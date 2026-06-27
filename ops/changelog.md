@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-06-27 (Exp 4861 generation-wall fork probe schema-validation test fix — codex)
+
+- Fixed the failing Exp 4861 diagnostic test without reverting prior changes and without modifying
+  `scripts/research_conductor.py`. Invalid `engine_heldout_accuracy` row values are now excluded
+  from `_median_accuracy()`, so `artifact_schema_errors()` reports a bad
+  `median_engine_heldout_accuracy` instead of accepting an out-of-range median as self-consistent.
+- Validation: `pytest -q tests/python/test_experiment_4861_generation_wall_fork_probe.py -o 'addopts='`
+  passed (`8 passed`); scoped Coverage.py via pytest-cov data filtering reported 100% for
+  `python/carnot/experiment_4861_generation_wall_fork_probe.py` (`291` statements, `0` missing).
+  Repo-wide spec coverage remains blocked by pre-existing unreferenced legacy tests (`1124 test(s)
+  missing spec traceability`), and reconciliation remains blocked by that plus stale architecture
+  documentation.
+
 ## 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed test fix — codex)
 
 - Fixed the failing Exp 4855 audit test without reverting prior changes and without modifying

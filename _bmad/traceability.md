@@ -1,5 +1,18 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-27 Exp 4861 generation-wall fork probe
+regression fix hardened `artifact_schema_errors()` and `_median_accuracy()`
+for malformed held-out accuracy rows under `REQ-ARC-WMTE-4861`. The validator
+now excludes out-of-range accuracies from median recomputation, so a bogus
+`median_engine_heldout_accuracy` cannot appear self-consistent when row-level
+accuracy validation has already failed. Focused tests:
+`tests/python/test_experiment_4861_generation_wall_fork_probe.py`
+(`8 passed`); scoped Coverage.py report for the Exp 4861 module is 100% (`291`
+statements, `0` missing). Repo-wide spec coverage remains blocked by
+pre-existing unreferenced legacy tests (`1124 test(s) missing spec
+traceability`), and reconciliation remains blocked by that plus stale
+architecture documentation.
+
 **Operational Note:** 2026-06-27 Exp 4855 A1 generation-diagnostic audit
 regression fix hardened `run()` for missing source inputs under
 `REQ-ARC-WMTE-4855`. The audit now rechecks the Exp 4851 source artifact and
@@ -38,7 +51,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix; REQ-ARC-WMTE-4855 implementation/test traceability reconciled)
+**Last Updated:** 2026-06-27 (Exp 4861 generation-wall fork probe median-validation regression fix; REQ-ARC-WMTE-4861 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 

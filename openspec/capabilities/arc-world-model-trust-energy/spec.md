@@ -10921,6 +10921,94 @@ Then the audit records the corresponding failed check, emits a terminal
 `complete_a1_generation_diagnostic_non_test_*` verdict, and sets
 `a1_genuinely_diagnostic=false`.
 
+### REQ-ARC-WMTE-4861: Generation Wall Induce-Plan Fork Probe
+
+Experiment 4861 SHALL diagnose the Exp 4851 `NEVER_ENUMERATED` L1
+first-contact wall as a Phase-Prototype+Validation fork. The workflow SHALL use
+the fixed held-out game list `cd82`, `cn04`, `ls20`, `m0r0`, `r11l`, `sk48`,
+`sp80`, `su15`, and `wa30`, plus the `tu93` positive control. The held-out
+planner SHALL be blind to banked winning prefixes; banked prefixes may be read
+only after planning to classify the planned candidate pool against executable
+oracle ground truth.
+
+The probe SHALL first check, before measuring any game, that
+`arc_solver_kit.offline_arcade()` is available, the Qwen3.5-9B-MTP local GGUF
+generator is available on the non-CUDA iGPU path (never a 3090 fallback), and at
+least three Exp 4851 `NEVER_ENUMERATED` games plus `tu93` have registry and
+offline-environment ground truth. Missing resources SHALL produce terminal
+`blocked_offline_arcade_missing`, `blocked_generator_unavailable`, or
+`blocked_no_heldout_games` artifacts rather than a fabricated fork verdict.
+
+For each measured held-out game the workflow SHALL collect cold-start
+transitions without a `GameAdapter`, invoke the live
+`arc_competition_agent.E3AgentPolicy._induce_and_plan` path, load the induced
+engine through `arc_executable_world_model.load_engine`, plan through
+`arc_executable_world_model.plan_in_model`, and then classify the planned
+candidate pool as `COVERED`, `ENUMERATED_BUT_LOST`, or `NEVER_ENUMERATED`.
+The artifact SHALL also report held-out off-path transition accuracy for the
+induced engine. Each per-game row SHALL be checkpointed atomically, and a soft
+elapsed budget stop SHALL write a schema-valid `partial=true` artifact with
+checkpoint evidence and exit successfully.
+
+The positive control `tu93` SHALL come out high-accuracy and `COVERED`; if it
+does not, the probe is retired as a harness artifact. Otherwise the joint fork
+verdict SHALL be `GUIDANCE_WALL` when median held-out engine accuracy is high
+and at least one held-out game migrates from Exp 4851 `NEVER_ENUMERATED` to
+planned `COVERED`, `PLANNER_GAP` when median accuracy is high and no game
+migrates, and `INDUCER_CEILING` when accuracy is low and no game migrates.
+Experiment 4861 SHALL write
+`results/experiment_4861_generation_wall_fork_probe.json`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a measured fork is complete_generation_wall_<fork>_<detail> (e.g. complete_generation_wall_inducer_ceiling_low_accuracy_no_migration)."
+- `fork_verdict`: principle "one of GUIDANCE_WALL | PLANNER_GAP | INDUCER_CEILING -- the headline that redirects .449."
+- `per_game_fork`: principle "per-game mapping game -> {engine_heldout_accuracy, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated (bare NEVER->planned COVERED), winning_prefix_len} -- the quantitative joint measurement."
+- `coverage_migration_count`: principle "how many NEVER_ENUMERATED games migrated to COVERED under induce->plan -- the GUIDANCE signal."
+- `median_engine_heldout_accuracy`: principle "the induced world-model quality across games -- distinguishes INDUCER ceiling (low) from planner gap (high)."
+- `positive_control_game`: principle "tu93 -- MUST be HIGH accuracy + COVERED or the measurement is a harness artifact."
+- `positive_control_migrated`: principle "true iff tu93 came out HIGH accuracy + COVERED -- the load-bearing not-a-harness-artifact check."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into induction or planning (the tautology trap B1 audits)."
+- `n_games_measured`: principle ">=3 NEVER_ENUMERATED held-out games for a non-degenerate joint table."
+- `verifier_is_oracle`: principle "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+- `live_path_reachable`: principle "the probe calls the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
+- `solve_provenance`: principle "development_proxy -- an offline fork measurement, NOT a live first-win; declared honestly."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- induce->plan invokes the LLM."
+- `preconditions_checked`: principle "records arcade/generator/held-out-games checks; a missing resource emits blocked_, never a fabricated fork."
+- `random_seed`: principle "determinism for induction + planning stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, induce/plan config, budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4861-BLOCKED-PRECONDITION
+
+Given the offline arcade is unavailable, the iGPU Qwen3.5-9B-MTP generator is
+unavailable, or fewer than three Exp 4851 `NEVER_ENUMERATED` held-out games plus
+`tu93` are present
+When Experiment 4861 starts
+Then it writes
+`results/experiment_4861_generation_wall_fork_probe.json` with a terminal
+`blocked_*` verdict, empty or partial fork rows, explicit
+`preconditions_checked`, `planner_blind_to_banked_answer=true`, and no
+fabricated migration count.
+
+#### SCENARIO-ARC-WMTE-4861-JOINT-FORK
+
+Given a covered `tu93` positive control and at least three measured
+`NEVER_ENUMERATED` held-out games
+When Experiment 4861 combines held-out engine accuracy with planned-bucket
+migration
+Then it emits one of `GUIDANCE_WALL`, `PLANNER_GAP`, or `INDUCER_CEILING`,
+records `coverage_migration_count`, `median_engine_heldout_accuracy`, and
+`per_game_fork`, and derives the terminal `honest_verdict` from that joint fork.
+
+#### SCENARIO-ARC-WMTE-4861-PARTIAL-CHECKPOINT
+
+Given the soft elapsed budget is reached after at least one game checkpoint
+When Experiment 4861 stops the current run
+Then it writes a schema-valid artifact with `partial=true`,
+`checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
+0 so the next run can resume from the checkpoints.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that

@@ -1,0 +1,128 @@
+{
+  "checkpoint_emitted": false,
+  "coverage_migration_count": 0,
+  "duration_s": 0.5617976188659668,
+  "experiment_id": 4861,
+  "field_principles": {
+    "checkpoint_emitted": {
+      "principle": "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+    },
+    "coverage_migration_count": {
+      "principle": "how many NEVER_ENUMERATED games migrated to COVERED under induce->plan -- the GUIDANCE signal."
+    },
+    "fork_verdict": {
+      "principle": "one of GUIDANCE_WALL | PLANNER_GAP | INDUCER_CEILING -- the headline that redirects .449."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a measured fork is complete_generation_wall_<fork>_<detail> (e.g. complete_generation_wall_inducer_ceiling_low_accuracy_no_migration)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) -- induce->plan invokes the LLM."
+    },
+    "live_path_reachable": {
+      "principle": "the probe calls the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
+    },
+    "median_engine_heldout_accuracy": {
+      "principle": "the induced world-model quality across games -- distinguishes INDUCER ceiling (low) from planner gap (high)."
+    },
+    "n_games_measured": {
+      "principle": ">=3 NEVER_ENUMERATED held-out games for a non-degenerate joint table."
+    },
+    "per_game_fork": {
+      "principle": "per-game mapping game -> {engine_heldout_accuracy, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated (bare NEVER->planned COVERED), winning_prefix_len} -- the quantitative joint measurement."
+    },
+    "planner_blind_to_banked_answer": {
+      "principle": "true -- the banked winning prefix was NOT injected into induction or planning (the tautology trap B1 audits)."
+    },
+    "positive_control_game": {
+      "principle": "tu93 -- MUST be HIGH accuracy + COVERED or the measurement is a harness artifact."
+    },
+    "positive_control_migrated": {
+      "principle": "true iff tu93 came out HIGH accuracy + COVERED -- the load-bearing not-a-harness-artifact check."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/generator/held-out-games checks; a missing resource emits blocked_, never a fabricated fork."
+    },
+    "random_seed": {
+      "principle": "determinism for induction + planning stochastic search."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, induce/plan config, budget) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline fork measurement, NOT a live first-win; declared honestly."
+    },
+    "verifier_is_oracle": {
+      "principle": "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+    }
+  },
+  "fork_verdict": null,
+  "honest_verdict": "blocked_generator_unavailable",
+  "induce_plan_config": {
+    "game_adapter_for_heldout": false,
+    "heldout_games": [
+      "cd82",
+      "cn04",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "wa30"
+    ],
+    "heldout_transitions": 24,
+    "high_accuracy_threshold": 0.5,
+    "igpu_only": true,
+    "live_path": "E3AgentPolicy._induce_and_plan -> e3.load_engine -> e3.plan_in_model",
+    "llm_model": "Qwen3.5-9B-MTP",
+    "plan_max_depth": 40,
+    "plan_max_nodes": 20000,
+    "planner_blind_to_banked_answer": true,
+    "soft_elapsed_budget_s": 4200.0,
+    "transition_budget": 32
+  },
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": false,
+  "median_engine_heldout_accuracy": null,
+  "n_games_measured": 0,
+  "partial": false,
+  "per_game_fork": {},
+  "planner_blind_to_banked_answer": true,
+  "positive_control_fork": null,
+  "positive_control_game": "tu93",
+  "positive_control_migrated": false,
+  "preconditions_checked": {
+    "generator": {
+      "detail": "cuda_3090_generator_disallowed",
+      "igpu_required": true,
+      "launch_env_cuda_visible_devices": "1",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": false,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "heldout_games": {
+      "available_games": [],
+      "ok": false
+    },
+    "live_path": {
+      "ok": false
+    },
+    "offline_arcade": {
+      "ok": true
+    },
+    "planner_blind_to_banked_answer": true
+  },
+  "random_seed": 20260627,
+  "reproducibility_checksum": "sha256:b0d742344120eced916159cc53c44f24d7105ee27e553d8ec3909db9b2e065fc",
+  "retire_if_same_verdict": true,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4861",
+    "SCENARIO-ARC-WMTE-4861-BLOCKED-PRECONDITION",
+    "SCENARIO-ARC-WMTE-4861-JOINT-FORK",
+    "SCENARIO-ARC-WMTE-4861-PARTIAL-CHECKPOINT"
+  ],
+  "verifier_is_oracle": true
+}
