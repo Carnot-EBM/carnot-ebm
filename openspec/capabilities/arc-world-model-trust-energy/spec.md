@@ -11058,6 +11058,86 @@ Then the audit records the corresponding failed check, emits a terminal
 `complete_a1_fork_probe_non_test_*` verdict, and sets
 `a1_genuinely_diagnostic=false`.
 
+### REQ-ARC-WMTE-4868: V449 Frontier SOTA Ingestion For The Generation-Wall Fork
+
+Experiment 4868 SHALL run the reserved `.449` SOTA-ingestion slot aimed at the
+Exp 4861 generation-wall fork verdict. The workflow SHALL read
+`results/experiment_4861_generation_wall_fork_probe.json`,
+`results/experiment_4858_sota_ingestion_generation_expressibility.json`,
+`research-studying.md`, `research-references.md`, `scripts/sweep_clusters.py`,
+and `scripts/sweep_semscholar.py`. It SHALL use the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch, and direct arXiv HTTP checks. It SHALL NOT invoke
+`/deep-research`, re-ingest nulled macro-vocabulary/click-heatmap coverage,
+exploration-strategy, or energy classes, load models, train, submit to a
+leaderboard, modify `scripts/research_conductor.py`, or make a solve claim.
+
+If Exp 4861 supplies `fork_verdict=INDUCER_CEILING`, the mapping SHALL target
+world-model inducer quality: stronger small/local coding-model inducers,
+test-time dynamics/world-model adaptation, counterexample-guided refinement, and
+the sovereignty/decentralization tension between the SWE-strong cloud
+Family-B-style executable-world-model inducer and a local open inducer. If Exp
+4861 supplies `GUIDANCE_WALL` or `PLANNER_GAP`, the mapping SHALL instead target
+neural-guided planning, MCTS, and search-verifier loops over the executable
+world model. If Exp 4861 is blocked and its `fork_verdict` is null, the workflow
+SHALL record that fact honestly and may follow the operator-reserved likely
+`INDUCER_CEILING` branch only as `requested_fallback_reason`, without claiming
+that Exp 4861 measured the fork.
+
+On a successful ingestion-synthesis run, Experiment 4868 SHALL write
+`results/experiment_4868_sota_ingestion_v449_frontier.json`, update
+`research-studying.md` with an idempotent Exp 4868 section marked INGESTED, and
+update `research-references.md` with an idempotent Exp 4868 source section. The
+artifact SHALL include the required fields `honest_verdict`, `methods_mapped`,
+`arxiv_ids_cited`, `aimed_at_fork_verdict`, `flagged_for_v449`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`upstream_artifacts`, `sota_to_experiment_mapping_note`, `note_path`,
+`references_path`, `random_seed`, `duration_s`, `reproducibility_checksum`, and
+`field_principles`.
+
+The complete-path `honest_verdict` SHALL equal
+`success_sota_ingestion_v449_frontier_mapped`; `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`; `methods_mapped` SHALL contain three to
+five methods; and every method claim SHALL cite only verified arXiv IDs from
+`arxiv_ids_cited`. The source set SHALL contain only direct arXiv HTTP-200
+checks from the focused pass: `2203.13474`, `2502.07786`, `2506.02918`,
+`2507.03160`, `2507.15877`, `2509.03956`, `2605.05138`, and `2606.11521`.
+For the reserved INDUCER_CEILING branch, the strongest methods SHALL include
+the executable-world-model inducer quality ladder, test-time world-model/dynamics
+adaptation, counterexample-guided refinement, and local open-code-model
+induction.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_v449_frontier_mapped."
+- `methods_mapped`: principle "the strongest 3-5 methods aimed at A1's fork verdict (inducer-quality OR guided-planning), each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID (no fabrication -- adversarial_verify bar)."
+- `aimed_at_fork_verdict`: principle "the A1 fork_verdict the ingestion targets (INDUCER_CEILING -> inducer quality; GUIDANCE/PLANNER -> planning/search)."
+- `flagged_for_v449`: principle "the strongest method(s) flagged so the .449 planner reads the mapping."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4868-V449-FRONTIER-MAPPED
+
+Given the research files, Exp 4861 fork-probe artifact, and Exp 4858 handoff
+artifact are present
+When Experiment 4868 runs through the reliable channel
+Then it writes `results/experiment_4868_sota_ingestion_v449_frontier.json`,
+records that `/deep-research` was not invoked, maps three to five SOTA methods
+onto the `.449` frontier branch with real arXiv IDs, updates
+`research-studying.md` and `research-references.md` idempotently, records any
+blocked/null Exp 4861 fork verdict honestly, and flags the strongest candidate
+inputs for `.449`.
+
+#### SCENARIO-ARC-WMTE-4868-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID,
+targets a fork verdict inconsistent with its branch, uses a stale `.448` flag,
+re-ingests retired coverage/exploration/energy classes, invokes
+`/deep-research`, claims a model-load, training, leaderboard, or solve result,
+or modifies `scripts/research_conductor.py`
+When the Experiment 4868 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that

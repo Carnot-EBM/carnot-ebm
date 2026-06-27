@@ -17016,6 +17016,23 @@ Top 10 selected by relevance score.
 - **Complexity:** high
 - **Description:** Extend Carnot's constraint extraction pipeline (currently arithmetic-only) to factual claims grounded in a lightweight knowledge graph. Use Wikidata SPARQL (public endpoint, no cost) to resolve named entities and their relations as soft constraints encoded into Ising couplings. Run on 100 TriviaQA questions using Qwen3.5-0.8B as the LLM. Measure: (a) factual claim detection rate, (b) KG resolution success rate, (c) Ising verifier precision/recall on factual hallucinations vs arithmetic-only baseline. Success: ≥60% factual claim detection with ≥70% verifier precision — establishing the first data point for Goal #3 (factual extractor). Also test with google/gemma-4-E4B-it to check model-agnosticism.
 
+<!-- EXP4868-V449-FRONTIER-REFERENCES-START -->
+## 2026-06-27 Exp 4868 V449 frontier source set
+
+Reliable-channel ingestion for `.449`, aimed at the reserved
+`INDUCER_CEILING` branch while recording that Exp 4861 is blocked/null. These
+papers are marked INGESTED for the V449 frontier roadmap handoff:
+
+- **arXiv:2203.13474 -- CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2502.07786 -- Counterexample Guided Program Repair Using Zero-Shot Learning and MaxSAT-based Fault Localization.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2506.02918 -- World Modelling Improves Language Model Agents.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2507.03160 -- Assessing Small Language Models for Code Generation: An Empirical Study with Benchmarks.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2509.03956 -- World Model Implanting for Test-time Adaptation of Embodied Agents.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+- **arXiv:2606.11521 -- Counterexample Guided Learning in the Large using Reasoning Agents.** Exp 4868 use: V449 INDUCER_CEILING source for improving executable world-model induction or preserving a local open inducer path.
+<!-- EXP4868-V449-FRONTIER-REFERENCES-END -->
+
 <!-- EXP4858-GENERATION-EXPRESSIBILITY-REFERENCES-START -->
 ## 2026-06-27 Exp 4858 generation-expressibility source set
 

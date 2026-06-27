@@ -10,6 +10,57 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4868-SOTA-INGESTION-V449-FRONTIER-START -->
+## 2026-06-27 Exp 4868 - .449 V449 frontier SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4868_sota_ingestion_v449_frontier.json`.
+
+**Preconditions:** `research-studying.md`, `research-references.md`,
+`results/experiment_4861_generation_wall_fork_probe.json`, and
+`results/experiment_4858_sota_ingestion_generation_expressibility.json` were
+present. The checked-in Exp 4861 A1 `fork_verdict` is blocked/null
+(`honest_verdict=blocked_generator_unavailable`), so this note follows the
+operator-reserved likely `INDUCER_CEILING` branch without claiming A1 measured
+it. `scripts/sweep_clusters.py` emitted ARC action-effect and
+neural-guided-search/world-model cluster URLs. `scripts/sweep_semscholar.py`
+was run on four focused queries; HTTP 429 limited three queries, and the
+test-time dynamics query returned arXiv IDs recorded in the artifact. Low-
+concurrency WebSearch/WebFetch plus direct arXiv HTTP checks verified the top
+eight papers listed below. `/deep-research` was not invoked. The retired
+macro-vocab/click-heatmap coverage, exploration-strategy, and energy classes
+were not re-ingested. No model load, training, leaderboard submission, or solve
+claim was made; this is a no solve claim ingestion note.
+
+**A1 fork targeted:** `INDUCER_CEILING`, with the caveat that the committed A1
+artifact is blocked/null. The .449 handoff is to improve world-model inducer
+accuracy before investing in more planner/search machinery.
+
+**Verified source set:**
+- arXiv:2203.13474 -- CodeGen: An Open Large Language Model for Code with Multi-Turn Program Synthesis
+- arXiv:2502.07786 -- Counterexample Guided Program Repair Using Zero-Shot Learning and MaxSAT-based Fault Localization
+- arXiv:2506.02918 -- World Modelling Improves Language Model Agents
+- arXiv:2507.03160 -- Assessing Small Language Models for Code Generation: An Empirical Study with Benchmarks
+- arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning
+- arXiv:2509.03956 -- World Model Implanting for Test-time Adaptation of Embodied Agents
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+- arXiv:2606.11521 -- Counterexample Guided Learning in the Large using Reasoning Agents
+
+**SOTA -> .449 frontier mapping:**
+- **Family-B executable world-model inducer quality ladder** (arXiv:2605.05138, arXiv:2507.03160, arXiv:2203.13474): maps to .449 / INDUCER_CEILING. Fork mapping: INDUCER_CEILING means the executable model is inaccurate before planning; compare the strong Family-B coding-agent inducer against local small/open code inducers under the same held-out transition gate. Evidence: arXiv:2605.05138 reports verifier-driven executable Python world models with strong coding agents; arXiv:2507.03160 and arXiv:2203.13474 bound what local/open code models can plausibly supply. Experiment graft: Build a two-lane inducer harness: cloud-strength Family-B reference lane for ceiling measurement, local open-code lane for sovereign deployment, both emitting the same executable engine interface. Validation gate: Pass only if held-out off-path transition accuracy improves before any planner reranking; otherwise .449 retires the inducer upgrade. Sovereignty: The cloud lane is a measurement oracle for capability, not the desired deployment path; the local lane preserves air-gapped operation. Fails when: The strong inducer still overfits observed prefixes, or the local open inducer cannot approach the cloud reference without forbidden network access.
+- **Test-time world-model and dynamics adaptation loop** (arXiv:2506.02918, arXiv:2509.03956, arXiv:2507.15877): maps to .449 / INDUCER_CEILING. Fork mapping: INDUCER_CEILING can be attacked by adapting the dynamics model at test time from observed transitions before planning through it. Evidence: arXiv:2506.02918 adds internal state prediction to language agents, arXiv:2509.03956 composes world models at test time, and arXiv:2507.15877 frames ARC test-time fine-tuning versus execution-guided synthesis. Experiment graft: After cold-start transition collection, fit or select a small dynamics adapter, then rerun the held-out transition score before plan_in_model. Validation gate: Only count improvements that raise held-out transition accuracy on games not used for the adapter's observed-prefix fit. Sovereignty: The adapter can be trained or selected locally from game observations, which keeps the improvement air-gapped. Fails when: The adapter memorizes prefix frames, loses hidden state, or improves in-distribution replay without raising held-out dynamics accuracy.
+- **Counterexample-guided executable world-model refinement** (arXiv:2606.11521, arXiv:2502.07786, arXiv:2507.15877): maps to .449 / INDUCER_CEILING. Fork mapping: INDUCER_CEILING becomes a refinement loop: failed held-out transitions become counterexamples that revise the executable engine instead of merely rejecting it. Evidence: arXiv:2606.11521 shows counterexamples can improve LLM symbolic induction; arXiv:2502.07786 uses CEGIS-style LLM repair; arXiv:2507.15877 supports execution-guided ARC synthesis. Experiment graft: Wrap the engine verifier in a CEGIS loop that converts off-path mismatch rows into minimal failing transition tests and asks the inducer to repair the engine. Validation gate: Accept a refined engine only when the repair fixes held-out counterexamples without regressing observed-prefix replay. Sovereignty: Counterexamples are produced by the local executable verifier, so even a small local inducer receives precise feedback without cloud traces. Fails when: Counterexamples are too sparse, repairs overfit the latest failing row, or the executable representation cannot express the hidden mechanic.
+- **Local open-code inducer distillation and self-correction** (arXiv:2507.03160, arXiv:2203.13474, arXiv:2502.07786): maps to .449 / INDUCER_CEILING. Fork mapping: INDUCER_CEILING requires a stronger air-gapped inducer, so the local lane should use open code-model selection plus verifier feedback rather than another generic prompt. Evidence: arXiv:2507.03160 evaluates compact open code models, arXiv:2203.13474 establishes open multi-turn program synthesis, and arXiv:2502.07786 shows verifier feedback can improve LLM repair. Experiment graft: Benchmark candidate local code models on executable-engine synthesis, then distill the successful prompting and repair traces into the chosen local inducer lane. Validation gate: Promote a local inducer only if it beats the current Qwen3.5-9B-MTP engine accuracy under the same A1 held-out-game set. Sovereignty: This is the deployment candidate: all inference and refinement stays on local hardware after the cloud reference has measured the ceiling. Fails when: The best local model cannot synthesize executable state updates, or self-correction loops repeatedly repair syntax while dynamics remain wrong.
+
+flagged_for_v449: family_b_executable_world_model_inducer_ladder (arXiv:2605.05138 + arXiv:2507.03160 + arXiv:2203.13474)
+flagged_for_v449: test_time_world_model_adaptation_loop (arXiv:2506.02918 + arXiv:2509.03956 + arXiv:2507.15877)
+flagged_for_v449: cegis_world_model_refinement_loop (arXiv:2606.11521 + arXiv:2502.07786 + arXiv:2507.15877)
+
+**Bottom line for .449:** stage the Family-B executable-world-model inducer as
+the capability reference, add test-time dynamics adaptation, and wrap the
+induced engine in counterexample-guided refinement. Promote the local open
+inducer only when held-out transition accuracy improves under the same A1 gate.
+<!-- EXP4868-SOTA-INGESTION-V449-FRONTIER-END -->
+
 <!-- EXP4858-SOTA-INGESTION-GENERATION-EXPRESSIBILITY-START -->
 ## 2026-06-27 Exp 4858 - .448 generation expressibility SOTA ingestion - INGESTED
 
