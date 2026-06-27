@@ -1,0 +1,801 @@
+{
+  "checkpoint_emitted": true,
+  "coverage_migration_count": 0,
+  "duration_s": 587.0132269859314,
+  "experiment_id": 4871,
+  "field_principles": {
+    "checkpoint_emitted": {
+      "principle": "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+    },
+    "coverage_migration_count": {
+      "principle": "how many NEVER_ENUMERATED games migrated to COVERED under induce->plan -- the GUIDANCE signal."
+    },
+    "fork_verdict": {
+      "principle": "one of GUIDANCE_WALL | PLANNER_GAP | INDUCER_CEILING -- the headline that redirects .450."
+    },
+    "generator_backend": {
+      "principle": "which server actually served (gpu0_cuda | igpu_hip) -- proves the GPU fix worked and the .448 cuda_3090_generator_disallowed veto is gone."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a measured fork is complete_generation_wall_<fork>_<detail> (e.g. complete_generation_wall_inducer_ceiling_low_accuracy_no_migration)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) -- induce->plan invokes the LLM on the GPU-0 generator."
+    },
+    "live_path_reachable": {
+      "principle": "the probe calls the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes)."
+    },
+    "median_engine_heldout_accuracy": {
+      "principle": "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. The induced world-model quality across games; distinguishes INDUCER ceiling (low) from planner gap (high)."
+    },
+    "model_specs": {
+      "principle": "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+    },
+    "n_games_measured": {
+      "principle": "EMIT BARE -- B1 reads it. >=3 NEVER_ENUMERATED held-out games for a non-degenerate joint table."
+    },
+    "per_game_fork": {
+      "principle": "per-game mapping game -> {engine_heldout_accuracy, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated, winning_prefix_len} -- the quantitative joint measurement."
+    },
+    "planner_blind_to_banked_answer": {
+      "principle": "true -- the banked winning prefix was NOT injected into induction or planning (the tautology trap B1 audits)."
+    },
+    "positive_control_game": {
+      "principle": "tu93 -- MUST be HIGH accuracy + COVERED or the measurement is a harness artifact."
+    },
+    "positive_control_migrated": {
+      "principle": "true iff tu93 came out HIGH accuracy + COVERED -- the load-bearing not-a-harness-artifact check."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/generator/held-out-games checks; a missing resource emits blocked_, never a fabricated fork."
+    },
+    "random_seed": {
+      "principle": "determinism for induction + planning stochastic search."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, induce/plan config, budget) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline fork measurement, NOT a live first-win; declared honestly."
+    },
+    "verifier_is_oracle": {
+      "principle": "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+    }
+  },
+  "fork_verdict": null,
+  "generator_backend": "gpu0_cuda",
+  "honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
+  "induce_plan_config": {
+    "game_adapter_for_heldout": false,
+    "generator_precondition": "igpu_hip_or_gpu0_cuda",
+    "gpu0_cuda_allowed": true,
+    "heldout_games": [
+      "cd82",
+      "cn04",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "wa30"
+    ],
+    "heldout_transitions": 24,
+    "high_accuracy_threshold": 0.5,
+    "igpu_only": false,
+    "live_path": "E3AgentPolicy._induce_and_plan -> e3.load_engine -> e3.plan_in_model",
+    "llm_model": "Qwen3.5-9B-MTP",
+    "plan_max_depth": 40,
+    "plan_max_nodes": 20000,
+    "planner_blind_to_banked_answer": true,
+    "soft_elapsed_budget_s": 4200.0,
+    "transition_budget": 32
+  },
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "median_engine_heldout_accuracy": 0.0,
+  "model_specs": {
+    "backend": "gpu0_cuda",
+    "cuda_visible_devices": "0",
+    "kv_quant": "q8_0",
+    "mtp": true,
+    "name": "Qwen3.5-9B-MTP",
+    "no_think_prefix": true,
+    "port": 8931,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+  },
+  "n_games_measured": 9,
+  "partial": false,
+  "per_game_fork": {
+    "cd82": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.25,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "cd82",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 0,
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "heldout_accuracy": 0.375,
+          "heldout_change_consistency": 0.0,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 25,
+          "trust_energy": 497.750082,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.6667,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        },
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 0,
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "heldout_accuracy": 0.363636,
+          "heldout_change_consistency": 0.0,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 32,
+          "trust_energy": 497.751465,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.625,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 5
+    },
+    "cn04": {
+      "cold_actions": 33,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.208333,
+      "engine_heldout_cell_recall": 0.108452,
+      "game": "cn04",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 92,
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "heldout_accuracy": 0.0,
+          "heldout_change_consistency": 0.105869,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 32,
+          "trust_energy": 22.100861,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.6644,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 13
+    },
+    "ls20": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.0,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "ls20",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "world_model_accuracy_below_threshold",
+          "transition_count": 25,
+          "trust_metric": "exact",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          },
+          "verify_accuracy": 0.28,
+          "verify_cell_recall": 0.0
+        },
+        {
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "proposer_failed_or_missing_root",
+          "transition_count": 32,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 13
+    },
+    "m0r0": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.083333,
+      "engine_heldout_cell_recall": 0.018736,
+      "game": "m0r0",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 0,
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "heldout_accuracy": 0.25,
+          "heldout_change_consistency": 0.0,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 25,
+          "trust_energy": 497.779551,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        },
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 18,
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "heldout_accuracy": 0.0,
+          "heldout_change_consistency": 0.058824,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 32,
+          "trust_energy": 291.866155,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 2,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 1,
+      "planned_prefix_len": 2,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 15
+    },
+    "r11l": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.0,
+      "engine_heldout_cell_recall": 0.042289,
+      "game": "r11l",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "world_model_accuracy_below_threshold",
+          "transition_count": 25,
+          "trust_metric": "exact",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.8333,
+            "heldout_cell_recall": 0.9167,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          },
+          "verify_accuracy": 0.0,
+          "verify_cell_recall": 0.0
+        },
+        {
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "world_model_accuracy_below_threshold",
+          "transition_count": 32,
+          "trust_metric": "exact",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          },
+          "verify_accuracy": 0.0,
+          "verify_cell_recall": 0.0312
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 4
+    },
+    "sk48": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.0,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "sk48",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 78,
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "heldout_accuracy": 0.0,
+          "heldout_change_consistency": 0.134715,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 25,
+          "trust_energy": 12.816271,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.9429,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        },
+        {
+          "binary_gate_pass": false,
+          "correct_changed_cells": 0,
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "heldout_accuracy": 0.0,
+          "heldout_change_consistency": 0.0,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "hidden_state_trust_below_threshold",
+          "transition_count": 32,
+          "trust_energy": 1000000.0,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.9481,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 14
+    },
+    "sp80": {
+      "cold_actions": 34,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.0,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "sp80",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "dsl_transition_count": 25,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "stall",
+          "skipped": "world_model_accuracy_below_threshold",
+          "transition_count": 25,
+          "trust_metric": "exact",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 25,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          },
+          "verify_accuracy": 0.0,
+          "verify_cell_recall": 0.0
+        },
+        {
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "proposer_failed_or_missing_root",
+          "transition_count": 32,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.8688,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 4
+    },
+    "su15": {
+      "cold_actions": 33,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.5,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "su15",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "",
+          "transition_count": 32,
+          "trust_metric": "exact",
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.625,
+            "heldout_cell_recall": 1.0,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          },
+          "verify_accuracy": 0.6562,
+          "verify_cell_recall": 0.0
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 7
+    },
+    "wa30": {
+      "cold_actions": 33,
+      "cold_transition_count": 32,
+      "engine_heldout_accuracy": 0.0,
+      "engine_heldout_cell_recall": 0.0,
+      "game": "wa30",
+      "heldout_transition_count": 24,
+      "induction_attempts": [
+        {
+          "dsl_transition_count": 32,
+          "goal_level": 1,
+          "model_specs": "offline_dsl_induction_no_llm",
+          "planned": false,
+          "reason": "exp4871_generation_wall_fork_probe",
+          "skipped": "proposer_failed_or_missing_root",
+          "transition_count": 32,
+          "ttt_prior_engine": {
+            "backend": "cnn",
+            "gate": "PASS",
+            "heldout_accuracy": 0.0,
+            "heldout_cell_recall": 0.8765,
+            "n_transitions": 32,
+            "prior_loaded": true,
+            "trust_metric": "cell_recall",
+            "trust_threshold": 0.5
+          }
+        }
+      ],
+      "live_path_methods_called": [
+        "E3AgentPolicy._induce_and_plan"
+      ],
+      "load_engine_error": "FileNotFoundError(PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/wa30/world_model.py'))",
+      "migrated": false,
+      "plan_error": "",
+      "plan_length": 0,
+      "planned_bucket": "NEVER_ENUMERATED",
+      "planned_pool_size": 0,
+      "planned_prefix_len": 0,
+      "planner_reached_l1_win": false,
+      "winning_prefix_len": 33
+    }
+  },
+  "planner_blind_to_banked_answer": true,
+  "positive_control_fork": {
+    "cold_actions": 34,
+    "cold_transition_count": 32,
+    "engine_heldout_accuracy": 0.0,
+    "engine_heldout_cell_recall": 0.0,
+    "game": "tu93",
+    "heldout_transition_count": 24,
+    "induction_attempts": [
+      {
+        "dsl_transition_count": 25,
+        "goal_level": 1,
+        "model_specs": "offline_dsl_induction_no_llm",
+        "planned": false,
+        "reason": "stall",
+        "skipped": "world_model_accuracy_below_threshold",
+        "transition_count": 25,
+        "trust_metric": "exact",
+        "ttt_prior_engine": {
+          "backend": "cnn",
+          "gate": "PASS",
+          "heldout_accuracy": 0.3333,
+          "heldout_cell_recall": 1.0,
+          "n_transitions": 25,
+          "prior_loaded": true,
+          "trust_metric": "cell_recall",
+          "trust_threshold": 0.5
+        },
+        "verify_accuracy": 0.0,
+        "verify_cell_recall": 0.0
+      },
+      {
+        "dsl_transition_count": 32,
+        "goal_level": 1,
+        "model_specs": "offline_dsl_induction_no_llm",
+        "planned": false,
+        "reason": "exp4871_generation_wall_fork_probe",
+        "skipped": "world_model_accuracy_below_threshold",
+        "transition_count": 32,
+        "trust_metric": "exact",
+        "ttt_prior_engine": {
+          "backend": "cnn",
+          "gate": "PASS",
+          "heldout_accuracy": 0.25,
+          "heldout_cell_recall": 1.0,
+          "n_transitions": 32,
+          "prior_loaded": true,
+          "trust_metric": "cell_recall",
+          "trust_threshold": 0.5
+        },
+        "verify_accuracy": 0.0312,
+        "verify_cell_recall": 0.0312
+      }
+    ],
+    "live_path_methods_called": [
+      "E3AgentPolicy._induce_and_plan",
+      "arc_executable_world_model.load_engine",
+      "arc_executable_world_model.plan_in_model"
+    ],
+    "load_engine_error": "",
+    "migrated": false,
+    "plan_error": "",
+    "plan_length": 0,
+    "planned_bucket": "NEVER_ENUMERATED",
+    "planned_pool_size": 0,
+    "planned_prefix_len": 0,
+    "planner_reached_l1_win": false,
+    "winning_prefix_len": 18
+  },
+  "positive_control_game": "tu93",
+  "positive_control_migrated": false,
+  "preconditions_checked": {
+    "generator": {
+      "allowed_backends": [
+        "gpu0_cuda",
+        "igpu_hip"
+      ],
+      "ambient_cuda_visible_devices": null,
+      "backend": "gpu0_cuda",
+      "detail": "ok",
+      "generator_backend": "gpu0_cuda",
+      "igpu_required": false,
+      "launch_env_cuda_visible_devices": "0",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": true,
+      "port": 8931,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "heldout_games": {
+      "available_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "n_available": 9,
+      "ok": true,
+      "positive_control_game": "tu93",
+      "positive_control_game_present": true,
+      "requested_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ]
+    },
+    "live_path": {
+      "ok": true
+    },
+    "offline_arcade": {
+      "ok": true
+    },
+    "planner_blind_to_banked_answer": true,
+    "positive_control": {
+      "game": "tu93",
+      "passed": false
+    }
+  },
+  "random_seed": 20260627,
+  "reproducibility_checksum": "sha256:a07c8fec5ae3aa7fb820b89d207753070f77e5f789839ea3b2693056e2f2a9f3",
+  "retire_if_same_verdict": true,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4871",
+    "SCENARIO-ARC-WMTE-4871-GPU-FIXED-PRECONDITION",
+    "SCENARIO-ARC-WMTE-4871-JOINT-FORK",
+    "SCENARIO-ARC-WMTE-4871-PARTIAL-CHECKPOINT"
+  ],
+  "verifier_is_oracle": true
+}

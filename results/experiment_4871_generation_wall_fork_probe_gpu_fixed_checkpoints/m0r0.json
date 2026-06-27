@@ -1,0 +1,72 @@
+{
+  "cold_actions": 34,
+  "cold_transition_count": 32,
+  "engine_heldout_accuracy": 0.083333,
+  "engine_heldout_cell_recall": 0.018736,
+  "game": "m0r0",
+  "heldout_transition_count": 24,
+  "induction_attempts": [
+    {
+      "binary_gate_pass": false,
+      "correct_changed_cells": 0,
+      "dsl_transition_count": 25,
+      "goal_level": 1,
+      "heldout_accuracy": 0.25,
+      "heldout_change_consistency": 0.0,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "reason": "stall",
+      "skipped": "hidden_state_trust_below_threshold",
+      "transition_count": 25,
+      "trust_energy": 497.779551,
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "gate": "PASS",
+        "heldout_accuracy": 0.0,
+        "heldout_cell_recall": 1.0,
+        "n_transitions": 25,
+        "prior_loaded": true,
+        "trust_metric": "cell_recall",
+        "trust_threshold": 0.5
+      }
+    },
+    {
+      "binary_gate_pass": false,
+      "correct_changed_cells": 18,
+      "dsl_transition_count": 32,
+      "goal_level": 1,
+      "heldout_accuracy": 0.0,
+      "heldout_change_consistency": 0.058824,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "reason": "exp4871_generation_wall_fork_probe",
+      "skipped": "hidden_state_trust_below_threshold",
+      "transition_count": 32,
+      "trust_energy": 291.866155,
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "gate": "PASS",
+        "heldout_accuracy": 0.0,
+        "heldout_cell_recall": 1.0,
+        "n_transitions": 32,
+        "prior_loaded": true,
+        "trust_metric": "cell_recall",
+        "trust_threshold": 0.5
+      }
+    }
+  ],
+  "live_path_methods_called": [
+    "E3AgentPolicy._induce_and_plan",
+    "arc_executable_world_model.load_engine",
+    "arc_executable_world_model.plan_in_model"
+  ],
+  "load_engine_error": "",
+  "migrated": false,
+  "plan_error": "",
+  "plan_length": 2,
+  "planned_bucket": "NEVER_ENUMERATED",
+  "planned_pool_size": 1,
+  "planned_prefix_len": 2,
+  "planner_reached_l1_win": false,
+  "winning_prefix_len": 15
+}
