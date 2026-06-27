@@ -51861,3 +51861,79 @@ milestones:
       (B2), hardware (C), and the .448 SOTA handoff (D).'
     deliverable: results/experiment_4859_capstone_v447.json
     result: OK (conductor)
+- id: 2026.06.448
+  title: 'FORK THE GENERATION WALL: GUIDANCE-gap vs world-model-INDUCER ceiling. The .447 finding (NEVER_ENUMERATED dominant)
+    means the sufficient primitives are never ASSEMBLED. .448 headline runs the genuinely-untried induce->plan_in_model (Family-B
+    SOTA, arXiv:2605.05138) BLIND on the NEVER_ENUMERATED held-out games and measures the JOINT (induced world-model held-out
+    accuracy x coverage migration NEVER_ENUMERATED->COVERED), with tu93 as positive control + a B1 tautology-guard: HIGH-accuracy+migration
+    -> GUIDANCE wall (build a planner); HIGH-accuracy+no-migration -> planner gap; LOW-accuracy+no-migration -> INDUCER ceiling
+    (operator escalation). PLUS the scored deadline levers: A2 level-up bank, A3 self-play checkpoint, A4 a GENUINELY LIVE
+    held-out first-win readiness (the 6/30 go/no-go), B2 submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v448.md
+  completed: '2026-06-27'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4860-phase0
+    title: PHASE 0 (TRANSITION) -- archive .447 -> activate .448; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .447 close-state (A1 generation-coverage diagnostic NEVER_ENUMERATED dominant 9/10 + b1_trusted;
+      macro-vocab + click-heatmap RETIRED -> wall is GUIDANCE not coverage; energy CONCLUDED; exploration-prior CLOSED; reproducible_total_levels=65).
+    deliverable: results/experiment_4860_archive_447_activate_448.json
+    result: OK (conductor)
+  - id: exp4861-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GENERATION-WALL FORK PROBE: GUIDANCE-gap vs world-model-INDUCER
+      ceiling. For the NEVER_ENUMERATED held-out games (from exp4851), run the genuinely-untried induce->plan_in_model (Family-B
+      SOTA, arXiv:2605.05138; live-path-reachable via arc_competition_agent._induce_and_plan) BLIND to the banked answer,
+      and measure the JOINT (induced world-model held-out transition accuracy x coverage migration NEVER_ENUMERATED->COVERED).
+      tu93 = positive control. The decisive fork that redirects .449; a Phase-Prototype probe, not an 18th coverage lever.'
+    deliverable: results/experiment_4861_generation_wall_fork_probe.json
+    result: OK (conductor)
+  - id: exp4862-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .447 s5i5 and .446 ka59; pick a shallow L1-only game with a grounded next-level delta -- g50t/wa30/r11l -- else
+      a +1 deepen on the shallowest solved game). offline_reproduced gated.
+    deliverable: results/experiment_4862_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4863-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4863_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4864-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the color-permuted variant
+      harness, checkpoint/resume-capable (wall-clock-safe per the 2026-06-25 fix). .448 MUST produce a FRESH LIVE number for
+      the operator 6/30 go/no-go (or honestly declare a cache hit).
+    deliverable: results/experiment_4864_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4865-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 generation-wall fork probe is HONEST -- the planner/inducer
+      was BLIND to the banked winning prefix (no tautology of feeding the offline solver answer into induction/planning),
+      measured on REAL games, the tu93 positive control genuinely migrated (HIGH accuracy + COVERED), and the per-game (accuracy
+      x bucket) numbers MATCH the fork verdict.
+    deliverable: results/experiment_4865_fork_probe_audit.json
+    result: OK (conductor)
+  - id: exp4866-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the OPERATOR submission checklist (NEVER
+      submits). The package was READY in .447 (vram ~15.146GB); this is the final pre-deadline (6/30) go/no-go confirmation.'
+    deliverable: results/experiment_4866_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4867-c
+    title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
+      on failure -- do NOT exit with no file changes). Board was REACHABLE in .447 (graduated terminal); keep in the continuity
+      rotation.
+    deliverable: results/experiment_4867_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4868-d
+    title: PHASE D (SOTA-INGESTION -- the .449 frontier) -- given A1's fork verdict, ingest the matching SOTA. If INDUCER-CEILING,
+      ingest stronger/decentralized world-model-induction options (and the SWE-strong-but- air-gapped tension); if GUIDANCE/PLANNER-gap,
+      ingest neural-guided planning / MCTS / search-verifier over the executable world model. Real arXiv IDs only; do NOT
+      re-ingest the nulled coverage/exploration/energy classes.
+    deliverable: results/experiment_4868_sota_ingestion_v449_frontier.json
+    result: OK (conductor)
+  - id: exp4869-e
+    title: 'PHASE E (CAPSTONE .448) -- aggregate the scorecard: the A1 generation-wall FORK verdict (GUIDANCE_WALL -> build
+      a planner / PLANNER_GAP -> stronger planner / INDUCER_CEILING -> operator escalation, per B1''s tautology + positive-control
+      check), the level-up bank (A2), self-play checkpoint (A3), the FRESH LIVE held-out readiness (A4), submission-package
+      state (B2), hardware (C), .449 handoff (D).'
+    deliverable: results/experiment_4869_capstone_v448.json
+    result: OK (conductor)
