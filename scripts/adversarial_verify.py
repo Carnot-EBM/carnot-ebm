@@ -430,13 +430,20 @@ _DELTA_SUFFIXES = ("_delta", "_diff", "_change")
 
 def _is_reference_field(k: str) -> bool:
     """True if the field names a KNOWN PRIOR baseline/reference. Suffix-anchored
-    to avoid substring collisions with measured outcomes."""
+    to avoid substring collisions with measured outcomes.
+
+    The prior-best of a metric is also a carried reference (it EQUALS the baseline until the
+    metric improves), so a `prior_best_*` / `prior_submitted_*` field is a reference too --
+    prefix-anchored. Origin: exp4886 (.450 A4) where `first_win_baseline` (=0.04) vs
+    `prior_best_heldout_first_win_rate` (=0.04) was CRITICAL-flagged because only the `_baseline`
+    side was recognized; both are references, so the pair is the expected no-improvement state."""
     kl = k.lower()
     return (
         kl in ("baseline", "reference", "ref")
         or kl.endswith(("_baseline", "_reference", "_ref"))
         or "_baseline_" in kl
         or "_reference_" in kl
+        or kl.startswith(("prior_best", "prior_submitted"))
     )
 
 
