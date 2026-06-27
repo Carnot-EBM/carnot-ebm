@@ -237,5 +237,23 @@
   "source_partial_ledger_sha256": "sha256:7edb4483ce7db9062a2be0f374bc5b14e8b19c12b8128555e09217eed43a7ad6",
   "source_ready_for_operator_submit": false,
   "submitted_to_leaderboard": false,
-  "substrate_honesty_note": "Fresh ARC runtime attempts were executed by the 4729 readiness driver. The source driver classifies its scorer as verifier_ensemble_against_cached_candidates/no live LLM; this 4886 lane records live_agent_ran=true for the fresh driver invocation and preserves the source substrate string separately."
+  "substrate_honesty_note": "Fresh ARC runtime attempts were executed by the 4729 readiness driver. The source driver classifies its scorer as verifier_ensemble_against_cached_candidates/no live LLM; this 4886 lane records live_agent_ran=true for the fresh driver invocation and preserves the source substrate string separately.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "first_win_baseline=0.04 and prior_best_heldout_first_win_rate=0.04 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "warn",
+      "detail": "heldout_first_win_delta_vs_baseline=0.0225 and heldout_first_win_delta_vs_prior_best=0.0225 agree, but BOTH are baseline/reference or VERIFIED arithmetic-derived (delta) fields, not independent measurements \u2014 structural arithmetic, not a coincidence between two distinct measured metrics. Downgraded CRITICAL->WARN (baseline-identity carve-out)."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+    }
+  ]
 }
