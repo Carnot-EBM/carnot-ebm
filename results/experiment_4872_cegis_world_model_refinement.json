@@ -1,0 +1,595 @@
+{
+  "cegis_config": {
+    "a1_artifact": "results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json",
+    "a1_low_accuracy_threshold": 0.5,
+    "bootstrap_iterations": 1000,
+    "generator_precondition": "igpu_hip_or_gpu0_cuda",
+    "gpu0_cuda_allowed": true,
+    "heldout_games": [
+      "cd82",
+      "cn04",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "wa30"
+    ],
+    "heldout_transitions": 24,
+    "live_path": "arc_executable_world_model.load_engine/refactor -> E3 executable program",
+    "llm_model": "Qwen3.5-9B-MTP",
+    "max_repair_counterexamples": 4,
+    "max_rounds": 1,
+    "observed_prefix_transitions": 24,
+    "soft_elapsed_budget_s": 4200.0
+  },
+  "cegis_heldout_accuracy_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "cegis_heldout_accuracy_delta_median": 0.0,
+  "checkpoint_emitted": true,
+  "delta_on_truly_heldout_split": true,
+  "duration_s": 141.88956594467163,
+  "experiment_id": 4872,
+  "field_principles": {
+    "cegis_heldout_accuracy_delta_ci95": {
+      "principle": "bootstrap CI95 of the delta; PASS requires it to exclude 0 (not a noise lift)."
+    },
+    "cegis_heldout_accuracy_delta_median": {
+      "principle": "median (refined - baseline) held-out transition accuracy -- did CEGIS MOVE the inducer wall?"
+    },
+    "checkpoint_emitted": {
+      "principle": "a capped run still emits a usable partial (per-game + per-round checkpointing)."
+    },
+    "delta_on_truly_heldout_split": {
+      "principle": "true -- the re-measure split is DISJOINT from the repair counterexamples (B1 audits; else it is a tautology)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a real lift is success_cegis_engine_accuracy_lift_<delta>; a null is complete_cegis_no_heldout_accuracy_lift_residual_<cause>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) -- CEGIS repair invokes the LLM on the GPU-0 generator."
+    },
+    "live_path_reachable": {
+      "principle": "the refinement improves the live e3 induction/repair path (arc_orphan_solver_lint passes), not a parallel solver."
+    },
+    "model_specs": {
+      "principle": "names the actual generator (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
+    },
+    "per_game_accuracy_delta": {
+      "principle": "per-game {baseline, refined, delta, counterexamples_fixed, cegis_rounds} -- the quantitative intervention table."
+    },
+    "positive_control_passed": {
+      "principle": "a known-correctable misprediction was fixed -> a flat null is a real ceiling, not a harness no-op."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the CEGIS stochastic repair search."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, A1 baseline, CEGIS config, held-out split) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an inducer-accuracy measurement, NOT a banked level."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
+    }
+  },
+  "honest_verdict": "complete_cegis_no_heldout_accuracy_lift_residual_positive_control_failed",
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "model_specs": {
+    "backend": "gpu0_cuda",
+    "cuda_visible_devices": "0",
+    "kv_quant": "q8_0",
+    "mtp": true,
+    "name": "Qwen3.5-9B-MTP",
+    "no_think_prefix": true,
+    "port": 8931,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+  },
+  "n_games_measured": 9,
+  "partial": false,
+  "per_game_accuracy_delta": {
+    "cd82": {
+      "a1_artifact_baseline": 0.25,
+      "accepted_repairs": 0,
+      "baseline": 0.4,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "cd82",
+      "observed_prefix_accuracy_after": 0.25,
+      "observed_prefix_accuracy_before": 0.25,
+      "refined": 0.4,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        0,
+        7,
+        10,
+        22
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "cn04": {
+      "a1_artifact_baseline": 0.208333,
+      "accepted_repairs": 0,
+      "baseline": 0.25,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "cn04",
+      "observed_prefix_accuracy_after": 0.208333,
+      "observed_prefix_accuracy_before": 0.208333,
+      "refined": 0.25,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        22
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        0,
+        10,
+        21,
+        23
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "ls20": {
+      "a1_artifact_baseline": 0.0,
+      "accepted_repairs": 0,
+      "baseline": 0.0,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "ls20",
+      "observed_prefix_accuracy_after": 0.0,
+      "observed_prefix_accuracy_before": 0.0,
+      "refined": 0.0,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        11,
+        12,
+        13,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        10,
+        14,
+        15,
+        19
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "m0r0": {
+      "a1_artifact_baseline": 0.083333,
+      "accepted_repairs": 0,
+      "baseline": 0.0,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "m0r0",
+      "observed_prefix_accuracy_after": 0.083333,
+      "observed_prefix_accuracy_before": 0.083333,
+      "refined": 0.0,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        9,
+        11,
+        13,
+        20
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "r11l": {
+      "a1_artifact_baseline": 0.0,
+      "accepted_repairs": 0,
+      "baseline": 0.0,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "r11l",
+      "observed_prefix_accuracy_after": 0.0,
+      "observed_prefix_accuracy_before": 0.0,
+      "refined": 0.0,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        3,
+        5,
+        11,
+        13
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "sk48": {
+      "a1_artifact_baseline": 0.0,
+      "accepted_repairs": 0,
+      "baseline": 0.0,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "sk48",
+      "observed_prefix_accuracy_after": 0.0,
+      "observed_prefix_accuracy_before": 0.0,
+      "refined": 0.0,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        3,
+        6,
+        12,
+        23
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "sp80": {
+      "a1_artifact_baseline": 0.0,
+      "accepted_repairs": 0,
+      "baseline": 0.0,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "sp80",
+      "observed_prefix_accuracy_after": 0.0,
+      "observed_prefix_accuracy_before": 0.0,
+      "refined": 0.0,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        19,
+        20,
+        21
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        16,
+        18,
+        22,
+        23
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "su15": {
+      "a1_artifact_baseline": 0.5,
+      "accepted_repairs": 0,
+      "baseline": 0.55,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "su15",
+      "observed_prefix_accuracy_after": 0.5,
+      "observed_prefix_accuracy_before": 0.5,
+      "refined": 0.55,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        20,
+        21
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        15,
+        19,
+        22,
+        23
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    },
+    "wa30": {
+      "a1_artifact_baseline": 0.0,
+      "accepted_repairs": 0,
+      "baseline": 0.2,
+      "cegis_rounds": 1,
+      "counterexamples_fixed": 0,
+      "delta": 0.0,
+      "game": "wa30",
+      "observed_prefix_accuracy_after": 0.125,
+      "observed_prefix_accuracy_before": 0.125,
+      "refined": 0.2,
+      "remeasure_transition_count": 20,
+      "remeasure_transition_ids": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        12,
+        13,
+        14,
+        15,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "repair_counterexample_count": 4,
+      "repair_transition_ids": [
+        0,
+        3,
+        11,
+        16
+      ],
+      "residual": "no_accepted_repair",
+      "rounds": [
+        {
+          "accepted": false,
+          "residual": "local model code unusable after 1 tries (missing ('engine', 'is_level_complete') in output)",
+          "round": 1
+        }
+      ]
+    }
+  },
+  "positive_control_passed": false,
+  "preconditions_checked": {
+    "a1_baseline": {
+      "detail": "ok",
+      "median_engine_heldout_accuracy": 0.0,
+      "n_games": 9,
+      "ok": true,
+      "per_game_baselines_present": true
+    },
+    "generator": {
+      "allowed_backends": [
+        "gpu0_cuda",
+        "igpu_hip"
+      ],
+      "ambient_cuda_visible_devices": null,
+      "backend": "gpu0_cuda",
+      "detail": "ok",
+      "generator_backend": "gpu0_cuda",
+      "igpu_required": false,
+      "launch_env_cuda_visible_devices": "0",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": true,
+      "port": 8931,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "live_path": {
+      "ok": true
+    },
+    "offline_arcade": {
+      "ok": true
+    }
+  },
+  "random_seed": 20260627,
+  "reproducibility_checksum": "sha256:b62db7aacf2cec11a5a802cb96ba48a86e4238260073c7275e29a3465fbcfdd6",
+  "retire_if_same_verdict": true,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4872",
+    "SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE",
+    "SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE",
+    "SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA"
+  ],
+  "verifier_is_oracle": false
+}

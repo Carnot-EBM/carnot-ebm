@@ -11091,6 +11091,83 @@ Then it writes a schema-valid artifact with `partial=true`,
 `checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
 0 so the next run can resume from the checkpoints.
 
+### REQ-ARC-WMTE-4872: CEGIS World-Model Refinement Accuracy Lift
+
+Experiment 4872 SHALL run only after the Exp 4871 A1 artifact exists and reports
+`median_engine_heldout_accuracy < 0.5`. It SHALL reuse the Exp 4871 GPU-fixed
+generator precondition, held-out game list, live executable world-model path, and
+banked-answer blindness, but SHALL evaluate a bounded counterexample-guided
+repair loop over the induced executable `world_model.py` program rather than a
+parallel solver. If the offline arcade, generator, live path, or A1 low-accuracy
+baseline is unavailable, the workflow SHALL write a terminal `blocked_*`
+artifact instead of fabricating a CEGIS verdict.
+
+For each measured A1 held-out game, the workflow SHALL induce or load the
+initial executable engine, collect real off-path transition mispredictions, split
+those failures into repair counterexamples and a disjoint remeasurement split,
+and invoke the live Qwen3.5-9B-MTP proposer to repair the executable program.
+A repair SHALL be accepted only when it fixes at least one repair
+counterexample and does not regress observed-prefix replay. The loop SHALL be
+bounded, checkpointed per game and round, and SHALL stop on the soft elapsed
+budget with a schema-valid partial artifact.
+
+The final score SHALL compare the A1 baseline held-out accuracy with the refined
+engine accuracy on a split disjoint from the counterexamples used for repair.
+Experiment 4872 SHALL write
+`results/experiment_4872_cegis_world_model_refinement.json` with the median
+per-game held-out accuracy delta, a bootstrap CI95 for that delta, the per-game
+accuracy table, `delta_on_truly_heldout_split=true`, `verifier_is_oracle=false`,
+`live_path_reachable=true` only when the E3 induction/repair import path passes
+orphan-solver lint, and `solve_provenance=development_proxy`.
+
+The falsifiable gate SHALL pass only when the median delta is positive, the CI95
+excludes 0, at least three games are measured, the split is truly disjoint, and
+the positive control records at least one known-correctable misprediction fixed.
+If the CI95 includes 0, the artifact SHALL retire this CEGIS lever with a
+terminal `complete_cegis_no_heldout_accuracy_lift_residual_*` verdict.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real lift is success_cegis_engine_accuracy_lift_<delta>; a null is complete_cegis_no_heldout_accuracy_lift_residual_<cause>."
+- `cegis_heldout_accuracy_delta_median`: principle "median (refined - baseline) held-out transition accuracy -- did CEGIS MOVE the inducer wall?"
+- `cegis_heldout_accuracy_delta_ci95`: principle "bootstrap CI95 of the delta; PASS requires it to exclude 0 (not a noise lift)."
+- `per_game_accuracy_delta`: principle "per-game {baseline, refined, delta, counterexamples_fixed, cegis_rounds} -- the quantitative intervention table."
+- `delta_on_truly_heldout_split`: principle "true -- the re-measure split is DISJOINT from the repair counterexamples (B1 audits; else it is a tautology)."
+- `positive_control_passed`: principle "a known-correctable misprediction was fixed -> a flat null is a real ceiling, not a harness no-op."
+- `verifier_is_oracle`: principle "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
+- `live_path_reachable`: principle "the refinement improves the live e3 induction/repair path (arc_orphan_solver_lint passes), not a parallel solver."
+- `solve_provenance`: principle "development_proxy -- an inducer-accuracy measurement, NOT a banked level."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game + per-round checkpointing)."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- CEGIS repair invokes the LLM on the GPU-0 generator."
+- `model_specs`: principle "names the actual generator (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server)."
+- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+- `random_seed`: principle "determinism for the CEGIS stochastic repair search."
+- `reproducibility_checksum`: principle "content hash of (games, A1 baseline, CEGIS config, held-out split) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4872-A1-LOW-ACCURACY-GATE
+
+Given the Exp 4871 artifact is missing, malformed, or has
+`median_engine_heldout_accuracy >= 0.5`
+When Experiment 4872 starts
+Then it writes a terminal `blocked_a1_baseline_missing` or
+`blocked_a1_not_inducer_ceiling` artifact and does not invoke CEGIS repair.
+
+#### SCENARIO-ARC-WMTE-4872-REPAIR-ACCEPTANCE
+
+Given a real held-out transition misprediction and observed-prefix replay rows
+When a proposed executable repair is scored
+Then the repair is accepted only if it fixes at least one repair
+counterexample, preserves observed-prefix replay accuracy, and records the
+accepted round in the per-game checkpoint.
+
+#### SCENARIO-ARC-WMTE-4872-TRULY-HELDOUT-DELTA
+
+Given repair counterexamples and a disjoint remeasurement split
+When Experiment 4872 builds the final artifact
+Then `delta_on_truly_heldout_split=true`, the per-game deltas are computed on
+the remeasurement split rather than the repair examples, and the median delta
+CI95 determines the terminal success or retirement verdict.
+
 ### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
 
 Experiment 4865 SHALL adversarially audit
