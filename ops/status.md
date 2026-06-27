@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix)
+**Last Updated:** 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed regression fix)
+
+## Session 2026-06-27 — Exp 4855 A1 Generation-Diagnostic Audit Test Fix
+
+Fixed the Exp 4855 audit regression without modifying
+`scripts/research_conductor.py`. `run()` now independently verifies the source
+A1 artifact and script still exist before reading them, even if a caller or test
+double reports preconditions as ok, so missing inputs produce the documented
+`blocked_a1_artifact_missing` artifact instead of raising `FileNotFoundError`.
+
+Validation for this fix: Exp 4855 focused tests pass (`7 passed`), scoped
+Coverage.py report for the Exp 4855 module is 100% (`293` statements, `0`
+missing), and focused Ruff check/format pass on the touched Python files. The
+repo-wide `scripts/check_spec_coverage.py` check remains blocked by
+pre-existing unreferenced legacy tests (`1124 test(s) missing spec
+traceability`).
 
 ## Session 2026-06-27 — Exp 4851 Generation-Coverage Diagnostic Test Fix
 

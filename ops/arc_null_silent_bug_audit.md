@@ -193,3 +193,20 @@
 
 - Per-game deltas: `{'lp85': 0.04985, 'r11l': 0.192308, 'tu93': 0.06639}`
 - Source checksum: `sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313`
+## Experiment 4855 .447 A1 Generation Diagnostic Audit
+
+- Verdict: `complete_a1_generation_diagnostic_audited`
+- a1_genuinely_diagnostic: `True`
+- Non-diagnostic reasons: `-`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Check | Passed | Detail |
+|---|---:|---|
+| `proposer_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_game_coverage": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
+| `positive_control` | `True` | `{"adaptered": true, "artifact_positive_control_covered": true, "coverage_bucket": "COVERED", "matched_winning_prefix_len": 18, "positive_control_game": "tu93", "reached_l1_win": true, "winning_prefix_len": 18}` |
+| `bucket_distribution` | `True` | `{"bucket_counts": {"COVERED": 1, "NEVER_ENUMERATED": 9}, "claimed_dominant_bucket": "NEVER_ENUMERATED", "computed_dominant_bucket": "NEVER_ENUMERATED", "honest_verdict": "complete_generation_wall_never_enumerated_dominant", "invalid_games": [], "n_games_measured": 10, "per_game_count": 10}` |
+| `live_path_and_provenance` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "development_proxy": true, "solve_provenance": "development_proxy"}` |
+| `summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
+
+- Source artifact checksum: `sha256:a49c15b54ff935ac736d4a580fdf4639ac019377b251da04cb2cc7501f5cbaff`
+- Source script checksum: `sha256:0af6642f1fa0a6e9aa2b4554df30fa3f35e61b76946de647d37e6c8a8fd8cb72`

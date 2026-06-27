@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-06-27 (Exp 4855 A1 generation-diagnostic audit fail-closed test fix — codex)
+
+- Fixed the failing Exp 4855 audit test without reverting prior changes and without modifying
+  `scripts/research_conductor.py`. `run()` now rechecks the Exp 4851 source artifact and script
+  before reading them, so missing inputs fail closed with `blocked_a1_artifact_missing` even if a
+  caller-provided precondition result is stale or overbroad.
+- Validation: `pytest tests/python/test_experiment_4855_generation_diagnostic_audit.py -q -o addopts=''`
+  passed (`7 passed`); direct Coverage.py scoped to the Exp 4855 module reported 100%
+  (`293` statements, `0` missing); focused Ruff check/format passed. Repo-wide spec coverage remains
+  blocked by pre-existing unreferenced legacy tests (`1124 test(s) missing spec traceability`).
+
 ## 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation test fix — codex)
 
 - Fixed the failing Exp 4851 diagnostic test without reverting prior changes and without modifying
