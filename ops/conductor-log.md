@@ -9458,3 +9458,4 @@ The contro |
 | 2026-06-27 16:46 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ssert specs["b |
 | 2026-06-27 17:18 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | OK | cache hit: 92 passed, 1 warning in 12.32s |
 | 2026-06-27 17:38 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 111 passed, 1 warning in 10.41s |
+| 2026-06-27 17:53 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 90 passed, 1 warning in 8.91s |
