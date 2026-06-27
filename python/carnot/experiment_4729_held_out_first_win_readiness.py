@@ -53,11 +53,15 @@ RANDOM_SEED = 4729
 # Soft wall-clock budget (seconds). Checked BETWEEN per-game units. When exceeded the run stops
 # GRACEFULLY -- it flushes the partial file and emits a clean partial: true artifact (exit 0), keeping
 # the total wall-clock well under codex's 4800s HARD cap so codex never kills the process mid-write.
-# The default 4200s leaves ~10min of headroom for the parity test + artifact assembly + flush. The
-# operator can override via EXP4729_SOFT_BUDGET_S (e.g. raise it on an uncapped direct invocation, or
-# lower it for a faster partial). The PARTIAL artifact accumulates across resumed runs until COMPLETE.
+# Default 3500s (lowered from 4200s on 2026-06-27): the .449 A4 first attempt still died at the 4800s
+# hard cap because 4200s left only ~600s for the agent's artifact-write+commit; 3500s leaves ~1300s of
+# margin so a clean partial is rescued even on a slow run. (With the conductor's GPU-0 CUDA generator
+# per the 2026-06-27 allocation the full harness now runs in ~1137s, so this budget rarely binds; it is
+# the slow-path safety net.) The operator can override via EXP4729_SOFT_BUDGET_S (e.g. raise it on an
+# uncapped direct invocation, or lower it for a faster partial). The PARTIAL artifact accumulates across
+# resumed runs until COMPLETE.
 SOFT_BUDGET_ENV = "EXP4729_SOFT_BUDGET_S"
-DEFAULT_SOFT_BUDGET_S = 4200.0
+DEFAULT_SOFT_BUDGET_S = 3500.0
 TERMINAL_PREFIXES = ("success:", "complete:", "blocked_")
 INFERENCE_SUBSTRATE = (
     "verifier_ensemble_against_cached_candidates -- the held-out lane scores the submitted "
