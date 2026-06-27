@@ -9411,3 +9411,15 @@ The contro |
 | 2026-06-27 03:05 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT; operato | OK | 88 passed, 1 warning in 9.49s |
 | 2026-06-27 03:16 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability; A | OK | 85 passed, 1 warning in 7.71s |
 | 2026-06-27 03:30 UTC | PHASE D (SOTA-INGESTION -- the .447 frontier) -- i | OK | 109 passed, 1 warning in 13.77s |
+| 2026-06-27 03:55 UTC | PHASE E (CAPSTONE .446) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.94s |
+| 2026-06-27 03:57 UTC | Milestone 2026.06.446 activated | OK | 10 tasks queued |
+| 2026-06-27 03:59 UTC | PHASE 0 (TRANSITION) -- archive .445 -> activate . | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; opera | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE A4 (ARC NORTH STAR; SCORE -- held-out first- | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT; operato | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability; A | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE D (SOTA-INGESTION -- the .447 frontier) -- i | OK | Deliverable already exists in repo |
+| 2026-06-27 03:59 UTC | PHASE E (CAPSTONE .446) -- aggregate the scorecard | OK | Deliverable already exists in repo |
