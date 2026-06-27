@@ -1,6 +1,19 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix)
+**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix)
+
+## Session 2026-06-27 — Exp 4851 Generation-Coverage Diagnostic Test Fix
+
+Fixed the Exp 4851 schema-validation regression without modifying
+`scripts/research_conductor.py`. `artifact_schema_errors()` now handles malformed
+`per_game_coverage` row values fail-closed and reports the explicit row error
+instead of crashing while recomputing `dominant_bucket`.
+
+Validation for this fix: Exp 4851 focused tests pass (`8 passed`), scoped
+Coverage.py report for the Exp 4851 module is 100% (`262` statements, `0`
+missing), and focused Ruff check/format pass on the touched Python files. The repo-wide
+`scripts/check_spec_coverage.py` check remains blocked by pre-existing
+unreferenced legacy tests (`1124 test(s) missing spec traceability`).
 
 ## Session 2026-06-26 — Exp 4750 Structural-Alignment Detector Test Fix
 

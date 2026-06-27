@@ -1,0 +1,236 @@
+{
+  "dominant_bucket": "NEVER_ENUMERATED",
+  "duration_s": 14.209228754043579,
+  "experiment_id": 4851,
+  "field_principles": {
+    "dominant_bucket": {
+      "principle": "the bucket the majority of held-out games fall in -- the headline that redirects .448 (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant (e.g. complete_generation_wall_never_enumerated_dominant)."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference if the proposer invokes the LLM (60s floor), else verifier_ensemble_against_cached_candidates -- declare what actually ran."
+    },
+    "live_path_reachable": {
+      "principle": "the instrumentation hooks the live proposer (arc_orphan_solver_lint passes) -- a diagnostic the live agent cannot reach is wasted effort."
+    },
+    "n_games_measured": {
+      "principle": ">=3 held-out games for a non-degenerate distribution."
+    },
+    "per_game_coverage": {
+      "principle": "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
+    },
+    "positive_control_covered": {
+      "principle": "true iff the positive control came out COVERED -- the load-bearing not-a-harness-artifact check."
+    },
+    "positive_control_game": {
+      "principle": "the adaptered game used as positive control; it MUST be COVERED or the measurement is a harness artifact (a Phase-Prototype positive control)."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/generator/ground-truth checks; a missing resource emits blocked_, never a fabricated bucket."
+    },
+    "proposer_blind_to_banked_answer": {
+      "principle": "true -- the banked winning prefix was NOT injected into the proposer (the tautology trap B1 audits)."
+    },
+    "random_seed": {
+      "principle": "determinism for the proposer's stochastic search."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, proposer config, budget) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- an offline coverage measurement, NOT a live first-win; declared honestly."
+    },
+    "verifier_is_oracle": {
+      "principle": "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+    }
+  },
+  "honest_verdict": "complete_generation_wall_never_enumerated_dominant",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "live_path_reachable": true,
+  "n_games_measured": 10,
+  "per_game_coverage": {
+    "cd82": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "cd82",
+      "matched_winning_prefix_len": 1,
+      "pool_size": 1568,
+      "proposal_record_count": 98,
+      "reached_l1_win": false,
+      "winning_prefix_len": 5
+    },
+    "cn04": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "cn04",
+      "matched_winning_prefix_len": 2,
+      "pool_size": 1491,
+      "proposal_record_count": 115,
+      "reached_l1_win": false,
+      "winning_prefix_len": 13
+    },
+    "lp85": {
+      "actions_executed": 20,
+      "bucket": "COVERED",
+      "budget_actions": 160,
+      "game": "lp85",
+      "matched_winning_prefix_len": 0,
+      "pool_size": 189,
+      "proposal_record_count": 5,
+      "reached_l1_win": true,
+      "winning_prefix_len": 5
+    },
+    "ls20": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "ls20",
+      "matched_winning_prefix_len": 2,
+      "pool_size": 488,
+      "proposal_record_count": 122,
+      "reached_l1_win": false,
+      "winning_prefix_len": 13
+    },
+    "m0r0": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "m0r0",
+      "matched_winning_prefix_len": 3,
+      "pool_size": 1268,
+      "proposal_record_count": 116,
+      "reached_l1_win": false,
+      "winning_prefix_len": 15
+    },
+    "r11l": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "r11l",
+      "matched_winning_prefix_len": 1,
+      "pool_size": 2524,
+      "proposal_record_count": 70,
+      "reached_l1_win": false,
+      "winning_prefix_len": 4
+    },
+    "sk48": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "sk48",
+      "matched_winning_prefix_len": 4,
+      "pool_size": 4766,
+      "proposal_record_count": 109,
+      "reached_l1_win": false,
+      "winning_prefix_len": 14
+    },
+    "sp80": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "sp80",
+      "matched_winning_prefix_len": 2,
+      "pool_size": 1585,
+      "proposal_record_count": 122,
+      "reached_l1_win": false,
+      "winning_prefix_len": 4
+    },
+    "su15": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "su15",
+      "matched_winning_prefix_len": 1,
+      "pool_size": 896,
+      "proposal_record_count": 32,
+      "reached_l1_win": false,
+      "winning_prefix_len": 7
+    },
+    "wa30": {
+      "actions_executed": 160,
+      "bucket": "NEVER_ENUMERATED",
+      "budget_actions": 160,
+      "game": "wa30",
+      "matched_winning_prefix_len": 3,
+      "pool_size": 575,
+      "proposal_record_count": 115,
+      "reached_l1_win": false,
+      "winning_prefix_len": 33
+    }
+  },
+  "positive_control_coverage": {
+    "adaptered": true,
+    "bucket": "COVERED",
+    "budget_actions": 160,
+    "game": "tu93",
+    "matched_winning_prefix_len": 18,
+    "pool_size": 18,
+    "reached_l1_win": true,
+    "states_expanded": 966,
+    "winning_prefix_len": 18
+  },
+  "positive_control_covered": true,
+  "positive_control_game": "tu93",
+  "preconditions_checked": {
+    "generator": {
+      "available": true,
+      "detail": "not_required_stepwise_explorer_no_llm",
+      "required": false
+    },
+    "ground_truth": {
+      "available_games": [
+        "cd82",
+        "cn04",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "n_available": 10,
+      "ok": true,
+      "positive_control_game_present": true
+    },
+    "live_path": {
+      "ok": true
+    },
+    "offline_arcade": {
+      "ok": true
+    },
+    "positive_control": {
+      "covered": true,
+      "game": "tu93"
+    },
+    "proposer_invokes_llm": false
+  },
+  "proposer_blind_to_banked_answer": true,
+  "proposer_config": {
+    "action_budget": 160,
+    "game_adapter_for_heldout": false,
+    "llm_invoked": false,
+    "max_depth": 45,
+    "max_games": null,
+    "positive_control_adaptered": true,
+    "proposer": "StepwiseExplorer._candidates",
+    "search_mode": "depth_first_ride"
+  },
+  "random_seed": 20260627,
+  "reproducibility_checksum": "sha256:6d57bb153a10a519171c42bc838ad510b73fe8405b8e1eca937a051764b11d4b",
+  "retire_if_same_verdict": true,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4851",
+    "SCENARIO-ARC-WMTE-4851-COVERAGE-BUCKETS",
+    "SCENARIO-ARC-WMTE-4851-POSITIVE-CONTROL",
+    "SCENARIO-ARC-WMTE-4851-BLOCKED-PRECONDITION"
+  ],
+  "verifier_is_oracle": true
+}

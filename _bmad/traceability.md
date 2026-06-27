@@ -1,5 +1,15 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-27 Exp 4851 generation-coverage diagnostic
+regression fix hardened `artifact_schema_errors()` for malformed
+`per_game_coverage` rows under `REQ-ARC-WMTE-4851`. The validator now reports
+`per_game_coverage.<game>` instead of crashing during dominant-bucket
+recomputation. Focused tests:
+`tests/python/test_experiment_4851_generation_coverage_diagnostic.py`
+(`8 passed`); scoped Coverage.py for the Exp 4851 module is 100% (`262`
+statements, `0` missing); focused Ruff check/format passed. The full
+spec-coverage audit is still blocked by pre-existing unreferenced legacy tests.
+
 **Operational Note:** 2026-06-26 Exp 4750 structural-alignment detector
 regression fix added the missing multi-exemplar L1-completion fallback API and
 artifact fields for `REQ-ARC-WMTE-4712`, with focused tests in
@@ -17,7 +27,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-06-26 (Exp 4750 structural-alignment detector fallback regression fix; REQ-ARC-WMTE-4712 implementation/test traceability reconciled)
+**Last Updated:** 2026-06-27 (Exp 4851 generation-coverage diagnostic schema-validation regression fix; REQ-ARC-WMTE-4851 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
