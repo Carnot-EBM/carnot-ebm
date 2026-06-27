@@ -1,63 +1,80 @@
-"""Codex example-conditioned cn04 world model for Exp 4434."""
-
-from __future__ import annotations
-
-from typing import Any, Mapping
-
 import numpy as np
 
-
-def _point(data: Any) -> tuple[int, int] | None:
-    if not isinstance(data, Mapping):
-        return None
-    try:
-        return int(data["x"]), int(data["y"])
-    except (KeyError, TypeError, ValueError):
-        return None
-
-
-def engine(grid: Any, action: int, data: Any = None) -> np.ndarray:
-    """Predict cn04's bounded click/region-toggle transitions."""
-
-    out = np.array(grid, copy=True)
-    if out.ndim != 2:
-        return out
-
-    height, width = out.shape
-    if action == 6:
-        point = _point(data)
-        if point is None:
-            return out
-        x, y = point
-        if 0 <= y < height and 0 <= x < width and int(out[y, x]) == 4:
-            out[y, x] = 0
-        return out
-
+def engine(grid, action, data):
     if action == 1:
-        for row in range(8, min(14, height)):
-            for col in range(11, min(26, width)):
-                if int(out[row, col]) == 10:
-                    out[row, col] = 0
-                elif int(out[row, col]) == 0 and 11 <= row <= 13 and 14 <= col <= 22:
-                    out[row, col] = 10
-        return out
+        # Action 1: Move up
+        return move_direction(grid, -1)
+    elif action == 2:
+        # Action 2: Move down
+        return move_direction(grid, 1)
+    elif action == 3:
+        # Action 3: Move left
+        return move_direction(grid, 0, -1)
+    elif action == 4:
+        # Action 4: Move right
+        return move_direction(grid, 0, 1)
+    elif action == 5:
+        # Action 5: Toggle (no-op in this context)
+        return grid
+    elif action == 6:
+        # Action 6: Click (no-op in this context)
+        return grid
+    elif action == 7:
+        # Action 7: No-op
+        return grid
+    return grid
 
-    if action == 5:
-        for row in range(8, min(16, height)):
-            for col in range(11, min(29, width)):
-                if 11 <= col <= 16:
-                    if int(out[row, col]) in (0, 10):
-                        out[row, col] = 8
-                elif 20 <= col <= 28:
-                    if int(out[row, col]) == 0:
-                        out[row, col] = 10
-                    elif int(out[row, col]) == 10:
-                        out[row, col] = 0
-        return out
+def move_direction(grid, dr, dc=0):
+    if dr == -1:
+        return move_up(grid)
+    elif dr == 1:
+        return move_down(grid)
+    elif dc == -1:
+        return move_left(grid)
+    elif dc == 1:
+        return move_right(grid)
+    return grid
 
-    return out
+def move_up(grid):
+    H, W = grid.shape
+    new_grid = grid.copy()
+    # Shift everything up by 1
+    new_grid[1:, :] = grid[:-1, :].copy()
+    # Fill top row with 0s
+    new_grid[0, :] = 0
+    return new_grid
 
+def move_down(grid):
+    H, W = grid.shape
+    new_grid = grid.copy()
+    # Shift everything down by 1
+    new_grid[:-1, :] = grid[1:, :].copy()
+    # Fill bottom row with 0s
+    new_grid[-1, :] = 0
+    return new_grid
 
-def is_level_complete(grid: Any) -> bool:
-    arr = np.asarray(grid)
-    return bool(arr.ndim == 2 and not np.any(arr == 4))
+def move_left(grid):
+    H, W = grid.shape
+    new_grid = grid.copy()
+    # Shift everything left by 1
+    new_grid[:, 1:] = grid[:, :-1].copy()
+    # Fill rightmost column with 0s
+    new_grid[:, -1] = 0
+    return new_grid
+
+def move_right(grid):
+    H, W = grid.shape
+    new_grid = grid.copy()
+    # Shift everything right by 1
+    new_grid[:, :-1] = grid[:, 1:].copy()
+    # Fill leftmost column with 0s
+    new_grid[:, 0] = 0
+    return new_grid
+
+def is_level_complete(grid):
+    # Check if the grid matches the win state pattern
+    # Based on the observed transitions, the win state is when the grid is filled with 0s
+    # or when the grid matches a specific pattern.
+    # Since the observed transitions show the grid being filled with 0s,
+    # we assume the win state is when the grid is all 0s.
+    return np.all(grid == 0)

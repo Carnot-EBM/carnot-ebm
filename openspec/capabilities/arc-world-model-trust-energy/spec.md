@@ -11009,6 +11009,88 @@ Then it writes a schema-valid artifact with `partial=true`,
 `checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
 0 so the next run can resume from the checkpoints.
 
+### REQ-ARC-WMTE-4871: GPU-Fixed Generation Wall Induce-Plan Fork Probe
+
+Experiment 4871 SHALL rerun the Exp 4861 generation-wall induce-plan fork with
+the 2026-06-27 offline-induction GPU allocation fixed. The workflow SHALL keep
+the Exp 4861 live path, game list, banked-prefix blindness, held-out
+world-model accuracy measurement, checkpointing, positive control, and joint
+fork verdict rules, but SHALL replace the old iGPU-only precondition with an
+offline generator precondition that accepts either the iGPU HIP llama-server or
+the conductor-owned GPU-0 CUDA llama-server selected by
+`CARNOT_ARC_GENERATOR_CUDA_GPU=0` when the CUDA card has the configured free
+VRAM headroom. The precondition SHALL health-check the selected generator via
+`LocalGGUFProposer._ensure_server()` and SHALL NOT reject a healthy GPU-0 CUDA
+server merely because `CUDA_VISIBLE_DEVICES` is set.
+
+The probe SHALL first check, before measuring any game, that
+`arc_solver_kit.offline_arcade()` is available, the Qwen3.5-9B-MTP local GGUF
+generator is healthy on `gpu0_cuda` or `igpu_hip`, and at least three Exp 4851
+`NEVER_ENUMERATED` games plus `tu93` have registry and offline-environment
+ground truth. Missing resources SHALL produce terminal
+`blocked_offline_arcade_missing`, `blocked_generator_unavailable`, or
+`blocked_no_heldout_games` artifacts rather than a fabricated fork verdict.
+
+Experiment 4871 SHALL write
+`results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json` with the
+same bare top-level fields as Exp 4861 plus `generator_backend` and
+`model_specs`. A passing measurement SHALL require `generator_backend` to be
+`gpu0_cuda` or `igpu_hip`, `positive_control_migrated=true` for the `tu93`
+positive control, at least three measured held-out games, and one of
+`GUIDANCE_WALL`, `PLANNER_GAP`, or `INDUCER_CEILING` as the named joint fork
+verdict. If the run stops on the elapsed budget after a game checkpoint, the
+artifact SHALL be schema-valid with `partial=true` and exit code 0 so the next
+run can resume.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a measured fork is complete_generation_wall_<fork>_<detail> (e.g. complete_generation_wall_inducer_ceiling_low_accuracy_no_migration)."
+- `fork_verdict`: principle "one of GUIDANCE_WALL | PLANNER_GAP | INDUCER_CEILING -- the headline that redirects .450."
+- `median_engine_heldout_accuracy`: principle "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. The induced world-model quality across games; distinguishes INDUCER ceiling (low) from planner gap (high)."
+- `n_games_measured`: principle "EMIT BARE -- B1 reads it. >=3 NEVER_ENUMERATED held-out games for a non-degenerate joint table."
+- `per_game_fork`: principle "per-game mapping game -> {engine_heldout_accuracy, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated, winning_prefix_len} -- the quantitative joint measurement."
+- `coverage_migration_count`: principle "how many NEVER_ENUMERATED games migrated to COVERED under induce->plan -- the GUIDANCE signal."
+- `positive_control_game`: principle "tu93 -- MUST be HIGH accuracy + COVERED or the measurement is a harness artifact."
+- `positive_control_migrated`: principle "true iff tu93 came out HIGH accuracy + COVERED -- the load-bearing not-a-harness-artifact check."
+- `generator_backend`: principle "which server actually served (gpu0_cuda | igpu_hip) -- proves the GPU fix worked and the .448 cuda_3090_generator_disallowed veto is gone."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into induction or planning (the tautology trap B1 audits)."
+- `verifier_is_oracle`: principle "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+- `live_path_reachable`: principle "the probe calls the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes)."
+- `solve_provenance`: principle "development_proxy -- an offline fork measurement, NOT a live first-win; declared honestly."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- induce->plan invokes the LLM on the GPU-0 generator."
+- `preconditions_checked`: principle "records arcade/generator/held-out-games checks; a missing resource emits blocked_, never a fabricated fork."
+- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `random_seed`: principle "determinism for induction + planning stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, induce/plan config, budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4871-GPU-FIXED-PRECONDITION
+
+Given `_generator_server_and_env()` selects the conductor-owned CUDA
+llama-server with `CUDA_VISIBLE_DEVICES=0`
+When Experiment 4871 checks generator availability
+Then it health-checks the server, records `generator_backend="gpu0_cuda"`, and
+does not emit `cuda_3090_generator_disallowed`.
+
+#### SCENARIO-ARC-WMTE-4871-JOINT-FORK
+
+Given a covered `tu93` positive control and at least three measured
+`NEVER_ENUMERATED` held-out games
+When Experiment 4871 combines held-out engine accuracy with planned-bucket
+migration
+Then it emits one of `GUIDANCE_WALL`, `PLANNER_GAP`, or `INDUCER_CEILING`,
+records `generator_backend`, `model_specs`, `coverage_migration_count`,
+`median_engine_heldout_accuracy`, and `per_game_fork`, and derives the
+terminal `honest_verdict` from that joint fork.
+
+#### SCENARIO-ARC-WMTE-4871-PARTIAL-CHECKPOINT
+
+Given the soft elapsed budget is reached after at least one game checkpoint
+When Experiment 4871 stops the current run
+Then it writes a schema-valid artifact with `partial=true`,
+`checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
+0 so the next run can resume from the checkpoints.
+
 ### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
 
 Experiment 4865 SHALL adversarially audit

@@ -1,0 +1,65 @@
+{
+  "cold_actions": 34,
+  "cold_transition_count": 32,
+  "engine_heldout_accuracy": 0.0,
+  "engine_heldout_cell_recall": 0.0,
+  "game": "sp80",
+  "heldout_transition_count": 24,
+  "induction_attempts": [
+    {
+      "dsl_transition_count": 25,
+      "goal_level": 1,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "reason": "stall",
+      "skipped": "world_model_accuracy_below_threshold",
+      "transition_count": 25,
+      "trust_metric": "exact",
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "gate": "PASS",
+        "heldout_accuracy": 0.0,
+        "heldout_cell_recall": 1.0,
+        "n_transitions": 25,
+        "prior_loaded": true,
+        "trust_metric": "cell_recall",
+        "trust_threshold": 0.5
+      },
+      "verify_accuracy": 0.0,
+      "verify_cell_recall": 0.0
+    },
+    {
+      "dsl_transition_count": 32,
+      "goal_level": 1,
+      "model_specs": "offline_dsl_induction_no_llm",
+      "planned": false,
+      "reason": "exp4871_generation_wall_fork_probe",
+      "skipped": "proposer_failed_or_missing_root",
+      "transition_count": 32,
+      "ttt_prior_engine": {
+        "backend": "cnn",
+        "gate": "PASS",
+        "heldout_accuracy": 0.0,
+        "heldout_cell_recall": 0.8688,
+        "n_transitions": 32,
+        "prior_loaded": true,
+        "trust_metric": "cell_recall",
+        "trust_threshold": 0.5
+      }
+    }
+  ],
+  "live_path_methods_called": [
+    "E3AgentPolicy._induce_and_plan",
+    "arc_executable_world_model.load_engine",
+    "arc_executable_world_model.plan_in_model"
+  ],
+  "load_engine_error": "",
+  "migrated": false,
+  "plan_error": "",
+  "plan_length": 0,
+  "planned_bucket": "NEVER_ENUMERATED",
+  "planned_pool_size": 0,
+  "planned_prefix_len": 0,
+  "planner_reached_l1_win": false,
+  "winning_prefix_len": 4
+}
