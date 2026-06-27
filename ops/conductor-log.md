@@ -9441,3 +9441,4 @@ The contro |
 | 2026-06-27 09:52 UTC | PHASE 0 (TRANSITION) -- archive .447 -> activate . | OK | 85 passed, 1 warning in 7.71s |
 | 2026-06-27 10:19 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- GE | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-27 10:47 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 109 passed, 1 warning in 8.84s |
+| 2026-06-27 11:00 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 8.08s |
