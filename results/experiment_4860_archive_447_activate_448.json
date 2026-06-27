@@ -1,0 +1,269 @@
+{
+  "a447_generation_wall_never_enumerated": true,
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "milestone",
+        "exp4860_transition"
+      ],
+      "path": "research-roadmap.yaml",
+      "sha256": "1048e38feb2528c48cb449f334a26837f6de9e9ad4bab2948ef6bbbc3ebd1223",
+      "source": "active_research_roadmap_yaml"
+    },
+    {
+      "fields_imported": [
+        "milestone",
+        "literal_precondition"
+      ],
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source": "research_roadmap_next_yaml"
+    },
+    {
+      "fields_imported": [
+        "honest_verdict",
+        "a1_generation_wall_verdict",
+        "scored_lever_state",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4859_capstone_v447.json",
+      "sha256": "4e4ba59088a64c0245af4828a6af9737f49b381464becc6613cea941e2d0ad0c",
+      "source": "experiment_4859_capstone_v447"
+    },
+    {
+      "fields_imported": [
+        "dominant_bucket",
+        "bucket_counts",
+        "per_game_coverage",
+        "positive_control_covered"
+      ],
+      "path": "results/experiment_4851_generation_coverage_diagnostic.json",
+      "sha256": "a49c15b54ff935ac736d4a580fdf4639ac019377b251da04cb2cc7501f5cbaff",
+      "source": "experiment_4851_generation_coverage_diagnostic"
+    },
+    {
+      "fields_imported": [
+        "a1_genuinely_diagnostic",
+        "proposer_blind_confirmed",
+        "positive_control_confirmed",
+        "buckets_match_claim"
+      ],
+      "path": "results/experiment_4855_generation_diagnostic_audit.json",
+      "sha256": "57bfc2176a077169a35de87db09c49948a150db2aac6cf76f16d4012144b9ca8",
+      "source": "experiment_4855_generation_diagnostic_audit"
+    },
+    {
+      "fields_imported": [
+        "retired_coverage_levers",
+        "v448_guidance_frontier"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-v448.md",
+      "sha256": "842e1ffd710840e30a4fd84981c94d7b73fa83ec7720ac4014cf385390159864",
+      "source": "research_roadmap_v448_change_proposal"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "96ffa8489c8e23c19b327936648a88b246e6b319156bcd3322d3e610083868b8",
+      "source": "arc_solve_registry"
+    }
+  ],
+  "close_state_447": {
+    "a1_generation_wall_verdict": {
+      "b1_experiment_id": 4855,
+      "b1_trusted": true,
+      "bucket_counts": {
+        "COVERED": 1,
+        "NEVER_ENUMERATED": 9
+      },
+      "dominant_bucket": "NEVER_ENUMERATED",
+      "experiment_id": 4851,
+      "lp85_covered": true,
+      "n_games_measured": 10,
+      "never_enumerated_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "never_enumerated_matched_prefix_range": [
+        1,
+        4
+      ],
+      "never_enumerated_winning_prefix_len_range": [
+        4,
+        33
+      ],
+      "source": "A1",
+      "trust_checks": {
+        "a1_genuinely_diagnostic": true,
+        "buckets_match_claim": true,
+        "positive_control_confirmed": true,
+        "proposer_blind_confirmed": true
+      },
+      "tu93_positive_control_covered": true,
+      "verdict": "generation_wall_never_enumerated",
+      "winning_prefix_never_assembled": true
+    },
+    "a447_generation_wall_never_enumerated": true,
+    "capstone_honest_verdict": "complete_a1_generation_wall_never_enumerated_capstone_ready",
+    "capstone_ready": true,
+    "capstone_reported_reproducible_total_levels": 65,
+    "energy_program_concluded": true,
+    "exploration_prior_class_closed": true,
+    "perception_from_grid_null": true,
+    "reproducible_total_levels": 65,
+    "retired_coverage_levers": [
+      "complete: macro_horizon_collapse_empirical_null_guidance_not_depth",
+      "complete: click_heatmap_generator_premise_falsified_guidance_not_coverage"
+    ],
+    "wall_is_guidance_not_coverage": true
+  },
+  "duration_s": 0.0001,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4860_archive_447_activate_448",
+  "experiment_id": 4860,
+  "exploration_prior_class_closed": true,
+  "field_principles": {
+    "a447_generation_wall_never_enumerated": {
+      "principle": "true -- the .447 A1 dominant bucket was NEVER_ENUMERATED (b1_trusted); the winning prefix is never assembled."
+    },
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program is concluded; the planner must NOT re-propose energy stages."
+    },
+    "exploration_prior_class_closed": {
+      "principle": "true -- the .448 frontier is the GUIDANCE-vs-INDUCER fork, not exploration or perception-from-grid."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_447_archived_448_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    },
+    "wall_is_guidance_not_coverage": {
+      "principle": "true -- macro-vocab + click-heatmap retirements prove the vocabulary is sufficient; the .448 planner must NOT re-propose coverage/vocabulary levers."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "action": "blocked_before_or_without_green_current_gate",
+    "current_gate_passed": null,
+    "poison_tests": [],
+    "resolved": false
+  },
+  "preconditions_checked": {
+    "a1_4851": {
+      "available": true,
+      "path": "results/experiment_4851_generation_coverage_diagnostic.json"
+    },
+    "active_research_roadmap_yaml": {
+      "available": true,
+      "milestone": "2026.06.448",
+      "milestone_before_activation": "2026.06.448",
+      "parses": true,
+      "path": "research-roadmap.yaml"
+    },
+    "agents_md": {
+      "available": true,
+      "path": "AGENTS.md"
+    },
+    "b1_4855": {
+      "available": true,
+      "path": "results/experiment_4855_generation_diagnostic_audit.json"
+    },
+    "capstone_4859": {
+      "available": true,
+      "path": "results/experiment_4859_capstone_v447.json"
+    },
+    "capstone_spec": {
+      "available": true,
+      "has_req_4860": true,
+      "path": "openspec/capabilities/capstone/spec.md"
+    },
+    "codex_or_opencode_md": {
+      "available": true,
+      "path": "CODEX.md|OPENCODE.md"
+    },
+    "offline_arcade": {
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "error": "",
+      "error_type": "",
+      "exit_code": 0,
+      "passed": true
+    },
+    "registry": {
+      "available": true,
+      "path": "ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 65
+    },
+    "research_roadmap_next_yaml": {
+      "activation_attempted": false,
+      "activation_error": "",
+      "available": false,
+      "command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "error": "No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "error_type": "FileNotFoundError",
+      "exit_code": 1,
+      "milestone": null,
+      "parses": false,
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+    },
+    "roadmap_v448": {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-v448.md"
+    },
+    "smart_subset_pretest_gate": {
+      "command": [],
+      "exit_code": null,
+      "not_run_reason": "blocked_before_smart_subset_gate",
+      "passed": null,
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  },
+  "random_seed": 4860,
+  "reproducibility_checksum": "sha256:49d4bf78e79e5038924fd777ee33e3d4bdfd11fd232854da236af2b89f147e22",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4860_archive_447_activate_448.json",
+  "schema": "carnot.archive_activation.v447_to_v448_4860.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4860",
+    "SCENARIO-CAPSTONE-4860",
+    "SCENARIO-CAPSTONE-4860-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4860-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.448",
+    "activation_state": "blocked_missing_or_failed_precondition",
+    "active_milestone_confirmed": false,
+    "archive_state": "archive_noop_or_already_recorded",
+    "archived_milestone": "2026.06.447"
+  },
+  "v448_frontier": {
+    "allowed_direction": "induce_then_plan_in_model_guidance_vs_inducer_fork",
+    "headline_fork": "guidance_gap_vs_world_model_inducer_ceiling",
+    "next_headline_task_id": "exp4861-a1",
+    "planner_must_not_reopen_energy_program": true,
+    "planner_must_not_repropose_coverage_vocabulary_levers": true,
+    "planner_must_not_repropose_exploration_or_perception_from_grid": true,
+    "retired_levers": [
+      "complete: macro_horizon_collapse_empirical_null_guidance_not_depth",
+      "complete: click_heatmap_generator_premise_falsified_guidance_not_coverage"
+    ],
+    "root_cause": "guidance_assembly_not_coverage"
+  },
+  "wall_is_guidance_not_coverage": true
+}
