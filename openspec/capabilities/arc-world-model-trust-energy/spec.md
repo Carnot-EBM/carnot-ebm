@@ -11696,6 +11696,104 @@ When Experiment 4887 runs
 Then it writes `blocked_a1_artifact_missing`, marks every trust boolean false,
 records the missing precondition, and does not claim A1 or A1b audit success.
 
+### REQ-ARC-WMTE-4890: V451 Frontier SOTA Ingestion Follows The Actual Value-Gap Fork
+
+Experiment 4890 SHALL run the reserved `.451` SOTA-ingestion slot after reading
+the actual A1 value-gap fork artifact
+`results/experiment_4882_ttt_dynamics_value_gap.json`, the optional A1b
+inducer-ceiling attribution artifact
+`results/experiment_4883_inducer_ceiling_ab.json`, and the `.450` handoff
+`results/experiment_4879_sota_ingestion_v450_frontier.json`. It SHALL also
+read `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, and `scripts/sweep_semscholar.py`. If the A1
+artifact is missing, Experiment 4890 SHALL write a blocked deliverable with
+`honest_verdict=blocked_a1_artifact_missing` and SHALL NOT fabricate a mapping.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch, and direct arXiv HTTP checks. It SHALL NOT invoke
+`/deep-research`, SHALL NOT re-ingest the retired energy-as-ARC-lever,
+coverage/vocabulary, exploration-strategy, selection/ranking, or
+perception-from-grid classes, SHALL NOT load a model, train, submit to a
+leaderboard, make a solve claim, or modify `scripts/research_conductor.py`,
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
+
+The mapping SHALL branch on A1's actual `fork_verdict` and A1b's
+`inducer_ceiling_attribution`. If A1 reports `INDUCER_CEILING_BEATABLE`, the
+mapping SHALL target test-time-adaptation scaling plus first-win conversion. If
+A1 reports `PLANNER_GAP`, the mapping SHALL target neural-guided planning,
+MCTS, and search-verifier loops over the accurate engine. If A1 reports
+`INDUCER_CEILING_HARD` and A1b reports `LOCAL_MODEL_IS_CEILING`, the mapping
+SHALL target stronger local open-code inducers. If A1 reports
+`INDUCER_CEILING_HARD` and A1b reports `METHOD_IS_CEILING`, the mapping SHALL
+target alternative world-model representations beyond executable code,
+including decision-oriented or agent-authored targets and action-prefix latent
+adapters. For the checked-in Exp 4882/4883 branch, the required target is
+`INDUCER_CEILING_HARD` with `METHOD_IS_CEILING`.
+
+On a successful ingestion-synthesis run, Experiment 4890 SHALL write
+`results/experiment_4890_sota_ingestion_v451_frontier.json`, update
+`research-studying.md` with an idempotent Exp 4890 INGESTED section, and update
+`research-references.md` with an idempotent Exp 4890 source section. The
+artifact SHALL include the required user-facing fields `honest_verdict`,
+`aimed_at_fork_verdict`, `methods_mapped`, `arxiv_ids_cited`,
+`flagged_for_v451`, `banned_channels_excluded`, `inference_substrate`, and
+`preconditions_checked`, plus provenance fields sufficient to audit the
+reliable sweep and upstream artifacts.
+
+The complete-path `honest_verdict` SHALL equal
+`success_sota_ingestion_v451_frontier_mapped`; `inference_substrate` SHALL
+equal `aggregation_from_upstream_artifacts`; `methods_mapped` SHALL contain
+three to five methods; every method claim SHALL cite only verified arXiv IDs
+from `arxiv_ids_cited`; each method SHALL include `experiment_graft`,
+`validation_gate`, and `fails_when`; `banned_channels_excluded` SHALL be true;
+and `duration_s` SHALL use the aggregation-only `0.0001` floor. For the
+checked-in branch, the source set SHALL include direct arXiv HTTP-200 checks
+for `2503.18938`, `2505.08073`, `2602.23997`, `2603.19312`, `2606.25421`, and
+`2606.26217`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_v451_frontier_mapped."
+- `aimed_at_fork_verdict`: principle "the A1 fork verdict the ingestion targets (BEATABLE->scale TTA+convert; PLANNER_GAP->planning/search; CEILING_HARD->stronger local inducer / alt representation)."
+- `methods_mapped`: principle "the strongest 3-5 methods, each with a real arXiv ID + experiment_graft + validation_gate + fails_when."
+- `arxiv_ids_cited`: principle "every method claim cites a verifiable HTTP-200 arXiv ID (no fabrication -- adversarial_verify bar)."
+- `flagged_for_v451`: principle "the strongest method(s) flagged so the .451 planner reads the mapping (discover->ingest->plan->experiment)."
+- `banned_channels_excluded`: principle "true -- /deep-research NOT invoked; energy/coverage/exploration/selection classes NOT re-ingested."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+- `preconditions_checked`: principle "records reliable-channel checks + the A1 fork-verdict read; banned channels explicitly excluded."
+
+#### SCENARIO-ARC-WMTE-4890-V451-FRONTIER-MAPPED
+
+Given the research files, Exp 4882 A1 artifact, Exp 4883 A1b artifact, and Exp
+4879 handoff artifact are present
+When Experiment 4890 runs through the reliable channel
+Then it writes `results/experiment_4890_sota_ingestion_v451_frontier.json`,
+records that `/deep-research` was not invoked, maps three to five alternative
+world-model representation methods onto the `.451` frontier with real HTTP-200
+arXiv IDs, records the actual A1 `INDUCER_CEILING_HARD` verdict and A1b
+`METHOD_IS_CEILING` attribution, updates `research-studying.md` and
+`research-references.md` idempotently, and flags the strongest `.451`
+candidate inputs.
+
+#### SCENARIO-ARC-WMTE-4890-BLOCKED-A1
+
+Given the Exp 4882 A1 artifact is missing
+When Experiment 4890 checks preconditions
+Then it writes `blocked_a1_artifact_missing`, records the missing A1
+precondition, keeps `methods_mapped=[]`, keeps `banned_channels_excluded=true`,
+and does not fabricate an A1 fork verdict.
+
+#### SCENARIO-ARC-WMTE-4890-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID,
+targets a fork verdict inconsistent with A1/A1b, maps a retired
+energy/coverage/exploration/selection/perception class, invokes
+`/deep-research`, claims a model-load, training, leaderboard, or solve result,
+or modifies `scripts/research_conductor.py`
+When the Experiment 4890 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that

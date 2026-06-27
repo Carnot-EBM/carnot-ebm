@@ -10,6 +10,54 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4890-SOTA-INGESTION-V451-FRONTIER-START -->
+## 2026-06-27 Exp 4890 - .451 V451 frontier SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4890_sota_ingestion_v451_frontier.json`.
+
+**Preconditions:** `research-studying.md`, `research-references.md`,
+`results/experiment_4882_ttt_dynamics_value_gap.json`,
+`results/experiment_4883_inducer_ceiling_ab.json`, and
+`results/experiment_4879_sota_ingestion_v450_frontier.json` were present. A1's
+actual fork verdict is `INDUCER_CEILING_HARD`; A1b's inducer-ceiling attribution
+is `METHOD_IS_CEILING`. `scripts/sweep_clusters.py` emitted the
+neural-guided-search/world-model cluster 6 URLs. `scripts/sweep_semscholar.py`
+was run on five focused queries; HTTP 429 rate limits were recorded rather than
+promoted as evidence. Low-concurrency WebSearch/WebFetch plus direct arXiv
+HTTP checks verified the top six papers listed below. `/deep-research` was not
+invoked. The retired energy-as-ARC-lever, coverage/vocabulary,
+exploration-strategy, selection/ranking, and perception-from-grid classes were
+not re-ingested. No model load, training, leaderboard submission, or solve claim
+was made; this is a no solve claim ingestion note.
+
+**A1/A1b branch:** `INDUCER_CEILING_HARD` with `METHOD_IS_CEILING`, so `.451`
+targets alternative world-model representations beyond executable code.
+
+**Verified source set:**
+- arXiv:2503.18938 -- AdaWorld: Learning Adaptable World Models with Latent Actions
+- arXiv:2505.08073 -- Explainable Reinforcement Learning Agents Using World Models
+- arXiv:2602.23997 -- Foundation World Models for Agents that Learn, Verify, and Adapt Reliably Beyond Static Environments
+- arXiv:2603.19312 -- LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels
+- arXiv:2606.25421 -- Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making
+- arXiv:2606.26217 -- Fast LeWorldModel
+
+**SOTA -> .451 frontier mapping:**
+- **Agent-authored decision-need world-model targets** (arXiv:2606.25421): maps to .451 / INDUCER_CEILING_HARD + METHOD_IS_CEILING. A1b fit: A1b says the current executable-code induction method is the ceiling; decision-need targets replace generic next-observation supervision. Evidence: arXiv:2606.25421 proposes Agent-Authored World Modeling, where the policy identifies decision-relevant dynamics before acting. Experiment graft: For each A1 held-out engine miss, generate a decision-need target such as hidden register state, object persistence, or action effect, then train or prompt a non-code world-model target table before engine loading. Validation gate: Promote only if the decision-target representation raises held-out changed-cell value accuracy on the same A1 games without using the banked answer as supervision. Fails when: The authored targets mirror the current model misconception, require unobserved facts, or improve next-frame text while held-out dynamics stay flat.
+- **Action-prefix latent transition adapter** (arXiv:2606.26217, arXiv:2603.19312): maps to .451 / INDUCER_CEILING_HARD + METHOD_IS_CEILING. A1b fit: A1b rules out another same-method executable inducer pass; prefix latents model multi-step action effects without rolling one-step code. Evidence: arXiv:2606.26217 replaces repeated one-step latent rollout with action-prefix prediction; arXiv:2603.19312 supplies the compact LeWorldModel latent substrate. Experiment graft: Encode candidate action prefixes into latent future-state deltas and score A1 held-out transitions through the latent adapter before converting only accepted deltas into engine facts. Validation gate: Count the graft only when long-horizon held-out transition accuracy improves and one-step observed-prefix replay does not regress. Fails when: Prefix supervision hides wrong mechanics, latent states cannot be decoded into verifier-checkable facts, or compounding error remains flat.
+- **Latent-action adaptable world-model interface** (arXiv:2503.18938): maps to .451 / INDUCER_CEILING_HARD + METHOD_IS_CEILING. A1b fit: A1b method-ceiling means the missing structure may be action semantics, not code synthesis strength; latent actions give a non-code action layer. Evidence: arXiv:2503.18938 extracts self-supervised latent actions and conditions an adaptable world model on them for transfer with limited interactions. Experiment graft: Infer latent action tokens from cold-start ARC transitions, align E3 discrete controls to those tokens, and feed the latent action state into the held-out transition scorer. Validation gate: Promote only if the latent-action adapter predicts off-prefix action effects better than the current executable engine on the A1 split. Fails when: The latent actions do not align with legal controls, collapse across different mechanics, or require more adaptation interactions than ARC permits.
+- **Reverse counterfactual world-model targeter** (arXiv:2505.08073, arXiv:2606.25421): maps to .451 / INDUCER_CEILING_HARD + METHOD_IS_CEILING. A1b fit: A1b method-ceiling suggests the engine needs a targetable state representation; reverse world models ask what state fact would make a desired action rational. Evidence: arXiv:2505.08073 augments model-based RL with a reverse world model for counterfactual state targets; arXiv:2606.25421 supplies the decision-need target construction. Experiment graft: For each failed A1 transition, ask a reverse model for the missing state fact that would make the predicted action effect valid, then turn that fact into a targeted induction or probe row. Validation gate: Accept only reverse targets that reduce held-out dynamics errors while remaining oracle-distinct from level completion. Fails when: The counterfactual state is unreachable, leaks the terminal answer, or explains the policy without improving transition prediction.
+- **Verification-calibrated abstraction substrate** (arXiv:2602.23997, arXiv:2603.19312): maps to .451 / INDUCER_CEILING_HARD + METHOD_IS_CEILING. A1b fit: A1b method-ceiling points away from another executable-code attempt; a calibrated abstraction layer makes representation reliability explicit. Evidence: arXiv:2602.23997 argues for world models with online abstraction calibration and verification hooks; arXiv:2603.19312 demonstrates compact latent world-model structure with physical probes. Experiment graft: Insert a persistent latent abstraction state beside the executable engine and require each abstract fact to carry a verifier-calibrated confidence before it affects planning. Validation gate: Promote only if abstraction confidence predicts held-out engine mismatches and the calibrated facts improve A1 value accuracy. Fails when: The abstraction is too coarse for ARC mechanics, calibration only tracks seen prefixes, or verifier hooks become a selection/ranking rerun.
+
+flagged_for_v451: agent_authored_decision_need_targets (arXiv:2606.25421)
+flagged_for_v451: action_prefix_latent_adapter (arXiv:2606.26217 + arXiv:2603.19312)
+flagged_for_v451: latent_action_world_model_adapter (arXiv:2503.18938)
+
+**Bottom line for .451:** start with agent-authored decision-need targets, then
+action-prefix latent adapters and latent-action world-model interfaces. Treat
+reverse/counterfactual targets and verification-calibrated abstractions as
+secondary representation experiments; do not re-run the retired classes.
+<!-- EXP4890-SOTA-INGESTION-V451-FRONTIER-END -->
+
 <!-- EXP4879-SOTA-INGESTION-V450-FRONTIER-START -->
 ## 2026-06-27 Exp 4879 - .450 V450 frontier SOTA ingestion - INGESTED
 
