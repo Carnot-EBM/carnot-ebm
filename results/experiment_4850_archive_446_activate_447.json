@@ -1,0 +1,120 @@
+{
+  "a446_close_state": {
+    "a1_object_identity_perception_research_bet": "genuine_null",
+    "energy_as_arc_lever_program": "concluded",
+    "exploration_prior_class": "closed",
+    "forward_focus": "l1_first_contact_generation_wall",
+    "passive_grid_perception_for_goal_grounding": "retired",
+    "residual_dead_end": "the_winning_prefix_is_never_proposed",
+    "shape_motion_tracker_real_frame_recovery": {
+      "games_recovered": 1,
+      "games_tested": 3,
+      "verdict": "beat_color_centroid_baseline_on_only_1_of_3_real_frame_games"
+    },
+    "tu93_goal_grounding_positive_control": {
+      "goal_grounding_threshold_recovered": false,
+      "verdict": "did_not_recover_at_goal_grounding_threshold"
+    }
+  },
+  "a446_perception_genuine_null": true,
+  "blocked_resource": "research_roadmap_next_yaml",
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "a1_perception_probe_verdict",
+        "honest_verdict",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4849_capstone_v446.json",
+      "sha256": "f9158f4ba3800c77f02695a5e7436d0ebc9337b1051f3c3af6519aae09618cc5",
+      "source": "experiment_4849_capstone_v446"
+    },
+    {
+      "fields_imported": [
+        "reproducible_total_levels"
+      ],
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "392ae57fcc32086c877cf5e6f1352b604bc389c50c0ba457393d4e64244e38c4",
+      "source": "arc_solve_registry"
+    },
+    {
+      "fields_imported": [
+        "milestone_447_plan",
+        "a446_close_state",
+        "exp4850_transition_requirement"
+      ],
+      "path": "openspec/change-proposals/research-roadmap-v447.md",
+      "sha256": "9e9989b668694cbd30011f6adb13e518979a0de89dbec57ba56524bb09978822",
+      "source": "research_roadmap_v447_change_proposal"
+    },
+    {
+      "available": false,
+      "fields_imported": [],
+      "path": "research-roadmap-next.yaml",
+      "source": "literal_precondition_resource"
+    }
+  ],
+  "duration_s": 0.0001,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4850_archive_446_activate_447",
+  "experiment_id": 4850,
+  "exploration_prior_class_closed": true,
+  "field_principles": {
+    "a446_perception_genuine_null": {
+      "principle": "true -- the .446 A1 object-identity probe was a genuine rendered-grid null; the .447 planner must NOT re-propose passive grid perception for goal-grounding."
+    },
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program is concluded (2026-06-26 operator); the planner must NOT re-propose energy stages."
+    },
+    "exploration_prior_class_closed": {
+      "principle": "true -- the .447 frontier is the L1-first-contact GENERATION wall, not exploration."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_446_archived_447_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry, not re-counted."
+    }
+  },
+  "honest_verdict": "blocked_missing_research_roadmap_next_yaml",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "pre_test_gate": {
+    "poison_test_quarantined": false,
+    "reason_not_run": "not_run_because_literal_precondition_failed_before_pretest_gate",
+    "run": false
+  },
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"",
+      "exit_code": 0,
+      "passed": true
+    },
+    "research_roadmap_next_yaml": {
+      "available": false,
+      "command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "error_type": "FileNotFoundError",
+      "exit_code": 1,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+      "passed": false
+    }
+  },
+  "recorded_at_utc": "2026-06-27T04:51:15Z",
+  "reproducible_total_levels": 65,
+  "result_path": "results/experiment_4850_archive_446_activate_447.json",
+  "schema": "carnot.archive_activation.v446_to_v447_4850.blocked.v1",
+  "script_run": {
+    "command": ".venv/bin/python python/carnot/experiment_4850_archive_446_activate_447.py",
+    "reason_not_run": "not_run_because_precondition_research_roadmap_next_yaml_failed",
+    "run": false
+  },
+  "transition": {
+    "activated_milestone": "2026.06.447",
+    "activation_state": "blocked_missing_research_roadmap_next_yaml",
+    "archive_state": "not_attempted_due_to_failed_precondition",
+    "archived_milestone": "2026.06.446"
+  }
+}
