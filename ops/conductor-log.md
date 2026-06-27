@@ -9471,3 +9471,4 @@ The contro |
 | 2026-06-27 19:42 UTC | Milestone 2026.06.450 activated | OK | 10 tasks queued |
 | 2026-06-27 19:56 UTC | PHASE 0 (TRANSITION) -- archive .449 -> activate . | OK | 86 passed, 1 warning in 7.17s |
 | 2026-06-27 20:17 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- AT | OK | 89 passed, 1 warning in 6.36s |
+| 2026-06-27 20:34 UTC | PHASE A1b (ARC NORTH STAR; INDUCER-CEILING A/B) -- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
