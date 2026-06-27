@@ -1,416 +1,689 @@
-# Pre-staged .446 roadmap (Pre-Staged Roadmap Convention). Operator chose 'c' (both in parallel):
-# (a) RESEARCH BET on the perception/representation root cause (A1 object-identity perception layer)
-# + (b) SCORED LEVER maximizing offline banked levels + 6/30 submission readiness (A2/A4/B2).
-# Built by scripts/_build_roadmap_446.py.
-milestone: 2026.06.446
-planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-26). Operator chose ''c'' (both in parallel): (a) RESEARCH
-  BET -- aim the A1 headline at the perception/representation root cause of the L1-first-contact wall (a generic
-  OBJECT-IDENTITY perception layer for goal-grounding, the perception-wall note''s own recommended build, NARROWED
-  to goal-grounding per its RECONCILIATION); (b) SCORED LEVER -- weight A2 first-win-breadth + A4 readiness + B2
-  submission-harden toward maximizing OFFLINE banked levels + 6/30 submission readiness. Energy program CONCLUDED;
-  exploration-prior class CLOSED (.445 exp4831 nulled with a live archive).'
-milestone_title: 'OPERATOR ''c'' (BOTH): A1 RESEARCH BET on the perception/representation ROOT CAUSE -- a generic
-  OBJECT-IDENTITY perception layer (shape/connectivity/MOTION, recolor-invariant) for GOAL-GROUNDING, the named
-  L1-wall blocker; measured on REAL lp85/r11l/tu93 frames where the color-centroid detector recovered NONE, tu93
-  as positive control. PLUS the SCORED LEVER: maximize OFFLINE banked levels (A2 first-win breadth) + 6/30 submission
-  readiness (A4 held-out, B2 Kaggle package harden). Exploration-prior class CLOSED; energy CONCLUDED. PASS (>=2
-  games recover) -> goal-grounding feasible, .447 wires it live; genuine null -> object-identity unrecoverable from
-  the rendered grid (needs internal sprite state, does not generalize) -- a deeper headline finding.'
-milestone_doc: docs/research-notes/mechanic-template-and-perception-wall-2026-06-24.md
-theme: 'The two big bets are negative (energy CONCLUDED -- offline discriminator, no live value; exploration-prior
-  class CLOSED -- .445 exp4831 nulled with a live archive). ~15 generation/exploration levers tested, ~0 moved the
-  L1-first-contact wall. The NAMED root cause is PERCEPTION/REPRESENTATION -- precisely (per the perception-wall
-  note''s RECONCILIATION) generic GOAL-PREDICATE GROUNDING: recovering stable object identity from the RENDERED
-  grid (value/discrimination is measured-adequate at LOO-AUROC 0.725; goal-grounding is the gap). Operator ''c''
-  runs BOTH tracks: A1 attacks the root cause as a research bet (the object-identity perception layer, may not pay
-  off before 6/30); A2/A4/B2 maximize the realistic scored lever (offline banked levels + submission readiness).
-  Phase-Prototype discipline: A1 is a PROBE with a tu93 positive control + a color-centroid baseline comparator
-  + a B1 real-frames adversarial check (the mechanic-template synthetic-only-pass trap).'
-sprint_forcing_function: ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1 perception
-  root-cause probe + A2 level-up + A3 self-play + A4 readiness); >=1 level-up attempt (Level-Up Attempt Guarantee
-  -- A2, rotated sb26/lf52/bp35); self-play EVERY milestone (A3); 2 reserved infra (B1 A1 perception-probe adversarial
-  check, B2 submission harden); 1 hardware continuity (C KV260, SSH-only, always-write-blocked-artifact); 1 SOTA-ingestion
-  (D object-centric world-model/planning, the .447 frontier). The energy track is CONCLUDED and the exploration-prior
-  class is CLOSED -- the planner must NOT re-propose energy stages or exploration-strategy levers.
+# Pre-staged .447 roadmap (Pre-Staged Roadmap Convention).
+# Planner: outer-loop Claude Opus 4.8, 2026-06-27.
+# STRATEGIC PIVOT: .446's object-identity perception research bet landed a GENUINE NULL
+# (object identity unrecoverable from the rendered grid). Combined with ~17 prior nulled
+# levers (.425-.446) whose EVERY residual_dead_end is "candidate generation is the
+# bottleneck; the winning prefix is never proposed", the standing operator-directed forward
+# focus is "the L1-first-contact GENERATION wall". .447 STOPS building levers and DIAGNOSES
+# the wall: does the live proposer ever even EMIT the known-winning first-contact prefix?
+# Decompose COVERED / ENUMERATED-BUT-LOST / NEVER-ENUMERATED. Plus the scored deadline levers.
+milestone: 2026.06.447
+planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-27). The .446 A1 perception research
+  bet is a GENUINE NULL (object-identity unrecoverable from the rendered grid; grid-grounded
+  goal-grounding retired). Energy program CONCLUDED (2026-06-26 operator directive); exploration-prior
+  class CLOSED. ~17 candidate-generation/ranking/perception levers nulled, all on the SAME residual:
+  the winning first-contact prefix is never proposed. .447 headline DIAGNOSES that generation wall
+  instead of building an 18th lever -- the standing operator-directed forward focus.'
+milestone_title: 'DIAGNOSE THE GENERATION WALL: does the live generic first-contact proposer ever
+  EMIT the known-winning L1 prefix? For games with an offline-banked winner as ground truth (proposer
+  BLIND to it), measure proposer coverage and decompose every miss into COVERED / ENUMERATED-BUT-LOST
+  / NEVER-ENUMERATED, with a positive control + a B1 adversarial tautology-guard. NEVER-ENUMERATED-dominant
+  retires the ranking-lever class and points .448 at generation expressibility (program synthesis over
+  primitives); COVERED-dominant revives the ranker. PLUS the scored deadline levers: A2 level-up bank,
+  A3 self-play checkpoint, A4 a GENUINELY LIVE held-out first-win readiness (the 6/30 go/no-go signal),
+  B2 submission-package final harden.'
+milestone_doc: openspec/change-proposals/research-roadmap-v447.md
+theme: 'The wall is CANDIDATE GENERATION, not ranking/perception. ~17 levers (.425-.446) all nulled on
+  the same residual ("the winner is never proposed"); energy CONCLUDED; exploration-prior CLOSED;
+  perception-from-grid a proven null (.446 A1). .447 measures the wall directly -- proposer coverage of
+  the known winner, decomposed -- so .448 spends effort where the loss actually is. The diagnostic is a
+  Phase-Prototype probe with a positive control + the B1 adversarial check against the tautology of
+  feeding the offline solver answer back into the proposer. The planner must NOT re-propose energy
+  stages or exploration-strategy levers (concluded/closed).'
+sprint_forcing_function: 'ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1
+  generation-wall diagnostic + A2 level-up + A3 self-play + A4 live readiness); >=1 level-up attempt
+  (Level-Up Attempt Guarantee -- A2, rotated off .446 ka59); self-play EVERY milestone (A3, trains +
+  checkpoints the learned verifier = continuous self-learning / FR-11); 2 reserved infra (B1 A1
+  adversarial tautology-guard, B2 submission harden); 1 hardware continuity (C KV260, SSH-only,
+  always-write-blocked-artifact); 1 SOTA-ingestion (D generation-expressibility frontier, the .448
+  handoff). Live stack FROZEN to Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s).'
 tasks:
-- id: exp4840-phase0
-  title: PHASE 0 (TRANSITION) -- archive .445 -> activate .446; assert YAML parses + pre-test gate green; RESOLVE
-    any poison pre-test. RECORD the .445 close-state (amortized-prior fair-test nulled -> exploration-prior class
-    CLOSED; .446 attacks the perception/representation root cause).
+- id: exp4850-phase0
+  title: PHASE 0 (TRANSITION) -- archive .446 -> activate .447; assert YAML parses + pre-test gate
+    green; RESOLVE any poison pre-test. RECORD the .446 close-state (A1 perception GENUINE NULL ->
+    grid-grounded goal-grounding retired; energy CONCLUDED; exploration-prior CLOSED; the forward
+    focus is the L1-first-contact GENERATION wall).
   priority: critical
   track: transition
   max_turns: 40
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4840_archive_445_activate_446.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (archive-v445-activate-v446).'
-  prompt: "CONTEXT (2026-06-27). Milestone 2026.06.445 completed. Mechanically transition to 2026.06.446, resolve\
-    \ any poison pre-test, RECORD the true .445 close-state. Routine (codex). Conductor may have already archived\
-    \ (no-op). You MUST still WRITE the deliverable.\n\nKEY .445 CLOSE-STATE: the AMORTIZED IN-CONTEXT-EXPLORATION\
-    \ PRIOR fair-test (exp4831) NULLED with a live archive (the exp4701 silent-bug fix held) -- no held-out first-win\
-    \ lift above 0.04. This CLOSES the exploration-prior class: ~15 generation/exploration levers tested, ~0 moved\
-    \ the L1 wall. The named root cause is PERCEPTION/REPRESENTATION. The .446 headline (A1) attacks it: a generic\
-    \ OBJECT-IDENTITY perception layer for GOAL-GROUNDING. Record exploration_prior_class_closed=true, energy_program_concluded=true.\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS: `.venv/bin/python -c \"import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml'));\
-    \ print('ok')\"` exits 0; arc_solver_kit.offline_arcade() exits 0.\n  1. Archive .445 -> activate .446 (no-op\
-    \ if already done). Record the close-state flags.\n  2. Run the pre-test gate; resolve any poison test. WRITE\
-    \ the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"\
-    terminal prefix; clean transition is complete_445_archived_446_activated_<state>.\"\n  inference_substrate:\n\
-    \    principle: \"aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).\"\n  exploration_prior_class_closed:\n\
-    \    principle: \"the amortized-prior fair-test nulled with a live archive; the planner must NOT re-propose\
-    \ exploration-strategy levers -- the .446 frontier is perception/representation.\"\n  reproducible_total_levels:\n\
-    \    principle: \"the authoritative ARC progress metric carried from the registry, not re-counted.\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4850_archive_446_activate_447.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation /
+    reserved-slot task -- false-positive scope-match vs prior same-class transition tasks; structurally
+    never a doomed rerun. (archive-v446-activate-v447).'
+  prompt: |
+    CONTEXT ({date}). Milestone 2026.06.446 completed. Mechanically transition to 2026.06.447,
+    resolve any poison pre-test, and RECORD the true .446 close-state. Routine mechanical task
+    (codex). The conductor may have already archived (no-op) -- you MUST still WRITE the deliverable.
+
+    KEY .446 CLOSE-STATE to record:
+      - A1 object-identity perception research bet = GENUINE NULL (object identity unrecoverable from
+        the rendered grid; shape/motion tracker beat the color-centroid baseline on only 1/3 real-frame
+        games; tu93 positive control did NOT recover at the goal-grounding threshold). Grid-grounded
+        goal-grounding via passive perception is RETIRED.
+      - Energy-as-ARC-lever program CONCLUDED (2026-06-26 operator directive: "do NOT re-propose energy
+        stages"). Exploration-prior class CLOSED.
+      - The forward focus is the L1-first-contact GENERATION wall: ~17 nulled levers all share the
+        residual "the winning prefix is never proposed". reproducible_total_levels = 65 (unchanged).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/ops/arc_solve_registry.yaml (the reproducible_total_levels source of truth)
+      - {project_root}/research-roadmap-next.yaml (this file; must yaml.safe_load)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (BEFORE any other step):
+         a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')"` exits 0.
+         b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+         If either fails -> honest_verdict blocked_<resource>, write the deliverable, EXIT.
+      1. Archive .446 -> activate .447 (no-op if already done). Record the close-state flags below.
+      2. Run the pre-test gate; if a poison test fails against this script's own honest verdict,
+         quarantine it to unblock (note which test). WRITE the deliverable.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; clean transition is complete_446_archived_447_activated_<state>."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+      a446_perception_genuine_null:
+        principle: "true -- the .446 A1 object-identity probe was a genuine rendered-grid null; the
+          .447 planner must NOT re-propose passive grid perception for goal-grounding."
+      energy_program_concluded:
+        principle: "true -- the energy-as-ARC-lever program is concluded (2026-06-26 operator); the
+          planner must NOT re-propose energy stages."
+      exploration_prior_class_closed:
+        principle: "true -- the .447 frontier is the L1-first-contact GENERATION wall, not exploration."
+      reproducible_total_levels:
+        principle: "the authoritative ARC progress metric carried from the registry, not re-counted."
+
+    Run: `.venv/bin/python python/carnot/experiment_4850_archive_446_activate_447.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4841-a1
-  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE; operator ''c'' RESEARCH BET) -- GENERIC OBJECT-IDENTITY PERCEPTION
-    LAYER for GOAL-GROUNDING. Build a grid-grounded module that segments each frame into persistent OBJECTS and
-    tracks their identity across transitions by SHAPE/CONNECTIVITY/MOTION (NOT color -- robust to recoloring), exposing
-    object-relational features. PROBE per Phase-Prototype+Validation. Decisive: recover stable cross-frame object
-    correspondence on the complex-rendering games (lp85 full-recolor, r11l no-anchor) where the naive color-centroid
-    detector got 0, with tu93 (visible goal) as a positive control. The named L1-wall root cause; a research bet
-    (may not pay off before 6/30).'
+- id: exp4851-a1
+  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- CANDIDATE-GENERATION COVERAGE DIAGNOSTIC.
+    Instrument the LIVE generic first-contact proposer (StepwiseExplorer / OfflineSolver proposal step)
+    and, for games whose winning L1 prefix is offline-banked as GROUND TRUTH (proposer BLIND to it),
+    measure whether the proposer ever EMITS the winning prefix within the standard action budget.
+    Decompose every miss into COVERED / ENUMERATED-BUT-LOST / NEVER-ENUMERATED. Positive control: a
+    game WITH an adapter must be COVERED. This is the named forward focus; a DIAGNOSTIC, not an 18th lever.'
   priority: critical
-  track: arc-perception
+  track: arc-north-star
   max_turns: 200
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4841_object_identity_perception_probe.json
-  operator_override: '2026-06-26 operator chose ''c'' (both in parallel): aim the .446 HEADLINE at the perception/representation
-    root cause as a RESEARCH BET. Grounded in mechanic-template-and-perception-wall-2026-06-24.md (the note''s own
-    recommended build: a generic object-identity perception layer tracked by shape/connectivity/motion, not color).
-    NARROWED per that note''s RECONCILIATION: the blocker is generic GOAL-PREDICATE GROUNDING (exact object-identity
-    recovery), NOT value/discrimination (measured-adequate at LOO-AUROC 0.725). Not an energy/exploration-strategy
-    lever (those are concluded/closed).'
+  deliverable: results/experiment_4851_generation_coverage_diagnostic.json
+  operator_override: '2026-06-26/2026-06-19 standing: the forward focus is the L1-first-contact GENERATION
+    wall (energy CONCLUDED, exploration-prior CLOSED, perception-from-grid a proven null). This A1 is a
+    DIAGNOSTIC measurement of proposer coverage (different deliverable shape from every prior lever) -- it
+    does not rank/route/perceive a pool; it measures whether the pool can contain the winner. Reserved ARC
+    headline slot.'
   prior_failures:
-  - experiment_id: lever4-mechanic-template-color-centroid-detector
-    verdict: 'complete: color_centroid_goal_detector_recovers_none_on_complex_rendering_games (genuine null on real
-      grids)'
-    addressed_by: 'The lever-#4 mechanic-template build (perception-wall note) used a naive COLOR-CENTROID goal
-      detector: it recovered the structural goal condition on NONE of the three games -- lp85 (whole board recolors
-      -- no stable color identity), r11l (zero stationary goal colors), tu93 (trail of new cells). This A1 is a
-      DIFFERENT mechanism: track object identity by SHAPE/CONNECTIVITY/MOTION (connected-component + cross-frame
-      correspondence by overlap/shape, recolor-INVARIANT), the exact build the note recommends (''track by shape/connectivity/motion,
-      not color -- robust to recoloring''). retire_if_same_verdict: true -- if a shape/motion-based object tracker
-      ALSO cannot recover stable cross-frame object correspondence on >=2 of the three games (lp85, r11l, tu93),
-      then object-identity is genuinely unrecoverable from the RENDERED grid (the agent would need internal sprite
-      state, which does not generalize to hidden games) -- a deeper, headline finding that retires grid-grounded
-      goal-grounding.'
+  - experiment_id: exp4704-object-centric-representation-builder
+    verdict: 'complete: candidate_generation_coverage_delta_0.0 (object slots built but no winning-prefix
+      coverage, first-win, or solve-rate lift on held-out games)'
+    addressed_by: 'exp4704 (and the .432 generation-by-search + .433 controllable-novelty + the other ~14
+      levers) all BUILT a generation/ranking/perception mechanism and reported a coverage/solve DELTA that
+      nulled. This A1 does NOT build a lever: it MEASURES, for the EXISTING live proposer, whether the
+      known-winning prefix is ever enumerated, and DECOMPOSES the loss (never-enumerated vs enumerated-but-lost
+      vs covered). The deliverable is a diagnosis that redirects .448, not another delta. retire_if_same_verdict:
+      true -- if A1 cannot even produce a non-degenerate coverage measurement (e.g. proposer never runs, or the
+      positive control fails so the measurement is a harness artifact), the proposer-coverage diagnostic approach
+      is retired and .448 must instrument generation differently.'
     retire_if_same_verdict: true
-  prompt: "CONTEXT (2026-06-27). OPERATOR-DIRECTED 'c' RESEARCH BET. The energy program is CONCLUDED and the exploration-prior\
-    \ class is CLOSED (.445 exp4831 nulled with a live archive). ~15 generation/exploration levers tested, ~0 moved\
-    \ the L1-first-contact wall. The NAMED root cause is PERCEPTION/REPRESENTATION. This headline attacks it directly.\n\
-    \nTHE PRECISE, NARROWED BLOCKER (read {project_root}/docs/research-notes/mechanic-template-and-perception-wall-2026-06-24.md\
-    \ FIRST, including its RECONCILIATION section): NOT 'perception' broadly -- the live VALUE/DISCRIMINATION representation\
-    \ is MEASURED-ADEQUATE (v3 features LOO-AUROC 0.725, exp4545). The blocker is generic GOAL-PREDICATE GROUNDING:\
-    \ recovering stable structural OBJECTS (their identity across frames) from the RENDERED grid precisely enough\
-    \ to evaluate an object-relational is_level_complete. The naive color-centroid detector recovered the goal on\
-    \ NONE of the three games -- lp85 (whole board RECOLORS -- no stable color identity), r11l (zero stationary\
-    \ goal colors), tu93 (trail of new cells) -- because object identity is lost under recoloring/trails. Per-game\
-    \ GameAdapters succeed only by reading INTERNAL sprite state, which does NOT generalize to hidden games.\n\n\
-    THE BUILD (the note's own recommendation): a generic, grid-grounded OBJECT-IDENTITY perception module. Segment\
-    \ each frame into persistent OBJECTS via connected-component / shape segmentation, then track identity ACROSS\
-    \ transitions by SHAPE + CONNECTIVITY + MOTION (overlap/displacement), NOT by color -- so it is INVARIANT to\
-    \ recoloring. Expose object-relational features (this object at that object + offset; player overlaps goal).\
-    \ This is the layer BOTH the mechanic-template goal_energy AND LLM goal-induction need to become grid-grounded-yet-object-aware.\n\
-    \nSCOPE: a PROBE/PROTOTYPE (Phase-Prototype+Validation discipline -- the note: 'a bigger build than a single\
-    \ lever'). Build the minimal tracker + MEASURE cross-frame object-identity correspondence; do NOT attempt a\
-    \ full live-solver integration this milestone (that is .447+ iff the probe passes). It MUST be live-path-reachable\
-    \ in principle (a module under python/carnot/agentic/ importable by the live agent; arc_orphan_solver_lint must\
-    \ pass -- either wire a thin import hook or allow-list with a reason).\n\nverifier_is_oracle: the object-identity\
-    \ tracker is execution-grounded structural perception, NOT an oracle-distinct learned energy -- declare verifier_is_oracle=true\
-    \ (per the circularity discipline); this probe is about GROUNDING, not a moat claim.\n\nCONCRETE STEPS:\n  0.\
-    \ PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit\
-    \ as k; k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing, EXIT.\n     b. The offline frame\
-    \ sources for lp85, r11l, tu93 are present (environment_files / banked traces). If a game's frames are missing\
-    \ -> record it and proceed with the available games; if NONE are available -> blocked_no_offline_frames, EXIT.\n\
-    \  1. Build the object-identity perception module (connected-component segmentation + shape/connectivity/motion\
-    \ cross-frame correspondence; recolor-invariant).\n  2. POSITIVE CONTROL: on tu93 (fully-visible goal) confirm\
-    \ the tracker yields stable player+goal object identity across the solving transitions (the note flags tu93\
-    \ as plausibly grid-groundable with a better-than-color-centroid detector).\n  3. HARD TEST: on lp85 (full recolor)\
-    \ and r11l (no stationary anchor), measure whether stable object correspondence is recovered ACROSS frames despite\
-    \ recoloring -- report a quantitative correspondence score (e.g. fraction of objects with a consistent identity\
-    \ track across the transition sequence), NOT a binary self-grade. The three test games are lp85, r11l, tu93.\n\
-    \  4. WRITE the artifact with solve_provenance=development_proxy (this is an offline perception PROBE measured\
-    \ on banked frames -- it is NOT a live first-win; declare honestly).\n\nFALSIFIABLE GATE:\n  PASS iff (i) the\
-    \ positive control (tu93) yields stable player+goal identity tracks; AND (ii) on >=2 of the three test games\
-    \ (lp85, r11l, tu93) the shape/motion tracker recovers stable cross-frame object correspondence (correspondence\
-    \ score materially above a color-centroid baseline run on the SAME frames -- include that baseline as the comparator).\
-    \ retire_if_same_verdict: true -- if the shape/motion tracker ALSO fails on >=2 games (no better than color-centroid),\
-    \ object-identity is genuinely unrecoverable from the rendered grid: a deeper finding (the agent needs internal\
-    \ sprite state, which does not generalize) that retires grid-grounded goal-grounding and points .447 elsewhere.\
-    \ EITHER outcome is a real, headline-worthy result for the research bet.\n\nGUARD (the mechanic-template trap):\
-    \ that build was 'verified on synthetic data ... but on REAL grids exposed a deeper obstacle.' This probe MUST\
-    \ be measured on REAL game frames (lp85/r11l/tu93), NOT synthetic align cases. A synthetic-only PASS is a NON-TEST\
-    \ -- B1 will check this.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
-    \ \"terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding.\"\
-    \n  measured_on_real_frames:\n    principle: \"true iff the correspondence scores are measured on REAL lp85/r11l/tu93\
-    \ frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST.\"\n \
-    \ per_game_correspondence:\n    principle: \"per-game mapping game -> (shape_motion_score, color_centroid_baseline_score,\
-    \ n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames.\"\n  positive_control_tu93_passed:\n\
-    \    principle: \"the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype\
-    \ positive control so a global null is not a harness artifact.\"\n  games_with_recovery:\n    principle: \"\
-    count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid\
-    \ -- >=2 for a PASS.\"\n  verifier_is_oracle:\n    principle: \"true -- execution-grounded structural perception,\
-    \ NOT an oracle-distinct moat (circularity discipline); this probe is about grounding.\"\n  live_path_reachable:\n\
-    \    principle: \"the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception\
-    \ layer the live agent cannot reach is wasted effort.\"\n  solve_provenance:\n    principle: \"development_proxy\
-    \ -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery).\"\
-    \n  inference_substrate:\n    principle: \"live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates\
-    \ -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran).\"\
-    \n  preconditions_checked:\n    principle: \"records arcade/frame-availability checks so a missing-resource\
-    \ run emits blocked_, never a fabricated correspondence score.\"\n  random_seed:\n    principle: \"determinism\
-    \ for any stochastic segmentation/tracking step + the baseline.\"\n  reproducibility_checksum:\n    principle:\
-    \ \"content hash of (frames, tracker params, baseline) so a replication catches drift.\"\n"
-  milestone: 2026.06.446
+  prompt: |
+    CONTEXT ({date}). HEADLINE. The forward focus (standing operator directive, ops/known-issues.md) is
+    "the L1-first-contact GENERATION wall (the actual multi-level live-solve blocker)". Across ~17 nulled
+    levers (.425-.446) EVERY residual_dead_end is the same: "candidate generation is the bottleneck; the
+    winning prefix is never proposed, so ranking/routing/perception only reorders a pool without the winner".
+    Energy is CONCLUDED; exploration-prior CLOSED; perception-from-grid a proven null (.446 A1). We have
+    NEVER MEASURED the wall. This headline does, as a Phase-Prototype DIAGNOSTIC (measurable, positive
+    control, B1 adversarial check) -- NOT an 18th lever.
+
+    THE MEASUREMENT. For a set of public games whose winning L1 prefix is ALREADY banked offline as ground
+    truth (ops/arc_solve_registry.yaml, 25 games), run the LIVE generic first-contact proposer -- the
+    StepwiseExplorer / OfflineSolver proposal step used by the live agent -- on each game's L1 from a COLD
+    start, with NO GameAdapter and the proposer BLIND to the banked solution (this blindness is load-bearing;
+    B1 will verify it). Capture the proposer's enumerated candidate pool within the standard action budget.
+    For each game classify into exactly one bucket:
+      - COVERED: the winning L1 prefix (or any prefix that reaches the L1 win) IS in the pool and reachable
+        within budget -> the wall is RANKING/SELECTION (a ranker/learned verifier could still help).
+      - ENUMERATED-BUT-LOST: the winning prefix is enumerated but pruned/truncated by the search budget ->
+        the wall is SEARCH DEPTH / PRUNING.
+      - NEVER-ENUMERATED: the winner's action primitives are never proposed -> the wall is EXPRESSIBILITY /
+        VOCABULARY (no ranker can fix it; need program synthesis over richer primitives).
+    Report the per-game bucket and the DOMINANT bucket. POSITIVE CONTROL: a game WITH a GameAdapter (e.g.
+    tu93) must come out COVERED -- else a global "never covered" is a harness artifact, not a finding.
+
+    SCOPE: a PROBE/DIAGNOSTIC (Phase-Prototype+Validation discipline). It must be LIVE-PATH-REACHABLE -- an
+    instrumentation hook on the EXISTING OfflineSolver/StepwiseExplorer (importable by the live agent;
+    arc_orphan_solver_lint must pass), NOT a parallel solver. Do NOT inject the banked answer into the
+    proposer. Keep the action budget bounded so the run fits the codex wall-clock cap; checkpoint per game.
+
+    verifier_is_oracle: the reproduction gate that defines "the winning prefix" is the executable oracle ->
+    declare verifier_is_oracle=true (circularity discipline); this is a GROUNDING measurement, not a moat.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/python/carnot/agentic/arc_solver_kit.py (offline_arcade, reproduce, the proposal/search engine)
+      - {project_root}/scripts/arc_loop_solve.py (OfflineSolver; the live development twin)
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py (StepwiseExplorer; the scored live proposer)
+      - {project_root}/ops/arc_solve_registry.yaml (banked winning prefixes = ground truth)
+      - {project_root}/scripts/summarize_artifact.py (read upstream artifacts via this)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (BEFORE any other step):
+         a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+            Else honest_verdict blocked_offline_arcade_missing, write the deliverable, EXIT.
+         b. Qwen3.5-9B-MTP available on the iGPU (NEVER the 3090s) IF the proposer invokes the LLM; if the
+            generator is unavailable -> blocked_generator_unavailable, write deliverable, EXIT.
+         c. >=3 games with a banked L1 winning prefix are present in the registry + offline env; if NONE
+            -> blocked_no_banked_ground_truth, EXIT.
+      1. Build the coverage instrumentation as a hook on the live proposer (no injected answer).
+      2. Run the proposer cold on each selected game's L1 within the bounded action budget; capture the pool.
+      3. Classify each game COVERED / ENUMERATED-BUT-LOST / NEVER-ENUMERATED; record the dominant bucket.
+      4. POSITIVE CONTROL: confirm an adaptered game (tu93) is COVERED.
+      5. WRITE the artifact (solve_provenance=development_proxy -- an offline coverage measurement, NOT a live first-win).
+
+    FALSIFIABLE GATE:
+      PASS iff (i) the positive control (an adaptered game) is COVERED -- proving the measurement is real,
+      not a harness artifact; AND (ii) a non-degenerate per-game bucket distribution is produced over >=3
+      held-out games with a named dominant bucket. The FINDING (whichever bucket dominates) is the headline
+      and redirects .448. retire_if_same_verdict: true -- if the positive control FAILS or no non-degenerate
+      distribution is produced, the proposer-coverage diagnostic is retired (the measurement itself is broken).
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; a measured decomposition is complete_generation_wall_<dominant_bucket>_dominant
+          (e.g. complete_generation_wall_never_enumerated_dominant)."
+      per_game_coverage:
+        principle: "per-game mapping game -> {bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED,
+          winning_prefix_len, pool_size, reached_l1_win, budget_actions} -- the quantitative measurement."
+      dominant_bucket:
+        principle: "the bucket the majority of held-out games fall in -- the headline that redirects .448
+          (never_enumerated -> generation expressibility; enumerated_but_lost -> budget/pruning; covered -> ranking)."
+      positive_control_game:
+        principle: "the adaptered game used as positive control; it MUST be COVERED or the measurement is a
+          harness artifact (a Phase-Prototype positive control)."
+      positive_control_covered:
+        principle: "true iff the positive control came out COVERED -- the load-bearing not-a-harness-artifact check."
+      proposer_blind_to_banked_answer:
+        principle: "true -- the banked winning prefix was NOT injected into the proposer (the tautology trap B1 audits)."
+      n_games_measured:
+        principle: ">=3 held-out games for a non-degenerate distribution."
+      verifier_is_oracle:
+        principle: "true -- the reproduction gate defining the winner is the executable oracle (circularity discipline)."
+      live_path_reachable:
+        principle: "the instrumentation hooks the live proposer (arc_orphan_solver_lint passes) -- a diagnostic
+          the live agent cannot reach is wasted effort."
+      solve_provenance:
+        principle: "development_proxy -- an offline coverage measurement, NOT a live first-win; declared honestly."
+      inference_substrate:
+        principle: "live_llm_inference if the proposer invokes the LLM (60s floor), else
+          verifier_ensemble_against_cached_candidates -- declare what actually ran."
+      preconditions_checked:
+        principle: "records arcade/generator/ground-truth checks; a missing resource emits blocked_, never a fabricated bucket."
+      random_seed:
+        principle: "determinism for the proposer's stochastic search."
+      reproducibility_checksum:
+        principle: "content hash of (games, proposer config, budget) so a replication catches drift."
+
+    Run: `.venv/bin/python python/carnot/experiment_4851_generation_coverage_diagnostic.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4842-a2
-  title: 'PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE; operator ''c'' SCORED LEVER) -- maximize OFFLINE
-    banked levels: bank >=1 NEW reproducible level on a ROTATED unsolved target (sb26/lf52/bp35 first-contact, else
-    +1 deepen on the shallowest solved game). offline_reproduced gated.'
+- id: exp4852-a2
+  title: 'PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a
+    ROTATED target (rotate OFF .446''s ka59; first-contact on a shallow/unsolved game else +1 deepen on the
+    shallowest solved game with a grounded next-level delta). offline_reproduced gated.'
   priority: critical
   track: arc-north-star
   max_turns: 160
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4842_levelup_attempt.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (Level-Up Attempt Guarantee; operator ''c'' scored lever; rotate
-    sb26/lf52/bp35).'
-  prompt: "CONTEXT (2026-06-27). Level-Up Attempt Guarantee + operator 'c' SCORED LEVER: maximize OFFLINE banked\
-    \ levels (the realistic scored play for the 6/30 deadline). >=1 task whose gate BANKS a new reproducible level.\
-    \ ROTATE the target (sb26/lf52/bp35 first-contact -- different from .445's bp35-class rotation; else +1 deepen\
-    \ on the shallowest solved game).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade() exits\
-    \ 0; Qwen on the iGPU (NEVER the 3090s) if induction is needed; missing env -> blocked_<game>_offline_env_missing.\n\
-    \  1. Read ops/arc_solve_registry.yaml; pick the rotated target; recommend_approach(game).\n  2. arc_loop_solve.py\
-    \ --game <target>; register a GameAdapter for the DELTA if needed.\n  3. Reproduction gate; update registry;\
-    \ record DEAD-ENDS.\n\nFALSIFIABLE GATE: >=1 NEW level offline-reproduced, solve_provenance=live_agent_self_discovery.\
-    \ retire_if_same_verdict: true -- rotate again if no bank.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; banked is success_, no-bank is complete_<game>_no_new_level_residual_<cause>.\"\
-    \n  solve_provenance:\n    principle: \"live_agent_self_discovery; NOT outer_loop_re (CRITICAL).\"\n  offline_reproduced:\n\
-    \    principle: \"only reproduced levels count.\"\n  reproduced_levels:\n    principle: \"the new reproducible\
-    \ depth; the monotonic ARC metric.\"\n  inference_substrate:\n    principle: \"live_llm_inference if induction\
-    \ runs (60s floor).\"\n  preconditions_checked:\n    principle: \"records arcade/env/generator checks; a missing\
-    \ resource emits blocked_, never a fabricated solve.\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4852_levelup_attempt.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): Level-Up Attempt Guarantee
+    reserved slot -- false-positive scope-match vs prior level-up tasks; structurally never a doomed rerun.
+    Rotate off .446 ka59.'
+  prompt: |
+    CONTEXT ({date}). Level-Up Attempt Guarantee: >=1 task whose gate BANKS a new reproducible level.
+    ROTATE the target OFF .446's ka59. Pick a shallow L1-only game for a +1 deepen (g50t, s5i5, wa30, r11l)
+    that has a grounded next-level delta, OR a first-contact on any remaining unsolved game; consult the
+    registry's recommend_approach + dead_ends to avoid known no-grounded-delta walls.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends, recommend_approach inputs)
+      - {project_root}/scripts/arc_loop_solve.py (the standing solve loop)
+      - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach)
+      - {project_root}/python/carnot/agentic/arc_game_adapters.py (register a GameAdapter for the DELTA if needed)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; Qwen3.5-9B-MTP on the iGPU (NEVER the
+         3090s) IF induction is needed; a missing env -> honest_verdict blocked_<game>_offline_env_missing, write deliverable, EXIT.
+      1. Read the registry; pick the ROTATED target; recommend_approach(game).
+      2. `.venv/bin/python scripts/arc_loop_solve.py --game <target>`; register a GameAdapter for the DELTA if needed.
+      3. Reproduction gate (arc_solver_kit.reproduce); update ops/arc_solve_registry.yaml; record DEAD-ENDS.
+
+    FALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true, reproduced_levels>=prior+1),
+    solve_provenance=live_agent_self_discovery. retire_if_same_verdict: true -- rotate again next milestone if no bank.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+      solve_provenance:
+        principle: "live_agent_self_discovery -- the agent solved via its own attempts/RE; NOT outer_loop_re (CRITICAL)."
+      target_game:
+        principle: "the rotated target (must differ from .446 ka59) so coverage sweeps the corpus."
+      offline_reproduced:
+        principle: "only reproduced levels count toward reproducible_total_levels."
+      reproduced_levels:
+        principle: "the new reproducible depth; the monotonic ARC progress metric."
+      new_levels_banked:
+        principle: ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
+      inference_substrate:
+        principle: "live_llm_inference if induction runs (60s floor)."
+      preconditions_checked:
+        principle: "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+    Run: `.venv/bin/python scripts/arc_loop_solve.py --game <rotated-target>`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4843-a3
-  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone) -- standing arc_loop_solve loop: verifier-routed
-    solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+- id: exp4853-a3
+  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing
+    arc_loop_solve loop: verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
   priority: high
   track: arc-north-star
   max_turns: 140
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4843_self_play_verifier_checkpoint.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (self-play-every-milestone).'
-  prompt: "CONTEXT (2026-06-27). Self-play EVERY milestone. Run arc_loop_solve.py on a banked game (warm-started)\
-    \ to advance +1 level AND refresh the checkpoint.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arc_solver_kit.offline_arcade()\
-    \ exits 0; target has a banked level.\n  1. arc_loop_solve.py --game <banked-target> (or --auto): warm-start,\
-    \ verifier-routed search + reproduction gate, train + checkpoint.\n  2. Confirm the checkpoint mtime advanced.\n\
-    \nFALSIFIABLE GATE: checkpoint refreshed (mtime advances) AND reproduction gate passes on >=1 level. A failed\
-    \ run records the residual; does NOT fabricate.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
-    \    principle: \"terminal prefix; refreshed + gate green is success_.\"\n  verifier_checkpoint_refreshed:\n\
-    \    principle: \"the self-improvement signal.\"\n  inference_substrate:\n    principle: \"live_llm_inference\
-    \ (60s floor).\"\n  solve_provenance:\n    principle: \"live_agent_self_discovery -- self-play is the agent\
-    \ improving on its own attempts.\"\n  preconditions_checked:\n    principle: \"records arcade/registry checks;\
-    \ a missing target emits blocked_, never a fabricated checkpoint.\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4853_self_play_verifier_checkpoint.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): self-play-every-milestone reserved
+    slot -- false-positive scope-match vs prior self-play tasks; structurally never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). Self-play EVERY milestone -- this is the CONTINUOUS SELF-LEARNING experiment
+    (research-program.md "Continuous Self-Learning" Tier 3; FR-11 relay): the learned verifier improves
+    across runs by training on the self-play traces and checkpointing. Run arc_loop_solve on a banked game
+    (warm-started from the saved checkpoint) to advance +1 level AND refresh the checkpoint.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/scripts/arc_loop_solve.py (warm-start + train + checkpoint)
+      - {project_root}/ops/arc_solve_registry.yaml (banked targets + learned_verifier_checkpoint paths)
+      - {project_root}/models/ (arc_verifier_<game>.json checkpoints)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the target has a banked level + an
+         existing checkpoint to warm-start. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>` (or --auto): warm-start,
+         verifier-routed search + reproduction gate, then TRAIN + CHECKPOINT the learned verifier.
+      2. Confirm the checkpoint mtime advanced (the self-improvement signal).
+
+    FALSIFIABLE GATE: checkpoint refreshed (mtime advances) AND reproduction gate passes on >=1 level.
+    A failed run records the residual; does NOT fabricate.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+      verifier_checkpoint_refreshed:
+        principle: "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+      checkpoint_path:
+        principle: "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+      offline_reproduced:
+        principle: "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+      reproduced_levels:
+        principle: "the depth confirmed this run."
+      inference_substrate:
+        principle: "live_llm_inference (60s floor)."
+      solve_provenance:
+        principle: "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+      preconditions_checked:
+        principle: "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+    Run: `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4844-a4
-  title: PHASE A4 (ARC NORTH STAR; SCORE -- held-out first-win readiness; operator 'c' DEADLINE LANE) -- measure
-    held-out first-win on the color-permuted variant harness, checkpoint/resume-capable; feeds the operator submission
-    decision.
+- id: exp4854-a4
+  title: 'PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUINELY LIVE held-out first-win readiness on the
+    color-permuted variant harness, checkpoint/resume-capable (wall-clock-safe per the 2026-06-25 fix). The
+    .446 A4 ran live_agent_ran=false (cache resume); .447 MUST produce a FRESH LIVE number for the operator
+    6/30 go/no-go.'
   priority: high
   track: arc-north-star
   max_turns: 120
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_4844_heldout_first_win_readiness.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (held-out first-win readiness lane; operator ''c'' deadline-submission
-    signal).'
-  prompt: "CONTEXT (2026-06-27). Measure the live E3 agent's held-out first-win rate on the experiment_4605 variant\
-    \ harness. Checkpoint/resume so a capped run still emits a partial. This is the deadline-relevant generalization\
-    \ signal that feeds the operator's submission go/no-go.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: arcade + variant\
-    \ harness present; Qwen on the iGPU (NEVER the 3090s). Scope under the codex cap (or checkpoint/resume).\n \
-    \ 1. Run with periodic checkpointing; on cap emit the partial.\n  2. Report rate + CI vs the 0.04 baseline.\n\
-    \  3. SUBSTRATE HONESTY: if you RESUME from a cache and do NOT run live, declare inference_substrate=aggregation_from_upstream_artifacts.\
-    \ For a FLAT null (rate==0.04) add null_delta_methodology_note + positive_control_passed=true.\n\nFALSIFIABLE\
-    \ GATE: a non-fabricated rate with CI; a capped run still emits a partial.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; a measured rate is complete_/success_.\"\n  heldout_first_win_rate:\n\
-    \    principle: \"the deadline-relevant generalization signal -- held-out.\"\n  inference_substrate:\n    principle:\
-    \ \"live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts if a cache hit -- declare what\
-    \ ran.\"\n  null_delta_methodology_note:\n    principle: \"for a flat null (rate==0.04), why the agreement is\
-    \ a genuine no-improvement, not a TAUTOLOGY bug.\"\n  checkpoint_emitted:\n    principle: \"a capped run must\
-    \ still emit a usable partial.\"\n  preconditions_checked:\n    principle: \"records generator/harness checks;\
-    \ a missing resource emits blocked_.\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4854_heldout_first_win_readiness.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): held-out first-win readiness lane
+    -- false-positive scope-match vs prior readiness tasks; structurally never a doomed rerun. Deadline-submission signal.'
+  prompt: |
+    CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605 variant
+    harness. This is the deadline-relevant generalization signal feeding the operator's 6/30 go/no-go. The
+    .446 A4 was a cache resume (live_agent_ran=false) -- .447 MUST run GENUINELY LIVE (or honestly declare a
+    cache hit). The wall-clock cap issue is RESOLVED (2026-06-25, commit 810b6f451): the script checkpoints
+    the attempt ledger after each game + honors a soft ELAPSED budget (EXP4729_SOFT_BUDGET_S ~4200s), emits a
+    schema-valid partial on a budget stop, and resumes; SCORE is byte-identical to an uncapped run.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/python/carnot/experiment_4729_held_out_first_win_readiness.py (the checkpoint/resume readiness driver)
+      - {project_root}/results/experiment_4605_live_integration_scored_agent.json (the variant harness baseline)
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy -- the scored live agent)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: arcade + variant harness present; Qwen3.5-9B-MTP on the iGPU (NEVER the 3090s). A
+         missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. Run the readiness driver LIVE with periodic checkpointing; on a soft-budget stop emit the partial.
+      2. Report the rate + CI vs the 0.04 baseline and vs the prior-best.
+      3. SUBSTRATE HONESTY: if you RESUME from a cache and do NOT run live, declare
+         inference_substrate=aggregation_from_upstream_artifacts AND live_agent_ran=false. For a FLAT null
+         (rate==0.04) add null_delta_methodology_note + positive_control_passed=true (why the agreement is a
+         genuine no-improvement, not a TAUTOLOGY bug).
+
+    FALSIFIABLE GATE: a non-fabricated rate with CI from a LIVE run (live_agent_ran=true), or an honestly
+    declared cache hit; a capped run still emits a usable partial (checkpoint_emitted=true).
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; a measured rate is complete_heldout_first_win_<rate> or success_ if it beats prior-best."
+      heldout_first_win_rate:
+        principle: "the deadline-relevant generalization signal -- held-out, fresh."
+      live_agent_ran:
+        principle: "true for a fresh live run (the .447 requirement); false only with an honest cache-hit substrate declaration."
+      heldout_first_win_delta_vs_baseline:
+        principle: "delta vs the 0.04 baseline -- the go/no-go signal."
+      inference_substrate:
+        principle: "live_llm_inference (60s floor) if live; aggregation_from_upstream_artifacts if a cache hit -- declare what ran."
+      null_delta_methodology_note:
+        principle: "for a flat null (rate==0.04), why the agreement is a genuine no-improvement, not a TAUTOLOGY bug."
+      positive_control_passed:
+        principle: "a positive control so a flat null is not a harness artifact."
+      checkpoint_emitted:
+        principle: "a capped run must still emit a usable partial (the 2026-06-25 wall-clock fix)."
+      solve_provenance:
+        principle: "development_proxy -- a held-out first-win proxy measurement, declared honestly (not a banked level)."
+      preconditions_checked:
+        principle: "records generator/harness checks; a missing resource emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4729_held_out_first_win_readiness.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4845-b1
-  title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 object-identity perception probe was GENUINELY
-    exercised on REAL frames (measured_on_real_frames=true, NOT the mechanic-template synthetic-only-pass trap),
-    the shape/motion tracker actually ran (not a no-op), and per-game correspondence beats the color-centroid baseline
-    on the SAME frames.
+- id: exp4855-b1
+  title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 generation-coverage diagnostic is
+    HONEST -- the proposer was BLIND to the banked winning prefix (no tautology of feeding the offline solver
+    answer back in), measured on REAL games, the positive control genuinely came out COVERED, and the per-game
+    buckets MATCH the dominant-bucket claim.
   priority: high
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4845_perception_probe_audit.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (reserved infra slot 1; A1 perception-probe adversarial check
-    -- real-frames + not-a-no-op).'
-  prompt: "CONTEXT (2026-06-27). Reserved infra slot -- the Phase-Prototype+Validation ADVERSARIAL CHECK for the\
-    \ A1 perception probe (exp4841). The mechanic-template precedent: a build that 'verified on synthetic data ...\
-    \ but on REAL grids exposed a deeper obstacle' -- a synthetic-only pass is a NON-TEST. Audit A1 hostilely:\n\
-    \  (1) VERIFY measured_on_real_frames=true -- the correspondence scores come from REAL lp85/r11l/tu93 frames,\
-    \ NOT synthetic align cases. If synthetic-only, A1 is a NON-TEST.\n  (2) VERIFY the shape/motion tracker materially\
-    \ CHANGED the result vs the color-centroid baseline (per_game_correspondence shows a real spread, not the tracker\
-    \ silently degenerating to the baseline -- the S2/S3 no-op lesson applied to perception).\n  (3) VERIFY the\
-    \ positive control (tu93) genuinely passed AND the >=2-game recovery claim matches the per-game numbers (no\
-    \ celebratory verdict over failing numbers).\n  (4) Confirm live_path_reachable (arc_orphan_solver_lint passes)\
-    \ and solve_provenance is the honest development_proxy (NOT live_agent_self_discovery -- it is an offline probe).\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS: the .446 A1 artifact present.\n  1. Read it via scripts/summarize_artifact.py;\
-    \ run the four checks; run scripts/adversarial_verify.py on it.\n  2. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.\n\
-    \nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; audit\
-    \ complete is complete_/success_.\"\n  a1_genuinely_exercised:\n    principle: \"the load-bearing check -- measured_on_real_frames\
-    \ AND tracker!=baseline no-op AND positive control real AND verdict matches numbers; else A1 is a non-test (synthetic-only\
-    \ or a silent degenerate-to-baseline).\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
-    \ (0.0001s floor).\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4855_generation_diagnostic_audit.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): reserved infra slot 1 -- A1
+    adversarial check; false-positive scope-match vs prior audit tasks; structurally never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). Reserved infra slot -- the Phase-Prototype+Validation ADVERSARIAL CHECK for the A1
+    generation-coverage diagnostic (exp4851). The obvious way to fake a coverage measurement is the TAUTOLOGY:
+    inject the offline solver's banked winning prefix into the proposer, then "discover" it is COVERED. Audit
+    A1 hostilely:
+      (1) VERIFY proposer_blind_to_banked_answer=true -- the banked winning prefix was NOT seeded into the
+          proposer / search frontier (read the A1 script's proposal path; the winner must be ground-truth-only,
+          used to CLASSIFY the pool, never to SEED it). If the answer was injected, A1 is a NON-TEST.
+      (2) VERIFY positive_control_covered=true on a REAL adaptered game -- else a global "never enumerated"
+          is a harness artifact, not a finding.
+      (3) VERIFY the per-game buckets MATCH the dominant_bucket claim (no celebratory dominant-bucket over
+          numbers that say otherwise) and n_games_measured>=3 (non-degenerate distribution).
+      (4) Confirm live_path_reachable (arc_orphan_solver_lint passes) and solve_provenance=development_proxy
+          (an offline measurement, NOT live_agent_self_discovery).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4851_generation_coverage_diagnostic.json (the A1 artifact)
+      - {project_root}/scripts/summarize_artifact.py
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/python/carnot/experiment_4851_generation_coverage_diagnostic.py (the A1 script -- check the proposal path for injection)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the .447 A1 artifact + script present. Missing -> honest_verdict blocked_a1_artifact_missing, write deliverable, EXIT.
+      1. Read A1 via scripts/summarize_artifact.py; read the A1 script's proposal path for any banked-answer injection.
+      2. Run the four checks; run scripts/adversarial_verify.py on the A1 artifact.
+      3. WRITE the audit appending to ops/arc_null_silent_bug_audit.md.
+
+    FALSIFIABLE GATE: a1_genuinely_diagnostic=true iff all four checks pass; else the dominant-bucket finding
+    is NOT trustworthy and the capstone must label A1 a non-test.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; audit complete is complete_a1_generation_diagnostic_audited."
+      a1_genuinely_diagnostic:
+        principle: "the load-bearing check -- proposer-blind AND positive-control-covered AND buckets-match-claim
+          AND live-path-reachable; else A1 is a tautology/harness non-test and its dominant-bucket finding is void."
+      proposer_blind_confirmed:
+        principle: "true iff the banked winner was used only to classify, never to seed the proposer (the tautology trap)."
+      positive_control_confirmed:
+        principle: "true iff the positive control really came out COVERED on a real adaptered game."
+      buckets_match_claim:
+        principle: "true iff the per-game buckets support the claimed dominant_bucket."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+    Run: `.venv/bin/python python/carnot/experiment_4855_generation_diagnostic_audit.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4846-b2
-  title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT; operator ''c'' SCORED LEVER) -- SUBMISSION-PACKAGE harden:
-    verify the Kaggle ARC-AGI-3 package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the
-    OPERATOR submission checklist (NEVER submits).'
+- id: exp4856-b2
+  title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the
+    Kaggle ARC-AGI-3 package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the OPERATOR
+    submission checklist (NEVER submits). The package was READY in .446 (vram 15.146GB); this is the final
+    pre-deadline go/no-go confirmation.'
   priority: high
   track: infra
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4846_submission_package_harden.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (reserved infra slot 2; operator ''c'' deadline-submission readiness;
-    operator-only submit).'
-  prompt: "CONTEXT (2026-06-27). Reserved infra slot, DEADLINE-RELEVANT (operator 'c' realistic scored lever; 6/30\
-    \ is ~3.5 days out). Verify the ARC-AGI-3 Kaggle package builds and the frozen live stack packages within ~16GB.\
-    \ Produce an OPERATOR checklist -- the task NEVER submits (Operator-Only External Publication discipline).\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS: the submission packaging scripts + arc_competition_agent present.\n \
-    \ 1. Dry-build; verify the agent config + model paths resolve; estimate VRAM vs 16GB (Qwen3.5-9B Q4 ~5.9GB weights\
-    \ + q8 KV + headroom).\n  2. Cross-check the package against docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md\
-    \ (the packaging spec).\n  3. WRITE the operator checklist; the task does not submit.\n\nREQUIRED ARTIFACT FIELDS\
-    \ (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; package builds is success_/complete_.\"\
-    \n  submission_package_ready:\n    principle: \"True iff ready for the OPERATOR to submit; the task NEVER submits.\"\
-    \n  vram_estimate_gb:\n    principle: \"must fit ~16GB Kaggle with KV + headroom.\"\n  inference_substrate:\n\
-    \    principle: \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4856_submission_package_harden.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): reserved infra slot 2 -- deadline
+    submission readiness; operator-only submit; false-positive scope-match vs prior package tasks; never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). Reserved infra slot, DEADLINE-RELEVANT (6/30 is ~3 days out). The package was READY in
+    .446 (exp4846: vram_estimate_gb 15.146, package builds, operator-only). Re-verify it still builds and the
+    frozen live stack packages within ~16GB, and produce a FINAL OPERATOR checklist. The task NEVER submits
+    (Operator-Only External Publication discipline) and has no submit credentials.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4846_submission_package_harden.json (the .446 ready package)
+      - {project_root}/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md (packaging spec)
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py (the scored agent config + model paths)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the submission packaging scripts + arc_competition_agent present. Missing -> honest_verdict
+         blocked_packaging_scripts_missing, write deliverable, EXIT.
+      1. Dry-build; verify the agent config + model paths resolve; estimate VRAM vs 16GB (Qwen3.5-9B Q4 ~5.9GB
+         weights + q8 KV + headroom).
+      2. Cross-check against the packaging spec; diff against the .446 ready package (regression check).
+      3. WRITE the OPERATOR checklist; the task does NOT submit.
+
+    FALSIFIABLE GATE: submission_package_ready=true (builds + fits ~16GB) OR an honest blocked_/not-ready
+    verdict naming the regression. submitted_to_leaderboard MUST be false.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; package builds is success_submission_package_ready."
+      submission_package_ready:
+        principle: "True iff ready for the OPERATOR to submit; the task NEVER submits."
+      submitted_to_leaderboard:
+        principle: "MUST be false -- external publication is operator-only (no submit credentials)."
+      vram_estimate_gb:
+        principle: "must fit ~16GB Kaggle with KV + headroom (was 15.146 in .446)."
+      package_builds:
+        principle: "the dry-build result; a regression from .446 ready-state is a deadline blocker to surface."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+    Run: `.venv/bin/python python/carnot/experiment_4856_submission_package_harden.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4847-c
-  title: PHASE C (HARDWARE -- KV260) -- SSH-reachability; ALWAYS write the deliverable (blocked_kv260_ssh_unreachable
-    on failure -- do NOT exit with no file changes). Board known offline 2026-06-26 (no route to 192.168.51.98).
+- id: exp4857-c
+  title: PHASE C (HARDWARE -- KV260) -- SSH-reachability continuity; ALWAYS write the deliverable
+    (blocked_kv260_ssh_unreachable on failure -- do NOT exit with no file changes). Board was REACHABLE in
+    .446 (graduated terminal); keep in the continuity rotation.
   priority: medium
   track: hardware
   max_turns: 60
   inference_substrate: hardware_smoke
-  deliverable: results/experiment_4847_kv260_continuity.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (hardware-continuity; KV260; always write a deliverable; board
-    offline noted).'
-  prompt: "CONTEXT (2026-06-27). KV260 hardware-continuity. SSH ONLY -- host SD-card device nodes are PERMANENTLY\
-    \ retired.\n\nCRITICAL: the board is known OFFLINE (no route to 192.168.51.98; kria->kv260.local unresolved).\
-    \ Prior KV260 tasks FAILED 3x with \"No file changes\" because the agent exited on SSH failure WITHOUT writing\
-    \ the deliverable. You MUST ALWAYS WRITE results/experiment_4847_kv260_continuity.json -- on SSH failure write\
-    \ it with honest_verdict blocked_kv260_ssh_unreachable. NEVER exit without writing (that 3-fail-skips). A blocked\
-    \ artifact is the EXPECTED, CORRECT outcome.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: `ssh -o ConnectTimeout=5\
-    \ -o BatchMode=yes kria 'true'`. If non-zero -> honest_verdict blocked_kv260_ssh_unreachable + kv260_ssh_reachable=false,\
-    \ GO TO STEP 2 (do NOT exit before writing).\n  1. If reachable: report the overlay + board state; record the\
-    \ next step.\n  2. ALWAYS WRITE the deliverable.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
-    \    principle: \"terminal prefix; reachable is success_/complete_; unreachable is blocked_kv260_ssh_unreachable\
-    \ -- artifact MUST be written either way (no 'No file changes' 3-fail-skip).\"\n  inference_substrate:\n   \
-    \ principle: \"hardware_smoke (SSH-attached board test).\"\n  kv260_ssh_reachable:\n    principle: \"the SSH\
-    \ check -- false when offline; the artifact is still written.\"\n  preconditions_checked:\n    principle: \"\
-    records the SSH check; a blocked artifact is correct when the board is offline.\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4857_kv260_continuity.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): hardware-continuity reserved slot
+    -- KV260; always write a deliverable; false-positive scope-match vs prior KV260 tasks; never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). KV260 hardware-continuity. SSH ONLY -- host SD-card device nodes are PERMANENTLY
+    retired (KV260 SSH-Not-SD-Card Discipline). The board was REACHABLE in .446 (graduated terminal: ssh kria
+    succeeded, 5 UIO devices, uptime captured).
+
+    CRITICAL: prior KV260 tasks FAILED 3x with "No file changes" because the agent exited on SSH failure
+    WITHOUT writing the deliverable. You MUST ALWAYS WRITE results/experiment_4857_kv260_continuity.json --
+    on SSH failure write it with honest_verdict blocked_kv260_ssh_unreachable. NEVER exit without writing
+    (that 3-fail-skips). A blocked artifact is the EXPECTED, CORRECT outcome when the board is offline.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. If non-zero -> honest_verdict
+         blocked_kv260_ssh_unreachable + kv260_ssh_reachable=false, GO TO STEP 2 (do NOT exit before writing).
+      1. If reachable: report the overlay + board state (xmutil listapps, ls /dev/uio*); record the next step.
+      2. ALWAYS WRITE the deliverable.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is
+          blocked_kv260_ssh_unreachable -- artifact MUST be written either way (no 'No file changes' 3-fail-skip)."
+      inference_substrate:
+        principle: "hardware_smoke (SSH-attached board test)."
+      kv260_ssh_reachable:
+        principle: "the SSH check -- false when offline; the artifact is still written."
+      preconditions_checked:
+        principle: "records the SSH check; a blocked artifact is correct when the board is offline."
+
+    Run: `.venv/bin/python python/carnot/experiment_4857_kv260_continuity.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4848-d
-  title: PHASE D (SOTA-INGESTION -- the .447 frontier) -- ingest object-centric WORLD-MODEL + structured PLANNING
-    methods that CONSUME an object-identity perception layer (the .446 A1 build), to turn recovered object structure
-    into a proposable WINNER on a novel game. Real arXiv IDs only; do NOT re-ingest the nulled exploration-strategy
-    class.
+- id: exp4858-d
+  title: PHASE D (SOTA-INGESTION -- the .448 frontier) -- given A1's generation-wall bucket finding, ingest
+    GENERATION-EXPRESSIBILITY SOTA (program-synthesis-over-action-primitives / object-relational MCTS proposer
+    / library-learning) that could put the winning prefix INTO the pool on a novel game. Real arXiv IDs only;
+    do NOT re-ingest the nulled exploration-strategy or energy classes (CLOSED/CONCLUDED).
   priority: medium
   track: sota-ingestion
   max_turns: 100
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4848_sota_ingestion_object_world_model.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (reserved SOTA-ingestion slot; .447 frontier = object-centric
-    world-model/planning that consumes the A1 perception layer).'
-  prompt: "CONTEXT (2026-06-27). Reserved SOTA-ingestion slot. The .446 headline (A1) builds a generic OBJECT-IDENTITY\
-    \ perception layer for goal-grounding. The NEXT-layer question (.447 frontier): given recovered object structure,\
-    \ how do you turn it into a PROPOSABLE WINNER on a novel game? Ingest object-centric WORLD-MODELS and structured/relational\
-    \ PLANNING that consume an object-relational state: object-centric / slot-based world models, relational/graph\
-    \ planners, object-relational dynamics learning, structured exploration over object affordances. ALSO read the\
-    \ .445 D output (results/experiment_4838_sota_ingestion_perception_representation.json -- the perception methods\
-    \ flagged_for_v446) and carry the strongest forward. Use the RELIABLE channel (sweep_clusters.py / sweep_semscholar.py\
-    \ + low-concurrency WebSearch/WebFetch). Do NOT invoke /deep-research. Do NOT re-ingest the nulled exploration-strategy\
-    \ class (it is CLOSED).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: research-studying.md / research-references.md\
-    \ present; the .445 D artifact if it landed.\n  1. Read the discovered corpus filtered to object-centric world-models\
-    \ + relational planning; focused fresh sweep (top 5-8 papers).\n  2. Synthesize a SOTA->experiment mapping note:\
-    \ how each method consumes the A1 object layer to produce a proposable winner. Cite REAL arXiv IDs.\n  3. Flag\
-    \ the strongest method(s) for the .447 roadmap; mark ingested in research-studying.md.\n\nREQUIRED ARTIFACT\
-    \ FIELDS (principle-annotated):\n  honest_verdict:\n    principle: \"terminal prefix; mapping emitted is success_sota_ingestion_object_world_model_mapped.\"\
-    \n  methods_mapped:\n    principle: \"the strongest 3-5 object-centric world-model/planning methods mapped onto\
-    \ consuming the A1 perception layer, each with a real arXiv ID.\"\n  arxiv_ids_cited:\n    principle: \"every\
-    \ method claim must cite a verifiable arXiv ID.\"\n  flagged_for_v447:\n    principle: \"the strongest method(s)\
-    \ flagged so the .447 planner reads the mapping.\"\n  inference_substrate:\n    principle: \"aggregation_from_upstream_artifacts\
-    \ (0.0001s floor).\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4858_sota_ingestion_generation_expressibility.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): reserved SOTA-ingestion slot --
+    .448 frontier = generation expressibility (the wall A1 diagnoses); false-positive scope-match vs prior
+    ingestion tasks; never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). Reserved SOTA-ingestion slot. The .447 headline (A1) measures WHERE the winning
+    first-contact prefix is lost in generation. The .448 frontier follows the finding: if NEVER-ENUMERATED
+    dominates, the gap is GENERATION EXPRESSIBILITY -- the proposer's action-primitive vocabulary cannot
+    express the winner, so no ranker can fix it. Ingest SOTA that WIDENS what the proposer can express:
+    program synthesis / library-learning over action primitives (DreamCoder-style), object-relational MCTS
+    proposers, neural-guided program search for interactive grid games. ALSO read the .446 D handoff
+    (results/experiment_4848_sota_ingestion_object_world_model.json -- the object-relational planners flagged
+    for .447) and carry forward only what consumes a PARTIAL/noisy object signal (A1 proved exact object
+    identity is unrecoverable). Use the RELIABLE channel (sweep_clusters.py / sweep_semscholar.py +
+    low-concurrency WebSearch/WebFetch). Do NOT invoke /deep-research. Do NOT re-ingest the nulled
+    exploration-strategy class or energy stages (CLOSED/CONCLUDED).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4848_sota_ingestion_object_world_model.json (the .446 -> .447 handoff)
+      - {project_root}/results/experiment_4851_generation_coverage_diagnostic.json (A1's bucket finding -- aim the ingestion at it)
+      - {project_root}/research-studying.md and {project_root}/research-references.md (the discovered corpus)
+      - {project_root}/scripts/sweep_clusters.py and {project_root}/scripts/sweep_semscholar.py (the reliable sweep channel)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: research-studying.md / research-references.md present; the A1 artifact (read its dominant_bucket).
+      1. Read the discovered corpus filtered to generation expressibility (program synthesis / library learning /
+         neural-guided program search); focused fresh sweep (top 5-8 papers).
+      2. Synthesize a SOTA->experiment mapping note: how each method would put the winning prefix INTO the pool,
+         aimed at A1's dominant bucket. Cite REAL arXiv IDs for every method claim.
+      3. Flag the strongest method(s) for the .448 roadmap; mark ingested in research-studying.md; add new papers
+         to research-references.md.
+
+    FALSIFIABLE GATE: a mapping note with >=3 methods, each citing a verifiable arXiv ID, aimed at A1's
+    dominant bucket; honest_verdict success_sota_ingestion_generation_expressibility_mapped.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; mapping emitted is success_sota_ingestion_generation_expressibility_mapped."
+      methods_mapped:
+        principle: "the strongest 3-5 generation-expressibility methods, each mapped onto putting the winning prefix
+          into the pool, each with a real arXiv ID."
+      arxiv_ids_cited:
+        principle: "every method claim must cite a verifiable arXiv ID (no fabrication -- adversarial_verify bar)."
+      aimed_at_dominant_bucket:
+        principle: "the A1 dominant_bucket the ingestion targets (never_enumerated -> expressibility; covered -> ranking)."
+      flagged_for_v448:
+        principle: "the strongest method(s) flagged so the .448 planner reads the mapping."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+    Run: `.venv/bin/python python/carnot/experiment_4858_sota_ingestion_generation_expressibility.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
-- id: exp4849-e
-  title: 'PHASE E (CAPSTONE .446) -- aggregate the scorecard: the A1 object-identity perception-probe verdict (recovery
-    -> goal-grounding feasible / genuine null -> object-identity unrecoverable from rendered grid, a deeper finding,
-    per B1''s real-frames check), level-up bank, self-play, readiness, submission-package state.'
+- id: exp4859-e
+  title: 'PHASE E (CAPSTONE .447) -- aggregate the scorecard: the A1 generation-wall verdict (dominant
+    bucket: never-enumerated -> expressibility / enumerated-but-lost -> budget / covered -> ranking, per B1''s
+    tautology + positive-control check), the level-up bank (A2), self-play checkpoint (A3), the FRESH LIVE
+    held-out readiness (A4), submission-package state (B2), hardware (C), and the .448 SOTA handoff (D).'
   priority: high
   track: capstone
   max_turns: 120
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_4849_capstone_v446.json
-  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation / reserved-slot
-    task -- false-positive scope-match vs prior same-class tasks; structurally never a doomed rerun. Sprint majority-ARC
-    + reserved infra/hardware/sota/capstone slots. (capstone aggregation; codex default).'
-  prompt: "CONTEXT (2026-06-27). Capstone for .446. The HEADLINE is the A1 object-identity perception-probe verdict\
-    \ (operator 'c' RESEARCH BET): does the shape/motion object tracker recover stable cross-frame object correspondence\
-    \ on >=2 of {{lp85, r11l, tu93}} (goal-grounding becomes feasible -> .447 wires it into the live solver), or\
-    \ is it a GENUINE null (object-identity unrecoverable from the rendered grid even by shape/motion -> the agent\
-    \ needs internal sprite state, which does not generalize -- a deeper, headline finding)? ALSO report the operator\
-    \ 'c' SCORED-LEVER state: level-up bank (A2), held-out readiness (A4), submission-package readiness (B2).\n\n\
-    IMPORTANT: read each upstream artifact via scripts/summarize_artifact.py. The A1 verdict is ONLY trustworthy\
-    \ if B1 confirmed measured_on_real_frames AND tracker!=baseline-no-op (else it is a synthetic-only or degenerate\
-    \ NON-TEST, per the mechanic-template precedent).\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: the .446 upstream\
-    \ artifacts present.\n  1. Read each via summarize_artifact; honor the A1 real-frames + not-a-no-op checks (per\
-    \ B1).\n  2. Aggregate: A1 perception verdict; level-up; self-play; readiness; submission state. Cite sha256/ids.\n\
-    \  3. WRITE the capstone scorecard.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n\
-    \    principle: \"terminal prefix; capstone_ready=true is success_/complete_.\"\n  a1_perception_probe_verdict:\n\
-    \    principle: \"the headline -- object-identity recovery (goal-grounding feasible) / genuine null (unrecoverable\
-    \ from rendered grid, deeper finding) / synthetic-only non-test; honors B1's real-frames + not-a-no-op checks.\"\
-    \n  scored_lever_state:\n    principle: \"the operator 'c' deadline track -- {{level_up_banked, heldout_first_win_rate,\
-    \ submission_package_ready}}; the realistic 6/30 signal.\"\n  reproducible_total_levels:\n    principle: \"\
-    the monotonic ARC progress metric carried from the registry.\"\n  cited_upstream_artifacts:\n    principle:\
-    \ \"list of {{experiment_id, fields_imported, sha256}} -- the audit trail.\"\n  inference_substrate:\n    principle:\
-    \ \"aggregation_from_upstream_artifacts (0.0001s floor).\"\n"
-  milestone: 2026.06.446
+  deliverable: results/experiment_4859_capstone_v447.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): capstone aggregation reserved slot
+    -- false-positive scope-match vs prior capstones; never a doomed rerun; codex default.'
+  prompt: |
+    CONTEXT ({date}). Capstone for .447. The HEADLINE is the A1 generation-wall verdict: which bucket
+    dominates (NEVER-ENUMERATED -> .448 pivots to generation expressibility / program synthesis;
+    ENUMERATED-BUT-LOST -> widen search budget/pruner; COVERED -> revive the learned-verifier ranker)? The A1
+    verdict is ONLY trustworthy if B1 confirmed proposer_blind=true (no tautology) AND positive_control_covered
+    AND buckets_match_claim -- else label A1 a non-test. ALSO report the scored deadline levers: level-up bank
+    (A2), fresh live held-out readiness (A4), self-play checkpoint (A3), submission-package readiness (B2).
+
+    IMPORTANT: read each upstream artifact via scripts/summarize_artifact.py. Skip any artifact carrying
+    flagged_adversarial=true (never aggregate a flagged artifact's numbers). Cite sha256/ids.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/scripts/summarize_artifact.py
+      - all results/experiment_485{1,2,3,4,5,6,7,8}_*.json (the .447 upstreams)
+      - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the .447 upstream artifacts present. Missing -> honest_verdict blocked_upstreams_missing, write deliverable, EXIT.
+      1. Read each via summarize_artifact; honor B1's a1_genuinely_diagnostic check before trusting the A1 verdict.
+      2. Aggregate: A1 generation-wall verdict (+ B1 trust), A2 level-up, A3 self-play, A4 fresh live readiness,
+         B2 submission state, C hardware, D .448 handoff. Cite sha256/ids.
+      3. WRITE the capstone scorecard.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; capstone_ready=true is complete_a1_generation_wall_<dominant_bucket>_capstone_ready."
+      a1_generation_wall_verdict:
+        principle: "the headline -- {dominant_bucket, b1_trusted (proposer-blind + positive-control + buckets-match),
+          per_game_coverage}; the redirection for .448."
+      scored_lever_state:
+        principle: "the deadline track -- {level_up_banked, heldout_first_win_rate, live_agent_ran, submission_package_ready};
+          the realistic 6/30 signal."
+      reproducible_total_levels:
+        principle: "the monotonic ARC progress metric carried from the registry."
+      cited_upstream_artifacts:
+        principle: "list of {experiment_id, fields_imported, sha256} -- the audit trail."
+      flagged_artifacts_skipped:
+        principle: "any upstream with flagged_adversarial=true that was excluded from aggregation."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+    Run: `.venv/bin/python python/carnot/experiment_4859_capstone_v447.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.447
   agent_type: codex
   model: gpt-5.5
