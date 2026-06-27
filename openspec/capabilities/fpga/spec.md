@@ -12822,3 +12822,83 @@ fields, `kv260_ssh_reachable`, deterministic `random_seed=4878`, a concrete
 `next_forward_step`, and no host SD-card precondition.
 
 **Implementation status:** Implemented (Exp 4878)
+
+---
+
+### REQ-HW-4889
+
+**Title:** KV260 continuity MUST always write the Exp 4889 SSH-only deliverable
+
+**Description:**
+Experiment 4889 MUST produce `results/experiment_4889_kv260_continuity.json`
+for the KV260 hardware-continuity slot. The only valid precondition is board
+SSH reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card device nodes are permanently retired for KV260 and MUST NOT be
+used. If the SSH command returns non-zero, the experiment MUST still write the
+artifact with `honest_verdict=blocked_kv260_ssh_unreachable`,
+`kv260_ssh_reachable=false`, `inference_substrate=aggregation_from_upstream_artifacts`,
+and `preconditions_checked` recording the failed SSH check. A blocked artifact
+is the expected correct outcome while the board is offline; the experiment MUST
+NOT exit with no file changes, including the prior "No file changes"
+3-fail-skip failure mode.
+
+When SSH is reachable, the experiment MUST capture board state over SSH:
+hostname, kernel, uptime, `/dev/uio*` count, and `xmutil listapps` if
+available. If non-sudo `xmutil` reports that root privileges are required, the
+experiment MAY retry with `ssh kria 'sudo xmutil listapps'` as a read-only
+board-state fallback and MUST preserve both transcripts. The next forward step
+MUST be continuity-only because the KV260 has already graduated to terminal.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable (still WRITES).`
+- `kv260_ssh_reachable`: `true with board state, or false -- the SSH-only continuity signal (NEVER host SD-card presence).`
+- `board_state`: `captured hostname/kernel/uptime/uio-count over SSH -- the terminal-state continuity record.`
+- `next_forward_step`: `continuity-only (graduated terminal); records the next concrete step only if a probe changes.`
+- `inference_substrate`: `aggregation_from_upstream_artifacts (an SSH state read; 0.0001s floor).`
+- `preconditions_checked`: `records the SSH reachability check; an unreachable board emits blocked_kv260_ssh_unreachable, never a fabricated state.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4889_kv260_continuity.py` writes
+  `results/experiment_4889_kv260_continuity.json` whether SSH is reachable or
+  unreachable.
+- `inference_substrate` is exactly `aggregation_from_upstream_artifacts`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, no `xmutil` or board-state command is run,
+  and the blocked artifact is the terminal output rather than a no-file-changes
+  skip.
+- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
+  `success_kv260_continuity_ok`, board state is captured over SSH, `xmutil
+  listapps` is preserved when available, and `next_forward_step` remains
+  continuity-only for the terminal KV260.
+- `verifier_is_oracle=false`, `random_seed=4889`, `field_principles`,
+  `duration_s >= 0.0001`, `command_probes`, and a stable
+  `reproducibility_checksum` are present.
+
+**Implementation status:** Implemented (Exp 4889)
+
+---
+
+### SCENARIO-HW-4889
+
+**Scenario:** Exp 4889 writes SSH-attached KV260 terminal continuity or an honest SSH-unreachable block.
+
+**Given:** The KV260 terminal board is in the per-milestone SSH-only continuity
+rotation and host SD-card device-node checks are retired.
+**When:** Experiment 4889 checks SSH and, only when reachable, records `xmutil
+listapps` plus hostname, kernel, uptime, and UIO count over SSH.
+**Then:** It always writes `results/experiment_4889_kv260_continuity.json` with
+`honest_verdict=blocked_kv260_ssh_unreachable` when SSH is unreachable, or
+`success_kv260_continuity_ok` plus board state when SSH is reachable,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+principle-annotated required fields, `kv260_ssh_reachable`, deterministic
+`random_seed=4889`, a terminal continuity-only `next_forward_step`, and no host
+SD-card precondition.
+
+**Implementation status:** Implemented (Exp 4889)
