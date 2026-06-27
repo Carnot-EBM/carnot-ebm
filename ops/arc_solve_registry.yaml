@@ -718,13 +718,43 @@ general_gotchas:
 games:
 - game: r11l
   reproducibility: reproduced
-  levels_reproduced: 1
-  win_condition: 'click-to-template: each colored piece dragged onto its gray template
-    (+1,+1).'
-  action_model: ACTION6 click; full reset->win trajectory in the artifact replays
-    offline.
-  solver: results/experiment_4296 solve_trace.actions (replays cleanly offline).
-  gotchas: []
+  levels_reproduced: 2
+  mechanic_class: click_template_handle_average
+  win_condition: >-
+    L1 click-to-template placement plus L2 handle-average placement: each
+    non-dirwzt roefwu piece must collide with its flkdtg template; pieces with
+    multiple roefwulewcui handles move to the average of handle centers.
+  action_model: >-
+    ACTION6 click-only. Clicking a handle selects it; clicking elsewhere moves
+    the selected handle to the click minus half-handle size, and grouped pieces
+    recompute from the average of their handle centers.
+  solver: >-
+    GameAdapter _r11l in python/carnot/agentic/arc_game_adapters.py +
+    scripts/arc_loop_solve.py; results/arc_loop_solve_r11l.json 24-label L2
+    reproduction gate.
+  reproduce: >-
+    Exp4862 results/experiment_4862_levelup_attempt.json re-gates
+    results/arc_loop_solve_r11l.json offline_reproduced=True,
+    reached_level=2, banked +1 over the prior L1 registry row.
+  gotchas:
+  - Existing models/arc_verifier_r11l.json is a stale 4-feature checkpoint from
+    the L1 first-contact path; _r11l intentionally sets featurize=None so the
+    standing loop uses the hand verifier instead of loading the mismatched head.
+  - L2 has grouped pieces controlled by multiple handles; moving a handle to the
+    template corner is not enough because the piece origin is the average of all
+    handle centers.
+  dead_ends:
+  - 'Exp4862 first standing-loop attempt with _r11l featurize enabled failed
+    before search: the stale models/arc_verifier_r11l.json checkpoint expected
+    4 features while the new adapter exposed 6. The banked run disables learned
+    checkpoint loading for this adapter.'
+  latest_exp4862_levelup_attempt:
+    artifact: results/experiment_4862_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_r11l.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 1
+    verifier_checkpoint: null
 - game: ls20
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1756,7 +1786,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 65
+reproducible_total_levels: 66
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
