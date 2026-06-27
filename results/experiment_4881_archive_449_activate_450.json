@@ -1,0 +1,175 @@
+{
+  "a449_close_state": {
+    "a1": {
+      "a1_genuinely_diagnostic": false,
+      "b1_trusted": false,
+      "computed_fork_verdict": "INDUCER_CEILING",
+      "failure_reasons": [
+        "positive_control_not_migrated",
+        "positive_control_not_covered",
+        "positive_control_low_accuracy",
+        "fork_verdict_missing"
+      ],
+      "generator_backend": "gpu0_cuda",
+      "gpu0_duration_s": 587.0132,
+      "honest_verdict": "complete_generation_wall_fork_probe_retired_positive_control_failed",
+      "live_path_reachable": true,
+      "next_450_pivot": "do_not_use_a1_non_test",
+      "planner_blind": true,
+      "positive_control_exact_accuracy": 0.0,
+      "positive_control_game": "tu93",
+      "positive_control_passed": false,
+      "verdict": "non_test_b1_untrusted"
+    },
+    "a1b": {
+      "cegis_heldout_accuracy_delta_median": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "positive_control_passed": false,
+      "status": "ran"
+    },
+    "a2": {
+      "new_levels_banked": 1,
+      "solve_provenance": "live_agent_self_discovery",
+      "target_game": "s5i5"
+    },
+    "a3": {
+      "checkpoint_path": "models/arc_verifier_re86.json",
+      "target_game": "re86",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4": {
+      "generator_backend": "gpu0_cuda",
+      "heldout_first_win_rate": 0.04,
+      "live_agent_ran": true,
+      "positive_control_passed": true
+    },
+    "a449_fork_untrusted_non_test": true,
+    "b2": {
+      "operator_only": true,
+      "submission_package_ready": true,
+      "vram_estimate_gb": 15.146
+    },
+    "c": {
+      "kv260_ssh_reachable": true,
+      "uio_device_count": 5
+    },
+    "capstone_honest_verdict": "complete_a1_generation_wall_non_test_capstone_ready",
+    "corrigendum": {
+      "cell_recall_by_game": {
+        "cd82": 0.2839,
+        "ka59": 0.8853,
+        "lp85": 0.2574,
+        "sc25": 0.7506,
+        "tn36": 0.8633
+      },
+      "fork_probe_number_is_artifact": true,
+      "honest_verdict": "complete_fork_probe_0667_unreproduced_honest_changing_acc_0.0_noop_hypothesis_refuted_noopfrac_0.0195",
+      "max_cell_recall": 0.8853,
+      "max_change_value_accuracy": 0.0
+    },
+    "corrigendum_change_location_learnable": true,
+    "d": {
+      "aimed_at_fork_verdict": "INDUCER_CEILING",
+      "priority_1": "test_time_dynamics_adaptation",
+      "priority_2": "family_b_vs_local_open_code_inducer_ab"
+    },
+    "energy_program_concluded": true,
+    "exact_match_metric_was_degenerate": true,
+    "reproducible_total_levels": 67,
+    "summary": "a1_untrusted_non_test_metric_degenerate_corrigendum_location_signal_value_gap_energy_concluded"
+  },
+  "a449_fork_untrusted_non_test": true,
+  "activated_milestone": "2026.06.450",
+  "active_milestone_confirmed": "2026.06.450",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archive_record_action": "blocked_no_archive",
+  "archived_milestone": "2026.06.449",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "bc7b5fd82b6faccfa880d4132334301c962b249cc7fccbd01ae2bc05407b84fd"
+    },
+    {
+      "path": "results/experiment_4880_capstone_v449.json",
+      "sha256": "5f110fa2192ef1c362cfb25cf0a23e248595dbe54a422a0f3ce193ee86e22773"
+    },
+    {
+      "path": "results/arc_fork_probe_accuracy_corrigendum.json",
+      "sha256": "a38b0ac24440db19e6d2cc6a95901b0a3bdedd3b905bbb13e7392eb6f843a2f5"
+    }
+  ],
+  "corrigendum_change_location_learnable": true,
+  "duration_s": 1.373461,
+  "energy_program_concluded": true,
+  "exact_match_metric_was_degenerate": true,
+  "experiment": "experiment_4881_archive_449_activate_450",
+  "experiment_id": 4881,
+  "field_principles": {
+    "a449_fork_untrusted_non_test": {
+      "principle": "true -- the .449 A1 fork probe ran live on GPU-0 but its positive control failed on the degenerate exact-match metric (B1 b1_trusted=false); the fork is NOT trustworthy."
+    },
+    "corrigendum_change_location_learnable": {
+      "principle": "true -- the induced engine predicts change-LOCATION (cell_recall <=0.88) but change-VALUE ~0; the binding residual is the engine's VALUE prediction, and the .449 metric was degenerate."
+    },
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program is concluded (negative); the planner must NOT re-propose energy stages."
+    },
+    "exact_match_metric_was_degenerate": {
+      "principle": "true -- exact-full-grid-match held-out accuracy was 0.0 on every game incl tu93 (FALSE_NEGATIVE_RISK); .450 A1 uses the corrigendum-corrected GRADED metric instead."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_449_archived_450_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (67 after s5i5 L2), not re-counted."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "research_roadmap_next_yaml": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')"
+      ],
+      "exists": false,
+      "exit_code": 1,
+      "passed": false,
+      "path": "research-roadmap-next.yaml",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'\n",
+      "stdout_tail": ""
+    }
+  },
+  "pretest_gate": {
+    "green": false,
+    "ran": false,
+    "reason": "skipped_after_precondition_failure"
+  },
+  "random_seed": 20260627,
+  "reproducibility_checksum": "e7522b0ac921b6b87ae2d980bd5d8144534be6474582c5023b516226c2c42ceb",
+  "reproducible_total_levels": 67,
+  "schema": "carnot.exp4881.archive_449_activate_450.v1",
+  "spec_refs": [
+    "REQ-REPORT-4881",
+    "SCENARIO-REPORT-4881"
+  ],
+  "transition_performed": false
+}
