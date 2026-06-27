@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "experiment": "experiment_4870_archive_448_activate_449",
+  "experiment_id": 4870,
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "precondition_gate_from_local_files_no_llm",
+  "archive_448_activated_449": false,
+  "transition_state": "blocked_before_archive_activation",
+  "blocked_precondition": "research_roadmap_next_yaml_safe_load",
+  "blocked_resource": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+  "precondition_checks": {
+    "research_roadmap_next_yaml_safe_load": {
+      "passed": false,
+      "exit_code": 1,
+      "command": ".venv/bin/python -c \"import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')\"",
+      "stderr_excerpt": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'"
+    },
+    "offline_arcade_import": {
+      "passed": true,
+      "exit_code": 0,
+      "command": ".venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\""
+    }
+  },
+  "a448_fork_blocked_on_gpu_precondition": true,
+  "gpu_directive_fix_required": true,
+  "inducer_ceiling_indicated": true,
+  "energy_program_concluded": true,
+  "reproducible_total_levels": 66,
+  "a448_close_state": {
+    "a1_exp4861_generation_wall_fork_probe": {
+      "status": "BLOCKED",
+      "honest_verdict": "blocked_generator_unavailable",
+      "fork_verdict": null,
+      "n_games_measured": 0,
+      "flagged_adversarial": true,
+      "blocker": "DURATION_TOO_SHORT -- never invoked the model",
+      "root_cause": "generator_available() hard-rejected CUDA_VISIBLE_DEVICES under cuda_3090_generator_disallowed with igpu_required=true while the conductor launched CUDA_VISIBLE_DEVICES=1",
+      "fork_still_unmeasured": true
+    },
+    "a2_exp4862": {
+      "status": "PASS",
+      "result": "banked r11l L2 via click-template handle-average L2 delta",
+      "reproducible_total_levels_before": 65,
+      "reproducible_total_levels_after": 66,
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    "a3_exp4863": {
+      "status": "PASS",
+      "result": "self-play checkpoint refreshed",
+      "checkpoint_path": "models/arc_verifier_re86.json",
+      "gate": "re86"
+    },
+    "a4_exp4864": {
+      "status": "FLAT_NULL",
+      "heldout_first_win_delta": 0.04,
+      "live_agent_ran": false,
+      "note": "cache hit, not a fresh live run"
+    },
+    "b1_exp4865": {
+      "status": "PASS",
+      "result": "classified exp4861 as a non-test"
+    },
+    "b2_exp4866": {
+      "status": "READY",
+      "vram_estimate_gb": 15.146,
+      "vram_limit_gb": 16.0,
+      "package_builds": true,
+      "operator_only": true
+    },
+    "c_exp4867": {
+      "status": "KV260_REACHABLE",
+      "uio_device_count": 5,
+      "terminal": true
+    },
+    "d_exp4868": {
+      "status": "MAPPED",
+      "branch": "operator_reserved_INDUCER_CEILING",
+      "inducer_quality_tracks": 3
+    },
+    "program_state": {
+      "energy_as_arc_lever": "CONCLUDED_NEGATIVE",
+      "retired_levers": [
+        "coverage",
+        "exploration",
+        "perception_from_grid"
+      ],
+      "forward_focus": "L1_first_contact_GENERATION_wall",
+      "inducer_ceiling_evidence": [
+        ".437 exp4750 engine held-out approx 0.12",
+        "exp4749 identity-null"
+      ]
+    }
+  },
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_448_archived_449_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "a448_fork_blocked_on_gpu_precondition": {
+      "principle": "true -- the .448 A1 fork probe blocked_generator_unavailable on the wrong GPU precondition; the fork is UNMEASURED and .449 A1 re-runs it on the conductor's GPU-0 generator."
+    },
+    "gpu_directive_fix_required": {
+      "principle": "true -- per the 2026-06-27 operator directive, offline induction (A1/A1b/A4) must use the conductor's GPU-0 CUDA generator, NOT be iGPU-pinned; the experiment's generator_available() precondition must ACCEPT the GPU-0 generator."
+    },
+    "inducer_ceiling_indicated": {
+      "principle": "true -- independent evidence (.437 exp4750 engine held-out ~0.12; exp4749 identity-null) strongly indicates INDUCER_CEILING; A1 measures it, A1b attacks it."
+    },
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program is concluded (negative); the planner must NOT re-propose energy stages."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (66 after r11l L2), not re-counted."
+    }
+  }
+}
