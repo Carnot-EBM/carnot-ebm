@@ -9410,3 +9410,4 @@ The contro |
 | 2026-06-27 02:49 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 88 passed, 1 warning in 8.37s |
 | 2026-06-27 03:05 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT; operato | OK | 88 passed, 1 warning in 9.49s |
 | 2026-06-27 03:16 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability; A | OK | 85 passed, 1 warning in 7.71s |
+| 2026-06-27 03:30 UTC | PHASE D (SOTA-INGESTION -- the .447 frontier) -- i | OK | 109 passed, 1 warning in 13.77s |
