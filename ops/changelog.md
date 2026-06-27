@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-06-27 (Operational retrospective .446 -- GENUINE empty just-activated window, NOT a false-zero detector gap; 0 experiments executed -- outer-loop)
+
+Operational retro for milestone 2026.06.446. Unlike the recurring false-zero timing-detector gap of .435/.443 (where real high-numbered artifacts existed on disk despite the detector reporting 0), .446 is a GENUINELY EMPTY window: the milestone was activated 2026-06-27T03:57:33Z (commit b088ff144) and the retro ran ~7 minutes later at 04:04:50Z, with ZERO experiments executed in between. Definitive on-disk check: the only results/*.json modified after activation is operational_retro_2026_06_446.json itself; the 15 most-recent experiment artifacts (all mtime ~03:54Z, BEFORE activation) are low-numbered (exp1593-2071) bulk-touched files, not real runs; the highest on-disk experiment artifacts (exp4846-4849) are from the prior cycle. The detector's 0/0/0/null is therefore CORRECT here, not a false zero.
+
+- Locked retro fields stay at 0 (total_wall_time_minutes, experiments_completed, compute_bound_experiments_count) / [] (slowest_experiments) / null (gpu_idle_on_compute_bound_tasks) -- all accurate for an empty window. Only interpretive fields filled.
+- GPU state: both RTX 3090s idle (0% util, 4MB each). CORRECT -- no compute-bound (GGUF/CUDA) task ran, so gpu_idle_on_compute_bound_tasks=null and GPU idle is NOT flagged as a bottleneck per the GPU-idle interpretation rule.
+- Bottleneck (only operational signal): the empty window itself. Highest-leverage action -- confirm the conductor launches/commits .446 experiment artifacts inside the retro window; with the ARC-AGI-3 submission deadline 2026-06-30 (3 days out), cycle throughput on ARC live-solve tasks is what matters. estimated_time_savings_pct=0 (no wall-time to reclaim from an empty window).
+- Wrote results/operational_retro_2026_06_446.json (interpretive fields only; locked numeric fields untouched) + docs/research-log.md .446 entry. Did NOT touch operator-curated docs (docs/index.html, docs/roadmap.md, README.md) or scripts/research_conductor.py / research-roadmap.yaml.
+
 ## 2026-06-26 (Operational retrospective .443 -- recurring false-zero timing-detector gap, ~74th milestone; .443 = S2-v3 corpus-wide structural-energy GENUINE bounded null -> pivot energy to S3 generation -- outer-loop)
 
 Operational retro for milestone 2026.06.443. The authoritative milestone-scoped timing detector AGAIN false-reported 0 commits since activation (the recurring observability gap documented .363-.435, now ~74 milestones); on-disk artifacts exp4811-exp4819 (mtimes 17:46:08Z->19:24:53Z UTC, ~99-min content window after the exp4810 archive_442_activate_443 transition) show the milestone executed cleanly. Locked retro fields stay at the detector's 0/0/0/null per conductor constraint; interpretive fields + research-log corrected from on-disk evidence.
