@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.446",
+  "generated_at": "2026-06-27T04:04:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.446 has no experiment commits recorded since its activation, so there is no per-experiment timing data to analyze (experiments_completed=0, total_wall_time_minutes=0, compute_bound_experiments_count=0). Both RTX 3090 GPUs are idle (0% util, 4MB allocated each), which is CORRECT given zero compute-bound tasks ran — not an efficiency bug. This is an empty/early-activation operational retrospective; numbers are reported as measured rather than inferred.",
+  "bottlenecks_identified": [
+    "No experiment commits since activation of 2026.06.446 — no wall-time data exists to attribute any execution bottleneck to. The empty window is the only operational signal this milestone.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because no GGUF/CUDA/compute-bound task ran. 0% GPU on a milestone with zero compute-bound tasks is correct behaviour per the GPU-idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Confirm the conductor is launching and committing experiment artifacts within each milestone's retro window — an empty timing block means experiments either have not landed commits yet or the milestone just activated.",
+    "If 2026.06.446 is a capstone/docs-only or just-activated milestone, tag the retrospective so zero timing data is expected and not re-investigated as a regression.",
+    "Both GPUs are free (48GB aggregate) — when ARC live-solve experiments do run, keep them flowing so cycle throughput, not idle GPUs, is the limiting factor before the 2026-06-30 ARC deadline."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Verify experiment artifacts are committing for 2026.06.446: an empty timing block this close to the ARC deadline is the single most important operational thing to rule out (just-activated vs. experiments-not-landing).",
+    "With the ARC-AGI-3 submission deadline 2026-06-30 (3 days out), keep milestone throughput focused on ARC live-solve tasks that bank reproducible levels, so each cycle produces committed artifacts rather than empty windows.",
+    "Leave both idle RTX 3090s available for the next compute-bound ARC/verifier batch; no DualGPURunner change is warranted here because no multi-model task ran this milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The HOW-was-it-executed question is unanswerable this milestone because no experiment committed timing data; the honest move is to record the empty window rather than infer numbers from prior retrospectives. The operational signal worth carrying forward is to confirm experiments land artifacts inside each milestone's retro window so the next retro has real data to analyze."
+}
