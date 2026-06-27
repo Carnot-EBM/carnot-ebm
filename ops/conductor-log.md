@@ -9474,3 +9474,4 @@ The contro |
 | 2026-06-27 20:34 UTC | PHASE A1b (ARC NORTH STAR; INDUCER-CEILING A/B) -- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-27 21:02 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 109 passed, 1 warning in 9.71s |
 | 2026-06-27 21:17 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 8.93s |
+| 2026-06-27 22:25 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
