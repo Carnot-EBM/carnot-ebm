@@ -176,3 +176,20 @@
 - Prefixes injected: `1`
 - Prior changed proposals: `True`
 - Imitation control held-out split: `True`
+## Experiment 4845 .446 A1 Perception Probe Audit
+
+- Verdict: `complete_a1_perception_probe_audit_genuinely_exercised`
+- a1_genuinely_exercised: `True`
+- Non-test reasons: `-`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Check | Passed | Detail |
+|---|---:|---|
+| `measured_on_real_frames` | `True` | `{"artifact_measured_on_real_frames": true, "bad_games": []}` |
+| `tracker_changed_vs_baseline` | `True` | `{"deltas": {"lp85": 0.04985, "r11l": 0.192308, "tu93": 0.06639}, "distinct_delta_count": 3, "missing_numeric_games": [], "nonzero_delta_games": ["lp85", "r11l", "tu93"]}` |
+| `positive_control_and_recovery_claim` | `True` | `{"artifact_games_with_recovery": 1, "claimed_recovery_matches_rows": true, "complete_claimed": true, "goal_persistence": 0.5, "goal_track_id": 39, "player_motion": 220.624731, "player_track_id": 9, "positive_control_passed": true, "recovered_count": 1, "recovered_games": ["r11l"], "should_be_success": false, "success_claimed": false, "verdict_matches_numbers": true}` |
+| `live_path_and_provenance` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "not_live_agent_self_discovery": true, "solve_provenance": "development_proxy"}` |
+| `summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
+
+- Per-game deltas: `{'lp85': 0.04985, 'r11l': 0.192308, 'tu93': 0.06639}`
+- Source checksum: `sha256:f34b2628f231f7ccd67147963c40e486acd8890a18c26e0182b43dac889bd313`

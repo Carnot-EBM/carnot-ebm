@@ -10561,3 +10561,66 @@ When `scripts/arc_orphan_solver_lint.py` runs
 Then the lint passes and the artifact records `live_path_reachable=true` only
 when the module is importable from the live agent path or consciously
 allow-listed with a reason.
+
+### REQ-ARC-WMTE-4845: A1 Perception Probe Adversarial Audit
+
+Experiment 4845 SHALL adversarially audit the Exp 4841 object-identity
+perception probe before the .446 A1 result is trusted. The workflow SHALL read
+`results/experiment_4841_object_identity_perception_probe.json` through
+`scripts/summarize_artifact.py`, run `scripts/adversarial_verify.py` on that
+artifact, run the four hostile checks below, and append the audit outcome to
+`ops/arc_null_silent_bug_audit.md`.
+
+The audit SHALL verify all of the following:
+
+- `measured_on_real_frames=true` and every `per_game_correspondence` row used
+  for the decision comes from real `lp85`/`r11l`/`tu93` banked/offline frames,
+  not synthetic alignment cases.
+- The shape/motion tracker materially differs from the color-centroid baseline:
+  per-game shape-minus-baseline deltas are measured and are not all zero.
+- The `tu93` positive control genuinely passed, and any >=2-game recovery
+  claim matches the `per_game_correspondence` rows rather than celebrating over
+  failing numbers.
+- `scripts/arc_orphan_solver_lint.py` passes, `live_path_reachable=true`, and
+  `solve_provenance=development_proxy` rather than `live_agent_self_discovery`.
+
+Experiment 4845 SHALL write
+`results/experiment_4845_perception_probe_audit.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`a1_genuinely_exercised`, and `inference_substrate`. It SHALL also record the
+source artifact path and checksum, summarizer result, adversarial verification
+result, per-game correspondence deltas, the four hostile check payloads,
+preconditions checked, random seed, duration, and a reproducibility checksum.
+A clean audit SHALL use a terminal `complete_` verdict and set
+`a1_genuinely_exercised=true`; a synthetic-only, baseline-degenerate,
+positive-control-failed, mismatched-verdict, unreachable-live-path, or dishonest
+provenance result SHALL be recorded as a non-test with
+`a1_genuinely_exercised=false`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_/success_."
+- `a1_genuinely_exercised`: principle "the load-bearing check -- measured_on_real_frames AND tracker!=baseline no-op AND positive control real AND verdict matches numbers; else A1 is a non-test (synthetic-only or a silent degenerate-to-baseline)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4845-A1-HOSTILE-AUDIT
+
+Given the Exp 4841 perception artifact is present
+When Experiment 4845 runs the summarizer, adversarial verifier, real-frame,
+tracker-vs-baseline, positive-control, recovery-claim, live-path, and
+solve-provenance checks
+Then it writes `results/experiment_4845_perception_probe_audit.json`, appends a
+stable section to `ops/arc_null_silent_bug_audit.md`, records
+`inference_substrate=aggregation_from_upstream_artifacts`, and marks
+`a1_genuinely_exercised=true` only when the hostile checks all pass.
+
+#### SCENARIO-ARC-WMTE-4845-NON-TEST-CLASSIFICATION
+
+Given an Exp 4841-like artifact that is synthetic-only, has shape/motion scores
+equal to the color-centroid baseline on every game, fails the `tu93` positive
+control, claims success with fewer than two recovered games, is unreachable from
+the live path, or declares `solve_provenance=live_agent_self_discovery`
+When Experiment 4845 audits that artifact
+Then the audit records the corresponding failed check, emits a terminal
+`complete_a1_perception_probe_non_test_*` verdict, and sets
+`a1_genuinely_exercised=false`.
