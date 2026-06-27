@@ -17016,6 +17016,23 @@ Top 10 selected by relevance score.
 - **Complexity:** high
 - **Description:** Extend Carnot's constraint extraction pipeline (currently arithmetic-only) to factual claims grounded in a lightweight knowledge graph. Use Wikidata SPARQL (public endpoint, no cost) to resolve named entities and their relations as soft constraints encoded into Ising couplings. Run on 100 TriviaQA questions using Qwen3.5-0.8B as the LLM. Measure: (a) factual claim detection rate, (b) KG resolution success rate, (c) Ising verifier precision/recall on factual hallucinations vs arithmetic-only baseline. Success: ≥60% factual claim detection with ≥70% verifier precision — establishing the first data point for Goal #3 (factual extractor). Also test with google/gemma-4-E4B-it to check model-agnosticism.
 
+<!-- EXP4858-GENERATION-EXPRESSIBILITY-REFERENCES-START -->
+## 2026-06-27 Exp 4858 generation-expressibility source set
+
+Reliable-channel ingestion for `.448`, aimed at Exp 4851's
+`NEVER_ENUMERATED` dominant bucket. These papers are marked INGESTED for the
+generation-expressibility roadmap handoff:
+
+- **arXiv:2006.08381 -- DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2310.19791 -- LILO: Learning Interpretable Libraries by Compressing and Documenting Code.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2411.17708 -- Towards Efficient Neurally-Guided Program Induction for ARC-AGI.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2507.14172 -- SOAR: Self-Improving Language Models for Evolutionary Program Synthesis: A Case Study on ARC-AGI.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2601.06604 -- Object-Centric World Models Meet Monte Carlo Tree Search.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+- **arXiv:2606.14418 -- Causal Object-Centric Models for Planning with Monte Carlo Tree Search.** Exp 4858 use: generation expressibility source for putting missing winning prefixes into the candidate pool.
+<!-- EXP4858-GENERATION-EXPRESSIBILITY-REFERENCES-END -->
+
 <!-- EXP210_REFERENCES_START -->
 ## 2026-04-12 - Exp 210: Constraint Extraction for Instruction-Tuned Models
 

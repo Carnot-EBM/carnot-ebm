@@ -10,6 +10,61 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP4858-SOTA-INGESTION-GENERATION-EXPRESSIBILITY-START -->
+## 2026-06-27 Exp 4858 - .448 generation expressibility SOTA ingestion - INGESTED
+
+**Status:** INGESTED into `results/experiment_4858_sota_ingestion_generation_expressibility.json`.
+
+**Preconditions:** `research-studying.md`, `research-references.md`,
+`results/experiment_4848_sota_ingestion_object_world_model.json`, and
+`results/experiment_4851_generation_coverage_diagnostic.json` were present.
+Exp 4851's dominant bucket was `NEVER_ENUMERATED`, so the target is generation
+expressibility, not ranking. `scripts/sweep_clusters.py` emitted ARC
+action-effect/exploration and neural-guided-search/world-model cluster URLs.
+`scripts/sweep_semscholar.py` was run on three focused generation-expressibility
+queries and returned HTTP 429 for all three, so no S2-only source was promoted.
+Low-concurrency WebSearch/WebFetch plus direct arXiv HTTP checks verified the
+top eight papers listed below. `/deep-research` was not invoked. The nulled
+exploration-strategy class and concluded energy stages were not re-ingested. No
+model load, training, leaderboard submission, or solve claim was made; this is a
+no solve claim ingestion note.
+
+**A1 bucket targeted:** `NEVER_ENUMERATED` means the current proposer did not
+express at least one action primitive in most banked winning prefixes. A ranker
+cannot fix a missing candidate. The .448 handoff is to put the winning prefix
+into the pool by widening the proposer vocabulary.
+
+**Partial/noisy object signal contract:** carry forward only partial/noisy object
+signal from Exp 4848. Object slots, relation hints, and action bindings can guide
+proposal generation, but exact identity is not a trusted precondition.
+
+**Verified source set:**
+- arXiv:2006.08381 -- DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning
+- arXiv:2310.19791 -- LILO: Learning Interpretable Libraries by Compressing and Documenting Code
+- arXiv:2411.17708 -- Towards Efficient Neurally-Guided Program Induction for ARC-AGI
+- arXiv:2507.14172 -- SOAR: Self-Improving Language Models for Evolutionary Program Synthesis: A Case Study on ARC-AGI
+- arXiv:2507.15877 -- Out-of-Distribution Generalization in the ARC-AGI Domain: Comparing Execution-Guided Neural Program Synthesis and Test-Time Fine-Tuning
+- arXiv:2601.06604 -- Object-Centric World Models Meet Monte Carlo Tree Search
+- arXiv:2605.05138 -- Executable World Models for ARC-AGI-3 in the Era of Coding Agents
+- arXiv:2606.14418 -- Causal Object-Centric Models for Planning with Monte Carlo Tree Search
+
+**SOTA -> generation expressibility mapping for .448:**
+- **DreamCoder/LILO action-primitive library learner** (arXiv:2006.08381, arXiv:2310.19791): maps to .448 / NEVER_ENUMERATED; Primitive expansion: Learns reusable action primitives and documented abstractions from verified traces, then offers those primitives as first-class proposer moves. Winner insertion: Insert the winning prefix into the pool by synthesizing a short program over learned move/transform/loop primitives, then lowering it to actions. Object signal: Consumes partial/noisy object signal as soft predicates and confidence-tagged slots; stable object IDs are useful hints, not requirements. Proposal graft: Mine successful and near-successful traces for reusable ARC action macros, add them to the proposer vocabulary, and enumerate macro programs before raw coordinate retries. Verification handoff: Lower each macro program to executable actions and keep it only when replay matches the verifier's prefix/state checks. Takes over: Takes over the fixed primitive vocabulary that made decisive multi-step prefixes absent from the proposal pool. Fails when: The trace corpus is too thin to learn useful macros, abstractions overfit one family, or the learned macro cannot be lowered into legal live actions.
+- **Neurally guided ARC DSL program search** (arXiv:2411.17708, arXiv:2507.14172): maps to .448 / NEVER_ENUMERATED; Primitive expansion: Uses a learned guide and evolutionary self-improvement to prioritize DSL primitive operators and compositions that the generic action proposer never names. Winner insertion: Insert the winning prefix into the pool by searching ARC DSL programs, compiling the best program into candidate action prefixes, and replaying them. Object signal: Consumes partial/noisy object signal as optional features for DSL argument binding while preserving fallback grid predicates. Proposal graft: Add a program-search proposer arm that samples guided DSL transformations for object, color, region, and loop operations before live ranking. Verification handoff: Compile candidate programs to action prefixes and verify by executable replay against the offline/live harness. Takes over: Takes over flat action enumeration when the missing prefix is a composed grid transformation rather than a single primitive action. Fails when: The DSL excludes the true mechanic, the neural guide memorizes training families, or evolutionary search spends the action budget on invalid programs.
+- **Execution-guided neural program synthesis for ARC** (arXiv:2507.15877, arXiv:2507.14172): maps to .448 / NEVER_ENUMERATED; Primitive expansion: Expands primitives by letting neural proposals mutate executable programs under feedback from failed replays and counterexamples. Winner insertion: Insert the winning prefix into the pool by turning replay errors into program edits until the synthesized action program reaches the missing prefix state. Object signal: Consumes partial/noisy object signal only as counterexample annotations and candidate feature bindings; execution remains the source of truth. Proposal graft: Run a bounded synthesize-execute-repair loop over action programs, enqueueing only repaired prefixes that pass executable checks. Verification handoff: Every repaired program is replayed; rejected traces become the next synthesis counterexample rather than a scored candidate. Takes over: Takes over one-shot proposal failures by converting verifier rejects into new candidate programs. Fails when: Counterexamples are too expensive to gather, the repair model edits surface syntax but not mechanics, or the executable check cannot expose the missing rule.
+- **Object-relational MCTS action-program proposer** (arXiv:2601.06604, arXiv:2606.14418): maps to .448 / NEVER_ENUMERATED; Primitive expansion: Expands primitive actions into object-bound action programs selected by MCTS over learned object-relational dynamics. Winner insertion: Insert the winning prefix into the pool by expanding MCTS branches whose object-relation deltas predict the decisive first-contact transition. Object signal: Consumes partial/noisy object signal as probabilistic slots and relation hypotheses, allowing identity uncertainty inside the tree state. Proposal graft: Add a shallow object-relation MCTS proposer that emits replayable object-bound branches as candidate prefixes. Verification handoff: Replay branch actions and compare observed relation deltas against the MCTS prediction before admitting the prefix. Takes over: Takes over unguided object interaction enumeration when the current pool never tries the decisive object-action binding. Fails when: Noisy slots alias multiple controllable objects, learned dynamics rewards a latent shortcut, or tree search cannot ground object choices to live controls.
+- **Executable world-model action programmer** (arXiv:2605.05138, arXiv:2507.15877): maps to .448 / NEVER_ENUMERATED; Primitive expansion: Turns induced executable transition models into primitive action-program templates that become new proposer primitives for interactive ARC levels. Winner insertion: Insert the winning prefix into the pool by inducing a transition program, planning through it, and exporting the realized action sequence as a prefix. Object signal: Consumes partial/noisy object signal as typed hints for transition variables; the executable model must still pass replay without trusting exact IDs. Proposal graft: Let coding-agent world-model induction produce executable transition functions and ask the proposer to enumerate action programs that satisfy those functions. Verification handoff: Accept an action program only after replay confirms the induced transition and the prefix remains legal under the live harness. Takes over: Takes over static frame-delta heuristics by creating new executable action programs before ranker selection. Fails when: The induced model overfits observed prefixes, hidden mechanics need more probes, or the planner finds a model path that cannot be executed in the real game.
+
+flagged_for_v448: dreamcoder_lilo_action_library (arXiv:2006.08381 + arXiv:2310.19791)
+flagged_for_v448: eg_nps_soar_arc_program_search (arXiv:2411.17708 + arXiv:2507.14172 + arXiv:2507.15877)
+flagged_for_v448: comet_executable_world_model_mcts (arXiv:2606.14418 + arXiv:2601.06604 + arXiv:2605.05138)
+
+**Bottom line for .448:** start with DreamCoder/LILO-style action-library
+learning as the vocabulary widening layer, pair it with execution-guided ARC
+program search for counterexample repair, and use COMET/executable-world-model
+MCTS to turn partial object signals into replayable action prefixes.
+<!-- EXP4858-SOTA-INGESTION-GENERATION-EXPRESSIBILITY-END -->
+
 <!-- EXP4848-SOTA-INGESTION-OBJECT-WORLD-MODEL-START -->
 ## 2026-06-27 Exp 4848 - .447 object-world-model planning SOTA ingestion - INGESTED
 
