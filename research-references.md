@@ -24769,3 +24769,45 @@ CORRECTED goal-free online-action-learning DRIVER (coordinate-head-proposes-clic
 Go-Explore + CNN, A/B vs frozen; operator 2026-06-24 leader-gap; A4). (4) AUDIT the recent
 nulls for the silent bugs the operator found (B1). Majority-ARC sprint, 6 days to the
 2026-06-30 ARC Prize Milestone #1 deadline ($25K).
+
+### .448 generation-wall fork — GUIDANCE vs. world-model-INDUCER-quality ceiling (planner Opus 4.8, 2026-06-27)
+
+The `.447 A1 candidate-generation coverage diagnostic (exp4851) returned **NEVER_ENUMERATED
+dominant (9/10 held-out games)** — the live proposer enumerates 488-4766 candidates but the
+winning multi-step L1 prefix (len 4-33) is **never assembled** (matched_winning_prefix_len 1-3,
+then the search diverges). B1 (exp4855) confirmed it genuine (proposer-blind, tu93 positive control COVERED).
+
+This must be reconciled with **two RETIRED coverage levers** (ops/known-issues.md 2026-06-23):
+**macro-action vocabulary induction** (`complete: macro_horizon_collapse_empirical_null_guidance_not_depth`
+-- macros multiply branching 24-vs-4 without a guiding signal -> strictly worse; "the 0.04 wall is
+generation-GUIDANCE, not depth") and **click-heatmap-as-generator**
+(`complete: click_heatmap_generator_premise_falsified_guidance_not_coverage` -- 99.1% of human
+effective clicks land <=2px of an object centroid; the centroid enumerator already covers what works;
+ARC click games are OBJECT-level "which object/which order", not "where-precisely"). Synthesis: the
+**primitive vocabulary is already sufficient**; NEVER_ENUMERATED means the right sequence is never
+**ASSEMBLED**, i.e. the wall is **GUIDANCE/assembly**, not coverage. So `.448 must NOT re-propose any
+coverage/vocabulary lever (macro, option-framework, off-centroid click generator -- all retired).
+
+The decisive `.448 fork (the genuinely-untried direction): is the assembly gap closable by a
+**guided planner over the sufficient primitives**, or is it a structural **world-model-INDUCER-quality
+ceiling** (our air-gapped weak Qwen3.5-9B-MTP cannot induce an accurate-enough forward model to plan
+through)? The SOTA path is **executable world models + planning**:
+- **Executable World Models for ARC-AGI-3 in the Era of Coding Agents (arXiv:2605.05138)** -- the
+  Family-B SOTA: a STRONG coding-agent induces+verifies an executable Python world model, then plans
+  in it. The ledger's structural diagnosis is precisely that we run a WEAK inducer where SOTA runs a
+  strong one. Carnot already has the live-path-reachable hook (`arc_competition_agent._induce_and_plan`
+  -> `e3.load_engine` -> `plan_in_model`); the free-form engine nulled at **0.12 held-out accuracy** on
+  lp85 (the dynamics ENGINE is the binding wall -- `.437 A2 finding).
+- **ARC of Progress survey (arXiv:2603.13372)** + **ARC Prize 2025 Technical Report (arXiv:2601.10904)**
+  -- frontier <1%, humans 100%; world-modeling-that-generalizes + goal-setting named as the crux.
+- **ARCTraj human reasoning trajectories (arXiv:2511.11079)** -- a human-trajectory corpus (candidate
+  imitation/guidance signal; cf. the retired DQfD imitation-prior null exp4512).
+
+**Bottom line for .448:** the headline (A1) measures the fork decisively -- for the NEVER_ENUMERATED
+held-out games, run the genuinely-untried induce->`plan_in_model` (Family-B, live-path-reachable) and
+measure, per game, the JOINT (induced world-model held-out accuracy x coverage migration
+NEVER_ENUMERATED->COVERED). High-accuracy+migration -> GUIDANCE was the wall, planning closes it (.449
+builds guided planning); high-accuracy+no-migration -> the planner is the gap; LOW-accuracy+no-migration
+-> the INDUCER is the structural ceiling (operator escalation: the weak-9B world-model wall). This is
+NOT a retired lever and NOT the free-form-engine accuracy null -- its deliverable is the joint
+accuracy x coverage-migration fork on the exp4851 harness, the next-level root cause of the .447 finding.
