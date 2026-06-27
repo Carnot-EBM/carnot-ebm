@@ -1,29 +1,28 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.448",
-  "generated_at": "2026-06-27T12:53:49Z",
+  "generated_at": "2026-06-27T13:07:44Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The milestone-scoped TIMING DATA block fed to this retro reported no experiment commits since activation, so the locked numeric fields are 0/0/0/null. This matches the recurring FALSE-ZERO milestone-timing detector gap flagged across ~74 prior milestones (e.g. .447): the authoritative detector returns zero even when experiments did commit, so per-experiment durations could not be ranked from the authoritative source this milestone. On-disk artifact inspection (documented in the research-log entry) indicates 2026.06.448 actually executed its phase arms; the retro JSON keeps the conductor-locked 0/0/0/null fields per the anti-hallucination guard.",
+  "summary": "The milestone-scoped timing detector reported 0 experiment commits since activation of 2026.06.448, so the locked timing fields are 0/0/0 and slowest_experiments is empty. On this project a zero-at-retro reading is frequently a known milestone-scoped timing-detector false-zero (the detector-wire reaches the standalone module but not the conductor's retro prompt-assembly consumer) rather than a genuinely idle milestone, so artifact mtimes should be cross-checked before concluding idleness. Both RTX 3090s were idle (0% util, 4MB each), which is correct because no monitored compute-bound task was present; gpu_idle_on_compute_bound_tasks is therefore null.",
   "bottlenecks_identified": [
-    "Recurring FALSE-ZERO milestone-scoped-timing detector gap: the authoritative TIMING DATA block reported 0 commits since activation, so this retro cannot rank slowest experiments or compute a real wall-time from its own data source. The same gap has been documented for ~74 milestones (~.363 through .447); it forces a manual disk-mtime inspection every retro and risks misdiagnosing an active milestone as empty.",
-    "Both RTX 3090 GPUs are idle (0% util, 4MB allocated each), but this is CORRECT, not a bottleneck: no monitored-3090 compute-bound task was present in the TIMING DATA, so gpu_idle_on_compute_bound_tasks is null and GPU idle is NOT flagged (per the GPU-idle interpretation rule)."
+    "Retro data-visibility gap: the milestone-scoped timing detector reported 0 commits, leaving this retrospective with no per-experiment duration signal. This is a recurring detector-wiring gap, not evidence of zero real throughput.",
+    "Because the timing block is empty, no compute or scheduling bottleneck can be measured this milestone — the retro is blind rather than reporting an optimized run."
   ],
   "improvements_suggested": [
-    "Move the shipped milestone-scoped timing detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro is fed real per-experiment durations instead of a false zero. This is the single recurring operational defect and is the reason the locked fields read 0/0/0/null.",
-    "Add a disk-mtime fallback: when the detector returns 0 commits, derive the exp_range and window from results/experiment_*.json mtimes so a detector false-zero degrades to a verifiable artifact-mtime window rather than an apparently-empty retro.",
-    "Enforce the Inference-Substrate Declaration Discipline at write time for blocked tasks: a task exiting with honest_verdict=blocked_* MUST NOT declare inference_substrate=live_llm_inference, since it never reached inference -- this prevents benign blocked tasks from tripping the DURATION_TOO_SHORT fabrication gate.",
-    "Leave GPU / DualGPURunner untouched: no monitored-3090 compute-bound task ran, so both 3090s idle is correct behaviour, not an inefficiency to fix."
+    "Move the timing detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site so the retro consumes real per-experiment timing instead of the standalone module's false-zero.",
+    "Add a disk-mtime fallback: when the detector reports zero commits, degrade to a verifiable artifact-mtime window over results/experiment_*.json so a false-zero becomes a real (if coarse) timing window rather than an empty retro.",
+    "Stamp duration_s / inference_substrate / compute_bound at artifact write-time so future retros can classify compute-bound vs synthesis tasks without re-deriving them, and so blocked_* tasks never declare live_llm_inference."
   ],
   "top_3_highest_leverage_actions": [
-    "Wire real per-experiment timing into the retro TIMING-DATA block (move the detector to the prompt-assembly call site + add a disk-mtime fallback) -- the dominant recurring operational defect across ~74 milestones; it does not reclaim compute wall-clock but eliminates the manual disk inspection every retro requires and prevents misdiagnosing active milestones as empty.",
-    "Fix the blocked-task substrate declaration (blocked_* => never live_llm_inference) so benign blocked phase arms stop tripping the fabrication gate.",
-    "Do NOT enforce DualGPURunner or any GPU-engagement change: both 3090s idle is correct because no monitored-3090 compute-bound task ran this milestone."
+    "Re-wire the timing detector to the conductor's retro prompt-assembly consumer, eliminating the recurring false-zero that blinds operational retros.",
+    "Add the disk-mtime fallback window so a detector false-zero still yields a verifiable artifact-mtime timing window for the retro to analyze.",
+    "Add write-time duration_s / inference_substrate / compute_bound stamping to every experiment artifact for reliable downstream compute-bound classification."
   ],
   "estimated_time_savings_pct": 15,
-  "meta_reflection": "The honest operational story of this milestone is not 'empty' but 'invisible': the retro's authoritative timing source reported zero while the milestone's phase arms actually ran and committed, the same false-zero detector gap flagged for ~74 milestones. The recurring fix -- real timing into the retro prompt plus a disk-mtime fallback -- is higher-leverage than any per-experiment speedup, because it would stop every future retro from having to reconstruct the execution window by hand and from initially misreading an active milestone as data-free."
+  "meta_reflection": "The compute axis has nothing to optimize this milestone because the timing block is empty, and the GPU idleness is expected rather than a bug. The durable, recurring process lesson is that an operational retro should never be blinded by a single detector: re-wiring the timing detector to the retro's prompt-assembly call site plus a disk-mtime fallback would let the retro measure real execution even when the primary detector reads zero."
 }
