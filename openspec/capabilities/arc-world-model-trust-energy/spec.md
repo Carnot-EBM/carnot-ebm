@@ -11628,6 +11628,74 @@ Then it emits one of `LOCAL_MODEL_IS_CEILING`, `METHOD_IS_CEILING`, or
 reference lane as ceiling-only, and retires the inducer direction when neither
 lane's delta CI95 excludes zero.
 
+### REQ-ARC-WMTE-4887: Value-Gap And Inducer-Ceiling Adversarial Audit
+
+Experiment 4887 SHALL audit the Experiment 4882 A1 TTT dynamics value-gap
+probe and, when present, the Experiment 4883 A1b inducer-ceiling A/B before any
+capstone trusts the fork verdict or inducer attribution. If the A1 artifact or
+source script is missing, Experiment 4887 SHALL write
+`results/experiment_4887_value_gap_inducer_audit.json` with
+`honest_verdict=blocked_a1_artifact_missing` and SHALL not fabricate any A1 or
+A1b pass.
+
+The audit SHALL run `scripts/summarize_artifact.py` and
+`scripts/adversarial_verify.py` on the A1 artifact, SHALL run
+`scripts/adversarial_verify.py` on A1b when A1b exists, SHALL inspect the A1
+source path so the banked winning answer is used only after planning for
+classification, and SHALL require `arc_orphan_solver_lint` to pass before
+declaring the live path reachable. A1 is genuinely diagnostic only when the
+graded `tu93` positive control is non-degenerate (`cell_recall > 0`), the
+reported value delta is remeasured on a split disjoint from the TTA adapter fit
+set, the planner is blind to the banked answer, per-game
+`cell_recall`/value-accuracy/delta numbers support the reported
+`fork_verdict`, the live path is reachable, and the A1 run used GPU-0 CUDA or
+iGPU HIP for at least the live-model duration floor without an adversarial
+flag. A1b is trustworthy only when it was gate-skipped because A1 did not enter
+the low-value inducer-ceiling branch, or when both lanes scored the same A1
+held-out games and split, remained oracle-distinct, used a reachable live path,
+and labeled the reference lane as ceiling-only.
+
+Experiment 4887 SHALL write
+`results/experiment_4887_value_gap_inducer_audit.json` with required top-level
+fields `honest_verdict`, `a1_genuinely_diagnostic`,
+`a1_positive_control_non_degenerate_confirmed`,
+`a1_delta_on_heldout_disjoint_confirmed`, `planner_blind_confirmed`,
+`numbers_match_fork`, `a1b_ab_trustworthy`, `inference_substrate`,
+`checks`, `a1_failure_reasons`, `a1b_failure_reasons`,
+`a1_summarizer_result`, `a1_adversarial_result`,
+`a1b_adversarial_result`, `live_lint_result`, `preconditions_checked`,
+`field_principles`, `duration_s`, and `reproducibility_checksum`. The workflow
+SHALL append an idempotent Experiment 4887 section to
+`ops/arc_null_silent_bug_audit.md`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_a1b_audited."
+- `a1_genuinely_diagnostic`: principle "the load-bearing check -- non-degenerate-graded-control AND held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
+- `a1_positive_control_non_degenerate_confirmed`: principle "true iff the GRADED tu93 positive control really had cell_recall > 0 -- proves the .449 degenerate-metric failure is FIXED."
+- `a1_delta_on_heldout_disjoint_confirmed`: principle "true iff A1's value-accuracy delta was re-measured on a split DISJOINT from the TTA adapter's fit set (not a tautology)."
+- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed induction/adaptation/planning."
+- `numbers_match_fork`: principle "true iff the per-game (cell_recall, value-accuracy, delta) numbers support the claimed fork_verdict."
+- `a1b_ab_trustworthy`: principle "true iff both A1b lanes scored the SAME held-out split as A1 and oracle-distinct (or A1b was gate-skipped)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4887-A1-A1B-AUDIT
+
+Given checked-in A1 and optional A1b artifacts plus the A1 source script
+When Experiment 4887 runs the hostile audit
+Then it writes a schema-valid `complete_a1_a1b_audited` artifact whose A1 and
+A1b trust booleans are true only when all load-bearing checks pass, and whose
+failure reasons make any degenerate positive control, TTA tautology,
+banked-answer injection, fork-number mismatch, unreachable live path,
+wrong/too-short substrate, circular verifier, or unfair A1b split explicit.
+
+#### SCENARIO-ARC-WMTE-4887-BLOCKED-A1-ARTIFACT
+
+Given the A1 artifact or A1 source script is missing
+When Experiment 4887 runs
+Then it writes `blocked_a1_artifact_missing`, marks every trust boolean false,
+records the missing precondition, and does not claim A1 or A1b audit success.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
