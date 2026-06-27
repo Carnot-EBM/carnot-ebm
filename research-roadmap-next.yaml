@@ -843,7 +843,7 @@ tasks:
     CONTEXT ({date}). KV260 hardware continuity (Hardware-Task Continuity Discipline + KV260 SSH-Not-SD-Card
     Discipline). The board graduated terminal (.448/.449 REACHABLE, 5 UIO devices) but stays in the
     per-milestone SSH-only continuity rotation. The precondition is SSH-reachability of the board, NEVER host
-    SD-card presence (do NOT use /dev/mmcblk).
+    SD-card presence (do NOT probe the host SD-card block device).
 
     EXISTING CODE TO READ FIRST:
       - {project_root}/results/experiment_4878_kv260_continuity.json (the .449 continuity artifact -- board state to confirm)
@@ -851,7 +851,7 @@ tasks:
 
     CONCRETE STEPS:
       0. PRECONDITIONS: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero ->
-         honest_verdict blocked_kv260_ssh_unreachable, WRITE the deliverable, EXIT (do NOT use /dev/mmcblk).
+         honest_verdict blocked_kv260_ssh_unreachable, WRITE the deliverable, EXIT (do NOT probe the host SD-card block device).
       1. Capture board state over SSH (hostname, kernel, uptime, `ls /dev/uio*` count, `xmutil listapps` if available).
       2. Record the next forward step (continuity-only; the board is terminal). WRITE the deliverable.
 
