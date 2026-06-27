@@ -9470,3 +9470,4 @@ The contro |
 | 2026-06-27 19:39 UTC | Activation REFUSED: milestone 2026.06.450 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-27 19:42 UTC | Milestone 2026.06.450 activated | OK | 10 tasks queued |
 | 2026-06-27 19:56 UTC | PHASE 0 (TRANSITION) -- archive .449 -> activate . | OK | 86 passed, 1 warning in 7.17s |
+| 2026-06-27 20:17 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- AT | OK | 89 passed, 1 warning in 6.36s |
