@@ -1,0 +1,31 @@
+{
+  "experiment": "verifier_gated_reasoning_derisk",
+  "schema": "carnot.verifier_gated_reasoning_derisk.v1",
+  "honest_verdict": "complete: model_native_verifier_discriminates_hallucinations_self_consistency_auroc_0.7918_proceed_to_full_experiment",
+  "question": "can a Carnot-side model-native (no-retrieval) verifier discriminate the local model's correct vs hallucinated factual answers? (the #1 risk of verifier-gated reasoning)",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "model": "Qwen3.5-9B-MTP (GPU 1, port 8921)",
+  "corpus": "google/simpleqa-verified eval",
+  "n_items": 120,
+  "model_accuracy": 0.0833,
+  "n_correct": 10,
+  "n_hallucinated": 110,
+  "auroc_per_signal": {
+    "p_true": 0.6745,
+    "answer_logprob": 0.6982,
+    "self_consistency": 0.7918
+  },
+  "auroc_shuffled_control": {
+    "p_true": 0.5882,
+    "answer_logprob": 0.4273,
+    "self_consistency": 0.4468
+  },
+  "best_signal": "self_consistency",
+  "best_auroc": 0.7918,
+  "model_native_verifier_discriminates": true,
+  "interpretation": "discriminates=True -> a Carnot-side model-native verifier can gate hallucinated intermediate facts; proceed to the full A/B/C verifier-gated-reasoning experiment. discriminates=False -> model-native signals are ~chance; the verifier must be retrieval-grounded (the #1 risk).",
+  "random_seed": 2603,
+  "duration_s": 106.14,
+  "reproducibility_checksum": "sha256:786aa666173f65256ab97ea073bcdf39a1a351a51cf50317bc8e3785570f1983"
+}

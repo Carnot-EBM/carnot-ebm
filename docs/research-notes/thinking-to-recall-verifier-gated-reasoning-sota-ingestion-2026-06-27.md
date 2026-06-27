@@ -139,12 +139,21 @@ adversarial-verify clean (no circularity: the intermediate-fact verifier must be
 final-answer oracle).
 
 **Honest risks.**
-1. **Domain transfer of the verifier.** FoVer's 0.913 is on math/code *step* verification; *factual*
-   intermediate-fact verification is a different domain. Carnot's energy/constraint verifier may not
-   detect factual hallucinations well — the paper used a *retrieval-grounded* ("search-enabled") verifier.
-   The fair Carnot version may need a local retrieval-grounded factuality checker (offline KB), which is
-   decentralization-compatible but is a new verifier instance. **This is the #1 risk: the verifier must
-   actually discriminate hallucinated facts in THIS domain.**
+1. **Domain transfer of the verifier — DE-RISKED POSITIVE (2026-06-27).** FoVer's 0.913 is on math/code
+   *step* verification; *factual* intermediate-fact verification is a different domain. The concern was
+   that Carnot's model-native signals may not detect factual hallucinations at all — the paper used a
+   *retrieval-grounded* ("search-enabled") verifier. **Resolved by `verifier_gated_reasoning_derisk`**
+   (`results/verifier_gated_reasoning_derisk_hardened.json`, n=500, 45 correct / 455 hallucinated on
+   SimpleQA-Verified, Qwen3.5-9B on GPU 1): three *no-retrieval* model-native signals all discriminate
+   correct-vs-hallucinated FINAL answers above chance, strongest being **self-consistency AUROC 0.759,
+   paired-bootstrap CI95 [0.698, 0.818]** (lower bound strictly > 0.5; label-shuffle control 0.536).
+   So a no-retrieval Carnot-side verifier CAN discriminate this model's own factual hallucinations →
+   the full experiment does NOT need retrieval grounding for the discrimination step; self-consistency
+   is the lever. **Residual (carry into the full experiment):** the de-risk measured discrimination of
+   the *final answer*; the full experiment gates on discriminating *intermediate facts* in a trace
+   (reasonable extrapolation — intermediate facts are also self-generated factual claims — but unproven
+   until the A/B/C run). The de-risk did NOT establish headroom (that gating improves final accuracy);
+   that is risk #2 and the full experiment's C>B gate.
 2. **Headroom dependence.** If the corpus has few hallucinated-fact traces, there's nothing to gate (the
    FALSE_NEGATIVE guard catches this).
 3. **Cost.** Live local reasoning on GPU 1; scope to a few hundred QA items + a few seeds (sub-hour).
