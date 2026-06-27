@@ -9448,3 +9448,5 @@ The contro |
 | 2026-06-27 12:11 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability co | OK | 85 passed, 1 warning in 8.60s |
 | 2026-06-27 12:29 UTC | PHASE D (SOTA-INGESTION -- the .449 frontier) -- g | OK | 110 passed, 1 warning in 5.82s |
 | 2026-06-27 12:48 UTC | PHASE E (CAPSTONE .448) -- aggregate the scorecard | OK | 87 passed, 1 warning in 8.19s |
+| 2026-06-27 13:49 UTC | Plan milestone 2026.06.449 | OK | 11 tasks proposed |
+| 2026-06-27 13:52 UTC | Milestone 2026.06.449 activated | OK | 11 tasks queued |
