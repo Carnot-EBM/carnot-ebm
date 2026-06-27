@@ -9455,3 +9455,4 @@ The contro |
 | 2026-06-27 14:46 UTC | PHASE A1b (ARC NORTH STAR; FIRST INDUCER SWING) -- | OK | 89 passed, 1 warning in 9.13s |
 | 2026-06-27 15:10 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 110 passed, 1 warning in 8.40s |
 | 2026-06-27 15:23 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 10.77s |
+| 2026-06-27 16:46 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE) -- GENUIN | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ssert specs["b |
