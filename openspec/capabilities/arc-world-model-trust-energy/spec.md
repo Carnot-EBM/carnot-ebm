@@ -11168,6 +11168,76 @@ Then `delta_on_truly_heldout_split=true`, the per-game deltas are computed on
 the remeasurement split rather than the repair examples, and the median delta
 CI95 determines the terminal success or retirement verdict.
 
+### REQ-ARC-WMTE-4876: A1 GPU-Fixed Fork Probe And A1b CEGIS Adversarial Audit
+
+Experiment 4876 SHALL adversarially audit the `.449` A1 fork probe artifact
+`results/experiment_4871_generation_wall_fork_probe_gpu_fixed.json`, its source
+`python/carnot/experiment_4871_generation_wall_fork_probe_gpu_fixed.py`, and
+the optional A1b CEGIS refinement artifact
+`results/experiment_4872_cegis_world_model_refinement.json` before any capstone
+trusts the fork verdict or inducer delta. If the A1 artifact or source is
+missing, the workflow SHALL write
+`results/experiment_4876_fork_probe_inducer_audit.json` with
+`honest_verdict=blocked_a1_artifact_missing`, preserve the required fields with
+false gates, append the audit report, and stop without fabricating A1/A1b
+passes.
+
+The A1 audit SHALL run `scripts/summarize_artifact.py` and
+`scripts/adversarial_verify.py` on the A1 artifact, inspect the source
+induce-plan path, and run `scripts/arc_orphan_solver_lint.py`. The falsifiable
+gate `a1_genuinely_diagnostic` SHALL be true iff A1 ran live on an accepted
+GPU-0 CUDA or iGPU HIP generator, cleared the 60-second live-inference duration
+floor, was not flagged adversarial, kept induction/planning blind to the banked
+winner until post-planning classification, passed the real `tu93` positive
+control with high accuracy and `COVERED`, had per-game accuracy/bucket numbers
+supporting the claimed fork verdict with `n_games_measured>=3`, and remained
+live-path-reachable.
+
+If the A1b artifact ran, Experiment 4876 SHALL run
+`scripts/adversarial_verify.py` on it, verify every repair counterexample split
+is disjoint from its remeasurement split, verify the reported median delta and
+CI95 match the per-game deltas, record whether its positive control passed,
+confirm `verifier_is_oracle=false`, and confirm the live E3 repair path is
+reachable. The falsifiable gate `a1b_delta_trustworthy` SHALL be true iff A1b's
+delta is on a truly held-out disjoint split and oracle-distinct, or iff A1b was
+gate-skipped because A1 was high-accuracy or blocked. A1b positive-control
+failure SHALL be recorded as residual evidence even when the held-out/oracle
+mechanics are trustworthy.
+
+Experiment 4876 SHALL append an idempotent section to
+`ops/arc_null_silent_bug_audit.md` and write
+`results/experiment_4876_fork_probe_inducer_audit.json`. The artifact SHALL
+include the required principle-annotated fields:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_a1b_audited."
+- `a1_genuinely_diagnostic`: principle "the load-bearing check -- ran-live-on-GPU0 AND planner-blind AND positive-control-migrated AND numbers-match-fork AND live-path-reachable; else A1's fork verdict is void."
+- `a1_ran_live_on_gpu0`: principle "true iff generator_backend is gpu0_cuda/igpu_hip AND duration clears the 60s floor AND not flagged_adversarial -- proves the .448 cuda_3090_generator_disallowed block is gone."
+- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed induction/planning."
+- `positive_control_confirmed`: principle "true iff tu93 really came out HIGH accuracy + COVERED."
+- `numbers_match_fork`: principle "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
+- `a1b_delta_trustworthy`: principle "true iff A1b's accuracy delta is on a held-out split DISJOINT from the repair set and oracle-distinct (or A1b was gate-skipped)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4876-A1-A1B-AUDIT
+
+Given the Exp 4871 artifact and source are present, and the Exp 4872 artifact
+is present or was gate-skipped
+When Experiment 4876 audits A1 and A1b
+Then it writes `results/experiment_4876_fork_probe_inducer_audit.json`, appends
+the audit report, sets `a1_genuinely_diagnostic=true` only when every A1
+load-bearing check passes, sets `a1b_delta_trustworthy=true` only for a
+disjoint held-out oracle-distinct A1b delta or an explicit gate skip, and
+records failed positive-control or numeric checks as reasons that void the
+corresponding A1 fork verdict or A1b lift.
+
+#### SCENARIO-ARC-WMTE-4876-BLOCKED-A1-ARTIFACT
+
+Given the Exp 4871 A1 artifact or source is missing
+When Experiment 4876 starts
+Then it writes a terminal `blocked_a1_artifact_missing` artifact with the
+required principle fields, false diagnostic gates, precondition evidence, and no
+fabricated A1b trust result.
+
 ### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
 
 Experiment 4865 SHALL adversarially audit

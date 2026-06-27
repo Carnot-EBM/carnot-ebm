@@ -227,3 +227,27 @@
 
 - Source artifact checksum: `sha256:fe40e39d556c549cd113e4c6850b78263c73cd856060c028e6cbebd28db906d3`
 - Source script checksum: `sha256:c0e890c4540d72e7656d2ece898bdde7162c27e3d9e369fc66a01269a95fd998`
+## Experiment 4876 A1/A1b Audit
+
+- Verdict: `complete_a1_a1b_audited`
+- a1_genuinely_diagnostic: `False`
+- a1_ran_live_on_gpu0: `True`
+- a1b_delta_trustworthy: `True`
+- A1 reasons: `positive_control_not_migrated, positive_control_not_covered, positive_control_low_accuracy, fork_verdict_missing`
+- A1b reasons: `-`
+- A1b residuals: `a1b_positive_control_failed`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Check | Passed | Detail |
+|---|---:|---|
+| `a1_live_gpu` | `True` | `{"duration_floor_s": 60.0, "duration_s": 587.0132269859314, "flagged_adversarial": false, "generator_backend": "gpu0_cuda"}` |
+| `a1_planner_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_planned_pool": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
+| `a1_positive_control` | `False` | `{"artifact_positive_control_migrated": false, "engine_heldout_accuracy": 0.0, "high_accuracy_threshold": 0.5, "planned_bucket": "NEVER_ENUMERATED", "positive_control_game": "tu93", "row_game": "tu93"}` |
+| `a1_numbers_match_fork` | `False` | `{"computed_coverage_migration_count": 0, "computed_fork_verdict": "INDUCER_CEILING", "computed_median_engine_heldout_accuracy": 0.0, "invalid_games": [], "per_game_count": 9, "reported_coverage_migration_count": 0, "reported_fork_verdict": null, "reported_median_engine_heldout_accuracy": 0.0, "reported_n_games_measured": 9}` |
+| `a1_live_path` | `True` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": true, "solve_provenance": "development_proxy", "source_live_path": {"calls": ["_collect_cold_policy_transitions", "list", "int", "_heldout_transitions", "normalize_sequence", "classify_planned_pool", "row.update", "policy._induce_and_plan", "e3.load_engine", "live_methods.append", "score", "float", "float", "_execute_plan_reaches_l1", "max", "e3.plan_in_model", "live_methods.append", "round", "round", "len", "len", "int", "list", "repr", "sum", "e3.WorldModelVerifier", "float", "float", "getattr", "int", "int", "repr", "ord"], "function_present": true, "induce_and_plan_called": true, "load_engine_called": true, "passed": true, "plan_in_model_called": true}, "source_live_path_called": true}` |
+| `a1_summarizer_and_adversarial_verify` | `True` | `{"adversarial_flag_count": 0, "adversarial_loaded": true, "summarizer_returncode": 0}` |
+| `a1b_delta` | `True` | `{"adversarial_flag_count": 1, "artifact_delta_on_truly_heldout_split": true, "circular_moat_flag_count": 0, "computed_ci95": [0.0, 0.0], "computed_median": 0.0, "live_path_reachable": true, "n_games_measured": 9, "oracle_distinct": true, "positive_control_passed": false, "reported_ci95": [0.0, 0.0], "reported_median": 0.0, "split_disjoint": true, "status": "ran", "verifier_is_oracle": false}` |
+
+- A1 artifact checksum: `sha256:f223196660e020cef86c8f3901aedebe269012ab3eee7c1c9be6e4cea9bac081`
+- A1 script checksum: `sha256:3a96f5b124687b1562ec0e1578e810852adebf85034150f50e4b389b506049bf`
+- A1b artifact checksum: `sha256:0afdde35fa4ca01fd551d6df3136e2f4cff5b7d7b694df969c035e89d9b03bd8`
