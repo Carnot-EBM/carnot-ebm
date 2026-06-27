@@ -11194,3 +11194,58 @@ When Experiment 4853 checks preconditions
 Then it writes `results/experiment_4853_self_play_verifier_checkpoint.json`
 with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
 fabricated checkpoint refresh.
+
+### REQ-ARC-WMTE-4863: ARC Self-Play Verifier Checkpoint Refresh Artifact
+
+Experiment 4863 SHALL run the standing ARC self-play loop on a banked target
+with an existing learned verifier checkpoint, warm-start from that checkpoint,
+reproduction-gate at least one offline level, train on this run's self-play
+traces, refresh the checkpoint, and write
+`results/experiment_4863_self_play_verifier_checkpoint.json`.
+
+The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
+only when the checkpoint mtime advances, `offline_reproduced=true`, and
+`reproduced_levels >= 1`. A failed loop, missing checkpoint, stale mtime, or
+failed reproduction gate SHALL write a terminal `complete_*` or `blocked_*`
+artifact with the residual instead of fabricating checkpoint progress.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+- `reproduced_levels`: principle "the depth confirmed this run."
+- `inference_substrate`: principle "live_llm_inference (60s floor)."
+- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+#### SCENARIO-ARC-WMTE-4863-CHECKPOINT-REFRESHED
+
+Given `arc_solver_kit.offline_arcade()` is available, the selected target is
+banked in `ops/arc_solve_registry.yaml`, and
+`models/arc_verifier_<game>.json` exists before the standing loop runs
+When `scripts/arc_loop_solve.py --game <banked-target>` reports an
+offline-reproduced level and writes the learned verifier checkpoint
+Then Experiment 4863 records `verifier_checkpoint_refreshed=true`,
+`checkpoint_path`, advanced checkpoint mtimes, `offline_reproduced=true`,
+`reproduced_levels >= 1`, `solve_provenance=live_agent_self_discovery`,
+and a terminal success verdict.
+
+#### SCENARIO-ARC-WMTE-4863-RESIDUAL-NO-FABRICATION
+
+Given the loop result is missing, the reproduction gate fails, the checkpoint
+path is absent, or the checkpoint mtime does not advance
+When Experiment 4863 builds its artifact
+Then it records `verifier_checkpoint_refreshed=false`, preserves the residual
+cause, keeps `offline_reproduced` and `reproduced_levels` grounded in the
+loop result, and does not emit a success verdict.
+
+#### SCENARIO-ARC-WMTE-4863-BLOCKED-PRECONDITION
+
+Given the offline arcade is unavailable, the registry is missing, the selected
+target is not banked, or the checkpoint file is absent before the run
+When Experiment 4863 checks preconditions
+Then it writes `results/experiment_4863_self_play_verifier_checkpoint.json`
+with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
+fabricated checkpoint refresh.
