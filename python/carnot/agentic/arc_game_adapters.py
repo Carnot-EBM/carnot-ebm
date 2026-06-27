@@ -220,6 +220,39 @@ SP80_L2_TAIL_LABELS: tuple[str, ...] = (
 SP80_L2_SOLUTION_LABELS: tuple[str, ...] = SP80_L1_LABELS + SP80_L2_TAIL_LABELS
 
 
+S5I5_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(6, {"x": x, "y": y})
+    for x, y in (
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (15, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (30, 57),
+        (15, 57),
+        (45, 57),
+        (45, 57),
+        (45, 57),
+        (60, 57),
+        (60, 57),
+        (60, 57),
+        (60, 57),
+        (60, 57),
+        (60, 57),
+    )
+)
+
+
 SU15_L1_LABELS: tuple[str, ...] = tuple(
     _json_action_label(6, {"x": x, "y": y})
     for x, y in (
@@ -939,6 +972,154 @@ def _lp85():
         featurize=featurize,
         hand_verifier=lambda g: float(sum(_dists(g))),
         depth_caps={1: 20, 2: 70, 3: 90},
+    )
+
+
+def _s5i5():
+    """s5i5 -- dynamic marker-control coverage across L1/L2."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+    from carnot.agentic.arc_exp4101_eleventh_game_explore_first import (
+        build_s5i5_l1_plan,
+        observe_s5i5_state_from_env,
+    )
+
+    def _plan_labels(env, frame=None) -> list[str]:
+        try:
+            observed = observe_s5i5_state_from_env(
+                env,
+                level_completed=kit.frame_level(frame),
+            )
+            plan = build_s5i5_l1_plan(observed)
+        except (AttributeError, TypeError, ValueError):
+            return []
+        return [_json_action_label(6, {"x": action.x, "y": action.y}) for action in plan.actions]
+
+    def action_labels(env, frame=None, path=None):
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 1 and extension_index < len(S5I5_L2_TAIL_LABELS):
+            return [S5I5_L2_TAIL_LABELS[extension_index]]
+        labels = _plan_labels(env, frame)
+        if not labels:
+            return []
+        return [labels[0]]
+
+    def apply(env, label, frame):
+        del frame
+        row = json.loads(label)
+        data = row.get("data") if isinstance(row.get("data"), dict) else None
+        return env.step(_game_action(GameAction, int(row["action"])), data=data)
+
+    def _sprite_rows(game, tag: str) -> tuple[tuple[str, int, int, int, int], ...]:
+        level = getattr(game, "current_level", None)
+        getter = getattr(level, "get_sprites_by_tag", None)
+        if not callable(getter):
+            return ()
+        try:
+            sprites = list(getter(tag))
+        except Exception:
+            return ()
+        return tuple(
+            sorted(
+                (
+                    str(getattr(sprite, "name", "")),
+                    int(getattr(sprite, "x", 0)),
+                    int(getattr(sprite, "y", 0)),
+                    int(getattr(sprite, "width", 0)),
+                    int(getattr(sprite, "height", 0)),
+                )
+                for sprite in sprites
+            )
+        )
+
+    def _control_rows(game) -> tuple[tuple[str, int, int, int, int], ...]:
+        controls = getattr(game, "pigtralzpb", {})
+        try:
+            keys = list(controls.keys())
+        except Exception:
+            keys = []
+        return tuple(
+            sorted(
+                (
+                    str(getattr(control, "name", "")),
+                    int(getattr(control, "x", 0)),
+                    int(getattr(control, "y", 0)),
+                    int(getattr(control, "width", 0)),
+                    int(getattr(control, "height", 0)),
+                )
+                for control in keys
+            )
+        )
+
+    def _linked_rows(game) -> tuple[tuple[str, str, int, int, int, int], ...]:
+        rows: list[tuple[str, str, int, int, int, int]] = []
+        for mapping_name in ("pigtralzpb", "uricqfoplr"):
+            mapping = getattr(game, mapping_name, {})
+            try:
+                items = list(mapping.items())
+            except Exception:
+                items = []
+            for key, values in items:
+                rows.append(
+                    (
+                        mapping_name,
+                        str(getattr(key, "name", "")),
+                        int(getattr(key, "x", 0)),
+                        int(getattr(key, "y", 0)),
+                        int(getattr(key, "width", 0)),
+                        int(getattr(key, "height", 0)),
+                    )
+                )
+                try:
+                    value_sprites = list(values)
+                except Exception:
+                    value_sprites = []
+                for sprite in value_sprites:
+                    rows.append(
+                        (
+                            mapping_name,
+                            str(getattr(sprite, "name", "")),
+                            int(getattr(sprite, "x", 0)),
+                            int(getattr(sprite, "y", 0)),
+                            int(getattr(sprite, "width", 0)),
+                            int(getattr(sprite, "height", 0)),
+                        )
+                    )
+        return tuple(sorted(rows))
+
+    def state_key(game, frame=None):
+        return (
+            kit.frame_level(frame) if frame is not None else -1,
+            _frame_grid_state_key(frame),
+            _sprite_rows(game, "0064ocqkuqacti"),
+            _sprite_rows(game, "0087vvmblxkzdi"),
+            _control_rows(game),
+            _linked_rows(game),
+        )
+
+    def hand_verifier(game, frame=None):
+        fake_env = type("EnvProxy", (), {"_game": game})()
+        try:
+            observed = observe_s5i5_state_from_env(
+                fake_env,
+                level_completed=kit.frame_level(frame),
+            )
+        except (AttributeError, TypeError, ValueError):
+            return 1000.0
+        return float(sum(max(0, int(item.clicks_needed)) for item in observed.items))
+
+    return GameAdapter(
+        game="s5i5",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: 24, 2: 32, 3: 2},
+        level_tails={2: S5I5_L2_TAIL_LABELS},
+        branch_mode="replay",
     )
 
 
@@ -2518,6 +2699,7 @@ _BUILDERS = {
     "lf52": _lf52,
     "r11l": _r11l,
     "re86": _re86,
+    "s5i5": _s5i5,
     "ka59": _ka59,
     "cn04": _cn04,
     "su15": _su15,

@@ -15,6 +15,63 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
+
+The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt
+that is not `.448`'s `r11l` L2 bank, not `.448`'s `re86` self-play target, and
+not a hidden-state-bound target (`ka59` or `wa30`). The selected target SHALL be
+grounded by `ops/arc_solve_registry.yaml` plus
+`arc_solve_learning.recommend_approach(game)`, and SHALL NOT re-solve an
+already-reproduced level as a new result.
+
+The workflow SHALL run the standing loop
+`.venv/bin/python scripts/arc_loop_solve.py --game <target>` before registering
+any missing per-game adapter delta. Any counted level SHALL pass
+`arc_solver_kit.reproduce()` offline, and the artifact SHALL set
+`verifier_is_oracle=true` only for that executable reproduction gate. The
+artifact SHALL be written to `results/experiment_4873_levelup_attempt.json` and
+include principle-annotated fields `honest_verdict`, `solve_provenance`,
+`target_game`, `offline_reproduced`, `reproduced_levels`,
+`new_levels_banked`, `verifier_is_oracle`, `inference_substrate`, and
+`preconditions_checked`.
+
+The success path SHALL use `honest_verdict` prefix
+`success_<game>_levelup_banked`, set
+`solve_provenance=live_agent_self_discovery`, set
+`offline_reproduced=true`, and set `new_levels_banked>=1` with
+`reproduced_levels` strictly greater than the prior registry depth. The no-bank
+path SHALL use `complete_<game>_no_new_level_residual_<cause>`. Missing offline
+environment resources SHALL produce a blocked verdict and SHALL NOT fabricate a
+solve. The workflow SHALL not update `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`; the conductor reconciler owns those files.
+
+#### SCENARIO-REPORT-4873: S5I5 L2 Marker Delta Banks Through The Offline Oracle
+
+**Given** the offline arcade loads, the registry records `s5i5` with one
+reproduced level and a grounded post-L1 marker-control L2 delta, and the first
+standing-loop probe for `s5i5` reports `needs_per_game_RE`
+**When** the Exp 4873 workflow registers the `s5i5` adapter delta, reruns the
+standing loop to the next level, and builds the result artifact
+**Then** `results/experiment_4873_levelup_attempt.json` records
+`target_game=s5i5`, `solve_provenance=live_agent_self_discovery`,
+`offline_reproduced=true`, `reproduced_levels=2`, `new_levels_banked=1`,
+the executable reproduction gate as the oracle, and the rotated-target
+precondition evidence.
+
+#### SCENARIO-REPORT-4873-BLOCKED-PRECONDITION: Missing Offline ARC Resource Blocks
+
+**Given** the offline arcade or target environment is unavailable
+**When** the Exp 4873 workflow starts
+**Then** it writes a blocked artifact with a `blocked_` verdict, records the
+missing resource under `preconditions_checked`, sets `offline_reproduced=false`,
+and sets `new_levels_banked=0`.
+
+## Implementation Status (REQ-REPORT-4873)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4873 | Planned (`python/carnot/experiment_4873_levelup_attempt.py`, `python/carnot/agentic/arc_game_adapters.py`) | Planned (`tests/python/test_experiment_4873_levelup_attempt.py`) |
+
 ### REQ-REPORT-4420: Archive .408, Activate .409, Record The Honest Config-Rule Close-State
 
 The Exp 4420 workflow SHALL archive milestone `2026.06.408`, confirm milestone
