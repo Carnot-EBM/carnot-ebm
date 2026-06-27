@@ -9897,6 +9897,81 @@ Then it writes a blocked artifact with the missing source in
 `preconditions_checked`, no silent-bug fabrication, no markdown append, and a
 stable reproducibility checksum.
 
+### REQ-ARC-WMTE-4838: Perception/Representation SOTA Ingestion For The L1-First-Contact Wall
+
+Experiment 4838 SHALL run the reserved `.446` SOTA-ingestion slot for
+object-centric, slot, relational, and structured-state perception. The workflow
+SHALL verify that `research-studying.md` and `research-references.md` are
+present, read the discovered corpus filtered to object-centric and relational
+representation learning, emit focused `scripts/sweep_clusters.py` cluster URLs
+for world-model, affordance/action-effect, and neural-guided world-model
+literature, run `scripts/sweep_semscholar.py` on focused perception and
+representation queries, and use low-concurrency WebSearch/WebFetch plus direct
+arXiv checks to verify the top five to eight source papers. The workflow SHALL
+NOT invoke `/deep-research`, re-ingest the nulled exploration-strategy class,
+load models, train, submit to a leaderboard, or make a solve claim.
+
+On a successful ingestion-synthesis run, Experiment 4838 SHALL write
+`results/experiment_4838_sota_ingestion_perception_representation.json` and
+update `research-studying.md` with an idempotent Exp 4838 section marked
+INGESTED. The artifact SHALL include the required fields `honest_verdict`,
+`methods_mapped`, `arxiv_ids_cited`, `flagged_for_v446`,
+`inference_substrate`, `preconditions_checked`, `citations`, `fresh_sweep`,
+`l1_wall_context`, `perception_representation_mapping_note`, `note_path`,
+`random_seed`, `duration_s`, `reproducibility_checksum`, and
+`field_principles`.
+
+The complete-path `honest_verdict` SHALL start with `success_` and equal
+`success_sota_ingestion_perception_representation_mapped`;
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`; and
+`flagged_for_v446` SHALL name the strongest method or methods for the `.446`
+planner. The mapping SHALL cover the L1-first-contact wall by explaining how
+each method makes the winning prefix representable and proposable on a novel
+game instead of merely re-weighting an unchanged candidate pool. The mapping
+SHALL cover slot/object state construction, relational transition graphs,
+object-centric world-model planning, causal/object-level latent prediction, and
+ARC-specific composable slot-transition loops.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_perception_representation_mapped."
+- `methods_mapped`: principle "the strongest 3-5 perception/representation methods mapped onto the L1-wall root cause, each with a real arXiv ID."
+- `arxiv_ids_cited`: principle "every method claim must cite a verifiable arXiv ID."
+- `flagged_for_v446`: principle "the strongest method(s) flagged so the .446 planner reads the mapping (perception, not more exploration)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+The source set SHALL contain only verified arXiv IDs from the focused pass:
+`1802.04687`, `1911.12247`, `2006.15055`, `2402.03326`, `2507.03298`,
+`2601.06604`, `2602.11389`, and `2606.12316`. The method map SHALL contain
+three to five methods, and every method claim SHALL cite only IDs from
+`arxiv_ids_cited`. The note SHALL identify Neural Relational Inference,
+Contrastively-trained Structured World Models, Slot Attention, Slot Structured
+World Models, Dyn-O, Object-Centric World Models with MCTS, Causal-JEPA, and
+Loop-OWM as the ingested literature informing `.446` perception and
+representation.
+
+#### SCENARIO-ARC-WMTE-4838
+
+Given the research files are present, the reliable sweep helpers are available,
+Semantic Scholar is attempted through the reliable script, and the top arXiv
+sources are HTTP-200 verified
+When Experiment 4838 runs
+Then it writes
+`results/experiment_4838_sota_ingestion_perception_representation.json`,
+records that `/deep-research` was not invoked, maps three to five SOTA methods
+onto the L1-first-contact perception/representation root cause with real arXiv
+IDs, updates `research-studying.md` with the Exp 4838 mapping note, and flags
+the strongest candidate inputs for `.446`.
+
+#### SCENARIO-ARC-WMTE-4838-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID, uses
+a stale `.445` roadmap flag, maps exploration re-weighting instead of
+perception/representation, omits the winner-representable/proposable handoff,
+or claims a model-load, training, leaderboard, or solve result
+When the Experiment 4838 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4775: .439 ARC Null Silent-Bug Audit
 
 Experiment 4775 SHALL audit the `.439` ARC null artifacts before their negative
