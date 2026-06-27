@@ -210,3 +210,20 @@
 
 - Source artifact checksum: `sha256:a49c15b54ff935ac736d4a580fdf4639ac019377b251da04cb2cc7501f5cbaff`
 - Source script checksum: `sha256:0af6642f1fa0a6e9aa2b4554df30fa3f35e61b76946de647d37e6c8a8fd8cb72`
+## Experiment 4865 .448 A1 Fork Probe Audit
+
+- Verdict: `complete_a1_fork_probe_non_test_positive_control_not_migrated_positive_control_row_missing_positive_control_not_covered`
+- a1_genuinely_diagnostic: `False`
+- Non-diagnostic reasons: `positive_control_not_migrated, positive_control_row_missing, positive_control_not_covered, positive_control_low_accuracy, n_games_measured_below_3, live_path_unreachable`
+- Inference substrate: `aggregation_from_upstream_artifacts`
+
+| Check | Passed | Detail |
+|---|---:|---|
+| `planner_blind_to_banked_answer` | `True` | `{"allowed_only_in_classify_planned_pool": true, "artifact_flag": true, "disallowed_refs": [], "function_present": true, "winning_prefix_refs": 1}` |
+| `positive_control` | `False` | `{"artifact_positive_control_migrated": false, "engine_heldout_accuracy": null, "high_accuracy_threshold": 0.5, "planned_bucket": null, "positive_control_game": "tu93", "row_game": null}` |
+| `numbers_match_fork` | `False` | `{"computed_coverage_migration_count": 0, "computed_fork_verdict": null, "computed_median_engine_heldout_accuracy": null, "invalid_games": [], "per_game_count": 0, "reported_coverage_migration_count": 0, "reported_fork_verdict": null, "reported_median_engine_heldout_accuracy": null, "reported_n_games_measured": 0}` |
+| `live_path_and_provenance` | `False` | `{"arc_orphan_solver_lint_passed": true, "artifact_live_path_reachable": false, "development_proxy": true, "solve_provenance": "development_proxy", "source_live_path": {"calls": ["_collect_cold_policy_transitions", "max", "list", "int", "policy._induce_and_plan", "e3.load_engine", "live_methods.append", "repr", "_heldout_transitions", "sum", "ord", "score", "float", "float", "e3.WorldModelVerifier", "e3.plan_in_model", "live_methods.append", "int", "int", "repr", "normalize_sequence", "_execute_plan_reaches_l1", "classify_planned_pool", "row.update", "round", "round", "len", "len", "int", "list", "float", "float", "getattr"], "function_present": true, "induce_and_plan_called": true, "load_engine_called": true, "passed": true, "plan_in_model_called": true}, "source_live_path_called": true}` |
+| `summarizer_and_adversarial_verify` | `False` | `{"adversarial_flag_count": 2, "adversarial_loaded": true, "summarizer_returncode": 2}` |
+
+- Source artifact checksum: `sha256:fe40e39d556c549cd113e4c6850b78263c73cd856060c028e6cbebd28db906d3`
+- Source script checksum: `sha256:c0e890c4540d72e7656d2ece898bdde7162c27e3d9e369fc66a01269a95fd998`

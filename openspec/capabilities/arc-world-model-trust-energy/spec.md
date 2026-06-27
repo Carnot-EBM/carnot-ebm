@@ -11009,6 +11009,55 @@ Then it writes a schema-valid artifact with `partial=true`,
 `checkpoint_emitted=true`, the measured per-game rows preserved, and exit code
 0 so the next run can resume from the checkpoints.
 
+### REQ-ARC-WMTE-4865: Hostile A1 Induce-Plan Fork Probe Audit
+
+Experiment 4865 SHALL adversarially audit
+`results/experiment_4861_generation_wall_fork_probe.json` and
+`python/carnot/experiment_4861_generation_wall_fork_probe.py` before any
+capstone trusts the A1 fork verdict. If either input is missing, it SHALL write
+`results/experiment_4865_fork_probe_audit.json` with
+`honest_verdict=blocked_a1_artifact_missing` and no fabricated pass checks.
+
+The audit SHALL run `scripts/summarize_artifact.py` and
+`scripts/adversarial_verify.py` on the A1 artifact, inspect the Exp 4861
+induce-plan source path, and append an idempotent section to
+`ops/arc_null_silent_bug_audit.md`. The falsifiable gate
+`a1_genuinely_diagnostic` SHALL be true iff all four load-bearing checks pass:
+planner blindness to the banked answer, a real `tu93` positive control with
+high held-out accuracy and `COVERED`, per-game accuracy/bucket numbers that
+support `fork_verdict` with `n_games_measured>=3`, and live-path reachability
+plus `solve_provenance=development_proxy`. A blocked or retired Exp 4861
+artifact SHALL therefore be reported as a non-test rather than a trusted fork.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_fork_probe_audited."
+- `a1_genuinely_diagnostic`: principle "the load-bearing check -- planner-blind AND positive-control-migrated AND numbers-match-fork AND live-path-reachable; else A1 is a tautology/harness non-test and its fork verdict is void."
+- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed induction/planning (the tautology trap)."
+- `positive_control_confirmed`: principle "true iff tu93 really came out HIGH accuracy + COVERED."
+- `numbers_match_fork`: principle "true iff the per-game accuracy x bucket numbers support the claimed fork_verdict."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4865-A1-FORK-AUDIT
+
+Given the Exp 4861 fork-probe artifact and script are present
+When Experiment 4865 audits the source path, positive control, numeric fork
+table, live-path reachability, and verifier outputs
+Then it writes `results/experiment_4865_fork_probe_audit.json`, appends the
+audit report, and sets `a1_genuinely_diagnostic=true` only when every
+load-bearing check passes.
+
+#### SCENARIO-ARC-WMTE-4865-NON-TEST-CLASSIFICATION
+
+Given an Exp 4861-like artifact or script that injects the banked answer before
+classification, lacks a passing `tu93` positive control, has fork verdicts that
+do not match its per-game numbers, measures fewer than three games, lacks the
+live induce-plan path, or declares non-development solve provenance
+When Experiment 4865 audits it
+Then the audit records the corresponding failed check, emits a terminal
+`complete_a1_fork_probe_non_test_*` verdict, and sets
+`a1_genuinely_diagnostic=false`.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
