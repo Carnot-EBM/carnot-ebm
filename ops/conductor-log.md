@@ -9399,3 +9399,4 @@ The contro |
 | 2026-06-27 00:22 UTC | PHASE B1 (INFRA slot 1) -- SILENT-BUG AUDIT + VERI | OK | 87 passed, 1 warning in 5.99s |
 | 2026-06-27 00:38 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 89 passed, 1 warning in 9.53s |
 | 2026-06-27 00:48 UTC | PHASE C (HARDWARE -- KV260) -- SSH-reachability; A | OK | 85 passed, 1 warning in 8.13s |
+| 2026-06-27 01:04 UTC | PHASE D (SOTA-INGESTION -- the .446 frontier = PER | OK | 108 passed, 1 warning in 6.35s |
