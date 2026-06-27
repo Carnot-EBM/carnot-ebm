@@ -88,14 +88,15 @@ tasks:
     verdict: 'complete: color_centroid_goal_detector_recovers_none_on_complex_rendering_games (genuine null on real
       grids)'
     addressed_by: 'The lever-#4 mechanic-template build (perception-wall note) used a naive COLOR-CENTROID goal
-      detector: it recovered the structural goal condition on NONE of {{lp85 (whole board recolors -- no stable color
-      identity), r11l (zero stationary goal colors), tu93 (trail of new cells)}}. This A1 is a DIFFERENT mechanism:
-      track object identity by SHAPE/CONNECTIVITY/MOTION (connected-component + cross-frame correspondence by overlap/shape,
-      recolor-INVARIANT), the exact build the note recommends (''track by shape/connectivity/motion, not color --
-      robust to recoloring''). retire_if_same_verdict: true -- if a shape/motion-based object tracker ALSO cannot
-      recover stable cross-frame object correspondence on >=2 of {{lp85, r11l, tu93}}, then object-identity is genuinely
-      unrecoverable from the RENDERED grid (the agent would need internal sprite state, which does not generalize
-      to hidden games) -- a deeper, headline finding that retires grid-grounded goal-grounding.'
+      detector: it recovered the structural goal condition on NONE of the three games -- lp85 (whole board recolors
+      -- no stable color identity), r11l (zero stationary goal colors), tu93 (trail of new cells). This A1 is a
+      DIFFERENT mechanism: track object identity by SHAPE/CONNECTIVITY/MOTION (connected-component + cross-frame
+      correspondence by overlap/shape, recolor-INVARIANT), the exact build the note recommends (''track by shape/connectivity/motion,
+      not color -- robust to recoloring''). retire_if_same_verdict: true -- if a shape/motion-based object tracker
+      ALSO cannot recover stable cross-frame object correspondence on >=2 of the three games (lp85, r11l, tu93),
+      then object-identity is genuinely unrecoverable from the RENDERED grid (the agent would need internal sprite
+      state, which does not generalize to hidden games) -- a deeper, headline finding that retires grid-grounded
+      goal-grounding.'
     retire_if_same_verdict: true
   prompt: "CONTEXT (2026-06-27). OPERATOR-DIRECTED 'c' RESEARCH BET. The energy program is CONCLUDED and the exploration-prior\
     \ class is CLOSED (.445 exp4831 nulled with a live archive). ~15 generation/exploration levers tested, ~0 moved\
@@ -105,58 +106,58 @@ tasks:
     \ is MEASURED-ADEQUATE (v3 features LOO-AUROC 0.725, exp4545). The blocker is generic GOAL-PREDICATE GROUNDING:\
     \ recovering stable structural OBJECTS (their identity across frames) from the RENDERED grid precisely enough\
     \ to evaluate an object-relational is_level_complete. The naive color-centroid detector recovered the goal on\
-    \ NONE of {{lp85 (whole board RECOLORS -- no stable color identity), r11l (zero stationary goal colors), tu93\
-    \ (trail of new cells)}} because object identity is lost under recoloring/trails. Per-game GameAdapters succeed\
-    \ only by reading INTERNAL sprite state, which does NOT generalize to hidden games.\n\nTHE BUILD (the note's\
-    \ own recommendation): a generic, grid-grounded OBJECT-IDENTITY perception module. Segment each frame into persistent\
-    \ OBJECTS via connected-component / shape segmentation, then track identity ACROSS transitions by SHAPE + CONNECTIVITY\
-    \ + MOTION (overlap/displacement), NOT by color -- so it is INVARIANT to recoloring. Expose object-relational\
-    \ features (this object at that object + offset; player overlaps goal). This is the layer BOTH the mechanic-template\
-    \ goal_energy AND LLM goal-induction need to become grid-grounded-yet-object-aware.\n\nSCOPE: a PROBE/PROTOTYPE\
-    \ (Phase-Prototype+Validation discipline -- the note: 'a bigger build than a single lever'). Build the minimal\
-    \ tracker + MEASURE cross-frame object-identity correspondence; do NOT attempt a full live-solver integration\
-    \ this milestone (that is .447+ iff the probe passes). It MUST be live-path-reachable in principle (a module\
-    \ under python/carnot/agentic/ importable by the live agent; arc_orphan_solver_lint must pass -- either wire\
-    \ a thin import hook or allow-list with a reason).\n\nverifier_is_oracle: the object-identity tracker is execution-grounded\
-    \ structural perception, NOT an oracle-distinct learned energy -- declare verifier_is_oracle=true (per the circularity\
-    \ discipline); this probe is about GROUNDING, not a moat claim.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (BEFORE\
-    \ any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit as k; k.offline_arcade()\"\
-    ` exits 0. Else blocked_offline_arcade_missing, EXIT.\n     b. The offline frame sources for lp85, r11l, tu93\
-    \ are present (environment_files / banked traces). If a game's frames are missing -> record it and proceed with\
-    \ the available games; if NONE are available -> blocked_no_offline_frames, EXIT.\n  1. Build the object-identity\
-    \ perception module (connected-component segmentation + shape/connectivity/motion cross-frame correspondence;\
-    \ recolor-invariant).\n  2. POSITIVE CONTROL: on tu93 (fully-visible goal) confirm the tracker yields stable\
-    \ player+goal object identity across the solving transitions (the note flags tu93 as plausibly grid-groundable\
-    \ with a better-than-color-centroid detector).\n  3. HARD TEST: on lp85 (full recolor) and r11l (no stationary\
-    \ anchor), measure whether stable object correspondence is recovered ACROSS frames despite recoloring -- report\
-    \ a quantitative correspondence score (e.g. fraction of objects with a consistent identity track across the\
-    \ transition sequence), NOT a binary self-grade.\n  4. WRITE the artifact with solve_provenance=development_proxy\
-    \ (this is an offline perception PROBE measured on banked frames -- it is NOT a live first-win; declare honestly).\n\
-    \nFALSIFIABLE GATE:\n  PASS iff (i) the positive control (tu93) yields stable player+goal identity tracks; AND\
-    \ (ii) on >=2 of {{lp85, r11l, tu93}} the shape/motion tracker recovers stable cross-frame object correspondence\
-    \ (correspondence score materially above a color-centroid baseline run on the SAME frames -- include that baseline\
-    \ as the comparator). retire_if_same_verdict: true -- if the shape/motion tracker ALSO fails on >=2 games (no\
-    \ better than color-centroid), object-identity is genuinely unrecoverable from the rendered grid: a deeper finding\
-    \ (the agent needs internal sprite state, which does not generalize) that retires grid-grounded goal-grounding\
-    \ and points .447 elsewhere. EITHER outcome is a real, headline-worthy result for the research bet.\n\nGUARD\
-    \ (the mechanic-template trap): that build was 'verified on synthetic data ... but on REAL grids exposed a deeper\
-    \ obstacle.' This probe MUST be measured on REAL game frames (lp85/r11l/tu93), NOT synthetic align cases. A\
-    \ synthetic-only PASS is a NON-TEST -- B1 will check this.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n\
-    \  honest_verdict:\n    principle: \"terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding,\
-    \ a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding.\"\n  measured_on_real_frames:\n\
-    \    principle: \"true iff the correspondence scores are measured on REAL lp85/r11l/tu93 frames, NOT synthetic\
-    \ -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST.\"\n  per_game_correspondence:\n\
-    \    principle: \"per-game {game: {shape_motion_score, color_centroid_baseline_score, n_frames}} -- the quantitative\
-    \ recovery measure vs the color-centroid comparator on the same frames.\"\n  positive_control_tu93_passed:\n\
+    \ NONE of the three games -- lp85 (whole board RECOLORS -- no stable color identity), r11l (zero stationary\
+    \ goal colors), tu93 (trail of new cells) -- because object identity is lost under recoloring/trails. Per-game\
+    \ GameAdapters succeed only by reading INTERNAL sprite state, which does NOT generalize to hidden games.\n\n\
+    THE BUILD (the note's own recommendation): a generic, grid-grounded OBJECT-IDENTITY perception module. Segment\
+    \ each frame into persistent OBJECTS via connected-component / shape segmentation, then track identity ACROSS\
+    \ transitions by SHAPE + CONNECTIVITY + MOTION (overlap/displacement), NOT by color -- so it is INVARIANT to\
+    \ recoloring. Expose object-relational features (this object at that object + offset; player overlaps goal).\
+    \ This is the layer BOTH the mechanic-template goal_energy AND LLM goal-induction need to become grid-grounded-yet-object-aware.\n\
+    \nSCOPE: a PROBE/PROTOTYPE (Phase-Prototype+Validation discipline -- the note: 'a bigger build than a single\
+    \ lever'). Build the minimal tracker + MEASURE cross-frame object-identity correspondence; do NOT attempt a\
+    \ full live-solver integration this milestone (that is .447+ iff the probe passes). It MUST be live-path-reachable\
+    \ in principle (a module under python/carnot/agentic/ importable by the live agent; arc_orphan_solver_lint must\
+    \ pass -- either wire a thin import hook or allow-list with a reason).\n\nverifier_is_oracle: the object-identity\
+    \ tracker is execution-grounded structural perception, NOT an oracle-distinct learned energy -- declare verifier_is_oracle=true\
+    \ (per the circularity discipline); this probe is about GROUNDING, not a moat claim.\n\nCONCRETE STEPS:\n  0.\
+    \ PRECONDITIONS (BEFORE any other step):\n     a. `.venv/bin/python -c \"from carnot.agentic import arc_solver_kit\
+    \ as k; k.offline_arcade()\"` exits 0. Else blocked_offline_arcade_missing, EXIT.\n     b. The offline frame\
+    \ sources for lp85, r11l, tu93 are present (environment_files / banked traces). If a game's frames are missing\
+    \ -> record it and proceed with the available games; if NONE are available -> blocked_no_offline_frames, EXIT.\n\
+    \  1. Build the object-identity perception module (connected-component segmentation + shape/connectivity/motion\
+    \ cross-frame correspondence; recolor-invariant).\n  2. POSITIVE CONTROL: on tu93 (fully-visible goal) confirm\
+    \ the tracker yields stable player+goal object identity across the solving transitions (the note flags tu93\
+    \ as plausibly grid-groundable with a better-than-color-centroid detector).\n  3. HARD TEST: on lp85 (full recolor)\
+    \ and r11l (no stationary anchor), measure whether stable object correspondence is recovered ACROSS frames despite\
+    \ recoloring -- report a quantitative correspondence score (e.g. fraction of objects with a consistent identity\
+    \ track across the transition sequence), NOT a binary self-grade. The three test games are lp85, r11l, tu93.\n\
+    \  4. WRITE the artifact with solve_provenance=development_proxy (this is an offline perception PROBE measured\
+    \ on banked frames -- it is NOT a live first-win; declare honestly).\n\nFALSIFIABLE GATE:\n  PASS iff (i) the\
+    \ positive control (tu93) yields stable player+goal identity tracks; AND (ii) on >=2 of the three test games\
+    \ (lp85, r11l, tu93) the shape/motion tracker recovers stable cross-frame object correspondence (correspondence\
+    \ score materially above a color-centroid baseline run on the SAME frames -- include that baseline as the comparator).\
+    \ retire_if_same_verdict: true -- if the shape/motion tracker ALSO fails on >=2 games (no better than color-centroid),\
+    \ object-identity is genuinely unrecoverable from the rendered grid: a deeper finding (the agent needs internal\
+    \ sprite state, which does not generalize) that retires grid-grounded goal-grounding and points .447 elsewhere.\
+    \ EITHER outcome is a real, headline-worthy result for the research bet.\n\nGUARD (the mechanic-template trap):\
+    \ that build was 'verified on synthetic data ... but on REAL grids exposed a deeper obstacle.' This probe MUST\
+    \ be measured on REAL game frames (lp85/r11l/tu93), NOT synthetic align cases. A synthetic-only PASS is a NON-TEST\
+    \ -- B1 will check this.\n\nREQUIRED ARTIFACT FIELDS (principle-annotated):\n  honest_verdict:\n    principle:\
+    \ \"terminal prefix; recovery is success_object_identity_perception_recovers_goal_grounding, a null is complete_object_identity_unrecoverable_from_rendered_grid_deeper_finding.\"\
+    \n  measured_on_real_frames:\n    principle: \"true iff the correspondence scores are measured on REAL lp85/r11l/tu93\
+    \ frames, NOT synthetic -- the mechanic-template synthetic-only-pass trap; a false here is a NON-TEST.\"\n \
+    \ per_game_correspondence:\n    principle: \"per-game mapping game -> (shape_motion_score, color_centroid_baseline_score,\
+    \ n_frames) -- the quantitative recovery measure vs the color-centroid comparator on the same frames.\"\n  positive_control_tu93_passed:\n\
     \    principle: \"the tu93 visible-goal control must yield stable player+goal identity tracks -- a Phase-Prototype\
     \ positive control so a global null is not a harness artifact.\"\n  games_with_recovery:\n    principle: \"\
-    count of {{lp85, r11l, tu93}} where the shape/motion tracker materially beats color-centroid -- >=2 for a PASS.\"\
-    \n  verifier_is_oracle:\n    principle: \"true -- execution-grounded structural perception, NOT an oracle-distinct\
-    \ moat (circularity discipline); this probe is about grounding.\"\n  live_path_reachable:\n    principle: \"\
-    the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception layer the live agent\
-    \ cannot reach is wasted effort.\"\n  solve_provenance:\n    principle: \"development_proxy -- an offline perception\
-    \ probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery).\"\n  inference_substrate:\n\
-    \    principle: \"live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates\
+    count of the three test games (lp85, r11l, tu93) where the shape/motion tracker materially beats color-centroid\
+    \ -- >=2 for a PASS.\"\n  verifier_is_oracle:\n    principle: \"true -- execution-grounded structural perception,\
+    \ NOT an oracle-distinct moat (circularity discipline); this probe is about grounding.\"\n  live_path_reachable:\n\
+    \    principle: \"the module is importable by the live agent (arc_orphan_solver_lint passes) -- a perception\
+    \ layer the live agent cannot reach is wasted effort.\"\n  solve_provenance:\n    principle: \"development_proxy\
+    \ -- an offline perception probe on banked frames, NOT a live first-win; declared honestly (not live_agent_self_discovery).\"\
+    \n  inference_substrate:\n    principle: \"live_llm_inference if any LLM induction runs, else verifier_ensemble_against_cached_candidates\
     \ -- declare what actually ran (the probe is mostly CPU segmentation; do not claim live inference if none ran).\"\
     \n  preconditions_checked:\n    principle: \"records arcade/frame-availability checks so a missing-resource\
     \ run emits blocked_, never a fabricated correspondence score.\"\n  random_seed:\n    principle: \"determinism\
