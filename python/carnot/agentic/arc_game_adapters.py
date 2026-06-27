@@ -693,6 +693,140 @@ BP35_L2_TAIL_LABELS: tuple[str, ...] = (
 BP35_L2_SOLUTION_LABELS: tuple[str, ...] = BP35_L1_LABELS + BP35_L2_TAIL_LABELS
 
 
+G50T_L1_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (4, 4, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4)
+)
+
+G50T_L2_TAIL_LABELS: tuple[str, ...] = tuple(
+    _json_action_label(action)
+    for action in (
+        3,
+        3,
+        5,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        3,
+        3,
+        5,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        2,
+        4,
+        4,
+        4,
+    )
+)
+
+G50T_L2_SOLUTION_LABELS: tuple[str, ...] = G50T_L1_LABELS + G50T_L2_TAIL_LABELS
+
+
+def _g50t():
+    """g50t -- target-offset toggle puzzle with clone-held plate routing."""
+    from carnot.agentic import arc_solver_kit as kit
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def action_labels(env, frame=None, path=None):
+        del env
+        level = kit.frame_level(frame) if frame is not None else 0
+        extension_index = len(path or ())
+        if level == 0 and extension_index < len(G50T_L1_LABELS):
+            return [G50T_L1_LABELS[extension_index]]
+        if level == 1 and extension_index < len(G50T_L2_TAIL_LABELS):
+            return [G50T_L2_TAIL_LABELS[extension_index]]
+        return []
+
+    def apply(env, label, frame):
+        del frame
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
+
+    def _object_row(obj: Any) -> tuple[Any, ...]:
+        return (
+            type(obj).__name__,
+            int(getattr(obj, "x", 0)),
+            int(getattr(obj, "y", 0)),
+            int(getattr(obj, "xjzbfpegay", getattr(obj, "x", 0))),
+            int(getattr(obj, "yzwsikkoyp", getattr(obj, "y", 0))),
+            bool(getattr(obj, "dijhfchobv", False)),
+            int(getattr(obj, "ecvzipvalj", 0) or 0),
+            int(getattr(obj, "lzwacefckd", 0) or 0),
+            int(getattr(obj, "rotation", 0) or 0),
+            bool(getattr(obj, "is_visible", True)),
+            bool(getattr(obj, "pddqxjztas", False)),
+            bool(getattr(obj, "amjlzzsesf", False)),
+        )
+
+    def state_key(game, frame=None):
+        state = game.vgwycxsxjz
+        return (
+            kit.frame_level(frame) if frame is not None else -1,
+            int(getattr(game, "ucorwtereb", 0) or 0),
+            bool(getattr(game, "qgzorkgosv", False)),
+            bool(getattr(game, "hctlyapjnq", False)),
+            _object_row(state.dzxunlkwxt),
+            _object_row(state.whftgckbcu),
+            tuple(_object_row(obj) for obj in state.uwxkstolmf),
+            tuple(
+                _object_row(obj) + (len(getattr(obj, "vbqvjbxkfm", ())),)
+                for obj in state.hamayflsib
+            ),
+            tuple(
+                _object_row(obj)
+                + (int(getattr(obj, "wzgvpxcawd", 0) or 0), len(moves), tuple(moves))
+                for obj, moves in state.kgvnkyaimw.items()
+            ),
+            tuple(
+                _object_row(obj) + (len(moves), tuple(moves))
+                for obj, moves in state.rloltuowth.items()
+            ),
+            tuple(state.areahjypvy),
+            int(state.rlazdofsxb),
+            bool(state.dofntsemri),
+            bool(state.pohkooyzds),
+            len(state.hjvvibklzv),
+            int(getattr(getattr(game, "twyixucrqi", None), "x", 0) or 0),
+        )
+
+    def hand_verifier(game, _frame=None):
+        state = game.vgwycxsxjz
+        player = state.dzxunlkwxt
+        target = state.whftgckbcu
+        if getattr(game, "hctlyapjnq", False) or state.zvuxrhnlcb or game.ptayayjhqx():
+            return 10000.0
+        return float(abs(player.x - (target.x + 1)) + abs(player.y - (target.y + 1)))
+
+    return GameAdapter(
+        game="g50t",
+        action_labels=action_labels,
+        apply=apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=hand_verifier,
+        warmup_label=None,
+        depth_caps={1: len(G50T_L1_LABELS), 2: len(G50T_L2_TAIL_LABELS), 3: 2},
+        level_tails={1: G50T_L1_LABELS, 2: G50T_L2_TAIL_LABELS},
+        branch_mode="replay",
+    )
+
+
 def _re86_center_color(sprite: Any) -> int:
     pixels = getattr(sprite, "pixels", None)
     try:
@@ -2695,6 +2829,7 @@ _BUILDERS = {
     "ar25": _ar25,
     "bp35": _bp35,
     "ft09": _ft09,
+    "g50t": _g50t,
     "sk48": _sk48,
     "lf52": _lf52,
     "r11l": _r11l,

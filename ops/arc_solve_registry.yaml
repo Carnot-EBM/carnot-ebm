@@ -1550,19 +1550,16 @@ games:
     reproducibility_checksum: 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436
 - game: g50t
   reproducibility: reproduced
-  levels_reproduced: 1
-  solver: python/carnot/experiment_4443_bank_g50t_example_conditioned_win.py execution-grounds
-    the target-offset predicate and replays OfflineSolver.
+  levels_reproduced: 2
+  solver: GameAdapter _g50t in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game g50t.
   gotchas: []
   dead_ends:
   - gap_id: GAP-4423-G50T-UNSELECTABLE-FIRST-CONTACT
     status: filled
     game: g50t
     failure_mode: needs_per_game_RE
-    missing_discriminator: selectable verifier that distinguishes the target's winning
-      delta from the explored non-winning states
-    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's
-      visible toggles
+    missing_discriminator: selectable verifier that distinguishes the target's winning delta from the explored non-winning states
+    candidate_design: adapt Exp 4421 config-rule predicate grounding to this game's visible toggles
     routed_recipe:
       game: ls20
       solver: results/experiment_4285 solve_trace.actions.
@@ -1574,20 +1571,25 @@ games:
       mode: standing_arc_loop_routing_only
     filled_by: experiment_4443_bank_g50t_example_conditioned_win
     filled_artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
-    filled_summary: Example-conditioned target-offset win predicate reproduced g50t
-      L1 offline with corrected inference_substrate.
+    filled_summary: Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected inference_substrate.
+  - Exp4884 retired the prior g50t adapter-free L2 bounded-search dead end by registering _g50t.
   mechanic_class: config_toggle_target_offset
-  win_condition: 'L1 target-offset predicate: player.x == target.x + 1 and player.y
-    == target.y + 1; verifier grounds against execution state immediately before next_level.'
-  action_model: Keyboard ACTION1-5 labels; L1 plan 44445222222244444. ACTION4 moves
-    right, ACTION2 moves down, ACTION5 commits the trigger clone.
-  reproduce: Exp4443 results/experiment_4443_bank_g50t_example_conditioned_win.json
-    offline_reproduced=True, reproduced_levels=1, checksum b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9.
+  win_condition: 'All banked levels use the grounded target-offset predicate: the active player must reach target.x + 1 and target.y + 1, verified only by the offline arc_solver_kit.reproduce gate.'
+  action_model: 'Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5 commit/rewind clone. L2 uses two clone cycles: first clone holds the right-hand plate, second clone holds the left-hand plate, then the active player takes the top route to the target-offset cell.'
+  reproduce: Exp4884 results/experiment_4884_levelup_attempt.json re-gated results/arc_loop_solve_g50t.json offline_reproduced=True, reached_level=2, banked +1, checksum c169f78924293f9c1e6b45f8fbef832f08e1f4f83e0fafad25b20c09c169fe39.
   latest_exp4443_reproduce:
     artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
     offline_reproduced: true
     reproduced_levels: 1
     reproducibility_checksum: b6e32c00d39b5b4b87032dc97039d7d19d0116037f8a408c84517489918c0ae9
+  latest_exp4884_levelup_attempt:
+    artifact: results/experiment_4884_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_g50t.json
+    offline_reproduced: true
+    reproduced_levels: 2
+    new_levels_banked: 1
+    target_rotation: rotated_off_s5i5_r11l_re86_hidden_state_bound_targets
+    reproducibility_checksum: c169f78924293f9c1e6b45f8fbef832f08e1f4f83e0fafad25b20c09c169fe39
 - game: dc22
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1783,7 +1785,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 67
+reproducible_total_levels: 68
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:

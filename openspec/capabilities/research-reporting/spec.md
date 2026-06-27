@@ -72,6 +72,63 @@ and sets `new_levels_banked=0`.
 |---|---|---|
 | REQ-REPORT-4873 | Planned (`python/carnot/experiment_4873_levelup_attempt.py`, `python/carnot/agentic/arc_game_adapters.py`) | Planned (`tests/python/test_experiment_4873_levelup_attempt.py`) |
 
+### REQ-REPORT-4884: Rotated G50T Level-Up Attempt Banks Only New Offline-Reproduced Depth
+
+The Exp 4884 workflow SHALL select `g50t` for the rotated ARC deepening
+attempt. The target SHALL differ from `.449`'s `s5i5` L2 bank, `.448`'s `r11l`
+L2 bank, and the `re86` self-play target, and SHALL avoid hidden-state-bound
+targets (`ka59` and `wa30`). The selected target SHALL be grounded by
+`ops/arc_solve_registry.yaml` plus `arc_solve_learning.recommend_approach(game)`,
+and SHALL NOT count an already-reproduced level as a new result.
+
+The workflow SHALL run the standing loop
+`.venv/bin/python scripts/arc_loop_solve.py --game g50t` before registering any
+missing per-game adapter delta. Any counted level SHALL pass
+`arc_solver_kit.reproduce()` offline, and the artifact SHALL set
+`verifier_is_oracle=true` only for that executable reproduction gate. The
+artifact SHALL be written to `results/experiment_4884_levelup_attempt.json` and
+include principle-annotated fields `honest_verdict`, `solve_provenance`,
+`target_game`, `offline_reproduced`, `reproduced_levels`,
+`new_levels_banked`, `verifier_is_oracle`, `inference_substrate`, and
+`preconditions_checked`.
+
+The success path SHALL use `honest_verdict` prefix
+`success_<game>_levelup_banked`, set
+`solve_provenance=live_agent_self_discovery`, set
+`offline_reproduced=true`, and set `new_levels_banked>=1` with
+`reproduced_levels` strictly greater than the prior registry depth. The no-bank
+path SHALL use `complete_<game>_no_new_level_residual_<cause>`. Missing offline
+environment resources SHALL produce a blocked verdict and SHALL NOT fabricate a
+solve. The workflow SHALL not update `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`; the conductor reconciler owns those files.
+
+#### SCENARIO-REPORT-4884: G50T L2 Clone Toggle Delta Banks Through The Offline Oracle
+
+**Given** the offline arcade loads, the registry records `g50t` with one
+reproduced level and a grounded target-offset mechanic, and the first
+standing-loop probe for `g50t` reports `needs_per_game_RE`
+**When** the Exp 4884 workflow registers the `g50t` adapter delta, reruns the
+standing loop to the next level, and builds the result artifact
+**Then** `results/experiment_4884_levelup_attempt.json` records
+`target_game=g50t`, `solve_provenance=live_agent_self_discovery`,
+`offline_reproduced=true`, `reproduced_levels=2`, `new_levels_banked=1`,
+the executable reproduction gate as the oracle, and the rotated-target
+precondition evidence.
+
+#### SCENARIO-REPORT-4884-BLOCKED-PRECONDITION: Missing Offline ARC Resource Blocks
+
+**Given** the offline arcade or target environment is unavailable
+**When** the Exp 4884 workflow starts
+**Then** it writes a blocked artifact with a `blocked_` verdict, records the
+missing resource under `preconditions_checked`, sets `offline_reproduced=false`,
+and sets `new_levels_banked=0`.
+
+## Implementation Status (REQ-REPORT-4884)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4884 | Planned (`python/carnot/experiment_4884_levelup_attempt.py`, `python/carnot/agentic/arc_game_adapters.py`) | Planned (`tests/python/test_experiment_4884_levelup_attempt.py`) |
+
 ### REQ-REPORT-4420: Archive .408, Activate .409, Record The Honest Config-Rule Close-State
 
 The Exp 4420 workflow SHALL archive milestone `2026.06.408`, confirm milestone
