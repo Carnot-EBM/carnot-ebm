@@ -5284,3 +5284,12 @@ uncertain mechanics deserve live actions. Keep the drift guardrail as the
 failure detector so object-centric perception does not create a false sense of
 control.
 <!-- EXP4709-STRUCTURED-WORLD-MODEL-SOTA-END -->
+
+## INGESTED 2026-06-27: arXiv:2603.09906 "Thinking to Recall" (Google Research)
+Reasoning unlocks parametric knowledge via (1) computational buffer + (2) factual priming; KEY: one
+hallucinated intermediate fact significantly lowers final-answer accuracy, and self-generated facts are an
+UNFIXED reliability risk. Mapped onto the Carnot VERIFIER CORE (not the ARC generation wall):
+docs/research-notes/thinking-to-recall-verifier-gated-reasoning-sota-ingestion-2026-06-27.md. Two outputs:
+(a) paper-v6 corroboration quote bank (FLAGGED, re-verify before publication); (b) scoped experiment
+VERIFIER-GATED REASONING (process verifier filters/repairs intermediate facts -> reliable factual priming;
+arms A/B/C, CI95 gate, GPU 1). Flagged for a verifier-core milestone, NOT the ARC sprint.
