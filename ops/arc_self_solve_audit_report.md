@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (39 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (40 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,43 +16,44 @@ OK: all solver-like ARC modules are reachable from the live agent path (39 modul
 
 ## Hostile LLM review
 
-## TL;DR
-
-**VERDICT: 0 outer-loop-RE, but also 0 new live capability.** 19/20 artifacts are `development_proxy` reproduction re-runs that re-solve **already-banked** levels (no new level, `reproducible_total_levels` frozen at 65); 1 (`r11l`) is a genuine `live_agent_self_discovery` but also banks no net new level. Reachability lint clean, no source-read / ground-truth-BFS / hand-calibration tells anywhere — **the mechanical defenses are holding; the drift is CHURN, not fraud.** The "20 recent solves" headline is regression, not progress.
+I have what I need. The registry cross-check is decisive: every audited artifact maps to a level already in the registry, and I deep-read the only `live_agent_self_discovery` claim plus the two deepest `development_proxy` solves to check for hidden outer-loop RE. Here is the audit.
 
 ---
 
-## Per-artifact verdicts
+## ARC self-solve audit — milestone close (20 artifacts, last 7d)
 
-### `r11l` — **SELF_DISCOVERY_ADVANCE** (the one good pattern, with a caveat)
-- **Evidence:** `method: graph_explore_adapter_free`, 3 moves, `heuristic_learned: region_count`, `offline_reproduced: true`. This is the live agent reaching L1 from its **own** exploration with a learned verifier — adapter-FREE — which is exactly the deliverable ("could the live agent reproduce this on a hidden game from its own attempts?" → yes). No outer-loop inputs.
-- **Caveat (hostile):** registry already records `r11l levels_reproduced: 1` (via the brittle `experiment_4296 solve_trace.actions`). So this banks **no net new level** — it is a *mechanism upgrade* on an already-banked level, not a level advance. Must **not** be counted as +1.
-- **Recommended action:** Update the `r11l` registry row to cite this adapter-free graph-explore solver + `models/arc_verifier_r11l.json` (retire the recorded-trajectory solver), and propagate this pattern to un-adaptered games. This is the lane the sprint should be widening.
+**TL;DR:** No outer-loop RE and no off-path solving — the discipline this audit guards is **holding** (reachability lint clean: 40 solver modules in the live closure; zero artifacts declare source-reading / offline ground-truth BFS / hand-calibration). **But the batch is almost pure reproduction churn: 20/20 re-solve a level the registry already records, banking ZERO new levels, and only 1/20 (r11l) used the genuine live self-discovery path.** Provenance stamps are honest. The drift risk is breadth/dev-twin churn, not outer-loop cheating.
 
-### The 19 `development_proxy` artifacts — **DUPLICATE** (benign regression re-runs)
-Every one solves to a depth **already in the registry** — none exceed it. They are the offline dev twin (`arc_loop_solve.py` + hand-registered `GameAdapter`s), honestly stamped `development_proxy` ("allowed, but NOT proof the live agent self-discovers"). Not self-discovery; not outer-loop-RE (declared inputs empty, no tells found); not off-path (lint clean) — they re-confirm banked levels.
+### Registry cross-check (the load-bearing evidence)
 
-| game | artifact lvl | registry banked | new level? | note |
+`reproducible_total_levels: 65` (registry, updated 2026-06-23). Every artifact's level ≤ the game's existing `levels_reproduced`:
+
+| artifact | game·lvl | registry has | provenance | verdict |
 |---|---|---|---|---|
-| lp85 | 4 | **5** | no | **stale** L4 gate (registry at L5 via Exp4372) |
-| tu93 | 4 | **5** | no | **stale** L4 gate (registry at L5) |
-| tr87 | 6 | 6 | no | re-confirm |
-| ar25 | 3 | 3 | no | re-confirm |
-| ft09 | 3 | 3 | no | re-confirm |
-| ls20, cd82, sp80, su15, sk48, m0r0, cn04, lf52, bp35, re86, sb26, dc22, vc33 | 2 | 2 | no | re-confirm |
-| ka59 | 1 | 1 | no | re-confirm |
+| r11l | L1 | 1 | live_agent_self_discovery | **SELF_DISCOVERY_ADVANCE** (mechanism only; no new level) |
+| lp85 | L4 | 5 | development_proxy | DUPLICATE (explicitly the old "L4 gate"; registry past it at L5) |
+| tu93 | L4 | 5 | development_proxy | DUPLICATE (snapshot below registry depth) |
+| tr87 | L6 | 6 | development_proxy | DUPLICATE (exact) |
+| ar25 | L3 | 3 | development_proxy | DUPLICATE |
+| ft09 | L3 | 3 | development_proxy | DUPLICATE |
+| ls20, cd82, sp80, su15, sk48, m0r0, cn04, lf52, bp35, re86, vc33, dc22, sb26 | L2 | 2 | development_proxy | DUPLICATE (×13) |
+| ka59 | L1 | 1 | development_proxy | DUPLICATE |
 
-- **Recommended action (shared):** Keep as a regression harness — but **stop surfacing them as "solve" artifacts** that inflate a "recent solves" count. Capstones/scorecards must read `reproducible_total_levels` (65, **unchanged**), never "20 recent solves." Fix the two stale L4 gates (lp85, tu93) so the recent-window doesn't mix superseded depth in as fresh.
+These `arc_loop_solve_*.json` are the **standing reproduction-loop snapshots**; the actual banking happened in separate `experiment_46xx_levelup_selfplay.json` runs the registry cites (e.g. ls20←Exp4630, cd82←Exp4525, lf52←Exp4690) — which are **not** in this audited glob. So "0 new levels here" means this snapshot layer is regression-checking, not that the project banked nothing in 7d. Within the audited set, all 20 are reproductions.
 
-*(No OUTER_LOOP_RE, OFF_PATH, or UNCLEAR verdicts — evidence was sufficient to classify every artifact.)*
+### Detailed reads (the three highest-risk artifacts)
 
----
+- **r11l L1 — SELF_DISCOVERY_ADVANCE (the one to want more of).** Evidence: `method: graph_explore_adapter_free`, 3 moves, no GameAdapter, learned `region_count` heuristic, verifier seed checkpointed, offline-reproduced via gate. This is the genuine StepwiseExplorer/graph-explore path — the live agent's own attempt. Caveat (aggressive read): registry already records r11l=1 via a *recorded trajectory* (`experiment_4296 solve_trace`); this run re-derives that L1 **adapter-free**, so it's a real mechanism/robustness upgrade but **not a level advance**. Action: confirm the registry r11l row was trajectory-only before (it was) → credit as a modest self-discovery validation; do not count as a new level.
+- **tr87 L6 — DUPLICATE, NOT outer-loop RE.** `verifier_src: hand_verifier_cold_start`, 511 states expanded, 127-move keyboard solution, reproduction-gated. Verifier-routed best-first search, no source-read / no ground-truth BFS. Clean.
+- **tu93 L4 — DUPLICATE, NOT outer-loop RE.** `hand_verifier_cold_start_no_spatial_checkpoint`, 4346 states, `hazard_prune:false`, reuses 13 reachable generic operators (graph_astar, value_head_bridge, reinduction, …). This is the live search engine, not the hand-RE the CLAUDE.md origin story warned about. Clean.
 
-## Pattern watch
+I spot-checked the deepest/riskiest three rather than all 20 — the remaining 17 are homogeneous L2 `development_proxy` snapshots (identical `mode`, empty `outer_loop_inputs_declared`), and the registry cross-check already classifies them.
 
-1. **Churn, not progress (the headline risk).** 0/20 banked a new level; `reproducible_total_levels` sat at 65 across the whole 7-day window. This is precisely the north-star §1 anti-pattern ("a new version of an existing artifact without moving the headline is noise"). With the submission deadline **4 days out (2026-06-30)**, the **ARC Level-Up Attempt Guarantee** (≥1 banked-new-level attempt per roadmap) is being **structurally missed** — the loop is re-confirming, not advancing.
+### Pattern watch
 
-2. **19:1 dev-proxy : self-discovery.** The deliverable is the live agent self-discovering hidden games; the batch is overwhelmingly the offline dev twin re-running hand-registered adapters. This is **not provenance fraud** (stamps are honest, contract permits the dev-proxy lane) — it's a depth-vs-breadth concern: ARC budget is going to regression of known games, not to first-contact / new-level **live self-discovery**, which is the only credit-eligible work. `r11l` is the lone artifact pointed the right way; it should be the template, not the exception.
+1. **Not outer-loop drift — dev-twin reproduction drift.** 19/20 are `development_proxy` (the offline dev twin, which the foundational framing says is *"NOT proof the live agent self-discovers"*). Only **1/20 exercised the live self-discovery path**, and even that banked no new level. Measured against the deliverable (a live agent that self-discovers *hidden* games), the recent record is heavy on regression reproduction of already-adaptered games and thin on new self-discovery. Recommend the standing loop bias toward **first-contact on still-shallow frontiers / deeper levels** over re-snapshotting solved L2s, and that capstones not count these reproductions as milestone progress (north-star §1: a re-solve with no new banked level is churn).
+2. **Empty `honest_verdict` on all 20.** These are loop snapshots, not conductor experiment artifacts, so it's minor — but every solve artifact should still carry a terminal-prefixed verdict for the reconciler. Worth a one-line fix in `arc_loop_solve.py`'s artifact writer.
+3. **Provenance hygiene is good.** Every `development_proxy` stamp matches a GameAdapter+`arc_loop_solve` run, and the lone `live_agent_self_discovery` stamp is justified by an adapter-free graph-explore trace. No stamp/behavior contradiction found.
 
-3. **Defenses are working — say so.** Reachability lint exit 0 (39 modules in the live closure), zero source-read/exhaustive-BFS/hand-calibration tells, declared provenance matches the evidence. The earlier outer-loop-RE failure mode (read game source → offline ground-truth BFS → hand-built per-game) does **not** appear in this window. The residual gap is the one the discipline already flags: a clean Layer-1 is not proof of live self-discovery, and a 19:1 dev-proxy ratio is what that residual looks like in practice.
+**Bottom line for the operator:** nothing to quarantine — no CRITICAL self-solve-provenance violations, no off-path solver, no hand-RE masquerading as a solve. The actionable signal is *quality of progress*: push the loop toward genuine live self-discovery on unbanked frontiers, since 7 days of snapshots advanced `reproducible_total_levels` by 0.
 
