@@ -12350,6 +12350,115 @@ Then it writes `blocked_upstream_artifact_missing`, records the missing
 precondition, sets all pass booleans false except any explicitly proven gate
 skip, and exits without fabricating the audit.
 
+### REQ-ARC-WMTE-4911: V453 Frontier SOTA Ingestion After Env-Grounded Wall
+
+Experiment 4911 SHALL run the `.453` SOTA-ingestion slot after reading A1's
+env-grounded search fork artifact
+`results/experiment_4903_env_grounded_location_pruned_search.json`, A1b's
+last-representation artifact
+`results/experiment_4904_latent_action_interface.json` when A1 did not clear
+the first-win gate, `ops/north-star.md`, `research-studying.md`,
+`research-references.md`, `scripts/sweep_clusters.py`, and
+`scripts/sweep_semscholar.py`. If either required upstream artifact is missing
+for the checked-in wall branch, Experiment 4911 SHALL write
+`results/experiment_4911_sota_ingestion_v453_frontier.json` with
+`honest_verdict=blocked_upstream_artifact_missing`, `methods_mapped=[]`,
+`post_sprint_pivot_methods=[]`, `banned_channels_excluded=true`, and SHALL NOT
+fabricate an A1 or A1b fork verdict.
+
+The workflow SHALL branch on A1's actual `fork_verdict`. If A1 reports
+`ENV_GROUNDED_SEARCH_UNLOCKS_FIRST_WIN`, the `.453` map SHALL target
+neural-guided/value-guided online search, learned action priors, and
+sample-efficient interactive search. If A1 reports `SEARCH_BUDGET_BOUND`, the
+map SHALL target cheaper action-priors, amortized search, and planning
+efficiency. If A1 reports `WALL_DEEPER_THAN_VALUE_PREDICTION` and A1b reports
+`VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES`, the map SHALL record that the
+change-VALUE wall survives four representation classes plus env-grounding and
+SHALL only promote final-sprint causal/world-model diagnostic candidates, not
+another replay of retired ARC levers.
+
+Regardless of the A1 branch, Experiment 4911 SHALL also map the post-sprint
+verifier-moat / oracle-distinct / FoVer-paper pivot from `ops/north-star.md`
+sections 1 and 5. This pivot SHALL focus on learned or energy verifiers in
+non-saturated domains where self-consistency is not near ceiling and an
+oracle-distinct verifier can add value. It SHALL NOT claim a solve, load a
+model, train, submit to a leaderboard, invoke `/deep-research`, re-ingest the
+nulled energy-as-ARC-lever, TTA-on-code-engine, stronger-local-code-inducer,
+decision-need-targets, action-prefix-latents, coverage/vocabulary,
+exploration, selection/ranking, or perception-from-grid classes, or modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+On a successful ingestion-synthesis run, Experiment 4911 SHALL write
+`results/experiment_4911_sota_ingestion_v453_frontier.json`, update
+`research-studying.md` with an idempotent Exp 4911 INGESTED section, and update
+`research-references.md` with an idempotent Exp 4911 source section. The
+artifact SHALL include `honest_verdict`, `aimed_at_fork_verdict`,
+`methods_mapped`, `post_sprint_pivot_methods`, `arxiv_ids_cited`, `citations`,
+`banned_channels_excluded`, `flagged_for_v453`, `inference_substrate`,
+`random_seed`, and `reproducibility_checksum`, plus provenance fields that
+record upstream artifacts, the reliable sweep channel, the branch selected, and
+the no-fabrication guards.
+
+The complete-path `honest_verdict` SHALL equal
+`success_sota_ingestion_v453_frontier_mapped`; `aimed_at_fork_verdict` SHALL
+equal A1's actual `WALL_DEEPER_THAN_VALUE_PREDICTION` branch for the checked-in
+artifacts; `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`; `methods_mapped` SHALL contain three to
+five final-sprint wall-diagnostic methods; `post_sprint_pivot_methods` SHALL
+contain at least three verifier-moat candidates; every method claim SHALL cite
+only verified arXiv IDs from `arxiv_ids_cited`; `banned_channels_excluded`
+SHALL be true; `duration_s` SHALL use the aggregation-only `0.0001` floor; and
+the source set SHALL include direct arXiv HTTP-200 checks for `2401.12497`,
+`2505.02074`, `2602.11389`, `2504.07257`, `2605.18871`, `2505.14999`,
+`2606.04579`, and `2604.24198`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success_sota_ingestion_v453_frontier_mapped."
+- `aimed_at_fork_verdict`: principle "the A1 fork verdict the ingestion targets (selects the .453 branch)."
+- `methods_mapped`: principle "the strongest 3-5 methods, each with a real arXiv ID + experiment_graft + fails_when."
+- `post_sprint_pivot_methods`: principle "the verifier-moat / oracle-distinct candidates for when the ARC sprint retires 6/30 (north-star §1/§5)."
+- `arxiv_ids_cited`: principle "every method claim cites a verifiable HTTP-200 arXiv ID (no fabrication)."
+- `citations`: principle "HTTP-200 arXiv source metadata backing every method claim."
+- `banned_channels_excluded`: principle "true -- /deep-research NOT invoked; nulled classes NOT re-ingested."
+- `flagged_for_v453`: principle "the strongest method(s) flagged so the .453 planner reads the mapping (discover->ingest->plan->experiment)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (reads upstream verdicts + sweeps; 0.0001s floor)."
+- `random_seed`: principle "determinism for the sweep query ordering."
+- `reproducibility_checksum`: principle "content hash of (branch, sweep queries, mapped methods) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4911-V453-WALL-AND-PIVOT-MAPPED
+
+Given the research files, north-star note, Exp 4903 A1 artifact, and Exp 4904
+A1b artifact are present
+When Experiment 4911 runs through the reliable channel
+Then it writes `results/experiment_4911_sota_ingestion_v453_frontier.json`,
+records that `/deep-research` was not invoked, records A1's
+`WALL_DEEPER_THAN_VALUE_PREDICTION` and A1b's
+`VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES`, maps three to five final ARC
+wall-diagnostic methods plus the post-sprint verifier-moat candidates with real
+HTTP-200 arXiv IDs, updates `research-studying.md` and
+`research-references.md` idempotently, and flags the strongest `.453` planner
+inputs.
+
+#### SCENARIO-ARC-WMTE-4911-BLOCKED-UPSTREAM
+
+Given the Exp 4903 A1 artifact or required Exp 4904 A1b artifact is missing
+When Experiment 4911 checks preconditions
+Then it writes `blocked_upstream_artifact_missing`, records the missing
+precondition, keeps `methods_mapped=[]`, keeps
+`post_sprint_pivot_methods=[]`, keeps `banned_channels_excluded=true`, and does
+not fabricate either fork verdict.
+
+#### SCENARIO-ARC-WMTE-4911-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID,
+targets a fork verdict inconsistent with A1/A1b, maps a nulled class, invokes
+`/deep-research`, claims a model-load, training, leaderboard, or solve result,
+or modifies `scripts/research_conductor.py`
+When the Experiment 4911 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ## Implementation Status (REQ-ARC-WMTE-4908)
 
 | Requirement | Implementation | Tests |

@@ -24899,3 +24899,18 @@ sidesteps the change-VALUE wall by reading values from the env (north-star §5 v
 action-pruner). AdaWorld (arXiv:2503.18938) is retained as the GATED LAST representation swing
 (A1b), run only if the env-grounded reframe does not lift first-win.
 <!-- V452-PLANNER-NOTE-END -->
+
+<!-- EXP4911-V453-FRONTIER-REFERENCES-START -->
+## Exp 4911 V453 wall and verifier-pivot source set
+
+Reliable-channel source set for `success_sota_ingestion_v453_frontier_mapped`:
+
+- arXiv:2401.12497 - Building Minimal and Reusable Causal State Abstractions for Reinforcement Learning - https://arxiv.org/abs/2401.12497 - HTTP 200
+- arXiv:2504.07257 - Better Decisions through the Right Causal World Model - https://arxiv.org/abs/2504.07257 - HTTP 200
+- arXiv:2505.02074 - Learning Local Causal World Models with State Space Models and Attention - https://arxiv.org/abs/2505.02074 - HTTP 200
+- arXiv:2505.14999 - Learning to Rank Chain-of-Thought: Using a Small Model - https://arxiv.org/abs/2505.14999 - HTTP 200
+- arXiv:2602.11389 - Causal-JEPA: Learning World Models through Object-Level Latent Masking - https://arxiv.org/abs/2602.11389 - HTTP 200
+- arXiv:2604.24198 - Rewarding the Scientific Process: Process-Level Reward Modeling for Agentic Data Analysis - https://arxiv.org/abs/2604.24198 - HTTP 200
+- arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - HTTP 200
+- arXiv:2606.04579 - SCI-PRM: A Tool Aware Process Reward Model for Scientific Reasoning Verification - https://arxiv.org/abs/2606.04579 - HTTP 200
+<!-- EXP4911-V453-FRONTIER-REFERENCES-END -->
