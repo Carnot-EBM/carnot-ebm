@@ -1,0 +1,79 @@
+{
+  "board_state": {
+    "captured": true,
+    "hostname": "kv260",
+    "kernel": "Linux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux",
+    "raw_stdout": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 03:56:20 up 1 day,  3:58,  1 user,  load average: 0.08, 0.02, 0.01\n5\n",
+    "uio_device_count": 5,
+    "uptime": "03:56:20 up 1 day,  3:58,  1 user,  load average: 0.08, 0.02, 0.01"
+  },
+  "command_probes": {
+    "kv260_board_state": {
+      "combined_output": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 03:56:20 up 1 day,  3:58,  1 user,  load average: 0.08, 0.02, 0.01\n5\n",
+      "command": "ssh kria 'hostname; uname -a; uptime; ls /dev/uio* 2>/dev/null | wc -l'",
+      "duration_s": 0.4481864608824253,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "kv260\nLinux kv260 6.8.0-1029-xilinx #30-Ubuntu SMP PREEMPT_DYNAMIC Mon Apr 27 07:29:43 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n 03:56:20 up 1 day,  3:58,  1 user,  load average: 0.08, 0.02, 0.01\n5\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.598934241104871,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7624690989032388,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9515032679773867,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    }
+  },
+  "duration_s": 6.7614,
+  "experiment": 4899,
+  "field_principles": {
+    "board_state": "captured hostname/kernel/uptime/uio-count over SSH -- the terminal-state continuity record.",
+    "honest_verdict": "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable (still WRITES).",
+    "inference_substrate": "aggregation_from_upstream_artifacts (an SSH state read; 0.0001s floor).",
+    "kv260_ssh_reachable": "true with board state, or false -- the SSH-only continuity signal (NEVER host SD-card presence).",
+    "next_forward_step": "continuity-only (graduated terminal); records the next concrete step only if a probe changes.",
+    "preconditions_checked": "records the SSH reachability check; an unreachable board emits blocked_kv260_ssh_unreachable, never a fabricated state."
+  },
+  "honest_verdict": "success_kv260_continuity_ok",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_ssh_reachable": true,
+  "loaded_overlay": "carnot_ising_v2_n64",
+  "next_forward_step": "GRADUATED: KV260 terminal criteria met; continue per-milestone SSH-only continuity checks. Next concrete step: keep the board in the continuity rotation and queue an overlay-state audit only if a future SSH or xmutil probe changes.",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.598934241104871,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 4899,
+  "reproducibility_checksum": "cc16d8dafe5eb0f79c6abe4a03a82a580be2bab9c56c598041be72e1e507ef90",
+  "schema": "carnot.kv260_ssh_continuity.v14",
+  "spec_refs": [
+    "REQ-HW-4899",
+    "SCENARIO-HW-4899"
+  ],
+  "verifier_is_oracle": false,
+  "xmutil_requires_sudo": true
+}
