@@ -125,6 +125,12 @@ SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archi
 # this swaps the cell-choice heuristic for an LLM promisingness judge). Enable only with the archive on.
 SUBMITTED_IGE_CELL_SELECTION_ENABLED = False
 SUBMITTED_IGE_CELL_SELECTION_MODE = "llm_promisingness_go_explore"
+# REQ-ARC-WMTE-4933: MATM-style similarity retrieval is an opt-in efficiency lever. The submitted
+# baseline remains exact frame-hash navigation until the Experiment 4933 gate proves a strict gain.
+SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED = False
+SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE = "within_game_lsh_cross_game_features_v2"
+MATM_SIMILARITY_BUCKET_WIDTH = 0.25
+MATM_SIMILARITY_MAX_CANDIDATES = 8
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -316,6 +322,9 @@ class StepwiseExplorer:
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
         go_explore_archive: Any | bool | None = SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
+        similarity_retrieval: bool | None = None,
+        similarity_bucket_width: float = MATM_SIMILARITY_BUCKET_WIDTH,
+        similarity_max_candidates: int = MATM_SIMILARITY_MAX_CANDIDATES,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
@@ -425,6 +434,21 @@ class StepwiseExplorer:
         self._nav_edges_recorded = 0
         self._nav_forward_steps = 0
         self._nav_reset_replay_steps = 0
+        if similarity_retrieval is None:
+            similarity_retrieval = _os.environ.get("CARNOT_ARC_MATM_SIMILARITY_RETRIEVAL", "0") == "1"
+        self.similarity_retrieval_enabled = bool(similarity_retrieval)
+        self.similarity_bucket_width = max(1e-9, float(similarity_bucket_width))
+        self.similarity_max_candidates = max(1, int(similarity_max_candidates))
+        self._similarity_state_buckets: dict[tuple[int, ...], list[str]] = {}
+        self._similarity_descriptor_by_hash: dict[str, tuple[int, ...]] = {}
+        self._last_shortest_path_kind: str | None = None
+        self._nav_similarity_hits = 0
+        self._nav_similarity_candidates_considered = 0
+        self._nav_similarity_router_accepts = 0
+        self._nav_similarity_router_rejects = 0
+        self._nav_similarity_value_checks = 0
+        self._nav_similarity_goal_checks = 0
+        self._nav_similarity_world_model_verifier_checks = 0
         self.goal_bias = goal_bias
         self.goal_bias_label = str(goal_bias_label or "")
         self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
@@ -635,17 +659,32 @@ class StepwiseExplorer:
         """SCENARIO-ARC-FCP-4516: expose whether frontier navigation avoids RESET replay."""
 
         hits = int(self._nav_exact_hits + self._nav_partial_hits)
+        hits += int(self._nav_similarity_hits)
         attempts = int(self._nav_attempts)
         return {
             "navigation_attempts": attempts,
             "exact_shortest_path_hits": int(self._nav_exact_hits),
             "partial_forward_walk_hits": int(self._nav_partial_hits),
+            "similarity_forward_walk_hits": int(self._nav_similarity_hits),
             "forward_walk_hits": hits,
             "reset_replay_fallbacks": int(self._nav_reset_fallbacks),
             "forward_edges_recorded": int(self._nav_edges_recorded),
             "forward_navigation_steps": int(self._nav_forward_steps),
             "reset_replay_steps": int(self._nav_reset_replay_steps),
             "forward_walk_hit_rate": float(hits / attempts) if attempts else 0.0,
+            "similarity_retrieval_enabled": bool(self.similarity_retrieval_enabled),
+            "similarity_buckets": int(len(self._similarity_state_buckets)),
+            "similarity_indexed_states": int(len(self._similarity_descriptor_by_hash)),
+            "similarity_candidates_considered": int(
+                self._nav_similarity_candidates_considered
+            ),
+            "similarity_router_accepts": int(self._nav_similarity_router_accepts),
+            "similarity_router_rejects": int(self._nav_similarity_router_rejects),
+            "similarity_value_checks": int(self._nav_similarity_value_checks),
+            "similarity_goal_checks": int(self._nav_similarity_goal_checks),
+            "similarity_world_model_verifier_checks": int(
+                self._nav_similarity_world_model_verifier_checks
+            ),
         }
 
     def set_goal_bias(self, goal_bias, *, label: str = "", lower_is_better: bool = False) -> None:
@@ -1033,6 +1072,42 @@ class StepwiseExplorer:
         edges.append((act, next_hash))
         self._nav_edges_recorded += 1
 
+    def _similarity_descriptor(self, frame: Any) -> tuple[int, ...] | None:
+        """REQ-ARC-WMTE-4933: deterministic coarse key for within-game near-state lookup."""
+
+        if frame is None:
+            return None
+        try:
+            from carnot.agentic.arc_value_learner import cross_game_features_v2
+
+            values = cross_game_features_v2(frame)
+        except Exception:
+            return None
+        bucket: list[int] = []
+        for value in values:
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                number = 0.0
+            if number != number:
+                number = 0.0
+            bucket.append(int(round(number / self.similarity_bucket_width)))
+        return tuple(bucket)
+
+    def _index_similarity_state(self, node_hash: str, frame: Any) -> None:
+        """Index one live-observed state; never imports cross-game trajectories."""
+
+        if not self.similarity_retrieval_enabled or not node_hash:
+            return
+        descriptor = self._similarity_descriptor(frame)
+        if descriptor is None:
+            return
+        self._similarity_descriptor_by_hash[node_hash] = descriptor
+        bucket = self._similarity_state_buckets.setdefault(descriptor, [])
+        if node_hash not in bucket:
+            bucket.append(node_hash)
+            bucket.sort()
+
     def _ingest(self, latest) -> None:
         if latest is None:
             return
@@ -1163,11 +1238,13 @@ class StepwiseExplorer:
                             or self.controllable_novelty_policy is not None
                             or self.object_centric_proposal_policy is not None
                             or self.go_explore_archive is not None
+                            or self.similarity_retrieval_enabled
                             else frame_for_value
                         ),
                         "previous_frame": o.get("previous_frame") or origin_node.get("frame"),
                         "discriminative_features": features,
                     }
+                self._index_similarity_state(h, latest)
         self.cur = h
         if self.root is None and not over:
             self.root = h
@@ -1194,12 +1271,14 @@ class StepwiseExplorer:
                         or self.controllable_novelty_policy is not None
                         or self.object_centric_proposal_policy is not None
                         or self.go_explore_archive is not None
+                        or self.similarity_retrieval_enabled
                         else frame_for_value
                     ),
                     "previous_frame": None,
                     "discriminative_features": features,
                 },
             )
+            self._index_similarity_state(h, latest)
         if self.go_explore_archive is not None and not over:
             node = self.graph.get(h)
             if node is not None:
@@ -1328,12 +1407,12 @@ class StepwiseExplorer:
     def _frontier_navigation_cost_key(self, node_hash: str) -> tuple[int, int]:
         """SCENARIO-ARC-FCP-4523: prefer cheap navigation only within equal depth."""
 
-        fwd = self._shortest_path(self.cur, node_hash)
+        fwd = self._shortest_path(self.cur, node_hash, allow_similarity=False)
         if fwd is not None:
             return (0, len(fwd))
         return (1, len(self.graph.get(node_hash, {}).get("path", [])))
 
-    def _shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
+    def _exact_shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
         """Frontier-distance navigation: BFS over the KNOWN forward edges from src to dst.
         Returns the action sequence to walk there WITHOUT a RESET (cheaper than replay-
         from-root), or None if dst isn't forward-reachable from src in the known graph."""
@@ -1355,6 +1434,145 @@ class StepwiseExplorer:
                 q.append((nxt, npath))
         return None
 
+    def _shortest_path(
+        self,
+        src: Optional[str],
+        dst: str,
+        *,
+        allow_similarity: bool = True,
+    ) -> Optional[list]:
+        exact = self._exact_shortest_path(src, dst)
+        if exact is not None:
+            self._last_shortest_path_kind = "exact"
+            return exact
+        similar = self._similarity_shortest_path(src, dst) if allow_similarity else None
+        self._last_shortest_path_kind = "similarity" if similar is not None else None
+        return similar
+
+    def _edge_next_hash(self, origin: str, action: Mapping[str, Any]) -> str | None:
+        act = {"action": int(action["action"]), "data": action.get("data")}
+        for existing, next_hash in self.adj.get(origin, []):
+            if self._same_path_step(existing, act):
+                return next_hash
+        return None
+
+    @staticmethod
+    def _similarity_world_model_key(grid: Any, action: int, data: Any) -> tuple:
+        import numpy as np
+
+        arr = np.asarray(grid, dtype=np.int16)
+        data_key = json.dumps(data, sort_keys=True, separators=(",", ":"), default=str)
+        return (tuple(int(dim) for dim in arr.shape), arr.tobytes(), int(action), data_key)
+
+    def _similarity_world_model_verifier_passes(
+        self,
+        origin: str,
+        dst: str,
+        prefix: Sequence[Mapping[str, Any]],
+    ) -> bool:
+        try:
+            import numpy as np
+
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import Transition, WorldModelVerifier
+        except Exception:
+            return False
+
+        transitions = []
+        lookup: dict[tuple, Any] = {}
+        node_hash = origin
+        for step in prefix:
+            next_hash = self._edge_next_hash(node_hash, step)
+            if next_hash is None:
+                return False
+            before = self.graph.get(node_hash, {}).get("frame")
+            after = self.graph.get(next_hash, {}).get("frame")
+            if before is None or after is None:
+                return False
+            try:
+                grid = np.asarray(grid_of(before), dtype=np.int16)
+                next_grid = np.asarray(grid_of(after), dtype=np.int16)
+            except Exception:
+                return False
+            action = int(step["action"])
+            data = step.get("data")
+            lookup[self._similarity_world_model_key(grid, action, data)] = next_grid.copy()
+            transitions.append(
+                Transition(
+                    grid=grid.copy(),
+                    action=action,
+                    data=data,
+                    next_grid=next_grid.copy(),
+                    level_before=0,
+                    level_after=0,
+                )
+            )
+            node_hash = next_hash
+        if node_hash != dst or not transitions:
+            return False
+
+        def engine(grid: Any, action: int, data: Any) -> Any:
+            key = self._similarity_world_model_key(grid, int(action), data)
+            if key not in lookup:
+                raise KeyError("unobserved_similarity_prefix_transition")
+            return lookup[key].copy()
+
+        try:
+            score = WorldModelVerifier(transitions).score(engine)
+            self._nav_similarity_world_model_verifier_checks += 1
+            return float(score.accuracy) >= 1.0
+        except Exception:
+            return False
+
+    def _similarity_prefix_router_accepts(
+        self,
+        src: str,
+        origin: str,
+        dst: str,
+        prefix: Sequence[Mapping[str, Any]],
+    ) -> bool:
+        src_node = self.graph.get(src) or {}
+        dst_node = self.graph.get(dst) or {}
+        src_frame = src_node.get("frame")
+        dst_frame = dst_node.get("frame")
+        if src_frame is None or dst_frame is None:
+            return False
+        if self.value_head is not None and self.value_weight != 0.0:
+            self._nav_similarity_value_checks += 1
+            src_value = self._value(src_frame, node_hash=src)
+            dst_value = self._value(dst_frame, node_hash=dst)
+            if float(dst_value) > float(src_value):
+                return False
+        if self.goal_bias is not None:
+            self._nav_similarity_goal_checks += 1
+            src_goal = self._goal_bias_score(src_node)
+            dst_goal = self._goal_bias_score(dst_node)
+            if self._goal_bias_key(dst_goal) > self._goal_bias_key(src_goal):
+                return False
+        return self._similarity_world_model_verifier_passes(origin, dst, prefix)
+
+    def _similarity_shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
+        if not self.similarity_retrieval_enabled or src is None or src == dst:
+            return None
+        descriptor = self._similarity_descriptor_by_hash.get(src)
+        if descriptor is None:
+            return None
+        candidates = [
+            state_hash
+            for state_hash in self._similarity_state_buckets.get(descriptor, [])
+            if state_hash != src
+        ][: self.similarity_max_candidates]
+        for state_hash in candidates:
+            prefix = self._exact_shortest_path(state_hash, dst)
+            if not prefix:
+                continue
+            self._nav_similarity_candidates_considered += 1
+            if self._similarity_prefix_router_accepts(src, state_hash, dst, prefix):
+                self._nav_similarity_router_accepts += 1
+                return prefix
+            self._nav_similarity_router_rejects += 1
+        return None
+
     def _partial_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
         """Walk to the deepest reachable ancestor of dst, then replay only the suffix."""
 
@@ -1369,7 +1587,7 @@ class StepwiseExplorer:
             ancestor_path = node.get("path", [])
             if not self._path_is_prefix(ancestor_path, target_path):
                 continue
-            forward = self._shortest_path(src, ancestor)
+            forward = self._exact_shortest_path(src, ancestor)
             if forward is None:
                 continue
             depth = len(ancestor_path)
@@ -1596,7 +1814,10 @@ class StepwiseExplorer:
         self._nav_attempts += 1
         fwd = self._shortest_path(self.cur, th) if not over else None
         if fwd is not None:
-            self._nav_exact_hits += 1
+            if self._last_shortest_path_kind == "similarity":
+                self._nav_similarity_hits += 1
+            else:
+                self._nav_exact_hits += 1
             self._nav_forward_steps += len(fwd)
             self.pending = [{"kind": s["action"], "data": s["data"], "probe": False} for s in fwd]
         else:
@@ -1775,6 +1996,7 @@ class CarnotAgentPolicy:
         frontier_batch_size: int | str | None = SUBMITTED_FRONTIER_BATCH_SIZE,
         navigation_cost_tiebreak: bool = SUBMITTED_NAVIGATION_COST_TIEBREAK,
         candidate_router: Any | None = None,
+        similarity_retrieval: bool | None = None,
     ) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
@@ -1805,6 +2027,7 @@ class CarnotAgentPolicy:
                 frontier_batch_size=frontier_batch_size,
                 navigation_cost_tiebreak=navigation_cost_tiebreak,
                 candidate_router=candidate_router,
+                similarity_retrieval=similarity_retrieval,
             )
         )
 
@@ -1884,6 +2107,7 @@ class E3AgentPolicy:
             SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED
         ),
         go_explore_archive: Any | bool | None = SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
+        similarity_retrieval: bool | None = SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED,
         subgoal_search: bool = False,
         subgoal_budget: int = 3,
         factored_planner: bool = False,
@@ -1987,6 +2211,7 @@ class E3AgentPolicy:
             program_synthesis_filter=initial_program_filter,
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
+            similarity_retrieval=similarity_retrieval,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -2947,6 +3172,8 @@ SUBMITTED_AGENT_CONFIG = {
     "go_explore_archive_mode": SUBMITTED_GO_EXPLORE_ARCHIVE_MODE,
     "ige_cell_selection_enabled": SUBMITTED_IGE_CELL_SELECTION_ENABLED,
     "ige_cell_selection_mode": SUBMITTED_IGE_CELL_SELECTION_MODE,
+    "matm_similarity_retrieval_enabled": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_ENABLED,
+    "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,
@@ -3050,6 +3277,9 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                     frontier_batch_size=SUBMITTED_AGENT_CONFIG["frontier_batch_size"],
                     navigation_cost_tiebreak=bool(
                         SUBMITTED_AGENT_CONFIG["navigation_cost_tiebreak"]
+                    ),
+                    similarity_retrieval=bool(
+                        SUBMITTED_AGENT_CONFIG["matm_similarity_retrieval_enabled"]
                     ),
                 )
                 if cascade
