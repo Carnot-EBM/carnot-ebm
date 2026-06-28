@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-27'
+updated: '2026-06-28'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -1594,39 +1594,19 @@ games:
   reproducibility: reproduced
   levels_reproduced: 2
   mechanic_class: config_toggle_navigation
-  win_condition: >-
-    L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while
-    ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker
-    and support sprites; next_level counts only after the offline frame level
-    counter advances.
-  action_model: >-
-    Keyboard ACTION1-4 move jfva; ACTION6 click payloads are display coordinates
-    derived from the visible buezna sprite centers. Exp4666 accepts the 93-label
-    standing-loop path from results/arc_loop_solve_dc22.json only through
-    arc_solver_kit.reproduce.
-  solver: >-
-    GameAdapter _dc22 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_dc22.json L2 gate.
-  reproduce: >-
-    Exp4666 results/experiment_4666_levelup_selfplay.json re-gated
-    results/arc_loop_solve_dc22.json offline_reproduced=True, reached_level=2,
-    banked +1 over the current L1 registry row, checksum ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0.
-  learned_verifier_checkpoint: models/arc_verifier_dc22.json trained by scripts/arc_loop_solve.py
-    on the dc22 L1+L2 positive steps-to-go trace and the recorded off-path/dead-end
-    evidence.
+  win_condition: 'L1+L2 toggle-navigation predicate: keyboard moves jfva through the maze while ACTION6 clicks visible buezna sys_click sprites to toggle same-letter blocker and support sprites; next_level counts only after the offline frame level counter advances.'
+  action_model: Keyboard ACTION1-4 move jfva; ACTION6 click payloads are display coordinates derived from the visible buezna sprite centers. Exp4666 accepts the 93-label standing-loop path from results/arc_loop_solve_dc22.json only through arc_solver_kit.reproduce.
+  solver: GameAdapter _dc22 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_dc22.json L2 gate.
+  reproduce: Exp4666 results/experiment_4666_levelup_selfplay.json re-gated results/arc_loop_solve_dc22.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0.
+  learned_verifier_checkpoint: models/arc_verifier_dc22.json trained by scripts/arc_loop_solve.py on the dc22 L1+L2 positive steps-to-go trace and the recorded off-path/dead-end evidence.
   gotchas:
-  - dc22 was on the operator skip list for rotation discipline; Exp4666 records
-    this as a fallback_exception because it was the only available standing-loop
-    artifact with offline_reproduced=true and a verifier checkpoint ahead of the
-    registry.
-  - The learned verifier is a routing/checkpoint artifact only; the executable
-    reproduction gate remains the oracle-distinct authority.
+  - dc22 was on the operator skip list for rotation discipline; Exp4666 records this as a fallback_exception because it was the only available standing-loop artifact with offline_reproduced=true and a verifier checkpoint ahead of the registry.
+  - The learned verifier is a routing/checkpoint artifact only; the executable reproduction gate remains the oracle-distinct authority.
   dead_ends:
-  - bp35, re86, and sb26 remain preferred hard targets but have no grounded
-    next-level adapter in this milestone.
+  - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0, cn04, and ar25 standing-loop probes repeated prior levels.
-  - lp85, tr87, and tn36 reproduced only prior-or-lower registry depths during
-    this milestone's bounded probes.
+  - lp85, tr87, and tn36 reproduced only prior-or-lower registry depths during this milestone's bounded probes.
+  - 'Exp4894 dc22 no-bank duplicate_depth: complete_dc22_no_new_level_residual_duplicate_depth.'
   latest_exp4666_levelup_selfplay:
     artifact: results/experiment_4666_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_dc22.json
@@ -1636,6 +1616,15 @@ games:
     verifier_checkpoint: models/arc_verifier_dc22.json
     fallback_exception: true
     reproducibility_checksum: ec16d760881f77cc0d6ca85258a579c643c70d18193f57f7a66b55678aaceaf0
+  latest_exp4894_levelup_attempt:
+    artifact: results/experiment_4894_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_dc22.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: duplicate_depth
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: 0144dae3ea506ee4cde0088fd7861286e2400a6345f535debd78f6c3b788c3b8
 - game: sb26
   reproducibility: reproduced
   levels_reproduced: 2
