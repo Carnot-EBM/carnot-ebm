@@ -1,0 +1,79 @@
+{
+  "experiment": "arc_ige_llm_go_explore_ab",
+  "schema": "carnot.arc_ige_llm_go_explore_ab.v1",
+  "honest_verdict": "complete_ige_ab_selector_not_exercised_no_archive_returns_in_1_specs_budget_300_inconclusive",
+  "question": "does LLM-judged Go-Explore cell selection (IGE, arXiv:2405.15143) raise live first-win on held-out games vs the plain-archive heuristic (the isolated A/B; only the selector differs)?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "games": [
+    "ar25"
+  ],
+  "variant_ids": [
+    1
+  ],
+  "budget": 300,
+  "max_depth_override": 8,
+  "n_specs": 1,
+  "baseline_arm": {
+    "first_win_rate": 0.0,
+    "variant_solved_count": 0,
+    "variant_attempts_count": 1,
+    "median_actions_to_first_levelup": null
+  },
+  "ige_arm": {
+    "first_win_rate": 0.0,
+    "variant_solved_count": 0,
+    "variant_attempts_count": 1,
+    "median_actions_to_first_levelup": null
+  },
+  "paired_first_win_delta_ci": {
+    "method": "paired_percentile_bootstrap",
+    "point": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "bootstrap_resamples": 1000,
+    "random_seed": 20260628
+  },
+  "ige_selector_diagnostics": {
+    "selector": "ige_llm_promisingness",
+    "verifier_is_oracle": false,
+    "enabled": true,
+    "proposer_injected": false,
+    "calls": 0,
+    "llm_choices": 0,
+    "parse_failures": 0,
+    "server_unavailable": 0,
+    "fallbacks": 0
+  },
+  "selector_exercised": false,
+  "ige_beats_baseline": false,
+  "model_specs": {
+    "generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "kv_quant": "q8_0",
+    "mtp": true
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "used_env_source": false,
+  "read_game_source": false,
+  "offline_ground_truth_bfs": false,
+  "hand_calibrated_per_game": false,
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5-9b-mtp_gpu_server",
+      "available": true,
+      "detail": "warm_server_reused"
+    }
+  ],
+  "interpretation": "ige_beats_baseline=True (ci excludes 0) -> LLM cell-promisingness gets winning prefixes into the explored pool where visit-count heuristics + RND novelty did not: a real first-win lever. no_first_win_lift -> the LLM judges cells fine but the winning multi-step prefix still never enters the pool: consistent with the triangulated generation/enumeration wall (.448-.452). selector_not_exercised -> budget too small for the archive to ever RETURN; raise budget.",
+  "cites_upstream": [
+    "exp4701",
+    "exp4831 (plain archive nulled)",
+    "exp4688 (RND novelty nulled)",
+    "arXiv:2405.15143"
+  ],
+  "random_seed": 20260628,
+  "duration_s": 50.9,
+  "reproducibility_checksum": "sha256:2b734a4d927f913f06b57ade90b625752200d0897c5fd9866de6848716981d67"
+}

@@ -40,6 +40,19 @@ sys.path.insert(0, str(REPO / "python"))
 N_GAMES = int(sys.argv[1]) if len(sys.argv) > 1 else 3
 N_VARIANTS = int(sys.argv[2]) if len(sys.argv) > 2 else 1
 BUDGET = int(sys.argv[3]) if len(sys.argv) > 3 else 600
+# Optional DFS depth-cap override (argv[4]). The submitted config caps DFS branches at max_depth=45; the
+# archive only RETURNS (and thus the selector only fires) when a branch is exhausted OR hits the cap. A
+# lower cap forces returns sooner so the selector is actually EXERCISED. It is applied IDENTICALLY to both
+# arms (baseline heuristic + IGE), so the A/B still isolates the selector; the override is recorded so the
+# result is honestly scoped ("does IGE beat the heuristic GIVEN the archive returns", not the submitted-cap
+# question of whether it returns at all). Default None = submitted max_depth (45).
+MAX_DEPTH = int(sys.argv[4]) if len(sys.argv) > 4 else None
+# Archive cell granularity. The submitted default (bins=6) coarse-cells states so aggressively that a game
+# like ar25 collapses to ~2 cells -> with the current-path exclusion there is almost never >=2 ELIGIBLE
+# cells, so cell-SELECTION (IGE's entire premise) has nothing to choose among and never fires. A finer
+# grid (bins~16) yields ~20+ cells so the selector has a real choice. This is itself a finding: IGE only
+# matters when the archive's abstraction produces enough distinct cells. Applied to BOTH arms equally.
+ARCHIVE_BINS = int(os.environ.get("CARNOT_IGE_ARCHIVE_BINS", "16"))
 SEED = 20260628
 
 
@@ -106,8 +119,8 @@ def main() -> int:
     # Shared IGE selector (one warm proposer reused across all ige-arm attempts; diagnostics accumulate).
     ige_selector = IGECellSelector()
 
-    baseline = [dict(_run_attempt("baseline", str(s["game"]), s, BUDGET, None)) for s in specs]
-    ige = [dict(_run_attempt("ige", str(s["game"]), s, BUDGET, ige_selector)) for s in specs]
+    baseline = [dict(_run_attempt("baseline", str(s["game"]), s, BUDGET, None, MAX_DEPTH)) for s in specs]
+    ige = [dict(_run_attempt("ige", str(s["game"]), s, BUDGET, ige_selector, MAX_DEPTH)) for s in specs]
 
     base_m = measurement_from_attempts(baseline)
     ige_m = measurement_from_attempts(ige)
@@ -150,6 +163,8 @@ def main() -> int:
         "games": games,
         "variant_ids": variant_ids,
         "budget": BUDGET,
+        "max_depth_override": MAX_DEPTH,
+        "archive_bins": ARCHIVE_BINS,
         "n_specs": len(specs),
         "baseline_arm": {k: base_m[k] for k in ("first_win_rate", "variant_solved_count", "variant_attempts_count", "median_actions_to_first_levelup")},
         "ige_arm": {k: ige_m[k] for k in ("first_win_rate", "variant_solved_count", "variant_attempts_count", "median_actions_to_first_levelup")},
@@ -182,7 +197,7 @@ def main() -> int:
     return 0
 
 
-def _run_attempt(arm: str, game: str, spec, budget: int, selector):
+def _run_attempt(arm: str, game: str, spec, budget: int, selector, max_depth=None):
     """Replicates experiment_4605.run_variant_attempt's live loop, but builds the policy with the
     Go-Explore archive ALWAYS enabled and the selector being the ONLY arm difference (baseline: None;
     ige: the IGECellSelector). Reproduction-gated via kit.reproduce."""
@@ -203,7 +218,9 @@ def _run_attempt(arm: str, game: str, spec, budget: int, selector):
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     env = VariantEnv(env, game, int(spec["variant"]), reflect=spec.get("reflect"))
-    archive_cfg = {"enabled": True, "selector": selector} if selector is not None else {"enabled": True}
+    archive_cfg = {"enabled": True, "bins": ARCHIVE_BINS}
+    if selector is not None:
+        archive_cfg["selector"] = selector
     policy = E3AgentPolicy(
         game,
         proposer=_NoOpProposer(),
@@ -211,6 +228,9 @@ def _run_attempt(arm: str, game: str, spec, budget: int, selector):
         value_weight=_submitted_value_weight(),
         go_explore_archive=archive_cfg,
     )
+    if max_depth is not None and getattr(policy, "explorer", None) is not None:
+        # force the archive to RETURN sooner so the selector is exercised (applied to both arms equally)
+        policy.explorer.max_depth = int(max_depth)
     frames: list = []
     latest = None
     labels: list[str] = []

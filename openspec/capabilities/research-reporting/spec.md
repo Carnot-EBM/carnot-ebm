@@ -391,6 +391,77 @@ missing resource under `preconditions_checked`, sets
 |---|---|---|
 | REQ-REPORT-4925 | Planned (`python/carnot/experiment_4925_levelup_attempt.py`) | Planned (`tests/python/test_experiment_4925_levelup_attempt.py`) |
 
+### REQ-REPORT-4926: Rotated SU15 Banking Attempt Banks Only New Offline-Reproduced ARC Depth
+
+The Exp 4926 workflow SHALL select `su15` for the rotated public ARC L2-to-L3
+banking attempt, with `cd82` retained only as the alternate. The selected target
+SHALL differ from `.453`'s `cn04`, `.452`'s `m0r0`, `.451`'s `dc22`, `.450`'s
+`g50t`, `.449`'s `s5i5`, A1's `sp80`, and the current A3 self-play target. It
+SHALL avoid hidden-state-bound targets (`ka59` and `wa30`), consult
+`ops/arc_solve_registry.yaml` plus `arc_solve_learning.recommend_approach(game)`,
+record the consulted dead ends, and SHALL NOT count an already-reproduced level
+as a new result.
+
+The workflow SHALL run the standing loop
+`.venv/bin/python scripts/arc_loop_solve.py --game <target>` before claiming any
+banked level. Any counted level SHALL pass `arc_solver_kit.reproduce()` offline,
+and the artifact SHALL set `verifier_is_oracle=true` only for that executable
+reproduction gate. The artifact SHALL be written to
+`results/experiment_4926_levelup_attempt.json` and include principle-annotated
+fields `honest_verdict`, `solve_provenance`, `target_game`,
+`offline_reproduced`, `reproduced_levels`, `new_levels_banked`,
+`verifier_is_oracle`, `live_path_reachable`, `inference_substrate`, and
+`preconditions_checked`.
+
+The success path SHALL use `honest_verdict` prefix
+`success_<game>_levelup_banked`, set
+`solve_provenance=live_agent_self_discovery`, set
+`offline_reproduced=true`, and set `new_levels_banked>=1` with
+`reproduced_levels` strictly greater than the prior registry depth. The no-bank
+path SHALL use `complete_<game>_no_new_level_residual_<cause>` and record the
+residual dead end in the registry. Missing offline arcade or target environment
+resources SHALL produce a `blocked_` verdict and SHALL NOT fabricate a solve.
+The workflow SHALL not update `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`; the conductor reconciler owns those files.
+
+#### SCENARIO-REPORT-4926: SU15 L3 Attempt Is The Rotated Banking Floor
+
+**Given** the offline arcade loads, the registry records `su15` and `cd82` at
+L2, the recent excluded targets are `cn04`, `m0r0`, `dc22`, `g50t`, and `s5i5`,
+A1's target is `sp80`, the active A3 self-play target is `bp35`, and the
+preferred `su15` row carries prior L3 caution/dead-end context
+**When** the Exp 4926 workflow selects a target and runs
+`.venv/bin/python scripts/arc_loop_solve.py --game su15`
+**Then** `results/experiment_4926_levelup_attempt.json` records
+`target_game=su15`, `solve_provenance=live_agent_self_discovery`,
+`live_path_reachable=true`, the executable reproduction gate as the oracle, the
+`recommend_approach(su15)` payload, the consulted registry dead end, and either
+a new offline-reproduced depth or an explicit no-bank residual dead end.
+
+#### SCENARIO-REPORT-4926-REPRODUCTION-GATE: Duplicate Depth Is Not Banked
+
+**Given** the selected target's standing-loop result reports only an
+offline-reproduced depth equal to the prior registry depth
+**When** Exp 4926 builds `results/experiment_4926_levelup_attempt.json`
+**Then** it records `complete_su15_no_new_level_residual_duplicate_depth`,
+`offline_reproduced=false`, `new_levels_banked=0`, the executable reproduction
+gate as the oracle, and `retire_if_same_verdict=true`.
+
+#### SCENARIO-REPORT-4926-BLOCKED-PRECONDITION: Missing Offline ARC Resource Blocks
+
+**Given** the offline arcade or target environment is unavailable
+**When** the Exp 4926 workflow starts
+**Then** it writes a blocked artifact with a `blocked_` verdict, records the
+missing resource under `preconditions_checked`, sets
+`offline_reproduced=false`, `live_path_reachable=false`, and
+`new_levels_banked=0`.
+
+## Implementation Status (REQ-REPORT-4926)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4926 | Planned (`python/carnot/experiment_4926_levelup_attempt.py`) | Planned (`tests/python/test_experiment_4926_levelup_attempt.py`) |
+
 ### REQ-REPORT-4420: Archive .408, Activate .409, Record The Honest Config-Rule Close-State
 
 The Exp 4420 workflow SHALL archive milestone `2026.06.408`, confirm milestone
