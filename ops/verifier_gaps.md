@@ -2517,9 +2517,32 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: high (it is the single binding ceiling on multi-level deepening = the only lever that grows reproducible_total_levels via live self-discovery; 15 games gated on it)
 
 ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
-- status: open
+- status: building (RICHER-SCALAR candidate BUILT + REFUTED 2026-06-27 -> re-scoped to RELATIONAL; see UPDATE)
+- UPDATE 2026-06-27 (richer-scalar candidate refuted -> the gap is RELATIONAL, not scalar): built
+  induce_goal_energy_richer (arc_agi3_goal_induction.py) adding a value/fill/spatial scalar ladder
+  (nonbg_cells, max_color_count, nonbg_bbox_area, color_entropy) under the SAME strict-separation guard;
+  3 unit tests pass (test_arc_single_positive_goal_energy.py). RE-RAN the stage-1.6 probe on all 4 games:
+  STILL None on cd82/sk48/sp80/cn04 (operator_used=None, separating_feature=None; adversarial_verify clean
+  4/4). ROOT CAUSE (the sharper finding): the negatives include NEAR-WIN frames (the penultimate frame
+  differs from the win by ~one cell), so NO global scalar -- count, fill, OR spatial-extent -- can strictly
+  separate the win from them. The goal is RELATIONAL/CELL-LEVEL (the configuration matches a within-frame
+  TARGET; the win differs from the penultimate frame only in specific cell VALUES), which no global scalar
+  can express. So the missing feature is a WITHIN-FRAME RELATIONAL TARGET-MATCH, not richer scalars.
+  Re-scoped candidate design below.
 - evidence: results/arc_within_game_l3_self_induction_{cd82,sk48,sp80,cn04}_stage1.json (2026-06-27, outer-loop). With the GAP-4890 win-exemplar floor cleared (induce_goal_energy_single_positive fires from 1 win), ALL 4 grid-based stalled games returned None with verdict complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling: NO object-count / unique-colour-count feature strictly separates the lone level-completion win from the self-played non-win grids. adversarial_verify clean (4/4).
 - failure mode: the goal-induction operator (both the >=2-win and the new single-positive variants) only has object-COUNT and colour-COUNT hypotheses (H1-H5). The stalled games' goals are SPATIAL/VALUE/ORDER, not count: cd82 palette_region_fill (canvas==target under a mask -> same counts), sk48 chain_color_reorder (same colours, reordered), sp80 spill_splitter (placement), cn04 marker_pair_shape_alignment (alignment). So the win and non-win states have identical object/colour counts and the energy reads ~0 on both -> cannot induce a usable goal -> graph_explore degrades to blind BFS -> no L3. This, NOT the win-exemplar floor, is the binding ceiling on multi-level deepening for >=4 of the 15 L2-stalled games.
 - missing discriminator: a richer goal-feature family for goal-energy induction -- cell-VALUE match against an induced target/mask, spatial-pattern / alignment match, set/multiset ORDER match -- so the induced energy is 0 on the win and >0 on non-wins for value/spatial/order goals. The change-LOCATION prior (which transfers) can supply the candidate mask region; the gap is the VALUE/spatial predicate over it.
-- candidate design: extend induce_goal_energy_single_positive with (a) a target-mask-match energy (Hamming distance of changed-cell VALUES vs the win exemplar over the change-location mask), (b) a permutation/order energy for reorder games, (c) an alignment energy (object-centroid relative-position match). Select among these by the same strict-separation contrastive guard already used for the count hypotheses. Then re-run the cd82/sk48/sp80/cn04 stage-1.5 probe; success = the energy separates on real grids -> proceed to the graph_explore L3 search.
-- priority: high (now THE binding ceiling on within-game deepening once the floor is cleared; >=4 of 15 L2-stalled games confirmed gated on it; growing reproducible_total_levels via live self-discovery depends on it)
+- candidate design (RE-SCOPED 2026-06-27 to RELATIONAL after the scalar refutation): the energy must be a
+  WITHIN-FRAME RELATIONAL TARGET-MATCH, not a global scalar. Concretely: (a) induce a target by finding a
+  region-PAIR (or region + reference) that is EQUAL in the win exemplar but UNEQUAL in the negatives (the
+  canvas vs the displayed target) -> energy = Hamming mismatch of that region pair in the candidate grid
+  (this generalises across levels: the target is re-read from each level's frame, not the win's exact
+  values); (b) for reorder games, a sequence/permutation-match energy over the ordered colour run; (c) for
+  alignment, an object-centroid relative-position match. The strict-separation guard still selects which
+  relational predicate fires. NOTE: global-scalar features (counts AND value/fill/spatial) are now
+  EMPIRICALLY RULED OUT (this UPDATE) because near-win negatives bracket the win on every global statistic.
+  Then re-run the stage-1.6 probe; success = the relational energy is 0 on the win and >0 on near-win
+  negatives -> proceed to the graph_explore_solve_v2 L3 search.
+- priority: high (now THE binding ceiling on within-game deepening; confirmed 2026-06-28 when the .451 A2
+  level-up STALLED on a stalled-game with repro=False/newlvls=0 -- the reliable +1/milestone lane is now
+  blocked on exactly this; growing reproducible_total_levels via live self-discovery depends on it)

@@ -148,3 +148,77 @@ def induce_goal_energy_single_positive(
         return lambda g: float(abs(len(objects(g)) - w_obj))
     # No feature strictly separates the single win from the negatives -> cannot induce honestly.
     return None
+
+
+# --- GAP-4891: richer goal-feature family (value / fill / spatial), beyond object/colour COUNTS ----
+
+def _goal_feature_value(grid: np.ndarray, feat: str) -> float:
+    """One scalar goal-relevant feature of a grid (GAP-4891). Beyond the count features
+    (objects / unique-colours) that GAP-4890 showed cannot separate the win from non-wins on
+    spatial/value/order goals (cd82 region-fill, sk48 reorder, sp80 placement, cn04 alignment),
+    these capture FILL/VALUE/SPATIAL changes that leave the counts unchanged."""
+    arr = np.asarray(grid)
+    vals, counts = np.unique(arr, return_counts=True)
+    if feat == "n_objects":
+        return float(len(objects(arr)))
+    if feat == "n_unique_colors":
+        return float(len(vals))
+    if feat == "nonbg_cells":  # cells not the dominant (background) colour -- FILL extent
+        return float(arr.size - int(counts.max()))
+    if feat == "max_color_count":  # extent of the most-common colour (fills shrink/grow it)
+        return float(int(counts.max()))
+    if feat == "nonbg_bbox_area":  # spatial extent (bounding box) of non-background -- placement/alignment
+        bg = vals[int(counts.argmax())]
+        ys, xs = np.where(arr != bg)
+        return float((ys.max() - ys.min() + 1) * (xs.max() - xs.min() + 1)) if ys.size else 0.0
+    if feat == "color_entropy":  # distributional spread of colours (reorder/redistribute goals)
+        p = counts / counts.sum()
+        return float(-(p * np.log(p + 1e-12)).sum())
+    raise ValueError(f"unknown goal feature {feat}")
+
+
+_RICHER_GOAL_FEATURES = (
+    "n_objects",
+    "n_unique_colors",
+    "nonbg_cells",
+    "max_color_count",
+    "nonbg_bbox_area",
+    "color_entropy",
+)
+
+
+def induce_goal_energy_richer(
+    win_grid: Optional[np.ndarray],
+    non_win_grids: List[np.ndarray],
+    features: tuple[str, ...] = _RICHER_GOAL_FEATURES,
+) -> Optional[Callable[[np.ndarray], float]]:
+    """GAP-4891 goal-energy over a RICHER scalar-feature family (the within-game L2->L3 deepening
+    unblock, after GAP-4890's single-positive operator cleared the win-exemplar floor).
+
+    WHY: GAP-4890 proved that with the floor cleared, all 4 grid-based stalled games (cd82/sk48/sp80/
+    cn04) still returned None because object/colour-COUNT features cannot SEPARATE the lone win from the
+    non-wins -- their goals are spatial/value/order (region-fill, reorder, placement, alignment), which
+    leave counts unchanged (results/arc_within_game_l3_self_induction_*_stage1.json). This adds FILL/
+    VALUE/SPATIAL scalar features (non-background cell count, dominant-colour extent, non-bg bounding-box
+    area, colour entropy) and applies the SAME strict-separation anti-mis-induction guard from GAP-4890:
+    a feature fires ONLY when the lone win is strictly above/below EVERY negative on it. Returns
+    energy(grid)->float>=0 (0 at the win's value), or None if no feature separates -- an honest
+    'cannot induce'. Same contract as induce_goal_energy -> drops into graph_explore_solve_v2's
+    goal_energy hook. The caller MUST still run the BFS-only ablation (energy only counts if it reaches
+    the win faster than navigation-only)."""
+    if win_grid is None or not non_win_grids:
+        return None
+    for feat in features:
+        try:
+            wv = _goal_feature_value(win_grid, feat)
+            nv = [_goal_feature_value(g, feat) for g in non_win_grids]
+        except Exception:
+            continue
+        if not nv:
+            continue
+        if wv < min(nv):  # win strictly LOWER -> goal = reduce this feature to the win's value
+            return lambda g, _f=feat, _w=wv: float(max(0.0, _goal_feature_value(g, _f) - _w))
+        if wv > max(nv):  # win strictly HIGHER -> goal = increase this feature to the win's value
+            return lambda g, _f=feat, _w=wv: float(max(0.0, _w - _goal_feature_value(g, _f)))
+    # No richer feature strictly separates the single win from the negatives -> cannot induce honestly.
+    return None

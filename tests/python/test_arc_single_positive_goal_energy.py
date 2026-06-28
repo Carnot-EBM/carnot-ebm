@@ -12,6 +12,7 @@ import numpy as np
 
 from carnot.agentic.arc_agi3_goal_induction import (
     induce_goal_energy,
+    induce_goal_energy_richer,
     induce_goal_energy_single_positive,
 )
 
@@ -72,3 +73,37 @@ def test_single_positive_handles_empty_inputs():
     """Defensive: no negatives or no win -> None (cannot contrast)."""
     assert induce_goal_energy_single_positive(None, [_grid_with_objects(2)]) is None
     assert induce_goal_energy_single_positive(_grid_with_objects(1), []) is None
+
+
+# --- GAP-4891 richer goal-feature family --------------------------------------------------------
+
+def test_richer_fires_on_fill_where_counts_are_blind():
+    """GAP-4891 core: a region-FILL goal -- win has more non-background cells than non-wins, but the
+    SAME object/colour COUNTS. The count-only operator returns None; the richer operator fires on the
+    nonbg_cells (fill) feature and separates."""
+    win = np.zeros((6, 6), dtype=int)
+    win[0:4, 0:4] = 1  # 16 filled cells, 1 connected object, colours {0,1}
+    nonwin = np.zeros((6, 6), dtype=int)
+    nonwin[0, 0:5] = 1  # 5 filled cells, 1 connected object, colours {0,1}
+
+    # counts are identical (1 object, 2 colours) -> the GAP-4890 count operator cannot separate
+    assert induce_goal_energy_single_positive(win, [nonwin]) is None
+
+    energy = induce_goal_energy_richer(win, [nonwin])
+    assert energy is not None, "richer operator must fire on a fill goal the counts are blind to"
+    assert energy(win) == 0.0
+    assert energy(nonwin) > 0.0
+
+
+def test_richer_returns_none_when_truly_indistinguishable():
+    """If NO feature (count or value/fill/spatial) separates the lone win from the negatives -> None."""
+    win = np.zeros((6, 6), dtype=int)
+    win[0:2, 0:2] = 1
+    nonwin = np.zeros((6, 6), dtype=int)
+    nonwin[0:2, 0:2] = 1  # identical grid -> every feature identical
+    assert induce_goal_energy_richer(win, [nonwin]) is None
+
+
+def test_richer_handles_empty_inputs():
+    assert induce_goal_energy_richer(None, [np.zeros((4, 4), dtype=int)]) is None
+    assert induce_goal_energy_richer(np.zeros((4, 4), dtype=int), []) is None

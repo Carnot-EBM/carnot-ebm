@@ -35,7 +35,10 @@ sys.path.insert(0, str(REPO / "scripts"))
 from carnot.agentic import arc_game_adapters as adapters  # noqa: E402
 from carnot.agentic import arc_solver_kit as kit  # noqa: E402
 from carnot.agentic.arc_agi3_goal_induction import (  # noqa: E402
+    _RICHER_GOAL_FEATURES,
+    _goal_feature_value,
     induce_goal_energy,
+    induce_goal_energy_richer,
     induce_goal_energy_single_positive,
 )
 from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
@@ -110,8 +113,25 @@ def main() -> int:
     # fires from ONE win iff it is strictly separated from the negatives. Test BOTH on cd82's real grids.
     energy_two_win = induce_goal_energy(win_grids, non_win_grids) if len(win_grids) >= 2 else None
     energy = induce_goal_energy_single_positive(win_grids[0], non_win_grids) if win_grids else None
+    operator_used = "single_positive_count" if energy is not None else None
+    # GAP-4891: if the count operator can't separate, try the RICHER value/fill/spatial feature family.
+    if energy is None and win_grids:
+        energy = induce_goal_energy_richer(win_grids[0], non_win_grids)
+        operator_used = "richer_value_spatial" if energy is not None else None
     induce_fired = energy is not None
     two_win_floor_blocked = energy_two_win is None and len(win_grids) < 2
+    # diagnostic: which richer feature (if any) strictly separates the win from the negatives?
+    separating_feature = None
+    if win_grids:
+        for _feat in _RICHER_GOAL_FEATURES:
+            try:
+                _wv = _goal_feature_value(win_grids[0], _feat)
+                _nv = [_goal_feature_value(g, _feat) for g in non_win_grids]
+            except Exception:
+                continue
+            if _nv and (_wv < min(_nv) or _wv > max(_nv)):
+                separating_feature = _feat
+                break
     sep = None
     if induce_fired:
         we = [float(energy(g)) for g in win_grids]
@@ -130,15 +150,15 @@ def main() -> int:
     if level_reached < 2:
         verdict = f"complete_self_induction_stage1_could_not_reach_l2_reached_{level_reached}"
     elif not induce_fired:
-        # the single-positive operator clears the win-exemplar FLOOR; None now means the deeper ceiling:
-        # object/colour features cannot separate the lone win from the negatives (representation ceiling).
-        verdict = (f"complete_self_induction_gap4890_single_positive_no_separation_representation_ceiling"
+        # neither count (GAP-4890) NOR richer value/fill/spatial (GAP-4891) features separate the lone
+        # win from the negatives -> the goal needs ORDER/relational features (the next ceiling).
+        verdict = (f"complete_self_induction_gap4891_no_feature_separates_needs_order_relational"
                    f"_n_win_{len(win_grids)}")
     elif not sep["separates"]:
-        verdict = (f"complete_self_induction_gap4890_energy_does_not_separate_on_real_grids"
+        verdict = (f"complete_self_induction_energy_does_not_separate_on_real_grids_op_{operator_used}"
                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}")
     else:
-        verdict = (f"success_gap4890_single_positive_goal_energy_fires_and_separates_from_one_win"
+        verdict = (f"success_goal_energy_fires_and_separates_op_{operator_used}_feat_{separating_feature}"
                    f"_winE_{sep['mean_win_energy']}_nonE_{sep['mean_nonwin_energy']}_proceed_to_stage2_search")
 
     art = {
@@ -153,11 +173,12 @@ def main() -> int:
         "level_reached": level_reached,
         "n_win_grids": len(win_grids),
         "n_nonwin_grids": len(non_win_grids),
-        "goal_induction_operator": "induce_goal_energy_single_positive (GAP-4890)",
+        "goal_induction_operator": operator_used,
         "two_win_floor_blocked_old_operator": two_win_floor_blocked,
-        "single_positive_operator_fired": induce_fired,
+        "induce_fired": induce_fired,
+        "separating_feature": separating_feature,
         "energy_separation": sep,
-        "stage": 1.5,
+        "stage": 1.6,
         "solve_provenance": "live_agent_self_discovery",
         "used_env_source": False, "read_game_source": False,
         "offline_ground_truth_bfs": False, "hand_calibrated_per_game": False,
