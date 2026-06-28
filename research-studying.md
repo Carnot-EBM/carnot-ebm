@@ -5466,3 +5466,25 @@ This is the post-sprint verifier-moat pivot required after the ARC sprint retire
 - flagged_for_v453: distributional_energy_verifier_pivot (arXiv:2605.18871)
 - flagged_for_v453: tool_aware_science_prm_pivot (arXiv:2606.04579)
 <!-- EXP4911-SOTA-INGESTION-V453-FRONTIER-END -->
+
+### .453 PLANNER DECISION (outer-loop Claude Opus 4.8, 2026-06-28)
+
+Selected the .453 milestone from the exp4911 frontier map above, under the still-active
+ARC sprint (through 2026-06-30). Decisions:
+
+- **ARC headline = the causal-state-abstraction wall DIAGNOSTIC (arXiv:2401.12497, D's
+  priority-1).** .452 settled the wall is representation-invariant across FOUR world-model
+  representations PLUS env-grounded real-env-value search (A1 exp4903 delta -0.04 B1-trusted;
+  A1b exp4904 VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES). The diagnostic does NOT propose
+  representation #5; it CLASSIFIES the minimal causal state variables behind each failed
+  first-win as observable-from-the-ARC-interface (a fixable representation gap) vs hidden
+  (representation-invariant by construction). This is the "final ARC closure check before
+  2026-06-30" the exp4911 planner_instruction conditions on, and it is mandated by the
+  still-active sprint (majority-ARC). Publishable closure for the FoVer paper's ARC section.
+- **Post-6/30 pivot = distributional energy verifier (arXiv:2605.18871, post-sprint priority-1).**
+  The .453 SOTA-ingestion slot does NOT re-map (exp4911 already mapped); it MINIMALLY SCAFFOLDS
+  the offline FoVer->MuSR distributional-energy-verifier-vs-self-consistency harness + dry-run,
+  so the loop executes the pivot the instant the sprint retires.
+- **Did NOT carry forward** (all nulled/retired per exp4911): energy-as-ARC-lever, TTA-on-code-engine,
+  stronger-local-code-inducers, decision-need targets, action-prefix latents, coverage/vocabulary,
+  exploration, selection/ranking, perception-from-grid, representation #5.
