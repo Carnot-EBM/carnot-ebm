@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.453",
+  "generated_at": "2026-06-28T14:28:44Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked numeric fields (0/0/0/null) are the recurring FALSE-ZERO detector gap, NOT a genuinely empty milestone: the milestone-scoped timing detector again reported 'no commits since activation' (~80 milestones now, .363->.453), but .453 in fact ran exp4913-exp4923 (11 tasks), on-disk results/experiment_491{3..9}_*.json + experiment_492{0..3}_*.json mtimes 2026-06-28 06:29:46 -> 10:22:02 EDT, ~232-min window -- sourced from artifact mtimes, not the detector, not prior-retro recall. Headline (context only): A1 causal-abstraction diagnostic (exp4914, live_llm_inference 60.0s) reached closure WALL_IS_HIDDEN_STATE, B1-trusted (exp4918, all six trust gates true; hidden variable = winning_prefix_order_state) -> capstone exp4923 = ARC closure, the live first-win wall is representation-invariant by construction. A NEW level banked this milestone (exp4915 cn04, live_agent_self_discovery, offline_reproduced) -> reproducible_total_levels 68->69, the first bank in 4 milestones.",
+  "bottlenecks_identified": [
+    "PRIMARY (recurring ~80 milestones, .363->.453): the milestone-scoped timing detector false-zeroed again, so the retro TIMING DATA block was empty and the locked numeric fields (total_wall_time_minutes/experiments_completed/compute_bound_count/slowest) are uninformative 0s. The real window (exp4913-exp4923, ~232 min) had to be reconstructed from on-disk artifact mtimes. Diagnosis (unchanged from .451/.452): the detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer.",
+    "Write-time stamping gap: several arms shipped without duration_s/compute_bound stamped (exp4920's own stamping_audit flags exp4915 + exp4916 missing duration_s; compute_bound is unset on all .453 arms). This is what makes compute-bound auto-detection impossible downstream.",
+    "Recurring archive/activate transition quirk: exp4913 logged blocked_research_roadmap_next_yaml_missing (1.6s) yet the milestone activated and ran 10 downstream tasks -- same false-blocked verdict as exp4891 (.451) and exp4902 (.452).",
+    "NOT a GPU-idle bottleneck: gpu_idle_on_compute_bound_tasks is null. The 14:28Z snapshot postdates the last task (exp4923, 10:22 EDT); the long live arms (exp4914 60.0s, exp4917 3627.4s ~60.5min, exp4916) engaged the GPU earlier in the window, so the post-window idle reading is correct, not a bug."
+  ],
+  "improvements_suggested": [
+    "WIRE the fix that .453 already shipped: exp4920 delivered python/carnot/reporting/retro_timing_mtime_fallback.py (mtime fallback) + python/carnot/reporting/runtime_stamping.py (write-time stamping) + a wiring proposal at docs/retro_timing_mtime_fallback_wiring_proposal_4920.md, but research_conductor_modified=false -- the module exists and is NOT yet wired into the conductor's retro prompt-assembly call site (the retro task is forbidden from editing research_conductor.py per CLAUDE.md, hence the proposal). An operator one-line wire of this module closes the ~80-milestone gap.",
+    "Adopt the shipped runtime_stamping helper at artifact write time so duration_s + inference_substrate + compute_bound are always present -- this both fixes the stamping_audit misses and makes the locked compute_bound_count field meaningful.",
+    "Fix the archive/activate transition task's false blocked_research_roadmap_next_yaml_missing verdict so a transition that actually activates the milestone does not log a blocked terminal state.",
+    "Both 3090s are free post-window (24GB each); the deliverable is now ARC-closed, so post-6/30 dispatch the exp4922 distributional-energy-verifier moat pivot (verifier_is_oracle=false) onto the idle rig."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Operator wires exp4920's mtime-fallback + runtime-stamping modules into scripts/research_conductor.py's retro TIMING-DATA prompt-assembly per docs/retro_timing_mtime_fallback_wiring_proposal_4920.md -- this is the single highest-leverage action and directly retires the ~80-milestone false-zero gap (.453 even shipped the module; only the wire remains).",
+    "Turn on write-time duration_s/inference_substrate/compute_bound stamping (runtime_stamping.py) for every arm so the conductor's locked numeric fields stop being structurally empty.",
+    "Deliverable is locked by the A1 WALL_IS_HIDDEN_STATE closure (capstone exp4923) = the ~0.05 first-win agent + the publishable FoVer paper; do NOT queue representation #5, and execute the exp4922 verifier-moat pivot scaffold the instant the sprint retires 6/30."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The disciplined response to an empty TIMING DATA block is to verify against on-disk artifacts rather than trust the detector or parrot a false-empty milestone -- .453 ran a full 11-task milestone (exp4913-exp4923) with a B1-trusted ARC-closure headline and a banked level (68->69). The irony this milestone: exp4920 SHIPPED the very fix for the recurring false-zero gap, but as a module + wiring proposal (the retro task cannot edit the conductor), so the gap persisted into .453's own retro. The fix is now one operator wire away from retirement."
+}
