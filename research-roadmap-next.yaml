@@ -1,0 +1,1003 @@
+# Pre-staged .453 roadmap (Pre-Staged Roadmap Convention).
+# Planner: outer-loop Claude Opus 4.8, 2026-06-28.
+# STRATEGIC READ (.452 -> .453): .452's capstone (exp4912) CLOSED the multi-milestone world-model fork
+# as a B1-TRUSTED honest negative: complete_capstone_v452_escalate_wall_survives_four_representations_plus_env_grounding.
+# A1 (exp4903) env-grounded change-LOCATION-pruned REAL-ENV-VALUE search: WALL_DEEPER_THAN_VALUE_PREDICTION,
+# first-win delta -0.04 (CI95 [-0.04,-0.04]), migration 0, B1-TRUSTED (real-env value, planner-blind, tu93
+# positive control non-degenerate). A1b (exp4904) latent-action AdaWorld: VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES.
+# DECISIVE per-game evidence: even reading the TRUE change-VALUE free from the env (24 reads/game) with a working
+# change-LOCATION prior, 0/9 games migrated NEVER_ENUMERATED->COVERED -> the wall is MULTI-STEP-PREFIX ASSEMBLY,
+# not value-prediction and not change-LOCATION. Deliverable LOCKS to the ~0.05 agent (package ready 15.146GB) +
+# the publishable FoVer paper (paper_ready=true). "Do NOT queue representation #5."
+# .453 (still under the ARC sprint through 6/30) does the FINAL ARC CLOSURE DIAGNOSTIC (A1 HEADLINE): the
+# causal-state-abstraction wall diagnostic (D's priority-1, arXiv:2401.12497) classifies the minimal causal state
+# variables behind each failed first-win as OBSERVABLE-from-the-ARC-interface (a fixable representation gap) vs
+# HIDDEN (representation-invariant by construction) -- a CLASSIFICATION, NOT representation #5, NOT a value table.
+# Plus the sprint mandates (A2 level-up rotated, A3 self-play/FR-11 rotated, A4 CLEAN held-out go/no-go FIXING the
+# 3-milestone recurring flagged_adversarial, B2 final package harden), 3 reserved infra (B1 A1-audit, B2 deadline
+# package, B3 retro detector-wire+stamping fix), 1 hardware (C KV260 SSH-only), 1 SOTA (D minimally SCAFFOLDS the
+# post-6/30 distributional-energy-verifier pivot arXiv:2605.18871). Do NOT re-propose energy (CONCLUDED),
+# TTA-on-code-engine, stronger-local-code-inducers, decision-need-targets, action-prefix-latents,
+# coverage/exploration/selection/perception-from-grid, or representation #5 (all nulled/retired).
+milestone: 2026.06.453
+planned_by: 'outer-loop (Claude Opus 4.8 planner, 2026-06-28). .452 capstone (exp4912) CLOSED the world-model
+  fork as a B1-trusted honest negative: the live first-win wall survives FOUR representations
+  (executable-code + decision-need-targets + action-prefix-latents + latent-action) PLUS env-grounded
+  real-env-value search (A1 exp4903 delta -0.04 B1-trusted; A1b exp4904 VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES).
+  A1''s per-game data shows even free real-env change-VALUE reads + a working change-LOCATION prior migrate 0/9
+  games -> the wall is multi-step-prefix assembly. .453 stops proposing representations and does the FINAL ARC
+  CLOSURE DIAGNOSTIC: the causal-state-abstraction wall diagnostic (arXiv:2401.12497) classifies the minimal
+  causal state variables as observable (fixable) vs hidden (representation-invariant by construction) --
+  publishable closure for the FoVer paper''s ARC section. Plus the sprint mandates + 3 infra + 1 hardware + 1
+  SOTA that minimally scaffolds the post-6/30 distributional-energy-verifier pivot (arXiv:2605.18871).'
+milestone_title: 'FINAL ARC CLOSURE DIAGNOSTIC (not representation #5); pivot teed up. .452 proved the live
+  first-win wall survives FOUR world-model representations + env-grounded real-env-value search (A1 B1-trusted
+  WALL_DEEPER_THAN_VALUE_PREDICTION delta -0.04; A1b VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES). The decisive
+  evidence: even reading change-VALUE free from the env, 0/9 games assembled the winning prefix -> the wall is
+  multi-step-prefix assembly. .453 A1 (HEADLINE) does the causal-state-abstraction wall diagnostic
+  (arXiv:2401.12497): CLASSIFY the minimal causal state variables behind each failed first-win as
+  OBSERVABLE-from-the-ARC-interface (a fixable representation gap) vs HIDDEN (representation-invariant by
+  construction) -- mechanistic closure, NOT representation #5, NOT a value-predicting table. Plus the sprint
+  lanes (A2 level-up rotated, A3 self-play/FR-11, A4 CLEAN held-out go/no-go fixing the recurring
+  flagged_adversarial, B2 final package harden), 3 infra, 1 hardware (C), 1 SOTA that scaffolds the post-6/30
+  distributional-energy-verifier pivot. Deliverable locked: ~0.05 agent + publishable FoVer paper.'
+milestone_doc: openspec/change-proposals/research-roadmap-v453.md
+theme: '.452 settled (B1-trusted) that NO offline representation predicts change-VALUE and that even
+  env-grounded real-env-value search cannot assemble the multi-step winning prefix (wall is prefix assembly,
+  not value). .453 does NOT propose representation #5. It does the FINAL ARC CLOSURE DIAGNOSTIC: a
+  causal-state-abstraction audit (arXiv:2401.12497) that CLASSIFIES the minimal causal variables behind each
+  failed first-win as observable (fixable) vs hidden (representation-invariant by construction) -- closure, not
+  churn. The planner must NOT re-propose energy (CONCLUDED 2026-06-26), TTA-on-code-engine, stronger local code
+  inducers, decision-need-targets, action-prefix-latent tables, coverage/vocabulary/selection,
+  exploration/perception-from-grid, or representation #5 (all nulled/retired). Offline induction (A1/A3/A4) runs
+  on the conductor''s dedicated GPU-0 CUDA generator (2026-06-27 directive), NOT iGPU-pinned. The LIVE
+  submission stack (B2) stays FROZEN to Qwen3.5-9B-MTP on the iGPU. D scaffolds (does not start) the post-6/30
+  verifier-moat pivot.'
+sprint_forcing_function: 'ARC-AGI-3 submission sprint through 2026-06-30 (CLAUDE.md). Majority ARC (A1 closure
+  diagnostic + A2 level-up + A3 self-play + A4 held-out go/no-go + B2 deadline package); >=1 level-up attempt
+  (Level-Up Attempt Guarantee -- A2, rotated OFF .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5 / .448 r11l);
+  self-play EVERY milestone (A3, trains + checkpoints the learned verifier = continuous self-learning / FR-11,
+  rotated OFF .452 vc33 / .451 sk48 / .450 ls20 / .449 re86); 3 reserved infra (B1 A1-diagnostic adversarial
+  audit, B2 final submission harden, B3 retro detector-wire + write-time-stamping operational fix); 1 hardware
+  continuity (C KV260, SSH-only, always-write-blocked-artifact); 1 SOTA-ingestion (D, minimally SCAFFOLDS the
+  post-6/30 distributional-energy-verifier pivot since the sprint retires 6/30). Live SUBMISSION stack FROZEN to
+  Qwen3.5-9B-MTP on the iGPU; OFFLINE induction (A1/A3/A4) runs on the conductor''s dedicated GPU-0 CUDA
+  generator per the 2026-06-27 operator GPU-allocation directive.'
+tasks:
+- id: exp4913-phase0
+  title: PHASE 0 (TRANSITION) -- archive .452 -> activate .453; assert YAML parses + pre-test gate green;
+    RESOLVE any poison pre-test. RECORD the .452 close-state (A1 exp4903 WALL_DEEPER_THAN_VALUE_PREDICTION delta
+    -0.04 B1-trusted; A1b exp4904 VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES; capstone exp4912 closed the fork
+    as a trusted honest negative "wall survives four representations + env-grounding"; A2 m0r0 no-bank ->
+    reproducible_total_levels stays 68; A3 vc33 checkpoint refreshed; A4 0.05 held-out CI-lower-0 but
+    flagged_adversarial 3rd milestone; B2 package ready 15.146GB operator-only; energy CONCLUDED; deliverable
+    locked = ~0.05 agent + FoVer paper paper_ready=true).
+  priority: critical
+  track: transition
+  max_turns: 40
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4913_archive_452_activate_453.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): routine continuation /
+    reserved-slot task -- false-positive scope-match vs prior same-class transition tasks; structurally never a
+    doomed rerun. (archive-v452-activate-v453).'
+  prompt: |
+    CONTEXT ({date}). Milestone 2026.06.452 completed. Mechanically transition to 2026.06.453,
+    resolve any poison pre-test, and RECORD the true .452 close-state. Routine mechanical task
+    (codex). The conductor may have already archived (no-op) -- you MUST still WRITE the deliverable.
+
+    KEY .452 CLOSE-STATE to record:
+      - A1 (exp4903 env-grounded change-LOCATION-pruned REAL-ENV-VALUE search, HEADLINE) TRUSTED: honest_verdict
+        complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION
+        (value_grounded_first_win_delta_median=-0.04, CI95 [-0.04,-0.04], coverage_migration_count=0; B1 audit
+        exp4908 confirmed a1_trustworthy: real-env value, planner-blind, tu93 positive control non-degenerate,
+        numbers match the fork). The per-game evidence: 24 real-env value reads/game + a working change-LOCATION
+        prior migrated 0/9 games -> the wall is multi-step-prefix assembly, not value-prediction.
+      - A1b (exp4904 latent-action AdaWorld) TRUSTED: VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES
+        (latent_action_value_accuracy_delta_median=-0.103, ran genuinely live).
+      - Capstone (exp4912) CLOSED the fork: complete_capstone_v452_escalate_wall_survives_four_representations_plus_env_grounding.
+        Do NOT queue representation #5.
+      - A2 (exp4905) NO BANK: m0r0 duplicate-depth; reproducible_total_levels STAYS 68.
+      - A3 (exp4906) PASS: vc33 self-play checkpoint refreshed (models/arc_verifier_vc33.json).
+      - A4 (exp4907) flagged_adversarial (true verdict complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live);
+        3rd milestone running flagged. .453 A4 FIXES this.
+      - B2 (exp4909) package READY (15.146GB < 16GB), operator-only, submits=false.
+      - C (exp4910) KV260 REACHABLE, graduated terminal.
+      - D (exp4911) SOTA ingestion mapped .453: causal-abstraction diagnostic priority-1 (arXiv:2401.12497) +
+        post-sprint distributional-energy-verifier pivot (arXiv:2605.18871). All HTTP-200.
+      - Energy-as-ARC-lever CONCLUDED (2026-06-26, negative). Goal-quality SOLVED (.437). TTA-on-code-engine /
+        stronger-local-code-inducers / decision-need-targets / action-prefix-latents / coverage / exploration /
+        selection / perception-from-grid all RETIRED. Do NOT re-propose them or representation #5.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/ops/arc_solve_registry.yaml (the reproducible_total_levels source of truth = 68)
+      - {project_root}/research-roadmap-next.yaml (this file; must yaml.safe_load)
+      - {project_root}/results/operational_retro_2026_06_452.json (the .452 conductor retro)
+      - {project_root}/results/experiment_4912_capstone_v452.json (the closure capstone)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (BEFORE any other step):
+         a. `.venv/bin/python -c "import yaml; yaml.safe_load(open('{project_root}/research-roadmap-next.yaml')); print('ok')"` exits 0.
+         b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+         If either fails -> honest_verdict blocked_<resource>, write the deliverable, EXIT.
+      1. Archive .452 -> activate .453 (no-op if already done). Record the close-state flags below.
+      2. Run the pre-test gate; if a poison test fails against this script's own honest verdict,
+         quarantine it to unblock (note which test). WRITE the deliverable.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; clean transition is complete_452_archived_453_activated_<state>."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+      wall_survives_four_representations_plus_env_grounding:
+        principle: "true -- .452 closed the fork as a B1-trusted honest negative; .453 does a closure diagnostic, NOT representation #5."
+      energy_program_concluded:
+        principle: "true -- the energy-as-ARC-lever program concluded negative; do NOT re-propose energy."
+      v453_attacks_closure_diagnostic_not_representation:
+        principle: "true -- .453 A1 CLASSIFIES the wall (observable vs hidden causal variable), it does not propose a 5th value-prediction representation."
+      reproducible_total_levels:
+        principle: "the authoritative ARC progress metric carried from the registry (68; .452 banked nothing)."
+
+    Run: `.venv/bin/python python/carnot/experiment_4913_archive_452_activate_453.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4914-a1
+  title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- FINAL ARC CLOSURE DIAGNOSTIC: the
+    causal-state-abstraction wall diagnostic (arXiv:2401.12497 Causal Bisimulation Modeling, D''s priority-1).
+    .452 proved (B1-trusted) the live first-win wall survives FOUR representations + env-grounded real-env-value
+    search; A1''s per-game data shows even free change-VALUE reads + a working change-LOCATION prior migrate 0/9
+    games -> the wall is multi-step-prefix assembly. A1 does NOT propose representation #5: over A1''s exact
+    failed transitions it derives the MINIMAL causal state variables needed to predict changed-cell value +
+    progress-to-goal and CLASSIFIES each as OBSERVABLE-from-the-ARC-interface (a fixable representation gap) vs
+    HIDDEN (representation-invariant by construction). A solved-game POSITIVE CONTROL must classify observable.
+    The named fork is the mechanistic closure verdict that the FoVer paper''s ARC section reports.'
+  priority: critical
+  track: arc-north-star
+  max_turns: 180
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4914_causal_abstraction_wall_diagnostic.json
+  operator_override: '2026-06-27 operator GPU-allocation directive + 2026-06-19 ARC sprint (standing): the FINAL
+    ARC closure DIAGNOSTIC (D exp4911 flagged this exact priority-1 candidate, arXiv:2401.12497) -- a
+    classification audit of the wall, NOT another value-prediction representation, the honest non-churn response
+    to the .452 trusted-closed fork. Reserved ARC headline slot; offline induction runs on the conductor''s
+    GPU-0 generator (NOT iGPU-pinned). False-positive scope-match vs the .452 A1 world-model probe.'
+  prior_failures:
+  - experiment_id: exp4903-env-grounded-location-pruned-search
+    verdict: 'complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION (env-grounded
+      real-env-value search did not lift first-win; delta -0.04, migration 0; B1-trusted)'
+    addressed_by: 'A1 is NOT another search strategy and NOT another value-prediction representation. It is a
+      DIAGNOSTIC over exp4903''s exact failed transitions: it derives the minimal causal state abstraction
+      (arXiv:2401.12497) and CLASSIFIES each required variable observable-vs-hidden from the ARC interface, to
+      explain WHY the prefix could not be assembled. retire_if_same_verdict: true -- if the diagnostic cannot
+      produce a non-degenerate per-game observable/hidden classification with a passing solved-game positive
+      control, the causal-abstraction lens is retired and .454 escalates to the operator (no representation #5).'
+    retire_if_same_verdict: true
+  - experiment_id: exp4904-latent-action-interface
+    verdict: 'complete_latent_action_no_value_lift_representation_invariant_4_classes (a 4th representation,
+      latent-action, did not move change-VALUE)'
+    addressed_by: 'A1 explicitly does NOT add a 5th representation. The capstone instructed "do NOT queue
+      representation #5"; A1 instead classifies the variable structure of the wall (observable vs hidden).
+      retire_if_same_verdict: true (shared gate with the row above).'
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). HEADLINE -- the FINAL ARC CLOSURE DIAGNOSTIC. .452 closed the world-model fork as a
+    B1-TRUSTED honest negative: the live first-win wall survives FOUR representations (executable-code,
+    decision-need-targets, action-prefix-latents, latent-action) PLUS env-grounded real-env-value search
+    (A1 exp4903 WALL_DEEPER_THAN_VALUE_PREDICTION delta -0.04; A1b exp4904 VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES).
+    The DECISIVE per-game evidence (exp4903): even reading the TRUE change-VALUE free from the env (24 reads/game)
+    with a WORKING change-LOCATION prior (cell_recall 0.727; tu93 positive control non-degenerate), the search
+    migrated 0/9 games NEVER_ENUMERATED->COVERED (8 states expanded, best path 6-8). So the wall is NOT
+    change-VALUE prediction and NOT change-LOCATION -- it is ASSEMBLING the multi-step winning prefix.
+
+    THE OPEN QUESTION (the only one worth the sprint's remaining days, for CLOSURE not churn): WHY can't the
+    search assemble the winning prefix? Is the missing discriminator a state variable the agent COULD observe
+    from the ARC interface but its current abstraction drops (a FIXABLE representation gap), or a HIDDEN variable
+    the interface cannot expose (representation-invariant BY CONSTRUCTION)? Per the capstone, DO NOT queue
+    representation #5 -- A1 is a DIAGNOSTIC that classifies the wall, not another value-prediction representation.
+
+    THE METHOD (arXiv:2401.12497 Causal Bisimulation Modeling -- minimal, task-specific causal state abstraction).
+    Over A1's exact failed transitions (the 9 held-out games + tu93), derive the MINIMAL set of state variables
+    causally necessary to predict (a) changed-cell value and (b) progress-to-goal, then CLASSIFY each variable:
+      - OBSERVABLE: demonstrably readable from the ARC frame / env state the agent already sees (prove it -- a
+        claimed observable must be extractable from frame/env, or it is HIDDEN).
+      - HIDDEN: a latent counter, off-screen state, or interaction-dependent variable the interface cannot expose.
+    FORBIDDEN (exp4911 fails_when): A1 MUST NOT become a decision-need target table in disguise (no
+    change-VALUE-predicting table), MUST NOT claim a solve or a static-ranking lift, MUST produce a
+    CLASSIFICATION REPORT only.
+
+    POSITIVE CONTROL (LOAD-BEARING). On a game we DID solve (tu93, and at least one solved L2 game), the
+    diagnostic MUST find the minimal causal abstraction is OBSERVABLE (we solved it over observable inputs). If
+    the positive control classifies hidden, the diagnostic is broken -> emit the retiring verdict, do NOT report
+    a wall finding.
+
+    THE GPU FIX (load-bearing -- 2026-06-27 operator GPU-allocation directive). Offline induction must NOT
+    iGPU-pin or hard-reject CUDA_VISIBLE_DEVICES. Accept the conductor's GPU-0 CUDA llama-server
+    (CUDA_VISIBLE_DEVICES=0, CARNOT_ARC_GENERATOR_CUDA_GPU=0, card >=13GB free) OR the iGPU HIP server;
+    health-check via _ensure_server(). REUSE exp4903's generator precondition.
+
+    THE INTERVENTION (Phase-Prototype+Validation -- diagnostic then positive control then fork):
+      1. Read exp4903's per-game failed transitions + the held-out split + tu93 positive control.
+      2. For >=3 failed NEVER_ENUMERATED games: induce the minimal causal abstraction over observed transitions
+         (via the live e3 load_engine induction interface), enumerate the variables it requires for changed-cell
+         value + progress, and classify each observable/hidden (proving observability against frame/env state).
+      3. POSITIVE CONTROL: run the same on tu93 + a solved L2 game; assert the abstraction classifies OBSERVABLE.
+      4. Emit the per-game table + the fork verdict.
+    FORK VERDICT:
+      - the minimal causal abstraction for the failed games is a SUBSET of observable variables (and the
+        positive control passes) -> WALL_IS_OBSERVABLE_VARIABLE_GAP (a named, testable lever survives for
+        post-sprint: retain that variable in the agent's abstraction).
+      - the minimal causal abstraction REQUIRES a hidden variable (positive control passes) ->
+        WALL_IS_HIDDEN_STATE (no representation over observable inputs recovers it -> the representation-invariance
+        is mechanistically explained -> ARC closure; the deliverable stays the ~0.05 agent + FoVer paper).
+      - positive control fails (solved game classifies hidden) -> DIAGNOSTIC_DEGENERATE_RETIRED (the lens is
+        broken, not the wall; retire and escalate).
+
+    SCOPE: LIVE-PATH-REACHABLE -- the diagnostic uses the live e3 induction interface
+    (arc_executable_world_model.load_engine) over real failed transitions; arc_orphan_solver_lint must pass; NOT
+    a parallel solver. This is a DIAGNOSTIC, not a verifier-moat claim -- verifier_is_oracle=false (the
+    causal-abstraction classifier is oracle-distinct from the env's level-up check; must pass
+    check_circular_moat_overclaim). Do NOT inject the banked winning prefix (classification ground truth only;
+    B1 audits planner-blindness). WALL-CLOCK SAFE: checkpoint the per-game ledger after each game (atomic write),
+    honor a soft ELAPSED budget (~3500s, under the codex hard cap); on a budget stop emit a schema-valid
+    partial:true artifact + exit 0; print per-game progress (codex idle-timeout guard).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4903_env_grounded_location_pruned_search.json (the 9 failed games +
+        per-game failed-transition data + the change-LOCATION 0.727 signal + tu93 positive control)
+      - {project_root}/python/carnot/experiment_4903_env_grounded_location_pruned_search.py (the GPU-fixed
+        generator precondition + held-out split to reuse)
+      - {project_root}/python/carnot/agentic/arc_executable_world_model.py (load_engine -- the live induction
+        interface the causal-abstraction audit reads the engine facts from)
+      - {project_root}/research-studying.md (the exp-4911 v453-frontier note: causal_state_abstraction_wall_diagnostic, arXiv:2401.12497)
+      - {project_root}/scripts/summarize_artifact.py (read upstream artifacts via this)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (BEFORE any other step):
+         a. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
+            Else honest_verdict blocked_offline_arcade_missing, write the deliverable, EXIT.
+         b. The generator is healthy via the GPU-fixed precondition: accept the conductor's GPU-0 CUDA server
+            (CARNOT_ARC_GENERATOR_CUDA_GPU=0, card >=13GB free) OR the iGPU HIP server; health-check
+            _ensure_server(). If NEITHER healthy -> blocked_generator_unavailable, write deliverable, EXIT.
+            Do NOT block merely because CUDA_VISIBLE_DEVICES is set.
+         c. exp4903's artifact present with the failed-game transitions + held-out split + tu93 positive control;
+            else blocked_a1_baseline_missing, write deliverable, EXIT.
+      1. Induce the minimal causal abstraction over >=3 failed NEVER_ENUMERATED games; enumerate required
+         variables for changed-cell value + progress; classify each observable/hidden (prove observability).
+      2. POSITIVE CONTROL: tu93 + a solved L2 game classify OBSERVABLE, else emit the retiring verdict.
+      3. Emit the per-game classification table + the named fork verdict.
+      4. WRITE the artifact (solve_provenance=development_proxy -- a diagnostic over the dev twin, NOT a bank).
+
+    FALSIFIABLE GATE:
+      PASS iff (i) a GENUINELY-LIVE run (duration_s > 60, NOT flagged DURATION_TOO_SHORT) produces a
+      non-degenerate per-game {required_variables, observable_from_interface (bool/var), classification} table
+      over >=3 failed games; AND (ii) the solved-game positive control(s) classify OBSERVABLE; AND (iii) a named
+      fork verdict (WALL_IS_OBSERVABLE_VARIABLE_GAP / WALL_IS_HIDDEN_STATE / DIAGNOSTIC_DEGENERATE_RETIRED)
+      supported by the table. The fork verdict is the headline closure. retire_if_same_verdict: true -- if the
+      diagnostic is degenerate (positive control fails), the causal-abstraction lens is retired and .454 escalates.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; a fixable gap is complete_causal_abstraction_observable_variable_gap_<var>;
+          a fundamental wall is complete_causal_abstraction_hidden_state_representation_invariant_closure; a
+          broken lens is complete_causal_abstraction_diagnostic_degenerate_retired."
+      fork_verdict:
+        principle: "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | DIAGNOSTIC_DEGENERATE_RETIRED
+          -- the mechanistic closure verdict for the FoVer paper's ARC section + the .454 handoff."
+      per_game_causal_abstraction:
+        principle: "per-game {{required_variables: list, observable_from_interface: {{var: bool}},
+          classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence}} -- the quantitative classification table."
+      minimal_abstraction_is_observable_subset:
+        principle: "true iff the failed games' minimal causal abstraction is a subset of interface-observable
+          variables (the fixable case); false means a hidden variable is required (the closure case)."
+      positive_control_games:
+        principle: "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, else the diagnostic is broken."
+      positive_control_classifies_observable:
+        principle: "true iff every positive-control (solved) game's minimal abstraction is observable -- the load-bearing non-degeneracy check."
+      is_decision_need_table_in_disguise:
+        principle: "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table (exp4911 fails_when forbids it)."
+      planner_blind_to_banked_answer:
+        principle: "true -- the banked winning prefix was classification ground truth only, NOT injected into the abstraction induction."
+      verifier_is_oracle:
+        principle: "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
+      live_path_reachable:
+        principle: "the diagnostic reads the live e3 load_engine induction interface (arc_orphan_solver_lint passes), not a parallel solver."
+      generator_backend:
+        principle: "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+      solve_provenance:
+        principle: "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
+      checkpoint_emitted:
+        principle: "a capped run still emits a usable partial (per-game checkpointing)."
+      inference_substrate:
+        principle: "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on the GPU-0 generator."
+      model_specs:
+        principle: "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+      preconditions_checked:
+        principle: "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+      random_seed:
+        principle: "determinism for the causal-abstraction induction stochastic search."
+      reproducibility_checksum:
+        principle: "content hash of (games, failed transitions, abstraction config, held-out split) so a replication catches drift."
+
+    Run: `.venv/bin/python python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4915-a2
+  title: 'PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED
+    target (rotate OFF .452 m0r0 and .451 dc22 and .450 g50t and .449 s5i5 and .448 r11l; prefer a shallow L2
+    game with a grounded next-level delta via recommend_approach + dead_ends -- sp80 L2->L3 / su15 L2->L3 / cn04
+    L2->L3 are the strong shallow-deepen candidates; AVOID the hidden-state-bound ka59/wa30, the just-failed
+    m0r0, and any recorded dead-end). offline_reproduced gated.'
+  priority: critical
+  track: arc-north-star
+  max_turns: 160
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4915_levelup_attempt.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): Level-Up Attempt Guarantee
+    reserved slot -- false-positive scope-match vs prior level-up tasks; structurally never a doomed rerun.
+    Rotate off .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5 / .448 r11l.'
+  prompt: |
+    CONTEXT ({date}). Level-Up Attempt Guarantee: >=1 task whose gate BANKS a new reproducible level. ROTATE
+    the target OFF .452's m0r0 (no-bank duplicate-depth), .451's dc22, .450's g50t, .449's s5i5, .448's r11l.
+    Pick a shallow L2 game with a GROUNDED next-level delta via the registry's recommend_approach + dead_ends.
+    STRONG candidates: sp80 L2->L3, su15 L2->L3, cn04 L2->L3 (all currently L2). AVOID ka59 and wa30 (registry
+    rows hidden-state-bound), m0r0 (just failed duplicate-depth), and any recorded dead-end. (All 25 public
+    games are at L1+, so this is a deepening attempt, not a first-contact.) Pick a target that DIFFERS from the
+    A3 self-play target so the two ARC lanes do not collide.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends, recommend_approach inputs)
+      - {project_root}/scripts/arc_loop_solve.py (the standing solve loop)
+      - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach)
+      - {project_root}/python/carnot/agentic/arc_game_adapters.py (register a GameAdapter for the DELTA if needed)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the generator (GPU-0 CUDA or iGPU; do NOT
+         iGPU-pin) is healthy IF induction is needed; a missing env -> honest_verdict
+         blocked_<game>_offline_env_missing, write deliverable, EXIT.
+      1. Read the registry; pick the ROTATED target; recommend_approach(game). Do NOT re-solve an
+         already-reproduced level (duplicate = adversarial_verify CRITICAL).
+      2. `.venv/bin/python scripts/arc_loop_solve.py --game <target>`; register a GameAdapter for the DELTA if needed.
+      3. Reproduction gate (arc_solver_kit.reproduce); update ops/arc_solve_registry.yaml; record DEAD-ENDS.
+
+    FALSIFIABLE GATE: >=1 NEW level offline-reproduced (offline_reproduced=true, reproduced_levels>=prior+1),
+    solve_provenance=live_agent_self_discovery. retire_if_same_verdict: true -- rotate again next milestone if no bank.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+      solve_provenance:
+        principle: "live_agent_self_discovery -- the agent solved via its own attempts/RE; NOT outer_loop_re (CRITICAL)."
+      target_game:
+        principle: "the rotated target (must differ from .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5 / .448 r11l AND from A3's target) so coverage sweeps the corpus."
+      offline_reproduced:
+        principle: "only reproduced levels count toward reproducible_total_levels."
+      reproduced_levels:
+        principle: "the new reproducible depth; the monotonic ARC progress metric."
+      new_levels_banked:
+        principle: ">=1 for a PASS; 0 records the rotation dead-end for the next planner."
+      verifier_is_oracle:
+        principle: "the reproduction gate is the executable oracle (circularity discipline)."
+      inference_substrate:
+        principle: "live_llm_inference if induction runs (60s floor)."
+      preconditions_checked:
+        principle: "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+    Run: `.venv/bin/python scripts/arc_loop_solve.py --game <rotated-target>`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4916-a3
+  title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing
+    arc_loop_solve loop on a banked game with an existing checkpoint, ROTATED off .452 vc33 and .451 sk48 and
+    .450 ls20 and .449 re86 (pick another banked game that has a models/arc_verifier_<game>.json checkpoint --
+    e.g. cd82 / lf52 / sb26 / lp85 / ar25 / bp35, DIFFERENT from A2''s target): verifier-routed solve ->
+    reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+  priority: high
+  track: arc-north-star
+  max_turns: 140
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4916_self_play_verifier_checkpoint.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): self-play-every-milestone reserved
+    slot -- false-positive scope-match vs prior self-play tasks; structurally never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). Self-play EVERY milestone -- this is the CONTINUOUS SELF-LEARNING experiment
+    (research-program.md "Continuous Self-Learning" Tier 3; FR-11 relay): the learned verifier improves across
+    runs by training on the self-play traces and checkpointing. Run arc_loop_solve on a banked game (warm-
+    started from the saved checkpoint) to advance/confirm a level AND refresh the checkpoint. ROTATE off .452's
+    vc33, .451's sk48, .450's ls20, and .449's re86 -- pick another banked game that HAS an existing
+    models/arc_verifier_<game>.json checkpoint to warm-start (e.g. cd82, lf52, sb26, lp85, ar25, bp35; the
+    requirement is warm-start + train + checkpoint). Pick a target that DIFFERS from A2's level-up target.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/scripts/arc_loop_solve.py (warm-start + train + checkpoint)
+      - {project_root}/ops/arc_solve_registry.yaml (banked targets + learned_verifier_checkpoint paths)
+      - {project_root}/models/ (arc_verifier_<game>.json checkpoints -- pick one NOT vc33/sk48/ls20/re86)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the target has a banked level + an
+         existing checkpoint to warm-start. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>` (or --auto): warm-start,
+         verifier-routed search + reproduction gate, then TRAIN + CHECKPOINT the learned verifier.
+      2. Confirm the checkpoint mtime advanced (the self-improvement signal).
+
+    FALSIFIABLE GATE: checkpoint refreshed (mtime advances) AND reproduction gate passes on >=1 level.
+    A failed run records the residual; does NOT fabricate.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+      verifier_checkpoint_refreshed:
+        principle: "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+      checkpoint_path:
+        principle: "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+      offline_reproduced:
+        principle: "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+      reproduced_levels:
+        principle: "the depth confirmed this run."
+      target_game:
+        principle: "the rotated self-play target (differs from .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A2's target)."
+      inference_substrate:
+        principle: "live_llm_inference (60s floor)."
+      solve_provenance:
+        principle: "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+      preconditions_checked:
+        principle: "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+    Run: `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4917-a4
+  title: 'PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- CLEAN held-out
+    first-win readiness: FIX the 3-milestone recurring flagged_adversarial (.450/.451/.452). Run the held-out
+    readiness driver LIVE on the GPU-0 generator carrying FULL methodology (model_specs + random_seed +
+    inference_substrate + null_delta_methodology_note + positive_control_passed + the soft-budget-partial
+    honest markers) so a genuine ~0.05 CI-lower-0 live null is COUNTABLE (NOT flagged true_live_recheck=critical)
+    for the operator''s 6/30 go/no-go. If it STILL flags, diagnose the exact summarize_artifact /
+    adversarial_verify rule that fires and document the minimal correct fix.'
+  priority: high
+  track: arc-north-star
+  max_turns: 50
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_4917_heldout_first_win_readiness.json
+  operator_override: '2026-06-27 GPU directive + 2026-06-25 A4 wall-clock directive + 2026-06-19 ARC sprint
+    (standing): held-out first-win readiness lane on the conductor''s GPU-0 generator (offline measurement, NOT
+    iGPU-pinned); DELIVERABLE-FIRST + max_turns<=50; ALSO addresses the .452 retro top-3 action (the held-out
+    arm''s recurring flagged_adversarial). False-positive scope-match vs prior readiness tasks. FINAL
+    pre-deadline (6/30) go/no-go signal.'
+  prompt: |
+    CONTEXT ({date}). Measure the live E3 agent's held-out first-win rate on the experiment_4605 variant
+    harness -- the FINAL pre-deadline generalization signal feeding the operator's 6/30 go/no-go. The recurring
+    failure: this arm has shipped flagged_adversarial THREE milestones running (.450 exp4886, .451 exp4896, .452
+    exp4907 -- a genuine ~58-min live soft-budget-partial null, ~0.05, CI lower 0, but true_live_recheck=critical
+    so the capstone correctly SKIPPED it via the fabrication gate). The .452 retro's #2 highest-leverage action
+    is to DIAGNOSE+FIX this so the genuine live null is COUNTED, not discarded. .453 A4 produces a CLEAN
+    countable number, not a 4th flagged run.
+
+    THE ROOT-CAUSE HYPOTHESIS (verify, then fix at the SOURCE): the live-recheck trips because the artifact is a
+    soft-budget PARTIAL live null that is MISSING the methodology fields the recheck needs to distinguish a
+    genuine null from a fabrication (model_specs / random_seed / inference_substrate / null_delta_methodology_note
+    / positive_control_passed). FIX at the source (the held-out DRIVER's artifact stamping), NOT by weakening the
+    fabrication gate. Only if a genuine fully-stamped live null STILL flags do you propose a minimal, documented
+    carve-out in summarize_artifact/adversarial_verify (those are NOT research_conductor.py, so editing them is
+    allowed) -- and even then prefer the stamp fix.
+
+    MANDATORY SCOPE (DELIVERABLE-FIRST + headline-eligible):
+      - STEP 1 MUST run the held-out readiness driver LIVE and WRITE results/experiment_4917_*.json BEFORE any
+        spec/test authoring, so a rescuable artifact always exists.
+      - CARRY FULL METHODOLOGY in the artifact: model_specs (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) +
+        random_seed + inference_substrate=live_llm_inference + duration_s + (for a flat null)
+        null_delta_methodology_note (why the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY bug) +
+        positive_control_passed=true. This is what makes the live null COUNTABLE (not flagged).
+      - REUSE the EXISTING experiment_4729 tests. Do NOT author a new capstone-scale test suite.
+      - The driver already checkpoints the attempt ledger after each game + honors a soft ELAPSED budget
+        (~3500s), emits a schema-valid partial on a budget stop, resumes; SCORE is byte-identical to an uncapped run.
+      - After writing, run adversarial_verify / summarize_artifact on the fresh artifact; if it is NOT flagged,
+        record flag_resolved=true. If it IS flagged, record the exact triggering rule + the minimal documented fix.
+
+    THE GPU FIX: run on the conductor's GPU-0 generator (accept the GPU-0 CUDA server, do NOT iGPU-pin; offline
+    measurement uses GPU 0/1 per the 2026-06-27 directive).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/python/carnot/experiment_4729_held_out_first_win_readiness.py (the checkpoint/resume readiness driver -- run this LIVE first)
+      - {project_root}/results/experiment_4907_heldout_first_win_readiness.json (the .452 flagged partial + its flags to avoid)
+      - {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/summarize_artifact.py (the live-recheck rule that trips -- diagnose which rule fires)
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py (E3AgentPolicy -- the scored live agent)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: arcade + variant harness present; the generator healthy via the GPU-fixed precondition
+         (GPU-0 CUDA or iGPU; do NOT block on CUDA_VISIBLE_DEVICES). A missing resource -> honest_verdict
+         blocked_<resource>, write deliverable, EXIT.
+      1. DELIVERABLE-FIRST: run the readiness driver LIVE (live_agent_ran=true) with periodic checkpointing
+         and WRITE the artifact carrying FULL methodology (model_specs + random_seed + null markers). On a soft-budget
+         stop emit the partial. Do NOT resume-from-cache-only -- a FRESH live run. Do this BEFORE any test/spec work.
+      2. Run adversarial_verify/summarize_artifact on the fresh artifact; record flag_resolved + (if still flagged)
+         the exact triggering rule + the minimal documented fix.
+      3. Report the rate + CI vs the 0.04 baseline and vs prior-best. For a flat null add null_delta_methodology_note.
+
+    FALSIFIABLE GATE: a non-fabricated rate with CI from a LIVE run (live_agent_ran=true) carrying model_specs +
+    random_seed + the null markers, NOT flagged true_live_recheck=critical (flag_resolved=true); OR, if it still
+    flags, an exact-rule diagnosis + the minimal documented source fix. A capped run still emits a usable partial.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; a clean countable null is complete_heldout_first_win_<rate>_live_flag_resolved; a lift is success_heldout_first_win_<rate>."
+      heldout_first_win_rate:
+        principle: "the live held-out first-win rate -- the 6/30 go/no-go number for the operator."
+      heldout_first_win_ci:
+        principle: "bootstrap CI of the rate; a CI-lower-0 result is an honest null, not a failure."
+      live_agent_ran:
+        principle: "true -- a FRESH live run (not resume-from-cache), the precondition for a countable readiness number."
+      flag_resolved:
+        principle: "true iff the fresh fully-stamped artifact is NOT flagged true_live_recheck=critical -- the recurring-flag fix landed."
+      triggering_rule_if_flagged:
+        principle: "if still flagged, the exact summarize_artifact/adversarial_verify rule that fires + the minimal documented source fix (prefer the stamp fix over weakening the gate)."
+      null_delta_methodology_note:
+        principle: "for a flat null, why the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY/fabrication (what the live-recheck needs)."
+      positive_control_passed:
+        principle: "true -- a non-degenerate positive control distinguishes a real null from a broken harness."
+      model_specs:
+        principle: "Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server -- the methodology stamp whose absence caused the recurring flag."
+      random_seed:
+        principle: "determinism + part of the methodology stamp the live-recheck requires."
+      generator_backend:
+        principle: "gpu0_cuda | igpu_hip -- proves the GPU fix and a genuine live run."
+      inference_substrate:
+        principle: "live_llm_inference (60s floor)."
+      solve_provenance:
+        principle: "development_proxy -- a readiness measurement on the variant harness, NOT a registry bank."
+      preconditions_checked:
+        principle: "records arcade/variant-harness/generator checks; a missing resource emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4917_held_out_first_win_readiness.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4918-b1
+  title: 'PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT of the A1 causal-abstraction diagnostic. Confirm the
+    diagnostic is HONEST before the capstone trusts its closure verdict: (a) it classifies variables from REAL
+    failed transitions (not fabricated), (b) it is NOT a decision-need / change-VALUE-predicting table in
+    disguise, (c) every claimed OBSERVABLE variable is actually readable from frame/env state, (d) the
+    solved-game positive control classifies observable, (e) verifier_is_oracle=false / planner-blind, (f) the
+    numbers match the fork verdict. Emits a1_diagnostic_trustworthy for the capstone.'
+  priority: high
+  track: infra
+  max_turns: 60
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4918_causal_abstraction_audit.json
+  operator_override: '2026-06-19 operator directive (ARC sprint, standing): reserved infra adversarial-audit
+    slot (the .452 B1 analog) -- false-positive scope-match vs prior audit tasks; structurally never a doomed
+    rerun. Gates whether the capstone trusts the A1 headline closure verdict.'
+  prompt: |
+    CONTEXT ({date}). The A1 (exp4914) causal-abstraction wall diagnostic is the .453 HEADLINE closure result.
+    Before the capstone (exp4923) trusts it, adversarially AUDIT it -- the same discipline the .452 B1 (exp4908)
+    applied to A1's env-grounded search. The audit NEVER edits the diagnostic; it reads exp4914's artifact +
+    script and emits per-check booleans + an overall a1_diagnostic_trustworthy.
+
+    THE CHECKS (all must pass for trusted):
+      1. REAL TRANSITIONS: the classification is computed over exp4903's ACTUAL failed transitions, not
+         synthesized/placeholder rows. Cross-check the cited transitions against exp4903.
+      2. NOT A VALUE TABLE: the diagnostic produces a CLASSIFICATION report (observable/hidden per variable), NOT
+         a change-VALUE-predicting decision-need table (exp4911 fails_when). is_decision_need_table_in_disguise=false.
+      3. OBSERVABLE CLAIMS VERIFIABLE: every variable A1 classified OBSERVABLE is actually extractable from the
+         frame/env state the agent sees (spot-check >=2). A claimed-observable that is not readable = a FAIL.
+      4. POSITIVE CONTROL: the solved-game positive control(s) classify observable (A1's non-degeneracy check held).
+      5. ORACLE-DISTINCT + PLANNER-BLIND: verifier_is_oracle=false; the banked winning prefix was not injected
+         into the abstraction induction (planner_blind_to_banked_answer=true).
+      6. NUMBERS MATCH FORK: the per-game table supports the named fork verdict (observable-subset ->
+         WALL_IS_OBSERVABLE_VARIABLE_GAP; hidden-required -> WALL_IS_HIDDEN_STATE).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4914_causal_abstraction_wall_diagnostic.json (the artifact under audit)
+      - {project_root}/python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py (the script under audit)
+      - {project_root}/results/experiment_4903_env_grounded_location_pruned_search.json (the real failed transitions to cross-check)
+      - {project_root}/scripts/adversarial_verify.py + {project_root}/scripts/summarize_artifact.py
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: exp4914 artifact + script present; exp4903 artifact present. Missing -> honest_verdict
+         blocked_a1_artifact_missing, write deliverable, EXIT.
+      1. Run the 6 checks; cross-check transitions + spot-check >=2 observable claims against frame/env state.
+      2. Emit per-check booleans + a1_diagnostic_trustworthy (AND of all checks) + failure reasons. WRITE the deliverable.
+
+    FALSIFIABLE GATE: all 6 checks evaluated with evidence; a1_diagnostic_trustworthy emitted (true only if all
+    pass). A failing check is recorded with its reason -- the audit reports honestly, it does not rubber-stamp.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; complete_a1_causal_abstraction_audited (trusted or with named failures)."
+      a1_diagnostic_trustworthy:
+        principle: "AND of the 6 checks -- the capstone trusts A1's closure verdict ONLY if this is true."
+      checks:
+        principle: "per-check booleans {real_transitions, not_value_table, observable_claims_verified, positive_control_observable, oracle_distinct_planner_blind, numbers_match_fork}."
+      a1_failure_reasons:
+        principle: "list of named failures (empty if trusted) -- the audit reports honestly, no rubber-stamp."
+      observable_claims_spot_checked:
+        principle: ">=2 claimed-observable variables verified readable from frame/env state (the load-bearing honesty check)."
+      inference_substrate:
+        principle: "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
+      preconditions_checked:
+        principle: "records exp4914/exp4903 presence; a missing input emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4918_causal_abstraction_audit.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4919-b2
+  title: 'PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- submission-package FINAL pre-deadline (6/30) harden +
+    operator submission checklist. The package is READY (15.146GB < 16GB, frozen Qwen3.5-9B-MTP iGPU stack,
+    operator-only). Re-confirm it builds + loads + the frozen stack resolves + the agent config resolves, run
+    the ready-package regression check, and produce the operator submission checklist. submits=false
+    (operator-only external publication).'
+  priority: high
+  track: infra
+  max_turns: 50
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4919_submission_package_harden.json
+  operator_override: '2026-06-19 ARC sprint (standing) + Operator-Only External Publication: the FINAL
+    pre-deadline (6/30) submission-package harden + operator checklist; the task NEVER submits (operator-only).
+    False-positive scope-match vs prior package-harden tasks; reserved deadline-infra slot.'
+  prompt: |
+    CONTEXT ({date}). FINAL pre-deadline (2026-06-30) submission-package harden. The package is READY from .452
+    (exp4909: peak_vram 15.146GB < 16GB Kaggle limit, frozen Qwen3.5-9B-MTP iGPU stack, builds, operator-only,
+    submits=false). .453 re-confirms it is still green the day before the deadline and produces the operator
+    submission checklist. CRITICAL: this task NEVER submits to the leaderboard -- external publication is
+    operator-only (CLAUDE.md). It prepares the package + checklist; the operator submits.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4909_submission_package_harden.json (the .452 ready package + its checks)
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py (the agent config + model-path resolution)
+      - {project_root}/docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md (packaging requirements)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the frozen submission stack (Qwen3.5-9B-MTP GGUF) is cached/resolvable; the package
+         build inputs present. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. Dry-build the package; confirm peak_vram < 16GB, frozen stack loads, agent config + model path resolve,
+         packaging requirements cross-check passes, ready-package regression check passes.
+      2. Produce the operator submission checklist (steps the OPERATOR performs; the task ends before submission).
+         WRITE the deliverable with submits=false, operator_only=true.
+
+    FALSIFIABLE GATE: submission_package_ready=true with peak_vram_gb < 16 AND frozen_stack_loads=true AND
+    package_builds=true AND submits=false AND operator_only=true. A regression (vram >=16 / stack fails) is
+    recorded honestly with submission_package_ready=false.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; ready is success_submission_package_ready_final_pre_deadline."
+      submission_package_ready:
+        principle: "True iff ready for the OPERATOR to submit; the task itself NEVER submits (operator-only)."
+      submits:
+        principle: "false -- external publication is operator-only; the task prepares, never submits."
+      operator_only:
+        principle: "true -- the submission step is reserved for the operator (defense in depth: no leaderboard token used)."
+      peak_vram_gb:
+        principle: "must be < 16 (Kaggle validation env limit); 15.146 in .452."
+      frozen_stack_loads:
+        principle: "the frozen Qwen3.5-9B-MTP iGPU stack loads (Kaggle parity)."
+      package_builds:
+        principle: "the package dry-build succeeds."
+      ready_package_regression_ok:
+        principle: "the ready package still passes its regression check the day before the deadline."
+      operator_submission_checklist:
+        principle: "the operator-facing steps to submit (the task ends before submission)."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (reads the package + upstream; 0.0001s floor)."
+      preconditions_checked:
+        principle: "records frozen-stack + build-input checks; a missing resource emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4919_submission_package_harden.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4920-b3
+  title: 'PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .452 retro top-3 actions) -- ship a STANDALONE retro
+    detector-wire results/-mtime FALLBACK module + a write-time duration_s/inference_substrate/compute_bound
+    STAMPING helper + an audit. The milestone-scoped timing detector has false-zeroed (0/0/0/null) for ~79
+    milestones (.363->.452); two .452 arms (exp4905, exp4906) shipped duration_s=None. Deliver standalone
+    modules + an audit + a wiring PROPOSAL; do NOT modify scripts/research_conductor.py (operator wires the conductor).'
+  priority: high
+  track: infra
+  max_turns: 50
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4920_retro_timing_and_stamping_fix.json
+  operator_override: '2026-06-19 ARC sprint (standing) + .452 operational retro top-3 actions: reserved
+    operational-infra slot -- the ~79-milestone recurring detector false-zero + the duration_s=None gap.
+    False-positive scope-match vs prior infra/retro-fix tasks; standalone module + proposal, no conductor edit.'
+  prompt: |
+    CONTEXT ({date}). The .452 operational retro's top-3 highest-leverage actions are operational, not research:
+    (1) the milestone-scoped timing detector false-zeroes (0 experiments / 0 wall-minutes / 0 compute-bound /
+    null GPU-idle) despite real on-disk arms -- a ~79-milestone recurring gap (.363->.452) because the shipped
+    detector reaches a standalone module but NOT the conductor's retro prompt-assembly consumer; (3) two .452
+    arms (exp4905 level-up, exp4906 self-play) shipped duration_s=None, forcing disk archaeology. B3 ships the
+    standalone fixes WITHOUT touching scripts/research_conductor.py (the conductor wiring is an operator action
+    per Public Documentation Discipline).
+
+    MANDATORY SCOPE (standalone modules + audit + proposal; NO conductor edit):
+      - A results/-mtime FALLBACK module: given a milestone, reconstruct the timing window from the
+        results/experiment_*.json mtimes for that milestone's arms (the verifiable artifact-mtime window the
+        retro can use when the commit-detector false-zeroes). Pure function over results/ mtimes; deterministic.
+      - A write-time STAMPING helper: a small helper that stamps duration_s + inference_substrate +
+        compute_bound on an arm's artifact at write time, plus an AUDIT that scans recent results/ for arms
+        missing any of the three and lists them (backfill list).
+      - A WIRING PROPOSAL doc/section: where in the conductor's retro prompt-assembly the mtime-fallback should
+        be called (operator wires it; the experiment does NOT edit research_conductor.py).
+      - Run the audit over the .452 arms (exp4902-exp4912) and record which shipped duration_s=None (>=exp4905, exp4906).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/operational_retro_2026_06_452.json (the false-zero retro + its top-3 actions)
+      - {project_root}/results/operational_retro_2026_06_451.json + _450.json (the recurring pattern)
+      - {project_root}/results/experiment_4905_levelup_attempt.json + experiment_4906_self_play_verifier_checkpoint.json (the duration_s=None arms)
+      - {project_root}/scripts/summarize_artifact.py (the existing artifact-reading convention to match)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the .452 retro + arm artifacts present. Missing -> honest_verdict blocked_<resource>,
+         write deliverable, EXIT.
+      1. Write the results/-mtime fallback module (a milestone -> {n_arms, window_start, window_end,
+         wall_minutes, compute_bound_count} from mtimes) with a unit-testable pure function.
+      2. Write the stamping helper + audit; run the audit over .452 arms; record the duration_s=None list.
+      3. Write the wiring proposal (call site in the conductor's retro prompt-assembly). Do NOT edit the conductor.
+      4. WRITE the deliverable (mtime_fallback_window for .452 + stamping_audit + wiring_proposal_path).
+
+    FALSIFIABLE GATE: the mtime-fallback reconstructs a NON-zero .452 window (n_arms>=11, wall_minutes>0,
+    compute_bound_count>=3 matching the live arms) AND the stamping audit lists the duration_s=None arms AND a
+    wiring proposal exists. research_conductor_modified=false.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; success_retro_timing_mtime_fallback_and_stamping_shipped."
+      mtime_fallback_window:
+        principle: "the .452 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} reconstructed from results/ mtimes -- the verifiable fix for the ~79-milestone false-zero."
+      mtime_fallback_module_path:
+        principle: "the standalone module path (operator wires it into the conductor's retro prompt-assembly)."
+      stamping_helper_path:
+        principle: "the write-time duration_s/inference_substrate/compute_bound stamping helper."
+      stamping_audit_missing_duration:
+        principle: "the list of .452 arms missing duration_s (>=exp4905, exp4906) -- closes the disk-archaeology gap."
+      wiring_proposal_path:
+        principle: "the proposed conductor call site (operator wires; the experiment does NOT edit research_conductor.py)."
+      research_conductor_modified:
+        principle: "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (reads retro + arm mtimes; 0.0001s floor)."
+      preconditions_checked:
+        principle: "records retro + arm-artifact presence; a missing input emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4920_retro_timing_and_stamping_fix.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4921-c
+  title: 'PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only continuity check (graduated terminal; stays in the
+    rotation). SSH-reachability precondition ONLY (NEVER a host SD-card / block-device precondition); always WRITE a
+    deliverable (blocked artifact if unreachable).'
+  priority: medium
+  track: hardware
+  max_turns: 40
+  inference_substrate: hardware_smoke
+  deliverable: results/experiment_4921_kv260_continuity.json
+  operator_override: '2026-06-19 ARC sprint (standing) + Hardware-Task Continuity: KV260 is the one
+    sovereignty board kept in the per-milestone continuity rotation (graduated terminal). False-positive
+    scope-match vs prior KV260 continuity tasks; structurally never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). KV260 hardware-continuity check (the one board kept in the per-milestone rotation;
+    graduated terminal per north-star §3). SSH-only per CLAUDE.md "KV260 SSH-Not-SD-Card Discipline": the
+    precondition is SSH-reachability of the board, NEVER a host SD-card / block-device check. Always WRITE a deliverable
+    (a blocked artifact if unreachable -- never fabricate).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4910_kv260_continuity.json (the .452 continuity result -- reachable, terminal)
+      - {project_root}/ops/known-issues.md (KV260 SSH-only discipline + the kria alias)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (SSH ONLY -- NEVER host SD card):
+         `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 -> reachable; proceed.
+         Non-zero -> honest_verdict blocked_kv260_ssh_unreachable, WRITE the deliverable, EXIT (do NOT fabricate).
+         If the prompt ever referenced a host SD-card / block-device check -> blocked_kv260_wrong_mechanism_sd_card_precondition.
+      1. If reachable: `ssh kria 'xmutil listapps'` to confirm the board state; record kv260_ssh_reachable + loaded_overlay.
+      2. WRITE the deliverable.
+
+    FALSIFIABLE GATE: a deliverable is written either way -- kv260_ssh_reachable true (reachable, overlay listed)
+    or a blocked artifact (unreachable). Never a fabricated hardware result.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; reachable is success_kv260_continuity_ok; unreachable is blocked_kv260_ssh_unreachable."
+      kv260_ssh_reachable:
+        principle: "true iff `ssh kria true` exits 0 -- the ONLY correct KV260 precondition (NEVER a host SD-card / block-device check)."
+      loaded_overlay:
+        principle: "the current board overlay state (xmutil listapps) if reachable."
+      inference_substrate:
+        principle: "hardware_smoke (SSH-attached board; per-board floor)."
+      preconditions_checked:
+        principle: "records the SSH-reachability check; a host SD-card precondition is the retired wrong mechanism."
+
+    Run: `.venv/bin/python python/carnot/experiment_4921_kv260_continuity.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4922-d
+  title: 'PHASE D (SOTA-INGESTION; POST-SPRINT PIVOT SCAFFOLD) -- minimally SCAFFOLD the post-6/30
+    distributional-energy-verifier pivot (arXiv:2605.18871, post-sprint priority-1). .452 D (exp4911) already
+    MAPPED the .453 frontier; .453 D does NOT re-map -- it builds the offline FoVer->MuSR
+    distributional-energy-verifier-vs-self-consistency-vs-LLM-judge harness SKELETON + a tiny-slice DRY-RUN, so
+    the loop executes the verifier-moat pivot the instant the sprint retires 6/30. Scaffold only; majority-ARC
+    still governs through 6/30. verifier_is_oracle=false; self_consistency_saturated=false (the moat domain).'
+  priority: medium
+  track: sota-ingestion
+  max_turns: 60
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_4922_distributional_energy_verifier_scaffold.json
+  operator_override: '2026-06-11 SOTA-Ingestion Cycle (standing) + 2026-06-19 ARC sprint: reserved
+    SOTA-ingestion slot -- the post-sprint verifier-moat pivot SCAFFOLD (north-star §1/§5). False-positive
+    scope-match vs prior SOTA-ingestion tasks; structurally never a doomed rerun. Scaffold de-risks the pivot;
+    it does NOT start it (majority-ARC governs through 6/30).'
+  prompt: |
+    CONTEXT ({date}). The sprint retires 2026-06-30. .452 closed the ARC world-model fork; the deliverable locks
+    to the ~0.05 agent + the publishable FoVer paper, and D (exp4911) mapped the post-sprint pivot to the
+    verifier-moat / oracle-distinct directions (north-star §1/§5) where self-consistency is NOT near-ceiling. The
+    priority-1 post-sprint method is the DISTRIBUTIONAL ENERGY VERIFIER (arXiv:2605.18871 "Distributional
+    Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning"): combine learned quality scoring with
+    deterministic constraint penalties + uncertainty to verify structured LLM outputs. .453 D does NOT re-map
+    (exp4911 mapped); it MINIMALLY SCAFFOLDS the offline harness so the pivot is executable on 6/30.
+
+    THE SCAFFOLD (offline, de-risking only -- NOT the full experiment):
+      - Port the FoVer evaluation harness SKELETON to a non-saturated structured-reasoning domain (MuSR or a
+        TravelPlanner-style structured-reasoning slice) with the comparison stubbed: distributional energy
+        verifier vs self-consistency vs LLM-judge.
+      - DRY-RUN on a tiny slice (a handful of cached candidate rows) to prove the harness runs end-to-end and
+        emits the three comparison columns -- NOT a headline claim, NOT a promotion.
+      - State the VALIDATION GATE the real (post-6/30) experiment must pass: the verifier beats self-consistency
+        with CI95 excluding zero AND no model-identity shortcut under adversarial_verify; oracle_distinct (no
+        cheap executable oracle for the domain).
+    GUARDRAILS: cite the real arXiv ID (2605.18871, HTTP-200 verified by exp4911). verifier_is_oracle=false (the
+    distributional energy verifier is oracle-distinct from any answer key). self_consistency_saturated=false (the
+    moat only exists where SC is not near-ceiling). Do NOT claim a verifier win -- this is a SCAFFOLD + dry-run.
+    Do NOT re-promote any nulled class (energy-as-ARC-lever, etc.).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_4911_sota_ingestion_v453_frontier.json (the post_sprint_pivot_methods map + the validation gates)
+      - {project_root}/research-studying.md (the post-sprint verifier-moat pivot note + the .453 planner decision)
+      - {project_root}/ops/north-star.md (§1 the FoVer headline, §5 the verifier-moat / oracle-distinct frame)
+      - {project_root}/ops/reproduction-runbook-fover-headline.md (the FoVer harness this scaffold ports from)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: the FoVer harness + a non-saturated structured-reasoning slice (MuSR or equivalent
+         cached rows) reachable. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. Build the offline harness skeleton (the three comparison columns: distributional energy verifier vs
+         self-consistency vs LLM-judge) on the non-saturated domain.
+      2. DRY-RUN on a tiny cached slice; confirm it runs end-to-end and emits the three columns (no headline claim).
+      3. State the validation gate the real post-6/30 experiment must pass. WRITE the deliverable.
+
+    FALSIFIABLE GATE: a runnable offline harness skeleton + a tiny-slice dry-run that emits the three comparison
+    columns + the stated validation gate + the real arXiv ID. NO verifier win is claimed (scaffold only);
+    pivot_executable_on_6_30=true.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; success_distributional_energy_verifier_pivot_scaffolded."
+      pivot_executable_on_6_30:
+        principle: "true -- the harness skeleton + dry-run make the post-sprint verifier-moat pivot executable the instant the sprint retires."
+      harness_skeleton_path:
+        principle: "the offline FoVer->non-saturated-domain harness skeleton (the de-risking deliverable)."
+      dry_run_three_columns:
+        principle: "the tiny-slice dry-run output: {distributional_energy_verifier, self_consistency, llm_judge} columns -- proves the harness runs, NOT a headline."
+      validation_gate:
+        principle: "the gate the real post-6/30 experiment must pass: beats SC CI95-excl-0, no model-identity shortcut, oracle-distinct."
+      arxiv_id_cited:
+        principle: "2605.18871 (HTTP-200 verified by exp4911) -- no fabrication."
+      verifier_is_oracle:
+        principle: "false -- the distributional energy verifier is oracle-distinct (the moat domain has no cheap executable oracle)."
+      self_consistency_saturated:
+        principle: "false -- the moat only exists where self-consistency is NOT near-ceiling (the domain choice)."
+      no_verifier_win_claimed:
+        principle: "true -- this is a SCAFFOLD + dry-run; the win is claimed only by the real post-6/30 experiment that passes the validation gate."
+      inference_substrate:
+        principle: "verifier_ensemble_against_cached_candidates (scores cached rows in the dry-run; 1s floor)."
+      preconditions_checked:
+        principle: "records FoVer-harness + domain-slice presence; a missing resource emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
+- id: exp4923-capstone
+  title: 'PHASE E (CAPSTONE .453) -- aggregate the scorecard. HEADLINE = A1''s causal-abstraction CLOSURE
+    verdict (trusted ONLY if B1 confirmed a1_diagnostic_trustworthy: real transitions, not-a-value-table,
+    observable claims verified readable, positive control observable, oracle-distinct/planner-blind,
+    numbers-match-fork). If WALL_IS_OBSERVABLE_VARIABLE_GAP -> name the fixable lever for the post-sprint handoff.
+    If WALL_IS_HIDDEN_STATE -> ARC closure: the wall is representation-invariant by construction; deliverable =
+    the ~0.05 agent + the publishable FoVer paper. Report the scored deadline lanes (A2 bank, A3 self-play, A4
+    CLEAN go/no-go flag_resolved, B2 package) + the post-6/30 distributional-energy-verifier pivot (D scaffold).
+    Skip any flagged_adversarial upstream.'
+  priority: critical
+  track: capstone
+  max_turns: 60
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_4923_capstone_v453.json
+  operator_override: '2026-06-19 ARC sprint (standing): routine milestone capstone -- false-positive
+    scope-match vs prior capstone tasks; structurally never a doomed rerun. (capstone-v453).'
+  prompt: |
+    CONTEXT ({date}). CAPSTONE for 2026.06.453. Aggregate the milestone scorecard. The HEADLINE is A1's
+    (exp4914) causal-abstraction CLOSURE verdict -- trusted ONLY if B1 (exp4918) confirmed
+    a1_diagnostic_trustworthy. Skip any upstream artifact carrying flagged_adversarial (fabrication gate); read
+    every upstream artifact via scripts/summarize_artifact.py (Reading-Results Discipline).
+
+    THE HEADLINE LOGIC:
+      - Trust A1's fork verdict ONLY if B1's a1_diagnostic_trustworthy=true (real transitions, not a value table,
+        observable claims verified readable, positive control classifies observable, oracle-distinct +
+        planner-blind, numbers match the fork). If B1 says untrustworthy, report the headline as the B1 failure,
+        NOT A1's verdict.
+      - If A1 = WALL_IS_OBSERVABLE_VARIABLE_GAP (trusted) -> the closure verdict names a FIXABLE lever (a missing
+        observable variable the agent's abstraction could retain); record it as the .454 / post-sprint candidate.
+      - If A1 = WALL_IS_HIDDEN_STATE (trusted) -> ARC CLOSURE: the live first-win wall is representation-invariant
+        BY CONSTRUCTION (no representation over observable inputs recovers the discriminating variable). The
+        deliverable LOCKS to the current ~0.05 first-win agent (package ready, operator-only) + the publishable
+        FoVer verifier-ensemble paper (paper_ready=true, north-star §1/§2). Do NOT queue representation #5.
+      - If A1 = DIAGNOSTIC_DEGENERATE_RETIRED or B1-untrusted -> report the diagnostic inconclusive; the wall
+        stays the trusted .452 negative; escalate to the operator for .454.
+    Report the scored deadline lanes: A2 (exp4915 bank / no-bank -> reproducible_total_levels), A3 (exp4916
+    self-play checkpoint refreshed), A4 (exp4917 CLEAN held-out go/no-go rate + flag_resolved), B2 (exp4919
+    package ready), B3 (exp4920 retro-timing+stamping fix), C (exp4921 KV260), D (exp4922 post-6/30
+    distributional-energy-verifier pivot scaffold). State the post-sprint handoff plainly.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/scripts/summarize_artifact.py (read EVERY upstream artifact via this -- Reading-Results Discipline)
+      - {project_root}/results/experiment_4914_causal_abstraction_wall_diagnostic.json (A1 -- the headline)
+      - {project_root}/results/experiment_4918_causal_abstraction_audit.json (B1 -- the trust gate)
+      - {project_root}/results/experiment_4915_levelup_attempt.json + _4916_*.json + _4917_*.json + _4919_*.json + _4920_*.json + _4921_*.json + _4922_*.json
+      - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels) + {project_root}/ops/north-star.md (§1/§2/§5)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: all upstream .453 arm artifacts present (summarize_artifact exit code recorded);
+         registry loadable. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {id, fields_imported, sha256}.
+      2. Apply the headline logic (trust A1 only if B1 clean); skip flagged_adversarial upstream (list them).
+      3. Build the milestone_scorecard + the post_sprint_pivot handoff. WRITE the deliverable.
+
+    FALSIFIABLE GATE: capstone_ready=true with the headline gated on B1's a1_diagnostic_trustworthy, the scored
+    scorecard for all arms, skipped_flagged_adversarial listed, reproducible_total_levels carried from the
+    registry, and the post-6/30 pivot handoff stated. cited_upstream_artifacts has sha256 per source.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; complete_capstone_v453_<closure-or-escalate> (e.g. _wall_is_hidden_state_arc_closure / _observable_variable_gap_<lever> / _diagnostic_inconclusive_escalate)."
+      headline:
+        principle: "the one-line .453 headline -- A1's trusted closure verdict (observable-gap lever / hidden-state closure) or the B1-untrusted/inconclusive fallback."
+      a1_closure_verdict_trusted:
+        principle: "A1's fork verdict gated on B1 a1_diagnostic_trustworthy -- the headline is only as good as the audit."
+      reproducible_total_levels:
+        principle: "the monotonic ARC progress metric from the registry (68 + A2's bank if any)."
+      heldout_first_win_rate:
+        principle: "A4's CLEAN go/no-go number IF flag_resolved (else note it was still flagged)."
+      submission_package_ready:
+        principle: "B2's terminal gate -- the package state for the operator's 6/30 decision."
+      post_sprint_pivot:
+        principle: "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier scaffold + the deliverable (~0.05 agent + FoVer paper); NOT representation #5."
+      skipped_flagged_adversarial:
+        principle: "the list of upstream artifacts skipped per the fabrication gate."
+      cited_upstream_artifacts:
+        principle: "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
+      inference_substrate:
+        principle: "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
+      preconditions_checked:
+        principle: "records upstream-artifact presence + registry loadability; a missing input emits blocked_."
+      random_seed:
+        principle: "determinism for any tie-break in the scorecard aggregation."
+      reproducibility_checksum:
+        principle: "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
+
+    Run: `.venv/bin/python python/carnot/experiment_4923_capstone_v453.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.453
+  agent_type: codex
+  model: gpt-5.5
