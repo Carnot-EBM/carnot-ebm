@@ -1296,6 +1296,58 @@ class LocalGGUFProposer:
             return True, code
         return False, f"local model code unusable after {tries} tries ({last})"
 
+    def complete_text(
+        self,
+        prompt: str,
+        *,
+        max_tokens: Optional[int] = None,
+        temperature: float = 0.1,
+        stop: Optional[list] = None,
+    ) -> tuple[bool, str]:
+        """Raw free-text/JSON completion (NOT the code-extraction path of generate()).
+
+        WHY a separate method: generate() runs `_extract_python` + an `ast.parse` gate +
+        a `def <name>` presence check, which is exactly right for inducing a world-model
+        engine but WRONG for a short reasoning answer (e.g. "which archived cell is most
+        promising to explore from -> reply with one integer"). complete_text returns the
+        server's raw `content` string with no code gating, so callers that want JSON/an
+        index/a short rationale get it directly. Reuses the SAME warm GPU server as
+        generate() via _ensure_server()/_url() (no second llama-server, no CPU fallback).
+
+        Returns (ok, text). ok=False (with a diagnostic string) when the GPU server is
+        unavailable or the request errors — the caller is expected to fall back to its
+        own heuristic rather than fabricate, per the no-silent-degradation discipline.
+        """
+        import json as _json
+        import urllib.request
+
+        if not self._ensure_server():
+            return False, (
+                f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                "must run on GPU (no CPU fallback)"
+            )
+        full_prompt = (self.no_think_prefix + prompt) if self.no_think_prefix else prompt
+        payload = {
+            "prompt": full_prompt,
+            "n_predict": int(max_tokens or self.max_tokens),
+            "temperature": float(temperature),
+            "cache_prompt": True,
+        }
+        if stop:
+            payload["stop"] = list(stop)
+        body = _json.dumps(payload).encode()
+        try:
+            req = urllib.request.Request(
+                self._url() + "/completion",
+                data=body,
+                headers={"Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                text = _json.load(r).get("content", "")
+        except Exception as e:  # pragma: no cover - network boundary
+            return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+        return True, str(text)
+
     def _gen_to_file(
         self, game: str, prompt: str, *, codeonly_eligible: bool = False
     ) -> tuple[bool, str]:

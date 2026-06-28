@@ -36,6 +36,7 @@ from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
 from carnot.agentic.arc_go_explore import coerce_go_explore_archive
+from carnot.agentic.arc_ige_cell_selector import coerce_ige_cell_selector
 from carnot.agentic.arc_program_synthesis_filter import (
     coerce_program_synthesis_filter,
     induce_action_effect_proposal_filter,
@@ -119,6 +120,11 @@ SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE = (
 )
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
+# IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
+# arXiv:2405.15143). OFF by default: it is an OPEN-question lever (the plain archive nulled on first-win;
+# this swaps the cell-choice heuristic for an LLM promisingness judge). Enable only with the archive on.
+SUBMITTED_IGE_CELL_SELECTION_ENABLED = False
+SUBMITTED_IGE_CELL_SELECTION_MODE = "llm_promisingness_go_explore"
 _DEFAULT_VALUE_HEAD = object()
 _DEFAULT_CANDIDATE_ROUTER = object()
 _DEFAULT_FRAME_CHANGE_SCORER = object()
@@ -442,6 +448,16 @@ class StepwiseExplorer:
             amortized_first_contact_prior
         )
         self.go_explore_archive = coerce_go_explore_archive(go_explore_archive)
+        # IGE cell selection (2026-06-28): when the flag is on and a Go-Explore archive exists without an
+        # explicit selector, attach the LLM-promisingness cell selector (Intelligent Go-Explore). The
+        # selector only RANKS already-archived cells (verifier_is_oracle=False) and falls back to the
+        # archive heuristic if the GPU server / parse fails, so flipping it on cannot fabricate a solve.
+        if (
+            SUBMITTED_IGE_CELL_SELECTION_ENABLED
+            and self.go_explore_archive is not None
+            and getattr(self.go_explore_archive, "selector", None) is None
+        ):
+            self.go_explore_archive.selector = coerce_ige_cell_selector(True)
         self._qd_sequences_injected = 0
         self._qd_actions_injected = 0
         self._qd_generation_errors = 0
@@ -2912,6 +2928,8 @@ SUBMITTED_AGENT_CONFIG = {
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
     "go_explore_archive_mode": SUBMITTED_GO_EXPLORE_ARCHIVE_MODE,
+    "ige_cell_selection_enabled": SUBMITTED_IGE_CELL_SELECTION_ENABLED,
+    "ige_cell_selection_mode": SUBMITTED_IGE_CELL_SELECTION_MODE,
     "router_wired": True,
     "solve_learning_router_wired": True,
     "strategy_router_enabled": True,

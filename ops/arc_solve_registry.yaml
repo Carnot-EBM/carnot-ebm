@@ -1002,32 +1002,27 @@ games:
   reproducibility: reproduced
   levels_reproduced: 2
   mechanic_class: spill_splitter_placement
-  win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the
-    spill into all three repwkzbkhxl target blocks without touching the wall:
-    len3 at (0,3), len5 at (4,3), len3 at (8,5).'
-  action_model: Keyboard ACTION1-4 move the selected splitter after display-rotation
-    remapping; ACTION6 selects splitter sprites from offline-derived display centers;
-    ACTION5 commits the spill. L2 tail selects the two len3 splitters and moves them
-    to the derived target placements.
-  solver: GameAdapter _sp80 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_sp80.json 33-label L2 gate.
-  reproduce: Exp4535 results/experiment_4535_levelup_attempt.json re-gated results/arc_loop_solve_sp80.json
-    offline_reproduced=True, reached_level=2, banked +1 over the current L1
-    registry row, checksum 747d4797b8e298a6728efeb2bbd71b0ffa8359567c07d453d643e6e4a340743e.
+  win_condition: 'L1 move-right x3 then commit; L2 splitter placements route the spill into all three repwkzbkhxl target blocks without touching the wall: len3 at (0,3), len5 at (4,3), len3 at (8,5).'
+  action_model: Keyboard ACTION1-4 move the selected splitter after display-rotation remapping; ACTION6 selects splitter sprites from offline-derived display centers; ACTION5 commits the spill. L2 tail selects the two len3 splitters and moves them to the derived target placements.
+  solver: GameAdapter _sp80 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_sp80.json 33-label L2 gate.
+  reproduce: Exp4535 results/experiment_4535_levelup_attempt.json re-gated results/arc_loop_solve_sp80.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 747d4797b8e298a6728efeb2bbd71b0ffa8359567c07d453d643e6e4a340743e.
   gotchas:
-  - L2 has dojfslwbg=180, so external keyboard directions and click coordinates are
-    display-rotated before the game maps them back to grid space.
-  - The win predicate is not just visible piece placement; ACTION5 starts a spill,
-    and success requires every repwkzbkhxl block to be marked while no waoewejnqzc
-    wall is touched.
-  - Failed commit states can spend search time in spill animation; use a bounded
-    spill predicate to evaluate candidate placements before replay-gating.
-  - Use fresh-env branching for this adapter; replaying L1 on a reused advanced
-    sp80 env does not reconstruct the L2 start state that the reproduction gate
-    sees from a pristine offline arcade.
+  - L2 has dojfslwbg=180, so external keyboard directions and click coordinates are display-rotated before the game maps them back to grid space.
+  - The win predicate is not just visible piece placement; ACTION5 starts a spill, and success requires every repwkzbkhxl block to be marked while no waoewejnqzc wall is touched.
+  - Failed commit states can spend search time in spill animation; use a bounded spill predicate to evaluate candidate placements before replay-gating.
+  - Use fresh-env branching for this adapter; replaying L1 on a reused advanced sp80 env does not reconstruct the L2 start state that the reproduction gate sees from a pristine offline arcade.
   dead_ends:
-  - Exp4535 arc_loop_solve --game sp80 --target-level 3 replays to L2 only; the
-    current adapter has no grounded L3 splitter-placement delta.
+  - Exp4535 arc_loop_solve --game sp80 --target-level 3 replays to L2 only; the current adapter has no grounded L3 splitter-placement delta.
+  - 'Exp4925 sp80 no-bank duplicate_depth: complete_sp80_no_new_level_residual_duplicate_depth.'
+  latest_exp4925_levelup_attempt:
+    artifact: results/experiment_4925_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_sp80.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: duplicate_depth
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: a3d057dcd66e4e3b31e5cb3eaa73f5a45c7c9f8ec6d62dec8d94492660d49648
 - game: su15
   reproducibility: reproduced
   levels_reproduced: 2
