@@ -11984,6 +11984,83 @@ When Experiment 4893 computes the median delta and bootstrap CI95
 Then it emits `REPRESENTATION_MATTERS` only when the CI95 excludes zero, and
 otherwise emits `VALUE_GAP_REPRESENTATION_INVARIANT_HARD`.
 
+### REQ-ARC-WMTE-4897: Value-Gap Representation Adversarial Audit
+
+Experiment 4897 SHALL audit the Experiment 4892 A1 decision-need value-gap
+probe and the optional Experiment 4893 A1b action-prefix latent adapter before
+any capstone trusts the `.451` representation fork. If the A1 artifact or
+source script is missing, Experiment 4897 SHALL write
+`results/experiment_4897_value_gap_representation_audit.json` with
+`honest_verdict=blocked_a1_artifact_missing` and SHALL not fabricate any A1 or
+A1b pass.
+
+The audit SHALL run `scripts/summarize_artifact.py` and
+`scripts/adversarial_verify.py` on the A1 artifact, SHALL run
+`scripts/adversarial_verify.py` on A1b when A1b exists, SHALL inspect the A1
+source path so the banked winning answer is used only after planning for
+classification, and SHALL require `arc_orphan_solver_lint` to pass before
+declaring the live path reachable. A1 is genuinely diagnostic only when the
+graded `tu93` positive control is non-degenerate (`cell_recall > 0`), the
+reported value delta is scored on a split disjoint from the decision-need
+authoring set, the planner is blind to the banked answer, per-game
+`cell_recall`/value-accuracy/delta numbers support the reported
+`fork_verdict`, the live path is reachable, and the A1 run used GPU-0 CUDA or
+iGPU HIP for at least the live-model duration floor without an adversarial
+flag. A1b is genuinely live only when it was gate-skipped because A1 closed the
+value gap or blocked, or when it cleared the 60s live floor without a
+`DURATION_TOO_SHORT` flag, scored the same held-out games and split as A1,
+remained oracle-distinct, and used a reachable live path.
+
+Experiment 4897 SHALL write
+`results/experiment_4897_value_gap_representation_audit.json` with required
+top-level fields `honest_verdict`, `a1_genuinely_diagnostic`,
+`a1_positive_control_non_degenerate_confirmed`,
+`a1_delta_on_heldout_disjoint_confirmed`, `planner_blind_confirmed`,
+`numbers_match_fork`, `a1b_ran_genuinely_live`, `inference_substrate`,
+`checks`, `a1_failure_reasons`, `a1b_failure_reasons`,
+`a1_summarizer_result`, `a1_adversarial_result`,
+`a1b_adversarial_result`, `live_lint_result`, `preconditions_checked`,
+`field_principles`, `duration_s`, and `reproducibility_checksum`. The workflow
+SHALL append an idempotent Experiment 4897 section to
+`ops/arc_null_silent_bug_audit.md`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; audit complete is complete_a1_a1b_audited."
+- `a1_genuinely_diagnostic`: principle "the load-bearing check -- non-degenerate-graded-control AND held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
+- `a1_positive_control_non_degenerate_confirmed`: principle "true iff the GRADED tu93 positive control really had cell_recall > 0 -- carries forward the .450 degenerate-metric fix."
+- `a1_delta_on_heldout_disjoint_confirmed`: principle "true iff A1's value-accuracy delta was scored on a split DISJOINT from the representation's authoring set (not a tautology)."
+- `planner_blind_confirmed`: principle "true iff the banked winner was used only to classify, never to seed authoring/fitting/planning."
+- `numbers_match_fork`: principle "true iff the per-game (cell_recall, value-accuracy, delta) numbers support the claimed fork_verdict."
+- `a1b_ran_genuinely_live`: principle "true iff A1b cleared the 60s live floor (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b non-test fix) on the same held-out split (or A1b was gate-skipped)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+
+#### SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT
+
+Given checked-in A1 and optional A1b artifacts plus the A1 source script
+When Experiment 4897 runs the hostile audit
+Then it writes a schema-valid `complete_a1_a1b_audited` artifact whose A1 and
+A1b booleans are true only when all load-bearing checks pass, and whose failure
+reasons make any degenerate graded control, held-out split tautology,
+banked-answer injection, fork-number mismatch, unreachable live path,
+wrong/too-short substrate, circular verifier, or unfair A1b split explicit.
+
+#### SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED
+
+Given Experiment 4893 exists or A1 makes it unnecessary
+When Experiment 4897 evaluates A1b
+Then `a1b_ran_genuinely_live=true` only when A1b is gate-skipped because A1
+closed the value gap or blocked, or when A1b reports `duration_s > 60`,
+`ran_genuinely_live=true`, no `DURATION_TOO_SHORT` adversarial flag, the same
+A1 held-out game split, oracle-distinct scoring, and a reachable live path.
+
+#### SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT
+
+Given the A1 artifact or A1 source script is missing
+When Experiment 4897 runs
+Then it writes `blocked_a1_artifact_missing`, marks every trust boolean false,
+records the missing precondition, and does not claim A1 or A1b audit success.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that

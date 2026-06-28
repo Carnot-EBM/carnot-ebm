@@ -1,0 +1,294 @@
+{
+  "a1_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4892_decision_need_targets_value_gap.json",
+    "exp_id": 4892,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "a1_artifact_checksum": "sha256:8104e5b8a16fb7d59bf98b459b2d5322d31a221df143c02f66a9764690e4d422",
+  "a1_artifact_path": "results/experiment_4892_decision_need_targets_value_gap.json",
+  "a1_delta_on_heldout_disjoint_confirmed": true,
+  "a1_failure_reasons": [],
+  "a1_genuinely_diagnostic": true,
+  "a1_live_path_reachable_confirmed": true,
+  "a1_positive_control_non_degenerate_confirmed": true,
+  "a1_ran_live_on_gpu0": true,
+  "a1_script_checksum": "sha256:377b55ab71d70d2f91e40b94bd9ca8997f40d0e32a30e05e42f780d799b80255",
+  "a1_script_path": "python/carnot/experiment_4892_decision_need_targets_value_gap.py",
+  "a1_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+  "a1_source_honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
+  "a1_source_n_games_measured": 9,
+  "a1_summarizer_result": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "==============================================================================\nARTIFACT  experiment_4892_decision_need_targets_value_gap.json\n------------------------------------------------------------------------------\n  verdict          : complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 276.93438816070557   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      decision_need_value_accuracy_delta_median = -0.101866\n      engine_cell_recall_median = 0.727273\n  adversarial flags: none\n"
+  },
+  "a1b_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4893_action_prefix_latent_adapter.json",
+    "exp_id": 4893,
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "action_prefix_value_accuracy_delta_median=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      }
+    ],
+    "honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
+    "loaded": true,
+    "max_severity": 0,
+    "title": ""
+  },
+  "a1b_artifact_checksum": "sha256:9c2fff54149794603fea9a458af0d2d46721889417dd0c6e596b160a4675b732",
+  "a1b_artifact_path": "results/experiment_4893_action_prefix_latent_adapter.json",
+  "a1b_failure_reasons": [],
+  "a1b_ran_genuinely_live": true,
+  "a1b_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
+  "a1b_source_honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
+  "audit_report_path": "ops/arc_null_silent_bug_audit.md",
+  "checks": {
+    "a1_heldout_disjoint_delta": {
+      "artifact_delta_on_truly_heldout_split": true,
+      "bad_games": [],
+      "checked_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "tu93_positive_control",
+        "wa30"
+      ],
+      "passed": true
+    },
+    "a1_live_gpu": {
+      "duration_floor_s": 60.0,
+      "duration_s": 276.93438816070557,
+      "flagged_adversarial": false,
+      "generator_backend": "gpu0_cuda",
+      "inference_substrate": "live_llm_inference",
+      "passed": true
+    },
+    "a1_live_path": {
+      "arc_orphan_solver_lint_passed": true,
+      "artifact_live_path_reachable": true,
+      "passed": true,
+      "solve_provenance": "development_proxy",
+      "source_live_path": {
+        "calls": [
+          "a1._collect_cold_policy_transitions",
+          "list",
+          "cold.get",
+          "_author_llm_targets",
+          "DecisionNeedTargetTable.author",
+          "e3.collect_transitions",
+          "list",
+          "score_decision_need_table",
+          "_a1_value",
+          "_a1_value",
+          "float",
+          "float",
+          "a1.classify_planned_pool",
+          "classification.update",
+          "int",
+          "sum",
+          "np.asarray",
+          "_plan_with_decision_need_table",
+          "int",
+          "max",
+          "cold.get",
+          "list",
+          "int",
+          "a1._execute_plan_reaches_l1",
+          "round",
+          "round",
+          "round",
+          "round",
+          "round",
+          "_transition_ids",
+          "_transition_ids",
+          "list",
+          "len",
+          "len",
+          "len",
+          "len",
+          "table.target_kinds",
+          "table.summary",
+          "ord",
+          "np.asarray",
+          "float",
+          "float",
+          "str",
+          "int",
+          "llm_authoring.get",
+          "a1_baseline_row.get",
+          "a1_baseline_row.get",
+          "_transition_ids"
+        ],
+        "classification_path_called": true,
+        "decision_need_target_table_authored": true,
+        "function_present": true,
+        "passed": true,
+        "plan_path_called": true
+      },
+      "source_live_path_called": true
+    },
+    "a1_numbers_match_fork": {
+      "computed_ci95": [
+        -0.227708,
+        0.025266
+      ],
+      "computed_coverage_migration_count": 0,
+      "computed_engine_cell_recall_median": 0.727273,
+      "computed_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+      "computed_median_delta": -0.101866,
+      "invalid_games": [],
+      "never_enumerated_games": 9,
+      "passed": true,
+      "per_game_count": 9,
+      "reported_ci95": [
+        -0.227708,
+        0.025266
+      ],
+      "reported_coverage_migration_count": 0,
+      "reported_engine_cell_recall_median": 0.727273,
+      "reported_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+      "reported_median_delta": -0.101866,
+      "reported_n_games_measured": 9
+    },
+    "a1_oracle_distinct": {
+      "circular_moat_flagged": false,
+      "passed": true,
+      "verifier_is_oracle": false
+    },
+    "a1_planner_blind_to_banked_answer": {
+      "allowed_only_in_classify_planned_pool": true,
+      "artifact_flag": true,
+      "disallowed_refs": [],
+      "function_present": true,
+      "passed": true,
+      "winning_prefix_refs": 1
+    },
+    "a1_positive_control": {
+      "artifact_positive_control_non_degenerate": true,
+      "cell_recall": 0.177143,
+      "passed": true,
+      "positive_control_game": "tu93",
+      "row_game": "tu93"
+    },
+    "a1_summarizer_and_adversarial_verify": {
+      "adversarial_flag_count": 0,
+      "adversarial_loaded": true,
+      "passed": true,
+      "summarizer_returncode": 0
+    },
+    "a1b_live_and_split": {
+      "a1_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "a1b_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "adversarial_flag_kinds": [
+        "IMPLAUSIBLE_PERFECT"
+      ],
+      "bad_delta_games": [],
+      "bad_split_games": [],
+      "duration_floor_s": 60.0,
+      "duration_s": 218.924402,
+      "duration_too_short_flagged": false,
+      "live_path_reachable": true,
+      "missing_live_methods": [],
+      "oracle_distinct": true,
+      "passed": true,
+      "ran_genuinely_live": true,
+      "same_games_as_a1": true,
+      "same_split_as_a1": true,
+      "status": "ran",
+      "verifier_is_oracle": false
+    }
+  },
+  "duration_s": 1.52928,
+  "experiment": "experiment_4897_value_gap_representation_audit",
+  "experiment_id": 4897,
+  "field_principles": {
+    "a1_delta_on_heldout_disjoint_confirmed": {
+      "principle": "true iff A1's value-accuracy delta was scored on a split DISJOINT from the representation's authoring set (not a tautology)."
+    },
+    "a1_genuinely_diagnostic": {
+      "principle": "the load-bearing check -- non-degenerate-graded-control AND held-out-disjoint-delta AND planner-blind AND numbers-match-fork AND live-path-reachable AND ran-live-on-GPU0; else A1's fork verdict is void."
+    },
+    "a1_positive_control_non_degenerate_confirmed": {
+      "principle": "true iff the GRADED tu93 positive control really had cell_recall > 0 -- carries forward the .450 degenerate-metric fix."
+    },
+    "a1b_ran_genuinely_live": {
+      "principle": "true iff A1b cleared the 60s live floor (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b non-test fix) on the same held-out split (or A1b was gate-skipped)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; audit complete is complete_a1_a1b_audited."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "numbers_match_fork": {
+      "principle": "true iff the per-game (cell_recall, value-accuracy, delta) numbers support the claimed fork_verdict."
+    },
+    "planner_blind_confirmed": {
+      "principle": "true iff the banked winner was used only to classify, never to seed authoring/fitting/planning."
+    }
+  },
+  "honest_verdict": "complete_a1_a1b_audited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_lint_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).\n"
+  },
+  "numbers_match_fork": true,
+  "planner_blind_confirmed": true,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a1_script_present": true,
+    "a1b_artifact_present": true,
+    "adversarial_verify_script_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "ok": true,
+    "spec_has_req_4897": true,
+    "summarizer_script_present": true
+  },
+  "random_seed": 4897,
+  "reproducibility_checksum": "sha256:c081b469495cafc4c708c7d1ca7c5dbf8714c2590adcb39ea694aa474a853f2d",
+  "result_path": "results/experiment_4897_value_gap_representation_audit.json",
+  "schema": "carnot.arc.value_gap_representation_audit_4897.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4897",
+    "SCENARIO-ARC-WMTE-4897-A1-A1B-AUDIT",
+    "SCENARIO-ARC-WMTE-4897-A1B-LIVE-OR-GATE-SKIPPED",
+    "SCENARIO-ARC-WMTE-4897-BLOCKED-A1-ARTIFACT"
+  ]
+}
