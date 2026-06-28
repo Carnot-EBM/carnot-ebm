@@ -12276,6 +12276,86 @@ When Experiment 4904 computes the median delta and bootstrap CI95
 Then it emits `REPRESENTATION_MATTERS` only when the CI95 excludes zero, and
 otherwise emits `VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES`.
 
+### REQ-ARC-WMTE-4908: Env-Grounded Search A1/A1b Adversarial Audit
+
+Experiment 4908 SHALL audit the `.452` Exp 4903 A1 env-grounded
+location-pruned first-win headline and the gated Exp 4904 A1b latent-action
+interface before any capstone trusts either fork. If the A1 artifact, A1 source
+script, or required A1b artifact when the A1 first-win delta is below `0.1` is
+missing, the workflow SHALL write
+`results/experiment_4908_env_grounded_search_audit.json` with
+`honest_verdict=blocked_upstream_artifact_missing` and SHALL not fabricate any
+audit pass.
+
+The A1 audit SHALL confirm that change-VALUE came from executed real
+environment transitions rather than model-predicted values, that the banked
+winning prefix was not injected into ranking/search/scoring, that the `tu93`
+change-LOCATION positive control is non-degenerate, that the per-game
+first-win/action-cost/migration numbers recompute the named fork verdict, and
+that the live path is reachable rather than an orphan solver. The A1
+trustworthy capstone boolean SHALL be exactly
+`a1_value_from_real_env AND a1_planner_blind AND
+a1_positive_control_non_degenerate AND a1_numbers_match_fork`.
+
+The A1b audit SHALL confirm that Exp 4904 either correctly gate-skipped because
+A1 lifted first-win by at least `0.1`, or genuinely ran live on the same
+held-out split with `duration_s > 60`, `ran_genuinely_live=true`,
+`inference_substrate=live_llm_inference`, and oracle-distinct
+`verifier_is_oracle=false`. The workflow SHALL run
+`scripts/summarize_artifact.py` and `scripts/adversarial_verify.py` on the
+audited artifacts, SHALL include a per-claim audit table with boolean pass/fail
+and an evidence line, SHALL set `adversarial_flags_found=true` when either
+adversarial verification report contains flags, SHALL declare
+`inference_substrate=aggregation_from_upstream_artifacts`, and SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete_a1_a1b_audited."
+- `a1_value_from_real_env`: principle "true iff the search read change-VALUE from executed env transitions, not the model's prediction -- the whole .452 premise."
+- `a1_planner_blind`: principle "true iff the banked winning prefix was NOT injected into ranking/search/scoring (else the first-win is a tautology)."
+- `a1_positive_control_non_degenerate`: principle "true iff tu93's change-LOCATION prior is non-degenerate (ranks the truly-changing action highly)."
+- `a1_numbers_match_fork`: principle "true iff the per-game (first-win x action-cost x migration) numbers support the named fork verdict."
+- `a1_trustworthy`: principle "real-env AND planner-blind AND positive-control AND numbers-match -- the capstone trusts A1 only if true."
+- `a1b_ran_genuinely_live`: principle "true iff A1b duration_s>60 and genuinely ran (the .450 A1b 13.7s non-test fix); or a1b_gate_skipped=true."
+- `a1b_gate_skipped`: principle "true iff A1 lifted first-win >= 0.1 so the gate correctly skipped the last representation swing."
+- `adversarial_flags_found`: principle "any adversarial_verify flag on the A1/A1b artifacts (fabrication gate)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (reads upstream artifacts + the A1 script; no LLM)."
+
+#### SCENARIO-ARC-WMTE-4908-A1-AUDIT
+
+Given the Exp 4903 artifact and source script are present
+When Experiment 4908 audits A1
+Then it records a per-claim table for real-env value grounding,
+planner-blindness, positive-control non-degeneracy, numbers-match-fork, and
+live-path reachability, with each row carrying a boolean pass and evidence
+line, and computes `a1_trustworthy` from the four load-bearing A1 booleans.
+
+#### SCENARIO-ARC-WMTE-4908-A1B-LIVE-OR-GATE-SKIPPED
+
+Given the Exp 4903 first-win delta and optional Exp 4904 artifact
+When Experiment 4908 audits A1b
+Then it records `a1b_gate_skipped=true` only when the A1 first-win delta is at
+least `0.1`, otherwise it requires the Exp 4904 artifact to have genuinely run
+live for more than 60 seconds on the same held-out split and with an
+oracle-distinct verifier.
+
+#### SCENARIO-ARC-WMTE-4908-BLOCKED-UPSTREAM
+
+Given the required A1 artifact/script is missing, or the A1b artifact is
+missing while A1 remains below the `0.1` first-win gate
+When Experiment 4908 starts
+Then it writes `blocked_upstream_artifact_missing`, records the missing
+precondition, sets all pass booleans false except any explicitly proven gate
+skip, and exits without fabricating the audit.
+
+## Implementation Status (REQ-ARC-WMTE-4908)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-4908 | Implemented (`python/carnot/experiment_4908_env_grounded_search_audit.py`) | Implemented (`tests/python/test_experiment_4908_env_grounded_search_audit.py`) |
+
 ### REQ-ARC-WMTE-4897: Value-Gap Representation Adversarial Audit
 
 Experiment 4897 SHALL audit the Experiment 4892 A1 decision-need value-gap

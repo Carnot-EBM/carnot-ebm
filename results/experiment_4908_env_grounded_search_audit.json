@@ -1,0 +1,384 @@
+{
+  "a1_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4903_env_grounded_location_pruned_search.json",
+    "exp_id": 4903,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "a1_artifact_checksum": "sha256:1f8ebe39689af0b8c158fda8782a827e05d7d93d60d7c74b74bc8da73ab32187",
+  "a1_artifact_path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+  "a1_failure_reasons": [],
+  "a1_live_path_reachable": true,
+  "a1_numbers_match_fork": true,
+  "a1_planner_blind": true,
+  "a1_positive_control_non_degenerate": true,
+  "a1_script_checksum": "sha256:3793730e16cb4ed4ee3f346dfc11d5095359d859d6c8dd570d4ba2ec07de12f6",
+  "a1_script_path": "python/carnot/experiment_4903_env_grounded_location_pruned_search.py",
+  "a1_source_fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+  "a1_source_honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+  "a1_summarizer_result": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "==============================================================================\nARTIFACT  experiment_4903_env_grounded_location_pruned_search.json\n------------------------------------------------------------------------------\n  verdict          : complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 60.0   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      value_grounded_first_win_delta_median = -0.04\n  adversarial flags: none\n"
+  },
+  "a1_trustworthy": true,
+  "a1_value_from_real_env": true,
+  "a1b_adversarial_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4904_latent_action_interface.json",
+    "exp_id": 4904,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_latent_action_no_value_lift_representation_invariant_4_classes",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "a1b_artifact_checksum": "sha256:f13eab79b63250d89588f2246231decaa58839c21ec3a5900ae375f778a9b3d6",
+  "a1b_artifact_path": "results/experiment_4904_latent_action_interface.json",
+  "a1b_failure_reasons": [],
+  "a1b_gate_skipped": false,
+  "a1b_ran_genuinely_live": true,
+  "a1b_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES",
+  "a1b_source_honest_verdict": "complete_latent_action_no_value_lift_representation_invariant_4_classes",
+  "a1b_summarizer_result": {
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "==============================================================================\nARTIFACT  experiment_4904_latent_action_interface.json\n------------------------------------------------------------------------------\n  verdict          : complete_latent_action_no_value_lift_representation_invariant_4_classes\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 178.750196   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      engine_cell_recall_median = 0.334362\n      latent_action_value_accuracy_delta_median = -0.103162\n  adversarial flags: none\n"
+  },
+  "adversarial_flags_found": false,
+  "checks": {
+    "a1_adversarial_verify": {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4903_env_grounded_location_pruned_search.json",
+      "exp_id": 4903,
+      "flag_count": 0,
+      "flags": [],
+      "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "loaded": true,
+      "max_severity": -1,
+      "title": ""
+    },
+    "a1_live_path_reachable": {
+      "arc_orphan_solver_lint_passed": true,
+      "artifact_live_path_reachable": true,
+      "evidence": "arc_orphan_solver_lint passed and all A1 rows cite StepwiseExplorer.action_prior, load_engine, and plan_in_model",
+      "missing_method_games": [],
+      "passed": true,
+      "solve_provenance": "development_proxy",
+      "verifier_is_oracle": false
+    },
+    "a1_numbers_match_fork": {
+      "bad_games": [],
+      "computed_ci95": [
+        -0.04,
+        -0.04
+      ],
+      "computed_coverage_migration_count": 0,
+      "computed_fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "computed_median_actions_to_first_win": null,
+      "computed_median_delta": -0.04,
+      "evidence": "median_delta=-0.04, ci95=[-0.04, -0.04], coverage_migration_count=0, median_actions_to_first_win=None, fork=WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "passed": true,
+      "reported_ci95": [
+        -0.04,
+        -0.04
+      ],
+      "reported_coverage_migration_count": 0,
+      "reported_fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "reported_median_actions_to_first_win": null,
+      "reported_median_delta": -0.04
+    },
+    "a1_planner_blind": {
+      "artifact_flag": true,
+      "config_flag": true,
+      "evidence": "winning_prefix appears only in _classify_after_search after search",
+      "passed": true,
+      "precondition_flag": true,
+      "source": {
+        "disallowed_refs": [],
+        "function_present": true,
+        "passed": true,
+        "winning_prefix_refs": [
+          {
+            "call": "_classify_after_search",
+            "line": 1225
+          },
+          {
+            "call": "_classify_after_search",
+            "line": 1122
+          }
+        ]
+      }
+    },
+    "a1_positive_control_non_degenerate": {
+      "evidence": "tu93 true_changing_action_rank=4 <= 5",
+      "passed": true,
+      "positive_control_game": "tu93",
+      "row": {
+        "actual_changing_actions_seen": 4,
+        "change_value_predictions_used": 0,
+        "game": "tu93",
+        "location_ranker_non_degenerate": true,
+        "non_degenerate_rank_threshold": 5,
+        "prior_top_rank_score": 3853.0,
+        "real_env_value_reads": 4,
+        "true_changing_action_rank": 4
+      }
+    },
+    "a1_summarizer": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4903_env_grounded_location_pruned_search.json\n------------------------------------------------------------------------------\n  verdict          : complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 60.0   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      value_grounded_first_win_delta_median = -0.04\n  adversarial flags: none\n"
+    },
+    "a1_value_from_real_env": {
+      "bad_prediction_games": [],
+      "config": {
+        "a1_artifact": "results/experiment_4892_decision_need_targets_value_gap.json",
+        "action_budget": 24,
+        "baseline_artifact": "results/experiment_4896_heldout_first_win_readiness.json",
+        "bootstrap_iterations": 1000,
+        "bounded_action_cost": 80,
+        "change_location_prior_only": true,
+        "env_supplies_change_value": true,
+        "generator_precondition": "igpu_hip_or_gpu0_cuda",
+        "gpu0_cuda_allowed": true,
+        "heldout_games": [
+          "cd82",
+          "cn04",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "wa30"
+        ],
+        "live_path": "StepwiseExplorer.action_prior -> e3.load_engine/plan_in_model",
+        "llm_model": "Qwen3.5-9B-MTP",
+        "max_states": 48,
+        "planner_blind_to_banked_answer": true,
+        "positive_control_game": "tu93",
+        "search_strategy": "interleaved_act_and_observe",
+        "soft_elapsed_budget_s": 3500.0,
+        "top_k": 3
+      },
+      "evidence": "9/9 A1 rows have change_value_predictions_used=0 and real_env_value_reads>0; source real_transition_called=True",
+      "missing_read_games": [],
+      "passed": true,
+      "source": {
+        "direct_engine_calls_in_search": [],
+        "passed": true,
+        "prior_rank_called": true,
+        "real_env_reads_incremented": true,
+        "real_transition_called": true,
+        "score_calls": [
+          "np.asarray",
+          "float",
+          "np.asarray",
+          "np.count_nonzero",
+          "self.engine",
+          "source.copy",
+          "_action_id",
+          "_action_data"
+        ],
+        "search_calls": [
+          "ChangeLocationActionPrior",
+          "np.asarray",
+          "count",
+          "heapq.heappush",
+          "float",
+          "_grid_key",
+          "progress_score",
+          "heapq.heappop",
+          "prior.rank",
+          "int",
+          "round",
+          "int",
+          "int",
+          "int",
+          "next",
+          "int",
+          "int",
+          "legal_actions",
+          "np.asarray",
+          "float",
+          "bool",
+          "_grid_key",
+          "seen.add",
+          "heapq.heappush",
+          "float",
+          "float",
+          "max",
+          "int",
+          "real_transition",
+          "progress_score",
+          "is_goal",
+          "progress_score",
+          "int",
+          "grid.copy",
+          "int",
+          "int",
+          "round",
+          "int",
+          "int",
+          "int",
+          "len",
+          "next",
+          "float"
+        ]
+      }
+    },
+    "a1b_adversarial_verify": {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4904_latent_action_interface.json",
+      "exp_id": 4904,
+      "flag_count": 0,
+      "flags": [],
+      "honest_verdict": "complete_latent_action_no_value_lift_representation_invariant_4_classes",
+      "loaded": true,
+      "max_severity": -1,
+      "title": ""
+    },
+    "a1b_live_or_gate_skipped": {
+      "a1_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "a1b_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "adversarial_flag_kinds": [],
+      "duration_floor_s": 60.0,
+      "duration_s": 178.750196,
+      "duration_too_short_flagged": false,
+      "evidence": "A1b duration_s=178.750196 > 60 and heldout split matches A1",
+      "missing_live_method_games": [],
+      "oracle_distinct": true,
+      "passed": true,
+      "ran_genuinely_live": true,
+      "same_heldout_split": true,
+      "status": "ran"
+    },
+    "a1b_summarizer": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4904_latent_action_interface.json\n------------------------------------------------------------------------------\n  verdict          : complete_latent_action_no_value_lift_representation_invariant_4_classes\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 178.750196   substrate: live_llm_inference\n  duration floor   : live_llm_inference >=60.0s (live_model)\n  headline metrics :\n      engine_cell_recall_median = 0.334362\n      latent_action_value_accuracy_delta_median = -0.103162\n  adversarial flags: none\n"
+    }
+  },
+  "claim_audit_table": [
+    {
+      "claim": "A1 real-env value grounding",
+      "evidence": "9/9 A1 rows have change_value_predictions_used=0 and real_env_value_reads>0; source real_transition_called=True",
+      "passed": true
+    },
+    {
+      "claim": "A1 planner-blind search",
+      "evidence": "winning_prefix appears only in _classify_after_search after search",
+      "passed": true
+    },
+    {
+      "claim": "A1 tu93 positive control",
+      "evidence": "tu93 true_changing_action_rank=4 <= 5",
+      "passed": true
+    },
+    {
+      "claim": "A1 numbers match fork",
+      "evidence": "median_delta=-0.04, ci95=[-0.04, -0.04], coverage_migration_count=0, median_actions_to_first_win=None, fork=WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "passed": true
+    },
+    {
+      "claim": "A1 live-path reachable",
+      "evidence": "arc_orphan_solver_lint passed and all A1 rows cite StepwiseExplorer.action_prior, load_engine, and plan_in_model",
+      "passed": true
+    },
+    {
+      "claim": "A1b genuinely live or gate-skipped",
+      "evidence": "A1b duration_s=178.750196 > 60 and heldout split matches A1",
+      "passed": true
+    }
+  ],
+  "duration_s": 0.64699,
+  "experiment": "experiment_4908_env_grounded_search_audit",
+  "experiment_id": 4908,
+  "field_principles": {
+    "a1_numbers_match_fork": {
+      "principle": "true iff the per-game (first-win x action-cost x migration) numbers support the named fork verdict."
+    },
+    "a1_planner_blind": {
+      "principle": "true iff the banked winning prefix was NOT injected into ranking/search/scoring (else the first-win is a tautology)."
+    },
+    "a1_positive_control_non_degenerate": {
+      "principle": "true iff tu93's change-LOCATION prior is non-degenerate (ranks the truly-changing action highly)."
+    },
+    "a1_trustworthy": {
+      "principle": "real-env AND planner-blind AND positive-control AND numbers-match -- the capstone trusts A1 only if true."
+    },
+    "a1_value_from_real_env": {
+      "principle": "true iff the search read change-VALUE from executed env transitions, not the model's prediction -- the whole .452 premise."
+    },
+    "a1b_gate_skipped": {
+      "principle": "true iff A1 lifted first-win >= 0.1 so the gate correctly skipped the last representation swing."
+    },
+    "a1b_ran_genuinely_live": {
+      "principle": "true iff A1b duration_s>60 and genuinely ran (the .450 A1b 13.7s non-test fix); or a1b_gate_skipped=true."
+    },
+    "adversarial_flags_found": {
+      "principle": "any adversarial_verify flag on the A1/A1b artifacts (fabrication gate)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_a1_a1b_audited."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream artifacts + the A1 script; no LLM)."
+    }
+  },
+  "honest_verdict": "complete_a1_a1b_audited",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_lint_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).\n"
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a1_script_present": true,
+    "a1_value_grounded_first_win_delta_median": -0.04,
+    "a1b_artifact_present": true,
+    "a1b_artifact_required_present": true,
+    "a1b_gate_skipped": false,
+    "adversarial_verify_script_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "ok": true,
+    "spec_has_req_4908": true,
+    "summarizer_script_present": true
+  },
+  "random_seed": 4908,
+  "reproducibility_checksum": "sha256:463dcb7b6c24da588768ac3cf7800d35822266716c8f3cf3e05092a6f53f263e",
+  "result_path": "results/experiment_4908_env_grounded_search_audit.json",
+  "schema": "carnot.arc.env_grounded_search_audit_4908.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4908",
+    "SCENARIO-ARC-WMTE-4908-A1-AUDIT",
+    "SCENARIO-ARC-WMTE-4908-A1B-LIVE-OR-GATE-SKIPPED",
+    "SCENARIO-ARC-WMTE-4908-BLOCKED-UPSTREAM"
+  ]
+}
