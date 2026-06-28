@@ -9489,3 +9489,4 @@ The contro |
 | 2026-06-28 03:12 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-28 03:33 UTC | PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERI | OK | 120 passed, 1 warning in 10.67s |
 | 2026-06-28 03:48 UTC | PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBM | OK | 89 passed, 1 warning in 11.29s |
+| 2026-06-28 03:59 UTC | PHASE C (HARDWARE CONTINUITY; KV260) -- SSH-only p | OK | 86 passed, 1 warning in 8.44s |
