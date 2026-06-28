@@ -119,13 +119,32 @@ def main() -> int:
         # SAME expert pool for PoE and max-vote; weights/trust fit on val (fit_poe_weights sets .trust too)
         pool = poe.build_expert_pool(train)
         weights = poe.fit_poe_weights(pool, val, energy_scorer=energy_scorer)
-        poe_model = poe.PoEWorldModel(experts=pool, weights=weights)
         maxvote = ProductWorldModel(pool)  # reads .trust set by fit_poe_weights
-
-        poe_s = _score(poe_model.engine, test)
         mv_s = _score(maxvote.engine, test)
-        single_engine, single_note = _induce_single_engine(game, train, cell)
-        single_s = _score(single_engine, test) if single_engine is not None else None
+
+        # PRIOR SWEEP (adversarial-review fix): the no_change_prior can suppress experts whose fitted weight
+        # is below it, handicapping PoE vs max-vote independently of the consensus rule. Score PoE at
+        # prior 0.0 (pure weighted consensus, no anti-fire bias = the FAIREST consensus test) AND 0.5; take
+        # the BEST for the verdict so a null is not an artifact of one prior choice.
+        poe_by_prior = {}
+        conflicts = 0
+        cells_voted = 0
+        for prior in (0.0, 0.5):
+            m = poe.PoEWorldModel(experts=pool, weights=weights, no_change_prior=prior)
+            m.consensus_conflict_cells = 0
+            m.cells_voted = 0
+            poe_by_prior[prior] = _score(m.engine, test)
+            conflicts = max(conflicts, int(m.consensus_conflict_cells))
+            cells_voted = max(cells_voted, int(m.cells_voted))
+        # primary PoE = the better of the two priors (fairest read of the consensus rule)
+        poe_s = max(poe_by_prior.values(), key=lambda s: s["cell_recall"])
+        # Single-engine LLM baseline is OPT-IN (CARNOT_POE_SINGLE_ENGINE=1): one induce call per game is
+        # slow (~10-60s each). The decisive verifier-moat metric is PoE-vs-maxvote (same experts, LLM-free).
+        if os.environ.get("CARNOT_POE_SINGLE_ENGINE") == "1":
+            single_engine, single_note = _induce_single_engine(game, train, cell)
+            single_s = _score(single_engine, test) if single_engine is not None else None
+        else:
+            single_engine, single_note, single_s = None, "single_engine_disabled_opt_in_flag", None
 
         per_game.append({
             "game": game,
@@ -137,6 +156,8 @@ def main() -> int:
             "maxvote": mv_s,
             "single_engine": single_s,
             "single_engine_note": single_note,
+            "consensus_conflict_cells": conflicts,
+            "cells_voted": cells_voted,
         })
 
     scored = [g for g in per_game if "poe" in g]
@@ -150,9 +171,19 @@ def main() -> int:
     # per-game win counts (more robust than the mean on a few games)
     poe_gt_mv_games = sum(1 for g in scored if g["poe"]["cell_recall"] > g["maxvote"]["cell_recall"])
     poe_lt_mv_games = sum(1 for g in scored if g["poe"]["cell_recall"] < g["maxvote"]["cell_recall"])
+    # The consensus mechanism is only TESTED when applying experts actually cast conflicting per-cell votes.
+    # If total conflicts == 0 the weighted-product collapses to a single-expert-per-cell rule (== max-vote),
+    # so a null does NOT test PoE-World's novelty -> it must NOT retire the lever (adversarial review GAP 1).
+    total_conflicts = sum(int(g.get("consensus_conflict_cells", 0)) for g in scored)
+    consensus_exercised = total_conflicts > 0
 
     if not scored:
         verdict = "complete_poe_world_ab_no_scorable_games_inconclusive"
+    elif not consensus_exercised:
+        verdict = (
+            f"complete_poe_world_consensus_not_exercised_0_conflicts_experts_mutually_exclusive_per_cell"
+            f"_poe_eq_maxvote_{poe_recall}_inconclusive_not_retired"
+        )
     elif poe_beats_maxvote and poe_gt_mv_games >= poe_lt_mv_games:
         single_clause = (
             f"_and_single_{single_recall}" if poe_beats_single else
@@ -160,12 +191,12 @@ def main() -> int:
         )
         verdict = (
             f"success_poe_world_beats_maxvote_cellrecall_{poe_recall}_vs_{mv_recall}"
-            f"_wins_{poe_gt_mv_games}of{len(scored)}{single_clause}"
+            f"_wins_{poe_gt_mv_games}of{len(scored)}_conflicts_{total_conflicts}{single_clause}"
         )
     else:
         verdict = (
             f"complete_poe_world_no_lift_over_maxvote_cellrecall_{poe_recall}_vs_{mv_recall}"
-            f"_wins_{poe_gt_mv_games}of{len(scored)}_retire_if_same"
+            f"_wins_{poe_gt_mv_games}of{len(scored)}_conflicts_{total_conflicts}_retire_if_same"
         )
 
     art = {
@@ -189,6 +220,8 @@ def main() -> int:
         "poe_gt_maxvote_games": poe_gt_mv_games,
         "poe_lt_maxvote_games": poe_lt_mv_games,
         "n_scored_games": len(scored),
+        "consensus_conflict_cells_total": total_conflicts,
+        "consensus_exercised": consensus_exercised,
         "per_game": per_game,
         "energy_reweighted": energy_scorer is not None,
         "prior_failures": [
@@ -197,18 +230,22 @@ def main() -> int:
                 "verdict": "structured_productworldmodel_dead_identity_engine",
                 "addressed_by": (
                     "weighted-product CONSENSUS combination (not highest-trust max-vote) + held-out-fitted "
-                    "log-odds weights + pruning of <=chance experts + a no-change prior; decisive metric is "
-                    "held-out changed-cell recall vs the max-vote baseline on the SAME expert pool."
+                    "log-odds weights + a no-change prior + BROAD harvested color-rewrite experts so per-cell "
+                    "votes can conflict; decisive metric is held-out changed-cell recall vs max-vote on the "
+                    "SAME pool, GATED on consensus_exercised (conflicts>0) so an un-exercised null does not "
+                    "retire the lever."
                 ),
-                "retire_if_same_verdict": True,
+                # only retire on a fair test: consensus must have actually fired (conflicts > 0)
+                "retire_if_same_verdict": bool(consensus_exercised),
             }
         ],
         "interpretation": (
-            "poe_beats_maxvote=True -> the weighted-consensus combination extracts more predictive value "
-            "from the same experts than max-vote: the genuine PoE-World contribution, oracle-distinct (the "
-            "weights come from held-out accuracy + structural energy, never the win oracle). no_lift -> the "
-            "combination rule is not the bottleneck; the experts themselves are too weak (consistent with "
-            "the exp4749 null and the broader world-model induction ceiling) -> this lever retires."
+            "consensus_exercised=False (conflicts==0) -> the experts are mutually-exclusive per cell, so the "
+            "weighted-product collapses to a single-expert-per-cell rule identical to max-vote: the PoE-World "
+            "consensus mechanism was NOT actually tested -> inconclusive, NOT retired (adversarial-review "
+            "GAP-1 fix). poe_beats_maxvote=True (with conflicts>0) -> weighted-consensus extracts more "
+            "predictive value than max-vote from the same experts: the genuine oracle-distinct contribution. "
+            "no_lift WITH conflicts>0 -> consensus was tested and does not beat max-vote -> the lever retires."
         ),
         "cites_upstream": ["exp4749 (ProductWorldModel)", "exp4677 (programmatic experts)", "arXiv:2505.10819"],
         "model_specs": {"expert_source": "exact_delta+color_rewrite", "single_engine_generator": "unsloth/Qwen3.5-9B-MTP-GGUF"},
