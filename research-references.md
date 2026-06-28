@@ -24876,3 +24876,26 @@ Reliable-channel source set for `success_sota_ingestion_v452_frontier_mapped`:
 - arXiv:2606.25421 - Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making - https://arxiv.org/abs/2606.25421 - HTTP 200
 - arXiv:2606.26217 - Fast LeWorldModel - https://arxiv.org/abs/2606.26217 - HTTP 200
 <!-- EXP4900-V452-FRONTIER-REFERENCES-END -->
+
+<!-- V452-PLANNER-NOTE-START -->
+## .452 planner note (2026-06-28, outer-loop Opus): env-grounding over representation #4
+
+The exp4900 source set above flags latent-action / reverse-counterfactual /
+verification-calibrated representations as candidates #4/#5/#6 for the change-VALUE gap.
+The `.452` planner (this milestone) did NOT make any of them the headline, because `.451`'s
+capstone (exp4901) ESCALATED to the operator: change-VALUE prediction is
+REPRESENTATION-INVARIANT across THREE offline representations already (executable-code,
+decision-need-targets, action-prefix-latents). Per north-star §1 (no-churn), a 4th offline
+value-prediction representation is high churn risk.
+
+**The reframe `.452` A1 adopts instead** (derived from the finding's own asymmetry, not a new
+paper): change-LOCATION is learnable (cell_recall 0.727), change-VALUE is not — and ARC-AGI-3
+is interactive, so the real env supplies the true change-VALUE for free. A1 demotes the induced
+model from state-predictor to action-PRIOR: a change-LOCATION-pruned, REAL-ENV-VALUE-GROUNDED
+interleaved act-and-observe search (distinct from `plan_in_model`'s plan-then-validate, whose
+plan is poisoned by the broken value prediction before the env sees it). This fixes the `.432`
+"proposal distribution misses the winning prefix" wall with the one signal that works AND
+sidesteps the change-VALUE wall by reading values from the env (north-star §5 verifier-as-
+action-pruner). AdaWorld (arXiv:2503.18938) is retained as the GATED LAST representation swing
+(A1b), run only if the env-grounded reframe does not lift first-win.
+<!-- V452-PLANNER-NOTE-END -->
