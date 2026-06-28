@@ -405,6 +405,91 @@ total.
 |---|---|---|
 | REQ-REPORT-4891 | Implemented (`python/carnot/experiment_4891_archive_450_activate_451.py`) | Implemented (`tests/python/test_experiment_4891_archive_450_activate_451.py`) |
 
+### REQ-REPORT-4902: Archive .451, Activate .452, Record Representation-Invariant Close-State
+
+The Exp 4902 workflow SHALL write
+`results/experiment_4902_archive_451_activate_452.json` for the record-only
+transition from milestone `2026.06.451` to `2026.06.452`. Before any transition
+work, it SHALL run both required preconditions: `yaml.safe_load` on the literal
+`research-roadmap-next.yaml` path and
+`carnot.agentic.arc_solver_kit.offline_arcade()`. If either precondition fails,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource under `preconditions_checked`, skips the
+pre-test gate, and does not claim a clean archive or activation.
+
+On the complete path, the workflow SHALL confirm `.452` is active, run the
+pre-test gate `.venv/bin/pytest tests/python -q`, record whether any poison
+pre-test was quarantined, and aggregate the true `.451` close-state from
+`ops/arc_solve_registry.yaml`, `results/operational_retro_2026_06_451.json`,
+`results/experiment_4891_archive_450_activate_451.json`,
+`results/experiment_4892_decision_need_targets_value_gap.json`,
+`results/experiment_4893_action_prefix_latent_adapter.json`,
+`results/experiment_4896_heldout_first_win_readiness.json`,
+`results/experiment_4901_capstone_v451.json`,
+`results/experiment_4899_kv260_continuity.json`, and
+`results/experiment_4900_sota_ingestion_v452_frontier.json`. The artifact SHALL
+use `inference_substrate=aggregation_from_upstream_artifacts`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT submit to the leaderboard, and SHALL
+carry `reproducible_total_levels` from the registry without re-counting.
+
+The close-state SHALL truthfully record that A1 Exp 4892 decision-need targets
+and A1b Exp 4893 action-prefix latents both failed to move change-VALUE
+accuracy with CI95 intervals including zero; Exp 4901 escalated the
+change-VALUE gap as representation-invariant across executable code,
+decision-need targets, and action-prefix latents; Exp 4894 banked no new
+duplicate-depth dc22 level so the registry remains at 68; Exp 4895 refreshed
+the sk48 self-play checkpoint; Exp 4896 was a soft-budget partial with
+held-out first-win about 0.052632 and CI lower 0 requiring a clean `.452` rerun
+with `model_specs` and `random_seed`; Exp 4898 was package-ready and
+operator-only at about 15.146 GB VRAM; Exp 4899 found KV260 reachable and
+graduated terminal; Exp 4900 mapped the `.452` frontier with latent-action
+AdaWorld arXiv:2503.18938 as priority 1, reverse-counterfactual arXiv:2505.08073
+as priority 2, and verification-calibrated abstraction arXiv:2602.23997 as
+priority 3; the energy program remains concluded and retired. The `.452`
+frontier SHALL attack environment grounding rather than another offline
+change-VALUE prediction headline, with the latent-action representation swing
+gated as the last representation attempt.
+
+Required field principles:
+
+- `honest_verdict`: terminal prefix; clean transition is complete_451_archived_452_activated_<state>.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).
+- `change_value_gap_representation_invariant_3_classes`: true -- .451 confirmed NO offline representation (code/decision-need/action-prefix-latent) predicts change-VALUE; the capstone escalated. .452 stops proposing representation #4 as the headline.
+- `energy_program_concluded`: true -- the energy-as-ARC-lever program concluded negative (S0-S3); do NOT re-propose energy.
+- `v452_attacks_env_grounding_not_prediction`: true -- .452 A1 reads change-VALUE from the real env (interleaved act-and-observe) rather than predicting it offline; A1b is the gated LAST representation swing only.
+- `reproducible_total_levels`: the authoritative ARC progress metric carried from the registry (68; .451 banked nothing).
+
+#### SCENARIO-REPORT-4902: Blocked Roadmap-Next Precondition Still Writes The Deliverable
+
+**Given** `research-roadmap-next.yaml` is absent or not parseable, the offline
+arcade precondition result is recorded, and the `.451` registry, retro,
+capstone, KV260, and SOTA artifacts are available
+**When** the Exp 4902 workflow runs
+**Then** it writes `results/experiment_4902_archive_451_activate_452.json` with
+a `blocked_research_roadmap_next_...` verdict, records the failed precondition,
+skips the pre-test gate, preserves the required principle-annotated fields,
+records the true `.451` close-state, and carries `reproducible_total_levels=68`
+from `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-REPORT-4902: Complete Transition Records The True .451 Close-State
+
+**Given** `research-roadmap-next.yaml` parses, the offline arcade precondition
+passes, `.452` is the active roadmap milestone, the pre-test gate is green, and
+the upstream `.451` artifacts are available
+**When** the Exp 4902 workflow runs
+**Then** it records a `complete_451_archived_452_activated_...` verdict,
+declares `aggregation_from_upstream_artifacts`, marks the change-VALUE gap as
+representation-invariant across three offline classes, marks the energy program
+concluded, marks `.452` as environment-grounding rather than offline
+prediction, records no new bank beyond registry total 68, and keeps the
+leaderboard submission flag false.
+
+## Implementation Status (REQ-REPORT-4902)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4902 | Implemented (`python/carnot/experiment_4902_archive_451_activate_452.py`) | Implemented (`tests/python/test_experiment_4902_archive_451_activate_452.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
