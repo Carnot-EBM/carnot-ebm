@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (42 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -18,45 +18,33 @@ OK: all solver-like ARC modules are reachable from the live agent path (42 modul
 
 ## TL;DR
 
-**VERDICT: 22/22 DUPLICATE — zero live self-discovery in the window.** Every one of the 22 recent artifacts is the standing offline loop (`standing_arc_loop_offline_no_quota`) re-confirming a level the registry **already records** (each artifact `level` ≤ registry `levels_reproduced`; `reproducible_total_levels` stays **69**, unmoved). All carry `solve_provenance: development_proxy` — i.e. `arc_loop_solve.py` + a **hand-registered per-game `GameAdapter`** (confirmed: `_tu93`, `_r11l`, `_ls20`, `_s5i5`, `_cd82`, … all 22 games have an adapter in `arc_game_adapters.py`). **Not one artifact is `live_agent_self_discovery`.** Reachability lint is clean (not OFF_PATH); no declared outer-loop inputs (not freshly OUTER_LOOP_RE) — but the mechanism that produced these solves *is* outer-loop RE banked in prior milestones, and the dev-twin replays it. This is a green reproducibility dashboard, not evidence the scored agent discovers hidden games on its own.
+**VERDICT: 22/22 DUPLICATE — zero new live capability, zero self-discovery.** All 22 artifacts are the **standing offline reproduction loop** (`mode: standing_arc_loop_offline_no_quota`) re-confirming already-registered solves. Every `reached_level` ≤ the registry's already-recorded `levels_reproduced`; **none** carries `new_levels_banked`; **all 22** are `solve_provenance: development_proxy` (offline dev twin + hand-registered `GameAdapter`). Reachability lint is green, so nothing is OFF_PATH, and none declare outer-loop inputs (no source-read / offline-BFS / hand-calibration), so nothing trips the CRITICAL OUTER_LOOP_RE flag. This is **regression hygiene, not progress** — and **0/22 are `live_agent_self_discovery`**, so this batch is no evidence the scored E3 agent self-discovers anything on a hidden game.
 
 ## Per-artifact verdicts
 
-Evidence column = artifact `level` vs registry `levels_reproduced`. All: provenance `development_proxy`, mode `standing_arc_loop_offline_no_quota`, adapter present.
+Shared evidence (all 22): `solve_provenance=development_proxy`, `mode=standing_arc_loop_offline_no_quota`, `new_levels_banked` absent, `outer_loop_inputs_declared=[]`, reproduction-gate `reproduced=true`. Distinguishing column is artifact level vs. the registry row that already records it.
 
-| Game | Lvl | Registry max | Verdict | Evidence |
+| Artifact (game) | reached_level | registry levels_reproduced | Verdict | Evidence note |
 |---|---|---|---|---|
-| lp85 | 4 | **5** | DUPLICATE | re-confirms gate **below** banked max (registry: "arc_loop_solve_lp85.json remains the L4 gate"; L5 banked via Exp4372) |
-| tu93 | 4 | **5** | DUPLICATE | re-confirms **below** banked max (registry L5); `verifier_src: hand_verifier_cold_start` |
-| tr87 | 6 | 6 | DUPLICATE | equals recorded depth |
-| ar25 | 3 | 3 | DUPLICATE | equals recorded depth |
-| cn04 | 3 | 3 | DUPLICATE | equals recorded depth |
-| ft09 | 3 | 3 | DUPLICATE | equals recorded depth |
-| r11l | 2 | 2 | DUPLICATE | equals; registry already cites this exact artifact (Exp4862) |
-| ls20 | 2 | 2 | DUPLICATE | equals; registry cites this artifact (Exp4630) |
-| s5i5 | 2 | 2 | DUPLICATE | equals; registry cites this artifact (Exp4873) |
-| cd82 | 2 | 2 | DUPLICATE | equals recorded depth |
-| sp80 | 2 | 2 | DUPLICATE | equals recorded depth |
-| su15 | 2 | 2 | DUPLICATE | equals recorded depth |
-| sk48 | 2 | 2 | DUPLICATE | equals recorded depth |
-| m0r0 | 2 | 2 | DUPLICATE | equals recorded depth |
-| vc33 | 2 | 2 | DUPLICATE | equals recorded depth |
-| g50t | 2 | 2 | DUPLICATE | equals recorded depth |
-| dc22 | 2 | 2 | DUPLICATE | equals recorded depth |
-| sb26 | 2 | 2 | DUPLICATE | equals recorded depth |
-| re86 | 2 | 2 | DUPLICATE | equals recorded depth |
-| bp35 | 2 | 2 | DUPLICATE | equals recorded depth |
-| lf52 | 2 | 2 | DUPLICATE | equals recorded depth |
-| ka59 | 1 | 1 | DUPLICATE | equals recorded depth (`n_deaths:0`, hazard model unfitted — pruner inert) |
+| lp85 | 4 | **5** | DUPLICATE | Subordinate L4 gate; registry already deeper (Exp4372 L5). |
+| tu93 | 4 | **5** | DUPLICATE | Subordinate L4 gate; registry already deeper (L5). |
+| tr87 | 6 | 6 | DUPLICATE | Re-confirms banked L6; 127-action fixed replay, hand verifier. |
+| ft09 | 3 | 3 | DUPLICATE | Equals recorded depth. |
+| ar25 | 3 | 3 | DUPLICATE | Equals recorded depth. |
+| cn04 | 3 | 3 | DUPLICATE | Equals recorded depth. |
+| r11l | 2 | 2 | DUPLICATE | This file IS the Exp4862 L2 gate target; already banked. |
+| ls20 | 2 | 2 | DUPLICATE | Exp4630 already banked L2. |
+| s5i5 | 2 | 2 | DUPLICATE | Exp4873 already banked L2. |
+| dc22 / vc33 / g50t / cd82 / sp80 / su15 / sk48 / m0r0 / lf52 / bp35 / re86 / sb26 | 2 | 2 | DUPLICATE | Each equals its recorded L2; standing re-confirmation. |
+| ka59 | 1 | 1 | DUPLICATE | Equals recorded L1. |
 
-**Recommended action (shared):** Keep the standing loop — but treat it as a **reproducibility/regression CI gate**, not as solving progress, and stop letting 22 green re-confirmations read as a productive 7-day window. Do **not** escalate these to CRITICAL: `development_proxy` is contract-permitted, inputs are undeclared-clean, and re-confirming gates legitimately catches drift. Two specifics: (1) lp85 and tu93 reproduce **shallower** than their banked max (L4 vs registry L5, via a different artifact) — the standing-loop `reached_level` is not the banked depth, so don't cite these artifacts as the depth proof. (2) The audit's "recent ARC solve artifacts" feed should distinguish *new-bank* runs from *re-confirmation* runs so a window of pure re-confirmation isn't miscounted as solves.
+**Recommended action (uniform):** No per-artifact remediation — these are legitimate offline regression snapshots and must **not** be edited (audit never touches solvers). The one action that matters: **any capstone/aggregator must NOT count these 22 `offline_reproduced:true` flags as 22 solves.** Cite the registry's single `reproducible_total_levels: 69` (its own header flags it "a dev proxy, not the score"), counted once.
 
-## Pattern watch — drift toward dev-proxy as a stand-in for the deliverable
+## Pattern watch
 
-- **The real signal: 0 `live_agent_self_discovery` artifacts in 7 days.** The deliverable is the scored `E3AgentPolicy` advancing a *hidden* game from its **own** attempts + runtime RE. Nothing in this window touches that path — it's 100% the offline dev twin replaying human-built adapters. A wall of `development_proxy` "solves" is exactly the failure mode the operator's principle names: the dev proxy looks like continuous progress while the actual deliverable gets **zero** new evidence.
-- **Even the recent genuine +1 banks are dev-proxy.** The registry's fresh banks (r11l L2/Exp4862, s5i5 L2/Exp4873, ls20 L2/Exp4630) all came from hand-registered `GameAdapter` RE, not the live agent. So the *entire* recent solve cadence — re-confirmations and new banks alike — is outer-loop-built-then-replayed. That's allowed, but it is **not** progress on "discovers on its own."
-- **North-star §1 churn risk.** 22 artifacts, 0 movement in `reproducible_total_levels` (69), 0 self-discovery. If the milestone narrative cites these as solving activity, it's miscounting reproducibility maintenance as capability gain.
-- **Mechanically clean, semantically hollow.** Layer-1 lints pass (reachable, no declared outer-loop inputs) — this is precisely the residual the CLAUDE.md rule warns about: a green Layer 1 is **not** proof the live agent self-discovered anything. The provenance stamp here is honest (`development_proxy`, not mislabeled `live_agent_self_discovery`), which is good — the drift is in how the window gets *read*, not in a forged stamp.
+- **Healthy as a regression harness, noise as a "solve" signal.** The standing loop doing zero-quota offline reproduction across the adaptered games is exactly the "capture + reuse, don't re-derive months later" mechanism the 2026-06-16 directive mandated — keep it. But a milestone whose ARC output is 22 re-confirmations and **zero** new banks / **zero** `live_agent_self_discovery` artifacts has made no progress on the actual deliverable. Watch for these inflating a headline solve count.
+- **The standing tension is structural, not a violation.** `reproducible_total_levels=69` is **entirely** `development_proxy` — hand-registered `GameAdapter`s (`_r11l`, `_ls20`, `_s5i5`, `_tu93`, …) replaying fixed action sequences under a hand verifier (`verifier_src: hand_verifier_cold_start`). That is the *tolerated* dev-twin form of per-game RE, but it is **not** proof the scored `E3AgentPolicy` self-discovers solves on hidden games. Per-milestone, demand at least one `live_agent_self_discovery` (or scored-E3) artifact; do not let a wall of dev-proxy re-confirmations stand in for live-agent forward progress.
+- **Minor consistency smell (non-blocking):** `reproducible_total_levels` appears as 69 in the live header (line 1769) but also as stale 34/37/39 inside historical capstone sub-blocks, and the header reads 24 games while 25 game rows are present. Worth a one-line reconcile so an aggregator doesn't read a stale total.
 
-**Bottom line:** No anti-pattern violation to quarantine, but the headline finding is a hollow window — surface to the operator that the next milestone needs at least one true `live_agent_self_discovery` artifact and at least one genuinely-new banked level, or the ARC sprint is maintaining a dashboard rather than advancing the deliverable.
+No drift toward CRITICAL outer-loop solving this batch (no source-read / ground-truth-BFS / hand-calibration declared, reachability green). The watch item is the opposite failure mode: **dev-proxy regression volume masquerading as solve progress.**
 
