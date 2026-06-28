@@ -12089,6 +12089,101 @@ solve result, or modifies `scripts/research_conductor.py`
 When the Experiment 4900 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4903: Env-Grounded Location-Pruned First-Win Search
+
+Experiment 4903 SHALL test the `.452` env-grounded search intervention on the
+same A1 held-out games `cd82`, `cn04`, `ls20`, `m0r0`, `r11l`, `sk48`, `sp80`,
+`su15`, and `wa30`, with `tu93` as the positive control. The workflow SHALL
+first check `arc_solver_kit.offline_arcade()`, the GPU-fixed Qwen3.5-9B-MTP
+generator precondition accepting either GPU-0 CUDA or iGPU HIP without
+rejecting ambient `CUDA_VISIBLE_DEVICES`, and
+`results/experiment_4892_decision_need_targets_value_gap.json`. Missing
+preconditions SHALL emit `blocked_offline_arcade_missing`,
+`blocked_generator_unavailable`, or `blocked_a1_baseline_missing` rather than a
+fabricated search lift.
+
+The intervention SHALL use the induced executable engine only as a
+change-LOCATION action prior: for each observed real state it SHALL rank legal
+actions by predicted changed-cell saliency, execute top-ranked candidates in
+the real offline environment, read the true next-state values from that
+environment, and score progress with a learned verifier that is oracle-distinct
+from the level-up check. It SHALL NOT ask the engine to predict change-VALUE
+for frontier states, and the banked winning prefix SHALL be used only after the
+run to classify coverage migration. The search SHALL stay live-path-reachable
+through the existing `StepwiseExplorer` action-prior expansion hook and the
+`arc_executable_world_model.load_engine` / `plan_in_model` induction path; it
+SHALL NOT become a parallel solver.
+
+Experiment 4903 SHALL write
+`results/experiment_4903_env_grounded_location_pruned_search.json` with required
+fields `honest_verdict`, `fork_verdict`,
+`value_grounded_first_win_delta_median`,
+`value_grounded_first_win_delta_ci95`, `median_actions_to_first_win`,
+`per_game_first_win`, `change_location_prior_used_not_value`,
+`coverage_migration_count`, `positive_control_game`,
+`positive_control_non_degenerate`, `planner_blind_to_banked_answer`,
+`verifier_is_oracle`, `live_path_reachable`, `generator_backend`,
+`solve_provenance`, `checkpoint_emitted`, `inference_substrate`, `model_specs`,
+`random_seed`, and `reproducibility_checksum`. The median first-win delta SHALL
+be emitted as a bare numeric field named
+`value_grounded_first_win_delta_median`.
+
+If the first-win delta CI95 excludes zero and at least one `NEVER_ENUMERATED`
+game migrates to `COVERED` at bounded action cost, the artifact SHALL report
+`fork_verdict=ENV_GROUNDED_SEARCH_UNLOCKS_FIRST_WIN`. If the CI95 excludes zero
+but solved games exceed the configured bounded action-cost threshold, it SHALL
+report `fork_verdict=SEARCH_BUDGET_BOUND`. If the CI95 includes zero, it SHALL
+report `fork_verdict=WALL_DEEPER_THAN_VALUE_PREDICTION` and
+`retire_if_same_verdict=true`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real lift is success_env_grounded_search_first_win_unlocked_<delta>; a null is complete_env_grounded_search_no_first_win_lift_<fork>; a degenerate control is complete_env_grounded_positive_control_degenerate_retired."
+- `fork_verdict`: principle "one of ENV_GROUNDED_SEARCH_UNLOCKS_FIRST_WIN | SEARCH_BUDGET_BOUND | WALL_DEEPER_THAN_VALUE_PREDICTION -- the headline that redirects .453."
+- `value_grounded_first_win_delta_median`: principle "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. Median (env-grounded-search - baseline) first-win rate across held-out games; did reading change-VALUE from the env instead of predicting it unlock first-wins?"
+- `value_grounded_first_win_delta_ci95`: principle "bootstrap CI95 of the first-win delta; PASS requires it to exclude 0 for a real lift."
+- `median_actions_to_first_win`: principle "the EFFICIENCY axis -- the real-env action cost of grounding value; an unbounded cost is SEARCH_BUDGET_BOUND."
+- `per_game_first_win`: principle "per-game {first_win_baseline, first_win_env_grounded, delta, actions_to_first_win, states_expanded, bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated} -- the quantitative table."
+- `change_location_prior_used_not_value`: principle "true -- the induced model supplied ONLY the change-LOCATION action-ranking; change-VALUE was read from the env, never predicted (the .451-invariant-finding sidestep)."
+- `coverage_migration_count`: principle "how many NEVER_ENUMERATED games migrated to COVERED under env-grounded search at a bounded action cost."
+- `positive_control_game`: principle "tu93 -- its change-LOCATION ranker MUST be non-degenerate (ranks the truly-changing action highly) or the measurement is a harness artifact."
+- `positive_control_non_degenerate`: principle "true iff tu93's change-LOCATION prior is non-degenerate -- carries forward the .450/.451 degenerate-metric fix."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into ranking, search, or progress scoring."
+- `verifier_is_oracle`: principle "false -- the change-LOCATION model + learned verifier are oracle-distinct from the env's level-up check; this is a SEARCH-STRATEGY result, not a verifier-moat claim (circularity discipline)."
+- `live_path_reachable`: principle "the search improves the live StepwiseExplorer/plan_in_model/_induce_and_plan path (arc_orphan_solver_lint passes)."
+- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+- `solve_provenance`: principle "development_proxy -- a live-path mechanism measurement on the dev twin, NOT a registry bank (A2 banks)."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- the change-LOCATION induction invokes the LLM on the GPU-0 generator."
+- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `random_seed`: principle "determinism for the action-prior induction + the best-first search tie-breaking."
+- `reproducibility_checksum`: principle "content hash of (games, search/prior config, held-out split, action budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4903-LOCATION-PRIOR-NOT-VALUE
+
+Given an induced engine, legal action candidates, and real environment states
+When Experiment 4903 ranks actions for expansion
+Then it orders actions by predicted changed-cell locations only, records
+`change_location_prior_used_not_value=true`, and reads all resulting next-grid
+values from the real environment transition.
+
+#### SCENARIO-ARC-WMTE-4903-FORK-VERDICT
+
+Given at least three `NEVER_ENUMERATED` games and a non-degenerate `tu93`
+positive control
+When Experiment 4903 aggregates per-game first-win deltas, coverage migration,
+and action cost
+Then it emits one of `ENV_GROUNDED_SEARCH_UNLOCKS_FIRST_WIN`,
+`SEARCH_BUDGET_BOUND`, or `WALL_DEEPER_THAN_VALUE_PREDICTION`, with
+`verifier_is_oracle=false` and `retire_if_same_verdict=true` for the null branch.
+
+#### SCENARIO-ARC-WMTE-4903-PARTIAL-CHECKPOINT
+
+Given the run reaches its elapsed budget after measuring at least one game
+When Experiment 4903 stops the current process
+Then it writes per-game checkpoints and a schema-valid partial artifact so the
+next run can resume without losing the first-win measurement.
+
 ### REQ-ARC-WMTE-4897: Value-Gap Representation Adversarial Audit
 
 Experiment 4897 SHALL audit the Experiment 4892 A1 decision-need value-gap
