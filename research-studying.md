@@ -5418,3 +5418,23 @@ counterexample in the milestone-close audit prompts), untested in our domain (ne
 audit-integrity-guard surface (gate behind it), LLM-judge/audit tier ONLY never the energy core. NO build; ARC=no-help
 (selection device, wall=generation); no codebase to extend; paper-v6 cite gated on the two-source rule.
 docs/research-notes/ahois-socratic-agents-autonomous-loop-peer-sota-ingestion-2026-06-27.md
+
+<!-- EXP4900-SOTA-INGESTION-V452-FRONTIER-START -->
+## Exp 4900 - .452 representation fork SOTA ingestion - INGESTED
+
+- Honest verdict: `success_sota_ingestion_v452_frontier_mapped`
+- Aimed at A1 fork: `VALUE_GAP_REPRESENTATION_INVARIANT`
+- A1b fork: `VALUE_GAP_REPRESENTATION_INVARIANT_HARD`
+- Branch: `third_representation_class_or_operator_escalation`
+- Banned channel note: `/deep-research` not invoked; no solve claim; no model load; retired classes excluded.
+
+### Methods
+- Latent-action adaptable representation interface (arXiv:2503.18938): Infer latent action tokens from cold ARC transitions, align E3 legal controls to those tokens, and feed the latent-action state into the held-out transition scorer without converting it through the failed decision-need or action-prefix table formats.
+- Reverse-counterfactual representation targeter (arXiv:2505.08073): For each hard A1/A1b transition miss, ask a reverse model for the missing pre-state or register fact that would make the desired action effect valid, then materialize only verifier-checkable facts into a new representation probe.
+- Verification-calibrated abstraction substrate (arXiv:2602.23997): Insert a persistent abstraction state beside the executable engine, attach verifier-calibrated confidence to each abstract fact, and let only calibrated facts influence held-out transition prediction.
+
+### Planner Flags
+- flagged_for_v452: latent_action_interface (arXiv:2503.18938)
+- flagged_for_v452: reverse_counterfactual_targeter (arXiv:2505.08073)
+- flagged_for_v452: verification_calibrated_abstraction (arXiv:2602.23997)
+<!-- EXP4900-SOTA-INGESTION-V452-FRONTIER-END -->

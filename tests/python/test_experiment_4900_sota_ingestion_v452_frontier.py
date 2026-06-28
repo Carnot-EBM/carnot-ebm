@@ -1,0 +1,453 @@
+"""Tests for Exp 4900 V452 SOTA ingestion.
+
+Spec refs: REQ-ARC-WMTE-4900,
+SCENARIO-ARC-WMTE-4900-V452-FRONTIER-MAPPED,
+SCENARIO-ARC-WMTE-4900-BLOCKED-A1,
+SCENARIO-ARC-WMTE-4900-NO-FABRICATION.
+"""
+
+from __future__ import annotations
+
+import copy
+import json
+import runpy
+from pathlib import Path
+
+import pytest
+
+from carnot import experiment_4900_sota_ingestion_v452_frontier as mod
+
+
+REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+ARTIFACT_PATH = REPO / mod.RESULT_RELATIVE_PATH
+STUDYING_PATH = REPO / mod.STUDYING_RELATIVE_PATH
+REFERENCES_PATH = REPO / mod.REFERENCES_RELATIVE_PATH
+
+
+def _artifact() -> dict[str, object]:
+    return mod.build_artifact(upstream_context=mod.DEFAULT_UPSTREAM_CONTEXT)
+
+
+def _bad_artifact(**updates: object) -> dict[str, object]:
+    artifact = copy.deepcopy(_artifact())
+    artifact.update(updates)
+    return artifact
+
+
+def _spec_section() -> str:
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    start = spec.index("### REQ-ARC-WMTE-4900")
+    end = spec.index("### REQ-ARC-WMTE-4897", start)
+    return spec[start:end]
+
+
+def test_req_arc_wmte_4900_spec_declares_v452_contract() -> None:
+    """REQ-ARC-WMTE-4900: OpenSpec declares the Exp 4900 artifact contract."""
+
+    section = _spec_section()
+
+    assert "REQ-ARC-WMTE-4900" in section
+    assert "SCENARIO-ARC-WMTE-4900-V452-FRONTIER-MAPPED" in section
+    assert "SCENARIO-ARC-WMTE-4900-BLOCKED-A1" in section
+    assert "SCENARIO-ARC-WMTE-4900-NO-FABRICATION" in section
+    assert mod.RESULT_RELATIVE_PATH in section
+    assert mod.A1_ARTIFACT_RELATIVE_PATH in section
+    assert mod.A1B_ARTIFACT_RELATIVE_PATH in section
+    assert mod.HANDOFF_ARTIFACT_RELATIVE_PATH in section
+    assert mod.HONEST_VERDICT in section
+    assert mod.BLOCKED_A1_VERDICT in section
+    assert mod.INFERENCE_SUBSTRATE in section
+    assert "VALUE_GAP_REPRESENTATION_INVARIANT" in section
+    assert "VALUE_GAP_REPRESENTATION_INVARIANT_HARD" in section
+    assert "third representation class" in section
+    assert "/deep-research" in section
+    assert "scripts/research_conductor.py" in section
+    for field, principle in mod.REQUIRED_USER_FIELD_PRINCIPLES.items():
+        assert field in section
+        assert principle["principle"] in section
+    for source_id in mod.REQUIRED_FETCHED_SOURCE_IDS:
+        assert source_id in section
+
+
+def test_req_arc_wmte_4900_artifact_maps_hard_invariant_to_third_representations() -> None:
+    """REQ-ARC-WMTE-4900: artifact maps A1/A1b hard invariance to V452 methods."""
+
+    artifact = _artifact()
+
+    assert set(artifact) == set(mod.REQUIRED_ARTIFACT_FIELDS)
+    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
+    assert artifact["aimed_at_fork_verdict"] == mod.AIMED_AT_FORK_VERDICT
+    assert artifact["a1b_fork_verdict"] == mod.A1B_HARD_VERDICT
+    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
+    assert artifact["duration_s"] == mod.DURATION_S
+    assert artifact["note_path"] == mod.NOTE_PATH
+    assert artifact["references_path"] == mod.REFERENCES_PATH
+    assert artifact["random_seed"] == mod.RANDOM_SEED
+    assert artifact["reproducibility_checksum"] == mod.REPRODUCIBILITY_CHECKSUM
+    assert artifact["arxiv_ids_cited"] == sorted(mod.REQUIRED_FETCHED_SOURCE_IDS)
+    assert set(artifact["citations"]) == mod.REQUIRED_FETCHED_SOURCE_IDS
+    assert set(artifact["field_principles"]) == set(mod.REQUIRED_PRINCIPLE_FIELDS)
+    assert artifact["banned_channels_excluded"] is True
+
+    cited: set[str] = set()
+    tracks: set[str] = set()
+    for method in artifact["methods_mapped"]:
+        assert set(method) == mod.REQUIRED_METHOD_FIELDS
+        assert method["source_ids"]
+        assert set(method["source_ids"]).issubset(mod.REQUIRED_FETCHED_SOURCE_IDS)
+        assert method["maps_to_frontier"] == ".452"
+        assert method["targets_a1_fork_verdict"] == mod.AIMED_AT_FORK_VERDICT
+        assert method["targets_a1b_fork_verdict"] == mod.A1B_HARD_VERDICT
+        assert "Exp 4892" in method["a1_result_fit"]
+        assert "Exp 4893" in method["a1b_result_fit"]
+        assert "arXiv:" in method["evidence"]
+        assert method["experiment_graft"]
+        assert method["validation_gate"]
+        assert method["fails_when"]
+        assert "flagged_for_v452" in method["roadmap_candidate"]
+        assert method["retired_class_reingested"] is False
+        cited.update(method["source_ids"])
+        tracks.add(method["track"])
+
+    assert 3 <= len(artifact["methods_mapped"]) <= 5
+    assert cited == mod.REQUIRED_MAPPED_SOURCE_IDS
+    assert tracks == mod.REQUIRED_TRACKS
+    assert {flag["candidate"] for flag in artifact["flagged_for_v452"]} == {
+        "latent_action_interface",
+        "reverse_counterfactual_targeter",
+        "verification_calibrated_abstraction",
+    }
+    assert all("flagged_for_v452" in flag["flag"] for flag in artifact["flagged_for_v452"])
+
+    preconditions = artifact["preconditions_checked"]
+    assert preconditions["a1_artifact_present"] is True
+    assert preconditions["a1_fork_verdict_read"] is True
+    assert preconditions["a1_fork_verdict"] == mod.AIMED_AT_FORK_VERDICT
+    assert preconditions["a1b_artifact_present"] is True
+    assert preconditions["a1b_fork_verdict"] == mod.A1B_HARD_VERDICT
+    assert preconditions["branch_reason"] == mod.BRANCH_REASON
+    assert preconditions["sweep_clusters_used"] is True
+    assert preconditions["sweep_cluster_ids"] == [6]
+    assert preconditions["sweep_semscholar_used"] is True
+    assert preconditions["semantic_scholar_result"] == mod.SEMANTIC_SCHOLAR_RESULT
+    assert preconditions["websearch_webfetch_used"] is True
+    assert preconditions["top_source_count"] == 8
+    assert preconditions["arxiv_http_200_verified_ids"] == [
+        f"https://arxiv.org/abs/{source_id}" for source_id in sorted(mod.REQUIRED_FETCHED_SOURCE_IDS)
+    ]
+    assert preconditions["deep_research_invoked"] is False
+    assert preconditions["retired_energy_classes_reingested"] is False
+    assert preconditions["tta_on_code_engine_reingested"] is False
+    assert preconditions["stronger_local_code_inducer_reingested"] is False
+    assert preconditions["coverage_vocabulary_reingested"] is False
+    assert preconditions["exploration_strategy_reingested"] is False
+    assert preconditions["selection_ranking_reingested"] is False
+    assert preconditions["perception_from_grid_reingested"] is False
+    assert preconditions["research_conductor_modified"] is False
+    assert preconditions["ops_docs_modified"] is False
+
+    upstream = artifact["upstream_artifacts"]
+    assert upstream["a1_artifact"] == mod.A1_ARTIFACT_RELATIVE_PATH
+    assert upstream["a1b_artifact"] == mod.A1B_ARTIFACT_RELATIVE_PATH
+    assert upstream["handoff_artifact"] == mod.HANDOFF_ARTIFACT_RELATIVE_PATH
+    assert upstream["a1_fork_verdict"] == mod.AIMED_AT_FORK_VERDICT
+    assert upstream["a1b_fork_verdict"] == mod.A1B_HARD_VERDICT
+    assert upstream["handoff_honest_verdict"] == "success_sota_ingestion_v451_frontier_mapped"
+
+
+@pytest.mark.parametrize(
+    ("bad_artifact", "message"),
+    [
+        (_bad_artifact(honest_verdict="complete_wrong"), "honest_verdict"),
+        (_bad_artifact(aimed_at_fork_verdict="PLANNER_GAP"), "aimed_at_fork_verdict"),
+        (_bad_artifact(a1b_fork_verdict="REPRESENTATION_MATTERS"), "a1b_fork_verdict"),
+        (_bad_artifact(inference_substrate="live_llm_inference"), "inference_substrate"),
+        (_bad_artifact(banned_channels_excluded=False), "banned_channels_excluded"),
+        (_bad_artifact(field_principles={}), "field_principles"),
+        (_bad_artifact(arxiv_ids_cited=[]), "arxiv_ids_cited"),
+        (_bad_artifact(citations={}), "citations"),
+        (
+            _bad_artifact(
+                citations=mod.CITATIONS
+                | {
+                    "2503.18938": mod.CITATIONS["2503.18938"]
+                    | {"url": "https://arxiv.org/abs/9999.99999"}
+                }
+            ),
+            "citation url",
+        ),
+        (
+            _bad_artifact(
+                citations=mod.CITATIONS
+                | {"2505.08073": mod.CITATIONS["2505.08073"] | {"http_status": 404}}
+            ),
+            "http_status",
+        ),
+        (_bad_artifact(methods_mapped=mod.DEFAULT_METHODS_MAPPED[:2]), "three to five"),
+        (
+            _bad_artifact(
+                methods_mapped=[
+                    mod.DEFAULT_METHODS_MAPPED[0] | {"source_ids": ["9999.99999"]},
+                    *mod.DEFAULT_METHODS_MAPPED[1:],
+                ]
+            ),
+            "verified citations",
+        ),
+        (
+            _bad_artifact(
+                methods_mapped=[
+                    mod.DEFAULT_METHODS_MAPPED[0] | {"targets_a1_fork_verdict": "PLANNER_GAP"},
+                    *mod.DEFAULT_METHODS_MAPPED[1:],
+                ]
+            ),
+            "A1 fork verdict",
+        ),
+        (
+            _bad_artifact(
+                methods_mapped=[
+                    mod.DEFAULT_METHODS_MAPPED[0] | {"track": "energy_as_arc_lever"},
+                    *mod.DEFAULT_METHODS_MAPPED[1:],
+                ]
+            ),
+            "retired",
+        ),
+        (_bad_artifact(flagged_for_v452=[]), "flagged_for_v452"),
+        (
+            _bad_artifact(flagged_for_v452=[{"candidate": "stale", "flag": "flagged_for_v451"}]),
+            "stale",
+        ),
+        (
+            _bad_artifact(
+                preconditions_checked=dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
+                | {"deep_research_invoked": True}
+            ),
+            "deep-research",
+        ),
+        (
+            _bad_artifact(
+                preconditions_checked=dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
+                | {"tta_on_code_engine_reingested": True}
+            ),
+            "TTA",
+        ),
+        (
+            _bad_artifact(
+                preconditions_checked=dict(mod.DEFAULT_PRECONDITIONS_CHECKED)
+                | {"stronger_local_code_inducer_reingested": True}
+            ),
+            "stronger local",
+        ),
+    ],
+)
+def test_no_fabrication_validator_rejects_bad_v452_artifacts(
+    bad_artifact: dict[str, object], message: str
+) -> None:
+    """SCENARIO-ARC-WMTE-4900-NO-FABRICATION: invalid claims fail closed."""
+
+    with pytest.raises(ValueError, match=message):
+        mod.validate_artifact(bad_artifact)
+
+
+def test_branch_helpers_cover_v452_redirects_for_req_arc_wmte_4900() -> None:
+    """REQ-ARC-WMTE-4900: branch derivation follows A1 and A1b values."""
+
+    assert (
+        mod.select_ingestion_track({"fork_verdict": "REPRESENTATION_UNLOCKS_VALUE"}, {})
+        == "first_win_conversion_over_value_accurate_representation"
+    )
+    assert (
+        mod.select_ingestion_track(
+            {"fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT"},
+            {"fork_verdict": "REPRESENTATION_MATTERS"},
+        )
+        == "first_win_conversion_over_value_accurate_representation"
+    )
+    assert mod.select_ingestion_track({"fork_verdict": "PLANNER_GAP"}, {}) == "neural_guided_planning_search"
+    assert (
+        mod.select_ingestion_track(
+            {"fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT"},
+            {"fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD"},
+        )
+        == "third_representation_class_or_operator_escalation"
+    )
+    with pytest.raises(ValueError, match="unsupported A1/A1b representation fork"):
+        mod.select_ingestion_track({"fork_verdict": "INDUCER_CEILING_HARD"}, {})
+
+
+def test_scenario_arc_wmte_4900_research_sections_are_idempotent() -> None:
+    """SCENARIO-ARC-WMTE-4900-V452-FRONTIER-MAPPED: markdown updates are stable."""
+
+    studying_original = "# Research Studying\n\nOld body\n"
+    studying_once = mod.update_research_studying_text(studying_original, _artifact())
+    studying_twice = mod.update_research_studying_text(studying_once, _artifact())
+
+    assert studying_once == studying_twice
+    assert studying_once.count(mod.STUDYING_SECTION_START) == 1
+    assert studying_once.count(mod.STUDYING_SECTION_END) == 1
+    assert "Exp 4900 - .452 representation fork SOTA ingestion - INGESTED" in studying_once
+    assert "VALUE_GAP_REPRESENTATION_INVARIANT_HARD" in studying_once
+    assert "flagged_for_v452" in studying_once
+    assert "arXiv:2503.18938" in studying_once
+    assert "no solve claim" in studying_once
+    mod.validate_research_studying_text(studying_once, _artifact())
+
+    references_original = "# Research References\n\n## Existing Section\nOld body\n"
+    references_once = mod.update_research_references_text(references_original, _artifact())
+    references_twice = mod.update_research_references_text(references_once, _artifact())
+
+    assert references_once == references_twice
+    assert references_once.count(mod.REFERENCES_SECTION_START) == 1
+    assert references_once.count(mod.REFERENCES_SECTION_END) == 1
+    assert "Exp 4900 V452 representation-fork source set" in references_once
+    assert "AdaWorld" in references_once
+    assert "Explainable Reinforcement Learning Agents Using World Models" in references_once
+    assert "Foundation World Models" in references_once
+    mod.validate_research_references_text(references_once, _artifact())
+
+
+def test_research_markdown_updates_reject_broken_existing_sections() -> None:
+    """REQ-ARC-WMTE-4900: malformed existing note markers fail closed."""
+
+    with pytest.raises(ValueError, match="missing end marker"):
+        mod.update_research_studying_text("# x\n\n" + mod.STUDYING_SECTION_START + "\n", _artifact())
+    with pytest.raises(ValueError, match="missing end marker"):
+        mod.update_research_references_text("# x\n\n" + mod.REFERENCES_SECTION_START + "\n", _artifact())
+
+
+def _write_upstream_fixtures(root: Path) -> None:
+    (root / mod.A1_ARTIFACT_RELATIVE_PATH).parent.mkdir(parents=True, exist_ok=True)
+    (root / mod.A1_ARTIFACT_RELATIVE_PATH).write_text(
+        json.dumps(
+            {
+                "honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
+                "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+                "decision_need_value_accuracy_delta_median": -0.101866,
+                "decision_need_value_accuracy_delta_ci95": [-0.227708, 0.025266],
+                "coverage_migration_count": 0,
+                "n_games_measured": 9,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (root / mod.A1B_ARTIFACT_RELATIVE_PATH).write_text(
+        json.dumps(
+            {
+                "honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
+                "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
+                "action_prefix_value_accuracy_delta_median": 0.0,
+                "action_prefix_value_accuracy_delta_ci95": [-0.134887, 0.025266],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (root / mod.HANDOFF_ARTIFACT_RELATIVE_PATH).write_text(
+        json.dumps(
+            {
+                "honest_verdict": "success_sota_ingestion_v451_frontier_mapped",
+                "aimed_at_fork_verdict": "INDUCER_CEILING_HARD",
+                "flagged_for_v451": [
+                    {"candidate": "agent_authored_decision_need_targets"},
+                    {"candidate": "action_prefix_latent_adapter"},
+                    {"candidate": "latent_action_world_model_adapter"},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_write_outputs_handles_blocked_a1_for_scenario_arc_wmte_4900(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-4900-BLOCKED-A1: missing A1 writes a blocked deliverable."""
+
+    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
+    studying_path = tmp_path / mod.STUDYING_RELATIVE_PATH
+    references_path = tmp_path / mod.REFERENCES_RELATIVE_PATH
+    studying_path.write_text("# Research Studying\n\n", encoding="utf-8")
+    references_path.write_text("# Research References\n\n", encoding="utf-8")
+
+    artifact = mod.write_outputs(
+        artifact_path=artifact_path,
+        studying_path=studying_path,
+        references_path=references_path,
+        repo_root=tmp_path,
+    )
+
+    assert artifact["honest_verdict"] == mod.BLOCKED_A1_VERDICT
+    assert artifact["methods_mapped"] == []
+    assert artifact["banned_channels_excluded"] is True
+    assert artifact["preconditions_checked"]["a1_artifact_present"] is False
+    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
+
+
+def test_write_outputs_is_idempotent_for_scenario_arc_wmte_4900(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-4900-V452-FRONTIER-MAPPED: writer emits stable outputs."""
+
+    _write_upstream_fixtures(tmp_path)
+    artifact_path = tmp_path / mod.RESULT_RELATIVE_PATH
+    studying_path = tmp_path / mod.STUDYING_RELATIVE_PATH
+    references_path = tmp_path / mod.REFERENCES_RELATIVE_PATH
+    studying_path.write_text("# Research Studying\n\n", encoding="utf-8")
+    references_path.write_text("# Research References\n\n", encoding="utf-8")
+
+    artifact = mod.write_outputs(
+        artifact_path=artifact_path,
+        studying_path=studying_path,
+        references_path=references_path,
+        repo_root=tmp_path,
+    )
+    second_artifact = mod.write_outputs(
+        artifact_path=artifact_path,
+        studying_path=studying_path,
+        references_path=references_path,
+        repo_root=tmp_path,
+    )
+
+    assert second_artifact == artifact
+    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
+    mod.validate_artifact(artifact)
+    mod.validate_research_studying_text(studying_path.read_text(encoding="utf-8"), artifact)
+    mod.validate_research_references_text(references_path.read_text(encoding="utf-8"), artifact)
+
+
+def test_main_writes_deliverables_for_req_arc_wmte_4900(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """REQ-ARC-WMTE-4900: direct module execution writes default outputs."""
+
+    _write_upstream_fixtures(tmp_path)
+    (tmp_path / mod.STUDYING_RELATIVE_PATH).write_text("# Research Studying\n\n", encoding="utf-8")
+    (tmp_path / mod.REFERENCES_RELATIVE_PATH).write_text("# Research References\n\n", encoding="utf-8")
+    monkeypatch.setenv("CARNOT_EXP4900_ROOT", str(tmp_path))
+
+    with pytest.raises(SystemExit) as module_exit:
+        runpy.run_path(str(Path(mod.__file__)), run_name="__main__")
+
+    assert module_exit.value.code == 0
+    assert capsys.readouterr().out.strip() == mod.HONEST_VERDICT
+    written = json.loads((tmp_path / mod.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
+    mod.validate_artifact(written)
+    mod.validate_research_studying_text(
+        (tmp_path / mod.STUDYING_RELATIVE_PATH).read_text(encoding="utf-8"),
+        written,
+    )
+    mod.validate_research_references_text(
+        (tmp_path / mod.REFERENCES_RELATIVE_PATH).read_text(encoding="utf-8"),
+        written,
+    )
+
+
+def test_deliverable_files_validate_for_req_arc_wmte_4900() -> None:
+    """REQ-ARC-WMTE-4900: committed deliverables satisfy the schema."""
+
+    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
+    studying = STUDYING_PATH.read_text(encoding="utf-8")
+    references = REFERENCES_PATH.read_text(encoding="utf-8")
+
+    mod.validate_artifact(artifact)
+    mod.validate_research_studying_text(studying, artifact)
+    mod.validate_research_references_text(references, artifact)
+    assert artifact["honest_verdict"] == mod.HONEST_VERDICT
+    assert artifact["flagged_for_v452"] == mod.FLAGGED_FOR_V452

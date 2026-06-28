@@ -24861,3 +24861,18 @@ builds guided planning); high-accuracy+no-migration -> the planner is the gap; L
 -> the INDUCER is the structural ceiling (operator escalation: the weak-9B world-model wall). This is
 NOT a retired lever and NOT the free-form-engine accuracy null -- its deliverable is the joint
 accuracy x coverage-migration fork on the exp4851 harness, the next-level root cause of the .447 finding.
+
+<!-- EXP4900-V452-FRONTIER-REFERENCES-START -->
+## Exp 4900 V452 representation-fork source set
+
+Reliable-channel source set for `success_sota_ingestion_v452_frontier_mapped`:
+
+- arXiv:2503.18938 - AdaWorld: Learning Adaptable World Models with Latent Actions - https://arxiv.org/abs/2503.18938 - HTTP 200
+- arXiv:2505.08073 - Explainable Reinforcement Learning Agents Using World Models - https://arxiv.org/abs/2505.08073 - HTTP 200
+- arXiv:2512.10016 - Latent Action World Models for Control with Unlabeled Trajectories - https://arxiv.org/abs/2512.10016 - HTTP 200
+- arXiv:2602.16229 - Factored Latent Action World Models - https://arxiv.org/abs/2602.16229 - HTTP 200
+- arXiv:2602.23997 - Foundation World Models for Agents that Learn, Verify, and Adapt Reliably Beyond Static Environments - https://arxiv.org/abs/2602.23997 - HTTP 200
+- arXiv:2603.19312 - LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels - https://arxiv.org/abs/2603.19312 - HTTP 200
+- arXiv:2606.25421 - Beyond Next-Observation Prediction: Agent-Authored World Modeling for Sequential Decision Making - https://arxiv.org/abs/2606.25421 - HTTP 200
+- arXiv:2606.26217 - Fast LeWorldModel - https://arxiv.org/abs/2606.26217 - HTTP 200
+<!-- EXP4900-V452-FRONTIER-REFERENCES-END -->
