@@ -9481,3 +9481,4 @@ The contro |
 | 2026-06-27 23:30 UTC | PHASE D (SOTA-INGESTION -- the .451 frontier) -- g | OK | 108 passed, 1 warning in 6.73s |
 | 2026-06-28 00:21 UTC | Plan milestone 2026.06.451 | OK | 11 tasks proposed |
 | 2026-06-28 00:23 UTC | Milestone 2026.06.451 activated | OK | 11 tasks queued |
+| 2026-06-28 00:37 UTC | PHASE 0 (TRANSITION) -- archive .450 -> activate . | OK | 86 passed, 1 warning in 6.80s |
