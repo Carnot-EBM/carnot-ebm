@@ -5488,3 +5488,17 @@ ARC sprint (through 2026-06-30). Decisions:
 - **Did NOT carry forward** (all nulled/retired per exp4911): energy-as-ARC-lever, TTA-on-code-engine,
   stronger-local-code-inducers, decision-need targets, action-prefix latents, coverage/vocabulary,
   exploration, selection/ranking, perception-from-grid, representation #5.
+
+<!-- EXP4940-DISTRIBUTIONAL-ENERGY-VERIFIER-EXECUTABLE-SPEC-START -->
+## Exp 4940 - Distributional Energy Verifier Executable Spec - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_executable_spec_ready`
+- Cited SOTA papers: arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989
+- Bottom line for the post-6/30 roadmap: build the decomposed-energy LoRA-ensemble scorer on top of Carnot's FoVer analytical penalties; keep ThinkPRM as a matched-compute comparator and VFScale as a dense-energy ablation, not the immediate drop-in verifier.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties (arXiv:2605.18871)
+- flagged_for_next_milestone_comparator: thinkprm_generative_prm_comparator (arXiv:2504.16828)
+- flagged_for_next_milestone_ablation: vfscale_intrinsic_energy_dense_reward (arXiv:2502.01989)
+<!-- EXP4940-DISTRIBUTIONAL-ENERGY-VERIFIER-EXECUTABLE-SPEC-END -->

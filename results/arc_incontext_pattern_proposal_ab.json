@@ -1,0 +1,220 @@
+{
+  "experiment": "arc_incontext_pattern_proposal_ab",
+  "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
+  "honest_verdict": "complete_incontext_patterns_positive_positional_shift_0.6667_vs_0.3333_delta_0.3333_but_ci_0.0_1.0_includes_0_underpowered_n6_promising_rerun_larger",
+  "question": "do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed opening prefix toward the banked winning prefix vs a no-exemplar control?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "n_games": 6,
+  "K": 4,
+  "with_exemplars_mean_positional": 0.6667,
+  "without_exemplars_mean_positional": 0.3333,
+  "positional_delta_point": 0.3333,
+  "positional_delta_ci95": [
+    0.0,
+    1.0
+  ],
+  "leading_delta_point": 0.0,
+  "exemplars_help": false,
+  "per_game": [
+    {
+      "game": "bp35",
+      "winner_prefix": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "with_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "without_exemplars_proposed": [
+        6,
+        1,
+        2,
+        3
+      ],
+      "with_positional": 0,
+      "without_positional": 0,
+      "positional_delta": 0,
+      "with_leading": 0,
+      "without_leading": 0,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "cd82",
+      "winner_prefix": [
+        4,
+        2,
+        2,
+        3
+      ],
+      "with_exemplars_proposed": [
+        6,
+        4,
+        4,
+        4
+      ],
+      "without_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 0,
+      "without_positional": 0,
+      "positional_delta": 0,
+      "with_leading": 0,
+      "without_leading": 0,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "cn04",
+      "winner_prefix": [
+        2,
+        4,
+        4,
+        4
+      ],
+      "with_exemplars_proposed": [
+        6,
+        2,
+        2,
+        3
+      ],
+      "without_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 0,
+      "without_positional": 0,
+      "positional_delta": 0,
+      "with_leading": 0,
+      "without_leading": 0,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "dc22",
+      "winner_prefix": [
+        6,
+        6,
+        1,
+        1
+      ],
+      "with_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "without_exemplars_proposed": [
+        6,
+        2,
+        2,
+        3
+      ],
+      "with_positional": 3,
+      "without_positional": 1,
+      "positional_delta": 2,
+      "with_leading": 1,
+      "without_leading": 1,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "ft09",
+      "winner_prefix": [
+        6,
+        6,
+        6,
+        6
+      ],
+      "with_exemplars_proposed": [
+        6,
+        2,
+        2,
+        2
+      ],
+      "without_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 1,
+      "without_positional": 1,
+      "positional_delta": 0,
+      "with_leading": 1,
+      "without_leading": 1,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "g50t",
+      "winner_prefix": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "with_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "without_exemplars_proposed": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 0,
+      "without_positional": 0,
+      "positional_delta": 0,
+      "with_leading": 0,
+      "without_leading": 0,
+      "leading_delta": 0,
+      "n_retrieved": 5
+    }
+  ],
+  "model_specs": {
+    "generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "kv_quant": "q8_0",
+    "mtp": true
+  },
+  "solve_provenance": "development_proxy",
+  "used_env_source": true,
+  "read_game_source": true,
+  "interpretation": "exemplars_help=True -> in-context verified patterns let the small LLM reason a better opening on a held-out game (beats the nulled fixed-recipe router exp4556 at the opening) -> escalate to a live-solve A/B. null -> verified-pattern in-context reasoning does not shift the opening toward the winner; consistent with the OOD/hidden-state wall (patterns from other games don't carry the held-out game's winning order). The source-code-derived win-conditions ARE included (arc_pattern_library source_code patterns), so this also tests the operator's source-code idea.",
+  "prior_failures": [
+    {
+      "experiment_id": "exp4556",
+      "verdict": "verifier_router_no_value_added",
+      "addressed_by": "router few-shots ONE closest-game recipe; this injects a TOP-K of verified worked+failed PATTERNS (incl. source-code win-conditions) as reasoning exemplars and measures opening-prefix shift on a LOO held-out game.",
+      "retire_if_same_verdict": true
+    }
+  ],
+  "cites_upstream": [
+    "exp4556 (router)",
+    "exp4933 (MATM efficiency retrieval)",
+    "exp4697 (in-context prior, unbuilt)"
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "qwen3.5-9b-mtp_gpu_server",
+      "available": true
+    }
+  ],
+  "random_seed": 20260628,
+  "duration_s": 136.19,
+  "reproducibility_checksum": "sha256:ef3a4bab44915da6cf45af69174eb1e5355f18d3141abbad95fc2cd8f71850c8"
+}
