@@ -269,6 +269,84 @@ program concluded, and uses the registry's authoritative reproducible total.
 |---|---|---|
 | REQ-REPORT-4881 | Implemented (`python/carnot/experiment_4881_archive_449_activate_450.py`) | Implemented (`tests/python/test_experiment_4881_archive_449_activate_450.py`) |
 
+### REQ-REPORT-4891: Archive .450, Activate .451, Record The Value-Representation Close-State
+
+The Exp 4891 workflow SHALL write
+`results/experiment_4891_archive_450_activate_451.json` for the record-only
+transition from milestone `2026.06.450` to `2026.06.451`. Before any transition
+work, it SHALL run both required preconditions: `yaml.safe_load` on
+`research-roadmap-next.yaml` and
+`carnot.agentic.arc_solver_kit.offline_arcade()`. If either precondition fails,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource under `preconditions_checked`, skips the
+pre-test gate, and does not claim a clean archive or activation.
+
+On the complete path, the workflow SHALL confirm `.451` is active, run the
+pre-test gate `.venv/bin/pytest tests/python -q`, and record the true `.450`
+close-state without live LLM inference. The artifact SHALL aggregate from the
+upstream registry, operational retro, A1 TTA value-gap artifact, A1/A1b audit,
+and the `.450` result artifacts. It SHALL include principle-annotated fields
+for `honest_verdict`, `inference_substrate`,
+`a1_inducer_ceiling_hard_trustworthy`,
+`a1b_was_fabrication_flagged_non_test`,
+`wall_is_executable_code_change_value_representation`,
+`energy_program_concluded`, and `reproducible_total_levels`.
+
+The close-state SHALL truthfully record that Exp 4882 A1 is trustworthy and
+diagnostic: the corrigendum-corrected graded metric is non-degenerate, the
+live GPU-0 executable-code engine predicts change-location
+(`engine_cell_recall_median=0.727`) but not change-value, TTA does not close the
+gap (`tta_changed_cell_value_accuracy_delta_median=-0.0087`, CI95 includes 0),
+and the fork verdict is `INDUCER_CEILING_HARD`. It SHALL also record that Exp
+4883 A1b is a fabrication-flagged non-test (`DURATION_TOO_SHORT`, about 13.7s)
+whose `METHOD_IS_CEILING` attribution is not established; Exp 4884 banked g50t
+L2 and carried the authoritative registry total from 67 to 68; Exp 4885
+refreshed the self-play checkpoint; Exp 4886 is only a flagged partial; Exp
+4888 is operator-only package-ready under 16 GB VRAM; Exp 4889 found KV260
+reachable with five UIO devices; Exp 4890 mapped the `.451` frontier toward
+alternative world-model representations; and the energy-as-ARC-lever program is
+concluded and retired.
+
+Required field principles:
+
+- `honest_verdict`: terminal prefix; clean transition is complete_450_archived_451_activated_<state>.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).
+- `a1_inducer_ceiling_hard_trustworthy`: true -- the .450 A1 fork (INDUCER_CEILING_HARD) was B1-audited genuinely diagnostic (non-degenerate graded control); the executable-code engine learns change-LOCATION but not change-VALUE.
+- `a1b_was_fabrication_flagged_non_test`: true -- the .450 A1b inducer A/B was DURATION_TOO_SHORT (13.7s); the METHOD_IS_CEILING attribution is NOT established and .451 tests it via alternative representations.
+- `wall_is_executable_code_change_value_representation`: true -- three attempts on the code representation (free-form, structured, TTA) all hit the same change-VALUE ceiling; .451 changes the representation class.
+- `energy_program_concluded`: true -- the energy-as-ARC-lever program is concluded (negative); do NOT re-propose energy stages.
+- `reproducible_total_levels`: the authoritative ARC progress metric carried from the registry (68 after g50t L2), not re-counted.
+
+#### SCENARIO-REPORT-4891: Blocked Roadmap-Next Precondition Still Writes The Deliverable
+
+**Given** `research-roadmap-next.yaml` is absent or not parseable, the offline
+arcade precondition result is recorded, and the `.450` registry, retro, A1, and
+audit artifacts are available
+**When** the Exp 4891 workflow runs
+**Then** it writes `results/experiment_4891_archive_450_activate_451.json` with
+a `blocked_research_roadmap_next_...` verdict, records the failed precondition,
+skips the pre-test gate, preserves the required principle-annotated fields, and
+carries `reproducible_total_levels=68` from `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-REPORT-4891: Complete Transition Records The True .450 Close-State
+
+**Given** `research-roadmap-next.yaml` parses, the offline arcade precondition
+passes, `.451` is the active roadmap milestone, the pre-test gate is green, and
+the upstream `.450` artifacts are available
+**When** the Exp 4891 workflow runs
+**Then** it records a `complete_450_archived_451_activated_...` verdict,
+declares `aggregation_from_upstream_artifacts`, marks A1 as a trustworthy
+`INDUCER_CEILING_HARD` finding, marks A1b as a fabrication-flagged non-test,
+marks the wall as the executable-code change-value representation, marks the
+energy program concluded, and uses the registry's authoritative reproducible
+total.
+
+## Implementation Status (REQ-REPORT-4891)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4891 | Implemented (`python/carnot/experiment_4891_archive_450_activate_451.py`) | Implemented (`tests/python/test_experiment_4891_archive_450_activate_451.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans

@@ -1,0 +1,208 @@
+{
+  "a1_inducer_ceiling_hard_trustworthy": true,
+  "a1b_was_fabrication_flagged_non_test": true,
+  "a450_close_state": {
+    "a1": {
+      "b1_audited_genuinely_diagnostic": true,
+      "coverage_migration_count": 0,
+      "duration_s": 168.1479,
+      "engine_cell_recall_median": 0.727273,
+      "fork_verdict": "INDUCER_CEILING_HARD",
+      "generator_backend": "gpu0_cuda",
+      "honest_verdict": "complete_ttt_dynamics_no_value_lift_INDUCER_CEILING_HARD",
+      "inference_substrate": "live_llm_inference",
+      "n_games_measured": 9,
+      "positive_control_game": "tu93",
+      "positive_control_non_degenerate": true,
+      "tta_changed_cell_value_accuracy_delta_median": -0.008699,
+      "tta_value_accuracy_delta_ci95": [
+        -0.177673,
+        0.0
+      ]
+    },
+    "a1_inducer_ceiling_hard_trustworthy": true,
+    "a1b": {
+      "a1b_ab_trustworthy": false,
+      "duration_s": 13.6979,
+      "duration_too_short_flagged": true,
+      "failure_reasons": [
+        "a1b_flagged_adversarial_stamp",
+        "a1b_adversarial_verify_flagged",
+        "a1b_duration_below_live_floor"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_inducer_ceiling_neither_lane_lifts_method_is_ceiling",
+      "inducer_ceiling_attribution": "METHOD_IS_CEILING",
+      "method_is_ceiling_established": false
+    },
+    "a1b_was_fabrication_flagged_non_test": true,
+    "a2": {
+      "honest_verdict": "success_g50t_levelup_banked",
+      "new_levels_banked": 1,
+      "reproducible_total_levels_after": 68,
+      "reproducible_total_levels_before": 67,
+      "solve_provenance": "live_agent_self_discovery",
+      "target_game": "g50t"
+    },
+    "a3": {
+      "honest_verdict": "success_self_play_checkpoint_refreshed",
+      "target_game": "ls20",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4": {
+      "flagged_adversarial": true,
+      "heldout_first_win_ci_lower": 0.0,
+      "heldout_first_win_rate": 0.0625,
+      "honest_verdict": "complete_heldout_first_win_soft_budget_partial_0.0625_ci_lower_0",
+      "live_agent_ran": true
+    },
+    "b2": {
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "submission_package_ready": true,
+      "vram_estimate_gb": 15.146
+    },
+    "c": {
+      "honest_verdict": "success_kv260_continuity_ok",
+      "kv260_ssh_reachable": true,
+      "uio_device_count": 5
+    },
+    "d": {
+      "aimed_at_fork_verdict": "INDUCER_CEILING_HARD",
+      "honest_verdict": "success_sota_ingestion_v451_frontier_mapped",
+      "priority_1": "agent_authored_decision_need_targets",
+      "priority_2": "action_prefix_latent_adapter",
+      "priority_3": "latent_action_world_model_adapter"
+    },
+    "energy_program_concluded": true,
+    "operational_retro": {
+      "honest_verdict": "",
+      "milestone": "2026.06.450",
+      "summary": "The locked detector fields (0/0/0/null) are a FALSE ZERO, not a genuine empty window. The milestone-scoped timing detector reported 0 commits since activation, but direct on-disk verification shows the archive transition exp4881 plus 9 substantive experiments exp4882-exp4890, mtimes 2026-06-27 19:55:46Z -> 23:28:14Z (~212-min real window). This is the recurring false-zero detector gap, documented .363-.449 and now extending to .450 (~77 milestones). Four arms are compute-bound (exp4882/4883/4885/4886 carry inference_substrate=live_llm_inference and ran on GPU-0 via generator_backend=gpu0_cuda), so compute_bound_experiments_count is really 4, not 0. The 23:36Z idle-GPU snapshot is post-window (8 min after exp4890), so it cannot evidence GPU-idle-during-compute; null is defensible only as insufficient-evidence, but generator_backend=gpu0_cuda shows the GPU was actually engaged."
+    },
+    "reproducible_total_levels": 68,
+    "summary": "a1_inducer_ceiling_hard_trustworthy_a1b_non_test_executable_code_change_value_wall_energy_concluded",
+    "wall_is_executable_code_change_value_representation": true
+  },
+  "activated_milestone": "2026.06.451",
+  "active_milestone_confirmed": "2026.06.451",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archive_record_action": "blocked_no_archive",
+  "archived_milestone": "2026.06.450",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "5bbf1e6501bd5c70f0f344f1d04f3f2134703ca0c35db9999983a8c4a207c384"
+    },
+    {
+      "path": "results/operational_retro_2026_06_450.json",
+      "sha256": "e2dd03f12cb4f1903746685499f001f793d991095ff9b8c40d24c9d02b17b691"
+    },
+    {
+      "path": "results/experiment_4882_ttt_dynamics_value_gap.json",
+      "sha256": "6a0f5e5552d56b267cb79f1b9414289514ae65bd3f6ff5653a98237b1b3c6333"
+    },
+    {
+      "path": "results/experiment_4883_inducer_ceiling_ab.json",
+      "sha256": "e7b2a79e8d5e0393574b641be54e50ee9d3ab6491096cf18ce822e8286febb21"
+    },
+    {
+      "path": "results/experiment_4887_value_gap_inducer_audit.json",
+      "sha256": "51ea0199eb682b08a129b9a68a6d235284652e40e0be56c5bb9de2a062bf2d72"
+    },
+    {
+      "path": "results/experiment_4884_levelup_attempt.json",
+      "sha256": "1d618a2dc242c34692629a0d88df86b6961a483e39e35a89c066d7994e074eab"
+    },
+    {
+      "path": "results/experiment_4885_self_play_verifier_checkpoint.json",
+      "sha256": "b167c69d9b589aee7f21dc297144afe264e2939c9d2a9859b579028a9699915c"
+    },
+    {
+      "path": "results/experiment_4886_heldout_first_win_readiness.json",
+      "sha256": "893d50a912de73367ada42e4039d97fdc1076836e79bd59b8ea1c5516091cf8c"
+    },
+    {
+      "path": "results/experiment_4888_submission_package_harden.json",
+      "sha256": "574dc1844b4fe3fe1d979a8e1340207fa7576c34f823a34fb25cfc79c2f3e935"
+    },
+    {
+      "path": "results/experiment_4889_kv260_continuity.json",
+      "sha256": "a1afd655ad3d8655daafd33549674b264cd802990f5d27959bab022629a4f537"
+    },
+    {
+      "path": "results/experiment_4890_sota_ingestion_v451_frontier.json",
+      "sha256": "250ecc74826c33c78481d298d0c57eca2e004e199e99b96829a5ba7ec532166f"
+    }
+  ],
+  "duration_s": 1.368607,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4891_archive_450_activate_451",
+  "experiment_id": 4891,
+  "field_principles": {
+    "a1_inducer_ceiling_hard_trustworthy": {
+      "principle": "true -- the .450 A1 fork (INDUCER_CEILING_HARD) was B1-audited genuinely diagnostic (non-degenerate graded control); the executable-code engine learns change-LOCATION but not change-VALUE."
+    },
+    "a1b_was_fabrication_flagged_non_test": {
+      "principle": "true -- the .450 A1b inducer A/B was DURATION_TOO_SHORT (13.7s); the METHOD_IS_CEILING attribution is NOT established and .451 tests it via alternative representations."
+    },
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program is concluded (negative); do NOT re-propose energy stages."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_450_archived_451_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (68 after g50t L2), not re-counted."
+    },
+    "wall_is_executable_code_change_value_representation": {
+      "principle": "true -- three attempts on the code representation (free-form, structured, TTA) all hit the same change-VALUE ceiling; .451 changes the representation class."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "research_roadmap_next_yaml": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')"
+      ],
+      "exists": false,
+      "exit_code": 1,
+      "passed": false,
+      "path": "research-roadmap-next.yaml",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'\n",
+      "stdout_tail": ""
+    }
+  },
+  "pretest_gate": {
+    "green": false,
+    "ran": false,
+    "reason": "skipped_after_precondition_failure"
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "fc101ed8ecce056a78711f450545ae2e13bc83ae27fadba722ceb415810cbc0e",
+  "reproducible_total_levels": 68,
+  "schema": "carnot.exp4891.archive_450_activate_451.v1",
+  "spec_refs": [
+    "REQ-REPORT-4891",
+    "SCENARIO-REPORT-4891"
+  ],
+  "transition_performed": false,
+  "wall_is_executable_code_change_value_representation": true
+}
