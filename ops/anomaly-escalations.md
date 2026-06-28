@@ -672,3 +672,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag(s) ['perception-overclaim'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
 - artifact: results/arc_relational_mask_deepen_ab.json
+
+## experiment_4938_self_play_verifier_checkpoint.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_4938_self_play_verifier_checkpoint.json
