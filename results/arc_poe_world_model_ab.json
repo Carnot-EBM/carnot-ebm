@@ -1,7 +1,7 @@
 {
   "experiment": "arc_poe_world_model_ab",
   "schema": "carnot.arc_poe_world_model_ab.v1",
-  "honest_verdict": "complete_poe_world_no_lift_over_maxvote_cellrecall_0.0574_vs_0.558_wins_0of4_conflicts_8_retire_if_same",
+  "honest_verdict": "complete_poe_world_no_lift_over_maxvote_cellrecall_0.178_vs_0.558_wins_0of4_conflicts_8_retire_if_same",
   "question": "does the weighted product-of-experts world model (PoE-World, arXiv:2505.10819) predict held-out transitions (changed-cell recall) better than the nulled max-vote ProductWorldModel (exp4749) and the single induced engine, given the SAME expert pool?",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "verifier_is_oracle": false,
@@ -12,7 +12,7 @@
     "cn04"
   ],
   "n_transitions_target": 120,
-  "poe_mean_cell_recall": 0.0574,
+  "poe_mean_cell_recall": 0.178,
   "maxvote_mean_cell_recall": 0.558,
   "single_engine_mean_cell_recall": null,
   "poe_beats_maxvote": false,
@@ -30,8 +30,18 @@
       "n_experts": 48,
       "n_kept": 29,
       "poe": {
-        "cell_recall": 0.1659,
-        "accuracy": 0.2333
+        "cell_recall": 0.2812,
+        "accuracy": 0.1667
+      },
+      "poe_by_prior": {
+        "0.0": {
+          "cell_recall": 0.2812,
+          "accuracy": 0.1667
+        },
+        "0.5": {
+          "cell_recall": 0.1659,
+          "accuracy": 0.2333
+        }
       },
       "maxvote": {
         "cell_recall": 0.5691,
@@ -52,6 +62,16 @@
         "cell_recall": 0.027,
         "accuracy": 0.0
       },
+      "poe_by_prior": {
+        "0.0": {
+          "cell_recall": 0.027,
+          "accuracy": 0.0
+        },
+        "0.5": {
+          "cell_recall": 0.027,
+          "accuracy": 0.0
+        }
+      },
       "maxvote": {
         "cell_recall": 0.7887,
         "accuracy": 0.0
@@ -68,8 +88,18 @@
       "n_experts": 48,
       "n_kept": 26,
       "poe": {
-        "cell_recall": 0.0368,
-        "accuracy": 0.2
+        "cell_recall": 0.2789,
+        "accuracy": 0.0667
+      },
+      "poe_by_prior": {
+        "0.0": {
+          "cell_recall": 0.2789,
+          "accuracy": 0.0667
+        },
+        "0.5": {
+          "cell_recall": 0.0368,
+          "accuracy": 0.2
+        }
       },
       "maxvote": {
         "cell_recall": 0.3419,
@@ -87,8 +117,18 @@
       "n_experts": 48,
       "n_kept": 21,
       "poe": {
-        "cell_recall": 0.0,
-        "accuracy": 0.2667
+        "cell_recall": 0.1251,
+        "accuracy": 0.2333
+      },
+      "poe_by_prior": {
+        "0.0": {
+          "cell_recall": 0.1251,
+          "accuracy": 0.2333
+        },
+        "0.5": {
+          "cell_recall": 0.0,
+          "accuracy": 0.2667
+        }
       },
       "maxvote": {
         "cell_recall": 0.5325,
@@ -120,6 +160,6 @@
     "single_engine_generator": "unsloth/Qwen3.5-9B-MTP-GGUF"
   },
   "random_seed": 20260628,
-  "duration_s": 56.14,
-  "reproducibility_checksum": "sha256:1ec14baebfaf2467ccbebd890f05dd22ca3caf55009e064c7f67b677b79d1b8a"
+  "duration_s": 52.6,
+  "reproducibility_checksum": "sha256:d415fd652fb0adc15ec73dace3865b489bc11fac02e86e4bedb486fab16247d0"
 }
