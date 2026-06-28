@@ -1,7 +1,7 @@
 {
   "experiment": "arc_ige_llm_go_explore_ab",
   "schema": "carnot.arc_ige_llm_go_explore_ab.v1",
-  "honest_verdict": "complete_ige_ab_selector_not_exercised_no_archive_returns_in_1_specs_budget_300_inconclusive",
+  "honest_verdict": "complete_ige_llm_go_explore_no_first_win_lift_0.000_vs_0.000_delta_0.000_ci_0.000_0.000_generation_wall_survives",
   "question": "does LLM-judged Go-Explore cell selection (IGE, arXiv:2405.15143) raise live first-win on held-out games vs the plain-archive heuristic (the isolated A/B; only the selector differs)?",
   "inference_substrate": "live_llm_inference",
   "verifier_is_oracle": false,
@@ -11,8 +11,9 @@
   "variant_ids": [
     1
   ],
-  "budget": 300,
-  "max_depth_override": 8,
+  "budget": 350,
+  "max_depth_override": 10,
+  "archive_bins": 16,
   "n_specs": 1,
   "baseline_arm": {
     "first_win_rate": 0.0,
@@ -41,13 +42,13 @@
     "verifier_is_oracle": false,
     "enabled": true,
     "proposer_injected": false,
-    "calls": 0,
-    "llm_choices": 0,
-    "parse_failures": 0,
+    "calls": 8,
+    "llm_choices": 7,
+    "parse_failures": 1,
     "server_unavailable": 0,
-    "fallbacks": 0
+    "fallbacks": 1
   },
-  "selector_exercised": false,
+  "selector_exercised": true,
   "ige_beats_baseline": false,
   "model_specs": {
     "generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
@@ -74,6 +75,6 @@
     "arXiv:2405.15143"
   ],
   "random_seed": 20260628,
-  "duration_s": 50.9,
-  "reproducibility_checksum": "sha256:2b734a4d927f913f06b57ade90b625752200d0897c5fd9866de6848716981d67"
+  "duration_s": 108.78,
+  "reproducibility_checksum": "sha256:fe2d6c0fca273da22ed9a82b5d8e7d7e32fc18c8628171757996b17830f8592a"
 }
