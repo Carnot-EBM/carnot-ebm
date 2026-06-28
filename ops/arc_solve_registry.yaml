@@ -1261,33 +1261,16 @@ games:
   reproducibility: reproduced
   levels_reproduced: 3
   mechanic_class: reflection_mirror_object_alignment
-  win_condition: >-
-    L1 object reflection plus L2 vertical mirror/object alignment plus L3
-    horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis
-    from y=16 to y=9, place the L-shaped object at (11,14), and place the
-    two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh
-    target cell.
-  action_model: >-
-    Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling. L3 tail:
-    ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the
-    L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the
-    two-row object, then ACTION3 x12 and ACTION2 x5 place it.
-  solver: >-
-    GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py plus
-    scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune.
-  reproduce: >-
-    Exp4728 results/experiment_4728_levelup_selfplay.json re-gated
-    results/arc_loop_solve_ar25.json offline_reproduced=True, reached_level=3,
-    banked +1 over the prior L2 registry row, checksum e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3.
+  win_condition: 'L1 object reflection plus L2 vertical mirror/object alignment plus L3 horizontal-axis reflection coverage: move the horizontal 0002nuguepuujf axis from y=16 to y=9, place the L-shaped object at (11,14), and place the two-row object at (3,14) so reflections cover every fixed 0001sruqbuvukh target cell.'
+  action_model: 'Keyboard-only ACTION1-4 movement plus ACTION5 selection cycling. L3 tail: ACTION1 x7 moves the selected horizontal axis up, ACTION5 selects the L-shaped object, ACTION4 x7 and ACTION2 x7 place it, ACTION5 selects the two-row object, then ACTION3 x12 and ACTION2 x5 place it.'
+  solver: GameAdapter _ar25 in python/carnot/agentic/arc_game_adapters.py plus scripts/arc_loop_solve.py --game ar25 --target-level 3 --no-hazard-prune.
+  reproduce: Exp4728 results/experiment_4728_levelup_selfplay.json re-gated results/arc_loop_solve_ar25.json offline_reproduced=True, reached_level=3, banked +1 over the prior L2 registry row, checksum e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3.
   learned_verifier_checkpoint: models/arc_verifier_ar25.json
   gotchas:
-  - The L3 axis sprite is selected at level entry; moving it horizontally is
-    ignored by the environment, so ACTION1 x7 is the load-bearing axis delta.
-  - The L3 target decomposes into two reflected object masks around y=9; moving
-    only the axis does not win.
+  - The L3 axis sprite is selected at level entry; moving it horizontally is ignored by the environment, so ACTION1 x7 is the load-bearing axis delta.
+  - The L3 target decomposes into two reflected object masks around y=9; moving only the axis does not win.
   - ACTION7 pops a hidden undo stack and remains excluded from the banked path.
-  - The learned verifier checkpoint routes/ranks future search only; the
-    executable offline reproduction gate remains the oracle-distinct authority.
+  - The learned verifier checkpoint routes/ranks future search only; the executable offline reproduction gate remains the oracle-distinct authority.
   dead_ends:
   - 're86: registry_prechecked:bp35: no_grounded_next_level_adapter'
   - 're86: registry_prechecked:lf52: recently_deepened_or_operator_skip_list'
@@ -1318,6 +1301,7 @@ games:
   - 'ar25: registry_prechecked:Previous ar25 neutral-verifier search repeated L1 only; deterministic L2 delta is required before the standing loop can bank.'
   - 'g50t: clone_replay_L2_route_reached_distance_12_no_bank'
   - 'ar25: ACTION7 hidden undo stack excluded from banked L3 path'
+  - 'Exp4947 ar25 no-bank no_grounded_l4_delta: complete_ar25_no_new_level_residual_no_grounded_l4_delta.'
   latest_exp4728_levelup_selfplay:
     artifact: results/experiment_4728_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_ar25.json
@@ -1327,6 +1311,15 @@ games:
     verifier_checkpoint: models/arc_verifier_ar25.json
     target_rotation: preferred_L1_targets_prechecked_then_allowed_L2_to_L3_alternative
     reproducibility_checksum: e151b688ff427f35e2db3d547fe09909dc8b5008ac3adf8dbf788ad7bf0c58b3
+  latest_exp4947_levelup_attempt:
+    artifact: results/experiment_4947_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_ar25.json
+    offline_reproduced: false
+    reproduced_levels: 3
+    new_levels_banked: 0
+    residual_cause: no_grounded_l4_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: 80c3407496706b32fd1eaa057b1da9f5ef8b56c0be32ccc59cf80b08872a5a43
 - game: ka59
   reproducibility: reproduced
   levels_reproduced: 1
