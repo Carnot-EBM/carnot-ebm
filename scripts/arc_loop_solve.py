@@ -74,7 +74,9 @@ def _label_to_action(label: str) -> dict:
         return {"raw": label}
 
 
-def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> dict:
+def solve_adaptered(
+    game: str, target_level: int, hazard_prune: bool = True, mask_prune: bool = False
+) -> dict:
     ad = adapters.get_adapter(game)
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -94,11 +96,26 @@ def solve_adaptered(game: str, target_level: int, hazard_prune: bool = True) -> 
     # (tu93) the search stops wasting expansions on death-paths. This is the wired-in salvage of the
     # outer-loop hazard-aware world model (arc_nav_world_model) onto the LIVE solve path.
     move_pruner = None
-    if hazard_prune:
-        from carnot.agentic.arc_hazard_pruner import HazardMovePruner
+    if hazard_prune or mask_prune:
         from carnot.agentic.arc_agi3_world_model import grid_of
 
-        move_pruner = HazardMovePruner(grid_of)
+        pruners = []
+        if hazard_prune:
+            from carnot.agentic.arc_hazard_pruner import HazardMovePruner
+
+            pruners.append(HazardMovePruner(grid_of))
+        if mask_prune:
+            # Relational-mask deepening pruner (induces its target region ONLINE on the first level-up;
+            # prunes action classes that never touch it). Conservative; no-ops on non-relational games.
+            from carnot.agentic.arc_relational_mask_pruner import RelationalMaskMovePruner
+
+            pruners.append(RelationalMaskMovePruner(grid_of))
+        if len(pruners) == 1:
+            move_pruner = pruners[0]
+        elif pruners:
+            from carnot.agentic.arc_relational_mask_pruner import CompositeMovePruner
+
+            move_pruner = CompositeMovePruner(*pruners)
 
     solver = kit.OfflineSolver(
         game,

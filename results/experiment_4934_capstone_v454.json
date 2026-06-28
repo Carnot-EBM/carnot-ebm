@@ -1,0 +1,541 @@
+{
+  "action_efficiency_result": {
+    "actions_to_first_levelup_delta": {
+      "cn04": 0,
+      "lp85": 0,
+      "m0r0": 0,
+      "sp80": 0,
+      "tu93": 0
+    },
+    "audit_failure_reasons": [
+      "A1_not_duplicate_failed_duplicate_depth_sp80_L2",
+      "A2_not_duplicate_failed_duplicate_depth_su15_L2",
+      "D_missing_experiment_4933_matm_similarity_retrieval_efficiency",
+      "missing_precondition_experiment_4933_matm_similarity_retrieval_efficiency"
+    ],
+    "b1_efficiency_trustworthy": false,
+    "d_honest_verdict": "complete_matm_similarity_retrieval_no_efficiency_gain_retired",
+    "decision": "honest_null_not_trusted_lift",
+    "forward_walk_hit_rate_delta": {
+      "cn04": 0.0,
+      "lp85": 0.0,
+      "m0r0": 0.0,
+      "sp80": 0.0,
+      "tu93": 0.0
+    },
+    "reached_level_regression": false,
+    "reported_lift": null,
+    "retire_if_same_verdict": true,
+    "submitted_parity_test_green": true
+  },
+  "arc_first_win_wall_closed": true,
+  "banks_counted": {
+    "audit_failure_reasons": [
+      "A1_not_duplicate_failed_duplicate_depth_sp80_L2",
+      "A2_not_duplicate_failed_duplicate_depth_su15_L2",
+      "D_missing_experiment_4933_matm_similarity_retrieval_efficiency",
+      "missing_precondition_experiment_4933_matm_similarity_retrieval_efficiency"
+    ],
+    "b1_banks_trustworthy": false,
+    "base_total_from_v453": 69,
+    "candidate_banks": [
+      {
+        "game": "sp80",
+        "new_levels_banked": 0,
+        "source": "A1_LEVELUP"
+      },
+      {
+        "game": "su15",
+        "new_levels_banked": 0,
+        "source": "A2_LEVELUP"
+      }
+    ],
+    "computed_total": 69,
+    "counted": [],
+    "registry_total": 69
+  },
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4923,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_closure_verdict_trusted",
+        "post_sprint_pivot",
+        "reproducible_total_levels"
+      ],
+      "path": "results/experiment_4923_capstone_v453.json",
+      "sha256": "sha256:4e6365c5f5010f40810f2d22342708f49aa39d4f83d5cdeeafd71f4072bd0a8a",
+      "source": "PREV_CAPSTONE",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4925,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "solve_provenance",
+        "live_path_reachable",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "path": "results/experiment_4925_levelup_attempt.json",
+      "sha256": "sha256:02aa2d63fd00d9ed244e872eb8cee95e541f4cbb39f329f3d74a2292db11a75d",
+      "source": "A1_LEVELUP",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4926,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "solve_provenance",
+        "live_path_reachable",
+        "reproduction_gate",
+        "registry_update"
+      ],
+      "path": "results/experiment_4926_levelup_attempt.json",
+      "sha256": "sha256:6ee10628ab842e753883ae6cb793ea98ca565d641db3e78b61e8234a9593cd33",
+      "source": "A2_LEVELUP",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4928,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "heldout_first_win_ci",
+        "games_evaluated",
+        "games_remaining",
+        "flag_resolved",
+        "live_agent_ran",
+        "positive_control_passed",
+        "parity_test_green",
+        "partial",
+        "generator_backend",
+        "solve_provenance"
+      ],
+      "path": "results/experiment_4928_heldout_first_win_readiness.json",
+      "sha256": "sha256:fb393f52b466af9de4b1c0d91d64ae5d21824bdc39da3ad38d544440323c6f23",
+      "source": "A4_HELDOUT",
+      "summarizer_exit_code": 1
+    },
+    {
+      "experiment_id": 4929,
+      "fields_imported": [
+        "honest_verdict",
+        "banks_trustworthy",
+        "efficiency_trustworthy",
+        "checks",
+        "audit_failure_reasons",
+        "bank_evidence",
+        "efficiency_evidence"
+      ],
+      "path": "results/experiment_4929_bank_and_efficiency_audit.json",
+      "sha256": "sha256:89d2c7a9a0fb46db484e13711fdcd9839058d42e7889eb5806b3204f1441347c",
+      "source": "B1_AUDIT",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4930,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "peak_vram_gb",
+        "frozen_stack_loads",
+        "package_builds",
+        "ready_package_regression_ok",
+        "submits",
+        "operator_only"
+      ],
+      "path": "results/experiment_4930_submission_package_harden.json",
+      "sha256": "sha256:cb726951d32fca8c6b2e6523de924183317fdd465c1c9f8c3461ef0bd1dfe35c",
+      "source": "B2_PACKAGE",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4931,
+      "fields_imported": [
+        "honest_verdict",
+        "milestone",
+        "stamping_backfilled_arms",
+        "mtime_fallback_window",
+        "wiring_proposal_reconfirmed",
+        "research_conductor_modified"
+      ],
+      "path": "results/experiment_4931_stamping_backfill_and_wiring_readiness.json",
+      "sha256": "sha256:696873f5d438ef043ccc577f6a0ad94a1778b187f205f8f8f89532dac8cb5afa",
+      "source": "B3_STAMPING",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4932,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "xmutil_requires_sudo",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4932_kv260_continuity.json",
+      "sha256": "sha256:31b36ade5fa6f121fc6d1f7b9a8883a2f148f9a0d6071b20a3c71f150b77ff82",
+      "source": "C_KV260",
+      "summarizer_exit_code": 0
+    },
+    {
+      "experiment_id": 4933,
+      "fields_imported": [
+        "honest_verdict",
+        "actions_to_first_levelup_delta",
+        "forward_walk_hit_rate_delta",
+        "reached_level_regression",
+        "submitted_parity_test_green",
+        "retire_if_same_verdict",
+        "post_sprint_pivot_gate_noted",
+        "arxiv_ids_cited",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_4933_matm_similarity_retrieval_efficiency.json",
+      "sha256": "sha256:6ba2058e5b45450144ba77811fc55e60f8749ad72649b028002d492673c592a8",
+      "source": "D_EFFICIENCY",
+      "summarizer_exit_code": 0
+    }
+  ],
+  "duration_s": 0.652237,
+  "experiment": "experiment_4934_capstone_v454",
+  "experiment_id": 4934,
+  "field_principles": {
+    "action_efficiency_result": {
+      "principle": "D's MATM efficiency lift if B1 efficiency_trustworthy, else the honest null -- the squared-scored submission lever."
+    },
+    "arc_first_win_wall_closed": {
+      "principle": "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .454 did not reopen it or queue representation #5."
+    },
+    "banks_counted": {
+      "principle": "the A1/A2 games whose banks were counted (gated on B1 banks_trustworthy) -- no un-audited bank inflates the total."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
+    },
+    "headline": {
+      "principle": "the one-line .454 headline -- the locked deliverable maximized for 6/30 (levels growth + efficiency + clean go/no-go + package ready)."
+    },
+    "heldout_first_win_rate": {
+      "principle": "A4's full-25 (or partial) go/no-go number + flag_resolved -- the operator's 6/30 decision input."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v454_submission_maximized_<state> (e.g. _levels_<N>_heldout_<rate>_package_ready)."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
+    },
+    "post_sprint_pivot": {
+      "principle": "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier scaffold (arXiv:2605.18871) + the deliverable (~0.05 agent + FoVer paper)."
+    },
+    "preconditions_checked": {
+      "principle": "records upstream-artifact presence + registry loadability; a missing input emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for any tie-break in the scorecard aggregation."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric from the registry (69 + A1/A2 banks counted ONLY if B1 banks_trustworthy)."
+    },
+    "skipped_flagged_adversarial": {
+      "principle": "the list of upstream artifacts skipped per the fabrication gate."
+    },
+    "submission_package_ready": {
+      "principle": "B2's terminal gate + peak_vram_gb -- the deadline deliverable for the operator."
+    }
+  },
+  "headline": ".454 submission readiness: 69 reproducible levels, no trusted A1/A2 banks counted; held-out first-win 0.04 with flag_resolved=True; D reports no trusted efficiency lift; package ready; ARC wall remains WALL_IS_HIDDEN_STATE closed.",
+  "heldout_first_win_rate": {
+    "ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4605
+    },
+    "flag_resolved": true,
+    "games_evaluated": 25,
+    "games_remaining": 0,
+    "generator_backend": "gpu0_cuda",
+    "honest_verdict": "complete_heldout_first_win_0.04_full25_live_flag_resolved",
+    "live_agent_ran": true,
+    "parity_test_green": true,
+    "partial": false,
+    "positive_control_passed": true,
+    "rate": 0.04,
+    "solve_provenance": "development_proxy",
+    "status": "full25_go_no_go"
+  },
+  "honest_verdict": "complete_capstone_v454_submission_maximized_levels_69_heldout_0.04_package_ready_efficiency_null",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_scorecard": {
+    "action_efficiency": {
+      "actions_to_first_levelup_delta": {
+        "cn04": 0,
+        "lp85": 0,
+        "m0r0": 0,
+        "sp80": 0,
+        "tu93": 0
+      },
+      "audit_failure_reasons": [
+        "A1_not_duplicate_failed_duplicate_depth_sp80_L2",
+        "A2_not_duplicate_failed_duplicate_depth_su15_L2",
+        "D_missing_experiment_4933_matm_similarity_retrieval_efficiency",
+        "missing_precondition_experiment_4933_matm_similarity_retrieval_efficiency"
+      ],
+      "b1_efficiency_trustworthy": false,
+      "d_honest_verdict": "complete_matm_similarity_retrieval_no_efficiency_gain_retired",
+      "decision": "honest_null_not_trusted_lift",
+      "forward_walk_hit_rate_delta": {
+        "cn04": 0.0,
+        "lp85": 0.0,
+        "m0r0": 0.0,
+        "sp80": 0.0,
+        "tu93": 0.0
+      },
+      "reached_level_regression": false,
+      "reported_lift": null,
+      "retire_if_same_verdict": true,
+      "submitted_parity_test_green": true
+    },
+    "banks": {
+      "audit_failure_reasons": [
+        "A1_not_duplicate_failed_duplicate_depth_sp80_L2",
+        "A2_not_duplicate_failed_duplicate_depth_su15_L2",
+        "D_missing_experiment_4933_matm_similarity_retrieval_efficiency",
+        "missing_precondition_experiment_4933_matm_similarity_retrieval_efficiency"
+      ],
+      "b1_banks_trustworthy": false,
+      "base_total_from_v453": 69,
+      "candidate_banks": [
+        {
+          "game": "sp80",
+          "new_levels_banked": 0,
+          "source": "A1_LEVELUP"
+        },
+        {
+          "game": "su15",
+          "new_levels_banked": 0,
+          "source": "A2_LEVELUP"
+        }
+      ],
+      "computed_total": 69,
+      "counted": [],
+      "registry_total": 69
+    },
+    "heldout_go_no_go": {
+      "ci": {
+        "bootstrap_resamples": 1000,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "method": "paired_percentile_bootstrap",
+        "point": 0.0,
+        "random_seed": 4605
+      },
+      "flag_resolved": true,
+      "games_evaluated": 25,
+      "games_remaining": 0,
+      "generator_backend": "gpu0_cuda",
+      "honest_verdict": "complete_heldout_first_win_0.04_full25_live_flag_resolved",
+      "live_agent_ran": true,
+      "parity_test_green": true,
+      "partial": false,
+      "positive_control_passed": true,
+      "rate": 0.04,
+      "solve_provenance": "development_proxy",
+      "status": "full25_go_no_go"
+    },
+    "reserved_lanes": {
+      "b3_stamping": {
+        "decision": "reserved_lane_blocked_insufficient_v454_mtime_window",
+        "honest_verdict": "blocked_insufficient_v454_mtime_window",
+        "mtime_fallback_window": {
+          "artifact_paths": [
+            "results/experiment_4924_archive_453_activate_454.json",
+            "results/experiment_4925_levelup_attempt.json",
+            "results/experiment_4926_levelup_attempt.json",
+            "results/experiment_4927_self_play_verifier_checkpoint.json",
+            "results/experiment_4928_heldout_first_win_readiness.json",
+            "results/experiment_4929_bank_and_efficiency_audit.json",
+            "results/experiment_4930_submission_package_harden.json"
+          ],
+          "compute_bound_count": 3,
+          "milestone": "2026.06.454",
+          "n_arms": 7,
+          "wall_minutes": 102.0,
+          "window_end": "2026-06-28T17:08:24Z",
+          "window_start": "2026-06-28T15:26:24Z"
+        },
+        "research_conductor_modified": false,
+        "wiring_proposal_reconfirmed": true
+      },
+      "c_kv260": {
+        "decision": "reserved_lane_kv260_continuity_ok",
+        "honest_verdict": "success_kv260_continuity_ok",
+        "kv260_ssh_reachable": true,
+        "loaded_overlay": "carnot_ising_v2_n64",
+        "xmutil_requires_sudo": true
+      }
+    },
+    "submission_package": {
+      "decision": "package_ready_operator_only",
+      "frozen_stack_loads": true,
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "package_builds": true,
+      "peak_vram_gb": 15.146,
+      "ready": true,
+      "ready_package_regression_ok": true,
+      "submits": false
+    },
+    "wall_closure": {
+      "closed": true,
+      "closure_verdict": "WALL_IS_HIDDEN_STATE",
+      "did_reopen_in_v454": false,
+      "do_not_queue": "representation_5",
+      "experiment_id": 4923,
+      "source": "PREV_CAPSTONE",
+      "trusted": true
+    }
+  },
+  "post_sprint_pivot": {
+    "arxiv_id": "2605.18871",
+    "decision": "post_6_30_distributional_energy_verifier_pivot",
+    "deliverable": "current ~0.05 agent + publishable FoVer paper",
+    "do_not_queue": "representation_5",
+    "domain": "non_saturated_structured_reasoning_domain",
+    "scaffold": "D_similarity_retrieval_retired_scaffold_handoff",
+    "starts_after": "2026-06-30_sprint_retirement",
+    "validation_gate": "distributional-energy-verifier beats self-consistency with CI95 excluding zero, no model-identity shortcut, oracle-distinct"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "north_star": {
+      "path": "ops/north-star.md",
+      "present": true,
+      "read_sections": [
+        "1",
+        "2",
+        "5"
+      ],
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+    },
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 69,
+      "sha256": "sha256:df35ccdec79f0de562e9ea743d52626ded14437927128fbec1c0bd65cd7f8fe1",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4934": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "A1_LEVELUP": {
+        "path": "results/experiment_4925_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A2_LEVELUP": {
+        "path": "results/experiment_4926_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A3_SELF_PLAY": {
+        "path": "results/experiment_4927_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 2
+      },
+      "A4_HELDOUT": {
+        "path": "results/experiment_4928_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "B1_AUDIT": {
+        "path": "results/experiment_4929_bank_and_efficiency_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B2_PACKAGE": {
+        "path": "results/experiment_4930_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B3_STAMPING": {
+        "path": "results/experiment_4931_stamping_backfill_and_wiring_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "C_KV260": {
+        "path": "results/experiment_4932_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "D_EFFICIENCY": {
+        "path": "results/experiment_4933_matm_similarity_retrieval_efficiency.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "PREV_CAPSTONE": {
+        "path": "results/experiment_4923_capstone_v453.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "sha256:2f6002cb11d80338686f5b1c014d22798a01fa419fee8ded7a17f89d6a4b3bc4",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_4934_capstone_v454.json",
+  "schema": "carnot.exp4934.capstone_v454.v1",
+  "skipped_flagged_adversarial": [
+    {
+      "experiment_id": 4927,
+      "path": "results/experiment_4927_self_play_verifier_checkpoint.json",
+      "reason": "live_critical_recheck",
+      "sha256": "sha256:3f90a90ccb8319534e46892746b96effd80f0fe55badba979cae9961ff611d13",
+      "source": "A3_SELF_PLAY",
+      "summarizer_exit_code": 2,
+      "true_honest_verdict": "success_self_play_checkpoint_refreshed",
+      "true_live_recheck": "critical"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-4934",
+    "SCENARIO-CAPSTONE-4934",
+    "SCENARIO-CAPSTONE-4934-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4934-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": {
+    "decision": "package_ready_operator_only",
+    "frozen_stack_loads": true,
+    "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+    "operator_only": true,
+    "package_builds": true,
+    "peak_vram_gb": 15.146,
+    "ready": true,
+    "ready_package_regression_ok": true,
+    "submits": false
+  }
+}
