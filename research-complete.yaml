@@ -52542,3 +52542,104 @@ milestones:
       arXiv IDs. Do NOT re-ingest the nulled coverage/ exploration/energy/selection classes.
     deliverable: results/experiment_4890_sota_ingestion_v451_frontier.json
     result: OK (conductor)
+- id: 2026.06.451
+  title: 'ATTACK THE CHANGE-VALUE GAP BY REPLACING THE WORLD-MODEL REPRESENTATION. .450 A1 proved the executable-code engine
+    + test-time adaptation predict change-LOCATION (cell_recall 0.727) but NOT change-VALUE (INDUCER_CEILING_HARD, trustworthy).
+    .450 A1b (MODEL-vs-METHOD) was a fabrication-flagged non-test (13.7s), so the attribution is unconfirmed -- but the .450
+    D ingestion''s frontier (alternative representations beyond executable code) is the right test on its own merits. .451
+    A1 (HEADLINE) = agent- authored DECISION-NEED targets (arXiv:2606.25421); A1b (gated on A1''s value-gap-not-closed) =
+    a structurally-different action-prefix LATENT adapter (arXiv:2606.26217 + 2603.19312) that MUST genuinely run live. If
+    BOTH alternative representations also fail -> the change-VALUE gap is representation-invariant and the capstone escalates
+    to the operator. PLUS the scored deadline lanes: A2 level-up bank, A3 self-play checkpoint, A4 a CLEAN genuinely-live
+    held-out first-win (the 6/30 go/no-go), B2 final submission harden.'
+  doc: openspec/change-proposals/research-roadmap-v451.md
+  completed: '2026-06-28'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4891-phase0
+    title: PHASE 0 (TRANSITION) -- archive .450 -> activate .451; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .450 close-state (A1 INDUCER_CEILING_HARD trustworthy -- code engine learns change-LOCATION cell_recall
+      0.727 but NOT change-VALUE, TTA delta -0.0087; A1b fabrication-flagged non-test 13.7s, attribution unconfirmed; A2 banked
+      g50t L2 -> reproducible_total_levels=68; A3 self-play pass; A4 flat-null ~0.0625 flagged; B2 package ready 15.146GB;
+      energy CONCLUDED; the wall is the executable-code change-VALUE representation).
+    deliverable: results/experiment_4891_archive_450_activate_451.json
+    result: OK (conductor)
+  - id: exp4892-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- ATTACK THE CHANGE-VALUE GAP WITH AGENT-AUTHORED DECISION-NEED
+      WORLD-MODEL TARGETS (arXiv:2606.25421), on A1''s exact held-out GRADED metric. .450 proved the EXECUTABLE-CODE engine
+      + test-time adaptation predict change-LOCATION (cell_recall 0.727) but NOT change-VALUE. A1 asks: does a NON-code DECISION-NEED
+      target representation (per-object action-effect, object persistence, hidden-register deltas authored from the agent''s
+      OWN cold-start transitions) predict change-VALUE where the code engine could not? (1) re-uses exp4882''s graded metric
+      + held-out games + split + tu93 positive control, (2) scores the decision-need representation''s changed_cell_value_accuracy
+      on the SAME held-out split, (3) forks: does closing the VALUE gap migrate any NEVER_ENUMERATED game -> COVERED? The
+      decisive swing + fork that redirects .452.'
+    deliverable: results/experiment_4892_decision_need_targets_value_gap.json
+    result: OK (conductor)
+  - id: exp4893-a1b
+    title: 'PHASE A1b (ARC NORTH STAR; SECOND REPRESENTATION) -- ACTION-PREFIX LATENT TRANSITION ADAPTER (arXiv:2606.26217
+      + 2603.19312). Gated on A1''s value-gap-NOT-closed regime (decision_need_value_accuracy_delta_median < 0.1). Encode
+      candidate ACTION PREFIXES into latent future-state deltas (a structurally-different non-code representation: multi-step
+      latent deltas, not symbolic decision-need targets) and score A1''s held-out transitions through the latent adapter on
+      the SAME graded gate. MUST genuinely run live (>60s -- the .450 A1b 13.7s DURATION_TOO_SHORT non-test fix). Either a
+      DIFFERENT representation closes the value gap, or the gap is representation-invariant across executable-code + two alternatives.'
+    deliverable: results/experiment_4893_action_prefix_latent_adapter.json
+    result: OK (conductor)
+  - id: exp4894-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .450 g50t and .449 s5i5 and .448 r11l; prefer a shallow game with a grounded next-level delta via recommend_approach
+      + dead_ends -- dc22 L2->L3 / sp80 L2->L3 / su15 L2->L3 / cn04 L2->L3 are strong shallow-deepen candidates; AVOID the
+      hidden-state-bound dead-ends ka59/wa30). offline_reproduced gated.
+    deliverable: results/experiment_4894_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4895-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop on a banked game with an existing checkpoint, ROTATED off .450 ls20 and .449 re86 (pick another banked game that
+      has a models/arc_verifier_<game>.json checkpoint): verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT
+      the learned verifier.'
+    deliverable: results/experiment_4895_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4896-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- GENUINELY LIVE + CLEAN held-out first-win
+      readiness on the color-permuted variant harness, on the conductor's GPU-0 generator. Run the experiment_4729 driver
+      LIVE and WRITE the artifact FIRST, reuse the EXISTING 4729 tests, and CARRY model_specs + random_seed (the .450 A4 was
+      flagged TAUTOLOGY + METHODOLOGY_MISSING -- .451 must produce a headline-eligible number).
+    deliverable: results/experiment_4896_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4897-b1
+    title: PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 decision-need value-gap result is GENUINELY DIAGNOSTIC
+      (graded positive control NON-DEGENERATE cell_recall>0; value-accuracy delta on a held-out split DISJOINT from the representation's
+      authoring set; planner-blind; live-path-reachable; ran live on GPU0; numbers match the fork verdict; oracle-distinct).
+      ALSO verify A1b GENUINELY RAN LIVE (duration_s>60, NOT DURATION_TOO_SHORT -- the explicit .450 A1b failure mode) on
+      the SAME held-out split, oracle-distinct -- or record it gate-skipped.
+    deliverable: results/experiment_4897_value_gap_representation_audit.json
+    result: OK (conductor)
+  - id: exp4898-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .450 (vram ~15.146GB); the deadline is 6/30 (~3 days out) so this is the final
+      pre-deadline go/no-go confirmation.'
+    deliverable: results/experiment_4898_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4899-c
+    title: PHASE C (HARDWARE CONTINUITY; KV260) -- SSH-only per-milestone continuity check (the board is graduated terminal;
+      stays in the rotation per Hardware-Task Continuity Discipline). NEVER a host SD-card precondition; always WRITE a blocked
+      artifact if SSH is unreachable.
+    deliverable: results/experiment_4899_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4900-d
+    title: PHASE D (SOTA-INGESTION -- the .452 frontier) -- given A1's ACTUAL representation-fork verdict + A1b's second-representation
+      result, ingest the matching SOTA via the RELIABLE channel (sweep_clusters / sweep_semscholar + low-concurrency WebSearch/WebFetch;
+      NOT /deep-research). Map the strongest 3-5 methods to .452 experiment candidates with real HTTP-200 arXiv IDs. Do NOT
+      re-ingest the nulled energy / coverage / exploration / selection / TTA-on-code-engine / stronger-local-code-inducer
+      classes.
+    deliverable: results/experiment_4900_sota_ingestion_v452_frontier.json
+    result: OK (conductor)
+  - id: exp4901-e
+    title: 'PHASE E (CAPSTONE .451) -- aggregate the scorecard. HEADLINE = the representation-fork verdict (trusted ONLY if
+      B1 confirmed A1''s non-degenerate control + held-out-disjoint delta + planner-blind AND that A1b genuinely ran live).
+      If BOTH A1 (decision-need) and A1b (action-prefix latent) failed to move change-VALUE accuracy, ESCALATE to the operator:
+      the change-VALUE gap is representation-invariant across executable-code + two alternatives, deliverable = the current
+      0.08 agent. Report the scored deadline levers (A2 bank, A3 self-play, A4 fresh-live readiness, B2 package). Skip any
+      flagged_adversarial upstream.'
+    deliverable: results/experiment_4901_capstone_v451.json
+    result: OK (conductor)
