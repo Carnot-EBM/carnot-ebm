@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.451",
+  "generated_at": "2026-06-28T04:34:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector again reported 0 commits since activation, but this is the RECURRING FALSE-ZERO detector gap (documented .363->.450, ~78 milestones now). On-disk artifacts exp4891-exp4901 (mtimes 2026-06-27 20:36:20 -> 2026-06-28 00:26:59 EDT, ~231-min window; activation commit 630442b7c) show the milestone DID execute 11 tasks, 4 of them live_llm_inference (exp4892 276.9s and exp4893 218.9s on GPU; exp4895 self-play and exp4896 held-out-first-win were live but recorded no duration_s). The locked numeric fields (0/0/0/null) reflect the broken detector, NOT reality. The post-window GPU snapshot (both 3090s idle at 04:34Z, ~7 min after the last artifact) is consistent with the compute-bound arms having finished earlier in the window; gpu_idle_on_compute_bound_tasks stays null because the detector surfaced no compute-bound task and substrate=live_llm_inference + 219-277s durations confirm the GPU was engaged.",
+  "bottlenecks_identified": [
+    "RECURRING FALSE-ZERO timing-detector gap (now ~78 milestones, .363->.451): the milestone-scoped detector reports 0 commits to the retro TIMING DATA block while exp4891-exp4901 actually ran (~231-min on-disk window). The detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer, so every retro must re-derive the real range from disk mtimes. This is the dominant operational waste this milestone, not any GPU or wall-time issue.",
+    "Duration-stamping gap: 2 of the 4 live_llm_inference arms (exp4895 self-play checkpoint, exp4896 held-out first-win) recorded no duration_s, so even a working detector could not rank them by wall-time. Compute-bound artifacts should stamp duration_s / inference_substrate / compute_bound at write time.",
+    "Process note (not a wall-time bottleneck): the archive/activate transition exp4891 logged honest_verdict=blocked_research_roadmap_next_yaml_missing in 1.37s, yet the milestone still activated (commit 630442b7c) and ran 10 downstream tasks -- worth confirming the missing research-roadmap-next.yaml did not silently drop any planned task."
+  ],
+  "improvements_suggested": [
+    "MOVE the milestone-scoped timing-detector wire to the conductor's retro TIMING-DATA prompt-assembly call site (the consumer that builds the retro prompt), so the detector's output actually reaches the retro instead of a standalone module the retro never reads. This is the single durable fix for the ~78-milestone false-zero gap.",
+    "Add a results/-mtime fallback to the retro data path: when the detector reports 0 commits since activation, fall back to artifact mtimes since the activation commit, so a detector false-zero degrades to a verifiable artifact-mtime window instead of an empty 0/0/0/null block.",
+    "Enforce write-time stamping of duration_s, inference_substrate, and compute_bound on EVERY artifact (exp4895/exp4896 were unstamped live arms this milestone), so slowest-experiment ranking is always possible.",
+    "Do NOT propose DualGPURunner here: the 4 live_llm_inference arms were single-model each and ran sequentially within the window; there was no 2+-models-in-parallel task to engage it."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Relocate the timing-detector wire to the conductor's retro prompt-assembly call site -- fixes the recurring false-zero that has degraded the TIMING DATA block of every retro since .363 (~78 milestones).",
+    "Add a results/-mtime fallback so a detector false-zero produces a real artifact-window (range + count + slowest) instead of 0/0/0/null.",
+    "Enforce write-time duration_s/inference_substrate/compute_bound stamping so live_llm_inference arms (exp4895/exp4896 were unstamped) are always rankable by wall-time."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The dominant operational signal this milestone is again the false-zero detector gap, not anything in execution efficiency: the 11 tasks (exp4891-exp4901) ran cleanly over ~231 min with the two heaviest live arms at 219-277s on GPU, yet the retro received an empty TIMING DATA block and had to re-derive the range from disk for the ~78th consecutive milestone. The fix is upstream (detector-wire relocation + mtime fallback + write-time stamping); it recurs precisely because it is logged in each retro but never lands as code."
+}
