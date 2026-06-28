@@ -187,6 +187,67 @@ missing resource under `preconditions_checked`, sets
 |---|---|---|
 | REQ-REPORT-4894 | Planned (`python/carnot/experiment_4894_levelup_attempt.py`) | Planned (`tests/python/test_experiment_4894_levelup_attempt.py`) |
 
+### REQ-REPORT-4905: Rotated M0R0 Deepening Attempt Banks Only New Offline-Reproduced ARC Depth
+
+The Exp 4905 workflow SHALL select a rotated public ARC L2 target for a
+deepening attempt from `m0r0`, `sp80`, `su15`, and `cn04`. The selected target
+SHALL differ from `.451`'s `dc22` duplicate-depth attempt, `.450`'s `g50t` L2
+bank, `.449`'s `s5i5` L2 bank, and `.448`'s `r11l` L2 bank. It SHALL avoid
+hidden-state-bound targets (`ka59` and `wa30`), SHALL consult
+`ops/arc_solve_registry.yaml` plus `arc_solve_learning.recommend_approach(game)`,
+SHALL avoid recorded next-level dead ends, and SHALL NOT count an
+already-reproduced level as a new result.
+
+The workflow SHALL run the standing loop
+`.venv/bin/python scripts/arc_loop_solve.py --game <rotated-target>` before
+claiming any banked level. Any counted level SHALL pass
+`arc_solver_kit.reproduce()` offline, and the artifact SHALL set
+`verifier_is_oracle=true` only for that executable reproduction gate. The
+artifact SHALL be written to `results/experiment_4905_levelup_attempt.json`
+and include principle-annotated fields `honest_verdict`,
+`solve_provenance`, `target_game`, `offline_reproduced`,
+`reproduced_levels`, `new_levels_banked`, `verifier_is_oracle`,
+`inference_substrate`, and `preconditions_checked`.
+
+The success path SHALL use `honest_verdict` prefix
+`success_<game>_levelup_banked`, set
+`solve_provenance=live_agent_self_discovery`, set
+`offline_reproduced=true`, and set `new_levels_banked>=1` with
+`reproduced_levels` strictly greater than the prior registry depth. The no-bank
+path SHALL use `complete_<game>_no_new_level_residual_<cause>` and record the
+residual dead end in the registry. Missing offline arcade or target environment
+resources SHALL produce a blocked verdict and SHALL NOT fabricate a solve. The
+workflow SHALL not update `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`; the conductor reconciler owns those files.
+
+#### SCENARIO-REPORT-4905: M0R0 L3 Attempt Records Duplicate-Depth Residual
+
+**Given** the offline arcade loads, the registry records `m0r0`, `sp80`,
+`su15`, and `cn04` at L2, `sp80` and `su15` carry recorded next-level dead-end
+cautions, and the recent targets are `dc22`, `g50t`, `s5i5`, and `r11l`
+**When** the Exp 4905 workflow selects `m0r0`, runs
+`.venv/bin/python scripts/arc_loop_solve.py --game m0r0`, and the reproduction
+gate reaches only the prior L2 depth
+**Then** `results/experiment_4905_levelup_attempt.json` records
+`target_game=m0r0`, `solve_provenance=live_agent_self_discovery`,
+`offline_reproduced=false`, `new_levels_banked=0`, the executable reproduction
+gate as the oracle, and a `complete_m0r0_no_new_level_residual_duplicate_depth`
+verdict with the duplicate-depth dead end recorded in the registry.
+
+#### SCENARIO-REPORT-4905-BLOCKED-PRECONDITION: Missing Offline ARC Resource Blocks
+
+**Given** the offline arcade or target environment is unavailable
+**When** the Exp 4905 workflow starts
+**Then** it writes a blocked artifact with a `blocked_` verdict, records the
+missing resource under `preconditions_checked`, sets
+`offline_reproduced=false`, and sets `new_levels_banked=0`.
+
+## Implementation Status (REQ-REPORT-4905)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4905 | Planned (`python/carnot/experiment_4905_levelup_attempt.py`) | Planned (`tests/python/test_experiment_4905_levelup_attempt.py`) |
+
 ### REQ-REPORT-4420: Archive .408, Activate .409, Record The Honest Config-Rule Close-State
 
 The Exp 4420 workflow SHALL archive milestone `2026.06.408`, confirm milestone

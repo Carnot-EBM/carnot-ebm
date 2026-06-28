@@ -4,8 +4,16 @@
   "moves": 38,
   "states_expanded": 1802,
   "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
-  "hazard_prune": false,
-  "hazard_pruner_stats": null,
+  "hazard_prune": true,
+  "hazard_pruner_stats": {
+    "observed": 1802,
+    "pruned": 0,
+    "n_deaths": 0,
+    "lethal_mode": null,
+    "trust": 0.0,
+    "specificity": 0.0,
+    "model_fitted": false
+  },
   "offline_reproduced": true,
   "reproduced_levels": 2,
   "learned_verifier_checkpoint": null,
@@ -241,6 +249,22 @@
         "search_heuristic",
         "graph_explore",
         "candidate_ranking",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "energy_fitness_qd_generator_operator",
+      "derived_from_games": [
+        "exp4738_energy_fitness_qd_generation_valid_test"
+      ],
+      "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
+      "selector_tags": [
+        "energy_qd",
+        "map_elites",
+        "candidate_generation",
+        "energy_fitness",
+        "graph_explore",
+        "click",
         "transfer"
       ]
     },
