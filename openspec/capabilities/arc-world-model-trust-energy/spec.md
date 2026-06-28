@@ -12459,6 +12459,103 @@ or modifies `scripts/research_conductor.py`
 When the Experiment 4911 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4914: Causal Abstraction Wall Diagnostic
+
+Experiment 4914 SHALL run the `.453` causal state-abstraction diagnostic
+selected by Experiment 4911. It SHALL first check `arc_solver_kit.offline_arcade()`,
+the GPU-fixed Qwen3.5-9B-MTP generator precondition accepting either GPU-0
+CUDA or iGPU HIP without rejecting ambient `CUDA_VISIBLE_DEVICES`, and
+`results/experiment_4903_env_grounded_location_pruned_search.json`. Missing
+preconditions SHALL write
+`results/experiment_4914_causal_abstraction_wall_diagnostic.json` with
+`blocked_offline_arcade_missing`, `blocked_generator_unavailable`, or
+`blocked_a1_baseline_missing` rather than fabricating a wall classification.
+
+For at least three Exp 4903 `NEVER_ENUMERATED` failed games, plus the positive
+controls `tu93` and one already-solved L2-or-deeper game, Experiment 4914 SHALL
+load the live E3 engine through `arc_executable_world_model.load_engine`,
+collect real offline-env transitions, derive the minimal causal variables
+needed to classify changed-cell value and progress-to-goal labels, and classify
+each required variable as observable only when an extractor proves it is
+readable from the ARC frame, action, or env state the agent already sees.
+Latent counters, off-screen registers, banked winning-prefix indices, and
+interaction-dependent variables without such an extractor SHALL be classified
+hidden. The diagnostic SHALL NOT become a decision-need target table, SHALL NOT
+claim a solve, SHALL NOT report a static-ranking lift, and SHALL use banked
+winning prefixes only as classification ground truth after induction.
+
+Experiment 4914 SHALL write
+`results/experiment_4914_causal_abstraction_wall_diagnostic.json` with required
+fields `honest_verdict`, `fork_verdict`, `per_game_causal_abstraction`,
+`minimal_abstraction_is_observable_subset`, `positive_control_games`,
+`positive_control_classifies_observable`, `is_decision_need_table_in_disguise`,
+`planner_blind_to_banked_answer`, `verifier_is_oracle`, `live_path_reachable`,
+`generator_backend`, `solve_provenance`, `checkpoint_emitted`,
+`inference_substrate`, `model_specs`, `preconditions_checked`, `random_seed`,
+and `reproducibility_checksum`.
+
+If every failed-game minimal abstraction is a subset of observable variables
+and every positive control classifies observable, the artifact SHALL report
+`fork_verdict=WALL_IS_OBSERVABLE_VARIABLE_GAP`. If any failed-game minimal
+abstraction requires a hidden variable and every positive control classifies
+observable, it SHALL report `fork_verdict=WALL_IS_HIDDEN_STATE`. If any
+positive control classifies hidden, it SHALL report
+`fork_verdict=DIAGNOSTIC_DEGENERATE_RETIRED` and retire the diagnostic lens.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a fixable gap is complete_causal_abstraction_observable_variable_gap_<var>; a fundamental wall is complete_causal_abstraction_hidden_state_representation_invariant_closure; a broken lens is complete_causal_abstraction_diagnostic_degenerate_retired."
+- `fork_verdict`: principle "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | DIAGNOSTIC_DEGENERATE_RETIRED -- the mechanistic closure verdict for the FoVer paper's ARC section + the .454 handoff."
+- `per_game_causal_abstraction`: principle "per-game {required_variables: list, observable_from_interface: {var: bool}, classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence} -- the quantitative classification table."
+- `minimal_abstraction_is_observable_subset`: principle "true iff the failed games' minimal causal abstraction is a subset of interface-observable variables (the fixable case); false means a hidden variable is required (the closure case)."
+- `positive_control_games`: principle "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, else the diagnostic is broken."
+- `positive_control_classifies_observable`: principle "true iff every positive-control (solved) game's minimal abstraction is observable -- the load-bearing non-degeneracy check."
+- `is_decision_need_table_in_disguise`: principle "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table (exp4911 fails_when forbids it)."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was classification ground truth only, NOT injected into the abstraction induction."
+- `verifier_is_oracle`: principle "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
+- `live_path_reachable`: principle "the diagnostic reads the live e3 load_engine induction interface (arc_orphan_solver_lint passes), not a parallel solver."
+- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+- `solve_provenance`: principle "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game checkpointing)."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on the GPU-0 generator."
+- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+- `random_seed`: principle "determinism for the causal-abstraction induction stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, failed transitions, abstraction config, held-out split) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT
+
+Given the Exp 4903 failed-game rows, live E3 engines, and real offline-env
+transition samples
+When Experiment 4914 induces the causal abstraction
+Then it emits a per-game table of required variables, per-variable
+observability proof, and `OBSERVABLE_GAP` or `HIDDEN_STATE` classification
+without emitting a change-VALUE target table, solve claim, or static-ranking
+lift.
+
+#### SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL
+
+Given `tu93` and a solved L2-or-deeper game are available
+When Experiment 4914 applies the same classifier
+Then every positive control must classify observable, otherwise the artifact
+reports `DIAGNOSTIC_DEGENERATE_RETIRED`.
+
+#### SCENARIO-ARC-WMTE-4914-FORK-VERDICT
+
+Given at least three failed `NEVER_ENUMERATED` games and passing positive
+controls
+When Experiment 4914 aggregates the per-game classifications
+Then it emits exactly one of `WALL_IS_OBSERVABLE_VARIABLE_GAP` or
+`WALL_IS_HIDDEN_STATE`, and otherwise emits
+`DIAGNOSTIC_DEGENERATE_RETIRED` for a broken positive-control lens.
+
+#### SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT
+
+Given the run reaches its elapsed budget after measuring at least one game
+When Experiment 4914 stops the current process
+Then it writes per-game checkpoints and a schema-valid partial artifact so the
+next run can resume without losing the causal-abstraction ledger.
+
 ## Implementation Status (REQ-ARC-WMTE-4908)
 
 | Requirement | Implementation | Tests |

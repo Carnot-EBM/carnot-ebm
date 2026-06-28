@@ -1,0 +1,471 @@
+{
+  "causal_abstraction_config": {
+    "a1_artifact": "results/experiment_4903_env_grounded_location_pruned_search.json",
+    "classification_only": true,
+    "failed_games": [
+      "cd82",
+      "cn04",
+      "ls20"
+    ],
+    "generator_precondition": "igpu_hip_or_gpu0_cuda",
+    "gpu0_cuda_allowed": true,
+    "live_path": "arc_executable_world_model.load_engine",
+    "llm_model": "Qwen3.5-9B-MTP",
+    "method": "minimal_task_specific_causal_state_abstraction",
+    "paper": "arXiv:2401.12497",
+    "positive_control_games": [
+      "tu93",
+      "ar25"
+    ],
+    "soft_elapsed_budget_s": 3500.0,
+    "targets": [
+      "changed_cell_value",
+      "progress_to_goal"
+    ],
+    "transitions_per_game": 6
+  },
+  "checkpoint_emitted": true,
+  "checkpoint_emitted_after_each_game": true,
+  "duration_s": 60.001,
+  "experiment_id": 4914,
+  "field_principles": {
+    "checkpoint_emitted": {
+      "principle": "a capped run still emits a usable partial (per-game checkpointing)."
+    },
+    "fork_verdict": {
+      "principle": "one of WALL_IS_OBSERVABLE_VARIABLE_GAP | WALL_IS_HIDDEN_STATE | DIAGNOSTIC_DEGENERATE_RETIRED -- the mechanistic closure verdict for the FoVer paper's ARC section + the .454 handoff."
+    },
+    "generator_backend": {
+      "principle": "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a fixable gap is complete_causal_abstraction_observable_variable_gap_<var>; a fundamental wall is complete_causal_abstraction_hidden_state_representation_invariant_closure; a broken lens is complete_causal_abstraction_diagnostic_degenerate_retired."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) -- the causal-abstraction induction invokes the LLM on the GPU-0 generator."
+    },
+    "is_decision_need_table_in_disguise": {
+      "principle": "false -- A1 produces a CLASSIFICATION report, NOT a change-VALUE-predicting table (exp4911 fails_when forbids it)."
+    },
+    "live_path_reachable": {
+      "principle": "the diagnostic reads the live e3 load_engine induction interface (arc_orphan_solver_lint passes), not a parallel solver."
+    },
+    "minimal_abstraction_is_observable_subset": {
+      "principle": "true iff the failed games' minimal causal abstraction is a subset of interface-observable variables (the fixable case); false means a hidden variable is required (the closure case)."
+    },
+    "model_specs": {
+      "principle": "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+    },
+    "per_game_causal_abstraction": {
+      "principle": "per-game {required_variables: list, observable_from_interface: {var: bool}, classification in OBSERVABLE_GAP|HIDDEN_STATE, evidence} -- the quantitative classification table."
+    },
+    "planner_blind_to_banked_answer": {
+      "principle": "true -- the banked winning prefix was classification ground truth only, NOT injected into the abstraction induction."
+    },
+    "positive_control_classifies_observable": {
+      "principle": "true iff every positive-control (solved) game's minimal abstraction is observable -- the load-bearing non-degeneracy check."
+    },
+    "positive_control_games": {
+      "principle": "tu93 + a solved L2 game -- on solved games the abstraction MUST classify observable, else the diagnostic is broken."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the causal-abstraction induction stochastic search."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, failed transitions, abstraction config, held-out split) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a diagnostic over the dev twin, NOT a registry bank."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the causal-abstraction classifier is oracle-distinct from the env's level-up check; a DIAGNOSTIC, not a moat claim (circularity discipline)."
+    }
+  },
+  "fork_verdict": "WALL_IS_HIDDEN_STATE",
+  "generator_backend": "gpu0_cuda",
+  "honest_verdict": "complete_causal_abstraction_hidden_state_representation_invariant_closure",
+  "inference_substrate": "live_llm_inference",
+  "is_decision_need_table_in_disguise": false,
+  "live_path_reachable": true,
+  "minimal_abstraction_is_observable_subset": false,
+  "model_specs": {
+    "backend": "gpu0_cuda",
+    "cuda_visible_devices": "0",
+    "kv_quant": "q8_0",
+    "mtp": true,
+    "name": "Qwen3.5-9B-MTP",
+    "no_think_prefix": true,
+    "port": 8931,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+  },
+  "n_games_measured": 3,
+  "partial": false,
+  "per_game_causal_abstraction": {
+    "cd82": {
+      "classification": "HIDDEN_STATE",
+      "evidence": {
+        "changed_transition_count": 4,
+        "engine_loaded": true,
+        "exp4903_bucket": "NEVER_ENUMERATED",
+        "live_path_methods_called": [
+          "arc_executable_world_model.load_engine"
+        ],
+        "observability_proofs": {
+          "action_data": {
+            "extractor": "candidate.data",
+            "observable": true,
+            "proof": "action_data extracted from candidate.data on observed transition samples"
+          },
+          "action_id": {
+            "extractor": "candidate.action_id",
+            "observable": true,
+            "proof": "action_id extracted from candidate.action_id on observed transition samples"
+          },
+          "changed_cell_value_basis": {
+            "extractor": "frame grid plus executed transition delta",
+            "observable": true,
+            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+          },
+          "visible_grid_hash": {
+            "extractor": "frame.grid -> sha256",
+            "observable": true,
+            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+          },
+          "winning_prefix_order_state": {
+            "extractor": null,
+            "observable": false,
+            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
+          }
+        },
+        "progress_transition_count": 0,
+        "solved_reproduced_level": 0,
+        "targets": [
+          "changed_cell_value",
+          "progress_to_goal"
+        ],
+        "transition_count": 6
+      },
+      "game": "cd82",
+      "observable_from_interface": {
+        "action_data": true,
+        "action_id": true,
+        "changed_cell_value_basis": true,
+        "visible_grid_hash": true,
+        "winning_prefix_order_state": false
+      },
+      "required_variables": [
+        "visible_grid_hash",
+        "action_id",
+        "action_data",
+        "changed_cell_value_basis",
+        "winning_prefix_order_state"
+      ],
+      "role": "failed"
+    },
+    "cn04": {
+      "classification": "HIDDEN_STATE",
+      "evidence": {
+        "changed_transition_count": 4,
+        "engine_loaded": true,
+        "exp4903_bucket": "NEVER_ENUMERATED",
+        "live_path_methods_called": [
+          "arc_executable_world_model.load_engine"
+        ],
+        "observability_proofs": {
+          "action_data": {
+            "extractor": "candidate.data",
+            "observable": true,
+            "proof": "action_data extracted from candidate.data on observed transition samples"
+          },
+          "action_id": {
+            "extractor": "candidate.action_id",
+            "observable": true,
+            "proof": "action_id extracted from candidate.action_id on observed transition samples"
+          },
+          "changed_cell_value_basis": {
+            "extractor": "frame grid plus executed transition delta",
+            "observable": true,
+            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+          },
+          "visible_grid_hash": {
+            "extractor": "frame.grid -> sha256",
+            "observable": true,
+            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+          },
+          "winning_prefix_order_state": {
+            "extractor": null,
+            "observable": false,
+            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
+          }
+        },
+        "progress_transition_count": 0,
+        "solved_reproduced_level": 0,
+        "targets": [
+          "changed_cell_value",
+          "progress_to_goal"
+        ],
+        "transition_count": 6
+      },
+      "game": "cn04",
+      "observable_from_interface": {
+        "action_data": true,
+        "action_id": true,
+        "changed_cell_value_basis": true,
+        "visible_grid_hash": true,
+        "winning_prefix_order_state": false
+      },
+      "required_variables": [
+        "visible_grid_hash",
+        "action_id",
+        "action_data",
+        "changed_cell_value_basis",
+        "winning_prefix_order_state"
+      ],
+      "role": "failed"
+    },
+    "ls20": {
+      "classification": "HIDDEN_STATE",
+      "evidence": {
+        "changed_transition_count": 6,
+        "engine_loaded": true,
+        "exp4903_bucket": "NEVER_ENUMERATED",
+        "live_path_methods_called": [
+          "arc_executable_world_model.load_engine"
+        ],
+        "observability_proofs": {
+          "action_data": {
+            "extractor": "candidate.data",
+            "observable": true,
+            "proof": "action_data extracted from candidate.data on observed transition samples"
+          },
+          "action_id": {
+            "extractor": "candidate.action_id",
+            "observable": true,
+            "proof": "action_id extracted from candidate.action_id on observed transition samples"
+          },
+          "changed_cell_value_basis": {
+            "extractor": "frame grid plus executed transition delta",
+            "observable": true,
+            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+          },
+          "visible_grid_hash": {
+            "extractor": "frame.grid -> sha256",
+            "observable": true,
+            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+          },
+          "winning_prefix_order_state": {
+            "extractor": null,
+            "observable": false,
+            "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
+          }
+        },
+        "progress_transition_count": 0,
+        "solved_reproduced_level": 0,
+        "targets": [
+          "changed_cell_value",
+          "progress_to_goal"
+        ],
+        "transition_count": 6
+      },
+      "game": "ls20",
+      "observable_from_interface": {
+        "action_data": true,
+        "action_id": true,
+        "changed_cell_value_basis": true,
+        "visible_grid_hash": true,
+        "winning_prefix_order_state": false
+      },
+      "required_variables": [
+        "visible_grid_hash",
+        "action_id",
+        "action_data",
+        "changed_cell_value_basis",
+        "winning_prefix_order_state"
+      ],
+      "role": "failed"
+    }
+  },
+  "planner_blind_to_banked_answer": true,
+  "positive_control_classifies_observable": true,
+  "positive_control_games": [
+    "tu93",
+    "ar25"
+  ],
+  "positive_control_rows": {
+    "ar25": {
+      "classification": "OBSERVABLE_GAP",
+      "evidence": {
+        "changed_transition_count": 3,
+        "engine_loaded": true,
+        "exp4903_bucket": null,
+        "live_path_methods_called": [
+          "arc_executable_world_model.load_engine"
+        ],
+        "observability_proofs": {
+          "action_data": {
+            "extractor": "candidate.data",
+            "observable": true,
+            "proof": "action_data extracted from candidate.data on observed transition samples"
+          },
+          "action_id": {
+            "extractor": "candidate.action_id",
+            "observable": true,
+            "proof": "action_id extracted from candidate.action_id on observed transition samples"
+          },
+          "changed_cell_value_basis": {
+            "extractor": "frame grid plus executed transition delta",
+            "observable": true,
+            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+          },
+          "visible_grid_hash": {
+            "extractor": "frame.grid -> sha256",
+            "observable": true,
+            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+          },
+          "visible_level_before": {
+            "extractor": "env/frame levels_completed",
+            "observable": true,
+            "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
+          }
+        },
+        "progress_transition_count": 0,
+        "solved_reproduced_level": 3,
+        "targets": [
+          "changed_cell_value",
+          "progress_to_goal"
+        ],
+        "transition_count": 6
+      },
+      "game": "ar25",
+      "observable_from_interface": {
+        "action_data": true,
+        "action_id": true,
+        "changed_cell_value_basis": true,
+        "visible_grid_hash": true,
+        "visible_level_before": true
+      },
+      "required_variables": [
+        "visible_grid_hash",
+        "action_id",
+        "action_data",
+        "changed_cell_value_basis",
+        "visible_level_before"
+      ],
+      "role": "positive_control"
+    },
+    "tu93": {
+      "classification": "OBSERVABLE_GAP",
+      "evidence": {
+        "changed_transition_count": 6,
+        "engine_loaded": true,
+        "exp4903_bucket": null,
+        "live_path_methods_called": [
+          "arc_executable_world_model.load_engine"
+        ],
+        "observability_proofs": {
+          "action_data": {
+            "extractor": "candidate.data",
+            "observable": true,
+            "proof": "action_data extracted from candidate.data on observed transition samples"
+          },
+          "action_id": {
+            "extractor": "candidate.action_id",
+            "observable": true,
+            "proof": "action_id extracted from candidate.action_id on observed transition samples"
+          },
+          "changed_cell_value_basis": {
+            "extractor": "frame grid plus executed transition delta",
+            "observable": true,
+            "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+          },
+          "visible_grid_hash": {
+            "extractor": "frame.grid -> sha256",
+            "observable": true,
+            "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+          },
+          "visible_level_before": {
+            "extractor": "env/frame levels_completed",
+            "observable": true,
+            "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples"
+          }
+        },
+        "progress_transition_count": 0,
+        "solved_reproduced_level": 5,
+        "targets": [
+          "changed_cell_value",
+          "progress_to_goal"
+        ],
+        "transition_count": 6
+      },
+      "game": "tu93",
+      "observable_from_interface": {
+        "action_data": true,
+        "action_id": true,
+        "changed_cell_value_basis": true,
+        "visible_grid_hash": true,
+        "visible_level_before": true
+      },
+      "required_variables": [
+        "visible_grid_hash",
+        "action_id",
+        "action_data",
+        "changed_cell_value_basis",
+        "visible_level_before"
+      ],
+      "role": "positive_control"
+    }
+  },
+  "preconditions_checked": {
+    "a1_baseline": {
+      "failed_games": [
+        "cd82",
+        "cn04",
+        "ls20"
+      ],
+      "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "ok": true,
+      "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+      "positive_control_non_degenerate": true
+    },
+    "generator": {
+      "allowed_backends": [
+        "gpu0_cuda",
+        "igpu_hip"
+      ],
+      "ambient_cuda_visible_devices": null,
+      "backend": "gpu0_cuda",
+      "detail": "ok",
+      "generator_backend": "gpu0_cuda",
+      "igpu_required": false,
+      "launch_env_cuda_visible_devices": "0",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": true,
+      "port": 8931,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "live_path": {
+      "ok": true
+    },
+    "offline_arcade": {
+      "ok": true
+    },
+    "planner_blind_to_banked_answer": true
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "sha256:52df1ccf01d3102bf2516f039227b82bb6560f9367d623bca28bd0bff2583f80",
+  "retire_if_same_verdict": false,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4914",
+    "SCENARIO-ARC-WMTE-4914-CLASSIFICATION-REPORT",
+    "SCENARIO-ARC-WMTE-4914-POSITIVE-CONTROL",
+    "SCENARIO-ARC-WMTE-4914-FORK-VERDICT",
+    "SCENARIO-ARC-WMTE-4914-PARTIAL-CHECKPOINT"
+  ],
+  "verifier_is_oracle": false
+}

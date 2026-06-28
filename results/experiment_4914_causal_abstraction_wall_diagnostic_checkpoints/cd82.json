@@ -1,0 +1,61 @@
+{
+  "classification": "HIDDEN_STATE",
+  "evidence": {
+    "changed_transition_count": 4,
+    "engine_loaded": true,
+    "exp4903_bucket": "NEVER_ENUMERATED",
+    "live_path_methods_called": [
+      "arc_executable_world_model.load_engine"
+    ],
+    "observability_proofs": {
+      "action_data": {
+        "extractor": "candidate.data",
+        "observable": true,
+        "proof": "action_data extracted from candidate.data on observed transition samples"
+      },
+      "action_id": {
+        "extractor": "candidate.action_id",
+        "observable": true,
+        "proof": "action_id extracted from candidate.action_id on observed transition samples"
+      },
+      "changed_cell_value_basis": {
+        "extractor": "frame grid plus executed transition delta",
+        "observable": true,
+        "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples"
+      },
+      "visible_grid_hash": {
+        "extractor": "frame.grid -> sha256",
+        "observable": true,
+        "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples"
+      },
+      "winning_prefix_order_state": {
+        "extractor": null,
+        "observable": false,
+        "proof": "No ARC frame/env extractor exposes the banked winning-prefix automaton index; it is interaction-dependent classification ground truth."
+      }
+    },
+    "progress_transition_count": 0,
+    "solved_reproduced_level": 0,
+    "targets": [
+      "changed_cell_value",
+      "progress_to_goal"
+    ],
+    "transition_count": 6
+  },
+  "game": "cd82",
+  "observable_from_interface": {
+    "action_data": true,
+    "action_id": true,
+    "changed_cell_value_basis": true,
+    "visible_grid_hash": true,
+    "winning_prefix_order_state": false
+  },
+  "required_variables": [
+    "visible_grid_hash",
+    "action_id",
+    "action_data",
+    "changed_cell_value_basis",
+    "winning_prefix_order_state"
+  ],
+  "role": "failed"
+}
