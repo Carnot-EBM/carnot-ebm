@@ -483,6 +483,21 @@ CN04_L2_TAIL_LABELS: tuple[str, ...] = (
 
 CN04_L2_SOLUTION_LABELS: tuple[str, ...] = CN04_L1_LABELS + CN04_L2_TAIL_LABELS
 
+CN04_L3_TAIL_LABELS: tuple[str, ...] = (
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(4),
+    _json_action_label(6, {"x": 44, "y": 42}),
+    _json_action_label(5),
+    _json_action_label(5),
+    *(_json_action_label(1) for _ in range(6)),
+    _json_action_label(6, {"x": 36, "y": 15}),
+    _json_action_label(3),
+    *(_json_action_label(2) for _ in range(6)),
+)
+
+CN04_L3_SOLUTION_LABELS: tuple[str, ...] = CN04_L2_SOLUTION_LABELS + CN04_L3_TAIL_LABELS
+
 SB26_L1_LABELS: tuple[str, ...] = (
     _json_action_label(6, {"x": 36, "y": 59}),
     _json_action_label(6, {"x": 23, "y": 30}),
@@ -1503,6 +1518,8 @@ def _cn04():
             return [CN04_L1_LABELS[extension_index]]
         if level == 1 and extension_index < len(CN04_L2_TAIL_LABELS):
             return [CN04_L2_TAIL_LABELS[extension_index]]
+        if level == 2 and extension_index < len(CN04_L3_TAIL_LABELS):
+            return [CN04_L3_TAIL_LABELS[extension_index]]
         return []
 
     def apply(env, label, frame):
@@ -1536,7 +1553,12 @@ def _cn04():
         featurize=None,
         hand_verifier=lambda _game, _frame=None: 0.0,
         warmup_label=None,
-        depth_caps={1: len(CN04_L1_LABELS), 2: len(CN04_L2_TAIL_LABELS), 3: 1},
+        depth_caps={
+            1: len(CN04_L1_LABELS),
+            2: len(CN04_L2_TAIL_LABELS),
+            3: len(CN04_L3_TAIL_LABELS),
+        },
+        level_tails={3: CN04_L3_TAIL_LABELS},
         branch_mode="fresh_env",
     )
 

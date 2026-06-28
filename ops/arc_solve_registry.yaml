@@ -1173,33 +1173,28 @@ games:
     \ can't drive 5 attributes onto a target."
 - game: cn04
   reproducibility: reproduced
-  levels_reproduced: 2
+  levels_reproduced: 3
   mechanic_class: marker_pair_shape_alignment
-  win_condition: 'L1 adapter-free seed plus L2 marker-pair shape alignment: every original
-    8/13 marker on each visible sprite must overlap exactly one same-colored marker
-    from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6),
-    0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0.'
-  action_model: ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton
-    selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite
-    through camera-derived display coordinates.
-  solver: GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py with branch_mode='fresh_env';
-    results/arc_loop_solve_cn04.json 43-label L2 gate.
-  reproduce: Exp4570 results/experiment_4570_levelup_attempt.json re-gated results/arc_loop_solve_cn04.json
-    offline_reproduced=True, reached_level=2, banked +1 over the current L1
-    registry row, checksum f46b60d69b3de5e1dd2e65043cc5ba0b8e18abbd873a27853df1593683167355.
+  win_condition: 'L1 adapter-free seed plus L2 marker-pair shape alignment: every original 8/13 marker on each visible sprite must overlap exactly one same-colored marker from another visible sprite. L2 positions 0002 at (4,5), 0003 at (8,6), 0004 at (3,3), and 0005 at (12,8) with all rotations normalized to 0.'
+  action_model: ACTION1-4 move the selected visible sprite; ACTION5 rotates a singleton selected sprite or cycles a stacked variant; ACTION6 selects a visible sprite through camera-derived display coordinates.
+  solver: GameAdapter _cn04 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py with branch_mode='fresh_env'; results/arc_loop_solve_cn04.json 43-label L2 gate.
+  reproduce: Exp4915 results/experiment_4915_levelup_attempt.json re-gated results/arc_loop_solve_cn04.json offline_reproduced=True, reached_level=3, banked +1, checksum 98a1e05492d2083832b4218271dc72102521b3424be591e5ad286436543af75c.
   gotchas:
-  - The win predicate is marker-pair coverage, not full-canvas equality; every
-    same-colored 8/13 marker must be paired exactly twice.
-  - ACTION5 can rotate the selected sprite and advance the level on the same
-    action, so count only the offline reproduction gate's reached_level.
-  - ACTION6 display coordinates must land on non-transparent rendered sprite
-    pixels after camera.display_to_grid mapping.
-  - Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even
-    though the full L1+L2 label sequence reproduces on a fresh offline arcade.
+  - The win predicate is marker-pair coverage, not full-canvas equality; every same-colored 8/13 marker must be paired exactly twice.
+  - ACTION5 can rotate the selected sprite and advance the level on the same action, so count only the offline reproduction gate's reached_level.
+  - ACTION6 display coordinates must land on non-transparent rendered sprite pixels after camera.display_to_grid mapping.
+  - Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade.
   dead_ends:
-  - Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad
-    graph exploration preserved L1 but did not derive the L2 marker-pair delta.
+  - Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not derive the L2 marker-pair delta.
+  latest_exp4915_levelup_attempt:
+    artifact: results/experiment_4915_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_cn04.json
+    offline_reproduced: true
+    reproduced_levels: 3
+    new_levels_banked: 1
+    solve_provenance: live_agent_self_discovery
+    target_rotation: rotated_off_m0r0_dc22_g50t_s5i5_r11l_and_a3_vc33
+    reproducibility_checksum: 98a1e05492d2083832b4218271dc72102521b3424be591e5ad286436543af75c
 - game: m0r0
   reproducibility: reproduced
   levels_reproduced: 2
@@ -1779,7 +1774,7 @@ games:
     verifier_checkpoint: models/arc_verifier_bp35.json
     target_rotation: clean_L1_to_L2_not_deepened_in_429_433
     reproducibility_checksum: 449511c595d37e6b03e6d25ade4031289ae7230a3886756f273601cc0e4fd9ae
-reproducible_total_levels: 68
+reproducible_total_levels: 69
 reproducible_total_games: 24
 provisional_total_levels: 1
 live_submissions:
