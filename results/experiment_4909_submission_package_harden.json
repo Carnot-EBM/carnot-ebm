@@ -1,0 +1,258 @@
+{
+  "agent_config_resolution": {
+    "a1_prior_config_ready": false,
+    "amortized_first_contact_prior_enabled": false,
+    "amortized_first_contact_prior_mode": "frequency_prior_from_cross_game_first_contact_traces",
+    "blocked_resource": "",
+    "checks": {
+      "binary_not_wheel": true,
+      "cuda_128_server": true,
+      "model_filename": true,
+      "model_is_qwen35_mtp": true,
+      "mtp_enabled": true,
+      "n_predict_floor": true,
+      "no_think": true,
+      "q8_kv": true,
+      "submitted_cascade": true,
+      "submitted_policy_e3": true
+    },
+    "go_explore_archive_enabled": false,
+    "go_explore_archive_mode": "return_then_explore_replayable_prefix_archive",
+    "kv_quant": "q8_0",
+    "llama_server_kind": "cuda-12.8-binary",
+    "max_tokens": 2560,
+    "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "model_path_env": "CARNOT_ARC_GGUF_PATH",
+    "mtp": true,
+    "n_predict_min": 2048,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "resolved": true,
+    "server_path_env": "CARNOT_LLAMA_SERVER",
+    "spec_type": "draft-mtp"
+  },
+  "blocked_resource": "",
+  "duration_s": 60.0,
+  "experiment": "experiment_4909_submission_package_harden",
+  "field_principles": {
+    "frozen_stack_loads": {
+      "principle": "true iff the iGPU MTP stack loads -- the live submission generator (NOT the 3090s)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_submission_package_ready_final_pre_deadline."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (the frozen GGUF load check on the iGPU; 60s floor)."
+    },
+    "operator_checklist": {
+      "principle": "the steps the OPERATOR performs to submit (this task stops at package-ready)."
+    },
+    "peak_vram_gb": {
+      "principle": "the frozen Qwen3.5-9B-MTP stack peak VRAM; must be < ~16GB (Kaggle constraint)."
+    },
+    "preconditions_checked": {
+      "principle": "records package/GGUF/iGPU checks; a missing resource emits blocked_."
+    },
+    "submission_package_ready": {
+      "principle": "true iff the package is ready for the OPERATOR to submit; this task never submits (Operator-Only External Publication)."
+    },
+    "submits": {
+      "principle": "MUST be false -- external submission is operator-only."
+    }
+  },
+  "frozen_stack_load_check": {
+    "blocked_resource": "",
+    "fits_16gb": true,
+    "frozen_stack_loads": true,
+    "generator_backend": "igpu_hip",
+    "igpu_hip_server_path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+    "igpu_hip_server_present": true,
+    "kv_quant": "q8_0",
+    "limit_gb": 16.0,
+    "measurement_source": "runtime_vram_estimate_after_live_load",
+    "mtp": true,
+    "n_predict_min": 2048,
+    "no_think_prefix": true,
+    "ok": true,
+    "peak_vram_gb": 15.146,
+    "server_reachable": true,
+    "uses_3090": false
+  },
+  "frozen_stack_loads": true,
+  "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+  "inference_substrate": "live_llm_inference",
+  "model_path_resolution": {
+    "all_gguf_candidates": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+    ],
+    "all_llama_server_candidates": [
+      "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    ],
+    "blocked_resource": "",
+    "gguf": {
+      "filename": "Qwen3.5-9B-Q4_K_M.gguf",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+      "present": true,
+      "size_bytes": 5868826976,
+      "size_gb": 5.868827
+    },
+    "llama_server": {
+      "cuda_12_8_capable": true,
+      "filename": "llama-server",
+      "kind": "cuda-12.8-binary",
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "present": true
+    },
+    "llama_server_candidate_checks": [
+      {
+        "cuda_12_8_capable": false,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+        "present": true
+      },
+      {
+        "cuda_12_8_capable": true,
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "present": true
+      }
+    ],
+    "resolved": true
+  },
+  "operator_checklist": [
+    "OPERATOR-CHECK: 6/30 final pre-deadline gate: confirm results/experiment_4909_submission_package_harden.json is ready, submits=false, and operator_only=true.",
+    "OPERATOR-CHECK: Confirm the .451 ready-package regression check is passed against results/experiment_4898_submission_package_harden.json.",
+    "OPERATOR-CHECK: Confirm the package dry-build compiled main.py and produced stable hashes for kernel-metadata.json and main.py.",
+    "OPERATOR-CHECK: Confirm the requirements-doc package cross-check passed against docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md.",
+    "OPERATOR-CHECK: Confirm Qwen3.5-9B-MTP GGUF resolves through CARNOT_ARC_GGUF_PATH and CUDA llama-server resolves through CARNOT_LLAMA_SERVER.",
+    "OPERATOR-CHECK: Verify the frozen iGPU HIP live-stack load used draft-MTP, q8_0 KV, /no_think, n_predict>=2048, and never targeted the 3090s.",
+    "OPERATOR-CHECK: Verify frozen stack peak VRAM 15.146GB is below the ~16GB Kaggle budget.",
+    "OPERATOR-CHECK: In Kaggle, use kernel iancblenke/carnot-arc-agi3-submission with GPU enabled, internet disabled, and the ARC-AGI-3 competition attached.",
+    "OPERATOR-CHECK: Attach carnot-agent-code, carnot-llamacpp-mtp-binary, and carnot-qwen35-9b-mtp-gguf before Save & Run.",
+    "OPERATOR-CHECK: Submit only through the operator-controlled Kaggle UI or API; this task never submits."
+  ],
+  "operator_only": true,
+  "package_builds": {
+    "blocked_resource": "",
+    "dry_build_ran": true,
+    "entrypoint_compiles": true,
+    "file_hashes": {
+      "kernel-metadata.json": "sha256:40629bd0ded774706e3356cddeb0e62d11178ab0f7e64f71e517296c423b6cc4",
+      "main.py": "sha256:893d9c196473c07ed99242494213dab4fa62f507a2173f30591d90065b56a03f"
+    },
+    "files": [
+      "kernel-metadata.json",
+      "main.py"
+    ],
+    "kernel_main_present": true,
+    "manifest_present": true,
+    "package_builds": true,
+    "package_sha256": "sha256:900bd246f3c61ee8710ce53c2d9d0ff66a936459bcf76ce0e5b4958be55184c6",
+    "submitted_to_leaderboard": false
+  },
+  "packaging_requirements_crosscheck": {
+    "blocked_resource": "",
+    "checks": {
+      "agent_code_dataset_attached": true,
+      "agent_submission_shape": true,
+      "competition_attached": true,
+      "env_paths_declared": true,
+      "gguf_dataset_attached": true,
+      "internet_disabled": true,
+      "kaggle_probe_script_present": true,
+      "llama_server_binary_dataset_attached": true,
+      "mtp_q8_declared": true,
+      "operator_only_external_publication": true,
+      "placeholder_non_rerun_submission": true
+    },
+    "doc_present": true,
+    "notes": [
+      "operator-only requirements package cross-check passed",
+      "kernel records CARNOT_ARC_MTP tight-VRAM override path"
+    ],
+    "ok": true,
+    "requirements_doc_path": "docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md"
+  },
+  "peak_vram_gb": 15.146,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arc_competition_agent_present": true,
+    "codex_or_opencode_md_read": true,
+    "frozen_gguf_present": true,
+    "igpu_hip_server_present": true,
+    "igpu_hip_server_reachable": true,
+    "kaggle_cuda_server_present": true,
+    "ok": true,
+    "package_build_path_present": true,
+    "packaging_requirements_doc_present": true,
+    "prior_4898_ready_package_present": true,
+    "spec_has_req_4909": true,
+    "submission_packaging_scripts_present": true
+  },
+  "random_seed": 4909,
+  "ready_package_regression_check": {
+    "checks": {
+      "frozen_config_still_resolves": true,
+      "frozen_stack_still_loads": true,
+      "model_paths_still_resolve": true,
+      "package_still_builds": true,
+      "peak_vram_still_fits_16gb": true,
+      "prior_artifact_present": true,
+      "prior_submission_package_ready": true,
+      "prior_submitted_to_leaderboard_false": true,
+      "requirements_still_pass": true,
+      "submits_still_false": true,
+      "vram_still_fits_16gb": true
+    },
+    "current_peak_vram_gb": 15.146,
+    "current_vram_estimate_gb": 15.146,
+    "diff": {
+      "gguf_path": "unchanged",
+      "llama_server_path": "unchanged",
+      "model_id": "unchanged",
+      "package_sha256": "unchanged",
+      "peak_vram_gb": "unchanged",
+      "vram_estimate_gb": "unchanged"
+    },
+    "ok": true,
+    "peak_vram_delta_gb": 0.0,
+    "prior_artifact_present": true,
+    "prior_experiment": "experiment_4898_submission_package_harden",
+    "prior_peak_vram_gb": 15.146,
+    "prior_ready_artifact_path": "results/experiment_4898_submission_package_harden.json",
+    "prior_submission_package_ready": true,
+    "prior_submits": false,
+    "prior_submitted_to_leaderboard": false,
+    "prior_vram_estimate_gb": 15.146,
+    "regressions": [],
+    "vram_delta_gb": 0.0
+  },
+  "reproducibility_checksum": "sha256:a17c23549e24eb433f32543db7b37102727d3e2bc779e2c933fe5a730dfd00db",
+  "result_path": "results/experiment_4909_submission_package_harden.json",
+  "schema": "carnot.exp4909.submission_package_harden.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4909",
+    "SCENARIO-CAPSTONE-4909",
+    "SCENARIO-CAPSTONE-4909-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4909-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": true,
+  "submits": false,
+  "submitted_to_leaderboard": false,
+  "vram_breakdown": {
+    "context_tokens": 16384,
+    "draft_model_weights_gb": 5.869,
+    "fits_16gb": true,
+    "kv_cache_gb": 1.208,
+    "kv_quant": "q8_0",
+    "limit_gb": 16.0,
+    "model_copies": 2,
+    "model_size_source": "resolved_model_path",
+    "model_weights_gb": 5.869,
+    "remaining_headroom_gb": 0.854,
+    "required_headroom_gb": 1.5,
+    "runtime_overhead_gb": 0.7,
+    "selected_model_size_bytes": 5868826976,
+    "total_with_headroom_gb": 15.146,
+    "vram_estimate_gb": 15.146
+  }
+}
