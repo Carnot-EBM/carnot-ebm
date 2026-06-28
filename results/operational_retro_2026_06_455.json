@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.455",
+  "generated_at": "2026-06-28T22:13:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked numeric fields are 0/0/0/null because the milestone-scoped TIMING DATA block reported 'no experiment commits since activation' -- but this is the RECURRING FALSE-ZERO detector gap (documented .363->.454, now ~81 milestones), NOT an empty milestone. On-disk verification shows 11 arms ran: results/experiment_4935..4945_*.json (archive_454_activate_455 -> capstone_v455), file mtimes 2026-06-28 ~19:28->22:05 UTC (~157-min window), finishing ~8 min before the 22:13Z retro snapshot. The locked zeros reflect the detector wiring gap, not the work that actually executed.",
+  "bottlenecks_identified": [
+    "RECURRING false-zero detector gap (~81 milestones, .363->.455): the milestone-scoped timing detector reports 0 commits since activation, so the retro TIMING DATA block is empty even though 11 arms (exp4935-exp4945) are on disk. The shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds the TIMING DATA block. This is the dominant operational drag -- it forces every retro to reconstruct the milestone from on-disk artifact mtimes.",
+    "The .453-shipped self-correction (B3 results/-mtime fallback) BLOCKED AGAIN this milestone: exp4943 = blocked_insufficient_v455_mtime_window -- the B3 arm ran mid-milestone (~17:38 local) before the later arms landed, so its window was anchored too early to catch the full run. The fallback needs to anchor on the activation commit and re-run at capstone time, not mid-milestone.",
+    "Write-time stamping still missing on some arms (the exp4920 stamping module is shipped but unwired): level-up / self-play arms continue to ship without duration_s/inference_substrate/compute_bound, which is the root cause the false-zero would otherwise be recoverable from."
+  ],
+  "improvements_suggested": [
+    "WIRE exp4920's already-shipped modules (python/carnot/reporting/retro_timing_mtime_fallback.py + runtime_stamping.py) into the conductor's retro TIMING-DATA prompt-assembly call site so a detector false-zero degrades to a verifiable artifact-mtime window instead of a misleading 0/0/0. This is an operator wire (the retro task is forbidden from editing scripts/research_conductor.py).",
+    "Repair the mtime-fallback window anchor that exp4943 found insufficient: anchor the window on the milestone activation commit and evaluate it at capstone time so all arms are in-window.",
+    "Enforce write-time duration_s / inference_substrate / compute_bound stamping at artifact-emit time so per-arm timing survives even when the commit-based detector misses.",
+    "Do NOT flag GPU idle this milestone: gpu_idle_on_compute_bound_tasks is null. The 22:13Z snapshot (both 3090s 0%) is a POST-window reading -- the GPU-bound held-out first-win arm (exp4939) finished hours before the snapshot, so post-window idle is not idle-during-compute."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Operator wire of exp4920's mtime-fallback + runtime-stamping into the conductor retro prompt-assembly call site -- retires an ~81-milestone recurring false-zero in one change.",
+    "Fix the B3 fallback window anchor (activation-commit-anchored, capstone-time re-run) so exp4943's blocked_insufficient_window stops recurring.",
+    "Add write-time duration_s/inference_substrate/compute_bound stamping to the arm emit path so timing is recoverable independent of the commit detector."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The honest operational finding is the detector gap itself: reporting this milestone as 'empty' would have been wrong -- 11 arms (exp4935-exp4945) are on disk through capstone_v455. The anti-hallucination discipline (never infer numbers) is satisfied by sourcing the exp range and the ~157-min window from on-disk artifact mtimes, exactly as retros .450-.454 did, while leaving the locked detector-view zeros untouched."
+}
