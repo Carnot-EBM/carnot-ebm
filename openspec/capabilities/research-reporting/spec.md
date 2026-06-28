@@ -700,6 +700,84 @@ submission flag false.
 |---|---|---|
 | REQ-REPORT-4913 | Implemented (`python/carnot/experiment_4913_archive_452_activate_453.py`) | Implemented (`tests/python/test_experiment_4913_archive_452_activate_453.py`) |
 
+### REQ-REPORT-4924: Archive .453, Activate .454, Record Hidden-State Closure
+
+The Exp 4924 workflow SHALL write
+`results/experiment_4924_archive_453_activate_454.json` for the record-only
+transition from milestone `2026.06.453` to `2026.06.454`. Before any transition
+work, it SHALL run both required preconditions: `yaml.safe_load` on the literal
+`research-roadmap-next.yaml` path and
+`carnot.agentic.arc_solver_kit.offline_arcade()`. If either precondition fails,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource under `preconditions_checked`, skips the
+pre-test gate, and does not claim a clean archive or activation.
+
+On the complete path, the workflow SHALL confirm `.454` is active, run the
+pre-test gate `.venv/bin/pytest tests/python -q`, record whether any poison
+pre-test was quarantined, and aggregate the true `.453` close-state from
+`ops/arc_solve_registry.yaml`,
+`results/operational_retro_2026_06_453.json`, and
+`results/experiment_4923_capstone_v453.json`. The artifact SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT submit to the leaderboard, and SHALL
+carry `reproducible_total_levels` from the registry without re-counting.
+
+The close-state SHALL truthfully record that A1 Exp 4914 reached
+`complete_causal_abstraction_hidden_state_representation_invariant_closure`
+with fork verdict `WALL_IS_HIDDEN_STATE`; B1 Exp 4918 confirmed
+`a1_diagnostic_trustworthy=true` through all six gates; Exp 4923 closed the
+world-model fork as `complete_capstone_v453_wall_is_hidden_state_arc_closure`;
+A2 Exp 4915 banked cn04 L2->L3 through live-agent self-discovery and offline
+reproduction, raising the registry total from 68 to 69; A3 Exp 4916 refreshed
+`models/arc_verifier_bp35.json`; A4 Exp 4917 is a clean genuine-live partial
+with 21 of 25 games complete and 4 games remaining for `.454`; B2 Exp 4919 is
+ready, operator-only, and non-submitting with peak VRAM below 16GB; C Exp 4921
+found KV260 reachable and graduated terminal; and D Exp 4922 scaffolded the
+distributional-energy-verifier pivot. The deliverable SHALL stay locked to the
+approximately 0.05 first-win agent plus publishable FoVer paper, and `.454`
+SHALL maximize the 6/30 submission rather than open representation #5 or any
+new world-model fork.
+
+Required field principles:
+
+- `honest_verdict`: terminal prefix; clean transition is complete_453_archived_454_activated_<state>.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).
+- `arc_first_win_wall_closed_hidden_state`: true -- .453 reached B1-trusted WALL_IS_HIDDEN_STATE closure; .454 executes the locked deliverable, NOT representation #5.
+- `deliverable_locked_agent_plus_fover_paper`: true -- the deliverable is the ~0.05 first-win agent + the publishable FoVer paper; do NOT chase the closed first-win wall.
+- `v454_is_submission_maximization_not_new_fork`: true -- .454 maximizes the 6/30 submission via deepening + action-efficiency; it does NOT open a new world-model fork.
+- `reproducible_total_levels`: the authoritative ARC progress metric carried from the registry (69 after cn04).
+
+#### SCENARIO-REPORT-4924: Blocked Roadmap-Next Precondition Still Writes The Deliverable
+
+**Given** `research-roadmap-next.yaml` is absent or not parseable, the offline
+arcade precondition result is recorded, and the `.453` registry, retro, and
+capstone artifacts are available
+**When** the Exp 4924 workflow runs
+**Then** it writes `results/experiment_4924_archive_453_activate_454.json` with
+a `blocked_research_roadmap_next_...` verdict, records the failed precondition,
+skips the pre-test gate, preserves the required principle-annotated fields,
+records the true `.453` close-state, and carries `reproducible_total_levels=69`
+from `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-REPORT-4924: Complete Transition Records The True .453 Close-State
+
+**Given** `research-roadmap-next.yaml` parses, the offline arcade precondition
+passes, `.454` is the active roadmap milestone, the pre-test gate is green, and
+the upstream `.453` artifacts are available
+**When** the Exp 4924 workflow runs
+**Then** it records a `complete_453_archived_454_activated_...` verdict,
+declares `aggregation_from_upstream_artifacts`, marks the ARC first-win wall as
+B1-trusted hidden state, keeps the deliverable locked to the first-win agent
+plus FoVer paper, marks `.454` as submission maximization rather than a new
+fork, records registry total 69, and keeps the leaderboard submission flag
+false.
+
+## Implementation Status (REQ-REPORT-4924)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4924 | Implemented (`python/carnot/experiment_4924_archive_453_activate_454.py`) | Implemented (`tests/python/test_experiment_4924_archive_453_activate_454.py`) |
+
 ### REQ-REPORT-4920: Retro Timing Mtime Fallback And Runtime Stamping Audit
 
 The Exp 4920 workflow SHALL ship standalone reporting helpers for the `.452`
