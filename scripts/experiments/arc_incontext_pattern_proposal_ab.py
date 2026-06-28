@@ -119,9 +119,24 @@ def _leading_match(proposed: list[int], winner: list[int]) -> int:
 
 def _positional_match(proposed: list[int], winner: list[int]) -> int:
     """Positional action-type agreement (proposal-QUALITY: how many of the opening actions match the
-    winner's, position-wise). Catches a shift toward the winning vocabulary/pattern even when action-1
-    differs -- the signal a strict leading-prefix metric hides."""
+    winner's, position-wise). KNOWN-BIASED: rewards coincidental overlap between degenerate constant-run
+    winners and the LLM's default repeat-guess (adversarial review 2026-06-28) -- reported, not headline."""
     return sum(1 for a, b in zip(proposed, winner) if a == b)
+
+
+def _lcs(proposed: list[int], winner: list[int]) -> int:
+    """Longest common SUBSEQUENCE of action types (order-respecting, position-flexible). Degeneracy-robust
+    middle ground: it credits getting the winning action ORDER right without the strict-first-action
+    requirement of leading-prefix or the constant-run inflation of positional. Normalized by len(winner)
+    downstream so a degenerate all-same winner can't dominate."""
+    if not proposed or not winner:
+        return 0
+    m, n = len(proposed), len(winner)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            dp[i][j] = dp[i - 1][j - 1] + 1 if proposed[i - 1] == winner[j - 1] else max(dp[i - 1][j], dp[i][j - 1])
+    return dp[m][n]
 
 
 def _server_ok(proposer) -> bool:
@@ -162,31 +177,51 @@ def main() -> int:
         print("BLOCKED: LLM server unreachable")
         return 0
 
+    # CHECKPOINT/RESUME (per-game) so a powered run (all games x M>=5) survives the ~5min kill-window:
+    # each game's result is written once; re-runs skip done games and the final artifact aggregates ALL.
+    ckpt_dir = REPO / "results" / "arc_incontext_pattern_proposal_ab_checkpoints"
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
     games = _banked()[:N_GAMES]
-    per_game = []
     for game, winner in games:
+        cpath = ckpt_dir / f"{game}.json"
+        if cpath.exists():
+            continue  # already measured in a prior chunk
         frame = _first_frame_ascii(game)
-        lib = build_pattern_library(exclude_game=game)  # LOO
+        # OPERATOR DIRECTIVE 2026-06-28: drop the OBFUSCATED source code; use only the RE'd SEMANTIC
+        # solve knowledge (registry win_condition/action_model/gotchas + solve trajectories + dead_ends).
+        lib = build_pattern_library(exclude_game=game, include_source_code=False)  # LOO, semantic-only
         pats = retrieve(lib, {"mechanic": game, "text": frame[:200]}, k_pos=3, k_neg=2)
         block = format_incontext_block(pats)
         # M samples per arm, averaged, to denoise LLM stochasticity (a single sample flips run-to-run)
         with_props = [_ask(proposer, frame, block, K) for _ in range(M)]
         wo_props = [_ask(proposer, frame, "", K) for _ in range(M)]
-        with_pos = round(sum(_positional_match(p, winner) for p in with_props) / M, 3)
-        wo_pos = round(sum(_positional_match(p, winner) for p in wo_props) / M, 3)
-        with_lead = round(sum(_leading_match(p, winner) for p in with_props) / M, 3)
-        wo_lead = round(sum(_leading_match(p, winner) for p in wo_props) / M, 3)
-        per_game.append({
+        denom = max(1, len(winner))
+        rec = {
             "game": game, "winner_prefix": winner, "samples": M,
             "with_exemplars_sample": with_props[0], "without_exemplars_sample": wo_props[0],
-            "with_positional": with_pos, "without_positional": wo_pos, "positional_delta": round(with_pos - wo_pos, 3),
-            "with_leading": with_lead, "without_leading": wo_lead, "leading_delta": round(with_lead - wo_lead, 3),
+            "with_positional": round(sum(_positional_match(p, winner) for p in with_props) / M, 3),
+            "without_positional": round(sum(_positional_match(p, winner) for p in wo_props) / M, 3),
+            "with_leading": round(sum(_leading_match(p, winner) for p in with_props) / M, 3),
+            "without_leading": round(sum(_leading_match(p, winner) for p in wo_props) / M, 3),
+            "with_lcs_norm": round(sum(_lcs(p, winner) for p in with_props) / M / denom, 3),
+            "without_lcs_norm": round(sum(_lcs(p, winner) for p in wo_props) / M / denom, 3),
             "n_retrieved": len(pats),
-        })
-        print(f"[{game}] winner={winner} with_pos={with_pos} without_pos={wo_pos} "
-              f"dpos={round(with_pos - wo_pos, 3)} (lead d={round(with_lead - wo_lead, 3)}, M={M})", flush=True)
+        }
+        rec["positional_delta"] = round(rec["with_positional"] - rec["without_positional"], 3)
+        rec["leading_delta"] = round(rec["with_leading"] - rec["without_leading"], 3)
+        rec["lcs_delta"] = round(rec["with_lcs_norm"] - rec["without_lcs_norm"], 3)
+        cpath.write_text(json.dumps(rec) + "\n")
+        print(f"[{game}] winner={winner} lead_d={rec['leading_delta']} lcs_d={rec['lcs_delta']} "
+              f"pos_d={rec['positional_delta']} (M={M})", flush=True)
 
-    scored = [g for g in per_game if g["with_exemplars_sample"] or g["without_exemplars_sample"]]
+    # aggregate ALL checkpoints (accumulated across chunked runs), not just this run's games
+    per_game = []
+    for cp in sorted(ckpt_dir.glob("*.json")):
+        try:
+            per_game.append(json.loads(cp.read_text()))
+        except Exception:
+            continue
+    scored = [g for g in per_game if g.get("with_exemplars_sample") or g.get("without_exemplars_sample")]
     # PRIMARY = LEADING (execution-relevant: a wrong action-1 breaks the plan; unbiased). The positional
     # metric is reported but is KNOWN-BIASED: it rewards coincidental digit overlap between degenerate
     # constant-run winners and the LLM's default repeat-guess (adversarial review 2026-06-28), so it
@@ -197,7 +232,12 @@ def main() -> int:
     with_mean = round(sum(g["with_leading"] for g in scored) / max(1, len(scored)), 4)
     wo_mean = round(sum(g["without_leading"] for g in scored) / max(1, len(scored)), 4)
     pos_point = round(sum(g["positional_delta"] for g in scored) / max(1, len(scored)), 4) if scored else 0.0
-    exemplars_help = bool(point > 0 and ci[0] > 0)
+    # LCS (degeneracy-robust co-primary): order-respecting, normalized; not inflated by constant-runs
+    lcs_deltas = [g.get("lcs_delta", 0.0) for g in scored]
+    lcs_point = round(sum(lcs_deltas) / len(lcs_deltas), 4) if lcs_deltas else 0.0
+    lcs_ci = _bootstrap_ci(lcs_deltas, SEED) if lcs_deltas else [0.0, 0.0]
+    # exemplars help only if a DEGENERACY-ROBUST metric (leading OR lcs) is positive with CI excluding 0
+    exemplars_help = bool((point > 0 and ci[0] > 0) or (lcs_point > 0 and lcs_ci[0] > 0))
     # SOURCE-CODE obfuscation disclosure (the operator's specific input): how many source-derived patterns
     # carry no transferable semantics because ARC-AGI-3 game source has random/scrubbed identifiers.
     from carnot.agentic.arc_pattern_library import build_pattern_library as _bpl
@@ -210,11 +250,12 @@ def main() -> int:
         verdict = "complete_incontext_pattern_no_scorable_games_inconclusive"
     elif exemplars_help:
         verdict = (f"success_incontext_patterns_shift_opening_toward_winner_leading_{with_mean}_vs_{wo_mean}"
-                   f"_delta_{point}_ci_excl_0_proceed_to_live_solve")
+                   f"_delta_{point}_ci_excl_0_lcs_delta_{lcs_point}_proceed_to_live_solve")
     else:
         # honest: ambiguous + underpowered + the source-code half is obfuscation-blocked. NOT a clean null.
         verdict = (f"complete_incontext_patterns_AMBIGUOUS_underpowered_n{len(scored)}_leading_delta_{point}"
-                   f"_ci_{ci[0]}_{ci[1]}_pos_delta_{pos_point}_src_obfuscated_{src_obf['obfuscated']}")
+                   f"_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
+                   f"_pos_delta_{pos_point}_src_obfuscated_{src_obf['obfuscated']}")
 
     art = {
         "experiment": "arc_incontext_pattern_proposal_ab",
@@ -226,8 +267,10 @@ def main() -> int:
         "verifier_is_oracle": False,
         "n_games": len(scored), "K": K, "samples_per_arm": M,
         "primary_metric": "leading_match_execution_relevant",
+        "co_primary_metric": "lcs_norm_degeneracy_robust",
         "with_exemplars_mean_leading": with_mean, "without_exemplars_mean_leading": wo_mean,
         "leading_delta_point": point, "leading_delta_ci95": ci,
+        "lcs_norm_delta_point": lcs_point, "lcs_norm_delta_ci95": lcs_ci,
         "positional_delta_point_BIASED": pos_point,
         "positional_metric_caveat": ("positional rewards coincidental digit overlap between degenerate "
                                      "constant-run winners and the LLM default repeat-guess; biased AGAINST "
