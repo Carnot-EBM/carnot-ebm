@@ -23,7 +23,7 @@ is the SOTA-flagged next layer on top of this archive.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 import numpy as np
 
@@ -96,13 +96,28 @@ class GoExploreReplayArchive:
     cell is represented by a reset-replayable action prefix.
     """
 
-    def __init__(self, *, enabled: bool = True, bins: int = 6, max_cells: int = 256) -> None:
+    def __init__(
+        self,
+        *,
+        enabled: bool = True,
+        bins: int = 6,
+        max_cells: int = 256,
+        selector: Optional[Callable[[Sequence[Mapping[str, Any]]], Optional[int]]] = None,
+    ) -> None:
         self.enabled = bool(enabled)
         self.bins = max(1, int(bins))
         self.max_cells = max(1, int(max_cells))
         self._cells: dict[tuple, dict[str, Any]] = {}
         self._observations = 0
         self._selected_prefixes = 0
+        # IGE hook (2026-06-28): when a `selector` callable is supplied, the cell CHOICE among eligible
+        # cells is delegated to it (e.g. an LLM promisingness judge); the heuristic stays as the fallback
+        # when the selector is absent, returns None, or returns an out-of-range index. The plumbing
+        # (observe/return/replay) is identical regardless of who picks the cell.
+        self.selector = selector
+        self._selector_calls = 0
+        self._selector_used = 0
+        self._selector_fallbacks = 0
 
     def observe(self, frame: Any, path: Sequence[Mapping[str, Any]] | None) -> None:
         if not self.enabled:
@@ -141,27 +156,61 @@ class GoExploreReplayArchive:
         if not self.enabled or not self._cells:
             return []
         current = _normalise_prefix(current_path)
-        eligible = [
-            entry
-            for entry in self._cells.values()
+        eligible_items = [
+            (key, entry)
+            for key, entry in self._cells.items()
             if entry.get("prefix") and entry.get("prefix") != current
         ]
-        if not eligible:
+        if not eligible_items:
             return []
-        selected = min(
-            eligible,
-            key=lambda entry: (
-                int(entry.get("visits", 0)),
-                -int(entry.get("depth", 0)),
-                tuple((step["action"], repr(step.get("data"))) for step in entry["prefix"]),
-            ),
-        )
+        selected = self._select_via_selector(eligible_items)
+        if selected is None:  # no selector, selector declined, or out-of-range -> heuristic fallback
+            selected = min(
+                (entry for _key, entry in eligible_items),
+                key=lambda entry: (
+                    int(entry.get("visits", 0)),
+                    -int(entry.get("depth", 0)),
+                    tuple((step["action"], repr(step.get("data"))) for step in entry["prefix"]),
+                ),
+            )
         selected["visits"] = int(selected.get("visits", 0)) + 1
         self._selected_prefixes += 1
         return [dict(step) for step in selected["prefix"]]
 
+    def _select_via_selector(
+        self, eligible_items: list[tuple[tuple, dict[str, Any]]]
+    ) -> Optional[dict[str, Any]]:
+        """Delegate cell choice to the IGE selector if present. Returns the chosen cell entry, or None to
+        signal the caller to use the heuristic (selector absent / >=2 cells needed / declined / bad index)."""
+        if self.selector is None or len(eligible_items) < 2:
+            return None
+        descriptors = []
+        for index, (key, entry) in enumerate(eligible_items):
+            level = int(key[0]) if isinstance(key, tuple) and key else 0
+            sig = key[1] if isinstance(key, tuple) and len(key) > 1 and isinstance(key[1], tuple) else None
+            descriptors.append(
+                {
+                    "index": index,
+                    "level": level,
+                    "signature": sig,
+                    "depth": int(entry.get("depth", 0)),
+                    "visits": int(entry.get("visits", 0)),
+                    "seen": int(entry.get("seen", 0)),
+                }
+            )
+        self._selector_calls += 1
+        try:
+            choice = self.selector(descriptors)
+        except Exception:
+            choice = None
+        if choice is None or not isinstance(choice, int) or not (0 <= choice < len(eligible_items)):
+            self._selector_fallbacks += 1
+            return None
+        self._selector_used += 1
+        return eligible_items[choice][1]
+
     def diagnostics(self) -> dict[str, Any]:
-        return {
+        diag: dict[str, Any] = {
             "enabled": bool(self.enabled),
             "stored_cells": int(len(self._cells)),
             "observations": int(self._observations),
@@ -170,7 +219,18 @@ class GoExploreReplayArchive:
                 (int(entry.get("depth", 0)) for entry in self._cells.values()), default=0
             ),
             "verifier_is_oracle": False,
+            "selector_enabled": bool(self.selector is not None),
+            "selector_calls": int(self._selector_calls),
+            "selector_used": int(self._selector_used),
+            "selector_fallbacks": int(self._selector_fallbacks),
         }
+        sel_diag = getattr(self.selector, "diagnostics", None)
+        if callable(sel_diag):
+            try:
+                diag["selector_diagnostics"] = sel_diag()
+            except Exception:
+                pass
+        return diag
 
 
 def coerce_go_explore_archive(value: Any) -> GoExploreReplayArchive | None:
@@ -183,9 +243,29 @@ def coerce_go_explore_archive(value: Any) -> GoExploreReplayArchive | None:
             enabled=bool(value.get("enabled", True)),
             bins=int(value.get("bins", 6)),
             max_cells=int(value.get("max_cells", 256)),
+            selector=_coerce_archive_selector(value.get("selector")),
         )
     if value is True:
         return GoExploreReplayArchive()
+    return None
+
+
+def _coerce_archive_selector(value: Any) -> Optional[Callable[..., Optional[int]]]:
+    """Normalize the archive's ``selector`` config into a callable | None. A callable is used directly;
+    the string ``"ige"`` (or a Mapping with ``{"kind": "ige", ...}``) lazily builds the IGE LLM selector
+    (lazy import avoids loading the heavy world-model/LLM module unless IGE is actually requested)."""
+    if value is None or value is False:
+        return None
+    if callable(value):
+        return value
+    if isinstance(value, str) and value.lower().startswith("ige"):
+        from carnot.agentic.arc_ige_cell_selector import coerce_ige_cell_selector
+
+        return coerce_ige_cell_selector(value)
+    if isinstance(value, Mapping) and str(value.get("kind", "")).lower().startswith("ige"):
+        from carnot.agentic.arc_ige_cell_selector import coerce_ige_cell_selector
+
+        return coerce_ige_cell_selector(dict(value))
     return None
 
 
