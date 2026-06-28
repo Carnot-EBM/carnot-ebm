@@ -1,0 +1,427 @@
+{
+  "change_location_prior_used_not_value": true,
+  "checkpoint_emitted": true,
+  "coverage_migration_count": 0,
+  "duration_s": 60.0,
+  "env_grounded_search_config": {
+    "a1_artifact": "results/experiment_4892_decision_need_targets_value_gap.json",
+    "action_budget": 24,
+    "baseline_artifact": "results/experiment_4896_heldout_first_win_readiness.json",
+    "bootstrap_iterations": 1000,
+    "bounded_action_cost": 80,
+    "change_location_prior_only": true,
+    "env_supplies_change_value": true,
+    "generator_precondition": "igpu_hip_or_gpu0_cuda",
+    "gpu0_cuda_allowed": true,
+    "heldout_games": [
+      "cd82",
+      "cn04",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "wa30"
+    ],
+    "live_path": "StepwiseExplorer.action_prior -> e3.load_engine/plan_in_model",
+    "llm_model": "Qwen3.5-9B-MTP",
+    "max_states": 48,
+    "planner_blind_to_banked_answer": true,
+    "positive_control_game": "tu93",
+    "search_strategy": "interleaved_act_and_observe",
+    "soft_elapsed_budget_s": 3500.0,
+    "top_k": 3
+  },
+  "experiment_id": 4903,
+  "field_principles": {
+    "change_location_prior_used_not_value": {
+      "principle": "true -- the induced model supplied ONLY the change-LOCATION action-ranking; change-VALUE was read from the env, never predicted (the .451-invariant-finding sidestep)."
+    },
+    "checkpoint_emitted": {
+      "principle": "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+    },
+    "coverage_migration_count": {
+      "principle": "how many NEVER_ENUMERATED games migrated to COVERED under env-grounded search at a bounded action cost."
+    },
+    "fork_verdict": {
+      "principle": "one of ENV_GROUNDED_SEARCH_UNLOCKS_FIRST_WIN | SEARCH_BUDGET_BOUND | WALL_DEEPER_THAN_VALUE_PREDICTION -- the headline that redirects .453."
+    },
+    "generator_backend": {
+      "principle": "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a real lift is success_env_grounded_search_first_win_unlocked_<delta>; a null is complete_env_grounded_search_no_first_win_lift_<fork>; a degenerate control is complete_env_grounded_positive_control_degenerate_retired."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor) -- the change-LOCATION induction invokes the LLM on the GPU-0 generator."
+    },
+    "live_path_reachable": {
+      "principle": "the search improves the live StepwiseExplorer/plan_in_model/_induce_and_plan path (arc_orphan_solver_lint passes)."
+    },
+    "median_actions_to_first_win": {
+      "principle": "the EFFICIENCY axis -- the real-env action cost of grounding value; an unbounded cost is SEARCH_BUDGET_BOUND."
+    },
+    "model_specs": {
+      "principle": "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+    },
+    "per_game_first_win": {
+      "principle": "per-game {first_win_baseline, first_win_env_grounded, delta, actions_to_first_win, states_expanded, bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated} -- the quantitative table."
+    },
+    "planner_blind_to_banked_answer": {
+      "principle": "true -- the banked winning prefix was NOT injected into ranking, search, or progress scoring."
+    },
+    "positive_control_game": {
+      "principle": "tu93 -- its change-LOCATION ranker MUST be non-degenerate (ranks the truly-changing action highly) or the measurement is a harness artifact."
+    },
+    "positive_control_non_degenerate": {
+      "principle": "true iff tu93's change-LOCATION prior is non-degenerate -- carries forward the .450/.451 degenerate-metric fix."
+    },
+    "random_seed": {
+      "principle": "determinism for the action-prior induction + the best-first search tie-breaking."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, search/prior config, held-out split, action budget) so a replication catches drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a live-path mechanism measurement on the dev twin, NOT a registry bank (A2 banks)."
+    },
+    "value_grounded_first_win_delta_ci95": {
+      "principle": "bootstrap CI95 of the first-win delta; PASS requires it to exclude 0 for a real lift."
+    },
+    "value_grounded_first_win_delta_median": {
+      "principle": "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. Median (env-grounded-search - baseline) first-win rate across held-out games; did reading change-VALUE from the env instead of predicting it unlock first-wins?"
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the change-LOCATION model + learned verifier are oracle-distinct from the env's level-up check; this is a SEARCH-STRATEGY result, not a verifier-moat claim (circularity discipline)."
+    }
+  },
+  "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+  "generator_backend": "gpu0_cuda",
+  "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+  "inference_substrate": "live_llm_inference",
+  "live_path_reachable": true,
+  "median_actions_to_first_win": null,
+  "model_specs": {
+    "backend": "gpu0_cuda",
+    "cuda_visible_devices": "0",
+    "kv_quant": "q8_0",
+    "mtp": true,
+    "name": "Qwen3.5-9B-MTP",
+    "no_think_prefix": true,
+    "port": 8931,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+  },
+  "n_games_measured": 9,
+  "partial": false,
+  "per_game_first_win": {
+    "cd82": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 8,
+      "best_progress_score": 250.06,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "cd82",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "cn04": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 7,
+      "best_progress_score": 255.05,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "cn04",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": true,
+      "migrated": false,
+      "prior_top_rank_score": 210.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "ls20": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 8,
+      "best_progress_score": 66.09,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "ls20",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "m0r0": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 8,
+      "best_progress_score": 112.05,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "m0r0",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "r11l": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 8,
+      "best_progress_score": 9.07,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "r11l",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "sk48": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 6,
+      "best_progress_score": 97.1,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "sk48",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "sp80": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 8,
+      "best_progress_score": 177.08,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "sp80",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": false,
+      "migrated": false,
+      "prior_top_rank_score": 0.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    },
+    "su15": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 2,
+      "best_progress_score": 20.06,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "su15",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": true,
+      "migrated": false,
+      "prior_top_rank_score": 1.0,
+      "real_env_value_reads": 6,
+      "states_expanded": 2
+    },
+    "wa30": {
+      "actions_to_first_win": null,
+      "baseline_bucket": "NEVER_ENUMERATED",
+      "best_path_len": 4,
+      "best_progress_score": 33.07,
+      "bucket": "NEVER_ENUMERATED",
+      "change_value_predictions_used": 0,
+      "delta": -0.04,
+      "first_win_baseline": 0.04,
+      "first_win_env_grounded": 0.0,
+      "game": "wa30",
+      "live_path_methods_called": [
+        "StepwiseExplorer.action_prior",
+        "arc_executable_world_model.load_engine",
+        "arc_executable_world_model.plan_in_model"
+      ],
+      "load_engine_error": "",
+      "location_ranker_non_degenerate": true,
+      "migrated": false,
+      "prior_top_rank_score": 64.0,
+      "real_env_value_reads": 24,
+      "states_expanded": 8
+    }
+  },
+  "planner_blind_to_banked_answer": true,
+  "positive_control_game": "tu93",
+  "positive_control_non_degenerate": true,
+  "positive_control_result": {
+    "actual_changing_actions_seen": 4,
+    "change_value_predictions_used": 0,
+    "game": "tu93",
+    "location_ranker_non_degenerate": true,
+    "non_degenerate_rank_threshold": 5,
+    "prior_top_rank_score": 3853.0,
+    "real_env_value_reads": 4,
+    "true_changing_action_rank": 4
+  },
+  "preconditions_checked": {
+    "a1_baseline": {
+      "engine_cell_recall_median": 0.727273,
+      "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+      "ok": true,
+      "path": "results/experiment_4892_decision_need_targets_value_gap.json",
+      "positive_control_non_degenerate": true
+    },
+    "first_win_baseline": {
+      "first_win_baseline": 0.04,
+      "ok": true,
+      "path": "results/experiment_4896_heldout_first_win_readiness.json"
+    },
+    "generator": {
+      "allowed_backends": [
+        "gpu0_cuda",
+        "igpu_hip"
+      ],
+      "ambient_cuda_visible_devices": null,
+      "backend": "gpu0_cuda",
+      "detail": "ok",
+      "generator_backend": "gpu0_cuda",
+      "igpu_required": false,
+      "launch_env_cuda_visible_devices": "0",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": true,
+      "port": 8931,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "heldout_games": {
+      "available_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ],
+      "n_available": 9,
+      "ok": true,
+      "positive_control_game": "tu93",
+      "positive_control_game_present": true,
+      "requested_games": [
+        "cd82",
+        "cn04",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "sk48",
+        "sp80",
+        "su15",
+        "wa30"
+      ]
+    },
+    "live_path": {
+      "ok": true
+    },
+    "offline_arcade": {
+      "ok": true
+    },
+    "planner_blind_to_banked_answer": true,
+    "positive_control": {
+      "game": "tu93",
+      "non_degenerate": true,
+      "true_changing_action_rank": 4
+    }
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "sha256:5e89ece7eb1da1326e99caf0dcc2a34e28160d594056df6d80a669aef5863f5f",
+  "retire_if_same_verdict": true,
+  "schema_version": 1,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-4903",
+    "SCENARIO-ARC-WMTE-4903-LOCATION-PRIOR-NOT-VALUE",
+    "SCENARIO-ARC-WMTE-4903-FORK-VERDICT",
+    "SCENARIO-ARC-WMTE-4903-PARTIAL-CHECKPOINT"
+  ],
+  "value_grounded_first_win_delta_ci95": [
+    -0.04,
+    -0.04
+  ],
+  "value_grounded_first_win_delta_median": -0.04,
+  "verifier_is_oracle": false
+}
