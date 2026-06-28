@@ -24914,3 +24914,20 @@ Reliable-channel source set for `success_sota_ingestion_v453_frontier_mapped`:
 - arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - HTTP 200
 - arXiv:2606.04579 - SCI-PRM: A Tool Aware Process Reward Model for Scientific Reasoning Verification - https://arxiv.org/abs/2606.04579 - HTTP 200
 <!-- EXP4911-V453-FRONTIER-REFERENCES-END -->
+
+<!-- V454-PLANNER-REFERENCES-START -->
+## V454 planner source set (2026-06-28) — post-ARC-closure: action-efficiency + post-sprint verifier-moat
+
+`.453` reached **B1-trusted ARC closure** (the live first-win wall is `WALL_IS_HIDDEN_STATE` —
+representation-invariant by construction; the hidden variable is winning-prefix-order state). The
+deliverable is LOCKED to the ~0.05 first-win agent + the publishable FoVer paper. `.454` (2 days
+before the 2026-06-30 sprint deadline) does NOT propose representation #5. The remaining open ARC
+value is **action efficiency** — the ARC-AGI-3 leaderboard scores `(human_actions/agent_actions)^2`,
+so a fewer-actions improvement is squared in the score (research-studying.md). The `.454` efficiency
+headline is the operator-flagged MATM similarity-keyed partial-trajectory retrieval; the two papers
+below corroborate trajectory-retrieval as the SOTA action-efficiency lever:
+
+- arXiv:2603.10600 - Trajectory-Informed Memory Generation for Self-Improving Agent Systems - https://arxiv.org/abs/2603.10600 - corroborates the MATM within-game partial-trajectory retrieval lever (extract actionable learnings from a game's own rollouts; retrieve to ground future action prediction). Verified via WebSearch 2026-06-28.
+- arXiv:2510.10304 - Sample-Efficient Online Learning in LM Agents via Hindsight Trajectory Rewriting - https://arxiv.org/abs/2510.10304 - sample-efficient exploration via relabeled past trajectories; adjacent to the self-play/FR-11 learned-verifier loop. Verified via WebSearch 2026-06-28.
+- arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - the POST-SPRINT pivot (already filed by exp4911). Decomposed energy = learned quality scorer (LoRA ensemble on one frozen encoder, 3% params) + deterministic constraint penalties + ensemble-std epistemic uncertainty -> two-pass regenerate/abstain. A 149M verifier orchestrating 7-26B open generators beats single-shot Qwen-72B on GSM8K/MuSR/TravelPlanner/TACO/Knights&Knaves. This IS the Carnot verifier thesis and the concrete method the `.454` D scaffold builds toward.
+<!-- V454-PLANNER-REFERENCES-END -->
