@@ -1,0 +1,589 @@
+{
+  "a1_fork_verdict_trusted": {
+    "b1_experiment_id": 4908,
+    "b1_honest_verdict": "complete_a1_a1b_audited",
+    "coverage_migration_count": 0,
+    "experiment_id": 4903,
+    "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+    "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+    "median_actions_to_first_win": null,
+    "source": "A1",
+    "trust_failure_reasons": [],
+    "trust_gate": {
+      "a1_numbers_match_fork": true,
+      "a1_planner_blind": true,
+      "a1_positive_control_non_degenerate": true,
+      "a1_trustworthy": true,
+      "a1_value_from_real_env": true,
+      "a1b_gate_skipped": false,
+      "a1b_live_or_gate_skipped": true,
+      "a1b_ran_genuinely_live": true
+    },
+    "trusted": true,
+    "value_grounded_first_win_delta_ci95": [
+      -0.04,
+      -0.04
+    ],
+    "value_grounded_first_win_delta_median": -0.04
+  },
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4903,
+      "fields_imported": [
+        "honest_verdict",
+        "fork_verdict",
+        "value_grounded_first_win_delta_median",
+        "value_grounded_first_win_delta_ci95",
+        "median_actions_to_first_win",
+        "coverage_migration_count",
+        "positive_control_non_degenerate",
+        "planner_blind_to_banked_answer",
+        "change_location_prior_used_not_value",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+      "sha256": "sha256:1f8ebe39689af0b8c158fda8782a827e05d7d93d60d7c74b74bc8da73ab32187",
+      "source": "A1"
+    },
+    {
+      "experiment_id": 4904,
+      "fields_imported": [
+        "honest_verdict",
+        "fork_verdict",
+        "latent_action_value_accuracy_delta_median",
+        "latent_action_value_accuracy_delta_ci95",
+        "ran_genuinely_live",
+        "delta_on_truly_heldout_split",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4904_latent_action_interface.json",
+      "sha256": "sha256:f13eab79b63250d89588f2246231decaa58839c21ec3a5900ae375f778a9b3d6",
+      "source": "A1B"
+    },
+    {
+      "experiment_id": 4908,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_source_fork_verdict",
+        "a1_trustworthy",
+        "a1_value_from_real_env",
+        "a1_planner_blind",
+        "a1_positive_control_non_degenerate",
+        "a1_numbers_match_fork",
+        "a1b_ran_genuinely_live",
+        "a1b_gate_skipped",
+        "a1b_source_fork_verdict",
+        "a1_failure_reasons",
+        "a1b_failure_reasons",
+        "checks",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4908_env_grounded_search_audit.json",
+      "sha256": "sha256:04ec969ba8889ca148b158244b85cf776a9ee588d421fd3a788250a6d5a91a81",
+      "source": "B1_AUDIT"
+    },
+    {
+      "experiment_id": 4905,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "registry_update",
+        "reproduction_gate",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4905_levelup_attempt.json",
+      "sha256": "sha256:eccfa871b7a53dfb5d1a8784fed5fa9e9a3eeec9d9302505743bcaa712f61454",
+      "source": "A2_LEVELUP"
+    },
+    {
+      "experiment_id": 4906,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "verifier_checkpoint_refreshed",
+        "checkpoint_path",
+        "offline_reproduced",
+        "reproduced_levels",
+        "search_state_count",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4906_self_play_verifier_checkpoint.json",
+      "sha256": "sha256:cf249290af55b35c38c6bf98a4423e562d58923d90dc83d8646dc9a2427c9801",
+      "source": "A3_SELF_PLAY"
+    },
+    {
+      "experiment_id": 4909,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submits",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "peak_vram_gb",
+        "frozen_stack_loads",
+        "package_builds",
+        "agent_config_resolution",
+        "model_path_resolution",
+        "packaging_requirements_crosscheck",
+        "ready_package_regression_check",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4909_submission_package_harden.json",
+      "sha256": "sha256:95b24de2bfc05918b983b000b429af55d41de0f3f790194c681e37516c28b285",
+      "source": "B2_PACKAGE"
+    },
+    {
+      "experiment_id": 4910,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "preconditions_checked",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4910_kv260_continuity.json",
+      "sha256": "sha256:6aa52ea0e241ddf379840409d03d82d39dd77acda3c4f38bc68716a95c96252c",
+      "source": "C_HARDWARE"
+    },
+    {
+      "experiment_id": 4911,
+      "fields_imported": [
+        "honest_verdict",
+        "aimed_at_fork_verdict",
+        "a1b_fork_verdict",
+        "selected_branch",
+        "flagged_for_v453",
+        "methods_mapped",
+        "post_sprint_pivot_methods",
+        "sota_to_experiment_mapping_note",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4911_sota_ingestion_v453_frontier.json",
+      "sha256": "sha256:ddea37ebe13cb71b4b8b5604a5d06ffa3ec70f5530194e8007e97ba570f2c4de",
+      "source": "D_HANDOFF"
+    }
+  ],
+  "duration_s": 0.538481,
+  "experiment": "experiment_4912_capstone_v452",
+  "experiment_id": 4912,
+  "field_principles": {
+    "a1_fork_verdict_trusted": {
+      "principle": "A1's fork verdict, gated on B1 a1_trustworthy -- the headline is only as good as the audit."
+    },
+    "headline": {
+      "principle": "the one-line .452 headline (env-grounding unlocked / budget-bound / wall survives FOUR representations + env-grounding)."
+    },
+    "heldout_first_win_rate": {
+      "principle": "A4's fresh-live readiness number -- the 6/30 go/no-go signal."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v452_<headline-or-escalate>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
+    },
+    "post_sprint_pivot": {
+      "principle": "on the escalate branch, the deliverable (~0.05 agent + FoVer paper) + D's post-sprint verifier-moat map; NOT representation #5."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric (from the registry; A2's bank if any)."
+    },
+    "skipped_flagged_adversarial": {
+      "principle": "the list of upstream artifacts skipped per the fabrication gate."
+    },
+    "submission_package_ready": {
+      "principle": "B2's terminal gate -- the package state for the operator's 6/30 decision."
+    }
+  },
+  "headline": "The live first-win wall survives energy + goal-quality + FOUR world-model representations + env-grounding. Deliverable: current ~0.05 first-win agent (submitted) + publishable FoVer verifier-ensemble paper (paper_ready=true, north-star section 1). Post-6/30: pivot to D's verifier-moat map. Do not queue representation #5.",
+  "heldout_first_win_rate": null,
+  "honest_verdict": "complete_capstone_v452_escalate_wall_survives_four_representations_plus_env_grounding",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_scorecard": {
+    "a1_env_grounded_search": {
+      "b1_experiment_id": 4908,
+      "b1_honest_verdict": "complete_a1_a1b_audited",
+      "coverage_migration_count": 0,
+      "experiment_id": 4903,
+      "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "median_actions_to_first_win": null,
+      "source": "A1",
+      "trust_failure_reasons": [],
+      "trust_gate": {
+        "a1_numbers_match_fork": true,
+        "a1_planner_blind": true,
+        "a1_positive_control_non_degenerate": true,
+        "a1_trustworthy": true,
+        "a1_value_from_real_env": true,
+        "a1b_gate_skipped": false,
+        "a1b_live_or_gate_skipped": true,
+        "a1b_ran_genuinely_live": true
+      },
+      "trusted": true,
+      "value_grounded_first_win_delta_ci95": [
+        -0.04,
+        -0.04
+      ],
+      "value_grounded_first_win_delta_median": -0.04
+    },
+    "a1b_latent_action_interface": {
+      "delta_on_truly_heldout_split": true,
+      "experiment_id": 4904,
+      "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES",
+      "honest_verdict": "complete_latent_action_no_value_lift_representation_invariant_4_classes",
+      "latent_action_value_accuracy_delta_ci95": [
+        -0.231195,
+        0.025266
+      ],
+      "latent_action_value_accuracy_delta_median": -0.103162,
+      "ran_genuinely_live": true,
+      "source": "A1B",
+      "status": "included"
+    },
+    "a2_levelup_bank": {
+      "decision": "no_new_level_banked",
+      "experiment_id": 4905,
+      "honest_verdict": "complete_m0r0_no_new_level_residual_duplicate_depth",
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "registry_authoritative_total": 68,
+      "registry_update_reason": "duplicate_depth",
+      "reproduced_levels": 0,
+      "reproducible_total_levels_after": 68,
+      "reproducible_total_levels_before": 68,
+      "reproduction_gate_passed": true,
+      "source": "A2_LEVELUP",
+      "target_game": "m0r0"
+    },
+    "a3_self_play_checkpoint": {
+      "checkpoint_path": "models/arc_verifier_vc33.json",
+      "decision": "checkpoint_refreshed",
+      "experiment_id": 4906,
+      "honest_verdict": "success_self_play_checkpoint_refreshed",
+      "offline_reproduced": true,
+      "reproduced_levels": 2,
+      "search_state_count": 10,
+      "source": "A3_SELF_PLAY",
+      "target_game": "vc33",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4_fresh_live_heldout": {
+      "experiment_id": 4907,
+      "reason": "flagged_adversarial",
+      "source": "A4_HELDOUT",
+      "stale_false_flag": false,
+      "status": "skipped_flagged_adversarial",
+      "true_honest_verdict": "complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live"
+    },
+    "b2_submission_package": {
+      "agent_config_resolved": true,
+      "decision": "package_ready_operator_only",
+      "dry_build_ran": true,
+      "experiment_id": 4909,
+      "frozen_stack_loads": true,
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "model_path_resolved": true,
+      "operator_only": true,
+      "package_builds": true,
+      "peak_vram_gb": 15.146,
+      "ready_package_regression_ok": true,
+      "requirements_ok": true,
+      "source": "B2_PACKAGE",
+      "submission_package_ready": true,
+      "submits": false
+    },
+    "c_hardware": {
+      "decision": "kv260_continuity_ok",
+      "experiment_id": 4910,
+      "honest_verdict": "success_kv260_continuity_ok",
+      "inference_substrate": "hardware_smoke",
+      "kv260_ssh_reachable": true,
+      "loaded_overlay": false,
+      "source": "C_HARDWARE"
+    },
+    "d_v453_handoff": {
+      "a1b_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES",
+      "aimed_at_fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "experiment_id": 4911,
+      "flagged_for_v453": [
+        {
+          "candidate": "causal_state_abstraction_wall_diagnostic",
+          "flag": "flagged_for_v453: causal_state_abstraction_wall_diagnostic (arXiv:2401.12497)",
+          "maps_to_frontier": ".453",
+          "priority": 1,
+          "source_ids": [
+            "2401.12497"
+          ]
+        },
+        {
+          "candidate": "distributional_energy_verifier_pivot",
+          "flag": "flagged_for_v453: distributional_energy_verifier_pivot (arXiv:2605.18871)",
+          "maps_to_frontier": "post_sprint_verifier_moat",
+          "priority": 2,
+          "source_ids": [
+            "2605.18871"
+          ]
+        },
+        {
+          "candidate": "tool_aware_science_prm_pivot",
+          "flag": "flagged_for_v453: tool_aware_science_prm_pivot (arXiv:2606.04579)",
+          "maps_to_frontier": "post_sprint_verifier_moat",
+          "priority": 3,
+          "source_ids": [
+            "2606.04579"
+          ]
+        }
+      ],
+      "honest_verdict": "success_sota_ingestion_v453_frontier_mapped",
+      "mapping_note": {
+        "branch": "wall_survives_four_representations_plus_env_grounding",
+        "not_carried_forward": "Do not re-promote energy-as-ARC-lever, TTA-on-code-engine, stronger local code inducers, decision-need targets, action-prefix latents, coverage/vocabulary, exploration, selection/ranking, or perception-from-grid classes.",
+        "pivot_source_ids": [
+          "2505.14999",
+          "2604.24198",
+          "2605.18871",
+          "2606.04579"
+        ],
+        "planner_instruction": "Use the causal-abstraction diagnostic only if the operator wants a final ARC closure check before 2026-06-30. Otherwise start the verifier-moat pivot with distributional energy verification and Sci-PRM/DataPRM-style process verification.",
+        "summary": "A1 and A1b leave the .453 ARC branch as a final wall diagnostic rather than another representation push; the post-sprint work should pivot to oracle-distinct verifier-moat experiments in non-saturated domains.",
+        "terminal_success": "success_sota_ingestion_v453_frontier_mapped",
+        "wall_source_ids": [
+          "2401.12497",
+          "2504.07257",
+          "2505.02074",
+          "2602.11389"
+        ]
+      },
+      "post_sprint_pivot_methods": [
+        {
+          "evidence": "arXiv:2605.18871 combines learned quality scoring with deterministic constraint penalties and uncertainty to verify structured LLM outputs.",
+          "experiment_graft": "Port the FoVer evaluation harness to MuSR/TravelPlanner-style structured reasoning rows, score candidates with a small distributional energy verifier, and compare against self-consistency and an LLM judge.",
+          "fails_when": "The target domain has a cheap executable oracle, self-consistency is already near ceiling, or the scorer learns generator identity.",
+          "maps_to_track": "post_sprint_verifier_moat",
+          "method": "Distributional energy verifier for structured reasoning",
+          "north_star_fit": "north-star \u00a71/\u00a75: tests whether an oracle-distinct learned energy verifier adds value where self-consistency is not saturated.",
+          "oracle_distinct_verifier": true,
+          "self_consistency_saturated": false,
+          "source_ids": [
+            "2605.18871"
+          ],
+          "track": "distributional_energy_verifier",
+          "validation_gate": "Promote only if the verifier beats self-consistency with CI95 excluding zero and no model-identity shortcut under adversarial_verify."
+        },
+        {
+          "evidence": "arXiv:2505.14999 uses a 55M-parameter energy outcome reward model to rank chain-of-thought candidates using only outcome labels.",
+          "experiment_graft": "Train or calibrate a tiny EORM-style scorer on non-FoVer reasoning traces, then run best-of-N selection against self-consistency at matched sample and cost budgets.",
+          "fails_when": "Outcome labels are too sparse, the scorer is just a math-domain proxy, or cost parity disappears at the needed sample size.",
+          "maps_to_track": "post_sprint_verifier_moat",
+          "method": "Small energy outcome reward model",
+          "north_star_fit": "north-star \u00a71/\u00a75: a cheap verifier can be a moat only if it beats self-consistency on headroom domains without being the oracle.",
+          "oracle_distinct_verifier": true,
+          "self_consistency_saturated": false,
+          "source_ids": [
+            "2505.14999"
+          ],
+          "track": "energy_outcome_reward_model",
+          "validation_gate": "Require accuracy lift plus cost/action reduction over self-consistency and an oracle-distinct declaration for every evaluated domain."
+        },
+        {
+          "evidence": "arXiv:2606.04579 trains Sci-PRM on chain-of-tool trajectories for fine-grained supervision of tool selection, execution, and interpretation.",
+          "experiment_graft": "Build a small FoVer-style scientific-tool trace corpus, label step selection/execution/interpretation errors, and test whether a PRM catches errors missed by generator self-checks.",
+          "fails_when": "The benchmark is saturated by tool execution, labels leak final answers, or the verifier cannot separate tool misuse from valid exploration.",
+          "maps_to_track": "post_sprint_verifier_moat",
+          "method": "Tool-aware scientific process reward model",
+          "north_star_fit": "north-star \u00a71/\u00a75: scientific tool-use reasoning is a non-saturated domain where the verifier can judge process rather than final answers.",
+          "oracle_distinct_verifier": true,
+          "self_consistency_saturated": false,
+          "source_ids": [
+            "2606.04579"
+          ],
+          "track": "tool_aware_science_prm",
+          "validation_gate": "Promote only if the PRM improves best-of-N or RL reward shaping on a held-out scientific trace set without using the final-answer oracle."
+        },
+        {
+          "evidence": "arXiv:2604.24198 introduces DataPRM, an environment-aware generative process reward model for agentic data analysis and silent-error detection.",
+          "experiment_graft": "Use DataPRM-style active trace checks on non-saturated data-analysis tasks, with the verifier probing intermediate states and scoring correctable versus irrecoverable mistakes.",
+          "fails_when": "The environment exposes exact execution oracles, active probes become the answer checker, or exploratory actions are penalized as errors.",
+          "maps_to_track": "post_sprint_verifier_moat",
+          "method": "Environment-aware data-analysis process verifier",
+          "north_star_fit": "north-star \u00a71/\u00a75: dynamic data-analysis agents have silent-error headroom where an oracle-distinct verifier can actively inspect process.",
+          "oracle_distinct_verifier": true,
+          "self_consistency_saturated": false,
+          "source_ids": [
+            "2604.24198"
+          ],
+          "track": "environment_aware_data_prm",
+          "validation_gate": "Require downstream policy lift over self-consistency and an explicit silent-error catch rate on held-out tasks."
+        }
+      ],
+      "selected_branch": "wall_survives_four_representations_plus_env_grounding",
+      "source": "D_HANDOFF"
+    }
+  },
+  "post_sprint_pivot": {
+    "decision": "post_6_30_verifier_moat_pivot",
+    "deliverable": "current ~0.05 first-win agent (submitted) + publishable FoVer verifier-ensemble paper",
+    "do_not_queue": "representation_5",
+    "experiment_id": 4911,
+    "mapping_summary": "A1 and A1b leave the .453 ARC branch as a final wall diagnostic rather than another representation push; the post-sprint work should pivot to oracle-distinct verifier-moat experiments in non-saturated domains.",
+    "methods": [
+      {
+        "evidence": "arXiv:2605.18871 combines learned quality scoring with deterministic constraint penalties and uncertainty to verify structured LLM outputs.",
+        "experiment_graft": "Port the FoVer evaluation harness to MuSR/TravelPlanner-style structured reasoning rows, score candidates with a small distributional energy verifier, and compare against self-consistency and an LLM judge.",
+        "fails_when": "The target domain has a cheap executable oracle, self-consistency is already near ceiling, or the scorer learns generator identity.",
+        "maps_to_track": "post_sprint_verifier_moat",
+        "method": "Distributional energy verifier for structured reasoning",
+        "north_star_fit": "north-star \u00a71/\u00a75: tests whether an oracle-distinct learned energy verifier adds value where self-consistency is not saturated.",
+        "oracle_distinct_verifier": true,
+        "self_consistency_saturated": false,
+        "source_ids": [
+          "2605.18871"
+        ],
+        "track": "distributional_energy_verifier",
+        "validation_gate": "Promote only if the verifier beats self-consistency with CI95 excluding zero and no model-identity shortcut under adversarial_verify."
+      },
+      {
+        "evidence": "arXiv:2505.14999 uses a 55M-parameter energy outcome reward model to rank chain-of-thought candidates using only outcome labels.",
+        "experiment_graft": "Train or calibrate a tiny EORM-style scorer on non-FoVer reasoning traces, then run best-of-N selection against self-consistency at matched sample and cost budgets.",
+        "fails_when": "Outcome labels are too sparse, the scorer is just a math-domain proxy, or cost parity disappears at the needed sample size.",
+        "maps_to_track": "post_sprint_verifier_moat",
+        "method": "Small energy outcome reward model",
+        "north_star_fit": "north-star \u00a71/\u00a75: a cheap verifier can be a moat only if it beats self-consistency on headroom domains without being the oracle.",
+        "oracle_distinct_verifier": true,
+        "self_consistency_saturated": false,
+        "source_ids": [
+          "2505.14999"
+        ],
+        "track": "energy_outcome_reward_model",
+        "validation_gate": "Require accuracy lift plus cost/action reduction over self-consistency and an oracle-distinct declaration for every evaluated domain."
+      },
+      {
+        "evidence": "arXiv:2606.04579 trains Sci-PRM on chain-of-tool trajectories for fine-grained supervision of tool selection, execution, and interpretation.",
+        "experiment_graft": "Build a small FoVer-style scientific-tool trace corpus, label step selection/execution/interpretation errors, and test whether a PRM catches errors missed by generator self-checks.",
+        "fails_when": "The benchmark is saturated by tool execution, labels leak final answers, or the verifier cannot separate tool misuse from valid exploration.",
+        "maps_to_track": "post_sprint_verifier_moat",
+        "method": "Tool-aware scientific process reward model",
+        "north_star_fit": "north-star \u00a71/\u00a75: scientific tool-use reasoning is a non-saturated domain where the verifier can judge process rather than final answers.",
+        "oracle_distinct_verifier": true,
+        "self_consistency_saturated": false,
+        "source_ids": [
+          "2606.04579"
+        ],
+        "track": "tool_aware_science_prm",
+        "validation_gate": "Promote only if the PRM improves best-of-N or RL reward shaping on a held-out scientific trace set without using the final-answer oracle."
+      },
+      {
+        "evidence": "arXiv:2604.24198 introduces DataPRM, an environment-aware generative process reward model for agentic data analysis and silent-error detection.",
+        "experiment_graft": "Use DataPRM-style active trace checks on non-saturated data-analysis tasks, with the verifier probing intermediate states and scoring correctable versus irrecoverable mistakes.",
+        "fails_when": "The environment exposes exact execution oracles, active probes become the answer checker, or exploratory actions are penalized as errors.",
+        "maps_to_track": "post_sprint_verifier_moat",
+        "method": "Environment-aware data-analysis process verifier",
+        "north_star_fit": "north-star \u00a71/\u00a75: dynamic data-analysis agents have silent-error headroom where an oracle-distinct verifier can actively inspect process.",
+        "oracle_distinct_verifier": true,
+        "self_consistency_saturated": false,
+        "source_ids": [
+          "2604.24198"
+        ],
+        "track": "environment_aware_data_prm",
+        "validation_gate": "Require downstream policy lift over self-consistency and an explicit silent-error catch rate on held-out tasks."
+      }
+    ],
+    "north_star_section": "1",
+    "paper_ready": true,
+    "planner_instruction": "Use the causal-abstraction diagnostic only if the operator wants a final ARC closure check before 2026-06-30. Otherwise start the verifier-moat pivot with distributional energy verification and Sci-PRM/DataPRM-style process verification.",
+    "selected_branch": "wall_survives_four_representations_plus_env_grounding",
+    "source": "D_HANDOFF"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:7785ee78873d07f8ff3dd601b00cb2541c5fd40724635bdc0db0830e001c067c",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4912": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "A1": {
+        "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A1B": {
+        "path": "results/experiment_4904_latent_action_interface.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A2_LEVELUP": {
+        "path": "results/experiment_4905_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A3_SELF_PLAY": {
+        "path": "results/experiment_4906_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A4_HELDOUT": {
+        "path": "results/experiment_4907_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 2
+      },
+      "B1_AUDIT": {
+        "path": "results/experiment_4908_env_grounded_search_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B2_PACKAGE": {
+        "path": "results/experiment_4909_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 1
+      },
+      "C_HARDWARE": {
+        "path": "results/experiment_4910_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "D_HANDOFF": {
+        "path": "results/experiment_4911_sota_ingestion_v453_frontier.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "sha256:d79eef02a4bf024ab330c108db8d1a7dde43cd8745541b2b5e6801009ac2b3b1",
+  "reproducible_total_levels": 68,
+  "result_path": "results/experiment_4912_capstone_v452.json",
+  "schema": "carnot.exp4912.capstone_v452.v1",
+  "skipped_flagged_adversarial": [
+    {
+      "experiment_id": 4907,
+      "path": "results/experiment_4907_heldout_first_win_readiness.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:88aac61ea7c9322c4aa9767b6aa98bf68c0df89e1e3194a109fbb91789ffe73a",
+      "source": "A4_HELDOUT",
+      "stale_false_flag": false,
+      "summarizer_exit_code": 2,
+      "true_honest_verdict": "complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live",
+      "true_live_recheck": "critical"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-4912",
+    "SCENARIO-CAPSTONE-4912",
+    "SCENARIO-CAPSTONE-4912-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4912-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": true
+}
