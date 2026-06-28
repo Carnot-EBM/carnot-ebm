@@ -3062,6 +3062,76 @@ Discipline — no partial-token substring (blocked/marginal/no_improvement) at t
 rather than copied from the experiment number (the tautology seed anti-pattern that
 triggers GATE_PASSED_WITHOUT_DATA in adversarial_verify.py).
 
+### REQ-KONA-4922: Distributional Energy Verifier Pivot Scaffold on a Non-Saturated Structured Slice
+
+Carnot MUST provide an offline scaffold for the post-2026-06-30 verifier-moat
+pivot mapped by Exp 4911. The scaffold SHALL port the FoVer evaluation harness
+shape to a tiny TravelPlanner-style structured-reasoning slice, score cached
+candidates only, and emit the three comparison columns required by the pivot:
+`distributional_energy_verifier`, `self_consistency`, and `llm_judge`.
+
+This is a scaffold and dry-run only. It MUST cite arXiv:2605.18871
+(`Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+Reasoning`, HTTP-200 verified by Exp 4911), set `verifier_is_oracle=false`,
+set `self_consistency_saturated=false`, set `no_verifier_win_claimed=true`, and
+avoid any claim that the distributional energy verifier beat self-consistency.
+The comparison MAY be stubbed, but the distributional-energy column MUST combine
+cached learned-quality score, deterministic constraint penalty, and uncertainty
+instead of using model identity or an answer-key oracle.
+
+The implementation SHALL live at
+`python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py`, the
+tiny cached slice SHALL live at
+`data/experiment_4922_travelplanner_structured_slice.jsonl`, and the terminal
+artifact SHALL be written to
+`results/experiment_4922_distributional_energy_verifier_scaffold.json`.
+The scaffold SHALL NOT modify `scripts/research_conductor.py`.
+
+Required artifact fields and principles:
+- `honest_verdict`: terminal prefix; success_distributional_energy_verifier_pivot_scaffolded.
+- `pivot_executable_on_6_30`: true -- the harness skeleton + dry-run make the post-sprint verifier-moat pivot executable the instant the sprint retires.
+- `harness_skeleton_path`: the offline FoVer->non-saturated-domain harness skeleton (the de-risking deliverable).
+- `dry_run_three_columns`: the tiny-slice dry-run output: {distributional_energy_verifier, self_consistency, llm_judge} columns -- proves the harness runs, NOT a headline.
+- `validation_gate`: the gate the real post-6/30 experiment must pass: beats SC CI95-excl-0, no model-identity shortcut, oracle-distinct.
+- `arxiv_id_cited`: 2605.18871 (HTTP-200 verified by exp4911) -- no fabrication.
+- `verifier_is_oracle`: false -- the distributional energy verifier is oracle-distinct (the moat domain has no cheap executable oracle).
+- `self_consistency_saturated`: false -- the moat only exists where self-consistency is NOT near-ceiling (the domain choice).
+- `no_verifier_win_claimed`: true -- this is a SCAFFOLD + dry-run; the win is claimed only by the real post-6/30 experiment that passes the validation gate.
+- `inference_substrate`: verifier_ensemble_against_cached_candidates (scores cached rows in the dry-run; 1s floor).
+- `preconditions_checked`: records FoVer-harness + domain-slice presence; a missing resource emits blocked_.
+
+### SCENARIO-KONA-4922-DRY-RUN: Scaffold Emits the Three Comparison Columns
+
+**Given** the FoVer harness/runbook is present and the tiny
+TravelPlanner-style cached slice is present with self-consistency below the
+saturation ceiling
+**When** `python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py`
+runs
+**Then** it writes
+`results/experiment_4922_distributional_energy_verifier_scaffold.json` with
+`honest_verdict=success_distributional_energy_verifier_pivot_scaffolded`,
+`pivot_executable_on_6_30=true`, `arxiv_id_cited=2605.18871`, the three dry-run
+columns `{distributional_energy_verifier, self_consistency, llm_judge}`, and the
+post-sprint validation gate requiring CI95 excluding zero, no model-identity
+shortcut under `adversarial_verify`, and oracle-distinct evaluation.
+
+### SCENARIO-KONA-4922-BLOCKED: Missing Preconditions Block Honestly
+
+**Given** the FoVer harness/runbook or the tiny structured-reasoning cached slice
+is missing
+**When** the scaffold runs its step-0 precondition check
+**Then** it writes a terminal `blocked_*` verdict, records which resource is
+missing in `preconditions_checked`, sets `pivot_executable_on_6_30=false`, and
+does not emit a verifier-win claim.
+
+### SCENARIO-KONA-4922-NO-WIN-CLAIM: Dry-Run Cannot Promote the Verifier
+
+**Given** the tiny dry-run emits per-row selections for the three columns
+**When** the artifact is validated
+**Then** `no_verifier_win_claimed=true`, `verifier_is_oracle=false`,
+`self_consistency_saturated=false`, and the artifact contains the validation
+gate rather than a headline lift or promotion claim.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run

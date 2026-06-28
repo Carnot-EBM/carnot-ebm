@@ -1,0 +1,187 @@
+{
+  "arxiv_id_cited": "2605.18871",
+  "comparison_stubbed": true,
+  "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
+  "dry_run_three_columns": {
+    "columns": [
+      "distributional_energy_verifier",
+      "self_consistency",
+      "llm_judge"
+    ],
+    "dry_run_note": "SCAFFOLD + dry-run only; emits the three comparison columns and is NOT a headline.",
+    "n_rows": 3,
+    "rows": [
+      {
+        "distributional_energy_verifier": {
+          "answer": "Stay at one hotel, visit the museum on day 1, reserve the outdoor day for day 2, and return to the airport at 16:30 on day 3.",
+          "energy": -0.8,
+          "selected_candidate_id": "tp4922-001-b",
+          "stubbed": true
+        },
+        "llm_judge": {
+          "answer": "Use two hotel changes, put the museum after the airport return, and keep the outdoor day last.",
+          "judge_score": 0.9,
+          "selected_candidate_id": "tp4922-001-a",
+          "stubbed": true
+        },
+        "problem_id": "tp4922-001",
+        "self_consistency": {
+          "answer": "Use two hotel changes, put the museum after the airport return, and keep the outdoor day last.",
+          "selected_candidate_id": "tp4922-001-a",
+          "stubbed": true,
+          "vote_count": 3.0
+        }
+      },
+      {
+        "distributional_energy_verifier": {
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "energy": -0.71,
+          "selected_candidate_id": "tp4922-002-a",
+          "stubbed": true
+        },
+        "llm_judge": {
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "judge_score": 0.82,
+          "selected_candidate_id": "tp4922-002-a",
+          "stubbed": true
+        },
+        "problem_id": "tp4922-002",
+        "self_consistency": {
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "selected_candidate_id": "tp4922-002-a",
+          "stubbed": true,
+          "vote_count": 4.0
+        }
+      },
+      {
+        "distributional_energy_verifier": {
+          "answer": "Schedule the museum before 15:00, keep dinner fixed at 19:00, and move the hike to the clear-weather morning.",
+          "energy": -0.77,
+          "selected_candidate_id": "tp4922-003-b",
+          "stubbed": true
+        },
+        "llm_judge": {
+          "answer": "Put the hike after dinner and visit the museum after closing.",
+          "judge_score": 0.86,
+          "selected_candidate_id": "tp4922-003-a",
+          "stubbed": true
+        },
+        "problem_id": "tp4922-003",
+        "self_consistency": {
+          "answer": "Put the hike after dinner and visit the museum after closing.",
+          "selected_candidate_id": "tp4922-003-a",
+          "stubbed": true,
+          "vote_count": 3.0
+        }
+      }
+    ]
+  },
+  "duration_s": 1.0,
+  "field_principles": {
+    "arxiv_id_cited": {
+      "principle": "2605.18871 (HTTP-200 verified by exp4911) -- no fabrication."
+    },
+    "comparison_stubbed": {
+      "principle": "true -- exp4922 proves harness wiring only; the real comparison is post-6/30."
+    },
+    "domain_slice_path": {
+      "principle": "points to the tiny TravelPlanner-style cached structured-reasoning slice."
+    },
+    "dry_run_three_columns": {
+      "principle": "the tiny-slice dry-run output: {distributional_energy_verifier, self_consistency, llm_judge} columns -- proves the harness runs, NOT a headline."
+    },
+    "duration_s": {
+      "principle": "1.0s cached-scoring floor for verifier_ensemble_against_cached_candidates."
+    },
+    "fover_harness_sources": {
+      "principle": "records the FoVer runbook and scorer source this skeleton ports from."
+    },
+    "harness_skeleton_path": {
+      "principle": "the offline FoVer->non-saturated-domain harness skeleton (the de-risking deliverable)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_distributional_energy_verifier_pivot_scaffolded."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (scores cached rows in the dry-run; 1s floor)."
+    },
+    "no_headline_claim": {
+      "principle": "true -- the dry-run is not promoted into a result headline."
+    },
+    "no_verifier_win_claimed": {
+      "principle": "true -- this is a SCAFFOLD + dry-run; the win is claimed only by the real post-6/30 experiment that passes the validation gate."
+    },
+    "pivot_executable_on_6_30": {
+      "principle": "true -- the harness skeleton + dry-run make the post-sprint verifier-moat pivot executable the instant the sprint retires."
+    },
+    "preconditions_checked": {
+      "principle": "records FoVer-harness + domain-slice presence; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for dry-run row ordering and checksum construction."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of the cached slice, comparison columns, and guardrails."
+    },
+    "self_consistency_saturated": {
+      "principle": "false -- the moat only exists where self-consistency is NOT near-ceiling (the domain choice)."
+    },
+    "validation_gate": {
+      "principle": "the gate the real post-6/30 experiment must pass: beats SC CI95-excl-0, no model-identity shortcut, oracle-distinct."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the distributional energy verifier is oracle-distinct (the moat domain has no cheap executable oracle)."
+    }
+  },
+  "fover_harness_sources": [
+    {
+      "path": "ops/reproduction-runbook-fover-headline.md",
+      "present": true
+    },
+    {
+      "path": "python/carnot/eval/fover_memory_leakage_v3.py",
+      "present": true
+    }
+  ],
+  "harness_skeleton_path": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
+  "honest_verdict": "success_distributional_energy_verifier_pivot_scaffolded",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "no_headline_claim": true,
+  "no_verifier_win_claimed": true,
+  "pivot_executable_on_6_30": true,
+  "preconditions_checked": {
+    "blocked_resource": null,
+    "domain_error": null,
+    "domain_slice_non_saturated": true,
+    "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
+    "domain_slice_present": true,
+    "domain_slice_rows": 3,
+    "domain_slice_valid": true,
+    "exp4911_pivot_map_present": true,
+    "fover_harness_present": true,
+    "fover_harness_sources": [
+      {
+        "path": "ops/reproduction-runbook-fover-headline.md",
+        "present": true
+      },
+      {
+        "path": "python/carnot/eval/fover_memory_leakage_v3.py",
+        "present": true
+      }
+    ],
+    "self_consistency_dry_run_accuracy": 0.3333333333333333,
+    "self_consistency_saturation_threshold": 0.9
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "7ecb93c66b2250f3",
+  "self_consistency_saturated": false,
+  "validation_gate": {
+    "adversarial_verify_no_model_identity_shortcut_required": true,
+    "ci95_excludes_zero_required": true,
+    "oracle_distinct_note": "no cheap executable oracle for the evaluated domain",
+    "oracle_distinct_required": true,
+    "promotion_note": "the dry-run is not a headline; promotion requires the real post-6/30 experiment",
+    "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero"
+  },
+  "verifier_is_oracle": false
+}
