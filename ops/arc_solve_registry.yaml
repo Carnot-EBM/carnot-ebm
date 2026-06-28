@@ -1027,28 +1027,25 @@ games:
   reproducibility: reproduced
   levels_reproduced: 2
   mechanic_class: drag_merge_fruit_target
-  win_condition: "L1 click-to-connect diagonal plus L2 staged drag/merge: merge
-    eight level-0 fruits into one level-3 fruit and drag its center into the
-    xkstxyqbs target zone centered near (33,27)."
-  action_model: "ACTION6 click-only; L2 tail uses 14 discovered drag/merge
-    clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54),
-    (23,54),(16,54),(20,47),(27,40),(33,33),(33,27)."
-  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
-  reproduce: Exp4546 results/experiment_4546_levelup_attempt.json re-gated results/arc_loop_solve_su15.json
-    offline_reproduced=True, reached_level=2, banked +1 over the current L1
-    registry row, checksum 1b1702434993f3b26f1cf41595267aa8df107e403c5041d2373bd2b8962950fe.
+  win_condition: 'L1 click-to-connect diagonal plus L2 staged drag/merge: merge eight level-0 fruits into one level-3 fruit and drag its center into the xkstxyqbs target zone centered near (33,27).'
+  action_model: 'ACTION6 click-only; L2 tail uses 14 discovered drag/merge clicks: (40,40),(17,40),(15,56),(48,55),(31,39),(24,39),(39,54),(31,54), (23,54),(16,54),(20,47),(27,40),(33,33),(33,27).'
+  solver: GameAdapter _su15 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_su15.json 21-label L2 gate.
+  reproduce: Exp4546 results/experiment_4546_levelup_attempt.json re-gated results/arc_loop_solve_su15.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 1b1702434993f3b26f1cf41595267aa8df107e403c5041d2373bd2b8962950fe.
   gotchas:
-  - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires
-    staged drag/merge clicks; pair-merge clicks alone do not combine distant
-    level-1 pieces.
-  - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not
-    merely creating a level-3 fruit elsewhere.
+  - Click radius is 8 and each ACTION6 animates four drag ticks, so L2 requires staged drag/merge clicks; pair-merge clicks alone do not combine distant level-1 pieces.
+  - The win predicate counts the center of a level-3 fruit inside xkstxyqbs, not merely creating a level-3 fruit elsewhere.
   dead_ends:
-  - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a
-    gate because fresh-env replay per candidate was too noisy/expensive; the
-    banked route came from reverse-engineering the drag/merge radius and
-    constructive merge staging.
+  - Exp4546 unbounded fruit-relative best-first search from L2 stalled before a gate because fresh-env replay per candidate was too noisy/expensive; the banked route came from reverse-engineering the drag/merge radius and constructive merge staging.
+  - 'Exp4926 su15 no-bank duplicate_depth: complete_su15_no_new_level_residual_duplicate_depth.'
+  latest_exp4926_levelup_attempt:
+    artifact: results/experiment_4926_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_su15.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: duplicate_depth
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: 9dbb41f8fb53f3bc34ee92bc4864bc985e199933ea2407b031a6b5fe82bfea84
 - game: tu93
   reproducibility: reproduced
   levels_reproduced: 5
