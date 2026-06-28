@@ -11892,6 +11892,98 @@ When Experiment 4892 stops the current process
 Then it writes per-game checkpoints and a schema-valid partial artifact so the
 next run can resume without losing the primary value-accuracy measurement.
 
+### REQ-ARC-WMTE-4893: Action-Prefix Latent Adapter Value-Gap Fork Probe
+
+Experiment 4893 SHALL test the `.451` action-prefix latent representation
+branch only when Experiment 4892 produced the low-value regime:
+`results/experiment_4892_decision_need_targets_value_gap.json` exists,
+contains `decision_need_value_accuracy_delta_median < 0.1`, and exposes
+per-game code-engine baselines plus the held-out transition split. The workflow
+SHALL first check `arc_solver_kit.offline_arcade()`, the GPU-fixed
+Qwen3.5-9B-MTP generator precondition accepting either GPU-0 CUDA or iGPU HIP
+without rejecting ambient `CUDA_VISIBLE_DEVICES`, and the Exp 4892 artifact.
+Missing or gated-off preconditions SHALL emit a `blocked_` or `skipped_`
+artifact rather than a fabricated fork.
+
+For the same Exp 4892 held-out games and `tu93` positive control, Experiment
+4893 SHALL induce a non-code action-prefix latent adapter through the live E3
+interface (`arc_executable_world_model.load_engine`) and score the exact
+held-out transition ids with the same graded metric shape: `cell_recall` and
+`changed_cell_value_accuracy`. The latent adapter SHALL encode observed action
+prefixes into compact verifier-checkable future-state deltas, decode only
+accepted deltas into engine facts, keep adapter fit ids disjoint from held-out
+score ids, and keep the banked winning answer out of induction, fitting,
+scoring, and planning.
+
+Experiment 4893 SHALL write
+`results/experiment_4893_action_prefix_latent_adapter.json` with required
+fields `honest_verdict`, `fork_verdict`,
+`action_prefix_value_accuracy_delta_median`,
+`action_prefix_value_accuracy_delta_ci95`, `per_game_value_gap`,
+`ran_genuinely_live`, `delta_on_truly_heldout_split`, `verifier_is_oracle`,
+`live_path_reachable`, `generator_backend`, `solve_provenance`,
+`checkpoint_emitted`, `inference_substrate`, `model_specs`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`. The
+median action-prefix value-accuracy delta SHALL be emitted as a bare numeric
+field.
+
+If the value-accuracy delta CI95 excludes zero, the artifact SHALL report
+`fork_verdict=REPRESENTATION_MATTERS`. If the CI95 includes zero, it SHALL
+report `fork_verdict=VALUE_GAP_REPRESENTATION_INVARIANT_HARD` and
+`retire_if_same_verdict=true`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real lift is success_action_prefix_latent_value_gap_closed_<delta>; a flat null is complete_action_prefix_latent_no_value_lift_representation_invariant_hard."
+- `fork_verdict`: principle "one of REPRESENTATION_MATTERS | VALUE_GAP_REPRESENTATION_INVARIANT_HARD -- redirects .452."
+- `action_prefix_value_accuracy_delta_median`: principle "median (latent-representation - A1 code-engine baseline) changed-cell value accuracy; did the latent representation close the value gap?"
+- `action_prefix_value_accuracy_delta_ci95`: principle "bootstrap CI95 of the latent-representation value-accuracy delta; PASS requires it to exclude 0 for a real lift."
+- `per_game_value_gap`: principle "per-game {value_acc_code_baseline, value_acc_latent, cell_recall, delta, ci95} -- the quantitative table."
+- `ran_genuinely_live`: principle "true iff duration_s > 60 and the latent induction/scoring genuinely ran (the explicit .450 A1b 13.7s non-test fix)."
+- `delta_on_truly_heldout_split`: principle "true -- scored on the SAME held-out split as A1, disjoint from any fit set (B1 audits)."
+- `verifier_is_oracle`: principle "false -- the held-out transition score is oracle-distinct from the env's level-up check (circularity discipline)."
+- `live_path_reachable`: principle "the latent adapter uses the live e3 load_engine interface (arc_orphan_solver_lint passes), not a parallel solver."
+- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+- `solve_provenance`: principle "development_proxy -- a representation-accuracy measurement, NOT a banked level."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (per-game checkpointing)."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- the latent induction invokes an LLM on the GPU-0 generator."
+- `model_specs`: principle "names the inducer (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `preconditions_checked`: principle "records arcade/generator/A1-baseline checks; a missing resource emits blocked_."
+- `random_seed`: principle "determinism for the latent-adapter induction stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, A1 baseline, latent-adapter config, held-out split) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4893-A1-LOW-VALUE-GATE
+
+Given the Exp 4892 decision-need artifact
+When Experiment 4893 checks preconditions
+Then it proceeds only when the bare decision-need value delta is below `0.1`
+and the artifact contains per-game code baselines plus held-out transition ids;
+otherwise it writes a gated `blocked_` or `skipped_` artifact.
+
+#### SCENARIO-ARC-WMTE-4893-ACTION-PREFIX-LATENT
+
+Given the agent's own cold-start transitions
+When Experiment 4893 induces the action-prefix latent adapter
+Then it creates non-code latent future-state deltas keyed by compact action
+prefixes, decodes accepted deltas into verifier-checkable engine facts, and
+scores the same held-out split without using banked answers.
+
+#### SCENARIO-ARC-WMTE-4893-GENUINELY-LIVE
+
+Given at least three held-out games are available
+When Experiment 4893 measures the latent adapter
+Then a passing artifact records `ran_genuinely_live=true`, `duration_s > 60`,
+`inference_substrate=live_llm_inference`, and the live path includes
+`arc_executable_world_model.load_engine`.
+
+#### SCENARIO-ARC-WMTE-4893-FORK-VERDICT
+
+Given the per-game latent value-accuracy deltas against the Exp 4892 code
+baseline
+When Experiment 4893 computes the median delta and bootstrap CI95
+Then it emits `REPRESENTATION_MATTERS` only when the CI95 excludes zero, and
+otherwise emits `VALUE_GAP_REPRESENTATION_INVARIANT_HARD`.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that

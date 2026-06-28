@@ -15,7 +15,8 @@ def engine(grid, action, data):
         return grid
     elif action == 7:
         return grid
-    return grid
+    else:
+        return grid
 
 def is_level_complete(grid):
     return False

@@ -4,67 +4,77 @@ import numpy as np
 
 def engine(grid, action, data):
     if action == 1:
-        if data is None:
-            return grid
-        # Action 1 is a vertical click at (x, y)
-        x, y = data['x'], data['y']
-        h, w = grid.shape
-        # Create a mask for the clicked column
-        col_mask = np.zeros((h, w), dtype=int)
-        col_mask[:, x] = 1
-        
-        # Apply the click effect: toggle cells in the column
-        # Based on observed transitions, the click toggles cells in a specific pattern
-        # The pattern seems to be a vertical line of toggles
-        # We'll implement a simple toggle mechanism
-        
-        # Convert grid to list of lists for easier manipulation
-        grid_list = grid.tolist()
-        
-        # Toggle cells in the column
-        for i in range(h):
-            if col_mask[i, x] == 1:
-                grid_list[i][x] = 1 - grid_list[i][x]
-        
-        return np.array(grid_list)
+        return apply_action_1(grid)
     elif action == 2:
-        if data is None:
-            return grid
-        # Action 2 is a horizontal click at (x, y)
-        x, y = data['x'], data['y']
-        h, w = grid.shape
-        # Create a mask for the clicked row
-        row_mask = np.zeros((h, w), dtype=int)
-        row_mask[y, :] = 1
-        
-        # Apply the click effect: toggle cells in the row
-        grid_list = grid.tolist()
-        
-        # Toggle cells in the row
-        for i in range(w):
-            if row_mask[y, i] == 1:
-                grid_list[y][i] = 1 - grid_list[y][i]
-        
-        return np.array(grid_list)
-    else:
+        return apply_action_2(grid)
+    elif action == 3:
+        return apply_action_3(grid)
+    elif action == 4:
+        return apply_action_4(grid)
+    elif action == 5:
+        return apply_action_5(grid)
+    elif action == 6:
+        return apply_action_6(grid, data)
+    elif action == 7:
+        return apply_action_7(grid)
+    return grid
+
+def apply_action_1(grid):
+    grid = grid.copy()
+    # Action 1 is a vertical movement (up/down)
+    # Based on observed transitions, it shifts the pattern of blocks
+    # We simulate the movement by shifting rows
+    # This is a simplified model based on the observed pattern
+    # The exact shift amount and direction depend on the context
+    # For now, we assume a simple vertical shift
+    # This is a placeholder for the actual logic
+    return grid
+
+def apply_action_2(grid):
+    grid = grid.copy()
+    # Action 2 is a horizontal movement (left/right)
+    # Similar to action 1, it shifts the pattern of blocks
+    return grid
+
+def apply_action_3(grid):
+    grid = grid.copy()
+    # Action 3 is a toggle or interaction
+    # Based on observed transitions, it changes specific cells
+    return grid
+
+def apply_action_4(grid):
+    grid = grid.copy()
+    # Action 4 is a toggle or interaction
+    return grid
+
+def apply_action_5(grid):
+    grid = grid.copy()
+    # Action 5 is a toggle or interaction
+    return grid
+
+def apply_action_6(grid, data):
+    grid = grid.copy()
+    # Action 6 is a click at specific pixel coordinates
+    if data and 'x' in data and 'y' in data:
+        px, py = data['x'], data['y']
+        # Convert pixel coordinates to logical coordinates
+        logical_x, logical_y = px // 1, py // 1
+        # Apply the click effect
+        # This is a placeholder for the actual logic
         return grid
+    return grid
+
+def apply_action_7(grid):
+    grid = grid.copy()
+    # Action 7 is a toggle or interaction
+    return grid
 
 def is_level_complete(grid):
     # Check if the grid is in a win state
-    # Based on observed transitions, a win state is when the grid is fully filled
-    # or when a specific pattern is achieved
-    # For simplicity, we'll check if the grid is fully filled with non-zero values
-    return np.all(grid != 0)
-
-import numpy as np
+    # Based on observed transitions, a win state has specific patterns
+    # This is a placeholder for the actual logic
+    return False
 
 def is_level_complete(grid):
-    # Flatten grid to 1D
-    flat = grid.flatten()
-    # Check if all elements are equal to the most frequent element (win state)
-    if len(flat) == 0:
-        return False
-    # Use numpy to find unique values and their counts
-    unique, counts = np.unique(flat, return_counts=True)
-    # If the most frequent element appears more than half the time, it's a win
-    return counts[-1] > len(flat) / 2
+    import numpy as np
+    return np.array_equal(grid, np.zeros_like(grid, dtype=int))
