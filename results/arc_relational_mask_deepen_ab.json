@@ -1,7 +1,7 @@
 {
   "experiment": "arc_relational_mask_deepen_ab",
   "schema": "carnot.arc_relational_mask_deepen_ab.v1",
-  "honest_verdict": "complete_relational_mask_deepen_pruner_not_exercised_no_region_or_no_prunable_class_inconclusive",
+  "honest_verdict": "complete_relational_mask_deepen_pruner_not_exercised_no_new_level_null_no_region_or_no_prunable_class_inconclusive",
   "question": "does relational-target-region action-pruning let the deepening search bank a deeper level (or reach the same level with fewer states, no regression) -- the missing branch-pruning half of GAP-4891 Stage-2?",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "verifier_is_oracle": false,
@@ -165,6 +165,6 @@
   ],
   "interpretation": "unlocks=True -> branch-pruning makes a deeper level reachable: a real multi-level win. more_efficient=True -> same level, fewer states: a multi-level efficiency win (RHAE). no_lift WITH pruner_exercised -> the deepening wall is deeper than branching factor (the winning prefix is not merely buried in branches; it is not in the enumerated space) -> tightens the generation-wall closure. REGRESSION -> a false prune broke a solve (unsafe).",
   "random_seed": 20260628,
-  "duration_s": 188.05,
-  "reproducibility_checksum": "sha256:cc01075abec82e8719a11a66c148b1492f8fce71d67b221b5c556416b82a60d4"
+  "duration_s": 202.78,
+  "reproducibility_checksum": "sha256:4ee71ff25f5956f38b08053ae045d074596a06c0f597ecc2a6e0c30992a1a0d6"
 }
