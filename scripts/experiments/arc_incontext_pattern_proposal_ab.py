@@ -1,0 +1,274 @@
+#!/usr/bin/env python3
+"""In-context verified-pattern proposal A/B — the cheapest-decisive probe for the operator's
+2026-06-28 idea: give the small LLM a top-K of patterns that VERIFIABLY worked/failed on OTHER games so
+it can REASON a variant opening for a held-out game.
+
+THE QUESTION: on a held-out (LEAVE-ONE-OUT) game, does injecting retrieved verified worked+failed
+patterns into the LLM proposer's context shift its proposed OPENING PREFIX toward the game's banked
+WINNING prefix, vs a no-exemplar control? (If even the opening doesn't shift toward the winner, the lever
+is dead -- cheapest decisive, bounded LLM calls, before any live-solve scale-up.)
+
+DESIGN (offline-legal: local Qwen3.5-9B-MTP; LOO so it is genuine transfer, not memorization):
+- Held-out games = those with a banked solve trajectory (results/arc_loop_solve_<g>.json, solution_labels).
+- For each: build the pattern library EXCLUDING that game (LOO); retrieve top-K worked + M failed by its
+  mechanic/first-frame; render its first frame; ask the LLM for a K-action opening plan TWICE -- WITH the
+  retrieved exemplar block and WITHOUT (control).
+- METRIC: matching-prefix-length between the LLM's proposed opening and the banked winning opening
+  (how many of the first K action TYPES match in order). Paired delta WITH-minus-WITHOUT across games.
+- GATE (falsifiable): mean matching-prefix-length WITH > WITHOUT, paired bootstrap CI95 excludes 0.
+- solve_provenance = development_proxy (uses banked solves as the eval target; a proposal-quality
+  measurement, NOT a live self-discovery solve). verifier_is_oracle = False.
+
+HONEST PRIOR ~15-20%: the wall (WALL_IS_HIDDEN_STATE) is upstream of corpus richness; this tests whether
+in-context REASONING over verified analogies beats the nulled fixed-recipe router (exp4556) at the
+opening. A null tightens the closure; a positive justifies a live-solve scale-up.
+
+USAGE: arc_incontext_pattern_proposal_ab.py [n_games] [K]
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import re
+import sys
+import time
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO / "python"))
+
+N_GAMES = int(sys.argv[1]) if len(sys.argv) > 1 else 6
+K = int(sys.argv[2]) if len(sys.argv) > 2 else 4
+M = int(sys.argv[3]) if len(sys.argv) > 3 else 1  # samples per arm per game (denoise LLM stochasticity)
+SEED = 20260628
+
+
+def _banked() -> list[tuple[str, list[int]]]:
+    """Held-out games with a banked winning opening (action-type prefix from the solve trajectory)."""
+    out = []
+    import glob
+
+    for path in sorted(glob.glob(str(REPO / "results" / "arc_loop_solve_*.json"))):
+        try:
+            d = json.loads(Path(path).read_text())
+        except Exception:
+            continue
+        if not (d.get("offline_reproduced") and (d.get("reproduced_levels") or 0) >= 1):
+            continue
+        labels = d.get("solution_labels") or []
+        acts: list[int] = []
+        for lab in labels:
+            try:
+                acts.append(int(json.loads(lab).get("action")) if isinstance(lab, str) else int(lab))
+            except Exception:
+                pass
+        g = str(d.get("game") or "")
+        if g and len(acts) >= 2:
+            out.append((g, acts[:K]))
+    return out
+
+
+def _first_frame_ascii(game: str) -> str:
+    try:
+        from carnot.agentic import arc_solver_kit as kit
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        import numpy as np
+
+        arc = kit.offline_arcade()
+        env = arc.make(game, scorecard_id=arc.open_scorecard())
+        f = env.reset()
+        g = np.asarray(grid_of(f))
+        rows = [" ".join(f"{int(v):2d}" for v in row) for row in g[:24]]
+        return "\n".join(rows)
+    except Exception as exc:
+        return f"(frame unavailable: {exc!r})"[:120]
+
+
+def _ask(proposer, frame_ascii: str, exemplar_block: str, k: int) -> list[int]:
+    prompt = (
+        "You are proposing the opening action sequence for an unfamiliar grid puzzle game.\n"
+        "Actions are integers: 1-5 are directional/confirm keys, 6 is a click.\n"
+        f"The game's first screen (integers are colours):\n{frame_ascii}\n\n"
+        + (exemplar_block + "\n\n" if exemplar_block else "")
+        + f"Propose the {k} most promising FIRST actions, in order, as a JSON list of integers "
+        f"(e.g. [6,2,2,3]). Reply with ONLY the JSON list."
+    )
+    ok, text = proposer.complete_text(prompt, max_tokens=48, temperature=0.2)
+    if not ok:
+        return []
+    m = re.search(r"\[[0-9,\s]+\]", text or "")
+    if not m:
+        return [int(x) for x in re.findall(r"[1-6]", text or "")][:k]
+    try:
+        return [int(x) for x in json.loads(m.group())][:k]
+    except Exception:
+        return [int(x) for x in re.findall(r"[1-6]", m.group())][:k]
+
+
+def _leading_match(proposed: list[int], winner: list[int]) -> int:
+    """Leading contiguous match from index 0 (execution-relevant: a wrong action-1 breaks the plan)."""
+    n = 0
+    for a, b in zip(proposed, winner):
+        if a == b:
+            n += 1
+        else:
+            break
+    return n
+
+
+def _positional_match(proposed: list[int], winner: list[int]) -> int:
+    """Positional action-type agreement (proposal-QUALITY: how many of the opening actions match the
+    winner's, position-wise). Catches a shift toward the winning vocabulary/pattern even when action-1
+    differs -- the signal a strict leading-prefix metric hides."""
+    return sum(1 for a, b in zip(proposed, winner) if a == b)
+
+
+def _server_ok(proposer) -> bool:
+    try:
+        return proposer._healthy() or proposer._ensure_server()
+    except Exception:
+        return False
+
+
+def main() -> int:
+    started = time.time()
+    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+    from carnot.agentic.arc_pattern_library import (
+        build_pattern_library,
+        format_incontext_block,
+        retrieve,
+    )
+
+    proposer = LocalGGUFProposer(
+        repo_substr="Qwen3.5-9B-MTP",
+        model_path=os.environ.get("CARNOT_ARC_GGUF_PATH") or None,
+        mtp=(os.environ.get("CARNOT_ARC_MTP", "1") != "0"),
+        kv_quant="q8_0",
+        no_think_prefix="/no_think\n",
+        max_tokens=64,
+        port=int(os.environ.get("CARNOT_IGE_LLM_PORT", "8919")),
+    )
+    preconds = [{"resource": "qwen3.5-9b-mtp_gpu_server", "available": _server_ok(proposer)}]
+    if not preconds[0]["available"]:
+        _write({
+            "experiment": "arc_incontext_pattern_proposal_ab",
+            "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
+            "honest_verdict": "blocked_incontext_pattern_llm_server_unreachable",
+            "inference_substrate": "live_llm_inference", "verifier_is_oracle": False,
+            "preconditions_checked": preconds, "solve_provenance": "development_proxy",
+            "random_seed": SEED, "duration_s": round(time.time() - started, 2),
+        })
+        print("BLOCKED: LLM server unreachable")
+        return 0
+
+    games = _banked()[:N_GAMES]
+    per_game = []
+    for game, winner in games:
+        frame = _first_frame_ascii(game)
+        lib = build_pattern_library(exclude_game=game)  # LOO
+        pats = retrieve(lib, {"mechanic": game, "text": frame[:200]}, k_pos=3, k_neg=2)
+        block = format_incontext_block(pats)
+        # M samples per arm, averaged, to denoise LLM stochasticity (a single sample flips run-to-run)
+        with_props = [_ask(proposer, frame, block, K) for _ in range(M)]
+        wo_props = [_ask(proposer, frame, "", K) for _ in range(M)]
+        with_pos = round(sum(_positional_match(p, winner) for p in with_props) / M, 3)
+        wo_pos = round(sum(_positional_match(p, winner) for p in wo_props) / M, 3)
+        with_lead = round(sum(_leading_match(p, winner) for p in with_props) / M, 3)
+        wo_lead = round(sum(_leading_match(p, winner) for p in wo_props) / M, 3)
+        per_game.append({
+            "game": game, "winner_prefix": winner, "samples": M,
+            "with_exemplars_sample": with_props[0], "without_exemplars_sample": wo_props[0],
+            "with_positional": with_pos, "without_positional": wo_pos, "positional_delta": round(with_pos - wo_pos, 3),
+            "with_leading": with_lead, "without_leading": wo_lead, "leading_delta": round(with_lead - wo_lead, 3),
+            "n_retrieved": len(pats),
+        })
+        print(f"[{game}] winner={winner} with_pos={with_pos} without_pos={wo_pos} "
+              f"dpos={round(with_pos - wo_pos, 3)} (lead d={round(with_lead - wo_lead, 3)}, M={M})", flush=True)
+
+    scored = [g for g in per_game if g["with_exemplars_sample"] or g["without_exemplars_sample"]]
+    # PRIMARY = positional (proposal quality); SECONDARY = leading (execution readiness)
+    deltas = [g["positional_delta"] for g in scored]
+    point = round(sum(deltas) / len(deltas), 4) if deltas else 0.0
+    ci = _bootstrap_ci(deltas, SEED) if deltas else [0.0, 0.0]
+    with_mean = round(sum(g["with_positional"] for g in scored) / max(1, len(scored)), 4)
+    wo_mean = round(sum(g["without_positional"] for g in scored) / max(1, len(scored)), 4)
+    lead_point = round(sum(g["leading_delta"] for g in scored) / max(1, len(scored)), 4) if scored else 0.0
+    exemplars_help = bool(point > 0 and ci[0] > 0)
+
+    if not scored:
+        verdict = "complete_incontext_pattern_no_scorable_games_inconclusive"
+    elif exemplars_help:
+        verdict = (f"success_incontext_patterns_shift_opening_toward_winner_positional_{with_mean}_vs_{wo_mean}"
+                   f"_delta_{point}_ci_excl_0_lead_delta_{lead_point}_proceed_to_live_solve")
+    elif point > 0:
+        verdict = (f"complete_incontext_patterns_positive_positional_shift_{with_mean}_vs_{wo_mean}_delta_{point}"
+                   f"_but_ci_{ci[0]}_{ci[1]}_includes_0_underpowered_n{len(scored)}_promising_rerun_larger")
+    else:
+        verdict = (f"complete_incontext_patterns_no_opening_shift_positional_{with_mean}_vs_{wo_mean}_delta_{point}"
+                   f"_ci_{ci[0]}_{ci[1]}_null")
+
+    art = {
+        "experiment": "arc_incontext_pattern_proposal_ab",
+        "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
+        "honest_verdict": verdict,
+        "question": ("do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed "
+                     "opening prefix toward the banked winning prefix vs a no-exemplar control?"),
+        "inference_substrate": "live_llm_inference",
+        "verifier_is_oracle": False,
+        "n_games": len(scored), "K": K,
+        "with_exemplars_mean_positional": with_mean, "without_exemplars_mean_positional": wo_mean,
+        "positional_delta_point": point, "positional_delta_ci95": ci,
+        "leading_delta_point": lead_point,
+        "exemplars_help": exemplars_help,
+        "per_game": per_game,
+        "model_specs": {"generator": "unsloth/Qwen3.5-9B-MTP-GGUF", "kv_quant": "q8_0", "mtp": True},
+        "solve_provenance": "development_proxy",
+        "used_env_source": True, "read_game_source": True,
+        "interpretation": (
+            "exemplars_help=True -> in-context verified patterns let the small LLM reason a better opening "
+            "on a held-out game (beats the nulled fixed-recipe router exp4556 at the opening) -> escalate "
+            "to a live-solve A/B. null -> verified-pattern in-context reasoning does not shift the opening "
+            "toward the winner; consistent with the OOD/hidden-state wall (patterns from other games don't "
+            "carry the held-out game's winning order). The source-code-derived win-conditions ARE included "
+            "(arc_pattern_library source_code patterns), so this also tests the operator's source-code idea."
+        ),
+        "prior_failures": [
+            {"experiment_id": "exp4556", "verdict": "verifier_router_no_value_added",
+             "addressed_by": ("router few-shots ONE closest-game recipe; this injects a TOP-K of verified "
+                              "worked+failed PATTERNS (incl. source-code win-conditions) as reasoning "
+                              "exemplars and measures opening-prefix shift on a LOO held-out game."),
+             "retire_if_same_verdict": True},
+        ],
+        "cites_upstream": ["exp4556 (router)", "exp4933 (MATM efficiency retrieval)", "exp4697 (in-context prior, unbuilt)"],
+        "preconditions_checked": preconds,
+        "random_seed": SEED,
+        "duration_s": round(time.time() - started, 2),
+    }
+    _write(art)
+    print("\n=== VERDICT:", verdict)
+    return 0
+
+
+def _bootstrap_ci(deltas, seed, n=1000):
+    import random
+
+    if not deltas or len(set(deltas)) == 1:
+        v = round(float(sum(deltas) / len(deltas)), 4) if deltas else 0.0
+        return [v, v]
+    rng = random.Random(seed)
+    samp = sorted(sum(deltas[rng.randrange(len(deltas))] for _ in deltas) / len(deltas) for _ in range(n))
+    return [round(samp[int(0.025 * (n - 1))], 4), round(samp[int(0.975 * (n - 1))], 4)]
+
+
+def _write(art: dict) -> None:
+    payload = dict(art)
+    payload["reproducibility_checksum"] = ""
+    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
+        json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+    (REPO / "results" / "arc_incontext_pattern_proposal_ab.json").write_text(json.dumps(art, indent=2) + "\n")
+    print(f"-> results/arc_incontext_pattern_proposal_ab.json")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

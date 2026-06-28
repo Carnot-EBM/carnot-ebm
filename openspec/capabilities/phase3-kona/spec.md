@@ -3132,6 +3132,83 @@ does not emit a verifier-win claim.
 `self_consistency_saturated=false`, and the artifact contains the validation
 gate rather than a headline lift or promotion claim.
 
+### REQ-KONA-4940: Distributional Energy Verifier Executable Spec and SOTA Ingestion
+
+Carnot MUST advance the Exp 4922 distributional-energy verifier scaffold into
+an executable design spec for the post-2026-06-30 verifier-moat experiment
+without running the real benchmark. The executable spec SHALL ingest and cite
+real arXiv sources for `2605.18871`, `2504.16828`, and `2502.01989`; map each
+method onto the current Carnot verifier stack; and flag the strongest method(s)
+as post-6/30 NEXT-milestone roadmap input. The mapping MUST state, per paper,
+`strongest_method`, `implementation_cost_over_current_stack`, and `pitfalls`.
+
+The dry-run SHALL reuse the Exp 4922 TravelPlanner-style structured slice while
+confirming `self_consistency_saturated=false`. It SHALL wire exactly three
+end-to-end columns: `self_consistency`, `decomposed_energy_verifier`, and
+`oracle`. The `decomposed_energy_verifier` column MUST combine the existing
+FoVer-style analytical/executable constraint penalties with a learned
+quality-scorer ensemble abstraction in which the ensemble mean ranks candidates
+and the ensemble standard deviation drives abstention. The verifier column MUST
+ignore model identity and MUST NOT use the cached oracle labels used by the
+`oracle` column. The dry-run is an executable wiring proof only, not a benchmark
+or verifier-value claim.
+
+The implementation SHALL live at
+`python/carnot/experiment_4940_distributional_energy_verifier_executable_spec.py`,
+the research note SHALL live at
+`docs/research-notes/distributional-energy-verifier-executable-spec-20260628.md`,
+and the terminal artifact SHALL be written to
+`results/experiment_4940_distributional_energy_verifier_executable_spec.json`.
+The run SHALL update `research-studying.md` with an INGESTED Exp 4940 section
+and SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`,
+`ops/status.md`, or `_bmad/traceability.md`.
+
+Required artifact fields and principles:
+- `honest_verdict`: terminal prefix; success_distributional_energy_verifier_pivot_executable_spec_ready.
+- `arxiv_ids_cited`: 2605.18871 (Distributional EBM) + 2504.16828 (THINKPRM) + 2502.01989 (VFScale) -- real IDs, no fabrication (SOTA-ingestion guardrail).
+- `sota_to_carnot_mapping`: per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap.
+- `pivot_executable_on_7_1`: true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable).
+- `three_column_dry_run_ok`: the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run).
+- `sc_not_saturated_domain`: the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR).
+- `validation_gate`: the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here).
+- `verifier_is_oracle`: false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here.
+- `moat_proven_claimed`: false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads the scaffold + slice + papers; 0.0001s floor) -- no real benchmark run.
+- `preconditions_checked`: records scaffold/slice/network checks; a missing scaffold emits blocked_.
+- `random_seed`: determinism for the dry-run wiring.
+- `reproducibility_checksum`: content hash of (papers cited, design spec, dry-run config) so a replication catches drift.
+
+### SCENARIO-KONA-4940-EXECUTABLE-DRY-RUN: Three Columns Wire End-to-End
+
+**Given** the Exp 4922 scaffold, scaffold artifact, and TravelPlanner structured
+slice are present and self-consistency is below the saturation threshold
+**When** `python/carnot/experiment_4940_distributional_energy_verifier_executable_spec.py`
+runs
+**Then** it writes
+`results/experiment_4940_distributional_energy_verifier_executable_spec.json`
+with `honest_verdict=success_distributional_energy_verifier_pivot_executable_spec_ready`,
+`pivot_executable_on_7_1=true`, `three_column_dry_run_ok=true`, `verifier_is_oracle=false`,
+`moat_proven_claimed=false`, and dry-run columns `{self_consistency,
+decomposed_energy_verifier, oracle}` over a non-saturated TravelPlanner slice.
+
+### SCENARIO-KONA-4940-BLOCKED: Missing Scaffold or Slice Blocks Honestly
+
+**Given** the Exp 4922 scaffold, scaffold artifact, or structured slice is
+missing or the slice is invalid or self-consistency-saturated
+**When** the executable-spec precondition check runs
+**Then** it emits a terminal `blocked_*` verdict, records the blocked resource in
+`preconditions_checked`, keeps `pivot_executable_on_7_1=false`, and does not
+claim that the verifier moat is proven.
+
+### SCENARIO-KONA-4940-NO-MOAT-CLAIM: Validation Gate Is Stated, Not Met
+
+**Given** the SOTA mapping and dry-run wiring are present
+**When** the Exp 4940 artifact is validated
+**Then** `validation_gate` requires the real post-6/30 experiment to beat
+self-consistency with CI95 excluding zero, remain oracle-distinct, and pass a
+no-model-identity-shortcut check, while `moat_proven_claimed=false` and
+`verifier_is_oracle=false` remain enforced.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run
