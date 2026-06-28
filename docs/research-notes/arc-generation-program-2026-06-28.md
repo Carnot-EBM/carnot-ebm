@@ -1,5 +1,12 @@
 # ARC-AGI-3 Directed-Generation / Hierarchical-Planning research program (2026-06-28)
 
+> **STATUS (2026-06-28): PROGRAM COLLAPSED ON DESIGN — both root-cause branches were already executed
+> and refuted by the `.451–.454` chain (the operator-directed not-done-before check caught it BEFORE any
+> build). Branch A (inducer strength) = exp4883 `METHOD_IS_CEILING`; Branch B (interaction-history /
+> order-state observability) = exp4893 `REPRESENTATION_INVARIANT_HARD`. Conclusion: the generation wall
+> is information-theoretic (gradient-free first-contact needle-search), not lever-shaped. Do NOT build a
+> probe from this doc without a genuinely new paradigm + a fresh exclusion check. See §5.**
+
 **Origin:** operator directive 2026-06-28 ("let's start the research program for generation —
 directed candidate generation / hierarchical planning"), after every *selection*-class lever and the
 full oracle-distinct structural-energy program (S0–S3) concluded with no live ARC value, leaving the
@@ -79,10 +86,25 @@ observable features", there are exactly two live root-cause hypotheses:
     Inducer strength is downstream of an observability problem. A clean strong-inducer re-run would almost
     certainly re-confirm METHOD_IS_CEILING; expected value ~0. **RETIRED — do not build the strong-inducer
     probe.**
-- **(B) PERCEPTION → SYMBOLIC-STATE INTERFACE — the LIVE hypothesis.** The hidden interaction-order
-  state (exp4914 `winning_prefix_order_state.observable=False`) must be made OBSERVABLE so the
-  proposal distribution can condition on it; only then can the winning prefix be assembled. This is the
-  unrefuted root cause and the program's actual direction.
+- **(B) PERCEPTION → SYMBOLIC-STATE INTERFACE — ALSO REFUTED (2026-06-28 verification pass).** The
+  hypothesis was: condition the representation/proposal on interaction-history (a proxy for the hidden
+  order-state) and the winning prefix becomes recoverable. **This was already built and nulled:**
+  `experiment_4893_action_prefix_latent_adapter` (`.451` A1b) used `latent_substrate:
+  "action_prefix_future_state"` — a latent conditioned on the ACTION-PREFIX (interaction history) —
+  over the same 9 held-out games → `complete_action_prefix_latent_no_value_lift_representation_invariant_hard`,
+  value-accuracy delta median **0.0**, CI95 [−0.135, 0.025] (includes 0). Conditioning on
+  interaction-history recovers NO predictive signal. The exp4914 order-state ("interaction-dependent
+  classification ground truth") is definable only relative to the *unknown solution* — it is not a
+  learnable function of observable experience, so action-history conditioning cannot surface it.
+  **RETIRED.**
+
+> **BOTH root-cause branches are already executed and refuted** by the `.451–.454` chain. The
+> directed-generation / representation program was, on inspection, ALREADY RUN systematically:
+> inducer-strength (exp4883 METHOD_IS_CEILING), decision-need value targets (exp4892
+> REPRESENTATION_INVARIANT), action-prefix/history latent (exp4893 REPRESENTATION_INVARIANT_HARD),
+> latent-action interface (exp4904 4_CLASSES), env-grounded search (exp4903 WALL_DEEPER), causal-state
+> abstraction (exp4914 WALL_IS_HIDDEN_STATE). There is no cheapest-decisive probe left in the
+> induce/plan/condition-on-observable family that is not a re-run.
 
 These predict opposite next programs, so the cheapest decisive probe **must fork on them**.
 
@@ -127,24 +149,61 @@ vs both, or name what is different.
 
 ---
 
-## §5. The fork — now resolved to Branch B
+## §5. The fork — COLLAPSED: both branches already executed and refuted
 
-Branch A (inducer strength) is **refuted** (§3-A / §4: exp4883 METHOD_IS_CEILING + WALL_IS_HIDDEN_STATE
-logic). The program proceeds on **Branch B (perception→symbolic-state interface)**: make the hidden
-interaction-order state observable so the proposal distribution can assemble the winning prefix; if the
-state proves unrecoverable, fall back to model-free exploration with an interaction-history cell key.
-The energy verifier's role is unchanged — routing/pruning over a pool that (if Branch B succeeds) now
-contains the winner; it is not itself the generation fix.
+The verification pass (2026-06-28, operator-directed "make sure we have not done this before") found
+BOTH branches already run:
+- **Branch A (inducer strength):** exp4883 `METHOD_IS_CEILING` + logically superseded by
+  WALL_IS_HIDDEN_STATE.
+- **Branch B (interaction-history / order-state observability):** exp4893 `REPRESENTATION_INVARIANT_HARD`
+  (action-prefix latent, delta 0) — history conditioning recovers no signal.
+
+So the program as designed has **no un-run cheapest-decisive probe**. The honest conclusion:
+
+**The generation wall is information-theoretic, not lever-shaped.** For 24/25 games, first-contact is a
+gradient-free needle-search: the winning prefix's order-state is definable only relative to the unknown
+solution, is absent from the frame (exp4914), and is not recoverable from action-history (exp4893) or
+any of 4 representation classes. No induce/plan/condition-on-observable lever can manufacture a gradient
+that is not in the observable experience. This is why generic first-win sits at 1/25 (the games whose
+prefix is short/salient enough to stumble on blindly).
+
+**Thin residuals (low expected value — do NOT build without a fresh not-done-before check + a named
+difference):**
+1. **History-keyed model-free Go-Explore dedup** — exp4701/4831 used a FRAME-keyed coarse cell; a
+   state-dedup key that treats history-distinct states as distinct is mechanistically different (it
+   changes what the search keeps, not what it predicts). BUT the wall is "NEVER ENUMERATED" (the prefix
+   isn't *proposed*), and dedup granularity doesn't change the proposal support — so low EV.
+2. **AMAGO / Algorithm-Distillation in-context meta-exploration** (exp4697, unbuilt) — a meta-learned
+   cross-episode exploration policy; but it conditions on history (exp4893 nulled that signal) and needs
+   training the weak 9B, so it likely hits the same wall. Genuinely unbuilt, but low prior.
+
+**The realistic paradigm-change options (not deadline-week levers):**
+- A **strong coding-agent inducer AS THE LIVE AGENT** (the SOTA winners' actual mechanism, arXiv:2605.05138)
+  — but this is offline-illegal for the competition sandbox, and exp4883's ceiling probe (flagged) +
+  WALL_IS_HIDDEN_STATE suggest even it may not recover a hidden order-state. Needs a clean, genuine
+  strong-inducer run to settle, but expected value is bounded by the hidden-state logic.
+- A **much larger offline-legal local model** (bigger code model on the 3090s) — engineering, not research;
+  only worth it if a clean strong-inducer probe first shows inducer strength matters (it probably doesn't,
+  per §3-A).
+
+**Recommendation:** treat live multi-level ARC-AGI-3 generation as a closed honest-negative for this
+project's current paradigm. The deliverable stays the 0.08 submission (holding) + the FoVer paper. The
+energy verifier's proven value is in *verification-bottlenecked* domains, not this *generation*-bottlenecked
+one. Re-open only with a genuinely new paradigm (not a re-run of A/B).
 
 ---
 
 ## §6. Cross-references
 - The wall: `project_arc_l1_first_contact_wall`, `project_arc_generation_not_selection`, exp4914
   (`WALL_IS_HIDDEN_STATE`), exp4903 (`WALL_DEEPER_THAN_VALUE_PREDICTION`).
-- **Strong-inducer probe ALREADY DONE (the not-done-before catch):**
-  `results/experiment_4883_inducer_ceiling_ab.json` (`.450` A1b) — local 9B vs reference Family-B
-  inducer → `METHOD_IS_CEILING`; `flagged_adversarial` (DURATION_TOO_SHORT, reference lane a
-  ceiling-only placeholder). Retires the strong-inducer G0.
+- **Both branches ALREADY DONE (the not-done-before catches):**
+  - Branch A: `results/experiment_4883_inducer_ceiling_ab.json` (`.450` A1b) — local 9B vs reference
+    Family-B inducer → `METHOD_IS_CEILING`; `flagged_adversarial` (DURATION_TOO_SHORT, ceiling-only
+    reference placeholder). Retires the strong-inducer G0.
+  - Branch B: `results/experiment_4893_action_prefix_latent_adapter.json` (`.451` A1b) —
+    `latent_substrate: action_prefix_future_state` (interaction-history conditioning) →
+    `REPRESENTATION_INVARIANT_HARD`, delta 0, CI95 [−0.135, 0.025]. Retires the history/order-state G0'.
+  - Supporting: exp4892 (decision-need REPRESENTATION_INVARIANT), exp4904 (latent-action 4_classes).
 - Ruled-out census: `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`,
   `ops/exclusion_manifest.yaml`, `docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md`.
 - SOTA anchors: executable world models arXiv:2605.05138 (the strong-inducer mechanism G0 tests),
