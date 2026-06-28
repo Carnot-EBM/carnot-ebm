@@ -1,7 +1,7 @@
 {
   "experiment": "arc_within_game_l3_self_induction_cd82_stage1",
   "schema": "carnot.arc_within_game_l3_self_induction.v1",
-  "honest_verdict": "complete_self_induction_gap4891_no_feature_separates_needs_order_relational_n_win_1",
+  "honest_verdict": "success_goal_energy_fires_and_separates_op_relational_target_match_feat_None_winE_0.0_nonE_12.8_proceed_to_stage2_search",
   "question": "can the agent re-induce cd82's next-level goal from its OWN win exemplars + transitions (no hand delta), and does the induced energy separate win from non-win?",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "verifier_is_oracle": false,
@@ -9,11 +9,16 @@
   "level_reached": 2,
   "n_win_grids": 1,
   "n_nonwin_grids": 20,
-  "goal_induction_operator": null,
+  "goal_induction_operator": "relational_target_match",
   "two_win_floor_blocked_old_operator": true,
-  "induce_fired": false,
+  "induce_fired": true,
   "separating_feature": null,
-  "energy_separation": null,
+  "energy_separation": {
+    "mean_win_energy": 0.0,
+    "mean_nonwin_energy": 12.8,
+    "frac_nonwin_above_max_win": 1.0,
+    "separates": true
+  },
   "stage": 1.6,
   "solve_provenance": "live_agent_self_discovery",
   "used_env_source": false,
@@ -27,6 +32,6 @@
     "arc_solve_registry.yaml cd82 dead_end"
   ],
   "random_seed": 20260627,
-  "duration_s": 2.61,
-  "reproducibility_checksum": "sha256:028b53f77f30727e347e89c3b8fc2bf5e1fc56f5fc072cfeaa33bb8984b461a4"
+  "duration_s": 1.84,
+  "reproducibility_checksum": "sha256:5bba7e19862909e377876f7f3db0b84a7bd1f0fd207d84b38bd6e69c62e4bf54"
 }

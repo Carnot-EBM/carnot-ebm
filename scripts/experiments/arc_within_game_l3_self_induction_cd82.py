@@ -38,6 +38,7 @@ from carnot.agentic.arc_agi3_goal_induction import (  # noqa: E402
     _RICHER_GOAL_FEATURES,
     _goal_feature_value,
     induce_goal_energy,
+    induce_goal_energy_relational,
     induce_goal_energy_richer,
     induce_goal_energy_single_positive,
 )
@@ -118,6 +119,10 @@ def main() -> int:
     if energy is None and win_grids:
         energy = induce_goal_energy_richer(win_grids[0], non_win_grids)
         operator_used = "richer_value_spatial" if energy is not None else None
+    # GAP-4891 RELATIONAL: if scalars can't separate (near-win negatives), try within-frame target-match.
+    if energy is None and win_grids:
+        energy = induce_goal_energy_relational(win_grids[0], non_win_grids)
+        operator_used = "relational_target_match" if energy is not None else None
     induce_fired = energy is not None
     two_win_floor_blocked = energy_two_win is None and len(win_grids) < 2
     # diagnostic: which richer feature (if any) strictly separates the win from the negatives?
@@ -150,9 +155,9 @@ def main() -> int:
     if level_reached < 2:
         verdict = f"complete_self_induction_stage1_could_not_reach_l2_reached_{level_reached}"
     elif not induce_fired:
-        # neither count (GAP-4890) NOR richer value/fill/spatial (GAP-4891) features separate the lone
-        # win from the negatives -> the goal needs ORDER/relational features (the next ceiling).
-        verdict = (f"complete_self_induction_gap4891_no_feature_separates_needs_order_relational"
+        # count (GAP-4890) + richer scalar + RELATIONAL target-match all fail to separate the lone win
+        # -> the goal is not a translate-target either (masked/scaled/learned predicate -- next ceiling).
+        verdict = (f"complete_self_induction_gap4891_count_scalar_relational_all_fail_needs_learned_predicate"
                    f"_n_win_{len(win_grids)}")
     elif not sep["separates"]:
         verdict = (f"complete_self_induction_energy_does_not_separate_on_real_grids_op_{operator_used}"

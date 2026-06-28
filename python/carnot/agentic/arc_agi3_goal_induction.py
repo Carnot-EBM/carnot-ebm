@@ -222,3 +222,74 @@ def induce_goal_energy_richer(
             return lambda g, _f=feat, _w=wv: float(max(0.0, _w - _goal_feature_value(g, _f)))
     # No richer feature strictly separates the single win from the negatives -> cannot induce honestly.
     return None
+
+
+# --- GAP-4891 RELATIONAL: within-frame target-match (canvas == target-shown-at-offset) ------------
+
+def _overlap_pair(arr: np.ndarray, dy: int, dx: int) -> tuple[np.ndarray, np.ndarray]:
+    """Aligned (a, b) over the in-bounds overlap such that a[i,j]=arr[y,x] and b[i,j]=arr[y+dy,x+dx]."""
+    h, w = arr.shape
+    a = arr[max(0, -dy) : h - max(0, dy), max(0, -dx) : w - max(0, dx)]
+    b = arr[max(0, dy) : h - max(0, -dy), max(0, dx) : w - max(0, -dx)]
+    return a, b
+
+
+def induce_goal_energy_relational(
+    win_grid: Optional[np.ndarray],
+    non_win_grids: List[np.ndarray],
+    *,
+    min_mask: int = 6,
+) -> Optional[Callable[[np.ndarray], float]]:
+    """GAP-4891 RELATIONAL goal-energy (2026-06-27, after the count [GAP-4890] and richer-SCALAR
+    [induce_goal_energy_richer] ladders were empirically refuted on cd82/sk48/sp80/cn04).
+
+    WHY scalars failed: the negatives include NEAR-WIN frames (penultimate differs from the win by ~one
+    cell), so no global statistic separates them. The goal is RELATIONAL: at the win a CANVAS region
+    matches a TARGET shown elsewhere in the SAME frame; at every non-win it does not (yet). This models
+    that as TRANSLATIONAL self-similarity with an induced mask:
+      - Search offsets (dy,dx). For each, the win's NON-BACKGROUND self-match set M = {cells where
+        win==win-shifted-by-(dy,dx) AND win!=background} is the induced canvas/target overlap (background
+        excluded so trivial background self-matches don't dominate).
+      - A hypothesis fires only if |M|>=min_mask AND EVERY negative has >=1 cell in M that does NOT match
+        at the same offset (strict separation -- the canvas hasn't matched the target yet).
+      - energy(g) = count of M-cells where g != g-shifted-by-(dy,dx): 0 at the win (matches over all M),
+        >0 at near-win negatives (the wrong cell is in M). Pick the largest separating M.
+    Generalises across levels: (dy,dx) is the constant screen layout offset; the target is re-read from
+    each level's frame. Same contract -> drops into graph_explore_solve_v2's goal_energy hook. Returns
+    None if no offset separates -- honest 'the relational structure is not a simple translate' (e.g. a
+    learned mask/scale), which would itself be the next finding."""
+    if win_grid is None or not non_win_grids:
+        return None
+    arr = np.asarray(win_grid)
+    if arr.ndim != 2:
+        return None
+    h, w = arr.shape
+    vals, counts = np.unique(arr, return_counts=True)
+    bg = vals[int(counts.argmax())]
+    max_off = max(1, min(h, w) // 2)
+    # rank candidate offsets by the win's non-bg self-match-set size (cheap, win-only), largest first
+    candidates: list[tuple[int, int, int, np.ndarray]] = []
+    for dy in range(-max_off, max_off + 1):
+        for dx in range(-max_off, max_off + 1):
+            if dy == 0 and dx == 0:
+                continue
+            a, b = _overlap_pair(arr, dy, dx)
+            if a.size < min_mask:
+                continue
+            mask = (a == b) & (a != bg)  # non-background canvas cells that match the target-at-offset
+            ms = int(mask.sum())
+            if ms >= min_mask:
+                candidates.append((ms, dy, dx, mask))
+    candidates.sort(key=lambda t: t[0], reverse=True)
+
+    def _energy_at(g: np.ndarray, dy: int, dx: int, mask: np.ndarray) -> float:
+        ga, gb = _overlap_pair(np.asarray(g), dy, dx)
+        if ga.shape != mask.shape:
+            return float(int(mask.sum()))  # shape mismatch (different-size frame) -> max violation
+        return float((((ga != gb) & mask)).sum())
+
+    for ms, dy, dx, mask in candidates:
+        # strict separation: every negative must violate (>0) over the win's match-mask at this offset
+        if all(_energy_at(g, dy, dx, mask) > 0.0 for g in non_win_grids):
+            return lambda g, _dy=dy, _dx=dx, _m=mask: _energy_at(g, _dy, _dx, _m)
+    return None

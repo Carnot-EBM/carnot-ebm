@@ -12,6 +12,7 @@ import numpy as np
 
 from carnot.agentic.arc_agi3_goal_induction import (
     induce_goal_energy,
+    induce_goal_energy_relational,
     induce_goal_energy_richer,
     induce_goal_energy_single_positive,
 )
@@ -107,3 +108,37 @@ def test_richer_returns_none_when_truly_indistinguishable():
 def test_richer_handles_empty_inputs():
     assert induce_goal_energy_richer(None, [np.zeros((4, 4), dtype=int)]) is None
     assert induce_goal_energy_richer(np.zeros((4, 4), dtype=int), []) is None
+
+
+# --- GAP-4891 RELATIONAL: within-frame target-match -----------------------------------------------
+
+def test_relational_fires_on_canvas_equals_target_with_nearwin_negative():
+    """GAP-4891 relational: at the win a CANVAS block matches a TARGET block shown at a fixed offset
+    (left block == right block); the near-win negative differs by ONE cell. Counts/scalars can't
+    separate (the near-win frame is scalar-identical), but the relational energy is 0 on the win and
+    >0 on the one-cell-off negative -- exactly the failure mode the scalar ladders could not handle."""
+    win = np.zeros((6, 8), dtype=int)
+    win[1:4, 0:3] = 1  # canvas block (left)
+    win[1:4, 4:7] = 1  # target block (right) == canvas, offset dx=4
+    nearwin = win.copy()
+    nearwin[1, 4] = 0  # one canvas/target cell not yet matched (penultimate-frame analog)
+
+    # scalar operators are blind here (near-win is one cell off; global stats ~identical)
+    energy = induce_goal_energy_relational(win, [nearwin])
+    assert energy is not None, "relational operator must fire on a canvas==target translate"
+    assert energy(win) == 0.0
+    assert energy(nearwin) > 0.0
+
+
+def test_relational_returns_none_without_translational_target():
+    """No within-frame translational target (a single isolated non-bg cell) -> None (honest)."""
+    win = np.zeros((6, 6), dtype=int)
+    win[2, 2] = 1  # one non-bg cell: no offset maps a non-bg cell onto another non-bg cell
+    nearwin = np.zeros((6, 6), dtype=int)
+    nearwin[3, 3] = 1
+    assert induce_goal_energy_relational(win, [nearwin]) is None
+
+
+def test_relational_handles_empty_inputs():
+    assert induce_goal_energy_relational(None, [np.zeros((4, 4), dtype=int)]) is None
+    assert induce_goal_energy_relational(np.zeros((4, 4), dtype=int), []) is None
