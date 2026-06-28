@@ -989,6 +989,7 @@ games:
   - sp80: no_grounded_L3_delta
   - su15: no_grounded_L3_delta
   - lf52: adapter-free graph explore banked L1 only; L2 requires GameAdapter rail delta
+  - 'Exp4936 lf52 no-bank no_grounded_l3_delta: complete_lf52_no_new_level_residual_no_grounded_l3_delta.'
   latest_exp4690_levelup_selfplay:
     artifact: results/experiment_4690_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_lf52.json
@@ -998,6 +999,15 @@ games:
     verifier_checkpoint: models/arc_verifier_lf52.json
     target_rotation: clean_L1_only_not_deepened_in_427_431
     reproducibility_checksum: 0522cc0b1993a66e8076d45d4e8ebdaf25d65882e0319f52156a08c6a542523c
+  latest_exp4936_levelup_attempt:
+    artifact: results/experiment_4936_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_lf52.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: a988ffc5568e397a431e2637bb40e290f262d42710ae272ea570f0e023caf3bb
 - game: sp80
   reproducibility: reproduced
   levels_reproduced: 2
