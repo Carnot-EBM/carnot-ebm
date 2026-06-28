@@ -1,0 +1,125 @@
+{
+  "experiment": "arc_poe_world_model_ab",
+  "schema": "carnot.arc_poe_world_model_ab.v1",
+  "honest_verdict": "complete_poe_world_no_lift_over_maxvote_cellrecall_0.0574_vs_0.558_wins_0of4_conflicts_8_retire_if_same",
+  "question": "does the weighted product-of-experts world model (PoE-World, arXiv:2505.10819) predict held-out transitions (changed-cell recall) better than the nulled max-vote ProductWorldModel (exp4749) and the single induced engine, given the SAME expert pool?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "games": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04"
+  ],
+  "n_transitions_target": 120,
+  "poe_mean_cell_recall": 0.0574,
+  "maxvote_mean_cell_recall": 0.558,
+  "single_engine_mean_cell_recall": null,
+  "poe_beats_maxvote": false,
+  "poe_beats_single_engine": false,
+  "poe_gt_maxvote_games": 0,
+  "poe_lt_maxvote_games": 4,
+  "n_scored_games": 4,
+  "consensus_conflict_cells_total": 8,
+  "consensus_exercised": true,
+  "per_game": [
+    {
+      "game": "ar25",
+      "n_transitions": 120,
+      "n_changed": 92,
+      "n_experts": 48,
+      "n_kept": 29,
+      "poe": {
+        "cell_recall": 0.1659,
+        "accuracy": 0.2333
+      },
+      "maxvote": {
+        "cell_recall": 0.5691,
+        "accuracy": 0.1667
+      },
+      "single_engine": null,
+      "single_engine_note": "single_engine_disabled_opt_in_flag",
+      "consensus_conflict_cells": 0,
+      "cells_voted": 933
+    },
+    {
+      "game": "bp35",
+      "n_transitions": 120,
+      "n_changed": 120,
+      "n_experts": 48,
+      "n_kept": 7,
+      "poe": {
+        "cell_recall": 0.027,
+        "accuracy": 0.0
+      },
+      "maxvote": {
+        "cell_recall": 0.7887,
+        "accuracy": 0.0
+      },
+      "single_engine": null,
+      "single_engine_note": "single_engine_disabled_opt_in_flag",
+      "consensus_conflict_cells": 0,
+      "cells_voted": 38
+    },
+    {
+      "game": "cd82",
+      "n_transitions": 120,
+      "n_changed": 91,
+      "n_experts": 48,
+      "n_kept": 26,
+      "poe": {
+        "cell_recall": 0.0368,
+        "accuracy": 0.2
+      },
+      "maxvote": {
+        "cell_recall": 0.3419,
+        "accuracy": 0.0667
+      },
+      "single_engine": null,
+      "single_engine_note": "single_engine_disabled_opt_in_flag",
+      "consensus_conflict_cells": 8,
+      "cells_voted": 672
+    },
+    {
+      "game": "cn04",
+      "n_transitions": 120,
+      "n_changed": 94,
+      "n_experts": 48,
+      "n_kept": 21,
+      "poe": {
+        "cell_recall": 0.0,
+        "accuracy": 0.2667
+      },
+      "maxvote": {
+        "cell_recall": 0.5325,
+        "accuracy": 0.2333
+      },
+      "single_engine": null,
+      "single_engine_note": "single_engine_disabled_opt_in_flag",
+      "consensus_conflict_cells": 0,
+      "cells_voted": 1623
+    }
+  ],
+  "energy_reweighted": true,
+  "prior_failures": [
+    {
+      "experiment_id": "exp4749",
+      "verdict": "structured_productworldmodel_dead_identity_engine",
+      "addressed_by": "weighted-product CONSENSUS combination (not highest-trust max-vote) + held-out-fitted log-odds weights + a no-change prior + BROAD harvested color-rewrite experts so per-cell votes can conflict; decisive metric is held-out changed-cell recall vs max-vote on the SAME pool, GATED on consensus_exercised (conflicts>0) so an un-exercised null does not retire the lever.",
+      "retire_if_same_verdict": true
+    }
+  ],
+  "interpretation": "consensus_exercised=False (conflicts==0) -> the experts are mutually-exclusive per cell, so the weighted-product collapses to a single-expert-per-cell rule identical to max-vote: the PoE-World consensus mechanism was NOT actually tested -> inconclusive, NOT retired (adversarial-review GAP-1 fix). poe_beats_maxvote=True (with conflicts>0) -> weighted-consensus extracts more predictive value than max-vote from the same experts: the genuine oracle-distinct contribution. no_lift WITH conflicts>0 -> consensus was tested and does not beat max-vote -> the lever retires.",
+  "cites_upstream": [
+    "exp4749 (ProductWorldModel)",
+    "exp4677 (programmatic experts)",
+    "arXiv:2505.10819"
+  ],
+  "model_specs": {
+    "expert_source": "exact_delta+color_rewrite",
+    "single_engine_generator": "unsloth/Qwen3.5-9B-MTP-GGUF"
+  },
+  "random_seed": 20260628,
+  "duration_s": 56.14,
+  "reproducibility_checksum": "sha256:1ec14baebfaf2467ccbebd890f05dd22ca3caf55009e064c7f67b677b79d1b8a"
+}

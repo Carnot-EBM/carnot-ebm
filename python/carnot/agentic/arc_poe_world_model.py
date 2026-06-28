@@ -66,21 +66,59 @@ def _expert_from_dict(row: Mapping[str, Any]) -> Optional[ProgrammaticExpert]:
         return None
 
 
+def harvest_color_rewrite_experts(
+    transitions: Sequence[Transition], *, min_count: int = 2, max_experts: int = 24
+) -> list[ProgrammaticExpert]:
+    """Harvest BROAD, OVERLAPPING color-rewrite experts from observed per-cell value changes (LLM-free).
+    For each frequently-observed (action, from_color -> to_color) change, build an expert that, for that
+    action, rewrites EVERY cell of from_color to to_color. Unlike the exact-delta experts (whose exact
+    preconditions make them mutually-exclusive per cell), these apply broadly and CONFLICT when a colour is
+    observed mapping to different targets -- which is precisely what gives the weighted-consensus combination
+    something to resolve (the mechanism that is inert on an exact-delta-only pool)."""
+    from collections import Counter
+
+    counts: Counter = Counter()
+    for t in transitions:
+        if t.grid.shape != t.next_grid.shape:
+            continue
+        for r, c in np.argwhere(t.grid != t.next_grid):
+            counts[(int(t.action), int(t.grid[r, c]), int(t.next_grid[r, c]))] += 1
+    experts: list[ProgrammaticExpert] = []
+    for (action, src, dst), n in counts.most_common(max_experts):
+        if n < min_count or src == dst:
+            continue
+        experts.append(
+            _color_rewrite_expert(
+                name=f"rewrite_a{action}_{src}to{dst}",
+                object_class=f"color_{src}",
+                action=action,
+                from_color=src,
+                to_color=dst,
+                metadata={"observed_count": int(n)},
+            )
+        )
+    return experts
+
+
 def build_expert_pool(
     transitions: Sequence[Transition],
     *,
     expert_dicts: Sequence[Mapping[str, Any]] = (),
     max_exact_delta: int = 24,
+    include_color_rewrite: bool = True,
 ) -> list[ProgrammaticExpert]:
-    """Assemble a pool of programmatic experts to combine: any LLM-proposed color-rewrite experts PLUS
-    exact-delta experts harvested from the (training) transitions. The exact-delta experts give the product
-    something concrete to reach consensus over even when the LLM proposes nothing usable (the failure mode
-    that left exp4749's product near-identity)."""
+    """Assemble a pool of programmatic experts to combine: any LLM-proposed color-rewrite experts, PLUS
+    BROAD harvested color-rewrite experts (overlapping -> exercise the consensus), PLUS exact-delta experts
+    harvested from the (training) transitions. The mix matters: exact-delta experts give precise but
+    mutually-exclusive predictions; the broad color-rewrite experts overlap and can DISAGREE, which is what
+    lets the weighted-product consensus differ from a max-vote (the lever exp4749's pool never exercised)."""
     pool: list[ProgrammaticExpert] = []
     for row in expert_dicts:
         exp = _expert_from_dict(row)
         if exp is not None:
             pool.append(exp)
+    if include_color_rewrite:
+        pool.extend(harvest_color_rewrite_experts(transitions))
     seen_sigs: set = set()
     n_delta = 0
     for i, t in enumerate(transitions):
@@ -103,12 +141,16 @@ def fit_poe_weights(
     *,
     energy_scorer: Any = None,
     prune_below: float = 1e-6,
+    no_evidence_weight: float = 1.0,
 ) -> list[float]:
     """Fit a non-negative weight per expert from HELD-OUT predictive accuracy on the cells it touches, as
     the log-odds of being right vs a no-change baseline (the closed-form MAP weight under a naive-Bayes
-    product of per-cell predictors). Experts whose held-out accuracy is <= 0.5 (no better than chance / no
-    better than not firing) get weight 0 -> PRUNED. Optionally multiply by an energy factor that down-
-    weights experts whose predictions are structurally implausible (oracle-distinct: no ground truth).
+    product of per-cell predictors). Experts that DID apply on held-out but were no better than chance
+    (acc <= 0.5) get weight 0 -> PRUNED. Experts that NEVER applied on held-out (total == 0) have NO
+    evidence to prune on, so they keep ``no_evidence_weight`` (default 1.0) -- pruning the unproven would
+    collapse a sparse-expert product to the identity engine (the exp4749 failure mode) and would also make
+    the PoE-vs-max-vote A/B unfair (max-vote keeps all experts). Optionally multiply by an energy factor
+    that down-weights structurally-implausible experts (oracle-distinct: no ground truth).
 
     Returns a weight per expert (same order); also writes each expert's .trust for the max-vote baseline."""
     weights: list[float] = []
@@ -131,16 +173,20 @@ def fit_poe_weights(
                 continue
             correct += int((pred[touched] == t.next_grid[touched]).sum())
             total += int(touched.sum())
-        acc = (correct / total) if total else 0.0
         expert.heldout_correct = correct
         expert.heldout_total = total
-        # log-odds weight; clamp acc away from 0/1 for a finite, well-behaved weight
-        acc_c = min(max(acc, 1e-3), 1 - 1e-3)
-        weight = max(0.0, math.log(acc_c / (1.0 - acc_c)))  # 0 at acc<=0.5, grows as acc->1
+        if total == 0:
+            # unproven (no held-out coverage): keep a neutral prior weight; trust=0 for the max-vote view.
+            expert.trust = 0.0
+            weight = float(no_evidence_weight)
+        else:
+            acc = correct / total
+            acc_c = min(max(acc, 1e-3), 1 - 1e-3)  # clamp for a finite log-odds
+            weight = max(0.0, math.log(acc_c / (1.0 - acc_c)))  # 0 at acc<=0.5, grows as acc->1
+            expert.trust = float(acc)  # the max-vote baseline reads .trust
         if energy_factor is not None:
             weight *= float(energy_factor[idx])
-        expert.trust = float(acc)  # the max-vote baseline reads .trust
-        weights.append(weight if (total > 0 and weight > prune_below) else 0.0)
+        weights.append(weight if weight > prune_below else 0.0)
     return weights
 
 
@@ -183,6 +229,11 @@ class PoEWorldModel:
     # base measure); >0 means a single weak expert cannot flip a cell on its own -- consensus is required.
     verifier_is_oracle: bool = False
     diagnostics_: dict[str, Any] = field(default_factory=dict)
+    # consensus-exercised telemetry (proves the weighted-product rule actually had conflicting votes to
+    # resolve, vs collapsing to a single-expert-per-cell max-vote): counts cells where >=2 DISTINCT values
+    # were voted across applying experts (excluding the no-change prior).
+    consensus_conflict_cells: int = 0
+    cells_voted: int = 0
 
     def _active(self) -> list[tuple[ProgrammaticExpert, float]]:
         return [(e, float(w)) for e, w in zip(self.experts, self.weights) if float(w) > 0.0]
@@ -216,6 +267,9 @@ class PoEWorldModel:
             return start.copy()
         out = start.copy()
         for (r, c), tally in votes.items():
+            self.cells_voted += 1
+            if len(tally) >= 2:  # >=2 distinct values voted by applying experts -> a real consensus to form
+                self.consensus_conflict_cells += 1
             # the current value carries the no-change prior; a candidate wins only on strict majority
             base_val = int(start[r, c])
             tally_full = dict(tally)
