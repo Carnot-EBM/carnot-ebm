@@ -1,0 +1,199 @@
+{
+  "activated_milestone": "2026.06.453",
+  "active_milestone_confirmed": "2026.06.453",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archive_record_action": "blocked_no_archive",
+  "archived_milestone": "2026.06.452",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "7785ee78873d07f8ff3dd601b00cb2541c5fd40724635bdc0db0830e001c067c"
+    },
+    {
+      "path": "results/operational_retro_2026_06_452.json",
+      "sha256": "9ff5ab689bbd999d11945a55275e6e34bf148218d77597af386c2f1a7e8f91e2"
+    },
+    {
+      "path": "results/experiment_4912_capstone_v452.json",
+      "sha256": "d4d402714e4154e5b7e1f3493ae593c43a9c44816d577527da9e889391062cec"
+    },
+    {
+      "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+      "sha256": "1f8ebe39689af0b8c158fda8782a827e05d7d93d60d7c74b74bc8da73ab32187"
+    }
+  ],
+  "close_state_452": {
+    "a1": {
+      "change_location_prior_used_not_value": true,
+      "coverage_migration_count": 0,
+      "failure_wall": "multi_step_prefix_assembly_not_value_prediction",
+      "fork_verdict": "WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "honest_verdict": "complete_env_grounded_search_no_first_win_lift_WALL_DEEPER_THAN_VALUE_PREDICTION",
+      "per_game_real_env_value_reads": 24,
+      "trust_gate": {
+        "a1_numbers_match_fork": true,
+        "a1_planner_blind": true,
+        "a1_positive_control_non_degenerate": true,
+        "a1_trustworthy": true,
+        "a1_value_from_real_env": true,
+        "a1b_gate_skipped": false,
+        "a1b_live_or_gate_skipped": true,
+        "a1b_ran_genuinely_live": true
+      },
+      "trusted": true,
+      "value_grounded_first_win_delta_ci95": [
+        -0.04,
+        -0.04
+      ],
+      "value_grounded_first_win_delta_median": -0.04
+    },
+    "a1b": {
+      "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES",
+      "honest_verdict": "complete_latent_action_no_value_lift_representation_invariant_4_classes",
+      "latent_action_value_accuracy_delta_median": -0.103162,
+      "ran_genuinely_live": true
+    },
+    "a2": {
+      "decision": "no_new_level_banked",
+      "honest_verdict": "complete_m0r0_no_new_level_residual_duplicate_depth",
+      "new_levels_banked": 0,
+      "no_bank_reason": "duplicate_depth",
+      "reproducible_total_levels_after": 68,
+      "target_game": "m0r0"
+    },
+    "a3": {
+      "checkpoint_path": "models/arc_verifier_vc33.json",
+      "decision": "checkpoint_refreshed",
+      "target_game": "vc33",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4": {
+      "reason": "flagged_adversarial",
+      "status": "skipped_flagged_adversarial",
+      "true_honest_verdict": "complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live",
+      "v453_fixes_this": true
+    },
+    "b2": {
+      "decision": "package_ready_operator_only",
+      "operator_only": true,
+      "peak_vram_gb": 15.146,
+      "submission_package_ready": true,
+      "submits": false
+    },
+    "c": {
+      "decision": "kv260_continuity_ok",
+      "graduated_terminal": true,
+      "kv260_ssh_reachable": true
+    },
+    "capstone": {
+      "capstone_ready": true,
+      "closed_fork": true,
+      "honest_verdict": "complete_capstone_v452_escalate_wall_survives_four_representations_plus_env_grounding"
+    },
+    "d": {
+      "all_priority_sources_http_200": true,
+      "priority_1": "causal_state_abstraction_wall_diagnostic",
+      "priority_1_arxiv": "2401.12497",
+      "priority_2": "distributional_energy_verifier_pivot",
+      "priority_2_arxiv": "2605.18871",
+      "priority_3": "tool_aware_science_prm_pivot",
+      "priority_3_arxiv": "2606.04579",
+      "selected_branch": "wall_survives_four_representations_plus_env_grounding"
+    },
+    "energy_program_concluded": true,
+    "operational_retro": {
+      "milestone": "2026.06.452",
+      "summary": "The milestone-scoped timing detector reported 0 experiments / 0 wall-minutes / 0 compute-bound tasks for 2026.06.452, but this is the RECURRING FALSE-ZERO detector gap (documented .363->.451, now .452, ~79 milestones), NOT a genuinely empty milestone: on-disk artifacts exp4902-exp4912 (the 11 .452 arms through capstone_v452, ~226-min window 01:36->05:22 EDT) exist. The locked retro numbers are left at the detector's 0/0/0/null per instruction; the disk-sourced narrative is in docs/research-log.md."
+    },
+    "reproducible_total_levels": 68,
+    "retired_programs": [
+      "energy_as_arc_lever",
+      "tta_on_code_engine",
+      "stronger_local_code_inducers",
+      "decision_need_targets",
+      "action_prefix_latents",
+      "coverage",
+      "exploration",
+      "selection",
+      "perception_from_grid"
+    ],
+    "summary": "wall_survives_four_representations_plus_env_grounding_closure_diagnostic",
+    "v453_attacks_closure_diagnostic_not_representation": true,
+    "wall_survives_four_representations_plus_env_grounding": true
+  },
+  "duration_s": 1.597984,
+  "energy_program_concluded": true,
+  "experiment": "experiment_4913_archive_452_activate_453",
+  "experiment_id": 4913,
+  "field_principles": {
+    "energy_program_concluded": {
+      "principle": "true -- the energy-as-ARC-lever program concluded negative; do NOT re-propose energy."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_452_archived_453_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (68; .452 banked nothing)."
+    },
+    "v453_attacks_closure_diagnostic_not_representation": {
+      "principle": "true -- .453 A1 CLASSIFIES the wall (observable vs hidden causal variable), it does not propose a 5th value-prediction representation."
+    },
+    "wall_survives_four_representations_plus_env_grounding": {
+      "principle": "true -- .452 closed the fork as a B1-trusted honest negative; .453 does a closure diagnostic, NOT representation #5."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "research_roadmap_next_yaml": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')"
+      ],
+      "exists": false,
+      "exit_code": 1,
+      "passed": false,
+      "path": "research-roadmap-next.yaml",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'\n",
+      "stdout_tail": ""
+    }
+  },
+  "pretest_gate": {
+    "green": false,
+    "ran": false,
+    "reason": "skipped_after_precondition_failure"
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "3e93dfe0b54f5f596ebf233c5f149f23565b25e40b9db1ce3160001e6fdcc900",
+  "reproducible_total_levels": 68,
+  "result_path": "results/experiment_4913_archive_452_activate_453.json",
+  "schema": "carnot.exp4913.archive_452_activate_453.v1",
+  "spec_refs": [
+    "REQ-REPORT-4913",
+    "SCENARIO-REPORT-4913"
+  ],
+  "transition_performed": false,
+  "v453_attacks_closure_diagnostic_not_representation": true,
+  "wall_survives_four_representations_plus_env_grounding": true
+}
