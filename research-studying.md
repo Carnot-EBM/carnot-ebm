@@ -5438,3 +5438,31 @@ docs/research-notes/ahois-socratic-agents-autonomous-loop-peer-sota-ingestion-20
 - flagged_for_v452: reverse_counterfactual_targeter (arXiv:2505.08073)
 - flagged_for_v452: verification_calibrated_abstraction (arXiv:2602.23997)
 <!-- EXP4900-SOTA-INGESTION-V452-FRONTIER-END -->
+
+<!-- EXP4911-SOTA-INGESTION-V453-FRONTIER-START -->
+## Exp 4911 - .453 wall and verifier-pivot SOTA ingestion - INGESTED
+
+- Honest verdict: `success_sota_ingestion_v453_frontier_mapped`
+- Aimed at A1 fork: `WALL_DEEPER_THAN_VALUE_PREDICTION`
+- A1b fork: `VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES`
+- Branch: `wall_survives_four_representations_plus_env_grounding`
+- Banned channel note: `/deep-research` not invoked; no solve claim; no model load; nulled classes excluded.
+
+### Final ARC Wall Diagnostics
+- Causal state-abstraction wall diagnostic (arXiv:2401.12497): Run an offline causal-abstraction audit over failed A1/A1b transitions: identify which variables would have to be retained for changed-cell value prediction, then stop unless the abstraction exposes a new observable state variable within the sprint budget.
+- Local causal SSM world-model diagnostic (arXiv:2505.02074): Fit a tiny causal SSM on observed prefixes and compare its inferred causal graph against the failed engine facts; accept only a diagnostic report unless it predicts held-out changed values without extra actions.
+- Object-level masked Causal-JEPA diagnostic (arXiv:2602.11389): Mask object-level latent facts in failed transitions and ask whether observed context can reconstruct the changed values; use the result to label the wall observable or unobservable rather than launching another planner.
+- Interpretable causal world-model extraction (arXiv:2504.07257): Extract symbolic object-transition equations from the same failed games and compare them to the induced engine; use mismatches to decide whether the sprint should stop or whether a single observable state variable was missed.
+
+### Post-Sprint Verifier-Moat Pivot
+This is the post-sprint verifier-moat pivot required after the ARC sprint retires.
+- Distributional energy verifier for structured reasoning (arXiv:2605.18871): Port the FoVer evaluation harness to MuSR/TravelPlanner-style structured reasoning rows, score candidates with a small distributional energy verifier, and compare against self-consistency and an LLM judge.
+- Small energy outcome reward model (arXiv:2505.14999): Train or calibrate a tiny EORM-style scorer on non-FoVer reasoning traces, then run best-of-N selection against self-consistency at matched sample and cost budgets.
+- Tool-aware scientific process reward model (arXiv:2606.04579): Build a small FoVer-style scientific-tool trace corpus, label step selection/execution/interpretation errors, and test whether a PRM catches errors missed by generator self-checks.
+- Environment-aware data-analysis process verifier (arXiv:2604.24198): Use DataPRM-style active trace checks on non-saturated data-analysis tasks, with the verifier probing intermediate states and scoring correctable versus irrecoverable mistakes.
+
+### Planner Flags
+- flagged_for_v453: causal_state_abstraction_wall_diagnostic (arXiv:2401.12497)
+- flagged_for_v453: distributional_energy_verifier_pivot (arXiv:2605.18871)
+- flagged_for_v453: tool_aware_science_prm_pivot (arXiv:2606.04579)
+<!-- EXP4911-SOTA-INGESTION-V453-FRONTIER-END -->
