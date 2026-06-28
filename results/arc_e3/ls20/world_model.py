@@ -6,18 +6,23 @@ def engine(grid, action, data):
     if action == 1:
         if data is None:
             return grid
-        if data.get('x') is not None:
-            px, py = data['x'], data['y']
-            h, w = grid.shape
-            if 0 <= px < h and 0 <= py < w:
-                grid[px, py] = 3
+        px, py = data['x'], data['y']
+        if px < 0 or px >= grid.shape[0] or py < 0 or py >= grid.shape[1]:
             return grid
-        h, w = grid.shape
-        for r in range(h):
-            for c in range(w):
-                if grid[r, c] == 3:
-                    grid[r, c] = 0
-        return grid
+        if grid[px, py] == 0:
+            return grid
+        target_row = px - 1
+        target_col = py - 1
+        if target_row < 0 or target_col < 0:
+            return grid
+        if grid[target_row, target_col] == 0:
+            return grid
+        if grid[target_row, target_col] == grid[px, py]:
+            return grid
+        new_grid = grid.copy()
+        new_grid[px, py] = 0
+        new_grid[target_row, target_col] = grid[px, py]
+        return new_grid
     return grid
 
 def is_level_complete(grid):
@@ -25,38 +30,9 @@ def is_level_complete(grid):
 
 def is_level_complete(grid):
     import numpy as np
-    if not isinstance(grid, np.ndarray):
-        grid = np.array(grid)
-    if grid.shape != (10, 10):
+    grid = np.array(grid)
+    if grid.shape != (21, 21):
         return False
-    if grid.dtype != object:
+    if grid.shape[0] != grid.shape[1]:
         return False
-    if not np.all([isinstance(c, str) for row in grid for c in row]):
-        return False
-    if not np.all([len(c) == 1 for row in grid for c in row]):
-        return False
-    if not np.all([c in '0123456789' for row in grid for c in row]):
-        return False
-    if np.all([c == '0' for row in grid for c in row]):
-        return False
-    if np.all([c == '9' for row in grid for c in row]):
-        return False
-    if np.all([c == '1' for row in grid for c in row]):
-        return False
-    if np.all([c == '2' for row in grid for c in row]):
-        return False
-    if np.all([c == '3' for row in grid for c in row]):
-        return False
-    if np.all([c == '4' for row in grid for c in row]):
-        return False
-    if np.all([c == '5' for row in grid for c in row]):
-        return False
-    if np.all([c == '6' for row in grid for c in row]):
-        return False
-    if np.all([c == '7' for row in grid for c in row]):
-        return False
-    if np.all([c == '8' for row in grid for c in row]):
-        return False
-    if np.all([c == '9' for row in grid for c in row]):
-        return False
-    return True
+    return np.all(grid == 0)
