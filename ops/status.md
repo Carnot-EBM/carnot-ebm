@@ -1,6 +1,24 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-27 (Exp 4861 generation-wall fork probe median-validation regression fix)
+**Last Updated:** 2026-06-28 (Exp 4939 held-out first-win final carry regression fix)
+
+## Session 2026-06-28 — Exp 4939 Held-Out First-Win Final Carry Test Fix
+
+Fixed the Exp 4939 import/test regression without reverting prior changes and
+without modifying `scripts/research_conductor.py`. Added
+`python/carnot/experiment_4939_held_out_first_win_readiness.py`, which validates
+the Exp 4928 clean full-25 source artifact, carries the final 0.04 held-out
+first-win go/no-go with source provenance, and fails closed with
+`blocked_<resource>` artifacts for missing, unclean, or critical live-recheck
+inputs.
+
+Validation for this fix: Exp 4939 focused tests pass (`5 passed`), scoped
+Coverage.py report for the Exp 4939 module is 100% (`132` statements, `0`
+missing), and focused Ruff check/format pass on the touched Python files. The
+E2E plan has no Exp 4939-specific check; this change is covered by the focused
+artifact/schema tests. Repo-wide `scripts/check_spec_coverage.py` remains
+blocked by pre-existing unreferenced legacy tests (`1164 test(s) missing spec
+traceability`).
 
 ## Session 2026-06-27 — Exp 4861 Generation-Wall Fork Probe Test Fix
 

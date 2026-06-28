@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-06-28 (Exp 4939 held-out first-win final carry test fix — codex)
+
+- Fixed the failing Exp 4939 import/tests without reverting prior changes and without modifying
+  `scripts/research_conductor.py`. Added the missing
+  `python/carnot/experiment_4939_held_out_first_win_readiness.py` carry module for
+  `REQ-CAPSTONE-4939`; it validates the Exp 4928 clean full-25 held-out first-win artifact,
+  preserves source sha256/checksum provenance, emits the final carried 0.04 go/no-go artifact, and
+  fails closed for missing, unclean, or critical live-recheck inputs.
+- Validation: `pytest tests/python/test_experiment_4939_heldout_first_win_readiness.py -q --no-cov`
+  passed (`5 passed`); direct Coverage.py scoped to the Exp 4939 module reported 100%
+  (`132` statements, `0` missing); focused Ruff check/format passed. Repo-wide spec coverage remains
+  blocked by pre-existing unreferenced legacy tests (`1164 test(s) missing spec traceability`).
+
 ## 2026-06-27 (Operational retrospective .450 -- recurring FALSE-ZERO detector gap (NOT empty), exp4881-exp4890, ~212-min window -- outer-loop)
 
 Operational retro for milestone 2026.06.450. The milestone-scoped timing detector reported 0/0/0/null, but direct on-disk verification (the same archaeology .447/.448/.449 required) shows this is the recurring FALSE-ZERO detector gap, now extending to .450 (~77 milestones, .363->.450) -- NOT a genuinely-empty window like .446. The archive transition exp4881 plus 9 substantive experiments exp4882-exp4890 exist on disk, mtimes 2026-06-27 19:55:46Z -> 23:28:14Z (~212-min real window). Four arms are compute-bound (exp4882/4883/4885/4886, inference_substrate=live_llm_inference, generator_backend=gpu0_cuda), so the real compute_bound count is 4 not 0. The 23:36Z idle-GPU snapshot is post-window (8 min after exp4890) so it cannot evidence GPU-idle-during-compute; gpu_idle_on_compute_bound_tasks=null reads as insufficient-evidence, but generator_backend=gpu0_cuda shows GPU-0 was actually engaged. One clean win: exp4884 g50t banked +1 level (reproducible_total_levels 67->68). A1 fork (exp4882) ran genuinely live on GPU-0 (no fabrication flag) and attributed INDUCER_CEILING_HARD; but exp4883 (A1b A/B) and exp4886 (held-out first-win 0.0625, CI lower 0 = flat null) both flagged_adversarial. Infra/hardware arms clean (submission package 15.146GB operator-only, KV260 reachable, .451 SOTA mapped). Highest-leverage action (recurring #1): MOVE the detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site + disk-mtime fallback + write-time duration_s/inference_substrate/compute_bound stamping. estimated_time_savings_pct=15. Locked detector fields left at 0/0/0/null per conductor control; interpretive fields document the false zero. Artifact: results/operational_retro_2026_06_450.json.
