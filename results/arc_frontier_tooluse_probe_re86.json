@@ -1,0 +1,172 @@
+{
+  "experiment": "arc_frontier_tooluse_probe",
+  "schema": "carnot.arc_frontier_tooluse_probe.v1",
+  "honest_verdict": "complete_frontier_tooluse_NULL_neither_first_win_re86_l1_ceiling_negative_lever_dead_local9b_cannot_if_frontier_cannot",
+  "game": "re86",
+  "question": "does a FRONTIER model DRIVING the existing ARC subsystems via a tool-loop (env/induce/verify/BFS) produce a first-contact L1 win the ONE-SHOT induce+BFS pipeline does NOT, on a game the baseline fails?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "off_live_path": true,
+  "off_live_path_note": "CEILING PROBE using codex (offline-illegal for SCORING). A positive result is NOT a banked solve; it would only justify re-validating the tool-loop FRAMING with the LOCAL model ON the live E3AgentPolicy path.",
+  "baseline_oneshot": {
+    "solved_l1": false,
+    "reason": "induce_failed",
+    "n_transitions": 120
+  },
+  "treatment_tooluse": {
+    "solved_l1": false,
+    "cheated": false,
+    "turns_used": 24,
+    "env_steps": 0
+  },
+  "treatment_transcript": [
+    {
+      "turn": 0,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "n=None, last_execute=None, current_level=0, turns_left=24.\nLAST OBSERVATION: none\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,510\n"
+    },
+    {
+      "turn": 1,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,487\n"
+    },
+    {
+      "turn": 2,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,530\n"
+    },
+    {
+      "turn": 3,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,534\n"
+    },
+    {
+      "turn": 4,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,469\n"
+    },
+    {
+      "turn": 5,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n507\n"
+    },
+    {
+      "turn": 6,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,535\n"
+    },
+    {
+      "turn": 7,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n526\n"
+    },
+    {
+      "turn": 8,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,465\n"
+    },
+    {
+      "turn": 9,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,474\n"
+    },
+    {
+      "turn": 10,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,542\n"
+    },
+    {
+      "turn": 11,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,511\n"
+    },
+    {
+      "turn": 12,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,529\n"
+    },
+    {
+      "turn": 13,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n472\n"
+    },
+    {
+      "turn": 14,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,287\n"
+    },
+    {
+      "turn": 15,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,467\n"
+    },
+    {
+      "turn": 16,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,456\n"
+    },
+    {
+      "turn": 17,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n502\n"
+    },
+    {
+      "turn": 18,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,550\n"
+    },
+    {
+      "turn": 19,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n475\n"
+    },
+    {
+      "turn": 20,
+      "note": "no_tool_call_parsed",
+      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,496\n"
+    },
+    {
+      "turn": 21,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,542\n"
+    },
+    {
+      "turn": 22,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,541\n"
+    },
+    {
+      "turn": 23,
+      "note": "no_tool_call_parsed",
+      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,565\n"
+    }
+  ],
+  "lever_signal": false,
+  "gate": "treatment_solved_l1 AND NOT baseline_solved_l1 AND NOT cheated",
+  "interpretation": "Ceiling probe of the operator's tool-use/MCP lever. The driver (codex/gpt-5.5, reasoning xhigh) is given a sandboxed tool interface over the EXISTING subsystems and decides what to do; the ONLY new variable vs the one-shot baseline is adaptive multi-round tool-DRIVING (both use codex induction, so induction strength is held constant). If the frontier driver cannot beat the one-shot baseline at first-contact, the deployable local 9B certainly cannot (it is strictly weaker at multi-step agentic tool-use), so the lever is dead before any 9B/Kaggle build. A positive (lever_signal=true) would justify ONLY a live-path re-validation with the local model -- NOT a deliverable claim. Anti-cheat: driver sandboxed in an empty CWD, told JSON-only, tool shim never returns source; a post-hoc source-read scan marks the run CONFOUNDED if it peeked.",
+  "solve_provenance": "development_proxy",
+  "used_env_source": true,
+  "read_game_source": false,
+  "model_specs": {
+    "driver": "codex/gpt-5.5",
+    "induce_backend": "codex/gpt-5.5",
+    "reasoning_effort": "xhigh"
+  },
+  "preconditions_checked": [
+    {
+      "resource": "codex_cli",
+      "available": true
+    }
+  ],
+  "prior_failures": [
+    {
+      "experiment_id": "arc_incontext_pattern_proposal_ab",
+      "verdict": "context_injection_powered_null",
+      "addressed_by": "context-INJECTION gave the LLM static analogies (passive); this gives the LLM TOOLS to ACT/observe/re-decide (the perceive->test RE loop) -- a structurally different axis. Tests the FRAMING at the frontier ceiling before any 9B build.",
+      "retire_if_same_verdict": true
+    }
+  ],
+  "random_seed": 20260628,
+  "duration_s": 588.33,
+  "reproducibility_checksum": "sha256:145f0f9566187096a8837fe5ac99aa671ea442b21947cdad5f0fa9dda71d5672"
+}

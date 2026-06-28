@@ -1,0 +1,100 @@
+{
+  "checkpoint_mtime_after_ns": "1782690913329650176",
+  "checkpoint_mtime_before_ns": "1781767267235751910",
+  "checkpoint_mtime_delta_ns": 923646093898266,
+  "checkpoint_path": "models/arc_verifier_lp85.json",
+  "duration_s": 10.198359,
+  "experiment": "experiment_4949_self_play_verifier_checkpoint",
+  "field_principles": {
+    "checkpoint_path": "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3).",
+    "duration_s": "the measured wall-clock; must be consistent with inference_substrate (>=1s for verifier-ensemble, >=60s for live_llm_inference).",
+    "flag_resolved": "true iff the fresh artifact is NOT flagged true_live_recheck=critical (the .455 DURATION_TOO_SHORT substrate mismatch is fixed).",
+    "honest_verdict": "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed.",
+    "inference_substrate": "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s. This fixes the .455 exp4938 DURATION_TOO_SHORT flag.",
+    "offline_reproduced": "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact.",
+    "preconditions_checked": "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint.",
+    "reproduced_levels": "the depth confirmed this run.",
+    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts.",
+    "target_game": "the rotated self-play target (differs from .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2).",
+    "verifier_checkpoint_refreshed": "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+  },
+  "flag_resolved": true,
+  "honest_verdict": "success_self_play_checkpoint_refreshed",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "loop_result_path": "results/arc_loop_solve_lp85.json",
+  "loop_solve_provenance": "development_proxy",
+  "model_specs": {
+    "checkpoint_template": "models/arc_verifier_<game>.json",
+    "standing_loop": "scripts/arc_loop_solve.py"
+  },
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "checkpoint_existing": {
+      "game": "lp85",
+      "ok": true,
+      "path": "models/arc_verifier_lp85.json"
+    },
+    "offline_arcade": {
+      "check": "arc_solver_kit.offline_arcade()",
+      "ok": true
+    },
+    "ok": true,
+    "registry_loadable": {
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "target_banked": {
+      "game": "lp85",
+      "ok": true,
+      "prior_level": 5,
+      "reason": "preferred_banked_target"
+    },
+    "target_rotation": {
+      "game": "lp85",
+      "ok": true,
+      "rotated_off": [
+        "ar25",
+        "bp35",
+        "vc33",
+        "sk48",
+        "ls20",
+        "re86"
+      ]
+    },
+    "target_selection": {
+      "banked": true,
+      "game": "lp85",
+      "prior_level": 5,
+      "reason": "preferred_banked_target"
+    }
+  },
+  "random_seed": 4949,
+  "reproduced_levels": 3,
+  "reproducibility_checksum": "d888a8b5f17ca6f22f46504700415e75b8accbb1e5eb41fea9c8032ac7f4fe1f",
+  "reproduction_gate": {
+    "claimed_level": 3,
+    "game": "lp85",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 3,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_4949_self_play_verifier_checkpoint.json",
+  "schema": "carnot.exp4949.self_play_verifier_checkpoint.v1",
+  "schema_errors": [],
+  "self_play_residual": "checkpoint_refreshed_gate_passed",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-LEARN-4949",
+    "SCENARIO-LEARN-4949-CHECKPOINT-REFRESHED",
+    "SCENARIO-LEARN-4949-SUBSTRATE-FIX",
+    "SCENARIO-LEARN-4949-RESIDUAL-NO-FABRICATION",
+    "SCENARIO-LEARN-4949-BLOCKED-PRECONDITION"
+  ],
+  "states_expanded": 650,
+  "target_game": "lp85",
+  "target_registry_prior_level": 5,
+  "target_selection_reason": "preferred_banked_target",
+  "verifier_checkpoint_refreshed": true
+}
