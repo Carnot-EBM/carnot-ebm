@@ -9528,3 +9528,4 @@ The contro |
 | 2026-06-28 16:56 UTC | PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT o | OK | 116 passed, 1 warning in 12.62s |
 | 2026-06-28 17:11 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 110 passed, 1 warning in 10.92s |
 | 2026-06-28 17:31 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .45 | OK | 85 passed, 1 warning in 9.17s |
+| 2026-06-28 17:43 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | 86 passed, 1 warning in 8.68s |
