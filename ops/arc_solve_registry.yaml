@@ -1204,18 +1204,23 @@ games:
   reproducibility: reproduced
   levels_reproduced: 2
   mechanic_class: graph_explore
-  win_condition: first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite coalescence
-    predicate over active pikgci sprites while avoiding visible spswjz hazards and wahtyt/xbso blockers.
-  solver: results/arc_explore_trajectory_m0r0.json L1 prefix + GameAdapter _m0r0
-    (arc_game_adapters.py) + arc_solver_kit.OfflineSolver.solve_level, branch_mode='fresh_env';
-    results/experiment_4515_deepen_graph_explore_l2.json.
-  reproduce: Exp4515 offline_reproduced=True, reproduced_levels=2, reached_level=2;
-    checksum e28e4e26efc7b2aac4651f35ca7c191141c4808a7416029ae2870c40d25cb04c.
+  win_condition: first-solve L1 adapter-free (E1); L2 deepened by visible two-sprite coalescence predicate over active pikgci sprites while avoiding visible spswjz hazards and wahtyt/xbso blockers.
+  solver: results/arc_explore_trajectory_m0r0.json L1 prefix + GameAdapter _m0r0 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver.solve_level, branch_mode='fresh_env'; results/experiment_4515_deepen_graph_explore_l2.json.
+  reproduce: Exp4515 offline_reproduced=True, reproduced_levels=2, reached_level=2; checksum e28e4e26efc7b2aac4651f35ca7c191141c4808a7416029ae2870c40d25cb04c.
   gotchas:
-  - L2 predicate is visible-state coalescence, not a hidden register; the adapter derives player,
-    hazard, and blocker cells from current_level sprites.
-  - Use the prior banked L1 prefix before solving L2; reset L1 includes rotated obstacle state, while
-    the registered deepen target is the already reproduced L1->L2 increment.
+  - L2 predicate is visible-state coalescence, not a hidden register; the adapter derives player, hazard, and blocker cells from current_level sprites.
+  - Use the prior banked L1 prefix before solving L2; reset L1 includes rotated obstacle state, while the registered deepen target is the already reproduced L1->L2 increment.
+  dead_ends:
+  - 'Exp4905 m0r0 no-bank duplicate_depth: complete_m0r0_no_new_level_residual_duplicate_depth.'
+  latest_exp4905_levelup_attempt:
+    artifact: results/experiment_4905_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_m0r0.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: duplicate_depth
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: a13c3bf2d2b789492b1977b2d1d2965656582466da28eef26fd29aed7c396ceb
 - game: sk48
   reproducibility: reproduced
   levels_reproduced: 2
