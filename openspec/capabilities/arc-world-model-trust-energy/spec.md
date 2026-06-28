@@ -11984,6 +11984,111 @@ When Experiment 4893 computes the median delta and bootstrap CI95
 Then it emits `REPRESENTATION_MATTERS` only when the CI95 excludes zero, and
 otherwise emits `VALUE_GAP_REPRESENTATION_INVARIANT_HARD`.
 
+### REQ-ARC-WMTE-4900: V452 Frontier SOTA Ingestion Follows The Representation Fork
+
+Experiment 4900 SHALL run the `.452` SOTA-ingestion slot after reading the
+actual A1 decision-need representation fork artifact
+`results/experiment_4892_decision_need_targets_value_gap.json`, the optional
+A1b action-prefix latent representation artifact
+`results/experiment_4893_action_prefix_latent_adapter.json`, and the `.451`
+handoff `results/experiment_4890_sota_ingestion_v451_frontier.json`. It SHALL
+also read `research-studying.md`, `research-references.md`,
+`scripts/sweep_clusters.py`, and `scripts/sweep_semscholar.py`. If the A1
+artifact is missing, Experiment 4900 SHALL write a blocked deliverable with
+`honest_verdict=blocked_a1_artifact_missing`, `methods_mapped=[]`,
+`banned_channels_excluded=true`, and SHALL NOT fabricate a mapping.
+
+The workflow SHALL use only the reliable channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, low-concurrency
+WebSearch/WebFetch, and direct arXiv HTTP checks. It SHALL NOT invoke
+`/deep-research`, SHALL NOT re-ingest the retired energy-as-ARC-lever,
+TTA-on-code-engine, stronger-local-code-inducer, coverage/vocabulary,
+exploration-strategy, selection/ranking, or perception-from-grid classes,
+SHALL NOT load a model, train, submit to a leaderboard, make a solve claim, or
+modify `scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`,
+or `_bmad/traceability.md`.
+
+The mapping SHALL branch on A1's actual `fork_verdict` and A1b's
+`fork_verdict` when A1b ran. If A1 reports `REPRESENTATION_UNLOCKS_VALUE` or
+A1b reports `REPRESENTATION_MATTERS`, the mapping SHALL target first-win
+conversion by turning the value-accurate representation into banked levels via
+neural-guided `plan_in_model`, MCTS, or search over the value-accurate engine.
+If A1 reports `PLANNER_GAP`, the mapping SHALL target neural-guided planning,
+MCTS, and search-verifier loops over the value-accurate representation. If A1
+reports `VALUE_GAP_REPRESENTATION_INVARIANT` and A1b reports
+`VALUE_GAP_REPRESENTATION_INVARIANT_HARD`, the mapping SHALL target a third
+representation class or an explicit operator-escalation note that the
+change-VALUE gap is a deep representation-invariant ceiling under the deadline.
+For the checked-in Exp 4892/4893 branch, the required target is
+`VALUE_GAP_REPRESENTATION_INVARIANT` plus
+`VALUE_GAP_REPRESENTATION_INVARIANT_HARD`.
+
+On a successful ingestion-synthesis run, Experiment 4900 SHALL write
+`results/experiment_4900_sota_ingestion_v452_frontier.json`, update
+`research-studying.md` with an idempotent Exp 4900 INGESTED section, and update
+`research-references.md` with an idempotent Exp 4900 source section. The
+artifact SHALL include the required user-facing fields `honest_verdict`,
+`aimed_at_fork_verdict`, `methods_mapped`, `arxiv_ids_cited`,
+`flagged_for_v452`, `banned_channels_excluded`, `inference_substrate`, and
+`preconditions_checked`, plus provenance fields sufficient to audit the
+reliable sweep and upstream artifacts.
+
+The complete-path `honest_verdict` SHALL equal
+`success_sota_ingestion_v452_frontier_mapped`; `aimed_at_fork_verdict` SHALL
+equal the actual A1 fork verdict; `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`; `methods_mapped` SHALL contain three to
+five methods; every method claim SHALL cite only verified arXiv IDs from
+`arxiv_ids_cited`; each method SHALL include `experiment_graft`,
+`validation_gate`, and `fails_when`; `banned_channels_excluded` SHALL be true;
+and `duration_s` SHALL use the aggregation-only `0.0001` floor. For the
+checked-in branch, the source set SHALL include direct arXiv HTTP-200 checks
+for `2503.18938`, `2505.08073`, `2602.23997`, `2512.10016`, `2602.16229`,
+`2606.25421`, `2606.26217`, and `2603.19312`, while the mapped hard-invariant
+methods SHALL prioritize the remaining `.450` representation candidates
+`2503.18938`, `2505.08073`, and `2602.23997`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; mapping emitted is success_sota_ingestion_v452_frontier_mapped."
+- `aimed_at_fork_verdict`: principle "the A1 fork verdict the ingestion targets (UNLOCKS_VALUE/MATTERS->convert to first-win; PLANNER_GAP->planning/search; INVARIANT->third representation class or escalate)."
+- `methods_mapped`: principle "the strongest 3-5 methods, each with a real arXiv ID + experiment_graft + validation_gate + fails_when."
+- `arxiv_ids_cited`: principle "every method claim cites a verifiable HTTP-200 arXiv ID (no fabrication -- adversarial_verify bar)."
+- `flagged_for_v452`: principle "the strongest method(s) flagged so the .452 planner reads the mapping (discover->ingest->plan->experiment)."
+- `banned_channels_excluded`: principle "true -- /deep-research NOT invoked; energy/TTA-on-code-engine/stronger-local-code-inducer/coverage/exploration/selection classes NOT re-ingested."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (0.0001s floor)."
+- `preconditions_checked`: principle "records reliable-channel checks + the A1 fork-verdict read; banned channels explicitly excluded."
+
+#### SCENARIO-ARC-WMTE-4900-V452-FRONTIER-MAPPED
+
+Given the research files, Exp 4892 A1 artifact, Exp 4893 A1b artifact, and Exp
+4890 handoff artifact are present
+When Experiment 4900 runs through the reliable channel
+Then it writes `results/experiment_4900_sota_ingestion_v452_frontier.json`,
+records that `/deep-research` was not invoked, maps three to five third
+representation methods onto the `.452` frontier with real HTTP-200 arXiv IDs,
+records the actual A1 `VALUE_GAP_REPRESENTATION_INVARIANT` verdict and A1b
+`VALUE_GAP_REPRESENTATION_INVARIANT_HARD` result, updates
+`research-studying.md` and `research-references.md` idempotently, and flags the
+strongest `.452` candidate inputs.
+
+#### SCENARIO-ARC-WMTE-4900-BLOCKED-A1
+
+Given the Exp 4892 A1 artifact is missing
+When Experiment 4900 checks preconditions
+Then it writes `blocked_a1_artifact_missing`, records the missing A1
+precondition, keeps `methods_mapped=[]`, keeps `banned_channels_excluded=true`,
+and does not fabricate an A1 fork verdict.
+
+#### SCENARIO-ARC-WMTE-4900-NO-FABRICATION
+
+Given a candidate artifact omits citations, cites an unverified arXiv ID,
+targets a fork verdict inconsistent with A1/A1b, maps a retired
+energy/TTA/stronger-local-code-inducer/coverage/exploration/selection/perception
+class, invokes `/deep-research`, claims a model-load, training, leaderboard, or
+solve result, or modifies `scripts/research_conductor.py`
+When the Experiment 4900 artifact validator runs
+Then it rejects the artifact before the result can be written.
+
 ### REQ-ARC-WMTE-4897: Value-Gap Representation Adversarial Audit
 
 Experiment 4897 SHALL audit the Experiment 4892 A1 decision-need value-gap
