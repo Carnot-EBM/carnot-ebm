@@ -1674,6 +1674,7 @@ games:
   - su15: no_grounded_L3_delta
   - r11l: prefix-rooted graph search reached only L1 after 20000 expansions
   - lf52: prefix-rooted graph search timed out without a bank
+  - 'Exp4937 sb26 no-bank no_grounded_l3_delta: complete_sb26_no_new_level_residual_no_grounded_l3_delta.'
   latest_exp4678_levelup_selfplay:
     artifact: results/experiment_4678_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sb26.json
@@ -1683,6 +1684,15 @@ games:
     verifier_checkpoint: models/arc_verifier_sb26.json
     target_rotation: clean_L1_only_not_deepened_in_426_430
     reproducibility_checksum: 229dd2bcc0c645252420108fcbcbb66349662c66b1029520bdfcd9713f1d45dd
+  latest_exp4937_levelup_attempt:
+    artifact: results/experiment_4937_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_sb26.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: bdae6a8349846c9a4aa7eb2367ad8eaf94d80e565064cb4b8f4a48bb81ea7daa
 - game: re86
   reproducibility: reproduced
   levels_reproduced: 2
