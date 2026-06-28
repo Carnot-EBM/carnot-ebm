@@ -52855,3 +52855,101 @@ milestones:
       Skip any flagged_adversarial upstream.'
     deliverable: results/experiment_4923_capstone_v453.json
     result: OK (conductor)
+- id: 2026.06.454
+  title: 'POST-ARC-CLOSURE SUBMISSION MAXIMIZATION (final pre-deadline milestone; no representation #5). .453 reached B1-trusted
+    ARC closure (WALL_IS_HIDDEN_STATE -- the live first-win wall is representation-invariant by construction) and banked cn04
+    (reproducible_total_levels 68->69). The deliverable is LOCKED: the ~0.05 first-win agent + the publishable FoVer paper.
+    .454 executes that locked deliverable for the 6/30 deadline: majority-ARC = DEEPENING (A1 sp80 L2->L3 + A2 su15 L2->L3
+    -> more scored games) + ACTION EFFICIENCY (D, the operator-flagged MATM similarity-keyed retrieval -- the leaderboard
+    squares the human/agent action ratio so a fewer-actions win is squared in the score) + A3 self-play (FR-11) + A4 held-out
+    RESUME 21/25->25/25 (CLEAN 6/30 go/no-go) + B2 FINAL submission-package harden. 3 reserved infra (B1 audit, B2 package,
+    B3 stamping), 1 hardware (C KV260 SSH-only), 1 SOTA/efficiency (D). Post-6/30 pivot = distributional-energy-verifier verifier-moat
+    (arXiv:2605.18871).'
+  doc: openspec/change-proposals/research-roadmap-v454.md
+  completed: '2026-06-28'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4924-phase0
+    title: PHASE 0 (TRANSITION) -- archive .453 -> activate .454; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .453 close-state (A1 exp4914 WALL_IS_HIDDEN_STATE B1-trusted ARC closure; capstone exp4923 = the
+      live first-win wall is representation-invariant by construction; A2 exp4915 banked cn04 L2->L3 -> reproducible_total_levels
+      68->69; A3 exp4916 bp35 checkpoint refreshed; A4 exp4917 genuine-live NOT-FLAGGED partial 21/25 games -- 4 remain; B2
+      exp4919 package ready 15.146GB; deliverable LOCKED = ~0.05 agent + FoVer paper).
+    deliverable: results/experiment_4924_archive_453_activate_454.json
+    result: OK (conductor)
+  - id: exp4925-a1
+    title: PHASE A1 (ARC NORTH STAR; PRIMARY; LEVEL-BANK -- the majority-ARC level-growth headline post-closure) -- DEEPEN
+      a shallow L2 game by one level (prefer sp80 L2->L3; the strongest grounded shallow-deepen candidate per the .453 A2
+      note, alongside su15/cd82). Rotate OFF .453 cn04 / .452 m0r0 / .451 dc22 / .450 g50t / .449 s5i5; AVOID ka59/wa30 (hidden-state-bound)
+      and any recorded dead-end. Bank >=1 NEW reproducible level; offline_reproduced gated; solve_provenance=live_agent_self_discovery.
+      Target MUST differ from A2/A3.
+    deliverable: results/experiment_4925_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4926-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE -- the >=1 banking-attempt floor) -- a SECOND deepen on a
+      DIFFERENT grounded shallow-deepen target (prefer su15 L2->L3; cd82 L2->L3 alternate). Rotate OFF .453 cn04 / .452 m0r0
+      / .451 dc22 / .450 g50t / .449 s5i5 AND off A1's sp80 AND A3's target; AVOID ka59/wa30. Bank >=1 NEW reproducible level;
+      offline_reproduced gated. Two banks maximize monotonic growth before the deadline.
+    deliverable: results/experiment_4926_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4927-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop on a banked game with an existing checkpoint, ROTATED OFF .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449
+      re86 (pick another banked game with a models/arc_verifier_<game>.json checkpoint -- e.g. cd82 / lf52 / sb26 / lp85 /
+      ar25, DIFFERENT from A1''s sp80 and A2''s su15): warm-started verifier- routed solve -> reproduction gate -> TRAIN +
+      CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4927_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4928-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- RESUME the held-out first-win readiness
+      from the .453 21/25-game checkpoint to FINISH the last ~4 games -> a CLEAN full-25-game rate + CI for the operator's
+      6/30 go/no-go. .453 already FIXED the 3-milestone recurring flagged_adversarial (the genuine-live partial was NOT flagged);
+      .454 produces the COMPLETE countable number, carrying full methodology (model_specs + random_seed + inference_substrate
+      + null markers) so the full-25 null stays countable (NOT flagged).
+    deliverable: results/experiment_4928_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4929-b1
+    title: 'PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT of the .454 ARC arms BEFORE the capstone trusts them: (a) A1/A2
+      banks are REAL reproduced levels (reproduction gate genuinely passed, not fabricated, not a duplicate of an already-reproduced
+      level, solve_provenance=live_agent_self_discovery), and (b) D''s MATM efficiency claim is ORACLE-DISTINCT (verifier_is_oracle=false)
+      and the A/B is honest (forward_walk_hit_rate + actions-to-first-levelup measured against the SUBMITTED exact-hash baseline
+      with ZERO reached_level regression, no leak). Emits banks_trustworthy + efficiency_trustworthy for the capstone.'
+    deliverable: results/experiment_4929_bank_and_efficiency_audit.json
+    result: OK (conductor)
+  - id: exp4930-b2
+    title: PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- submission-package FINAL pre-deadline (6/30) harden + operator submission
+      checklist. The package is READY from .453 (15.146GB < 16GB, frozen Qwen3.5-9B-MTP iGPU stack, operator-only). Re-confirm
+      it builds + loads + the frozen stack resolves + the agent config resolves, run the ready-package regression check, and
+      produce the operator submission checklist. submits=false (operator-only external publication).
+    deliverable: results/experiment_4930_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4931-b3
+    title: PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .453 retro top-3 actions) -- APPLY the .453-shipped runtime-stamping
+      helper to the .454 arms (backfill duration_s/inference_substrate/compute_bound on any arm missing them), re-run the
+      results/-mtime FALLBACK over .454 to confirm a NON-zero window, and emit a final wiring-readiness confirmation. Standalone
+      modules + audit + proposal only; do NOT modify scripts/research_conductor.py (the operator wires the conductor).
+    deliverable: results/experiment_4931_stamping_backfill_and_wiring_readiness.json
+    result: OK (conductor)
+  - id: exp4932-c
+    title: PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only continuity check (graduated terminal; stays in the rotation). SSH-reachability
+      precondition ONLY (NEVER a host SD-card / block-device precondition); always WRITE a deliverable (blocked artifact if
+      unreachable).
+    deliverable: results/experiment_4932_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4933-d
+    title: PHASE D (SOTA-INGESTION / EFFICIENCY slot; the squared-scored action-efficiency lever) -- the operator-flagged
+      MATM SIMILARITY-KEYED PARTIAL-TRAJECTORY RETRIEVAL in StepwiseExplorer (verifier-routed, oracle-distinct). Flag-gated
+      coarse/LSH state-descriptor index on StepwiseExplorer.adj so _shortest_path can return a sub-sequence from a SIMILAR
+      (not bit-identical) prior state; A/B vs the SUBMITTED exact-hash baseline over reproduced games (tu93/lp85/sp80/cn04/m0r0)
+      via arc3_replay_scorecard_metaharness.py. Also a light DEV scaffold of the post-6/30 distributional-energy-verifier
+      pivot (arXiv:2605.18871). Action- efficiency metric (does NOT move reproducible_total_levels). verifier_is_oracle=false.
+    deliverable: results/experiment_4933_matm_similarity_retrieval_efficiency.json
+    result: OK (conductor)
+  - id: exp4934-capstone
+    title: 'PHASE E (CAPSTONE .454) -- aggregate the SUBMISSION-READINESS scorecard for the 6/30 deadline. HEADLINE = the
+      locked deliverable maximized: reproducible_total_levels growth (A1 sp80 + A2 su15 banks, counted ONLY if B1 banks_trustworthy),
+      action-efficiency lift (D MATM, reported ONLY if B1 efficiency_trustworthy), CLEAN held-out go/no-go (A4 full-25 rate
+      + flag_resolved), submission package ready (B2). State the post-6/30 distributional-energy-verifier verifier-moat pivot
+      handoff (D scaffold, arXiv:2605.18871). Skip any flagged_adversarial upstream.'
+    deliverable: results/experiment_4934_capstone_v454.json
+    result: OK (conductor)
