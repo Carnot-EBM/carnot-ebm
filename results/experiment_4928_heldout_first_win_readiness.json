@@ -1,0 +1,374 @@
+{
+  "a1_amortized_prior_decision": {
+    "exists": true,
+    "first_win_delta_ci95": {
+      "confidence": 0.95,
+      "high": 0.0,
+      "low": 0.0,
+      "n_boot": 1000
+    },
+    "first_win_rate_no_prior_ablation": 0.0,
+    "first_win_rate_with_prior": 0.0,
+    "go_explore_archive_alive": {
+      "actions_injected": 1,
+      "alive": true,
+      "enabled": true,
+      "max_depth": 1,
+      "observations": 2,
+      "prefixes_injected": 1,
+      "selected_prefixes": 1,
+      "stored_cells": 2,
+      "verifier_is_oracle": false
+    },
+    "honest_verdict": "complete_amortized_prior_no_first_win_lift_l1_wall_survives",
+    "included_in_measurement": false,
+    "live_path_reachable": true,
+    "passed": false,
+    "prior_changed_proposals": true,
+    "reason": "a1_prior_not_passed",
+    "source_artifact_path": "results/experiment_4831_amortized_incontext_exploration_prior_live.json"
+  },
+  "checkpoint_emitted": true,
+  "checkpoint_path": "results/experiment_4928_heldout_first_win_readiness.partial.json",
+  "duration_s": 673.601274,
+  "experiment": "experiment_4928_heldout_first_win_readiness",
+  "experiment_id": 4928,
+  "field_principles": {
+    "flag_resolved": {
+      "principle": "true iff the fresh fully-stamped artifact is NOT flagged true_live_recheck=critical -- the recurring-flag fix holds at full-25."
+    },
+    "games_evaluated": {
+      "principle": "the count of games scored (target 25); a partial records games_remaining for the next resume."
+    },
+    "games_remaining": {
+      "principle": "remaining target games after this resume; zero for the countable full-25 result."
+    },
+    "generator_backend": {
+      "principle": "gpu0_cuda | igpu_hip -- proves the GPU fix and a genuine live run."
+    },
+    "heldout_first_win_ci": {
+      "principle": "bootstrap CI of the rate; a CI-lower-0 result is an honest null, not a failure."
+    },
+    "heldout_first_win_rate": {
+      "principle": "the live held-out first-win rate (full 25 games if complete) -- the 6/30 go/no-go number."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a clean countable null is complete_heldout_first_win_<rate>_full25_live_flag_resolved; a lift is success_heldout_first_win_<rate>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (60s floor)."
+    },
+    "live_agent_ran": {
+      "principle": "true -- a LIVE resume (not resume-from-cache-only), the precondition for a countable readiness number."
+    },
+    "model_specs": {
+      "principle": "Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server -- the methodology stamp whose absence caused the historical flag."
+    },
+    "null_delta_methodology_note": {
+      "principle": "for a flat null, why the ~0.04-agreement is genuine no-improvement, not a TAUTOLOGY/fabrication."
+    },
+    "positive_control_passed": {
+      "principle": "true -- a non-degenerate positive control distinguishes a real null from a broken harness."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/variant-harness/.453-ledger/generator checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism plus part of the methodology stamp the live-recheck requires."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- a readiness measurement on the variant harness, NOT a registry bank."
+    },
+    "triggering_rule_if_flagged": {
+      "principle": "if still flagged, the exact summarize_artifact/adversarial_verify rule that fires plus the minimal documented source fix."
+    }
+  },
+  "first_win_baseline": 0.04,
+  "flag_resolved": true,
+  "flagged_adversarial": false,
+  "games_evaluated": 25,
+  "games_remaining": 0,
+  "generator_backend": "gpu0_cuda",
+  "heldout_first_win_ci": {
+    "bootstrap_resamples": 1000,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "method": "paired_percentile_bootstrap",
+    "point": 0.0,
+    "random_seed": 4605
+  },
+  "heldout_first_win_ci_lower": 0.0,
+  "heldout_first_win_delta_vs_baseline": 0.0,
+  "heldout_first_win_delta_vs_prior_best": -0.0225,
+  "heldout_first_win_rate": 0.04,
+  "heldout_proxy_summary": {
+    "heldout_first_win_ci": {
+      "bootstrap_resamples": 1000,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "method": "paired_percentile_bootstrap",
+      "point": 0.0,
+      "random_seed": 4605
+    },
+    "heldout_first_win_rate": 0.04,
+    "heldout_variant_attempts": 100,
+    "proxy_cache_reason": "",
+    "proxy_cache_used": false,
+    "proxy_honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+    "source_artifact_path": "results/experiment_4605_live_integration_scored_agent.json"
+  },
+  "heldout_variant_attempt_floor": "B>=100",
+  "heldout_variant_attempts": 100,
+  "honest_verdict": "complete_heldout_first_win_0.04_full25_live_flag_resolved",
+  "inference_substrate": "live_llm_inference",
+  "live_agent_ran": true,
+  "model_specs": {
+    "backend": "gpu0_cuda",
+    "cuda_visible_devices": "0",
+    "kv_quant": "q8_0",
+    "llama_server_kind": "cuda-12.8-binary",
+    "model_filename": "Qwen3.5-9B-Q4_K_M.gguf",
+    "model_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "mtp": true,
+    "name": "Qwen3.5-9B-MTP",
+    "no_think_prefix": true,
+    "port": 8931,
+    "repo_substr": "Qwen3.5-9B-MTP",
+    "request_note": "Carried explicitly so the final pre-deadline held-out run is not flagged METHODOLOGY_MISSING.",
+    "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "serving_path": "GPU-0 CUDA llama-server"
+  },
+  "null_delta_methodology_note": "Held-out first-win rate equals the 0.04 baseline with positive-control parity passed; this is a genuine no-improvement result from the scored held-out variant harness, not a TAUTOLOGY bug or fabricated agreement.",
+  "parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.77s ==============================\n"
+  },
+  "parity_test_green": true,
+  "partial": false,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "a1_amortized_prior_included": false,
+    "a1_amortized_prior_passed": false,
+    "a1_amortized_prior_source": "results/experiment_4831_amortized_incontext_exploration_prior_live.json",
+    "ambient_cuda_visible_devices": null,
+    "experiment_4605_importable": true,
+    "experiment_4605_importable_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot import experiment_4605_live_integration_scored_agent",
+    "experiment_4605_importable_returncode": 0,
+    "experiment_4917_21of25_ledger_present": true,
+    "experiment_4917_checkpoint_ledger": {
+      "copied_from_source": true,
+      "destination_exists_after": true,
+      "destination_exists_before": false,
+      "destination_games_after": 21,
+      "destination_games_before": 0,
+      "destination_path": "results/experiment_4928_heldout_first_win_readiness.partial.json",
+      "expected_source_checkpoint": "experiment_4917_21_of_25_games",
+      "ok": true,
+      "source_exists": true,
+      "source_experiment_id": 4917,
+      "source_games": 21,
+      "source_path": "results/experiment_4917_heldout_first_win_readiness.partial.json"
+    },
+    "finalized_existing_live_artifact_after_import_path_fix": true,
+    "generator": {
+      "allowed_backends": [
+        "gpu0_cuda",
+        "igpu_hip"
+      ],
+      "ambient_cuda_visible_devices": null,
+      "backend": "gpu0_cuda",
+      "detail": "ok",
+      "generator_backend": "gpu0_cuda",
+      "igpu_required": false,
+      "launch_env_cuda_visible_devices": "0",
+      "model": "Qwen3.5-9B-MTP",
+      "ok": true,
+      "port": 8931,
+      "server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "generator_backend": "gpu0_cuda",
+    "generator_device": "gpu0_cuda",
+    "gpu_generator_device_policy": "igpu_hip_or_gpu0_cuda_no_igpu_pin",
+    "offline_arcade": true,
+    "offline_arcade_command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c from carnot.agentic import arc_solver_kit as k; k.offline_arcade()",
+    "offline_arcade_returncode": 0,
+    "ok": true,
+    "qwen35_mtp_gguf_cached": true,
+    "qwen35_mtp_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf"
+  },
+  "prior_best": {
+    "candidates": [
+      {
+        "exists": true,
+        "experiment_id": 4691,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4691_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4703,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4703_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4716,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4716_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4740,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4740_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4752,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: held_out_first_win_flat_no_leaderboard_change",
+        "path": "results/experiment_4752_held_out_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4764,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4764_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4774,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4774_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4784,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4784_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4794,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4794_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4804,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4804_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4814,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4814_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4824,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4824_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4834,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4834_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4844,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete: heldout_first_win_flat_genuine_null",
+        "path": "results/experiment_4844_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4854,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
+        "path": "results/experiment_4854_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4864,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
+        "path": "results/experiment_4864_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4875,
+        "heldout_first_win_rate": 0.04,
+        "honest_verdict": "complete_heldout_first_win_0.04_flat_genuine_null",
+        "path": "results/experiment_4875_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4886,
+        "heldout_first_win_rate": 0.0625,
+        "honest_verdict": "complete_heldout_first_win_soft_budget_partial_0.0625_ci_lower_0",
+        "path": "results/experiment_4886_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4896,
+        "heldout_first_win_rate": 0.052632,
+        "honest_verdict": "complete_heldout_first_win_0.052632_ci_lower_0_soft_budget_partial",
+        "path": "results/experiment_4896_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4907,
+        "heldout_first_win_rate": 0.05,
+        "honest_verdict": "complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live",
+        "path": "results/experiment_4907_heldout_first_win_readiness.json"
+      },
+      {
+        "exists": true,
+        "experiment_id": 4917,
+        "heldout_first_win_rate": 0.047619,
+        "honest_verdict": "complete: heldout_first_win_soft_budget_stop_partial_21_of_25_games_84_attempts_resume_to_finish",
+        "path": "results/experiment_4917_heldout_first_win_readiness.json"
+      }
+    ],
+    "prior_best_experiment_id": 4886,
+    "prior_best_heldout_first_win_rate": 0.0625,
+    "prior_best_result_path": "results/experiment_4886_heldout_first_win_readiness.json"
+  },
+  "prior_best_heldout_first_win_rate": 0.0625,
+  "proxy_artifact_path": "results/experiment_4605_live_integration_scored_agent.json",
+  "random_seed": 4928,
+  "reproducibility_checksum": "sha256:298739e8fa870ecee9914a94cf45906606e9a08b6fa5fccdd96ab19160a636e2",
+  "result_path": "results/experiment_4928_heldout_first_win_readiness.json",
+  "schema": "carnot.arc.heldout_first_win_readiness_4928.v1",
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-CAPSTONE-4928",
+    "SCENARIO-CAPSTONE-4928",
+    "SCENARIO-CAPSTONE-4928-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4928-FIELD-PRINCIPLES"
+  ],
+  "triggering_rule_if_flagged": ""
+}
