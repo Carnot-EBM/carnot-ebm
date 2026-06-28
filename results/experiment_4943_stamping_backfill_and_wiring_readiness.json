@@ -1,0 +1,164 @@
+{
+  "compute_bound": false,
+  "duration_s": 0.008367,
+  "experiment": "experiment_4943_stamping_backfill_and_wiring_readiness",
+  "experiment_id": 4943,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success_v455_stamping_backfilled_and_mtime_window_confirmed."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor)."
+    },
+    "mtime_fallback_window": {
+      "principle": "the .455 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- the verifiable fix for the false-zero."
+    },
+    "preconditions_checked": {
+      "principle": "records module + arm-artifact presence; a missing input emits blocked_."
+    },
+    "research_conductor_modified": {
+      "principle": "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
+    },
+    "stamping_backfilled_arms": {
+      "principle": "the list of .455 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap."
+    },
+    "wiring_proposal_reconfirmed": {
+      "principle": "true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire."
+    }
+  },
+  "honest_verdict": "blocked_insufficient_v455_mtime_window",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.06.455",
+  "mtime_fallback_module_path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
+  "mtime_fallback_window": {
+    "artifact_paths": [
+      "results/experiment_4935_archive_454_activate_455.json",
+      "results/experiment_4936_levelup_attempt.json",
+      "results/experiment_4937_levelup_attempt.json",
+      "results/experiment_4938_self_play_verifier_checkpoint.json",
+      "results/experiment_4939_heldout_first_win_readiness.json",
+      "results/experiment_4940_distributional_energy_verifier_executable_spec.json",
+      "results/experiment_4941_bank_and_pivot_audit.json",
+      "results/experiment_4942_submission_package_harden.json"
+    ],
+    "compute_bound_count": 3,
+    "milestone": "2026.06.455",
+    "n_arms": 8,
+    "wall_minutes": 112.46,
+    "window_end": "2026-06-28T21:20:33Z",
+    "window_start": "2026-06-28T19:28:05Z"
+  },
+  "preconditions_checked": {
+    "arm_artifact_errors": [],
+    "arm_artifacts": [
+      {
+        "experiment_id": 4935,
+        "path": "results/experiment_4935_archive_454_activate_455.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4936,
+        "path": "results/experiment_4936_levelup_attempt.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4937,
+        "path": "results/experiment_4937_levelup_attempt.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4938,
+        "path": "results/experiment_4938_self_play_verifier_checkpoint.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4939,
+        "path": "results/experiment_4939_heldout_first_win_readiness.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4940,
+        "path": "results/experiment_4940_distributional_energy_verifier_executable_spec.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4941,
+        "path": "results/experiment_4941_bank_and_pivot_audit.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4942,
+        "path": "results/experiment_4942_submission_package_harden.json",
+        "present": true
+      }
+    ],
+    "arm_count": 8,
+    "arm_glob_patterns": [
+      "experiment_493[5-9]_*.json",
+      "experiment_494[0-5]_*.json"
+    ],
+    "exp4920_shipping_artifact": "results/experiment_4920_retro_timing_and_stamping_fix.json",
+    "exp4920_shipping_artifact_present": true,
+    "exp4931_application_artifact": "results/experiment_4931_stamping_backfill_and_wiring_readiness.json",
+    "exp4931_application_artifact_present": true,
+    "missing_modules": [],
+    "module_artifacts": [
+      {
+        "path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
+        "present": true
+      },
+      {
+        "path": "python/carnot/reporting/runtime_stamping.py",
+        "present": true
+      }
+    ],
+    "ok": true,
+    "window_gate": {
+      "compute_bound_count": 3,
+      "min_arms": 10,
+      "min_compute_bound_count": 2,
+      "n_arms": 8,
+      "passed": false,
+      "wall_minutes": 112.46
+    },
+    "wiring_proposal_current": true,
+    "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
+    "wiring_proposal_present": true
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "e799bf89c335817487c76f07c1c117ad3f433ff5bb9f23aa89d0627b34b995b9",
+  "research_conductor_after_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_before_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_modified": false,
+  "research_conductor_path": "scripts/research_conductor.py",
+  "result_path": "results/experiment_4943_stamping_backfill_and_wiring_readiness.json",
+  "schema": "carnot.exp4943.stamping_backfill_and_wiring_readiness.v1",
+  "spec_refs": [
+    "REQ-REPORT-4943",
+    "SCENARIO-REPORT-4943",
+    "SCENARIO-REPORT-4943-MTIME-WINDOW",
+    "SCENARIO-REPORT-4943-BLOCKED-PRECONDITION"
+  ],
+  "stamping_audit_after": {
+    "missing_any": [],
+    "missing_by_field": {
+      "compute_bound": [],
+      "duration_s": [],
+      "inference_substrate": []
+    },
+    "scanned_count": 8
+  },
+  "stamping_audit_before": {
+    "missing_any": [],
+    "missing_by_field": {
+      "compute_bound": [],
+      "duration_s": [],
+      "inference_substrate": []
+    },
+    "scanned_count": 8
+  },
+  "stamping_backfilled_arms": "none missing",
+  "stamping_helper_path": "python/carnot/reporting/runtime_stamping.py",
+  "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
+  "wiring_proposal_reconfirmed": true
+}
