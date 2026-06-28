@@ -12982,3 +12982,76 @@ principle-annotated required fields, `kv260_ssh_reachable`, deterministic
 SD-card precondition.
 
 **Implementation status:** Implemented (Exp 4899)
+
+---
+
+### REQ-HW-4910
+
+**Title:** KV260 continuity MUST write the Exp 4910 SSH-only overlay and UIO deliverable
+
+**Description:**
+Experiment 4910 MUST produce `results/experiment_4910_kv260_continuity.json`
+for the KV260 hardware-continuity slot. The only valid precondition is board
+SSH reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card device nodes MUST NOT be used. If the SSH command returns
+non-zero, the experiment MUST still write the artifact with
+`honest_verdict=blocked_kv260_ssh_unreachable`, `kv260_ssh_reachable=false`,
+`inference_substrate=hardware_smoke`, and `preconditions_checked` recording
+the failed SSH-only precondition.
+
+When SSH is reachable, the experiment MUST record the flashed overlay state via
+`ssh kria 'xmutil listapps'` and the energy-evaluator interface presence via
+`ssh kria 'ls /dev/uio*'`. If non-sudo `xmutil` reports that root privileges
+are required, the experiment MAY retry with `ssh kria 'sudo xmutil listapps'`
+as a read-only board-state fallback and MUST preserve both transcripts.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; success_kv260_continuity_ok or blocked_kv260_ssh_unreachable.`
+- `kv260_ssh_reachable`: `true iff `ssh kria true` exit 0 -- the SSH-only precondition (NEVER host SD-card).`
+- `loaded_overlay`: `the xmutil listapps overlay (the flashed carnot_ising bitstream state).`
+- `uio_devices`: `the /dev/uio* list (the energy-evaluator interface presence).`
+- `inference_substrate`: `hardware_smoke (SSH-attached board; per-board floor).`
+- `preconditions_checked`: `records the SSH reachability check; unreachable emits blocked_, never a fabricated record.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_4910_kv260_continuity.py` writes
+  `results/experiment_4910_kv260_continuity.json` whether SSH is reachable or
+  unreachable.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, `loaded_overlay=null`, `uio_devices=[]`,
+  and no overlay or UIO command is run.
+- If `kv260_ssh_reachable=true`, `honest_verdict` is exactly
+  `success_kv260_continuity_ok`, `xmutil listapps` is preserved, and
+  `/dev/uio*` devices are preserved as a list.
+- `verifier_is_oracle=false`, `random_seed=4910`, `field_principles`,
+  `duration_s >= 0.0001`, `command_probes`, and a stable
+  `reproducibility_checksum` are present.
+
+**Implementation status:** Implemented (Exp 4910)
+
+---
+
+### SCENARIO-HW-4910
+
+**Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
+
+**Given:** The KV260 terminal board is in the per-milestone SSH-only continuity
+rotation and host SD-card device-node checks are retired.
+**When:** Experiment 4910 checks SSH and, only when reachable, records `xmutil
+listapps` plus `ls /dev/uio*` over SSH.
+**Then:** It always writes `results/experiment_4910_kv260_continuity.json` with
+`honest_verdict=blocked_kv260_ssh_unreachable` when SSH is unreachable, or
+`success_kv260_continuity_ok` plus overlay and UIO device state when SSH is
+reachable, `inference_substrate=hardware_smoke`, principle-annotated required
+fields, `kv260_ssh_reachable`, deterministic `random_seed=4910`, and no host
+SD-card precondition.
+
+**Implementation status:** Implemented (Exp 4910)
