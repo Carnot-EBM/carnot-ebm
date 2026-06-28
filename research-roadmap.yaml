@@ -270,7 +270,7 @@ tasks:
 
     FALSIFIABLE GATE:
       PASS iff (i) a GENUINELY-LIVE run (duration_s > 60, NOT flagged DURATION_TOO_SHORT) produces a
-      non-degenerate per-game {required_variables, observable_from_interface (bool/var), classification} table
+      non-degenerate per-game {{required_variables, observable_from_interface (bool/var), classification}} table
       over >=3 failed games; AND (ii) the solved-game positive control(s) classify OBSERVABLE; AND (iii) a named
       fork verdict (WALL_IS_OBSERVABLE_VARIABLE_GAP / WALL_IS_HIDDEN_STATE / DIAGNOSTIC_DEGENERATE_RETIRED)
       supported by the table. The fork verdict is the headline closure. retire_if_same_verdict: true -- if the
@@ -614,7 +614,7 @@ tasks:
       a1_diagnostic_trustworthy:
         principle: "AND of the 6 checks -- the capstone trusts A1's closure verdict ONLY if this is true."
       checks:
-        principle: "per-check booleans {real_transitions, not_value_table, observable_claims_verified, positive_control_observable, oracle_distinct_planner_blind, numbers_match_fork}."
+        principle: "per-check booleans {{real_transitions, not_value_table, observable_claims_verified, positive_control_observable, oracle_distinct_planner_blind, numbers_match_fork}}."
       a1_failure_reasons:
         principle: "list of named failures (empty if trusted) -- the audit reports honestly, no rubber-stamp."
       observable_claims_spot_checked:
@@ -739,8 +739,8 @@ tasks:
     CONCRETE STEPS:
       0. PRECONDITIONS: the .452 retro + arm artifacts present. Missing -> honest_verdict blocked_<resource>,
          write deliverable, EXIT.
-      1. Write the results/-mtime fallback module (a milestone -> {n_arms, window_start, window_end,
-         wall_minutes, compute_bound_count} from mtimes) with a unit-testable pure function.
+      1. Write the results/-mtime fallback module (a milestone -> {{n_arms, window_start, window_end,
+         wall_minutes, compute_bound_count}} from mtimes) with a unit-testable pure function.
       2. Write the stamping helper + audit; run the audit over .452 arms; record the duration_s=None list.
       3. Write the wiring proposal (call site in the conductor's retro prompt-assembly). Do NOT edit the conductor.
       4. WRITE the deliverable (mtime_fallback_window for .452 + stamping_audit + wiring_proposal_path).
@@ -753,7 +753,7 @@ tasks:
       honest_verdict:
         principle: "terminal prefix; success_retro_timing_mtime_fallback_and_stamping_shipped."
       mtime_fallback_window:
-        principle: "the .452 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} reconstructed from results/ mtimes -- the verifiable fix for the ~79-milestone false-zero."
+        principle: "the .452 {{n_arms, window_start, window_end, wall_minutes, compute_bound_count}} reconstructed from results/ mtimes -- the verifiable fix for the ~79-milestone false-zero."
       mtime_fallback_module_path:
         principle: "the standalone module path (operator wires it into the conductor's retro prompt-assembly)."
       stamping_helper_path:
@@ -889,7 +889,7 @@ tasks:
       harness_skeleton_path:
         principle: "the offline FoVer->non-saturated-domain harness skeleton (the de-risking deliverable)."
       dry_run_three_columns:
-        principle: "the tiny-slice dry-run output: {distributional_energy_verifier, self_consistency, llm_judge} columns -- proves the harness runs, NOT a headline."
+        principle: "the tiny-slice dry-run output: {{distributional_energy_verifier, self_consistency, llm_judge}} columns -- proves the harness runs, NOT a headline."
       validation_gate:
         principle: "the gate the real post-6/30 experiment must pass: beats SC CI95-excl-0, no model-identity shortcut, oracle-distinct."
       arxiv_id_cited:
@@ -960,7 +960,7 @@ tasks:
     CONCRETE STEPS:
       0. PRECONDITIONS: all upstream .453 arm artifacts present (summarize_artifact exit code recorded);
          registry loadable. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
-      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {id, fields_imported, sha256}.
+      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {{id, fields_imported, sha256}}.
       2. Apply the headline logic (trust A1 only if B1 clean); skip flagged_adversarial upstream (list them).
       3. Build the milestone_scorecard + the post_sprint_pivot handoff. WRITE the deliverable.
 
@@ -986,7 +986,7 @@ tasks:
       skipped_flagged_adversarial:
         principle: "the list of upstream artifacts skipped per the fabrication gate."
       cited_upstream_artifacts:
-        principle: "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
+        principle: "{{experiment_id, fields_imported, sha256}} per source -- the audit trail (no synthesized numbers)."
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
       preconditions_checked:

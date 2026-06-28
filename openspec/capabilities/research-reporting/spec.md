@@ -551,6 +551,88 @@ leaderboard submission flag false.
 |---|---|---|
 | REQ-REPORT-4902 | Implemented (`python/carnot/experiment_4902_archive_451_activate_452.py`) | Implemented (`tests/python/test_experiment_4902_archive_451_activate_452.py`) |
 
+### REQ-REPORT-4913: Archive .452, Activate .453, Record The Closed Representation Fork
+
+The Exp 4913 workflow SHALL write
+`results/experiment_4913_archive_452_activate_453.json` for the record-only
+transition from milestone `2026.06.452` to `2026.06.453`. Before any transition
+work, it SHALL run both required preconditions: `yaml.safe_load` on the literal
+`research-roadmap-next.yaml` path and
+`carnot.agentic.arc_solver_kit.offline_arcade()`. If either precondition fails,
+the workflow SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource under `preconditions_checked`, skips the
+pre-test gate, and does not claim a clean archive or activation.
+
+On the complete path, the workflow SHALL confirm `.453` is active, run the
+pre-test gate `.venv/bin/pytest tests/python -q`, record whether any poison
+pre-test was quarantined, and aggregate the true `.452` close-state from
+`ops/arc_solve_registry.yaml`,
+`results/operational_retro_2026_06_452.json`, and
+`results/experiment_4912_capstone_v452.json`. The artifact SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT submit to the leaderboard, and SHALL
+carry `reproducible_total_levels` from the registry without re-counting.
+
+The close-state SHALL truthfully record that A1 Exp 4903 was B1-trusted as an
+honest negative (`WALL_DEEPER_THAN_VALUE_PREDICTION`) with real-env
+change-LOCATION-pruned value reads, a median first-win delta of -0.04, CI95
+[-0.04, -0.04], and zero coverage migrations; A1b Exp 4904 was trusted as a
+genuinely-live latent-action AdaWorld negative
+(`VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES`) with a value-accuracy delta
+median of -0.103; Exp 4912 closed the fork as
+`complete_capstone_v452_escalate_wall_survives_four_representations_plus_env_grounding`;
+Exp 4905 banked no new duplicate-depth m0r0 level so the registry remains at
+68; Exp 4906 refreshed `models/arc_verifier_vc33.json`; Exp 4907 was
+`flagged_adversarial` with true verdict
+`complete_heldout_first_win_0.05_ci_lower_0_soft_budget_partial_live` and `.453`
+must fix that recurring held-out arm; Exp 4909 was package-ready,
+operator-only, and not submitting; Exp 4910 found KV260 reachable and graduated
+terminal; Exp 4911 mapped `.453` to a causal-abstraction diagnostic
+(arXiv:2401.12497) and a post-sprint distributional-energy-verifier pivot
+(arXiv:2605.18871). The energy-as-ARC-lever program and the retired ARC
+directions SHALL remain retired, and `.453` SHALL classify the wall rather than
+queue representation #5.
+
+Required field principles:
+
+- `honest_verdict`: terminal prefix; clean transition is complete_452_archived_453_activated_<state>.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor).
+- `wall_survives_four_representations_plus_env_grounding`: true -- .452 closed the fork as a B1-trusted honest negative; .453 does a closure diagnostic, NOT representation #5.
+- `energy_program_concluded`: true -- the energy-as-ARC-lever program concluded negative; do NOT re-propose energy.
+- `v453_attacks_closure_diagnostic_not_representation`: true -- .453 A1 CLASSIFIES the wall (observable vs hidden causal variable), it does not propose a 5th value-prediction representation.
+- `reproducible_total_levels`: the authoritative ARC progress metric carried from the registry (68; .452 banked nothing).
+
+#### SCENARIO-REPORT-4913: Blocked Roadmap-Next Precondition Still Writes The Deliverable
+
+**Given** `research-roadmap-next.yaml` is absent or not parseable, the offline
+arcade precondition result is recorded, and the `.452` registry, retro, and
+capstone artifacts are available
+**When** the Exp 4913 workflow runs
+**Then** it writes `results/experiment_4913_archive_452_activate_453.json` with
+a `blocked_research_roadmap_next_...` verdict, records the failed precondition,
+skips the pre-test gate, preserves the required principle-annotated fields,
+records the true `.452` close-state, and carries `reproducible_total_levels=68`
+from `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-REPORT-4913: Complete Transition Records The True .452 Close-State
+
+**Given** `research-roadmap-next.yaml` parses, the offline arcade precondition
+passes, `.453` is the active roadmap milestone, the pre-test gate is green, and
+the upstream `.452` artifacts are available
+**When** the Exp 4913 workflow runs
+**Then** it records a `complete_452_archived_453_activated_...` verdict,
+declares `aggregation_from_upstream_artifacts`, marks the wall as surviving
+four representations plus environment grounding, marks the energy program
+concluded, marks `.453` as a closure diagnostic rather than representation #5,
+records no new bank beyond registry total 68, and keeps the leaderboard
+submission flag false.
+
+## Implementation Status (REQ-REPORT-4913)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4913 | Implemented (`python/carnot/experiment_4913_archive_452_activate_453.py`) | Implemented (`tests/python/test_experiment_4913_archive_452_activate_453.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
