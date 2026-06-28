@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.454",
+  "generated_at": "2026-06-28T18:29:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector reported 0 experiments / 0 wall-minutes / 0 compute-bound tasks for 2026.06.454, but this is the RECURRING FALSE-ZERO detector gap (documented .363->.452, now .454, ~80 milestones), NOT an empty milestone: on-disk artifacts exp4924 (archive_453_activate_454) through exp4934 (capstone_v454) — 11 arms over a ~175-min file-mtime window (~11:26->14:21 EDT, 2026-06-28) — exist on disk. The locked retro numbers are left at the detector's 0/0/0/null per instruction; the disk-sourced narrative is here and in docs/research-log.md. Research ran cleanly; the gap blinds the retro, not the science.",
+  "bottlenecks_identified": [
+    "PRIMARY (operational, recurring ~80 milestones .363->.454): the authoritative milestone-scoped timing detector again false-zeroed (0 commits since activation) despite 11 real on-disk .454 arms (exp4924-exp4934). The shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds this TIMING DATA block. It blinds the retro, not the research.",
+    "NEW this milestone: exp4931 (B3 stamping-backfill + results/-mtime FALLBACK, the very task meant to make the false-zero self-correcting per the .453 retro top-3) itself BLOCKED with honest_verdict blocked_insufficient_v454_mtime_window — the fallback under-counted the .454 window in-flight, so the recurring gap was not yet closed for this cycle.",
+    "RECURRING (cosmetic): exp4924 (archive_453_activate_454) shipped blocked_research_roadmap_next_yaml_missing — the SAME false-blocked verdict as exp4891/.451, exp4902/.452, exp4913/.453. The milestone activated and ran all 10 downstream arms regardless, so this is a misleading verdict-stamp, not a real activation failure.",
+    "GPU idle is NOT flagged as a bug: gpu_idle_on_compute_bound_tasks is locked null. The single genuinely GPU-compute-bound arm with real wall time, exp4928 held-out first-win (673.60s ~11.2 min, live_llm_inference, generator_backend=gpu0_cuda), ran earlier (~12:36 EDT) and had finished by the 14:29 EDT (18:29 UTC) snapshot; post-window idle is not evidence of idle-during-compute. Disk supports gpu_idle=false (efficient), not a waste.",
+    "Duration-stamping still partial: exp4927 self-play (live_llm_inference, compute_bound=True) shipped duration_s=0.00 and both level-up arms (exp4925/exp4926) shipped duration_s=0.00, so the retro cannot rank those even from disk."
+  ],
+  "improvements_suggested": [
+    "(recurring #1) Move the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site AND fix the results/-mtime fallback that exp4931 found insufficient — degrade a detector false-zero to a verifiable artifact-mtime window (exp4924-exp4934 here) instead of a misleading 0/0/0.",
+    "Diagnose exp4931's blocked_insufficient_v454_mtime_window: the .453-shipped fallback exists but did not confirm a non-zero window for .454 in-flight (it ran at 13:29 EDT, before later arms landed, and/or its activation-time anchor is wrong). Anchor the window on the activation commit, not a fixed lookback.",
+    "Cosmetic: correct the archive/activate verdict so it does not stamp blocked_research_roadmap_next_yaml_missing when activation actually succeeds (recurring .451/.452/.453/.454); the milestone runs fine, but the false-blocked stamp is misleading in the changelog.",
+    "Enforce write-time stamping of duration_s + inference_substrate + compute_bound on every arm: exp4925/exp4926 (level-up) and exp4927 (self-play, live_llm) shipped duration_s=0.00 this milestone, so the retro cannot rank them even on disk.",
+    "Feed the capstone's skipped_flagged_adversarial list into the retro TIMING block so flagged/absent arm slots and reasons are visible without log archaeology (the held-out flag was RESOLVED this cycle — exp4928 flagged_adversarial=false, flag_resolved=true — closing the .450/.451/.452 recurring flag)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Move the detector-wire to the retro prompt-assembly call site + repair the results/-mtime fallback (exp4931 proved it still under-counts) — the ~80-milestone recurring #1; it makes every future retro's 0/0/0 self-correcting instead of needing manual on-disk reconstruction.",
+    "Repair the mtime-fallback window anchor: exp4931 applied the .453-shipped fallback at .454 and BLOCKED (insufficient_v454_mtime_window) because it ran mid-milestone (13:29 EDT) before later arms landed — anchor it on the activation commit and re-run at capstone time, not a fixed lookback.",
+    "Enforce write-time duration_s + inference_substrate + compute_bound stamping on ALL arms (three arms shipped duration_s=0.00 this milestone), closing the last gap that forces disk archaeology for slowest-arm ranking."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "2026.06.454 was a submission-readiness capstone milestone, not an empty one: it shipped a CLEAN full-25 held-out first-win number (0.04, flag_resolved=true — the single largest GPU arm, exp4928 ~11.2 min on gpu0_cuda, is now COUNTED rather than quarantined, directly closing the .450->.452 recurring flag), confirmed the submission package ready before the 6/30 deadline, and retired the MATM efficiency lever as a no-gain null. The operational lesson is unchanged and now ~80 milestones old — the retro's 0/0/0 is a detector-wire gap, not reality — but this cycle added a sharper signal: the .453 fallback meant to close that gap (exp4931) itself blocked, so the fix is not done. Fixing that wire + repairing the fallback's window anchor is the highest-leverage operational work; the research itself ran efficiently on a single correctly-utilized GPU."
+}
