@@ -3,9 +3,17 @@
   "reached_level": 2,
   "moves": 10,
   "states_expanded": 10,
-  "verifier_src": "hand_verifier_cold_start_no_spatial_checkpoint",
-  "hazard_prune": false,
-  "hazard_pruner_stats": null,
+  "verifier_src": "learned_verifier_live_checkpoint",
+  "hazard_prune": true,
+  "hazard_pruner_stats": {
+    "observed": 10,
+    "pruned": 0,
+    "n_deaths": 0,
+    "lethal_mode": null,
+    "trust": 0.0,
+    "specificity": 0.0,
+    "model_fitted": false
+  },
   "offline_reproduced": true,
   "reproduced_levels": 2,
   "learned_verifier_checkpoint": "models/arc_verifier_vc33.json",
@@ -28,7 +36,8 @@
     {
       "operator": "value_head_bridge_fix_operator",
       "derived_from_games": [
-        "exp4616_offline_live_bridge_disambiguation"
+        "exp4616_offline_live_bridge_disambiguation",
+        "exp4652_value_routing_cost_fix_live"
       ],
       "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
       "selector_tags": [
@@ -38,6 +47,71 @@
         "candidate_ranking",
         "graph_explore",
         "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "cheap_value_routing_cost_fix_operator",
+      "derived_from_games": [
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+      "selector_tags": [
+        "value_head",
+        "cheap_feature",
+        "value_routing",
+        "cost_fix",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "dagger_off_path_data_collection_operator",
+      "derived_from_games": [
+        "exp4665_dagger_distribution_shift_value_routing"
+      ],
+      "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
+      "selector_tags": [
+        "dagger",
+        "off_path",
+        "search_distribution",
+        "value_head",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "derived_from_games": [
+        "exp4677_poe_world_factored_subgoal_planner"
+      ],
+      "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
+      "selector_tags": [
+        "programmatic_expert",
+        "trust_weighting",
+        "factored_planner",
+        "candidate_generation",
+        "world_model",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "controllable_novelty_embedding_operator",
+      "derived_from_games": [
+        "exp4688_controllable_novelty_proposal_policy_live"
+      ],
+      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+      "selector_tags": [
+        "controllable_novelty",
+        "directed_exploration",
+        "intrinsic_proposal",
+        "candidate_generation",
+        "action_effect",
+        "graph_explore",
         "transfer"
       ]
     },
@@ -144,6 +218,25 @@
       ]
     },
     {
+      "operator": "online_warm_action_effect_controller_operator",
+      "derived_from_games": [
+        "exp4726_online_action_learning_driver_valid_test",
+        "exp4727_active_probe_disambiguation"
+      ],
+      "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
+      "selector_tags": [
+        "online_action_learning",
+        "online_warm",
+        "action_effect",
+        "frame_change",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
+        "transfer"
+      ]
+    },
+    {
       "operator": "graded_goal_energy_search_heuristic_operator",
       "derived_from_games": [
         "exp4020_goal_induction_separation",
@@ -156,6 +249,38 @@
         "search_heuristic",
         "graph_explore",
         "candidate_ranking",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "energy_fitness_qd_generator_operator",
+      "derived_from_games": [
+        "exp4738_energy_fitness_qd_generation_valid_test"
+      ],
+      "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
+      "selector_tags": [
+        "energy_qd",
+        "map_elites",
+        "candidate_generation",
+        "energy_fitness",
+        "graph_explore",
+        "click",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "object_centric_representation_builder_operator",
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
         "transfer"
       ]
     },
