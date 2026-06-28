@@ -153,6 +153,7 @@ def main() -> int:
             "n_experts": len(pool),
             "n_kept": int(sum(1 for w in weights if w > 0)),
             "poe": poe_s,
+            "poe_by_prior": {str(k): v for k, v in poe_by_prior.items()},
             "maxvote": mv_s,
             "single_engine": single_s,
             "single_engine_note": single_note,
