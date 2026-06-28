@@ -1,20 +1,28 @@
 {
   "experiment": "arc_incontext_pattern_proposal_ab",
   "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
-  "honest_verdict": "complete_incontext_patterns_positive_positional_shift_0.6667_vs_0.3333_delta_0.3333_but_ci_0.0_1.0_includes_0_underpowered_n6_promising_rerun_larger",
+  "honest_verdict": "complete_incontext_patterns_AMBIGUOUS_underpowered_n8_leading_delta_0.0_ci_0.0_0.0_pos_delta_0.25_src_obfuscated_True",
   "question": "do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed opening prefix toward the banked winning prefix vs a no-exemplar control?",
   "inference_substrate": "live_llm_inference",
   "verifier_is_oracle": false,
-  "n_games": 6,
+  "n_games": 8,
   "K": 4,
-  "with_exemplars_mean_positional": 0.6667,
-  "without_exemplars_mean_positional": 0.3333,
-  "positional_delta_point": 0.3333,
-  "positional_delta_ci95": [
-    0.0,
-    1.0
-  ],
+  "samples_per_arm": 3,
+  "primary_metric": "leading_match_execution_relevant",
+  "with_exemplars_mean_leading": 0.375,
+  "without_exemplars_mean_leading": 0.375,
   "leading_delta_point": 0.0,
+  "leading_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "positional_delta_point_BIASED": 0.25,
+  "positional_metric_caveat": "positional rewards coincidental digit overlap between degenerate constant-run winners and the LLM default repeat-guess; biased AGAINST the diversity exemplars induce -- not the headline (adversarial review).",
+  "source_code_obfuscation": {
+    "source_patterns": 25,
+    "semantically_empty": 13,
+    "obfuscated": true
+  },
   "exemplars_help": false,
   "per_game": [
     {
@@ -25,24 +33,25 @@
         4,
         4
       ],
-      "with_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "without_exemplars_proposed": [
+      "without_exemplars_sample": [
         6,
         1,
-        2,
-        3
+        1,
+        1
       ],
-      "with_positional": 0,
-      "without_positional": 0,
-      "positional_delta": 0,
-      "with_leading": 0,
-      "without_leading": 0,
-      "leading_delta": 0,
+      "with_positional": 0.0,
+      "without_positional": 0.0,
+      "positional_delta": 0.0,
+      "with_leading": 0.0,
+      "without_leading": 0.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     },
     {
@@ -53,24 +62,25 @@
         2,
         3
       ],
-      "with_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         4,
         4,
         4
       ],
-      "without_exemplars_proposed": [
+      "without_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "with_positional": 0,
-      "without_positional": 0,
-      "positional_delta": 0,
-      "with_leading": 0,
-      "without_leading": 0,
-      "leading_delta": 0,
+      "with_positional": 1.333,
+      "without_positional": 0.0,
+      "positional_delta": 1.333,
+      "with_leading": 0.0,
+      "without_leading": 0.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     },
     {
@@ -81,24 +91,25 @@
         4,
         4
       ],
-      "with_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         2,
         2,
-        3
+        2
       ],
-      "without_exemplars_proposed": [
+      "without_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "with_positional": 0,
-      "without_positional": 0,
-      "positional_delta": 0,
-      "with_leading": 0,
-      "without_leading": 0,
-      "leading_delta": 0,
+      "with_positional": 0.0,
+      "without_positional": 0.0,
+      "positional_delta": 0.0,
+      "with_leading": 0.0,
+      "without_leading": 0.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     },
     {
@@ -109,24 +120,25 @@
         1,
         1
       ],
-      "with_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "without_exemplars_proposed": [
+      "without_exemplars_sample": [
         6,
         2,
         2,
         3
       ],
-      "with_positional": 3,
-      "without_positional": 1,
-      "positional_delta": 2,
-      "with_leading": 1,
-      "without_leading": 1,
-      "leading_delta": 0,
+      "with_positional": 3.0,
+      "without_positional": 2.333,
+      "positional_delta": 0.667,
+      "with_leading": 1.0,
+      "without_leading": 1.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     },
     {
@@ -137,24 +149,25 @@
         6,
         6
       ],
-      "with_exemplars_proposed": [
-        6,
-        2,
-        2,
-        2
-      ],
-      "without_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "with_positional": 1,
-      "without_positional": 1,
-      "positional_delta": 0,
-      "with_leading": 1,
-      "without_leading": 1,
-      "leading_delta": 0,
+      "without_exemplars_sample": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 1.0,
+      "without_positional": 1.0,
+      "positional_delta": 0.0,
+      "with_leading": 1.0,
+      "without_leading": 1.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     },
     {
@@ -165,24 +178,83 @@
         4,
         4
       ],
-      "with_exemplars_proposed": [
+      "samples": 3,
+      "with_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "without_exemplars_proposed": [
+      "without_exemplars_sample": [
         6,
         1,
         1,
         1
       ],
-      "with_positional": 0,
-      "without_positional": 0,
-      "positional_delta": 0,
-      "with_leading": 0,
-      "without_leading": 0,
-      "leading_delta": 0,
+      "with_positional": 0.0,
+      "without_positional": 0.0,
+      "positional_delta": 0.0,
+      "with_leading": 0.0,
+      "without_leading": 0.0,
+      "leading_delta": 0.0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "lf52",
+      "winner_prefix": [
+        6,
+        6,
+        6,
+        6
+      ],
+      "samples": 3,
+      "with_exemplars_sample": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "without_exemplars_sample": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "with_positional": 1.0,
+      "without_positional": 1.0,
+      "positional_delta": 0.0,
+      "with_leading": 1.0,
+      "without_leading": 1.0,
+      "leading_delta": 0.0,
+      "n_retrieved": 5
+    },
+    {
+      "game": "ls20",
+      "winner_prefix": [
+        3,
+        3,
+        3,
+        1
+      ],
+      "samples": 3,
+      "with_exemplars_sample": [
+        6,
+        2,
+        2,
+        2
+      ],
+      "without_exemplars_sample": [
+        6,
+        5,
+        5,
+        5
+      ],
+      "with_positional": 0.333,
+      "without_positional": 0.333,
+      "positional_delta": 0.0,
+      "with_leading": 0.0,
+      "without_leading": 0.0,
+      "leading_delta": 0.0,
       "n_retrieved": 5
     }
   ],
@@ -194,7 +266,7 @@
   "solve_provenance": "development_proxy",
   "used_env_source": true,
   "read_game_source": true,
-  "interpretation": "exemplars_help=True -> in-context verified patterns let the small LLM reason a better opening on a held-out game (beats the nulled fixed-recipe router exp4556 at the opening) -> escalate to a live-solve A/B. null -> verified-pattern in-context reasoning does not shift the opening toward the winner; consistent with the OOD/hidden-state wall (patterns from other games don't carry the held-out game's winning order). The source-code-derived win-conditions ARE included (arc_pattern_library source_code patterns), so this also tests the operator's source-code idea.",
+  "interpretation": "HONEST READ (post adversarial-review 2026-06-28): this is NOT a clean null and NOT a win -- it is AMBIGUOUS + UNDERPOWERED + the source-code half is OBFUSCATION-BLOCKED. (1) The execution-relevant LEADING metric (primary) shows delta ~0 with a CI including 0 at n<=8 -- no clear effect either way. (2) The positional metric is biased AGAINST exemplars (rewards degenerate constant-run overlap), so its negative is an artifact, not evidence exemplars hurt. (3) The operator's SPECIFIC source-code input is crippled: ARC-AGI-3 game source is OBFUSCATED (random identifiers), so source_code patterns carry near-zero transferable semantics (see source_code_obfuscation). The behavior-derived patterns (solve trajectories + registry win-conditions/gotchas, which ARE semantic) are the only real signal carrier here, and they show no clear opening shift. A properly-powered test (M>=5, all 25 games) + a de-obfuscation-aware extractor would settle it; do NOT treat this as closed. Also rediscovers the project's own arc_solve_learning.py:114 finding: few-shotting a weak 9B below a confidence bar can degrade, not help.",
   "prior_failures": [
     {
       "experiment_id": "exp4556",
@@ -215,6 +287,6 @@
     }
   ],
   "random_seed": 20260628,
-  "duration_s": 136.19,
-  "reproducibility_checksum": "sha256:ef3a4bab44915da6cf45af69174eb1e5355f18d3141abbad95fc2cd8f71850c8"
+  "duration_s": 214.99,
+  "reproducibility_checksum": "sha256:d420ee087a0e1c0250fe3b039f0d59fce082d29d0139af9272b53360c0511f5c"
 }
