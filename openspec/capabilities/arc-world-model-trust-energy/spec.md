@@ -12556,6 +12556,86 @@ When Experiment 4914 stops the current process
 Then it writes per-game checkpoints and a schema-valid partial artifact so the
 next run can resume without losing the causal-abstraction ledger.
 
+### REQ-ARC-WMTE-4918: Causal Abstraction Diagnostic Audit
+
+Experiment 4918 SHALL adversarially audit the Experiment 4914 causal
+abstraction wall diagnostic before any capstone trusts the `.453` closure
+verdict. It SHALL read
+`results/experiment_4914_causal_abstraction_wall_diagnostic.json`,
+`python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py`, and
+`results/experiment_4903_env_grounded_location_pruned_search.json`. If the
+Experiment 4914 artifact or source, or the Experiment 4903 artifact, is
+missing, it SHALL write
+`results/experiment_4918_causal_abstraction_audit.json` with
+`honest_verdict=blocked_a1_artifact_missing`, record the missing precondition,
+and SHALL not fabricate trust.
+
+Experiment 4918 SHALL evaluate six load-bearing checks: (1) `real_transitions`
+is true only when every failed-game row cited by Experiment 4914 exists as an
+actual failed `NEVER_ENUMERATED` row in Experiment 4903, used real env reads,
+used zero change-value predictions, and the Experiment 4914 source's default
+classifier collects observed transitions rather than placeholder rows; (2)
+`not_value_table` is true only when Experiment 4914 is a classification report,
+not an exp4911-style change-value decision-need table; (3)
+`observable_claims_verified` is true only when at least two variables that A1
+classified observable have proof extractors readable from the visible frame,
+candidate action, or env state; (4) `positive_control_observable` is true only
+when all positive-control rows classify observable; (5)
+`oracle_distinct_planner_blind` is true only when `verifier_is_oracle=false`
+and `planner_blind_to_banked_answer=true`; and (6) `numbers_match_fork` is true
+only when the per-game classification table supports the named fork verdict.
+
+Experiment 4918 SHALL write
+`results/experiment_4918_causal_abstraction_audit.json` with required fields
+`honest_verdict`, `a1_diagnostic_trustworthy`, `checks`,
+`a1_failure_reasons`, `observable_claims_spot_checked`,
+`inference_substrate`, `preconditions_checked`, `source_a1_artifact`,
+`source_a1_script`, `source_exp4903_artifact`, `transition_cross_checks`,
+`not_value_table_evidence`, `positive_control_evidence`,
+`oracle_distinct_planner_blind_evidence`, `numbers_match_fork_evidence`,
+`field_principles`, `duration_s`, and `reproducibility_checksum`. The
+`a1_diagnostic_trustworthy` field SHALL equal the boolean AND of exactly those
+six checks, and each failed check SHALL append a named reason to
+`a1_failure_reasons`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete_a1_causal_abstraction_audited (trusted or with named failures)."
+- `a1_diagnostic_trustworthy`: principle "AND of the 6 checks -- the capstone trusts A1's closure verdict ONLY if this is true."
+- `checks`: principle "per-check booleans {real_transitions, not_value_table, observable_claims_verified, positive_control_observable, oracle_distinct_planner_blind, numbers_match_fork}."
+- `a1_failure_reasons`: principle "list of named failures (empty if trusted) -- the audit reports honestly, no rubber-stamp."
+- `observable_claims_spot_checked`: principle ">=2 claimed-observable variables verified readable from frame/env state (the load-bearing honesty check)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
+- `preconditions_checked`: principle "records exp4914/exp4903 presence; a missing input emits blocked_."
+
+#### SCENARIO-ARC-WMTE-4918-A1-DIAGNOSTIC-AUDIT
+
+Given the checked-in Experiment 4914 artifact and source and the Experiment
+4903 artifact are present
+When Experiment 4918 runs the audit
+Then it writes a schema-valid `complete_a1_causal_abstraction_audited`
+artifact, records all six check booleans with evidence, verifies at least two
+observable claims from extractor proofs, cross-checks cited failed games
+against Experiment 4903, and sets `a1_diagnostic_trustworthy=true` only when
+all checks pass.
+
+#### SCENARIO-ARC-WMTE-4918-NAMED-FAILURES
+
+Given any of the six audit checks fails
+When Experiment 4918 builds the audit artifact
+Then `a1_diagnostic_trustworthy=false`, the matching check boolean is false,
+and `a1_failure_reasons` names the failing condition rather than silently
+rubber-stamping A1.
+
+#### SCENARIO-ARC-WMTE-4918-BLOCKED-A1-ARTIFACT
+
+Given the Experiment 4914 artifact, Experiment 4914 source script, or
+Experiment 4903 artifact is missing
+When Experiment 4918 checks preconditions
+Then it writes `blocked_a1_artifact_missing`, marks every trust check false,
+records the missing path, and emits an untrusted artifact without inventing
+diagnostic evidence.
+
 ## Implementation Status (REQ-ARC-WMTE-4908)
 
 | Requirement | Implementation | Tests |

@@ -1,0 +1,245 @@
+{
+  "a1_diagnostic_trustworthy": true,
+  "a1_failure_reasons": [],
+  "checks": {
+    "not_value_table": true,
+    "numbers_match_fork": true,
+    "observable_claims_verified": true,
+    "oracle_distinct_planner_blind": true,
+    "positive_control_observable": true,
+    "real_transitions": true
+  },
+  "duration_s": 1.0,
+  "experiment": "experiment_4918_causal_abstraction_audit",
+  "experiment_id": 4918,
+  "field_principles": {
+    "a1_diagnostic_trustworthy": {
+      "principle": "AND of the 6 checks -- the capstone trusts A1's closure verdict ONLY if this is true."
+    },
+    "a1_failure_reasons": {
+      "principle": "list of named failures (empty if trusted) -- the audit reports honestly, no rubber-stamp."
+    },
+    "checks": {
+      "principle": "per-check booleans {real_transitions, not_value_table, observable_claims_verified, positive_control_observable, oracle_distinct_planner_blind, numbers_match_fork}."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_a1_causal_abstraction_audited (trusted or with named failures)."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
+    },
+    "observable_claims_spot_checked": {
+      "principle": ">=2 claimed-observable variables verified readable from frame/env state (the load-bearing honesty check)."
+    },
+    "preconditions_checked": {
+      "principle": "records exp4914/exp4903 presence; a missing input emits blocked_."
+    }
+  },
+  "honest_verdict": "complete_a1_causal_abstraction_audited",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "not_value_table_evidence": {
+    "classification_only": true,
+    "classification_rows_valid": true,
+    "decision_need_markers_present": false,
+    "is_decision_need_table_in_disguise": false,
+    "targets": [
+      "changed_cell_value",
+      "progress_to_goal"
+    ]
+  },
+  "numbers_match_fork_evidence": {
+    "computed_fork_verdict": "WALL_IS_HIDDEN_STATE",
+    "computed_minimal_abstraction_is_observable_subset": false,
+    "computed_positive_control_classifies_observable": true,
+    "declared_fork_verdict": "WALL_IS_HIDDEN_STATE",
+    "declared_minimal_abstraction_is_observable_subset": false,
+    "declared_positive_control_classifies_observable": true,
+    "per_game_classifications": {
+      "cd82": "HIDDEN_STATE",
+      "cn04": "HIDDEN_STATE",
+      "ls20": "HIDDEN_STATE"
+    },
+    "positive_control_classifications": {
+      "ar25": "OBSERVABLE_GAP",
+      "tu93": "OBSERVABLE_GAP"
+    }
+  },
+  "observable_claims_spot_checked": [
+    {
+      "extractor": "frame.grid -> sha256",
+      "game": "ar25",
+      "passed": true,
+      "proof": "visible_grid_hash extracted from frame.grid -> sha256 on observed transition samples",
+      "variable": "visible_grid_hash"
+    },
+    {
+      "extractor": "candidate.action_id",
+      "game": "ar25",
+      "passed": true,
+      "proof": "action_id extracted from candidate.action_id on observed transition samples",
+      "variable": "action_id"
+    },
+    {
+      "extractor": "candidate.data",
+      "game": "ar25",
+      "passed": true,
+      "proof": "action_data extracted from candidate.data on observed transition samples",
+      "variable": "action_data"
+    },
+    {
+      "extractor": "frame grid plus executed transition delta",
+      "game": "ar25",
+      "passed": true,
+      "proof": "changed_cell_value_basis extracted from frame grid plus executed transition delta on observed transition samples",
+      "variable": "changed_cell_value_basis"
+    },
+    {
+      "extractor": "env/frame levels_completed",
+      "game": "ar25",
+      "passed": true,
+      "proof": "visible_level_before extracted from env/frame levels_completed on observed transition samples",
+      "variable": "visible_level_before"
+    }
+  ],
+  "oracle_distinct_planner_blind_evidence": {
+    "planner_blind_to_banked_answer": true,
+    "precondition_planner_blind": true,
+    "verifier_is_oracle": false
+  },
+  "positive_control_evidence": {
+    "declared": true,
+    "rows": [
+      {
+        "classification": "OBSERVABLE_GAP",
+        "game": "ar25",
+        "row_observable": true
+      },
+      {
+        "classification": "OBSERVABLE_GAP",
+        "game": "tu93",
+        "row_observable": true
+      }
+    ]
+  },
+  "preconditions_checked": {
+    "experiment_4903_artifact": {
+      "checksum": "sha256:1f8ebe39689af0b8c158fda8782a827e05d7d93d60d7c74b74bc8da73ab32187",
+      "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+      "present": true
+    },
+    "experiment_4914_artifact": {
+      "checksum": "sha256:9cf170623e9fc96a43319fddde14f2f19cad1cf73403b36439b329c96533722f",
+      "path": "results/experiment_4914_causal_abstraction_wall_diagnostic.json",
+      "present": true
+    },
+    "experiment_4914_script": {
+      "checksum": "sha256:47223f4acaafdef737611e7c99698c7d5d608d7126cc687d0943b60005384db5",
+      "path": "python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py",
+      "present": true
+    }
+  },
+  "random_seed": 4918,
+  "reproducibility_checksum": "sha256:269edf36a29fc39cee3356b90caf0bb760c0e96d050efb20aa9b586dcad74864",
+  "result_path": "results/experiment_4918_causal_abstraction_audit.json",
+  "schema": "carnot.arc.causal_abstraction_audit_4918.v1",
+  "source_a1_artifact": {
+    "checksum": "sha256:9cf170623e9fc96a43319fddde14f2f19cad1cf73403b36439b329c96533722f",
+    "path": "results/experiment_4914_causal_abstraction_wall_diagnostic.json",
+    "present": true
+  },
+  "source_a1_script": {
+    "checksum": "sha256:47223f4acaafdef737611e7c99698c7d5d608d7126cc687d0943b60005384db5",
+    "path": "python/carnot/experiment_4914_causal_abstraction_wall_diagnostic.py",
+    "present": true
+  },
+  "source_exp4903_artifact": {
+    "checksum": "sha256:1f8ebe39689af0b8c158fda8782a827e05d7d93d60d7c74b74bc8da73ab32187",
+    "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+    "present": true
+  },
+  "source_transition_evidence": {
+    "calls": [
+      "classify_game_causal_abstraction",
+      "load_engine",
+      "collect_transitions",
+      "int",
+      "int"
+    ],
+    "collect_transitions_called": true,
+    "default_game_classifier_present": true,
+    "load_engine_called": true,
+    "passed": true,
+    "placeholder_transition_literals": []
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-4918",
+    "SCENARIO-ARC-WMTE-4918-A1-DIAGNOSTIC-AUDIT",
+    "SCENARIO-ARC-WMTE-4918-NAMED-FAILURES",
+    "SCENARIO-ARC-WMTE-4918-BLOCKED-A1-ARTIFACT"
+  ],
+  "transition_cross_checks": [
+    {
+      "change_value_predictions_used_in_4903": 0,
+      "checks": {
+        "failed_first_win": true,
+        "live_transition_path_called": true,
+        "multi_step_failed_prefix": true,
+        "never_enumerated_baseline": true,
+        "never_enumerated_bucket": true,
+        "no_change_value_predictions": true,
+        "not_migrated": true,
+        "real_env_reads_cover_samples": true,
+        "row_present": true,
+        "same_game": true
+      },
+      "exp4903_baseline_bucket": "NEVER_ENUMERATED",
+      "exp4903_bucket": "NEVER_ENUMERATED",
+      "game": "cd82",
+      "passed": true,
+      "real_env_value_reads_in_4903": 24,
+      "transition_count_cited_by_4914": 6
+    },
+    {
+      "change_value_predictions_used_in_4903": 0,
+      "checks": {
+        "failed_first_win": true,
+        "live_transition_path_called": true,
+        "multi_step_failed_prefix": true,
+        "never_enumerated_baseline": true,
+        "never_enumerated_bucket": true,
+        "no_change_value_predictions": true,
+        "not_migrated": true,
+        "real_env_reads_cover_samples": true,
+        "row_present": true,
+        "same_game": true
+      },
+      "exp4903_baseline_bucket": "NEVER_ENUMERATED",
+      "exp4903_bucket": "NEVER_ENUMERATED",
+      "game": "cn04",
+      "passed": true,
+      "real_env_value_reads_in_4903": 24,
+      "transition_count_cited_by_4914": 6
+    },
+    {
+      "change_value_predictions_used_in_4903": 0,
+      "checks": {
+        "failed_first_win": true,
+        "live_transition_path_called": true,
+        "multi_step_failed_prefix": true,
+        "never_enumerated_baseline": true,
+        "never_enumerated_bucket": true,
+        "no_change_value_predictions": true,
+        "not_migrated": true,
+        "real_env_reads_cover_samples": true,
+        "row_present": true,
+        "same_game": true
+      },
+      "exp4903_baseline_bucket": "NEVER_ENUMERATED",
+      "exp4903_bucket": "NEVER_ENUMERATED",
+      "game": "ls20",
+      "passed": true,
+      "real_env_value_reads_in_4903": 24,
+      "transition_count_cited_by_4914": 6
+    }
+  ]
+}
