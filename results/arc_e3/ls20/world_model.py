@@ -6,215 +6,57 @@ def engine(grid, action, data):
     if action == 1:
         if data is None:
             return grid
-        # Determine direction based on data
-        # data is {'x': px, 'y': py} in pixel coordinates
-        # pixel = logical * 1
-        # We need to find the direction of movement
-        # Based on the observed transitions, the player moves in a specific direction
-        # The player seems to be moving from right to left or left to right
-        # Let's assume the player is at the bottom right and moves left
-        # The player's position is determined by the data
-        px, py = data['x'], data['y']
-        logical_x, logical_y = px // 1, py // 1
-        
-        # The player moves in a specific direction
-        # Based on the observed transitions, the player moves in a specific direction
-        # Let's assume the player moves in the direction of the data
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the data
-        # The player moves in a specific direction
-        # The player's position is determined by the
+        if data.get('x') is not None:
+            px, py = data['x'], data['y']
+            h, w = grid.shape
+            if 0 <= px < h and 0 <= py < w:
+                grid[px, py] = 3
+            return grid
+        h, w = grid.shape
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == 3:
+                    grid[r, c] = 0
+        return grid
+    return grid
+
+def is_level_complete(grid):
+    return False
 
 def is_level_complete(grid):
     import numpy as np
-    g = np.array(grid)
-    if g.shape != (21, 21):
+    if not isinstance(grid, np.ndarray):
+        grid = np.array(grid)
+    if grid.shape != (10, 10):
         return False
-    for r in range(21):
-        for c in range(21):
-            if g[r, c] == 0:
-                return False
+    if grid.dtype != object:
+        return False
+    if not np.all([isinstance(c, str) for row in grid for c in row]):
+        return False
+    if not np.all([len(c) == 1 for row in grid for c in row]):
+        return False
+    if not np.all([c in '0123456789' for row in grid for c in row]):
+        return False
+    if np.all([c == '0' for row in grid for c in row]):
+        return False
+    if np.all([c == '9' for row in grid for c in row]):
+        return False
+    if np.all([c == '1' for row in grid for c in row]):
+        return False
+    if np.all([c == '2' for row in grid for c in row]):
+        return False
+    if np.all([c == '3' for row in grid for c in row]):
+        return False
+    if np.all([c == '4' for row in grid for c in row]):
+        return False
+    if np.all([c == '5' for row in grid for c in row]):
+        return False
+    if np.all([c == '6' for row in grid for c in row]):
+        return False
+    if np.all([c == '7' for row in grid for c in row]):
+        return False
+    if np.all([c == '8' for row in grid for c in row]):
+        return False
+    if np.all([c == '9' for row in grid for c in row]):
+        return False
     return True
