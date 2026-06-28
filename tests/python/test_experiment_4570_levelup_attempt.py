@@ -88,8 +88,8 @@ def test_req_arc_wmte_4570_spec_declares_required_contract() -> None:
         assert principle in spec
 
 
-def test_req_arc_wmte_4570_cn04_adapter_exposes_l1_then_l2_delta() -> None:
-    """REQ-ARC-WMTE-4570: the adapter schedules the reproduced cn04 L1+L2 labels."""
+def test_req_arc_wmte_4570_cn04_adapter_exposes_l1_l2_and_current_l3_delta() -> None:
+    """REQ-ARC-WMTE-4570: the adapter still schedules reproduced cn04 L1+L2 labels."""
 
     adapter = adapters.get_adapter("cn04")
     assert adapter is not None
@@ -104,13 +104,13 @@ def test_req_arc_wmte_4570_cn04_adapter_exposes_l1_then_l2_delta() -> None:
         SimpleNamespace(levels_completed=1),
         tuple("x" for _ in exp4570.CN04_L2_TAIL_LABELS),
     )
-    no_l3 = adapter.action_labels(env, SimpleNamespace(levels_completed=2), ())
+    first_l3 = adapter.action_labels(env, SimpleNamespace(levels_completed=2), ())
 
     assert first_l1 == [exp4570.CN04_L1_LABELS[0]]
     assert next_l1 == [exp4570.CN04_L1_LABELS[1]]
     assert first_l2 == [exp4570.CN04_L2_TAIL_LABELS[0]]
     assert exhausted_l2 == []
-    assert no_l3 == []
+    assert first_l3 == [adapters.CN04_L3_TAIL_LABELS[0]]
     assert adapter.depth_caps[1] == len(exp4570.CN04_L1_LABELS)
     assert adapter.depth_caps[2] == len(exp4570.CN04_L2_TAIL_LABELS)
     assert adapter.branch_mode == "fresh_env"
