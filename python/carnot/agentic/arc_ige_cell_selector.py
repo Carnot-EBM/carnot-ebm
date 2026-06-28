@@ -210,9 +210,7 @@ class IGECellSelector:
         }
 
 
-def coerce_ige_cell_selector(
-    value: Any, *, proposer: Any = None
-) -> Optional[IGECellSelector]:
+def coerce_ige_cell_selector(value: Any, *, proposer: Any = None) -> Optional[IGECellSelector]:
     """Normalize a flag/config value into an IGECellSelector | None (mirrors coerce_go_explore_archive).
 
     - None / False / "" -> None (disabled; archive keeps its heuristic)
@@ -224,7 +222,10 @@ def coerce_ige_cell_selector(
         return None
     if isinstance(value, IGECellSelector):
         return value
-    if value is True or (isinstance(value, str) and value.lower() in {"ige", "llm_promisingness", "llm_promisingness_go_explore"}):
+    if value is True or (
+        isinstance(value, str)
+        and value.lower() in {"ige", "llm_promisingness", "llm_promisingness_go_explore"}
+    ):
         return IGECellSelector(proposer=proposer)
     if isinstance(value, Mapping):
         if not bool(value.get("enabled", True)):

@@ -14936,3 +14936,80 @@ grounding-rate lift CI95 excludes zero.
 **Then** it SHALL write a terminal `complete:` verdict, set
 `config_rule_vocabulary_transfers=false`, keep `verifier_is_oracle=false`, and
 record the missing seeded-arm measurement in `logged_gaps`.
+
+---
+
+## REQ-LEARN-4927: Rotated ARC Continuous Self-Play Verifier Checkpoint Refresh
+
+Experiment 4927 SHALL run the standing ARC self-play loop on a rotated banked
+target with an existing learned verifier checkpoint, selecting a target that is
+not `.453`'s `bp35`, `.452`'s `vc33`, `.451`'s `sk48`, `.450`'s `ls20`,
+`.449`'s `re86`, A1's `sp80`, or A2's `su15`. The loop SHALL warm-start from
+`models/arc_verifier_<game>.json`, reproduction-gate at least one offline
+level, train on this run's self-play traces, refresh the checkpoint, and write
+`results/experiment_4927_self_play_verifier_checkpoint.json`.
+
+The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
+that `ops/arc_solve_registry.yaml` is loadable, that the selected target has a
+banked level, and that `models/arc_verifier_<game>.json` exists before the run.
+If any required resource is missing, Experiment 4927 SHALL write a terminal
+`blocked_*` artifact that records the failed precondition and SHALL NOT claim a
+refreshed checkpoint.
+
+The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
+only when the checkpoint mtime advances, `offline_reproduced=true`, and
+`reproduced_levels >= 1`. A failed loop, missing checkpoint, stale mtime,
+failed reproduction gate, or rotation back to `bp35`, `vc33`, `sk48`, `ls20`,
+`re86`, `sp80`, or `su15` SHALL write a terminal `complete_*` or `blocked_*`
+artifact with the residual instead of fabricating checkpoint progress.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+- `reproduced_levels`: principle "the depth confirmed this run."
+- `target_game`: principle "the rotated self-play target (differs from .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2)."
+- `inference_substrate`: principle "live_llm_inference (60s floor)."
+- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+### SCENARIO-LEARN-4927-CHECKPOINT-REFRESHED
+
+**Given** `arc_solver_kit.offline_arcade()` is available, `lf52` is banked in
+`ops/arc_solve_registry.yaml`, and `models/arc_verifier_lf52.json` exists before
+the standing loop runs
+**When** `scripts/arc_loop_solve.py --game lf52` reports an offline-reproduced
+level and writes the learned verifier checkpoint
+**Then** Experiment 4927 records `verifier_checkpoint_refreshed=true`,
+`checkpoint_path=models/arc_verifier_lf52.json`, advanced checkpoint mtimes,
+`offline_reproduced=true`, `reproduced_levels >= 1`, `target_game=lf52`,
+`solve_provenance=live_agent_self_discovery`, and
+`honest_verdict=success_self_play_checkpoint_refreshed`.
+
+### SCENARIO-LEARN-4927-RESIDUAL-NO-FABRICATION
+
+**Given** the loop result is missing, the reproduction gate fails, the
+checkpoint path is absent, or the checkpoint mtime does not advance
+**When** Experiment 4927 builds its artifact
+**Then** it records `verifier_checkpoint_refreshed=false`, preserves the
+residual cause, keeps `offline_reproduced` and `reproduced_levels` grounded in
+the loop result, and does not emit a success verdict.
+
+### SCENARIO-LEARN-4927-BLOCKED-PRECONDITION
+
+**Given** the offline arcade is unavailable, the registry is missing, the
+selected target is not banked, the checkpoint file is absent before the run, or
+the selection is one of the recent or conflicting targets `bp35`, `vc33`,
+`sk48`, `ls20`, `re86`, `sp80`, or `su15`
+**When** Experiment 4927 checks preconditions
+**Then** it writes `results/experiment_4927_self_play_verifier_checkpoint.json`
+with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
+fabricated checkpoint refresh.
+
+## Implementation Status (Exp 4927)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4927 | Implemented (`python/carnot/experiment_4927_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4927_self_play_verifier_checkpoint.py`) |

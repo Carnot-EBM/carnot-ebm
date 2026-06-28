@@ -25,6 +25,7 @@ otherwise (Pre-Launch Preconditions Discipline) rather than report a fake tie.
 USAGE: arc_ige_llm_go_explore_ab.py [n_games] [n_variants] [budget]   (defaults tuned for a tiny slice).
 The full multi-game/large-budget run is GPU-heavy and shares the dev GPU with the conductor; start small.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -114,13 +115,20 @@ def main() -> int:
     games = _public_games(REPO)[:N_GAMES]
     variant_ids = list(range(1, N_VARIANTS + 1))
     specs = variant_specs(games, variant_ids)
-    print(f"[ige-ab] games={games} variants={variant_ids} budget={BUDGET} specs={len(specs)}", flush=True)
+    print(
+        f"[ige-ab] games={games} variants={variant_ids} budget={BUDGET} specs={len(specs)}",
+        flush=True,
+    )
 
     # Shared IGE selector (one warm proposer reused across all ige-arm attempts; diagnostics accumulate).
     ige_selector = IGECellSelector()
 
-    baseline = [dict(_run_attempt("baseline", str(s["game"]), s, BUDGET, None, MAX_DEPTH)) for s in specs]
-    ige = [dict(_run_attempt("ige", str(s["game"]), s, BUDGET, ige_selector, MAX_DEPTH)) for s in specs]
+    baseline = [
+        dict(_run_attempt("baseline", str(s["game"]), s, BUDGET, None, MAX_DEPTH)) for s in specs
+    ]
+    ige = [
+        dict(_run_attempt("ige", str(s["game"]), s, BUDGET, ige_selector, MAX_DEPTH)) for s in specs
+    ]
 
     base_m = measurement_from_attempts(baseline)
     ige_m = measurement_from_attempts(ige)
@@ -129,6 +137,21 @@ def main() -> int:
     sel_diag = ige_selector.diagnostics()
     # The selector must have actually FIRED on the ige arm (else the arms are identical and the A/B is void).
     selector_exercised = int(sel_diag.get("llm_choices", 0)) > 0
+    # Inference-substrate honesty (CLAUDE.md Inference-Substrate Declaration Discipline): declare
+    # live_llm_inference ONLY when the LLM was genuinely invoked (the selector fired). If the archive never
+    # returned >=2 eligible cells the selector made ZERO model calls, so the run is a pure live-agent search
+    # over the offline arcade with NO LLM inference -- declaring live_llm_inference there would falsely trip
+    # the DURATION_TOO_SHORT fabrication gate (a <60s run with a GGUF marker but no actual model call).
+    substrate = (
+        "live_llm_inference"
+        if selector_exercised
+        else "verifier_ensemble_against_cached_candidates"
+    )
+    model_specs = (
+        {"generator": "unsloth/Qwen3.5-9B-MTP-GGUF", "kv_quant": "q8_0", "mtp": True}
+        if selector_exercised
+        else {"generator_declared_but_not_invoked": "unsloth/Qwen3.5-9B-MTP-GGUF", "llm_calls": 0}
+    )
     ige_fw = float(ige_m["first_win_rate"])
     base_fw = float(base_m["first_win_rate"])
     ci_lo, ci_hi = (delta["ci95"][0], delta["ci95"][1])
@@ -158,7 +181,7 @@ def main() -> int:
             "does LLM-judged Go-Explore cell selection (IGE, arXiv:2405.15143) raise live first-win on "
             "held-out games vs the plain-archive heuristic (the isolated A/B; only the selector differs)?"
         ),
-        "inference_substrate": "live_llm_inference",
+        "inference_substrate": substrate,
         "verifier_is_oracle": False,
         "games": games,
         "variant_ids": variant_ids,
@@ -166,13 +189,29 @@ def main() -> int:
         "max_depth_override": MAX_DEPTH,
         "archive_bins": ARCHIVE_BINS,
         "n_specs": len(specs),
-        "baseline_arm": {k: base_m[k] for k in ("first_win_rate", "variant_solved_count", "variant_attempts_count", "median_actions_to_first_levelup")},
-        "ige_arm": {k: ige_m[k] for k in ("first_win_rate", "variant_solved_count", "variant_attempts_count", "median_actions_to_first_levelup")},
+        "baseline_arm": {
+            k: base_m[k]
+            for k in (
+                "first_win_rate",
+                "variant_solved_count",
+                "variant_attempts_count",
+                "median_actions_to_first_levelup",
+            )
+        },
+        "ige_arm": {
+            k: ige_m[k]
+            for k in (
+                "first_win_rate",
+                "variant_solved_count",
+                "variant_attempts_count",
+                "median_actions_to_first_levelup",
+            )
+        },
         "paired_first_win_delta_ci": delta,
         "ige_selector_diagnostics": sel_diag,
         "selector_exercised": selector_exercised,
         "ige_beats_baseline": ige_wins,
-        "model_specs": {"generator": "unsloth/Qwen3.5-9B-MTP-GGUF", "kv_quant": "q8_0", "mtp": True},
+        "model_specs": model_specs,
         "solve_provenance": "live_agent_self_discovery",
         "used_env_source": False,
         "read_game_source": False,
@@ -186,13 +225,20 @@ def main() -> int:
             "enters the pool: consistent with the triangulated generation/enumeration wall (.448-.452). "
             "selector_not_exercised -> budget too small for the archive to ever RETURN; raise budget."
         ),
-        "cites_upstream": ["exp4701", "exp4831 (plain archive nulled)", "exp4688 (RND novelty nulled)", "arXiv:2405.15143"],
+        "cites_upstream": [
+            "exp4701",
+            "exp4831 (plain archive nulled)",
+            "exp4688 (RND novelty nulled)",
+            "arXiv:2405.15143",
+        ],
         "random_seed": SEED,
         "duration_s": round(time.time() - started, 2),
     }
     _write(art)
     print("\n=== VERDICT:", verdict)
-    print(f"baseline first_win={base_fw:.3f}  ige first_win={ige_fw:.3f}  delta={delta['point']:.3f} ci={delta['ci95']}")
+    print(
+        f"baseline first_win={base_fw:.3f}  ige first_win={ige_fw:.3f}  delta={delta['point']:.3f} ci={delta['ci95']}"
+    )
     print(f"selector diag: {sel_diag}")
     return 0
 
@@ -284,9 +330,10 @@ def _run_attempt(arm: str, game: str, spec, budget: int, selector, max_depth=Non
 def _write(art: dict) -> None:
     payload = dict(art)
     payload["reproducibility_checksum"] = ""
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(payload, sort_keys=True, default=str).encode()
-    ).hexdigest()
+    art["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode()).hexdigest()
+    )
     out = REPO / "results" / "arc_ige_llm_go_explore_ab.json"
     out.write_text(json.dumps(art, indent=2) + "\n")
     print(f"-> {out}")

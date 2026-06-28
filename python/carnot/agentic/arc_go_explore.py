@@ -164,7 +164,9 @@ class GoExploreReplayArchive:
         if not eligible_items:
             return []
         selected = self._select_via_selector(eligible_items)
-        if selected is None:  # no selector, selector declined, or out-of-range -> heuristic fallback
+        if (
+            selected is None
+        ):  # no selector, selector declined, or out-of-range -> heuristic fallback
             selected = min(
                 (entry for _key, entry in eligible_items),
                 key=lambda entry: (
@@ -187,7 +189,11 @@ class GoExploreReplayArchive:
         descriptors = []
         for index, (key, entry) in enumerate(eligible_items):
             level = int(key[0]) if isinstance(key, tuple) and key else 0
-            sig = key[1] if isinstance(key, tuple) and len(key) > 1 and isinstance(key[1], tuple) else None
+            sig = (
+                key[1]
+                if isinstance(key, tuple) and len(key) > 1 and isinstance(key[1], tuple)
+                else None
+            )
             descriptors.append(
                 {
                     "index": index,
