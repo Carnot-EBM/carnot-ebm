@@ -1,0 +1,558 @@
+{
+  "a1_closure_verdict_trusted": {
+    "b1_experiment_id": 4918,
+    "b1_failure_reasons": [],
+    "b1_honest_verdict": "complete_a1_causal_abstraction_audited",
+    "closure_verdict": "WALL_IS_HIDDEN_STATE",
+    "experiment_id": 4914,
+    "fixable_observable_lever": null,
+    "hidden_variables_required": [
+      "winning_prefix_order_state"
+    ],
+    "honest_verdict": "complete_causal_abstraction_hidden_state_representation_invariant_closure",
+    "is_decision_need_table_in_disguise": false,
+    "live_path_reachable": true,
+    "minimal_abstraction_is_observable_subset": false,
+    "n_games_measured": 3,
+    "planner_blind_to_banked_answer": true,
+    "positive_control_classifies_observable": true,
+    "source": "A1",
+    "trust_failure_reasons": [],
+    "trust_gate": {
+      "a1_diagnostic_trustworthy": true,
+      "not_value_table": true,
+      "numbers_match_fork": true,
+      "observable_claims_verified": true,
+      "oracle_distinct_planner_blind": true,
+      "positive_control_observable": true,
+      "real_transitions": true
+    },
+    "trusted": true,
+    "verifier_is_oracle": false
+  },
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4914,
+      "fields_imported": [
+        "honest_verdict",
+        "fork_verdict",
+        "minimal_abstraction_is_observable_subset",
+        "is_decision_need_table_in_disguise",
+        "positive_control_classifies_observable",
+        "planner_blind_to_banked_answer",
+        "verifier_is_oracle",
+        "live_path_reachable",
+        "n_games_measured",
+        "per_game_causal_abstraction",
+        "positive_control_games",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4914_causal_abstraction_wall_diagnostic.json",
+      "sha256": "sha256:9cf170623e9fc96a43319fddde14f2f19cad1cf73403b36439b329c96533722f",
+      "source": "A1"
+    },
+    {
+      "experiment_id": 4918,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_diagnostic_trustworthy",
+        "a1_failure_reasons",
+        "checks",
+        "not_value_table_evidence",
+        "numbers_match_fork_evidence",
+        "observable_claims_spot_checked",
+        "oracle_distinct_planner_blind_evidence",
+        "positive_control_evidence",
+        "transition_cross_checks",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4918_causal_abstraction_audit.json",
+      "sha256": "sha256:48dbe306770b9cb52373f1aba68f1850b0668f4d7a4c135d8c619ae996985e4f",
+      "source": "B1_AUDIT"
+    },
+    {
+      "experiment_id": 4915,
+      "fields_imported": [
+        "honest_verdict",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels_before",
+        "reproducible_total_levels_after",
+        "registry_update",
+        "reproduction_gate",
+        "target_game",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4915_levelup_attempt.json",
+      "sha256": "sha256:1a0e8e2220cf948b83262e0fa85b0c91f540d3bd698b4acf684e36a8ca69a2e8",
+      "source": "A2_LEVELUP"
+    },
+    {
+      "experiment_id": 4916,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "checkpoint_path",
+        "checkpoint_mtime_delta_ns",
+        "offline_reproduced",
+        "reproduced_levels",
+        "search_state_count",
+        "target_game",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4916_self_play_verifier_checkpoint.json",
+      "sha256": "sha256:f6eb2bef8adc93882b687cd26d849154a94b92d4e7581394ac94cf758f8b995f",
+      "source": "A3_SELF_PLAY"
+    },
+    {
+      "experiment_id": 4917,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_first_win_rate",
+        "heldout_first_win_ci",
+        "heldout_first_win_ci_lower",
+        "first_win_baseline",
+        "prior_best_heldout_first_win_rate",
+        "heldout_first_win_delta_vs_baseline",
+        "heldout_first_win_delta_vs_prior_best",
+        "positive_control_passed",
+        "parity_test_green",
+        "live_agent_ran",
+        "partial",
+        "completed_games",
+        "remaining_games",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4917_heldout_first_win_readiness.json",
+      "sha256": "sha256:c435186ad3dac87e1e2ac69232da07682f3e416d08cd04ecb7bdce697dec77cc",
+      "source": "A4_HELDOUT"
+    },
+    {
+      "experiment_id": 4919,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submits",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "peak_vram_gb",
+        "frozen_stack_loads",
+        "package_builds",
+        "package_build_check",
+        "ready_package_regression_ok",
+        "ready_package_regression_check",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4919_submission_package_harden.json",
+      "sha256": "sha256:a0de17f282eca2f0f46e8137ac6f3399ab8fe203244293eeab5f18339e8706d3",
+      "source": "B2_PACKAGE"
+    },
+    {
+      "experiment_id": 4920,
+      "fields_imported": [
+        "honest_verdict",
+        "research_conductor_modified",
+        "stamping_audit",
+        "stamping_audit_missing_duration",
+        "mtime_fallback_window",
+        "wiring_proposal_written",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4920_retro_timing_and_stamping_fix.json",
+      "sha256": "sha256:b9b1d056b39c68f129f51f6ff724d51cef6af9137b4f6c9bda2662f182e2d939",
+      "source": "B3_RETRO"
+    },
+    {
+      "experiment_id": 4921,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "xmutil_requires_sudo",
+        "command_probes",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4921_kv260_continuity.json",
+      "sha256": "sha256:856f3ddc43aad5bafa3bd2137c01006bd706cb5b2f78d16891f5c9880060f918",
+      "source": "C_KV260"
+    },
+    {
+      "experiment_id": 4922,
+      "fields_imported": [
+        "honest_verdict",
+        "pivot_executable_on_6_30",
+        "no_headline_claim",
+        "no_verifier_win_claimed",
+        "comparison_stubbed",
+        "self_consistency_saturated",
+        "dry_run_three_columns",
+        "harness_skeleton_path",
+        "domain_slice_path",
+        "validation_gate",
+        "verifier_is_oracle",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4922_distributional_energy_verifier_scaffold.json",
+      "sha256": "sha256:73dfe20e135c70ea0fc1355ed3e0352f34e1f141b84bff01b687b74b31b3686c",
+      "source": "D_PIVOT"
+    }
+  ],
+  "duration_s": 0.577697,
+  "experiment": "experiment_4923_capstone_v453",
+  "experiment_id": 4923,
+  "field_principles": {
+    "a1_closure_verdict_trusted": {
+      "principle": "A1's fork verdict gated on B1 a1_diagnostic_trustworthy -- the headline is only as good as the audit."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
+    },
+    "headline": {
+      "principle": "the one-line .453 headline -- A1's trusted closure verdict (observable-gap lever / hidden-state closure) or the B1-untrusted/inconclusive fallback."
+    },
+    "heldout_first_win_rate": {
+      "principle": "A4's CLEAN go/no-go number IF flag_resolved (else note it was still flagged)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v453_<closure-or-escalate> (e.g. _wall_is_hidden_state_arc_closure / _observable_variable_gap_<lever> / _diagnostic_inconclusive_escalate)."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
+    },
+    "post_sprint_pivot": {
+      "principle": "the post-6/30 verifier-moat handoff: D's distributional-energy-verifier scaffold + the deliverable (~0.05 agent + FoVer paper); NOT representation #5."
+    },
+    "preconditions_checked": {
+      "principle": "records upstream-artifact presence + registry loadability; a missing input emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for any tie-break in the scorecard aggregation."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (cited upstream sha256s + scorecard) so a replication catches drift."
+    },
+    "reproducible_total_levels": {
+      "principle": "the monotonic ARC progress metric from the registry (68 + A2's bank if any)."
+    },
+    "skipped_flagged_adversarial": {
+      "principle": "the list of upstream artifacts skipped per the fabrication gate."
+    },
+    "submission_package_ready": {
+      "principle": "B2's terminal gate -- the package state for the operator's 6/30 decision."
+    }
+  },
+  "headline": "ARC CLOSURE: the live first-win wall is representation-invariant by construction; no representation over observable inputs recovers the discriminating variable. Deliverable locks to the current ~0.05 first-win agent (operator-only package) plus the publishable FoVer verifier-ensemble paper. Do not queue representation #5.",
+  "heldout_first_win_rate": 0.047619,
+  "honest_verdict": "complete_capstone_v453_wall_is_hidden_state_arc_closure",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_scorecard": {
+    "a1_causal_abstraction_closure": {
+      "b1_experiment_id": 4918,
+      "b1_failure_reasons": [],
+      "b1_honest_verdict": "complete_a1_causal_abstraction_audited",
+      "closure_verdict": "WALL_IS_HIDDEN_STATE",
+      "experiment_id": 4914,
+      "fixable_observable_lever": null,
+      "hidden_variables_required": [
+        "winning_prefix_order_state"
+      ],
+      "honest_verdict": "complete_causal_abstraction_hidden_state_representation_invariant_closure",
+      "is_decision_need_table_in_disguise": false,
+      "live_path_reachable": true,
+      "minimal_abstraction_is_observable_subset": false,
+      "n_games_measured": 3,
+      "planner_blind_to_banked_answer": true,
+      "positive_control_classifies_observable": true,
+      "source": "A1",
+      "trust_failure_reasons": [],
+      "trust_gate": {
+        "a1_diagnostic_trustworthy": true,
+        "not_value_table": true,
+        "numbers_match_fork": true,
+        "observable_claims_verified": true,
+        "oracle_distinct_planner_blind": true,
+        "positive_control_observable": true,
+        "real_transitions": true
+      },
+      "trusted": true,
+      "verifier_is_oracle": false
+    },
+    "a2_levelup_bank": {
+      "decision": "new_level_banked",
+      "experiment_id": 4915,
+      "honest_verdict": "success_cn04_levelup_banked",
+      "new_levels_banked": 1,
+      "offline_reproduced": true,
+      "registry_authoritative_total": 69,
+      "registry_update_reason": "banked_offline_reproduced_level",
+      "reproduced_levels": 3,
+      "reproducible_total_levels_after": 69,
+      "reproducible_total_levels_before": 68,
+      "reproduction_gate_passed": true,
+      "source": "A2_LEVELUP",
+      "target_game": "cn04"
+    },
+    "a3_self_play_checkpoint": {
+      "checkpoint_mtime_delta_ns": 139466336536785,
+      "checkpoint_path": "models/arc_verifier_bp35.json",
+      "decision": "checkpoint_refreshed",
+      "experiment_id": 4916,
+      "honest_verdict": "success_self_play_checkpoint_refreshed",
+      "offline_reproduced": true,
+      "reproduced_levels": 2,
+      "search_state_count": 69,
+      "source": "A3_SELF_PLAY",
+      "target_game": "bp35",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4_heldout_go_no_go": {
+      "completed_game_count": 21,
+      "experiment_id": 4917,
+      "first_win_baseline": 0.04,
+      "flag_resolved": true,
+      "heldout_first_win_ci": {
+        "bootstrap_resamples": 1000,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "method": "paired_percentile_bootstrap",
+        "point": 0.0,
+        "random_seed": 4605
+      },
+      "heldout_first_win_ci_lower": 0.0,
+      "heldout_first_win_delta_vs_baseline": 0.007619,
+      "heldout_first_win_delta_vs_prior_best": -0.014881,
+      "heldout_first_win_rate": 0.047619,
+      "honest_verdict": "complete: heldout_first_win_soft_budget_stop_partial_21_of_25_games_84_attempts_resume_to_finish",
+      "live_agent_ran": true,
+      "parity_test_green": true,
+      "partial": true,
+      "positive_control_passed": true,
+      "prior_best_heldout_first_win_rate": 0.0625,
+      "remaining_game_count": 4,
+      "source": "A4_HELDOUT",
+      "status": "included_clean"
+    },
+    "b1_causal_abstraction_audit": {
+      "a1_diagnostic_trustworthy": true,
+      "a1_failure_reasons": [],
+      "checks": {
+        "not_value_table": true,
+        "numbers_match_fork": true,
+        "observable_claims_verified": true,
+        "oracle_distinct_planner_blind": true,
+        "positive_control_observable": true,
+        "real_transitions": true
+      },
+      "experiment_id": 4918,
+      "honest_verdict": "complete_a1_causal_abstraction_audited",
+      "observable_claims_checked_count": 5,
+      "source": "B1_AUDIT",
+      "transition_cross_check_count": 3
+    },
+    "b2_submission_package": {
+      "decision": "package_ready_operator_only",
+      "dry_build_ran": true,
+      "experiment_id": 4919,
+      "frozen_stack_loads": true,
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "package_builds": true,
+      "peak_vram_gb": 15.146,
+      "ready_package_regression_ok": true,
+      "source": "B2_PACKAGE",
+      "submission_package_ready": true,
+      "submits": false
+    },
+    "b3_retro_timing_stamping_fix": {
+      "decision": "retro_fix_shipped",
+      "experiment_id": 4920,
+      "honest_verdict": "success_retro_timing_mtime_fallback_and_stamping_shipped",
+      "missing_duration_count": 2,
+      "mtime_fallback_window": {
+        "artifact_paths": [
+          "results/experiment_4902_archive_451_activate_452.json",
+          "results/experiment_4903_env_grounded_location_pruned_search.json",
+          "results/experiment_4904_latent_action_interface.json",
+          "results/experiment_4905_levelup_attempt.json",
+          "results/experiment_4906_self_play_verifier_checkpoint.json",
+          "results/experiment_4907_heldout_first_win_readiness.json",
+          "results/experiment_4908_env_grounded_search_audit.json",
+          "results/experiment_4909_submission_package_harden.json",
+          "results/experiment_4910_kv260_continuity.json",
+          "results/experiment_4911_sota_ingestion_v453_frontier.json",
+          "results/experiment_4912_capstone_v452.json"
+        ],
+        "compute_bound_count": 3,
+        "milestone": "2026.06.452",
+        "n_arms": 11,
+        "wall_minutes": 226.05,
+        "window_end": "2026-06-28T09:22:05Z",
+        "window_start": "2026-06-28T05:36:02Z"
+      },
+      "research_conductor_modified": false,
+      "source": "B3_RETRO",
+      "wiring_proposal_written": true
+    },
+    "c_kv260": {
+      "decision": "kv260_continuity_ok",
+      "experiment_id": 4921,
+      "honest_verdict": "success_kv260_continuity_ok",
+      "inference_substrate": "hardware_smoke",
+      "kv260_ssh_reachable": true,
+      "loaded_overlay": "carnot_ising_v2_n64",
+      "source": "C_KV260",
+      "xmutil_requires_sudo": true
+    },
+    "d_distributional_energy_verifier_pivot": {
+      "comparison_columns": [
+        "distributional_energy_verifier",
+        "self_consistency",
+        "llm_judge"
+      ],
+      "comparison_stubbed": true,
+      "decision": "pivot_scaffold_executable",
+      "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
+      "experiment_id": 4922,
+      "harness_skeleton_path": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
+      "honest_verdict": "success_distributional_energy_verifier_pivot_scaffolded",
+      "no_headline_claim": true,
+      "no_verifier_win_claimed": true,
+      "pivot_executable_on_6_30": true,
+      "self_consistency_saturated": false,
+      "source": "D_PIVOT",
+      "validation_gate": {
+        "adversarial_verify_no_model_identity_shortcut_required": true,
+        "ci95_excludes_zero_required": true,
+        "oracle_distinct_note": "no cheap executable oracle for the evaluated domain",
+        "oracle_distinct_required": true,
+        "promotion_note": "the dry-run is not a headline; promotion requires the real post-6/30 experiment",
+        "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero"
+      },
+      "verifier_is_oracle": false
+    }
+  },
+  "post_sprint_pivot": {
+    "decision": "post_6_30_distributional_energy_verifier_pivot",
+    "deliverable": "current ~0.05 first-win agent (operator-only package) + publishable FoVer verifier-ensemble paper",
+    "distributional_energy_verifier_scaffold": {
+      "comparison_columns": [
+        "distributional_energy_verifier",
+        "self_consistency",
+        "llm_judge"
+      ],
+      "comparison_stubbed": true,
+      "decision": "pivot_scaffold_executable",
+      "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
+      "experiment_id": 4922,
+      "harness_skeleton_path": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
+      "honest_verdict": "success_distributional_energy_verifier_pivot_scaffolded",
+      "no_headline_claim": true,
+      "no_verifier_win_claimed": true,
+      "pivot_executable_on_6_30": true,
+      "self_consistency_saturated": false,
+      "source": "D_PIVOT",
+      "validation_gate": {
+        "adversarial_verify_no_model_identity_shortcut_required": true,
+        "ci95_excludes_zero_required": true,
+        "oracle_distinct_note": "no cheap executable oracle for the evaluated domain",
+        "oracle_distinct_required": true,
+        "promotion_note": "the dry-run is not a headline; promotion requires the real post-6/30 experiment",
+        "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero"
+      },
+      "verifier_is_oracle": false
+    },
+    "do_not_queue": "representation_5",
+    "north_star_sections": [
+      "1",
+      "2"
+    ],
+    "paper_ready": true
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "auxiliary_upstream_artifacts": {
+      "A4_HELDOUT_PARTIAL": {
+        "path": "results/experiment_4917_heldout_first_win_readiness.partial.json",
+        "present": true,
+        "sha256": "sha256:bed49249f4251ca6d038809e1111edd3c931fca599d0b4f9f381c8f181c468c6",
+        "summarizer_exit_code": 0
+      }
+    },
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:8fe212c20988cdece956ba53bd14d176ad2cf2ecc4d45289845a6716806220c5",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4923": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "A1": {
+        "path": "results/experiment_4914_causal_abstraction_wall_diagnostic.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A2_LEVELUP": {
+        "path": "results/experiment_4915_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A3_SELF_PLAY": {
+        "path": "results/experiment_4916_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A4_HELDOUT": {
+        "path": "results/experiment_4917_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B1_AUDIT": {
+        "path": "results/experiment_4918_causal_abstraction_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B2_PACKAGE": {
+        "path": "results/experiment_4919_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B3_RETRO": {
+        "path": "results/experiment_4920_retro_timing_and_stamping_fix.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "C_KV260": {
+        "path": "results/experiment_4921_kv260_continuity.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "D_PIVOT": {
+        "path": "results/experiment_4922_distributional_energy_verifier_scaffold.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "sha256:2029016a1f9e1083dc1ebc3c1b063449e4776359b0c960f299d1f1ce2ef60689",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_4923_capstone_v453.json",
+  "schema": "carnot.exp4923.capstone_v453.v1",
+  "skipped_flagged_adversarial": [],
+  "spec_refs": [
+    "REQ-CAPSTONE-4923",
+    "SCENARIO-CAPSTONE-4923",
+    "SCENARIO-CAPSTONE-4923-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4923-FIELD-PRINCIPLES"
+  ],
+  "submission_package_ready": true
+}
