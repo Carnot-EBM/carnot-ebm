@@ -700,6 +700,72 @@ submission flag false.
 |---|---|---|
 | REQ-REPORT-4913 | Implemented (`python/carnot/experiment_4913_archive_452_activate_453.py`) | Implemented (`tests/python/test_experiment_4913_archive_452_activate_453.py`) |
 
+### REQ-REPORT-4920: Retro Timing Mtime Fallback And Runtime Stamping Audit
+
+The Exp 4920 workflow SHALL ship standalone reporting helpers for the `.452`
+operational-retro timing gap without editing `scripts/research_conductor.py`.
+The results-mtime fallback SHALL reconstruct a milestone timing window from the
+`results/experiment_*.json` artifact mtimes for that milestone's arms. Its
+unit-testable core SHALL be a deterministic pure function over supplied
+artifact records and SHALL report `n_arms`, `window_start`, `window_end`,
+`wall_minutes`, and `compute_bound_count`.
+
+The runtime stamping helper SHALL stamp `duration_s`, `inference_substrate`, and
+`compute_bound` onto an artifact at write time, using a `0.0001` second duration
+floor. Its audit SHALL scan supplied result artifacts and list artifacts missing
+any of those three fields. For `.452`, the audit SHALL list
+`results/experiment_4905_levelup_attempt.json` and
+`results/experiment_4906_self_play_verifier_checkpoint.json` under the missing
+`duration_s` backfill list.
+
+The workflow SHALL write a conductor wiring proposal that names the retro
+prompt-assembly call site where the operator should invoke the mtime fallback,
+but the workflow SHALL NOT modify `scripts/research_conductor.py`. It SHALL
+write `results/experiment_4920_retro_timing_and_stamping_fix.json` with
+principle-annotated fields:
+
+- `honest_verdict`: terminal prefix; success_retro_timing_mtime_fallback_and_stamping_shipped.
+- `mtime_fallback_window`: the .452 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} reconstructed from results/ mtimes -- the verifiable fix for the ~79-milestone false-zero.
+- `mtime_fallback_module_path`: the standalone module path (operator wires it into the conductor's retro prompt-assembly).
+- `stamping_helper_path`: the write-time duration_s/inference_substrate/compute_bound stamping helper.
+- `stamping_audit_missing_duration`: the list of .452 arms missing duration_s (>=exp4905, exp4906) -- closes the disk-archaeology gap.
+- `wiring_proposal_path`: the proposed conductor call site (operator wires; the experiment does NOT edit research_conductor.py).
+- `research_conductor_modified`: false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads retro + arm mtimes; 0.0001s floor).
+- `preconditions_checked`: records retro + arm-artifact presence; a missing input emits blocked_.
+
+#### SCENARIO-REPORT-4920: Mtime Fallback Reconstructs The .452 Window
+
+**Given** `results/operational_retro_2026_06_452.json` and the `.452` arm
+artifacts `exp4902` through `exp4912` are present
+**When** Exp 4920 runs the standalone fallback over those artifact mtimes
+**Then** it writes `results/experiment_4920_retro_timing_and_stamping_fix.json`
+with a non-zero `.452` window where `n_arms>=11`, `wall_minutes>0`,
+`compute_bound_count>=3`, and `research_conductor_modified=false`.
+
+#### SCENARIO-REPORT-4920-STAMPING-AUDIT: Runtime Audit Lists Missing Duration Backfills
+
+**Given** `.452` arm artifacts include `exp4905` and `exp4906` with
+`duration_s=null`
+**When** the runtime stamping audit scans `exp4902` through `exp4912`
+**Then** the deliverable lists those two artifacts in
+`stamping_audit_missing_duration` and preserves the audit evidence for all
+missing runtime-stamp fields.
+
+#### SCENARIO-REPORT-4920-BLOCKED-PRECONDITION: Missing Retro Or Arm Blocks
+
+**Given** the `.452` retro or any required `.452` arm artifact is absent
+**When** Exp 4920 runs
+**Then** it writes a blocked deliverable whose `honest_verdict` starts with
+`blocked_`, records the failed precondition in `preconditions_checked`, and
+does not claim the success fallback or stamping audit shipped.
+
+## Implementation Status (REQ-REPORT-4920)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4920 | Implemented (`python/carnot/reporting/retro_timing_mtime_fallback.py`, `python/carnot/reporting/runtime_stamping.py`, `python/carnot/experiment_4920_retro_timing_and_stamping_fix.py`) | Implemented (`tests/python/test_experiment_4920_retro_timing_and_stamping_fix.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
