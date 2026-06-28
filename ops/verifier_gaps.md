@@ -2517,7 +2517,21 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: high (it is the single binding ceiling on multi-level deepening = the only lever that grows reproducible_total_levels via live self-discovery; 15 games gated on it)
 
 ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
-- status: building (RICHER-SCALAR candidate BUILT + REFUTED 2026-06-27 -> re-scoped to RELATIONAL; see UPDATE)
+- status: building (RELATIONAL operator SEPARATES on 3/4 games 2026-06-27 -- representation gap CLOSED for
+  cd82/sk48/sp80; cn04 residual; stage-2 graph_explore search next. Ladder: counts[GAP-4890]=fail ->
+  richer-scalar=fail -> RELATIONAL target-match=PASS 3/4. See UPDATE-2.)
+- UPDATE-2 2026-06-27 (RELATIONAL target-match WORKS on 3/4): built induce_goal_energy_relational
+  (arc_agi3_goal_induction.py) = translational self-similarity with a background-excluded induced mask
+  (find offset where the win's non-bg content matches its own translate = canvas==target-shown-at-offset;
+  mask = that match-set; energy = mask-cells where g != g-shifted; 0 at win, >0 at near-win negatives).
+  3 unit tests pass (10 total). EMPIRICAL on the 4 stalled games (results/arc_within_game_l3_self_
+  induction_*_stage1.json, adversarial_verify clean 4/4): cd82 SEPARATES (winE=0, mean-nonE=12.8,
+  frac_nonwin_above_max_win=1.0), sk48 SEPARATES (winE=0, nonE=29.0), sp80 SEPARATES (winE=0, nonE=3.27),
+  cn04 FAILS (alignment -- count+scalar+relational all fail -> needs a learned/masked predicate). So the
+  goal-ENERGY representation gap is CLOSED for 3 of 4 (the energy is 0 on the win and >0 on EVERY non-win,
+  incl. near-win) -- the first POSITIVE in the ladder. RESIDUALS: (a) confirm the energy GUIDES the search
+  (stage-2 graph_explore_solve_v2 to a reproduction-gated L3 -- separation is necessary not sufficient);
+  (b) cn04 alignment needs a relational predicate beyond translation (object-centroid relative position).
 - UPDATE 2026-06-27 (richer-scalar candidate refuted -> the gap is RELATIONAL, not scalar): built
   induce_goal_energy_richer (arc_agi3_goal_induction.py) adding a value/fill/spatial scalar ladder
   (nonbg_cells, max_color_count, nonbg_bbox_area, color_entropy) under the SAME strict-separation guard;
