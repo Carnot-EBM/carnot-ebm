@@ -9516,3 +9516,4 @@ The contro |
 | 2026-06-28 13:07 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 89 passed, 1 warning in 8.40s |
 | 2026-06-28 13:26 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .45 | OK | 87 passed, 1 warning in 8.39s |
 | 2026-06-28 13:47 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | 86 passed, 1 warning in 7.23s |
+| 2026-06-28 14:04 UTC | PHASE D (SOTA-INGESTION; POST-SPRINT PIVOT SCAFFOL | OK | 102 passed, 1 warning in 8.76s |
