@@ -1,0 +1,168 @@
+{
+  "adversarial_verifier_evidence": {
+    "adversarial_verify_path": "scripts/adversarial_verify.py",
+    "check_circular_moat_overclaim_used_for_D": false,
+    "summarize_artifact_path": "scripts/summarize_artifact.py"
+  },
+  "audit_failure_reasons": [
+    "A1_not_duplicate_failed_duplicate_depth_sp80_L2",
+    "A2_not_duplicate_failed_duplicate_depth_su15_L2",
+    "D_missing_experiment_4933_matm_similarity_retrieval_efficiency",
+    "missing_precondition_experiment_4933_matm_similarity_retrieval_efficiency"
+  ],
+  "bank_evidence": {
+    "A1": {
+      "artifact_experiment": "experiment_4925_levelup_attempt",
+      "artifact_gate_reached_level": 2,
+      "checks": {
+        "live_path_reachable": true,
+        "not_duplicate": false,
+        "reproduction_genuine": true,
+        "self_discovery_provenance": true
+      },
+      "claimed_reached_level": 2,
+      "failure_reasons": [
+        "A1_not_duplicate_failed_duplicate_depth_sp80_L2"
+      ],
+      "game": "sp80",
+      "label": "A1",
+      "live_path_evidence": {
+        "arc_orphan_solver_lint_passed": true,
+        "artifact_live_path_reachable": true,
+        "game_adapter_evidence": true,
+        "standing_loop_path_matches": true
+      },
+      "loop_cross_check": {
+        "artifact_path": "results/arc_loop_solve_sp80.json",
+        "game": "sp80",
+        "gate_reproduced": true,
+        "mode": "standing_arc_loop_offline_no_quota",
+        "offline_reproduced": true,
+        "path": "results/arc_loop_solve_sp80.json",
+        "reached_level": 2
+      },
+      "present": true,
+      "provenance": {
+        "outer_loop_inputs_declared": false,
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "registry_prior_level": 2
+    },
+    "A2": {
+      "artifact_experiment": "experiment_4926_levelup_attempt",
+      "artifact_gate_reached_level": 2,
+      "checks": {
+        "live_path_reachable": true,
+        "not_duplicate": false,
+        "reproduction_genuine": true,
+        "self_discovery_provenance": true
+      },
+      "claimed_reached_level": 2,
+      "failure_reasons": [
+        "A2_not_duplicate_failed_duplicate_depth_su15_L2"
+      ],
+      "game": "su15",
+      "label": "A2",
+      "live_path_evidence": {
+        "arc_orphan_solver_lint_passed": true,
+        "artifact_live_path_reachable": true,
+        "game_adapter_evidence": true,
+        "standing_loop_path_matches": true
+      },
+      "loop_cross_check": {
+        "artifact_path": "results/arc_loop_solve_su15.json",
+        "game": "su15",
+        "gate_reproduced": true,
+        "mode": "standing_arc_loop_offline_no_quota",
+        "offline_reproduced": true,
+        "path": "results/arc_loop_solve_su15.json",
+        "reached_level": 2
+      },
+      "present": true,
+      "provenance": {
+        "outer_loop_inputs_declared": false,
+        "solve_provenance": "live_agent_self_discovery"
+      },
+      "registry_prior_level": 2
+    }
+  },
+  "banks_trustworthy": false,
+  "checks": {
+    "honest_ab": false,
+    "live_path_reachable": true,
+    "not_duplicate": false,
+    "oracle_distinct": false,
+    "reproduction_genuine": true,
+    "self_discovery_provenance": true
+  },
+  "duration_s": 1.0,
+  "efficiency_evidence": {
+    "checks": {
+      "honest_ab": false,
+      "oracle_distinct": false
+    },
+    "failure_reasons": [
+      "D_missing_experiment_4933_matm_similarity_retrieval_efficiency"
+    ],
+    "present": false
+  },
+  "efficiency_trustworthy": false,
+  "experiment": "experiment_4929_bank_and_efficiency_audit",
+  "experiment_id": 4929,
+  "field_principles": {
+    "audit_failure_reasons": {
+      "principle": "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp."
+    },
+    "banks_trustworthy": {
+      "principle": "AND of the bank checks -- the capstone counts A1/A2 toward reproducible_total_levels ONLY if true."
+    },
+    "checks": {
+      "principle": "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct, honest_ab}."
+    },
+    "efficiency_trustworthy": {
+      "principle": "AND of the efficiency checks -- the capstone reports D's action-efficiency lift ONLY if true (oracle-distinct + honest A/B)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_v454_banks_and_efficiency_audited (trusted or with named failures)."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
+    },
+    "preconditions_checked": {
+      "principle": "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
+    }
+  },
+  "honest_verdict": "blocked_experiment_4933_matm_similarity_retrieval_efficiency_missing",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "lint_evidence": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (44 modules in the live closure).\n"
+  },
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "absent_inputs": [
+      "experiment_4933_matm_similarity_retrieval_efficiency"
+    ],
+    "adversarial_verify_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "d_artifact_present": false,
+    "registry_loadable": true,
+    "registry_present": true,
+    "spec_has_req_4929": true,
+    "summarize_artifact_present": true
+  },
+  "random_seed": 4929,
+  "reproducibility_checksum": "sha256:0c0ea7b8d2a3ccb1a6d2f8f3eb8f0a80ba43d21fd75a39f2bbee60b5dd43c083",
+  "result_path": "results/experiment_4929_bank_and_efficiency_audit.json",
+  "schema": "carnot.v454_bank_and_efficiency_audit.v1",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-CAPSTONE-4929",
+    "SCENARIO-CAPSTONE-4929",
+    "SCENARIO-CAPSTONE-4929-BLOCKED-PRECONDITION"
+  ]
+}
