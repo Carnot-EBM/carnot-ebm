@@ -1,0 +1,41 @@
+{
+  "experiment": "arc_relational_goal_energy_stage2",
+  "schema": "carnot.arc_relational_goal_energy_stage2.v1",
+  "honest_verdict": "complete_stage2_neither_banks_new_level_cd82_energy_L1_bfs_L1_search_wall_not_goal_energy",
+  "question": "does the GAP-4891 relational goal-energy GUIDE graph_explore to self-discover the next level (reproduction-gated), beating a BFS ablation?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "game": "cd82",
+  "prefix_level": 1,
+  "max_expansions": 4000,
+  "induce_fired": true,
+  "energy_arm": {
+    "reached_level": 1,
+    "reproduced": false,
+    "gate_reached": 1,
+    "states_expanded": 4000,
+    "traj_len": 0
+  },
+  "bfs_arm": {
+    "reached_level": 1,
+    "reproduced": false,
+    "gate_reached": 1,
+    "states_expanded": 4000,
+    "traj_len": 0
+  },
+  "energy_unlocks_new_level": false,
+  "energy_more_efficient": false,
+  "solve_provenance": "live_agent_self_discovery",
+  "used_env_source": false,
+  "read_game_source": false,
+  "offline_ground_truth_bfs": false,
+  "hand_calibrated_per_game": false,
+  "interpretation": "energy_unlocks=True -> the relational goal-energy ENABLES live self-discovery of the next level where blind BFS cannot (the GAP-4891 deepening payoff). more_efficient=True -> both reach it but the energy is cheaper (an efficiency win). neither -> the energy separates (Stage 1) but does not guide the search past it: the deepening wall is the SEARCH/enumeration, not goal-detection (consistent with the .452 env-grounded WALL_DEEPER finding).",
+  "cites_upstream": [
+    "arc_within_game_l3_self_induction_*_stage1.json",
+    "wf_b77c3b40-f11"
+  ],
+  "random_seed": 20260628,
+  "duration_s": 50.58,
+  "reproducibility_checksum": "sha256:d4ecf8bff0104087d3442ae8bb7f98280b6b6b94e3e4a2f63e11907731fad29f"
+}

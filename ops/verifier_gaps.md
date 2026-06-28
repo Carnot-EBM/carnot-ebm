@@ -2517,9 +2517,33 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: high (it is the single binding ceiling on multi-level deepening = the only lever that grows reproducible_total_levels via live self-discovery; 15 games gated on it)
 
 ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
-- status: building (RELATIONAL operator SEPARATES on 3/4 games 2026-06-27 -- representation gap CLOSED for
-  cd82/sk48/sp80; cn04 residual; stage-2 graph_explore search next. Ladder: counts[GAP-4890]=fail ->
-  richer-scalar=fail -> RELATIONAL target-match=PASS 3/4. See UPDATE-2.)
+- status: building (GOAL-DETECTION gap CLOSED for cd82/sk48/sp80 via RELATIONAL target-match; but STAGE-2
+  shows it does NOT unlock deepening -- the binding wall is trajectory ENUMERATION, not goal-detection.
+  Ladder: counts[GAP-4890]=fail -> richer-scalar=fail -> RELATIONAL target-match=SEPARATES 3/4 -> stage-2
+  guidance=NEITHER arm banks L3. See UPDATE-3 [decisive negative] then UPDATE-2.)
+- UPDATE-3 2026-06-28 (STAGE-2 decisive: relational energy SEPARATES but does NOT GUIDE the search ->
+  enumeration wall): built scripts/experiments/arc_relational_goal_energy_stage2.py -- wires
+  induce_goal_energy_relational into graph_explore_solve_v2's goal_energy hook (energy induced live by
+  replaying the game's banked L1 self-discovery seed as the prefix; the relational offset is level-invariant
+  so an energy induced at level k detects level k+1's target), then runs energy-guided search vs a BFS
+  ablation (goal_energy=None), reproduction-gating both -- the goal-induction doctrine's mandatory control.
+  RESULT on all 3 separating games (results/arc_relational_goal_energy_stage2_{cd82,sk48,sp80}.json,
+  adversarial_verify clean 3/3): induce_fired=True (the relational energy SEPARATES, confirming Stage 1) but
+  NEITHER arm banks a new reproduction-gated level -- both energy-guided and BFS stall at L1 with 4000
+  expansions, traj_len=0, reproduced=False. Verdict on each: complete_stage2_neither_banks_new_level_*_
+  energy_L1_bfs_L1_search_wall_not_goal_energy. DECISIVE READ: separation is necessary but NOT sufficient --
+  ordering the frontier by a correct goal-energy does NOT let the search REACH the next level, because the
+  winning trajectory is never ENUMERATED into the frontier in the first place. The binding wall for within-
+  game deepening is the SAME trajectory-enumeration wall as L1 first-contact, NOT goal-detection or value-
+  prediction. This converges INDEPENDENTLY with the conductor's .452 A1 env-grounded search finding
+  (WALL_DEEPER_THAN_VALUE_PREDICTION). CAVEAT (honest, keeps this from over-claiming): Stage-2 isolated the
+  goal_energy lever WITHOUT the change-location action-pruning prior, so it is somewhat underpowered vs a
+  fully-instrumented search -- but the .452 A1 result (complete env-grounded search WITH action-pruning) ALSO
+  hit WALL_DEEPER, so the enumeration wall holds under the stronger setup too. CONSEQUENCE: the relational
+  goal-energy is a genuine GOAL-DETECTION / verifier contribution (survives the post-6/30 verifier-moat
+  pivot -- it is an oracle-distinct discriminator that separates win from near-win), but it is NOT the lever
+  that unlocks reproducible_total_levels growth. The deepening lever is whatever makes the winning trajectory
+  appear in the candidate pool (directed exploration / generation), which is the project-wide generation wall.
 - UPDATE-2 2026-06-27 (RELATIONAL target-match WORKS on 3/4): built induce_goal_energy_relational
   (arc_agi3_goal_induction.py) = translational self-similarity with a background-excluded induced mask
   (find offset where the win's non-bg content matches its own translate = canvas==target-shown-at-offset;
