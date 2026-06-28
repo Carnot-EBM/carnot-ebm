@@ -1,0 +1,317 @@
+{
+  "capstone_ready": true,
+  "change_value_gap_representation_invariant": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4892,
+      "fields_imported": [
+        "honest_verdict",
+        "fork_verdict",
+        "decision_need_value_accuracy_delta_median",
+        "decision_need_value_accuracy_delta_ci95",
+        "positive_control_non_degenerate",
+        "delta_on_truly_heldout_split",
+        "n_games_measured",
+        "engine_cell_recall_median",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4892_decision_need_targets_value_gap.json",
+      "sha256": "sha256:8104e5b8a16fb7d59bf98b459b2d5322d31a221df143c02f66a9764690e4d422",
+      "source": "A1"
+    },
+    {
+      "experiment_id": 4893,
+      "fields_imported": [
+        "honest_verdict",
+        "fork_verdict",
+        "action_prefix_value_accuracy_delta_median",
+        "action_prefix_value_accuracy_delta_ci95",
+        "positive_control_non_degenerate",
+        "delta_on_truly_heldout_split",
+        "ran_genuinely_live",
+        "n_games_measured",
+        "engine_cell_recall_median",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4893_action_prefix_latent_adapter.json",
+      "sha256": "sha256:9c2fff54149794603fea9a458af0d2d46721889417dd0c6e596b160a4675b732",
+      "source": "A1B"
+    },
+    {
+      "experiment_id": 4897,
+      "fields_imported": [
+        "honest_verdict",
+        "a1_source_fork_verdict",
+        "a1b_source_fork_verdict",
+        "a1_genuinely_diagnostic",
+        "a1b_ran_genuinely_live",
+        "a1_failure_reasons",
+        "a1b_failure_reasons",
+        "checks",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4897_value_gap_representation_audit.json",
+      "sha256": "sha256:03b5561963f900c468b72eb5e8b7ba947e4e1f357e7360580073f32634e9d014",
+      "source": "B1_AUDIT"
+    },
+    {
+      "experiment_id": 4894,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "registry_update",
+        "reproduction_gate",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4894_levelup_attempt.json",
+      "sha256": "sha256:9afdd0648af22c4e613df89b27a682eace161ae43c45d916e6c3cb4bb512c9b1",
+      "source": "A2_LEVELUP"
+    },
+    {
+      "experiment_id": 4895,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "verifier_checkpoint_refreshed",
+        "checkpoint_path",
+        "offline_reproduced",
+        "reproduced_levels",
+        "search_state_count",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4895_self_play_verifier_checkpoint.json",
+      "sha256": "sha256:58e74759eca9848cf4737a8cd158dea5e4a1bb9a513311da25434ec9cd0921a8",
+      "source": "A3_SELF_PLAY"
+    },
+    {
+      "experiment_id": 4898,
+      "fields_imported": [
+        "honest_verdict",
+        "submission_package_ready",
+        "submitted_to_leaderboard",
+        "operator_only",
+        "vram_estimate_gb",
+        "package_builds",
+        "agent_config_resolution",
+        "model_path_resolution",
+        "packaging_requirements_crosscheck",
+        "ready_package_regression_check",
+        "inference_substrate"
+      ],
+      "path": "results/experiment_4898_submission_package_harden.json",
+      "sha256": "sha256:6b13ee8bf1a66d52f37c762021429977c13ff27b9ae25f65e4a81ec04c1a0471",
+      "source": "B2_PACKAGE"
+    }
+  ],
+  "deadline_lever_scorecard": {
+    "a2_bank": {
+      "decision": "no_new_level_banked",
+      "experiment_id": 4894,
+      "new_levels_banked": 0,
+      "offline_reproduced": false,
+      "registry_authoritative_total": 68,
+      "registry_update_reason": "duplicate_depth",
+      "reproduced_levels": 0,
+      "reproducible_total_levels_after": 68,
+      "reproducible_total_levels_before": 68,
+      "source": "A2_LEVELUP",
+      "target_game": "dc22"
+    },
+    "a3_self_play": {
+      "checkpoint_path": "models/arc_verifier_sk48.json",
+      "decision": "checkpoint_refreshed",
+      "experiment_id": 4895,
+      "offline_reproduced": true,
+      "reproduced_levels": 2,
+      "search_state_count": 44,
+      "source": "A3_SELF_PLAY",
+      "target_game": "sk48",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4_fresh_live_rate": {
+      "experiment_id": 4896,
+      "reason": "flagged_adversarial",
+      "source": "A4_HELDOUT",
+      "status": "skipped_flagged_adversarial"
+    },
+    "b2_package": {
+      "agent_config_resolved": true,
+      "decision": "package_ready_operator_only",
+      "dry_build_ran": true,
+      "experiment_id": 4898,
+      "model_path_resolved": true,
+      "operator_only": true,
+      "package_builds": true,
+      "ready_package_regression_ok": true,
+      "requirements_ok": true,
+      "source": "B2_PACKAGE",
+      "submission_package_ready": true,
+      "submitted_to_leaderboard": false,
+      "vram_estimate_gb": 15.146
+    },
+    "deadline_deliverable": "current_scored_agent_0.08"
+  },
+  "duration_s": 0.401144,
+  "experiment": "experiment_4901_capstone_v451",
+  "experiment_id": 4901,
+  "field_principles": {
+    "change_value_gap_representation_invariant": {
+      "principle": "true iff BOTH A1 + A1b failed to move change-VALUE accuracy -> escalate to operator (deliverable = the 0.08 agent)."
+    },
+    "deadline_lever_scorecard": {
+      "principle": "A2 bank / A3 self-play / A4 fresh-live held-out first-win / B2 package -- the 6/30 readiness summary."
+    },
+    "flagged_upstreams_skipped": {
+      "principle": "lists any flagged_adversarial upstream excluded from aggregation (the fabrication gate)."
+    },
+    "fork_verdict_trusted": {
+      "principle": "true iff B1 confirmed A1 genuinely diagnostic AND (if A1b ran) A1b genuinely live; else the verdict is a non-test."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; capstone complete is complete_capstone_v451_<headline>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (0.0001s floor)."
+    },
+    "operator_escalation_note": {
+      "principle": "present iff representation-invariant -- the .452 redirect / operator decision the milestone surfaces."
+    },
+    "representation_fork_verdict": {
+      "principle": "the trusted A1 (+ A1b) fork verdict -- the milestone headline that redirects .452."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric from the registry (carried, not re-counted)."
+    }
+  },
+  "flagged_upstreams_skipped": [
+    {
+      "experiment_id": 4896,
+      "path": "results/experiment_4896_heldout_first_win_readiness.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:8336713aabd0277f6cf987228b450ac4cf7fa13987b18dd0341e9108bcf7861f",
+      "source": "A4_HELDOUT",
+      "summarizer_exit_code": 2
+    }
+  ],
+  "fork_verdict_trusted": true,
+  "honest_verdict": "complete_capstone_v451_representation_invariant_escalate_operator",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "operator_escalation_note": "A1 decision-need targets and A1b action-prefix latents both failed to move change-VALUE accuracy with non-degenerate controls. Under the 2026-06-30 deadline the competition deliverable remains the current scored agent (0.08); .452 should try a third representation class such as D's mapping or wait for operator redirect.",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "sha256": "sha256:1791f64fc57e3a00108b5c30e2bd700d704cd3d9f36fd820aff17384ac50a151",
+      "yaml_loadable": true
+    },
+    "spec_has_req_4901": true,
+    "summarizer": {
+      "path": "scripts/summarize_artifact.py",
+      "present": true
+    },
+    "upstream_artifacts": {
+      "A1": {
+        "path": "results/experiment_4892_decision_need_targets_value_gap.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A1B": {
+        "path": "results/experiment_4893_action_prefix_latent_adapter.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A2_LEVELUP": {
+        "path": "results/experiment_4894_levelup_attempt.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A3_SELF_PLAY": {
+        "path": "results/experiment_4895_self_play_verifier_checkpoint.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "A4_HELDOUT": {
+        "path": "results/experiment_4896_heldout_first_win_readiness.json",
+        "present": true,
+        "summarizer_exit_code": 2
+      },
+      "B1_AUDIT": {
+        "path": "results/experiment_4897_value_gap_representation_audit.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      },
+      "B2_PACKAGE": {
+        "path": "results/experiment_4898_submission_package_harden.json",
+        "present": true,
+        "summarizer_exit_code": 0
+      }
+    }
+  },
+  "random_seed": 20260628,
+  "representation_fork_verdict": {
+    "a1": {
+      "delta_ci95": [
+        -0.227708,
+        0.025266
+      ],
+      "delta_ci95_includes_zero": true,
+      "delta_median": -0.101866,
+      "delta_on_truly_heldout_split": true,
+      "engine_cell_recall_median": 0.727273,
+      "experiment_id": 4892,
+      "failed_to_move_change_value_accuracy": true,
+      "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+      "honest_verdict": "complete_decision_need_no_value_lift_VALUE_GAP_REPRESENTATION_INVARIANT",
+      "n_games_measured": 9,
+      "positive_control_non_degenerate": true,
+      "source": "A1",
+      "status": "ran"
+    },
+    "a1_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT",
+    "a1b": {
+      "delta_ci95": [
+        -0.134887,
+        0.025266
+      ],
+      "delta_ci95_includes_zero": true,
+      "delta_median": 0.0,
+      "delta_on_truly_heldout_split": true,
+      "engine_cell_recall_median": 0.3125,
+      "experiment_id": 4893,
+      "failed_to_move_change_value_accuracy": true,
+      "fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
+      "honest_verdict": "complete_action_prefix_latent_no_value_lift_representation_invariant_hard",
+      "n_games_measured": 9,
+      "positive_control_non_degenerate": true,
+      "source": "A1B",
+      "status": "ran"
+    },
+    "a1b_source_fork_verdict": "VALUE_GAP_REPRESENTATION_INVARIANT_HARD",
+    "b1_experiment_id": 4897,
+    "b1_honest_verdict": "complete_a1_a1b_audited",
+    "change_value_gap_representation_invariant": true,
+    "trust_failure_reasons": [],
+    "trust_gate": {
+      "a1_genuinely_diagnostic": true,
+      "a1b_ran_genuinely_live": true,
+      "a1b_required": true
+    },
+    "trusted": true,
+    "verdict": "representation_invariant_escalate_operator"
+  },
+  "reproducibility_checksum": "sha256:83aa5a5b76e77b83806c8eacbf04e766fca68d22d82500dca468c367383bcf7a",
+  "reproducible_total_levels": 68,
+  "result_path": "results/experiment_4901_capstone_v451.json",
+  "schema": "carnot.exp4901.capstone_v451.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4901",
+    "SCENARIO-CAPSTONE-4901",
+    "SCENARIO-CAPSTONE-4901-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4901-FIELD-PRINCIPLES"
+  ]
+}
