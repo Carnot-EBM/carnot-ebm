@@ -52748,3 +52748,110 @@ milestones:
       package). Skip any flagged_adversarial upstream.'
     deliverable: results/experiment_4912_capstone_v452.json
     result: OK (conductor)
+- id: 2026.06.453
+  title: 'FINAL ARC CLOSURE DIAGNOSTIC (not representation #5); pivot teed up. .452 proved the live first-win wall survives
+    FOUR world-model representations + env-grounded real-env-value search (A1 B1-trusted WALL_DEEPER_THAN_VALUE_PREDICTION
+    delta -0.04; A1b VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES). The decisive evidence: even reading change-VALUE free
+    from the env, 0/9 games assembled the winning prefix -> the wall is multi-step-prefix assembly. .453 A1 (HEADLINE) does
+    the causal-state-abstraction wall diagnostic (arXiv:2401.12497): CLASSIFY the minimal causal state variables behind each
+    failed first-win as OBSERVABLE-from-the-ARC-interface (a fixable representation gap) vs HIDDEN (representation-invariant
+    by construction) -- mechanistic closure, NOT representation #5, NOT a value-predicting table. Plus the sprint lanes (A2
+    level-up rotated, A3 self-play/FR-11, A4 CLEAN held-out go/no-go fixing the recurring flagged_adversarial, B2 final package
+    harden), 3 infra, 1 hardware (C), 1 SOTA that scaffolds the post-6/30 distributional-energy-verifier pivot. Deliverable
+    locked: ~0.05 agent + publishable FoVer paper.'
+  doc: openspec/change-proposals/research-roadmap-v453.md
+  completed: '2026-06-28'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4913-phase0
+    title: PHASE 0 (TRANSITION) -- archive .452 -> activate .453; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .452 close-state (A1 exp4903 WALL_DEEPER_THAN_VALUE_PREDICTION delta -0.04 B1-trusted; A1b exp4904
+      VALUE_GAP_REPRESENTATION_INVARIANT_4_CLASSES; capstone exp4912 closed the fork as a trusted honest negative "wall survives
+      four representations + env-grounding"; A2 m0r0 no-bank -> reproducible_total_levels stays 68; A3 vc33 checkpoint refreshed;
+      A4 0.05 held-out CI-lower-0 but flagged_adversarial 3rd milestone; B2 package ready 15.146GB operator-only; energy CONCLUDED;
+      deliverable locked = ~0.05 agent + FoVer paper paper_ready=true).
+    deliverable: results/experiment_4913_archive_452_activate_453.json
+    result: OK (conductor)
+  - id: exp4914-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- FINAL ARC CLOSURE DIAGNOSTIC: the causal-state-abstraction wall
+      diagnostic (arXiv:2401.12497 Causal Bisimulation Modeling, D''s priority-1). .452 proved (B1-trusted) the live first-win
+      wall survives FOUR representations + env-grounded real-env-value search; A1''s per-game data shows even free change-VALUE
+      reads + a working change-LOCATION prior migrate 0/9 games -> the wall is multi-step-prefix assembly. A1 does NOT propose
+      representation #5: over A1''s exact failed transitions it derives the MINIMAL causal state variables needed to predict
+      changed-cell value + progress-to-goal and CLASSIFIES each as OBSERVABLE-from-the-ARC-interface (a fixable representation
+      gap) vs HIDDEN (representation-invariant by construction). A solved-game POSITIVE CONTROL must classify observable.
+      The named fork is the mechanistic closure verdict that the FoVer paper''s ARC section reports.'
+    deliverable: results/experiment_4914_causal_abstraction_wall_diagnostic.json
+    result: OK (conductor)
+  - id: exp4915-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .452 m0r0 and .451 dc22 and .450 g50t and .449 s5i5 and .448 r11l; prefer a shallow L2 game with a grounded next-level
+      delta via recommend_approach + dead_ends -- sp80 L2->L3 / su15 L2->L3 / cn04 L2->L3 are the strong shallow-deepen candidates;
+      AVOID the hidden-state-bound ka59/wa30, the just-failed m0r0, and any recorded dead-end). offline_reproduced gated.
+    deliverable: results/experiment_4915_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4916-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop on a banked game with an existing checkpoint, ROTATED off .452 vc33 and .451 sk48 and .450 ls20 and .449 re86 (pick
+      another banked game that has a models/arc_verifier_<game>.json checkpoint -- e.g. cd82 / lf52 / sb26 / lp85 / ar25 /
+      bp35, DIFFERENT from A2''s target): verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4916_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4917-a4
+    title: 'PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- CLEAN held-out first-win readiness:
+      FIX the 3-milestone recurring flagged_adversarial (.450/.451/.452). Run the held-out readiness driver LIVE on the GPU-0
+      generator carrying FULL methodology (model_specs + random_seed + inference_substrate + null_delta_methodology_note +
+      positive_control_passed + the soft-budget-partial honest markers) so a genuine ~0.05 CI-lower-0 live null is COUNTABLE
+      (NOT flagged true_live_recheck=critical) for the operator''s 6/30 go/no-go. If it STILL flags, diagnose the exact summarize_artifact
+      / adversarial_verify rule that fires and document the minimal correct fix.'
+    deliverable: results/experiment_4917_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4918-b1
+    title: 'PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT of the A1 causal-abstraction diagnostic. Confirm the diagnostic
+      is HONEST before the capstone trusts its closure verdict: (a) it classifies variables from REAL failed transitions (not
+      fabricated), (b) it is NOT a decision-need / change-VALUE-predicting table in disguise, (c) every claimed OBSERVABLE
+      variable is actually readable from frame/env state, (d) the solved-game positive control classifies observable, (e)
+      verifier_is_oracle=false / planner-blind, (f) the numbers match the fork verdict. Emits a1_diagnostic_trustworthy for
+      the capstone.'
+    deliverable: results/experiment_4918_causal_abstraction_audit.json
+    result: OK (conductor)
+  - id: exp4919-b2
+    title: PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- submission-package FINAL pre-deadline (6/30) harden + operator submission
+      checklist. The package is READY (15.146GB < 16GB, frozen Qwen3.5-9B-MTP iGPU stack, operator-only). Re-confirm it builds
+      + loads + the frozen stack resolves + the agent config resolves, run the ready-package regression check, and produce
+      the operator submission checklist. submits=false (operator-only external publication).
+    deliverable: results/experiment_4919_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4920-b3
+    title: PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- the .452 retro top-3 actions) -- ship a STANDALONE retro detector-wire
+      results/-mtime FALLBACK module + a write-time duration_s/inference_substrate/compute_bound STAMPING helper + an audit.
+      The milestone-scoped timing detector has false-zeroed (0/0/0/null) for ~79 milestones (.363->.452); two .452 arms (exp4905,
+      exp4906) shipped duration_s=None. Deliver standalone modules + an audit + a wiring PROPOSAL; do NOT modify scripts/research_conductor.py
+      (operator wires the conductor).
+    deliverable: results/experiment_4920_retro_timing_and_stamping_fix.json
+    result: OK (conductor)
+  - id: exp4921-c
+    title: PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only continuity check (graduated terminal; stays in the rotation). SSH-reachability
+      precondition ONLY (NEVER a host SD-card / block-device precondition); always WRITE a deliverable (blocked artifact if
+      unreachable).
+    deliverable: results/experiment_4921_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4922-d
+    title: PHASE D (SOTA-INGESTION; POST-SPRINT PIVOT SCAFFOLD) -- minimally SCAFFOLD the post-6/30 distributional-energy-verifier
+      pivot (arXiv:2605.18871, post-sprint priority-1). .452 D (exp4911) already MAPPED the .453 frontier; .453 D does NOT
+      re-map -- it builds the offline FoVer->MuSR distributional-energy-verifier-vs-self-consistency-vs-LLM-judge harness
+      SKELETON + a tiny-slice DRY-RUN, so the loop executes the verifier-moat pivot the instant the sprint retires 6/30. Scaffold
+      only; majority-ARC still governs through 6/30. verifier_is_oracle=false; self_consistency_saturated=false (the moat
+      domain).
+    deliverable: results/experiment_4922_distributional_energy_verifier_scaffold.json
+    result: OK (conductor)
+  - id: exp4923-capstone
+    title: 'PHASE E (CAPSTONE .453) -- aggregate the scorecard. HEADLINE = A1''s causal-abstraction CLOSURE verdict (trusted
+      ONLY if B1 confirmed a1_diagnostic_trustworthy: real transitions, not-a-value-table, observable claims verified readable,
+      positive control observable, oracle-distinct/planner-blind, numbers-match-fork). If WALL_IS_OBSERVABLE_VARIABLE_GAP
+      -> name the fixable lever for the post-sprint handoff. If WALL_IS_HIDDEN_STATE -> ARC closure: the wall is representation-invariant
+      by construction; deliverable = the ~0.05 agent + the publishable FoVer paper. Report the scored deadline lanes (A2 bank,
+      A3 self-play, A4 CLEAN go/no-go flag_resolved, B2 package) + the post-6/30 distributional-energy-verifier pivot (D scaffold).
+      Skip any flagged_adversarial upstream.'
+    deliverable: results/experiment_4923_capstone_v453.json
+    result: OK (conductor)
