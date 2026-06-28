@@ -1501,40 +1501,20 @@ games:
   reproducibility: reproduced
   levels_reproduced: 2
   mechanic_class: config_support_clearance
-  win_condition: >-
-    L1+L2 support-clearance config: controlled support clicks shift paired wall
-    segments until the active colored piece no longer has a blocking wall aligned
-    with its target-color sprite; the executable ielczunthe predicate then fires
-    next_level on replay.
-  action_model: >-
-    ACTION6 click-only on display coordinates derived from the camera transform.
-    L1 clicks lower_click (61,33) three times. L2 clicks the support controls at
-    (1,25) twice and (1,45) five times.
-  solver: >-
-    GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py +
-    scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2
-    gate.
-  reproduce: >-
-    Exp4654 results/experiment_4654_levelup_selfplay.json re-gated
-    results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2,
-    banked +1 over the current L1 registry row, checksum 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436.
-  learned_verifier_checkpoint: models/arc_verifier_vc33.json trained by scripts/arc_loop_solve.py
-    on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred
-    target dead-end notes.
+  win_condition: 'L1+L2 support-clearance config: controlled support clicks shift paired wall segments until the active colored piece no longer has a blocking wall aligned with its target-color sprite; the executable ielczunthe predicate then fires next_level on replay.'
+  action_model: ACTION6 click-only on display coordinates derived from the camera transform. L1 clicks lower_click (61,33) three times. L2 clicks the support controls at (1,25) twice and (1,45) five times.
+  solver: GameAdapter _vc33 in python/carnot/agentic/arc_game_adapters.py + scripts/arc_loop_solve.py; results/arc_loop_solve_vc33.json 10-label L2 gate.
+  reproduce: Exp4654 results/experiment_4654_levelup_selfplay.json re-gated results/arc_loop_solve_vc33.json offline_reproduced=True, reached_level=2, banked +1 over the current L1 registry row, checksum 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436.
+  learned_verifier_checkpoint: models/arc_verifier_vc33.json trained by scripts/arc_loop_solve.py on the vc33 L1+L2 positive steps-to-go trace and the recorded preferred target dead-end notes.
   gotchas:
-  - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls
-    at display y=25 and y=45 map to grid y=12 and y=22.
-  - >-
-    The L2 delta is not symmetric with L1: only the middle-lower support twice
-    and the bottom support five times reaches the support-clearance predicate.
-  - The learned verifier is a routing/checkpoint artifact only; the executable
-    reproduction gate remains the oracle-distinct authority.
+  - vc33 ACTION6 expects display coordinates; the L2 left-edge support controls at display y=25 and y=45 map to grid y=12 and y=22.
+  - 'The L2 delta is not symmetric with L1: only the middle-lower support twice and the bottom support five times reaches the support-clearance predicate.'
+  - The learned verifier is a routing/checkpoint artifact only; the executable reproduction gate remains the oracle-distinct authority.
   dead_ends:
-  - bp35, re86, and sb26 remain preferred hard targets but have no grounded
-    next-level adapter in this milestone.
+  - bp35, re86, and sb26 remain preferred hard targets but have no grounded next-level adapter in this milestone.
   - m0r0 and cn04 standing-loop L3 probes repeated their prior L2 gates.
-  - ft09, ls20, sk48, dc22, ka59, wa30, cd82, sp80, and su15 are skipped by the
-    operator's rotation exclusions or no-grounded-L3-delta rule.
+  - ft09, ls20, sk48, dc22, ka59, wa30, cd82, sp80, and su15 are skipped by the operator's rotation exclusions or no-grounded-L3-delta rule.
+  - 'Exp4948 vc33 no-bank no_grounded_l3_delta: complete_vc33_no_new_level_residual_no_grounded_l3_delta.'
   latest_exp4654_levelup_selfplay:
     artifact: results/experiment_4654_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_vc33.json
@@ -1543,6 +1523,15 @@ games:
     new_levels_banked: 1
     verifier_checkpoint: models/arc_verifier_vc33.json
     reproducibility_checksum: 341f207a35acea1f1fe37ecfd47b671e045d3e4e893d357a5a4faf0567059436
+  latest_exp4948_levelup_attempt:
+    artifact: results/experiment_4948_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_vc33.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: ed33631efac8e242fdca278ede5688eb5ab946c0111af6466f86f8d9c9359bf5
 - game: g50t
   reproducibility: reproduced
   levels_reproduced: 2
