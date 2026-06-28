@@ -16,54 +16,50 @@ OK: all solver-like ARC modules are reachable from the live agent path (42 modul
 
 ## Hostile LLM review
 
-All evidence is in. Every one of the 22 artifacts reports a level **≤ the depth the registry already records**, and all are stamped `development_proxy` (the hand-`GameAdapter` offline twin), not `live_agent_self_discovery`. Here is the audit.
+## TL;DR — VERDICT: FAIL on the guarded principle. 0 / 22 recent "solves" show the live agent self-discovering anything. All 22 are `development_proxy` — offline dev-twin (`arc_loop_solve.py`) runs riding **hand-registered per-game `GameAdapter`s** (the explicit anti-pattern in my mandate). ~13 of the 22 bank **no new registry level at all** (stale or self-play re-solves). Most damning: multiple conductor prompts (commits `dfaa09b01`, `b106fdc23`, `29a251fd6`, `65fe8add7`, `96081aaa3`…) **explicitly demanded `solve_provenance=live_agent_self_discovery` and got `development_proxy` every single time.** With the deadline 2026-06-30 (2 days out), there is **zero recent evidence** the *scored* agent (`arc_competition_agent.py` / E3AgentPolicy) discovers a hidden game on its own.
 
----
+Reachability lint is green (42 modules in the live closure) — so nothing is mechanically OFF_PATH. That is exactly why this is dangerous: the drift is **inside the allowed `development_proxy` lane**, where the orphan-lint can't see it.
 
-## TL;DR
+### Per-artifact verdicts
 
-**VERDICT: 22/22 DUPLICATE — zero live self-discovery advances this window.** None are fresh outer-loop-RE *violations* (no `read_game_source` / `offline_ground_truth_bfs` / `hand_calibrated_per_game` inputs declared, all honestly stamped `development_proxy`, reachability pre-pass clean at exit 0). But not one banks a new level — every artifact re-verifies an already-recorded level via the standing offline loop — and **not a single artifact in the last 7 days is `live_agent_self_discovery`.** The deliverable (the live agent solving a fresh game from its own attempts) is unrepresented; the corpus is 100% dev-twin re-snapshots.
+Verdicts inferred from registry depth (`ops/arc_solve_registry.yaml`, `reproducible_total_levels=68`), artifact `reached_level`, mtimes, and the conductor commit skip-lists. Every row is `development_proxy` via a hand-built adapter → **none is SELF_DISCOVERY_ADVANCE**.
 
-## Per-artifact
-
-Registry depth from `ops/arc_solve_registry.yaml`; artifact level from each `results/arc_loop_solve_*.json`. All `solve_provenance: development_proxy`, `mode: standing_arc_loop_offline_no_quota`, `outer_loop_inputs: []`.
-
-| Artifact | Game | Art L | Reg L | Verdict | Evidence |
+| game | art L | reg L | verdict | evidence | action |
 |---|---|---|---|---|---|
-| arc_loop_solve_lp85 | lp85 | 4 | **5** | DUPLICATE (stale) | Below registry; registry: "prior arc_loop_solve_lp85.json remains the L4 gate" — this IS the gate snapshot |
-| arc_loop_solve_tu93 | tu93 | 4 | **5** | DUPLICATE (stale) | Below registry depth (5) |
-| arc_loop_solve_tr87 | tr87 | 6 | 6 | DUPLICATE | `verifier_src: hand_verifier_cold_start`; 511 states → re-verify of banked L6 |
-| arc_loop_solve_ar25 | ar25 | 3 | 3 | DUPLICATE | = registry |
-| arc_loop_solve_ft09 | ft09 | 3 | 3 | DUPLICATE | = registry |
-| arc_loop_solve_r11l | r11l | 2 | 2 | DUPLICATE | = registry (Exp4862 already banked L2) |
-| arc_loop_solve_ls20 | ls20 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_s5i5 | s5i5 | 2 | 2 | DUPLICATE | = registry (Exp4873) |
-| arc_loop_solve_cd82 | cd82 | 2 | 2 | DUPLICATE | = registry (Exp4525) |
-| arc_loop_solve_dc22 | dc22 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_vc33 | vc33 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_g50t | g50t | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_sp80 | sp80 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_su15 | su15 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_sk48 | sk48 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_m0r0 | m0r0 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_cn04 | cn04 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_lf52 | lf52 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_bp35 | bp35 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_re86 | re86 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_sb26 | sb26 | 2 | 2 | DUPLICATE | = registry |
-| arc_loop_solve_ka59 | ka59 | 1 | 1 | DUPLICATE | = registry; `hazard_pruner model_fitted: false` (no deaths) → plain re-solve |
+| lp85 | 4 | **5** | **DUPLICATE** | Artifact is the superseded L4 gate; registry already at L5 (Exp4372). Banks nothing. | Stop re-emitting; it's below the registry. |
+| tu93 | 4 | **5** | **DUPLICATE** | Same — stale L4 gate, registry L5. | Drop from "recent solves." |
+| tr87 | 6 | 6 | **DUPLICATE** | 06-23T17:52 batch re-solve at flat L6. | — |
+| cd82 | 2 | 2 | **DUPLICATE** | 06-23T17:52 batch; L3 "no grounded delta," re-solve at L2. | — |
+| sp80 | 2 | 2 | **DUPLICATE** | 06-23T17:52 batch re-solve, flat. | — |
+| su15 | 2 | 2 | **DUPLICATE** | 06-23T17:52 batch re-solve, flat. | — |
+| ls20 | 2 | 2 | **DUPLICATE** | `.451` A3 *self-play* re-solve of already-banked L2 (commit `973698fe9`). | Self-play ≠ new capability; label as checkpoint-training, not a solve. |
+| sk48 | 2 | 2 | **DUPLICATE** | `.451` A3 self-play re-solve (commit `92e6f5266`). | Same. |
+| re86 | 2 | 2 | **DUPLICATE** | A3 self-play re-runs `.449/.450`; reg flat. | Same. |
+| ar25 | 3 | 3 | **DUPLICATE** | 06-25T16:16 batch with cn04/m0r0; reg flat (banked `.435`). | — |
+| m0r0 | 2 | 2 | **DUPLICATE** | 06-25T16:16 batch re-solve, flat. | — |
+| cn04 | 2 | 2 | **DUPLICATE** | 06-25T16:16 batch re-solve, flat. | — |
+| ka59 | 1 | 1 | **DUPLICATE** | Stuck at L1 (hidden-state-bound, repeatedly skipped); 06-26 re-solve, `model_fitted:false`. | Stop re-attempting; it's a known dead-end. |
+| r11l | 2 | 2 | **OUTER_LOOP_RE** | Fresh +1 this week (Exp4862) but via hand adapter `_r11l` + stale-checkpoint workaround. Honestly stamped dev-proxy — **not** live self-discovery. | Re-run on the E3 *scored* path with no adapter to test transfer. |
+| s5i5 | 2 | 2 | **OUTER_LOOP_RE** | Exp4873 **newly hand-registered `_s5i5`** to bank L2. Per-game RE the live agent can't reproduce. | Same. |
+| g50t | 2 | 2 | **OUTER_LOOP_RE** | `.450` A2 L1→L2 via hand config-rule adapter. | Same. |
+| dc22 | 2 | 2 | **OUTER_LOOP_RE** | Banked `.430` via `_dc22`; hand-adapter dev-proxy. | — |
+| vc33 | 2 | 2 | **OUTER_LOOP_RE** | Banked `.429` via hand adapter. | — |
+| ft09 | 3 | 3 | **OUTER_LOOP_RE** | Banked `.428` via hand adapter. | — |
+| bp35 | 2 | 2 | **OUTER_LOOP_RE** | Recent A2 first-contact (06-26) via hand adapter; dev-proxy stamp. | — |
+| sb26 | 2 | 2 | **OUTER_LOOP_RE** | A2 first-contact `.447/.448` via hand adapter (06-26). | — |
+| lf52 | 2 | 2 | **OUTER_LOOP_RE** | A2 first-contact `.438` via hand adapter. | — |
 
-**Recommended action (all 22):** These are the standing loop's offline reproduction-gate snapshots — they are *supposed* to re-verify, so they are not fabrication and not a contract breach. But they must **not** be counted as new-capability or milestone progress. The conductor/capstone should source new-level claims from `experiment_*_levelup_attempt.json` (which re-gate these files), never from the count of `arc_loop_solve_*.json`. Flag lp85 (L4) and tu93 (L4) as **stale** — they sit below the registry's banked L5 and should be refreshed or ignored, not read as the current depth.
+**Tally: SELF_DISCOVERY_ADVANCE 0 · OUTER_LOOP_RE 9 · DUPLICATE 13 · OFF_PATH 0.**
 
-## Pattern watch — drift toward dev-proxy, away from the deliverable
+*(Caveat: DUPLICATE vs. fresh-bank splits are inferred from mtimes + commit skip-lists, not per-experiment dates. The structural verdict — 0 self-discovery, all hand-adapter dev-proxy — is certain regardless of how the 9/13 split lands.)*
 
-1. **Zero `live_agent_self_discovery` in the window.** All 22 are `development_proxy` = `arc_loop_solve.py` + a hand-registered `GameAdapter`. Per the discipline that is *allowed but is not proof the live agent self-discovers*. A 7-day window with 22 solve artifacts and **none** from the scored `E3AgentPolicy` self-discovery path is itself the drift signal — the loop is re-snapshotting the dev twin, not exercising the deliverable.
+### Pattern watch — three drifts, all pointing the same way
 
-2. **100% duplicates = churn.** No artifact increments `reproducible_total_levels` (registry: 68 levels / 24 games). This is exactly the north-star §1 anti-pattern: re-producing existing artifacts without moving the headline. The registry itself concedes (line 1823) that `reproducible_total_levels` "is a dev proxy, not the score" and that these replays "score ~0 on hidden."
+1. **The provenance contract is being satisfied honestly *in label* but violated *in substance*.** Conductor prompts repeatedly spec `live_agent_self_discovery`; the loop delivers `development_proxy` every time and stamps it truthfully. The honest stamp is doing its job (no fabrication flag) — but it's also masking that **the north-star capability has not advanced in any of these 22 runs.** A green Layer-1 is being read as "we're banking levels"; what's actually happening is the outer loop hand-RE's each game and the dev-twin replays it.
 
-3. **The hand-`GameAdapter` substrate is the soft anti-pattern, and it's where the real reproduced corpus lives.** Win-conditions are written in the games' internal obfuscated tokens (`roefwu`/`flkdtg`/`rjlbuycveu`) and reference env internals (`env._game.level_index`) — i.e. reverse-engineered with privileged access, then frozen into `_r11l`/`_ls20`/`_s5i5`/`_cd82`/… adapters. This stays inside the `development_proxy` allowance, but it is not the live agent figuring a game out from its own attempts. Every banked level being adapter-backed is the thing to watch.
+2. **The generic, live-reachable primitives transfer to nothing.** Every persisted operator in the registry (exp4644, 4656, 4668, 4680, 4692, 4704, 4620, 4608, 4632…) reports cross-game transfer = `0.0` / "no new executable level banked" / "candidate generation remains the residual bottleneck." So the count of 68 levels is carried **entirely by per-game hand-built adapters**, while the part that would let the *live* agent crack a *hidden* game is a documented, repeated null. This is the precise failure the principle exists to catch.
 
-4. **The genuine live self-discovery program is stalled, which is *why* the window is all proxies.** Every `experiment_46xx/47xx_primitive_persist_transfer` row (graded-goal-energy, world-model-trust, PersistentAEM, DAgger, PoE-World, controllable-novelty, object-centric, energy-QD) reports `offline_reproduced_new_level: false` and null solve-rate/first-win transfer across `.429–.436`. Candidate generation remains the wall. So the loop banks dev-proxy re-runs while the live generator produces no new level — the two facts are the same story.
+3. **"Self-play EVERY milestone" is manufacturing DUPLICATEs.** The A3 standing-loop rule re-solves already-banked levels to train checkpoints, and the conductor counts those runs among "recent solves." Half this batch (13/22) banks no new level. Re-solving lp85/tu93 **below** their registry depth (L4 vs L5) is the tell that the harness isn't even checking its own registry before claiming a solve.
 
-**Bottom line for the operator:** No hard outer-loop-RE violation to act on in these artifacts, but treat this window as **no progress on the deliverable**. The honest scoreboard is "0 new live self-discovery levels; 0 new reproduced levels; 22 reproduction-gate re-snapshots." Push the next milestone's level-up slot onto the *live* `E3` path (or a genuinely unsolved game's first-contact), and stop letting `arc_loop_solve_*.json` re-snapshots read as forward motion.
+**Bottom line for the operator:** before 2026-06-30, at least one solve must come from `arc_competition_agent.py` (E3AgentPolicy) — or `arc_loop_solve` in adapter-free explore/induce mode — on a game with **no hand-registered `GameAdapter`**, stamped `live_agent_self_discovery` and surviving the reproduction gate. Until that exists, the project has a strong *offline development harness* and **zero recent proof of the actual deliverable.**
 
