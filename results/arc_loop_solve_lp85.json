@@ -1,19 +1,499 @@
 {
   "game": "lp85",
-  "reached_level": 4,
-  "moves": 54,
-  "states_expanded": 836,
-  "verifier_src": "learned_checkpoint",
+  "reached_level": 3,
+  "moves": 29,
+  "states_expanded": 650,
+  "verifier_src": "learned_verifier_live_checkpoint",
+  "hazard_prune": true,
+  "hazard_pruner_stats": {
+    "observed": 0,
+    "pruned": 0,
+    "n_deaths": 0,
+    "lethal_mode": null,
+    "trust": 0.0,
+    "specificity": 0.0,
+    "model_fitted": false
+  },
   "offline_reproduced": true,
-  "reproduced_levels": 4,
+  "reproduced_levels": 3,
   "learned_verifier_checkpoint": "models/arc_verifier_lp85.json",
+  "selected_generic_operators": [
+    {
+      "operator": "approach_dispatcher_operator",
+      "derived_from_games": [
+        "exp4592_generation_completeness_wiring"
+      ],
+      "purpose": "Execute the mechanic-class route by selecting the generated candidate for the routed toolkit approach, while falling back honestly when no routed candidate exists.",
+      "selector_tags": [
+        "approach_dispatch",
+        "mechanic_router",
+        "candidate_generation",
+        "graph_explore",
+        "goal_distance",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "value_head_bridge_fix_operator",
+      "derived_from_games": [
+        "exp4616_offline_live_bridge_disambiguation",
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Apply the offline-to-live value-head bridge fix by scoring only bounded decision points, caching repeated state scores, and reporting first-win or efficiency lift before any solve claim.",
+      "selector_tags": [
+        "value_head",
+        "bridge_fix",
+        "decision_point",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "cheap_value_routing_cost_fix_operator",
+      "derived_from_games": [
+        "exp4652_value_routing_cost_fix_live"
+      ],
+      "purpose": "Reuse the productionized cheap value-routing substrate: v2+frame-delta features, bounded lazy value-head scoring, and frame-hash caching before reporting solve/first-win/action-efficiency lift.",
+      "selector_tags": [
+        "value_head",
+        "cheap_feature",
+        "value_routing",
+        "cost_fix",
+        "candidate_ranking",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "dagger_off_path_data_collection_operator",
+      "derived_from_games": [
+        "exp4665_dagger_distribution_shift_value_routing"
+      ],
+      "purpose": "Collect and relabel live-frontier off-path rows against reproduced action prefixes so DAgger-lite value heads train on the search distribution rather than winning-path states only.",
+      "selector_tags": [
+        "dagger",
+        "off_path",
+        "search_distribution",
+        "value_head",
+        "graph_explore",
+        "live_path",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "programmatic_expert_trust_weighting_operator",
+      "derived_from_games": [
+        "exp4677_poe_world_factored_subgoal_planner"
+      ],
+      "purpose": "Rank generated programmatic object experts by held-out transition trust, keep only replay-stable factors for product-model planning, and report overfit-prefix residuals before any solve claim.",
+      "selector_tags": [
+        "programmatic_expert",
+        "trust_weighting",
+        "factored_planner",
+        "candidate_generation",
+        "world_model",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "controllable_novelty_embedding_operator",
+      "derived_from_games": [
+        "exp4688_controllable_novelty_proposal_policy_live"
+      ],
+      "purpose": "Embed controllable action-effect deltas for intrinsic proposal novelty, reject cosmetic/raw-frame novelty when the controllability gate is active, and report transfer value before any solve claim.",
+      "selector_tags": [
+        "controllable_novelty",
+        "directed_exploration",
+        "intrinsic_proposal",
+        "candidate_generation",
+        "action_effect",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "per_level_reinduction_operator",
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "purpose": "Detect a level-up, clear stale level-local induction state, re-induce the next level predicate, and route the frontier with depth-primary goal bias.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "deepening",
+        "goal_bias",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "llm_proposer_reinduction_operator",
+      "derived_from_games": [
+        "lp85",
+        "m0r0",
+        "sp80",
+        "vc33"
+      ],
+      "purpose": "Detect a level-up, request GOAL+DYNAMICS+plan candidates from an LLM proposer, rank them by trust energy, and fall back to DSL/verifier re-induction when live proposal is unavailable.",
+      "selector_tags": [
+        "reinduction",
+        "level_up",
+        "llm_proposer",
+        "bounded_refinement",
+        "trust_energy",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "env_adaptive_resolve_operator",
+      "derived_from_games": [
+        "sc25",
+        "exp4580_live_submission_gap_close"
+      ],
+      "purpose": "Re-derive replayable action coordinates from the current environment instead of trusting frozen live/offline pixel coordinates, then report drift recovery before any solve claim.",
+      "selector_tags": [
+        "env_adaptive",
+        "coordinate_discovery",
+        "drift_recovery",
+        "replay",
+        "click",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "verifier_router_candidate_ranking_operator",
+      "derived_from_games": [
+        "exp4556_cached_generic_transfer"
+      ],
+      "purpose": "Rank compatible cached action/plan candidates by verifier score with stable tie-breaking and report ordering gain before any solve claim.",
+      "selector_tags": [
+        "verifier_router",
+        "candidate_ranking",
+        "trust_energy",
+        "graph_explore",
+        "config_toggle",
+        "program_editor",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "world_model_trust_energy_gate_operator",
+      "derived_from_games": [
+        "exp4604_world_model_trust_energy"
+      ],
+      "purpose": "Rank executable world-model candidates by change-weighted held-out trust energy, reject identity/no-op degeneracy, and report value against the legacy binary exact-match gate before solve claims.",
+      "selector_tags": [
+        "world_model",
+        "trust_energy",
+        "hidden_state",
+        "candidate_ranking",
+        "verifier",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "persistent_action_effect_memory_operator",
+      "derived_from_games": [
+        "exp4568_clickability_action_effect_predictor",
+        "exp4629_graduate_action_effect_predictor_live"
+      ],
+      "purpose": "Rank action candidates with a leave-one-game cross-game memory of cached frame/action effects or the graduated live action-effect scorer, preserving original-order tie-breaking and reporting actions-to-first-levelup deltas before solve claims.",
+      "selector_tags": [
+        "action_effect",
+        "clickability",
+        "frame_change",
+        "live_action_pruner",
+        "persistent_aem_plus_optional_cnn",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "online_warm_action_effect_controller_operator",
+      "derived_from_games": [
+        "exp4726_online_action_learning_driver_valid_test",
+        "exp4727_active_probe_disambiguation"
+      ],
+      "purpose": "Reuse the .435 online-warm action-effect controller: combine leave-one-game PersistentAEM evidence with optional online-warm frame-change scores, keep the executable win-check outside ranking, and report first-win/efficiency transfer before any solve claim.",
+      "selector_tags": [
+        "online_action_learning",
+        "online_warm",
+        "action_effect",
+        "frame_change",
+        "candidate_ranking",
+        "graph_explore",
+        "click",
+        "keyboard",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "graded_goal_energy_search_heuristic_operator",
+      "derived_from_games": [
+        "exp4020_goal_induction_separation",
+        "exp4640_goal_energy_generation_live"
+      ],
+      "purpose": "Rank generated frontier candidates by a depth-preserving convex blend of navigation energy and Exp4020 graded goal-satisfaction energy, then report solve/first-win/action-efficiency lift before any solve claim.",
+      "selector_tags": [
+        "goal_energy",
+        "graded_goal_satisfaction",
+        "search_heuristic",
+        "graph_explore",
+        "candidate_ranking",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "energy_fitness_qd_generator_operator",
+      "derived_from_games": [
+        "exp4738_energy_fitness_qd_generation_valid_test"
+      ],
+      "purpose": "Reuse the .436 energy-fitness QD generator: keep naive candidates available, score generated candidates with oracle-distinct lower-is-better energy, preserve diverse behavior descriptors, and report coverage or first-win transfer before any solve claim.",
+      "selector_tags": [
+        "energy_qd",
+        "map_elites",
+        "candidate_generation",
+        "energy_fitness",
+        "graph_explore",
+        "click",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "object_centric_representation_builder_operator",
+      "derived_from_games": [
+        "exp4700_object_centric_perception_proposal_live",
+        "exp4701_amortized_exploration_prior_go_explore_live"
+      ],
+      "purpose": "Build connected-component object slots, relational gap keypoints, and proposal-side coverage diagnostics before value ranking or frontier selection, without consulting the executable win-check.",
+      "selector_tags": [
+        "object_centric",
+        "perception",
+        "representation_builder",
+        "candidate_generation",
+        "graph_explore",
+        "transfer"
+      ]
+    },
+    {
+      "operator": "object_centric_digest",
+      "derived_from_games": [
+        "g50t",
+        "lp85",
+        "tn36",
+        "ka59"
+      ],
+      "purpose": "Connected-component object summary for routing, grounding, and active data.",
+      "selector_tags": [
+        "object",
+        "digest",
+        "program_editor",
+        "world_model"
+      ]
+    },
+    {
+      "operator": "active_data_collection",
+      "derived_from_games": [
+        "ar25",
+        "ka59",
+        "ft09",
+        "sc25"
+      ],
+      "purpose": "Balanced action/object coverage plan for offline transition collection.",
+      "selector_tags": [
+        "active_data",
+        "world_model",
+        "e3",
+        "transition"
+      ]
+    },
+    {
+      "operator": "graph_astar_action_cost",
+      "derived_from_games": [
+        "tu93",
+        "lp85",
+        "cd82",
+        "sp80",
+        "cn04",
+        "m0r0",
+        "sk48",
+        "su15"
+      ],
+      "purpose": "A* frontier priority: standing path cost plus verifier/action-cost heuristic.",
+      "selector_tags": [
+        "graph_explore",
+        "astar",
+        "action_cost",
+        "keyboard",
+        "click"
+      ]
+    }
+  ],
   "reproduction_gate": {
     "game": "lp85",
-    "reached_level": 4,
-    "claimed_level": 4,
+    "reached_level": 3,
+    "claimed_level": 3,
     "reproduced": true,
     "mode": "offline_reproduction_gate_no_quota"
   },
+  "solution_labels": [
+    "{\"x\": 2, \"y\": 30}",
+    "{\"x\": 2, \"y\": 30}",
+    "{\"x\": 2, \"y\": 30}",
+    "{\"x\": 2, \"y\": 30}",
+    "{\"x\": 2, \"y\": 30}",
+    "{\"x\": 38, \"y\": 16}",
+    "{\"x\": 47, \"y\": 34}",
+    "{\"x\": 38, \"y\": 16}",
+    "{\"x\": 38, \"y\": 16}",
+    "{\"x\": 38, \"y\": 16}",
+    "{\"x\": 47, \"y\": 34}",
+    "{\"x\": 47, \"y\": 34}",
+    "{\"x\": 47, \"y\": 34}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 22, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}",
+    "{\"x\": 34, \"y\": 40}"
+  ],
+  "solution": [
+    {
+      "x": 2,
+      "y": 30
+    },
+    {
+      "x": 2,
+      "y": 30
+    },
+    {
+      "x": 2,
+      "y": 30
+    },
+    {
+      "x": 2,
+      "y": 30
+    },
+    {
+      "x": 2,
+      "y": 30
+    },
+    {
+      "x": 38,
+      "y": 16
+    },
+    {
+      "x": 47,
+      "y": 34
+    },
+    {
+      "x": 38,
+      "y": 16
+    },
+    {
+      "x": 38,
+      "y": 16
+    },
+    {
+      "x": 38,
+      "y": 16
+    },
+    {
+      "x": 47,
+      "y": 34
+    },
+    {
+      "x": 47,
+      "y": 34
+    },
+    {
+      "x": 47,
+      "y": 34
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 22,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    },
+    {
+      "x": 34,
+      "y": 40
+    }
+  ],
   "solve_provenance": "development_proxy",
   "mode": "standing_arc_loop_offline_no_quota"
 }
