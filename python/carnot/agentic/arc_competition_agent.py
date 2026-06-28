@@ -2371,6 +2371,23 @@ class E3AgentPolicy:
 
     def _world_model_candidates(self, engine, is_done) -> list[WorldModelCandidate]:
         candidates = [WorldModelCandidate("loaded_world_model.py", engine, is_done)]
+        # PoE-World (arXiv:2505.10819), OFF by default (CARNOT_ARC_POE_WORLD=1). Adds a weighted
+        # product-of-experts engine as an extra candidate so select_trusted_world_model can rank it
+        # against the single induced engine by held-out predictive fitness (oracle-distinct). Distinct
+        # from the nulled max-vote ProductWorldModel (exp4749): weighted-consensus combination + fitted/
+        # pruned weights. Wrapped in try/except so it can never break the live induction path.
+        if os.environ.get("CARNOT_ARC_POE_WORLD") == "1":
+            try:
+                from carnot.agentic import arc_poe_world_model as poe
+
+                active = self._active_transitions()
+                if len(active) >= 4:
+                    split = max(2, int(len(active) * 0.6))
+                    model = poe.build_poe_world_model(active[:split], active[split:] or active[:split])
+                    if model.diagnostics_.get("n_kept", 0) > 0:
+                        candidates.append(WorldModelCandidate("poe_world", model.engine, is_done))
+            except Exception:
+                pass
         provider = getattr(self.proposer, "world_model_candidates", None)
         if provider is None:
             provider = getattr(self.proposer, "candidate_engines", None)
