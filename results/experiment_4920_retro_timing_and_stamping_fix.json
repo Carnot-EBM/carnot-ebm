@@ -1,0 +1,281 @@
+{
+  "duration_s": 0.118362,
+  "experiment": "experiment_4920_retro_timing_and_stamping_fix",
+  "experiment_id": 4920,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success_retro_timing_mtime_fallback_and_stamping_shipped."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads retro + arm mtimes; 0.0001s floor)."
+    },
+    "mtime_fallback_module_path": {
+      "principle": "the standalone module path (operator wires it into the conductor's retro prompt-assembly)."
+    },
+    "mtime_fallback_window": {
+      "principle": "the .452 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} reconstructed from results/ mtimes -- the verifiable fix for the ~79-milestone false-zero."
+    },
+    "preconditions_checked": {
+      "principle": "records retro + arm-artifact presence; a missing input emits blocked_."
+    },
+    "research_conductor_modified": {
+      "principle": "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
+    },
+    "stamping_audit_missing_duration": {
+      "principle": "the list of .452 arms missing duration_s (>=exp4905, exp4906) -- closes the disk-archaeology gap."
+    },
+    "stamping_helper_path": {
+      "principle": "the write-time duration_s/inference_substrate/compute_bound stamping helper."
+    },
+    "wiring_proposal_path": {
+      "principle": "the proposed conductor call site (operator wires; the experiment does NOT edit research_conductor.py)."
+    }
+  },
+  "honest_verdict": "success_retro_timing_mtime_fallback_and_stamping_shipped",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.06.452",
+  "mtime_fallback_module_path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
+  "mtime_fallback_window": {
+    "artifact_paths": [
+      "results/experiment_4902_archive_451_activate_452.json",
+      "results/experiment_4903_env_grounded_location_pruned_search.json",
+      "results/experiment_4904_latent_action_interface.json",
+      "results/experiment_4905_levelup_attempt.json",
+      "results/experiment_4906_self_play_verifier_checkpoint.json",
+      "results/experiment_4907_heldout_first_win_readiness.json",
+      "results/experiment_4908_env_grounded_search_audit.json",
+      "results/experiment_4909_submission_package_harden.json",
+      "results/experiment_4910_kv260_continuity.json",
+      "results/experiment_4911_sota_ingestion_v453_frontier.json",
+      "results/experiment_4912_capstone_v452.json"
+    ],
+    "compute_bound_count": 3,
+    "milestone": "2026.06.452",
+    "n_arms": 11,
+    "wall_minutes": 226.05,
+    "window_end": "2026-06-28T09:22:05Z",
+    "window_start": "2026-06-28T05:36:02Z"
+  },
+  "preconditions_checked": {
+    "arm_artifacts": [
+      {
+        "path": "results/experiment_4902_archive_451_activate_452.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4903_env_grounded_location_pruned_search.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4904_latent_action_interface.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4905_levelup_attempt.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4906_self_play_verifier_checkpoint.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4907_heldout_first_win_readiness.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4908_env_grounded_search_audit.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4909_submission_package_harden.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4910_kv260_continuity.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4911_sota_ingestion_v453_frontier.json",
+        "present": true
+      },
+      {
+        "path": "results/experiment_4912_capstone_v452.json",
+        "present": true
+      }
+    ],
+    "missing_arm_artifacts": [],
+    "ok": true,
+    "retro_artifact": "results/operational_retro_2026_06_452.json",
+    "retro_present": true
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "6a06c3b6382e65ffac8825d56a24ddcc8f2d3e96809772c2bf56c7efd14798f5",
+  "research_conductor_after_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_before_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_modified": false,
+  "research_conductor_path": "scripts/research_conductor.py",
+  "result_path": "results/experiment_4920_retro_timing_and_stamping_fix.json",
+  "schema": "carnot.exp4920.retro_timing_and_stamping_fix.v1",
+  "spec_refs": [
+    "REQ-REPORT-4920",
+    "SCENARIO-REPORT-4920",
+    "SCENARIO-REPORT-4920-STAMPING-AUDIT",
+    "SCENARIO-REPORT-4920-BLOCKED-PRECONDITION"
+  ],
+  "stamping_audit": {
+    "missing_any": [
+      {
+        "experiment_id": 4902,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4902_archive_451_activate_452.json"
+      },
+      {
+        "experiment_id": 4903,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4903_env_grounded_location_pruned_search.json"
+      },
+      {
+        "experiment_id": 4904,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4904_latent_action_interface.json"
+      },
+      {
+        "experiment_id": 4905,
+        "missing_fields": [
+          "duration_s",
+          "compute_bound"
+        ],
+        "path": "results/experiment_4905_levelup_attempt.json"
+      },
+      {
+        "experiment_id": 4906,
+        "missing_fields": [
+          "duration_s",
+          "compute_bound"
+        ],
+        "path": "results/experiment_4906_self_play_verifier_checkpoint.json"
+      },
+      {
+        "experiment_id": 4907,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4907_heldout_first_win_readiness.json"
+      },
+      {
+        "experiment_id": 4908,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4908_env_grounded_search_audit.json"
+      },
+      {
+        "experiment_id": 4909,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4909_submission_package_harden.json"
+      },
+      {
+        "experiment_id": 4910,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4910_kv260_continuity.json"
+      },
+      {
+        "experiment_id": 4911,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4911_sota_ingestion_v453_frontier.json"
+      },
+      {
+        "experiment_id": 4912,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4912_capstone_v452.json"
+      }
+    ],
+    "missing_by_field": {
+      "compute_bound": [
+        {
+          "experiment_id": 4902,
+          "path": "results/experiment_4902_archive_451_activate_452.json"
+        },
+        {
+          "experiment_id": 4903,
+          "path": "results/experiment_4903_env_grounded_location_pruned_search.json"
+        },
+        {
+          "experiment_id": 4904,
+          "path": "results/experiment_4904_latent_action_interface.json"
+        },
+        {
+          "experiment_id": 4905,
+          "path": "results/experiment_4905_levelup_attempt.json"
+        },
+        {
+          "experiment_id": 4906,
+          "path": "results/experiment_4906_self_play_verifier_checkpoint.json"
+        },
+        {
+          "experiment_id": 4907,
+          "path": "results/experiment_4907_heldout_first_win_readiness.json"
+        },
+        {
+          "experiment_id": 4908,
+          "path": "results/experiment_4908_env_grounded_search_audit.json"
+        },
+        {
+          "experiment_id": 4909,
+          "path": "results/experiment_4909_submission_package_harden.json"
+        },
+        {
+          "experiment_id": 4910,
+          "path": "results/experiment_4910_kv260_continuity.json"
+        },
+        {
+          "experiment_id": 4911,
+          "path": "results/experiment_4911_sota_ingestion_v453_frontier.json"
+        },
+        {
+          "experiment_id": 4912,
+          "path": "results/experiment_4912_capstone_v452.json"
+        }
+      ],
+      "duration_s": [
+        {
+          "experiment_id": 4905,
+          "path": "results/experiment_4905_levelup_attempt.json"
+        },
+        {
+          "experiment_id": 4906,
+          "path": "results/experiment_4906_self_play_verifier_checkpoint.json"
+        }
+      ],
+      "inference_substrate": []
+    },
+    "scanned_count": 11
+  },
+  "stamping_audit_missing_duration": [
+    {
+      "experiment_id": 4905,
+      "path": "results/experiment_4905_levelup_attempt.json"
+    },
+    {
+      "experiment_id": 4906,
+      "path": "results/experiment_4906_self_play_verifier_checkpoint.json"
+    }
+  ],
+  "stamping_helper_path": "python/carnot/reporting/runtime_stamping.py",
+  "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
+  "wiring_proposal_written": true
+}
