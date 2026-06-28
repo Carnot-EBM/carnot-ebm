@@ -12636,6 +12636,80 @@ Then it writes `blocked_a1_artifact_missing`, marks every trust check false,
 records the missing path, and emits an untrusted artifact without inventing
 diagnostic evidence.
 
+### REQ-ARC-WMTE-4933: MATM Similarity-Keyed Within-Game Retrieval
+
+Experiment 4933 SHALL add a flag-gated coarse state-descriptor index to the
+live `StepwiseExplorer` navigation graph. The submitted default SHALL remain
+exact-frame-hash navigation. When the flag is enabled, `StepwiseExplorer` SHALL
+quantize `cross_game_features_v2(frame)` into a deterministic bucket, index only
+states observed within the current hidden-game rollout, and allow
+`_shortest_path` to return an observed action sub-sequence from a similar
+bucketed state only after routing the candidate prefix through the existing
+oracle-distinct value/goal/world-model-verifier checks. The retrieved prefix
+SHALL be treated as a navigation candidate, not as an environment oracle or a
+cross-game memory.
+
+Experiment 4933 SHALL write
+`results/experiment_4933_matm_similarity_retrieval_efficiency.json` with
+principle-annotated fields for `honest_verdict`, `verifier_is_oracle`,
+`forward_walk_hit_rate_delta`, `actions_to_first_levelup_delta`,
+`reached_level_regression`, `submitted_parity_test_green`,
+`flag_eligible_to_default_on`, `live_path_reachable`,
+`moves_reproducible_total_levels`, `post_sprint_pivot_gate_noted`,
+`arxiv_ids_cited`, `inference_substrate`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`. The artifact SHALL compare the
+flagged similarity retrieval configuration against the submitted exact-hash
+baseline on `tu93`, `lp85`, `sp80`, `cn04`, and `m0r0`. The gate SHALL pass only
+when forward-walk hit rate is strictly higher, actions-to-first-level-up drops
+by at least one on at least two games, reached levels do not regress, the
+submitted parity test is green, and lazy value routing remains in budget.
+Otherwise the artifact SHALL retire the lever with an honest null.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a landed efficiency lever is success_matm_similarity_retrieval_action_efficiency_up; a null is complete_matm_similarity_retrieval_no_efficiency_gain_retired."
+- `verifier_is_oracle`: principle "false -- the retrieved prefix is scored by the verifier router, NOT the env oracle (oracle-distinct; passes check_circular_moat_overclaim)."
+- `forward_walk_hit_rate_delta`: principle "per-game forward_walk_hit_rate vs the SUBMITTED exact-hash baseline -- the retrieval-quality signal (strictly up to PASS)."
+- `actions_to_first_levelup_delta`: principle "per-game actions-to-first-levelup vs baseline -- the squared-scored efficiency metric (down >=1 on >=2 games to PASS)."
+- `reached_level_regression`: principle "must be ZERO -- an efficiency lever may not regress any reproduced level."
+- `submitted_parity_test_green`: principle "test_arc_submitted_agent_parity.py green -- the flag does not break the submitted agent."
+- `flag_eligible_to_default_on`: principle "true only if the full gate passes; otherwise the lever RETIRES (retire_if_same_verdict)."
+- `live_path_reachable`: principle "true -- the index lives in the live StepwiseExplorer (arc_orphan_solver_lint passes), reachable by E3AgentPolicy."
+- `moves_reproducible_total_levels`: principle "false (expected) -- this is action-efficiency; it moves reproducible_total_levels only if a retrieved sub-sequence banks a strictly new level."
+- `post_sprint_pivot_gate_noted`: principle "the distributional-energy-verifier validation gate (arXiv:2605.18871) noted for the post-6/30 handoff -- NOT started here."
+- `arxiv_ids_cited`: principle "2606.19911 (MATM) + 2603.10600 (Trajectory-Informed Memory) + 2605.18871 (post-sprint pivot) -- no fabrication."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor); else the honest replay/scorecard substrate."
+- `preconditions_checked`: principle "records arcade/metaharness/fixture/generator checks; a missing resource emits blocked_."
+- `random_seed`: principle "determinism for the LSH bucketing + the A/B replay."
+- `reproducibility_checksum`: principle "content hash of (games, baseline config, similarity-index config) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4933-LIVE-WIRING
+
+Given `StepwiseExplorer` has exact forward edges and a current state whose
+coarse `cross_game_features_v2` bucket matches a prior observed state
+When similarity retrieval is enabled and exact `_shortest_path` fails
+Then `_shortest_path` may return the prior state's observed action sub-sequence
+only if the value/goal/world-model-verifier router accepts it, and
+`navigation_diagnostics()` reports similarity hits separately from exact
+hash hits.
+
+#### SCENARIO-ARC-WMTE-4933-FLAG-OFF-PARITY
+
+Given the submitted agent is constructed without the experiment flag
+When `test_arc_submitted_agent_parity.py` inspects the live E3 defaults
+Then similarity retrieval remains disabled, exact-hash navigation behavior is
+unchanged, and the submitted config is not eligible to default the flag on
+unless the full Experiment 4933 efficiency gate passes.
+
+#### SCENARIO-ARC-WMTE-4933-ARTIFACT-GATE
+
+Given the reproduced-game replay/scorecard resources are available
+When Experiment 4933 builds its artifact
+Then it records per-game forward-walk hit-rate deltas,
+actions-to-first-level-up deltas, reached-level regression status, arXiv IDs
+`2606.19911`, `2603.10600`, and `2605.18871`, and the post-6/30
+distributional-energy-verifier validation gate without starting that pivot.
+
 ## Implementation Status (REQ-ARC-WMTE-4908)
 
 | Requirement | Implementation | Tests |

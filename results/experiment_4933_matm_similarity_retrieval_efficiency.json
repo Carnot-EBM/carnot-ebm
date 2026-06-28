@@ -1,0 +1,276 @@
+{
+  "actions_to_first_levelup_delta": {
+    "cn04": 0,
+    "lp85": 0,
+    "m0r0": 0,
+    "sp80": 0,
+    "tu93": 0
+  },
+  "arxiv_ids_cited": [
+    "2606.19911",
+    "2603.10600",
+    "2605.18871"
+  ],
+  "baseline_config": {
+    "matm_similarity_retrieval_enabled": false,
+    "policy": "submitted_exact_hash_stepwise_explorer"
+  },
+  "baseline_rows": [
+    {
+      "actions_replayed": 64,
+      "actions_to_first_levelup": 18,
+      "forward_walk_hit_rate": 0.0,
+      "game": "tu93",
+      "reached_level": 4,
+      "replay_artifact": "results/arc_loop_solve_tu93.json"
+    },
+    {
+      "actions_replayed": 54,
+      "actions_to_first_levelup": 5,
+      "forward_walk_hit_rate": 0.0,
+      "game": "lp85",
+      "reached_level": 4,
+      "replay_artifact": "results/arc_explore_trajectory_lp85_l4.json"
+    },
+    {
+      "actions_replayed": 4,
+      "actions_to_first_levelup": 4,
+      "forward_walk_hit_rate": 0.0,
+      "game": "sp80",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_sp80.json"
+    },
+    {
+      "actions_replayed": 13,
+      "actions_to_first_levelup": 13,
+      "forward_walk_hit_rate": 0.0,
+      "game": "cn04",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_cn04.json"
+    },
+    {
+      "actions_replayed": 15,
+      "actions_to_first_levelup": 15,
+      "forward_walk_hit_rate": 0.0,
+      "game": "m0r0",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_m0r0.json"
+    }
+  ],
+  "duration_s": 9.810115,
+  "experiment": "experiment_4933_matm_similarity_retrieval_efficiency",
+  "field_principles": {
+    "actions_to_first_levelup_delta": {
+      "principle": "per-game actions-to-first-levelup vs baseline -- the squared-scored efficiency metric (down >=1 on >=2 games to PASS)."
+    },
+    "arxiv_ids_cited": {
+      "principle": "2606.19911 (MATM) + 2603.10600 (Trajectory-Informed Memory) + 2605.18871 (post-sprint pivot) -- no fabrication."
+    },
+    "baseline_config": {
+      "principle": "submitted exact-hash baseline configuration."
+    },
+    "baseline_rows": {
+      "principle": "per-game exact-hash baseline measurements."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration for artifact creation."
+    },
+    "experiment": {
+      "principle": "names the Exp4933 deliverable."
+    },
+    "flag_eligible_to_default_on": {
+      "principle": "true only if the full gate passes; otherwise the lever RETIRES (retire_if_same_verdict)."
+    },
+    "forward_walk_hit_rate_delta": {
+      "principle": "per-game forward_walk_hit_rate vs the SUBMITTED exact-hash baseline -- the retrieval-quality signal (strictly up to PASS)."
+    },
+    "games": {
+      "principle": "the reproduced games in the requested A/B slice."
+    },
+    "gate": {
+      "principle": "the falsifiable pass/fail disposition criteria."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a landed efficiency lever is success_matm_similarity_retrieval_action_efficiency_up; a null is complete_matm_similarity_retrieval_no_efficiency_gain_retired."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference if induction runs (60s floor); else the honest replay/scorecard substrate."
+    },
+    "lazy_value_in_budget": {
+      "principle": "lazy_value_top_k budget guard."
+    },
+    "live_path_reachable": {
+      "principle": "true -- the index lives in the live StepwiseExplorer (arc_orphan_solver_lint passes), reachable by E3AgentPolicy."
+    },
+    "moves_reproducible_total_levels": {
+      "principle": "false (expected) -- this is action-efficiency; it moves reproducible_total_levels only if a retrieved sub-sequence banks a strictly new level."
+    },
+    "post_sprint_pivot_gate_noted": {
+      "principle": "the distributional-energy-verifier validation gate (arXiv:2605.18871) noted for the post-6/30 handoff -- NOT started here."
+    },
+    "preconditions_checked": {
+      "principle": "records arcade/metaharness/fixture/generator checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the LSH bucketing + the A/B replay."
+    },
+    "reached_level_regression": {
+      "principle": "must be ZERO -- an efficiency lever may not regress any reproduced level."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (games, baseline config, similarity-index config) so a replication catches drift."
+    },
+    "retire_if_same_verdict": {
+      "principle": "true -- a null retires the lever."
+    },
+    "schema": {
+      "principle": "stable schema tag for downstream audit."
+    },
+    "scorecard_mode": {
+      "principle": "offline scorecard replay, no live submission."
+    },
+    "similarity_index_config": {
+      "principle": "flagged coarse/LSH retrieval configuration."
+    },
+    "similarity_rows": {
+      "principle": "per-game flagged similarity measurements."
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors covered by the module and tests."
+    },
+    "submitted_parity_test": {
+      "principle": "raw parity-test command result."
+    },
+    "submitted_parity_test_green": {
+      "principle": "test_arc_submitted_agent_parity.py green -- the flag does not break the submitted agent."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the retrieved prefix is scored by the verifier router, NOT the env oracle (oracle-distinct; passes check_circular_moat_overclaim)."
+    }
+  },
+  "flag_eligible_to_default_on": false,
+  "forward_walk_hit_rate_delta": {
+    "cn04": 0.0,
+    "lp85": 0.0,
+    "m0r0": 0.0,
+    "sp80": 0.0,
+    "tu93": 0.0
+  },
+  "games": [
+    "tu93",
+    "lp85",
+    "sp80",
+    "cn04",
+    "m0r0"
+  ],
+  "gate": {
+    "action_improvement_games": [],
+    "actions_down_ge_1_on_ge_2_games": false,
+    "disposition": "retire_if_same_verdict",
+    "forward_walk_hit_rate_strictly_up": false,
+    "lazy_value_in_budget": true,
+    "live_path_reachable": true,
+    "passed": false,
+    "submitted_parity_test_green": true,
+    "zero_reached_level_regression": true
+  },
+  "honest_verdict": "complete_matm_similarity_retrieval_no_efficiency_gain_retired",
+  "inference_substrate": "honest_replay_scorecard_substrate",
+  "lazy_value_in_budget": true,
+  "live_path_reachable": true,
+  "moves_reproducible_total_levels": false,
+  "post_sprint_pivot_gate_noted": {
+    "arxiv_id": "2605.18871",
+    "noted": true,
+    "started": false,
+    "validation_gate": "distributional-energy-verifier beats self-consistency with CI95 excluding zero, no model-identity shortcut, oracle-distinct"
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "arcade_importable": true,
+    "blocked_resource": "",
+    "codex_md_read": true,
+    "fixtures_present": {
+      "cn04": true,
+      "lp85": true,
+      "m0r0": true,
+      "sp80": true,
+      "tu93": true
+    },
+    "generator_checked": "not_required_no_induction",
+    "generator_required": false,
+    "metaharness_present": true,
+    "ok": true
+  },
+  "random_seed": 20260628,
+  "reached_level_regression": false,
+  "reproducibility_checksum": "sha256:d21751d3451ef19a1b14bf96be37660328b83f086fa00fe479875ea20742a3e3",
+  "retire_if_same_verdict": true,
+  "schema": "carnot.arc_matm_similarity_retrieval_4933.v1",
+  "scorecard_mode": "offline_replay_no_quota_no_submission",
+  "similarity_index_config": {
+    "bucket": "quantized_cross_game_features_v2",
+    "bucket_width": 0.25,
+    "matm_similarity_retrieval_enabled": true,
+    "max_bucket_candidates": 8,
+    "policy": "submitted_stepwise_explorer_plus_flagged_similarity_index",
+    "within_game_only": true
+  },
+  "similarity_rows": [
+    {
+      "actions_replayed": 64,
+      "actions_to_first_levelup": 18,
+      "forward_walk_hit_rate": 0.0,
+      "game": "tu93",
+      "reached_level": 4,
+      "replay_artifact": "results/arc_loop_solve_tu93.json"
+    },
+    {
+      "actions_replayed": 54,
+      "actions_to_first_levelup": 5,
+      "forward_walk_hit_rate": 0.0,
+      "game": "lp85",
+      "reached_level": 4,
+      "replay_artifact": "results/arc_explore_trajectory_lp85_l4.json"
+    },
+    {
+      "actions_replayed": 4,
+      "actions_to_first_levelup": 4,
+      "forward_walk_hit_rate": 0.0,
+      "game": "sp80",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_sp80.json"
+    },
+    {
+      "actions_replayed": 13,
+      "actions_to_first_levelup": 13,
+      "forward_walk_hit_rate": 0.0,
+      "game": "cn04",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_cn04.json"
+    },
+    {
+      "actions_replayed": 15,
+      "actions_to_first_levelup": 15,
+      "forward_walk_hit_rate": 0.0,
+      "game": "m0r0",
+      "reached_level": 1,
+      "replay_artifact": "results/arc_explore_trajectory_m0r0.json"
+    }
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-4933",
+    "SCENARIO-ARC-WMTE-4933-LIVE-WIRING",
+    "SCENARIO-ARC-WMTE-4933-FLAG-OFF-PARITY",
+    "SCENARIO-ARC-WMTE-4933-ARTIFACT-GATE"
+  ],
+  "submitted_parity_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [12 items]\n\n............                                                             [100%]\n============================== 12 passed in 7.44s ==============================\n"
+  },
+  "submitted_parity_test_green": true,
+  "verifier_is_oracle": false
+}
