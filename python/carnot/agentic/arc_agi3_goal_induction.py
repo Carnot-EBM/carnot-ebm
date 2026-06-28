@@ -293,3 +293,67 @@ def induce_goal_energy_relational(
         if all(_energy_at(g, dy, dx, mask) > 0.0 for g in non_win_grids):
             return lambda g, _dy=dy, _dx=dx, _m=mask: _energy_at(g, _dy, _dx, _m)
     return None
+
+
+def induce_relational_target_region(
+    win_grid: Optional[np.ndarray],
+    non_win_grids: List[np.ndarray],
+    *,
+    min_mask: int = 6,
+) -> Optional[np.ndarray]:
+    """GAP-4891 follow-on (2026-06-28): the full-grid BOOLEAN REGION the relational goal cares about, for
+    use as a search MOVE-PRUNER target (not just a frontier-ordering energy).
+
+    induce_goal_energy_relational returns an energy closure but hides WHICH cells matter. The deepening
+    enumeration wall needs that region: prune actions that never touch it (smaller branching -> deeper
+    reachable search). This reuses the SAME offset search + strict-separation selection, then maps the
+    winning self-similarity mask back to FULL-GRID coordinates -- marking BOTH the CANVAS cells and their
+    TARGET counterparts at the offset (changing either side affects the canvas==target match). The offset
+    is the level-invariant screen layout, so a region induced at level k transfers to k+1.
+
+    Returns an HxW bool array (True = a cell whose change is relevant to reaching the goal), or None when
+    no offset separates (same honest 'not a simple translate' signal as the energy variant)."""
+    if win_grid is None or not non_win_grids:
+        return None
+    arr = np.asarray(win_grid)
+    if arr.ndim != 2:
+        return None
+    h, w = arr.shape
+    vals, counts = np.unique(arr, return_counts=True)
+    bg = vals[int(counts.argmax())]
+    max_off = max(1, min(h, w) // 2)
+    candidates: list[tuple[int, int, int, np.ndarray]] = []
+    for dy in range(-max_off, max_off + 1):
+        for dx in range(-max_off, max_off + 1):
+            if dy == 0 and dx == 0:
+                continue
+            a, b = _overlap_pair(arr, dy, dx)
+            if a.size < min_mask:
+                continue
+            mask = (a == b) & (a != bg)
+            if int(mask.sum()) >= min_mask:
+                candidates.append((int(mask.sum()), dy, dx, mask))
+    candidates.sort(key=lambda t: t[0], reverse=True)
+
+    def _energy_at(g: np.ndarray, dy: int, dx: int, mask: np.ndarray) -> float:
+        ga, gb = _overlap_pair(np.asarray(g), dy, dx)
+        if ga.shape != mask.shape:
+            return float(int(mask.sum()))
+        return float((((ga != gb) & mask)).sum())
+
+    for ms, dy, dx, mask in candidates:
+        if not all(_energy_at(g, dy, dx, mask) > 0.0 for g in non_win_grids):
+            continue
+        # map the overlap-frame mask back to full-grid coords. _overlap_pair takes
+        # a = arr[y0a:.., x0a:..] with y0a=max(0,-dy), x0a=max(0,-dx); a[i,j]=arr[y0a+i, x0a+j],
+        # and the TARGET cell is arr[y0a+i+dy, x0a+j+dx]. Mark both sides.
+        y0a, x0a = max(0, -dy), max(0, -dx)
+        region = np.zeros((h, w), dtype=bool)
+        for i, j in np.argwhere(mask):
+            cy, cx = y0a + int(i), x0a + int(j)
+            ty, tx = cy + dy, cx + dx
+            region[cy, cx] = True
+            if 0 <= ty < h and 0 <= tx < w:
+                region[ty, tx] = True
+        return region
+    return None

@@ -1,0 +1,170 @@
+{
+  "experiment": "arc_relational_mask_deepen_ab",
+  "schema": "carnot.arc_relational_mask_deepen_ab.v1",
+  "honest_verdict": "complete_relational_mask_deepen_pruner_not_exercised_no_region_or_no_prunable_class_inconclusive",
+  "question": "does relational-target-region action-pruning let the deepening search bank a deeper level (or reach the same level with fewer states, no regression) -- the missing branch-pruning half of GAP-4891 Stage-2?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "verifier_is_oracle": false,
+  "games": [
+    "sp80",
+    "su15",
+    "cd82",
+    "tu93"
+  ],
+  "target_level": 3,
+  "per_game": [
+    {
+      "game": "sp80",
+      "baseline": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 33,
+        "pruner_stats": null
+      },
+      "mask": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 33,
+        "pruner_stats": {
+          "observed": 33,
+          "pruned": 0,
+          "region_known": true,
+          "region_source": "online_levelup",
+          "region_cells": 764,
+          "action_classes": 5,
+          "pruned_classes": 0,
+          "verifier_is_oracle": false
+        }
+      },
+      "base_reproduced_level": 2,
+      "mask_reproduced_level": 2,
+      "unlocks_deeper_level": false,
+      "regression": false,
+      "more_efficient_same_level": false,
+      "mask_pruned_edges": 0,
+      "mask_region_known": true
+    },
+    {
+      "game": "su15",
+      "baseline": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 21,
+        "pruner_stats": null
+      },
+      "mask": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 21,
+        "pruner_stats": {
+          "observed": 21,
+          "pruned": 0,
+          "region_known": true,
+          "region_source": "online_levelup",
+          "region_cells": 725,
+          "action_classes": 21,
+          "pruned_classes": 0,
+          "verifier_is_oracle": false
+        }
+      },
+      "base_reproduced_level": 2,
+      "mask_reproduced_level": 2,
+      "unlocks_deeper_level": false,
+      "regression": false,
+      "more_efficient_same_level": false,
+      "mask_pruned_edges": 0,
+      "mask_region_known": true
+    },
+    {
+      "game": "cd82",
+      "baseline": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 20,
+        "pruner_stats": null
+      },
+      "mask": {
+        "reached_level": 2,
+        "reproduced_levels": 2,
+        "offline_reproduced": true,
+        "states_expanded": 20,
+        "pruner_stats": {
+          "observed": 20,
+          "pruned": 0,
+          "region_known": true,
+          "region_source": "online_levelup",
+          "region_cells": 814,
+          "action_classes": 6,
+          "pruned_classes": 0,
+          "verifier_is_oracle": false
+        }
+      },
+      "base_reproduced_level": 2,
+      "mask_reproduced_level": 2,
+      "unlocks_deeper_level": false,
+      "regression": false,
+      "more_efficient_same_level": false,
+      "mask_pruned_edges": 0,
+      "mask_region_known": true
+    },
+    {
+      "game": "tu93",
+      "baseline": {
+        "reached_level": 3,
+        "reproduced_levels": 3,
+        "offline_reproduced": true,
+        "states_expanded": 2947,
+        "pruner_stats": null
+      },
+      "mask": {
+        "reached_level": 3,
+        "reproduced_levels": 3,
+        "offline_reproduced": true,
+        "states_expanded": 2947,
+        "pruner_stats": {
+          "observed": 2947,
+          "pruned": 0,
+          "region_known": true,
+          "region_source": "online_levelup",
+          "region_cells": 244,
+          "action_classes": 4,
+          "pruned_classes": 0,
+          "verifier_is_oracle": false
+        }
+      },
+      "base_reproduced_level": 3,
+      "mask_reproduced_level": 3,
+      "unlocks_deeper_level": false,
+      "regression": false,
+      "more_efficient_same_level": false,
+      "mask_pruned_edges": 0,
+      "mask_region_known": true
+    }
+  ],
+  "any_unlock": false,
+  "any_regression": false,
+  "efficiency_win_games": 0,
+  "pruner_exercised": false,
+  "solve_provenance": "live_agent_self_discovery",
+  "used_env_source": false,
+  "read_game_source": false,
+  "offline_ground_truth_bfs": false,
+  "hand_calibrated_per_game": false,
+  "prior_failures": [
+    {
+      "experiment_id": "GAP-4891-stage2",
+      "verdict": "relational_goal_energy_separates_but_does_not_guide_search_past_enumeration_wall",
+      "addressed_by": "Stage-2 isolated the goal-energy frontier-ORDERING without branch PRUNING; this adds the missing half -- relational-target-region action-pruning (learned change-LOCATION, the learnable axis) to shrink the branching factor. Decisive = deeper reproduced level or fewer states at no regression.",
+      "retire_if_same_verdict": false
+    }
+  ],
+  "interpretation": "unlocks=True -> branch-pruning makes a deeper level reachable: a real multi-level win. more_efficient=True -> same level, fewer states: a multi-level efficiency win (RHAE). no_lift WITH pruner_exercised -> the deepening wall is deeper than branching factor (the winning prefix is not merely buried in branches; it is not in the enumerated space) -> tightens the generation-wall closure. REGRESSION -> a false prune broke a solve (unsafe).",
+  "random_seed": 20260628,
+  "duration_s": 188.05,
+  "reproducibility_checksum": "sha256:cc01075abec82e8719a11a66c148b1492f8fce71d67b221b5c556416b82a60d4"
+}
