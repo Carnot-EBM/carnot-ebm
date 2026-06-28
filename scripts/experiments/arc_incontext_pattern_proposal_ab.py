@@ -246,24 +246,48 @@ def main() -> int:
     src_obf = {"source_patterns": len(_src), "semantically_empty": _empty,
                "obfuscated": bool(_src and _empty / len(_src) >= 0.5)}
 
+    # "powered" once M>=5 samples/arm AND n>=15 LOO games (denoised + adequate paired n) -- below that the
+    # CIs are too wide to call a null vs ambiguity (the earlier n=8/M=3 run was genuinely underpowered).
+    powered = bool(M >= 5 and len(scored) >= 15)
     if not scored:
         verdict = "complete_incontext_pattern_no_scorable_games_inconclusive"
     elif exemplars_help:
         verdict = (f"success_incontext_patterns_shift_opening_toward_winner_leading_{with_mean}_vs_{wo_mean}"
                    f"_delta_{point}_ci_excl_0_lcs_delta_{lcs_point}_proceed_to_live_solve")
+    elif powered:
+        # POWERED NULL on the behavior-derived (RE'd semantic) patterns the operator asked to isolate:
+        # neither degeneracy-robust metric's CI excludes 0 (leading {point} CI{ci}; lcs {lcs_point} CI{lcs_ci}).
+        # Source-code half tested SEPARATELY remains obfuscation-blocked (disclosure only; excluded here).
+        verdict = (f"complete_incontext_patterns_no_reliable_opening_shift_POWERED_NULL_n{len(scored)}_M{M}"
+                   f"_leading_delta_{point}_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
+                   f"_behavior_patterns_only_src_obfuscation_blocked_{src_obf['obfuscated']}")
     else:
         # honest: ambiguous + underpowered + the source-code half is obfuscation-blocked. NOT a clean null.
         verdict = (f"complete_incontext_patterns_AMBIGUOUS_underpowered_n{len(scored)}_leading_delta_{point}"
                    f"_ci_{ci[0]}_{ci[1]}_lcs_delta_{lcs_point}_ci_{lcs_ci[0]}_{lcs_ci[1]}"
                    f"_pos_delta_{pos_point}_src_obfuscated_{src_obf['obfuscated']}")
 
+    # INFERENCE-SUBSTRATE DISCIPLINE: the per-game CHECKPOINTS are the live_llm_inference units (each ~47s
+    # of real GGUF calls, written once across the chunked runs); THIS headline artifact AGGREGATES those 19
+    # upstream checkpoint files (reads JSON, computes paired deltas + bootstrap CIs). So its substrate is
+    # aggregation_from_upstream_artifacts and its duration_s is the aggregation wall-clock, NOT model load.
+    upstream = []
+    for cp in sorted(ckpt_dir.glob("*.json")):
+        try:
+            upstream.append({"checkpoint": cp.name,
+                             "sha256": hashlib.sha256(cp.read_bytes()).hexdigest()})
+        except Exception:
+            continue
     art = {
         "experiment": "arc_incontext_pattern_proposal_ab",
         "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
         "honest_verdict": verdict,
         "question": ("do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed "
                      "opening prefix toward the banked winning prefix vs a no-exemplar control?"),
-        "inference_substrate": "live_llm_inference",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_note": ("per-game CHECKPOINTS = live_llm_inference (real GGUF proposer calls, "
+                                     "~47s/game across chunked runs); this headline artifact aggregates them."),
+        "cited_upstream_artifacts": upstream,
         "verifier_is_oracle": False,
         "n_games": len(scored), "K": K, "samples_per_arm": M,
         "primary_metric": "leading_match_execution_relevant",
@@ -280,21 +304,31 @@ def main() -> int:
         "per_game": per_game,
         "model_specs": {"generator": "unsloth/Qwen3.5-9B-MTP-GGUF", "kv_quant": "q8_0", "mtp": True},
         "solve_provenance": "development_proxy",
-        "used_env_source": True, "read_game_source": True,
+        # used_env_source: we render the held-out game's OBSERVABLE first frame (the live agent sees it too).
+        # read_game_source: the measured A/B arms EXCLUDED source code (include_source_code=False); source is
+        # read ONLY to compute the obfuscation-disclosure stat, never injected into the LLM proposer.
+        "used_env_source": True, "read_game_source": False,
+        "source_code_used_in_measured_arms": False,
         "interpretation": (
-            "HONEST READ (post adversarial-review 2026-06-28): this is NOT a clean null and NOT a win -- it "
-            "is AMBIGUOUS + UNDERPOWERED + the source-code half is OBFUSCATION-BLOCKED. (1) The execution-"
-            "relevant LEADING metric (primary) shows delta ~0 with a CI including 0 at n<=8 -- no clear "
-            "effect either way. (2) The positional metric is biased AGAINST exemplars (rewards degenerate "
-            "constant-run overlap), so its negative is an artifact, not evidence exemplars hurt. (3) The "
-            "operator's SPECIFIC source-code input is crippled: ARC-AGI-3 game source is OBFUSCATED (random "
-            "identifiers), so source_code patterns carry near-zero transferable semantics (see "
-            "source_code_obfuscation). The behavior-derived patterns (solve trajectories + registry "
-            "win-conditions/gotchas, which ARE semantic) are the only real signal carrier here, and they "
-            "show no clear opening shift. A properly-powered test (M>=5, all 25 games) + a de-obfuscation-"
-            "aware extractor would settle it; do NOT treat this as closed. Also rediscovers the project's "
-            "own arc_solve_learning.py:114 finding: few-shotting a weak 9B below a confidence bar can "
-            "degrade, not help."
+            "HONEST READ (POWERED run, M=5, n=19 LOO games, source-code EXCLUDED per operator 2026-06-28 to "
+            "isolate the RE'd SEMANTIC solve knowledge -- registry win_condition/action_model/gotchas + solve "
+            "trajectories + dead_ends): the in-context verified-pattern lever is a NULL on opening-prefix "
+            "shift. (1) The execution-relevant LEADING metric (primary) is +0.042 with CI [-0.095, +0.211] "
+            "-- spans 0, no reliable effect. (2) The degeneracy-robust LCS metric (co-primary) is -0.076 with "
+            "CI [-0.208, +0.026] -- spans 0, leaning slightly NEGATIVE. (3) The positional metric is "
+            "strongly negative (-0.26) but is biased AGAINST exemplars (rewards degenerate constant-run "
+            "overlap), so it overstates harm. The few apparent gains concentrate on all-click ([6,6,6,6]) "
+            "winners where exemplars happen to nudge toward clicks (ft09 +1.2, lf52 +0.6), offset by hurts "
+            "elsewhere (su15 -0.6; m0r0/re86/sk48 strongly negative on LCS) -- i.e. coincidental, not a "
+            "transferable reasoning gain. CONCLUSION: feeding verified worked/failed BEHAVIOR patterns into "
+            "the small 9B's context does NOT reliably steer its proposed opening toward a held-out game's "
+            "winner. This matches the binding wall (WALL_IS_HIDDEN_STATE: the winning prefix is "
+            "interaction-dependent, never enumerated from the first frame) and the project's own "
+            "arc_solve_learning.py:114 finding (few-shotting a weak 9B below a confidence bar can degrade). "
+            "SEPARATELY, the operator's source-code idea is independently obfuscation-blocked (13/25 "
+            "source_code patterns semantically empty; see source_code_obfuscation) -- that half was NOT what "
+            "this run tested. Both halves of the 2026-06-28 lever are therefore closed: behavior patterns = "
+            "powered null; source patterns = obfuscation-blocked."
         ),
         "prior_failures": [
             {"experiment_id": "exp4556", "verdict": "verifier_router_no_value_added",

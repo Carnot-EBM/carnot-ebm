@@ -1,9 +1,88 @@
 {
   "experiment": "arc_incontext_pattern_proposal_ab",
   "schema": "carnot.arc_incontext_pattern_proposal_ab.v1",
-  "honest_verdict": "complete_incontext_patterns_AMBIGUOUS_underpowered_n19_leading_delta_0.0421_ci_-0.0947_0.2105_lcs_delta_-0.0763_ci_-0.2079_0.0263_pos_delta_-0.2632_src_obfuscated_True",
+  "honest_verdict": "complete_incontext_patterns_no_reliable_opening_shift_POWERED_NULL_n19_M5_leading_delta_0.0421_ci_-0.0947_0.2105_lcs_delta_-0.0763_ci_-0.2079_0.0263_behavior_patterns_only_src_obfuscation_blocked_True",
   "question": "do retrieved verified worked+failed patterns (LOO) shift the small LLM's proposed opening prefix toward the banked winning prefix vs a no-exemplar control?",
-  "inference_substrate": "live_llm_inference",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_note": "per-game CHECKPOINTS = live_llm_inference (real GGUF proposer calls, ~47s/game across chunked runs); this headline artifact aggregates them.",
+  "cited_upstream_artifacts": [
+    {
+      "checkpoint": "bp35.json",
+      "sha256": "2eca846d8337a63a6637e438afff128defcf2b4de74523e5eabd2cd237b231a7"
+    },
+    {
+      "checkpoint": "cd82.json",
+      "sha256": "32e93f3a08c9e9debe7be6ff195756576fbead651f47b2a4de2dd4789ab695bd"
+    },
+    {
+      "checkpoint": "cn04.json",
+      "sha256": "3170d3a099256ce9355b21b76aea0d154d6b0f53a75f1ce88c4c078496cfd57a"
+    },
+    {
+      "checkpoint": "dc22.json",
+      "sha256": "ac753cd1cd1842b84ba44ed4a42224eb8c68a172cd85cf192badb444a9b522db"
+    },
+    {
+      "checkpoint": "ft09.json",
+      "sha256": "697a28012e03242facb527f34a9a5cc4a94c48d690e8c23aa94dc35a103a3d14"
+    },
+    {
+      "checkpoint": "g50t.json",
+      "sha256": "378ea15b90927c583c8efc64dbc180d568313d31059571153b54611f2568e028"
+    },
+    {
+      "checkpoint": "lf52.json",
+      "sha256": "057738c63d4c7f725adbbdd7f8bd4fd7a8547236d736451a771e7f72cbb4d947"
+    },
+    {
+      "checkpoint": "ls20.json",
+      "sha256": "32e38ddb73d4db06f151e166345f966ad59189a7569c3b7674c2eb54eb63282f"
+    },
+    {
+      "checkpoint": "m0r0.json",
+      "sha256": "4703d42ef4558cd0416d05831f51e28a6f4808431f87a25e7f84d10f3be9515e"
+    },
+    {
+      "checkpoint": "r11l.json",
+      "sha256": "20334c5e0c8883f7ad2ea613f2e21136c2ae44eba1934c698b4d6c2fd46d6938"
+    },
+    {
+      "checkpoint": "re86.json",
+      "sha256": "5c769d149b54d70627b25108c8cfe4f4304fcf8474361b2606bb2fd50fa0bf6c"
+    },
+    {
+      "checkpoint": "s5i5.json",
+      "sha256": "33ffe2bb70e63430cf7017d00134679f8fe76a0449fe8e62fb1973310e420855"
+    },
+    {
+      "checkpoint": "sb26.json",
+      "sha256": "819979ef18d15eefb781b8e552bb68569280c74dbcc56385e5205dc0650d3800"
+    },
+    {
+      "checkpoint": "sk48.json",
+      "sha256": "dc4c5a45e75bcfba97c24d280b22b48963df76be4cc0c7a1c4a09143529d879e"
+    },
+    {
+      "checkpoint": "sp80.json",
+      "sha256": "888aa61c5e41f04169e4e97092f096af5d67e29fbe2457a2928a24a83ba575e8"
+    },
+    {
+      "checkpoint": "su15.json",
+      "sha256": "c72b84dc107c8e6aa8d5cd5d0811aa620b843664108587a65aea3a0cf52005a2"
+    },
+    {
+      "checkpoint": "tr87.json",
+      "sha256": "c27c71096227f7f5d6db27f8b965095f634add81bd396ab6ee7007ee03562567"
+    },
+    {
+      "checkpoint": "tu93.json",
+      "sha256": "1f5e4124accd6c665fa8b85581aa2a0219d2f40d46a2ecc0e69c7c07900aa65a"
+    },
+    {
+      "checkpoint": "vc33.json",
+      "sha256": "f2dac2a939fd074f5e99fc9858abaa0ed5644522cec8c796ecc0f7b72d8b6520"
+    }
+  ],
   "verifier_is_oracle": false,
   "n_games": 19,
   "K": 4,
@@ -647,8 +726,9 @@
   },
   "solve_provenance": "development_proxy",
   "used_env_source": true,
-  "read_game_source": true,
-  "interpretation": "HONEST READ (post adversarial-review 2026-06-28): this is NOT a clean null and NOT a win -- it is AMBIGUOUS + UNDERPOWERED + the source-code half is OBFUSCATION-BLOCKED. (1) The execution-relevant LEADING metric (primary) shows delta ~0 with a CI including 0 at n<=8 -- no clear effect either way. (2) The positional metric is biased AGAINST exemplars (rewards degenerate constant-run overlap), so its negative is an artifact, not evidence exemplars hurt. (3) The operator's SPECIFIC source-code input is crippled: ARC-AGI-3 game source is OBFUSCATED (random identifiers), so source_code patterns carry near-zero transferable semantics (see source_code_obfuscation). The behavior-derived patterns (solve trajectories + registry win-conditions/gotchas, which ARE semantic) are the only real signal carrier here, and they show no clear opening shift. A properly-powered test (M>=5, all 25 games) + a de-obfuscation-aware extractor would settle it; do NOT treat this as closed. Also rediscovers the project's own arc_solve_learning.py:114 finding: few-shotting a weak 9B below a confidence bar can degrade, not help.",
+  "read_game_source": false,
+  "source_code_used_in_measured_arms": false,
+  "interpretation": "HONEST READ (POWERED run, M=5, n=19 LOO games, source-code EXCLUDED per operator 2026-06-28 to isolate the RE'd SEMANTIC solve knowledge -- registry win_condition/action_model/gotchas + solve trajectories + dead_ends): the in-context verified-pattern lever is a NULL on opening-prefix shift. (1) The execution-relevant LEADING metric (primary) is +0.042 with CI [-0.095, +0.211] -- spans 0, no reliable effect. (2) The degeneracy-robust LCS metric (co-primary) is -0.076 with CI [-0.208, +0.026] -- spans 0, leaning slightly NEGATIVE. (3) The positional metric is strongly negative (-0.26) but is biased AGAINST exemplars (rewards degenerate constant-run overlap), so it overstates harm. The few apparent gains concentrate on all-click ([6,6,6,6]) winners where exemplars happen to nudge toward clicks (ft09 +1.2, lf52 +0.6), offset by hurts elsewhere (su15 -0.6; m0r0/re86/sk48 strongly negative on LCS) -- i.e. coincidental, not a transferable reasoning gain. CONCLUSION: feeding verified worked/failed BEHAVIOR patterns into the small 9B's context does NOT reliably steer its proposed opening toward a held-out game's winner. This matches the binding wall (WALL_IS_HIDDEN_STATE: the winning prefix is interaction-dependent, never enumerated from the first frame) and the project's own arc_solve_learning.py:114 finding (few-shotting a weak 9B below a confidence bar can degrade). SEPARATELY, the operator's source-code idea is independently obfuscation-blocked (13/25 source_code patterns semantically empty; see source_code_obfuscation) -- that half was NOT what this run tested. Both halves of the 2026-06-28 lever are therefore closed: behavior patterns = powered null; source patterns = obfuscation-blocked.",
   "prior_failures": [
     {
       "experiment_id": "exp4556",
@@ -669,6 +749,6 @@
     }
   ],
   "random_seed": 20260628,
-  "duration_s": 51.24,
-  "reproducibility_checksum": "sha256:a3cbafe43bccbd12c86b0988d59a5fb9638c820e235857a9cd0b3d822bc1f9d7"
+  "duration_s": 0.63,
+  "reproducibility_checksum": "sha256:1c92153ac353c57ec7b2cece8aba38fa4ad9a1d4308f610200b8bc16f9a656ac"
 }
