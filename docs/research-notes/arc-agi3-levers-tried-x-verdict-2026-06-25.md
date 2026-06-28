@@ -126,6 +126,66 @@ These are the `unbuilt_mapped_only` ingestions (genuinely untried — mapping ar
 
 ---
 
+## 2026-06-28 SESSION — generation-program closure + fresh-SOTA sweep (ALL re-skin the wall; do NOT re-propose)
+
+Operator-directed deep pass on the generation wall. Recorded here so the planner does not re-derive or
+re-propose any of it. Detail: `docs/research-notes/arc-generation-program-2026-06-28.md`,
+`arc-generation-sota-fresh-options-2026-06-28.md`, `arc-winner-code-borrowability-2026-06-28.md`.
+
+**This session's BUILDS → verdict:**
+- IGE-style LLM-guided Go-Explore cell selection (`arc_ige_cell_selector`) — honest_null (row above).
+- PoE-World weighted product-of-experts consensus (`arc_poe_world_model`) — honest_null (row above).
+- Relational-mask DEEPENING move-pruner (`arc_relational_mask_pruner`, `induce_relational_target_region`)
+  — honest_null `relational_mask_deepen_pruner_not_exercised` (`results/arc_relational_mask_deepen_ab.json`):
+  on relational-structure games the deepening search is generation-bound (~20-33 states, nothing to
+  prune); on tu93 (2947 states) every nav action class touches the region (position-dependent), so 0
+  prunes. Built/safe/live-path-reachable, but not the deepening lever. Flag default OFF.
+
+**The directed-generation PROGRAM — both root-cause branches were ALREADY RUN (caught by the
+not-done-before check BEFORE any new build):**
+- Branch A (inducer strength: strong coding-agent inducer vs weak 9B) = `experiment_4883_inducer_ceiling_ab`
+  (`.450` A1b) → `METHOD_IS_CEILING` (neither lane lifts). + logically superseded by `WALL_IS_HIDDEN_STATE`
+  (a strong inducer can't recover a variable absent from its inputs). DO NOT re-probe.
+- Branch B (interaction-history / order-state observability) = `experiment_4893_action_prefix_latent_adapter`
+  (`.451` A1b, `latent_substrate: action_prefix_future_state`) → `REPRESENTATION_INVARIANT_HARD` (delta 0,
+  CI95 incl 0). Conditioning on action-history recovers no signal. DO NOT re-propose history/order-state
+  conditioning. (Supported by exp4892 decision-need, exp4903 WALL_DEEPER, exp4904 4-classes, exp4914
+  WALL_IS_HIDDEN_STATE.)
+
+**Fresh SOTA families SCOUTED 2026-06-28 → all RE-SKIN the information-theoretic wall (NO LONGER "untried";
+do NOT propose as fresh).** Each computes its signal over already-sampled observable experience, so it can
+only re-rank/recompose it — the nulled action-history class. With real arXiv IDs:
+- Unsupervised skill discovery: Metra (2310.08887), LSD (2202.00914), CSD (2302.05103), SkiLD (2410.18416),
+  DUSDi/SUSD — re-skin; need 1e6–1e7 steps + factored state we lack.
+- Intrinsic exploration beyond NGU/RND: Plan2Explore/Disagreement (2005.05960), Empowerment (2510.05996;
+  counterproductive per 2511.04177), BYOL-Explore (2206.08332), active-inference EFE (2504.14898) —
+  epistemic terms re-skin RND. EFE's PRAGMATIC goal-prior is the only structurally-different idea, BUT it
+  reduces to the already-nulled exp4640 (goal-energy directs generation, 0/100). Do not build absent a
+  genuinely-generative (not re-ranking) framing.
+- Learned neural latent world models: Dreamer-XP, TD-MPC2 (2310.16828), EfficientZero-V2 (2403.00564),
+  AXIOM (2505.24784) — re-skin; AutumnBench (2510.19788) is the empirical proof (all agents fail tiny-data
+  planning; humans 93.5%). Tiny-per-game data starves them.
+- Open-ended curriculum / library transfer: OMNI/OMNI-EPIC (2306.01711/2405.15568), DreamCoder, Voyager
+  (2305.16291) — re-skin; cross-game program/skill library ≈ the nulled cross-game value transfer (exp4342).
+- (This subsumes the prior "unbuilt_mapped_only" AMAGO/Algorithm-Distillation/in-context items exp4685/4697
+  and Epistemic-MCTS exp4734/4746 — their families are now scouted+re-skin; treat as closed, not open.)
+
+**External validation (the decisive new input):** official ARC-AGI-3 tech report **arXiv:2603.24621** — the
+preview WINNER StochasticGoose/Tufa (12.58%) collapsed to **0.25%** on the full unseen set (≈ frontier LLMs
+Gemini-3.1-Pro 0.37% / GPT-5.4 0.26%); only 2/8 agents solved >1 game. **Winner code
+`github.com/DriesSmit/ARC3-solution` analyzed → NOTHING borrowable Carnot lacks:** its frame-change-CNN +
+online-learning + level-up-reset + click-heatmap are all already in Carnot (`arc_frame_change_predictor`
+exp4490/4547, `arc_online_action_effect_scorer` exp4710/4726, exp4629 banked efficiency, `arc_live_ttt`).
+Two independent teams, same architecture, same wall. Carnot's 0.08 is at frontier parity.
+
+**NET CLOSURE:** the live multi-level ARC generation wall is information-theoretic (gradient-free
+first-contact needle-search; the order-state is absent from frame, action-history, and 4 representation
+classes). Internal levers (≥8 paths), both generation-program branches, 4 fresh SOTA families, AND the
+competition winner's code all converge on it. Treat as a closed honest-negative for the current paradigm;
+re-open only with a genuinely new paradigm + a fresh not-done-before check. Deliverable = 0.08 + FoVer paper.
+
+---
+
 ## DO NOT RE-OPEN (closed / null / retired levers)
 
 The following are closed with a clean recorded verdict (`honest_null`, `not_robustly_extractable`, or a non-banking `validated_positive`/`modest_or_partial`); do not re-propose them without a stated new approach per Failed-Experiment Rerun Discipline:
