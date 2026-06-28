@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.452",
+  "generated_at": "2026-06-28T09:30:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector reported 0 experiments / 0 wall-minutes / 0 compute-bound tasks for 2026.06.452, but this is the RECURRING FALSE-ZERO detector gap (documented .363->.451, now .452, ~79 milestones), NOT a genuinely empty milestone: on-disk artifacts exp4902-exp4912 (the 11 .452 arms through capstone_v452, ~226-min window 01:36->05:22 EDT) exist. The locked retro numbers are left at the detector's 0/0/0/null per instruction; the disk-sourced narrative is in docs/research-log.md.",
+  "bottlenecks_identified": [
+    "PRIMARY (operational): the authoritative milestone-scoped timing detector again false-zeroed (0 commits since activation) despite 11 real on-disk .452 arms (exp4902-exp4912). The recurring detector-wire gap (~79 milestones, .363->.452): the shipped detector reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds this TIMING DATA block. It blinds the retro, not the research.",
+    "GPU idle is NOT flagged as a bug: gpu_idle_on_compute_bound_tasks=null. The 2026-06-28T09:30:33Z (05:30 EDT) snapshot shows both 3090s idle, but the 3 GPU-bound live arms (A1 exp4903 60s, A1b exp4904 178.75s, A4 held-out exp4907 3518s, all generator_backend=gpu0_cuda) ran EARLIER (01:52->03:55 EDT) and had finished by the snapshot — post-window idle is insufficient evidence of idle-during-compute, not waste.",
+    "The A4 held-out first-win arm (exp4907) ran ~58.6 min live on GPU-0 but shipped flagged_adversarial (true_live_recheck=critical, stale_false_flag=false) and was correctly SKIPPED by the capstone per the fabrication gate — the single largest GPU-time item of the milestone produced a quarantined artifact, and the held-out arm has now flagged_adversarial three milestones running (.450/.451/.452)."
+  ],
+  "improvements_suggested": [
+    "(recurring #1) Move the shipped detector-wire to the conductor's retro TIMING-DATA prompt-assembly call site + add a results/-mtime fallback so a detector false-zero degrades to a verifiable artifact-mtime window instead of a misleading 0/0/0.",
+    "Enforce write-time stamping of duration_s + inference_substrate + a compute_bound flag on every arm (exp4905 level-up and exp4906 self-play shipped duration_s=None this milestone), so the retro can rank slowest arms even when the commit-detector misses.",
+    "Diagnose+fix the recurring held-out first-win flagged_adversarial (exp4907, ~58 min GPU run quarantined): determine why a genuine soft-budget-partial / CI-lower-0 live null trips true_live_recheck=critical, and either correct the methodology stamp or tighten the false-positive so a real 58-min live null is counted rather than discarded.",
+    "Feed the capstone's skipped_flagged_adversarial list into the retro TIMING block so flagged/absent arm slots and their reasons are visible to the retro without log archaeology."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Move the detector-wire to the retro prompt-assembly call site + add a results/-mtime fallback (the ~79-milestone recurring #1) — it makes every future retro's 0/0/0 self-correcting instead of needing manual on-disk reconstruction.",
+    "Diagnose and fix the held-out first-win arm's recurring flagged_adversarial so its ~58-min live GPU-0 run produces a counted result instead of a quarantined one (3 milestones running).",
+    "Enforce write-time duration_s + inference_substrate + compute_bound stamping on all arms (two arms shipped duration_s=None this milestone), closing the remaining gap that forces disk archaeology."
+  ],
+  "estimated_time_savings_pct": 12,
+  "meta_reflection": "2026.06.452 was a DECISIVE capstone milestone, not an empty one: the live first-win wall survived a FOURTH world-model representation (A1b latent-action) plus env-grounded real-env-value search (A1, B1-trusted), so the multi-milestone representation fork closes as an honest negative and the project escalates to the post-6/30 verifier-moat pivot. The operational lesson is unchanged and now ~79 milestones old — the retro's 0/0/0 is a detector-wire gap, not reality — so fixing that wire (plus the held-out arm's recurring flag) is the highest-leverage operational work, since the research itself ran cleanly."
+}
