@@ -9510,3 +9510,4 @@ The contro |
 | 2026-06-28 10:32 UTC | PHASE 0 (TRANSITION) -- archive .452 -> activate . | OK | 85 passed, 1 warning in 9.25s |
 | 2026-06-28 10:50 UTC | PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- FI | OK | 89 passed, 1 warning in 6.82s |
 | 2026-06-28 11:12 UTC | PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANT | OK | 116 passed, 1 warning in 11.45s |
+| 2026-06-28 11:25 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 86 passed, 1 warning in 8.52s |
