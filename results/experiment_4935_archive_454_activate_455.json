@@ -1,0 +1,165 @@
+{
+  "activated_milestone": "2026.06.455",
+  "arc_first_win_wall_closed_hidden_state": true,
+  "archived_milestone": "2026.06.454",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "df35ccdec79f0de562e9ea743d52626ded14437927128fbec1c0bd65cd7f8fe1"
+    },
+    {
+      "path": "results/operational_retro_2026_06_454.json",
+      "sha256": "dc0b7ac5f0adb98b87f1aa43f463b442f9a8909157b0cefcbde85eaa4fd1bfb3"
+    },
+    {
+      "path": "results/experiment_4934_capstone_v454.json",
+      "sha256": "d3aa1894c1e679e21d96e89c2ee20a554888854698f7a3391b9896dc96a2c509"
+    }
+  ],
+  "close_state_454": {
+    "a1_a2_no_banked": {
+      "candidate_banks": [
+        {
+          "game": "sp80",
+          "new_levels_banked": 0,
+          "source": "A1_LEVELUP"
+        },
+        {
+          "game": "su15",
+          "new_levels_banked": 0,
+          "source": "A2_LEVELUP"
+        }
+      ],
+      "counted": [],
+      "interpretation": "no grounded L2->L3 delta on sp80/su15; honest no-bank rotation dead-end",
+      "no_banked": true
+    },
+    "a4_heldout": {
+      "flag_resolved": true,
+      "games_evaluated": 25,
+      "games_remaining": 0,
+      "heldout_first_win_rate": 0.04,
+      "honest_verdict": "complete_heldout_first_win_0.04_full25_live_flag_resolved",
+      "tautology_warn_only": true
+    },
+    "arc_first_win_wall_closed_hidden_state": true,
+    "b2_package": {
+      "decision": "package_ready_operator_only",
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "peak_vram_gb": 15.146,
+      "ready": true,
+      "submits": false
+    },
+    "capstone": {
+      "headline": ".454 submission readiness: 69 reproducible levels, no trusted A1/A2 banks counted; held-out first-win 0.04 with flag_resolved=True; D reports no trusted efficiency lift; package ready; ARC wall remains WALL_IS_HIDDEN_STATE closed.",
+      "honest_verdict": "complete_capstone_v454_submission_maximized_levels_69_heldout_0.04_package_ready_efficiency_null"
+    },
+    "d_efficiency": {
+      "decision": "honest_null_not_trusted_lift",
+      "honest_verdict": "complete_matm_similarity_retrieval_no_efficiency_gain_retired",
+      "reported_lift": null,
+      "retired": true
+    },
+    "deliverable": "current ~0.05 agent + publishable FoVer paper",
+    "deliverable_locked_agent_plus_fover_paper": true,
+    "do_not_queue": [
+      "representation_5"
+    ],
+    "operational_retro": {
+      "false_zero_detector_gap": true,
+      "milestone": "2026.06.454",
+      "summary": "The milestone-scoped timing detector reported 0 experiments / 0 wall-minutes / 0 compute-bound tasks for 2026.06.454, but this is the RECURRING FALSE-ZERO detector gap (documented .363->.452, now .454, ~80 milestones), NOT an empty milestone: on-disk artifacts exp4924 (archive_453_activate_454) through exp4934 (capstone_v454) \u2014 11 arms over a ~175-min file-mtime window (~11:26->14:21 EDT, 2026-06-28) \u2014 exist on disk. The locked retro numbers are left at the detector's 0/0/0/null per instruction; the disk-sourced narrative is here and in docs/research-log.md. Research ran cleanly; the gap blinds the retro, not the science."
+    },
+    "reproducible_total_levels": 69,
+    "summary": "v454_locked_deliverable_recorded_for_v455",
+    "v455_is_final_sprint_plus_pivot_readiness": true,
+    "wall_closure": {
+      "closed": true,
+      "closure_verdict": "WALL_IS_HIDDEN_STATE"
+    }
+  },
+  "deliverable_locked_agent_plus_fover_paper": true,
+  "duration_s": 1.018074,
+  "experiment": "experiment_4935_archive_454_activate_455",
+  "experiment_id": 4935,
+  "field_principles": {
+    "arc_first_win_wall_closed_hidden_state": {
+      "principle": "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .455 executes the locked deliverable, NOT representation #5."
+    },
+    "deliverable_locked_agent_plus_fover_paper": {
+      "principle": "true -- the deliverable is the ~0.05 first-win agent + the publishable FoVer paper; do NOT chase the closed first-win wall."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_454_archived_455_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (69; .454 banked nothing new)."
+    },
+    "v455_is_final_sprint_plus_pivot_readiness": {
+      "principle": "true -- .455 executes the locked 6/30 deliverable AND readies the post-6/30 verifier-moat pivot; it does NOT open a new world-model fork."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "research_roadmap_next_yaml": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')"
+      ],
+      "exists": false,
+      "exit_code": 1,
+      "passed": false,
+      "path": "research-roadmap-next.yaml",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'\n",
+      "stdout_tail": ""
+    }
+  },
+  "pretest_gate": {
+    "green": false,
+    "ran": false,
+    "reason": "skipped_after_precondition_failure"
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "4c267b218f75517724c4c50f4036c85d7e4569141535e7de182e2353f5b504b2",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_4935_archive_454_activate_455.json",
+  "schema": "carnot.exp4935.archive_454_activate_455.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4935",
+    "SCENARIO-CAPSTONE-4935",
+    "SCENARIO-CAPSTONE-4935-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4935-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.455",
+    "activation_state": "blocked_missing_or_failed_precondition",
+    "active_milestone_confirmed": "2026.06.455",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "archived_milestone": "2026.06.454"
+  },
+  "transition_performed": false,
+  "v455_is_final_sprint_plus_pivot_readiness": true
+}
