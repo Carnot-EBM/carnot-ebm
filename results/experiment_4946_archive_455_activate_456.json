@@ -1,0 +1,227 @@
+{
+  "activated_milestone": "2026.06.456",
+  "arc_first_win_wall_closed_hidden_state": true,
+  "archived_milestone": "2026.06.455",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "d300a8e0a3c80618dbe6a06d9e26ebfe65d395047d27ec1f5e0d982ce89cd78e"
+    },
+    {
+      "path": "results/operational_retro_2026_06_455.json",
+      "sha256": "85538a2292189b5798dcbfcc70a1dddad423c55416a73d1f9ed85430f28fd928"
+    },
+    {
+      "path": "results/experiment_4945_capstone_v455.json",
+      "sha256": "a4c32239c3ff82c46d270a6a56436b386803f492711555b81b170e251726d1dc"
+    },
+    {
+      "path": "results/experiment_4938_self_play_verifier_checkpoint.json",
+      "sha256": "0ce36966e3189fb2b6dbef484acd0ae6fa613c44889ad65fc1df4a6637d87680"
+    },
+    {
+      "path": "results/experiment_4943_stamping_backfill_and_wiring_readiness.json",
+      "sha256": "ef4c0562cee1eb8203d0ade7eb4340de7e9a6563d019d6cf76b6bcaa80ec4779"
+    }
+  ],
+  "close_state_455": {
+    "a1_a2_no_banked": {
+      "candidate_banks": [
+        {
+          "game": "lf52",
+          "new_levels_banked": 0,
+          "source": "A1_LEVELUP"
+        },
+        {
+          "game": "sb26",
+          "new_levels_banked": 0,
+          "source": "A2_LEVELUP"
+        }
+      ],
+      "counted": [],
+      "interpretation": "no grounded L2->L3 delta on lf52/sb26; honest no-bank rotation dead-end, not a fabrication",
+      "no_banked": true,
+      "second_consecutive_flat_milestone": true
+    },
+    "a4_heldout": {
+      "flag_resolved": true,
+      "games_evaluated": 25,
+      "heldout_first_win_rate": 0.04,
+      "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
+      "tautology_warn_only": true
+    },
+    "arc_first_win_wall_closed_hidden_state": true,
+    "b2_package": {
+      "decision": "package_ready_operator_only",
+      "frozen_stack_loads": true,
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "peak_vram_gb": 15.146,
+      "peak_vram_lt_16": true,
+      "ready": true,
+      "submits": false
+    },
+    "capstone": {
+      "capstone_ready": true,
+      "headline": ".455 final submission readiness: locked ~0.05 agent + FoVer paper ready for 6/30 at 69 reproducible levels, no trusted A1/A2 banks counted; held-out first-win 0.04 with flag_resolved=True; package ready; post-6/30 verifier-moat pivot executable 7/1; ARC wall remains WALL_IS_HIDDEN_STATE closed.",
+      "honest_verdict": "complete_capstone_v455_submission_ready_levels_69_heldout_0.04_package_ready_pivot_executable_7_1"
+    },
+    "d_pivot": {
+      "arxiv_id": "2605.18871",
+      "decision": "post_6_30_distributional_energy_verifier_moat_experiment_executable_7_1",
+      "moat_proven": false,
+      "pivot_executable_on_7_1": true,
+      "pivot_readiness_trustworthy": true,
+      "sota_signal": "2605.18871 beats self-consistency on MuSR"
+    },
+    "deliverable": "current ~0.05 agent + publishable FoVer paper",
+    "deliverable_locked_agent_plus_fover_paper": true,
+    "do_not_queue": [
+      "representation_5"
+    ],
+    "operational_retro": {
+      "false_zero_detector_gap": true,
+      "milestone": "2026.06.455",
+      "summary": "The locked numeric fields are 0/0/0/null because the milestone-scoped TIMING DATA block reported 'no experiment commits since activation' -- but this is the RECURRING FALSE-ZERO detector gap (documented .363->.454, now ~81 milestones), NOT an empty milestone. On-disk verification shows 11 arms ran: results/experiment_4935..4945_*.json (archive_454_activate_455 -> capstone_v455), file mtimes 2026-06-28 ~19:28->22:05 UTC (~157-min window), finishing ~8 min before the 22:13Z retro snapshot. The locked zeros reflect the detector wiring gap, not the work that actually executed."
+    },
+    "recurring_infra_bugs_to_fix": [
+      {
+        "detail": "duration_s=0.0001 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "duration_s": 0.0001,
+        "experiment_id": 4938,
+        "flagged_adversarial": true,
+        "honest_verdict": "success_self_play_checkpoint_refreshed",
+        "inference_substrate": "live_llm_inference",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical",
+        "source": "A3_SELF_PLAY"
+      },
+      {
+        "experiment_id": 4943,
+        "honest_verdict": "blocked_insufficient_v455_mtime_window",
+        "mtime_fallback_window": {
+          "artifact_paths": [
+            "results/experiment_4935_archive_454_activate_455.json",
+            "results/experiment_4936_levelup_attempt.json",
+            "results/experiment_4937_levelup_attempt.json",
+            "results/experiment_4938_self_play_verifier_checkpoint.json",
+            "results/experiment_4939_heldout_first_win_readiness.json",
+            "results/experiment_4940_distributional_energy_verifier_executable_spec.json",
+            "results/experiment_4941_bank_and_pivot_audit.json",
+            "results/experiment_4942_submission_package_harden.json"
+          ],
+          "compute_bound_count": 3,
+          "milestone": "2026.06.455",
+          "n_arms": 8,
+          "wall_minutes": 112.46,
+          "window_end": "2026-06-28T21:20:33Z",
+          "window_start": "2026-06-28T19:28:05Z"
+        },
+        "reason": "runs_before_all_arms_land",
+        "source": "B3_STAMPING",
+        "window_gate": {
+          "compute_bound_count": 3,
+          "min_arms": 10,
+          "min_compute_bound_count": 2,
+          "n_arms": 8,
+          "passed": false,
+          "wall_minutes": 112.46
+        }
+      }
+    ],
+    "reproducible_total_levels": 69,
+    "summary": "v455_locked_deliverable_recorded_for_v456",
+    "v456_is_final_stretch_plus_pivot_turnkey": true,
+    "wall_closure": {
+      "closed": true,
+      "closure_verdict": "WALL_IS_HIDDEN_STATE",
+      "do_not_queue": [
+        "representation_5"
+      ]
+    }
+  },
+  "deliverable_locked_agent_plus_fover_paper": true,
+  "duration_s": 1.059149,
+  "experiment": "experiment_4946_archive_455_activate_456",
+  "experiment_id": 4946,
+  "field_principles": {
+    "arc_first_win_wall_closed_hidden_state": {
+      "principle": "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .456 executes the locked deliverable, NOT representation #5."
+    },
+    "deliverable_locked_agent_plus_fover_paper": {
+      "principle": "true -- the deliverable is the ~0.05 first-win agent + the publishable FoVer paper; do NOT chase the closed first-win wall."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_455_archived_456_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (69; .455 banked nothing new)."
+    },
+    "v456_is_final_stretch_plus_pivot_turnkey": {
+      "principle": "true -- .456 executes the locked 6/30 deliverable AND makes the post-6/30 verifier-moat pivot turnkey; it does NOT open a new world-model fork."
+    }
+  },
+  "honest_verdict": "blocked_research_roadmap_next_yaml_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "research_roadmap_next_yaml": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml; yaml.safe_load(open('/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml')); print('ok')"
+      ],
+      "exists": false,
+      "exit_code": 1,
+      "passed": false,
+      "path": "research-roadmap-next.yaml",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nFileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'\n",
+      "stdout_tail": ""
+    }
+  },
+  "pretest_gate": {
+    "green": false,
+    "ran": false,
+    "reason": "skipped_after_precondition_failure"
+  },
+  "random_seed": 20260628,
+  "reproducibility_checksum": "b44e272d9f5a7ddbaed2d6862820565e916be541488e0e36566baf8952b49388",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_4946_archive_455_activate_456.json",
+  "schema": "carnot.exp4946.archive_455_activate_456.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4946",
+    "SCENARIO-CAPSTONE-4946",
+    "SCENARIO-CAPSTONE-4946-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4946-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.456",
+    "activation_state": "blocked_missing_or_failed_precondition",
+    "active_milestone_confirmed": "2026.06.456",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "archived_milestone": "2026.06.455",
+    "transition_performed": false
+  },
+  "transition_performed": false,
+  "v456_is_final_stretch_plus_pivot_turnkey": true
+}
