@@ -63,78 +63,88 @@ re-runs.
 Given the wall is "the winning prefix is never assembled by an induce→plan loop conditioned on
 observable features", there are exactly two live root-cause hypotheses:
 
-- **(A) INDUCER STRENGTH.** The frozen local 9B (Qwen3.5-9B-MTP) cannot synthesize a per-game
-  world-model accurate enough that short-horizon planning IN it assembles the winning prefix. The
-  SOTA winner (executable world models, arXiv:2605.05138, 58% RHAE) uses a STRONG coding-agent
-  inducer (GPT-5.5). Our free-form 9B engine tops out at held-out transition accuracy **0.12**.
-- **(B) PERCEPTION → SYMBOLIC-STATE INTERFACE.** Even a strong inducer is starved because ARC's
-  glyph/grid perception does not expose the **hidden interaction-order state** (exp4914
-  `WALL_IS_HIDDEN_STATE`); no induced model — however strong the inducer — can plan a prefix whose
-  ordering depends on a variable absent from its inputs.
+- **(A) INDUCER STRENGTH — REFUTED (2026-06-28, do NOT probe).** The hypothesis was: the frozen
+  local 9B can't synthesize a world-model accurate enough to plan the prefix, but a STRONG
+  coding-agent inducer (executable world models, arXiv:2605.05138) could. **This was already
+  attempted AND is logically superseded:**
+  - **Already attempted:** `experiment_4883_inducer_ceiling_ab` (`.450` A1b) ran exactly this A/B —
+    `local` lane = Qwen3.5-9B-MTP vs `reference` lane = "Family-B reference executable-world-model
+    inducer (arXiv:2605.05138)" over 9 held-out games → `inducer_ceiling_attribution: METHOD_IS_CEILING`,
+    `complete_inducer_ceiling_neither_lane_lifts_method_is_ceiling`. (Caveat: that artifact is
+    `flagged_adversarial: true` / DURATION_TOO_SHORT and its reference lane was a `capability_ceiling_only`
+    placeholder, so the *clean* strong-inducer run is technically un-run — but see the logical refutation.)
+  - **Logically superseded:** exp4914 `WALL_IS_HIDDEN_STATE`, `minimal_abstraction_is_observable_subset:
+    False`. If the winning-prefix-order variable is **unobservable from frames**, NO inducer — however
+    strong — can plan a prefix whose ordering depends on a variable absent from *every* inducer's inputs.
+    Inducer strength is downstream of an observability problem. A clean strong-inducer re-run would almost
+    certainly re-confirm METHOD_IS_CEILING; expected value ~0. **RETIRED — do not build the strong-inducer
+    probe.**
+- **(B) PERCEPTION → SYMBOLIC-STATE INTERFACE — the LIVE hypothesis.** The hidden interaction-order
+  state (exp4914 `winning_prefix_order_state.observable=False`) must be made OBSERVABLE so the
+  proposal distribution can condition on it; only then can the winning prefix be assembled. This is the
+  unrefuted root cause and the program's actual direction.
 
 These predict opposite next programs, so the cheapest decisive probe **must fork on them**.
 
 ---
 
-## §4. G0 — the cheapest decisive probe (build FIRST; ~1 day, offline, no new infra)
+## §4. The strong-inducer G0 is RETIRED before building (2026-06-28 not-done-before check)
 
-**Core bet (falsifiable):** *A strong external coding-agent inducer (not the frozen 9B) can synthesize
-an executable per-game world-model accurate enough that short-horizon `plan_in_model` assembles a
-winning L1 prefix the live explorer never enumerates.*
+> **The original §4 proposed a strong-vs-weak inducer probe. The not-done-before check (operator-
+> directed) RETIRED it: it is a re-run of `experiment_4883_inducer_ceiling_ab` AND is logically
+> superseded by `WALL_IS_HIDDEN_STATE` (see §3-A). Do NOT build it.** Preserved here as the rationale.
 
-**Why it is decisive:** it swaps ONLY the inducer and reuses the existing search, so the result
-cleanly attributes the wall to (A) inducer strength vs (B) the perception interface — the §3 fork.
+The retired probe would have swapped only the inducer (`LocalGGUFProposer` → `CodexProposer`/strong
+coding agent), reused `plan_in_model`, and measured winning-prefix migration `NEVER_ENUMERATED →
+ENUMERATED` on the frozen split. exp4883 already ran that A/B (`local` 9B vs `reference` Family-B
+arXiv:2605.05138) → `METHOD_IS_CEILING`. Even granting exp4883's `flagged_adversarial` weakness, the
+hidden-state finding makes a clean re-run's outcome a foregone conclusion (a strong inducer with the
+same observable inputs still cannot recover an unobservable ordering variable). Expected value ≈ 0.
 
-**Procedure (reuses existing code — no new harness):**
-1. Dataset: the frozen 10-game held-out split from exp4851 + the already-captured offline transition
-   corpus per game (`arc_executable_world_model.collect_transitions`).
-2. Induce each game's `(engine, is_level_complete)` TWO ways on the SAME K exploration frames:
-   - **weak arm:** `LocalGGUFProposer` (Qwen3.5-9B-MTP) — the live inducer (the control).
-   - **strong arm:** `CodexProposer` (gpt-5.5 via CLI — already in `arc_executable_world_model.py`)
-     OR a Claude coding agent. (Internet-using → DEV DIAGNOSTIC ONLY; see the legality caveat.)
-3. For each induced model, run the EXISTING `plan_in_model` BFS to depth = the game's winning-prefix
-   length; record whether the winning L1 prefix migrates `NEVER_ENUMERATED → ENUMERATED` (assembled
-   in the planned pool), plus held-out off-path transition accuracy.
+## §4'. The ACTUAL cheapest-decisive probe (Branch B): make the hidden ordering state observable
 
-**Falsifiable gate (the only non-circular evidence):**
-- prefix-assembly rate (strong arm) **≥ 3/10 games**, bootstrap CI95 lower bound **> 0**, AND
-- the strong−weak **delta CI95 excludes 0** (matched control, same games), AND
-- strong-arm held-out transition accuracy **exceeds the 0.12** free-form-engine ceiling, AND
-- anti-circularity: the assembled prefix is verified by the offline reproduction gate, not declared.
+**Core bet (falsifiable):** *The winning prefix is un-enumerable because the proposal distribution is
+conditioned only on the current frame; conditioning it ALSO on an explicit interaction-history feature
+(a cheap observable proxy for the hidden order-state) makes the winning L1 prefix enumerable.*
 
-**Honest expected outcome:** ~40% it clears the gate (the SOTA result exists, but ARC perception may
-starve even a strong inducer). **A NULL is highly informative** — it proves the wall is NOT
-inducer-strength but the **perception→symbolic-state interface (B)**, retiring the entire
-induce-and-plan family in one day and forcing the pivot to root cause (B) or model-free exploration.
+**Sketch (to be fully specified + its OWN not-done-before check BEFORE building — do not skip that):**
+add an interaction-history descriptor (e.g. a hash/RNN summary of the action-sequence-so-far, or a
+visit-count automaton index) to the explorer's node state, then measure whether the winning prefix
+migrates `NEVER_ENUMERATED → ENUMERATED` on the frozen failed-game split vs the frame-only control.
+Falsifiable gate: prefix-assembly rate lift, CI95 delta excludes 0, reproduction-gated.
 
-**OFFLINE-LEGALITY CAVEAT (load-bearing).** The live ARC submission MUST run offline in the Kaggle
-sandbox; a strong external coding agent is NOT offline-legal. **G0 is a DIAGNOSTIC, not a deployable
-solution.** A POSITIVE G0 does not ship codex-as-inducer; it justifies the §5-A program (get a
-strong-enough *offline-legal* inducer). `solve_provenance` for any G0 artifact is
-`development_proxy` (it uses an off-path strong inducer), NOT `live_agent_self_discovery`.
+**Honest prior:** even this may null — if the order-state is not recoverable from action-history alone,
+Branch B collapses to model-free exploration (Family-A "just-explore", arXiv:2512.24156) with an
+interaction-history cell key (NOT the already-nulled frame-keyed Go-Explore archive). The expected
+outcome is genuinely open — which is why it is the right next probe.
+
+**MANDATORY before building G0' (the lesson of this turn):** run the same exclusion/rerun check against
+the record (`arc-agi3-levers-tried-x-verdict`, exclusion manifest, results/) — confirm no prior
+interaction-history / order-state / sequence-conditioned proposal experiment exists. The
+interaction-history idea overlaps conceptually with the nulled NGU/RND episodic-novelty (exp4688) and
+the AMAGO/Algorithm-Distillation in-context-exploration mapping (exp4697, unbuilt) — G0' must be NEW
+vs both, or name what is different.
 
 ---
 
-## §5. The fork (which branch G0 selects)
+## §5. The fork — now resolved to Branch B
 
-- **G0 POSITIVE → Branch A: stronger OFFLINE-LEGAL inducer.** The 9B is the bottleneck. The program
-  becomes: a larger local code model on the dev 3090s (offline-legal), better elicitation/scaffolding
-  of the induce→verify→refactor loop (CEGIS, exp4872 lineage), or offline per-game model-building
-  distilled into an offline artifact. The energy verifier reverts to its proven routing/pruning role
-  over a pool that now contains the winner. Multi-week harness build.
-- **G0 NULL → Branch B: perception→symbolic-state interface.** Inducer strength is not the wall; the
-  hidden interaction-order state must be made OBSERVABLE (an interaction-history / automaton-index
-  feature the proposal distribution can condition on) — or, if that is intractable, pivot the live
-  agent to **model-free graph exploration** (Family-A "just-explore", arXiv:2512.24156) whose
-  return-then-explore does not need an induced model, accepting the lower ceiling. (NB: plain
-  Go-Explore archive already nulled — Branch B's model-free option must add the interaction-history
-  cell key, not re-run the frame-keyed archive.)
+Branch A (inducer strength) is **refuted** (§3-A / §4: exp4883 METHOD_IS_CEILING + WALL_IS_HIDDEN_STATE
+logic). The program proceeds on **Branch B (perception→symbolic-state interface)**: make the hidden
+interaction-order state observable so the proposal distribution can assemble the winning prefix; if the
+state proves unrecoverable, fall back to model-free exploration with an interaction-history cell key.
+The energy verifier's role is unchanged — routing/pruning over a pool that (if Branch B succeeds) now
+contains the winner; it is not itself the generation fix.
 
 ---
 
 ## §6. Cross-references
 - The wall: `project_arc_l1_first_contact_wall`, `project_arc_generation_not_selection`, exp4914
   (`WALL_IS_HIDDEN_STATE`), exp4903 (`WALL_DEEPER_THAN_VALUE_PREDICTION`).
+- **Strong-inducer probe ALREADY DONE (the not-done-before catch):**
+  `results/experiment_4883_inducer_ceiling_ab.json` (`.450` A1b) — local 9B vs reference Family-B
+  inducer → `METHOD_IS_CEILING`; `flagged_adversarial` (DURATION_TOO_SHORT, reference lane a
+  ceiling-only placeholder). Retires the strong-inducer G0.
 - Ruled-out census: `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`,
   `ops/exclusion_manifest.yaml`, `docs/research-notes/oracle-distinct-structural-energy-program-2026-06-26.md`.
 - SOTA anchors: executable world models arXiv:2605.05138 (the strong-inducer mechanism G0 tests),
