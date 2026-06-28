@@ -5,6 +5,16 @@ def engine(grid, action, data):
         return grid
     elif action == 2:
         return grid
+    elif action == 3:
+        return grid
+    elif action == 4:
+        return grid
+    elif action == 5:
+        return grid
+    elif action == 6:
+        return grid
+    elif action == 7:
+        return grid
     return grid
 
 def is_level_complete(grid):

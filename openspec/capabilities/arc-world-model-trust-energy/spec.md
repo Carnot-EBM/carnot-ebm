@@ -11794,6 +11794,104 @@ or modifies `scripts/research_conductor.py`
 When the Experiment 4890 artifact validator runs
 Then it rejects the artifact before the result can be written.
 
+### REQ-ARC-WMTE-4892: Decision-Need Target Value-Gap Fork Probe
+
+Experiment 4892 SHALL test the `.451` decision-need representation branch
+against the exact Experiment 4882 A1 graded value-gap setup. The workflow SHALL
+first check `arc_solver_kit.offline_arcade()`, the GPU-fixed Qwen3.5-9B-MTP
+generator precondition accepting either GPU-0 CUDA or iGPU HIP without rejecting
+ambient `CUDA_VISIBLE_DEVICES`, and
+`results/experiment_4882_ttt_dynamics_value_gap.json`. Missing preconditions
+SHALL emit `blocked_offline_arcade_missing`,
+`blocked_generator_unavailable`, or `blocked_a1_baseline_missing` rather than a
+fabricated fork.
+
+For the same A1 held-out games `cd82`, `cn04`, `ls20`, `m0r0`, `r11l`, `sk48`,
+`sp80`, `su15`, and `wa30`, and the `tu93` positive control, Experiment 4892
+SHALL read the Exp 4882 executable-code baseline `cell_recall` and
+`changed_cell_value_accuracy`, author a non-code decision-need target table
+from the agent's own cold-start transitions, and score that table on the same
+deterministic held-out transition ids used by A1. The target table SHALL encode
+decision-relevant dynamics facts such as per-action changed-cell values,
+click-relative action effects, object/cell persistence, and hidden-register
+deltas as data rows rather than generated executable code. The representation
+fit ids SHALL be disjoint from the held-out score ids, and the banked winning
+answer SHALL be used only after planning to classify coverage migration.
+
+Experiment 4892 SHALL write
+`results/experiment_4892_decision_need_targets_value_gap.json` with required
+fields `honest_verdict`, `fork_verdict`,
+`decision_need_value_accuracy_delta_median`,
+`decision_need_value_accuracy_delta_ci95`, `per_game_value_gap`,
+`engine_cell_recall_median`, `coverage_migration_count`,
+`positive_control_game`, `positive_control_non_degenerate`,
+`delta_on_truly_heldout_split`, `planner_blind_to_banked_answer`,
+`verifier_is_oracle`, `live_path_reachable`, `generator_backend`,
+`solve_provenance`, `checkpoint_emitted`, `inference_substrate`,
+`model_specs`, `random_seed`, and `reproducibility_checksum`. The median
+decision-need value-accuracy delta SHALL be emitted as a bare numeric field.
+
+If the value-accuracy delta CI95 excludes zero and at least one
+NEVER_ENUMERATED game migrates to `COVERED`, the artifact SHALL report
+`fork_verdict=REPRESENTATION_UNLOCKS_VALUE`. If the CI95 excludes zero and no
+game migrates, it SHALL report `fork_verdict=PLANNER_GAP`. If the CI95 includes
+zero, it SHALL report `fork_verdict=VALUE_GAP_REPRESENTATION_INVARIANT`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; a real value lift is success_decision_need_value_gap_closed_<delta>; a null is complete_decision_need_no_value_lift_<fork>; a degenerate control is complete_decision_need_positive_control_degenerate_retired."
+- `fork_verdict`: principle "one of REPRESENTATION_UNLOCKS_VALUE | PLANNER_GAP | VALUE_GAP_REPRESENTATION_INVARIANT -- the headline that redirects .452."
+- `decision_need_value_accuracy_delta_median`: principle "EMIT BARE (not a {value,principle} dict) -- A1b's gated_on reads this raw value. Median (decision-need - code-engine baseline) changed-cell VALUE accuracy across games; did the non-code representation close the value gap?"
+- `decision_need_value_accuracy_delta_ci95`: principle "bootstrap CI95 of the value-accuracy delta; PASS requires it to exclude 0 for a real lift."
+- `per_game_value_gap`: principle "per-game {cell_recall, value_acc_code_baseline, value_acc_decision_need, value_delta, planned_bucket in COVERED|ENUMERATED_BUT_LOST|NEVER_ENUMERATED, migrated} -- the quantitative table."
+- `engine_cell_recall_median`: principle "the corrigendum change-LOCATION floor; proves the graded metric is non-degenerate (where exact-match was 0)."
+- `coverage_migration_count`: principle "how many NEVER_ENUMERATED games migrated to COVERED under the decision-need representation + plan_in_model."
+- `positive_control_game`: principle "tu93 -- MUST be non-degenerate (cell_recall > 0) on the graded metric or the measurement is a harness artifact."
+- `positive_control_non_degenerate`: principle "true iff tu93 came out with HIGH cell_recall -- carries forward the .450 degenerate-metric fix."
+- `delta_on_truly_heldout_split`: principle "true -- the representation is scored on a split DISJOINT from the transitions used to author the targets (B1 audits; else tautology)."
+- `planner_blind_to_banked_answer`: principle "true -- the banked winning prefix was NOT injected into authoring, fitting, or planning."
+- `verifier_is_oracle`: principle "false -- the held-out transition accuracy is oracle-distinct from the env's level-up check (circularity discipline)."
+- `live_path_reachable`: principle "the representation improves the live e3.load_engine/plan_in_model path (arc_orphan_solver_lint passes)."
+- `generator_backend`: principle "which server served (gpu0_cuda | igpu_hip) -- proves the GPU fix and a genuine live run."
+- `solve_provenance`: principle "development_proxy -- an offline inducer-accuracy measurement, NOT a live first-win; declared honestly."
+- `checkpoint_emitted`: principle "a capped run still emits a usable partial (the 2026-06-25 wall-clock fix); per-game checkpointing."
+- `inference_substrate`: principle "live_llm_inference (60s floor) -- authoring/fitting/planning invokes the LLM on the GPU-0 generator."
+- `model_specs`: principle "names the actual generator invoked (Qwen3.5-9B-MTP via the GPU-0 CUDA llama-server) -- methodology for adversarial_verify."
+- `random_seed`: principle "determinism for target authoring + fitting + planning stochastic search."
+- `reproducibility_checksum`: principle "content hash of (games, authoring/fit/plan config, held-out split, budget) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4892-DECISION-NEED-TABLE
+
+Given the agent's own cold-start transitions
+When Experiment 4892 authors decision-need targets
+Then it produces a non-code target table whose executable prediction wrapper
+can improve changed-cell value accuracy without using held-out transitions or
+the banked answer as supervision.
+
+#### SCENARIO-ARC-WMTE-4892-SAME-SPLIT-DELTA
+
+Given the Exp 4882 A1 baseline artifact and held-out split
+When Experiment 4892 builds the value-gap table
+Then every target authoring transition id is disjoint from every held-out
+score transition id, and the bare median changed-cell value-accuracy delta
+plus bootstrap CI95 drive the fork verdict.
+
+#### SCENARIO-ARC-WMTE-4892-FORK-VERDICT
+
+Given at least three NEVER_ENUMERATED games and a non-degenerate `tu93`
+positive control
+When Experiment 4892 aggregates value deltas and migration classifications
+Then it emits one of `REPRESENTATION_UNLOCKS_VALUE`, `PLANNER_GAP`, or
+`VALUE_GAP_REPRESENTATION_INVARIANT`, keeps `verifier_is_oracle=false`, and
+sets `retire_if_same_verdict=true` when the delta CI95 includes zero.
+
+#### SCENARIO-ARC-WMTE-4892-PARTIAL-CHECKPOINT
+
+Given the run reaches its elapsed budget after measuring at least one game
+When Experiment 4892 stops the current process
+Then it writes per-game checkpoints and a schema-valid partial artifact so the
+next run can resume without losing the primary value-accuracy measurement.
+
 ### REQ-ARC-WMTE-4852: Rotated ARC Level-Up Attempt Guarantee
 
 Experiment 4852 SHALL run the standing ARC solve loop on a rotated target that
