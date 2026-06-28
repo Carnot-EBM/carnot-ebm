@@ -1,5 +1,18 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-06-28 Exp 4939 held-out first-win final carry
+regression fix added `python/carnot/experiment_4939_held_out_first_win_readiness.py`
+under `REQ-CAPSTONE-4939`. The module validates the Exp 4928 clean full-25
+artifact, carries the final 0.04 held-out first-win go/no-go with source
+sha256/checksum provenance, and writes honest `blocked_<resource>` artifacts for
+missing, unclean, or critical live-recheck inputs without modifying
+`scripts/research_conductor.py`. Focused tests:
+`tests/python/test_experiment_4939_heldout_first_win_readiness.py`
+(`5 passed`); scoped Coverage.py report for the Exp 4939 module is 100% (`132`
+statements, `0` missing); focused Ruff check/format passed. Repo-wide spec
+coverage remains blocked by pre-existing unreferenced legacy tests (`1164
+test(s) missing spec traceability`).
+
 **Operational Note:** 2026-06-27 Exp 4861 generation-wall fork probe
 regression fix hardened `artifact_schema_errors()` and `_median_accuracy()`
 for malformed held-out accuracy rows under `REQ-ARC-WMTE-4861`. The validator
@@ -51,7 +64,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-06-27 (Exp 4861 generation-wall fork probe median-validation regression fix; REQ-ARC-WMTE-4861 implementation/test traceability reconciled)
+**Last Updated:** 2026-06-28 (Exp 4939 held-out first-win final carry regression fix; REQ-CAPSTONE-4939 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
