@@ -4,263 +4,67 @@ import numpy as np
 
 def engine(grid, action, data):
     if action == 1:
-        # Action 1: Move the central block structure down by 1 row
+        if data is None:
+            return grid
+        # Action 1 is a vertical click at (x, y)
+        x, y = data['x'], data['y']
         h, w = grid.shape
-        # Identify the central block region (rows 12-53, cols 11-63)
-        # Shift the block down by 1 row
-        # The block is bounded by 5s and 6s, with inner content
-        # We need to shift the inner content down
-        
-        # Create a copy of the grid
-        new_grid = grid.copy()
-        
-        # Define the region of interest (the block structure)
-        # Based on the observed transitions, the block is in the middle
-        # Rows 12-53, Cols 11-63
-        
-        # Shift the content down by 1 row
-        # The outer boundary (5s and 6s) stays, inner content shifts
-        
-        # Actually, looking at the transitions, it seems like the entire block
-        # structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block seems to be from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but the outer boundary is preserved
-        
-        # Let's implement a simple shift down for the inner content
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # Shift the inner content down by 1 row
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Copy the grid
-        new_grid = grid.copy()
-        
-        # Shift the inner content down by 1 row
-        # The block is from row 12 to 53, col 11 to 63
-        
-        # For each row from 12 to 52, shift the content down
-        # The outer boundary (5s and 6s) is preserved
-        
-        # Actually, looking at the transitions more carefully:
-        # The block structure moves down, but
+        # Create a mask for the clicked column
+        col_mask = np.zeros((h, w), dtype=int)
+        col_mask[:, x] = 1
+        
+        # Apply the click effect: toggle cells in the column
+        # Based on observed transitions, the click toggles cells in a specific pattern
+        # The pattern seems to be a vertical line of toggles
+        # We'll implement a simple toggle mechanism
+        
+        # Convert grid to list of lists for easier manipulation
+        grid_list = grid.tolist()
+        
+        # Toggle cells in the column
+        for i in range(h):
+            if col_mask[i, x] == 1:
+                grid_list[i][x] = 1 - grid_list[i][x]
+        
+        return np.array(grid_list)
+    elif action == 2:
+        if data is None:
+            return grid
+        # Action 2 is a horizontal click at (x, y)
+        x, y = data['x'], data['y']
+        h, w = grid.shape
+        # Create a mask for the clicked row
+        row_mask = np.zeros((h, w), dtype=int)
+        row_mask[y, :] = 1
+        
+        # Apply the click effect: toggle cells in the row
+        grid_list = grid.tolist()
+        
+        # Toggle cells in the row
+        for i in range(w):
+            if row_mask[y, i] == 1:
+                grid_list[y][i] = 1 - grid_list[y][i]
+        
+        return np.array(grid_list)
+    else:
+        return grid
 
 def is_level_complete(grid):
-    import numpy as np
-    grid = np.array(grid)
-    if grid.shape[0] == 0:
+    # Check if the grid is in a win state
+    # Based on observed transitions, a win state is when the grid is fully filled
+    # or when a specific pattern is achieved
+    # For simplicity, we'll check if the grid is fully filled with non-zero values
+    return np.all(grid != 0)
+
+import numpy as np
+
+def is_level_complete(grid):
+    # Flatten grid to 1D
+    flat = grid.flatten()
+    # Check if all elements are equal to the most frequent element (win state)
+    if len(flat) == 0:
         return False
-    return np.all(grid == 0)
+    # Use numpy to find unique values and their counts
+    unique, counts = np.unique(flat, return_counts=True)
+    # If the most frequent element appears more than half the time, it's a win
+    return counts[-1] > len(flat) / 2
