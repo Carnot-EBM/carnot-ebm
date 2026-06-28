@@ -52643,3 +52643,108 @@ milestones:
       flagged_adversarial upstream.'
     deliverable: results/experiment_4901_capstone_v451.json
     result: OK (conductor)
+- id: 2026.06.452
+  title: 'STOP PREDICTING change-VALUE; READ IT FROM THE ENV. .451 proved the change-VALUE gap is REPRESENTATION-INVARIANT
+    across THREE world-model representations (capstone escalated to operator). The finding is an asymmetry: change-LOCATION
+    is learnable (cell_recall 0.727), change-VALUE is not -- and ARC-AGI-3 is interactive. .452 A1 (HEADLINE) demotes the
+    model to an action-PRIOR: a change-LOCATION-pruned, REAL-ENV-VALUE-GROUNDED interleaved act-and-observe search (NOT plan_in_model
+    plan-then-validate) that fixes the .432 proposal-distribution-misses wall with the one signal that works AND sidesteps
+    the change-VALUE wall by reading values from the env. A1b (gated on A1 not lifting first-win) = the LAST representation
+    swing (latent-action interface, AdaWorld arXiv:2503.18938). If BOTH null -> representation-invariant across FOUR classes
+    + env-grounding -> deliverable LOCKS to the ~0.05 agent + the publishable FoVer paper. PLUS the 6/30 deadline lanes: A2
+    level-up bank, A3 self-play, A4 a CLEAN genuinely-live held-out first-win, B2 final harden.'
+  doc: openspec/change-proposals/research-roadmap-v452.md
+  completed: '2026-06-28'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4902-phase0
+    title: PHASE 0 (TRANSITION) -- archive .451 -> activate .452; assert YAML parses + pre-test gate green; RESOLVE any poison
+      pre-test. RECORD the .451 close-state (A1 decision-need REPRESENTATION_INVARIANT delta -0.10 migration 0; A1b action-prefix-latent
+      REPRESENTATION_INVARIANT_HARD delta 0.0 -> capstone exp4901 ESCALATED to operator; A2 dc22 no-bank duplicate-depth ->
+      reproducible_total_levels stays 68; A3 sk48 self-play pass; A4 0.0526 soft-budget partial CI lower 0; B2 package ready
+      15.146GB; energy CONCLUDED; goal-quality SOLVED; the change-VALUE gap is representation-invariant across 3 classes).
+    deliverable: results/experiment_4902_archive_451_activate_452.json
+    result: OK (conductor)
+  - id: exp4903-a1
+    title: 'PHASE A1 (ARC NORTH STAR; PRIMARY; HEADLINE) -- STOP PREDICTING change-VALUE; READ IT FROM THE ENV. A change-LOCATION-pruned,
+      REAL-ENV-VALUE-GROUNDED interleaved act-and-observe search on A1''s exact held-out games. .451 proved change-VALUE prediction
+      is REPRESENTATION-INVARIANT (3 classes) but change-LOCATION is learnable (cell_recall 0.727). A1 demotes the model from
+      state-predictor to action-PRIOR: per state, the change-LOCATION model ranks WHICH legal actions change something meaningful,
+      the agent EXECUTES the top-k in the REAL env (reset-replay) to read the TRUE next state (change-VALUE for free, never
+      predicted), the learned verifier scores progress to the .437-quality goal, best-first. Measures BOTH north-star axes:
+      ACCURACY (NEVER_ENUMERATED -> COVERED migration / first-win vs 0.04) and EFFICIENCY (actions-to-first-win). The decisive
+      swing + fork that redirects .453.'
+    deliverable: results/experiment_4903_env_grounded_location_pruned_search.json
+    result: OK (conductor)
+  - id: exp4904-a1b
+    title: PHASE A1b (ARC NORTH STAR; LAST REPRESENTATION SWING) -- LATENT-ACTION INTERFACE (AdaWorld arXiv:2503.18938, D's
+      flagged priority-1). Gated on A1's first-win-NOT-lifted regime (value_grounded_first_win_delta_median < 0.1). Infer
+      latent ACTION tokens from cold ARC transitions, align E3 legal controls to those tokens, and score A1's held-out transitions
+      through the latent-action state -- a structurally-DISTINCT representation (a latent-action interface, NOT another decision-need
+      or action-prefix-delta table). MUST genuinely run live (>60s). Either a DISTINCT representation finally moves change-VALUE,
+      or the gap is representation-invariant across FOUR classes + env-grounding -> .453 escalates.
+    deliverable: results/experiment_4904_latent_action_interface.json
+    result: OK (conductor)
+  - id: exp4905-a2
+    title: PHASE A2 (ARC NORTH STAR; LEVEL-UP ATTEMPT GUARANTEE) -- bank >=1 NEW reproducible level on a ROTATED target (rotate
+      OFF .451 dc22 and .450 g50t and .449 s5i5 and .448 r11l; prefer a shallow L2 game with a grounded next-level delta via
+      recommend_approach + dead_ends -- m0r0 L2->L3 / sp80 L2->L3 / su15 L2->L3 / cn04 L2->L3 are strong shallow-deepen candidates;
+      AVOID the hidden-state-bound dead-ends ka59/wa30 and the just-failed dc22). offline_reproduced gated.
+    deliverable: results/experiment_4905_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp4906-a3
+    title: 'PHASE A3 (ARC NORTH STAR; self-play EVERY milestone; CONTINUOUS SELF-LEARNING / FR-11) -- standing arc_loop_solve
+      loop on a banked game with an existing checkpoint, ROTATED off .451 sk48 and .450 ls20 and .449 re86 (pick another banked
+      game that has a models/arc_verifier_<game>.json checkpoint -- e.g. cd82 / vc33 / sp80 / su15): verifier-routed solve
+      -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.'
+    deliverable: results/experiment_4906_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp4907-a4
+    title: PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERABLE-FIRST, max_turns<=50) -- GENUINELY LIVE + CLEAN held-out first-win
+      readiness on the color-permuted variant harness, on the conductor's GPU-0 generator. Run the experiment_4729 driver
+      LIVE and WRITE the artifact FIRST, reuse the EXISTING 4729 tests, and CARRY model_specs + random_seed (the .451 A4 was
+      a 0.0526 soft-budget partial CI lower 0 -- .452 is the FINAL pre-deadline (6/30) go/no-go number).
+    deliverable: results/experiment_4907_heldout_first_win_readiness.json
+    result: OK (conductor)
+  - id: exp4908-b1
+    title: 'PHASE B1 (INFRA slot 1; ADVERSARIAL CHECK) -- VERIFY the A1 env-grounded-search result is HONEST: the change-VALUE
+      used in the search came from the REAL ENV (executed transitions), NOT predicted or leaked from the banked answer; the
+      change-LOCATION prior was the induced model (not the oracle); the search was planner-BLIND to the banked winning prefix;
+      live-path-reachable; oracle-distinct; ran live on GPU0; the per-game (first-win x action-cost x migration) numbers MATCH
+      the fork verdict. ALSO verify A1b GENUINELY RAN LIVE (duration_s>60, NOT DURATION_TOO_SHORT) on the SAME held-out split,
+      oracle-distinct -- or record it gate-skipped.'
+    deliverable: results/experiment_4908_env_grounded_search_audit.json
+    result: OK (conductor)
+  - id: exp4909-b2
+    title: 'PHASE B2 (INFRA slot 2; DEADLINE-RELEVANT) -- SUBMISSION-PACKAGE FINAL harden: re-verify the Kaggle ARC-AGI-3
+      agent package builds + the frozen Qwen3.5-9B-MTP stack loads under ~16GB; produce the FINAL OPERATOR submission checklist
+      (NEVER submits). The package was READY in .451 (vram ~15.146GB); the deadline is 6/30 (~2 days out) so this is the final
+      pre-deadline go/no-go confirmation.'
+    deliverable: results/experiment_4909_submission_package_harden.json
+    result: OK (conductor)
+  - id: exp4910-c
+    title: PHASE C (HARDWARE CONTINUITY; KV260) -- SSH-only per-milestone continuity check (the board is graduated terminal;
+      stays in the rotation per Hardware-Task Continuity Discipline). NEVER a host SD-card precondition; always WRITE a blocked
+      artifact if SSH is unreachable.
+    deliverable: results/experiment_4910_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp4911-d
+    title: "PHASE D (SOTA-INGESTION -- the .453 frontier + the POST-sprint pivot) -- given A1's env-grounded fork verdict\
+      \ + A1b's last-representation result, ingest the matching SOTA via the RELIABLE channel (sweep_clusters / sweep_semscholar\
+      \ + low-concurrency WebSearch/WebFetch; NOT /deep-research). BECAUSE the ARC sprint retires 6/30, ALSO map the POST-sprint\
+      \ pivot back to the verifier-moat / oracle-distinct / FoVer-paper track (north-star \xA71/\xA75). Map the strongest\
+      \ 3-5 methods to .453 candidates with real HTTP-200 arXiv IDs. Do NOT re-ingest the nulled energy / TTA-on-code-engine\
+      \ / stronger-local-code-inducer / decision-need-targets / action-prefix-latent / coverage / exploration / selection\
+      \ / perception-from-grid classes."
+    deliverable: results/experiment_4911_sota_ingestion_v453_frontier.json
+    result: OK (conductor)
+  - id: exp4912-e
+    title: 'PHASE E (CAPSTONE .452) -- aggregate the scorecard. HEADLINE = A1''s env-grounded-search fork verdict (trusted
+      ONLY if B1 confirmed a1_trustworthy: real-env value + planner-blind + non-degenerate positive control + numbers-match,
+      AND that A1b genuinely ran live OR was gate-skipped). If A1 UNLOCKED first-wins -> .453 scales env-grounded search.
+      If A1 did NOT lift first-win AND A1b also nulled -> the change-VALUE / first-win wall survives env-grounding + FOUR
+      representations; report the deliverable = the current ~0.05 agent + the publishable FoVer paper, and tee up the post-6/30
+      verifier-moat pivot (D''s map). Report the scored deadline levers (A2 bank, A3 self-play, A4 fresh-live readiness, B2
+      package). Skip any flagged_adversarial upstream.'
+    deliverable: results/experiment_4912_capstone_v452.json
+    result: OK (conductor)
