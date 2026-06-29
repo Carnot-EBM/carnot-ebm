@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.459",
+  "generated_at": "2026-06-29T20:43:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The retro TIMING DATA again returned 0 experiments / 0 wall-minutes / null GPU-idle for 2026.06.459, but this is a FALSE ZERO, not a genuinely empty milestone. Git history and on-disk artifacts this turn show the full .459 phase sequence ran and committed today: 11 arms exp4979 (archive_458_activate_459) -> exp4989 (capstone_v459), spanning a ~12:54->16:34Z mtime window (~3.7h), capstone verdict complete_heldout_first_win_0.04_full25_final_flag_resolved. The 0/0/0/null is the recurring retro-harness false-zero detector gap the prior .457 retro documented: the timing-data detector reaches the standalone module but not the conductor's retro prompt-assembly consumer, so the TIMING DATA block shows zero even though arms ran.",
+  "bottlenecks_identified": [
+    "RECURRING FALSE-ZERO DETECTOR GAP (the load-bearing operational finding): the retro prompt's TIMING DATA block reported 0 experiments / 0 wall-minutes for .459, yet git + disk show 11 committed arms (exp4979->exp4989) over a ~3.7h mtime window today. The standalone relaxed-window timing detector (re-confirmed across .456/.457 and again this milestone's B3 arm) is wired but its output does not reach the conductor's retro prompt-assembly consumer, so the bottleneck analysis this retro exists to perform is structurally unavailable. This is the same gap documented in the .457 retro.",
+    "Because experiments_completed is a false zero, no slowest-experiment ranking can be produced from the bounded data and per-arm execution efficiency cannot be measured here -- the diagnostic is gated on the detector being wired, not on the milestone's actual behaviour.",
+    "GPU idle is NOT a bottleneck this snapshot: the .459 capstone (exp4989_capstone_v459) is aggregation_from_upstream_artifacts (synthesis-only) and landed ~16:34Z, ~4h before the 20:43Z GPU snapshot, so the idle RTX 3090s (0% util) are by-design correct. gpu_idle_on_compute_bound_tasks stays null because no compute-bound task is present in the bounded data -- the GPU-idle claim is correctly NOT flagged."
+  ],
+  "improvements_suggested": [
+    "Operator/outer-loop (outside this retro task's allowed edit surface): wire the already-shipped relaxed-window timing-data fallback (the .456 fix, re-confirmed .457/.459) into scripts/research_conductor.py's retro prompt-assembly consumer so the TIMING DATA block reflects the arms actually present at run time (n_arms>=7, wall_minutes>0) instead of a false zero. One conductor-core wiring restores per-experiment bottleneck analysis for every future retro.",
+    "Until that lands, have the retro harness fall back to a results/-mtime window over the milestone's committed experiment_*.json artifacts so even a false-zero TIMING DATA block yields a real wall-time window (the .459 arms exp4979->exp4989 are an exemplar the fallback would have captured).",
+    "Tag capstone/aggregation milestones explicitly so the harness expects synthesis-only GPU idle and does not conflate by-design idle GPUs with a compute-bound stall."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Land the relaxed-window timing-data detector into the conductor's retro prompt-assembly consumer -- this closes the ~recurring false-zero gap (now spanning many milestones through .457/.459) and is the single change that restores the retro's core efficiency-analysis function. Conductor-core, so it is handed to the operator/outer-loop, not an autonomous task.",
+    "Freeze-and-verify the locked ARC submission package (frozen Qwen3.5-9B-MTP iGPU stack, ~15.146GB < 16GB, operator-only) ahead of the 2026-06-30 deadline; a capstone milestone whose new arms are deadline-lane harden + held-out go/no-go + KV260 continuity is the correct shape for this final freeze step.",
+    "Point the idle GPU 0 (conductor) / GPU 1 (outer loop) capacity at any remaining headroom-positive deepen / held-out first-win work before the deadline rather than leaving both 3090s at 0% util."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The anti-hallucination guard correctly stopped fabrication of per-arm timing, but the 0/0/0/null it enforced is itself a known recurring detector false-zero, not a true empty milestone -- git + disk evidence this turn confirms 11 .459 arms (exp4979->exp4989) ran and committed a capstone. The ~10% saving is recovered per-retro forensics time: wiring the B3-confirmed relaxed-window detector into the conductor's retro consumer would remove the manual disk/git reconstruction every retro has had to do since ~.363. The fix is operational, not research, and sits outside this task's allowed edit surface, so the correct move is an honest hand-off to the operator/outer-loop rather than a silent zero."
+}
