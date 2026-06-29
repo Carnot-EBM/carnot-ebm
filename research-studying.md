@@ -5572,3 +5572,26 @@ ARC sprint (through 2026-06-30). Decisions:
 - variance_reduced_uncertainty_head
 - fast_slow_process_router
 <!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+
+<!-- EXP4995-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
+## Exp 4995 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
+- Cited SOTA papers: arXiv:2504.13134, arXiv:2605.10158, arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989, arXiv:2508.16665, arXiv:2508.10539, arXiv:2502.11157, arXiv:2504.01005, arXiv:2504.00891, arXiv:2509.24460, arXiv:2510.14913, arXiv:2603.04304
+- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4995_distributional_energy_verifier_turnkey.py`
+- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, add 2504.13134 as the EBRM distributional reward-head comparator, add 2605.10158 as the uPRM cheap discriminative process-verifier baseline, and report both as roadmap inputs after 2026-06-30 while preserving the oracle-distinct/no-model-identity-shortcut gate.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- distributional_energy_lora_ensemble_with_fover_penalties
+- ebrm_distributional_reward_head
+- uprm_cheap_process_verifier_baseline
+- discriminative_budget_frontier
+- v1_uncertainty_guided_regeneration_comparator
+- genprm_matched_compute_generative_comparator
+- thinkprm_matched_compute_comparator
+- efficiency_parity_frontier
+- contextprm_cross_domain_registry_comparator
+- variance_reduced_uncertainty_head
+- fast_slow_process_router
+<!-- EXP4995-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->

@@ -1,0 +1,690 @@
+{
+  "already_ingested_reconfirmed": [
+    "2605.18871",
+    "2504.16828",
+    "2502.01989",
+    "2508.16665",
+    "2508.10539",
+    "2502.11157",
+    "2504.01005",
+    "2504.00891",
+    "2509.24460",
+    "2510.14913",
+    "2603.04304"
+  ],
+  "arxiv_ids_cited": [
+    "2504.13134",
+    "2605.10158",
+    "2605.18871",
+    "2504.16828",
+    "2502.01989",
+    "2508.16665",
+    "2508.10539",
+    "2502.11157",
+    "2504.01005",
+    "2504.00891",
+    "2509.24460",
+    "2510.14913",
+    "2603.04304"
+  ],
+  "citations": {
+    "2502.01989": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model",
+      "url": "https://arxiv.org/abs/2502.01989"
+    },
+    "2502.11157": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Dyve: Thinking Fast and Slow for Dynamic Process Verification",
+      "url": "https://arxiv.org/abs/2502.11157"
+    },
+    "2504.00891": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "GenPRM: Scaling Test-Time Compute of Process Reward Models via Generative Reasoning",
+      "url": "https://arxiv.org/abs/2504.00891"
+    },
+    "2504.01005": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning",
+      "url": "https://arxiv.org/abs/2504.01005"
+    },
+    "2504.13134": {
+      "http_status": 200,
+      "ingestion_status": "new",
+      "title": "Energy-Based Reward Models for Robust Language Model Alignment",
+      "url": "https://arxiv.org/abs/2504.13134"
+    },
+    "2504.16828": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Process Reward Models That Think",
+      "url": "https://arxiv.org/abs/2504.16828"
+    },
+    "2508.10539": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Improving Value-based Process Verifier via Low-Cost Variance Reduction",
+      "url": "https://arxiv.org/abs/2508.10539"
+    },
+    "2508.16665": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Trust but Verify! A Survey on Verification Design for Test-time Scaling",
+      "url": "https://arxiv.org/abs/2508.16665"
+    },
+    "2509.24460": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "ContextPRM: Leveraging Contextual Coherence for multi-domain Test-Time Scaling",
+      "url": "https://arxiv.org/abs/2509.24460"
+    },
+    "2510.14913": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Budget-aware Test-time Scaling via Discriminative Verification",
+      "url": "https://arxiv.org/abs/2510.14913"
+    },
+    "2603.04304": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
+      "url": "https://arxiv.org/abs/2603.04304"
+    },
+    "2605.10158": {
+      "http_status": 200,
+      "ingestion_status": "new",
+      "title": "Unsupervised Process Reward Models",
+      "url": "https://arxiv.org/abs/2605.10158"
+    },
+    "2605.18871": {
+      "http_status": 200,
+      "ingestion_status": "reconfirmed",
+      "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+      "url": "https://arxiv.org/abs/2605.18871"
+    }
+  },
+  "dry_run_three_columns": {
+    "columns": [
+      "self_consistency",
+      "decomposed_energy_verifier",
+      "oracle"
+    ],
+    "dry_run_note": "Turnkey dry-run only: self-consistency, decomposed-energy verifier, and oracle columns wire end-to-end on a small cached slice; no moat claim is made.",
+    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4995_distributional_energy_verifier_turnkey.py",
+    "full_benchmark_run": false,
+    "n_rows": 3,
+    "reconfirmed_from_exp4951": true,
+    "reconfirmed_from_exp4962": true,
+    "reconfirmed_from_exp4973": true,
+    "reconfirmed_from_exp4984": true,
+    "rows": [
+      {
+        "decomposed_energy_verifier": {
+          "abstention_recommended": false,
+          "analytical_penalty_source": {
+            "cached_penalty_field": "deterministic_constraint_penalty",
+            "components": [
+              "fr11_session_memory",
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ],
+            "registry_path": "ops/verifier_registry.yaml",
+            "verifier_id": "fover_production_ensemble"
+          },
+          "answer": "Stay at one hotel, visit the museum on day 1, reserve the outdoor day for day 2, and return to the airport at 16:30 on day 3.",
+          "correct_by_cached_oracle": true,
+          "energy": -0.85,
+          "ensemble_stddev": 0.05,
+          "fover_analytical_constraint_penalty": 0.03,
+          "learned_quality_ensemble_mean": 0.88,
+          "selected_candidate_id": "tp4922-001-b",
+          "verifier_is_oracle": false
+        },
+        "domain": "travelplanner_style_structured_reasoning",
+        "oracle": {
+          "answer": "Stay at one hotel, visit the museum on day 1, reserve the outdoor day for day 2, and return to the airport at 16:30 on day 3.",
+          "oracle_label_correct": true,
+          "oracle_used_for_correctness_only": true,
+          "selected_candidate_id": "tp4922-001-b"
+        },
+        "problem_id": "tp4922-001",
+        "self_consistency": {
+          "answer": "Use two hotel changes, put the museum after the airport return, and keep the outdoor day last.",
+          "correct_by_cached_oracle": false,
+          "selected_candidate_id": "tp4922-001-a",
+          "vote_count": 3.0
+        }
+      },
+      {
+        "decomposed_energy_verifier": {
+          "abstention_recommended": false,
+          "analytical_penalty_source": {
+            "cached_penalty_field": "deterministic_constraint_penalty",
+            "components": [
+              "fr11_session_memory",
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ],
+            "registry_path": "ops/verifier_registry.yaml",
+            "verifier_id": "fover_production_ensemble"
+          },
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "correct_by_cached_oracle": true,
+          "energy": -0.77,
+          "ensemble_stddev": 0.06,
+          "fover_analytical_constraint_penalty": 0.04,
+          "learned_quality_ensemble_mean": 0.81,
+          "selected_candidate_id": "tp4922-002-a",
+          "verifier_is_oracle": false
+        },
+        "domain": "travelplanner_style_structured_reasoning",
+        "oracle": {
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "oracle_label_correct": true,
+          "oracle_used_for_correctness_only": true,
+          "selected_candidate_id": "tp4922-002-a"
+        },
+        "problem_id": "tp4922-002",
+        "self_consistency": {
+          "answer": "Visit client north before lunch, transfer by train at 14:00, then visit client south without returning to the first city.",
+          "correct_by_cached_oracle": true,
+          "selected_candidate_id": "tp4922-002-a",
+          "vote_count": 4.0
+        }
+      },
+      {
+        "decomposed_energy_verifier": {
+          "abstention_recommended": false,
+          "analytical_penalty_source": {
+            "cached_penalty_field": "deterministic_constraint_penalty",
+            "components": [
+              "fr11_session_memory",
+              "tier0r_curry_howard",
+              "tier0s_arithmetic_gap",
+              "tier0u_logical_consistency"
+            ],
+            "registry_path": "ops/verifier_registry.yaml",
+            "verifier_id": "fover_production_ensemble"
+          },
+          "answer": "Schedule the museum before 15:00, keep dinner fixed at 19:00, and move the hike to the clear-weather morning.",
+          "correct_by_cached_oracle": true,
+          "energy": -0.84,
+          "ensemble_stddev": 0.07,
+          "fover_analytical_constraint_penalty": 0.02,
+          "learned_quality_ensemble_mean": 0.86,
+          "selected_candidate_id": "tp4922-003-b",
+          "verifier_is_oracle": false
+        },
+        "domain": "travelplanner_style_structured_reasoning",
+        "oracle": {
+          "answer": "Schedule the museum before 15:00, keep dinner fixed at 19:00, and move the hike to the clear-weather morning.",
+          "oracle_label_correct": true,
+          "oracle_used_for_correctness_only": true,
+          "selected_candidate_id": "tp4922-003-b"
+        },
+        "problem_id": "tp4922-003",
+        "self_consistency": {
+          "answer": "Put the hike after dinner and visit the museum after closing.",
+          "correct_by_cached_oracle": false,
+          "selected_candidate_id": "tp4922-003-a",
+          "vote_count": 3.0
+        }
+      }
+    ]
+  },
+  "duration_s": 0.0001,
+  "field_principles": {
+    "already_ingested_reconfirmed": {
+      "principle": "the prior 2605.18871 / 2504.16828 / 2502.01989 / 2508.16665 / 2508.10539 / 2502.11157 / 2504.01005 / 2504.00891 / 2509.24460 / 2510.14913 / 2603.04304 set remains cited."
+    },
+    "arxiv_ids_cited": {
+      "principle": "NEW: 2504.13134 + 2605.10158; re-confirmed: 2605.18871 + 2504.16828 + 2502.01989 + 2508.16665 + 2508.10539 + 2502.11157 + 2504.01005 + 2504.00891 + 2509.24460 + 2510.14913 + 2603.04304 -- real IDs, no fabrication (SOTA-ingestion guardrail)."
+    },
+    "citations": {
+      "principle": "HTTP-200 arXiv source metadata backing every paper ID."
+    },
+    "dry_run_three_columns": {
+      "principle": "small cached TravelPlanner dry-run rows for {self_consistency, decomposed_energy_verifier, oracle}; proves wiring only."
+    },
+    "duration_s": {
+      "principle": "0.0001s floor for aggregation-only turnkey construction."
+    },
+    "field_principles": {
+      "principle": "principle annotations for every required user-facing artifact field."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_distributional_energy_verifier_pivot_turnkey_backlog_extended."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads the spec + slice + papers; 0.0001s floor) -- no real benchmark run."
+    },
+    "moat_proven_claimed": {
+      "principle": "false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate."
+    },
+    "next_milestone_roadmap_inputs": {
+      "principle": "post-6/30 roadmap inputs promoted from the new SOTA ingestion."
+    },
+    "no_real_benchmark_run": {
+      "principle": "true -- majority-ARC governs through 2026-06-30; Exp4995 is readiness only."
+    },
+    "pivot_executable_on_7_1": {
+      "principle": "true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable)."
+    },
+    "pivot_turnkey": {
+      "principle": "true -- the post-6/30 experiment is STILL ONE documented command away (real loader + dry-run + entrypoint re-confirmed)."
+    },
+    "post_sprint_first_experiment_pointer": {
+      "principle": "the single documented entrypoint + the pre-staged post-6/30 first-experiment so the loop pivots cleanly 7/1."
+    },
+    "preconditions_checked": {
+      "principle": "records spec/slice/network checks; a missing spec emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the dry-run wiring."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (papers cited, turnkey spec, dry-run config) so a replication catches drift."
+    },
+    "research_note_path": {
+      "principle": "points to the human-readable SOTA-ingestion and turnkey-readiness note."
+    },
+    "sc_not_saturated_domain": {
+      "principle": "the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR)."
+    },
+    "sota_to_carnot_mapping": {
+      "principle": "per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap."
+    },
+    "source_artifacts": {
+      "principle": "records the upstream spec, Exp4984/Exp4962 turnkey artifacts, slice, and SOTA inputs."
+    },
+    "three_column_dry_run_ok": {
+      "principle": "the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run)."
+    },
+    "turnkey_spec": {
+      "principle": "the one-command 7/1 experiment shape re-confirmed from Exp 4984."
+    },
+    "validation_gate": {
+      "principle": "the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here."
+    }
+  },
+  "honest_verdict": "success_distributional_energy_verifier_pivot_turnkey_backlog_extended",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "moat_proven_claimed": false,
+  "next_milestone_roadmap_inputs": [
+    "distributional_energy_lora_ensemble_with_fover_penalties",
+    "ebrm_distributional_reward_head",
+    "uprm_cheap_process_verifier_baseline",
+    "discriminative_budget_frontier",
+    "v1_uncertainty_guided_regeneration_comparator",
+    "genprm_matched_compute_generative_comparator",
+    "thinkprm_matched_compute_comparator",
+    "efficiency_parity_frontier",
+    "contextprm_cross_domain_registry_comparator",
+    "variance_reduced_uncertainty_head",
+    "fast_slow_process_router"
+  ],
+  "no_real_benchmark_run": true,
+  "pivot_executable_on_7_1": true,
+  "pivot_turnkey": true,
+  "post_sprint_first_experiment_pointer": {
+    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4995_distributional_energy_verifier_turnkey.py",
+    "first_experiment": "distributional_energy_verifier_vs_self_consistency_on_sc_not_saturated_TravelPlanner_or_MuSR",
+    "not_before_date": "2026-07-01",
+    "operator_note": "Use this single staged entrypoint after the majority-ARC sprint retires; promotion requires the validation gate.",
+    "real_benchmark_executed_by_exp4995": false
+  },
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "blocked_resource": null,
+    "codex_md_read": true,
+    "domain_error": null,
+    "domain_slice_path": "/home/ianblenke/github.com/ianblenke/carnot/data/experiment_4922_travelplanner_structured_slice.jsonl",
+    "domain_slice_present": true,
+    "domain_slice_rows": 3,
+    "domain_slice_valid": true,
+    "exp4922_harness_path": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
+    "exp4922_harness_present": true,
+    "exp4962_turnkey_artifact_path": "results/experiment_4962_distributional_energy_verifier_turnkey.json",
+    "exp4962_turnkey_artifact_present": true,
+    "exp4962_turnkey_module_path": "python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py",
+    "exp4962_turnkey_module_present": true,
+    "exp4984_turnkey_artifact_path": "results/experiment_4984_distributional_energy_verifier_turnkey.json",
+    "exp4984_turnkey_artifact_present": true,
+    "exp4984_turnkey_module_path": "python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py",
+    "exp4984_turnkey_module_present": true,
+    "fover_active_ensemble_id": "fover_production_ensemble",
+    "fover_active_ensemble_present": true,
+    "fover_registry_path": "ops/verifier_registry.yaml",
+    "fover_registry_present": true,
+    "kona_spec_has_req": true,
+    "kona_spec_path": "openspec/capabilities/phase3-kona/spec.md",
+    "kona_spec_present": true,
+    "model_load": false,
+    "net_available": true,
+    "network_checked_url": "https://arxiv.org/abs/2504.13134",
+    "ops_docs_modified": false,
+    "real_benchmark_executed": false,
+    "sc_not_saturated_domain": "TravelPlanner",
+    "scripts_research_conductor_modified": false,
+    "self_consistency_dry_run_accuracy": 0.3333333333333333,
+    "self_consistency_saturated": false,
+    "self_consistency_saturation_threshold": 0.9,
+    "training_launched": false
+  },
+  "random_seed": 20260629,
+  "reproducibility_checksum": "f974f7794b333263",
+  "research_note_path": "docs/research-notes/distributional-energy-verifier-turnkey-backlog-v460-20260629.md",
+  "sc_not_saturated_domain": "TravelPlanner",
+  "sota_to_carnot_mapping": {
+    "2502.01989": {
+      "implementation_cost_over_current_stack": "High: FoVer penalties can provide analytical constraints, but VFScale requires a generator-side diffusion or denoising search substrate plus dense-energy training; it is not a drop-in replacement for the current cached-candidate verifier.",
+      "pitfalls": "Evidence is strongest on Maze/Sudoku-style diffusion reasoning, not LLM structured-output reranking; the verifier-free objective can blur the oracle-distinct control, and hMCTS cost can erase matched-compute gains.",
+      "roadmap_input": "support_for_next_milestone: vfscale_intrinsic_energy_dense_reward_ablation",
+      "source_id": "2502.01989",
+      "strongest_method": "VFScale: train an intrinsic diffusion energy landscape with MRNCL plus KL regularization, then use hybrid MCTS over denoising trajectories so the intrinsic energy acts as a dense verifier/reward.",
+      "title": "VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model",
+      "url": "https://arxiv.org/abs/2502.01989"
+    },
+    "2502.11157": {
+      "implementation_cost_over_current_stack": "Medium-high: wrap FoVer plus the learned energy scorer in a cascade router that accepts easy rows cheaply and escalates only uncertainty or constraint-conflict rows to a slower process verifier.",
+      "pitfalls": "Router false negatives can skip needed slow checks; slow-path tokens can erase efficiency gains; ProcessBench/MATH evidence must be revalidated on TravelPlanner or MuSR before any moat claim.",
+      "roadmap_input": "candidate_next_milestone: fast_slow_process_router",
+      "source_id": "2502.11157",
+      "strongest_method": "Dynamic process verification with a cheap System-1 token-level fast path and selective System-2 comprehensive analysis for hard or ambiguous steps.",
+      "title": "Dyve: Thinking Fast and Slow for Dynamic Process Verification",
+      "url": "https://arxiv.org/abs/2502.11157"
+    },
+    "2504.00891": {
+      "implementation_cost_over_current_stack": "Medium-high: add a generative PRM comparator beside the discriminative decomposed-energy verifier, charge its reasoning and code-check tokens against the same budget, and keep FoVer penalties as the deterministic oracle-distinct analytical column.",
+      "pitfalls": "Generated verification traces may re-derive the generator answer, code checks are not available for every TravelPlanner/MuSR-style constraint, and verifier-token cost can erase matched-compute gains.",
+      "roadmap_input": "candidate_next_milestone: genprm_matched_compute_generative_comparator",
+      "source_id": "2504.00891",
+      "strongest_method": "GenPRM: a generative process reward model that reasons over each step, emits verification chains, and can invoke code-style checks as test-time compute scales.",
+      "title": "GenPRM: Scaling Test-Time Compute of Process Reward Models via Generative Reasoning",
+      "url": "https://arxiv.org/abs/2504.00891"
+    },
+    "2504.01005": {
+      "implementation_cost_over_current_stack": "Low-medium: add matched-compute accounting around the existing three-column harness, then report the decomposed-energy verifier against the self-consistency/generative-verification frontier rather than only against equal candidate counts.",
+      "pitfalls": "A verifier that improves accuracy can still lose the north-star win if verification tokens are too expensive; frontier conclusions can flip by domain, generator strength, and self-consistency saturation.",
+      "roadmap_input": "candidate_next_milestone: efficiency_parity_frontier",
+      "source_id": "2504.01005",
+      "strongest_method": "Compute-optimal fixed-budget analysis of when to allocate inference tokens to additional self-consistency samples versus fewer samples plus a generative verification pass.",
+      "title": "When To Solve, When To Verify: Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning",
+      "url": "https://arxiv.org/abs/2504.01005"
+    },
+    "2504.13134": {
+      "implementation_cost_over_current_stack": "Medium: Carnot already has a learned quality-scorer ensemble stub. Add an EBRM-style distribution-modeling head as a comparator or replacement for the mean/stddev quality head while keeping FoVer analytical constraint penalties as the structured-reasoning addition.",
+      "pitfalls": "It is an alignment reward model, not a per-step process verifier; the structured-reasoning constraint-penalty term is Carnot's addition; post-hoc reward-model refinement can inherit the base reward model's blind spots.",
+      "roadmap_input": "candidate_next_milestone: ebrm_distributional_reward_head",
+      "source_id": "2504.13134",
+      "strongest_method": "EBRM post-hoc energy reward refinement: model the reward distribution explicitly instead of collapsing preference uncertainty to a scalar, using conflict-aware filtering, label-noise-aware contrastive training, and hybrid initialization to make a base reward model more robust.",
+      "title": "Energy-Based Reward Models for Robust Language Model Alignment",
+      "url": "https://arxiv.org/abs/2504.13134"
+    },
+    "2504.16828": {
+      "implementation_cost_over_current_stack": "Medium-high: keep FoVer penalties as deterministic checks, add a generative PRM comparator or labeler for the learned quality-scorer ensemble, and account for verifier tokens against self-consistency at matched compute.",
+      "pitfalls": "Verifier tokens can dominate cost, generated rationales may re-derive the generator answer instead of judging it, process labels may not transfer from math to TravelPlanner/MuSR, and long-CoT traces are hard to expose safely.",
+      "roadmap_input": "support_for_next_milestone: thinkprm_generative_prm_comparator",
+      "source_id": "2504.16828",
+      "strongest_method": "ThinkPRM: a generative long-CoT process verifier that writes a step-wise verification trace and uses that generated reasoning as the reward signal for best-of-N selection or reward-guided search.",
+      "title": "Process Reward Models That Think",
+      "url": "https://arxiv.org/abs/2504.16828"
+    },
+    "2508.10539": {
+      "implementation_cost_over_current_stack": "Medium: add process-state value labels or cached rollouts to the TravelPlanner/MuSR candidate traces, then calibrate the learned quality-ensemble STDDEV used by the regenerate/abstain loop.",
+      "pitfalls": "Evidence is math-centric; reducing variance can over-smooth genuine epistemic disagreement; adjacent-step value estimates may be unavailable for outcome-only rows.",
+      "roadmap_input": "candidate_next_milestone: variance_reduced_uncertainty_head",
+      "source_id": "2508.10539",
+      "strongest_method": "ComMCS variance reduction for value-based process verifiers: combine current-step and later-step Monte Carlo value estimates to reduce annotation variance without additional LLM inference.",
+      "title": "Improving Value-based Process Verifier via Low-Cost Variance Reduction",
+      "url": "https://arxiv.org/abs/2508.10539"
+    },
+    "2508.16665": {
+      "implementation_cost_over_current_stack": "Low: no model change required. Use it to label Carnot's current decomposed-energy verifier as a discriminative outcome-ranker with analytical constraint penalties, uncertainty, and abstention controls.",
+      "pitfalls": "It is a survey, not a direct measured win; taxonomy language can hide whether the verifier is oracle-distinct, matched-compute, or evaluated on a self-consistency-not-saturated domain.",
+      "roadmap_input": "taxonomy_anchor: verifier_design_cell_and_adjacent_open_cells",
+      "source_id": "2508.16665",
+      "strongest_method": "Verifier-design taxonomy for test-time scaling: outcome vs process, generative vs discriminative, prompt-based vs trained, and utility axes for efficiency and abstention.",
+      "title": "Trust but Verify! A Survey on Verification Design for Test-time Scaling",
+      "url": "https://arxiv.org/abs/2508.16665"
+    },
+    "2509.24460": {
+      "implementation_cost_over_current_stack": "Medium-high: extend the verifier registry with domain tags, coherence features, and cross-domain calibration slices, then compare against the current math-strong/code-weak Carnot verifier stack.",
+      "pitfalls": "Context coherence can reward fluent but wrong traces, cross-domain PRM generalization may hide per-domain failures, and registry expansion must avoid turning an executable oracle into the verifier itself.",
+      "roadmap_input": "candidate_next_milestone: contextprm_cross_domain_registry_comparator",
+      "source_id": "2509.24460",
+      "strongest_method": "ContextPRM: multi-domain process verification that uses contextual coherence signals to scale test-time verification beyond a single math-heavy verifier domain.",
+      "title": "ContextPRM: Leveraging Contextual Coherence for multi-domain Test-Time Scaling",
+      "url": "https://arxiv.org/abs/2509.24460"
+    },
+    "2510.14913": {
+      "implementation_cost_over_current_stack": "Low-medium: Carnot's decomposed-energy verifier is already a discriminative learned quality scorer plus deterministic penalties. Add matched-compute accounting, report accuracy-per-cost, and compare directly against both discriminative and generative verifier frontiers.",
+      "pitfalls": "A fixed compute budget can make an accurate verifier lose if its candidate scoring overhead is too high; hybrid self-consistency can hide whether the verifier itself adds oracle-distinct signal; math frontier results must be revalidated on TravelPlanner or MuSR.",
+      "roadmap_input": "candidate_next_milestone: discriminative_budget_frontier",
+      "source_id": "2510.14913",
+      "strongest_method": "Budget-aware discriminative verification: under a fixed inference budget, combine self-consistency with a discriminative verifier rather than spending the budget on costly generative verification traces.",
+      "title": "Budget-aware Test-time Scaling via Discriminative Verification",
+      "url": "https://arxiv.org/abs/2510.14913"
+    },
+    "2603.04304": {
+      "implementation_cost_over_current_stack": "Medium-high: add a pairwise ranking comparator around the current candidate table, use ensemble STDDEV to target regeneration or abstention, and keep the learned quality mean as the pointwise baseline.",
+      "pitfalls": "A unified generator/self-verifier can collapse into a model-identity shortcut, pairwise tournaments can spend substantial compute, and code or math wins may not transfer to oracle-distinct TravelPlanner/MuSR constraints without a separate verifier signal.",
+      "roadmap_input": "candidate_next_milestone: v1_uncertainty_guided_regeneration_comparator",
+      "source_id": "2603.04304",
+      "strongest_method": "V1-Infer pairwise self-verification: use uncertainty-guided tournament ranking over candidate pairs, allocating verification compute where relative correctness is most uncertain.",
+      "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
+      "url": "https://arxiv.org/abs/2603.04304"
+    },
+    "2605.10158": {
+      "implementation_cost_over_current_stack": "Low-medium: add uPRM as a cheap discriminative baseline over the existing candidate table and report matched-compute parity against self-consistency and the decomposed-energy verifier.",
+      "pitfalls": "Its signal is derived from the generator's own next-token probabilities, creating a model-identity shortcut risk; for Carnot's oracle-distinct moat it is a strong cheap comparator, not itself the independent learned/energy verifier.",
+      "roadmap_input": "candidate_next_milestone: uprm_cheap_process_verifier_baseline",
+      "source_id": "2605.10158",
+      "strongest_method": "uPRM unsupervised process verification: train a discriminative process reward model without human labels from the generator's next-token probabilities, then use it as a test-time verifier that can beat majority voting by up to 6.9%.",
+      "title": "Unsupervised Process Reward Models",
+      "url": "https://arxiv.org/abs/2605.10158"
+    },
+    "2605.18871": {
+      "implementation_cost_over_current_stack": "Medium: keep Carnot's FoVer verifier ensemble as the analytical penalty source, add a learned LoRA-ensemble quality scorer, calibrate mean/stddev on structured rows, and prohibit model_id or oracle-label features in the verifier path.",
+      "pitfalls": "Fails or overclaims when self-consistency is near ceiling, deterministic penalties silently become the correctness oracle, code tasks leak model identity, or stddev abstention is tuned on test labels.",
+      "roadmap_input": "flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties",
+      "source_id": "2605.18871",
+      "strongest_method": "Decomposed energy verifier: heterogeneous LoRA quality-scorer ensemble on one frozen encoder; ensemble mean ranks candidates, ensemble stddev triggers targeted regeneration or abstention; deterministic analytical constraint penalties remain separate.",
+      "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+      "url": "https://arxiv.org/abs/2605.18871"
+    }
+  },
+  "source_artifacts": {
+    "domain_slice": "data/experiment_4922_travelplanner_structured_slice.jsonl",
+    "exp4922_harness": "python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py",
+    "exp4962_turnkey_artifact": "results/experiment_4962_distributional_energy_verifier_turnkey.json",
+    "exp4962_turnkey_module": "python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py",
+    "exp4984_turnkey_artifact": "results/experiment_4984_distributional_energy_verifier_turnkey.json",
+    "exp4984_turnkey_module": "python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py",
+    "fover_registry": "ops/verifier_registry.yaml",
+    "kona_spec": "openspec/capabilities/phase3-kona/spec.md",
+    "north_star": "ops/north-star.md",
+    "research_references": "research-references.md",
+    "research_studying": "research-studying.md",
+    "verifier_gaps": "ops/verifier_gaps.md"
+  },
+  "three_column_dry_run_ok": true,
+  "turnkey_spec": {
+    "candidate_pool": "post-6/30 generated structured-reasoning candidates",
+    "decomposed_energy_verifier_column": {
+      "analytical_penalties": {
+        "cached_penalty_field": "deterministic_constraint_penalty",
+        "components": [
+          "fr11_session_memory",
+          "tier0r_curry_howard",
+          "tier0s_arithmetic_gap",
+          "tier0u_logical_consistency"
+        ],
+        "registry_path": "ops/verifier_registry.yaml",
+        "verifier_id": "fover_production_ensemble"
+      },
+      "formula": "-learned_quality_ensemble_mean + fover_analytical_constraint_penalty",
+      "learned_quality_scorer": "heterogeneous LoRA ensemble on one frozen encoder; mean ranks candidates",
+      "model_identity_features_allowed": false,
+      "oracle_labels_allowed_in_verifier": false,
+      "uncertainty_policy": "ensemble stddev above threshold triggers targeted regeneration or abstention"
+    },
+    "domain": "TravelPlanner",
+    "entrypoint_command": ".venv/bin/python python/carnot/experiment_4995_distributional_energy_verifier_turnkey.py",
+    "experiment": "post_6_30_distributional_energy_verifier_moat_test_v460",
+    "oracle_column": "cached labels or domain oracle used only to score correctness",
+    "real_experiment_not_run": true,
+    "real_loader": "data/experiment_4922_travelplanner_structured_slice.jsonl",
+    "self_consistency_column": "majority answer over matched candidate sample counts",
+    "sota_backlog_extension": {
+      "new_arxiv_ids": [
+        "2508.16665",
+        "2508.10539",
+        "2502.11157"
+      ],
+      "next_milestone_roadmap_inputs": [
+        "distributional_energy_lora_ensemble_with_fover_penalties",
+        "variance_reduced_uncertainty_head",
+        "fast_slow_process_router",
+        "thinkprm_matched_compute_comparator"
+      ],
+      "reconfirmed_arxiv_ids": [
+        "2605.18871",
+        "2504.16828",
+        "2502.01989"
+      ],
+      "taxonomy_position": {
+        "adjacent_open_cells": [
+          "generative_process_verifier",
+          "value_process_variance_reduction",
+          "fast_slow_process_router"
+        ],
+        "carnot_design_cell": "decomposed_energy_verifier: discriminative outcome-ranker with analytical constraint penalties, ensemble uncertainty, abstention, and efficiency controls",
+        "occupied_axes": {
+          "abstention_axis": "ensemble STDDEV drives targeted regeneration or abstention",
+          "efficiency_axis": "cheap rerank/abstain first; slow regeneration only when uncertain",
+          "generative_vs_discriminative": "discriminative scorer plus deterministic penalties",
+          "outcome_vs_process": "outcome-first with process-adjacent constraint signals"
+        },
+        "survey_source": "2508.16665"
+      }
+    },
+    "sota_backlog_extension_v458": {
+      "new_arxiv_ids": [
+        "2504.01005",
+        "2504.00891",
+        "2509.24460"
+      ],
+      "next_milestone_roadmap_inputs": [
+        "distributional_energy_lora_ensemble_with_fover_penalties",
+        "efficiency_parity_frontier",
+        "genprm_matched_compute_generative_comparator",
+        "contextprm_cross_domain_registry_comparator",
+        "variance_reduced_uncertainty_head",
+        "fast_slow_process_router"
+      ],
+      "reconfirmed_arxiv_ids": [
+        "2605.18871",
+        "2504.16828",
+        "2502.01989",
+        "2508.16665",
+        "2508.10539",
+        "2502.11157"
+      ]
+    },
+    "sota_backlog_extension_v459": {
+      "must_report_comparators": [
+        "discriminative_budget_frontier_2510_14913",
+        "genprm_generative_frontier_2504_00891",
+        "thinkprm_generative_frontier_2504_16828",
+        "v1_uncertainty_guided_regeneration_2603_04304"
+      ],
+      "new_arxiv_ids": [
+        "2510.14913",
+        "2603.04304"
+      ],
+      "next_milestone_roadmap_inputs": [
+        "distributional_energy_lora_ensemble_with_fover_penalties",
+        "discriminative_budget_frontier",
+        "v1_uncertainty_guided_regeneration_comparator",
+        "genprm_matched_compute_generative_comparator",
+        "thinkprm_matched_compute_comparator",
+        "efficiency_parity_frontier",
+        "contextprm_cross_domain_registry_comparator",
+        "variance_reduced_uncertainty_head",
+        "fast_slow_process_router"
+      ],
+      "reconfirmed_arxiv_ids": [
+        "2605.18871",
+        "2504.16828",
+        "2502.01989",
+        "2508.16665",
+        "2508.10539",
+        "2502.11157",
+        "2504.01005",
+        "2504.00891",
+        "2509.24460"
+      ]
+    },
+    "sota_backlog_extension_v460": {
+      "must_report_comparators": [
+        "ebrm_distributional_reward_modeling_2504_13134",
+        "uprm_unsupervised_process_verifier_2605_10158",
+        "discriminative_budget_frontier_2510_14913",
+        "genprm_generative_frontier_2504_00891",
+        "thinkprm_generative_frontier_2504_16828",
+        "v1_uncertainty_guided_regeneration_2603_04304"
+      ],
+      "new_arxiv_ids": [
+        "2504.13134",
+        "2605.10158"
+      ],
+      "next_milestone_roadmap_inputs": [
+        "distributional_energy_lora_ensemble_with_fover_penalties",
+        "ebrm_distributional_reward_head",
+        "uprm_cheap_process_verifier_baseline",
+        "discriminative_budget_frontier",
+        "v1_uncertainty_guided_regeneration_comparator",
+        "genprm_matched_compute_generative_comparator",
+        "thinkprm_matched_compute_comparator",
+        "efficiency_parity_frontier",
+        "contextprm_cross_domain_registry_comparator",
+        "variance_reduced_uncertainty_head",
+        "fast_slow_process_router"
+      ],
+      "reconfirmed_arxiv_ids": [
+        "2605.18871",
+        "2504.16828",
+        "2502.01989",
+        "2508.16665",
+        "2508.10539",
+        "2502.11157",
+        "2504.01005",
+        "2504.00891",
+        "2509.24460",
+        "2510.14913",
+        "2603.04304"
+      ]
+    }
+  },
+  "validation_gate": {
+    "beats_self_consistency_ci95_excludes_zero_required": true,
+    "claimed_met": false,
+    "domain_self_consistency_not_near_ceiling_required": true,
+    "no_model_identity_shortcut_required": true,
+    "oracle_distinct_required": true,
+    "promotion_note": "not met by Exp4995; this artifact only re-confirms turnkey readiness and extends the post-6/30 backlog",
+    "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
+    "verifier_is_oracle_required_value": false
+  },
+  "verifier_is_oracle": false
+}
