@@ -10,143 +10,216 @@
   "off_live_path_note": "CEILING PROBE using codex (offline-illegal for SCORING). A positive result is NOT a banked solve; it would only justify re-validating the tool-loop FRAMING with the LOCAL model ON the live E3AgentPolicy path.",
   "baseline_oneshot": {
     "solved_l1": false,
-    "reason": "induce_failed",
-    "n_transitions": 120
+    "reason": "no plan to is_level_complete in model",
+    "n_transitions": 120,
+    "verifier_accuracy": 0.467,
+    "verifier_cell_recall": 0.908,
+    "plan_outcome": {
+      "planned": false,
+      "executed": null,
+      "level_up": null,
+      "plan_len": null
+    }
   },
   "treatment_tooluse": {
     "solved_l1": false,
     "cheated": false,
-    "turns_used": 24,
-    "env_steps": 0
+    "turns_used": 15,
+    "env_steps": 360
   },
   "treatment_transcript": [
     {
       "turn": 0,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "n=None, last_execute=None, current_level=0, turns_left=24.\nLAST OBSERVATION: none\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,510\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 1
+      },
+      "obs": {
+        "total_transitions": 60,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c33:9 r32c36:5 r33c33:9 r33c36:5 r34c33:9 r34c36:5 r35c33:9 r35c36:5 r36c33:9 r36c36:5 r37c33:9 r37c36:5 r38c33:9 r38c36:5 r39c33:9 r39c36:5 r40c33:9 r40c36:5 r41c33:9 r41c36:5 r42c33:9 r42c36:5 r43c33:9 r43c36:5 r44c33:9 r44c36:5 r45c20:9,9,9 r45c33:0 r45c36:9 r45c47:5,5,5 r46c33:9 r46c36:5 r47c33:9 r47c36:5 r48c33:9 r48c36:5 r49c33:9 r49c36:5 r50c33:9 r50c36:5 r51c33:9 r51c36:5 r52c33:9 r52c36:5 r53c33:9 r53c36:5 r54c33:9 r54c36:5 r55c33:9 r55c36:5 r56c33:9 r56c36:5 r57c33:9 r57c36:5 r58c33:9 r58c36:5 r63c63:1",
+          "r32c33:5 r33c33:5 r34c33:5 r45c20:5,5,5,5,5,5,5,5,5,5,5,5,5,9,5,5,5,5,5,5,5,5,5,5,5,5,5 r48c20:9,9,9,9,9,9,9,9,9,9,9,9,9,0,9,9,9,9,9,9,9,9,9,9,9,9,9 r59c33:9 r60c33:9 r61c33:9",
+          "r32c33:9 r33c33:9 r34c33:9 r45c20:9,9,9,9,9,9,9,9,9,9,9,9,9,0,9,9,9,9,9,9,9,9,9,9,9,9,9 r48c20:5,5,5,5,5,5,5,5,5,5,5,5,5,9,5,5,5,5,5,5,5,5,5,5,5,5,5 r59c33:5 r60c33:5 r61c33:5 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 1,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,487\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": false,
+        "reason": "proposer failed to emit code"
+      }
     },
     {
       "turn": 2,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,530\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 2
+      },
+      "obs": {
+        "total_transitions": 120,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c33:9 r32c36:5 r33c33:9 r33c36:5 r34c33:9 r34c36:5 r35c33:9 r35c36:5 r36c33:9 r36c36:5 r37c33:9 r37c36:5 r38c33:9 r38c36:5 r39c33:9 r39c36:5 r40c33:9 r40c36:5 r41c33:9 r41c36:5 r42c33:9 r42c36:5 r43c33:9 r43c36:5 r44c33:9 r44c36:5 r45c20:9,9,9 r45c33:0 r45c36:9 r45c47:5,5,5 r46c33:9 r46c36:5 r47c33:9 r47c36:5 r48c33:9 r48c36:5 r49c33:9 r49c36:5 r50c33:9 r50c36:5 r51c33:9 r51c36:5 r52c33:9 r52c36:5 r53c33:9 r53c36:5 r54c33:9 r54c36:5 r55c33:9 r55c36:5 r56c33:9 r56c36:5 r57c33:9 r57c36:5 r58c33:9 r58c36:5 r63c63:1",
+          "r32c33:5 r32c36:9 r33c33:5 r33c36:9 r34c33:5 r34c36:9 r35c33:5 r35c36:9 r36c33:5 r36c36:9 r37c33:5 r37c36:9 r38c33:5 r38c36:9 r39c33:5 r39c36:9 r40c33:5 r40c36:9 r41c33:5 r41c36:9 r42c33:5 r42c36:9 r43c33:5 r43c36:9 r44c33:5 r44c36:9 r45c20:5,5,5 r45c33:9 r45c36:0 r45c47:9,9,9 r46c33:5 r46c36:9 r47c33:5 r47c36:9 r48c33:5 r48c36:9 r49c33:5 r49c36:9 r50c33:5 r50c36:9 r51c33:5 r51c36:9 r52c33:5 r52c36:9 r53c33:5 r53c36:9 r54c33:5 r54c36:9 r55c33:5 r55c36:9 r56c33:5 r56c36:9 r57c33:5 r57c36:9 r58c33:5 r58c36:9",
+          "r32c36:5 r32c39:9 r33c36:5 r33c39:9 r34c36:5 r34c39:9 r35c36:5 r35c39:9 r36c36:5 r36c39:9 r37c36:5 r37c39:9 r38c36:5 r38c39:9 r39c36:5 r39c39:9 r40c36:5 r40c39:9 r41c36:5 r41c39:9 r42c36:5 r42c39:9 r43c36:5 r43c39:9 r44c36:5 r44c39:9 r45c23:5,5,5 r45c36:9 r45c39:0 r45c50:9,9,9 r46c36:5 r46c39:9 r47c36:5 r47c39:9 r48c36:5 r48c39:9 r49c36:5 r49c39:9 r50c36:5 r50c39:9 r51c36:5 r51c39:9 r52c36:5 r52c39:9 r53c36:5 r53c39:9 r54c36:5 r54c39:9 r55c36:5 r55c39:9 r56c36:5 r56c39:9 r57c36:5 r57c39:9 r58c36:5 r58c39:9 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 3,
       "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,534\n"
+      "raw_tail": "codex timeout 200s"
     },
     {
       "turn": 4,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,469\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": true,
+        "accuracy": 0.283,
+        "cell_recall": 0.882,
+        "has_is_level_complete": true,
+        "n_transitions": 120,
+        "n_mismatch": 8
+      }
     },
     {
       "turn": 5,
       "note": "no_tool_call_parsed",
-      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n507\n"
+      "raw_tail": "codex timeout 200s"
     },
     {
       "turn": 6,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,535\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 2
+      },
+      "obs": {
+        "total_transitions": 180,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c33:9 r32c36:5 r33c33:9 r33c36:5 r34c33:9 r34c36:5 r35c33:9 r35c36:5 r36c33:9 r36c36:5 r37c33:9 r37c36:5 r38c33:9 r38c36:5 r39c33:9 r39c36:5 r40c33:9 r40c36:5 r41c33:9 r41c36:5 r42c33:9 r42c36:5 r43c33:9 r43c36:5 r44c33:9 r44c36:5 r45c20:9,9,9 r45c33:0 r45c36:9 r45c47:5,5,5 r46c33:9 r46c36:5 r47c33:9 r47c36:5 r48c33:9 r48c36:5 r49c33:9 r49c36:5 r50c33:9 r50c36:5 r51c33:9 r51c36:5 r52c33:9 r52c36:5 r53c33:9 r53c36:5 r54c33:9 r54c36:5 r55c33:9 r55c36:5 r56c33:9 r56c36:5 r57c33:9 r57c36:5 r58c33:9 r58c36:5 r63c63:1",
+          "r32c33:5 r32c36:9 r33c33:5 r33c36:9 r34c33:5 r34c36:9 r35c33:5 r35c36:9 r36c33:5 r36c36:9 r37c33:5 r37c36:9 r38c33:5 r38c36:9 r39c33:5 r39c36:9 r40c33:5 r40c36:9 r41c33:5 r41c36:9 r42c33:5 r42c36:9 r43c33:5 r43c36:9 r44c33:5 r44c36:9 r45c20:5,5,5 r45c33:9 r45c36:0 r45c47:9,9,9 r46c33:5 r46c36:9 r47c33:5 r47c36:9 r48c33:5 r48c36:9 r49c33:5 r49c36:9 r50c33:5 r50c36:9 r51c33:5 r51c36:9 r52c33:5 r52c36:9 r53c33:5 r53c36:9 r54c33:5 r54c36:9 r55c33:5 r55c36:9 r56c33:5 r56c36:9 r57c33:5 r57c36:9 r58c33:5 r58c36:9",
+          "r32c36:5 r32c39:9 r33c36:5 r33c39:9 r34c36:5 r34c39:9 r35c36:5 r35c39:9 r36c36:5 r36c39:9 r37c36:5 r37c39:9 r38c36:5 r38c39:9 r39c36:5 r39c39:9 r40c36:5 r40c39:9 r41c36:5 r41c39:9 r42c36:5 r42c39:9 r43c36:5 r43c39:9 r44c36:5 r44c39:9 r45c23:5,5,5 r45c36:9 r45c39:0 r45c50:9,9,9 r46c36:5 r46c39:9 r47c36:5 r47c39:9 r48c36:5 r48c39:9 r49c36:5 r49c39:9 r50c36:5 r50c39:9 r51c36:5 r51c39:9 r52c36:5 r52c39:9 r53c36:5 r53c39:9 r54c36:5 r54c39:9 r55c36:5 r55c39:9 r56c36:5 r56c39:9 r57c36:5 r57c39:9 r58c36:5 r58c39:9 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 7,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n526\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": false,
+        "reason": "proposer failed to emit code"
+      }
     },
     {
       "turn": 8,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,465\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 2
+      },
+      "obs": {
+        "total_transitions": 240,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c33:9 r32c36:5 r33c33:9 r33c36:5 r34c33:9 r34c36:5 r35c33:9 r35c36:5 r36c33:9 r36c36:5 r37c33:9 r37c36:5 r38c33:9 r38c36:5 r39c33:9 r39c36:5 r40c33:9 r40c36:5 r41c33:9 r41c36:5 r42c33:9 r42c36:5 r43c33:9 r43c36:5 r44c33:9 r44c36:5 r45c20:9,9,9 r45c33:0 r45c36:9 r45c47:5,5,5 r46c33:9 r46c36:5 r47c33:9 r47c36:5 r48c33:9 r48c36:5 r49c33:9 r49c36:5 r50c33:9 r50c36:5 r51c33:9 r51c36:5 r52c33:9 r52c36:5 r53c33:9 r53c36:5 r54c33:9 r54c36:5 r55c33:9 r55c36:5 r56c33:9 r56c36:5 r57c33:9 r57c36:5 r58c33:9 r58c36:5 r63c63:1",
+          "r32c33:5 r32c36:9 r33c33:5 r33c36:9 r34c33:5 r34c36:9 r35c33:5 r35c36:9 r36c33:5 r36c36:9 r37c33:5 r37c36:9 r38c33:5 r38c36:9 r39c33:5 r39c36:9 r40c33:5 r40c36:9 r41c33:5 r41c36:9 r42c33:5 r42c36:9 r43c33:5 r43c36:9 r44c33:5 r44c36:9 r45c20:5,5,5 r45c33:9 r45c36:0 r45c47:9,9,9 r46c33:5 r46c36:9 r47c33:5 r47c36:9 r48c33:5 r48c36:9 r49c33:5 r49c36:9 r50c33:5 r50c36:9 r51c33:5 r51c36:9 r52c33:5 r52c36:9 r53c33:5 r53c36:9 r54c33:5 r54c36:9 r55c33:5 r55c36:9 r56c33:5 r56c36:9 r57c33:5 r57c36:9 r58c33:5 r58c36:9",
+          "r32c36:5 r32c39:9 r33c36:5 r33c39:9 r34c36:5 r34c39:9 r35c36:5 r35c39:9 r36c36:5 r36c39:9 r37c36:5 r37c39:9 r38c36:5 r38c39:9 r39c36:5 r39c39:9 r40c36:5 r40c39:9 r41c36:5 r41c39:9 r42c36:5 r42c39:9 r43c36:5 r43c39:9 r44c36:5 r44c39:9 r45c23:5,5,5 r45c36:9 r45c39:0 r45c50:9,9,9 r46c36:5 r46c39:9 r47c36:5 r47c39:9 r48c36:5 r48c39:9 r49c36:5 r49c39:9 r50c36:5 r50c39:9 r51c36:5 r51c39:9 r52c36:5 r52c39:9 r53c36:5 r53c39:9 r54c36:5 r54c39:9 r55c36:5 r55c39:9 r56c36:5 r56c39:9 r57c36:5 r57c39:9 r58c36:5 r58c39:9 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 9,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,474\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": true,
+        "accuracy": 0.308,
+        "cell_recall": 0.899,
+        "has_is_level_complete": true,
+        "n_transitions": 240,
+        "n_mismatch": 8
+      }
     },
     {
       "turn": 10,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,542\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 5
+      },
+      "obs": {
+        "total_transitions": 300,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c36:5 r32c39:9 r33c36:5 r33c39:9 r34c36:5 r34c39:9 r35c36:5 r35c39:9 r36c36:5 r36c39:9 r37c36:5 r37c39:9 r38c36:5 r38c39:9 r39c36:5 r39c39:9 r40c36:5 r40c39:9 r41c36:5 r41c39:9 r42c36:5 r42c39:9 r43c36:5 r43c39:9 r44c36:5 r44c39:9 r45c23:5,5,5 r45c36:9 r45c39:0 r45c50:9,9,9 r46c36:5 r46c39:9 r47c36:5 r47c39:9 r48c36:5 r48c39:9 r49c36:5 r49c39:9 r50c36:5 r50c39:9 r51c36:5 r51c39:9 r52c36:5 r52c39:9 r53c36:5 r53c39:9 r54c36:5 r54c39:9 r55c36:5 r55c39:9 r56c36:5 r56c39:9 r57c36:5 r57c39:9 r58c36:5 r58c39:9 r63c63:1",
+          "r27c21:0 r45c39:9",
+          "r13c21:11 r14c21:11 r15c21:11 r24c10:11,11,11,11,11,11,11,11,11,11,11,0,11,11,11,11,11,11,11,11,11,11,11 r27c10:5,5,5,5,5,5,5,5,5,5,5,11,5,5,5,5,5,5,5,5,5,5,5 r36c21:5 r37c21:5 r38c21:5 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 11,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,511\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": false,
+        "reason": "proposer failed to emit code"
+      }
     },
     {
       "turn": 12,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,529\n"
+      "tool": "explore",
+      "args": {
+        "n": 60,
+        "seed": 2
+      },
+      "obs": {
+        "total_transitions": 360,
+        "new_changed": 60,
+        "level_up_transitions_seen": 0,
+        "sample_changes": [
+          "r32c33:9 r32c36:5 r33c33:9 r33c36:5 r34c33:9 r34c36:5 r35c33:9 r35c36:5 r36c33:9 r36c36:5 r37c33:9 r37c36:5 r38c33:9 r38c36:5 r39c33:9 r39c36:5 r40c33:9 r40c36:5 r41c33:9 r41c36:5 r42c33:9 r42c36:5 r43c33:9 r43c36:5 r44c33:9 r44c36:5 r45c20:9,9,9 r45c33:0 r45c36:9 r45c47:5,5,5 r46c33:9 r46c36:5 r47c33:9 r47c36:5 r48c33:9 r48c36:5 r49c33:9 r49c36:5 r50c33:9 r50c36:5 r51c33:9 r51c36:5 r52c33:9 r52c36:5 r53c33:9 r53c36:5 r54c33:9 r54c36:5 r55c33:9 r55c36:5 r56c33:9 r56c36:5 r57c33:9 r57c36:5 r58c33:9 r58c36:5 r63c63:1",
+          "r32c33:5 r32c36:9 r33c33:5 r33c36:9 r34c33:5 r34c36:9 r35c33:5 r35c36:9 r36c33:5 r36c36:9 r37c33:5 r37c36:9 r38c33:5 r38c36:9 r39c33:5 r39c36:9 r40c33:5 r40c36:9 r41c33:5 r41c36:9 r42c33:5 r42c36:9 r43c33:5 r43c36:9 r44c33:5 r44c36:9 r45c20:5,5,5 r45c33:9 r45c36:0 r45c47:9,9,9 r46c33:5 r46c36:9 r47c33:5 r47c36:9 r48c33:5 r48c36:9 r49c33:5 r49c36:9 r50c33:5 r50c36:9 r51c33:5 r51c36:9 r52c33:5 r52c36:9 r53c33:5 r53c36:9 r54c33:5 r54c36:9 r55c33:5 r55c36:9 r56c33:5 r56c36:9 r57c33:5 r57c36:9 r58c33:5 r58c36:9",
+          "r32c36:5 r32c39:9 r33c36:5 r33c39:9 r34c36:5 r34c39:9 r35c36:5 r35c39:9 r36c36:5 r36c39:9 r37c36:5 r37c39:9 r38c36:5 r38c39:9 r39c36:5 r39c39:9 r40c36:5 r40c39:9 r41c36:5 r41c39:9 r42c36:5 r42c39:9 r43c36:5 r43c39:9 r44c36:5 r44c39:9 r45c23:5,5,5 r45c36:9 r45c39:0 r45c50:9,9,9 r46c36:5 r46c39:9 r47c36:5 r47c39:9 r48c36:5 r48c39:9 r49c36:5 r49c39:9 r50c36:5 r50c39:9 r51c36:5 r51c39:9 r52c36:5 r52c39:9 r53c36:5 r53c39:9 r54c36:5 r54c39:9 r55c36:5 r55c39:9 r56c36:5 r56c39:9 r57c36:5 r57c39:9 r58c36:5 r58c39:9 r63c62:1"
+        ]
+      }
     },
     {
       "turn": 13,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n472\n"
+      "tool": "induce",
+      "args": {},
+      "obs": {
+        "induced": false,
+        "reason": "proposer failed to emit code"
+      }
     },
     {
       "turn": 14,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,287\n"
-    },
-    {
-      "turn": 15,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,467\n"
-    },
-    {
-      "turn": 16,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,456\n"
-    },
-    {
-      "turn": 17,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n502\n"
-    },
-    {
-      "turn": 18,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,550\n"
-    },
-    {
-      "turn": 19,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "N: {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n475\n"
-    },
-    {
-      "turn": 20,
-      "note": "no_tool_call_parsed",
-      "raw_tail": "{\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n21,496\n"
-    },
-    {
-      "turn": 21,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,542\n"
-    },
-    {
-      "turn": 22,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,541\n"
-    },
-    {
-      "turn": 23,
-      "note": "no_tool_call_parsed",
-      "raw_tail": " {\"error\": \"your last reply was not a single JSON tool call; emit ONLY the JSON\"}\n\nEmit the single best next tool call as JSON now.\ncodex\n{\"tool\":\"explore\",\"args\":{\"n\":60,\"seed\":1}}\ntokens used\n2,565\n"
+      "note": "global_timeout"
     }
   ],
   "lever_signal": false,
   "gate": "treatment_solved_l1 AND NOT baseline_solved_l1 AND NOT cheated",
   "interpretation": "Ceiling probe of the operator's tool-use/MCP lever. The driver (codex/gpt-5.5, reasoning xhigh) is given a sandboxed tool interface over the EXISTING subsystems and decides what to do; the ONLY new variable vs the one-shot baseline is adaptive multi-round tool-DRIVING (both use codex induction, so induction strength is held constant). If the frontier driver cannot beat the one-shot baseline at first-contact, the deployable local 9B certainly cannot (it is strictly weaker at multi-step agentic tool-use), so the lever is dead before any 9B/Kaggle build. A positive (lever_signal=true) would justify ONLY a live-path re-validation with the local model -- NOT a deliverable claim. Anti-cheat: driver sandboxed in an empty CWD, told JSON-only, tool shim never returns source; a post-hoc source-read scan marks the run CONFOUNDED if it peeked.",
   "solve_provenance": "development_proxy",
-  "used_env_source": true,
+  "used_env_source": false,
   "read_game_source": false,
+  "interacts_with_offline_env_via_step": true,
   "model_specs": {
     "driver": "codex/gpt-5.5",
     "induce_backend": "codex/gpt-5.5",
@@ -167,6 +240,6 @@
     }
   ],
   "random_seed": 20260628,
-  "duration_s": 588.33,
-  "reproducibility_checksum": "sha256:145f0f9566187096a8837fe5ac99aa671ea442b21947cdad5f0fa9dda71d5672"
+  "duration_s": 3134.19,
+  "reproducibility_checksum": "sha256:87123ae6724c8ac649f83b21d14519fd6c8cec031a1f54299ddead33db3cf2ae"
 }
