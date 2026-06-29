@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.457",
+  "generated_at": "2026-06-29T10:39:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The retro TIMING DATA for 2026.06.457 again returned 0/0/0/null, but the milestone is NOT empty: 11 arms (exp4957-exp4967) are on disk, mtimes 2026-06-29T02:50->06:31 UTC (~221-min window), running the full final-sprint arm set through capstone exp4967_capstone_v457 (verified this turn via ls + ops/changelog.md, not the timing detector). The 0/0/0/null is the recurring FALSE-ZERO detector gap documented .363->.457 (~83 milestones): the shipped detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds the TIMING DATA block. gpu_idle_on_compute_bound_tasks=null is correct -- the capstone landed at 06:31Z, ~4h before the 10:39Z GPU snapshot, and the final capstone is aggregation_from_upstream_artifacts plus a KV260 hardware_smoke, so the idle RTX 3090s are by-design, not a bottleneck.",
+  "bottlenecks_identified": [
+    "Recurring retro false-zero detector gap (now ~83 milestones, .363->.457): the milestone-scoped timing detector reports 0 experiments / 0 wall-time, yet on-disk artifacts confirm 11 arms ran (exp4957-exp4967, ~221-min mtime window 02:50->06:31 UTC, capstone exp4967_capstone_v457). The shipped detector-wire reaches the standalone module but not the conductor's retro prompt-assembly consumer, so this retrospective had to be reconstructed from on-disk records rather than the detector.",
+    "The fix is ready but UNWIRED: B3 arm exp4965 again confirmed the relaxed-window results/-mtime fallback (success_v457_stamping_backfilled_and_mtime_window_confirmed, n_arms>=7 / wall_minutes>0, non-zero window), continuing the .456 success (exp4954). So the gap is no longer blocked -- only the single conductor-side wiring step into the retro prompt-assembly call site remains, and that is out-of-scope for autonomous retro tasks (must not edit scripts/research_conductor.py)."
+  ],
+  "improvements_suggested": [
+    "Wire exp4920's already-shipped, twice-confirmed (exp4954/.456, exp4965/.457) mtime-fallback + runtime-stamping modules into the conductor's retro TIMING-DATA prompt-assembly call site, so a detector false-zero degrades to a verifiable artifact-mtime window instead of a misleading zero. This is the single recurring fix across ~83 milestones and the only step still outstanding (operator/conductor-side).",
+    "Add write-time duration_s / inference_substrate / compute_bound stamping at artifact-emit time (the runtime_stamping helper already exists) so slowest_experiments + compute_bound flags self-populate without a post-hoc mtime reconstruction.",
+    "Until the wire lands, continue reconstructing the retro from on-disk changelog/artifact mtimes (the established 82-milestone convention) rather than trusting the detector's zero.",
+    "Do NOT propose DualGPURunner enforcement this milestone: zero compute-bound, multi-model arms ran, and the GPU snapshot is post-window, so the idle RTX 3090s are correct by-design, not a parallelism miss."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the B3-confirmed (exp4954/.456, exp4965/.457) mtime-fallback + runtime-stamping into the conductor's retro prompt-assembly call site -- the single recurring fix, now unblocked, that ends the ~83-milestone false-zero gap.",
+    "Add write-time duration_s/inference_substrate/compute_bound stamping so the slowest-experiment table and compute_bound flags populate automatically at emit time.",
+    "Keep reconstructing retros from on-disk artifact mtimes until the wire lands (interim mitigation that keeps the operational record honest)."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "For the ~83rd consecutive milestone (.363->.457), the retro TIMING DATA's 0/0/0/null is a detector false-zero, not a genuinely empty milestone -- the full .457 arm set ran through capstone exp4967_capstone_v457. The operational signal is unchanged but sharper: the fix is shipped AND twice-confirmed by B3 (exp4954/.456, exp4965/.457), so nothing is blocked -- only the one conductor-side wiring step remains, and it is structurally out-of-scope for an autonomous retro task that must not edit scripts/research_conductor.py. The honest framing is 'ready-to-wire, awaiting the operator', not 'broken'."
+}
