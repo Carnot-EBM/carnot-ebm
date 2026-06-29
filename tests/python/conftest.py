@@ -70,25 +70,17 @@ collect_ignore = [
     "test_experiment_1029_fover_expansion_v2.py",
     "test_experiment_1031_energy_ssd_v3.py",
     "test_experiment_1043_fover_expansion_v3.py",
-    # test_experiment_4940/4941 (post-6/30 distributional-energy-verifier turnkey +
-    # bank-and-pivot audit) each HANG the full suite: a test invokes mod.main(...) which
-    # runs the real distributional-energy dry-run (model/FoVer-ensemble/data I/O) instead
-    # of mocking it (30 dots then hang on the last item per file). The full `pytest
-    # tests/python -q` pretest gate therefore never returns -> the milestone .457
-    # archive/activate TRANSITION task ran codex past its 4801s wall-clock cap and FAILED
-    # 2026-06-29 04:04 + 05:27 UTC (conductor stall loop; the pretest gate is
-    # PRETEST_COMMAND=pytest tests/python -q in experiment_4957). Quarantined here (the
-    # documented last-resort mechanism) to unblock the transition; the proper fix is to mock
-    # the model/data I/O in mod.main for these two tests (their network-checker test is
-    # already correctly monkeypatched). Observed: outer-loop watchdog 2026-06-29.
-    "test_experiment_4940_distributional_energy_verifier_executable_spec.py",
-    "test_experiment_4941_bank_and_pivot_audit.py",
-    # test_experiment_4943/4944 hang the same way (full RUN >90s; the hang is at test-RUN
-    # time, not collection — a bisect of the .457 test range 4940-4957 found exactly four
-    # hangers: 4940, 4941, 4943, 4944; all the others complete in 66-89s). Same root cause +
-    # same last-resort quarantine; same proper follow-up (mock the heavy I/O).
-    "test_experiment_4943_stamping_backfill_and_wiring_readiness.py",
-    "test_experiment_4944_kv260_continuity.py",
+    # 2026-06-29 RESOLVED + UN-QUARANTINED: test_experiment_4940/4941/4943/4944 were quarantined as an
+    # emergency unblock when the milestone .456/.457 archive/activate TRANSITION gate (then
+    # PRETEST_COMMAND=`pytest tests/python -q`, WITH pyproject coverage addopts) ran codex past its 4801s
+    # cap. ROOT CAUSE (diagnosed by the outer-loop watchdog): these are HEAVY-compute tests and COVERAGE
+    # INSTRUMENTATION made them ~15x slower (6s each with --no-cov vs 90s+ with coverage); the full
+    # coverage-instrumented suite then blew the cap. They were NEVER hanging on real I/O. FIXED at the
+    # gate: the transition modules now use `pytest <own-test> -q --no-cov` (exp4968), and the conductor's
+    # own full-suite gate already uses `--no-cov -o addopts=` (research_conductor.py:1354). With coverage
+    # off in every conductor gate, these tests pass in ~6s and no longer threaten any cap, so they are
+    # un-quarantined here (verified: all 4 pass rc=0 in ~6s with --no-cov). The remaining slowness only
+    # appears in full-suite-WITH-coverage runs (CI / manual), which have no codex cap.
 ]
 
 
