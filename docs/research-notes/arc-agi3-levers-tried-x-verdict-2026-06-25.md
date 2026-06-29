@@ -282,3 +282,47 @@ is warranted — and it is a multi-week build, not a deadline-week rapid lever.*
 `docs/research-notes/arc-energy-augmented-strategy.md` (the graft playbook + the LOO=0.503 evidence);
 `results/arc_discriminative_verifier.json` (energy-on-ARC = chance); `project_arc_generation_not_selection`
 (the wall is generation); `feedback_hybrid_pragmatic_architecture` (energy = verifier, never generator).
+
+## 2026-06-29 — Generation-energy on ARC: the STRUCTURAL conclusion (operator chose "generation energy on the wall"; verify-before-build found it walled)
+
+Operator directed adopting the leaders' live approach + experimenting with new energy models for efficiency,
+then (when efficiency-energy proved nulled) chose "generation energy on ARC (the wall)". A rigorous
+verify-before-build pass (workflow `arc-borrowable-techniques-not-done-before` + direct artifact reads)
+established the structural reason this axis is closed to energy models:
+
+**1. Efficiency-energy is comprehensively swept/nulled** (do NOT rebuild): Carnot-verifier-as-pruner
+(`proto_carnot_pruner` honest_null, ratio 1.042, lost m0r0); learned value-head live routing
+(exp4652/4658/4665 honest_null, first_win 0.04 both arms, delta 0.0 CI[0,0]); verifier action-pruner
+(exp3929 1.96x / exp4160 1.31x / exp4071 67% — all offline-replay, winning action never pruned, NO new
+level); the ONE banked efficiency-energy lever (frame-change CNN, exp4629 +0.184) is ALREADY live. And
+**state/goal-energy does not even discriminate win-states**: `arc3_state_goal_energy_discrimination` =
+mean_logo_auroc **0.4958** vs shuffled-control 0.509 (≈ chance), while a frame→steps value head reference
+is 0.725 (that head is the banked CNN).
+
+**2. Generation-energy is the most-swept axis, all nulled by the information-theoretic wall**: goal-energy
+directing generation (exp4640/4737 `goal_energy_does_not_up_weight_the_winner`, 0/100 solved); energy-
+fitness QD generator (exp4741 modest scaffolding, value-null transfer); hidden-state latent registers
+(exp3957 `latent_registers_no_drop_energy`); hierarchical subgoals (exp4676 `value_head_still_not_
+separating`); in-context patterns (powered null); frontier tool-loop (ceiling-negative). The wall is
+exp4914 `WALL_IS_HIDDEN_STATE`: `winning_prefix_order_state.observable=False` — NOT a learnable function of
+observable experience.
+
+**3. The structural insight (the deep finding).** Even the one ostensibly-"genuinely-new" angle — a FIRING
+information-gain active-probe (exp4727 was a NON-TEST: `hypothesis_posterior_built=False`,
+`probe_actions_taken=0`, `posterior_entropy_reduction=0.0`, budget=10/explore=2 too small) — is, on
+inspection of `arc_active_probe.py`, a **SELECTION mechanism downstream of generation**: the info-gain
+energy can only DISAMBIGUATE among hypotheses the inducer ALREADY generated. exp4727's own failure taxonomy
+(`mechanic_outside_hypothesis_class` / `probe_outcomes_aliased` / `budget_insufficient`) IS the generation
+wall — it never built a posterior because the weak local inducer could not produce ≥2 disagreeing
+correct-class hypotheses. **Energy models are verifiers/selectors/pruners by nature; ARC's binding wall is
+GENERATION of the non-observable hidden-state-dependent winning prefix.** An energy that scores at chance on
+observable state (0.4958) cannot select OR guide-generate toward a target that is not a function of
+observable state. Therefore NO energy model — pruner, value-head, probe, or energy-guided generator
+(exp4640 already tried the last, nulled) — structurally cracks ARC's generation wall.
+
+**CONSEQUENCE for "new energy models":** their productive home is SELECTION-bottlenecked domains where the
+discriminating signal IS in observable state and self-consistency is NOT near-optimal — the post-6/30
+distributional-energy verifier on MuSR (arXiv:2605.18871, beats SC), exp4940 staged. On ARC, energy is
+already maxed out as the banked efficiency CNN; the residual gap is a stronger GENERATOR (not an energy
+model). The ONLY non-rerun ARC-energy attempt left would require a fundamentally new energy SIGNAL that
+discriminates where observable-state energy scores 0.4958 — prior very low; attacking an info-theoretic wall.
