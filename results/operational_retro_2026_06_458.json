@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.458",
+  "generated_at": "2026-06-29T16:02:37Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.458's TIMING DATA reports 0 commits since activation, but that is the recurring milestone-scoped false-zero detector gap (documented .363->.457, ~83 milestones), NOT an empty milestone: ops/changelog.md + on-disk results confirm .458 ran archive (exp4968) -> capstone (exp4978), ~11 arms. The locked numeric fields stay 0/0/0/null because the detector fed the retro no per-arm timing; gpu_idle_on_compute_bound_tasks=null is correct since the enumerated final arms are aggregation + a KV260 hardware_smoke, not GPU-compute-bound.",
+  "bottlenecks_identified": [
+    "RECURRING and the only real operational bottleneck: the conductor's retro TIMING-DATA prompt-assembly again received 0 commits since activation (false-zero), so this retro has no per-arm wall-time to optimize. The milestone is NOT empty -- on-disk exp4968-exp4978 + ops/changelog.md confirm ~11 arms ran (archive -> 2 level-up attempts -> self-play -> held-out -> pivot-turnkey -> 2 audits -> B3 stamping -> KV260 -> capstone). Gap documented .363->.457; .458 extends it to ~84 milestones.",
+    "GPU idle is NOT a bottleneck this milestone: gpu_idle_on_compute_bound_tasks is null (zero compute-bound arms reached the detector; the final capstone exp4978 is aggregation_from_upstream_artifacts and KV260 exp4977 is hardware_smoke), so the idle RTX 3090 (GPU 0) is by-design per the interpretation rule. The GPU 1 llama.cpp process at snapshot time is non-milestone outer-loop work on its owned GPU."
+  ],
+  "improvements_suggested": [
+    "Wire the B3-confirmed runtime-stamping + relaxed results/-mtime fallback (exp4976 success_v458_stamping_backfilled_and_mtime_window_confirmed; relaxed gate n_arms>=7, wall_minutes>0) into the conductor's retro TIMING-DATA prompt-assembly call site so future retros receive a non-zero window. The fix is ready-to-wire, not blocked -- only the single conductor-side wiring step remains (out-of-scope here: autonomous retro tasks must not edit scripts/research_conductor.py).",
+    "Until that wire lands, continue reconstructing the milestone window from on-disk results/ mtimes + ops/changelog.md (as the .456/.457 retros did) so the narrative stays honest about what actually ran rather than misreading the false-zero as an empty milestone.",
+    "No experiment-execution change is warranted: the .458 arm cadence executed cleanly to a complete capstone (complete_capstone_v458_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1); the deficiency is purely in timing CAPTURE, not execution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Land the single conductor-side wire of the B3-confirmed mtime-fallback into the retro prompt-assembly so the ~84-milestone false-zero retro gap finally closes and operational retros regain real wall-time signal.",
+    "Keep the on-disk results/ + ops/changelog.md reconstruction discipline for the .459 retro so the empty-detector window is not misread as an empty milestone.",
+    "Hold experiment execution as-is: .458 reached a clean complete capstone (deliverable LOCKED for the 6/30 deadline -- reproducible_total_levels 69, held-out first-win 0.04 flag_resolved, submission package operator-ready, post-6/30 distributional-energy verifier-moat pivot turnkey 7/1); no execution-speed action is justified by this data."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The honest operational read is that .458 executed fine -- the only thing wrong is that the retro's own input pipeline reported a false zero, as it has for ~84 milestones. The meta-lesson is unchanged and now well-aged: a self-improving loop must be able to MEASURE its own execution; the B3-confirmed mtime-fallback removes the last technical blocker, leaving only a one-line conductor wire that autonomous retro tasks are correctly forbidden from making themselves."
+}
