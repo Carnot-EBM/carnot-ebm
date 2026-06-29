@@ -1,0 +1,250 @@
+{
+  "activated_milestone": "2026.06.457",
+  "arc_first_win_wall_closed_hidden_state": true,
+  "archived_milestone": "2026.06.456",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "9325456e1bb478a1a34d5cc380e79ce3d0a3b7bbab9e09c0cd4ac55fe4d1a8a6"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "027f803c50af909e8338300742dd4250919854074c89cdffbe921cfeb615d560"
+    },
+    {
+      "path": "results/operational_retro_2026_06_456.json",
+      "sha256": "6d93fe0a6ddc7a12f8c194d082fe8cd2c61cb40fbf5707905eb5c418babe2c9b"
+    },
+    {
+      "path": "results/experiment_4956_capstone_v456.json",
+      "sha256": "9588ffa8f64f07e2ae66fbdeb21b086215ea4edb80cfde601448abb1306a53a8"
+    }
+  ],
+  "close_state_456": {
+    "a1_a2_no_banked": {
+      "candidate_banks": [
+        {
+          "game": "ar25",
+          "new_levels_banked": 0,
+          "source": "A1_LEVELUP"
+        },
+        {
+          "game": "vc33",
+          "new_levels_banked": 0,
+          "source": "A2_LEVELUP"
+        }
+      ],
+      "counted": [],
+      "interpretation": "no grounded next-level delta on ar25/vc33; honest no-bank rotation dead-end, not a fabrication",
+      "no_banked": true,
+      "third_consecutive_flat_milestone": true
+    },
+    "a3_self_play": {
+      "duration_too_short_flag_resolved": true,
+      "flag_resolved": true,
+      "honest_verdict": "success_self_play_checkpoint_refreshed",
+      "reproduction_gate": {
+        "claimed_level": 3,
+        "game": "lp85",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 3,
+        "reproduced": true
+      },
+      "self_play_artifact_counted": true,
+      "target_game": "lp85",
+      "verifier_checkpoint_refreshed": true
+    },
+    "a4_heldout": {
+      "flag_resolved": true,
+      "games_evaluated": 25,
+      "heldout_first_win_rate": 0.04,
+      "honest_verdict": "complete_heldout_first_win_0.04_full25_final_flag_resolved",
+      "tautology_warn_only": true
+    },
+    "arc_first_win_wall_closed_hidden_state": true,
+    "b2_package": {
+      "decision": "package_ready_operator_only",
+      "frozen_stack_loads": true,
+      "honest_verdict": "success_submission_package_ready_final_pre_deadline",
+      "operator_only": true,
+      "peak_vram_gb": 15.146,
+      "peak_vram_lt_16": true,
+      "ready": true,
+      "submits": false
+    },
+    "b3_stamping": {
+      "honest_verdict": "success_v456_stamping_backfilled_and_mtime_window_confirmed",
+      "mtime_fallback_window": {
+        "artifact_paths": [
+          "results/experiment_4946_archive_455_activate_456.json",
+          "results/experiment_4947_levelup_attempt.json",
+          "results/experiment_4948_levelup_attempt.json",
+          "results/experiment_4949_self_play_verifier_checkpoint.json",
+          "results/experiment_4950_heldout_first_win_readiness.json",
+          "results/experiment_4951_distributional_energy_verifier_turnkey.json",
+          "results/experiment_4952_bank_and_pivot_audit.json",
+          "results/experiment_4953_submission_package_harden.json"
+        ],
+        "compute_bound_count": 4,
+        "milestone": "2026.06.456",
+        "n_arms": 8,
+        "wall_minutes": 100.2,
+        "window_end": "2026-06-29T00:49:13Z",
+        "window_start": "2026-06-28T23:09:01Z"
+      },
+      "recurring_window_block_resolved": true,
+      "research_conductor_modified": false,
+      "window_gate_relaxed": true,
+      "window_nonzero": true
+    },
+    "capstone": {
+      "capstone_ready": true,
+      "headline": ".456 final submission readiness: locked ~0.05 agent + FoVer paper ready for 6/30 at 69 reproducible levels, no trusted A1/A2 banks counted; held-out first-win 0.04 with flag_resolved=True; package ready; A3 substrate fixed; B3 non-zero mtime window fixed; post-6/30 verifier-moat pivot turnkey 7/1; ARC wall remains WALL_IS_HIDDEN_STATE closed.",
+      "honest_verdict": "complete_capstone_v456_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1"
+    },
+    "d_pivot": {
+      "arxiv_id": "2605.18871",
+      "decision": "post_6_30_distributional_energy_verifier_moat_experiment_turnkey_7_1",
+      "moat_proven": false,
+      "pivot_executable_on_7_1": true,
+      "pivot_readiness_trustworthy": true,
+      "pivot_turnkey": true,
+      "sota_signal": "2605.18871 beats self-consistency on MuSR"
+    },
+    "deliverable": "locked ~0.05 first-win agent + publishable FoVer paper",
+    "deliverable_locked_agent_plus_fover_paper": true,
+    "do_not_queue": [
+      "representation_5"
+    ],
+    "operational_retro": {
+      "false_zero_detector_gap": true,
+      "milestone": "2026.06.456",
+      "summary": "Milestone 2026.06.456 is the FINAL PHASE E submission-readiness capstone before the 2026-06-30 ARC-AGI-3 deadline. The retro TIMING-DATA detector again returned 0 experiments / 0 compute-bound / 0 wall-minutes with both RTX 3090s idle -- the recurring false-zero detector gap (documented .363->.455). On-disk evidence (ops/changelog.md, read this turn) shows .456 in fact ran its capstone arms (exp4954 B3 stamping/fallback, exp4955 KV260 continuity, exp4956 capstone_v456); none are compute-bound LLM inference, so the idle GPUs and gpu_idle_on_compute_bound_tasks=null are correct-by-design, not a bug."
+    },
+    "reproducible_total_levels": 69,
+    "summary": "v456_locked_deliverable_recorded_for_v457",
+    "v457_is_final_sprint_day_plus_pivot_turnkey": true,
+    "wall_closure": {
+      "closed": true,
+      "closure_verdict": "WALL_IS_HIDDEN_STATE",
+      "do_not_queue": [
+        "representation_5"
+      ],
+      "trusted": true
+    }
+  },
+  "deliverable_locked_agent_plus_fover_paper": true,
+  "duration_s": 4561.398134,
+  "experiment": "experiment_4957_archive_456_activate_457",
+  "experiment_id": 4957,
+  "field_principles": {
+    "arc_first_win_wall_closed_hidden_state": {
+      "principle": "true -- the .453 B1-trusted WALL_IS_HIDDEN_STATE closure stands; .457 executes the locked deliverable, NOT representation #5."
+    },
+    "deliverable_locked_agent_plus_fover_paper": {
+      "principle": "true -- the deliverable is the ~0.05 first-win agent + the publishable FoVer paper; do NOT chase the closed first-win wall."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_456_archived_457_activated_<state>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (69; .456 banked nothing new -- 3rd flat milestone)."
+    },
+    "v457_is_final_sprint_day_plus_pivot_turnkey": {
+      "principle": "true -- .457 executes the locked 6/30 deliverable AND keeps the post-6/30 verifier-moat pivot turnkey; it does NOT open a new world-model fork."
+    }
+  },
+  "honest_verdict": "blocked_pretest_gate_failed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "active_roadmap_yaml": {
+      "active_exists": true,
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml,os; p='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'; q='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'; f=p if os.path.exists(p) else q; yaml.safe_load(open(f)); print('ok',f)"
+      ],
+      "exit_code": 0,
+      "fallback_path": "research-roadmap-next.yaml",
+      "next_exists": false,
+      "passed": true,
+      "primary_path": "research-roadmap.yaml",
+      "selected_path": "research-roadmap.yaml",
+      "stderr_tail": "",
+      "stdout_tail": "ok /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
+    },
+    "capstone_v456": {
+      "exists": true,
+      "honest_verdict": "complete_capstone_v456_submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1",
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4956_capstone_v456.json"
+    },
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "operational_retro_v456": {
+      "exists": true,
+      "honest_verdict": "",
+      "loadable": true,
+      "optional": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/operational_retro_2026_06_456.json"
+    },
+    "registry": {
+      "exists": true,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 69
+    }
+  },
+  "pretest_gate": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "exit_code": -15,
+    "green": false,
+    "passed": false,
+    "ran": true,
+    "stderr_tail": "frozenlist, xxhash._xxhash, PIL._imagingmath, fontTools.misc.bezierTools, fontTools.varLib.iup (total: 254)\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140181388382128, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140213384484848, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+    "stdout_tail": "............................................................... [ 88%]\n........................................................................ [ 88%]\n........................................................................ [ 88%]\n...............sss...................................................... [ 88%]\n......................sssssssssssssss................................... [ 88%]\n........................................................................ [ 89%]\n........................................................................ [ 89%]\n........................................................................ [ 89%]\n...............s........................................................ [ 89%]\n........................................................................ [ 89%]\n........................................................................ [ 89%]\n........................................................................ [ 90%]\n................................................."
+  },
+  "random_seed": 20260629,
+  "reproducibility_checksum": "b476bd7ab72c603bfccc6eeff8a7e694a06c4eb0992d6738dc1472204d66fe68",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_4957_archive_456_activate_457.json",
+  "schema": "carnot.exp4957.archive_456_activate_457.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4957",
+    "SCENARIO-CAPSTONE-4957",
+    "SCENARIO-CAPSTONE-4957-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-4957-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.457",
+    "activation_state": "blocked_pretest_gate_failed",
+    "active_milestone_confirmed": "2026.06.457",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "archived_milestone": "2026.06.456",
+    "transition_performed": false
+  },
+  "transition_performed": false,
+  "v457_is_final_sprint_day_plus_pivot_turnkey": true
+}
