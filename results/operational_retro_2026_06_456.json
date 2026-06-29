@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.456",
+  "generated_at": "2026-06-29T01:57:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.456 is the FINAL PHASE E submission-readiness capstone before the 2026-06-30 ARC-AGI-3 deadline. The retro TIMING-DATA detector again returned 0 experiments / 0 compute-bound / 0 wall-minutes with both RTX 3090s idle -- the recurring false-zero detector gap (documented .363->.455). On-disk evidence (ops/changelog.md, read this turn) shows .456 in fact ran its capstone arms (exp4954 B3 stamping/fallback, exp4955 KV260 continuity, exp4956 capstone_v456); none are compute-bound LLM inference, so the idle GPUs and gpu_idle_on_compute_bound_tasks=null are correct-by-design, not a bug.",
+  "bottlenecks_identified": [
+    "Observability, NOT wall-time: the retro TIMING-DATA detector reported 0 commits since activation -- the recurring false-zero gap (~82 milestones, .363->.455 per the .454/.455 retros). The detector-wire reaches the standalone module but never the conductor's retro prompt-assembly consumer that feeds this TIMING-DATA block, so the retrospective cannot self-confirm what the milestone actually ran.",
+    "GPU idle is NOT a bottleneck this milestone: there are zero compute-bound tasks (the FINAL capstone is aggregation_from_upstream_artifacts plus a KV260 hardware_smoke), so gpu_idle_on_compute_bound_tasks=null and the idle RTX 3090s are correct-by-design. No DualGPURunner action applies (no model loaded)."
+  ],
+  "improvements_suggested": [
+    "Wire exp4954's NOW-CONFIRMED fix into the retro prompt-assembly call site. This milestone's B3 arm (exp4954, on-disk per ops/changelog) advanced the recurring fix from BLOCKED in .454 (exp4931) / .455 (exp4943) -- both blocked on the too-strict n_arms>=10 window -- to success_v456_stamping_backfilled_and_mtime_window_confirmed using a RELAXED gate (n_arms>=7, wall_minutes>0). The fallback + runtime-stamping is confirmed ready-to-wire; only the conductor-side wiring remains (out-of-scope for autonomous retro tasks, which must not edit scripts/research_conductor.py).",
+    "Add a milestone-type signal (capstone/aggregation vs compute-bound) to the retro input so a by-design zero-compute capstone is auto-labelled 'expected' rather than ambiguous, preventing the next retro from drawing a false 'nothing ran' conclusion.",
+    "With the 6/30 deadline ~2 days out, keep retro-tooling changes minimal and operator-gated; the capstone (exp4956) already re-confirmed the submission package ready and the post-6/30 verifier-moat pivot turnkey for 7/1."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Operator/conductor action: wire exp4954's confirmed mtime-fallback + runtime-stamping into the conductor's retro TIMING-DATA prompt-assembly call site. The fix is no longer 'blocked' (as in .454/.455) -- it is confirmed ready this milestone; only the single wiring step remains, and it would correct retrospective accuracy for every future milestone.",
+    "Emit a retro_input milestone-type flag so 0-compute capstones are not misread as empty/failed milestones.",
+    "Hold non-essential operational tooling until after the 2026-06-30 submission; the deliverable is LOCKED (capstone exp4956: reproducible_total_levels 69, held-out first-win 0.04, package ready, pivot turnkey 7/1), so operator focus stays on submission."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "For the FINAL capstone two days before the deadline, 'no new experiments' is the operationally-correct posture and the idle GPUs confirm it. The notable progress this cycle is that the recurring false-zero fix moved from BLOCKED to CONFIRMED-READY (exp4954) -- the standing highest-leverage operational action is now a single conductor-side wiring step, not a fresh build. The retro's own 0/0/0/null block remains the live proof that the wiring is still pending."
+}

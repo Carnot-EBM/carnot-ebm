@@ -1,14 +1,19 @@
 import numpy as np
 
 def engine(grid, action, data):
-    if action == 6:
-        px, py = data['x'], data['y']
-        logical_x, logical_y = px // 1, py // 1
-        if 0 <= logical_y < grid.shape[0] and 0 <= logical_x < grid.shape[1]:
-            grid = grid.copy()
-            grid[logical_y, logical_x] = 0
-            return grid
-    return grid.copy()
+    if action == 1:
+        grid[63, 62] = 11
+        grid[63, 60] = 11
+        grid[63, 58] = 11
+        grid[63, 56] = 11
+    elif action == 2:
+        grid[63, 54] = 11
+        grid[63, 52] = 11
+    elif action == 6:
+        if data:
+            px, py = data['x'], data['y']
+            grid[py, px] = 11
+    return grid
 
 def is_level_complete(grid):
     return False
