@@ -12924,6 +12924,74 @@ principle-annotated field is present, and same-depth or failed reproduction
 attempts emit a terminal no-bank verdict without incrementing the registry
 total.
 
+### REQ-ARC-WMTE-4969: Fresh Deep ARC Level-Up Attempt Ledger
+
+Experiment 4969 SHALL run the standing ARC solve loop on one rotated fresh deep
+target, preferring `tu93` from the registry's reproduced L5 row and otherwise
+falling back to `tn36` L7 or `cn04` L3 only when the preferred target is blocked.
+The workflow SHALL read `ops/arc_solve_registry.yaml`, call
+`recommend_approach(game)` before any search, exclude recently attempted or
+hidden-state-bound lanes, and compute the standing-loop target level as
+`prior_reproduced_levels + 1` so it cannot re-solve an already banked level.
+If the selected registry row has no grounded next-level delta or the standing
+loop fails to offline-reproduce a strictly deeper level, the experiment SHALL
+write an honest no-bank artifact and record the residual dead-end without
+incrementing the registry total.
+
+Experiment 4969 SHALL write `results/experiment_4969_levelup_attempt.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`solve_provenance`, `target_game`, `offline_reproduced`,
+`reproduced_levels`, `new_levels_banked`, `live_path_reachable`,
+`verifier_is_oracle`, `inference_substrate`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`. It SHALL also include
+`rotation_selection`, `approach_recommendation`, `attempted_games`,
+`dead_ends`, `registry_update`, `retire_if_same_verdict`, `loop_command`,
+`loop_artifact`, and `schema_errors`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent advanced via its own attempts/runtime RE; NOT outer_loop_re (CRITICAL) and NOT a re-solve of an already-banked level (duplicate CRITICAL)."
+- `target_game`: principle "the rotated FRESH grounded DEEP deepen target (differs from .457 tr87/s5i5 / .456 ar25/vc33 AND from A2's and A3's targets)."
+- `offline_reproduced`: principle "only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `new_levels_banked`: principle ">=1 for a PASS; 0 records the honest rotation dead-end for the next planner (the deepen well is dry across all regimes)."
+- `live_path_reachable`: principle "true -- the deepen runs through arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint passes), not a parallel solver."
+- `verifier_is_oracle`: principle "the reproduction gate is the executable oracle (circularity discipline)."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor); else verifier_ensemble_against_cached_candidates / the honest offline arcade substrate."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+- `random_seed`: principle "determinism for the offline search."
+- `reproducibility_checksum`: principle "content hash of (game, plan, claimed level) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-4969-FRESH-DEEP-TARGET
+
+Given the registry contains `tu93` at L5, `tn36` at L7, and `cn04` at L3
+When Experiment 4969 selects its target
+Then it selects `tu93`, records the `recommend_approach(tu93)` payload, excludes
+the recent and hidden-state-bound lanes, and sets the standing-loop target level
+to 6 rather than the script's lower default.
+
+#### SCENARIO-ARC-WMTE-4969-REPRODUCTION-GATE
+
+Given the standing loop result reports a reproduced depth greater than the
+registry prior
+When Experiment 4969 builds its terminal artifact
+Then `new_levels_banked>=1`, `offline_reproduced=true`,
+`reproduced_levels>=prior+1`, and `solve_provenance=live_agent_self_discovery`.
+Otherwise it emits `complete_<game>_no_new_level_residual_<cause>`,
+`new_levels_banked=0`, `retire_if_same_verdict=true`, and a dead-end record
+without incrementing the registry total.
+
+#### SCENARIO-ARC-WMTE-4969-STABLE-ARTIFACT
+
+Given a selected target, preconditions, recommendation, standing-loop result,
+and registry prior
+When Experiment 4969 writes `results/experiment_4969_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, every required
+principle-annotated field is present, and missing offline environment
+preconditions produce `blocked_<game>_offline_env_missing` without fabricated
+reproduced levels.
+
 ### REQ-ARC-WMTE-4853: ARC Self-Play Verifier Checkpoint Refresh Artifact
 
 Experiment 4853 SHALL run the standing ARC self-play loop on a banked target
