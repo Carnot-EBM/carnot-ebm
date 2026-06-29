@@ -49,9 +49,28 @@ def main() -> None:
             per_game.append({"game": g, "error": str(e)[:60]})
             continue
         scores = []
+        skipped = 0
         for lab in labs:
-            step = json.loads(lab) if isinstance(lab, str) else lab
-            aid = int(step["action"]); data = step.get("data")
+            # robustly resolve (aid, data) across the varied label formats: int, dict, JSON-str, bare label
+            aid = data = None
+            try:
+                step = lab
+                if isinstance(step, str):
+                    try:
+                        step = json.loads(step)
+                    except Exception:
+                        import re
+                        m = re.search(r"\d+", step)  # e.g. "ACTION4" -> 4
+                        step = int(m.group()) if m else None
+                if isinstance(step, dict):
+                    aid = int(step["action"]); data = step.get("data")
+                elif step is not None:
+                    aid = int(step); data = None
+            except Exception:
+                aid = None
+            if aid is None:
+                skipped += 1
+                continue
             try:
                 s = float(_scorer_value(frame, ArcAction(aid, data, "winpath"), sc))
                 scores.append(s)
