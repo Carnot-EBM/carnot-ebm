@@ -9559,3 +9559,5 @@ The contro |
 | 2026-06-29 01:52 UTC | PHASE E (CAPSTONE .456) -- aggregate the FINAL sub | OK | 86 passed, 1 warning in 10.03s |
 | 2026-06-29 02:39 UTC | Plan milestone 2026.06.457 | OK | 11 tasks proposed |
 | 2026-06-29 02:41 UTC | Milestone 2026.06.457 activated | OK | 11 tasks queued |
+| 2026-06-29 04:04 UTC | PHASE 0 (TRANSITION) -- archive .456 -> activate . | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: gistry_unloada |
+| 2026-06-29 05:27 UTC | PHASE 0 (TRANSITION) -- archive .456 -> activate . | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: om/ianblenke/c |
