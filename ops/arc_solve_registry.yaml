@@ -1518,6 +1518,7 @@ games:
     filled_artifact: results/experiment_4443_bank_g50t_example_conditioned_win.json
     filled_summary: Example-conditioned target-offset win predicate reproduced g50t L1 offline with corrected inference_substrate.
   - Exp4884 retired the prior g50t adapter-free L2 bounded-search dead end by registering _g50t.
+  - 'Exp4981 g50t no-bank no_grounded_l3_delta: complete_g50t_no_new_level_residual_no_grounded_l3_delta.'
   mechanic_class: config_toggle_target_offset
   win_condition: 'All banked levels use the grounded target-offset predicate: the active player must reach target.x + 1 and target.y + 1, verified only by the offline arc_solver_kit.reproduce gate.'
   action_model: 'Keyboard ACTION1 up, ACTION2 down, ACTION3 left, ACTION4 right, ACTION5 commit/rewind clone. L2 uses two clone cycles: first clone holds the right-hand plate, second clone holds the left-hand plate, then the active player takes the top route to the target-offset cell.'
@@ -1535,6 +1536,16 @@ games:
     new_levels_banked: 1
     target_rotation: rotated_off_s5i5_r11l_re86_hidden_state_bound_targets
     reproducibility_checksum: c169f78924293f9c1e6b45f8fbef832f08e1f4f83e0fafad25b20c09c169fe39
+  latest_exp4981_levelup_attempt:
+    artifact: results/experiment_4981_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_g50t.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    target_rotation: rotated_fresh_l2_re86_g50t_cd82_off_tn36_ft09_recent_hidden_state_bound
+    reproducibility_checksum: a7c1cdc39245f128b86eaeebd2b49377e05647d2551d95af317e0051a5282798
 - game: dc22
   reproducibility: reproduced
   levels_reproduced: 2
