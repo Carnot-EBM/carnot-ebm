@@ -34,7 +34,12 @@ def engine(grid, action, data):
                     for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                         nr = r + dr
                         nc = c + dc
-                        if 0 <= nr < scan_h and 0 <= nc < w and movable[nr, nc] and not seen[nr, nc]:
+                        if (
+                            0 <= nr < scan_h
+                            and 0 <= nc < w
+                            and movable[nr, nc]
+                            and not seen[nr, nc]
+                        ):
                             seen[nr, nc] = True
                             cells.append((nr, nc))
                 if len(cells) < 8:
@@ -61,7 +66,10 @@ def engine(grid, action, data):
                     continue
                 center = zero_cell
                 if center is None:
-                    center = (max(row_counts, key=row_counts.get), max(col_counts, key=col_counts.get))
+                    center = (
+                        max(row_counts, key=row_counts.get),
+                        max(col_counts, key=col_counts.get),
+                    )
                 nines = values.count(9)
                 warm = values.count(1) + values.count(11)
                 if nines > warm:
@@ -79,7 +87,14 @@ def engine(grid, action, data):
                     }
                 )
 
-        comps.sort(key=lambda comp: (comp["bbox"][0], comp["bbox"][1], comp["bbox"][2], comp["bbox"][3]))
+        comps.sort(
+            key=lambda comp: (
+                comp["bbox"][0],
+                comp["bbox"][1],
+                comp["bbox"][2],
+                comp["bbox"][3],
+            )
+        )
         active = -1
         for idx, comp in enumerate(comps):
             if comp["has_zero"]:
