@@ -16,30 +16,29 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-## TL;DR
+## ARC Self-Solve Audit — hostile review (window: last 7d, 22 artifacts)
 
-**VERDICT: 0/22 are SELF_DISCOVERY_ADVANCE. All 22 are `development_proxy` standing-loop re-runs of the `arc_loop_solve.py` + hand-registered `GameAdapter` dev twin — and every one I could registry-cross-check is a DUPLICATE of an already-banked level (no new live capability).** Reachability is clean (not OFF_PATH) and provenance is honestly stamped (not CRITICAL `outer_loop_re`), but by the project's own taxonomy `development_proxy` is explicitly *"NOT proof the live agent self-discovers."* The scored live entrypoint (`arc_competition_agent.py` / `E3AgentPolicy`) produced **zero** artifacts in the 7-day window. This is reproduction-maintenance telemetry being emitted at solve volume.
+**TL;DR: `different_mechanism / regression-not-discovery`. 0 / 22 recent ARC "solves" are `live_agent_self_discovery` — all 22 are `development_proxy` (the `arc_loop_solve` standing offline loop replaying hand-registered `GameAdapter`s). 21 / 22 are DUPLICATE re-confirmations of already-banked registry levels; `reproducible_total_levels` is flat at 69. The lone non-duplicate (dc22 L3) is a registry-reconciliation gap, not a discovery advance. No fabrication, reachability clean (exit 0), provenance honestly declared — so this is NOT the CRITICAL `outer_loop_re` anti-pattern. It is the milder, real drift the discipline warns about: dev-proxy regression re-confirmation standing in for live self-discovery, one day before the 6/30 deadline.**
 
-## Per-artifact
+### Per-artifact verdicts
 
-All share the identical signature: `solve_provenance: development_proxy`, `mode: standing_arc_loop_offline_no_quota`, `outer_loop_inputs_declared: []`, empty `honest_verdict`, solver = `arc_loop_solve.py` + per-game `GameAdapter`. "reg" = `levels_reproduced` in `ops/arc_solve_registry.yaml`.
+Cross-checked every artifact's `reached_level` against the registry's `levels_reproduced`:
 
-| Game | Lvl | Reg lvl | Verdict | Evidence |
-|---|---|---|---|---|
-| lp85 | 3 | **5** | DUPLICATE | Below registry's deepest (Exp4372 banked L5); this is the stale L4-gate file re-run at L3. |
-| r11l | 2 | 2 | DUPLICATE | == registry L2 (Exp4862). No new level. |
-| ls20 | 2 | 2 | DUPLICATE | == registry L2 (Exp4630). |
-| tu93 | 4 | **5** | DUPLICATE | Below registry L5; `_tu93` adapter already deep-solves. `hand_verifier_cold_start`. |
-| s5i5 | 2 | 2 | DUPLICATE | == registry L2 (Exp4873). |
-| ka59 | 1 | 1 | DUPLICATE | == registry L1; registry notes ka59 is "hidden-state-bound." |
-| tr87 | 6 | ~6 | DUPLICATE¹ | tr87 already adaptered (`glyph_rewrite_matcher` primitive derived from it). |
-| dc22, vc33, g50t, cd82, sp80, su15, sk48, ft09, ar25, m0r0, cn04, lf52, bp35, re86, sb26 | 2–3 | — | DUPLICATE¹ | Identical standing-loop signature; all appear as already-adaptered/cached games across the registry's `derived_from_games` + `transfer_dead_ends` rows. |
+| Artifacts | Verdict | Evidence |
+|---|---|---|
+| ls20, lf52, su15, sp80, bp35, cn04, vc33, m0r0, sk48, g50t, re86, s5i5, r11l, ka59, sb26, tr87, cd82, ft09, ar25 (19) | **DUPLICATE** | `reached_level == registry levels_reproduced`; `mode: standing_arc_loop_offline_no_quota`. Re-runs the reproduction gate on a level the registry already banks — no new live capability. |
+| lp85 (L3 vs reg L5), tu93 (L4 vs reg L5) (2) | **DUPLICATE (below reg)** | Standing-loop gate sits *below* the deepest banked level (registry: lp85's loop artifact "remains the L4 gate"; deeper levels banked separately by Exp4372/levelup path). |
+| dc22 (L3 vs reg L2) | **UNCLEAR → reconcile (not self-discovery)** | Only artifact above its registry row: artifact `reproduced_levels:3` but registry `levels_reproduced:2`. Provenance still `development_proxy`. Registry gotcha already flags dc22 as "ahead of the registry" + on the operator rotation skip-list (Exp4666 `fallback_exception`). Either a genuine unreconciled +1 (→ bump total to 70) or an over-claim. |
 
-¹ Signature-presumed DUPLICATE (not individually registry-gated this pass). **Recommended action (all 22):** keep as reproduction-health telemetry **only**; exclude from any milestone solve-count, `reproducible_total_levels` increment, headline, or "live agent solved X" claim. Flag the lp85/tu93 sub-registry-depth re-runs as stale-target — the standing loop is re-gating shallower than what's banked.
+Common to all 22: `solve_provenance: development_proxy`, solved by `GameAdapter _<game>` in `arc_game_adapters.py` + `arc_loop_solve.py`. Per the discipline, `development_proxy` is *allowed but NOT proof the live agent self-discovers*. **Verdict for all 22: NOT `SELF_DISCOVERY_ADVANCE`.** None is `OFF_PATH` (all reachable from a live entrypoint); none is `OUTER_LOOP_RE` by the declared-provenance test (no `outer_loop_inputs_declared`, honest `development_proxy` label).
 
-## Pattern watch — drift toward outer-loop solving
+### Recommended actions
+1. **Do not surface these 22 as ARC "solves" / milestone progress.** They are the standing offline regression suite (mtimes 6/20→6/29, continuously re-run). Gate milestone ARC progress strictly on *net-new* `reproducible_total_levels` and on `live_agent_self_discovery`-provenance artifacts.
+2. **Reconcile dc22.** Run the levelup-attempt path (where `live_agent_self_discovery` provenance + `reproducibility_checksum` live) to actually bank L3 and update the registry row, or correct the artifact. Until reconciled, do not count dc22 L3 toward the total. Treat "standing artifact ahead of registry" as a recurring reconciliation hazard.
+3. **For the 6/30 sprint:** the deliverable lane (live agent self-discovering a fresh/held-out first-win) produced **zero** advances this window. Per the memory state (first-win wall 0.04, deepen well drying), the ARC effort is flowing to regression re-confirmation, not the live first-win lane — surface this to the operator now, not post-deadline.
 
-- **Volume/substance mismatch.** 22 "solve" artifacts in 7d, **zero** new banked levels (registry `reproducible_total_levels` flat — corroborated by the "levels stuck, 2+ flat milestones" state). The standing dev-twin loop manufactures solve-shaped artifacts that are pure reproduction churn. The risk is laundering this into apparent progress.
-- **The deliverable is missing from the record.** Not one artifact comes from `arc_competition_agent.py`/`E3AgentPolicy` self-discovery. Every "solve" routes through `arc_loop_solve.py` + a `GameAdapter` that the **outer loop hand-reverse-engineered** per game (registry: `GameAdapter _r11l … _s5i5 … _tu93`). `development_proxy` is contract-legal, but it is one honesty-stamp away from the anti-pattern — a hand-RE'd per-game adapter is exactly the "human/outer-loop reverse-engineering a game" this principle forbids from counting as the deliverable.
-- **No CRITICAL fraud here** (no declared offline-BFS/`*calibration*`/exhaustive-ground-truth inputs in these runs; lint green). The defense held mechanically. The standing watch item is the inverse failure: a wall of green `development_proxy` DUPLICATES reads as "the live agent is solving lots of games" when the live, hidden-game self-discovery agent has demonstrated nothing in-window. Require at least one `live_agent_self_discovery` artifact (from the E3 cascade on an *un-adaptered* game) before any milestone claims live solving capability.
+### Pattern watch — drift toward dev-proxy regression substituting for self-discovery
+- The per-game reverse-engineering is being done **by hand** (the `_<game>` `GameAdapter`s), not by the live agent at runtime. The honest `development_proxy` label keeps this on the right side of the `outer_loop_re` CRITICAL line — but it is the *boundary*: "hand-built per-game adapter" is one step from the anti-pattern. A green Layer-1 here is NOT evidence the live agent self-discovers anything.
+- **Risk signature to flag if it recurs:** a milestone whose entire ARC output is N `arc_loop_solve_*` `development_proxy` re-confirmations reads as "N games solved" while `reproducible_total_levels` is flat. That is the north-star churn definition (a new version of an existing artifact without moving the headline).
+- **Out-of-window follow-up:** the four formerly-unsolved games (re86/sb26/bp35/lf52) now bank L2 via `development_proxy` adapters. Real registry capability — but their *first-contact* provenance (was the live agent, or an outer-loop hand-RE, the discoverer?) landed before this 7d window. The next milestone-close should pull those first-solve artifacts and confirm they weren't `outer_loop_re`.
 
