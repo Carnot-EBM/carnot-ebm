@@ -5551,3 +5551,24 @@ ARC sprint (through 2026-06-30). Decisions:
 - variance_reduced_uncertainty_head
 - fast_slow_process_router
 <!-- EXP4973-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+
+<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
+## Exp 4984 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
+- Cited SOTA papers: arXiv:2510.14913, arXiv:2603.04304, arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989, arXiv:2508.16665, arXiv:2508.10539, arXiv:2502.11157, arXiv:2504.01005, arXiv:2504.00891, arXiv:2509.24460
+- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4984_distributional_energy_verifier_turnkey.py`
+- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, use 2510.14913 as the matched-compute discriminative budget frontier, use 2603.04304 as the uncertainty-guided regenerate/abstain comparator, and report against both the discriminative frontier and the GenPRM/THINKPRM generative frontier.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- distributional_energy_lora_ensemble_with_fover_penalties
+- discriminative_budget_frontier
+- v1_uncertainty_guided_regeneration_comparator
+- genprm_matched_compute_generative_comparator
+- thinkprm_matched_compute_comparator
+- efficiency_parity_frontier
+- contextprm_cross_domain_registry_comparator
+- variance_reduced_uncertainty_head
+- fast_slow_process_router
+<!-- EXP4984-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
