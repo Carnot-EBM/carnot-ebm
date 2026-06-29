@@ -110,11 +110,22 @@ class ToolEnv:
         self.engine = None
         self.ilc = None
         self.level_reached = 0
-        self.level_up_seen_in_explore = False
+        self.level_up_seen = False  # a win-state surfaced anywhere (explore OR directed try_actions)
         self.env_steps = 0  # real env actions taken (for honesty; offline so RHAE-irrelevant)
         self.last_verify: dict | None = None
         self.last_plan: dict | None = None
         self.last_execute: dict | None = None
+        # fair-shot counters: distinguish a CLEAN ceiling-negative from a confounded/inconclusive run
+        self.n_induce_ok = 0
+        self.n_plan = 0
+        self.n_execute = 0
+        self.n_try = 0
+        # induce backend = the DEPLOYABLE local Qwen (fast -> more turns fit; held constant vs baseline so
+        # the ONLY treatment variable is codex DRIVING the loop). The driver (codex) is the frontier ceiling.
+        self._proposer = wm.LocalGGUFProposer(
+            repo_substr="Qwen3.5-9B-MTP", kv_quant="q8_0", no_think_prefix="/no_think\n",
+            port=int(os.environ.get("CARNOT_IGE_LLM_PORT", "8920")),
+        )
 
     def _start_grid(self):
         import numpy as np
@@ -142,22 +153,79 @@ class ToolEnv:
         changed = sum(1 for t in new if not np.array_equal(t.grid, t.next_grid))
         lvlup = sum(1 for t in new if t.level_after > t.level_before)
         if lvlup:
-            self.level_up_seen_in_explore = True
+            self.level_up_seen = True
         sample = [self.wm._rle_delta(t.grid, t.next_grid) for t in new if not np.array_equal(t.grid, t.next_grid)][:3]
         return {"total_transitions": len(self.trans), "new_changed": changed,
-                "level_up_transitions_seen": lvlup, "sample_changes": sample}
+                "level_up_transitions_seen": lvlup, "action_ids_available": self._action_ids(),
+                "sample_changes": sample}
+
+    def _action_ids(self) -> list:
+        """Available action ids at reset (so the driver knows the action vocabulary for try_actions)."""
+        try:
+            from carnot.agentic.arc_graph_explore import rich_action_candidates, _warm
+            from carnot.agentic import arc_solver_kit as kit
+
+            arc = kit.offline_arcade()
+            env = arc.make(self.game, scorecard_id=arc.open_scorecard())
+            f = _warm(env, False)
+            return sorted({int(c.action_id) for c in rich_action_candidates(f)})
+        except Exception:
+            return []
+
+    def try_actions(self, actions: list) -> dict:
+        """DIRECTED INTERACTION (the core lever): execute an explicit action sequence from reset+warmup and
+        report the per-step level + whether it reached a level-up. Records the resulting transitions into the
+        induce corpus, so if the driver SURFACES a win here, induce can then learn is_level_complete from it.
+        actions: list of ints (1-6) or {"action":int,"data":{"x":int,"y":int}} dicts. Capped at 40."""
+        import numpy as np
+        from arcengine import GameAction
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        from carnot.agentic.arc_agi3_live_adapter import _levels_completed, _game_action
+        from carnot.agentic.arc_graph_explore import _warm
+        from carnot.agentic import arc_solver_kit as kit
+
+        self.n_try += 1
+        arc = kit.offline_arcade()
+        env = arc.make(self.game, scorecard_id=arc.open_scorecard())
+        f = _warm(env, False)
+        if self.cell is None:
+            self.cell = self.wm.detect_cell(grid_of(f))
+        start_level = _levels_completed(f)
+        levels, leveled = [], False
+        for a in (actions or [])[:40]:
+            aid = int(a.get("action")) if isinstance(a, dict) else int(a)
+            data = a.get("data") if isinstance(a, dict) else None
+            g0 = self.wm.to_logical(grid_of(f), self.cell)
+            l0 = _levels_completed(f)
+            nf = env.step(_game_action(GameAction, aid), data=data)
+            self.env_steps += 1
+            if nf is None:
+                break
+            g1 = self.wm.to_logical(grid_of(nf), self.cell)
+            l1 = _levels_completed(nf)
+            self.trans.append(self.wm.Transition(g0, aid, data, g1, l0, l1))
+            levels.append(l1)
+            if l1 > start_level:
+                leveled = True
+            f = nf
+        self.trans = self.trans[-500:]
+        if leveled:
+            self.level_up_seen = True
+            self.level_reached = max(self.level_reached, 1)
+        return {"per_step_level": levels, "reached_level_up": leveled, "start_level": start_level,
+                "final_frame": self.wm.to_ascii(self.wm.to_logical(grid_of(f), self.cell))[:1200]}
 
     def induce(self) -> dict:
         if not self.trans:
-            return {"error": "no transitions yet; explore first"}
-        proposer = self.wm.CodexProposer()
-        ok, _code = proposer.induce(self.game, self.trans, self.cell or 1)
+            return {"error": "no transitions yet; explore or try_actions first"}
+        ok, _code = self._proposer.induce(self.game, self.trans, self.cell or 1)
         if not ok:
             return {"induced": False, "reason": "proposer failed to emit code"}
         try:
             self.engine, self.ilc = self.wm.load_engine(self.game)
         except Exception as exc:
             return {"induced": False, "reason": f"load_engine failed: {exc!r}"[:160]}
+        self.n_induce_ok += 1
         vr = self.wm.WorldModelVerifier(self.trans).score(self.engine)
         self.last_verify = {"induced": True, "accuracy": round(vr.accuracy, 3),
                             "cell_recall": round(getattr(vr, "cell_recall", 0.0), 3),
@@ -168,6 +236,7 @@ class ToolEnv:
     def plan(self, max_depth: int = 30) -> dict:
         if self.engine is None or self.ilc is None:
             return {"error": "no induced model with is_level_complete; induce first"}
+        self.n_plan += 1
         try:
             sg = self._start_grid()
             p = self.wm.plan_in_model(self.engine, self.ilc, sg, max_depth=int(max_depth))
@@ -179,6 +248,7 @@ class ToolEnv:
     def execute(self) -> dict:
         if self.engine is None or self.ilc is None:
             return {"error": "no induced model; induce first"}
+        self.n_execute += 1
         try:
             out = self.wm.plan_and_execute(self.game, self.engine, self.ilc)
         except Exception as exc:
@@ -196,27 +266,32 @@ class ToolEnv:
 _TOOL_SCHEMA = (
     'TOOLS (respond with EXACTLY ONE JSON object, single line, NOTHING else -- no prose, no code fences,\n'
     'no shell commands, do NOT read any files):\n'
-    '- {"tool":"explore","args":{"n":60,"seed":1}}  -- take n exploratory env steps; returns transition counts + sample changes\n'
-    '- {"tool":"induce","args":{}}                    -- induce an executable world-model from transitions; returns verifier accuracy/cell_recall\n'
-    '- {"tool":"plan","args":{"max_depth":30}}        -- BFS a plan to the win-state INSIDE the model (0 real actions); returns whether a plan exists\n'
-    '- {"tool":"execute","args":{}}                   -- run the planned path in the REAL env; returns level_up (THE WIN SIGNAL)\n'
-    '- {"tool":"done","args":{"reason":"..."}}        -- give up\n'
+    '- {"tool":"explore","args":{"n":60,"seed":1}}         -- random salient env steps; returns counts + available action_ids + sample changes\n'
+    '- {"tool":"try_actions","args":{"actions":[6,2,2,3]}}  -- DIRECTED: run an EXACT action sequence from reset (ints 1-6; 6=click needs data {"x":..,"y":..}); returns per-step level + reached_level_up (THE WIN SIGNAL) + final frame. USE THIS to hunt the first level-up.\n'
+    '- {"tool":"induce","args":{}}                          -- induce an executable world-model from collected transitions; returns verifier accuracy/cell_recall + has_is_level_complete\n'
+    '- {"tool":"plan","args":{"max_depth":30}}              -- BFS a plan to the win-state INSIDE the model (0 real actions); returns whether a plan exists\n'
+    '- {"tool":"execute","args":{}}                         -- run the planned path in the REAL env; returns level_up (THE WIN SIGNAL)\n'
+    '- {"tool":"done","args":{"reason":"..."}}              -- give up\n'
 )
 
 
 def _driver_prompt(env: ToolEnv, turns_left: int, last_obs: dict | None) -> str:
     return (
         "You are a POLICY driving an offline ARC-AGI-3 puzzle solver via tools. GOAL: reach level 1 "
-        "(level_up) on an UNFAMILIAR grid-puzzle game you have never seen. You do NOT know its rules; "
-        "discover them by exploring, inducing a world-model, checking the verifier, planning, and "
-        "executing. Iterate: if induction accuracy is low, explore more (different seeds / more steps) "
-        "before re-inducing; if no plan is found, the model's goal predicate is likely wrong -- explore "
-        "toward any level-up transition and re-induce; only execute when a plan exists.\n\n"
+        "(reached_level_up / level_up = true) on an UNFAMILIAR grid-puzzle game you have never seen. You do "
+        "NOT know its rules; discover them by interacting. STRATEGY: (1) explore a little to see the grid + "
+        "available action_ids; (2) use try_actions to DIRECTLY hunt a level-up -- form a hypothesis about "
+        "the goal from the frame and TEST concrete action sequences (this is your most powerful tool; a win "
+        "you surface here is recorded so induce can learn it); (3) once you have transitions, induce a "
+        "world-model and check accuracy; (4) if has_is_level_complete, plan then execute. Do NOT loop on "
+        "explore+induce -- if accuracy stalls or no plan is found, switch to try_actions to hunt a real "
+        "level-up directly. You have limited turns; act decisively.\n\n"
         + _TOOL_SCHEMA
-        + f"\nSTATE: transitions={len(env.trans)}, level_up_seen_while_exploring={env.level_up_seen_in_explore}, "
+        + f"\nSTATE: transitions={len(env.trans)}, win_state_surfaced={env.level_up_seen}, "
+        f"induces_ok={env.n_induce_ok}, plans={env.n_plan}, executes={env.n_execute}, try_actions={env.n_try}, "
         f"last_verify={env.last_verify}, last_plan={env.last_plan}, last_execute={env.last_execute}, "
         f"current_level={env.level_reached}, turns_left={turns_left}.\n"
-        f"LAST OBSERVATION: {json.dumps(last_obs) if last_obs else 'none'}\n\n"
+        f"LAST OBSERVATION: {json.dumps(last_obs)[:1600] if last_obs else 'none'}\n\n"
         "Emit the single best next tool call as JSON now."
     )
 
@@ -245,29 +320,39 @@ def run_treatment(game: str) -> dict:
         if tool == "done":
             transcript.append({"turn": turn, "tool": "done", "args": args})
             break
-        fn = {"explore": env.explore, "induce": env.induce, "plan": env.plan, "execute": env.execute}.get(tool)
+        fn = {"explore": env.explore, "try_actions": env.try_actions, "induce": env.induce,
+              "plan": env.plan, "execute": env.execute}.get(tool)
         if fn is None:
             last_obs = {"error": f"unknown tool {tool!r}"}
             transcript.append({"turn": turn, "tool": tool, "obs": last_obs})
             continue
         try:
-            last_obs = fn(**{k: v for k, v in args.items() if k in ("n", "seed", "max_depth")})
+            last_obs = fn(**{k: v for k, v in args.items() if k in ("n", "seed", "max_depth", "actions")})
         except Exception as exc:
             last_obs = {"error": f"tool raised: {exc!r}"[:160]}
         transcript.append({"turn": turn, "tool": tool, "args": args, "obs": last_obs})
         if env.level_reached >= 1:
             transcript.append({"turn": turn, "WIN": True})
             break
+    # fair_shot: did the treatment genuinely get to TEST the lever? (directed interaction, OR a full
+    # induce->plan/execute cycle). If not, a no-win is INCONCLUSIVE/harness-confounded, not a ceiling-negative.
+    fair_shot = bool(env.n_try > 0 or (env.n_induce_ok > 0 and (env.n_plan + env.n_execute) > 0))
     return {"solved_l1": env.level_reached >= 1, "cheated": cheated, "turns_used": len(transcript),
-            "env_steps": env.env_steps, "transcript": transcript}
+            "env_steps": env.env_steps, "n_induce_ok": env.n_induce_ok, "n_plan": env.n_plan,
+            "n_execute": env.n_execute, "n_try_actions": env.n_try,
+            "win_state_surfaced": env.level_up_seen, "fair_shot": fair_shot, "transcript": transcript}
 
 
 def run_baseline(game: str) -> dict:
-    """The current ONE-SHOT pipeline: explore -> induce ONCE (codex) -> plan_and_execute."""
+    """The current ONE-SHOT pipeline: explore -> induce ONCE (local Qwen, held constant vs treatment) ->
+    plan_and_execute. The ONLY treatment variable is codex DRIVING the loop, not the induce backend."""
     from carnot.agentic import arc_executable_world_model as wm
 
     trans, cell = wm.collect_transitions(game, n=120, seed=SEED)
-    ok, _ = wm.CodexProposer().induce(game, trans, cell)
+    proposer = wm.LocalGGUFProposer(repo_substr="Qwen3.5-9B-MTP", kv_quant="q8_0",
+                                    no_think_prefix="/no_think\n",
+                                    port=int(os.environ.get("CARNOT_IGE_LLM_PORT", "8920")))
+    ok, _ = proposer.induce(game, trans, cell)
     if not ok:
         return {"solved_l1": False, "reason": "induce_failed", "n_transitions": len(trans)}
     try:
@@ -310,9 +395,18 @@ def main() -> int:
                    "tool_driving_framing_justifies_live_path_revalidation")
     elif treatment["solved_l1"] and baseline["solved_l1"]:
         verdict = f"complete_frontier_tooluse_no_advantage_both_solved_{GAME}_l1_baseline_already_wins"
+    elif treatment["solved_l1"] and not baseline["solved_l1"]:
+        verdict = (f"success_frontier_tooluse_BEATS_oneshot_baseline_{GAME}_l1_"
+                   "tool_driving_framing_justifies_live_path_revalidation")
+    elif not treatment.get("fair_shot"):
+        # the treatment never genuinely tested the lever (no directed try_actions, no induce->plan/execute
+        # cycle) -- a harness/budget confound, NOT evidence the lever fails. Do NOT call it a ceiling-negative.
+        verdict = (f"complete_frontier_tooluse_INCONCLUSIVE_{GAME}_treatment_no_fair_shot_"
+                   f"induces_ok_{treatment['n_induce_ok']}_plans_{treatment['n_plan']}_"
+                   f"execs_{treatment['n_execute']}_tries_{treatment['n_try_actions']}")
     elif not treatment["solved_l1"] and not baseline["solved_l1"]:
-        verdict = (f"complete_frontier_tooluse_NULL_neither_first_win_{GAME}_l1_"
-                   "ceiling_negative_lever_dead_local9b_cannot_if_frontier_cannot")
+        verdict = (f"complete_frontier_tooluse_NULL_neither_first_win_{GAME}_l1_fair_shot_"
+                   "ceiling_negative_local9b_cannot_if_frontier_driver_cannot")
     else:
         verdict = f"complete_frontier_tooluse_baseline_only_solved_{GAME}_l1_tool_loop_no_help"
 
@@ -353,8 +447,9 @@ def main() -> int:
         "used_env_source": False,
         "read_game_source": False,
         "interacts_with_offline_env_via_step": True,
-        "model_specs": {"driver": "codex/gpt-5.5", "induce_backend": "codex/gpt-5.5",
-                        "reasoning_effort": "xhigh"},
+        "model_specs": {"driver": "codex/gpt-5.5", "induce_backend": "local Qwen3.5-9B-MTP (deployable)",
+                        "reasoning_effort": "xhigh",
+                        "isolation": "induce backend held constant baseline==treatment; ONLY codex-driving differs"},
         "preconditions_checked": [{"resource": "codex_cli", "available": True}],
         "prior_failures": [
             {"experiment_id": "arc_incontext_pattern_proposal_ab",
