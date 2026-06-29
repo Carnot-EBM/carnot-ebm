@@ -97,17 +97,32 @@ def _detect_source_read(raw: str, game: str) -> bool:
 
 
 def _parse_action(a) -> tuple[int | None, dict | None]:
-    """Robustly parse one driver-supplied action: a bare int, or a dict under several plausible keys
-    (action/id/a/act). Returns (action_id, data) or (None, None) if unparseable -- callers SKIP None."""
+    """Robustly parse one driver-supplied action into (action_id, data). Mirrors the proven coalescing in
+    arc_solver_kit.py:1820-1836 so CLICK coordinates are read whether the driver nests them under "data"
+    OR puts them FLAT as siblings ({"action_id":6,"x":..,"y":..}). A dict with only x/y is inferred as a
+    click (action 6). Returns (None, None) only if truly unparseable; callers SKIP None."""
     if isinstance(a, dict):
-        for k in ("action", "id", "a", "act", "action_id"):
-            v = a.get(k)
-            if v is not None:
-                try:
-                    return int(v), (a.get("data") if isinstance(a.get("data"), dict) else None)
-                except (TypeError, ValueError):
-                    return None, None
-        return None, None
+        aid = None
+        for k in ("action", "action_id", "id", "a", "act"):
+            if a.get(k) is not None:
+                aid = a.get(k)
+                break
+        if aid is None and a.get("x") is not None and a.get("y") is not None:
+            aid = 6  # only coords given -> infer a click
+        try:
+            aid = int(aid)
+        except (TypeError, ValueError):
+            return None, None
+        nested = a.get("data") if isinstance(a.get("data"), dict) else {}
+        xv = nested.get("x", a.get("x"))
+        yv = nested.get("y", a.get("y"))
+        data = None
+        if xv is not None and yv is not None:
+            try:
+                data = {"x": int(xv), "y": int(yv)}
+            except (TypeError, ValueError):
+                data = None
+        return aid, data
     try:
         return int(a), None
     except (TypeError, ValueError):
@@ -209,12 +224,13 @@ class ToolEnv:
         if self.cell is None:
             self.cell = self.wm.detect_cell(grid_of(f))
         start_level = _levels_completed(f)
-        levels, leveled, skipped = [], False, 0
+        levels, leveled, skipped, executed = [], False, 0, []
         for a in (actions or [])[:40]:
             aid, data = _parse_action(a)
             if aid is None:
                 skipped += 1
                 continue  # malformed element -> skip robustly (never raise / abort the whole sequence)
+            executed.append({"action": aid, "data": data})  # transparency: exact action+coords applied
             g0 = self.wm.to_logical(grid_of(f), self.cell)
             l0 = _levels_completed(f)
             nf = env.step(_game_action(GameAction, aid), data=data)
@@ -233,7 +249,9 @@ class ToolEnv:
             self.level_up_seen = True
             self.level_reached = max(self.level_reached, 1)
         return {"per_step_level": levels, "reached_level_up": leveled, "start_level": start_level,
-                "skipped_malformed": skipped,
+                "skipped_malformed": skipped, "actions_executed": executed[:40],
+                "n_clicks_with_coords": sum(1 for e in executed if e["action"] == 6 and e["data"]),
+                "n_clicks_no_coords": sum(1 for e in executed if e["action"] == 6 and not e["data"]),
                 "action_schema_hint": ('actions = list of ints 1-6, OR dicts {"action":int,"data":{"x":int,"y":int}}'
                                        if skipped else None),
                 "final_frame": self.wm.to_ascii(self.wm.to_logical(grid_of(f), self.cell))[:1200]}
@@ -463,6 +481,17 @@ def main() -> int:
             "model -- NOT a deliverable claim. Anti-cheat: driver sandboxed in an empty CWD, told JSON-only, "
             "tool shim never returns source; a post-hoc source-read scan marks the run CONFOUNDED if it peeked."
         ),
+        "limitations": [
+            "n=2 games (re86, ft09) -- suggestive, not a decisive ceiling claim over all 25 games.",
+            ("verifier 'accuracy' is full-grid-match over ALL transitions; on a game where exploration "
+             "surfaces NO state change (new_changed=0) an identity model scores accuracy=1.0 with "
+             "cell_recall=0.0 (a VACUOUS fit, not a substantive world model) -- read cell_recall + "
+             "new_changed alongside accuracy."),
+            ("induce backend is the deployable local Qwen3.5-9B-MTP, which is weak (often acc~0 / degenerate "
+             "on these grids); the probe routes around it via try_actions, but a stronger induce backend "
+             "might change the plan/execute arm."),
+            ("reasoning_effort is codex gpt-5.5's DEFAULT (xhigh per the codex header), not explicitly forced."),
+        ],
         "solve_provenance": "development_proxy",
         # used_env_source / read_game_source = did we read the game SOURCE CODE? NO -- the probe only
         # INTERACTS with the offline env via reset/step (exactly what the live agent does); it never reads
@@ -471,7 +500,7 @@ def main() -> int:
         "read_game_source": False,
         "interacts_with_offline_env_via_step": True,
         "model_specs": {"driver": "codex/gpt-5.5", "induce_backend": "local Qwen3.5-9B-MTP (deployable)",
-                        "reasoning_effort": "xhigh",
+                        "reasoning_effort": "xhigh (codex gpt-5.5 default; not explicitly forced via -c)",
                         "isolation": "induce backend held constant baseline==treatment; ONLY codex-driving differs"},
         "preconditions_checked": [{"resource": "codex_cli", "available": True}],
         "prior_failures": [
