@@ -24931,3 +24931,21 @@ below corroborate trajectory-retrieval as the SOTA action-efficiency lever:
 - arXiv:2510.10304 - Sample-Efficient Online Learning in LM Agents via Hindsight Trajectory Rewriting - https://arxiv.org/abs/2510.10304 - sample-efficient exploration via relabeled past trajectories; adjacent to the self-play/FR-11 learned-verifier loop. Verified via WebSearch 2026-06-28.
 - arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning - https://arxiv.org/abs/2605.18871 - the POST-SPRINT pivot (already filed by exp4911). Decomposed energy = learned quality scorer (LoRA ensemble on one frozen encoder, 3% params) + deterministic constraint penalties + ensemble-std epistemic uncertainty -> two-pass regenerate/abstain. A 149M verifier orchestrating 7-26B open generators beats single-shot Qwen-72B on GSM8K/MuSR/TravelPlanner/TACO/Knights&Knaves. This IS the Carnot verifier thesis and the concrete method the `.454` D scaffold builds toward.
 <!-- V454-PLANNER-REFERENCES-END -->
+
+<!-- V457-PLANNER-REFERENCES-START -->
+## V457 planner source set (2026-06-29) — final sprint day: post-6/30 verifier-moat backlog
+
+`.456` re-confirmed the LOCKED deliverable for 6/30 (capstone =
+`submission_ready_levels_69_heldout_0.04_package_ready_pivot_turnkey_7_1`). Both `.456` deepens
+(A1 ar25 L3->L4, A2 vc33 L2->L3) NO-BANKED -> `reproducible_total_levels` stayed **69 for the THIRD
+consecutive milestone** (the deepen well is dry). The first-win wall stays B1-trusted CLOSED
+(`WALL_IS_HIDDEN_STATE`). `.457` (UTC 2026-06-29, the final sprint day before the 2026-06-30
+deadline) executes the locked deliverable and keeps the post-6/30 verifier-moat pivot TURNKEY. The D
+SOTA-ingestion slot adds the next papers for the post-sprint verifier-moat backlog (the pivot paper
+arXiv:2605.18871 is already filed; these EXTEND the program). All verified via WebSearch 2026-06-29:
+
+- arXiv:2508.16665 - Trust but Verify! A Survey on Verification Design for Test-time Scaling - https://arxiv.org/abs/2508.16665 - the umbrella survey for the post-6/30 verifier-moat program; taxonomizes outcome-vs-process and generative-vs-discriminative verifiers and the efficiency/abstention design axes. Use to position the distributional-energy-verifier (2605.18871) within the SOTA landscape.
+- arXiv:2508.10539 - Improving Value-based Process Verifier via Low-Cost Variance Reduction - https://arxiv.org/abs/2508.10539 - directly relevant to 2605.18871's ensemble-STDDEV epistemic-uncertainty term: low-cost variance reduction for value-based verifiers tightens the uncertainty signal that drives the two-pass regenerate/abstain loop. Candidate refinement once the pivot experiment is live.
+- arXiv:2502.11157 - Dyve: Thinking Fast and Slow for Dynamic Process Verification - https://arxiv.org/abs/2502.11157 - fast/slow dynamic verification = the EFFICIENCY-PARITY axis of the north-star win condition ("equally effective as the LM at lower cost/latency", north-star §5): a cheap fast path with selective slow escalation, the Meta-EBM Cascade Router shape. Candidate for the efficiency head-to-head.
+- arXiv:2408.15240 - Generative Verifiers: Reward Modeling as Next-Token Prediction - https://arxiv.org/abs/2408.15240 - foundational generative-verifier framing (reward modeling as next-token prediction); the lineage THINKPRM (2504.16828) and the distributional EBM (2605.18871) build on. Background/positioning, not a new method to implement.
+<!-- V457-PLANNER-REFERENCES-END -->
