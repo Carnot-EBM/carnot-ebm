@@ -4,6 +4,25 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-06-29 RESOLVED (outer-loop watchdog): milestone-TRANSITION pretest gate must use `--no-cov` + own-test (not full coverage-instrumented suite)
+
+**Incident:** the milestone .456 and .457 archive/activate TRANSITION tasks repeatedly FAILED with
+"Codex CLI error: Hard wall-clock cap after ~4801s" (caps at 04:04/05:27/06:50 + 12:48 UTC 2026-06-29),
+stalling each milestone rollover (~80 min wasted/transition; self-recovered via fast-retry / deliverable-
+exists). **Root cause:** the transition modules used `PRETEST_COMMAND = ["pytest", "tests/python", "-q"]`,
+which inherits pyproject COVERAGE addopts (`--cov ... --cov-fail-under=99`). Coverage instrumentation makes
+the full 43,704-test suite (incl. several heavy-compute tests like exp4940/4941/4943/4944, ~15x slower
+under coverage: 6s -> 90s+ each) exceed codex's 80-min cap. It was NEVER a hang — it was coverage cost.
+**Resolution (already converged in-repo):** the latest transition module `experiment_4968_archive_457_
+activate_458.py` uses `pytest <own-test-file> -q --no-cov` (fast targeted gate), and the conductor's own
+full-suite gate already uses `--no-cov -o addopts=` (research_conductor.py:1354). No transition cap-fail
+since 12:48. The 4 heavy tests were un-quarantined (they pass in ~6s with `--no-cov`; conftest
+collect_ignore note 2026-06-29). **DURABILITY REQUIREMENT for future transition-module authors (planner /
+outer-loop):** a milestone archive/activate transition's `PRETEST_COMMAND` MUST be
+`[".venv/bin/pytest", "tests/python/test_experiment_<N>_archive_*.py", "-q", "--no-cov"]` (its OWN test +
+`--no-cov`) — NEVER the full `tests/python` suite with coverage addopts, which re-introduces the cap.
+
+
 ### 2026-06-26 (MANDATORY-NEXT-MILESTONE, operator-directed "ignoring the deadline, we MUST pursue oracle-distinct structural energy"): S0 — the cheap decisive core-bet probe
 
 > **STATUS (2026-06-26): PROGRAM CONCLUDED — do NOT re-propose energy stages.** The full staged
