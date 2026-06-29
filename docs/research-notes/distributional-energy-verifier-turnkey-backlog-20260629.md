@@ -1,0 +1,61 @@
+# Exp 4962 Distributional Energy Verifier Turnkey Backlog Extension
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
+- Pivot executable on 7/1: `true`
+- Pivot turnkey: `true`
+- Three-column dry-run OK: `true`
+- Moat proven claimed: `false`
+- Entrypoint: `.venv/bin/python python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py`
+
+## SOTA to Carnot Mapping
+
+### arXiv:2508.16665 - Trust but Verify! A Survey on Verification Design for Test-time Scaling
+- URL: https://arxiv.org/abs/2508.16665
+- Strongest method: Verifier-design taxonomy for test-time scaling: outcome vs process, generative vs discriminative, prompt-based vs trained, and utility axes for efficiency and abstention.
+- Implementation cost over current stack: Low: no model change required. Use it to label Carnot's current decomposed-energy verifier as a discriminative outcome-ranker with analytical constraint penalties, uncertainty, and abstention controls.
+- Pitfalls: It is a survey, not a direct measured win; taxonomy language can hide whether the verifier is oracle-distinct, matched-compute, or evaluated on a self-consistency-not-saturated domain.
+- Roadmap input: `taxonomy_anchor: verifier_design_cell_and_adjacent_open_cells`
+
+### arXiv:2508.10539 - Improving Value-based Process Verifier via Low-Cost Variance Reduction
+- URL: https://arxiv.org/abs/2508.10539
+- Strongest method: ComMCS variance reduction for value-based process verifiers: combine current-step and later-step Monte Carlo value estimates to reduce annotation variance without additional LLM inference.
+- Implementation cost over current stack: Medium: add process-state value labels or cached rollouts to the TravelPlanner/MuSR candidate traces, then calibrate the learned quality-ensemble STDDEV used by the regenerate/abstain loop.
+- Pitfalls: Evidence is math-centric; reducing variance can over-smooth genuine epistemic disagreement; adjacent-step value estimates may be unavailable for outcome-only rows.
+- Roadmap input: `candidate_next_milestone: variance_reduced_uncertainty_head`
+
+### arXiv:2502.11157 - Dyve: Thinking Fast and Slow for Dynamic Process Verification
+- URL: https://arxiv.org/abs/2502.11157
+- Strongest method: Dynamic process verification with a cheap System-1 token-level fast path and selective System-2 comprehensive analysis for hard or ambiguous steps.
+- Implementation cost over current stack: Medium-high: wrap FoVer plus the learned energy scorer in a cascade router that accepts easy rows cheaply and escalates only uncertainty or constraint-conflict rows to a slower process verifier.
+- Pitfalls: Router false negatives can skip needed slow checks; slow-path tokens can erase efficiency gains; ProcessBench/MATH evidence must be revalidated on TravelPlanner or MuSR before any moat claim.
+- Roadmap input: `candidate_next_milestone: fast_slow_process_router`
+
+### arXiv:2605.18871 - Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning
+- URL: https://arxiv.org/abs/2605.18871
+- Strongest method: Decomposed energy verifier: heterogeneous LoRA quality-scorer ensemble on one frozen encoder; ensemble mean ranks candidates, ensemble stddev triggers targeted regeneration or abstention; deterministic analytical constraint penalties remain separate.
+- Implementation cost over current stack: Medium: keep Carnot's FoVer verifier ensemble as the analytical penalty source, add a learned LoRA-ensemble quality scorer, calibrate mean/stddev on structured rows, and prohibit model_id or oracle-label features in the verifier path.
+- Pitfalls: Fails or overclaims when self-consistency is near ceiling, deterministic penalties silently become the correctness oracle, code tasks leak model identity, or stddev abstention is tuned on test labels.
+- Roadmap input: `flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties`
+
+### arXiv:2504.16828 - Process Reward Models That Think
+- URL: https://arxiv.org/abs/2504.16828
+- Strongest method: ThinkPRM: a generative long-CoT process verifier that writes a step-wise verification trace and uses that generated reasoning as the reward signal for best-of-N selection or reward-guided search.
+- Implementation cost over current stack: Medium-high: keep FoVer penalties as deterministic checks, add a generative PRM comparator or labeler for the learned quality-scorer ensemble, and account for verifier tokens against self-consistency at matched compute.
+- Pitfalls: Verifier tokens can dominate cost, generated rationales may re-derive the generator answer instead of judging it, process labels may not transfer from math to TravelPlanner/MuSR, and long-CoT traces are hard to expose safely.
+- Roadmap input: `support_for_next_milestone: thinkprm_generative_prm_comparator`
+
+### arXiv:2502.01989 - VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model
+- URL: https://arxiv.org/abs/2502.01989
+- Strongest method: VFScale: train an intrinsic diffusion energy landscape with MRNCL plus KL regularization, then use hybrid MCTS over denoising trajectories so the intrinsic energy acts as a dense verifier/reward.
+- Implementation cost over current stack: High: FoVer penalties can provide analytical constraints, but VFScale requires a generator-side diffusion or denoising search substrate plus dense-energy training; it is not a drop-in replacement for the current cached-candidate verifier.
+- Pitfalls: Evidence is strongest on Maze/Sudoku-style diffusion reasoning, not LLM structured-output reranking; the verifier-free objective can blur the oracle-distinct control, and hMCTS cost can erase matched-compute gains.
+- Roadmap input: `support_for_next_milestone: vfscale_intrinsic_energy_dense_reward_ablation`
+
+## Taxonomy Position
+
+- Carnot design cell: decomposed_energy_verifier: discriminative outcome-ranker with analytical constraint penalties, ensemble uncertainty, abstention, and efficiency controls
+- Adjacent open cells: generative_process_verifier, value_process_variance_reduction, fast_slow_process_router
+
+## Validation Gate
+
+The post-6/30 experiment must beat self-consistency with CI95 excluding zero, remain oracle-distinct (`verifier_is_oracle=false`), avoid a model-identity shortcut, and evaluate a domain where self-consistency is not near-ceiling. Exp4962 states this gate but does not claim it has been met.

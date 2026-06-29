@@ -5517,3 +5517,19 @@ ARC sprint (through 2026-06-30). Decisions:
 - flagged_for_next_milestone_comparator: thinkprm_generative_prm_comparator (arXiv:2504.16828)
 - flagged_for_next_milestone_ablation: vfscale_intrinsic_energy_dense_reward (arXiv:2502.01989)
 <!-- EXP4951-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+
+<!-- EXP4962-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
+## Exp 4962 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
+- Cited SOTA papers: arXiv:2508.16665, arXiv:2508.10539, arXiv:2502.11157, arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989
+- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py`
+- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, use 2508.16665 for taxonomy positioning, use 2508.10539 to refine ensemble-STDDEV uncertainty, and use 2502.11157 for the efficiency head-to-head via a fast/slow process router.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- distributional_energy_lora_ensemble_with_fover_penalties
+- variance_reduced_uncertainty_head
+- fast_slow_process_router
+- thinkprm_matched_compute_comparator
+<!-- EXP4962-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->

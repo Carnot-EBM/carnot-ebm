@@ -3299,6 +3299,100 @@ model-identity shortcut, and evaluate a domain where self-consistency is not
 near-ceiling, while `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
 `no_real_benchmark_run=true` remain enforced.
 
+### REQ-KONA-4962: Distributional Energy Verifier Turnkey Backlog Extension
+
+Carnot MUST keep the Exp 4951 distributional-energy-verifier pivot turnkey
+while extending the post-2026-06-30 SOTA backlog without executing the real
+benchmark. The artifact SHALL cite the NEW arXiv papers `2508.16665`,
+`2508.10539`, and `2502.11157`; SHALL re-confirm the already-ingested
+`2605.18871`, `2504.16828`, and `2502.01989`; and SHALL map every cited paper
+onto Carnot with `strongest_method`, `implementation_cost_over_current_stack`,
+and `pitfalls`.
+
+The implementation SHALL live at
+`python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py`, and
+the terminal artifact SHALL be written to
+`results/experiment_4962_distributional_energy_verifier_turnkey.json`. The
+single documented entrypoint SHALL be
+`.venv/bin/python python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py`.
+The run SHALL update `research-studying.md` with an INGESTED Exp 4962 section
+and SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`,
+`ops/status.md`, or `_bmad/traceability.md`.
+
+The turnkey re-confirmation SHALL load
+`data/experiment_4922_travelplanner_structured_slice.jsonl`, verify
+`self_consistency_saturated=false`, and run the three-column dry-run over a
+small non-saturated slice with columns `self_consistency`,
+`decomposed_energy_verifier`, and `oracle`. The
+`decomposed_energy_verifier` column MUST remain oracle-distinct: it uses the
+active FoVer verifier ensemble analytical penalties plus a learned
+quality-scorer ensemble stub whose MEAN ranks candidates and whose STDDEV
+drives abstention; it MUST NOT use model identity or cached oracle labels.
+
+The survey paper `2508.16665` SHALL position Carnot's current design cell as a
+discriminative, decomposed-energy verifier for outcome ranking with analytical
+constraint penalties and abstention/efficiency controls. Adjacent open cells
+SHALL include generative process verification, low-cost value-process variance
+reduction, and fast/slow dynamic process-verifier routing. `2508.10539` SHALL
+be marked as an uncertainty-signal refinement candidate for the ensemble-STDDEV
+regenerate/abstain loop, and `2502.11157` SHALL be marked as an
+efficiency-parity candidate for the Meta-EBM Cascade Router shape.
+
+Required artifact fields and principles:
+- `honest_verdict`: terminal prefix; success_distributional_energy_verifier_pivot_turnkey_backlog_extended.
+- `arxiv_ids_cited`: NEW: 2508.16665 + 2508.10539 + 2502.11157; re-confirmed: 2605.18871 + 2504.16828 + 2502.01989 -- real IDs, no fabrication (SOTA-ingestion guardrail).
+- `sota_to_carnot_mapping`: per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap.
+- `pivot_executable_on_7_1`: true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable).
+- `pivot_turnkey`: true -- the post-6/30 experiment is STILL ONE documented command away (real loader + dry-run + entrypoint re-confirmed).
+- `three_column_dry_run_ok`: the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run).
+- `sc_not_saturated_domain`: the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR).
+- `post_sprint_first_experiment_pointer`: the single documented entrypoint + the pre-staged post-6/30 first-experiment so the loop pivots cleanly 7/1.
+- `validation_gate`: the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here).
+- `verifier_is_oracle`: false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here.
+- `moat_proven_claimed`: false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads the spec + slice + papers; 0.0001s floor) -- no real benchmark run.
+- `preconditions_checked`: records spec/slice/network checks; a missing spec emits blocked_.
+- `random_seed`: determinism for the dry-run wiring.
+- `reproducibility_checksum`: content hash of (papers cited, turnkey spec, dry-run config) so a replication catches drift.
+
+### SCENARIO-KONA-4962-TURNKEY-BACKLOG: Backlog and Three Columns Stay Ready
+
+**Given** the Exp 4951 turnkey artifact, Exp 4922 harness, FoVer registry,
+phase3-kona spec, and TravelPlanner structured slice are present and the slice
+is not self-consistency-saturated
+**When** `python/carnot/experiment_4962_distributional_energy_verifier_turnkey.py`
+runs
+**Then** it writes
+`results/experiment_4962_distributional_energy_verifier_turnkey.json` with
+`honest_verdict=success_distributional_energy_verifier_pivot_turnkey_backlog_extended`,
+`pivot_executable_on_7_1=true`, `pivot_turnkey=true`,
+`three_column_dry_run_ok=true`, `verifier_is_oracle=false`,
+`moat_proven_claimed=false`, all six real arXiv IDs, the documented one-command
+entrypoint, and dry-run columns `{self_consistency,
+decomposed_energy_verifier, oracle}` over a small non-saturated TravelPlanner
+slice.
+
+### SCENARIO-KONA-4962-BLOCKED: Missing Turnkey Preconditions Block Honestly
+
+**Given** the phase3-kona spec, Exp 4951 turnkey artifact, Exp 4922 harness,
+FoVer registry, or structured slice is missing, invalid, or
+self-consistency-saturated
+**When** the Exp 4962 precondition check runs
+**Then** it emits a terminal `blocked_*` verdict, records the blocked resource in
+`preconditions_checked`, keeps `pivot_executable_on_7_1=false` and
+`pivot_turnkey=false`, and does not claim that the verifier moat is proven.
+
+### SCENARIO-KONA-4962-VALIDATION-GATE: Extended Backlog Does Not Claim a Moat Win
+
+**Given** the six-paper SOTA mapping, taxonomy position, turnkey dry-run, and
+post-sprint entrypoint are present
+**When** the Exp 4962 artifact is validated
+**Then** `validation_gate` requires the real post-6/30 experiment to beat
+self-consistency with CI95 excluding zero, remain oracle-distinct, avoid a
+model-identity shortcut, and evaluate a domain where self-consistency is not
+near-ceiling, while `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
+`no_real_benchmark_run=true` remain enforced.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run
