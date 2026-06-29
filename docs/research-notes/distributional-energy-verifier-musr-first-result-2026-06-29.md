@@ -7,14 +7,23 @@ artifact `results/distributional_energy_verifier_musr.json`. Generator = Qwen3.5
 N=50 MuSR/murder_mysteries (binary MCQ), K=8 candidates, M=3 quality-ensemble. All selection methods
 ORACLE-DISTINCT (none sees gold; verifier_is_oracle=False).
 
-## Result: NULL for the cheap energy verifier, but the domain has real headroom (judge>SC)
+## FINAL RESULT (n=200): clean NEGATIVE — no method beats self-consistency
 
-| method | accuracy (/50) |
-|---|---|
-| self-consistency (baseline) | **0.58** (29) |
-| distributional-energy (with-abstain) | 0.52 (26) |
-| distributional-energy (pure min-energy) | 0.52 (26) |
-| **LLM-judge** | **0.64** (32) |
+| method | accuracy (/200) | vs SC (McNemar p) |
+|---|---|---|
+| self-consistency (baseline) | **0.560** (112) | — |
+| distributional-energy (pure min) | 0.535 (107) | −0.025 |
+| distributional-energy (with-abstain) | 0.515 (103) | −0.045, CI [−0.105,+0.015], **p=0.188** |
+| LLM-judge | 0.545 (109) | **p=0.736** |
+
+**At n=200, NO method beats self-consistency.** The cheap prompted decomposed-energy verifier **trails SC**
+(−0.045, p=0.188 — directionally worse, not significant); the LLM-judge is tied/below SC (p=0.736). The
+n=50 "judge>SC headroom" was **confirmed noise**. This is a clean NEGATIVE for the cheap prompted energy
+verifier off ARC.
+
+### (Superseded n=50 snapshot, kept for the record)
+n=50 read was SC 0.58 / energy 0.52 / judge 0.64 — the judge's apparent +0.06 evaporated at n=200 (it was
+McNemar p≈0.51 noise, flagged by adversarial review at the time).
 
 - **Energy − SC = -0.06, CI95 [-0.18, +0.06]** (incl 0) -> the cheap **prompted process-reward
   decomposed-energy verifier does NOT beat self-consistency**. abstain_rate 0.26 (genuinely exercised).
