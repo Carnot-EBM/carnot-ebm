@@ -121,24 +121,36 @@ def engine(grid, action, data):
     center_r = int(zeros[0, 0])
     center_c = int(zeros[0, 1])
 
+    trace_color = None
+    for dr, dc in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+        nr = center_r + dr
+        nc = center_c + dc
+        if 0 <= nr < scan_h and 0 <= nc < w:
+            value = int(out[nr, nc])
+            if value not in (0, 4, 5, 15):
+                trace_color = value
+                break
+    if trace_color is None:
+        return out
+
     left = 0
     c = center_c - 1
-    while c >= 0 and out[center_r, c] not in (4, 5, 15):
+    while c >= 0 and int(out[center_r, c]) == trace_color:
         left += 1
         c -= 1
     right = 0
     c = center_c + 1
-    while c < w and out[center_r, c] not in (4, 5, 15):
+    while c < w and int(out[center_r, c]) == trace_color:
         right += 1
         c += 1
     up = 0
     r = center_r - 1
-    while r >= 0 and out[r, center_c] not in (4, 5, 15):
+    while r >= 0 and int(out[r, center_c]) == trace_color:
         up += 1
         r -= 1
     down = 0
     r = center_r + 1
-    while r < scan_h and out[r, center_c] not in (4, 5, 15):
+    while r < scan_h and int(out[r, center_c]) == trace_color:
         down += 1
         r += 1
 
@@ -154,10 +166,7 @@ def engine(grid, action, data):
         if 0 <= r < scan_h:
             old_cells.add((r, center_c))
 
-    values = [int(out[r, c]) for r, c in old_cells if int(out[r, c]) != 0]
-    nines = values.count(9)
-    warm = values.count(1) + values.count(11)
-    draw_color = 9 if nines > warm else 11
+    draw_color = 9 if trace_color == 9 else 11
 
     dr = 0
     dc = 0
@@ -186,12 +195,16 @@ def engine(grid, action, data):
             if abs(r - tr) <= 1 and abs(c - tc) <= 1:
                 restore = 4
                 if r == tr and c == tc:
-                    restore = 1
+                    restore = 11 if np.any(out[:scan_h] == 11) else 1
         for tr, tc in nine_targets:
             if abs(r - tr) <= 1 and abs(c - tc) <= 1:
                 restore = 4
                 if r == tr and c == tc:
                     restore = 9
+        if trace_color == 9:
+            warm_restore = 11 if np.any(out[:scan_h] == 11) else 1
+            if (r == 27 and 10 <= c <= 32) or (c == 21 and 16 <= r <= 38):
+                restore = warm_restore
         out[r, c] = restore
 
     for r, c in new_cells - old_cells:
