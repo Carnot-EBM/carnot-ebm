@@ -15185,3 +15185,104 @@ fabricated checkpoint refresh.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4949 | Implemented (`python/carnot/experiment_4949_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4949_self_play_verifier_checkpoint.py`) |
+
+---
+
+## REQ-LEARN-4960: Continued Honest-Substrate ARC Self-Play Verifier Checkpoint Refresh
+
+Experiment 4960 SHALL run the standing ARC self-play loop on a rotated banked
+target with an existing learned verifier checkpoint, selecting `dc22` because
+it is banked, has `models/arc_verifier_dc22.json`, is not `.456`'s `lp85`,
+`.455`'s `ar25`, `.453`'s `bp35`, `.452`'s `vc33`, `.451`'s `sk48`,
+`.450`'s `ls20`, `.449`'s `re86`, or A1/A2's targets. The loop SHALL
+warm-start from `models/arc_verifier_dc22.json`, reproduction-gate at least one
+offline level, train on this run's self-play traces, refresh the checkpoint,
+and write `results/experiment_4960_self_play_verifier_checkpoint.json`.
+
+The preconditions SHALL verify that `arc_solver_kit.offline_arcade()` exits 0,
+that `ops/arc_solve_registry.yaml` is loadable, that the selected target has a
+banked level, and that `models/arc_verifier_<game>.json` exists before the run.
+If any required resource is missing, Experiment 4960 SHALL write a terminal
+`blocked_*` artifact that records the failed precondition and SHALL NOT claim a
+refreshed checkpoint.
+
+The success gate SHALL be falsifiable: `verifier_checkpoint_refreshed=true`
+only when the checkpoint mtime advances, `offline_reproduced=true`,
+`reproduced_levels >= 1`, and the fresh artifact is not live-rechecked as
+critical by the adversarial verifier. A failed loop, missing checkpoint, stale
+mtime, failed reproduction gate, critical live recheck, or rotation back to
+`lp85`, `ar25`, `bp35`, `vc33`, `sk48`, `ls20`, or `re86` SHALL write a
+terminal `complete_*` or `blocked_*` artifact with the residual instead of
+fabricating checkpoint progress.
+
+Experiment 4960 SHALL maintain the Exp 4949 substrate fix. When the standing
+loop uses the offline reproduction gate and checkpoint training without
+invoking an LLM generator, the artifact SHALL declare
+`verifier_ensemble_against_cached_candidates` and SHALL record a measured
+`duration_s >= 1.0`. It SHALL declare `live_llm_inference` only for a measured
+LLM-generator run with `duration_s >= 60.0`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed."
+- `verifier_checkpoint_refreshed`: principle "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11)."
+- `checkpoint_path`: principle "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3)."
+- `offline_reproduced`: principle "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact."
+- `reproduced_levels`: principle "the depth confirmed this run."
+- `target_game`: principle "the rotated self-play target (differs from .456 lp85 / .455 ar25 / .453 bp35 / .452 vc33 / .451 sk48 / .450 ls20 / .449 re86 AND from A1/A2)."
+- `inference_substrate`: principle "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator ran >=60s. This MAINTAINS the .456 exp4949 substrate fix."
+- `duration_s`: principle "the measured wall-clock; must be consistent with inference_substrate (>=1s for verifier-ensemble, >=60s for live_llm_inference)."
+- `flag_resolved`: principle "true iff the fresh artifact is NOT flagged true_live_recheck=critical (the substrate declaration holds)."
+- `solve_provenance`: principle "live_agent_self_discovery -- self-play is the agent improving on its own attempts."
+- `preconditions_checked`: principle "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint."
+
+### SCENARIO-LEARN-4960-CHECKPOINT-REFRESHED
+
+**Given** `arc_solver_kit.offline_arcade()` is available, `dc22` is banked in
+`ops/arc_solve_registry.yaml`, and `models/arc_verifier_dc22.json` exists before
+the standing loop runs
+**When** `scripts/arc_loop_solve.py --game dc22` reports an offline-reproduced
+level and writes the learned verifier checkpoint
+**Then** Experiment 4960 records `verifier_checkpoint_refreshed=true`,
+`checkpoint_path=models/arc_verifier_dc22.json`, advanced checkpoint mtimes,
+`offline_reproduced=true`, `reproduced_levels >= 1`, `target_game=dc22`,
+`solve_provenance=live_agent_self_discovery`, `flag_resolved=true`, and
+`honest_verdict=success_self_play_checkpoint_refreshed`.
+
+### SCENARIO-LEARN-4960-SUBSTRATE-FIX
+
+**Given** the loop uses the offline reproduction gate and checkpoint training
+without an LLM generator
+**When** Experiment 4960 builds its artifact
+**Then** it declares
+`inference_substrate=verifier_ensemble_against_cached_candidates`, records
+`duration_s >= 1.0`, and does not trigger a critical `DURATION_TOO_SHORT`
+live recheck.
+
+### SCENARIO-LEARN-4960-RESIDUAL-NO-FABRICATION
+
+**Given** the loop result is missing, the reproduction gate fails, the
+checkpoint path is absent, the checkpoint mtime does not advance, or the fresh
+artifact is critically flagged
+**When** Experiment 4960 builds its artifact
+**Then** it records `verifier_checkpoint_refreshed=false` or
+`flag_resolved=false` as applicable, preserves the residual cause, keeps
+`offline_reproduced` and `reproduced_levels` grounded in the loop result, and
+does not emit a success verdict.
+
+### SCENARIO-LEARN-4960-BLOCKED-PRECONDITION
+
+**Given** the offline arcade is unavailable, the registry is missing, the
+selected target is not banked, the checkpoint file is absent before the run, or
+the selection is one of the recent or conflicting targets `lp85`, `ar25`,
+`bp35`, `vc33`, `sk48`, `ls20`, or `re86`
+**When** Experiment 4960 checks preconditions
+**Then** it writes `results/experiment_4960_self_play_verifier_checkpoint.json`
+with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
+fabricated checkpoint refresh.
+
+## Implementation Status (Exp 4960)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4960 | Implemented (`python/carnot/experiment_4960_self_play_verifier_checkpoint.py`) | Implemented (`tests/python/test_experiment_4960_self_play_verifier_checkpoint.py`) |
