@@ -83,6 +83,12 @@ collect_ignore = [
     # already correctly monkeypatched). Observed: outer-loop watchdog 2026-06-29.
     "test_experiment_4940_distributional_energy_verifier_executable_spec.py",
     "test_experiment_4941_bank_and_pivot_audit.py",
+    # test_experiment_4943/4944 hang the same way (full RUN >90s; the hang is at test-RUN
+    # time, not collection — a bisect of the .457 test range 4940-4957 found exactly four
+    # hangers: 4940, 4941, 4943, 4944; all the others complete in 66-89s). Same root cause +
+    # same last-resort quarantine; same proper follow-up (mock the heavy I/O).
+    "test_experiment_4943_stamping_backfill_and_wiring_readiness.py",
+    "test_experiment_4944_kv260_continuity.py",
 ]
 
 
