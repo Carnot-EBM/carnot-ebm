@@ -3209,6 +3209,96 @@ self-consistency with CI95 excluding zero, remain oracle-distinct, and pass a
 no-model-identity-shortcut check, while `moat_proven_claimed=false` and
 `verifier_is_oracle=false` remain enforced.
 
+### REQ-KONA-4951: Distributional Energy Verifier Turnkey Readiness
+
+Carnot MUST advance the Exp 4940 executable design spec into a turnkey
+post-2026-06-30 distributional-energy-verifier experiment artifact without
+executing the real benchmark. The turnkey artifact SHALL re-confirm real arXiv
+citations for `2605.18871`, `2504.16828`, and `2502.01989`; update the
+SOTA-to-Carnot mapping with per-paper `strongest_method`,
+`implementation_cost_over_current_stack`, and `pitfalls`; and mark the
+decomposed-energy LoRA-ensemble over FoVer analytical penalties as the strongest
+NEXT-milestone roadmap input while keeping ThinkPRM and VFScale as comparator or
+ablation inputs.
+
+The implementation SHALL live at
+`python/carnot/experiment_4951_distributional_energy_verifier_turnkey.py`, the
+terminal artifact SHALL be written to
+`results/experiment_4951_distributional_energy_verifier_turnkey.json`, and the
+research note SHALL live at
+`docs/research-notes/distributional-energy-verifier-turnkey-20260629.md`. The
+single documented entrypoint SHALL be
+`.venv/bin/python python/carnot/experiment_4951_distributional_energy_verifier_turnkey.py`.
+The run SHALL update `research-studying.md` with an INGESTED Exp 4951 section,
+write a human-readable research note, and SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+The turnkey dry-run SHALL load a real small slice from
+`data/experiment_4922_travelplanner_structured_slice.jsonl`, confirm the chosen
+SC-not-saturated domain has `self_consistency_saturated=false`, and wire exactly
+three columns over that small slice: `self_consistency`,
+`decomposed_energy_verifier`, and `oracle`. The
+`decomposed_energy_verifier` column MUST use Carnot's active FoVer verifier
+ensemble as the analytical-penalty source, represented by cached deterministic
+constraint penalties in the structured slice, plus a learned quality-scorer
+ensemble stub whose MEAN ranks candidates and whose STDDEV drives abstention.
+The verifier column MUST ignore model identity and MUST NOT use the cached
+oracle labels used only by the `oracle` column.
+
+Required artifact fields and principles:
+- `honest_verdict`: terminal prefix; success_distributional_energy_verifier_pivot_turnkey_ready.
+- `arxiv_ids_cited`: 2605.18871 (Distributional EBM) + 2504.16828 (THINKPRM) + 2502.01989 (VFScale) -- real IDs, no fabrication (SOTA-ingestion guardrail).
+- `sota_to_carnot_mapping`: per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap.
+- `pivot_executable_on_7_1`: true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable).
+- `pivot_turnkey`: true -- the post-6/30 experiment is ONE documented command away (real loader + dry-run + entrypoint), not just an executable spec.
+- `three_column_dry_run_ok`: the self-consistency / decomposed-energy-verifier / oracle columns wire end-to-end on a SC-not-saturated slice (no full benchmark run).
+- `sc_not_saturated_domain`: the chosen domain (MuSR / TravelPlanner) where self-consistency is NOT near-ceiling -- the only place an oracle-distinct moat win is reachable (2605.18871 beats SC on MuSR).
+- `post_sprint_first_experiment_pointer`: the single documented entrypoint + the pre-staged post-6/30 first-experiment so the loop pivots cleanly 7/1.
+- `validation_gate`: the post-6/30 gate stated precisely: beats SC with CI95 excluding zero + oracle-distinct + no model-identity shortcut (NOT claimed met here).
+- `verifier_is_oracle`: false -- the DESIGN TARGET is oracle-distinct (a learned/energy verifier, NOT the executable oracle that defines correctness); not a measured result here.
+- `moat_proven_claimed`: false -- this is readiness/design + SOTA-ingestion; the real post-6/30 experiment must pass the gate.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads the spec + slice + papers; 0.0001s floor) -- no real benchmark run.
+- `preconditions_checked`: records spec/slice/network checks; a missing spec emits blocked_.
+- `random_seed`: determinism for the dry-run wiring.
+- `reproducibility_checksum`: content hash of (papers cited, turnkey spec, dry-run config) so a replication catches drift.
+
+### SCENARIO-KONA-4951-TURNKEY-DRY-RUN: Three Columns and Entrypoint Are Ready
+
+**Given** the Exp 4940 executable spec artifact, Exp 4922 harness, FoVer registry,
+and TravelPlanner structured slice are present and the slice is not
+self-consistency-saturated
+**When** `python/carnot/experiment_4951_distributional_energy_verifier_turnkey.py`
+runs
+**Then** it writes
+`results/experiment_4951_distributional_energy_verifier_turnkey.json` with
+`honest_verdict=success_distributional_energy_verifier_pivot_turnkey_ready`,
+`pivot_executable_on_7_1=true`, `pivot_turnkey=true`,
+`three_column_dry_run_ok=true`, `verifier_is_oracle=false`,
+`moat_proven_claimed=false`, the documented one-command entrypoint, and dry-run
+columns `{self_consistency, decomposed_energy_verifier, oracle}` over a small
+non-saturated TravelPlanner slice.
+
+### SCENARIO-KONA-4951-BLOCKED: Missing Turnkey Preconditions Block Honestly
+
+**Given** the Exp 4940 executable spec artifact, Exp 4922 harness, FoVer
+registry, or structured slice is missing, invalid, or self-consistency-saturated
+**When** the turnkey precondition check runs
+**Then** it emits a terminal `blocked_*` verdict, records the blocked resource in
+`preconditions_checked`, keeps `pivot_executable_on_7_1=false` and
+`pivot_turnkey=false`, and does not claim that the verifier moat is proven.
+
+### SCENARIO-KONA-4951-VALIDATION-GATE: Readiness Does Not Claim a Moat Win
+
+**Given** the SOTA mapping, turnkey dry-run, and post-sprint entrypoint are
+present
+**When** the Exp 4951 artifact is validated
+**Then** `validation_gate` requires the real post-6/30 experiment to beat
+self-consistency with CI95 excluding zero, remain oracle-distinct, avoid a
+model-identity shortcut, and evaluate a domain where self-consistency is not
+near-ceiling, while `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
+`no_real_benchmark_run=true` remain enforced.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run
