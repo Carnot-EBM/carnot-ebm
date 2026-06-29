@@ -3250,6 +3250,26 @@ Declaring outer-loop-only inputs (`used_env_source`, `read_game_source`,
 on a non-`outer_loop_re` solve is a CRITICAL contradiction. Re-solving a level the
 registry already records is a CRITICAL duplicate.
 
+**Source-reading is a PUBLIC-games dev tool ONLY — NEVER in the hidden live submission
+(operator directive 2026-06-29).** Reading the game source (`environment_files/<gid>/*.py`),
+probing the sandbox for source exposure, importlib-exec'ing the game sim, `set_level`
+teleporting, or reading the ground-truth win flag is **PERMITTED for the 25 PUBLIC games in
+the conductor + outer loop** (offline dev: understanding mechanics, building `GameAdapter`s,
+validation via `offline_arcade` over `environment_files`) — this is normal `development_proxy`
+work. It is **FORBIDDEN as any part of the LIVE AGENT's HIDDEN-game submission.** The scored
+agent must solve hidden games purely from its OWN runtime discovery (frames + exploration +
+induction); it must never read hidden-game source or ship a source-exposure probe to the
+scored eval. Rationale: (1) the deliverable is a live agent that DISCOVERS hidden games on its
+own — source-reading on hidden games is the anti-pattern, against the benchmark's stated design
+intent ("discover what winning looks like"); (2) it is metric-penalized anyway (RHAE squares
+efficiency; a brute-force teleport-solver scores LOW); (3) it carries discretionary-DQ /
+overfitting risk. The operator settled this WITHOUT needing an empirical probe of the hidden
+sandbox: we will not read/probe hidden-game source regardless of whether the scored env exposes
+it. Do NOT build or stage a hidden-eval source-exposure probe submission. (Context: the
+investigation found the scored path is a frames-only remote gateway anyway — `submission_kernel`
+runs `OPERATION_MODE=online` against `gateway:8001`, hidden source server-side — so source-
+reading is also inviable on the hidden set; the directive stands independent of that.)
+
 **Three-layer adversarial defense (aggressive — shipped 2026-06-22).**
 - **Layer 1a — commit-time HARD STOP:** `scripts/arc_orphan_solver_lint.py`
   (pre-commit `arc-orphan-solver-lint`, on any `python/carnot/agentic/arc_*.py` or
