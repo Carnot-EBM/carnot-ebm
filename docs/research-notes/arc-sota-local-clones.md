@@ -59,3 +59,50 @@ Refresh: `git -C /home/ianblenke/arc-sota-refs/<name> pull` (or re-clone `--dept
   GAP-ARCH-ENERGY-PROGRESS-SHAPING).
 - OPERATOR ASK: links to StochasticGoose / PersistentAEM / SubQ repos (or their Kaggle community-leaderboard
   pages) so they can be cloned here too.
+
+## 2026-06-29 — "How do the leaders succeed with frontier models while we fail?" (operator question; ANSWERED: premise inverted)
+
+Operator asked how the cloned top-leaderboard projects find success with frontier models while Carnot fails.
+A 9-agent comparative workflow (`arc-leaderboard-frontier-vs-carnot-comparison`) read every cloned solver in
+full. **The premise is inverted twice over** (adversarial-verified: premise SUPPORTED):
+
+1. **The leaders do NOT use frontier models.** Verified by keyword scan (zero `openai|anthropic|gpt|claude|
+   gemini|chat.completion|from_pretrained` hits in the winning solvers):
+   - **nihilisticneuralnet "0.46"** — no LLM. Mechanism: `importlib.exec_module` the hidden game's OWN
+     `environment_files/<gid>.py` source, clone the simulator, `set_level()` teleport, brute-force a
+     5-algorithm classical search (Dijkstra/Beam/IDA*/BFS/A*/MCTS) over the perfect simulator, read the
+     ground-truth win signal (`levels_completed` / private `_current_level_index`) directly. A torch CNN
+     (ForgeNet) is only a source-absent fallback.
+   - **vyankteshdwivedi "0.39 LB"** — no LLM. Same white-box exploit: read the game source, regex-extract
+     the win-field name, pickle-clone + forward-simulate, `set_level`. ChangeNet CNN only as a fallback.
+   - **StochasticGoose (preview winner 12.58%)** — no LLM. From-scratch online frame-change CNN.
+   - **just-explore (3rd, arXiv:2512.24156)** — no model inference at all; pure heuristic state-graph BFS
+     with reverse-BFS distance-to-frontier routing; paper explicitly "substantially outperforms frontier
+     LLM-based agents" (which scored ~0% on preview).
+2. **Where frontier models ARE the core solver, there is NO success.** The only frontier-as-core code in the
+   clones is the official baseline TEMPLATES (`llm_agents`/`reasoning_agent`/`langgraph`/`smolagents`/
+   `multimodal`, per-step o3/o4-mini choosers) and the OpenClaw scaffold (`arc3_agents`, routes to
+   claude/gpt-5/gemini) — NEITHER has any banked score (OpenClaw never completed a scored run: 401 + empty
+   recordings). Independent evidence (arXiv:2603.24621): frontier-LLM agents score **<0.4%** on the hidden
+   set; StochasticGoose collapsed **12.58% → 0.25%** preview→hidden.
+
+**Score comparability (the crux).** Carnot's **0.08** is RHAE-efficiency-weighted on the **HIDDEN scored
+set via blind live discovery** (never reads game source, never `set_level`-teleports, never reads
+ground-truth win flags). The leaders' headline numbers are NOT the same basis: "0.46" appears only in a
+filename (no metric/set/output in the notebook); "0.39"/"0.30" are PUBLIC-leaderboard source-reading
+numbers; "12/25" / "median 30/52" are LEVELS-COMPLETED on the PUBLIC PREVIEW. Three stacked confounds:
+public-preview vs hidden SET; raw-levels vs RHAE METRIC; white-box source-reading vs blind-discovery
+MECHANISM. **The only valid hidden-set comparators are StochasticGoose 0.25% and frontier <0.4% — against
+which Carnot's 0.08 is comparable-to-AHEAD.** Carnot is not failing where others succeed with frontier
+models; Carnot and the frontier-LLM approach hit the SAME hidden-win-state wall (our codex/gpt-5.5 probe on
+re86/ft09 reproduced it), and the leaders only look better via an easier set + a source-reading mechanism
+Carnot is deliberately forbidden from using (it is exactly the `outer_loop_re` anti-pattern in CLAUDE.md's
+ARC Live-Path Reachability discipline).
+
+**Legitimately borrowable (live-discovery, NOT the source-reading cheat):** (1) StochasticGoose's
+from-scratch online frame-change CNN for the ACTION6 click explosion — but Carnot already has this
+(`arc_frame_change_predictor` exp4490/4547, `arc_online_action_effect_scorer` exp4710/4726). (2)
+just-explore's persistent navigable state-graph + reverse-BFS distance-to-frontier routing + connected-
+component object segmentation + 5-tier visual-salience action priors — the most actionable un-fully-adopted
+lever. **Do NOT borrow** the top-two's `exec_module`-source + `set_level`-teleport + read-ground-truth-flag
+exploit — it violates the live-hidden-game-discovery deliverable and collapses on truly-hidden games.
