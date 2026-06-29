@@ -96,6 +96,24 @@ def _detect_source_read(raw: str, game: str) -> bool:
     return ("environment_files" in low) or (f"{game}.py" in low) or ("is_solved" in low)
 
 
+def _parse_action(a) -> tuple[int | None, dict | None]:
+    """Robustly parse one driver-supplied action: a bare int, or a dict under several plausible keys
+    (action/id/a/act). Returns (action_id, data) or (None, None) if unparseable -- callers SKIP None."""
+    if isinstance(a, dict):
+        for k in ("action", "id", "a", "act", "action_id"):
+            v = a.get(k)
+            if v is not None:
+                try:
+                    return int(v), (a.get("data") if isinstance(a.get("data"), dict) else None)
+                except (TypeError, ValueError):
+                    return None, None
+        return None, None
+    try:
+        return int(a), None
+    except (TypeError, ValueError):
+        return None, None
+
+
 class ToolEnv:
     """Wraps the EXISTING ARC subsystems as a minimal tool surface for the driver. Exposes only
     frames/deltas/verifier-scores/plans -- never game source."""
@@ -191,10 +209,12 @@ class ToolEnv:
         if self.cell is None:
             self.cell = self.wm.detect_cell(grid_of(f))
         start_level = _levels_completed(f)
-        levels, leveled = [], False
+        levels, leveled, skipped = [], False, 0
         for a in (actions or [])[:40]:
-            aid = int(a.get("action")) if isinstance(a, dict) else int(a)
-            data = a.get("data") if isinstance(a, dict) else None
+            aid, data = _parse_action(a)
+            if aid is None:
+                skipped += 1
+                continue  # malformed element -> skip robustly (never raise / abort the whole sequence)
             g0 = self.wm.to_logical(grid_of(f), self.cell)
             l0 = _levels_completed(f)
             nf = env.step(_game_action(GameAction, aid), data=data)
@@ -213,6 +233,9 @@ class ToolEnv:
             self.level_up_seen = True
             self.level_reached = max(self.level_reached, 1)
         return {"per_step_level": levels, "reached_level_up": leveled, "start_level": start_level,
+                "skipped_malformed": skipped,
+                "action_schema_hint": ('actions = list of ints 1-6, OR dicts {"action":int,"data":{"x":int,"y":int}}'
+                                       if skipped else None),
                 "final_frame": self.wm.to_ascii(self.wm.to_logical(grid_of(f), self.cell))[:1200]}
 
     def induce(self) -> dict:
