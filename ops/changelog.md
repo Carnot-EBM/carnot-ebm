@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-06-29 (Exp 4981 level-up attempt selector/artifact fix — codex)
+
+- Fixed the failing Exp 4981 tests without reverting prior changes and without modifying
+  `scripts/research_conductor.py`. `_dead_ends()` now normalizes YAML mapping-style dead-end
+  entries back to `game: note` strings, so target-specific blockers such as `re86: reset-only...`
+  are honored during fresh L2-to-L3 selection.
+- Regenerated `results/experiment_4981_levelup_attempt.json` with
+  `honest_verdict=complete_g50t_no_new_level_residual_no_grounded_l3_delta` and updated
+  `ops/arc_solve_registry.yaml` to record the `g50t` no-bank while removing the stale incorrect
+  Exp4981 `re86` registry entry left by the bad selector run.
+- Validation: `pytest -q tests/python/test_experiment_4981_levelup_attempt.py --no-cov` passed
+  (`10 passed`); direct Coverage.py scoped to `python/carnot/experiment_4981_levelup_attempt.py`
+  reported 100% (`344` statements, `0` missing); focused Ruff check/format passed; staged spec
+  coverage for the Exp4981 test file passed. Full repo Python coverage remains blocked in this
+  environment by unrelated missing optional dependency `python-sat`/`pysat`; whole-repo spec
+  coverage remains blocked by pre-existing unreferenced legacy tests (`1171 test(s) missing spec
+  traceability`).
+
 ## 2026-06-28 (Exp 4939 held-out first-win final carry test fix — codex)
 
 - Fixed the failing Exp 4939 import/tests without reverting prior changes and without modifying

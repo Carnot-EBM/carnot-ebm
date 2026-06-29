@@ -1,6 +1,27 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-28 (Exp 4939 held-out first-win final carry regression fix)
+**Last Updated:** 2026-06-29 (Exp 4981 level-up attempt selector/artifact fix)
+
+## Session 2026-06-29 — Exp 4981 Level-Up Attempt Selector/Artifact Fix
+
+Fixed the Exp 4981 selector regression without reverting prior changes and
+without modifying `scripts/research_conductor.py`. `_dead_ends()` now preserves
+YAML one-item mapping entries such as `re86: ...` as target-specific dead-end
+strings, so the fresh L2-to-L3 rotation skips `re86` correctly and selects
+`g50t`. Regenerated `results/experiment_4981_levelup_attempt.json` with
+`honest_verdict=complete_g50t_no_new_level_residual_no_grounded_l3_delta` and
+updated `ops/arc_solve_registry.yaml` to record the `g50t` no-bank while
+removing the stale bad `re86` Exp4981 entry.
+
+Validation for this fix: Exp 4981 focused tests pass (`10 passed`), scoped
+Coverage.py report for the Exp 4981 module is 100% (`344` statements, `0`
+missing), focused Ruff check/format pass, and staged spec coverage for the Exp
+4981 test file passes. The full `pytest tests/python --cov=python/carnot
+--cov-report=term-missing --cov-fail-under=100` run could not complete green in
+this environment because unrelated tests require missing optional dependency
+`python-sat` (`pysat` import missing); repo-wide spec coverage remains blocked
+by pre-existing unreferenced legacy tests (`1171 test(s) missing spec
+traceability`).
 
 ## Session 2026-06-28 — Exp 4939 Held-Out First-Win Final Carry Test Fix
 
