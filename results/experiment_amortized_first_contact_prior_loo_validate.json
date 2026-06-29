@@ -1,0 +1,34 @@
+{
+  "experiment": "amortized_first_contact_prior_LOO_validate",
+  "lever": "#2 amortized_first_contact_prior (cross-game first-contact frequency prior)",
+  "method": "leave-one-out: build prior from 21 games' winning first-actions, test if it ranks the held-out game's winning first-action family highly",
+  "n_games": 22,
+  "families": [
+    "action:0",
+    "action:1",
+    "action:2",
+    "action:3",
+    "action:4",
+    "click"
+  ],
+  "global_mode_family": "click",
+  "global_mode_base_rate": 0.32,
+  "LOO_top_family_hit_rate": "0/22 = 0%",
+  "LOO_mean_rank_of_winning_family": 3.23,
+  "chance_rank": 3.5,
+  "winning_family_rank_histogram": {
+    "rank2": 13,
+    "rank4": 3,
+    "rank5": 3,
+    "rank6": 3,
+    "rank1": 0
+  },
+  "finding": "NO cross-game transfer. The coarse action-family prior never (0%) ranks the held-out game's winning first-action family at the top; winning-family rank is at chance. First-contact actions are game-specific, confirming WALL_IS_HIDDEN_STATE / l1_first_contact. The prior is SAFE (re-ranking) but provides zero coverage benefit and would slightly hurt efficiency (tries the wrong family first).",
+  "recommendation": "DO NOT enable amortized_first_contact_prior. config unchanged (amortized_first_contact_prior_enabled stays False).",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "random_seed": 0,
+  "honest_verdict": "complete_amortized_first_contact_prior_no_transfer_do_not_enable"
+}
