@@ -1,0 +1,71 @@
+{
+  "experiment": "headway_tu93",
+  "game": "tu93",
+  "target_level": 5,
+  "prior_reproducible_level": 4,
+  "reached_level": 4,
+  "banked": false,
+  "reproduced_levels": 4,
+  "offline_reproduced": false,
+  "lever_used": null,
+  "levers_tried": [
+    "L2_bigger_budget_stronger_verifier",
+    "L1_maze_bfs_verifier_observation_derived",
+    "L3_source_diagnosis_only_no_solve_derived"
+  ],
+  "states_expanded": 13116,
+  "deepen_log": [
+    {
+      "lever": "L2_centroid_manhattan_verifier",
+      "from": 4,
+      "to": 5,
+      "found": false,
+      "nodes": 4568,
+      "seconds": 560.0,
+      "best_heuristic_plateau": 18.1,
+      "note": "max_nodes=400000, depth_cap=140; the adapter's player->goal straight-line Manhattan verifier PLATEAUED at best_h=18.1 (depth 6) and never triggered an L5 level-up. The full-experiment run with this verifier TIMED OUT at 1500s (rc 124) without a path."
+    },
+    {
+      "lever": "L1_maze_bfs_verifier",
+      "from": 4,
+      "to": 5,
+      "found": false,
+      "nodes": 3980,
+      "seconds": 380.0,
+      "best_heuristic_plateau": 3.0,
+      "note": "An observation-derived maze-BFS verifier (walls=color-2 on the observed 6px player lattice, BFS player->goal). Got best_h down to 3.0 (player AT the goal corridor, far better routing than centroid's 18.1) but STILL never triggered an L5 level-up after 3980 nodes. The full-experiment run with this verifier also TIMED OUT at 1500s (rc 124)."
+    }
+  ],
+  "final_reproduction_gate": {
+    "game": "tu93",
+    "reached_level": 4,
+    "claimed_level": 4,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota"
+  },
+  "solution_labels_floor_L4": "results/arc_loop_solve_tu93.json (64-move path, reproduces L4)",
+  "n_solution_moves": 64,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "offline_ground_truth_bfs": false,
+  "exhaustive_bfs_calibration": false,
+  "hand_calibrated_per_game": false,
+  "verifier_is_oracle": false,
+  "duration_s": 4600.0,
+  "honest_verdict": "complete_clean_negative_no_new_level_tu93_prior_L4_horizon_plus_multisprite_objective_confirmed",
+  "root_cause": "Two compounding constraints, both diagnosed empirically: (1) HORIZON -- tu93 requires branch_mode='fresh_env' (non-idempotent reset, gotcha #7), so every search node = a fresh env + replay of the 64-move L4 prefix + path; measured throughput is ~7-10 nodes/sec, so even 20k nodes exceeds the 25-min budget. (2) OBJECTIVE MISMATCH -- BOTH the stock centroid (Manhattan) verifier AND a stronger observation-derived maze-BFS verifier PLATEAU near the goal (best_h 18.1 and 3.0 respectively) without ever triggering an L5 level-up. tu93's deeper-level win condition (read from environment_files for ROOT-CAUSE DIAGNOSIS ONLY, NOT to derive a banked solve) is a MULTI-SPRITE placement objective with a per-action STEP BUDGET: next_level fires only when several distinct goal sprites (tags 0001haidilggfh/0020npxxteirsg/0023otenflmryc) are simultaneously placed AND the player sprites reach exits, and the run can lose() on budget exhaustion. A single player->goal distance verifier (which sufficed for the more single-objective L1-L4) cannot represent that multi-objective win, so best-first search converges to a near-goal plateau that is not a win state.",
+  "levers_assessment": {
+    "L1_observe_action_delta": "Tried. The action model (ACTION1-4 directional, 6px stride) is complete -- no missing action was found by observation; the player reaches the goal vicinity. The deeper-level difficulty is the MULTI-SPRITE objective, not a missing action.",
+    "L2_bigger_budget_stronger_verifier": "Tried. Raised max_nodes to 400000 and depth_cap to 140; the centroid verifier plateaued at best_h=18.1 and the run timed out. Budget is not the binding constraint when the verifier cannot represent the win condition.",
+    "L3_source_goal_heuristic": "NOT USED to derive a banked solve (would flip provenance to outer_loop_re, non-countable). Source was read ONLY to diagnose the root cause above. Even a source-derived multi-sprite goal-distance would face the same ~7 nodes/sec fresh-env horizon over a higher-dimensional objective; building it was judged unlikely to bank within budget and is excluded to keep this a clean, countable development_proxy negative."
+  },
+  "notes": [
+    "On-disk reproducible FLOOR for tu93 is L4 (the 64-move arc_loop_solve_tu93.json path; kit.reproduce -> L4). The registry's levels_reproduced=5 and prior exp4436/exp4537/exp4549 'L5/L6' claims are NOT backed by any persisted reproducible path -- the best gateable path on disk reaches L4.",
+    "Prior exp4537 and exp4549 independently hit the same dry well ('no fresh-env executable route reproduced beyond the current depth'), corroborating this negative.",
+    "This is the expected, acceptable outcome per the deepen-well-is-documented-dry guidance: a clean honest negative with a newly-pinned root cause (multi-sprite objective beyond a single-goal verifier, throttled by the fresh-env horizon).",
+    "No registry / router-ledger / model-checkpoint files were written (the live conductor owns those)."
+  ],
+  "methodology_note": "All search was offline (zero quota): kit.offline_arcade + OfflineSolver branch_mode='fresh_env'. The ONLY bank criterion is kit.reproduce(reproduced=True) for a level strictly greater than the prior reproducible level (L4); it was never satisfied, so banked=false. Two distinct verifiers were exercised with large budgets and both plateaued without a level-up; throughput (~7-10 nodes/sec) and the diagnosed multi-sprite objective are the joint cause. states_expanded=13116 is the sum across the instrumented L2 probe (4568), the L1 maze probe (3980), and the chained baseline L1->L4 confirmation search (~4568)."
+}
