@@ -1,0 +1,164 @@
+{
+  "adversarial_verifier_evidence": {
+    "adversarial_verify_path": "scripts/adversarial_verify.py",
+    "check_circular_moat_overclaim_used_for_D": true,
+    "summarize_artifact_path": "scripts/summarize_artifact.py"
+  },
+  "audit_failure_reasons": [],
+  "bank_evidence": {
+    "A1": {
+      "artifact_experiment": "experiment_4947_levelup_attempt",
+      "bank_claimed": false,
+      "checks": {
+        "live_path_reachable": true,
+        "not_duplicate": true,
+        "reproduction_genuine": true,
+        "self_discovery_provenance": true
+      },
+      "claim_status": "no_bank_claimed_honest_dead_end",
+      "claimed_reached_level": 3,
+      "failure_reasons": [],
+      "game": "ar25",
+      "label": "A1",
+      "loop_artifact_present": true,
+      "present": true,
+      "registry_prior_level": 3
+    },
+    "A2": {
+      "artifact_experiment": "experiment_4948_levelup_attempt",
+      "bank_claimed": false,
+      "checks": {
+        "live_path_reachable": true,
+        "not_duplicate": true,
+        "reproduction_genuine": true,
+        "self_discovery_provenance": true
+      },
+      "claim_status": "no_bank_claimed_honest_dead_end",
+      "claimed_reached_level": 2,
+      "failure_reasons": [],
+      "game": "vc33",
+      "label": "A2",
+      "loop_artifact_present": true,
+      "present": true,
+      "registry_prior_level": 2
+    }
+  },
+  "banks_trustworthy": true,
+  "checks": {
+    "honest_readiness": true,
+    "live_path_reachable": true,
+    "not_duplicate": true,
+    "oracle_distinct_design": true,
+    "reproduction_genuine": true,
+    "self_discovery_provenance": true
+  },
+  "duration_s": 1.0,
+  "experiment": "experiment_4952_bank_and_pivot_audit",
+  "experiment_id": 4952,
+  "field_principles": {
+    "audit_failure_reasons": {
+      "principle": "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp."
+    },
+    "banks_trustworthy": {
+      "principle": "AND of the bank checks over CLAIMED banks -- the capstone counts A1/A2 toward reproducible_total_levels ONLY if true (vacuously true if no bank claimed)."
+    },
+    "checks": {
+      "principle": "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct_design, honest_readiness}."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_v456_banks_and_pivot_audited (trusted or with named failures)."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (reads cached artifacts; 1s floor)."
+    },
+    "pivot_readiness_trustworthy": {
+      "principle": "AND of the pivot-turnkey checks -- the capstone states D's readiness ONLY if true (oracle-distinct design + honest gate + genuine turnkey wiring + no over-claim)."
+    },
+    "preconditions_checked": {
+      "principle": "records A1/A2/D artifact presence; a missing input is recorded, not fabricated."
+    }
+  },
+  "honest_verdict": "complete_v456_banks_and_pivot_audited_trusted",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "lint_evidence": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
+  },
+  "pivot_readiness_evidence": {
+    "artifact_experiment": null,
+    "checks": {
+      "honest_readiness": true,
+      "oracle_distinct_design": true
+    },
+    "failure_reasons": [],
+    "honest_readiness_evidence": {
+      "arxiv_ids_cited": [
+        "2605.18871",
+        "2504.16828",
+        "2502.01989"
+      ],
+      "citation_metadata_real": true,
+      "matm_reproposed": false,
+      "moat_proven_claimed": false,
+      "required_arxiv_ids": [
+        "2502.01989",
+        "2504.16828",
+        "2605.18871"
+      ],
+      "validation_gate": {
+        "beats_self_consistency_ci95_excludes_zero_required": true,
+        "claimed_met": false,
+        "domain_self_consistency_not_near_ceiling_required": true,
+        "no_model_identity_shortcut_required": true,
+        "oracle_distinct_required": true,
+        "promotion_note": "not met by Exp4951; this artifact only proves turnkey readiness for the post-6/30 experiment",
+        "real_post_6_30_experiment_must_pass": "distributional_energy_verifier beats self-consistency with CI95 excluding zero",
+        "verifier_is_oracle_required_value": false
+      }
+    },
+    "oracle_distinct_design_evidence": {
+      "circular_moat_critical_flags": [],
+      "design_target_declared": true,
+      "model_identity_features_allowed": false,
+      "oracle_labels_allowed_in_verifier": false,
+      "verifier_is_oracle": false
+    },
+    "present": true,
+    "turnkey_wiring_evidence": {
+      "dry_run_rows_have_required_columns": true,
+      "entrypoint_ok": true,
+      "loader": "data/experiment_4922_travelplanner_structured_slice.jsonl",
+      "loader_declared_consistently": true,
+      "loader_present": true,
+      "pivot_turnkey": true,
+      "preconditions_ok": true,
+      "three_column_dry_run_ok": true
+    }
+  },
+  "pivot_readiness_trustworthy": true,
+  "preconditions_checked": {
+    "a1_artifact_present": true,
+    "a2_artifact_present": true,
+    "absent_inputs": [],
+    "adversarial_verify_present": true,
+    "arc_orphan_solver_lint_present": true,
+    "d_artifact_present": true,
+    "registry_loadable": true,
+    "registry_present": true,
+    "spec_has_req_4952": true,
+    "summarize_artifact_present": true
+  },
+  "random_seed": 4952,
+  "reproducibility_checksum": "sha256:09436138193cb3e5f0aa19a8b77bcd0ec365ad73931382a0a63ac58c94ebf1f8",
+  "result_path": "results/experiment_4952_bank_and_pivot_audit.json",
+  "schema": "carnot.v456_bank_and_pivot_audit.v1",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-CAPSTONE-4952",
+    "SCENARIO-CAPSTONE-4952",
+    "SCENARIO-CAPSTONE-4952-BLOCKED-PRECONDITION"
+  ]
+}
