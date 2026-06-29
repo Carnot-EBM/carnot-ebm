@@ -26,12 +26,22 @@ NOT reach L2 (confirmed by a prior 15-min sweep), and the registry flags wa30 as
   L3 = source-derived goal heuristic (read environment_files/wa30/*/wa30.py). Only if L1+L2
        fail; reading source => provenance outer_loop_re (NON-countable). Declared honestly.
 
-Provenance: development_proxy. Introspecting env._game runtime attributes is OBSERVING THE SIM
-(the same information the live agent's perception could extract from frames in principle) -- it
-is NOT reading the .py source. read_game_source stays False.
+PROVENANCE (declared honestly): outer_loop_re.
+  Two L2 search attempts were run, both banked NOTHING:
+    (a) a FRAME-ONLY best-first search (verifier from rendered-frame color counts) -- this is
+        development_proxy, but the L2 frame ANIMATES non-deterministically so it explored noise
+        and never advanced the level (banked 0); and
+    (b) a search whose state-key + verifier READ env._game INTERNAL runtime state (_score,
+        _win_score, _sprites positions, _placeable_sprite). That internal introspection is RE the
+        LIVE agent CANNOT do on a hidden game (it only sees frames, never _score), so per the ARC
+        Live-Path Reachability Discipline this is outer_loop_re -- NOT a live-agent / development_proxy
+        solve. It also banked 0 (the score never advanced past 1 in 40000 expansions).
+  Because attempt (b) used internal-state RE, the artifact's overall solve_provenance is the
+  conservative outer_loop_re. NOTHING was banked, so there is no over-claim -- this is a clean
+  honest NEGATIVE. read_game_source stays False (the .py win-predicate source was never read).
 inference_substrate: verifier_ensemble_against_cached_candidates (offline search, no LLM).
 
-The ONLY proof a level banked is kit.reproduce(...) returning reproduced=True for L2.
+The ONLY proof a level banked is kit.reproduce(...) returning reproduced=True for L2. None did.
 """
 
 from __future__ import annotations
@@ -122,7 +132,9 @@ def main():
         "prior_level": 1,
         "target_level": 2,
         "inference_substrate": "verifier_ensemble_against_cached_candidates",
-        "solve_provenance": "development_proxy",
+        # outer_loop_re: the L2 verifier read env._game INTERNAL state (_score/_sprites), which the live
+        # agent cannot do on a hidden game. Banked nothing, so no over-claim -- honest conservative label.
+        "solve_provenance": "outer_loop_re",
         "read_game_source": False,
         "used_env_source": True,
         "random_seed": 30,
@@ -180,9 +192,11 @@ def main():
 
     if not out["banked"]:
         out["honest_verdict"] = (
-            "complete: wa30 L2 NOT banked -- action model established + L1 reproduces, but L1->L2 is "
-            "hidden-state-bound: the score never advanced past 1 within the search budget under a "
-            "logical-state-keyed best-first search. Clean honest negative (the deepen well is dry)."
+            "complete_wa30_l2_not_banked_clean_negative: action model established + L1 reproduces, "
+            "but L1->L2 is hidden-state-bound -- env._game._score never advanced past 1 (win=9) across "
+            "40000 best-first expansions, and even the logical sprite state is non-deterministic across "
+            "fresh replays (non-idempotent reset, gotcha #7), so no found path would survive the "
+            "reproduction gate anyway. No reproduce()-gated level-up; nothing banked."
         )
 
     out["duration_s"] = round(time.time() - t0, 2)

@@ -1,0 +1,108 @@
+{
+  "experiment": "headway_lp85",
+  "game": "lp85",
+  "prior_level": 5,
+  "target_level": 6,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "used_env_source": true,
+  "read_game_source": false,
+  "solve_provenance": "development_proxy",
+  "levers_tried": [
+    "L1_observe_action_delta",
+    "L2_bigger_budget_learned_verifier"
+  ],
+  "attempts": [
+    {
+      "label": "L2a_hand_cap150",
+      "states_expanded": 11069,
+      "search_s": 2332.25,
+      "found_path": true,
+      "reproduced": true,
+      "reached_level": 6,
+      "depth_cap": 150,
+      "max_nodes": 120000,
+      "branch_mode": "replay",
+      "solution_len": 89
+    }
+  ],
+  "banked": true,
+  "reproduced_level": 6,
+  "states_expanded": 11953,
+  "notes": [
+    "L1: lp85 action_labels are env-discovered (discover_click_buttons) so the L6 vocab is complete by construction (7 clickable buttons at L5). No missing action delta to RE; the wall is horizon/search, not vocabulary.",
+    "BANKED L6 via L2 (offline search, reproduce()-gated, development_proxy). Did NOT read game source."
+  ],
+  "prefix_solve": {
+    "reached_level": 5,
+    "prefix_len": 63,
+    "per_level": [
+      {
+        "level": 1,
+        "solved": true,
+        "path_len": 5,
+        "nodes": 9,
+        "depth_cap": 20,
+        "dt_s": 0.08
+      },
+      {
+        "level": 2,
+        "solved": true,
+        "path_len": 8,
+        "nodes": 64,
+        "depth_cap": 70,
+        "dt_s": 0.68
+      },
+      {
+        "level": 3,
+        "solved": true,
+        "path_len": 22,
+        "nodes": 286,
+        "depth_cap": 90,
+        "dt_s": 7.08
+      },
+      {
+        "level": 4,
+        "solved": true,
+        "path_len": 18,
+        "nodes": 377,
+        "depth_cap": 150,
+        "dt_s": 16.62
+      },
+      {
+        "level": 5,
+        "solved": true,
+        "path_len": 10,
+        "nodes": 148,
+        "depth_cap": 200,
+        "dt_s": 8.23
+      }
+    ],
+    "trace_samples": 63
+  },
+  "l5_state_probe": {
+    "level_at_prefix": 5,
+    "n_buttons": 7,
+    "hand_verifier_goal_distance": 57.0,
+    "featurize": [
+      57.0,
+      3.0,
+      19.0,
+      24.0,
+      3.0
+    ]
+  },
+  "learned_verifier": {
+    "n_samples": 63,
+    "weights": [
+      0.1736,
+      1.8654,
+      0.1494,
+      0.0104,
+      -0.1703,
+      -1.6951
+    ]
+  },
+  "banked_solution_len": 89,
+  "duration_s": 2367.65,
+  "random_seed": 0
+}

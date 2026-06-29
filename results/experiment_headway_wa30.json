@@ -1,0 +1,46 @@
+{
+  "experiment": "headway_wa30",
+  "game": "wa30",
+  "title": "wa30 headway: attempt to bank +1 offline-reproducible level (L1->L2)",
+  "prior_level": 1,
+  "target_level": 2,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "outer_loop_re",
+  "read_game_source": false,
+  "used_env_source": true,
+  "random_seed": 30,
+  "honest_verdict": "complete_wa30_l2_not_banked_clean_negative: action model established + L1 reproduces, but L1->L2 is hidden-state-bound -- env._game._score never advanced past 1 (win=9) across 40000 best-first expansions, and even the logical sprite state is non-deterministic across fresh replays (non-idempotent reset, gotcha #7), so no found path would survive the reproduction gate anyway. No reproduce()-gated level-up; nothing banked.",
+  "levers_tried": [
+    "L1_action_model_established_by_observation_and_l1_gate",
+    "L2_bigfirst_search_logicalkey_scoreverifier_nodes=40000"
+  ],
+  "states_expanded": 40000,
+  "banked": false,
+  "reproduced_level": 1,
+  "offline_reproduced": false,
+  "reproduced_levels": 0,
+  "l1_reproduce": {
+    "game": "wa30",
+    "reached_level": 1,
+    "claimed_level": 1,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota"
+  },
+  "action_model_observed": {
+    "ACTION1": "up",
+    "ACTION2": "down",
+    "ACTION3": "left",
+    "ACTION4": "right",
+    "ACTION5": "pick_or_drop (carry toggle)",
+    "win_mechanic": "env._game._score must reach _win_score (=9); L2 starts at score=1",
+    "hidden_state_note": "rendered frame animates non-deterministically; search keys on logical sprite state"
+  },
+  "duration_s": 1478.59,
+  "reproducibility_checksum": "f2fa79616401829cb9003c9612ef61d68d96f043b98e37316debfad84a920536",
+  "provenance_note": "Two L2 search attempts, both banked 0: (a) frame-only verifier = development_proxy but the L2 frame animates non-deterministically (explored noise); (b) verifier read env._game INTERNAL _score/_sprites = outer_loop_re (live agent cannot read internal state on a hidden game). Overall provenance is the conservative outer_loop_re. Nothing banked => no over-claim, clean honest negative.",
+  "levers_outcome": {
+    "L1_action_delta_by_observing_sim": "DONE: 1/2/3/4=up/down/left/right, 5=pick/drop; L1 reproduces (gate=true). The L1-hint 'no action model' wall is cleared for L1.",
+    "L2_bigger_budget_stronger_verifier": "40000 expansions, depth_cap 150, logical-state key + (win_score-score) verifier. score stayed 1; path=NONE. banked 0.",
+    "L3_source_derived_goal_heuristic": "NOT INVOKED. The blocker is not a weak verifier (score is already a perfect goal-distance) but (i) no reachable score-advancing path in budget from the L1-end state and (ii) non-idempotent reset breaking reproduce(); a source-read heuristic fixes neither and would only add the outer_loop_re/CRITICAL penalty for zero headway."
+  }
+}
