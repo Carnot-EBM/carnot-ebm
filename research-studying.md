@@ -5502,3 +5502,18 @@ ARC sprint (through 2026-06-30). Decisions:
 - flagged_for_next_milestone_comparator: thinkprm_generative_prm_comparator (arXiv:2504.16828)
 - flagged_for_next_milestone_ablation: vfscale_intrinsic_energy_dense_reward (arXiv:2502.01989)
 <!-- EXP4940-DISTRIBUTIONAL-ENERGY-VERIFIER-EXECUTABLE-SPEC-END -->
+
+<!-- EXP4951-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
+## Exp 4951 - Distributional Energy Verifier Turnkey Readiness - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_ready`
+- Cited SOTA papers: arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989
+- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4951_distributional_energy_verifier_turnkey.py`
+- Bottom line for the post-6/30 roadmap: run the decomposed-energy LoRA-ensemble scorer on top of Carnot's FoVer analytical penalties first; use ThinkPRM as the matched-compute generative verifier comparator and VFScale as a dense-energy ablation.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- flagged_for_next_milestone: decomposed_energy_lora_ensemble_with_fover_penalties (arXiv:2605.18871)
+- flagged_for_next_milestone_comparator: thinkprm_generative_prm_comparator (arXiv:2504.16828)
+- flagged_for_next_milestone_ablation: vfscale_intrinsic_energy_dense_reward (arXiv:2502.01989)
+<!-- EXP4951-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
