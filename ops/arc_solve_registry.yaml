@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-28'
+updated: '2026-06-29'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -1394,97 +1394,28 @@ games:
   reproducibility: reproduced
   mechanic_class: config_substitution
   levels_reproduced: 6
-  win_condition: 'EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE
-    equals the greedy REWRITE of the TARGET sequence through the visible reference
-    grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose
-    LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]),
-    1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation)
-    = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable
-    FIXED, the RULES editable -- set rule values so the rewrite of the fixed target
-    yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse
-    AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten
-    target == editable.'
-  action_model: 'keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element''s value
-    (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks
-    an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS;
-    all glyphs in a side cycle together, preserving internal offsets). Move budget
-    128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4:
-    +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).'
-  solver: 'GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver
-    (branch_mode=''fresh_env''). Verifier: base = summed cyclic-distance to the N-pass-rewritten
-    target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found
-    by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules
-    2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values
-    -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2
-    of any B-intermediate to editable), respecting that multi-glyph sides cycle together
-    with fixed offsets. results/arc_loop_solve_tr87.json.'
-  reproduce: re-gated reproduced=True L6 (kit.reproduce, claimed_level=6, 127-action
-    path); verifier-routed 511 states. tr87 is the deepest single-game solve (6 levels,
-    5 distinct mechanics).
+  win_condition: 'EDITABLE glyphs (value 1-7) must be set so the editable SEQUENCE equals the greedy REWRITE of the TARGET sequence through the visible reference grid (rules LHS->RHS). One PASS = scan left-to-right, match the FIRST rule whose LHS is a prefix, emit its RHS, advance. L1-L3 (base) = 1 pass: 1-to-1 (A4->[B3]), 1-to-MANY (B3->[C1,C5,C1]), MANY-to-many ([C3,C3]->[A6,A1]). L4 (double_translation) = 2 passes: a two-level chain A->B->C. L5 (alter_rules) INVERTS it: target+editable FIXED, the RULES editable -- set rule values so the rewrite of the fixed target yields the fixed editable. L6 (alter_rules + tree/double_translation) = the inverse AND 2-pass: edit a two-level rule chain (A->B AND B->C rules) so the TWICE-rewritten target == editable.'
+  action_model: 'keyboard [ACTION1-4]: ACTION1/2 cycle the SELECTED element''s value (-1/+1 mod 7), ACTION3/4 move the selector. In base levels the selector picks an editable GLYPH; under alter_rules (L5-L6) it picks a rule SIDE (LHS or RHS; all glyphs in a side cycle together, preserving internal offsets). Move budget 128. L1: 14 actions/94 states. L2: +25 (39 tot)/152. L3: +21 (60 tot)/234. L4: +21 (81 tot)/319. L5: +14 (95 tot)/377. L6: +32 (127 tot)/511 (verifier-routed).'
+  solver: 'GameAdapter _tr87 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver (branch_mode=''fresh_env''). Verifier: base = summed cyclic-distance to the N-pass-rewritten target; alter_rules 1-pass (L5) = cyclic-distance to a winning RULE config found by a parse-search (search LHS values, RHS forced by the editable segments); alter_rules 2-pass (L6) = a 2-LEVEL decomposition (enumerate first-level rule side-values -> the B-intermediate each produces, hashed; enumerate second-level -> match pass2 of any B-intermediate to editable), respecting that multi-glyph sides cycle together with fixed offsets. results/arc_loop_solve_tr87.json.'
+  reproduce: re-gated reproduced=True L6 (kit.reproduce, claimed_level=6, 127-action path); verifier-routed 511 states. tr87 is the deepest single-game solve (6 levels, 5 distinct mechanics).
   gotchas:
-  - 'The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing
-    editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted
-    2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the
-    editable must equal the rule-rewrite of the target, not the target''s raw values.'
-  - 'The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan
-    the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This
-    ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).'
-  - 'L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C
-    rules in cifzvbcuwqe), and the win = the editable matches the target rewritten
-    TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation
-    is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)'
-  - 'L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable
-    (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector
-    cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]);
-    ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values
-    so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE
-    (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix
-    the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read
-    the RHS off the editable segments. Verifier = cyclic distance of the rule-sides
-    to that found config.'
-  - 'Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states /
-    120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE
-    (not bare mismatch count): mismatch-count gives no gradient while cycling one
-    glyph (only drops when exactly right) and EXPLODED at L2''s 7 glyphs; cyclic-distance
-    drops 1 per step-toward-target and routes L4 in 319 states.'
-  - 'gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual
-    state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent
-    ''wins'' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT
-    L2). branch_mode=''fresh_env'' (a fresh env per candidate) fixes it. Also use
-    a full-grid state_key so the animation frames stay distinct.'
-  - hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level
-    flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps
-    + decoding the rule grid from pixels) is a future upgrade; the solve reproduces
-    regardless (the gate replays actions).
-  - 'L6 sets alter_rules AND tree_translation AND double_translation (the deepest
-    config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain.
-    The rules split by LHS series into first-level (A->B, rewrites the target) and
-    second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL
-    decomposition: enumerate first-level side first-values -> hash the B-intermediate
-    each produces; enumerate second-level side first-values -> for each, check pass2
-    of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed
-    internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst)
-    + 7^(2*nsecond) ~ 234k for L6''s 3+3 rules (~2s, cached per level).'
-  - 'PATH-DEPENDENCE: the level config (which flags + rule values appear at each index)
-    is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level
-    setup draws on global RNG state that the action history advances). This is WHY
-    reproduction works (replaying the exact action path reproduces the exact configs)
-    and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three)
-    are correct FOR THE ADAPTER''S deterministic verifier-routed path, not as absolute
-    level properties -- a different path can see a different mechanic at the same
-    index. Always inspect on the adapter''s exact path (replay the banked solution)
-    when RE-ing a deeper level.'
-  generic_glyph_rewrite_reproduce: Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier
-    without tr87 adapter.
+  - 'The win is a REWRITE-rule match, NOT a direct bar-to-bar pixel match: minimizing editable-vs-target ink hamming plateaus at 42/64 and never wins (greedy refuted 2026-06-17). The visible reference grid (internal cifzvbcuwqe) is the rule; the editable must equal the rule-rewrite of the target, not the target''s raw values.'
+  - 'The rule is a GREEDY multi-glyph-LHS rewrite matcher (mirrors bsqsshqpox): scan the target, match the FIRST rule whose LHS is a prefix, emit RHS, advance. This ONE matcher subsumes L1 (1-to-1), L2 (1-to-many) AND L3 (many-to-many, [C3,C3]->[A6,A1]).'
+  - 'L4 sets double_translation=True: the rules form a two-level chain (A->B AND B->C rules in cifzvbcuwqe), and the win = the editable matches the target rewritten TWICE. Apply the greedy rewrite N PASSES where N=2 if tree_translation OR double_translation is set (read game.current_level.get_data), else 1. (NONE of L1-L3 set any flag.)'
+  - 'L5 sets alter_rules=True -- the INVERSE puzzle: the target (zvojhrjxxm) + editable (ztgmtnnufb) are FIXED and the RULES (cifzvbcuwqe) are editable. The selector cycles over the 2*nrules rule SIDES (LHS/RHS of each rule, in order [r0.LHS,r0.RHS,r1.LHS,...]); ACTION1/2 cycles ALL glyphs in the selected side together. Solve = find rule values so greedy_rewrite(target)==editable. Tractable parse-search: the rule STRUCTURE (lhs_len,rhs_len) is fixed, the RHS values are FORCED once the LHS values fix the greedy parse, so search only the LHS values (7^nrules=2401 at L5) and read the RHS off the editable segments. Verifier = cyclic distance of the rule-sides to that found config.'
+  - 'Blind config-BFS is intractable: 5 glyphs x 7 values exhausted 52k+ states / 120k nodes with no win. The verifier is load-bearing. Use SUMMED CYCLIC-DISTANCE (not bare mismatch count): mismatch-count gives no gradient while cycling one glyph (only drops when exactly right) and EXPLODED at L2''s 7 glyphs; cyclic-distance drops 1 per step-toward-target and routes L4 in 319 states.'
+  - 'gotcha #7 (fresh_env): the win triggers a fade ANIMATION that leaves residual state (yfetxjexviz); a reuse-one-env replay search finds animation-contingent ''wins'' that FAIL the fresh-env reproduction gate (reproduced L1 by luck, NOT L2). branch_mode=''fresh_env'' (a fresh env per candidate) fixes it. Also use a full-grid state_key so the animation frames stay distinct.'
+  - hand_verifier reads internal state (cifzvbcuwqe/ztgmtnnufb/zvojhrjxxm + the level flags), the lp85 _goal_key pattern. Frame-only perception (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve reproduces regardless (the gate replays actions).
+  - 'L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6''s 3+3 rules (~2s, cached per level).'
+  - 'PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER''S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter''s exact path (replay the banked solution) when RE-ing a deeper level.'
+  generic_glyph_rewrite_reproduce: Exp4456 closed tr87 LOO through glyph_rewrite_rule_verifier without tr87 adapter.
   latest_exp4537_reinduction_transfer:
     artifact: results/experiment_4537_reinduction_primitive_persist_transfer.json
     operator: per_level_reinduction_operator
     deepest_level_reached: 6
     representation_transfer: true
     offline_reproduced_new_level: false
-    residual_dead_end: Re-induced tr87 L7 path-conditioned glyph-rewrite predicate
-      after replaying the reproduced L6 path, but no offline L7 config/route is
-      available beyond the current registry depth.
+    residual_dead_end: Re-induced tr87 L7 path-conditioned glyph-rewrite predicate after replaying the reproduced L6 path, but no offline L7 config/route is available beyond the current registry depth.
   latest_exp4549_llm_proposer_primitive_transfer:
     artifact: results/experiment_4549_llm_proposer_primitive_persist_transfer.json
     operator: llm_proposer_reinduction_operator
@@ -1493,10 +1424,18 @@ games:
     reachable_plan_produced: false
     representation_transfer: true
     offline_reproduced_new_level: false
-    residual_dead_end: A1 live proposer was null/unavailable, so the persisted
-      primitive used the DSL/verifier fallback to re-induce the tr87 L7 path-conditioned
-      glyph-rewrite predicate; no offline L7 config/route is available beyond
-      the current registry depth.
+    residual_dead_end: A1 live proposer was null/unavailable, so the persisted primitive used the DSL/verifier fallback to re-induce the tr87 L7 path-conditioned glyph-rewrite predicate; no offline L7 config/route is available beyond the current registry depth.
+  dead_ends:
+  - 'Exp4958 tr87 no-bank no_grounded_l7_delta: complete_tr87_no_new_level_residual_no_grounded_l7_delta.'
+  latest_exp4958_levelup_attempt:
+    artifact: results/experiment_4958_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_tr87.json
+    offline_reproduced: false
+    reproduced_levels: 6
+    new_levels_banked: 0
+    residual_cause: no_grounded_l7_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: 38f84bff53c439eb5a215a982c10bae07493c5b13923e255c02e02e920020462
 - game: vc33
   reproducibility: reproduced
   levels_reproduced: 2
