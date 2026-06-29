@@ -1,7 +1,7 @@
 {
   "experiment": "arc_frontier_tooluse_probe",
   "schema": "carnot.arc_frontier_tooluse_probe.v1",
-  "honest_verdict": "complete_frontier_tooluse_NULL_neither_first_win_re86_l1_ceiling_negative_lever_dead_local9b_cannot_if_frontier_cannot",
+  "honest_verdict": "complete_frontier_tooluse_INCONCLUSIVE_re86_confounded_treatment_never_reached_plan_execute_induce_flaky_no_winstate_surfaced",
   "game": "re86",
   "question": "does a FRONTIER model DRIVING the existing ARC subsystems via a tool-loop (env/induce/verify/BFS) produce a first-contact L1 win the ONE-SHOT induce+BFS pipeline does NOT, on a game the baseline fails?",
   "inference_substrate": "live_llm_inference",
@@ -241,5 +241,6 @@
   ],
   "random_seed": 20260628,
   "duration_s": 3134.19,
-  "reproducibility_checksum": "sha256:87123ae6724c8ac649f83b21d14519fd6c8cec031a1f54299ddead33db3cf2ae"
+  "reproducibility_checksum": "sha256:6635792cfb0afd11849f34ffd221cbf75308be87614cc93def408204428fc912",
+  "confound_note": "NOT a clean ceiling-negative: the treatment spent all 15 turns in explore->induce and NEVER reached plan/execute (codex induce slow + frequently failed to emit code on re86 large grid), 0 level-up transitions surfaced in 360 steps (no win-state to induce is_level_complete from), and the explore tool was too coarse for directed exploration. Superseded by the improved try_actions probe."
 }
