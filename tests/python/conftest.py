@@ -70,6 +70,19 @@ collect_ignore = [
     "test_experiment_1029_fover_expansion_v2.py",
     "test_experiment_1031_energy_ssd_v3.py",
     "test_experiment_1043_fover_expansion_v3.py",
+    # test_experiment_4940/4941 (post-6/30 distributional-energy-verifier turnkey +
+    # bank-and-pivot audit) each HANG the full suite: a test invokes mod.main(...) which
+    # runs the real distributional-energy dry-run (model/FoVer-ensemble/data I/O) instead
+    # of mocking it (30 dots then hang on the last item per file). The full `pytest
+    # tests/python -q` pretest gate therefore never returns -> the milestone .457
+    # archive/activate TRANSITION task ran codex past its 4801s wall-clock cap and FAILED
+    # 2026-06-29 04:04 + 05:27 UTC (conductor stall loop; the pretest gate is
+    # PRETEST_COMMAND=pytest tests/python -q in experiment_4957). Quarantined here (the
+    # documented last-resort mechanism) to unblock the transition; the proper fix is to mock
+    # the model/data I/O in mod.main for these two tests (their network-checker test is
+    # already correctly monkeypatched). Observed: outer-loop watchdog 2026-06-29.
+    "test_experiment_4940_distributional_energy_verifier_executable_spec.py",
+    "test_experiment_4941_bank_and_pivot_audit.py",
 ]
 
 
