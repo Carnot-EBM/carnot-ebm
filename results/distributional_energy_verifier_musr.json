@@ -46,5 +46,8 @@
   "solve_provenance": "development_proxy",
   "random_seed": 20260629,
   "duration_s": 6531.71,
-  "reproducibility_checksum": "sha256:a9a05e15aba7c53bc8a2dcf3b203c067d7c953e56ce6f9be6ab798ac5e309e54"
+  "reproducibility_checksum": "sha256:893172832cf34eadc6354a908782a72dbb68cb17482814cd83a839fe02ba2cd2",
+  "mcnemar_energy_vs_sc_p": 0.188,
+  "mcnemar_judge_vs_sc_p": 0.736,
+  "final_conclusion_n200": "DECISIVE at n=200: NO method beats self-consistency on MuSR. SC=0.56 (best); cheap prompted energy verifier 0.515-0.535 (delta -0.045, CI [-0.105,+0.015] incl 0; McNemar p=0.188 -- trails SC, not significant); LLM-judge 0.545 (McNemar p=0.736 -- tied/below SC; the n=50 judge>SC was confirmed NOISE). NEGATIVE for the cheap prompted decomposed-energy verifier off ARC. Lowers the prior that training the real arXiv:2605.18871 LoRA-EBM scorer beats SC (that specific trained scorer formally untested). Off-ARC verifier moat NOT realized on MuSR with cheap prompted verifiers; SC is strong here too."
 }
