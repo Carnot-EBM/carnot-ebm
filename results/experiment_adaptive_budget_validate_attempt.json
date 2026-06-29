@@ -1,0 +1,16 @@
+{
+  "experiment": "adaptive_budget_validate_attempt",
+  "lever": "#3 adaptive_budget early-stop (commit to 1 candidate on low-ambiguity frames)",
+  "outcome": "COULD_NOT_FAITHFULLY_VALIDATE_OFFLINE_FAST",
+  "what_was_tried": "winning-path commit-safety test: replay 22 games' winning paths, at each frame compute adaptive_budget_decision and check if a commit would drop the winning action.",
+  "why_invalid": "adaptive_budget's ambiguity gate is driven by value_head_margin, which requires _candidate_values = scoring EACH candidate's resulting next-state with the DAgger value head (per-candidate env-step + value eval). The fast reconstruction (rich_action_candidates without per-candidate value scoring) returns value_head_margin=None, so the ambiguity collapses to a flat 0.833 fallback -> the observed 'never fires <=0.8 / 76% wrong >=0.9' is an ARTIFACT of the missing value signal, NOT a real characterization. Reported as non-finding.",
+  "real_validation_path": "full-agent A/B (StepwiseExplorer with adaptive_budget_threshold set vs None) on the solvable games, comparing solve-rate + action-count. This engages the value head's lazy per-candidate scoring. It is the slow path (the e3 cascade's per-action induction makes it compute-infeasible in bounded wall-time) and CANNOT ship before 6/30 regardless.",
+  "status": "DEFERRED_post_deadline_neither_confirmed_nor_refuted",
+  "safe_by_design_note": "Unlike frame_change_prune (which prunes candidates and FAILED its solve-rate guard 4->3), adaptive_budget only reduces search BREADTH on low-ambiguity frames; whether that helps action-count or risks the solve is exactly what the deferred A/B must measure.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "random_seed": 0,
+  "honest_verdict": "complete_adaptive_budget_fast_validation_invalid_needs_full_agent_ab_deferred"
+}
