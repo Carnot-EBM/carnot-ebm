@@ -1,32 +1,32 @@
 {
   "experiment": "distributional_energy_verifier_musr",
   "schema": "carnot.distributional_energy_verifier_musr.v1",
-  "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.52_pure_0.52_vs_sc_0.58_delta_-0.06_ci_-0.18_0.06_puredelta_-0.06_ci_-0.2_0.08_sc_not_saturated_headroom_unrealized",
+  "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.515_pure_0.535_vs_sc_0.56_delta_-0.045_ci_-0.105_0.015_puredelta_-0.025_ci_-0.095_0.045_sc_not_saturated_headroom_unrealized",
   "domain": "MuSR/murder_mysteries",
   "question": "does an ORACLE-DISTINCT decomposed-energy verifier (mean-ranks/stddev-abstains quality ensemble + analytical penalty) beat self-consistency on a non-saturated no-cheap-oracle domain (arXiv:2605.18871)?",
   "inference_substrate": "live_llm_inference",
   "verifier_is_oracle": false,
-  "n_questions": 50,
+  "n_questions": 200,
   "k_candidates": 8,
   "m_ensemble": 3,
-  "self_consistency_accuracy": 0.58,
-  "distributional_energy_accuracy": 0.52,
-  "distributional_energy_pure_minenergy_accuracy": 0.52,
-  "llm_judge_accuracy": 0.64,
-  "energy_minus_sc_delta": -0.06,
+  "self_consistency_accuracy": 0.56,
+  "distributional_energy_accuracy": 0.515,
+  "distributional_energy_pure_minenergy_accuracy": 0.535,
+  "llm_judge_accuracy": 0.545,
+  "energy_minus_sc_delta": -0.045,
   "energy_minus_sc_ci95": [
-    -0.18,
-    0.06
+    -0.105,
+    0.015
   ],
-  "energy_pure_minus_sc_delta": -0.06,
+  "energy_pure_minus_sc_delta": -0.025,
   "energy_pure_minus_sc_ci95": [
-    -0.2,
-    0.08
+    -0.095,
+    0.045
   ],
   "energy_beats_sc": false,
   "sc_saturated": false,
-  "n_energy_abstained_to_sc": 13,
-  "abstain_rate": 0.26,
+  "n_energy_abstained_to_sc": 55,
+  "abstain_rate": 0.275,
   "oracle_distinctness": {
     "verifier_sees_gold": false,
     "note": "gold (answer_choice) is used for EVAL accuracy ONLY; never passed to the generator, the quality scorer, the analytical penalty, or the judge. The energy decomposition is -mean(quality_ensemble)+analytical_penalty; uncertainty=stddev abstains to SC.",
@@ -42,15 +42,9 @@
     "2504.16828",
     "2502.01989"
   ],
-  "interpretation": "First REAL execution of the post-6/30 distributional-energy-verifier pivot on a non-saturated, no-cheap-oracle domain (the headroom ARC's generation wall cannot host). A win (energy beats SC, CI excludes 0, oracle-distinct) is the verifier-moat result; a null scopes the moat. CAVEAT: the quality scorer is an LLM process-reward ensemble (THINKPRM-style), not yet a TRAINED EBM LoRA-ensemble -- a positive justifies training the real EBM scorer next; this is the cheapest decisive first test of the oracle-distinct-energy-beats-SC thesis off ARC. RESULT: cheap prompted decomposed-energy verifier is a NULL vs SC (26 vs 29/50, delta -0.06, CI incl 0). BUT the LLM-judge beats SC (32 vs 29/50) -> the moat headroom on MuSR is REAL and reachable by a holistic verifier; the decomposed process-reward energy underperformed it. Next: a better energy formulation OR the TRAINED LoRA-EBM quality scorer (the real arXiv:2605.18871 method, which a prompted stand-in only approximates). The judge>SC signal keeps the off-ARC verifier-moat thesis alive; do NOT conclude energy-cannot-help from this cheap-stand-in null.",
+  "interpretation": "First REAL execution of the post-6/30 distributional-energy-verifier pivot on a non-saturated, no-cheap-oracle domain (the headroom ARC's generation wall cannot host). A win (energy beats SC, CI excludes 0, oracle-distinct) is the verifier-moat result; a null scopes the moat. CAVEAT: the quality scorer is an LLM process-reward ensemble (THINKPRM-style), not yet a TRAINED EBM LoRA-ensemble -- a positive justifies training the real EBM scorer next; this is the cheapest decisive first test of the oracle-distinct-energy-beats-SC thesis off ARC.",
   "solve_provenance": "development_proxy",
   "random_seed": 20260629,
-  "duration_s": 2163.69,
-  "reproducibility_checksum": "sha256:45d6d64f6e7ad9956fd52c175e4d836f0c1d645b5eb0e891f2e3ffa595289f23",
-  "tautology_methodology_note": "energy_minus_sc_delta and energy_pure_minus_sc_delta both = -0.06 because energy(with-abstain) and energy(pure) both scored EXACTLY 26/50: the abstain mechanism flipped the selected answer on only 2 of 13 abstained questions, and on those 2 the SC-pick and the min-energy-pick each got 1 right (netting even). Verified per-question -> a genuine small-n (n=50, 0.02 granularity) coincidence, NOT a bug. adversarial_verify TAUTOLOGY here is a known small-n false-positive class.",
-  "surprising_result_acknowledgment": "the LLM-judge (0.64) is numerically above SC (0.58) but McNemar p~=0.51 (NOT significant at n=50); the energy verifier (0.52) is a clean null. NO method beats SC significantly here. Needs n>=200 to test for real headroom; do NOT call headroom \"real\" from n=50.",
-  "flagged_adversarial_disclosure": "adversarial_verify raises CRITICAL TAUTOLOGY on energy_minus_sc_delta==energy_pure_minus_sc_delta (both -0.06). INSPECTED per-question (see tautology_methodology_note): both energy variants legitimately scored 26/50 because the abstain mechanism flipped only 2/13 abstentions and those netted even. This is the known small-n two-accuracies-coincide false-positive class (cf. CLAUDE.md TAUTOLOGY-excludes-identifiers note), NOT fabrication. Result is oracle-distinct (verifier never sees gold), informative (methods differ on 9 q), n=50.",
-  "mcnemar_judge_vs_sc_p": 0.51,
-  "mcnemar_energy_vs_sc_p": 0.629,
-  "significance_note": "CORRECTION (adversarial review 2026-06-29): at n=50 NO method significantly beats self-consistency. energy vs SC: clean null (delta -0.06, CI incl 0). judge vs SC: +0.06 BUT McNemar exact p~=0.51, bootstrap CI [-0.06,+0.18] incl 0 -> WITHIN SAMPLING NOISE, not significant. The earlier \"headroom is REAL\" framing OVERSTATED a noise-level judge result; the defensible statement is \"judge >= SC but indistinguishable from noise at n=50\". Establishing off-ARC verifier headroom requires replication at n>=200 before any forward-facing headroom claim."
+  "duration_s": 6531.71,
+  "reproducibility_checksum": "sha256:a9a05e15aba7c53bc8a2dcf3b203c067d7c953e56ce6f9be6ab798ac5e309e54"
 }
