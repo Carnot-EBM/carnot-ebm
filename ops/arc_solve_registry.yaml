@@ -821,6 +821,7 @@ games:
   dead_ends:
   - 'Exp4852: scripts/arc_loop_solve.py --game s5i5 returned needs_per_game_RE; post-L1 L2 state exposed a chain-carried marker delta (controlled marker at (15,36), target marker at (51,30), four chained controls), but no GameAdapter or reproduction-gated L2 path was banked.'
   - Exp4873 retired the prior s5i5 L2 not-adaptered dead end by registering _s5i5.
+  - 'Exp4959 s5i5 no-bank no_grounded_l3_delta: complete_s5i5_no_new_level_residual_no_grounded_l3_delta.'
   latest_exp4852_levelup_attempt:
     artifact: results/experiment_4852_levelup_attempt.json
     loop_artifact: results/arc_loop_solve_s5i5.json
@@ -837,6 +838,15 @@ games:
     new_levels_banked: 1
     target_rotation: rotated_off_r11l_re86_hidden_state_bound_targets
     reproducibility_checksum: 608084647e52e0487704cc51ab2ad6f287ac782fb54e152db1ca73f5f4554f11
+  latest_exp4959_levelup_attempt:
+    artifact: results/experiment_4959_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_s5i5.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    reproducibility_checksum: 0b0e0a84b86476ac8666433e7dddb7fe4bf8d7b8c3d102ab1ade076cbee4ee0f
 - game: lp85
   reproducibility: reproduced
   levels_reproduced: 5
