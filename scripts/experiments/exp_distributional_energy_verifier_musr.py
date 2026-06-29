@@ -62,7 +62,11 @@ def _choices(row) -> list[str]:
 
 
 def _match_choice(text: str, choices: list[str]) -> str | None:
-    """Parse the model's selected choice from its completion (oracle-distinct: only the model's own text)."""
+    """Parse the model's selected choice from its completion (oracle-distinct: only the model's own text).
+    SUBSTRING-TRAP (adversarial review 2026-06-29): for OVERLAPPING option strings (e.g. ["Ana","Anabelle"])
+    the substring `c.lower() in tail` mis-attributes "Anabelle" -> "Ana". MuSR/murder_mysteries has no
+    overlapping name pairs (verified across all 50 q) so this does not bias the result, but harden this
+    (word-boundary match) before reuse on a corpus with substring-related options."""
     if not text:
         return None
     m = re.search(r"ANSWER\s*[:\-]?\s*(.+)", text, re.IGNORECASE)
