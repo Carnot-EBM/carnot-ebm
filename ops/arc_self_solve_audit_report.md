@@ -16,38 +16,28 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
+Audit complete. Findings grounded in the registry, the artifacts, and a live-path grep — written to `ops/arc_self_solve_audit_report.md`. The prior report was stale (it concluded "22/22 DUPLICATE, zero new levels" and never saw the headway work). Tight version:
+
 ## TL;DR
-
-**VERDICT: 22/22 recent ARC "solve" artifacts are DUPLICATE — honest `development_proxy` maintenance re-solves of already-banked registry levels via hand-registered `GameAdapter`s. ZERO are `live_agent_self_discovery`. ZERO bank a new level. Mechanically clean (reachable, honestly labeled, no undeclared outer-loop inputs) — but none advance the actual deliverable.** Not fraud; not progress either.
-
-The decisive facts from the artifacts + registry:
-- Every artifact: `solve_provenance: development_proxy`, `mode: standing_arc_loop_offline_no_quota`. Per the CLAUDE.md provenance contract, `development_proxy` is *"allowed, but NOT proof the live agent self-discovers."*
-- The standing offline loop re-runs the reproduction gate on games **that already have hand-built adapters** (`_r11l`, `_ls20`, `_s5i5`, … in `arc_game_adapters.py`). The registry's `reproduce:` lines name these exact loop artifacts as the *fixtures that prior numbered experiments re-gated* (e.g. r11l→Exp4862, s5i5→Exp4873, lp85→Exp4372). The loop artifacts are reconfirmations by construction.
-- New-level banking and the one genuine `live_agent_self_discovery` attempt I can see (registry s5i5 `exp4959`) live in **separate numbered experiments** — and `exp4959` banked `new_levels_banked: 0` (`residual_cause: no_grounded_l3_delta`). The self-discovery track is flat; the proxy track is busy.
+**ZERO live-agent self-discovery solves in the recent window.** The 22 standing-loop artifacts are honest `development_proxy` regression re-solves of already-banked levels (DUPLICATE); the *real* new-level + RE activity is in the **headway** artifacts the mechanical pre-pass missed entirely — 2 self-declare `outer_loop_re` (ka59 *read game source*), 1 banked lp85 L6 via offline search (dev-proxy, won't transfer to the scored path), 1 is a pending hand-RE'd **orphan** verifier (tu93). Honest stamps, working reproduction gate — but maintenance + outer-loop deepening, not progress on the deliverable. Levels stuck at 69; deadline tomorrow.
 
 ## Per-artifact
 
-All 22 share the same structure, so the verdict is uniform with depth-confirmed duplicates called out:
+**Group A — 22 standing-loop `arc_loop_solve_*.json`** (all `development_proxy`, reachable, gate-passed): **DUPLICATE.** None is self-discovery, off-path, or fresh outer-loop-RE. Two exceptions to call out:
+- **dc22 — RECONCILE:** gate reproduced **L3 > registry floor L2**. Real unbanked progress (or stale registry row). Bank it or explain.
+- **lp85 (L3<5), tu93 (L4<5):** shallow re-confirmations; deep levels banked in other experiments.
+- Action: keep as a no-quota regression harness; stop counting these as "solves" in any tally.
 
-| Artifact | Lvl | Registry banked depth | Verdict | Evidence |
-|---|---|---|---|---|
-| lp85 | 3 | **5** (Exp4372) | DUPLICATE | artifact re-solves L3 *below* banked L5; standing-loop re-gate |
-| r11l | 2 | **2** (Exp4862) | DUPLICATE | re-solve of banked L2 via `_r11l` adapter |
-| ls20 | 2 | **2** (Exp4630) | DUPLICATE | re-solve of banked L2 via `_ls20` adapter |
-| s5i5 | 2 | **2** (Exp4873) | DUPLICATE | re-solve of banked L2; genuine L3 self-discovery (exp4959) banked 0 |
-| tr87 / tu93 / dc22 / vc33 / g50t / cd82 / sp80 / su15 / sk48 / ft09 / ar25 / m0r0 / cn04 / lf52 / bp35 / re86 / ka59 / sb26 | 1–6 | adaptered, reproduced | DUPLICATE | all `development_proxy` + `standing_arc_loop_offline_no_quota`; reproduction-gate maintenance, no `new_levels_banked` field, hand verifier / cached checkpoint |
-
-- **Verdict (all 22):** `DUPLICATE`
-- **Evidence (all 22):** `development_proxy` standing-loop re-solve over an already-adaptered registry game; `reproduction_gate.mode = offline_reproduction_gate_no_quota`; capability traces to a hand-built per-game `GameAdapter`, not a live self-discovery run.
-- **Recommended action (all 22):** Keep as reproduction-maintenance (legit per the reproduction-gate discipline), but **do NOT count any toward `reproducible_total_levels` growth, headline, or "ARC progress" in a capstone** — they re-confirm, they don't advance. The capstone aggregator should treat `mode: standing_arc_loop_offline_no_quota` as maintenance, not as a milestone solve.
-
-None earned `SELF_DISCOVERY_ADVANCE`; none is `OFF_PATH` (orphan-lint exit 0, 46 modules in the live closure); none declared outer-loop inputs, so none rises to CRITICAL `OUTER_LOOP_RE`.
+**Group B — headway artifacts (the findings the pre-pass skipped):**
+- `experiment_headway_ka59.json` → **OUTER_LOOP_RE** — `solve_provenance: outer_loop_re`, `read_game_source: true`, no bank. Honest, but read source. Confirm `flagged_adversarial` quarantine.
+- `experiment_headway_wa30.json` → **OUTER_LOOP_RE** — self-declared, no source read, no bank (hidden-state-bound). Lowest-harm; contract working.
+- `experiment_headway_lp85.json` → **dev-proxy NEW bank, NOT self-discovery** — banked lp85 **L6** over L5 (gated). Search-horizon deepening on env-discovered actions; legit to bank (69→70) but 89 moves/2367s offline → not live capability. Don't headline.
+- `scripts/experiments/exp_headway_tu93_l1.py` → **OUTER_LOOP_RE (drift, pending)** — hand-codes a tu93 maze verifier from eyeballed frames (hardcoded wall/player/goal colors, 6px stride, origin 16), confirmed **orphaned** (zero live-path refs). Stamps `development_proxy` but substance is outer-loop RE on a parallel solver the live agent can't reach. **Salvage onto the live path or drop it — do not bank a level from it under `development_proxy`.**
 
 ## Pattern watch
+1. **Dry well → hand-RE, not self-discovery.** End-of-sprint pull toward "get a number": reading source, hand-built per-game verifiers, depth-150 offline search. None advances the live deliverable.
+2. **`development_proxy` is being stretched** to cover inline outer-loop-RE verifiers (tu93). Watch for it — or worse, `live_agent_self_discovery` — landing on a future `experiment_headway_tu93.json` if that script banks.
+3. **Structural coverage gap:** the pre-pass + Layer 1b key on `arc_loop_solve_*` / `*calibration*` names. Self-contained `scripts/experiments/exp_headway_*` solvers slip both — only author honesty (the `outer_loop_re` stamps) made ka59/wa30 visible. **Recommend: widen the audit glob to `experiment_headway_*` and extend Layer 1b to flag inline-verifier experiment scripts orphaned from the live import closure.**
 
-**Drift toward proxy-activity masking a stalled deliverable.** The entire last-7d ARC solve output (22 artifacts) is `development_proxy` reconfirmation on hand-adaptered games — a wall of "solves" that looks like activity while the deliverable (a live agent discovering *hidden* games from its own attempts) is flat: 0 new levels, 0 live self-discovery advances, and the one in-registry self-discovery attempt (s5i5/exp4959) returned `no_grounded_l3_delta`. This is the "deepen well drying / levels stuck" plateau, dressed as throughput.
-
-Two things to keep honest going forward:
-1. **Hand-registered `GameAdapter`s are the outer-loop-RE anti-pattern per the contract** (the registry's reverse-engineered `win_condition` strings are hand-RE'd game internals). They are acceptable *only* as `development_proxy` and must never be re-stamped `live_agent_self_discovery` or counted as the live agent self-discovering. So far that line is held — no provenance lie detected — but the volume of proxy artifacts is exactly what would let a mislabel slip through unnoticed.
-2. **The proxy track cannot substitute for the deliverable.** If a capstone or `reproducible_total_levels` claim ingests these 22 as "progress," that's the over-interpretation to block. The question for every one of them is the contract's question — *"could the LIVE agent reproduce this on a hidden game from its own attempts?"* — and for a standing-loop adapter re-solve the answer is no.
+I did not edit any solver, artifact, or registry — only wrote the advisory report. The two concrete operator actions are: **bank lp85 L6 + reconcile dc22 L3** (real progress), and **resolve the tu93 orphan** (salvage to live path or drop).
 
