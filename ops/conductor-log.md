@@ -9609,3 +9609,4 @@ The contro |
 | 2026-06-29 22:35 UTC | PHASE A3 (ARC NORTH STAR; self-play EVERY mileston | OK | 87 passed, 1 warning in 12.03s |
 | 2026-06-29 23:03 UTC | PHASE A4 (ARC NORTH STAR; DEADLINE LANE; DELIVERAB | OK | 86 passed, 1 warning in 8.53s |
 | 2026-06-29 23:19 UTC | PHASE D (SOTA-INGESTION / POST-6/30 PIVOT TURNKEY) | OK | 102 passed, 1 warning in 10.02s |
+| 2026-06-29 23:35 UTC | PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT o | OK | 88 passed, 1 warning in 10.38s |
