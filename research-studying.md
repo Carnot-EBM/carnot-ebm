@@ -5533,3 +5533,21 @@ ARC sprint (through 2026-06-30). Decisions:
 - fast_slow_process_router
 - thinkprm_matched_compute_comparator
 <!-- EXP4962-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
+
+<!-- EXP4973-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-START -->
+## Exp 4973 - Distributional Energy Verifier Turnkey Backlog Extension - INGESTED
+
+- Honest verdict: `success_distributional_energy_verifier_pivot_turnkey_backlog_extended`
+- Cited SOTA papers: arXiv:2504.01005, arXiv:2504.00891, arXiv:2509.24460, arXiv:2605.18871, arXiv:2504.16828, arXiv:2502.01989, arXiv:2508.16665, arXiv:2508.10539, arXiv:2502.11157
+- Turnkey entrypoint: `.venv/bin/python python/carnot/experiment_4973_distributional_energy_verifier_turnkey.py`
+- Bottom line for the post-6/30 roadmap: keep 2605.18871 as the pivot, use 2504.01005 as the compute-optimal efficiency frontier, use 2504.00891 as the matched-compute generative PRM comparator, and use 2509.24460 as the cross-domain verifier-registry comparator.
+- Guardrail: readiness/design only; no moat-proven claim and no real benchmark execution.
+
+### flagged_for_next_milestone
+- distributional_energy_lora_ensemble_with_fover_penalties
+- efficiency_parity_frontier
+- genprm_matched_compute_generative_comparator
+- contextprm_cross_domain_registry_comparator
+- variance_reduced_uncertainty_head
+- fast_slow_process_router
+<!-- EXP4973-DISTRIBUTIONAL-ENERGY-VERIFIER-TURNKEY-END -->
