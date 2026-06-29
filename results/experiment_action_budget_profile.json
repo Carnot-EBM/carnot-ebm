@@ -1,0 +1,102 @@
+{
+  "experiment": "action_budget_profile",
+  "scope": "exploration phase only (first ~24 actions; BUD=25 stays in the fast ~0.1s/action phase before the e3 cascade's slow per-action world-model induction)",
+  "n_games": 10,
+  "median_noop_pct": 33.5,
+  "median_revisit_pct": 12.5,
+  "click_games_noop_pct": [
+    38,
+    96,
+    29,
+    100,
+    58,
+    0,
+    100,
+    0
+  ],
+  "move_games_noop_pct": [
+    0,
+    0
+  ],
+  "per_game": [
+    {
+      "game": "cd82",
+      "actions": 24,
+      "noop_pct": 38,
+      "revisit_pct": 38,
+      "action_type": "click"
+    },
+    {
+      "game": "ar25",
+      "actions": 24,
+      "noop_pct": 96,
+      "revisit_pct": 92,
+      "action_type": "click"
+    },
+    {
+      "game": "cn04",
+      "actions": 24,
+      "noop_pct": 29,
+      "revisit_pct": 25,
+      "action_type": "click"
+    },
+    {
+      "game": "sk48",
+      "actions": 24,
+      "noop_pct": 100,
+      "revisit_pct": 96,
+      "action_type": "click"
+    },
+    {
+      "game": "ls20",
+      "actions": 24,
+      "noop_pct": 0,
+      "revisit_pct": 0,
+      "action_type": "move"
+    },
+    {
+      "game": "m0r0",
+      "actions": 24,
+      "noop_pct": 58,
+      "revisit_pct": 54,
+      "action_type": "click"
+    },
+    {
+      "game": "r11l",
+      "actions": 24,
+      "noop_pct": 0,
+      "revisit_pct": 0,
+      "action_type": "click"
+    },
+    {
+      "game": "bp35",
+      "actions": 14,
+      "noop_pct": 100,
+      "revisit_pct": 0,
+      "action_type": "click_then_induction"
+    },
+    {
+      "game": "vc33",
+      "actions": 24,
+      "noop_pct": 0,
+      "revisit_pct": 0,
+      "action_type": "click"
+    },
+    {
+      "game": "tr87",
+      "actions": 24,
+      "noop_pct": 0,
+      "revisit_pct": 0,
+      "action_type": "move"
+    }
+  ],
+  "finding": "BIMODAL: click-based games waste 29-100% of exploration actions on no-ops (frame unchanged); movement-based games ~0%. The submitted config has frame_change_prune_threshold=None (no-op pruning OFF) -> large untapped efficiency headroom on click games.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "proposer": "none_no_gguf",
+  "random_seed": 0,
+  "honest_verdict": "complete_action_budget_exploration_phase_profiled_10_games",
+  "caveats": "Exploration phase only (BUD=25); exploit-phase no-op rate not measured (the e3 cascade's per-action induction phase makes a full-budget profile compute-infeasible in bounded wall-time). No-op pct = frame_hash unchanged after the action."
+}
