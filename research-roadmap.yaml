@@ -551,7 +551,7 @@ tasks:
           * arXiv:2502.11157 (Dyve: Thinking Fast and Slow for Dynamic Process Verification) -- the EFFICIENCY-PARITY
             axis of the north-star win condition (equally effective as the LM at lower cost/latency): a cheap fast path
             with selective slow escalation = the Meta-EBM Cascade Router shape. Candidate for the efficiency head-to-head.
-        For EACH new paper: {strongest_method, implementation_cost_over_current_stack, pitfalls/where_it_fails}. Update
+        For EACH new paper: {{strongest_method, implementation_cost_over_current_stack, pitfalls/where_it_fails}}. Update
         research-studying.md (mark ingested) + flag the strongest method(s) as the NEXT-milestone (post-6/30) roadmap input.
       - RE-CONFIRM the already-ingested set still cited with real IDs: arXiv:2605.18871 (the pivot paper) + 2504.16828
         (THINKPRM, beats SC at equal compute using ~1% of process labels) + 2502.01989 (VFScale, near-oracle dense reward).
@@ -602,7 +602,7 @@ tasks:
       arxiv_ids_cited:
         principle: "NEW: 2508.16665 + 2508.10539 + 2502.11157; re-confirmed: 2605.18871 + 2504.16828 + 2502.01989 -- real IDs, no fabrication (SOTA-ingestion guardrail)."
       sota_to_carnot_mapping:
-        principle: "per-paper {strongest_method, implementation_cost_over_current_stack, pitfalls} -- the ingestion deliverable that feeds the post-6/30 roadmap."
+        principle: "per-paper {{strongest_method, implementation_cost_over_current_stack, pitfalls}} -- the ingestion deliverable that feeds the post-6/30 roadmap."
       pivot_executable_on_7_1:
         principle: "true -- the distributional-energy-verifier experiment runs the instant the sprint retires (the readiness deliverable)."
       pivot_turnkey:
@@ -705,7 +705,7 @@ tasks:
       pivot_readiness_trustworthy:
         principle: "AND of the pivot-turnkey checks -- the capstone states D's readiness ONLY if true (oracle-distinct design + honest gate + genuine turnkey wiring + no over-claim)."
       checks:
-        principle: "per-check booleans {reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct_design, honest_readiness}."
+        principle: "per-check booleans {{reproduction_genuine, not_duplicate, self_discovery_provenance, live_path_reachable, oracle_distinct_design, honest_readiness}}."
       audit_failure_reasons:
         principle: "list of named failures (empty if all trusted) -- the audit reports honestly, no rubber-stamp."
       inference_substrate:
@@ -810,11 +810,11 @@ tasks:
     -- re-run the fallback over .457 and emit a NON-zero window, still WITHOUT touching scripts/research_conductor.py.
 
     MANDATORY SCOPE (standalone application + audit + readiness; NO conductor edit):
-      - BACKFILL: scan the .457 arms (results/experiment_495{7,8,9}_*.json + experiment_496{0..7}_*.json present so far)
+      - BACKFILL: scan the .457 arms (results/experiment_495{{7,8,9}}_*.json + experiment_496{{0..7}}_*.json present so far)
         for any missing duration_s / inference_substrate / compute_bound, and apply the .453-shipped runtime_stamping
         helper to backfill them at the artifact level (deterministic, idempotent).
       - MTIME FALLBACK (RELAXED GATE, maintained from .456): re-run the .453-shipped results/-mtime fallback over the
-        .457 milestone; assert a NON-zero {n_arms, window_start, window_end, wall_minutes, compute_bound_count} window
+        .457 milestone; assert a NON-zero {{n_arms, window_start, window_end, wall_minutes, compute_bound_count}} window
         from WHATEVER .457 arms are present at run time (n_arms>=7, wall_minutes>0) -- do NOT require n_arms>=10 (the
         .454/.455 bug). Anchor the window on the .457 activation rather than a fixed arm count.
       - READINESS: reconfirm the wiring-proposal doc (the conductor retro prompt-assembly call site) is present and
@@ -843,7 +843,7 @@ tasks:
       honest_verdict:
         principle: "terminal prefix; success_v457_stamping_backfilled_and_mtime_window_confirmed (the relaxed gate still does not false-block)."
       mtime_fallback_window:
-        principle: "the .457 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block."
+        principle: "the .457 {{n_arms, window_start, window_end, wall_minutes, compute_bound_count}} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block."
       window_gate_relaxed:
         principle: "true -- the gate accepts the arms present at run time (n_arms>=7) instead of n_arms>=10, maintaining the .456 fix."
       stamping_backfilled_arms:
@@ -969,7 +969,7 @@ tasks:
     CONCRETE STEPS:
       0. PRECONDITIONS: all upstream .457 arm artifacts present (summarize_artifact exit code recorded); registry
          loadable. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
-      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {id, fields_imported, sha256}.
+      1. Read every upstream via summarize_artifact; record cited_upstream_artifacts {{id, fields_imported, sha256}}.
       2. Apply the headline logic (count banks only if B1 banks_trustworthy; state the pivot only if B1
          pivot_readiness_trustworthy); skip flagged_adversarial upstream (list them).
       3. Build the milestone_scorecard + the post_sprint_pivot handoff (turnkey 7/1). WRITE the deliverable.
@@ -1005,7 +1005,7 @@ tasks:
       skipped_flagged_adversarial:
         principle: "the list of upstream artifacts skipped per the fabrication gate."
       cited_upstream_artifacts:
-        principle: "{experiment_id, fields_imported, sha256} per source -- the audit trail (no synthesized numbers)."
+        principle: "{{experiment_id, fields_imported, sha256}} per source -- the audit trail (no synthesized numbers)."
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON; 0.0001s floor)."
       preconditions_checked:
