@@ -9574,3 +9574,5 @@ The contro |
 | 2026-06-29 10:06 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ad_checksum(ho |
 | 2026-06-29 10:18 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | cache hit: 86 passed, 1 warning in 10.17s |
 | 2026-06-29 10:34 UTC | PHASE E (CAPSTONE .457) -- aggregate the FINAL sub | OK | 86 passed, 1 warning in 10.29s |
+| 2026-06-29 11:23 UTC | Plan milestone 2026.06.458 | OK | 11 tasks proposed |
+| 2026-06-29 11:25 UTC | Milestone 2026.06.458 activated | OK | 11 tasks queued |
