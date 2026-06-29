@@ -1,3 +1,39 @@
+## 2026-06-29 — .458 planning sweep — EXTEND the post-6/30 verifier-moat (distributional-energy-verifier) SOTA backlog with 3 NEW process-verification papers
+
+Added by the `.458` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-29). `.458` is a
+final-stretch ARC-AGI-3 submission-sprint milestone (deadline 2026-06-30); the deliverable is LOCKED
+(~0.05 first-win agent + the publishable FoVer paper) and the post-6/30 headline is the
+**distributional-energy-verifier moat** ([arXiv:2605.18871](https://arxiv.org/abs/2605.18871), beats
+self-consistency on MuSR = oracle-distinct, SC-not-saturated). The `.456/.457` D-slots made that pivot
+turnkey for 7/1 and ingested a 6-paper backlog (2605.18871, 2504.16828, 2502.01989, 2508.16665,
+2508.10539, 2502.11157). A focused fresh sweep this planning round surfaced three genuinely-new,
+real, directly-relevant papers the `.458` D-slot ingests onto the same stack:
+
+- **[arXiv:2504.01005](https://arxiv.org/abs/2504.01005)** — *When To Solve, When To Verify:
+  Compute-Optimal Problem Solving and Generative Verification for LLM Reasoning.* Directly the
+  **efficiency-parity axis** of the north-star win condition ("equally effective as the LM at lower
+  cost/latency"): under a fixed inference budget, when to spend on more self-consistency samples vs
+  fewer samples + generative verification. Defines the compute-optimal frontier the distributional
+  energy verifier must sit on or beat. The single strongest new paper for the post-6/30 head-to-head.
+- **[arXiv:2504.00891](https://arxiv.org/abs/2504.00891)** — *GenPRM: Scaling Test-Time Compute of
+  Process Reward Models via Generative Reasoning.* A generative process verifier (CoT + code
+  verification per step) that scales with test-time compute. The matched-compute *generative*
+  comparator for the decomposed-energy verifier (the discriminative-vs-generative verifier axis the
+  Trust-but-Verify survey, 2508.16665, taxonomizes).
+- **[arXiv:2509.24460](https://arxiv.org/abs/2509.24460)** — *ContextPRM: Leveraging Contextual
+  Coherence for multi-domain Test-Time Scaling.* A **multi-domain** PRM — squarely the
+  `verifier-domain-bound` concern (Carnot's verifier is math-strong, code-weak; ARC-AGI-3 demands new
+  domains). The cross-domain-generalization comparator for the registry program.
+
+**Bottom line for the post-6/30 roadmap:** keep 2605.18871 as the pivot; add 2504.01005 as the
+compute-optimal efficiency frontier the head-to-head reports against; add 2504.00891 (GenPRM) as the
+matched-compute generative comparator alongside ThinkPRM; add 2509.24460 (ContextPRM) as the
+cross-domain generalization comparator for the verifier-registry domain-expansion. Guardrail: this is
+SOTA-ingestion + design only — no moat-proven claim, no real benchmark execution until the sprint
+retires 2026-06-30 (majority-ARC governs through the deadline).
+
+---
+
 ## 2026-06-25 (later) — .436 planning sweep — VALID-TEST THE GUIDANCE-CLASS GENERATION LEVERS: B1 found the energy-as-generation levers (goal-energy candidate scoring + energy-fitness QD) were NEVER validly tested (dead/byte-identical code); .436 reopens them with the non-degeneracy gate INLINE
 
 Added by the `.436` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-25). The `.435` capstone
