@@ -1,0 +1,327 @@
+{
+  "compute_bound": false,
+  "duration_s": 0.035812,
+  "experiment": "experiment_4987_stamping_backfill_and_wiring_readiness",
+  "experiment_id": 4987,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; success_v459_stamping_backfilled_and_mtime_window_confirmed (the relaxed gate still does not false-block)."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor)."
+    },
+    "mtime_fallback_window": {
+      "principle": "the .459 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block."
+    },
+    "preconditions_checked": {
+      "principle": "records module + arm-artifact presence; a missing input emits blocked_."
+    },
+    "research_conductor_modified": {
+      "principle": "false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited."
+    },
+    "stamping_backfilled_arms": {
+      "principle": "the list of .459 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap."
+    },
+    "window_gate_relaxed": {
+      "principle": "true -- the gate accepts the arms present at run time (n_arms>=7) instead of n_arms>=10, maintaining the .456 fix."
+    },
+    "wiring_proposal_reconfirmed": {
+      "principle": "true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire."
+    }
+  },
+  "honest_verdict": "success_v459_stamping_backfilled_and_mtime_window_confirmed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.06.459",
+  "mtime_fallback_module_path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
+  "mtime_fallback_window": {
+    "artifact_paths": [
+      "results/experiment_4979_archive_458_activate_459.json",
+      "results/experiment_4980_levelup_attempt.json",
+      "results/experiment_4981_levelup_attempt.json",
+      "results/experiment_4982_self_play_verifier_checkpoint.json",
+      "results/experiment_4983_heldout_first_win_readiness.json",
+      "results/experiment_4984_distributional_energy_verifier_turnkey.json",
+      "results/experiment_4985_bank_and_pivot_audit.json",
+      "results/experiment_4986_submission_package_harden.json"
+    ],
+    "compute_bound_count": 4,
+    "milestone": "2026.06.459",
+    "n_arms": 8,
+    "wall_minutes": 152.78,
+    "window_end": "2026-06-29T19:27:03Z",
+    "window_start": "2026-06-29T16:54:16Z"
+  },
+  "preconditions_checked": {
+    "activation_artifact_path": "results/experiment_4979_archive_458_activate_459.json",
+    "activation_artifact_present": true,
+    "arm_artifact_errors": [],
+    "arm_artifacts": [
+      {
+        "experiment_id": 4979,
+        "path": "results/experiment_4979_archive_458_activate_459.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4980,
+        "path": "results/experiment_4980_levelup_attempt.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4981,
+        "path": "results/experiment_4981_levelup_attempt.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4982,
+        "path": "results/experiment_4982_self_play_verifier_checkpoint.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4983,
+        "path": "results/experiment_4983_heldout_first_win_readiness.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4984,
+        "path": "results/experiment_4984_distributional_energy_verifier_turnkey.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4985,
+        "path": "results/experiment_4985_bank_and_pivot_audit.json",
+        "present": true
+      },
+      {
+        "experiment_id": 4986,
+        "path": "results/experiment_4986_submission_package_harden.json",
+        "present": true
+      }
+    ],
+    "arm_count": 8,
+    "arm_glob_patterns": [
+      "experiment_4979_*.json",
+      "experiment_498[0-9]_*.json"
+    ],
+    "exp4920_shipping_artifact": "results/experiment_4920_retro_timing_and_stamping_fix.json",
+    "exp4920_shipping_artifact_present": true,
+    "missing_modules": [],
+    "module_artifacts": [
+      {
+        "path": "python/carnot/reporting/retro_timing_mtime_fallback.py",
+        "present": true
+      },
+      {
+        "path": "python/carnot/reporting/runtime_stamping.py",
+        "present": true
+      }
+    ],
+    "ok": true,
+    "window_gate": {
+      "compute_bound_count": 4,
+      "min_arms": 7,
+      "min_compute_bound_count": 1,
+      "n_arms": 8,
+      "old_min_arms_not_required": 10,
+      "passed": true,
+      "relaxed": true,
+      "wall_minutes": 152.78
+    },
+    "wiring_proposal_current": true,
+    "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
+    "wiring_proposal_present": true
+  },
+  "random_seed": 20260629,
+  "reproducibility_checksum": "64173b10ea42cdb37a9bee2f64f6b401c09fa76fd28120cf1bded39a5e3ea251",
+  "research_conductor_after_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_before_sha256": "3e701e1dc2c8960d0ab7f751c577d12767ff5e7f4ae8df85d8ea56c0a13bfbbb",
+  "research_conductor_modified": false,
+  "research_conductor_path": "scripts/research_conductor.py",
+  "result_path": "results/experiment_4987_stamping_backfill_and_wiring_readiness.json",
+  "schema": "carnot.exp4987.stamping_backfill_and_wiring_readiness.v1",
+  "spec_refs": [
+    "REQ-REPORT-4987",
+    "SCENARIO-REPORT-4987",
+    "SCENARIO-REPORT-4987-MTIME-WINDOW",
+    "SCENARIO-REPORT-4987-BLOCKED-PRECONDITION"
+  ],
+  "stamping_audit_after": {
+    "missing_any": [],
+    "missing_by_field": {
+      "compute_bound": [],
+      "duration_s": [],
+      "inference_substrate": []
+    },
+    "scanned_count": 8
+  },
+  "stamping_audit_before": {
+    "missing_any": [
+      {
+        "experiment_id": 4979,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4979_archive_458_activate_459.json"
+      },
+      {
+        "experiment_id": 4980,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4980_levelup_attempt.json"
+      },
+      {
+        "experiment_id": 4981,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4981_levelup_attempt.json"
+      },
+      {
+        "experiment_id": 4982,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4982_self_play_verifier_checkpoint.json"
+      },
+      {
+        "experiment_id": 4984,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4984_distributional_energy_verifier_turnkey.json"
+      },
+      {
+        "experiment_id": 4985,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4985_bank_and_pivot_audit.json"
+      },
+      {
+        "experiment_id": 4986,
+        "missing_fields": [
+          "compute_bound"
+        ],
+        "path": "results/experiment_4986_submission_package_harden.json"
+      }
+    ],
+    "missing_by_field": {
+      "compute_bound": [
+        {
+          "experiment_id": 4979,
+          "path": "results/experiment_4979_archive_458_activate_459.json"
+        },
+        {
+          "experiment_id": 4980,
+          "path": "results/experiment_4980_levelup_attempt.json"
+        },
+        {
+          "experiment_id": 4981,
+          "path": "results/experiment_4981_levelup_attempt.json"
+        },
+        {
+          "experiment_id": 4982,
+          "path": "results/experiment_4982_self_play_verifier_checkpoint.json"
+        },
+        {
+          "experiment_id": 4984,
+          "path": "results/experiment_4984_distributional_energy_verifier_turnkey.json"
+        },
+        {
+          "experiment_id": 4985,
+          "path": "results/experiment_4985_bank_and_pivot_audit.json"
+        },
+        {
+          "experiment_id": 4986,
+          "path": "results/experiment_4986_submission_package_harden.json"
+        }
+      ],
+      "duration_s": [],
+      "inference_substrate": []
+    },
+    "scanned_count": 8
+  },
+  "stamping_backfilled_arms": [
+    {
+      "compute_bound": false,
+      "duration_s": 5.550006,
+      "experiment_id": 4979,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782752056606854964,
+      "path": "results/experiment_4979_archive_458_activate_459.json"
+    },
+    {
+      "compute_bound": true,
+      "duration_s": 1.823685,
+      "experiment_id": 4980,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782753297937265104,
+      "path": "results/experiment_4980_levelup_attempt.json"
+    },
+    {
+      "compute_bound": true,
+      "duration_s": 0.819096,
+      "experiment_id": 4981,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782755041716822538,
+      "path": "results/experiment_4981_levelup_attempt.json"
+    },
+    {
+      "compute_bound": false,
+      "duration_s": 4.800612,
+      "experiment_id": 4982,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782757941664600538,
+      "path": "results/experiment_4982_self_play_verifier_checkpoint.json"
+    },
+    {
+      "compute_bound": false,
+      "duration_s": 0.0001,
+      "experiment_id": 4984,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782759362945635119,
+      "path": "results/experiment_4984_distributional_energy_verifier_turnkey.json"
+    },
+    {
+      "compute_bound": false,
+      "duration_s": 1.0,
+      "experiment_id": 4985,
+      "inference_substrate": "verifier_ensemble_against_cached_candidates",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782760079420390147,
+      "path": "results/experiment_4985_bank_and_pivot_audit.json"
+    },
+    {
+      "compute_bound": true,
+      "duration_s": 1.065796,
+      "experiment_id": 4986,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "missing_fields": [
+        "compute_bound"
+      ],
+      "mtime_preserved_ns": 1782761223460563967,
+      "path": "results/experiment_4986_submission_package_harden.json"
+    }
+  ],
+  "stamping_helper_path": "python/carnot/reporting/runtime_stamping.py",
+  "window_gate_relaxed": true,
+  "wiring_proposal_path": "docs/retro_timing_mtime_fallback_wiring_proposal_4920.md",
+  "wiring_proposal_reconfirmed": true
+}
