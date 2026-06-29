@@ -1,0 +1,53 @@
+{
+  "experiment": "distributional_energy_verifier_musr",
+  "schema": "carnot.distributional_energy_verifier_musr.v1",
+  "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.52_pure_0.52_vs_sc_0.58_delta_-0.06_ci_-0.18_0.06_puredelta_-0.06_ci_-0.2_0.08_sc_not_saturated_headroom_unrealized",
+  "domain": "MuSR/murder_mysteries",
+  "question": "does an ORACLE-DISTINCT decomposed-energy verifier (mean-ranks/stddev-abstains quality ensemble + analytical penalty) beat self-consistency on a non-saturated no-cheap-oracle domain (arXiv:2605.18871)?",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": false,
+  "n_questions": 50,
+  "k_candidates": 8,
+  "m_ensemble": 3,
+  "self_consistency_accuracy": 0.58,
+  "distributional_energy_accuracy": 0.52,
+  "distributional_energy_pure_minenergy_accuracy": 0.52,
+  "llm_judge_accuracy": 0.64,
+  "energy_minus_sc_delta": -0.06,
+  "energy_minus_sc_ci95": [
+    -0.18,
+    0.06
+  ],
+  "energy_pure_minus_sc_delta": -0.06,
+  "energy_pure_minus_sc_ci95": [
+    -0.2,
+    0.08
+  ],
+  "energy_beats_sc": false,
+  "sc_saturated": false,
+  "n_energy_abstained_to_sc": 13,
+  "abstain_rate": 0.26,
+  "oracle_distinctness": {
+    "verifier_sees_gold": false,
+    "note": "gold (answer_choice) is used for EVAL accuracy ONLY; never passed to the generator, the quality scorer, the analytical penalty, or the judge. The energy decomposition is -mean(quality_ensemble)+analytical_penalty; uncertainty=stddev abstains to SC.",
+    "no_model_identity_shortcut": "all candidates come from ONE generator model; the scorer ranks by reasoning quality, not by candidate model_id (no model_id field is read)."
+  },
+  "model_specs": {
+    "generator": "unsloth/Qwen3.5-9B-MTP-GGUF",
+    "scorer": "same (single-model)",
+    "kv_quant": "q8_0"
+  },
+  "arxiv_ingested": [
+    "2605.18871",
+    "2504.16828",
+    "2502.01989"
+  ],
+  "interpretation": "First REAL execution of the post-6/30 distributional-energy-verifier pivot on a non-saturated, no-cheap-oracle domain (the headroom ARC's generation wall cannot host). A win (energy beats SC, CI excludes 0, oracle-distinct) is the verifier-moat result; a null scopes the moat. CAVEAT: the quality scorer is an LLM process-reward ensemble (THINKPRM-style), not yet a TRAINED EBM LoRA-ensemble -- a positive justifies training the real EBM scorer next; this is the cheapest decisive first test of the oracle-distinct-energy-beats-SC thesis off ARC. RESULT: cheap prompted decomposed-energy verifier is a NULL vs SC (26 vs 29/50, delta -0.06, CI incl 0). BUT the LLM-judge beats SC (32 vs 29/50) -> the moat headroom on MuSR is REAL and reachable by a holistic verifier; the decomposed process-reward energy underperformed it. Next: a better energy formulation OR the TRAINED LoRA-EBM quality scorer (the real arXiv:2605.18871 method, which a prompted stand-in only approximates). The judge>SC signal keeps the off-ARC verifier-moat thesis alive; do NOT conclude energy-cannot-help from this cheap-stand-in null.",
+  "solve_provenance": "development_proxy",
+  "random_seed": 20260629,
+  "duration_s": 2163.69,
+  "reproducibility_checksum": "sha256:5c69e92cc37ecb5ff86e11bb96e01967183ff37c2fcf00038376dc65e851dc6a",
+  "tautology_methodology_note": "energy_minus_sc_delta and energy_pure_minus_sc_delta both = -0.06 because energy(with-abstain) and energy(pure) both scored EXACTLY 26/50: the abstain mechanism flipped the selected answer on only 2 of 13 abstained questions, and on those 2 the SC-pick and the min-energy-pick each got 1 right (netting even). Verified per-question -> a genuine small-n (n=50, 0.02 granularity) coincidence, NOT a bug. adversarial_verify TAUTOLOGY here is a known small-n false-positive class.",
+  "surprising_result_acknowledgment": "the LLM-judge (0.64=32/50) BEATS self-consistency (0.58=29/50) while the decomposed-energy verifier (0.52=26/50) does NOT -> MuSR HAS verifier headroom (SC not saturated, a holistic judge realizes it), but the cheap prompted process-reward DECOMPOSED-energy formulation did not capture it. Preliminary at n=50 (judge +0.06 also has a wide CI); not headline until replicated at larger n.",
+  "flagged_adversarial_disclosure": "adversarial_verify raises CRITICAL TAUTOLOGY on energy_minus_sc_delta==energy_pure_minus_sc_delta (both -0.06). INSPECTED per-question (see tautology_methodology_note): both energy variants legitimately scored 26/50 because the abstain mechanism flipped only 2/13 abstentions and those netted even. This is the known small-n two-accuracies-coincide false-positive class (cf. CLAUDE.md TAUTOLOGY-excludes-identifiers note), NOT fabrication. Result is oracle-distinct (verifier never sees gold), informative (methods differ on 9 q), n=50."
+}
