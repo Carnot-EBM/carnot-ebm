@@ -1,3 +1,37 @@
+## 2026-06-29 — .459 planning sweep — EXTEND the post-6/30 verifier-moat backlog with 2 MORE real papers (the discriminative-verifier efficiency axis + a 2026 unify-generation-and-self-verification instantiation)
+
+Added by the `.459` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-29). `.459` is the
+final-stretch ARC-AGI-3 submission-sprint milestone on the **2026-06-30** deadline boundary (likely the
+last or second-to-last sprint milestone before the forcing function retires). The deliverable stays
+LOCKED (~0.05 first-win agent + the publishable FoVer paper) and the post-6/30 headline is unchanged:
+the **distributional-energy-verifier moat** ([arXiv:2605.18871](https://arxiv.org/abs/2605.18871), beats
+self-consistency on MuSR = oracle-distinct, SC-not-saturated). The `.456/.457/.458` D-slots made the
+pivot turnkey for 7/1 and ingested a 9-paper backlog (2605.18871, 2504.16828, 2502.01989, 2508.16665,
+2508.10539, 2502.11157, 2504.01005, 2504.00891, 2509.24460). A focused fresh sweep this round surfaced
+two genuinely-new, real, directly-relevant papers the `.459` D-slot ingests onto the same stack:
+
+- **[arXiv:2510.14913](https://arxiv.org/abs/2510.14913)** — *Budget-aware Test-time Scaling via
+  Discriminative Verification.* The single most on-point new paper: Carnot's decomposed-energy verifier
+  is itself **discriminative** (a learned LoRA-ensemble quality scorer, NOT a generative CoT verifier),
+  so this is the **matched-compute discriminative-verifier-under-budget comparator** — squarely the
+  efficiency-parity frontier of the north-star win condition ("parity at 10-100x cheaper"). It
+  complements the *generative* comparators (GenPRM 2504.00891, ThinkPRM 2504.16828): the post-6/30
+  head-to-head must report the distributional energy verifier against BOTH the discriminative budget
+  frontier (2510.14913) and the generative frontier.
+- **[arXiv:2603.04304](https://arxiv.org/abs/2603.04304)** — *V1: Unifying Generation and
+  Self-Verification for Parallel Reasoners* (Mar 2026). A 2026 instantiation of exactly the
+  distributional-energy verifier's **two-pass loop** (generate candidates -> score with the ensemble
+  MEAN / abstain on ensemble STDDEV -> targeted regeneration). The unify-generation-and-self-verification
+  comparator for the two-pass regenerate/abstain design; a current-SOTA reference point for the
+  uncertainty-driven regeneration half of 2605.18871.
+
+**Bottom line for the post-6/30 roadmap:** keep 2605.18871 as the pivot; the head-to-head now reports
+against the *discriminative* budget frontier (2510.14913) AND the *generative* frontier (2504.00891 /
+2504.16828), with 2504.01005 as the compute-optimal SC-vs-verify allocation and 2603.04304 as the
+2026 unify-generation-and-self-verification reference for the regenerate/abstain two-pass loop. The
+backlog is now 11 real-cited papers. (`/deep-research` was NOT used -- direct low-concurrency `WebSearch`
+per the SOTA-Ingestion Cycle Discipline.)
+
 ## 2026-06-29 — .458 planning sweep — EXTEND the post-6/30 verifier-moat (distributional-energy-verifier) SOTA backlog with 3 NEW process-verification papers
 
 Added by the `.458` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-29). `.458` is a
