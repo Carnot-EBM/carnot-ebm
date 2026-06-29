@@ -13321,6 +13321,77 @@ and the registry update records either the strict new bank or the no-bank
 dead-end without changing ops status, changelog, traceability, or the research
 conductor.
 
+### REQ-ARC-WMTE-4992: Fresh L2-To-L3 Rotation Level-Up Attempt Ledger
+
+Experiment 4992 SHALL perform the >=1-banking-attempt floor on a fresh L2-to-L3
+ARC target chosen from `cd82`, `m0r0`, or `sk48`, preferring `cd82`, avoiding
+A1's `sc25`, A3's `su15`, recent rotation targets, hidden-state-bound targets
+`ka59`/`wa30`, and any recorded next-level dead end. Before any search, it
+SHALL load `ops/arc_solve_registry.yaml`, call
+`arc_solve_learning.recommend_approach(<target>)`, consult the target's
+`dead_ends`, and verify that the relevant L3 delta is grounded by a live
+`GameAdapter`. It SHALL run `.venv/bin/python scripts/arc_loop_solve.py --game
+<target> --target-level 3` only when a grounded next-level delta is present,
+gate any claim through `arc_solver_kit.reproduce`, update the registry ledger,
+and write `results/experiment_4992_levelup_attempt.json`.
+
+If the selected fresh target has no grounded next-level delta, or only repeats
+the prior L2 depth, Experiment 4992 SHALL record the honest no-bank residual and
+MUST NOT fabricate a level-up. A missing offline arcade, unreadable registry,
+missing spec anchor, or missing target environment SHALL produce a terminal
+`blocked_*` artifact.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- NOT outer_loop_re (CRITICAL); NOT a duplicate re-solve (CRITICAL)."
+- `target_game`: principle "the rotated FRESH L2->L3 target (must differ from A1's sc25, A3's su15, and the recent level-up rotation)."
+- `offline_reproduced`: principle "only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `new_levels_banked`: principle ">=1 for a PASS; 0 records the honest rotation dead-end for the next planner."
+- `verifier_is_oracle`: principle "the reproduction gate is the executable oracle (circularity discipline)."
+- `live_path_reachable`: principle "true -- arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint passes)."
+- `inference_substrate`: principle "live_llm_inference if induction runs (60s floor); else verifier_ensemble_against_cached_candidates / the honest offline arcade substrate."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+
+#### SCENARIO-ARC-WMTE-4992-FRESH-L2-TARGET
+
+Given `cd82`, `m0r0`, and `sk48` are registry L2 games and recent/A1/A3
+rotation exclusions are active
+When Experiment 4992 selects a target
+Then it calls `recommend_approach` for the selected target, records the
+consulted dead ends, selects the first candidate with no blocking next-level
+dead end, and falls back to an honest no-bank selection when the first available
+candidate has no grounded L3 delta.
+
+#### SCENARIO-ARC-WMTE-4992-NO-GROUNDED-DELTA
+
+Given the selected target has a live adapter but no L3 tail or other grounded
+next-level delta
+When Experiment 4992 builds its artifact
+Then it records `new_levels_banked=0`, `offline_reproduced=false`,
+`reproduced_levels` equal to the prior L2 depth, `standing_loop_ran=false`, and
+a terminal verdict `complete_<game>_no_new_level_residual_no_grounded_l3_delta`.
+
+#### SCENARIO-ARC-WMTE-4992-REPRODUCTION-GATE
+
+Given a grounded L3 delta exists and the standing ARC loop runs
+When `arc_solver_kit.reproduce` reports an offline-reproduced deeper level
+Then Experiment 4992 banks only the strict level increase, records
+`solve_provenance=live_agent_self_discovery`, updates the registry total by the
+new banked count, and emits `success_<game>_levelup_banked`; if reproduction
+fails or repeats L2, it emits an honest `complete_*` residual.
+
+#### SCENARIO-ARC-WMTE-4992-STABLE-ARTIFACT
+
+Given Experiment 4992 completes, blocks, or records a no-bank residual
+When it writes `results/experiment_4992_levelup_attempt.json`
+Then the artifact contains the required principle-annotated fields, `spec_refs`
+for this requirement and scenarios, `random_seed`, `reproducibility_checksum`,
+candidate-selection audit, approach recommendation, dead-end audit, delta
+status, registry update payload, standing-loop command/path/result state, and
+schema errors only when the artifact violates the contract.
+
 ### REQ-ARC-WMTE-4853: ARC Self-Play Verifier Checkpoint Refresh Artifact
 
 Experiment 4853 SHALL run the standing ARC self-play loop on a banked target

@@ -1281,6 +1281,7 @@ games:
   - 'sk48: registry_prechecked prior L1 before target L2'
   - 'sk48: L2 tail is banked only through the standing GameAdapter/live-path loop'
   - 'sk48: registry_prechecked:sk48: recently_deepened_or_operator_skip_list'
+  - 'Exp4992 sk48 no-bank no_grounded_l3_delta: complete_sk48_no_new_level_residual_no_grounded_l3_delta.'
   latest_exp4751_levelup_selfplay:
     artifact: results/experiment_4751_levelup_selfplay.json
     loop_artifact: results/arc_loop_solve_sk48.json
@@ -1290,6 +1291,16 @@ games:
     verifier_checkpoint: models/arc_verifier_sk48.json
     target_rotation: shallow_solved_sk48_L1_to_L2_live_path
     reproducibility_checksum: 5695797d7a0fde50273b3c61c5b71c121ff5f6e1be48204d5ad00854bbc808e7
+  latest_exp4992_levelup_attempt:
+    artifact: results/experiment_4992_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_sk48.json
+    offline_reproduced: false
+    reproduced_levels: 2
+    new_levels_banked: 0
+    residual_cause: no_grounded_l3_delta
+    solve_provenance: live_agent_self_discovery
+    target_rotation: fresh_l2_cd82_m0r0_sk48_off_sc25_su15_recent_hidden_state_bound
+    reproducibility_checksum: 5cb2f61eac942ca68ceb3bb5c61f30013ffc7349bb237f64b794647ed3594e55
 - game: ar25
   reproducibility: reproduced
   levels_reproduced: 3
