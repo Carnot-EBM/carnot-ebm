@@ -9571,3 +9571,4 @@ The contro |
 | 2026-06-29 08:20 UTC | PHASE B1 (RESERVED INFRA 1) -- ADVERSARIAL AUDIT o | OK | 88 passed, 1 warning in 9.47s |
 | 2026-06-29 08:31 UTC | PHASE B2 (RESERVED INFRA 2; DEADLINE LANE) -- subm | OK | 89 passed, 1 warning in 10.53s |
 | 2026-06-29 08:43 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- maintai | OK | 85 passed, 1 warning in 6.84s |
+| 2026-06-29 10:06 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ad_checksum(ho |
