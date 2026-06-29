@@ -326,3 +326,30 @@ distributional-energy verifier on MuSR (arXiv:2605.18871, beats SC), exp4940 sta
 already maxed out as the banked efficiency CNN; the residual gap is a stronger GENERATOR (not an energy
 model). The ONLY non-rerun ARC-energy attempt left would require a fundamentally new energy SIGNAL that
 discriminates where observable-state energy scores 0.4958 — prior very low; attacking an info-theoretic wall.
+
+---
+
+## Addendum 2026-06-29 — "public-set source-reading exploit": we ALREADY have it
+
+Operator question: "How do we reach the same public-set source-reading exploits as the leaderboard
+leaders?" **Answer: we already reach it — `arc_solver_kit.OfflineSolver` (driven by
+`scripts/arc_loop_solve.py`) IS a source-reading exploit, in its robust form.** It loads the public
+game sims directly from `environment_files/` (`Arcade(OperationMode.OFFLINE, ...)`, zero network/quota),
+`set_level`-teleports, branches by `copy.deepcopy(env._game)` OR (the universal path) replay-from-reset,
+and reads the win flag off `frame.levels_completed`. That is the same mechanism the 0.46/0.39 Kaggle
+"leaders" use — and it is exactly how we banked all **69 reproducible public levels** across the 25
+public games.
+
+A standalone reimplementation (`arc_public_source_exploit_solver.py`, started 2026-06-29) was REDUNDANT
+and reintroduced two gotchas the kit already solved: (#2) it read the level off `env._game`
+(`_current_level_index`) instead of off the FRAME — so wins never registered (0/L0 even on easy games);
+(#3) it used pure deepcopy-branching, which is BROKEN for some games (sc25 references don't survive
+deepcopy). The file was lost to a conductor checkpoint cycle before it was fixed; it is not worth
+reconstructing because the kit is strictly better.
+
+**The honest framing (unchanged):** these are PUBLIC numbers. The exploit does NOT transfer to the
+HIDDEN leaderboard — the scored path is a frames-only remote `gateway:8001`, hidden source server-side,
+so it cannot raise our 0.08 hidden RHAE score. The remaining gap to a leader's public number is BREADTH
+(more games × deeper levels), gated by the dry deepen well — NOT a missing exploit mechanism. Per the
+2026-06-29 operator policy ([[feedback_source_reading_public_dev_only]]), source-reading stays a
+PUBLIC-games dev/RE tool (conductor + outer-loop), never in the hidden live submission.
