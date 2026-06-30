@@ -14014,3 +14014,63 @@ When Experiment 4916 checks preconditions
 Then it writes `results/experiment_4916_self_play_verifier_checkpoint.json`
 with a terminal `blocked_*` verdict, explicit `preconditions_checked`, and no
 fabricated checkpoint refresh.
+
+### REQ-ARC-WMTE-5040: Opportunistic ARC Level-Up Attempt Ledger
+
+Experiment 5040 SHALL perform one opportunistic ARC level-up attempt after the
+retired sprint, preferring fresh grounded `lp85` L5->L6 or `sc25` L5->L6
+targets and using `cn04` L3->L4 only as an alternate. The attempt SHALL read the
+ARC solve registry, consult `recommend_approach(target_game)`, avoid the current
+recently hammered and hidden-state-bound target sets, and fail closed when the
+registry already records that the next-level delta is not grounded.
+
+Experiment 5040 SHALL write `results/experiment_5040_levelup_attempt.json` with
+principle-annotated top-level fields for `honest_verdict`, `solve_provenance`,
+`target_game`, `offline_reproduced`, `reproduced_levels`, `new_levels_banked`,
+`live_path_reachable`, `verifier_is_oracle`, `inference_substrate`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`. The
+artifact SHALL include the selected candidate audit, registry dead-end evidence,
+approach recommendation, standing loop command/result path, reproduction gate,
+solution labels, registry update summary, and `retire_if_same_verdict`.
+
+Experiment 5040 SHALL count a bank only when the standing ARC loop result passes
+the executable offline reproduction gate and reaches a strictly deeper level
+than the registry's prior per-game depth. Duplicate-depth reproductions and
+previously recorded no-grounded-delta paths SHALL record a no-bank honest
+verdict instead of claiming progress.
+
+#### SCENARIO-ARC-WMTE-5040-REGISTRY-PRECHECK
+
+Given the registry already records a next-level no-grounded-delta dead end for
+the highest-priority candidate
+When Experiment 5040 selects a target
+Then it skips that candidate, records the consulted dead end, and evaluates the
+next allowed rotated target.
+
+#### SCENARIO-ARC-WMTE-5040-NO-GROUNDED-DELTA
+
+Given the selected rotated target has an adapter but no grounded tail for the
+next target level
+When Experiment 5040 builds its artifact
+Then it records `complete_<game>_no_new_level_residual_no_grounded_lN_delta`,
+sets `offline_reproduced=false`, keeps `new_levels_banked=0`, and does not
+execute the standing loop.
+
+#### SCENARIO-ARC-WMTE-5040-REPRODUCTION-GATE
+
+Given the selected rotated target has a grounded next-level delta
+When the standing ARC loop returns a reproduction-gated result
+Then Experiment 5040 banks only if `offline_reproduced=true`, the reproduction
+gate reports the same reproduced status, the live standing-loop path is
+reachable, and the reproduced level is strictly greater than the prior registry
+depth.
+
+#### SCENARIO-ARC-WMTE-5040-STABLE-ARTIFACT
+
+Given Experiment 5040 writes `results/experiment_5040_levelup_attempt.json`
+When the artifact is validated
+Then every required field is present with bare JSON booleans/integers where
+required, `solve_provenance=live_agent_self_discovery`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`,
+`verifier_is_oracle=true`, and the reproducibility checksum matches the content
+hash of the game, plan, and claimed level payload.
