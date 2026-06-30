@@ -1,317 +1,403 @@
-# Pre-staged .461 roadmap (Pre-Staged Roadmap Convention).
-# Planner: outer-loop Claude Opus 4.8, 2026-06-29 (UTC).
-# STRATEGIC READ (.460 -> .461): .460 completed cleanly (the FINAL-STRETCH ARC sprint milestone on the 6/30 deadline
-# boundary). The ARC-AGI-3 Submission Sprint Forcing Function is now RETIRED (deadline reached + operator explicitly
-# lifted it -- CLAUDE.md). The capstone exp5000 closed levels=69 (6th flat milestone, deepen well dry across ALL depth
-# regimes), held-out first-win CLEAN full-25 0.04, package READY 15.146GB, the post-6/30 distributional-energy-verifier
-# pivot TURNKEY + a 13-paper ingested backlog. The .453 B1-trusted WALL_IS_HIDDEN_STATE closure STANDS; the ARC
-# deliverable is LOCKED (~0.05 first-win agent + the publishable FoVer paper). Per the 2026-06-30 operator directive
-# (known-issues.md MANDATORY-NEXT-MILESTONE: "unlock the conductor running PHASE D experiments immediately"), .461
-# shifts the MAJORITY from ARC live-solving to EXECUTING PHASE D -- the off-ARC distributional-energy verifier moat.
-# THE DECISIVE OPEN QUESTION: the cheap *prompted* energy proxy NULLED on MuSR (SC 0.56 best; energy 0.515-0.535;
-# energy_beats_sc=False but sc_saturated=False -> headroom present, UNREALIZED). Does a TRAINED verifier capture it?
-# PHASE D builds the three operator-named constructions on headroom-present ORACLE-DISTINCT corpora (MuSR + a 2nd):
-#   D1 = TRAIN the REAL arXiv:2605.18871 LoRA-EBM holistic-quality scorer (not the prompted proxy);
-#   D2 = REPLICATE uPRM (arXiv:2605.10158, unsupervised process RM, BEATS self-consistency by up to 6.9% = the
-#        published win-condition existence proof);
-#   D3 = EBRM (arXiv:2504.13134, energy RM modeling the reward DISTRIBUTION with uncertainty, COLM 2025).
-# FALSIFIABLE GATE (the only non-circular evidence): on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle
-# =False, headroom_present=True), >=1 of {{LoRA-EBM, uPRM, EBRM}} beats TUNED self-consistency with paired CI95 excluding
-# 0 (McNemar). retire_if_same_verdict: true -- if the trained LoRA-EBM AND uPRM both fail on any headroom-present
-# oracle-distinct corpus, the off-ARC verifier moat retires as bounded (a publishable null converging with the ARC
-# tie). A POSITIVE resolves the still-pending DiffusionGemma gate (docs/research-notes/diffusiongemma-energy-guided-
-# diffusion-spec.md). Reserved slots still apply: 2 infra (B1 moat harness, B2 oracle-distinct/headroom lint), 1
-# hardware (C KV260 SSH-only), 1 SOTA-ingestion (E1). Continuous self-learning (E2 ARC self-play, FR-11) + 1
-# opportunistic ARC level-up (E3) keep ARC alive without the majority. Offline training/induction runs on the
-# conductor's dedicated GPU-0 CUDA device (2026-06-27 allocation), NOT iGPU-pinned.
-# DO NOT re-propose: representation #5, energy-as-ARC-lever (S0 CONCLUDED 2026-06-26), the dynamics-engine L2 wall
-# (post-sprint), macro/horizon-collapse, click-heatmap generator, trust-gate flip, MATM similarity-retrieval (NULLED
-# .454), TTT-on-code-engine, local code inducers, decision-need targets, action-prefix latents, coverage/exploration/
-# selection/perception-from-grid. PHASE D's LoRA-EBM/uPRM/EBRM SCORER training is DISTINCT from the retired live-LoRA
-# verifier-as-REWARD path (exp4247) + verifier-as-reward in-loop training (exp4263): PHASE D trains the verifier/scorer
-# itself and uses it as an oracle-distinct SELECTOR, NOT as an RFT reward to train a policy -- and it is operator-
-# directed (each D task carries operator_override for the substring scope-match).
-# ORDERING: B1 (harness) is enabling and placed before the D arms; D5 (gate aggregation) reads D1-D4 and is placed
-# after them; B2 (lint) reads D1-D4 artifacts and is placed after D4; the capstone is last.
-milestone: 2026.06.461
-milestone_title: 'PHASE D (FIRST execution) -- the off-ARC distributional-energy verifier MOAT, now the majority lever
-  (ARC sprint RETIRED 2026-06-30). .460 completed cleanly: capstone = submission_ready_levels_69_heldout_0.04_package
-  _ready_pivot_turnkey; the ARC deliverable is LOCKED. The cheap prompted energy proxy NULLED on MuSR (SC 0.56 best,
-  energy 0.515-0.535, energy_beats_sc=False but sc_saturated=False -> headroom UNREALIZED). PHASE D tests whether a
-  TRAINED verifier captures it: D1 trains the REAL arXiv:2605.18871 LoRA-EBM holistic-quality scorer, D2 replicates
-  uPRM (arXiv:2605.10158, unsupervised process RM that BEATS self-consistency by up to 6.9%), D3 builds EBRM
-  (arXiv:2504.13134, energy RM modeling the reward distribution with uncertainty), D4 cross-corpus-generalizes the best
-  verifier to a 2nd headroom-present oracle-distinct corpus (GPQA/MMLU-Pro-hard/MATH-500-hard), D5 aggregates the
-  moat gate + resolves the still-pending DiffusionGemma gate. FALSIFIABLE GATE: >=1 oracle-distinct verifier beats
-  TUNED-SC with McNemar CI95 excluding 0 on a headroom-present domain; retire_if_same_verdict if LoRA-EBM AND uPRM both
-  fail (a publishable bounded null). 2 reserved infra (B1 moat harness, B2 oracle-distinct/headroom lint), 1 hardware
-  (C KV260 SSH-only), 1 SOTA-ingestion (E1), continuous self-learning (E2 ARC self-play/FR-11) + 1 opportunistic ARC
-  level-up (E3). All codex; planner/retro stay Opus.'
-milestone_doc: openspec/change-proposals/research-roadmap-v461.md
-theme: 'The ARC sprint is RETIRED and the ARC deliverable is LOCKED (levels 69, held-out 0.04 clean, package ready,
-  FoVer paper publishable). .461 executes PHASE D -- the off-ARC distributional-energy verifier moat -- as the new
-  majority lever, per the 2026-06-30 operator directive. The decisive open question: the cheap prompted energy proxy
-  did not beat self-consistency on MuSR but the domain has UNREALIZED headroom (sc_saturated=False). PHASE D tests
-  whether a TRAINED/principled ORACLE-DISTINCT verifier captures it. D1 trains the real arXiv:2605.18871 LoRA-EBM
-  holistic-quality scorer (reusing the cached MuSR candidates -- anti-churn -- + FoVer contrastive pairs; a trainable
-  HF base on GPU-0 CUDA). D2 replicates uPRM (arXiv:2605.10158) -- the published unsupervised process RM that BEATS
-  majority voting by up to 6.9%, the win-condition existence proof. D3 builds EBRM (arXiv:2504.13134) -- an energy RM
-  that models the reward distribution with uncertainty (post-hoc refinement, COLM 2025). All three are tested as
-  oracle-distinct SELECTORS (verifier never sees gold at inference) vs TUNED self-consistency on headroom-present
-  corpora. D4 cross-corpus-generalizes the best verifier; D5 aggregates the falsifiable moat gate and resolves the
-  still-pending DiffusionGemma gate. The gate is the ONLY non-circular evidence: beats-tuned-SC, McNemar CI95-excl-0,
-  verifier_is_oracle=False, headroom_present=True; retire_if_same_verdict if the trained LoRA-EBM AND uPRM both fail
-  (a publishable bounded null converging with the ARC tie). Anti-traps: oracle@K + headroom_present reported on every
-  arm (FALSE_NEGATIVE_RISK), tuned-SC baseline (headroom-control), n>=200, paired bootstrap + McNemar, oracle-
-  distinctness lint (B2). Reserved: 2 infra (B1 reusable moat benchmark harness, B2 lint), 1 hardware (C KV260 SSH-
-  only), 1 SOTA-ingestion (E1 fresh verifier-moat literature sweep). Continuous self-learning (E2 ARC self-play /
-  FR-11 -- the learned verifier improves across runs and checkpoints) + 1 opportunistic ARC level-up (E3, honest
-  no-bank if dry) keep ARC alive without the majority. Offline training/induction runs on the conductor GPU-0 CUDA
-  device (2026-06-27 allocation), NOT iGPU-pinned. Do NOT re-propose any nulled/retired/concluded lever (energy-as-ARC
-  [S0 CONCLUDED 2026-06-26], representation #5, dynamics-engine L2 wall, macro, click-heatmap, trust-gate, MATM
-  retrieval [NULLED .454], TTT-code-engine, local code inducers, decision-need, action-prefix latents, perception-
-  from-grid). PHASE D scorer-training is DISTINCT from the retired verifier-as-REWARD path (exp4247/exp4263) and is
-  operator-directed.'
+# Pre-staged .462 roadmap (Pre-Staged Roadmap Convention).
+# Planner: outer-loop Claude Opus 4.8, 2026-06-30 (UTC).
+# STRATEGIC READ (.461 -> .462): .461 was the FIRST PHASE D milestone but it did NOT test the decisive
+# question -- all three principled constructions failed to EXECUTE (an execution failure, NOT a scientific
+# null): D1 LoRA-EBM never trained (running_..._pretrain_skeleton, n_pairs=0, train_loss=null, 0.99s
+# bootstrap-and-bail -- preconditions ALL passed); D2 uPRM blocked on the logprob candidate cache
+# (blocked_uprm_logprob_candidate_cache -- fresh generation disabled by an empty env flag; the scorer+formula
+# are fully implemented); D3 EBRM was the SOLE clean arm but DEGENERATE -- abstained 97.5% to a k=1 strawman
+# "tuned-SC" over the weak registry quality ensemble (point-estimate 0.515 < SC 0.585), so delta=+0.000 /
+# McNemar p=1.0 measured always-abstain-to-SC, not a trained verifier. D5 correctly read MIXED-SCOPED. The
+# fabrication gate worked (D1/D2/D4 correctly skipped); the problem was EXECUTION, not detection. So .462 is
+# the FIRST REAL PHASE D test: fix the two infra defects the failures exposed (B1 genuine K-way tuned-SC
+# baseline + always-abstain degeneracy guard; B2 shared logprob-enriched candidate cache that unblocks D2 +
+# feeds D1/D3/cascade), then re-execute the three constructions PROPERLY (D1 train+eval a Qwen3.5-1.7B LoRA-EBM
+# train-first-not-skeleton-first; D2 uPRM unblocked; D3 EBRM refining the REAL D1 scorer with the E1-ingested
+# uncertainty heads, gated_on D1, non-degenerate abstention), and ADD the EFFICIENCY arm (uncertainty-routed
+# cheap->judge cascade, arXiv:2510.20369) so a north-star-§5 Pareto win is reachable even if every accuracy arm
+# ties SC. THE FALSIFIABLE GATE (the only non-circular evidence): on a headroom-present ORACLE-DISTINCT domain
+# (verifier_is_oracle=False, headroom_present vs GENUINE tuned-SC), >=1 of {LoRA-EBM, uPRM, EBRM} beats genuine
+# tuned-SC with McNemar CI95-excl-0, MuSR + >=1 second corpus; OR the cascade hits accuracy-parity at materially
+# fewer judge calls. retire_if_same_verdict: true -- if the PROPERLY-EXECUTED LoRA-EBM AND uPRM both null, the
+# off-ARC accuracy moat retires as bounded (a publishable null converging with the ARC tie). A skeleton/degenerate
+# arm is a FAILED EXECUTION, not a null -> does NOT trigger retirement. A POSITIVE records the DiffusionGemma gate
+# conditions satisfied off-ARC (activation stays operator-gated -- do NOT autonomously flip to MET). Reserved
+# slots: 2 infra (B1, B2), 1 hardware (C KV260 SSH-only), 1 SOTA-ingestion (E1). Continuous self-learning (E2 ARC
+# self-play / FR-11) + 1 opportunistic ARC level-up (E3, honest no-bank if dry) keep ARC alive without the
+# majority. Offline training/scoring on the conductor GPU-0 CUDA device (2026-06-27 allocation), NOT iGPU-pinned.
+# DO NOT re-propose: energy-as-ARC (S0 CONCLUDED 2026-06-26), the verifier-as-REWARD path (exp4247/exp4263 --
+# PHASE D trains the SCORER as an oracle-distinct SELECTOR, each D arm carries operator_override + prior_failures),
+# representation #5, ARC dynamics-engine L2 wall, macro, click-heatmap, trust-gate, MATM retrieval (NULLED .454),
+# TTT-code-engine, local code inducers, decision-need, action-prefix latents, perception-from-grid.
+# ORDERING: B1+B2 (infra) FIRST (enabling); D1 before D3 (D3 gated_on D1 scorer_trained); D4 after D1/D2/D3
+# (best arm); D5 after D1-D4 + cascade; capstone last.
+milestone: 2026.06.462
+milestone_title: 'PHASE D (SECOND execution) -- the FIRST REAL oracle-distinct verifier-moat test. .461 did NOT
+  test the decisive question: all three constructions failed to EXECUTE (D1 LoRA-EBM never trained = skeleton
+  bail; D2 uPRM blocked on logprob cache; D3 EBRM degenerate = abstained 97.5% to a k=1 strawman tuned-SC over a
+  weak base scorer). Zero real trained-verifier measurements landed. .462 fixes the two infra defects (B1 genuine
+  K-way tuned-SC baseline + degeneracy guard; B2 shared logprob-enriched candidate cache) and re-executes the
+  constructions PROPERLY: D1 trains a Qwen3.5-1.7B LoRA-EBM (train-first-not-skeleton-first, gate requires
+  train_loss non-null), D2 uPRM unblocked via the B2 cache (+LC-ERD fallback), D3 EBRM refines the REAL D1 scorer
+  with the E1-ingested uncertainty heads (UARM/pessimistic/RewardUQ) gated_on D1, plus a north-star-§5 EFFICIENCY
+  arm (uncertainty-routed cheap->judge cascade, arXiv:2510.20369) and D4 cross-corpus -> D5 gate. FALSIFIABLE
+  GATE: >=1 oracle-distinct verifier beats GENUINE tuned-SC with McNemar CI95-excl-0 on a headroom-present domain
+  (MuSR + >=1 second corpus), OR the cascade reaches accuracy-parity at materially fewer judge calls;
+  retire_if_same_verdict if the PROPERLY-EXECUTED LoRA-EBM AND uPRM both null. 2 reserved infra (B1, B2), 1
+  hardware (C KV260 SSH-only), 1 SOTA-ingestion (E1), continuous self-learning (E2 ARC self-play/FR-11) + 1
+  opportunistic ARC level-up (E3). All codex; planner/retro stay Opus.'
+milestone_doc: openspec/change-proposals/research-roadmap-v462.md
+theme: 'The verifier moat is still UNTESTED -- .461 measured zero real trained verifiers (all three arms failed
+  to execute: D1 skeleton-bail, D2 blocked on logprob cache, D3 degenerate always-abstain to a k=1 strawman SC).
+  .462 is the FIRST REAL PHASE D test. It builds the two prerequisites the .461 degeneracy exposed (B1 a GENUINE
+  K-way tuned-SC baseline -- not k=1 -- with the K-sweep reported + an always-abstain degeneracy guard; B2 a
+  shared logprob-enriched candidate cache that unblocks D2 and feeds D1/D3/cascade, generated once = anti-churn),
+  then re-executes the three constructions PROPERLY on headroom-present ORACLE-DISTINCT corpora: D1 TRAINS a
+  Qwen3.5-1.7B LoRA-EBM holistic-quality scorer (train-first-not-skeleton-first; the gate REQUIRES train_loss
+  non-null so a skeleton cannot pass), D2 replicates uPRM (arXiv:2605.10158, the published unsupervised process RM
+  that beats SC by up to 6.9%) unblocked via the B2 cache with an LC-ERD (arXiv:2605.24005) fallback, D3 builds a
+  NON-DEGENERATE EBRM that refines the REAL D1 trained scorer (gated_on D1) with the E1-ingested uncertainty heads
+  (UARM 2606.19818, distributional-pessimistic 2606.09073, RewardUQ 2602.24040 calibration) and a capped
+  abstention. All are oracle-distinct SELECTORS (verifier never sees gold at inference) vs the GENUINE tuned-SC.
+  A north-star-§5 EFFICIENCY arm tests the uncertainty-routed cheap->strong-judge cascade (arXiv:2510.20369): a
+  Pareto win = accuracy parity at materially fewer judge calls (charge the judge budget explicitly; the judge must
+  not become the moat). D4 generalizes the best arm to a 2nd headroom-present corpus; D5 aggregates the
+  falsifiable gate + the DiffusionGemma status (operator-gated -- not autonomously flipped). retire_if_same_verdict
+  if the properly-executed LoRA-EBM AND uPRM both null (a publishable bounded null converging with the ARC tie); a
+  skeleton/degenerate arm is a FAILED execution, NOT a null. Anti-traps: GENUINE tuned-SC (headroom-control),
+  oracle@K + headroom_present on every arm (FALSE_NEGATIVE_RISK), n>=200, paired bootstrap + McNemar, oracle-
+  distinctness lint, a train_loss-non-null gate (the anti-skeleton fix). Reserved: 2 infra (B1, B2), 1 hardware
+  (C), 1 SOTA-ingestion (E1). Continuous self-learning (E2 ARC self-play / FR-11) + 1 opportunistic ARC level-up
+  (E3, honest no-bank). Offline training/scoring on GPU-0 CUDA (2026-06-27), NOT iGPU-pinned. Do NOT re-propose any
+  nulled/retired/concluded lever (energy-as-ARC [S0 CONCLUDED], verifier-as-reward [exp4247/exp4263], representation
+  #5, dynamics-engine L2, macro, click-heatmap, trust-gate, MATM retrieval, perception-from-grid).'
 tasks:
-- id: exp5001-phase0
-  title: 'PHASE 0 (TRANSITION) -- archive .460 -> activate .461; assert the ACTIVE roadmap YAML parses + the pre-test
-    gate is green (own-test + --no-cov); RESOLVE any poison pre-test. RECORD the .460 close-state (capstone exp5000 =
-    submission_ready_levels_69_heldout_0.04_package_ready; ARC sprint RETIRED 2026-06-30; the ARC deliverable LOCKED;
-    PHASE D unlocked = the new majority lever).'
+- id: exp5014-phase0
+  title: 'PHASE 0 (TRANSITION) -- archive .461 -> activate .462; assert the ACTIVE roadmap YAML parses + the
+    pre-test gate is green (own-test + --no-cov); RESOLVE any poison pre-test. RECORD the .461 close-state
+    (capstone exp5013 = MIXED-SCOPED moat; the three PHASE D execution defects D1 skeleton-bail / D2 logprob-cache
+    block / D3 degenerate-always-abstain; ARC LOCKED at levels 69; PHASE D remains the majority lever for .462).'
   priority: critical
   track: transition
   max_turns: 40
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_5001_archive_460_activate_461.json
+  deliverable: results/experiment_5014_archive_461_activate_462.json
   operator_override: '2026-06-19 operator directive (standing) + 2026-06-12 codex-default for the transition task:
     routine continuation / reserved-slot mechanical task -- false-positive scope-match vs prior same-class archive/
-    activate transition tasks; structurally never a doomed rerun (archive-v460-activate-v461).'
+    activate transition tasks; structurally never a doomed rerun (archive-v461-activate-v462).'
   prompt: |
-    CONTEXT ({date}). Milestone 2026.06.460 completed. Mechanically transition to 2026.06.461, resolve any poison
-    pre-test, and RECORD the true .460 close-state. Routine mechanical task (codex). The conductor may have already
+    CONTEXT ({date}). Milestone 2026.06.461 completed. Mechanically transition to 2026.06.462, resolve any poison
+    pre-test, and RECORD the true .461 close-state. Routine mechanical task (codex). The conductor may have already
     archived (no-op) -- you MUST still WRITE the deliverable.
 
     DURABILITY REQUIREMENT (known-issues 2026-06-29): this transition module's PRETEST_COMMAND MUST be its OWN test
-    file with --no-cov (e.g. [".venv/bin/pytest", "tests/python/test_experiment_5001_archive_460_activate_461.py",
+    file with --no-cov (e.g. [".venv/bin/pytest", "tests/python/test_experiment_5014_archive_461_activate_462.py",
     "-q", "--no-cov"]) -- NEVER the full tests/python suite with coverage addopts (that re-introduces the codex
     ~4800s wall-clock cap).
 
-    KEY .460 CLOSE-STATE to record:
-      - Capstone (exp5000) = the .460 capstone: reproducible_total_levels=69 (6th flat milestone, deepen well dry
-        across ALL depth regimes), held-out first-win CLEAN full-25 0.04 (flag_resolved), package READY 15.146GB,
-        the distributional-energy-verifier pivot TURNKEY + a 13-paper ingested backlog.
-      - The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED (2026-06-30 deadline reached + operator lifted it).
-      - The .453 B1-trusted WALL_IS_HIDDEN_STATE closure STANDS; the ARC deliverable is LOCKED (~0.05 first-win agent
-        + the publishable FoVer paper, paper_ready=true).
-      - PHASE D (the off-ARC distributional-energy verifier moat) is UNLOCKED and is the new MAJORITY lever per the
-        2026-06-30 operator directive. Do NOT queue representation #5 or any nulled/concluded lever (S0 energy-as-ARC
-        CONCLUDED 2026-06-26 = no live ARC value).
+    KEY .461 CLOSE-STATE to record:
+      - Capstone (exp5013) = MIXED-SCOPED off-ARC verifier moat: the only clean arm was EBRM-on-MuSR
+        delta_vs_tuned_sc=+0.000 (CI95 [-0.03,0.025], McNemar p=1.0) -- but that "tie" was DEGENERATE (abstained
+        97.5% to a k=1 strawman tuned-SC over the weak registry quality ensemble; not a trained verifier).
+      - The three PHASE D EXECUTION DEFECTS (NOT scientific nulls): D1 LoRA-EBM never trained (skeleton bail,
+        n_pairs=0); D2 uPRM blocked on the logprob candidate cache (fresh-gen disabled by env flag); D4 cross-corpus
+        skeleton bail. D1/D2/D4 were flagged_adversarial and correctly skipped by the capstone.
+      - DiffusionGemma gate STILL-PENDING (did NOT autonomously flip). reproducible_total_levels=69 (ARC LOCKED).
+      - PHASE D remains the MAJORITY lever for .462 (the off-ARC verifier moat; the ARC sprint is retired). Do NOT
+        queue any nulled/concluded lever (energy-as-ARC S0 CONCLUDED 2026-06-26; verifier-as-reward exp4247/4263).
 
     EXISTING CODE TO READ FIRST:
       - {project_root}/ops/arc_solve_registry.yaml (reproducible_total_levels source of truth = 69)
       - {project_root}/research-roadmap.yaml (the ACTIVE milestone after the conductor archives next->active; yaml.safe_load it)
-      - {project_root}/results/experiment_5000_capstone_v460.json (the .460 capstone, if present)
-      - {project_root}/python/carnot/experiment_4990_archive_459_activate_460.py (the .460 transition module -- the pattern to repeat)
+      - {project_root}/results/experiment_5013_capstone_v461.json (the .461 capstone, if present)
+      - {project_root}/python/carnot/experiment_5001_archive_460_activate_461.py (the .461 transition module -- the pattern to repeat)
 
     CONCRETE STEPS:
       0. PRECONDITIONS (BEFORE any other step):
          a. The ACTIVE roadmap parses: `.venv/bin/python -c "import yaml,os; p='{project_root}/research-roadmap.yaml'; q='{project_root}/research-roadmap-next.yaml'; f=p if os.path.exists(p) else q; yaml.safe_load(open(f)); print('ok',f)"` exits 0. (Check research-roadmap.yaml FIRST -- the conductor renames next->active at activation.)
          b. `.venv/bin/python -c "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"` exits 0.
          If neither roadmap file parses -> honest_verdict blocked_<resource>, write the deliverable, EXIT.
-      1. Archive .460 -> activate .461 (no-op if already done). Record the close-state flags below.
+      1. Archive .461 -> activate .462 (no-op if already done). Record the close-state flags below.
       2. Run the pre-test gate (own-test + --no-cov); if a poison test fails against this script's own honest verdict,
          quarantine it to unblock (note which test). WRITE the deliverable.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; clean transition is complete_460_archived_461_activated_phase_d_unlocked."
+        principle: "terminal prefix; clean transition is complete_461_archived_462_activated_phase_d_continues."
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
-      arc_sprint_retired:
-        principle: "true -- the ARC-AGI-3 Submission Sprint Forcing Function retired 2026-06-30; PHASE D is the new majority lever."
-      phase_d_unlocked_majority_lever:
-        principle: "true -- .461 executes the off-ARC distributional-energy verifier moat per the 2026-06-30 operator directive."
-      arc_deliverable_locked:
-        principle: "true -- levels 69 + the publishable FoVer paper; ARC banked-level work continues only opportunistically."
+      phase_d_first_real_test:
+        principle: "true -- .462 is the FIRST milestone that actually measures the moat (.461 was all execution failures)."
+      prior_milestone_moat_verdict:
+        principle: "MIXED-SCOPED carried from exp5013 -- no realized win, no bounded retirement (D1/D2 nulls were not clean)."
+      execution_defects_to_fix:
+        principle: "the three .461 PHASE D execution defects .462 addresses (D1 skeleton-bail, D2 logprob-cache block, D3 degenerate-always-abstain)."
       reproducible_total_levels:
-        principle: "the authoritative ARC progress metric carried from the registry (69; .460 banked nothing new)."
+        principle: "the authoritative ARC progress metric carried from the registry (69; ARC LOCKED + opportunistic)."
 
-    Run: `.venv/bin/python python/carnot/experiment_5001_archive_460_activate_461.py`
+    Run: `.venv/bin/python python/carnot/experiment_5014_archive_461_activate_462.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5002-b1
-  title: 'PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) -- build a REUSABLE oracle-distinct verifier-moat BENCHMARK
-    HARNESS the D arms share: a corpus loader (MuSR + GPQA/MMLU-Pro/MATH-500), candidate-cache reuse, and uniform
-    metrics (oracle@K, TUNED self-consistency, paired-bootstrap + McNemar CI95, headroom_present flag, oracle-
-    distinctness enforcement). This makes D1-D5 honest, comparable, and anti-FALSE_NEGATIVE_RISK by construction.'
+- id: exp5015-b1
+  title: 'PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) -- fix the moat harness baseline INTEGRITY: replace the
+    k=1 strawman "tuned-SC" with a GENUINE K-way majority-vote self-consistency (sweep K over the cached
+    candidates, report the full {K: accuracy} sweep so the tuned choice is auditable), and add an ALWAYS-ABSTAIN
+    DEGENERACY GUARD (flag any abstaining selector that abstains > 50% -> it IS tuned-SC, not a real verifier). Re-
+    emit the corrected MuSR tuned-SC baseline all D arms must beat. This makes every .462 moat delta honest.'
   priority: high
   track: infra
   max_turns: 50
   inference_substrate: verifier_ensemble_against_cached_candidates
-  deliverable: results/experiment_5002_moat_benchmark_harness.json
-  operator_override: '2026-06-30 operator directive (PHASE D execution) + reserved-infra-slot discipline: a NEW shared
-    benchmark harness for the verifier-moat program -- false-positive scope-match vs prior harness/scaffold infra
-    tasks; structurally never a doomed rerun. Enables D1-D5 to be comparable + honest (headroom-control + oracle-
-    distinctness baked in).'
+  deliverable: results/experiment_5015_genuine_sc_baseline_fix.json
+  operator_override: '2026-06-30 operator directive (PHASE D execution) + reserved-infra-slot discipline: a baseline-
+    INTEGRITY fix to the shared moat harness (the .461 D3 "tie" was an artifact of a k=1 strawman SC + an always-
+    abstain selector) -- false-positive scope-match vs prior harness/SC infra tasks; structurally never a doomed
+    rerun. Editing python/carnot/moat_benchmark_harness.py is permitted (NOT research_conductor.py).'
   prompt: |
-    CONTEXT ({date}). PHASE B1 reserved infra slot (enabling). The PHASE D arms (D1 LoRA-EBM, D2 uPRM, D3 EBRM, D4
-    cross-corpus, D5 gate) must all measure the SAME thing the SAME way: oracle-distinct selection accuracy vs TUNED
-    self-consistency on a headroom-present corpus, with a paired CI. Build the shared harness ONCE so each D arm is a
-    thin verifier plugged into it -- and so the anti-traps (headroom-control, oracle-distinctness, FALSE_NEGATIVE_RISK)
-    are enforced mechanically, not per-arm.
+    CONTEXT ({date}). PHASE B1 reserved infra slot (enabling). The .461 moat measurements compared against a
+    "tuned_self_consistency" whose config was {{k:1, temperature:cached}} -- i.e. SINGLE-SAMPLE accuracy (0.585),
+    NOT a K-way majority vote. And the .461 D3 EBRM "clean tie" was DEGENERATE: it abstained 97.5% to that k=1 SC,
+    so its delta=+0.000 measured always-abstain-to-SC, not a verifier. Both defects make every moat delta untrust-
+    worthy. Fix the shared harness ONCE so all D arms measure against an HONEST baseline and a real-verifier guard.
 
-    WHAT TO BUILD (python/carnot/moat_benchmark_harness.py -- a library, not a one-off):
-      1. A CORPUS LOADER returning {{question, narrative/context, choices, gold}} rows for: MuSR/murder_mysteries
-         (TAUR-Lab/mu_sr, already used), GPQA (if cached), MMLU-Pro-hard, and MATH-500-hard. Gold is for EVAL ONLY.
-      2. CANDIDATE-CACHE REUSE: load the cached MuSR candidates from
-         results/distributional_energy_verifier_musr_checkpoints/ (the cheap-proxy run already generated K per
-         question -- reuse them, do NOT regenerate; anti-churn). Provide a generate-with-logprobs path (gemma-4-12B-
-         it-GGUF on GPU-0 CUDA) for corpora/arms that need fresh candidates or per-token logprobs (D2 uPRM).
-      3. METRICS, computed uniformly for ANY verifier scorer f(candidate)->energy:
-         - tuned_self_consistency: majority vote, with the SC temperature/K swept (report the TUNED-SC accuracy as the
-           baseline to beat -- not naive SC).
-         - oracle_at_k: the accuracy achievable if you could always pick a correct candidate when present in the K pool
-           (the selectable-headroom ceiling).
-         - headroom_present: (oracle_at_k - tuned_sc) >= 0.10 AND n_flips_possible > 0 (the FALSE_NEGATIVE_RISK guard:
-           a null is only informative where headroom exists).
-         - verifier selection accuracy + paired bootstrap CI95(verifier - tuned_sc) + McNemar p.
-         - oracle_distinctness assertions: the scorer never reads gold/answer_index/answer_choice/model_id (raise if it does).
-      4. A small SMOKE over a cached MuSR slice (n<=30) proving the harness wires SC + oracle@K + a trivial verifier
-         end-to-end. This is the deliverable's evidence; the full benchmark is the D arms' job.
+    WHAT TO BUILD (extend python/carnot/moat_benchmark_harness.py -- the .461 B1 library, do NOT fork it):
+      1. GENUINE tuned-SC: implement majority-vote self-consistency over the K cached candidates per question
+         (tie-break deterministically). SWEEP K in {{1,3,5,7,...}} up to the available candidates-per-question and
+         report the FULL {{K: accuracy}} curve + the tuned (best-K) accuracy + the chosen K. If only 1 candidate
+         exists per question, record that honestly (k=1 is then forced AND oracle@K is also degenerate -> flag it).
+      2. ALWAYS-ABSTAIN DEGENERACY GUARD: a helper that, given an abstaining selector's abstain_rate, FLAGS
+         (verdict + a degeneracy_flag field) when abstain_rate > 0.50 -- because such a selector is mostly just
+         tuned-SC and its delta is uninformative. The D arms import this guard.
+      3. headroom_present recomputed against the GENUINE tuned-SC: (oracle@K - genuine_tuned_sc) >= 0.10 AND flips>0.
+      4. A SMOKE over the cached MuSR slice (n<=200): report the K-sweep, the genuine tuned-SC accuracy, oracle@K,
+         genuine headroom_present, and demonstrate the degeneracy guard fires on a synthetic always-abstain selector.
+         Re-emit the corrected MuSR tuned-SC baseline (results-side) for the D arms to consume.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/scripts/experiments/exp_distributional_energy_verifier_musr.py (the cheap-proxy MuSR runner -- the loader, _match_choice, SC, candidate cache to reuse)
-      - {project_root}/python/carnot/experiment_4922_distributional_energy_verifier_scaffold.py + experiment_4984_distributional_energy_verifier_turnkey.py (the turnkey scaffold; three-column SC/energy/oracle wiring)
-      - {project_root}/results/distributional_energy_verifier_musr.json (the n=200 null: SC 0.56, energy 0.515-0.535, sc_saturated=False)
-      - {project_root}/scripts/adversarial_verify.py (check_circular_moat_overclaim -- the oracle-distinctness contract to satisfy)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the .461 B1 harness -- the SC/oracle@K/CI functions to FIX)
+      - {project_root}/results/experiment_5002_moat_benchmark_harness.json (the .461 B1 smoke)
+      - {project_root}/results/experiment_5005_ebrm_uncertainty_verifier.json (the .461 D3 degenerate tie: tuned_self_consistency.config k=1, abstain_rate 0.975 -- the bug this fixes)
+      - {project_root}/results/distributional_energy_verifier_musr_checkpoints/ (the cached MuSR candidates -- how many K per question?)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: MuSR cached (`.venv/bin/python -c "from datasets import load_dataset; load_dataset('TAUR-Lab/MuSR')"` or the local cache) AND the cached candidate checkpoints exist. A missing corpus -> honest_verdict blocked_<resource>, write deliverable, EXIT.
-      1. Build python/carnot/moat_benchmark_harness.py with the loader + cache-reuse + metrics above.
-      2. Run the smoke (n<=30 cached MuSR slice): report tuned_sc, oracle_at_k, headroom_present, and a trivial-verifier delta + CI to prove the wiring.
-      3. WRITE results/experiment_5002_moat_benchmark_harness.json + minimal own-test (test the metrics on a tiny synthetic fixture; --no-cov).
+      0. PRECONDITIONS: the cached MuSR candidates exist (`ls {project_root}/results/distributional_energy_verifier_musr_checkpoints/`) AND moat_benchmark_harness.py imports. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. Fix the harness SC to genuine K-way majority vote + report the K-sweep; add the always-abstain degeneracy guard; recompute headroom vs genuine SC.
+      2. Run the smoke (n<=200 cached MuSR): report the K-sweep, genuine tuned-SC, oracle@K, genuine headroom_present, + the degeneracy-guard fire on a synthetic always-abstain selector.
+      3. WRITE results/experiment_5015_genuine_sc_baseline_fix.json + a minimal own-test (the K-way vote + the guard on a tiny fixture; --no-cov).
 
-    FALSIFIABLE GATE: the harness loads >=1 headroom-present corpus, computes tuned_sc + oracle_at_k + a paired CI on
-    the smoke slice, and the oracle-distinctness assertions fire on a gold-peeking scorer. A blocked corpus records
-    blocked_<resource> honestly.
+    FALSIFIABLE GATE: the harness computes a GENUINE K-way tuned-SC with the full {{K: accuracy}} sweep reported,
+    the degeneracy guard fires on a >50%-abstain selector, and headroom_present is recomputed vs the genuine SC.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; success_moat_harness_built_smoke_green."
+        principle: "terminal prefix; success_genuine_sc_baseline_fixed_degeneracy_guard_shipped."
+      genuine_tuned_sc_accuracy:
+        principle: "the K-way majority-vote tuned-SC on MuSR (the HONEST baseline to beat -- replaces the k=1 strawman 0.585 if K>1 helps)."
+      sc_k_sweep:
+        principle: "the full {K: accuracy} curve so the tuned-K choice is auditable (proves k=1 was/was-not genuinely best, not a default)."
+      tuned_k:
+        principle: "the K that maximizes SC accuracy (the tuned choice)."
+      candidates_per_question:
+        principle: "how many cached candidates exist per question (if 1, SC and oracle@K are degenerate -- flagged honestly)."
+      oracle_at_k:
+        principle: "the selectable-headroom ceiling (recomputed)."
+      genuine_headroom_present:
+        principle: "(oracle@K - genuine_tuned_sc) >= 0.10 AND flips>0 -- the FALSE_NEGATIVE_RISK guard against the GENUINE baseline."
+      degeneracy_guard_fires:
+        principle: "true -- the always-abstain guard flags a >50%-abstain selector (so a future D arm cannot degenerate to SC undetected)."
       harness_module_path:
-        principle: "python/carnot/moat_benchmark_harness.py -- the reusable library the D arms import (no duplicated metric code)."
-      corpora_available:
-        principle: "the list of loadable headroom-candidate corpora (MuSR + the 2nd-corpus options) so D4 can pick a confirmed-cached second corpus."
-      tuned_sc_smoke:
-        principle: "the TUNED self-consistency accuracy on the smoke slice -- the baseline to beat is tuned, not naive SC (headroom-control)."
-      oracle_at_k_smoke:
-        principle: "the selectable-headroom ceiling; (oracle@K - tuned_sc) is the headroom a verifier could capture."
-      headroom_present_smoke:
-        principle: "(oracle@K - tuned_sc) >= 0.10 AND flips>0 -- the FALSE_NEGATIVE_RISK guard a null must clear to be informative."
-      oracle_distinctness_enforced:
-        principle: "true -- the harness raises if a scorer reads gold/answer_index/model_id (verifier_is_oracle=False is mechanically enforced)."
+        principle: "python/carnot/moat_benchmark_harness.py -- the shared library the D arms import (fixed in place)."
       inference_substrate:
-        principle: "verifier_ensemble_against_cached_candidates (scores cached candidates; 1s floor) -- no new LLM generation in the smoke."
+        principle: "verifier_ensemble_against_cached_candidates (re-scores cached candidates; 1s floor) -- no new LLM generation."
       random_seed:
-        principle: "determinism for the bootstrap CI + the smoke."
+        principle: "determinism for the bootstrap + smoke."
       preconditions_checked:
-        principle: "records corpus/candidate-cache checks; a missing corpus emits blocked_, never a fabricated metric."
+        principle: "records the candidate-cache + harness-import checks; a missing cache emits blocked_."
 
-    Run: `.venv/bin/python python/carnot/experiment_5002_moat_benchmark_harness.py`
+    Run: `.venv/bin/python python/carnot/experiment_5015_genuine_sc_baseline_fix.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5003-d1
+- id: exp5016-b2
+  title: 'PHASE B2 (INFRA; RESERVED SLOT 2 of 2; ENABLING) -- build the SHARED candidate cache the D arms need:
+    generate K reasoning+answer candidates per MuSR question WITH per-token logprobs (the +/- marker telemetry
+    uPRM needs), checkpoint-per-question to a JSONL (resumable under the codex cap). This UNBLOCKS D2 (the .461
+    blocker = empty logprob cache) and feeds D1/D3/cascade -- generated ONCE = anti-churn.'
+  priority: high
+  track: infra
+  max_turns: 50
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_5016_shared_logprob_candidate_cache.json
+  operator_override: '2026-06-30 operator directive (PHASE D execution) + reserved-infra-slot discipline: a NEW
+    shared logprob-enriched candidate cache that unblocks the .461 D2 blocker + feeds D1/D3/cascade -- false-
+    positive scope-match vs prior candidate-generation/cache infra tasks; structurally never a doomed rerun.'
+  prompt: |
+    CONTEXT ({date}). PHASE B2 reserved infra slot (enabling). The .461 D2 uPRM BLOCKED because the per-token-
+    logprob candidate cache was empty (`blocked_uprm_logprob_candidate_cache`; 0 cached rows, fresh generation
+    disabled by an empty env flag). The uPRM scorer + first-error formula are fully implemented -- they just need
+    the candidates. Build the shared cache ONCE (anti-churn): K candidates per MuSR question WITH the per-token
+    logprob telemetry, so D2 scores (unblocked) and D1/D3/cascade reuse the same candidates.
+
+    WHAT TO BUILD (a generator script, e.g. scripts/build_moat_candidate_cache.py + the JSONL it writes):
+      1. For each MuSR/murder_mysteries question (n>=200), generate K (>=5) reasoning+answer candidates on the
+         GPU-0 CUDA llama-server (gemma-4-12B-it-GGUF; the .461 D2 confirmed it returns completion_probabilities
+         with top_logprobs at http://127.0.0.1:8919/completion). CAPTURE per-token logprobs + the top-logprobs for
+         the +/- marker tokens uPRM scores. CHECKPOINT-PER-QUESTION (append to the JSONL atomically) so a capped
+         run RESUMES by skipping done questions -- this is the cap-survival mechanism (NOT a skeleton-first bail).
+      2. Optionally extend to a 2nd corpus (GPQA / MMLU-Pro-hard) if MuSR finishes with budget left (best-effort;
+         MuSR is the priority). Record which corpora were cached.
+      3. A small own-test over a tiny synthetic fixture (the JSONL schema round-trips; --no-cov).
+
+    THE GPU FIX (2026-06-27): generate on the conductor's GPU-0 CUDA llama-server; do NOT iGPU-pin or hard-reject
+    CUDA_VISIBLE_DEVICES (the iGPU constraint is for the LIVE ARC submission stack only, not offline generation).
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_5004_uprm_replication.json (the .461 D2 block: the uPRM formula in uprm_score_methodology_note + the exact llama-server logprob path/precondition)
+      - {project_root}/scripts/experiments/exp_distributional_energy_verifier_musr.py (the MuSR loader + candidate-gen pattern)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the generate-with-logprobs path to reuse; the B1-fixed harness)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (BEFORE any generation): gemma-4-12B-it-GGUF cached (`ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/`; verify the exact repo id) AND the GPU-0 llama-server returns top_logprobs AND the MuSR corpus is cached. A missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT (no fabrication).
+      1. Generate K>=5 candidates-with-logprobs per MuSR question (n>=200), checkpoint-per-question to the JSONL (resumable). Record n_questions, K, n_cached_rows.
+      2. (Best-effort) extend to a confirmed-cached 2nd corpus if budget remains. WRITE the deliverable + own-test.
+
+    FALSIFIABLE GATE: a JSONL cache with >=200 MuSR questions x K>=5 candidates carrying per-token logprobs + the
+    +/- marker top-logprobs, resumable, with candidate_cache_built=true. A blocked precondition records blocked_<resource> honestly.
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; success_logprob_candidate_cache_built_musr_n<N>_k<K>."
+      candidate_cache_built:
+        principle: "true iff >=200 MuSR questions x K>=5 candidates-with-logprobs were cached (the field D1/D2/D3 gate/precondition on)."
+      cache_jsonl_path:
+        principle: "the resumable JSONL path (results/...candidates...jsonl) D2 consumes for uPRM scoring + D1/D3/cascade reuse."
+      n_questions:
+        principle: ">=200 (sample-size rigor)."
+      candidates_per_question:
+        principle: "K>=5 -- enough for a genuine K-way SC vote AND a non-degenerate oracle@K."
+      has_per_token_logprobs:
+        principle: "true -- the +/- marker telemetry uPRM's first-error score needs (the .461 D2 blocker)."
+      corpora_cached:
+        principle: "MuSR (required) + any best-effort 2nd corpus (GPQA/MMLU-Pro-hard) for D4."
+      model_specs:
+        principle: "gemma-4-12B-it-GGUF on the GPU-0 CUDA llama-server -- the generation methodology stamp."
+      inference_substrate:
+        principle: "live_llm_inference (live generation with logprobs; >=60s floor)."
+      random_seed:
+        principle: "determinism for sampling (vary by question index)."
+      reproducibility_checksum:
+        principle: "content hash of (generator, corpus, K, seed) so a replication catches drift."
+      preconditions_checked:
+        principle: "records GGUF-cached/logprob-server/corpus checks; a missing resource emits blocked_, never a fabricated cache."
+
+    Run: `.venv/bin/python python/carnot/experiment_5016_shared_logprob_candidate_cache.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.462
+  agent_type: codex
+  model: gpt-5.5
+- id: exp5017-d1
   title: 'PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAIN the REAL arXiv:2605.18871 LoRA-EBM holistic-quality
-    scorer (NOT the cheap prompted proxy) and test beats-TUNED-SC on MuSR. The decisive open question: does a TRAINED
-    oracle-distinct verifier capture the headroom the cheap prompted proxy missed (SC 0.56, energy 0.515-0.535,
-    sc_saturated=False)? Reuse the cached MuSR candidates (anti-churn) + FoVer contrastive pairs; QLoRA on GPU-0 CUDA.'
+    scorer FOR REAL this time (the .461 D1 bootstrap-and-bailed = skeleton, never trained). Qwen3.5-1.7B base +
+    LoRA + scalar energy head, contrastive on FoVer + gold-labeled candidate pairs; EVAL min-energy select vs the
+    GENUINE tuned-SC (B1). The decisive open question: does a TRAINED oracle-distinct verifier capture the MuSR
+    headroom? TRAIN-FIRST-NOT-SKELETON-FIRST; the gate REQUIRES train_loss non-null + duration>60s.'
   priority: critical
   track: verifier-moat
   max_turns: 50
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_5003_lora_ebm_scorer_musr.json
+  deliverable: results/experiment_5017_lora_ebm_scorer_musr_v2.json
   operator_override: '2026-06-30 operator directive (known-issues.md MANDATORY-NEXT-MILESTONE: "Train the REAL
-    arXiv:2605.18871 LoRA-EBM holistic-quality scorer"): PHASE D1 trains the verifier/SCORER itself and uses it as an
-    oracle-distinct SELECTOR -- DISTINCT from the retired live-LoRA verifier-as-REWARD path (exp4247) + verifier-as-
-    reward in-loop training (exp4263), which used the verifier as an RFT reward to train a POLICY. False-positive
-    substring scope-match vs those reward-path retirements; explicitly authorized forward work.'
+    arXiv:2605.18871 LoRA-EBM holistic-quality scorer"): D1 trains the verifier/SCORER and uses it as an oracle-
+    distinct SELECTOR -- DISTINCT from the retired verifier-as-REWARD path (exp4247/exp4263, which used the verifier
+    as an RFT reward to train a POLICY). False-positive substring scope-match vs those reward-path retirements;
+    explicitly authorized forward work.'
   prior_failures:
-  - experiment_id: distributional_energy_verifier_musr
-    verdict: complete_musr_energy_verifier_no_win_sc_not_saturated_headroom_unrealized
-    addressed_by: "The prior null used a CHEAP PROMPTED energy proxy (a THINKPRM-style quality-ensemble prompt, no
-      training). D1 TRAINS the real arXiv:2605.18871 LoRA-EBM holistic-quality scorer (contrastive energy on FoVer +
-      gold-labeled MuSR candidate pairs) -- the directly-stated open question (does a TRAINED verifier capture the
-      UNREALIZED headroom the prompted proxy missed). Different technique; same headroom-present oracle-distinct corpus."
+  - experiment_id: exp5003-d1
+    verdict: running_lora_ebm_scorer_musr_pretrain_skeleton
+    addressed_by: "The .461 D1 bootstrap-and-bailed: it wrote a skeleton artifact at 0.99s and NEVER loaded/trained
+      the model (n_pairs=0, train_loss=null), despite ALL preconditions passing. .462 D1 changes four things: (a) a
+      SMALLER Qwen3.5-1.7B base (loads+QLoRA-trains in one codex session, vs the .461 4B); (b) reuses the B2 shared
+      candidate cache (no generation burden); (c) is structured TRAIN-FIRST-NOT-SKELETON-FIRST -- load model + train
+      + checkpoint-per-epoch, THEN write the artifact (the skeleton-first step IS what caused the bail); (d) the
+      falsifiable gate REQUIRES train_loss non-null + n_pairs>0 + duration_s>60, so a skeleton-only artifact is a
+      FAILED run, not a pass. Different base, structure, infra, and gate."
     retire_if_same_verdict: true
   prompt: |
-    CONTEXT ({date}). PHASE D1 is the primary moat headline. The cheap PROMPTED energy proxy did NOT beat self-
-    consistency on MuSR (results/distributional_energy_verifier_musr.json: SC 0.56 best; prompted energy 0.515-0.535;
-    energy_beats_sc=False) BUT sc_saturated=False -> the headroom is present and UNREALIZED. The operator directive
-    (2026-06-30) is to TRAIN the REAL arXiv:2605.18871 LoRA-EBM holistic-quality scorer and test whether a TRAINED
-    verifier captures it. This is an ORACLE-DISTINCT verifier (it scores reasoning quality, NEVER sees gold at
-    inference) -- the non-circular moat test the ARC generation wall cannot host.
+    CONTEXT ({date}). PHASE D1 is the primary moat headline and the FIRST real attempt to TRAIN the verifier. The
+    .461 D1 NEVER TRAINED (skeleton bail at 0.99s); the cheap PROMPTED proxy already nulled on MuSR (SC best, energy
+    0.515-0.535) but sc_saturated=False -> the headroom is UNREALIZED. The operator directive (2026-06-30) is to
+    TRAIN the REAL arXiv:2605.18871 LoRA-EBM holistic-quality scorer and test whether a TRAINED oracle-distinct
+    verifier captures it. THIS TASK IS NOT COMPLETE UNTIL THE MODEL HAS ACTUALLY TRAINED -- writing a skeleton and
+    exiting is a FAILED run (the gate enforces train_loss non-null + duration>60s).
 
-    THE CONSTRUCTION (arXiv:2605.18871, made real):
-      - A trainable HF base (Qwen/Qwen3.5-4B base, or Qwen/Qwen3.5-1.7B base for wall-clock -- point at the BASE repo,
-        NOT a -GGUF repo per the GGUF-tokenizer rule) + a LoRA adapter + a scalar ENERGY head.
-      - Train CONTRASTIVELY: energy(good reasoning) < energy(bad reasoning). Pairs come from (a) the cached FoVer
-        step-labeled corpus (data/fover_train*.json -- correct vs erroneous reasoning) and (b) the cached MuSR
-        candidates labeled by gold FOR TRAINING ONLY (correct-answer candidate = positive, wrong = negative). Gold is
-        used to BUILD training pairs (standard RM/EBM training); the verifier is oracle-distinct at INFERENCE.
-      - At EVAL: re-score the cached MuSR candidates with the trained scorer; select the min-energy candidate's answer;
-        accuracy vs gold; paired bootstrap + McNemar vs TUNED-SC. Reuse the exp5002 harness for SC/oracle@K/CI.
-      - ANTI-CHURN: reuse the cached MuSR candidates (results/distributional_energy_verifier_musr_checkpoints/) -- do
-        NOT regenerate. DELIVERABLE-FIRST + checkpoint the trained adapter so a capped run resumes the eval.
+    THE CONSTRUCTION (arXiv:2605.18871, made real, SMALL base):
+      - A trainable HF BASE repo Qwen/Qwen3.5-1.7B (NOT a -GGUF repo per the GGUF-tokenizer rule) + a LoRA adapter
+        + a scalar ENERGY head. (1.7B QLoRA on a few thousand pairs trains in ~10-20 min on GPU-0 CUDA.)
+      - Train CONTRASTIVELY: energy(good reasoning) < energy(bad reasoning). Pairs from (a) the cached FoVer step-
+        labeled corpus (data/fover_train*.json -- correct vs erroneous reasoning) and (b) the B2 cached MuSR
+        candidates labeled by gold FOR TRAINING ONLY (correct-answer candidate = positive, wrong = negative). Gold
+        BUILDS training pairs (standard RM/EBM training); the verifier is oracle-distinct at INFERENCE.
+      - At EVAL: re-score the cached MuSR candidates with the trained scorer; select the min-energy candidate's
+        answer; accuracy vs gold; paired bootstrap + McNemar vs the GENUINE tuned-SC (B1, NOT k=1). Reuse the
+        B1-fixed exp5015 harness for SC/oracle@K/CI/headroom.
+      - CHECKPOINT-PER-EPOCH (the cap-survival mechanism) so a capped eval resumes from the trained adapter.
 
-    THE GPU FIX (2026-06-27): train/eval on the conductor's GPU-0 CUDA device (CUDA_VISIBLE_DEVICES=0); do NOT
-    iGPU-pin or hard-reject CUDA_VISIBLE_DEVICES. A 1.7B/4B QLoRA scorer on a few thousand pairs trains in < 30 min.
+    THE GPU FIX (2026-06-27): train/eval on the conductor GPU-0 CUDA device (CUDA_VISIBLE_DEVICES=0); do NOT
+    iGPU-pin or hard-reject CUDA_VISIBLE_DEVICES.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/python/carnot/moat_benchmark_harness.py (the exp5002 shared harness -- import it; do not re-implement SC/oracle@K/CI)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the B1-FIXED shared harness -- import it; use the GENUINE tuned-SC, not k=1)
+      - {project_root}/results/experiment_5015_genuine_sc_baseline_fix.json (the genuine tuned-SC baseline to beat)
+      - {project_root}/results/experiment_5016_shared_logprob_candidate_cache.json (the B2 cache; fall back to results/distributional_energy_verifier_musr_checkpoints/ if B2 blocked)
       - {project_root}/scripts/train_per_token_ebm_combined.py + scripts/train_ebm_multi_model.py (existing EBM-training patterns to reuse)
       - {project_root}/python/carnot/verify/trained_ebm_judge_ood_real_substrate_v3.py (a trained EBM judge -- the head + scoring pattern)
       - {project_root}/data/fover_train.json + data/fover_train_v4.json (step-labeled contrastive pairs)
-      - {project_root}/results/distributional_energy_verifier_musr.json + its candidate checkpoints (the cached candidates + the null to beat)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS (BEFORE any training): the trainable base is cached (`ls ~/.cache/huggingface/hub/models--Qwen--Qwen3.5-4B/` or 1.7B; download in this step if absent + reachable) AND CUDA is available (`.venv/bin/python -c "import torch; assert torch.cuda.is_available()"`) AND the cached MuSR candidates + FoVer pairs exist. A missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT (no fabrication).
-      1. DELIVERABLE-FIRST: write a skeleton results/experiment_5003_lora_ebm_scorer_musr.json early so a capped run leaves a rescuable artifact.
-      2. Build the contrastive corpus (FoVer + gold-labeled cached MuSR candidates). Train the LoRA-EBM energy head (QLoRA, GPU-0, 1-2 epochs, checkpoint the adapter). Record train loss + n_pairs.
-      3. EVAL oracle-distinct: re-score the cached MuSR candidates (n>=200) with the trained scorer; select min-energy; accuracy + paired CI + McNemar vs TUNED-SC via the exp5002 harness. Confirm the scorer never reads gold at inference (oracle_distinctness_enforced).
-      4. Run adversarial_verify / summarize_artifact on the fresh artifact; confirm verifier_is_oracle=False passes check_circular_moat_overclaim and the artifact is not DURATION_TOO_SHORT-flagged.
+      0. PRECONDITIONS (BEFORE any training): the trainable base is cached (`ls ~/.cache/huggingface/hub/models--Qwen--Qwen3.5-1.7B/`; download in this step if absent + reachable) AND CUDA is available (`.venv/bin/python -c "import torch; assert torch.cuda.is_available()"`) AND the candidate cache (B2 or the .461 fallback) + FoVer pairs exist. A missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT (no fabrication).
+      1. Build the contrastive corpus (FoVer + gold-labeled cached MuSR candidate pairs). Record n_pairs (must be >0).
+      2. TRAIN the LoRA-EBM energy head (QLoRA, GPU-0, 1-2 epochs, CHECKPOINT-PER-EPOCH). Record train_loss (must be non-null). DO NOT write a skeleton-and-exit -- training MUST run (>60s).
+      3. EVAL oracle-distinct: re-score the cached MuSR candidates (n>=200) with the trained scorer; select min-energy; accuracy + paired CI + McNemar vs the GENUINE tuned-SC via the B1 harness. Confirm the scorer never reads gold at inference (oracle_distinctness_enforced) + the always-abstain degeneracy guard does not fire.
+      4. Run adversarial_verify / summarize_artifact on the fresh artifact; confirm verifier_is_oracle=False passes check_circular_moat_overclaim + the artifact is NOT DURATION_TOO_SHORT-flagged (train>60s).
 
-    FALSIFIABLE GATE (the moat win-condition for this arm): trained-scorer accuracy > tuned_sc with paired CI95
-    excluding 0 (McNemar p<0.05) AND verifier_is_oracle=False AND headroom_present=True. A null (CI includes 0)
-    tightens the moat scope honestly. retire_if_same_verdict: true -- if D1 AND D2 (uPRM) both null on every headroom-
-    present oracle-distinct corpus, the off-ARC moat retires (D5 records it).
+    FALSIFIABLE GATE (the moat win-condition for this arm): scorer_trained=true (train_loss non-null, n_pairs>0,
+    duration>60s) AND trained-scorer accuracy > GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05) AND
+    verifier_is_oracle=False AND headroom_present=True. A clean null (CI includes 0) tightens the moat honestly.
+    A SKELETON (scorer_trained=false) is a FAILED execution, NOT a null -> retire_if_same_verdict: true fires ONLY
+    on a clean trained null matched with D2, not on a skeleton.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0."
+        principle: "terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a clean null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0, a failed train is blocked_lora_ebm_train_did_not_run."
+      scorer_trained:
+        principle: "true iff the model ACTUALLY trained (train_loss non-null, n_pairs>0, duration>60s) -- the anti-skeleton gate AND the field D3 gates on; false = a FAILED execution, not a null."
+      train_loss:
+        principle: "the final contrastive training loss (non-null REQUIRED -- a null means the .461 skeleton bail recurred)."
+      n_pairs:
+        principle: "the contrastive-pair count (>0 REQUIRED -- 0 was the .461 skeleton signature)."
       verifier_is_oracle:
-        principle: "false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference; this is the non-circular moat test (must pass check_circular_moat_overclaim)."
+        principle: "false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference (must pass check_circular_moat_overclaim)."
       headroom_present:
-        principle: "true required for an informative result -- (oracle@K - tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard); a null on a no-headroom corpus is uninformative, not a moat bound."
+        principle: "true required for an informative result -- (oracle@K - GENUINE tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard, vs the B1 genuine baseline)."
       trained_scorer_accuracy:
         principle: "the oracle-distinct selection accuracy of the TRAINED LoRA-EBM (the headline number)."
-      tuned_sc_accuracy:
-        principle: "the TUNED self-consistency baseline (temperature/K swept) -- the honest baseline to beat, not naive SC."
+      genuine_tuned_sc_accuracy:
+        principle: "the GENUINE K-way tuned-SC baseline from B1 (NOT the k=1 strawman) -- the honest baseline to beat."
       delta_vs_tuned_sc:
-        principle: "trained_scorer_accuracy - tuned_sc_accuracy; the moat lift (signed)."
+        principle: "trained_scorer_accuracy - genuine_tuned_sc_accuracy; the moat lift (signed)."
       paired_ci95:
         principle: "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
       mcnemar_p:
-        principle: "McNemar paired-test p; a win requires p<0.05 (the discordant-pairs significance, robust to the shared corpus)."
+        principle: "McNemar paired-test p; a win requires p<0.05."
       n_questions:
-        principle: ">=200 for the headline delta (sample-size rigor; the cheap-proxy null was decisive at n=200)."
+        principle: ">=200 for the headline delta (sample-size rigor)."
       oracle_at_k:
-        principle: "the selectable-headroom ceiling -- bounds what any selector could achieve."
+        principle: "the selectable-headroom ceiling."
       model_specs:
-        principle: "the trainable base (Qwen3.5-4B/1.7B base + LoRA + energy head) AND the cached-candidate generator (Qwen3.5-9B-MTP) -- the methodology stamp."
+        principle: "the trainable base (Qwen3.5-1.7B base + LoRA + energy head) AND the cached-candidate generator -- the methodology stamp."
       inference_substrate:
         principle: "live_llm_inference (GPU training + scoring; >=60s floor)."
       random_seed:
@@ -319,254 +405,384 @@ tasks:
       reproducibility_checksum:
         principle: "content hash of (base, LoRA config, corpus, seed) so a replication catches drift."
       preconditions_checked:
-        principle: "records base-cached/CUDA/candidate-cache checks; a missing resource emits blocked_, never a fabricated AUROC."
+        principle: "records base-cached/CUDA/candidate-cache/FoVer checks; a missing resource emits blocked_, never a fabricated AUROC."
 
-    Run: `.venv/bin/python python/carnot/experiment_5003_lora_ebm_scorer_musr.py`
+    Run: `.venv/bin/python python/carnot/experiment_5017_lora_ebm_scorer_musr_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5004-d2
-  title: 'PHASE D2 (VERIFIER MOAT; the published WIN-CONDITION existence proof) -- REPLICATE uPRM (arXiv:2605.10158,
-    Unsupervised Process Reward Models): an UNSUPERVISED process verifier (next-token-prob first-error scoring, NO gold
-    labels) that BEATS majority-voting/self-consistency by up to 6.9%. Use it as an oracle-distinct test-time-scaling
-    SELECTOR over K candidates on a headroom-present corpus; gate beats-TUNED-SC with McNemar CI95-excl-0.'
+- id: exp5018-d2
+  title: 'PHASE D2 (VERIFIER MOAT; the published WIN-CONDITION existence proof) -- REPLICATE uPRM (arXiv:2605.10158)
+    UNBLOCKED: the .461 D2 blocked only on the empty logprob cache (the scorer + first-error formula are fully
+    implemented). Consume the B2 shared logprob cache, run the uPRM next-token-prob first-error process score as an
+    oracle-distinct SELECTOR over K candidates, gate beats-GENUINE-tuned-SC with McNemar CI95-excl-0 on MuSR. LC-ERD
+    (arXiv:2605.24005) consistency-based fallback if logprobs are incomplete.'
   priority: critical
   track: verifier-moat
   max_turns: 50
-  inference_substrate: live_llm_inference
-  deliverable: results/experiment_5004_uprm_replication.json
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_5018_uprm_replication_v2.json
   operator_override: '2026-06-30 operator directive (known-issues.md: "Replicate uPRM (arXiv:2605.10158) -- the
-    published unsupervised process reward model that beats self-consistency by up to 6.9%"): replicating a PUBLISHED
-    POSITIVE precedent as an oracle-distinct selector. DISTINCT from the retired verifier-as-REWARD path (exp4247/
-    exp4263 used the verifier as an RFT policy reward); uPRM here is a SELECTOR scored from the generator''s own
-    next-token logprobs (unsupervised), never an RFT reward. False-positive substring scope-match vs those reward-path
-    retirements; explicitly authorized.'
+    published unsupervised process reward model that beats self-consistency by up to 6.9%"): an oracle-distinct
+    SELECTOR scored from the generator''s own next-token logprobs (unsupervised). DISTINCT from the retired
+    verifier-as-REWARD path (exp4247/exp4263); uPRM is a SELECTOR, never an RFT reward. False-positive substring
+    scope-match vs those reward-path retirements; explicitly authorized.'
+  prior_failures:
+  - experiment_id: exp5004-d2
+    verdict: blocked_uprm_logprob_candidate_cache
+    addressed_by: "The .461 D2 blocked ONLY because the per-token-logprob candidate cache was empty and
+      CARNOT_UPRM_ENABLE_FRESH_GENERATION='' (generation disabled). The uPRM scorer + first-error formula are
+      already fully implemented (the .461 artifact's uprm_score_methodology_note has the exact arXiv:2605.10158
+      formula). .462 D2 consumes the B2 shared logprob-enriched candidate cache (generated FIRST in exp5016), with
+      a generate-if-missing precondition (flag enabled) AND the LC-ERD (arXiv:2605.24005) consistency-based process-
+      utility FALLBACK if logprobs are incomplete. The block cause is removed; the scorer is unchanged."
+    retire_if_same_verdict: true
   prompt: |
-    CONTEXT ({date}). PHASE D2 replicates the STRONGEST positive precedent for the moat: uPRM (arXiv:2605.10158,
-    "Unsupervised Process Reward Models"). uPRM derives a scoring function FROM THE GENERATOR'S OWN NEXT-TOKEN
-    PROBABILITIES that estimates the position of the first erroneous step across a batch of reasoning trajectories --
-    NO human annotations, NO gold answers. As a test-time-scaling verifier it BEATS majority voting by up to 6.9%
-    (and +15% absolute over LLM-as-judge on first-error identification on ProcessBench). This is the win-condition
-    EXISTENCE PROOF: it tells us a fully-unsupervised, oracle-distinct verifier CAN beat SC. Replicating it both
-    de-risks the LoRA-EBM bet and is itself a moat win if it holds on our corpora.
+    CONTEXT ({date}). PHASE D2 replicates the STRONGEST positive precedent for the moat: uPRM (arXiv:2605.10158).
+    uPRM derives a process score FROM THE GENERATOR'S OWN NEXT-TOKEN PROBABILITIES (the first-error position across
+    a batch of trajectories) -- NO annotations, NO gold. As a test-time-scaling verifier it BEATS majority voting by
+    up to 6.9% (and +15% absolute over LLM-as-judge on first-error on ProcessBench). It is the win-condition
+    EXISTENCE PROOF. The .461 D2 blocked ONLY on the empty logprob cache; B2 (exp5016) now provides it.
 
-    THE CONSTRUCTION (uPRM as an oracle-distinct SELECTOR):
-      - Generate K reasoning+answer candidates per question WITH per-token logprobs (gemma-4-12B-it-GGUF on GPU-0
-        CUDA; the llama-server returns logprobs). Reuse the exp5002 harness generate-with-logprobs path.
-      - uPRM score: from the next-token probabilities, compute the per-step "first-error" signal of the paper (the
-        position/likelihood of the first erroneous step); aggregate to a candidate-level process score. NO gold is
-        read at scoring time (unsupervised + oracle-distinct).
-      - SELECT the best-process-score candidate's answer; accuracy vs gold (EVAL only); paired CI + McNemar vs TUNED-SC.
-      - Target a HEADROOM-PRESENT corpus: MuSR (sc_saturated=False) and/or a harder-math/GPQA slice where SC is not
-        saturated. Report oracle@K + headroom_present (do NOT claim a null on a no-headroom corpus -- FALSE_NEGATIVE_RISK).
-
-    THE GPU FIX (2026-06-27): generate on the conductor's GPU-0 CUDA llama-server; do NOT iGPU-pin.
+    THE CONSTRUCTION (uPRM as an oracle-distinct SELECTOR -- reuse the .461 impl):
+      - Load the B2 shared logprob cache (results/experiment_5016_..._cache JSONL): K candidates-with-logprobs per
+        MuSR question. The .461 artifact's uprm_score_methodology_note has the exact formula:
+        S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t over the +/- marker next-token probs; selector = mean no-error
+        log-likelihood. NO gold at scoring time (unsupervised + oracle-distinct).
+      - SELECT the best-process-score candidate's answer; accuracy vs gold (EVAL only); paired CI + McNemar vs the
+        GENUINE tuned-SC (B1). Report oracle@K + genuine headroom_present (do NOT claim a null on a no-headroom corpus).
+      - LC-ERD FALLBACK (arXiv:2605.24005): if the cache's logprobs are incomplete, derive process utility from
+        consistency-regulated latent logic across the candidate batch instead -- BUT keep the no-model-id audit
+        (endogenous consensus must not become a model-identity shortcut). Record which path was used.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/python/carnot/moat_benchmark_harness.py (the exp5002 harness -- generate-with-logprobs + SC/oracle@K/CI)
-      - {project_root}/scripts/experiments/exp_distributional_energy_verifier_musr.py (the MuSR loader + candidate gen pattern)
-      - {project_root}/python/carnot/verify/ (existing process-verifier / step-scoring modules: dyve/genprm/contextprm-style references already ingested)
-      - {project_root}/research-references.md (the uPRM 2605.10158 entry + the ingested PRM backlog)
+      - {project_root}/results/experiment_5004_uprm_replication.json (the .461 D2 -- the uprm_score_methodology_note has the exact formula; the precondition is now satisfied by B2)
+      - {project_root}/results/experiment_5016_shared_logprob_candidate_cache.json (the B2 cache to consume)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the B1-fixed harness -- genuine SC/oracle@K/CI)
+      - {project_root}/python/carnot/verify/ (existing process-verifier/step-scoring references)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: gemma-4-12B-it-GGUF cached (`ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/`; verify the exact repo id) AND the GPU-0 llama-server returns logprobs AND the target corpus is cached. A missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT.
-      1. DELIVERABLE-FIRST: write a skeleton artifact early.
-      2. Generate (or reuse cached) K candidates WITH per-token logprobs on a headroom-present corpus (n>=200).
-      3. Implement the uPRM next-token-prob first-error process score (cite the paper's exact formulation in a methodology_note); SELECT best; accuracy + paired CI + McNemar vs TUNED-SC via the harness.
-      4. adversarial_verify / summarize_artifact; confirm verifier_is_oracle=False (unsupervised, no gold at scoring) + headroom_present.
+      0. PRECONDITIONS: the B2 logprob cache exists (`ls {project_root}/results/...candidates...jsonl` with >=200 questions x K>=5 + per-token logprobs) OR the LC-ERD fallback inputs exist. A missing cache AND no fallback -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. DELIVERABLE-FIRST minimal skeleton (schema only), THEN compute the uPRM scores from the cache.
+      2. Implement/reuse the uPRM next-token-prob first-error score (cite the exact formula); SELECT best; accuracy + paired CI + McNemar vs the GENUINE tuned-SC via the harness. (Or the LC-ERD fallback if logprobs incomplete.)
+      3. adversarial_verify / summarize_artifact; confirm verifier_is_oracle=False (unsupervised, no gold) + genuine headroom_present + the degeneracy guard does not fire.
 
-    FALSIFIABLE GATE: uPRM-selection accuracy > tuned_sc with paired CI95-excl-0 (McNemar p<0.05), verifier_is_oracle
-    =False, headroom_present=True. A null here (the published positive NOT replicating on our corpora) is itself a
-    decisive finding -- record it honestly with the corpus + n. retire_if_same_verdict: true (paired with D1 in D5).
+    FALSIFIABLE GATE: uPRM-selection accuracy > GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05),
+    verifier_is_oracle=False, headroom_present=True. A clean null (the published positive NOT replicating on our
+    corpora at the genuine baseline) is itself decisive -- record it honestly. retire_if_same_verdict: true (paired
+    with D1 in D5: a bounded retirement requires BOTH D1 and D2 to clean-null).
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; a win is success_uprm_beats_sc_<corpus>_<delta>, a null is complete_uprm_no_win_<corpus>_ci_incl_0."
+        principle: "terminal prefix; a win is success_uprm_beats_sc_musr_<delta>, a clean null is complete_uprm_no_win_musr_<delta>_ci_incl_0."
       verifier_is_oracle:
         principle: "false -- uPRM is UNSUPERVISED (scored from the generator's own logprobs); it never reads gold (must pass check_circular_moat_overclaim)."
       headroom_present:
-        principle: "true required for an informative result ((oracle@K - tuned_sc) >= 0.10, flips>0); FALSE_NEGATIVE_RISK guard."
+        principle: "true required for an informative result vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard)."
       uprm_selection_accuracy:
         principle: "the oracle-distinct selection accuracy of the uPRM process score (the headline)."
-      tuned_sc_accuracy:
-        principle: "the TUNED-SC baseline (headroom-control)."
+      genuine_tuned_sc_accuracy:
+        principle: "the B1 GENUINE K-way tuned-SC (NOT k=1) -- the honest baseline to beat."
       delta_vs_tuned_sc:
-        principle: "uprm_selection_accuracy - tuned_sc_accuracy; the paper reports up to +0.069."
+        principle: "uprm_selection_accuracy - genuine_tuned_sc_accuracy; the paper reports up to +0.069."
       paired_ci95:
         principle: "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
       mcnemar_p:
         principle: "McNemar paired p; a win requires p<0.05."
+      scoring_path:
+        principle: "uprm_logprob (primary) or lc_erd_consistency (fallback) -- which path scored; the LC-ERD path keeps the no-model-id audit."
       uprm_score_methodology_note:
-        principle: "the exact paper formulation of the next-token-prob first-error score (so a third party can replicate); the unsupervised-not-circular justification."
-      corpus:
-        principle: "the headroom-present oracle-distinct corpus (MuSR / harder-math / GPQA slice)."
+        principle: "the exact arXiv:2605.10158 first-error formula (so a third party can replicate) + the unsupervised-not-circular justification."
       n_questions:
         principle: ">=200 for the headline delta (sample-size rigor)."
       model_specs:
-        principle: "gemma-4-12B-it-GGUF (the SOTA generator providing logprobs) -- the methodology stamp."
+        principle: "the cached-candidate generator (gemma-4-12B-it-GGUF) -- the methodology stamp."
       inference_substrate:
-        principle: "live_llm_inference (live generation with logprobs; >=60s floor)."
+        principle: "verifier_ensemble_against_cached_candidates (scores the B2 cached candidates; 1s floor) -- declare live_llm_inference ONLY if it regenerates fresh."
       random_seed:
-        principle: "determinism for generation + bootstrap."
+        principle: "determinism for the bootstrap."
       preconditions_checked:
-        principle: "records GGUF-cached/logprob/corpus checks; a missing resource emits blocked_."
+        principle: "records the B2-cache / LC-ERD-fallback checks; a missing cache+fallback emits blocked_."
 
-    Run: `.venv/bin/python python/carnot/experiment_5004_uprm_replication.py`
+    Run: `.venv/bin/python python/carnot/experiment_5018_uprm_replication_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5005-d3
-  title: 'PHASE D3 (VERIFIER MOAT; the uncertainty-aware construction) -- build EBRM (arXiv:2504.13134, Energy-Based
-    Reward Models, COLM 2025): an energy RM that models the reward DISTRIBUTION with uncertainty (conflict-aware
-    filtering + label-noise-aware contrastive training). Apply it as a post-hoc refinement of a base scorer + an
-    oracle-distinct abstention-on-uncertainty SELECTOR; gate beats-TUNED-SC on a headroom-present corpus.'
+- id: exp5019-d3
+  title: 'PHASE D3 (VERIFIER MOAT; the uncertainty-aware construction, NON-DEGENERATE) -- rebuild EBRM
+    (arXiv:2504.13134) properly: refine the REAL D1 trained LoRA-EBM scorer (gated_on D1 scorer_trained, NOT the
+    weak registry fallback that made the .461 D3 degenerate), add the E1-ingested uncertainty heads (UARM
+    2606.19818 + distributional-pessimistic 2606.09073 + RewardUQ 2602.24040 calibration), and CAP the abstention
+    so the selector cannot collapse to always-SC (the B1 degeneracy guard). Gate beats-GENUINE-tuned-SC on MuSR.'
   priority: high
   track: verifier-moat
   max_turns: 50
-  inference_substrate: live_llm_inference
-  deliverable: results/experiment_5005_ebrm_uncertainty_verifier.json
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_5019_ebrm_uncertainty_verifier_v2.json
+  gated_on:
+  - upstream: exp5017-d1
+    artifact_field: scorer_trained
+    op: '=='
+    value: true
   operator_override: '2026-06-30 operator directive (known-issues.md: "EBRM (arXiv:2504.13134) -- energy RM modeling
-    the reward distribution with uncertainty; an alternative construction"): an oracle-distinct SELECTOR that models
-    the reward distribution + abstains under uncertainty. DISTINCT from the retired live-LoRA verifier-as-REWARD path
-    (exp4247/exp4263) and from the retired content-energy EBM ranking TRM ARC candidates (exclusion_manifest:487, which
-    was ON ARC) -- EBRM here is OFF-ARC reasoning-candidate selection. False-positive substring scope-match; explicitly
-    authorized forward work.'
+    the reward distribution with uncertainty") + the .461 E1 SOTA-ingestion flag (uarm_uncertainty_head_for_d3_ebrm,
+    distributional_pessimistic_ebrm_head, rewarduq_calibration_gate_for_d1_d3): an oracle-distinct abstaining
+    SELECTOR. DISTINCT from the retired verifier-as-REWARD path (exp4247/exp4263) and the retired content-energy EBM
+    ranking TRM ARC candidates (exclusion_manifest:487, ON ARC) -- EBRM here is OFF-ARC reasoning-candidate
+    selection. False-positive substring scope-match; explicitly authorized forward work.'
+  prior_failures:
+  - experiment_id: exp5005-d3
+    verdict: complete_ebrm_no_win_musr_plus_0p000_ci_incl_0
+    addressed_by: "The .461 D3 'clean tie' was DEGENERATE: it abstained 97.5% to a k=1 strawman tuned-SC over the
+      weak registry quality ensemble (point-estimate 0.515 < SC 0.585), so delta=+0.000 / McNemar p=1.0 measured
+      always-abstain-to-SC, NOT a trained verifier. .462 D3 changes four things: (a) refines the REAL D1 TRAINED
+      LoRA-EBM scorer (gated_on D1 scorer_trained), NOT the registry fallback; (b) compares against the GENUINE
+      K-way tuned-SC (B1), not k=1; (c) adds the E1-ingested uncertainty heads (UARM conformal + distributional-
+      pessimistic + RewardUQ calibration) -- the distributional/uncertainty lever the cheap proxy lacked; (d) CAPS
+      the abstention rate via the B1 degeneracy guard so the selector cannot collapse to always-SC. Different base,
+      baseline, uncertainty model, and abstention."
+    retire_if_same_verdict: true
   prompt: |
-    CONTEXT ({date}). PHASE D3 builds the uncertainty-aware construction: EBRM (arXiv:2504.13134, "Energy-Based Reward
-    Models for Robust Language Model Alignment", COLM 2025). EBRM is a lightweight POST-HOC refinement that models the
-    reward DISTRIBUTION (not a point estimate) to capture uncertainty, via conflict-aware data filtering + label-noise-
-    aware contrastive training + hybrid initialization. The Carnot use: model the per-candidate reward distribution,
-    select the highest-reward candidate BUT ABSTAIN to tuned-SC when the distribution is high-variance (uncertain) --
-    the principled version of the cheap proxy's stddev-abstain heuristic. The distributional/uncertainty modeling is
-    the lever the cheap proxy lacked.
+    CONTEXT ({date}). PHASE D3 builds the uncertainty-aware construction PROPERLY. The .461 D3 was DEGENERATE
+    (abstained 97.5% to a k=1 strawman SC over a weak base scorer). .462 D3 fixes all three causes: a REAL base
+    (the D1 trained scorer, gated_on D1), a GENUINE tuned-SC baseline (B1), and a capped abstention. EBRM
+    (arXiv:2504.13134) is a lightweight POST-HOC refinement that models the reward DISTRIBUTION (not a point
+    estimate) to capture uncertainty (conflict-aware filtering + label-noise-aware contrastive + hybrid init). The
+    E1-ingested papers sharpen the uncertainty head: UARM (2606.19818, conformal + heteroscedastic variance),
+    distributional-pessimistic (2606.09073, pessimistic log-moment), RewardUQ (2602.24040, the ECE/AUROC
+    calibration table). Use: model the per-candidate reward distribution over the D1 scorer, select max-reward BUT
+    abstain to the GENUINE tuned-SC ONLY when the distribution is high-variance -- AND cap the abstention rate so
+    the selector cannot degenerate.
 
-    THE CONSTRUCTION (EBRM as an oracle-distinct abstaining SELECTOR):
-      - Base scorer: refine the D1 trained LoRA-EBM scorer if available (gated_on D1), else refine the registry
-        quality-ensemble (the cheap-proxy scorer) -- EBRM is POST-HOC, so it works on top of an existing RM.
-      - Model the reward DISTRIBUTION per candidate (energy-based, with the conflict-aware + label-noise-aware training
-        from the paper); the uncertainty = the distribution's spread.
-      - SELECT max-reward; ABSTAIN to tuned-SC when uncertainty exceeds a calibrated threshold. Oracle-distinct (no
-        gold at inference). Accuracy + paired CI + McNemar vs TUNED-SC on a headroom-present corpus (MuSR) via the harness.
-      - Also report the paper's secondary claim if cheaply measurable: does the uncertainty-aware reward DELAY reward-
-        hacking / improve robustness vs a point-estimate RM (an abstention-calibration curve)?
-      - Reuse the existing distributional-EBM-uncertainty scaffold: python/carnot/verify/distributional_ebm_repair_uncertainty_audit_v1.py.
+    THE CONSTRUCTION (EBRM as an oracle-distinct abstaining SELECTOR over the D1 base):
+      - Base scorer: the D1 TRAINED LoRA-EBM (read results/experiment_5017_..._v2.json; gated_on D1 scorer_trained).
+      - Model the reward DISTRIBUTION per candidate (energy-based, conflict-aware + label-noise-aware per the paper;
+        add the UARM conformal/heteroscedastic head + the distributional-pessimistic log-moment aggregation).
+      - SELECT max-reward; ABSTAIN to the GENUINE tuned-SC ONLY when uncertainty exceeds a calibrated threshold, AND
+        CAP abstention <= 50% (the B1 degeneracy guard) -- if the best threshold forces >50% abstention the selector
+        is degenerate and the arm records that honestly (NOT a tie). Oracle-distinct (no gold at inference).
+      - Report the RewardUQ-style calibration table (ECE, AUROC correct-vs-incorrect, selection delta after
+        uncertainty abstention) vs the point-estimate D1 base. Accuracy + paired CI + McNemar vs GENUINE tuned-SC (n>=200).
 
     EXISTING CODE TO READ FIRST:
+      - {project_root}/results/experiment_5017_lora_ebm_scorer_musr_v2.json (the D1 base scorer to refine -- gated_on)
       - {project_root}/python/carnot/verify/distributional_ebm_repair_uncertainty_audit_v1.py (existing distributional-EBM + uncertainty scaffold to build on)
-      - {project_root}/python/carnot/moat_benchmark_harness.py (the exp5002 harness)
-      - {project_root}/results/experiment_5003_lora_ebm_scorer_musr.json (the D1 base scorer to refine, if it landed)
-      - {project_root}/research-references.md (the EBRM 2504.13134 entry)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the B1-fixed harness -- genuine SC + the degeneracy guard)
+      - {project_root}/results/experiment_5005_ebrm_uncertainty_verifier.json (the .461 degenerate D3 -- the abstain_rate 0.975 / k=1 bug this fixes)
+      - {project_root}/research-references.md (the V462 block: UARM 2606.19818, pessimistic 2606.09073, RewardUQ 2602.24040)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: a base scorer exists (D1 artifact OR the cheap-proxy/registry quality-ensemble) AND the cached MuSR candidates exist AND CUDA is available if training. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
-      1. DELIVERABLE-FIRST: skeleton artifact early.
-      2. Build the EBRM reward-distribution refinement (conflict-aware filter + label-noise-aware contrastive training per the paper); calibrate the abstention-on-uncertainty threshold on a held-out split.
-      3. EVAL oracle-distinct: select max-reward-with-abstention; accuracy + paired CI + McNemar vs TUNED-SC (n>=200). Report the abstention-calibration / robustness curve.
-      4. adversarial_verify / summarize_artifact; verifier_is_oracle=False + headroom_present.
+      0. PRECONDITIONS: the D1 trained scorer exists with scorer_trained=true (read its artifact) AND the cached MuSR candidates exist. If D1 did NOT train (scorer_trained!=true) -> honest_verdict blocked_d1_base_scorer_not_trained, write deliverable, EXIT (do NOT fall back to the registry ensemble -- that is the .461 degenerate path). The gated_on guard should already skip this task if D1 failed.
+      1. DELIVERABLE-FIRST minimal skeleton, THEN build the EBRM reward-distribution refinement over the D1 base (conflict-aware filter + label-noise-aware contrastive + UARM/pessimistic uncertainty head); calibrate the abstention threshold on a held-out split with the <=50% abstention CAP.
+      2. EVAL oracle-distinct: select max-reward-with-capped-abstention; accuracy + paired CI + McNemar vs GENUINE tuned-SC (n>=200). Report the RewardUQ calibration table vs the point-estimate base.
+      3. adversarial_verify / summarize_artifact; verifier_is_oracle=False + headroom_present + the degeneracy guard does NOT fire (abstention <=50%).
 
-    FALSIFIABLE GATE: EBRM-selection accuracy > tuned_sc with paired CI95-excl-0 (McNemar p<0.05), verifier_is_oracle
-    =False, headroom_present=True; OR a calibration improvement (better accuracy/abstention tradeoff than the point-
-    estimate base scorer) recorded honestly. A null tightens the moat scope.
+    FALSIFIABLE GATE: EBRM-selection accuracy > GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05),
+    verifier_is_oracle=False, headroom_present=True, AND abstention_rate<=0.50 (non-degenerate); OR a calibration
+    improvement (better accuracy/abstention tradeoff than the point-estimate D1 base) recorded honestly. A null
+    tightens the moat scope.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; a win is success_ebrm_beats_sc_musr_<delta>, a null is complete_ebrm_no_win_musr_<delta>_ci_incl_0."
+        principle: "terminal prefix; a win is success_ebrm_beats_sc_musr_<delta>, a clean null is complete_ebrm_no_win_musr_<delta>_ci_incl_0, a missing base is blocked_d1_base_scorer_not_trained."
       verifier_is_oracle:
         principle: "false -- EBRM scores reasoning-candidate reward distributions, never reads gold at inference (must pass check_circular_moat_overclaim)."
       headroom_present:
-        principle: "true required for an informative result (FALSE_NEGATIVE_RISK guard)."
+        principle: "true required vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard)."
+      abstention_rate:
+        principle: "<=0.50 REQUIRED for a non-degenerate result -- the B1 degeneracy guard (the .461 D3 abstained 0.975 = degenerate)."
       ebrm_selection_accuracy:
         principle: "the oracle-distinct accuracy of the uncertainty-aware abstaining selector (the headline)."
-      tuned_sc_accuracy:
-        principle: "the TUNED-SC baseline (headroom-control)."
+      genuine_tuned_sc_accuracy:
+        principle: "the B1 GENUINE K-way tuned-SC (NOT k=1) -- the honest baseline."
       delta_vs_tuned_sc:
-        principle: "ebrm_selection_accuracy - tuned_sc_accuracy; the signed moat lift."
+        principle: "ebrm_selection_accuracy - genuine_tuned_sc_accuracy; the signed moat lift."
       paired_ci95:
         principle: "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
       mcnemar_p:
         principle: "McNemar paired p; a win requires p<0.05."
       uncertainty_calibration:
-        principle: "the abstention-on-uncertainty calibration vs the point-estimate base scorer (EBRM's distinctive claim: delays reward-hacking / improves robustness)."
+        principle: "the RewardUQ-style table (ECE, AUROC correct-vs-incorrect, selection delta after abstention) vs the point-estimate D1 base -- EBRM's distinctive claim."
       base_scorer_refined:
-        principle: "which base RM EBRM refined (D1 LoRA-EBM if it landed, else the registry quality-ensemble) -- EBRM is post-hoc."
+        principle: "the D1 TRAINED LoRA-EBM (NOT the registry fallback) -- EBRM is post-hoc over a REAL base."
       n_questions:
         principle: ">=200 (sample-size rigor)."
       model_specs:
-        principle: "the base scorer + EBRM refinement substrate -- the methodology stamp."
+        principle: "the D1 base scorer + the EBRM/UARM uncertainty head -- the methodology stamp."
       inference_substrate:
-        principle: "live_llm_inference if training/scoring on GPU (>=60s); else verifier_ensemble_against_cached_candidates."
+        principle: "verifier_ensemble_against_cached_candidates (post-hoc refinement + scoring of cached candidates; 1s floor)."
       random_seed:
         principle: "determinism for the calibration split + bootstrap."
       preconditions_checked:
-        principle: "records base-scorer/candidate-cache/CUDA checks; a missing resource emits blocked_."
+        principle: "records the D1-base / candidate-cache checks; a missing base emits blocked_d1_base_scorer_not_trained (NOT a registry fallback)."
 
-    Run: `.venv/bin/python python/carnot/experiment_5005_ebrm_uncertainty_verifier.py`
+    Run: `.venv/bin/python python/carnot/experiment_5019_ebrm_uncertainty_verifier_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5006-d4
-  title: 'PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATION) -- evaluate the BEST D1/D2/D3 oracle-distinct verifier
-    on a SECOND headroom-present oracle-distinct corpus (GPQA / MMLU-Pro-hard / MATH-500-hard, whichever is cached +
-    headroom_present). The gate requires MuSR + >=1 second corpus: a single-corpus win could be corpus-specific; a
-    second-corpus confirmation is what makes the moat claim generalize.'
+- id: exp5020-cascade
+  title: 'PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- north-star §5 Pareto win) -- build the uncertainty-routed
+    cheap-verifier -> strong-judge CASCADE (arXiv:2510.20369): the cheap oracle-distinct verifier selects when
+    confident and routes ONLY uncertain questions to a strong LLM-judge. The WIN = accuracy parity (within CI) with
+    the judge-only baseline at MATERIALLY FEWER judge calls. Charge the judge-call budget explicitly so the judge
+    cannot become the moat (the E1 pitfall).'
   priority: high
   track: verifier-moat
   max_turns: 50
   inference_substrate: live_llm_inference
-  deliverable: results/experiment_5006_moat_second_corpus.json
-  operator_override: '2026-06-30 operator directive (the gate is on a headroom-present oracle-distinct domain = MuSR +
-    >=1 second corpus): cross-corpus generalization of the best PHASE D verifier. DISTINCT from the retired ARC cross-
-    GAME transfer nulls (exp4305/exp4314/exp4342, which were ON ARC) -- this is OFF-ARC cross-reasoning-corpus verifier
-    generalization. False-positive substring scope-match vs "cross-domain/cross-game"; explicitly authorized.'
+  deliverable: results/experiment_5020_uncertainty_routed_cascade.json
+  operator_override: '2026-06-30 operator directive (PHASE D execution) + the .461 E1 SOTA-ingestion flag
+    (uncertainty_routed_judge_control, arXiv:2510.20369) + north-star §5 (the verifier earns its place at lower
+    cost/latency = efficiency-parity): the EFFICIENCY win-condition arm. DISTINCT from the verifier-as-REWARD path
+    (exp4247/exp4263) -- this is a test-time cascade SELECTOR + a cost measurement, never an RFT reward. False-
+    positive substring scope-match vs prior verifier/cascade tasks; explicitly authorized forward work.'
   prompt: |
-    CONTEXT ({date}). PHASE D4 is the cross-corpus generalization check. A verifier-moat win on MuSR alone could be
-    corpus-specific; the falsifiable gate requires a headroom-present ORACLE-DISTINCT domain confirmed on MuSR + >=1
-    SECOND corpus. Take the BEST oracle-distinct verifier from D1/D2/D3 (by delta_vs_tuned_sc on MuSR) and evaluate it
-    on a second headroom-present oracle-distinct corpus.
+    CONTEXT ({date}). PHASE D6 is the EFFICIENCY axis of the north-star win condition (§5: "the verifier earns its
+    place if it is equally effective as the LM at lower cost/latency"). Even if every ACCURACY arm (D1/D2/D3) ties
+    SC, a Pareto win is still a moat: accuracy parity at materially fewer strong-judge calls. arXiv:2510.20369 routes
+    uncertain cases from a cheap RM to a strong judge, improving the cost-quality tradeoff over random judge calls.
 
-    SECOND-CORPUS SELECTION (pick one CONFIRMED cached + headroom_present, in priority order):
-      - GPQA (graduate-level science MCQ -- hard, SC not saturated, no cheap oracle), OR
-      - MMLU-Pro-hard slice, OR
-      - MATH-500-hard slice (note: math has a partial sympy oracle -- keep the verifier oracle-distinct; do NOT let it
-        execute/check the answer, only score reasoning quality).
-      Confirm oracle@K - tuned_sc >= 0.10 on the chosen corpus BEFORE claiming any result (FALSE_NEGATIVE_RISK: a
-      no-headroom corpus yields an uninformative null). If NO second corpus is headroom-present, record that honestly
-      (the moat is MuSR-scoped) -- do NOT force a null on a saturated corpus.
+    THE CONSTRUCTION (uncertainty-routed cascade -- charge the judge budget explicitly):
+      - CHEAP verifier: the best oracle-distinct cheap scorer available (D1 trained LoRA-EBM if scorer_trained, else
+        D2 uPRM, else the registry quality ensemble -- record which). It selects when its uncertainty is LOW.
+      - STRONG judge: an LLM-as-judge (gemma-4-12B-it-GGUF on GPU-0, or a stronger SOTA GGUF) invoked ONLY on the
+        uncertain questions the cheap verifier routes up. COUNT every judge call (the cost).
+      - Report THREE rows + the cost: (a) cheap-verifier-only accuracy + 0 judge calls; (b) judge-only accuracy +
+        N judge calls (the expensive ceiling); (c) CASCADE accuracy + the judge-call count at a swept routing
+        threshold. The WIN = cascade accuracy within CI of judge-only at << N judge calls (e.g. <=40%) -- a Pareto
+        point. Also report cascade vs GENUINE tuned-SC.
+      - ANTI-PITFALL (E1): the judge must NOT become the moat. Separate cheap-verifier value (a) from judge-fallback
+        value (b); the headline is the cost-quality FRONTIER, not the judge's accuracy. verifier_is_oracle=False
+        (neither the cheap verifier nor the judge is the executable oracle on MuSR).
 
-    THE GPU FIX (2026-06-27): generate candidates on the GPU-0 CUDA llama-server (gemma-4-12B-it-GGUF); do NOT iGPU-pin.
+    THE GPU FIX (2026-06-27): run the judge on the GPU-0 CUDA llama-server; do NOT iGPU-pin.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/python/carnot/moat_benchmark_harness.py (the exp5002 harness -- loader + metrics; corpora_available tells you which 2nd corpus is cached)
-      - {project_root}/results/experiment_5003_lora_ebm_scorer_musr.json + experiment_5004_uprm_replication.json + experiment_5005_ebrm_uncertainty_verifier.json (pick the best by delta_vs_tuned_sc)
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the B1-fixed harness -- genuine SC + CI + the cached candidates)
+      - {project_root}/results/experiment_5017_lora_ebm_scorer_musr_v2.json + experiment_5018_uprm_replication_v2.json (the cheap verifiers; pick the best by delta)
+      - {project_root}/python/carnot/verify/ (existing LLM-as-judge / cascade-router references; the Meta-EBM Cascade Router shape)
+      - {project_root}/research-references.md (the V462 block: 2510.20369)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: >=1 of D1/D2/D3 produced a usable verifier (read their artifacts) AND a second corpus is cached + headroom_present. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT. If D1-D3 all blocked, fall back to the cheap-proxy scorer as the control (record fallback honestly).
-      1. DELIVERABLE-FIRST: skeleton artifact early. Pick the best verifier + a confirmed-cached headroom-present 2nd corpus.
-      2. Generate (or reuse) K candidates on the 2nd corpus (n>=200); score with the best verifier (oracle-distinct); accuracy + paired CI + McNemar vs TUNED-SC via the harness.
-      3. adversarial_verify / summarize_artifact; verifier_is_oracle=False + headroom_present.
+      0. PRECONDITIONS: a cheap oracle-distinct verifier exists (D1/D2 artifact or the registry ensemble) AND the GPU-0 judge llama-server is reachable AND the cached MuSR candidates exist. A missing resource -> honest_verdict blocked_<resource>, write deliverable, EXIT.
+      1. DELIVERABLE-FIRST minimal skeleton, THEN run the cheap-verifier-only + judge-only baselines (count judge calls).
+      2. Sweep the routing-uncertainty threshold; for each, record cascade accuracy + judge-call count. Report the cost-quality frontier + the best Pareto point (accuracy within CI of judge-only at minimal judge calls).
+      3. adversarial_verify / summarize_artifact; verifier_is_oracle=False; confirm the judge cost is charged + the cheap-vs-judge value is separated.
 
-    FALSIFIABLE GATE: the best verifier's accuracy > tuned_sc on the 2nd corpus with paired CI95-excl-0 (the cross-
-    corpus generalization confirmation) -- OR an honest record that the moat is MuSR-scoped (no second headroom-present
-    corpus confirmed the win). retire_if_same_verdict: true (feeds D5).
+    FALSIFIABLE GATE: the cascade reaches accuracy within CI of the judge-only baseline at MATERIALLY fewer judge
+    calls (a Pareto efficiency win, north-star §5) -- OR an honest record that the cheap verifier cannot route
+    without losing accuracy (no efficiency win on this corpus). Either way the judge-call cost is charged explicitly.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; a win is success_moat_generalizes_<corpus>_<delta>, a scoped result is complete_moat_musr_scoped_<corpus>_no_confirm."
+        principle: "terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr."
+      verifier_is_oracle:
+        principle: "false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim)."
+      cheap_verifier_only_accuracy:
+        principle: "the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor)."
+      judge_only_accuracy:
+        principle: "the strong-judge-only accuracy at N judge calls (the expensive ceiling)."
+      judge_only_calls:
+        principle: "N -- the full judge-call count (the cost the cascade must beat)."
+      cascade_accuracy:
+        principle: "the cascade accuracy at the best routing threshold (the headline)."
+      cascade_judge_calls:
+        principle: "the judge-call count the cascade actually used (the efficiency number; a win = << N)."
+      judge_call_fraction:
+        principle: "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
+      cost_quality_frontier:
+        principle: "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
+      genuine_tuned_sc_accuracy:
+        principle: "the B1 GENUINE tuned-SC (the accuracy context)."
+      n_questions:
+        principle: ">=200 (sample-size rigor)."
+      model_specs:
+        principle: "the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp."
+      inference_substrate:
+        principle: "live_llm_inference (the strong judge runs live; >=60s floor)."
+      random_seed:
+        principle: "determinism for the routing + bootstrap."
+      preconditions_checked:
+        principle: "records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_."
+
+    Run: `.venv/bin/python python/carnot/experiment_5020_uncertainty_routed_cascade.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.462
+  agent_type: codex
+  model: gpt-5.5
+- id: exp5021-d4
+  title: 'PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATION) -- evaluate the BEST D1/D2/D3 oracle-distinct
+    verifier on a SECOND headroom-present oracle-distinct corpus (GPQA / MMLU-Pro-hard / MATH-500-hard, whichever is
+    cached + headroom_present vs the GENUINE tuned-SC). The gate requires MuSR + >=1 second corpus: a single-corpus
+    win could be corpus-specific. Honest MuSR-scoped record if no 2nd corpus is headroom-present.'
+  priority: high
+  track: verifier-moat
+  max_turns: 50
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  deliverable: results/experiment_5021_moat_second_corpus_v2.json
+  operator_override: '2026-06-30 operator directive (the gate is on a headroom-present oracle-distinct domain = MuSR
+    + >=1 second corpus): cross-corpus generalization of the best PHASE D verifier. DISTINCT from the retired ARC
+    cross-GAME transfer nulls (exp4305/exp4314/exp4342, ON ARC) -- this is OFF-ARC cross-reasoning-corpus verifier
+    generalization. False-positive substring scope-match vs "cross-domain/cross-game"; explicitly authorized.'
+  prior_failures:
+  - experiment_id: exp5006-d4
+    verdict: running_moat_second_corpus_mmlu_pro_hard_skeleton
+    addressed_by: "The .461 D4 bootstrap-and-bailed (skeleton, never ran). .462 D4 changes three things: (a) it
+      only runs once >=1 D arm produced a REAL best verifier (precondition reads D1/D2/D3 artifacts; honest blocked_
+      if none), (b) it reuses the B2 shared 2nd-corpus candidate cache (no generation burden / no skeleton-first),
+      (c) it scores against the GENUINE tuned-SC (B1) and records an honest MuSR-scoped result if no 2nd corpus is
+      headroom-present. Different precondition, infra, baseline, and structure."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). PHASE D4 is the cross-corpus generalization check. A verifier-moat win on MuSR alone could be
+    corpus-specific; the falsifiable gate requires a headroom-present ORACLE-DISTINCT domain confirmed on MuSR + >=1
+    SECOND corpus. Take the BEST oracle-distinct verifier from D1/D2/D3 (by delta_vs_tuned_sc on MuSR) and evaluate
+    it on a second headroom-present oracle-distinct corpus.
+
+    SECOND-CORPUS SELECTION (pick one CONFIRMED cached + headroom_present vs the GENUINE tuned-SC, in priority order):
+      - GPQA (graduate-level science MCQ -- hard, SC not saturated, no cheap oracle), OR
+      - MMLU-Pro-hard slice, OR
+      - MATH-500-hard slice (note: math has a partial sympy oracle -- keep the verifier oracle-distinct; do NOT let
+        it execute/check the answer, only score reasoning quality).
+      Confirm oracle@K - GENUINE tuned-SC >= 0.10 on the chosen corpus BEFORE claiming any result (FALSE_NEGATIVE_RISK).
+      If NO second corpus is headroom-present, record that honestly (the moat is MuSR-scoped) -- do NOT force a null
+      on a saturated corpus.
+
+    THE GPU FIX (2026-06-27): if candidates must be generated, use the GPU-0 CUDA llama-server; prefer the B2 2nd-corpus cache.
+
+    EXISTING CODE TO READ FIRST:
+      - {project_root}/python/carnot/moat_benchmark_harness.py (the B1-fixed harness -- loader + genuine SC; corpora_available tells you which 2nd corpus is cached)
+      - {project_root}/results/experiment_5016_shared_logprob_candidate_cache.json (the B2 2nd-corpus cache if generated)
+      - {project_root}/results/experiment_5017_*/5018_*/5019_* (the D arms -- pick the best by delta_vs_tuned_sc)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS: >=1 of D1/D2/D3 produced a usable verifier (read their artifacts; pick the best by delta) AND a second corpus is cached + headroom_present vs the GENUINE tuned-SC. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT. If D1-D3 all failed, record blocked_no_best_verifier (do NOT fall back to a degenerate scorer).
+      1. DELIVERABLE-FIRST minimal skeleton. Pick the best verifier + a confirmed-cached headroom-present 2nd corpus.
+      2. Score the 2nd-corpus candidates (n>=200) with the best verifier (oracle-distinct); accuracy + paired CI + McNemar vs the GENUINE tuned-SC via the harness.
+      3. adversarial_verify / summarize_artifact; verifier_is_oracle=False + headroom_present + non-degenerate.
+
+    FALSIFIABLE GATE: the best verifier's accuracy > GENUINE tuned-SC on the 2nd corpus with paired CI95-excl-0 (the
+    cross-corpus generalization confirmation) -- OR an honest record that the moat is MuSR-scoped (no second
+    headroom-present corpus confirmed the win). retire_if_same_verdict: true (feeds D5).
+
+    REQUIRED ARTIFACT FIELDS (principle-annotated):
+      honest_verdict:
+        principle: "terminal prefix; a win is success_moat_generalizes_<corpus>_<delta>, a scoped result is complete_moat_musr_scoped_<corpus>_no_confirm, no verifier is blocked_no_best_verifier."
       verifier_is_oracle:
         principle: "false -- the best verifier scores reasoning quality, never the answer's executable correctness (must pass check_circular_moat_overclaim)."
       headroom_present:
-        principle: "true required on the 2nd corpus for an informative result (FALSE_NEGATIVE_RISK guard); if false, the corpus is excluded from the moat claim."
+        principle: "true required on the 2nd corpus vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard); if false, the corpus is excluded from the moat claim."
       best_verifier_from:
         principle: "which arm (D1/D2/D3) provided the best verifier by MuSR delta_vs_tuned_sc."
       second_corpus:
         principle: "the chosen confirmed-cached headroom-present oracle-distinct corpus (GPQA/MMLU-Pro-hard/MATH-500-hard)."
       second_corpus_accuracy:
         principle: "the best verifier's oracle-distinct accuracy on the 2nd corpus."
-      tuned_sc_accuracy_second:
-        principle: "the TUNED-SC baseline on the 2nd corpus (headroom-control)."
+      genuine_tuned_sc_accuracy_second:
+        principle: "the GENUINE K-way tuned-SC on the 2nd corpus (headroom-control)."
       delta_vs_tuned_sc_second:
         principle: "the cross-corpus moat lift (signed); CI95-excl-0 is the generalization confirmation."
       paired_ci95_second:
@@ -576,168 +792,105 @@ tasks:
       model_specs:
         principle: "the generator + the best verifier -- the methodology stamp."
       inference_substrate:
-        principle: "live_llm_inference (live generation; >=60s) or verifier_ensemble_against_cached_candidates if candidates are reused."
+        principle: "verifier_ensemble_against_cached_candidates if candidates are reused (1s floor); live_llm_inference only if generated fresh (>=60s)."
       random_seed:
-        principle: "determinism for generation + bootstrap."
+        principle: "determinism for the bootstrap."
       preconditions_checked:
         principle: "records verifier/corpus/headroom checks; a missing resource emits blocked_."
 
-    Run: `.venv/bin/python python/carnot/experiment_5006_moat_second_corpus.py`
+    Run: `.venv/bin/python python/carnot/experiment_5021_moat_second_corpus_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5007-d5
-  title: 'PHASE D5 (VERIFIER MOAT; the falsifiable GATE + DiffusionGemma-gate resolution) -- aggregate D1/D2/D3/D4 and
-    DECIDE the off-ARC verifier-moat verdict: does >=1 oracle-distinct verifier beat TUNED-SC with McNemar CI95
-    excluding 0 on a headroom-present domain? POSITIVE = the moat is realized off ARC + the DiffusionGemma gate
-    conditions are satisfied on the tested domain. ALL-NULL (LoRA-EBM AND uPRM both fail) = the off-ARC moat retires as
-    bounded (a publishable null converging with the ARC tie). retire_if_same_verdict is decided HERE.'
+- id: exp5022-d5
+  title: 'PHASE D5 (VERIFIER MOAT; the falsifiable GATE + DiffusionGemma-gate resolution) -- aggregate D1/D2/D3/D4 +
+    the cascade and DECIDE the off-ARC verifier-moat verdict: does >=1 oracle-distinct verifier beat the GENUINE
+    tuned-SC with McNemar CI95-excl-0 on a headroom-present domain (ACCURACY), OR does the cascade hit parity at
+    materially fewer judge calls (EFFICIENCY)? POSITIVE = moat realized off ARC + DiffusionGemma conditions
+    satisfied on the tested domain (activation operator-gated). PROPERLY-EXECUTED D1 AND D2 both null = bounded
+    retirement. A skeleton/degenerate arm is a FAILED execution, NOT a null.'
   priority: critical
   track: verifier-moat
   max_turns: 40
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_5007_moat_gate_resolution.json
+  deliverable: results/experiment_5022_moat_gate_resolution_v2.json
   operator_override: '2026-06-30 operator directive (the falsifiable gate is the only non-circular evidence): a
     capstone-style aggregation of the PHASE D arms that decides the moat verdict + the DiffusionGemma gate status.
     False-positive scope-match vs prior aggregation/gate tasks; structurally never a doomed rerun.'
   prompt: |
-    CONTEXT ({date}). PHASE D5 resolves the milestone's falsifiable gate. Read the D1 (LoRA-EBM), D2 (uPRM), D3 (EBRM),
-    and D4 (cross-corpus) artifacts and decide the off-ARC verifier-moat verdict + the DiffusionGemma gate status.
-    NEVER aggregate an artifact carrying flagged_adversarial=true (the fabrication gate -- skip it).
+    CONTEXT ({date}). PHASE D5 resolves the milestone's falsifiable gate. Read the D1 (LoRA-EBM, exp5017), D2 (uPRM,
+    exp5018), D3 (EBRM, exp5019), D6 (cascade efficiency, exp5020), and D4 (cross-corpus, exp5021) artifacts and
+    decide the off-ARC verifier-moat verdict + the DiffusionGemma gate status. NEVER aggregate an artifact carrying
+    flagged_adversarial=true (the fabrication gate -- skip + list it). CRITICAL DISTINCTION (the .461 lesson): a
+    SKELETON (scorer_trained=false) or DEGENERATE (abstention>50%) arm is a FAILED EXECUTION, NOT a clean null --
+    it does NOT count toward a bounded retirement.
 
-    THE GATE (the ONLY non-circular evidence): on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle=False,
-    headroom_present=True, the verifier is NOT the executable oracle), at least one of {{trained LoRA-EBM (D1), uPRM
-    (D2), EBRM (D3)}} achieves selection accuracy beating TUNED-SC with paired CI95 excluding 0 (McNemar p<0.05),
-    confirmed on MuSR AND (D4) >=1 second corpus.
-      - POSITIVE (>=1 arm wins, CI95-excl-0, headroom-present, oracle-distinct, cross-corpus confirmed): the off-ARC
-        verifier moat is REALIZED. This satisfies the DiffusionGemma gate's three conditions ON THE TESTED DOMAIN
-        (headroom present + non-trivial oracle-distinct verifier + matched-control CI95-excl-0). Record
-        diffusiongemma_gate_conditions_satisfied_off_arc=true; NOTE that ARC's ~13pp headroom remains the canonical
-        un-captured target and DiffusionGemma ACTIVATION stays operator-gated (do NOT flip the gate to MET autonomously
-        -- per the circularity discipline, report the satisfied conditions + the win, operator decides activation).
-      - ALL-NULL (LoRA-EBM D1 AND uPRM D2 both fail to beat SC with CI95-excl-0 on EVERY headroom-present oracle-
-        distinct corpus): the off-ARC verifier moat retires as BOUNDED -- a publishable null converging with the ARC
-        tie. Record moat_retired_bounded=true + the retirement rationale; this is the retire_if_same_verdict outcome.
-      - MIXED / no headroom-present corpus confirmed: scope the moat honestly (which corpora, which arms) -- do NOT
-        over-claim a win that did not generalize, and do NOT retire if no corpus was actually headroom-present (an
-        uninformative null is not a moat bound -- FALSE_NEGATIVE_RISK).
+    THE GATE (the ONLY non-circular evidence):
+      - ACCURACY win: on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle=False, headroom_present=True
+        vs the GENUINE tuned-SC), >=1 of {trained LoRA-EBM (D1, scorer_trained=true), uPRM (D2), EBRM (D3, non-
+        degenerate)} beats the GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05), confirmed on MuSR AND (D4)
+        >=1 second corpus.
+      - EFFICIENCY win (north-star §5): the cascade (D6) reaches accuracy within CI of the judge-only baseline at
+        materially fewer judge calls (a Pareto point), with the judge cost charged + the cheap-vs-judge value separated.
+      - POSITIVE (>=1 accuracy OR efficiency win): the off-ARC verifier moat is REALIZED. Record
+        diffusiongemma_gate_conditions_satisfied_off_arc=true (the 3 conditions met ON THE TESTED DOMAIN); NOTE
+        ARC's ~13pp headroom remains the canonical un-captured target and DiffusionGemma ACTIVATION stays operator-
+        gated (do NOT autonomously flip to MET -- report the satisfied conditions + the win, operator decides).
+      - BOUNDED RETIREMENT (retire_if_same_verdict): the PROPERLY-EXECUTED LoRA-EBM (D1 scorer_trained=true) AND
+        uPRM (D2) BOTH clean-null (CI95 incl 0) on EVERY headroom-present oracle-distinct corpus, AND no efficiency
+        win. Then the off-ARC accuracy moat retires as BOUNDED -- a publishable null converging with the ARC tie.
+        Record moat_retired_bounded=true. (If D1 was a SKELETON or D2 was BLOCKED -- not a clean trained null --
+        do NOT retire; record execution_incomplete instead, so .463 re-runs the un-executed arm.)
+      - MIXED / no headroom-present corpus confirmed: scope the moat honestly (which corpora, which arms).
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/results/experiment_5003_lora_ebm_scorer_musr.json (D1)
-      - {project_root}/results/experiment_5004_uprm_replication.json (D2)
-      - {project_root}/results/experiment_5005_ebrm_uncertainty_verifier.json (D3)
-      - {project_root}/results/experiment_5006_moat_second_corpus.json (D4)
-      - {project_root}/docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (THE GATE -- the three MET conditions)
+      - {project_root}/results/experiment_5017_*/5018_*/5019_*/5020_*/5021_* (the D arms)
+      - {project_root}/results/experiment_5015_genuine_sc_baseline_fix.json (the genuine tuned-SC baseline all deltas are measured against)
+      - {project_root}/docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (THE GATE -- the three conditions)
       - {project_root}/scripts/adversarial_verify.py (check_circular_moat_overclaim; skip flagged_adversarial artifacts)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: read whichever D1-D4 artifacts exist (a blocked arm is absent, not fatal). Skip any flagged_adversarial=true artifact. If NO D arm produced a non-flagged result, honest_verdict blocked_no_moat_arms, write deliverable, EXIT.
-      1. Tabulate per arm per corpus: delta_vs_tuned_sc, paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present.
-      2. Decide the gate: POSITIVE / ALL-NULL-RETIRE / MIXED-SCOPED per the rules above. Compute diffusiongemma_gate_conditions_satisfied_off_arc honestly.
-      3. WRITE the verdict + a one-paragraph paper-eligible summary (which construction, which corpus, the delta + CI). Update ops/verifier_gaps.md if a present-but-unselectable failure mode was found (Missing-Verifier Gap Logging).
+      0. PRECONDITIONS: read whichever D1-D4 + cascade artifacts exist (a blocked/skeleton arm is recorded as execution_incomplete, not a null). Skip any flagged_adversarial=true artifact. If NO arm produced a non-flagged result, honest_verdict blocked_no_moat_arms, write deliverable, EXIT.
+      1. Tabulate per arm per corpus: delta_vs_tuned_sc (vs the GENUINE SC), paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present, scorer_trained/abstention_rate (the execution-quality flags); + the cascade's judge_call_fraction.
+      2. Decide the gate: POSITIVE / BOUNDED-RETIRE / EXECUTION-INCOMPLETE / MIXED-SCOPED per the rules above (a skeleton/degenerate/blocked arm is NOT a clean null). Compute diffusiongemma_gate_conditions_satisfied_off_arc honestly.
+      3. WRITE the verdict + a one-paragraph paper-eligible summary. Update ops/verifier_gaps.md if a present-but-unselectable failure mode was found (Missing-Verifier Gap Logging).
 
-    FALSIFIABLE GATE: a non-fabricated moat verdict tracing to the D1-D4 numbers (verifier_is_oracle=False,
-    headroom_present per corpus), with the DiffusionGemma-gate status and the retire/realize decision explicit.
+    FALSIFIABLE GATE: a non-fabricated moat verdict tracing to the D1-D4 + cascade numbers (vs the GENUINE tuned-SC),
+    with the DiffusionGemma-gate status and the realize/bounded-retire/execution-incomplete decision explicit.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null."
+        principle: "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null, an unexecuted arm is complete_moat_execution_incomplete_<arm>."
       moat_realized:
-        principle: "true iff >=1 oracle-distinct arm beats tuned-SC with CI95-excl-0 on a headroom-present corpus, cross-corpus confirmed."
+        principle: "true iff >=1 oracle-distinct arm beats the GENUINE tuned-SC with CI95-excl-0 on a headroom-present corpus (cross-corpus confirmed), OR the cascade hits an efficiency Pareto win."
       moat_retired_bounded:
-        principle: "true iff D1 AND D2 both null on every headroom-present oracle-distinct corpus (the retire_if_same_verdict outcome; a publishable bounded null)."
+        principle: "true iff the PROPERLY-EXECUTED D1 (scorer_trained) AND D2 both clean-null on every headroom-present oracle-distinct corpus AND no efficiency win (the retire_if_same_verdict outcome) -- NOT triggered by a skeleton/degenerate/blocked arm."
+      execution_incomplete_arms:
+        principle: "arms that did NOT cleanly execute (D1 skeleton / D2 blocked / D3 degenerate) -- these are FAILED executions to re-run in .463, NOT nulls that bound the moat."
       best_arm:
-        principle: "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) + its corpus + delta + CI."
+        principle: "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) OR the efficiency Pareto point + its corpus + delta + CI."
+      efficiency_win:
+        principle: "true iff the cascade reached accuracy parity (within CI of judge-only) at materially fewer judge calls (north-star §5)."
       per_arm_table:
-        principle: "per arm per corpus: delta_vs_tuned_sc, paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present (the audit trail)."
+        principle: "per arm per corpus: delta_vs_tuned_sc (vs GENUINE SC), paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present, scorer_trained/abstention_rate (the audit + execution-quality trail)."
       diffusiongemma_gate_conditions_satisfied_off_arc:
-        principle: "true iff a POSITIVE arm satisfies the gate's 3 conditions (headroom present + non-trivial oracle-distinct verifier + matched-control CI95-excl-0) ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip the gate to MET)."
+        principle: "true iff a POSITIVE arm satisfies the gate's 3 conditions ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip to MET)."
       verifier_is_oracle:
-        principle: "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms are skipped)."
+        principle: "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms skipped)."
       flagged_arms_skipped:
-        principle: "the list of D arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+        principle: "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
       inference_substrate:
-        principle: "aggregation_from_upstream_artifacts (reads D1-D4 JSON, no LLM; 0.0001s floor)."
+        principle: "aggregation_from_upstream_artifacts (reads D1-D4 + cascade JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {{experiment_id, fields_imported, sha256}} for each D arm so the verdict is traceable to a real measurement."
+        principle: "the {experiment_id, fields_imported, sha256} for each arm so the verdict is traceable to a real measurement."
 
-    Run: `.venv/bin/python python/carnot/experiment_5007_moat_gate_resolution.py`
+    Run: `.venv/bin/python python/carnot/experiment_5022_moat_gate_resolution_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5008-b2
-  title: 'PHASE B2 (INFRA; RESERVED SLOT 2 of 2) -- extend adversarial_verify.py with an ORACLE-DISTINCTNESS +
-    HEADROOM-CONTROL lint for verifier-moat artifacts: a moat/beats-SC claim is FLAGGED unless it declares
-    verifier_is_oracle=False, headroom_present=True (oracle@K - tuned_sc >= 0.10, flips>0), a TUNED-SC baseline (not
-    naive), and a paired CI. Defense-in-depth so a future moat over-claim cannot reach a headline.'
-  priority: high
-  track: infra
-  max_turns: 50
-  inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_5008_moat_oracle_distinct_lint.json
-  operator_override: '2026-06-30 operator directive (PHASE D execution) + reserved-infra-slot discipline: a NEW lint
-    hardening the moat claims (sibling to check_circular_moat_overclaim + the FALSE_NEGATIVE_RISK detector). False-
-    positive scope-match vs prior adversarial_verify/lint infra tasks; structurally never a doomed rerun. Editing
-    adversarial_verify.py is permitted (it is NOT research_conductor.py).'
-  prompt: |
-    CONTEXT ({date}). PHASE B2 reserved infra slot. The PHASE D moat claims need a mechanical guard so a future
-    beats-SC over-claim cannot reach a headline. Extend the existing adversarial machinery (NOT research_conductor.py)
-    with a moat-artifact lint that enforces the anti-traps this milestone's design depends on. This complements the
-    existing check_circular_moat_overclaim (oracle-distinctness) and FALSE_NEGATIVE_RISK (no-headroom null) checks.
-
-    WHAT TO BUILD (a check in scripts/adversarial_verify.py, e.g. check_moat_claim_rigor):
-      - FIRES (WARN/CRITICAL) on any artifact making a verifier-moat / beats-SC / verifier_value_added claim that:
-        (a) does NOT declare verifier_is_oracle=False (or declares it true) -> CRITICAL (circular/over-claim);
-        (b) claims a WIN (delta>0 headline) without headroom_present=True (oracle@K - tuned_sc >= 0.10, flips>0) ->
-            CRITICAL (FALSE_NEGATIVE_RISK / un-anchored win);
-        (c) compares against NAIVE self-consistency instead of a TUNED-SC baseline -> WARN (headroom-control gap);
-        (d) claims a beats-SC WIN without a paired CI (paired_ci95 / mcnemar_p) -> CRITICAL (no significance);
-        (e) a NULL claim ("does not beat SC", "moat retired") on a corpus where headroom_present=False -> WARN
-            (uninformative null mislabeled as a moat bound).
-      - A small unit test over synthetic fixtures (a clean win, a circular over-claim, a no-headroom null, a naive-SC
-        comparison) proving each rule fires; --no-cov.
-      - Run the new lint over the D1-D4 artifacts that exist and report findings (advisory, does not block them).
-
-    EXISTING CODE TO READ FIRST:
-      - {project_root}/scripts/adversarial_verify.py (check_circular_moat_overclaim, FALSE_NEGATIVE_RISK -- the siblings to extend; the existing rule structure)
-      - {project_root}/results/experiment_5003_lora_ebm_scorer_musr.json + experiment_5004/5005/5006 (the moat artifacts to lint)
-      - {project_root}/CLAUDE.md "Circularity / Oracle-Distinctness Discipline" + "Adversarial Artifact Verification" (the contract this enforces)
-
-    CONCRETE STEPS:
-      0. PRECONDITIONS: scripts/adversarial_verify.py present + importable. Missing -> blocked_<resource>, write deliverable, EXIT.
-      1. Add check_moat_claim_rigor with rules (a)-(e); wire it into the artifact-scan path (do NOT touch research_conductor.py).
-      2. Add the synthetic-fixture unit test (--no-cov); confirm each rule fires.
-      3. Run the lint over the existing D arms; record findings. WRITE the deliverable.
-
-    FALSIFIABLE GATE: the new check fires correctly on all synthetic fixtures (clean=pass, circular=CRITICAL, no-
-    headroom-win=CRITICAL, naive-SC=WARN, no-CI=CRITICAL) and runs over the D artifacts without crashing.
-
-    REQUIRED ARTIFACT FIELDS (principle-annotated):
-      honest_verdict:
-        principle: "terminal prefix; success_moat_rigor_lint_shipped_fixtures_green."
-      check_function_name:
-        principle: "check_moat_claim_rigor (the added adversarial_verify check)."
-      rules_implemented:
-        principle: "the (a)-(e) rule list -- the mechanical contract enforcing oracle-distinctness + headroom-control + paired-CI on moat claims."
-      fixtures_passed:
-        principle: "each synthetic fixture (clean/circular/no-headroom/naive-SC/no-CI) fires the expected severity (the test evidence)."
-      d_arms_lint_findings:
-        principle: "advisory findings on the existing D1-D4 artifacts (does not block them; surfaces any residual over-claim)."
-      inference_substrate:
-        principle: "aggregation_from_upstream_artifacts (reads artifacts + runs a lint; no LLM)."
-      random_seed:
-        principle: "determinism for the fixture generation."
-      preconditions_checked:
-        principle: "records adversarial_verify-importable check; a missing module emits blocked_."
-
-    Run: `.venv/bin/python python/carnot/experiment_5008_moat_oracle_distinct_lint.py`
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
-  agent_type: codex
-  model: gpt-5.5
-- id: exp5009-c
+- id: exp5023-c
   title: 'PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- KV260 reachability + a small on-board energy-eval smoke
     (the verifier''s analytical-penalty Ising constraint energy), SSH-only, ALWAYS-write-a-(blocked-or-success)-
     artifact. Per the KV260-focus relaxation this is the single hardware-continuity slot.'
@@ -745,31 +898,32 @@ tasks:
   track: hardware
   max_turns: 50
   inference_substrate: hardware_smoke
-  deliverable: results/experiment_5009_kv260_continuity.json
+  deliverable: results/experiment_5023_kv260_continuity.json
   operator_override: '2026-06-19 operator directive (standing) + Hardware-Task Continuity (north-star KV260-focus
-    relaxation): the single per-milestone KV260 continuity slot -- false-positive scope-match vs prior KV260 continuity
-    tasks; structurally never a doomed rerun. SSH-only (NEVER host SD-card per the KV260 SSH-Not-SD-Card Discipline).'
+    relaxation): the single per-milestone KV260 continuity slot -- false-positive scope-match vs prior KV260
+    continuity tasks; structurally never a doomed rerun. SSH-only (NEVER host SD-card per the KV260 SSH-Not-SD-Card
+    Discipline).'
   prompt: |
-    CONTEXT ({date}). KV260 hardware-continuity slot (the board stays visible in milestone retros per the Hardware-Task
-    Continuity Discipline; KV260-focus relaxation = KV260 is the single hardware slot). SSH-only -- NEVER probe the
-    host SD-card device path (KV260 SSH-Not-SD-Card Discipline). Always write a (blocked-or-success) artifact.
+    CONTEXT ({date}). KV260 hardware-continuity slot (the board stays visible in milestone retros per the Hardware-
+    Task Continuity Discipline; KV260-focus relaxation = KV260 is the single hardware slot). SSH-only -- NEVER probe
+    the host SD-card device path (KV260 SSH-Not-SD-Card Discipline). Always write a (blocked-or-success) artifact.
 
     CONCRETE STEPS:
       0. PRECONDITIONS (KV260 SSH-Not-SD-Card Discipline -- SSH reachability, NEVER host SD card):
          `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0. If non-zero -> honest_verdict
          blocked_kv260_ssh_unreachable, write the deliverable, EXIT. (Do NOT probe the HOST's SD-card device path --
-         that checks the host card slot, which is the retired wrong mechanism; the board boots from its onboard
-         microSD and is updated only over SSH.)
+         that checks the host card slot, the retired wrong mechanism; the board boots from its onboard microSD and
+         is updated only over SSH.)
       1. List loaded overlays (`ssh kria 'xmutil listapps'`) + UIO devices (`ssh kria 'ls /dev/uio*'`); record the board state.
       2. Small on-board energy smoke: run a tiny quadratic-Ising constraint-energy eval on the board (reuse the
          existing carnot_ising overlay / on-board python path if loaded) OR, if no overlay is loaded, record the
          reachability + overlay state as a continuity confirmation (a deploy is operator-gated). Capture real wall-clock.
-      3. WRITE results/experiment_5009_kv260_continuity.json.
+      3. WRITE results/experiment_5023_kv260_continuity.json.
 
     EXISTING CODE TO READ FIRST:
       - {project_root}/ops/hardware-bringup-prep.md (KV260 bring-up state + the xmutil/UIO workflow)
       - {project_root}/CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" (the SSH-only precondition table)
-      - {project_root}/results/experiment_4988_*.json or the latest KV260 continuity artifact (the prior pattern to repeat)
+      - {project_root}/results/experiment_5009_kv260_continuity.json (the .461 KV260 continuity artifact -- the prior pattern to repeat; overlay carnot_ising_v2_n64 was loaded, energy -7 ok)
 
     FALSIFIABLE GATE: a non-fabricated reachability result (SSH exit code) + overlay/UIO state, with a real on-board
     energy duration if the overlay is loaded; a blocked_kv260_ssh_unreachable is an honest non-terminal state.
@@ -788,30 +942,32 @@ tasks:
       preconditions_checked:
         principle: "records the SSH reachability check (never the host SD-card device path); a non-zero SSH emits blocked_kv260_ssh_unreachable."
 
-    Run: `.venv/bin/python python/carnot/experiment_5009_kv260_continuity.py`
+    Run: `.venv/bin/python python/carnot/experiment_5023_kv260_continuity.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5010-e1
+- id: exp5024-e1
   title: 'PHASE E1 (SOTA-INGESTION; RESERVED SLOT) -- a FRESH focused literature sweep for NEW oracle-distinct
-    verifier / energy-RM / process-verifier / uncertainty-aware-RM papers (2025-2026) beyond the 13 already ingested,
-    mapped onto the PHASE D moat program. Reliable channel ONLY (sweep_clusters/sweep_semscholar + low-concurrency
-    WebSearch/WebFetch); the /deep-research harness is BANNED from the autonomous loop.'
+    verifier / energy-RM / process-verifier / uncertainty-aware-RM / efficiency-cascade papers (2025-2026) beyond
+    the 18 already ingested, mapped onto the .463 verifier-moat direction (scale the winner, or pivot if D1+D2 both
+    null). Reliable channel ONLY (sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch); the
+    /deep-research harness is BANNED from the autonomous loop.'
   priority: medium
   track: sota-ingestion
   max_turns: 50
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_5010_sota_ingestion_verifier_moat.json
+  deliverable: results/experiment_5024_sota_ingestion_verifier_moat.json
   operator_override: '2026-06-11 SOTA-Ingestion Cycle Discipline (standing reserved slot for a bleeding-edge headline
     track) + 2026-06-30 PHASE D execution: a fresh verifier-moat literature pass mapped onto the active D program.
     False-positive scope-match vs prior SOTA-ingestion tasks; structurally never a doomed rerun.'
   prompt: |
-    CONTEXT ({date}). PHASE E1 reserved SOTA-ingestion slot (the headline is now the off-ARC verifier moat = a
-    bleeding-edge track, so per the SOTA-Ingestion Cycle Discipline one ingestion task is reserved). Find NEW SOTA on
-    oracle-distinct verification / energy reward models / unsupervised process verifiers / uncertainty-aware RMs and
-    map the strongest 3-5 methods onto the PHASE D arms (D1 LoRA-EBM, D2 uPRM, D3 EBRM) so SOTA flows into the NEXT
-    milestone's roadmap.
+    CONTEXT ({date}). PHASE E1 reserved SOTA-ingestion slot (the headline is the off-ARC verifier moat = a bleeding-
+    edge track, so per the SOTA-Ingestion Cycle Discipline one ingestion task is reserved). Find NEW SOTA on oracle-
+    distinct verification / energy reward models / unsupervised process verifiers / uncertainty-aware RMs / cheap-
+    verifier-vs-judge cascades and map the strongest 3-5 methods onto the .463 direction (which is conditioned on
+    the D5 verdict: scale the winning construction if a moat realized, or pivot to a new verifier direction if D1+D2
+    both cleanly null).
 
     RELIABLE MECHANISM (MANDATORY -- the /deep-research 25-75-agent harness is BANNED from the autonomous loop; it
     rate-limited 4x + burned ~6M tokens for ZERO output on 2026-06-11): use scripts/sweep_clusters.py /
@@ -819,27 +975,29 @@ tasks:
     of the top 5-8 papers. Cite REAL arXiv IDs/URLs for every method (an ingestion artifact with no verifiable
     citations is treated as fabrication).
 
-    ALREADY INGESTED (do NOT re-list as new -- 13 papers): 2605.18871, 2605.10158, 2504.13134, 2504.16828, 2502.01989,
-    2508.16665, 2508.10539, 2502.11157, 2504.01005, 2504.00891, 2509.24460, 2510.14913, 2603.04304.
+    ALREADY INGESTED (do NOT re-list as new -- 18 papers): 2605.18871, 2605.10158, 2504.13134, 2504.16828,
+    2502.01989, 2508.16665, 2508.10539, 2502.11157, 2504.01005, 2504.00891, 2509.24460, 2510.14913, 2603.04304,
+    2606.19818, 2606.09073, 2602.24040, 2510.20369, 2605.24005. (CompassVerifier 2508.03686 + Generative Verifiers
+    2408.15240 were noted in the .462 planning pass -- do NOT re-list those either.)
 
     CONCRETE STEPS:
       0. PRECONDITIONS: network reachable (`curl -sf -o /dev/null https://arxiv.org`); sweep helpers importable. Missing -> blocked_<resource>, write deliverable, EXIT.
-      1. Run a focused sweep (energy-based reward models, unsupervised/process reward models, oracle-distinct verification, test-time-scaling verifiers, uncertainty-aware RMs, 2025-2026). WebFetch the top 5-8.
-      2. Synthesize a SOTA->experiment mapping note (docs/research-notes/verifier-moat-literature-<date>.md): the strongest 3-5 NEW methods, what each would take over the PHASE D stack, where each fails/pitfalls; flag candidate inputs for the .462 roadmap.
+      1. Run a focused sweep (energy-based reward models, unsupervised/process reward models, oracle-distinct verification, test-time-scaling verifiers, uncertainty-aware RMs, cheap-verifier-vs-judge cascades, 2025-2026). WebFetch the top 5-8.
+      2. Synthesize a SOTA->experiment mapping note (docs/research-notes/verifier-moat-literature-<date>.md): the strongest 3-5 NEW methods, what each would take over the PHASE D stack, where each fails/pitfalls; flag candidate inputs for the .463 roadmap conditioned on the D5 verdict.
       3. Update research-studying.md (mark ingested) + research-references.md (the new entries). WRITE the deliverable.
 
     FALSIFIABLE GATE: >=3 NEW (not-already-ingested) papers with verified arXiv IDs + a per-method PHASE-D mapping +
-    the .462 candidate flag; OR an honest record that no new headline-relevant SOTA was found this cycle.
+    the .463 candidate flag; OR an honest record that no new headline-relevant SOTA was found this cycle.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
         principle: "terminal prefix; success_sota_ingested_<n>_new_papers_mapped_to_phase_d."
       new_arxiv_ids:
-        principle: "verified-real NEW arXiv IDs (http 200), NOT in the 13-paper ingested set (no fabrication -- every method cites a source)."
+        principle: "verified-real NEW arXiv IDs (http 200), NOT in the 18-paper ingested set (no fabrication -- every method cites a source)."
       sota_to_phase_d_mapping:
-        principle: "per NEW method: which PHASE D arm it strengthens (D1/D2/D3) + the implementation delta over the current stack + the pitfall."
+        principle: "per NEW method: which PHASE D arm/direction it strengthens + the implementation delta over the current stack + the pitfall."
       next_milestone_candidates:
-        principle: "the strongest method(s) flagged as candidate inputs for the .462 roadmap (discover->ingest->plan->experiment)."
+        principle: "the strongest method(s) flagged as candidate inputs for the .463 roadmap (discover->ingest->plan->experiment)."
       note_path:
         principle: "docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads)."
       reliable_channel_used:
@@ -849,36 +1007,36 @@ tasks:
       preconditions_checked:
         principle: "records network/sweep-helper checks; unreachable network emits blocked_."
 
-    Run: `.venv/bin/python python/carnot/experiment_5010_sota_ingestion_verifier_moat.py`
+    Run: `.venv/bin/python python/carnot/experiment_5024_sota_ingestion_verifier_moat.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5011-e2
-  title: 'PHASE E2 (CONTINUOUS SELF-LEARNING / FR-11; ARC self-play) -- the standing arc_loop_solve self-play loop on
-    a banked checkpointed game (rotated OFF .460 su15 / .459 ft09 / .458 sp80 / .457 dc22 -- prefer r11l; lf52/ls20
-    alternates): warm-started verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.
+- id: exp5025-e2
+  title: 'PHASE E2 (CONTINUOUS SELF-LEARNING / FR-11; ARC self-play) -- the standing arc_loop_solve self-play loop
+    on a banked checkpointed game (rotated OFF .461 r11l / .460 su15 / .459 ft09 / .458 sp80 -- prefer lf52; ls20
+    alternate): warm-started verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier.
     The learned verifier improves across runs = continuous self-learning (research-program Tier 3 / FR-11). HONEST
     substrate (verifier_ensemble_against_cached_candidates unless the generator ran >=60s).'
   priority: medium
   track: continuous-self-learning
   max_turns: 100
   inference_substrate: verifier_ensemble_against_cached_candidates
-  deliverable: results/experiment_5011_self_play_verifier_checkpoint.json
-  operator_override: '2026-06-19 operator directive (standing) + research-program.md Continuous Self-Learning (FR-11):
-    the continuous-self-learning self-play slot (the learned verifier trains + checkpoints across runs) -- false-
-    positive scope-match vs prior self-play tasks; structurally never a doomed rerun. ARC continues opportunistically
-    post-sprint. Rotate off su15/ft09/sp80/dc22/lp85/ar25/bp35/vc33/sk48/ls20/re86.'
+  deliverable: results/experiment_5025_self_play_verifier_checkpoint.json
+  operator_override: '2026-06-19 operator directive (standing) + research-program.md Continuous Self-Learning
+    (FR-11): the continuous-self-learning self-play slot (the learned verifier trains + checkpoints across runs) --
+    false-positive scope-match vs prior self-play tasks; structurally never a doomed rerun. ARC continues
+    opportunistically post-sprint. Rotate off r11l/su15/ft09/sp80/dc22/lp85/ar25/bp35/vc33/sk48/ls20/re86.'
   prompt: |
     CONTEXT ({date}). The continuous-self-learning experiment (research-program.md "Continuous Self-Learning" Tier 3;
-    FR-11): the learned verifier improves across runs by training on self-play traces + checkpointing. Now that the
-    ARC sprint is retired this is OPPORTUNISTIC ARC, but continuous self-learning is a STANDING goal (planner
-    instruction: >=1 experiment targets continuous self-learning). Run arc_loop_solve on a banked checkpointed game
-    (warm-started from the saved checkpoint) to confirm a level AND refresh the checkpoint.
+    FR-11): the learned verifier improves across runs by training on self-play traces + checkpointing. ARC is now
+    opportunistic (the sprint is retired) but continuous self-learning is a STANDING goal (planner instruction: >=1
+    experiment targets continuous self-learning). Run arc_loop_solve on a banked checkpointed game (warm-started
+    from the saved checkpoint) to confirm a level AND refresh the checkpoint.
 
-    TARGET: rotate OFF .460 su15, .459 ft09, .458 sp80, .457 dc22, .456 lp85, .455 ar25, .453 bp35, .452 vc33, .451
-    sk48, .450 ls20, .449 re86 -- PREFER r11l (banked, has a models/arc_verifier_r11l.json checkpoint, not in the
-    recent self-play rotation); lf52 / ls20 are checkpointed alternates.
+    TARGET: rotate OFF .461 r11l, .460 su15, .459 ft09, .458 sp80, .457 dc22, .456 lp85, .455 ar25, .453 bp35, .452
+    vc33, .451 sk48, .450 ls20, .449 re86 -- PREFER lf52 (banked, has a models/arc_verifier_lf52.json checkpoint,
+    not in the recent self-play rotation); ls20 is a checkpointed alternate.
 
     MAINTAIN THE .456 SUBSTRATE FIX: if the self-play loop runs the offline reproduction gate + checkpoint training
     WITHOUT invoking the LLM, declare inference_substrate=verifier_ensemble_against_cached_candidates (1s floor).
@@ -888,8 +1046,8 @@ tasks:
     EXISTING CODE TO READ FIRST:
       - {project_root}/scripts/arc_loop_solve.py (warm-start + train + checkpoint)
       - {project_root}/ops/arc_solve_registry.yaml (banked targets + learned_verifier_checkpoint paths)
-      - {project_root}/models/ (arc_verifier_<game>.json checkpoints -- pick r11l/lf52/ls20, NOT su15/ft09/sp80/dc22)
-      - {project_root}/results/experiment_4993_self_play_verifier_checkpoint.json (the .460 self-play exemplar -- the honest-substrate pattern to repeat)
+      - {project_root}/models/ (arc_verifier_<game>.json checkpoints -- pick lf52/ls20, NOT r11l/su15/ft09/sp80)
+      - {project_root}/results/experiment_5011_self_play_verifier_checkpoint.json (the .461 self-play exemplar -- the honest-substrate pattern to repeat; r11l checkpoint refreshed)
 
     CONCRETE STEPS:
       0. PRECONDITIONS: `arc_solver_kit.offline_arcade()` exits 0; the target has a banked level + an existing checkpoint to warm-start. Missing -> honest_verdict blocked_<resource>, write deliverable, EXIT.
@@ -913,7 +1071,7 @@ tasks:
       reproduced_levels:
         principle: "the depth confirmed this run."
       target_game:
-        principle: "the rotated self-play target (differs from .460 su15 / .459 ft09 / .458 sp80 / .457 dc22)."
+        principle: "the rotated self-play target (differs from .461 r11l / .460 su15 / .459 ft09 / .458 sp80)."
       solve_provenance:
         principle: "live_agent_self_discovery -- self-play is the agent improving on its own attempts (NOT outer_loop_re)."
       inference_substrate:
@@ -927,38 +1085,39 @@ tasks:
 
     Run: `.venv/bin/python scripts/arc_loop_solve.py --game <banked-target>`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5012-e3
-  title: 'PHASE E3 (OPPORTUNISTIC ARC LEVEL-UP) -- a single opportunistic deepen on a FRESH grounded game (rotate to a
-    deepest lane NOT recently attempted: prefer sc25 L5->L6 or cn04 L3->L4; lp85 L5->L6 alt), reproduction-gated,
-    solve_provenance=live_agent_self_discovery, HONEST no-bank if the deepen well is dry (it has been flat at 69 for 6+
-    milestones). ARC is opportunistic post-sprint -- a no-bank rotation dead-end is the CORRECT outcome if dry.'
+- id: exp5026-e3
+  title: 'PHASE E3 (OPPORTUNISTIC ARC LEVEL-UP) -- a single opportunistic deepen on a FRESH grounded game (rotate to
+    a deepest lane NOT recently attempted: prefer sc25 L5->L6 or lp85 L5->L6; cn04 L3->L4 alt), reproduction-gated,
+    solve_provenance=live_agent_self_discovery, HONEST no-bank if the deepen well is dry (it has been flat at 69 for
+    7+ milestones). ARC is opportunistic post-sprint -- a no-bank rotation dead-end is the CORRECT outcome if dry.'
   priority: low
   track: arc-opportunistic
   max_turns: 120
   inference_substrate: verifier_ensemble_against_cached_candidates
-  deliverable: results/experiment_5012_levelup_attempt.json
+  deliverable: results/experiment_5026_levelup_attempt.json
   operator_override: '2026-06-19 operator directive (standing): ARC banked-level work continues opportunistically
-    post-sprint -- false-positive scope-match vs prior level-up/deepen tasks; structurally never a doomed rerun. Honest
-    no-bank if the well is dry. Rotate off the recently-attempted lanes; differs from E2 (r11l).'
+    post-sprint -- false-positive scope-match vs prior level-up/deepen tasks; structurally never a doomed rerun.
+    Honest no-bank if the well is dry. Rotate off the recently-attempted lanes; differs from E2 (lf52).'
   prompt: |
     CONTEXT ({date}). Opportunistic ARC level-up (NOT the majority -- the sprint is retired; this keeps ARC banked-
     level growth alive). Each new reproduced level is a game the live agent can score. Bank +1 on a FRESH grounded
-    target IF the well is not dry. HONEST CONTEXT: reproducible_total_levels has been flat at 69 for 6+ milestones (the
-    deepen well is dry across ALL depth regimes) -- an honest no-bank rotation dead-end is the CORRECT outcome if dry;
-    do NOT fabricate a bank or re-solve an already-reproduced level (a duplicate is an adversarial_verify CRITICAL).
+    target IF the well is not dry. HONEST CONTEXT: reproducible_total_levels has been flat at 69 for 7+ milestones
+    (the deepen well is dry across ALL depth regimes; .461 E3 cn04 L3->L4 no-banked) -- an honest no-bank rotation
+    dead-end is the CORRECT outcome if dry; do NOT fabricate a bank or re-solve an already-reproduced level (a
+    duplicate is an adversarial_verify CRITICAL).
 
-    TARGET: prefer sc25 L5->L6 (a depth-5 game) or cn04 L3->L4; lp85 L5->L6 alt. Confirm via recommend_approach + the
-    registry grounded-delta/dead_ends BEFORE searching. Rotate off the recently-hammered lanes (tn36/g50t/tu93/bp35/
-    tr87/s5i5/ar25/vc33/lf52/sb26/sp80/su15/m0r0/dc22) and AVOID ka59/wa30 (hidden-state-bound). Differs from E2 (r11l).
+    TARGET: prefer sc25 L5->L6 (a depth-5 game) or lp85 L5->L6; cn04 L3->L4 alt. Confirm via recommend_approach + the
+    registry grounded-delta/dead_ends BEFORE searching. Rotate off the recently-hammered lanes (cn04/tn36/g50t/tu93/
+    bp35/tr87/s5i5/ar25/vc33/lf52/sb26/sp80/su15/m0r0/dc22) and AVOID ka59/wa30 (hidden-state-bound). Differs from E2 (lf52).
 
     THE GPU FIX (2026-06-27): if induction runs, accept the conductor's GPU-0 CUDA llama-server OR the iGPU HIP server;
     do NOT iGPU-pin. Most deepens are offline search + reproduction gate (no LLM) -- record the honest substrate.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends; sc25 L5, cn04 L3, lp85 L5)
+      - {project_root}/ops/arc_solve_registry.yaml (levels_reproduced, dead_ends; sc25 L5, lp85 L5, cn04 L3)
       - {project_root}/scripts/arc_loop_solve.py (the standing solve loop)
       - {project_root}/python/carnot/agentic/arc_solve_learning.py (recommend_approach)
       - {project_root}/python/carnot/agentic/arc_game_adapters.py (register/extend a GameAdapter for the next-level DELTA if needed)
@@ -979,7 +1138,7 @@ tasks:
       solve_provenance:
         principle: "live_agent_self_discovery -- the agent advanced via its own attempts/runtime RE; NOT outer_loop_re (CRITICAL) and NOT a re-solve of an already-banked level (duplicate CRITICAL)."
       target_game:
-        principle: "the rotated FRESH grounded deepen target (differs from E2's r11l and the recently-attempted lanes)."
+        principle: "the rotated FRESH grounded deepen target (differs from E2's lf52 and the recently-attempted lanes)."
       offline_reproduced:
         principle: "only reproduced levels count toward reproducible_total_levels."
       reproduced_levels:
@@ -999,80 +1158,84 @@ tasks:
       reproducibility_checksum:
         principle: "content hash of (game, plan, claimed level) so a replication catches drift."
 
-    Run: `.venv/bin/python python/carnot/experiment_5012_levelup_attempt.py`
+    Run: `.venv/bin/python python/carnot/experiment_5026_levelup_attempt.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
-- id: exp5013-capstone
-  title: 'CAPSTONE v461 -- aggregate the FIRST PHASE D milestone: the off-ARC verifier-moat verdict (does a TRAINED/
-    principled oracle-distinct verifier beat tuned-SC on a headroom-present domain? D1 LoRA-EBM + D2 uPRM + D3 EBRM +
-    D4 cross-corpus -> D5 gate), the DiffusionGemma-gate status, the infra (B1 harness + B2 lint), KV260 continuity (C),
-    SOTA-ingestion (E1), continuous self-learning (E2), opportunistic ARC (E3). Skip any flagged_adversarial artifact.'
+- id: exp5027-capstone
+  title: 'CAPSTONE v462 -- aggregate the SECOND PHASE D milestone (the FIRST REAL moat test): the off-ARC verifier-
+    moat verdict (does a TRAINED/principled oracle-distinct verifier beat the GENUINE tuned-SC, OR does the cascade
+    hit an efficiency Pareto win? D1 LoRA-EBM + D2 uPRM + D3 EBRM + D6 cascade + D4 cross-corpus -> D5 gate), the
+    DiffusionGemma-gate status, the infra (B1 genuine-SC + B2 logprob cache), KV260 (C), SOTA-ingestion (E1),
+    continuous self-learning (E2), opportunistic ARC (E3). Skip any flagged_adversarial artifact. Emit the .463 pointer.'
   priority: high
   track: capstone
   max_turns: 50
   inference_substrate: aggregation_from_upstream_artifacts
-  deliverable: results/experiment_5013_capstone_v461.json
-  operator_override: '2026-06-19 operator directive (standing) + capstone-default codex: routine milestone-aggregation
-    capstone -- false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun.'
+  deliverable: results/experiment_5027_capstone_v462.json
+  operator_override: '2026-06-19 operator directive (standing) + capstone-default codex: routine milestone-
+    aggregation capstone -- false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun.'
   prompt: |
-    CONTEXT ({date}). CAPSTONE for 2026.06.461 -- the FIRST PHASE D (off-ARC verifier-moat) milestone after the ARC
-    sprint retired. Aggregate the milestone's arms into a single scorecard. NEVER aggregate an artifact carrying
-    flagged_adversarial=true (the fabrication gate -- skip + list it).
+    CONTEXT ({date}). CAPSTONE for 2026.06.462 -- the SECOND PHASE D milestone and the FIRST that actually measured
+    the moat (.461 was all execution failures). Aggregate the milestone's arms into a single scorecard. NEVER
+    aggregate an artifact carrying flagged_adversarial=true (the fabrication gate -- skip + list it). A skeleton/
+    degenerate/blocked arm is a FAILED EXECUTION, NOT a null (the .461 lesson).
 
-    THE HEADLINE to aggregate (read D5 exp5007 as the authoritative moat verdict):
-      - The off-ARC verifier-moat verdict: moat_realized (>=1 oracle-distinct arm beats tuned-SC, CI95-excl-0,
-        headroom-present, cross-corpus confirmed) OR moat_retired_bounded (D1 LoRA-EBM AND D2 uPRM both null) OR
-        mixed/MuSR-scoped. Carry best_arm + delta + CI + the per-arm table.
-      - diffusiongemma_gate_conditions_satisfied_off_arc (from D5; activation stays operator-gated -- do NOT flip the
-        gate to MET autonomously).
-      - Infra: B1 (exp5002) moat harness built; B2 (exp5008) oracle-distinctness/headroom lint shipped.
-      - C (exp5009) KV260 reachable/continuity; E1 (exp5010) SOTA-ingested N new papers mapped to PHASE D; E2 (exp5011)
-        self-play checkpoint refreshed (continuous self-learning); E3 (exp5012) opportunistic ARC level (bank or honest no-bank).
+    THE HEADLINE to aggregate (read D5 exp5022 as the authoritative moat verdict):
+      - The off-ARC verifier-moat verdict: moat_realized (>=1 oracle-distinct arm beats the GENUINE tuned-SC, CI95-
+        excl-0, headroom-present, cross-corpus confirmed; OR the cascade efficiency Pareto win) OR moat_retired_bounded
+        (PROPERLY-EXECUTED D1 LoRA-EBM AND D2 uPRM both clean-null) OR execution_incomplete (an arm did not run) OR
+        mixed/MuSR-scoped. Carry best_arm + delta + CI + the per-arm table (with scorer_trained/abstention_rate).
+      - diffusiongemma_gate_conditions_satisfied_off_arc (from D5; activation stays operator-gated -- do NOT flip to MET).
+      - Infra: B1 (exp5015) GENUINE tuned-SC baseline + degeneracy guard shipped; B2 (exp5016) shared logprob cache built.
+      - C (exp5023) KV260 reachable/continuity; E1 (exp5024) SOTA-ingested N new papers mapped to .463; E2 (exp5025)
+        self-play checkpoint refreshed (continuous self-learning); E3 (exp5026) opportunistic ARC level (bank or honest no-bank).
       - The ARC deliverable stays LOCKED (levels 69 + the publishable FoVer paper); reproducible_total_levels carried.
 
     EXISTING CODE TO READ FIRST:
-      - {project_root}/results/experiment_5007_moat_gate_resolution.json (D5 -- the authoritative moat verdict)
-      - {project_root}/results/experiment_5003_*/5004_*/5005_*/5006_* (the D arms, for the per-arm table)
-      - {project_root}/results/experiment_5002_*/5008_*/5009_*/5010_*/5011_*/5012_* (infra/hardware/ingestion/self-play/ARC)
-      - {project_root}/python/carnot/experiment_5000_capstone_v460.py (the prior capstone pattern to repeat)
+      - {project_root}/results/experiment_5022_moat_gate_resolution_v2.json (D5 -- the authoritative moat verdict)
+      - {project_root}/results/experiment_5017_*/5018_*/5019_*/5020_*/5021_* (the D arms, for the per-arm table)
+      - {project_root}/results/experiment_5015_*/5016_*/5023_*/5024_*/5025_*/5026_* (infra/hardware/ingestion/self-play/ARC)
+      - {project_root}/python/carnot/experiment_5013_capstone_v461.py (the prior capstone pattern to repeat)
       - {project_root}/scripts/adversarial_verify.py (skip flagged_adversarial artifacts)
 
     CONCRETE STEPS:
-      0. PRECONDITIONS: read whichever arm artifacts exist (a blocked/absent arm is recorded, not fatal). If D5 is absent, aggregate D1-D4 directly + note D5 missing.
-      1. Build the scorecard: the moat verdict + gate status + per-arm table + infra/hardware/ingestion/self-play/ARC rollup. Skip + list any flagged_adversarial artifact.
-      2. Compute next_milestone_pointer: if moat_realized -> .462 scales the winning construction (larger scorer / more corpora / the DiffusionGemma activation proposal for the operator); if moat_retired_bounded -> .462 pivots to the next verifier direction (the E1 SOTA candidates); if mixed -> .462 tightens the strongest arm. WRITE the deliverable.
+      0. PRECONDITIONS: read whichever arm artifacts exist (a blocked/absent arm is recorded, not fatal). If D5 is absent, aggregate D1-D4 + cascade directly + note D5 missing.
+      1. Build the scorecard: the moat verdict + gate status + per-arm table (with execution-quality flags) + infra/hardware/ingestion/self-play/ARC rollup. Skip + list any flagged_adversarial artifact.
+      2. Compute next_milestone_pointer: if moat_realized -> .463 scales the winning construction (larger scorer / more corpora / the DiffusionGemma activation proposal for the operator); if moat_retired_bounded -> .463 pivots to the next verifier direction (the E1 SOTA candidates); if execution_incomplete -> .463 re-runs the un-executed arm (route off codex if it bailed twice); if mixed -> .463 tightens the strongest arm. WRITE the deliverable.
 
     FALSIFIABLE GATE: a non-fabricated scorecard tracing every headline number to a non-flagged upstream artifact, with
-    the moat verdict + DiffusionGemma-gate status + the .462 pointer explicit.
+    the moat verdict + DiffusionGemma-gate status + the .463 pointer explicit.
 
     REQUIRED ARTIFACT FIELDS (principle-annotated):
       honest_verdict:
-        principle: "terminal prefix; complete_capstone_v461_moat_<realized|retired_bounded|musr_scoped>_<headline>."
+        principle: "terminal prefix; complete_capstone_v462_moat_<realized|retired_bounded|execution_incomplete|musr_scoped>_<headline>."
       moat_verdict:
-        principle: "the off-ARC verifier-moat verdict carried from D5 (realized / retired_bounded / mixed-scoped) -- the milestone headline."
+        principle: "the off-ARC verifier-moat verdict carried from D5 (realized / retired_bounded / execution_incomplete / mixed-scoped) -- the milestone headline."
       best_arm_and_delta:
-        principle: "the strongest oracle-distinct construction + corpus + delta_vs_tuned_sc + CI (from D5)."
+        principle: "the strongest oracle-distinct construction (or the efficiency Pareto point) + corpus + delta_vs_tuned_sc + CI (from D5)."
+      efficiency_win:
+        principle: "true iff the cascade (D6) reached accuracy parity at materially fewer judge calls (north-star §5)."
       diffusiongemma_gate_status:
         principle: "the gate status from D5 (conditions satisfied off-ARC? activation stays operator-gated; not autonomously flipped to MET)."
       per_arm_table:
-        principle: "D1/D2/D3/D4 deltas + CIs + verifier_is_oracle + headroom_present (the audit trail)."
+        principle: "D1/D2/D3/D6/D4 deltas + CIs + verifier_is_oracle + headroom_present + scorer_trained/abstention_rate (the audit + execution-quality trail)."
       infra_rollup:
-        principle: "B1 harness + B2 lint status (the 2 reserved infra slots)."
+        principle: "B1 genuine-SC baseline + degeneracy guard + B2 logprob cache status (the 2 reserved infra slots)."
       reproducible_total_levels:
         principle: "the ARC progress metric carried from the registry (the deliverable stays LOCKED; ARC opportunistic)."
       flagged_artifacts_skipped:
         principle: "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
       next_milestone_pointer:
-        principle: ".462 direction conditioned on the moat verdict (scale the winner / pivot to the next verifier direction / tighten the strongest arm)."
+        principle: ".463 direction conditioned on the moat verdict (scale the winner / pivot to the next verifier direction / re-run the un-executed arm / tighten the strongest arm)."
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {{experiment_id, fields_imported, sha256}} for each aggregated arm (traceable to real measurements)."
+        principle: "the {experiment_id, fields_imported, sha256} for each aggregated arm (traceable to real measurements)."
 
-    Run: `.venv/bin/python python/carnot/experiment_5013_capstone_v461.py`
+    Run: `.venv/bin/python python/carnot/experiment_5027_capstone_v462.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  milestone: 2026.06.461
+  milestone: 2026.06.462
   agent_type: codex
   model: gpt-5.5
