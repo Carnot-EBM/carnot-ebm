@@ -1,0 +1,305 @@
+{
+  "activated_milestone": "2026.06.462",
+  "arc_locked": true,
+  "archived_milestone": "2026.06.461",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "fd22f08eccd171ae9ed4ed82fa4481b065485f1ad058cad782cf63c0a2afd57d"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "aefaa024972093c2e5d2a61a77ed45f9645fa16b6c07c9c2a8cf38e96aac5888"
+    },
+    {
+      "path": "results/experiment_5013_capstone_v461.json",
+      "sha256": "2fdfa6f6b12fd8ffa57338c6ef0470705fc25aa5e69f3a711eba6d14ba4fd043"
+    },
+    {
+      "path": "results/experiment_5003_lora_ebm_scorer_musr.json",
+      "sha256": "2737af698768a25d516f5c28067047f18477acd13f0a3d00974608b8ea44a5af"
+    },
+    {
+      "path": "results/experiment_5004_uprm_replication.json",
+      "sha256": "df7f0b4ca5a4692ad3e3a3e8a66167c6f74ae95634c1c8c74efb393a9f12c79f"
+    },
+    {
+      "path": "results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "sha256": "4d89e8df80f5961d0028187237066cb5af816a556f7d8aa8d1bb80f7bcad6dab"
+    },
+    {
+      "path": "results/experiment_5006_moat_second_corpus.json",
+      "sha256": "db67fa3cff5ba1afc9e0c038fb1e00b58e345e2ce14b1ff94a0ce784a593e43b"
+    }
+  ],
+  "close_state_461": {
+    "arc": {
+      "locked": true,
+      "mode": "opportunistic_only"
+    },
+    "capstone": {
+      "capstone_ready": true,
+      "honest_verdict": "complete_capstone_v461_moat_musr_scoped_ebrm_musr_delta_0p000"
+    },
+    "clean_arm": {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.0,
+      "headroom_present": true,
+      "mcnemar_p": 1.0,
+      "paired_ci95": [
+        -0.03,
+        0.025
+      ],
+      "point_estimate_accuracy": 0.515,
+      "selection_accuracy": 0.585,
+      "source_experiment_id": 5005,
+      "tuned_sc_accuracy": 0.585,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    "d1_skeleton_bail": {
+      "all_preconditions_available": true,
+      "arm_id": "D1",
+      "defect": "skeleton_bail_never_trained",
+      "flagged_adversarial": true,
+      "honest_verdict": "running_lora_ebm_scorer_musr_pretrain_skeleton",
+      "n_pairs": 0,
+      "scientific_null": false,
+      "source_experiment_id": 5003,
+      "train_loss": null
+    },
+    "d2_logprob_cache_block": {
+      "arm_id": "D2",
+      "blocked_on": "uprm_logprob_candidate_cache",
+      "defect": "logprob_candidate_cache_block",
+      "flagged_adversarial": true,
+      "fresh_generation_disabled": true,
+      "honest_verdict": "blocked_uprm_logprob_candidate_cache",
+      "resource_detail": "0 cached uPRM logprob row(s), required >= 200; CARNOT_UPRM_ENABLE_FRESH_GENERATION=''",
+      "scientific_null": false,
+      "source_experiment_id": 5004
+    },
+    "d3_degeneracy": {
+      "abstention_rate": 0.975,
+      "arm_id": "D3",
+      "defect": "degenerate_always_abstain_to_strawman_sc",
+      "delta_vs_tuned_sc": 0.0,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p000_ci_incl_0",
+      "mcnemar_p": 1.0,
+      "paired_ci95": [
+        -0.03,
+        0.025
+      ],
+      "scientific_null": false,
+      "source_experiment_id": 5005,
+      "tuned_sc_k": 1,
+      "weak_base_scorer": "registry_quality_ensemble"
+    },
+    "d4_cross_corpus_skeleton_bail": {
+      "arm_id": "D4",
+      "defect": "cross_corpus_skeleton_bail",
+      "flagged_adversarial": true,
+      "honest_verdict": "running_moat_second_corpus_mmlu_pro_hard_skeleton",
+      "scientific_null": false,
+      "source_experiment_id": 5006,
+      "usable_best_verifier_missing": true
+    },
+    "diffusiongemma_gate_status": {
+      "activation": "not_activated",
+      "autonomously_flipped_to_met": false,
+      "conditions_satisfied_off_arc": false,
+      "operator_gated": true,
+      "status": "STILL-PENDING"
+    },
+    "do_not_queue": [
+      "energy-as-ARC",
+      "verifier-as-reward"
+    ],
+    "flagged_adversarial_skipped": [
+      {
+        "experiment_id": 5003,
+        "honest_verdict": "running_lora_ebm_scorer_musr_pretrain_skeleton",
+        "path": "results/experiment_5003_lora_ebm_scorer_musr.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:2737af698768a25d516f5c28067047f18477acd13f0a3d00974608b8ea44a5af",
+        "source": "D1_LORA_EBM"
+      },
+      {
+        "experiment_id": 5004,
+        "honest_verdict": "blocked_uprm_logprob_candidate_cache",
+        "path": "results/experiment_5004_uprm_replication.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:df7f0b4ca5a4692ad3e3a3e8a66167c6f74ae95634c1c8c74efb393a9f12c79f",
+        "source": "D2_UPRM"
+      },
+      {
+        "experiment_id": 5006,
+        "honest_verdict": "running_moat_second_corpus_mmlu_pro_hard_skeleton",
+        "path": "results/experiment_5006_moat_second_corpus.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:db67fa3cff5ba1afc9e0c038fb1e00b58e345e2ce14b1ff94a0ce784a593e43b",
+        "source": "D4_SECOND_CORPUS"
+      }
+    ],
+    "moat_verdict": {
+      "decision": "MIXED-SCOPED",
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "state": "mixed_musr_scoped",
+      "summary": "D5 is scoped rather than realized or retired: best clean row is EBRM on MuSR delta_vs_tuned_sc=plus_0p000, CI95=[-0.03, 0.025], McNemar p=1.0, skipped flagged artifacts were D1, D2, D4, and the evidence did not provide both a clean positive MuSR arm and a clean D4 second-corpus confirmation. This is not a bounded retirement unless clean D1 and D2 nulls are both present."
+    },
+    "phase_d": {
+      "arc_sprint_retired": true,
+      "first_real_test_in_462": true,
+      "majority_lever_for_462": true
+    },
+    "prior_milestone_moat_verdict": "MIXED-SCOPED",
+    "reproducible_total_levels": 69,
+    "summary": "v461_mixed_scoped_phase_d_execution_failures_recorded_for_v462"
+  },
+  "diffusiongemma_gate_status": {
+    "activation": "not_activated",
+    "autonomously_flipped_to_met": false,
+    "conditions_satisfied_off_arc": false,
+    "operator_gated": true,
+    "status": "STILL-PENDING"
+  },
+  "duration_s": 6.629418,
+  "execution_defects_to_fix": [
+    {
+      "addressed_by_462": "train_first_lora_ebm_with_smaller_qwen_base",
+      "arm_id": "D1",
+      "defect": "skeleton_bail_never_trained",
+      "evidence": "n_pairs=0, train_loss=None",
+      "scientific_null": false,
+      "source_experiment_id": 5003
+    },
+    {
+      "addressed_by_462": "shared_logprob_enriched_candidate_cache",
+      "arm_id": "D2",
+      "defect": "logprob_cache_block_fresh_generation_disabled",
+      "evidence": "0 cached uPRM logprob row(s), required >= 200; CARNOT_UPRM_ENABLE_FRESH_GENERATION=''",
+      "scientific_null": false,
+      "source_experiment_id": 5004
+    },
+    {
+      "addressed_by_462": "genuine_k_way_sc_baseline_and_abstention_guard",
+      "arm_id": "D3",
+      "defect": "degenerate_always_abstain_to_k1_tuned_sc",
+      "evidence": "abstention_rate=0.975, tuned_sc_k=1",
+      "scientific_null": false,
+      "source_experiment_id": 5005
+    }
+  ],
+  "experiment": "experiment_5014_archive_461_activate_462",
+  "experiment_id": 5014,
+  "field_principles": {
+    "execution_defects_to_fix": {
+      "principle": "the three .461 PHASE D execution defects .462 addresses (D1 skeleton-bail, D2 logprob-cache block, D3 degenerate-always-abstain)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_461_archived_462_activated_phase_d_continues."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "phase_d_first_real_test": {
+      "principle": "true -- .462 is the FIRST milestone that actually measures the moat (.461 was all execution failures)."
+    },
+    "prior_milestone_moat_verdict": {
+      "principle": "MIXED-SCOPED carried from exp5013 -- no realized win, no bounded retirement (D1/D2 nulls were not clean)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (69; ARC LOCKED + opportunistic)."
+    }
+  },
+  "honest_verdict": "complete_461_archived_462_activated_phase_d_continues",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "phase_d_first_real_test": true,
+  "phase_d_majority_lever": true,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "active_roadmap_yaml": {
+      "active_exists": true,
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml,os; p='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'; q='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'; f=p if os.path.exists(p) else q; yaml.safe_load(open(f)); print('ok',f)"
+      ],
+      "exit_code": 0,
+      "fallback_path": "research-roadmap-next.yaml",
+      "next_exists": false,
+      "passed": true,
+      "primary_path": "research-roadmap.yaml",
+      "selected_path": "research-roadmap.yaml",
+      "stderr_tail": "",
+      "stdout_tail": "ok /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
+    },
+    "capstone_v461": {
+      "exists": true,
+      "honest_verdict": "complete_capstone_v461_moat_musr_scoped_ebrm_musr_delta_0p000",
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5013_capstone_v461.json"
+    },
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "registry": {
+      "exists": true,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 69
+    }
+  },
+  "pretest_gate": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/python/test_experiment_5014_archive_461_activate_462.py",
+      "-q",
+      "--no-cov"
+    ],
+    "exit_code": 0,
+    "green": true,
+    "passed": true,
+    "ran": true,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [6 items]\n\n......                                                                   [100%]\n============================== 6 passed in 3.87s ===============================\n"
+  },
+  "prior_milestone_moat_verdict": "MIXED-SCOPED",
+  "random_seed": 20260630,
+  "reproducibility_checksum": "81bf4f88ffeee73d2c2597012af534b089259ac426decb635a6ff8e0bef0ae2d",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_5014_archive_461_activate_462.json",
+  "schema": "carnot.exp5014.archive_461_activate_462.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-5014",
+    "SCENARIO-CAPSTONE-5014",
+    "SCENARIO-CAPSTONE-5014-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-5014-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.462",
+    "activation_state": "already_active_or_activated_462",
+    "active_milestone_confirmed": "2026.06.462",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "archived_milestone": "2026.06.461",
+    "transition_performed": true
+  },
+  "transition_performed": true
+}
