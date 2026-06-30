@@ -171,5 +171,14 @@
   "spec_refs": [
     "REQ-VERIFY-5008",
     "SCENARIO-VERIFY-5008"
-  ]
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "critical",
+      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
