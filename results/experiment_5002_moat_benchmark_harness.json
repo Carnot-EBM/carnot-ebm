@@ -1,0 +1,343 @@
+{
+  "candidate_cache_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+  "corpora_available": [
+    "MuSR/murder_mysteries",
+    "MMLU-Pro-hard",
+    "MATH-500-hard"
+  ],
+  "duration_s": 1.0,
+  "experiment": "experiment_5002_moat_benchmark_harness",
+  "experiment_id": 5002,
+  "field_principles": {
+    "candidate_cache_dir": {
+      "principle": "source directory for reused MuSR candidate checkpoints."
+    },
+    "corpora_available": {
+      "principle": "the list of loadable headroom-candidate corpora (MuSR + the 2nd-corpus options) so D4 can pick a confirmed-cached second corpus."
+    },
+    "duration_s": {
+      "principle": "1.0s cached-scoring floor for verifier_ensemble_against_cached_candidates."
+    },
+    "experiment": {
+      "principle": "machine-readable experiment slug."
+    },
+    "experiment_id": {
+      "principle": "numeric experiment identifier."
+    },
+    "field_principles": {
+      "principle": "principle annotations for every artifact field."
+    },
+    "generation_path": {
+      "principle": "fresh-candidate/logprob path for later D arms; unused in smoke."
+    },
+    "harness_module_path": {
+      "principle": "python/carnot/moat_benchmark_harness.py -- the reusable library the D arms import (no duplicated metric code)."
+    },
+    "headroom_present_smoke": {
+      "principle": "(oracle@K - tuned_sc) >= 0.10 AND flips>0 -- the FALSE_NEGATIVE_RISK guard a null must clear to be informative."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_moat_harness_built_smoke_green."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (scores cached candidates; 1s floor) -- no new LLM generation in the smoke."
+    },
+    "mcnemar_p_smoke": {
+      "principle": "paired McNemar exact p for trivial verifier versus tuned SC."
+    },
+    "n_flips_possible_smoke": {
+      "principle": "count of tuned-SC-wrong rows where oracle@K could recover."
+    },
+    "no_new_llm_generation_in_smoke": {
+      "principle": "true -- Exp 5002 only scores cached MuSR candidates."
+    },
+    "oracle_at_k_smoke": {
+      "principle": "the selectable-headroom ceiling; (oracle@K - tuned_sc) is the headroom a verifier could capture."
+    },
+    "oracle_distinctness_enforced": {
+      "principle": "true -- the harness raises if a scorer reads gold/answer_index/model_id (verifier_is_oracle=False is mechanically enforced)."
+    },
+    "paired_ci95_smoke": {
+      "principle": "paired bootstrap CI95 for trivial verifier minus tuned SC."
+    },
+    "preconditions_checked": {
+      "principle": "records corpus/candidate-cache checks; a missing corpus emits blocked_, never a fabricated metric."
+    },
+    "random_seed": {
+      "principle": "determinism for the bootstrap CI + the smoke."
+    },
+    "reproducibility_checksum": {
+      "principle": "hash of preconditions, smoke metrics, and guardrails."
+    },
+    "result_path": {
+      "principle": "where the terminal JSON artifact is written."
+    },
+    "schema": {
+      "principle": "stable artifact schema for Exp 5002."
+    },
+    "smoke_limit": {
+      "principle": "bounded cached MuSR smoke size, at most 30 rows."
+    },
+    "smoke_metrics": {
+      "principle": "full shared metric bundle from the reusable harness."
+    },
+    "spec_refs": {
+      "principle": "OpenSpec anchors for the harness and smoke."
+    },
+    "trivial_verifier_delta_smoke": {
+      "principle": "trivial cached-verifier accuracy minus tuned self-consistency."
+    },
+    "tuned_sc_smoke": {
+      "principle": "the TUNED self-consistency accuracy on the smoke slice -- the baseline to beat is tuned, not naive SC (headroom-control)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- scorers are blocked from answer-key/model-id reads."
+    }
+  },
+  "generation_path": {
+    "available": true,
+    "cuda_device": "CUDA:0",
+    "entrypoint": "harness.generate_candidates_with_logprobs",
+    "gpu": 0,
+    "model": "gemma-4-12B-it-GGUF",
+    "requires_logprobs": true,
+    "used_in_smoke": false
+  },
+  "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+  "headroom_present_smoke": true,
+  "honest_verdict": "success_moat_harness_built_smoke_green",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "mcnemar_p_smoke": 1.0,
+  "n_flips_possible_smoke": 7,
+  "no_new_llm_generation_in_smoke": true,
+  "oracle_at_k_smoke": 0.9,
+  "oracle_distinctness_enforced": true,
+  "paired_ci95_smoke": [
+    -0.133333,
+    0.066667
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "blocked_resource": null,
+    "candidate_cache_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+    "candidate_cache_files": 200,
+    "candidate_cache_nonempty": true,
+    "candidate_cache_present": true,
+    "codex_md_read": true,
+    "corpora_available": [
+      "MuSR/murder_mysteries",
+      "MMLU-Pro-hard",
+      "MATH-500-hard"
+    ],
+    "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+    "harness_module_present": true,
+    "kona_spec_has_req": true,
+    "kona_spec_path": "openspec/capabilities/phase3-kona/spec.md",
+    "kona_spec_present": true,
+    "musr_corpus_available": true,
+    "musr_corpus_error": null,
+    "musr_rows_loaded_for_precheck": 30,
+    "new_llm_generation_in_smoke": false,
+    "ops_docs_modified": false,
+    "scripts_research_conductor_modified": false,
+    "smoke_limit": 30
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:8cd697829b8198f2ff060fb98dfe5f94f56f0900da00b9523885b15474d14e8d",
+  "result_path": "results/experiment_5002_moat_benchmark_harness.json",
+  "schema": "carnot.moat_benchmark_harness.v1",
+  "smoke_limit": 30,
+  "smoke_metrics": {
+    "headroom_present": true,
+    "mcnemar_p": 1.0,
+    "n_flips_possible": 7,
+    "n_rows": 30,
+    "oracle_at_k": 0.9,
+    "paired_correct": {
+      "oracle_at_k": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "tuned_self_consistency": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      "verifier": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1
+      ]
+    },
+    "tuned_self_consistency": {
+      "accuracy": 0.666667,
+      "config": {
+        "k": 4,
+        "temperature": "cached"
+      },
+      "predictions": [
+        "Mackenzie",
+        "Ana",
+        "Harry",
+        "Harry",
+        "Amelia",
+        "Emma",
+        "Nelson",
+        "Nelson",
+        "Julia",
+        "Julia",
+        "Unity",
+        "Vivian",
+        "Emma",
+        "Emma",
+        "Lance",
+        "Harper",
+        "Roscoe",
+        "Roscoe",
+        "Angela",
+        "Roy",
+        "Ervin",
+        "Andrew",
+        "Brianna",
+        "Oscar",
+        "Jay",
+        "Jay",
+        "Max",
+        "Max",
+        "Martin",
+        "Martin"
+      ]
+    },
+    "verifier": {
+      "accuracy": 0.633333,
+      "predictions": [
+        "Mackenzie",
+        "Ana",
+        "Harry",
+        "Harry",
+        "Amelia",
+        "Emma",
+        "Nelson",
+        "Nelson",
+        "Julia",
+        "Julia",
+        "Unity",
+        "Vivian",
+        "Emma",
+        "Emma",
+        "Harper",
+        "Harper",
+        "Roscoe",
+        "Roscoe",
+        "Angela",
+        "Roy",
+        "Andrew",
+        "Andrew",
+        "Brianna",
+        "Oscar",
+        "Jay",
+        "Autumn",
+        "Max",
+        "Max",
+        "Martin",
+        "Martin"
+      ]
+    },
+    "verifier_minus_tuned_sc_ci95": [
+      -0.133333,
+      0.066667
+    ],
+    "verifier_minus_tuned_sc_delta": -0.033334
+  },
+  "spec_refs": [
+    "REQ-KONA-5002",
+    "SCENARIO-KONA-5002-SMOKE",
+    "SCENARIO-KONA-5002-ORACLE-DISTINCT",
+    "SCENARIO-KONA-5002-BLOCKED"
+  ],
+  "trivial_verifier_delta_smoke": -0.033334,
+  "tuned_sc_smoke": 0.666667,
+  "verifier_is_oracle": false
+}
