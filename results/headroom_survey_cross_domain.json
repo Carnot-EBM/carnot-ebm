@@ -1,0 +1,36 @@
+{
+  "experiment": "headroom_survey_cross_domain",
+  "purpose": "Positive-control diagnostic (operator 'try that next'): WHERE is there oracle-distinct headroom a learned verifier could capture? Computed from CACHED cross-domain pools (exp4305/exp4314); no generation.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "cited_upstream_artifacts": [
+    "results/experiment_4305_cross_domain_pool.json.gz",
+    "results/experiment_4314_cross_domain_selector_ir3de_cascal_pool.json.gz",
+    "results/experiment_4305_cross_domain_selector_generalization.json",
+    "results/experiment_4314_cross_domain_selector_ir3de_cascal.json"
+  ],
+  "metric_definitions": {
+    "oracle_at_k": "fraction of tasks where the correct answer is among the K candidates (selectable upper bound)",
+    "sc_vote": "fraction where the majority-vote (self-consistency) candidate is correct (baseline)",
+    "headroom": "oracle_at_k - sc_vote = selectable headroom a verifier could capture",
+    "oracle_distinct": "true if NO cheap executable oracle defines correctness (code/arc-exec/sudoku = circular = false)"
+  },
+  "per_domain": [
+    {"domain": "fover",  "n": 26, "oracle_at_k": 0.769, "sc_vote": 0.269, "headroom": 0.500, "oracle_distinct": true,  "note": "ONLY oracle-distinct domain with real headroom"},
+    {"domain": "arc",    "n": 52, "oracle_at_k": 0.827, "sc_vote": 0.250, "headroom": 0.577, "oracle_distinct": false, "note": "circular: executable ARC oracle"},
+    {"domain": "arcgen", "n": 24, "oracle_at_k": 0.750, "sc_vote": 0.250, "headroom": 0.500, "oracle_distinct": false, "note": "circular: executable generator oracle"}
+  ],
+  "no_headroom_corpora": {
+    "MuSR": "SC near-ceiling -> the entire PHASE D null streak (uPRM -0.110, LoRA-EBM/EBRM +0.080 CI-incl-0, process-reward -0.030, replay-memory -0.05) is a no-headroom artifact, not a method failure",
+    "math_csp_P0.1": "strong classical baselines near-optimal (prior bounded nulls)"
+  },
+  "prior_fover_attempt_collapsed": {
+    "experiments": ["exp4305", "exp4314"],
+    "result": "cross-domain (held-out FoVer) verifier-select beat vote by +0.231 BUT label_ablation reproduced +0.231 identically -> label-independent artifact",
+    "honest_verdict": "cross_domain_selection_collapses_domain_bound",
+    "implication": "FoVer headroom is REAL but UNCAPTURED; the cross-domain transfer was an artifact"
+  },
+  "decisive_next_experiment": "IN-DOMAIN FoVer verifier-selection vs tuned-SC (train on FoVer, test held-out FoVer), n>=150, verifier_is_oracle=false, with a MANDATORY label-ablation negative control (real verifier beats vote AND shuffled-label verifier does NOT). Beats SC toward the 0.77 oracle ceiling with CI95 excl 0 = moat realized on an oracle-distinct headroom-present domain (the open claim). See ops/known-issues.md MOAT REDIRECT 2026-06-30.",
+  "honest_verdict": "complete_headroom_survey_fover_is_the_oracle_distinct_target_musr_is_no_headroom",
+  "random_seed": 20260630,
+  "solve_provenance": "development_proxy"
+}

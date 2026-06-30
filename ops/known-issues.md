@@ -1280,6 +1280,42 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### MOAT REDIRECT 2026-06-30 (operator "try that next") — STOP testing the moat on MuSR; test IN-DOMAIN FoVer selection
+
+**Finding (outer-loop headroom survey on cached cross-domain pools exp4305/exp4314, zero generation):**
+the entire PHASE D null streak (uPRM −0.110, LoRA-EBM/EBRM +0.080 CI-incl-0, process-reward −0.030,
+replay-memory −0.05 on MuSR) has ONE explanation — **MuSR / math / CSP have no oracle-distinct headroom**
+(SC is near-ceiling, so NO selector can win). The cached pools reveal the headroom map:
+
+| domain | oracle@K | SC(vote) | headroom | oracle-distinct |
+|---|---|---|---|---|
+| **fover** | 0.769 | 0.269 | **+0.500** | **YES** |
+| arc / arcgen | 0.75–0.83 | 0.25 | +0.50–0.58 | NO (executable oracle = circular) |
+
+**FoVer is the only oracle-distinct domain with real headroom** (correct candidate present 77%, vote picks
+it 27%). The moat opportunity is there, NOT on MuSR. BUT the one FoVer attempt (exp4305/4314) was
+**cross-domain** and COLLAPSED: `fover.cross_domain_delta=+0.231` but `label_ablation.cross_domain_delta`
+=+0.231 IDENTICAL → the lift is a label-independent artifact (honest verdict
+`cross_domain_selection_collapses_domain_bound`). So FoVer's headroom is real but UNCAPTURED.
+
+**The decisive, unrun experiment (redirect PHASE D here):**
+1. Build a PROPER-SIZED FoVer (oracle-distinct, headroom-present) candidate-selection pool — the exp4305
+   pool is only n=26; need n≥150 questions, K candidates, parsed answers, oracle@K<1.0 confirmed.
+2. **IN-DOMAIN** (train on FoVer, test on held-out FoVer — NOT cross-domain) verifier-selection vs
+   **tuned-SC**. Gate: verifier-selection accuracy beats SC (toward the 0.77 oracle ceiling), CI95 excl 0.
+3. **Label-ablation negative control is MANDATORY** (the exact trap that killed the cross-domain attempt):
+   the REAL verifier must beat vote AND the shuffled-label verifier must NOT. If the label-ablation
+   reproduces the delta, it is an artifact — quarantine, do not headline.
+4. `verifier_is_oracle: false` (a learned/energy verifier over FoVer step-reasoning, not the answer key).
+   AUROC (our 0.91 headline) is discrimination; this measures SELECTION-beats-SC = the stronger moat claim.
+
+**Retire the MuSR-moat line** (uPRM/LoRA-EBM/EBRM/process-reward on MuSR) — it is a no-headroom corpus;
+re-running it is the diminishing-returns churn north-star §1 forbids. Cross-refs: exp4305/exp4314 (the
+collapse + headroom data), `feedback_cl_bench_continual_learning` (headroom-normalized gain),
+CLAUDE.md "Circularity / Oracle-Distinctness Discipline" + "Adversarial Artifact Verification"
+(FALSE_NEGATIVE_RISK = run a positive control; the headroom survey IS that control).
+
+
 ### PLANNER-TEMPLATE FIX 2026-06-30 — PHASE E self-learning/replay tasks must declare an aggregation substrate
 
 **Recurring false-positive (E1 exp5051, .463):** continuous-self-learning / replay-memory tasks read CACHED
