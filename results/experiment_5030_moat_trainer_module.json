@@ -1,0 +1,104 @@
+{
+  "base_used": "Qwen/Qwen3.5-2B",
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5030_moat_smoke/epoch_2",
+  "duration_s": 88.7625,
+  "experiment": "experiment_5030_moat_trainer_module",
+  "experiment_id": 5030,
+  "field_principles": {
+    "base_used": "the REAL cached base the resolver returned (e.g. Qwen/Qwen3.5-2B) -- proves the resolver kills the 404 class.",
+    "checkpoint_path": "the smoke checkpoint that reloaded + scored (proves resume/score work).",
+    "honest_verdict": "terminal prefix; success_moat_trainer_module_shipped_smoke_trained_<base>; a non-training smoke is blocked_smoke_train_did_not_run.",
+    "inference_substrate": "live_llm_inference (GPU training in the smoke; >=60s floor).",
+    "model_specs": "the resolved base + LoRA + scalar energy head -- the methodology stamp.",
+    "module_path": "python/carnot/moat_trainer.py -- the shared library D1 imports.",
+    "preconditions_checked": "records CUDA/base-cached/fover/peft checks; a missing resource emits blocked_, never a fabricated smoke.",
+    "random_seed": "determinism for the smoke train/score.",
+    "reproducibility_checksum": "content hash of (base, LoRA config, smoke pairs, seed).",
+    "resolver_base_list": "the prioritized list probed [Qwen3.5-2B, Qwen3.5-0.8B, Qwen3-4B, Qwen2.5-0.5B] + which were present (auditable; a single wrong id can never block again).",
+    "smoke_duration_s": ">60s REQUIRED (real GPU training takes wall-clock; the anti-skeleton signal).",
+    "smoke_passed": "true iff the 60s smoke ACTUALLY trained (smoke_train_loss non-null, smoke_duration_s>60, checkpoint reloads+scores) -- the field D1 gates on; the pre-flight de-risk that the .462 D1 lacked.",
+    "smoke_train_loss": "the smoke's final contrastive loss (non-null REQUIRED -- proves the trainer runs the model)."
+  },
+  "honest_verdict": "success_moat_trainer_module_shipped_smoke_trained_Qwen_Qwen35-2B",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "adapter": "LoRA",
+    "base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "base_model": "Qwen/Qwen3.5-2B",
+    "energy_head": "scalar_sequence_regression_head",
+    "lora_alpha": 16,
+    "lora_r": 8,
+    "quantization": "4bit_nf4_QLoRA",
+    "resolver_priority": [
+      "Qwen/Qwen3.5-2B",
+      "Qwen/Qwen3.5-0.8B",
+      "Qwen/Qwen3-4B",
+      "Qwen/Qwen2.5-0.5B"
+    ]
+  },
+  "module_path": "python/carnot/moat_trainer.py",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available=true, device_count=1",
+      "resource": "cuda"
+    },
+    {
+      "available": true,
+      "detail": "resolved Qwen/Qwen3.5-2B",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
+      "resource": "trainable_base_cached"
+    },
+    {
+      "available": true,
+      "detail": "data/fover_train_v4.json present",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train_v4.json",
+      "resource": "fover_pairs"
+    },
+    {
+      "available": true,
+      "detail": "peft 0.19.1",
+      "resource": "peft"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:a99b9e68fc2418aa9aff994c3f3ae602db4daea7efd0bf7ccfca1b8c7acab771",
+  "resolver_base_list": [
+    {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
+      "present": true,
+      "repo_id": "Qwen/Qwen3.5-2B"
+    },
+    {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+      "present": true,
+      "repo_id": "Qwen/Qwen3.5-0.8B"
+    },
+    {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c",
+      "present": true,
+      "repo_id": "Qwen/Qwen3-4B"
+    },
+    {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen2.5-0.5B/snapshots/060db6499f32faf8b98477b0a26969ef7d8b9987",
+      "present": true,
+      "repo_id": "Qwen/Qwen2.5-0.5B"
+    }
+  ],
+  "result_path": "results/experiment_5030_moat_trainer_module.json",
+  "schema": "carnot.experiment_5030_moat_trainer_module.v1",
+  "smoke_candidate_energies": [
+    -6.125,
+    -5.40625
+  ],
+  "smoke_duration_s": 84.0639,
+  "smoke_n_pairs": 64,
+  "smoke_n_steps": 64,
+  "smoke_passed": true,
+  "smoke_train_loss": 0.04401,
+  "spec_refs": [
+    "REQ-VERIFY-5030",
+    "SCENARIO-VERIFY-5030"
+  ],
+  "verifier_is_oracle": false
+}

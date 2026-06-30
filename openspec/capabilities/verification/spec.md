@@ -21550,3 +21550,78 @@ win without paired significance, and a no-headroom null, when
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5008 | Implemented (`scripts/adversarial_verify.py`, `python/carnot/experiment_5008_moat_oracle_distinct_lint.py`, `results/experiment_5008_moat_oracle_distinct_lint.json`) | Implemented (`tests/python/test_adversarial_verify_moat_claim_rigor.py`) |
+
+### REQ-VERIFY-5030: Reusable Moat-Trainer Module With Cached-Base Resolver
+
+The repository SHALL provide a reusable LoRA-EBM training module at
+`python/carnot/moat_trainer.py` so that the headline moat experiment (D1) can
+import a trained energy-head pipeline instead of re-deriving it, and SHALL
+provide Exp 5030 at `python/carnot/experiment_5030_moat_trainer_module.py` to
+de-risk that pipeline end-to-end on a real cached base and write
+`results/experiment_5030_moat_trainer_module.json`.
+
+`moat_trainer.resolve_trainable_base(preferred=None)` SHALL probe a prioritized
+list of bases confirmed cacheable on the conductor box
+(`Qwen/Qwen3.5-2B`, `Qwen/Qwen3.5-0.8B`, `Qwen/Qwen3-4B`, `Qwen/Qwen2.5-0.5B`)
+and return the first `(repo_id, local_snapshot_path)` whose local HuggingFace
+snapshot has a `config.json` plus safetensors weights. If a `preferred` id is
+passed and present it SHALL be used first; otherwise the list is probed in
+order. The function SHALL raise a clear error naming the full probed list ONLY
+when NONE is present. This kills the hallucinated-repo failure class
+(`Qwen/Qwen3.5-1.7B` 404 in REQ-VERIFY-5017) — a single wrong id can never
+block training again.
+
+`moat_trainer.train_energy_head(base, pairs, out_dir, epochs=1, ...)` SHALL load
+the resolved base plus a LoRA adapter and a scalar energy head, train
+contrastively so `energy(good) < energy(bad)` on `(positive, negative)`
+reasoning pairs, checkpoint per epoch to `out_dir` (adapter, tokenizer, and an
+epoch/metrics marker) so a capped run RESUMES from the last epoch, and return
+`{train_loss, n_pairs, base_used, checkpoint_dir, epochs_done}`.
+`moat_trainer.score_candidates(checkpoint, candidate_texts)` SHALL load a
+trained checkpoint and return one per-candidate scalar energy (lower = better),
+the eval path D1 uses.
+
+Before any training Exp 5030 SHALL check CUDA availability, that at least one
+resolver base is cached, that `data/fover_train_v4.json` exists, and that `peft`
+is importable; a missing resource SHALL write an honest
+`honest_verdict=blocked_<resource>` artifact with `preconditions_checked` and
+stop without fabricating a smoke. When preconditions hold, Exp 5030 SHALL run a
+60-second smoke: resolve a base, train the energy head for a few steps on a
+handful of FoVer pairs on conductor GPU 0 (CUDA device 0, no iGPU pinning),
+checkpoint, reload, and score two candidates.
+
+The terminal artifact SHALL include `honest_verdict` (terminal prefix
+`success_moat_trainer_module_shipped_smoke_trained_<base>` on a trained smoke,
+`blocked_<resource>` otherwise), bare bool `smoke_passed`, `base_used`,
+`resolver_base_list`, `smoke_train_loss`, `smoke_duration_s`, `checkpoint_path`,
+`module_path`, `model_specs`, `inference_substrate="live_llm_inference"`,
+`random_seed`, `reproducibility_checksum`, `preconditions_checked`,
+`duration_s`, `field_principles`, and `spec_refs`. `smoke_passed` SHALL be true
+only when the smoke ACTUALLY trained (`smoke_train_loss` non-null,
+`smoke_duration_s>60`, and the checkpoint reloads and scores) — the pre-flight
+de-risk that the REQ-VERIFY-5017 D1 lacked. A smoke that cannot train on any
+real base is a FAILED execution (retire-if-same-verdict), not a null.
+
+### SCENARIO-VERIFY-5030: Moat Trainer Resolves A Real Base And The Smoke Trains
+
+Given CUDA is available on conductor GPU 0, at least one resolver base
+(`Qwen/Qwen3.5-2B`) is cached with `config.json` and safetensors, `peft` is
+importable, and `data/fover_train_v4.json` exists, when Exp 5030 runs, then
+`resolve_trainable_base()` returns a real cached `(repo_id, path)`,
+`train_energy_head` trains the LoRA energy head for a few steps on a handful of
+FoVer contrastive pairs, checkpoints to disk, `score_candidates` reloads the
+checkpoint and returns two finite energies, and the runner writes a terminal
+artifact with `smoke_passed=true`, a non-null `smoke_train_loss`,
+`smoke_duration_s>60`, `base_used` naming the resolved base, and every required
+field.
+
+If CUDA, a cached resolver base, `peft`, or `data/fover_train_v4.json` is
+missing, then Exp 5030 writes a blocked artifact naming the missing resource,
+records the precondition checks, keeps `smoke_passed=false`, and exits without
+claiming a trained smoke loss or checkpoint.
+
+## Implementation Status (REQ-VERIFY-5030)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5030 | Implemented (`python/carnot/moat_trainer.py`, `python/carnot/experiment_5030_moat_trainer_module.py`, `results/experiment_5030_moat_trainer_module.json`) | Implemented (`tests/python/test_moat_trainer.py`) |
