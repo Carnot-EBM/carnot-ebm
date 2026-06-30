@@ -11,6 +11,21 @@ loop) executes the current experiments.
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
 <!-- EXP4890-SOTA-INGESTION-V451-FRONTIER-START -->
+<!-- EXP5010-VERIFIER-MOAT-LITERATURE-START -->
+## Exp 5010 - verifier-moat literature SOTA ingestion - INGESTED
+
+- Honest verdict: `success_sota_ingested_5_new_papers_mapped_to_phase_d`
+- Note: `docs/research-notes/verifier-moat-literature-2026-06-30.md`
+- Reliable channel: sweep_clusters/sweep_semscholar plus WebSearch/WebFetch; `/deep-research` was not invoked.
+- Phase D read: D1/D2 were not clean evidence, D3 tied tuned-SC on MuSR, so .462 should target uncertainty-aware reruns and the D2 unblock.
+
+### flagged_for_v462
+- UARM calibrated uncertainty reward head (arXiv:2606.19818): flagged_for_v462 (.462): uarm_uncertainty_head_for_d3_ebrm
+- Distributional pessimistic reward uncertainty (arXiv:2606.09073): flagged_for_v462 (.462): distributional_pessimistic_ebrm_head
+- RewardUQ calibration harness for verifier uncertainty (arXiv:2602.24040): flagged_for_v462 (.462): rewarduq_calibration_gate_for_d1_d3
+- Uncertainty-routed RM plus strong-judge cascade (arXiv:2510.20369): flagged_for_v462 (.462): uncertainty_routed_moat_cascade
+- LC-ERD endogenous reward decomposition (arXiv:2605.24005): flagged_for_v462 (.462): lc_erd_uprm_unblock_path
+<!-- EXP5010-VERIFIER-MOAT-LITERATURE-END -->
 ## 2026-06-27 Exp 4890 - .451 V451 frontier SOTA ingestion - INGESTED
 
 **Status:** INGESTED into `results/experiment_4890_sota_ingestion_v451_frontier.json`.

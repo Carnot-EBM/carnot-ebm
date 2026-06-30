@@ -32,6 +32,17 @@ against the *discriminative* budget frontier (2510.14913) AND the *generative* f
 backlog is now 11 real-cited papers. (`/deep-research` was NOT used -- direct low-concurrency `WebSearch`
 per the SOTA-Ingestion Cycle Discipline.)
 
+<!-- EXP5010-VERIFIER-MOAT-REFERENCES-START -->
+## Exp 5010 verifier-moat literature source set
+
+These entries are new to the Exp 5010 selected set and are not in the 13-paper already-ingested exclusion list.
+
+- arXiv:2606.19818 - Uncertainty-Aware Reward Modeling for Stable RLHF - https://arxiv.org/abs/2606.19818 - HTTP 200
+- arXiv:2606.09073 - A Unifying Lens on Reward Uncertainty in RLHF - https://arxiv.org/abs/2606.09073 - HTTP 200
+- arXiv:2602.24040 - RewardUQ: A Unified Framework for Uncertainty-Aware Reward Models - https://arxiv.org/abs/2602.24040 - HTTP 200
+- arXiv:2510.20369 - Ask a Strong LLM Judge when Your Reward Model is Uncertain - https://arxiv.org/abs/2510.20369 - HTTP 200
+- arXiv:2605.24005 - LC-ERD: Mining Latent Logic for Self-Evolving Reasoning via Consistency-Regulated Reward Decomposition - https://arxiv.org/abs/2605.24005 - HTTP 200
+<!-- EXP5010-VERIFIER-MOAT-REFERENCES-END -->
 ## 2026-06-29 — .458 planning sweep — EXTEND the post-6/30 verifier-moat (distributional-energy-verifier) SOTA backlog with 3 NEW process-verification papers
 
 Added by the `.458` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-29). `.458` is a

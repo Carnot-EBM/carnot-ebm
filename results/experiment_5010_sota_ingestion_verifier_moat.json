@@ -1,0 +1,247 @@
+{
+  "citations_verified": {
+    "2510.20369": {
+      "http_status": 200,
+      "title": "Ask a Strong LLM Judge when Your Reward Model is Uncertain",
+      "url": "https://arxiv.org/abs/2510.20369"
+    },
+    "2602.24040": {
+      "http_status": 200,
+      "title": "RewardUQ: A Unified Framework for Uncertainty-Aware Reward Models",
+      "url": "https://arxiv.org/abs/2602.24040"
+    },
+    "2605.24005": {
+      "http_status": 200,
+      "title": "LC-ERD: Mining Latent Logic for Self-Evolving Reasoning via Consistency-Regulated Reward Decomposition",
+      "url": "https://arxiv.org/abs/2605.24005"
+    },
+    "2606.09073": {
+      "http_status": 200,
+      "title": "A Unifying Lens on Reward Uncertainty in RLHF",
+      "url": "https://arxiv.org/abs/2606.09073"
+    },
+    "2606.19818": {
+      "http_status": 200,
+      "title": "Uncertainty-Aware Reward Modeling for Stable RLHF",
+      "url": "https://arxiv.org/abs/2606.19818"
+    }
+  },
+  "field_principles": {
+    "citations_verified": {
+      "principle": "HTTP-200 arXiv title and URL evidence for every selected method."
+    },
+    "field_principles": {
+      "principle": "principle annotations are part of the artifact contract."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_sota_ingested_5_new_papers_mapped_to_phase_d."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (literature synthesis, no LLM inference)."
+    },
+    "new_arxiv_ids": {
+      "principle": "verified-real NEW arXiv IDs (http 200), NOT in the 13-paper ingested set (no fabrication -- every method cites a source)."
+    },
+    "next_milestone_candidates": {
+      "principle": "the strongest method(s) flagged as candidate inputs for the .462 roadmap (discover->ingest->plan->experiment)."
+    },
+    "note_path": {
+      "principle": "docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads)."
+    },
+    "preconditions_checked": {
+      "principle": "records network/sweep-helper checks; unreachable network emits blocked_."
+    },
+    "reliable_channel_used": {
+      "principle": "sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch (NOT /deep-research -- banned from the autonomous loop)."
+    },
+    "sota_to_phase_d_mapping": {
+      "principle": "per NEW method: which PHASE D arm it strengthens (D1/D2/D3) + the implementation delta over the current stack + the pitfall."
+    }
+  },
+  "honest_verdict": "success_sota_ingested_5_new_papers_mapped_to_phase_d",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "new_arxiv_ids": [
+    "2606.19818",
+    "2606.09073",
+    "2602.24040",
+    "2510.20369",
+    "2605.24005"
+  ],
+  "next_milestone_candidates": [
+    {
+      "candidate": "D3 uncertainty-aware EBRM rerun",
+      "candidate_flag": "flagged_for_v462 (.462): distributional_uncertainty_d3_rerun",
+      "phase_d_arms": [
+        "D3 EBRM"
+      ],
+      "source_ids": [
+        "2606.19818",
+        "2606.09073",
+        "2602.24040"
+      ],
+      "why": "D3 is the only clean Phase D row so far and tied tuned-SC; the new papers directly address uncertainty and reward-distribution scoring."
+    },
+    {
+      "candidate": "D2 endogenous-process verifier unblock",
+      "candidate_flag": "flagged_for_v462 (.462): lc_erd_or_logprob_cache_d2_unblock",
+      "phase_d_arms": [
+        "D2 uPRM"
+      ],
+      "source_ids": [
+        "2605.24005"
+      ],
+      "why": "D2 blocked on logprob candidate cache; LC-ERD supplies a process utility fallback that still must pass the model-identity shortcut audit."
+    },
+    {
+      "candidate": "Matched-compute uncertainty cascade control",
+      "candidate_flag": "flagged_for_v462 (.462): uncertainty_routed_judge_control",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D2 uPRM",
+        "D3 EBRM"
+      ],
+      "source_ids": [
+        "2510.20369"
+      ],
+      "why": "If no cheap arm beats tuned-SC alone, a routed cascade can measure whether verifier uncertainty saves judge calls without relabeling the judge as the moat."
+    }
+  ],
+  "note_path": "docs/research-notes/verifier-moat-literature-2026-06-30.md",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "already_ingested_exclusion_set_checked": [
+      "2502.01989",
+      "2502.11157",
+      "2504.00891",
+      "2504.01005",
+      "2504.13134",
+      "2504.16828",
+      "2508.10539",
+      "2508.16665",
+      "2509.24460",
+      "2510.14913",
+      "2603.04304",
+      "2605.10158",
+      "2605.18871"
+    ],
+    "codex_md_read": true,
+    "deep_research_invoked": false,
+    "network_arxiv_reachable": true,
+    "ops_docs_modified": false,
+    "phase_d_artifacts_read": [
+      "results/experiment_5003_lora_ebm_scorer_musr.json",
+      "results/experiment_5004_uprm_replication.json",
+      "results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "results/experiment_5007_moat_gate_resolution.json"
+    ],
+    "phase_d_status_summary": "D1 flagged skeleton, D2 blocked logprob cache, D3 clean MuSR null delta 0.000 CI [-0.03, 0.025], D5 scoped not retired.",
+    "research_conductor_modified": false,
+    "selected_arxiv_http_200": {
+      "2510.20369": "https://arxiv.org/abs/2510.20369",
+      "2602.24040": "https://arxiv.org/abs/2602.24040",
+      "2605.24005": "https://arxiv.org/abs/2605.24005",
+      "2606.09073": "https://arxiv.org/abs/2606.09073",
+      "2606.19818": "https://arxiv.org/abs/2606.19818"
+    },
+    "sweep_clusters_used": true,
+    "sweep_helpers_importable": true,
+    "sweep_semscholar_used": true,
+    "websearch_webfetch_used": true
+  },
+  "reliable_channel_used": {
+    "deep_research_invoked": false,
+    "semscholar_result": "HTTP 429 on both focused queries; rate limits recorded.",
+    "sweep_cluster_commands": [
+      ".venv/bin/python scripts/sweep_clusters.py 0 --max-results 8",
+      ".venv/bin/python scripts/sweep_clusters.py 1 --max-results 8"
+    ],
+    "sweep_clusters_used": true,
+    "sweep_semscholar_commands": [
+      ".venv/bin/python scripts/sweep_semscholar.py \"oracle distinct verifier process reward model self consistency uncertainty reward model\" --limit 8",
+      ".venv/bin/python scripts/sweep_semscholar.py \"energy reward model uncertainty robust language model alignment verifier\" --limit 8"
+    ],
+    "sweep_semscholar_used": true,
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/2606.19818",
+      "https://arxiv.org/abs/2606.09073",
+      "https://arxiv.org/abs/2602.24040",
+      "https://arxiv.org/abs/2510.20369",
+      "https://arxiv.org/abs/2605.24005",
+      "https://arxiv.org/abs/2602.21158",
+      "https://arxiv.org/abs/2605.10325",
+      "https://arxiv.org/abs/2606.04579"
+    ],
+    "websearch_queries": [
+      "site:arxiv.org/abs 2026 process reward model verifier uncertainty reward model LLM oracle distinct",
+      "site:arxiv.org/abs energy reward model uncertainty process reward model 2026 LLM verifier",
+      "site:arxiv.org/abs \"Reward Model\" \"Uncertainty\" \"RLHF\" \"2026\""
+    ],
+    "websearch_webfetch_used": true
+  },
+  "sota_to_phase_d_mapping": [
+    {
+      "arxiv_id": "2606.19818",
+      "candidate_flag": "flagged_for_v462 (.462): uarm_uncertainty_head_for_d3_ebrm",
+      "implementation_delta": "Rerun the clean D3 MuSR selector with an uncertainty head over the EBRM score, then penalize high-variance candidates before comparing against tuned self-consistency. If D1 is retried, attach the same calibration head to the LoRA-EBM scorer.",
+      "method": "UARM calibrated uncertainty reward head",
+      "phase_d_arms": [
+        "D3 EBRM",
+        "D1 LoRA-EBM"
+      ],
+      "pitfall": "The evidence is RLHF/preference-domain calibration, not a direct reasoning-selector win; style or safety uncertainty could be mistaken for reasoning correctness.",
+      "source_signal": "Adds conformal uncertainty and heteroscedastic reward variance to avoid over-weighting unreliable RM scores.",
+      "url": "https://arxiv.org/abs/2606.19818"
+    },
+    {
+      "arxiv_id": "2606.09073",
+      "candidate_flag": "flagged_for_v462 (.462): distributional_pessimistic_ebrm_head",
+      "implementation_delta": "Replace the scalar D3 energy readout with a reward-distribution head and sweep pessimistic beta values on the existing MuSR candidate cache before any second-corpus spend.",
+      "method": "Distributional pessimistic reward uncertainty",
+      "phase_d_arms": [
+        "D3 EBRM"
+      ],
+      "pitfall": "This is a unifying objective, not a finished verifier; excessive pessimism can abstain away the exact headroom D3 needs to capture.",
+      "source_signal": "Frames the right reward object as a distribution p(r|x,y), with pessimistic log-moment aggregation for uncertain regions.",
+      "url": "https://arxiv.org/abs/2606.09073"
+    },
+    {
+      "arxiv_id": "2602.24040",
+      "candidate_flag": "flagged_for_v462 (.462): rewarduq_calibration_gate_for_d1_d3",
+      "implementation_delta": "Insert a RewardUQ-style calibration table into the D1/D3 harness: ECE, AUROC on correct-vs-incorrect candidates, and selection delta after uncertainty-aware abstention.",
+      "method": "RewardUQ calibration harness for verifier uncertainty",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D3 EBRM"
+      ],
+      "pitfall": "Better calibration can still leave selection accuracy tied with SC; the .462 gate must require delta_vs_tuned_sc, not calibration alone.",
+      "source_signal": "Compares uncertainty quantification methods for reward models and ranks them by accuracy plus calibration.",
+      "url": "https://arxiv.org/abs/2602.24040"
+    },
+    {
+      "arxiv_id": "2510.20369",
+      "candidate_flag": "flagged_for_v462 (.462): uncertainty_routed_moat_cascade",
+      "implementation_delta": "Add a matched-compute cascade control beside D1/D2/D3: cheap verifier selects when confident, uncertain pairs go to the same LLM-judge budget already used as a comparator.",
+      "method": "Uncertainty-routed RM plus strong-judge cascade",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D2 uPRM",
+        "D3 EBRM"
+      ],
+      "pitfall": "The judge can become the real verifier if cost and oracle-distinct boundaries are not charged explicitly; a win must separate cheap verifier value from judge fallback value.",
+      "source_signal": "Routes uncertain preference pairs from a cheap RM to a stronger judge, improving cost-quality tradeoffs over random judge calls.",
+      "url": "https://arxiv.org/abs/2510.20369"
+    },
+    {
+      "arxiv_id": "2605.24005",
+      "candidate_flag": "flagged_for_v462 (.462): lc_erd_uprm_unblock_path",
+      "implementation_delta": "Use LC-ERD as the D2 unblock path when next-token logprob caches are missing: derive process utility from consistency-regulated latent logic across the existing candidate batch, then compare to tuned SC.",
+      "method": "LC-ERD endogenous reward decomposition",
+      "phase_d_arms": [
+        "D2 uPRM"
+      ],
+      "pitfall": "Endogenous consensus can preserve generator bias and create a model-identity shortcut, so the no-model-id adversarial check stays mandatory.",
+      "source_signal": "Mines latent logic and decomposes step utility from consistency signals when explicit process labels are scarce.",
+      "url": "https://arxiv.org/abs/2605.24005"
+    }
+  ]
+}
