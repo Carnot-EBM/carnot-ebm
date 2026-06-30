@@ -861,6 +861,18 @@ games:
   - deepcopy-injection WORKS for lp85 (unlike sc25).
   - dedup by goal-relevant key (goal positions), not full grid hash, or the search
     explodes (26k states -> fails).
+  dead_ends:
+  - 'Exp5026 lp85 no-bank no_grounded_l6_delta: complete_lp85_no_new_level_residual_no_grounded_l6_delta.'
+  latest_exp5026_levelup_attempt:
+    artifact: results/experiment_5026_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_lp85.json
+    offline_reproduced: false
+    reproduced_levels: 5
+    new_levels_banked: 0
+    residual_cause: no_grounded_l6_delta
+    solve_provenance: live_agent_self_discovery
+    target_rotation: fresh_sc25_l6_before_lp85_l6_cn04_l4_alt_avoids_e2_lf52
+    reproducibility_checksum: 39aa90e1134c0a023dee74e2125b0a925f7adb749861ea0b3006c24358c27711
 - game: sc25
   reproducibility: reproduced
   levels_reproduced: 5
