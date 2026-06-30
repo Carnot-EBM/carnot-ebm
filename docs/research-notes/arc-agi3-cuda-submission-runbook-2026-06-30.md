@@ -65,3 +65,6 @@ proxy. Operator-only steps (B–D) are flagged; preparation (A + staging) is don
 - `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` — packaging manifest (PACKAGING MANIFEST + Local CUDA validation)
 - `results/kaggle_env_probe.json` — the P100/CUDA-12.8/driver-580 evidence
 - `results/experiment_4986_submission_package_harden.json` — the latest local harden (iGPU proxy)
+
+## Staged (2026-06-30): /home/ianblenke/carnot_submission_staging/
+All four payloads staged + verified (agent-code guards pass, GGUF hardlinked, kernel parses, binary=build-on-Kaggle). See that dir's MANIFEST.md for the operator upload/build/submit steps.

@@ -20824,6 +20824,80 @@ claiming `candidate_cache_built=true`.
 |---|---|---|
 | REQ-VERIFY-5016 | Implemented (`python/carnot/experiment_5016_shared_logprob_candidate_cache.py`, `results/experiment_5016_shared_logprob_candidate_cache.json`) | Implemented (`tests/python/test_experiment_5016_shared_logprob_candidate_cache.py`) |
 
+### REQ-VERIFY-5029: Rescored MuSR Logprob Candidate Cache V2
+
+The repository SHALL provide Exp 5029 at
+`python/carnot/experiment_5029_shared_logprob_candidate_cache_v2.py` to
+rescore, not regenerate, the existing B1 MuSR candidate answer strings from
+`results/distributional_energy_verifier_musr_checkpoints/` and to write
+`results/experiment_5029_shared_logprob_candidate_cache_v2.json`.
+
+Before live scoring, the runner SHALL check that at least 200 cached MuSR
+checkpoint files exist, `unsloth/gemma-4-12B-it-GGUF` resolves to a local GGUF,
+and the conductor GPU-0 llama-server at
+`http://127.0.0.1:8919/completion` returns `completion_probabilities` with
+per-token logprobs and top-logprob rows containing both `+` and `-` marker
+alternatives. Missing resources SHALL produce a terminal
+`honest_verdict=blocked_<resource>` artifact with `candidate_cache_built=false`
+and SHALL NOT fabricate cached candidate rows.
+
+When preconditions hold, the runner SHALL load existing cached MuSR answer
+strings, score each non-empty answer string through the GPU-0 CUDA
+llama-server in echo/logprobs mode, and append one JSONL row per scored
+candidate to a resumable cache. Each row SHALL carry the original answer
+string, source checkpoint identity, per-token logprobs, and
+`uprm_marker_logprobs` containing the `+` and `-` marker top-logprob telemetry
+used by uPRM. The runner SHALL flush each appended candidate row immediately,
+resume by skipping already complete scored candidates/questions, and isolate
+per-question failures so one bad question is recorded and the run continues.
+
+The terminal artifact SHALL include `honest_verdict`,
+`candidate_cache_built`, `n_cached_rows`, `cache_jsonl_path`,
+`rescored_not_regenerated`, `n_questions`, `candidates_per_question`,
+`has_per_token_logprobs`, `corpora_cached`, `model_specs`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `duration_s`, `field_principles`, and `spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; success_logprob_cache_rescored_musr_n<N>; a 0-row run is blocked_cache_zero_rows (the .462 failure mode -- not a silent pass).`;
+`candidate_cache_built` = `true iff n_cached_rows>0 over >=200 MuSR questions (the field D2 gates on).`;
+`n_cached_rows` = `>0 REQUIRED -- 0 was the .462 failure signature; the incremental-write fix guarantees rows persist as they are scored.`;
+`cache_jsonl_path` = `the resumable JSONL path D2 consumes for uPRM scoring.`;
+`rescored_not_regenerated` = `true -- the candidates are the EXISTING cached MuSR strings re-scored for logprobs, NOT freshly generated (the anti-0-rows fix).`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`candidates_per_question` = `the number of cached candidates re-scored per question.`;
+`has_per_token_logprobs` = `true -- the +/- marker telemetry uPRM's first-error score needs.`;
+`corpora_cached` = `MuSR (required) + any best-effort 2nd corpus (GPQA/MMLU-Pro-hard) for D4.`;
+`model_specs` = `gemma-4-12B-it-GGUF on the GPU-0 CUDA llama-server -- the scoring methodology stamp.`;
+`inference_substrate` = `live_llm_inference (live re-scoring with logprobs; >=60s floor).`;
+`random_seed` = `determinism for the scoring order.`;
+`reproducibility_checksum` = `content hash of (server, corpus, candidate set) so a replication catches drift.`;
+`preconditions_checked` = `records cached-candidates/GGUF/logprob-server checks; a missing resource emits blocked_, never a fabricated cache.`
+
+### SCENARIO-VERIFY-5029: Candidate Rows Flush And Resume
+
+Given at least 200 cached MuSR checkpoint files, a cached
+`gemma-4-12B-it-GGUF`, and a GPU-0 llama-server returning marker top-logprobs,
+when Exp 5029 runs, then it writes a JSONL cache with one complete candidate
+row per scored existing answer string, flushes each row as it is produced,
+sets `rescored_not_regenerated=true`, sets `candidate_cache_built=true`, and
+sets `honest_verdict` to `success_logprob_cache_rescored_musr_n<N>`.
+
+Given a partially populated v2 JSONL cache, when Exp 5029 resumes, then it
+skips already complete scored candidate rows, finishes only missing candidates,
+and JSON schema round-trips without losing per-token logprobs or
+`uprm_marker_logprobs`.
+
+If live scoring writes zero valid candidate rows, then Exp 5029 writes
+`honest_verdict=blocked_cache_zero_rows` and SHALL NOT report
+`candidate_cache_built=true`.
+
+## Implementation Status (REQ-VERIFY-5029)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5029 | Proposed (`python/carnot/experiment_5029_shared_logprob_candidate_cache_v2.py`, `results/experiment_5029_shared_logprob_candidate_cache_v2.json`) | Proposed (`tests/python/test_experiment_5029_shared_logprob_candidate_cache_v2.py`) |
+
 ### REQ-VERIFY-5017: Trained Qwen3.5-1.7B LoRA-EBM MuSR Scorer V2
 
 The repository SHALL provide Exp 5017 at
