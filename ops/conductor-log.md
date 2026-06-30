@@ -9673,3 +9673,4 @@ The contro |
 | 2026-06-30 20:09 UTC | PHASE D1 powered LoRA-EBM/EORM -- gated on Exp 504 | OK | 95 passed, 1 warning in 8.83s |
 | 2026-06-30 20:27 UTC | PHASE D2 dense process-reward repair -- gated on E | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-06-30 20:48 UTC | PHASE D3 KAN/PURM calibration -- gated on Exp 5045 | OK | 88 passed, 1 warning in 9.11s |
+| 2026-06-30 20:50 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
