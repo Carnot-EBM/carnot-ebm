@@ -518,6 +518,76 @@ a terminal `blocked_<resource>` verdict, records the failed resource in
 |---|---|---|
 | REQ-REPORT-5038 | Planned (`python/carnot/experiment_5038_sota_ingestion_verifier_moat.py`) | Planned (`tests/python/test_experiment_5038_sota_ingestion_verifier_moat.py`) |
 
+### REQ-REPORT-5053: Phase E1 SOTA Ingestion For .465
+
+The Exp 5053 workflow SHALL run the fresh SOTA-ingestion pass reserved for the
+`.465` planning handoff and write
+`results/experiment_5053_sota_ingestion_v465.json`. It SHALL update
+`research-references.md` with only genuinely actionable additions for Carnot
+and SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`,
+`ops/status.md`, or `_bmad/traceability.md`.
+
+The workflow SHALL read `AGENTS.md`, `CODEX.md`, `research-references.md`,
+`research-program.md`,
+`results/experiment_5038_sota_ingestion_verifier_moat.json`, and
+`openspec/change-proposals/research-roadmap-vNEXT.md` before writing the
+artifact. It SHALL search or record checks for arXiv, OpenReview, Hugging Face Papers,
+GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM citation trails.
+
+The complete artifact SHALL include at least these top-level fields:
+`honest_verdict`, `references_added`, `n_sources_checked`,
+`selected_sources`, `next_milestone_candidates`,
+`research_references_updated`, `inference_substrate`,
+`preconditions_checked`, `duplicate_filter`, and `field_principles`.
+`honest_verdict` SHALL equal
+`success_sota_ingestion_v465_actionable_references_added`.
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+`research_references_updated` SHALL be true on the complete path.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; complete verdict is success_sota_ingestion_v465_actionable_references_added."
+- `references_added`: principle "only genuinely actionable nonduplicate sources added to research-references.md, each with URL and concrete Carnot hook."
+- `n_sources_checked`: principle "count of source records checked across arXiv, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and EBT/ARM-EBM trails."
+- `selected_sources`: principle "deduplicated source records selected for .465 planning; no repeats from Exp 5038 or the .464 planning sweep."
+- `next_milestone_candidates`: principle "candidate .465 follow-up experiments with the source IDs that justify them."
+- `research_references_updated`: principle "true only when the managed Exp 5053 section has been written and validated."
+
+`references_added` SHALL contain the selected source IDs and URLs actually
+inserted into `research-references.md`. Every selected source SHALL include a
+concrete Carnot hook and SHALL NOT duplicate the Exp 5038 selected set or the
+`.464` planning sweep IDs and URLs. The duplicate filter SHALL reject known
+existing IDs such as `2512.05439`, `2512.12850`, `2507.07731`, `2602.03034`,
+`2601.21484`, `2603.21558`, `2603.02119`, `2606.18910`, `2606.21724`,
+`2606.29366`, `2605.12421`, `2601.17789`, `2606.25313`, `2507.02092`,
+`2510.27545`, `2512.15605`, and every Exp 5038 ID.
+
+#### SCENARIO-REPORT-5053: Actionable .465 Sources Are Added Without Duplicates
+
+Given the required repository instructions, roadmap, prior SOTA artifact, and
+research reference file are readable
+When the Exp 5053 workflow runs
+Then it writes the JSON artifact, updates `research-references.md` once with a
+managed Exp 5053 section, records at least five checked sources, selects only
+non-duplicate actionable sources, includes concrete Carnot hooks for verifier
+moat, energy-guided decoding, constraint satisfaction, hallucination
+mitigation, continual verifier learning or hardware-accelerated decoding, and
+records that no duplicate KAN/KANFIS or EBT/ARM-EBM entry was re-added.
+
+#### SCENARIO-REPORT-5053-DUPLICATE-FILTER: Existing Source IDs Are Suppressed
+
+Given candidate sources include an already-recorded Exp 5038 or `.464` source
+and at least one new actionable source
+When duplicate filtering is applied
+Then the existing source is listed under rejected duplicates, is absent from
+`references_added`, and the new source remains eligible for selection.
+
+## Implementation Status (REQ-REPORT-5053)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5053 | Planned (`python/carnot/experiment_5053_sota_ingestion_v465.py`) | Planned (`tests/python/test_experiment_5053_sota_ingestion_v465.py`) |
+
 ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
 
 The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt

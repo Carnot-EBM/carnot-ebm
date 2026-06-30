@@ -25148,3 +25148,61 @@ NEW this planning pass (not in the ingested set; comparator candidates for `.463
 
 **Bottom line for the `.462` roadmap:** the moat is still UNTESTED (zero real trained-verifier measurements landed). `.462` builds the prerequisites (genuine tuned-SC baseline B1; shared logprob cache B2) and re-runs D1/D2/D3 to FIRST measure the decisive question, plus adds the efficiency-axis cascade (2510.20369) so a Pareto win is reachable even if every accuracy arm ties SC. Flag for `.463`: if a real arm produces a win, scale it (more corpora + the DiffusionGemma activation proposal); if D1+D2 both cleanly null, the off-ARC moat retires as bounded (a publishable null converging with the ARC tie).
 <!-- V462-PLANNER-REFERENCES-END -->
+
+<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-START -->
+## Exp 5053 .465 SOTA ingestion source set
+
+- **Artifact:** `results/experiment_5053_sota_ingestion_v465.json`
+- **Honest verdict:** `success_sota_ingestion_v465_actionable_references_added`
+- **Scope:** verifier moat, guided decoding, constraints, hallucination mitigation, continual verifier learning, and sampling hardware.
+- **Duplicate handling:** prior Exp 5038 and .464 planning-sweep entries were checked and not re-added.
+
+### T1: Tool-integrated Verification for Test-time Compute Scaling in Small Language Models
+- **Source:** arXiv:2504.04718 - https://arxiv.org/abs/2504.04718
+- **Tracks:** verifier moat, constraint satisfaction
+- **Carnot hook:** .465: add a tool-first cheap verifier gate before D6 judge fallback and charge tool calls separately from final verifier selection.
+- **Actionability:** External tools handle memorization-heavy checks before a small verifier ranks candidates, giving a direct cheap-verifier path for test-time scaling.
+
+### Constraints-of-Thought: A Framework for Constrained Reasoning in Language-Model-Guided Search
+- **Source:** arXiv:2510.08992 - https://arxiv.org/abs/2510.08992
+- **Tracks:** constraint satisfaction, verifier moat
+- **Carnot hook:** .465: prototype intent-constraint trace features for verifier training and measure whether pruning beats tuned self-consistency on frozen tasks.
+- **Actionability:** Represents each search step as intent plus constraint and uses that representation to prune infeasible MCTS branches.
+
+### Vegas: Self-Speculative Decoding with Verification-Guided Sparse Attention
+- **Source:** arXiv:2602.07223 - https://arxiv.org/abs/2602.07223
+- **Tracks:** hardware-accelerated decoding, verifier moat
+- **Carnot hook:** .465: add a decoding-cost baseline where verifier evidence gates sparse attention before any larger judge call.
+- **Actionability:** Uses verification-guided sparse attention to make self-speculative decoding more efficient without a second draft model.
+
+### SAFE: An LLM-as-Verifier Framework for Evidence-Grounded Multi-Hop Reasoning
+- **Source:** arXiv:2604.01993 - https://arxiv.org/abs/2604.01993
+- **Tracks:** hallucination mitigation, verifier moat
+- **Carnot hook:** .465: extend retrieval-NLI grounding with SAFE-style per-hop evidence checks and compare against the current semantic consistency verifier.
+- **Actionability:** Splits multi-hop claims into evidence-grounded checks so verifier output is tied to cited support instead of a free-form judge vote.
+
+### Think Through Uncertainty: Improving Long-Form Generation Factuality via Reasoning Calibration
+- **Source:** arXiv:2604.12046 - https://arxiv.org/abs/2604.12046
+- **Tracks:** hallucination mitigation, continual verifier learning
+- **Carnot hook:** .465: use uncertainty trace features as replay examples for continual verifier calibration instead of only scalar confidence thresholds.
+- **Actionability:** Calibrates generation around uncertainty-aware reasoning traces, making the uncertainty signal useful to downstream factuality checks.
+
+### Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains
+- **Source:** arXiv:2605.26942 - https://arxiv.org/abs/2605.26942
+- **Tracks:** constraint satisfaction, hallucination mitigation
+- **Carnot hook:** .465: add a neuro-symbolic compliance fixture for the verifier moat so policy violations are evaluated as structured constraints.
+- **Actionability:** Combines symbolic policy checks with neural output interpretation for domains where violations are concrete and auditable.
+
+### The Missing Piece in Pre-trained Model Evaluation: Reward-Guided Decoding Unlocks Task-Oriented Behavior Without Parameter Updates
+- **Source:** arXiv:2605.28020 - https://arxiv.org/abs/2605.28020
+- **Tracks:** energy-guided decoding, hardware-accelerated decoding
+- **Carnot hook:** .465: adapt the semantic-energy selector into a reward-guided decoding arm and report accuracy per additional sampled token.
+- **Actionability:** Uses reward-guided decoding as a parameter-free way to steer task behavior, making decoding-time guidance the intervention to measure.
+
+### Where Larger Models Excel: The Primacy of Constraint-Guided Reasoning
+- **Source:** arXiv:2606.26108 - https://arxiv.org/abs/2606.26108
+- **Tracks:** constraint satisfaction, continual verifier learning
+- **Carnot hook:** .465: mine constraint-guided failure modes into a continual verifier learning replay set and separate scale benefit from verifier benefit.
+- **Actionability:** Frames scale gains as improved constraint-guided reasoning, which gives the verifier program a target for smaller-model distillation.
+
+<!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-END -->
