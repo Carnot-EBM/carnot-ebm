@@ -22196,6 +22196,65 @@ duration evidence, then Exp 5045 writes
 |---|---|---|
 | REQ-VERIFY-5045 | Proposed (`python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`, `results/experiment_5045_powered_lora_ebm_eorm_musr.json`) | Proposed (`tests/python/test_experiment_5045_powered_lora_ebm_eorm_musr.py`) |
 
+### REQ-VERIFY-5047: KAN/PURM Energy Calibration Over Powered D1 Margins
+
+The repository SHALL provide Exp 5047 at
+`python/carnot/experiment_5047_kan_purm_energy_calibration.py` to fit a small
+interpretable KAN/FIS/PURM-style calibration/readout layer over the Exp 5045
+powered D1 candidate energies, powered D1 margins, uncertainty features, and
+candidate correctness labels, writing
+`results/experiment_5047_kan_purm_energy_calibration.json`.
+
+The runner SHALL inherit Exp 5045 `model_specs` for any refreshed-candidate or
+verifier-score provenance and SHALL NOT perform fresh LLM generation. It SHALL
+load Exp 5045 as the upstream powered D1 artifact, reconstruct or load
+candidate-level powered D1 energy rows for the same MuSR cached candidate panel,
+compute per-question energy margins and uncertainty features, and train only on
+held-out-safe question splits. Labels MAY be used to fit calibration/readout
+weights on training folds, but held-out question labels SHALL NOT be visible to
+the fold model before prediction.
+
+The runner SHALL include both a simple logistic baseline and an interpretable
+additive fuzzy/KAN/PURM readout. The calibrated selector SHALL evaluate
+selection accuracy against both genuine tuned self-consistency and powered D1,
+with the headline delta anchored to powered D1 (`delta_vs_powered_d1`), not only
+to tuned self-consistency. If the calibrated readout abstains on more than 50%
+of questions or its held-out selections collapse to the powered D1 choices, the
+artifact SHALL set `degeneracy_guard_fired=true` and SHALL NOT claim an
+incremental win.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`calibration_available`, `calibrated_accuracy`, `powered_d1_accuracy`,
+`delta_vs_powered_d1`, `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`,
+`abstention_rate`, `degeneracy_guard_fired`, `verifier_is_oracle`, and
+`headroom_present`. It SHALL also include `spec_refs`, split diagnostics,
+baseline-logistic metrics, readout coefficients or rule weights, source-artifact
+paths, question/candidate counts, and a reproducibility checksum.
+
+### SCENARIO-VERIFY-5047: Held-Out Calibration Reports Incremental Lift Or Degeneracy
+
+Given Exp 5045 exists with powered D1 model specs, a trained checkpoint path,
+genuine tuned-SC predictions, powered D1 predictions, and at least 200 cached
+MuSR candidate questions, when Exp 5047 runs, then it builds question-level
+cross-validation splits without train/test question overlap, fits the logistic
+baseline and KAN/FIS/PURM readout on train folds, predicts held-out selections,
+compares against powered D1 with paired bootstrap CI95 and McNemar exact p,
+compares against genuine tuned self-consistency for context, and writes every
+required field.
+
+If candidate-level energies cannot be loaded or reconstructed from Exp 5045
+and its checkpoint, then Exp 5047 writes a blocked artifact with
+`calibration_available=false`. If the calibrated selector's abstention rate is
+greater than 50% or the held-out predictions are identical to powered D1 choices,
+then it writes a complete null artifact with `degeneracy_guard_fired=true`
+rather than claiming that uncertainty calibration closed the CI.
+
+## Implementation Status (REQ-VERIFY-5047)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5047 | Proposed (`python/carnot/experiment_5047_kan_purm_energy_calibration.py`, `results/experiment_5047_kan_purm_energy_calibration.json`) | Proposed (`tests/python/test_experiment_5047_kan_purm_energy_calibration.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
