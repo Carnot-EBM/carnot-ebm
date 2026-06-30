@@ -3687,6 +3687,84 @@ domain where self-consistency is not near-ceiling, while
 `moat_proven_claimed=false`, `verifier_is_oracle=false`, and
 `no_real_benchmark_run=true` remain enforced.
 
+### REQ-KONA-5002: Shared Moat Benchmark Harness for Phase D Verifier Arms
+
+Carnot MUST provide a reusable Phase D moat benchmark harness in
+`python/carnot/moat_benchmark_harness.py` and a thin Exp 5002 artifact writer in
+`python/carnot/experiment_5002_moat_benchmark_harness.py`. The harness SHALL be
+a library, not a one-off script, so D1 LoRA-EBM, D2 uPRM, D3 EBRM, D4
+cross-corpus, and D5 gate arms all measure the same target: oracle-distinct
+selection accuracy versus tuned self-consistency on headroom-present candidate
+pools with paired uncertainty.
+
+The harness SHALL load normalized corpus rows with `{question, context,
+choices, gold}` for MuSR/murder_mysteries, GPQA if cached, MMLU-Pro-hard if
+cached, and MATH-500-hard if cached. Gold labels are for evaluation only. The
+harness SHALL reuse cached MuSR candidate checkpoints from
+`results/distributional_energy_verifier_musr_checkpoints/` and SHALL NOT
+regenerate those smoke candidates. For future D arms that require fresh
+candidates or per-token logprobs, it SHALL expose a generate-with-logprobs path
+documented as `gemma-4-12B-it-GGUF` on GPU-0 CUDA while keeping the Exp 5002
+smoke on cached candidates only.
+
+For any verifier scorer `f(candidate) -> energy`, lower is better, the harness
+SHALL compute tuned self-consistency accuracy by sweeping available K/temperature
+settings, oracle@K as the selectable-headroom ceiling, headroom presence as
+`(oracle_at_k - tuned_sc) >= 0.10 AND n_flips_possible > 0`, verifier selection
+accuracy, paired bootstrap CI95(verifier - tuned self-consistency), and McNemar
+p. The harness SHALL mechanically enforce oracle-distinctness by raising if a
+scorer reads `gold`, `answer_index`, `answer_choice`, or `model_id`.
+
+The terminal artifact SHALL be written to
+`results/experiment_5002_moat_benchmark_harness.json`. If MuSR or the cached
+candidate checkpoints are missing, Exp 5002 SHALL write a terminal
+`blocked_<resource>` artifact rather than fabricate metrics. Exp 5002 SHALL NOT
+modify `scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+Required artifact fields and principles:
+- `honest_verdict`: terminal prefix; success_moat_harness_built_smoke_green.
+- `harness_module_path`: python/carnot/moat_benchmark_harness.py -- the reusable library the D arms import (no duplicated metric code).
+- `corpora_available`: the list of loadable headroom-candidate corpora (MuSR + the 2nd-corpus options) so D4 can pick a confirmed-cached second corpus.
+- `tuned_sc_smoke`: the TUNED self-consistency accuracy on the smoke slice -- the baseline to beat is tuned, not naive SC (headroom-control).
+- `oracle_at_k_smoke`: the selectable-headroom ceiling; (oracle@K - tuned_sc) is the headroom a verifier could capture.
+- `headroom_present_smoke`: (oracle@K - tuned_sc) >= 0.10 AND flips>0 -- the FALSE_NEGATIVE_RISK guard a null must clear to be informative.
+- `oracle_distinctness_enforced`: true -- the harness raises if a scorer reads gold/answer_index/model_id (verifier_is_oracle=False is mechanically enforced).
+- `inference_substrate`: verifier_ensemble_against_cached_candidates (scores cached candidates; 1s floor) -- no new LLM generation in the smoke.
+- `random_seed`: determinism for the bootstrap CI + the smoke.
+- `preconditions_checked`: records corpus/candidate-cache checks; a missing corpus emits blocked_, never a fabricated metric.
+
+### SCENARIO-KONA-5002-SMOKE: Cached MuSR Smoke Computes Shared Metrics
+
+**Given** MuSR/murder_mysteries is locally loadable and
+`results/distributional_energy_verifier_musr_checkpoints/` contains cached
+candidate answer pools
+**When** `.venv/bin/python python/carnot/experiment_5002_moat_benchmark_harness.py`
+runs
+**Then** it writes `results/experiment_5002_moat_benchmark_harness.json` with
+`honest_verdict=success_moat_harness_built_smoke_green`, a smoke slice of at
+most 30 cached MuSR rows, tuned self-consistency accuracy, oracle@K,
+`headroom_present_smoke=true`, verifier accuracy for a trivial cached verifier,
+paired CI95, McNemar p, and `oracle_distinctness_enforced=true`.
+
+### SCENARIO-KONA-5002-ORACLE-DISTINCT: Forbidden Scorer Inputs Fail Closed
+
+**Given** a verifier scorer attempts to read `gold`, `answer_index`,
+`answer_choice`, or `model_id` from a candidate
+**When** the shared harness scores a candidate pool
+**Then** it raises an oracle-distinctness error before returning a metric,
+ensuring verifier-arm code cannot accidentally become an answer-key or
+model-identity oracle.
+
+### SCENARIO-KONA-5002-BLOCKED: Missing Resources Block Honestly
+
+**Given** MuSR is not locally loadable or the cached MuSR candidate checkpoint
+directory is missing or empty
+**When** the Exp 5002 precondition check runs
+**Then** it writes a terminal `blocked_<resource>` artifact, records the failed
+resource in `preconditions_checked`, keeps smoke metrics empty, and does not
+claim that a headroom-present corpus was loaded.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run
