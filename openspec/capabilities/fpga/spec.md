@@ -13905,6 +13905,95 @@ precondition.
 
 ---
 
+### REQ-HW-5052
+
+**Title:** KV260 p-bit timing-ratio parity packet MUST use SSH-only local evidence
+
+**Description:**
+Experiment 5052 MUST produce
+`results/experiment_5052_kv260_pbit_timing_ratio.json` as a local-evidence
+packet for comparing a bounded CPU reference with the SSH-attached KV260 board
+on a small Ising/p-bit-style parity workload. The only valid board access path
+is SSH:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true`
+
+Host SD-card device nodes MUST NOT be used. When SSH is unreachable, the
+experiment MUST still write the artifact with
+`honest_verdict=blocked_kv260_ssh_unreachable`, `kv260_ssh_reachable=false`,
+`timing_ratio_packet_built=false`, and a CPU reference packet when the local
+reference can run.
+
+When SSH is reachable, the experiment MUST probe overlay state with
+`ssh kria 'xmutil listapps'`, MAY use `ssh kria 'sudo xmutil listapps'` when
+the non-sudo command reports a root-privilege requirement, and MUST probe UIO
+device visibility with `ssh kria 'ls /dev/uio*'`. If a Carnot Ising overlay is
+loaded, the experiment MUST run a bounded `n_variables=64`
+`bounded_sparse_pbit_parity_n64` workload over SSH, record command wall-clock
+timing, board-reported workload timing, iterations, flips, energy, and a parity
+check against the CPU reference output. If the overlay is not loaded, the
+experiment MUST skip the KV260 workload and record the reason without making a
+speedup or hardware-accelerator claim.
+
+The artifact MUST include these bare required fields:
+
+- `honest_verdict`
+- `kv260_ssh_reachable`
+- `overlay_loaded`
+- `workload_name`
+- `n_variables`
+- `timing_ratio_packet_built`
+- `cpu_reference_ok`
+- `kv260_result_ok`
+- `local_claim_scope`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_5052_kv260_pbit_timing_ratio.py`
+  writes `results/experiment_5052_kv260_pbit_timing_ratio.json`.
+- The artifact includes `schema`, `experiment=5052`, `spec_refs` containing
+  `REQ-HW-5052` and `SCENARIO-HW-5052`, `command_probes`, `overlay_state`,
+  `cpu_reference`, `kv260_workload`, `timing_ratio_packet`, `duration_s`, and a
+  stable `reproducibility_checksum`.
+- `local_claim_scope` explicitly limits claims to local SSH evidence and MUST
+  NOT claim a general FPGA speedup, GPU benchmark, or external 2026 paper
+  result.
+- `cpu_reference_ok=true` only when the deterministic CPU reference has a
+  valid `n_variables=64`, iteration count, flip count, energy, final-state
+  checksum, and positive wall-clock duration.
+- `kv260_result_ok=true` only when SSH is reachable, a Carnot Ising overlay is
+  loaded, the SSH workload command exits zero, and the KV260 output matches the
+  CPU reference energy, flip count, and final-state checksum.
+- `timing_ratio_packet_built=true` only when both CPU and KV260 results are
+  valid; the packet records CPU wall-clock seconds, KV260 SSH command
+  wall-clock seconds, board-reported workload seconds, iteration count, flip
+  count, parity match, and timing ratios.
+- `overlay_state` records the loaded overlay, UIO devices, xmutil transcript,
+  sudo fallback state, and no host SD-card marker.
+- `duration_s >= 0.0001`, `verifier_is_oracle=false`, and `random_seed=5052`
+  are present.
+
+**Implementation status:** Implemented (Exp 5052)
+
+---
+
+### SCENARIO-HW-5052
+
+**Scenario:** Exp 5052 writes a local KV260 p-bit timing-ratio parity packet.
+
+**Given:** The KV260 board is reachable only through `ssh kria`, and the local
+comparison must stay bounded to an `n_variables=64` p-bit/Ising parity workload.
+**When:** Experiment 5052 runs the CPU reference, probes SSH reachability,
+overlay state, UIO devices, and runs the board workload only if a Carnot Ising
+overlay is loaded.
+**Then:** It writes
+`results/experiment_5052_kv260_pbit_timing_ratio.json` with the required
+schema fields, a CPU/KV260 parity verdict, timing-ratio packet when both sides
+are valid, and `local_claim_scope` limiting the result to local SSH evidence.
+
+**Implementation status:** Implemented (Exp 5052)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
