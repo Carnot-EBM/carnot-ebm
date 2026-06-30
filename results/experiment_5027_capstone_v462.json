@@ -1,0 +1,549 @@
+{
+  "arc_deliverable_locked": {
+    "arc_work_mode": "opportunistic",
+    "deliverable": "levels_69_plus_publishable_fover_paper",
+    "locked": true
+  },
+  "arc_opportunistic_rollup": {
+    "honest_verdict": "complete_lp85_no_new_level_residual_no_grounded_l6_delta",
+    "live_path_reachable": true,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "reproduced_levels": 5,
+    "reproducible_total_levels_after": 69,
+    "status": "complete",
+    "target_game": "lp85",
+    "target_level": 6
+  },
+  "best_arm_and_delta": {
+    "abstention_rate": null,
+    "arm": "EBRM",
+    "arm_id": "D3",
+    "corpus": "MuSR",
+    "delta_vs_tuned_sc": null,
+    "execution_status": "blocked",
+    "headroom_present": false,
+    "judge_call_fraction": null,
+    "paired_ci95": null,
+    "scorer_trained": null,
+    "source_experiment_id": 5019,
+    "verifier_is_oracle": false,
+    "win_vs_tuned_sc": false
+  },
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 5015,
+      "fields_imported": [
+        "honest_verdict",
+        "genuine_tuned_sc_accuracy",
+        "genuine_headroom_present",
+        "oracle_at_k",
+        "degeneracy_guard_fires",
+        "single_candidate_degenerate",
+        "n_questions"
+      ],
+      "path": "results/experiment_5015_genuine_sc_baseline_fix.json",
+      "sha256": "sha256:78af64c821451edcf0a6b71f2e8b0cfbfd5c9d105ac5250c4c7a70bdf2bc7711",
+      "source": "B1_GENUINE_SC"
+    },
+    {
+      "experiment_id": 5016,
+      "fields_imported": [
+        "honest_verdict",
+        "candidate_cache_built",
+        "cache_jsonl_path",
+        "n_cached_rows",
+        "n_questions",
+        "corpora_cached",
+        "has_per_token_logprobs"
+      ],
+      "path": "results/experiment_5016_shared_logprob_candidate_cache.json",
+      "sha256": "sha256:ed3c26d28ee7b27d75ce914dc68f2eb904180f25f8e612635a6bf4b6ac631962",
+      "source": "B2_LOGPROB_CACHE"
+    },
+    {
+      "experiment_id": 5019,
+      "fields_imported": [
+        "honest_verdict",
+        "status",
+        "gate_check_summary",
+        "blocked_at_layer"
+      ],
+      "path": "results/experiment_5019_d3.json",
+      "sha256": "sha256:bb5b38a3bfae335d40768ca6b522f8845d4a1f5eafb5cc4b00b619581be6c1ae",
+      "source": "D3_EBRM"
+    },
+    {
+      "experiment_id": 5022,
+      "fields_imported": [
+        "honest_verdict",
+        "decision",
+        "moat_realized",
+        "moat_retired_bounded",
+        "efficiency_win",
+        "best_arm",
+        "per_arm_table",
+        "execution_incomplete_arms",
+        "diffusiongemma_gate_status",
+        "diffusiongemma_gate_conditions_satisfied_off_arc",
+        "diffusiongemma_activation",
+        "flagged_arms_skipped",
+        "paper_summary"
+      ],
+      "path": "results/experiment_5022_moat_gate_resolution_v2.json",
+      "sha256": "sha256:124fa5ef3ab0d293324d1e5cfba9d1b305a6d7b8050a9e46724791bcfe511bef",
+      "source": "D5_MOAT_GATE"
+    },
+    {
+      "experiment_id": 5023,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "energy_smoke",
+        "overlay_state",
+        "uio_devices",
+        "xmutil_requires_sudo"
+      ],
+      "path": "results/experiment_5023_kv260_continuity.json",
+      "sha256": "sha256:c1d2bf3ae3028a7639305a389eab6f2d1d068e154721b8bc1368b1ce2c6f1496",
+      "source": "C_KV260"
+    },
+    {
+      "experiment_id": 5024,
+      "fields_imported": [
+        "honest_verdict",
+        "new_arxiv_ids",
+        "next_milestone_candidates",
+        "sota_to_phase_d_mapping",
+        "d5_conditioning",
+        "note_path"
+      ],
+      "path": "results/experiment_5024_sota_ingestion_verifier_moat.json",
+      "sha256": "sha256:f43d516d79b91c2272302ccdb4f56a0a47e7fd2bdbbc824ff8090ce0a8b04d98",
+      "source": "E1_SOTA"
+    },
+    {
+      "experiment_id": 5025,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "checkpoint_path",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "solve_provenance",
+        "flag_resolved"
+      ],
+      "path": "results/experiment_5025_self_play_verifier_checkpoint.json",
+      "sha256": "sha256:d8e846353f6ea2a512f7ac7d3a1ce7bacae4a440d71092655cfb9bacc79725f5",
+      "source": "E2_SELF_PLAY"
+    },
+    {
+      "experiment_id": 5026,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "target_level",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels_after",
+        "live_path_reachable"
+      ],
+      "path": "results/experiment_5026_levelup_attempt.json",
+      "sha256": "sha256:bdecaa5fe67d4f77bc33223c45c03753c8fefafa7505aa42676bcf5a89bd18c8",
+      "source": "E3_ARC_LEVEL"
+    }
+  ],
+  "diffusiongemma_gate_status": {
+    "activation": "not_activated",
+    "autonomously_flipped_to_met": false,
+    "conditions_satisfied_off_arc": false,
+    "operator_gated": true,
+    "status": "STILL-PENDING"
+  },
+  "duration_s": 0.23716,
+  "efficiency_win": false,
+  "experiment": "experiment_5027_capstone_v462",
+  "experiment_id": 5027,
+  "field_principles": {
+    "best_arm_and_delta": {
+      "principle": "the strongest oracle-distinct construction (or the efficiency Pareto point) + corpus + delta_vs_tuned_sc + CI (from D5)."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "the {experiment_id, fields_imported, sha256} for each aggregated arm (traceable to real measurements)."
+    },
+    "diffusiongemma_gate_status": {
+      "principle": "the gate status from D5 (conditions satisfied off-ARC? activation stays operator-gated; not autonomously flipped to MET)."
+    },
+    "efficiency_win": {
+      "principle": "true iff the cascade (D6) reached accuracy parity at materially fewer judge calls (north-star \u00a75)."
+    },
+    "flagged_artifacts_skipped": {
+      "principle": "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v462_moat_<realized|retired_bounded|execution_incomplete|musr_scoped>_<headline>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "infra_rollup": {
+      "principle": "B1 genuine-SC baseline + degeneracy guard + B2 logprob cache status (the 2 reserved infra slots)."
+    },
+    "moat_verdict": {
+      "principle": "the off-ARC verifier-moat verdict carried from D5 (realized / retired_bounded / execution_incomplete / mixed-scoped) -- the milestone headline."
+    },
+    "next_milestone_pointer": {
+      "principle": ".463 direction conditioned on the moat verdict (scale the winner / pivot to the next verifier direction / re-run the un-executed arm / tighten the strongest arm)."
+    },
+    "per_arm_table": {
+      "principle": "D1/D2/D3/D6/D4 deltas + CIs + verifier_is_oracle + headroom_present + scorer_trained/abstention_rate (the audit + execution-quality trail)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the ARC progress metric carried from the registry (the deliverable stays LOCKED; ARC opportunistic)."
+    }
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 5017,
+      "honest_verdict": "blocked_trainable_qwen_base",
+      "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:8ad95720951638b2408e99936236e63ad1b9d8316dc9d368aea295035bdb320e",
+      "source": "D1_LORA_EBM"
+    },
+    {
+      "experiment_id": 5018,
+      "honest_verdict": "blocked_b2_logprob_cache",
+      "path": "results/experiment_5018_uprm_replication_v2.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:67ac465385ec774488fb6112441b08480117fca6393f291bbbeb75a69c2de4d9",
+      "source": "D2_UPRM"
+    },
+    {
+      "experiment_id": 5020,
+      "honest_verdict": "blocked_judge_server",
+      "path": "results/experiment_5020_uncertainty_routed_cascade.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:3e9c8721201ebea83ea66e8c95b87d3a5c09b820177f2779a5973c45056d5330",
+      "source": "D6_CASCADE"
+    },
+    {
+      "experiment_id": 5021,
+      "honest_verdict": "blocked_no_best_verifier",
+      "path": "results/experiment_5021_moat_second_corpus_v2.json",
+      "reason": "flagged_adversarial",
+      "sha256": "sha256:eff9fa0e1e19e598964c74d83a470a23f2571921f240ff54ac7193eca2e45685",
+      "source": "D4_SECOND_CORPUS"
+    }
+  ],
+  "hardware_rollup": {
+    "energy_smoke": {
+      "board_reported_duration_s": 3.757001832127571e-05,
+      "command_exit_code": 0,
+      "energy": -7,
+      "expected_energy": -7,
+      "problem": "tiny_quadratic_ising_constraint_energy",
+      "success": true
+    },
+    "honest_verdict": "success_kv260_reachable_overlay_loaded_energy_ok",
+    "kv260_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "status": "complete",
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "xmutil_requires_sudo": true
+  },
+  "honest_verdict": "complete_capstone_v462_moat_execution_incomplete_ebrm",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "infra_rollup": {
+    "b1_genuine_sc_baseline": {
+      "built": true,
+      "degeneracy_guard_fires": true,
+      "genuine_headroom_present": true,
+      "genuine_tuned_sc_accuracy": 0.585,
+      "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+      "oracle_at_k": 0.865,
+      "status": "complete"
+    },
+    "b2_logprob_cache": {
+      "cache_built": false,
+      "cache_jsonl_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5016_shared_logprob_candidate_cache_musr.jsonl",
+      "corpora_cached": [],
+      "has_per_token_logprobs": false,
+      "honest_verdict": "blocked_generation_or_cache_error",
+      "n_cached_rows": 0,
+      "status": "present_not_complete"
+    }
+  },
+  "moat_verdict": {
+    "d5_missing": false,
+    "decision": "EXECUTION-INCOMPLETE",
+    "execution_incomplete_arms": [
+      {
+        "arm": "EBRM",
+        "arm_id": "D3",
+        "corpus": "MuSR",
+        "execution_status": "blocked",
+        "honest_verdict": "blocked_gate_check_failed",
+        "source_experiment_id": 5019
+      }
+    ],
+    "moat_realized": false,
+    "moat_retired_bounded": false,
+    "source": "D5_MOAT_GATE",
+    "state": "execution_incomplete",
+    "summary": "D5 is execution-incomplete: EBRM did not cleanly execute, while flagged artifacts skipped were D1, D2, D6, D4. This is not a clean null and cannot bound-retire the moat."
+  },
+  "next_milestone_pointer": {
+    "arm_id": "D3",
+    "best_arm": "EBRM",
+    "direction": "rerun_unexecuted_arm",
+    "milestone": "2026.06.463",
+    "plan": "Re-run the unexecuted or pre-gated arm; route off Codex if the same arm bails twice."
+  },
+  "per_arm_table": [
+    {
+      "abstention_rate": null,
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": null,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": null,
+      "headroom_present": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5019_d3.json",
+      "source_experiment_id": 5019,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 69,
+      "sha256": "sha256:3efcd23e1714c6fa34207d93180f08523f7198399b387a5fe46fbbe231e034c5",
+      "yaml_loadable": true
+    },
+    "spec_has_req_5027": true,
+    "upstream_artifacts": {
+      "B1_GENUINE_SC": {
+        "path": "results/experiment_5015_genuine_sc_baseline_fix.json",
+        "present": true
+      },
+      "B2_LOGPROB_CACHE": {
+        "path": "results/experiment_5016_shared_logprob_candidate_cache.json",
+        "present": true
+      },
+      "C_KV260": {
+        "path": "results/experiment_5023_kv260_continuity.json",
+        "present": true
+      },
+      "D1_LORA_EBM": {
+        "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+        "present": true
+      },
+      "D2_UPRM": {
+        "path": "results/experiment_5018_uprm_replication_v2.json",
+        "present": true
+      },
+      "D3_EBRM": {
+        "path": "results/experiment_5019_d3.json",
+        "present": true
+      },
+      "D4_SECOND_CORPUS": {
+        "path": "results/experiment_5021_moat_second_corpus_v2.json",
+        "present": true
+      },
+      "D5_MOAT_GATE": {
+        "path": "results/experiment_5022_moat_gate_resolution_v2.json",
+        "present": true
+      },
+      "D6_CASCADE": {
+        "path": "results/experiment_5020_uncertainty_routed_cascade.json",
+        "present": true
+      },
+      "E1_SOTA": {
+        "path": "results/experiment_5024_sota_ingestion_verifier_moat.json",
+        "present": true
+      },
+      "E2_SELF_PLAY": {
+        "path": "results/experiment_5025_self_play_verifier_checkpoint.json",
+        "present": true
+      },
+      "E3_ARC_LEVEL": {
+        "path": "results/experiment_5026_levelup_attempt.json",
+        "present": true
+      }
+    }
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:808befcc1f42ddfa2413bde908a1ad92079362f1c902f2c16ce467bb341260a8",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_5027_capstone_v462.json",
+  "schema": "carnot.exp5027.capstone_v462.v1",
+  "self_play_rollup": {
+    "checkpoint_path": "models/arc_verifier_lf52.json",
+    "checkpoint_refreshed": true,
+    "continuous_self_learning": true,
+    "flag_resolved": true,
+    "honest_verdict": "success_self_play_checkpoint_refreshed",
+    "offline_reproduced": true,
+    "status": "complete",
+    "target_game": "lf52"
+  },
+  "sota_ingestion_rollup": {
+    "d5_conditioning": {
+      "decision": "EXECUTION-INCOMPLETE",
+      "execution_incomplete_arms": [
+        "D3 EBRM"
+      ],
+      "flagged_or_blocked_arms": [
+        "D1 LoRA-EBM",
+        "D2 uPRM",
+        "D6 verifier-judge cascade",
+        "D4 second-corpus-confirmation"
+      ],
+      "honest_verdict": "complete_moat_execution_incomplete_ebrm",
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "roadmap_condition": "Because D5 is execution-incomplete rather than realized or clean-null, .463 should repair and harden D1/D2/D3/D6 before any retirement claim.",
+      "source_artifact": "results/experiment_5022_moat_gate_resolution_v2.json"
+    },
+    "new_arxiv_ids": [
+      "2502.11250",
+      "2605.11334",
+      "2507.01951",
+      "2605.30085",
+      "2502.14356"
+    ],
+    "new_papers_ingested": 5,
+    "next_milestone_candidates": [
+      {
+        "candidate": "Repair D2 with self-supervised process rewards",
+        "candidate_flag": "flagged_for_v463 (.463): repair_d2_self_supervised_prm",
+        "phase_d_arms": [
+          "D1 LoRA-EBM",
+          "D2 uPRM"
+        ],
+        "source_ids": [
+          "2507.01951",
+          "2502.14356"
+        ],
+        "why": "D5 did not cleanly retire D1 or D2. The strongest .463 repair path is a frozen-candidate self-supervised PRM that removes the blocked logprob cache."
+      },
+      {
+        "candidate": "Rerun D3 with uncertainty and conformal abstention",
+        "candidate_flag": "flagged_for_v463 (.463): rerun_d3_uncertainty_conformal_gate",
+        "phase_d_arms": [
+          "D3 EBRM"
+        ],
+        "source_ids": [
+          "2502.11250",
+          "2605.30085"
+        ],
+        "why": "D5 marks D3 execution incomplete. A .463 rerun should add CoT-entropy and CROP-style conformal thresholds before measuring delta_vs_tuned_sc."
+      },
+      {
+        "candidate": "Rebuild the cheap-verifier-vs-judge cascade",
+        "candidate_flag": "flagged_for_v463 (.463): verdi_oracle_distinct_cascade",
+        "phase_d_arms": [
+          "D6 verifier-judge cascade"
+        ],
+        "source_ids": [
+          "2605.11334"
+        ],
+        "why": "D6 was blocked, but VERDI gives a single-call confidence router. .463 should test judge-call savings while preserving oracle-distinct accounting."
+      }
+    ],
+    "sota_to_phase_d_mapping": [
+      {
+        "arxiv_id": "2502.11250",
+        "candidate_flag": "flagged_for_v463 (.463): cot_entropy_uprm_ebrm_uncertainty",
+        "implementation_delta": "Over Exp 5017-5022, attach CoT-Entropy uncertainty to the D2 step verifier and to the D3 EBRM selector, then require selection delta versus genuine tuned-SC after uncertainty-aware abstention.",
+        "method": "CoT-Entropy uncertainty-aware generative PRM",
+        "phase_d_arms": [
+          "D2 uPRM",
+          "D3 EBRM"
+        ],
+        "pitfall": "The paper is math-reasoning PRM evidence; uncertainty may flag style variation rather than wrong reasoning unless calibrated on the MuSR cache.",
+        "source_signal": "Adds uncertainty quantification to generative reward models for step-wise verification, using CoT Entropy to detect unreliable PRM judgments.",
+        "url": "https://arxiv.org/abs/2502.11250"
+      },
+      {
+        "arxiv_id": "2605.11334",
+        "candidate_flag": "flagged_for_v463 (.463): verdi_confidence_routed_cascade",
+        "implementation_delta": "Over Exp 5017-5022, rerun the blocked D6 cascade with VERDI-style step-verdict alignment, claim margin, and evidence-grounding features as the cheap confidence router before escalating to the judge.",
+        "method": "VERDI single-call decomposed judge confidence",
+        "phase_d_arms": [
+          "D6 verifier-judge cascade"
+        ],
+        "pitfall": "A cascade win can silently become a judge win; the artifact must charge every fallback call and keep oracle-distinct cheap-verifier value separate.",
+        "source_signal": "Extracts confidence from verification sub-check traces without extra judge calls, replacing unavailable or saturated logprob confidence.",
+        "url": "https://arxiv.org/abs/2605.11334"
+      },
+      {
+        "arxiv_id": "2507.01951",
+        "candidate_flag": "flagged_for_v463 (.463): reflective_self_supervised_prm_unblock",
+        "implementation_delta": "Over Exp 5017-5022, use the reflective self-supervised PRM recipe as the D2 unblock path and, if D1 remains base-model blocked, train only a small trajectory-scoring head over cached candidates.",
+        "method": "Reflective generative self-supervised PRM",
+        "phase_d_arms": [
+          "D1 LoRA-EBM",
+          "D2 uPRM"
+        ],
+        "pitfall": "Outcome-derived self-supervision can reproduce generator bias and reward answer-shape shortcuts; the no-model-id and oracle-distinct audits remain mandatory.",
+        "source_signal": "Uses a shared policy and process-reward interface with a lightweight scoring head and learns trajectory selection from outcome rewards without process labels.",
+        "url": "https://arxiv.org/abs/2507.01951"
+      },
+      {
+        "arxiv_id": "2605.30085",
+        "candidate_flag": "flagged_for_v463 (.463): crop_conformal_prefix_gate",
+        "implementation_delta": "Over Exp 5017-5022, wrap D3 energy or D6 confidence scores with a conformal prefix threshold and evaluate certified-prefix length plus answer-selection delta instead of scalar AUROC alone.",
+        "method": "CROP conformal clean-prefix certification",
+        "phase_d_arms": [
+          "D3 EBRM",
+          "D6 verifier-judge cascade"
+        ],
+        "pitfall": "Exchangeability assumptions may fail across generated candidates; over-withholding can erase the headroom that a verifier moat needs to exploit.",
+        "source_signal": "Turns any step-risk proxy into a calibrated clean-prefix certificate, then routes uncertified suffixes for repair or review.",
+        "url": "https://arxiv.org/abs/2605.30085"
+      },
+      {
+        "arxiv_id": "2502.14356",
+        "candidate_flag": "flagged_for_v463 (.463): full_step_self_supervised_uprm",
+        "implementation_delta": "Over Exp 5017-5022, replace the blocked D2 logprob-cache dependency with full-step self-supervised rewards over complete candidate traces, then compare the resulting selector with tuned-SC on the same cache.",
+        "method": "Full-Step-DPO self-supervised process reward",
+        "phase_d_arms": [
+          "D2 uPRM"
+        ],
+        "pitfall": "It optimizes the generator as much as the verifier; using it as a selector requires a frozen-candidate evaluation to avoid claiming training lift as moat lift.",
+        "source_signal": "Trains a self-supervised process reward model that scores every reasoning step instead of relying on human or GPT-4 step labels.",
+        "url": "https://arxiv.org/abs/2502.14356"
+      }
+    ],
+    "status": "complete"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5027",
+    "SCENARIO-CAPSTONE-5027",
+    "SCENARIO-CAPSTONE-5027-FIELD-PRINCIPLES"
+  ]
+}
