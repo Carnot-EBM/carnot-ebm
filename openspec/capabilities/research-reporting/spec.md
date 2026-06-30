@@ -265,6 +265,98 @@ skeleton, blocked, degenerate, or flagged arm as a bounded retirement input.
 |---|---|---|
 | REQ-REPORT-5022 | Planned (`python/carnot/experiment_5022_moat_gate_resolution_v2.py`) | Planned (`tests/python/test_experiment_5022_moat_gate_resolution_v2.py`) |
 
+### REQ-REPORT-5036: Phase D5 Off-ARC Verifier-Moat Gate Resolution v3
+
+The Exp 5036 workflow SHALL aggregate only non-fabricated upstream Phase D5
+evidence from Exp 5031 LoRA-EBM, Exp 5032 uPRM, Exp 5033 EBRM, Exp 5034
+cascade-efficiency, Exp 5035 second-corpus confirmation, and the genuine
+tuned-SC baseline of `0.585` recorded by the moat benchmark harness. It SHALL
+write `results/experiment_5036_moat_gate_resolution_v3.json`, SHALL NOT run
+live LLM inference, SHALL NOT modify `scripts/research_conductor.py`, and SHALL
+NOT count any artifact carrying `flagged_adversarial=true` toward a headline.
+
+The workflow SHALL tabulate, per arm and corpus, `delta_vs_tuned_sc` measured
+against the genuine tuned-SC baseline, `paired_ci95`, `mcnemar_p`,
+`verifier_is_oracle`, `headroom_present`, and execution-quality flags including
+`scorer_trained`, `abstention_rate`, blocked status, and
+`judge_call_fraction`. A skeleton LoRA-EBM (`scorer_trained=false`), blocked
+uPRM, blocked cascade or second-corpus artifact, or degenerate EBRM
+(`abstention_rate>0.50`) SHALL be recorded as `execution_incomplete`, not as a
+clean null. A bounded retirement SHALL be allowed only when properly executed
+D1 and D2 are both clean nulls on every headroom-present oracle-distinct corpus
+and the cascade has no efficiency win.
+
+The artifact SHALL include principle-annotated fields `honest_verdict`,
+`moat_realized`, `moat_retired_bounded`, `execution_incomplete_arms`,
+`best_arm`, `efficiency_win`, `per_arm_table`,
+`diffusiongemma_gate_conditions_satisfied_off_arc`, `verifier_is_oracle`,
+`flagged_arms_skipped`, `inference_substrate`, and
+`cited_upstream_artifacts`. A positive verdict SHALL require either (a) an
+accuracy win by trained LoRA-EBM, uPRM, or non-degenerate EBRM on MuSR with
+headroom-present oracle-distinct evidence, paired CI95 excluding zero, and
+McNemar `p<0.05`, confirmed by Exp 5035 on at least one second corpus, or (b)
+an efficiency Pareto win where the Exp 5034 cascade reaches accuracy parity
+with the judge-only baseline while using materially fewer judge calls. When
+positive, `diffusiongemma_gate_conditions_satisfied_off_arc` SHALL be true only
+for the tested off-ARC domain; activation SHALL remain operator-gated and the
+artifact SHALL NOT set the DiffusionGemma gate to `MET`.
+
+Required field principles:
+
+- `honest_verdict`: principle "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null, an unexecuted arm is complete_moat_execution_incomplete_<arm>."
+- `moat_realized`: principle "true iff >=1 oracle-distinct arm beats the GENUINE tuned-SC with CI95-excl-0 on a headroom-present corpus (cross-corpus confirmed), OR the cascade hits an efficiency Pareto win."
+- `moat_retired_bounded`: principle "true iff the PROPERLY-EXECUTED D1 (scorer_trained) AND D2 both clean-null on every headroom-present oracle-distinct corpus AND no efficiency win -- NOT triggered by a skeleton/degenerate/blocked arm."
+- `execution_incomplete_arms`: principle "arms that did NOT cleanly execute (D1 skeleton / D2 blocked / D3 degenerate) -- these are FAILED executions to re-run in .464, NOT nulls that bound the moat."
+- `best_arm`: principle "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) OR the efficiency Pareto point + its corpus + delta + CI."
+- `efficiency_win`: principle "true iff the cascade reached accuracy parity (within CI of judge-only) at materially fewer judge calls (north-star §5)."
+- `per_arm_table`: principle "per arm per corpus: delta_vs_tuned_sc (vs GENUINE SC 0.585), paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present, scorer_trained/abstention_rate (the audit + execution-quality trail)."
+- `diffusiongemma_gate_conditions_satisfied_off_arc`: principle "true iff a POSITIVE arm satisfies the gate's 3 conditions ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip to MET)."
+- `verifier_is_oracle`: principle "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms skipped)."
+- `flagged_arms_skipped`: principle "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (reads D1-D4 + cascade JSON, no LLM; 0.0001s floor)."
+- `cited_upstream_artifacts`: principle "the {experiment_id, fields_imported, sha256} for each arm so the verdict is traceable to a real measurement."
+
+#### SCENARIO-REPORT-5036-INCOMPLETE: Failed Executions Do Not Retire The Moat
+
+**Given** Exp 5031, Exp 5032, Exp 5033, Exp 5034, or Exp 5035 is
+non-flagged but skeleton, blocked, malformed, or degenerate
+**When** Exp 5036 aggregates Phase D5 v3
+**Then** it records the affected arm as execution-incomplete, writes a terminal
+`complete_moat_execution_incomplete_...` or `blocked_no_moat_arms` verdict as
+applicable, keeps `moat_realized=false`, keeps
+`moat_retired_bounded=false`, and does not satisfy the DiffusionGemma gate.
+
+#### SCENARIO-REPORT-5036-POSITIVE: Cross-Corpus Accuracy Or Efficiency Win Realizes The Moat
+
+**Given** a non-flagged, oracle-distinct D1/D2/D3 arm beats the genuine tuned-SC
+on MuSR with headroom present, paired CI95 excluding zero, and McNemar
+`p<0.05`, and Exp 5035 confirms the same arm on a second headroom-present
+corpus, or Exp 5034 reaches judge-only accuracy parity with materially fewer
+judge calls
+**When** Exp 5036 resolves the gate
+**Then** it writes a `success_moat_realized_off_arc_...` verdict, sets
+`moat_realized=true`, sets
+`diffusiongemma_gate_conditions_satisfied_off_arc=true`, records the best
+accuracy arm or efficiency Pareto point, and leaves activation
+operator-gated.
+
+#### SCENARIO-REPORT-5036-RETIRE: Clean D1 And D2 Nulls Bound Retirement
+
+**Given** non-flagged properly executed D1 and D2 results are both clean nulls
+on every headroom-present oracle-distinct corpus and Exp 5034 has no efficiency
+win
+**When** Exp 5036 resolves the gate
+**Then** it writes
+`complete_moat_retired_bounded_lora_ebm_and_uprm_both_null`, sets
+`moat_retired_bounded=true`, sets `moat_realized=false`, and does not treat any
+skeleton, blocked, degenerate, or flagged arm as a bounded retirement input.
+
+## Implementation Status (REQ-REPORT-5036)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5036 | Planned (`python/carnot/experiment_5036_moat_gate_resolution_v3.py`) | Planned (`tests/python/test_experiment_5036_moat_gate_resolution_v3.py`) |
+
 ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
 
 The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt
