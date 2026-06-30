@@ -168,12 +168,16 @@ def resolve_game_id(arcade, short: str) -> str:
     return short
 
 
-def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh, corpus=None) -> int:
+def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh, corpus=None) -> tuple[int, str]:
     gid = resolve_game_id(arcade, short)
     env = arcade.make(gid, scorecard_id=scorecard_id)
     frame = env.reset()
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed
     from carnot.agentic.arc_agi3_world_model import grid_of
+    # capture the per-game session guid -> the browser replay URL is
+    # https://arcprize.org/replay/<guid> (verified 2026-06-30). Recorded so the
+    # artifact carries a directly-viewable link per game.
+    guid = str(getattr(frame, "guid", "") or "") if frame is not None else ""
     prev_grid = grid_of(frame) if frame is not None else None
     prev_lvl = _levels_completed(frame) if frame is not None else 0
     for a in actions:
@@ -194,7 +198,7 @@ def replay_live(arcade, short: str, scorecard_id: str, actions: list[dict], mh, 
                 prev_grid, prev_lvl = ng, lvl
             except Exception:
                 pass
-    return _levels_completed(frame) if frame is not None else -1
+    return (_levels_completed(frame) if frame is not None else -1), guid
 
 
 def main(argv) -> int:
@@ -234,7 +238,7 @@ def main(argv) -> int:
             continue
         t0 = time.time()
         try:
-            lvl = replay_live(arcade, short, scorecard_id, actions, mh, corpus=corpus)
+            lvl, guid = replay_live(arcade, short, scorecard_id, actions, mh, corpus=corpus)
         except Exception as e:
             rows.append({"game": short, "claimed": claimed, "live_level": None, "error": repr(e)[:140]})
             print(f"    {short:5} claimed L{claimed} -> ERROR {repr(e)[:70]}", flush=True)
@@ -242,8 +246,10 @@ def main(argv) -> int:
         ok = lvl >= claimed
         matched += int(ok)
         total += max(0, lvl)
-        rows.append({"game": short, "claimed": claimed, "live_level": lvl, "env_match": ok})
-        print(f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  [{time.time()-t0:.0f}s]", flush=True)
+        rows.append({"game": short, "claimed": claimed, "live_level": lvl, "env_match": ok,
+                     "guid": guid, "replay_url": f"https://arcprize.org/replay/{guid}" if guid else None})
+        print(f"    {short:5} claimed L{claimed} -> LIVE L{lvl}  {'MATCH' if ok else 'MISMATCH'}  "
+              f"[{time.time()-t0:.0f}s]  {('https://arcprize.org/replay/' + guid) if guid else ''}", flush=True)
 
     if corpus is not None:
         try:
@@ -266,7 +272,8 @@ def main(argv) -> int:
     out = REPO / "results" / "arc3_live_submit.json"
     out.write_text(json.dumps({
         "experiment": "arc3_live_submit", "mode": "submit" if submit else "validate",
-        "scorecard_id": scorecard_id, "live_total_levels": total,
+        "scorecard_id": scorecard_id, "replay_base": "https://arcprize.org/replay/",
+        "live_total_levels": total,
         "games_env_matched": matched, "games": len(claimed_set),
         "claimed_total_levels": sum(claimed_set.values()), "per_game": rows,
         "replay_set_source": claimed_source, "claimed_caps": claimed_info.get("capped", []),
