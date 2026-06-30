@@ -1,0 +1,439 @@
+{
+  "arc_result": {
+    "duplicate_solve_avoided": true,
+    "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "prior_reproduced_level": 5,
+    "registry_precheck_passed": true,
+    "reproducible_total_levels_after": 69,
+    "reproducible_total_levels_before": 69,
+    "solve_claim": {
+      "claimed": false,
+      "provenance": "live_agent_self_discovery",
+      "provenance_evidence": {
+        "hand_built_adapter_used": false,
+        "llm_reasoning_invoked": false,
+        "offline_source_reading_used": false,
+        "per_game_bfs_used": false,
+        "runtime_self_discovery": true,
+        "solution_labels_from_live_run": false
+      },
+      "reproduction_gate": {
+        "claimed_level": 0,
+        "game": "tu93",
+        "mode": "offline_reproduction_gate_no_new_level_claim",
+        "reached_level": 0,
+        "reproduced": false
+      }
+    },
+    "state": "no_bank",
+    "target_game": "tu93",
+    "target_level": 6
+  },
+  "arc_state": "no_bank",
+  "best_arm_and_delta": {
+    "arm_id": "D1",
+    "ci95": [
+      0.0,
+      0.165
+    ],
+    "delta": 0.08,
+    "evidence_status": "blocked",
+    "headline_countable": false
+  },
+  "best_verifier_evidence": {
+    "accuracy": 0.665,
+    "arm": "powered_lora_ebm_eorm",
+    "arm_id": "D1",
+    "clean_no_win": false,
+    "delta_vs_tuned_sc": 0.08,
+    "execution_status": "blocked",
+    "experiment_id": 5045,
+    "headroom_present": true,
+    "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
+    "mcnemar_p": 0.076369,
+    "n_questions": 200,
+    "paired_ci95": [
+      0.0,
+      0.165
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+    "proper_musr_win": false,
+    "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff",
+    "verifier_is_oracle": false
+  },
+  "capstone_ready": true,
+  "cascade_state": {
+    "efficiency_win": false,
+    "execution_status": "blocked",
+    "honest_verdict": "blocked_gate_check_failed",
+    "judge_call_fraction": null,
+    "paired_ci95": null,
+    "state": "blocked"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 5050,
+      "fields_imported": [
+        "honest_verdict",
+        "moat_state",
+        "best_arm",
+        "best_arm_delta",
+        "best_arm_ci",
+        "second_corpus_confirmed",
+        "cascade_efficiency_win",
+        "execution_incomplete_reasons",
+        "blocked_upstream_artifacts",
+        "flagged_upstream_artifacts",
+        "missing_upstream_artifacts",
+        "per_arm_table",
+        "cascade_artifact",
+        "second_corpus_artifact"
+      ],
+      "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
+      "path": "results/experiment_5050_moat_gate_resolution_v464.json",
+      "sha256": "sha256:f6f8ec5513b719982e49ea10139f22a6c1f849305f41bf894df8ae619f578c5d",
+      "source": "moat_gate"
+    },
+    {
+      "experiment_id": 5051,
+      "fields_imported": [
+        "honest_verdict",
+        "self_learning_loop_executed",
+        "near_miss_count",
+        "verified_trace_count",
+        "pre_update_accuracy",
+        "post_update_accuracy",
+        "heldout_delta",
+        "contamination_guard_passed",
+        "fr11_evidence",
+        "delta_vs_genuine_tuned_sc",
+        "checkpoint_or_memory_path"
+      ],
+      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
+      "path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a",
+      "source": "fr11_self_learning"
+    },
+    {
+      "experiment_id": 5052,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "overlay_loaded",
+        "loaded_overlay",
+        "timing_ratio_packet_built",
+        "cpu_reference_ok",
+        "kv260_result_ok",
+        "local_claim_scope",
+        "timing_ratio_packet"
+      ],
+      "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
+      "path": "results/experiment_5052_kv260_pbit_timing_ratio.json",
+      "sha256": "sha256:7efedb3f6549131af20166273362889364162805308828d50890d9a4af0f967a",
+      "source": "hardware"
+    },
+    {
+      "experiment_id": 5053,
+      "fields_imported": [
+        "honest_verdict",
+        "research_references_updated",
+        "n_sources_checked",
+        "next_milestone_candidates"
+      ],
+      "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
+      "path": "results/experiment_5053_sota_ingestion_v465.json",
+      "sha256": "sha256:a1ef03a0d4b42e1884fe2bcfb17ec4941cad4fad4ac87eee96e51c0989e0bce5",
+      "source": "sota"
+    },
+    {
+      "experiment_id": 5054,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "target_level",
+        "prior_reproduced_level",
+        "new_levels_banked",
+        "offline_reproduced",
+        "duplicate_solve_avoided",
+        "registry_precheck_passed",
+        "reproducible_total_levels_before",
+        "reproducible_total_levels_after",
+        "solve_claim"
+      ],
+      "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
+      "path": "results/experiment_5054_arc_live_path_self_discovery.json",
+      "sha256": "sha256:4a3097b7c9192ff3ee33cac14151b8560fdffa08e7bf04faa29e07bdc2ec13a1",
+      "source": "arc"
+    }
+  ],
+  "docs_updated": {
+    "_bmad_traceability": false,
+    "openspec_capstone_spec": true,
+    "ops_changelog": false,
+    "ops_status": false,
+    "reason": "operator stop rule delegates ops/status/changelog/traceability reconciliation"
+  },
+  "duration_s": 0.000558,
+  "experiment": "experiment_5055_capstone_v464",
+  "experiment_id": 5055,
+  "field_principles": {
+    "arc_result": {
+      "principle": "the Exp5054 live-path ARC result, including no-bank and duplicate-depth state."
+    },
+    "best_arm_and_delta": {
+      "principle": "the strongest verifier evidence from Exp5050, including arm id, delta, CI, and whether the evidence is headline-countable."
+    },
+    "docs_updated": {
+      "principle": "records only the docs touched by this capstone run; ops reconciliation may be intentionally delegated."
+    },
+    "fr11_self_learning_result": {
+      "principle": "whether Exp5051 produced credible positive FR-11 self-learning evidence, with held-out delta and guardrail state."
+    },
+    "hardware_result": {
+      "principle": "the Exp5052 local KV260 timing-ratio packet state without promoting it to a general speedup claim."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v464_<realized_moat|musr_scoped_positive|bounded_retirement|execution_incomplete>_<fr11_state>."
+    },
+    "moat_state": {
+      "principle": "the blunt .464 verdict imported from Exp5050, constrained to realized moat, MuSR-scoped positive, bounded retirement, or execution-incomplete."
+    },
+    "next_milestone_pointer": {
+      "principle": "the concrete .465 experiment-class routing table for all four moat states plus the selected route."
+    }
+  },
+  "fr11_self_learning_result": {
+    "checkpoint_or_memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
+    "contamination_guard_passed": true,
+    "credible_evidence": false,
+    "credible_evidence_scope": "no credible positive FR-11 self-learning evidence",
+    "delta_vs_genuine_tuned_sc": 0.125,
+    "heldout_delta": -0.05,
+    "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
+    "near_miss_count": 312,
+    "post_update_accuracy": 0.65,
+    "pre_update_accuracy": 0.7,
+    "self_learning_loop_executed": true,
+    "state": "guarded_negative",
+    "verified_trace_count": 225
+  },
+  "fr11_state": "guarded_negative",
+  "hardware_result": {
+    "claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+    "cpu_reference_ok": true,
+    "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
+    "kv260_result_ok": true,
+    "kv260_ssh_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "overlay_loaded": true,
+    "state": "packet_built",
+    "timing_ratio_packet": {
+      "cpu_to_kv260_board_workload_ratio": 0.031477449031,
+      "cpu_to_kv260_command_wall_ratio": 0.002849813606,
+      "cpu_wall_clock_s": 0.00181530905,
+      "flips": 3800,
+      "iterations": 128,
+      "kv260_board_reported_workload_s": 0.057670145005,
+      "kv260_command_wall_clock_s": 0.636992204003,
+      "n_variables": 64,
+      "parity_match": true,
+      "ratio_claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+      "workload_name": "bounded_sparse_pbit_parity_n64"
+    },
+    "timing_ratio_packet_built": true
+  },
+  "hardware_state": "packet_built",
+  "honest_verdict": "complete_capstone_v464_execution_incomplete_fr11_no_credible_positive_evidence",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.06.464",
+  "missing_capstone_inputs": [],
+  "moat_resolution": {
+    "blocked_upstream_artifacts": [
+      {
+        "arm": "powered_lora_ebm_eorm",
+        "arm_id": "D1",
+        "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+        "status": null
+      },
+      {
+        "arm": "cross_model_cascade",
+        "arm_id": "D6",
+        "honest_verdict": "blocked_gate_check_failed",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_d6.json",
+        "status": "blocked"
+      }
+    ],
+    "bounded_retirement_ok": false,
+    "cascade_efficiency_win": false,
+    "execution_incomplete_reasons": [
+      "D1 blocked: blocked_sota_candidate_refresh_unavailable",
+      "D2 flagged: complete_process_reward_no_win_musr_minus_0p030",
+      "D6 blocked: blocked_gate_check_failed",
+      "D6 missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
+    ],
+    "flagged_upstream_artifacts": [
+      {
+        "arm": "vpr_process_reward",
+        "arm_id": "D2",
+        "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
+        "status": null
+      },
+      {
+        "arm": "second_corpus_confirmation",
+        "arm_id": "D4",
+        "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5049_second_corpus_confirmation.json",
+        "status": null
+      }
+    ],
+    "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
+    "missing_upstream_artifacts": [
+      {
+        "arm": "cross_model_cascade",
+        "arm_id": "D6",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
+      }
+    ],
+    "second_corpus_confirmed": false,
+    "state": "execution_incomplete"
+  },
+  "moat_state": "execution_incomplete",
+  "next_milestone_pointer": {
+    "by_moat_state": {
+      "execution_incomplete": {
+        "concrete_next": "Repair blocked or flagged Phase D arms before treating any result as a null: D1 SOTA refresh, D6 cascade, and D2/D4 audit cleanup.",
+        "experiment_class": "phase_d_execution_repair_and_confirmation"
+      },
+      "moat_realized": {
+        "concrete_next": "Scale the winning verifier arm with locked oracle-distinct controls and operator-gated activation.",
+        "experiment_class": "scale_realized_verifier"
+      },
+      "musr_scoped_positive": {
+        "concrete_next": "Run non-flagged second-corpus confirmation plus cascade cost accounting for the winning MuSR arm.",
+        "experiment_class": "second_corpus_confirmation"
+      },
+      "retired_bounded": {
+        "candidate_classes": [
+          "Tool-first verifier gate before judge fallback",
+          "Constraint-guided verifier replay set",
+          "Guided decoding cost frontier",
+          "Uncertainty-calibrated factuality loop"
+        ],
+        "concrete_next": "Retire the bounded D1/D2/D3 family and pick a fresh .465 verifier direction from SOTA ingestion.",
+        "experiment_class": "new_verifier_direction_from_sota"
+      }
+    },
+    "selected": {
+      "concrete_next": "Repair blocked or flagged Phase D arms before treating any result as a null: D1 SOTA refresh, D6 cascade, and D2/D4 audit cleanup.",
+      "experiment_class": "phase_d_execution_repair_and_confirmation"
+    },
+    "selected_state": "execution_incomplete"
+  },
+  "random_seed": 5055,
+  "reproducibility_checksum": "sha256:af375b60b8227d695c2cafbeab8b0fab45d2bc0f167068e20c6226ac64ad42fd",
+  "result_path": "results/experiment_5055_capstone_v464.json",
+  "schema": "carnot.experiment_5055_capstone_v464.v1",
+  "second_corpus_state": {
+    "best_arm": "D1",
+    "delta_vs_tuned_sc_second": 0.37,
+    "execution_status": "flagged",
+    "headline_counted": false,
+    "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
+    "paired_ci95_second": [
+      0.28,
+      0.47
+    ],
+    "reported_confirmed": true,
+    "state": "flagged_not_counted"
+  },
+  "sota_state": {
+    "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
+    "n_sources_checked": 8,
+    "next_milestone_candidates": [
+      {
+        "candidate": "Tool-first verifier gate before judge fallback",
+        "candidate_flag": "flagged_for_v465 (.465): tool_first_small_verifier_gate",
+        "source_ids": [
+          "2504.04718",
+          "2604.01993"
+        ],
+        "why": "T1 and SAFE give a low-cost path where tools and evidence checks reduce the burden on a small verifier before expensive judge escalation."
+      },
+      {
+        "candidate": "Constraint-guided verifier replay set",
+        "candidate_flag": "flagged_for_v465 (.465): constraint_replay_continual_verifier",
+        "source_ids": [
+          "2510.08992",
+          "2605.26942",
+          "2606.26108"
+        ],
+        "why": "Constraint traces, neuro-symbolic checks, and scale taxonomy can be converted into verifier replay fixtures that distinguish constraint following from generic model scale."
+      },
+      {
+        "candidate": "Guided decoding cost frontier",
+        "candidate_flag": "flagged_for_v465 (.465): guided_decoding_cost_frontier",
+        "source_ids": [
+          "2602.07223",
+          "2605.28020"
+        ],
+        "why": "Verification-guided sparse attention and reward-guided decoding let .465 measure whether sampling-time guidance buys accuracy per token instead of only per model call."
+      },
+      {
+        "candidate": "Uncertainty-calibrated factuality loop",
+        "candidate_flag": "flagged_for_v465 (.465): uncertainty_calibrated_factuality_loop",
+        "source_ids": [
+          "2604.01993",
+          "2604.12046"
+        ],
+        "why": "Evidence-grounded verification plus uncertainty trace calibration gives a concrete hallucination-mitigation loop for continual verifier learning."
+      }
+    ],
+    "research_references_updated": true
+  },
+  "source_artifact_states": [
+    {
+      "experiment_id": 5050,
+      "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
+      "path": "results/experiment_5050_moat_gate_resolution_v464.json",
+      "source": "moat_gate",
+      "state": "present"
+    },
+    {
+      "experiment_id": 5051,
+      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
+      "path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "source": "fr11_self_learning",
+      "state": "present"
+    },
+    {
+      "experiment_id": 5052,
+      "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
+      "path": "results/experiment_5052_kv260_pbit_timing_ratio.json",
+      "source": "hardware",
+      "state": "present"
+    },
+    {
+      "experiment_id": 5053,
+      "honest_verdict": "success_sota_ingestion_v465_actionable_references_added",
+      "path": "results/experiment_5053_sota_ingestion_v465.json",
+      "source": "sota",
+      "state": "present"
+    },
+    {
+      "experiment_id": 5054,
+      "honest_verdict": "complete_tu93_no_new_level_residual_duplicate_depth",
+      "path": "results/experiment_5054_arc_live_path_self_discovery.json",
+      "source": "arc",
+      "state": "present"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5055",
+    "SCENARIO-CAPSTONE-5055",
+    "SCENARIO-CAPSTONE-5055-FIELD-PRINCIPLES"
+  ]
+}
