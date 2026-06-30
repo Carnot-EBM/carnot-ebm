@@ -1,0 +1,112 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "checkpoint_path": null,
+  "deliverable_stage": "pretrain_skeleton",
+  "delta_vs_tuned_sc": null,
+  "duration_s": 0.993424,
+  "experiment": "experiment_5003_lora_ebm_scorer_musr",
+  "field_principles": {
+    "delta_vs_tuned_sc": {
+      "principle": "trained_scorer_accuracy - tuned_sc_accuracy; the moat lift (signed)."
+    },
+    "headroom_present": {
+      "principle": "true required for an informative result -- (oracle@K - tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (GPU training + scoring; >=60s floor)."
+    },
+    "mcnemar_p": {
+      "principle": "McNemar paired-test p; a win requires p<0.05 (the discordant-pairs significance, robust to the shared corpus)."
+    },
+    "model_specs": {
+      "principle": "the trainable base (Qwen3.5-4B/1.7B base + LoRA + energy head) AND the cached-candidate generator (Qwen3.5-9B-MTP)."
+    },
+    "n_questions": {
+      "principle": ">=200 for the headline delta (sample-size rigor)."
+    },
+    "oracle_at_k": {
+      "principle": "the selectable-headroom ceiling -- bounds what any selector could achieve."
+    },
+    "paired_ci95": {
+      "principle": "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
+    },
+    "preconditions_checked": {
+      "principle": "records base-cached/CUDA/candidate-cache checks; a missing resource emits blocked_, never a fabricated AUROC."
+    },
+    "random_seed": {
+      "principle": "determinism for the train/eval split + bootstrap."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (base, LoRA config, corpus, seed) so a replication catches drift."
+    },
+    "trained_scorer_accuracy": {
+      "principle": "the oracle-distinct selection accuracy of the TRAINED LoRA-EBM (the headline number)."
+    },
+    "tuned_sc_accuracy": {
+      "principle": "the TUNED self-consistency baseline (temperature/K swept) -- the honest baseline to beat, not naive SC."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference; this is the non-circular moat test."
+    }
+  },
+  "headroom_present": false,
+  "honest_verdict": "running_lora_ebm_scorer_musr_pretrain_skeleton",
+  "inference_substrate": "live_llm_inference",
+  "mcnemar_p": null,
+  "model_specs": {
+    "adapter": "LoRA",
+    "base_model": "Qwen/Qwen3.5-4B",
+    "cached_candidate_generator": "Qwen/Qwen3.5-9B-MTP",
+    "energy_head": "scalar",
+    "trainable_base_candidates": [
+      "Qwen/Qwen3.5-4B",
+      "Qwen/Qwen3.5-1.7B"
+    ]
+  },
+  "n_pairs": 0,
+  "n_questions": 0,
+  "oracle_at_k": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95": null,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "Qwen/Qwen3.5-4B cached with tokenizer and safetensors",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "resource": "trainable_qwen_base"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available=true on conductor GPU-0",
+      "resource": "cuda"
+    },
+    {
+      "available": true,
+      "detail": "200 cached MuSR checkpoint(s), required >= 200",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+      "resource": "cached_musr_candidates"
+    },
+    {
+      "available": true,
+      "detail": "2 FoVer file(s) available",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train.json,/home/ianblenke/github.com/ianblenke/carnot/data/fover_train_v4.json",
+      "resource": "fover_pairs"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:7a7fd3d6389d9c2aa2240f67280a4f1bc576b98afd3151879e9c4c5f57959749",
+  "schema": "carnot.experiment_5003_lora_ebm_scorer_musr.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5003",
+    "SCENARIO-VERIFY-5003"
+  ],
+  "summarize_artifact_exit_code": null,
+  "train_loss": null,
+  "trained_scorer_accuracy": null,
+  "tuned_sc_accuracy": null,
+  "verifier_is_oracle": false
+}

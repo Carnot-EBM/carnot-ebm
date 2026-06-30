@@ -20571,3 +20571,80 @@ not.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-4611 | Implemented (`scripts/adversarial_verify.py`; `python/carnot/experiment_4611_adversarial_verify_hardening.py`; `results/experiment_4611_adversarial_verify_hardening.json`) | Implemented (`tests/python/test_adversarial_verify_hardening_4611.py`) |
+
+### REQ-VERIFY-5003: LoRA-EBM Oracle-Distinct MuSR Scorer
+
+The repository SHALL provide Exp 5003 at
+`python/carnot/experiment_5003_lora_ebm_scorer_musr.py` to train a real
+LoRA-EBM holistic-quality scorer for cached MuSR candidates without
+regenerating candidates and to write
+`results/experiment_5003_lora_ebm_scorer_musr.json`.
+
+Before training, the runner SHALL check that a trainable Qwen base model cache
+is present, CUDA is available on conductor GPU 0 without iGPU pinning, cached
+MuSR candidate checkpoints are present, and FoVer training pairs are present.
+If any precondition is missing, the runner SHALL write an honest blocked
+artifact with `honest_verdict=blocked_<resource>`, `verifier_is_oracle=false`,
+`headroom_present=false`, and `preconditions_checked`, then stop without
+fabricating trained-scorer metrics.
+
+When preconditions hold, the runner SHALL write a deliverable-first skeleton
+artifact before training, build contrastive training pairs from FoVer
+correct/error reasoning and gold-labeled cached MuSR candidates, train a
+LoRA-EBM scorer with a scalar energy head so good reasoning has lower energy
+than bad reasoning, checkpoint the adapter, and record training loss and pair
+count. At evaluation time the scorer SHALL rank cached MuSR candidates using
+only oracle-distinct candidate text/reasoning fields and SHALL NOT read gold,
+answer index, or model identity fields. The runner SHALL reuse the shared
+Exp 5002 moat benchmark harness for tuned self-consistency, oracle@K, paired
+bootstrap CI, and McNemar calculations.
+
+The terminal artifact SHALL include `honest_verdict`, bare bool
+`verifier_is_oracle=false`, bare bool `headroom_present`,
+`trained_scorer_accuracy`, `tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `n_questions`, `oracle_at_k`, `model_specs`,
+`inference_substrate="live_llm_inference"`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `train_loss`,
+`n_pairs`, `checkpoint_path`, `oracle_distinctness_enforced`,
+`adversarial_verify_clean`, `adversarial_verify_flags`, `duration_s`,
+`field_principles`, and `spec_refs`.
+
+`honest_verdict` SHALL start with `success_lora_ebm_beats_sc_musr_` only when
+the trained scorer beats tuned self-consistency, the paired CI95 excludes zero,
+McNemar `p<0.05`, `verifier_is_oracle=false`, and `headroom_present=true`.
+Otherwise, with an informative run, it SHALL start with
+`complete_lora_ebm_no_win_musr_` and include that the CI includes zero when
+applicable.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0.`;
+`verifier_is_oracle` = `false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference; this is the non-circular moat test.`;
+`headroom_present` = `true required for an informative result -- (oracle@K - tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard).`;
+`trained_scorer_accuracy` = `the oracle-distinct selection accuracy of the TRAINED LoRA-EBM (the headline number).`;
+`tuned_sc_accuracy` = `the TUNED self-consistency baseline (temperature/K swept) -- the honest baseline to beat, not naive SC.`;
+`delta_vs_tuned_sc` = `trained_scorer_accuracy - tuned_sc_accuracy; the moat lift (signed).`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired-test p; a win requires p<0.05 (the discordant-pairs significance, robust to the shared corpus).`;
+`n_questions` = `>=200 for the headline delta (sample-size rigor).`;
+`oracle_at_k` = `the selectable-headroom ceiling -- bounds what any selector could achieve.`;
+`model_specs` = `the trainable base (Qwen3.5-4B/1.7B base + LoRA + energy head) AND the cached-candidate generator (Qwen3.5-9B-MTP).`;
+`inference_substrate` = `live_llm_inference (GPU training + scoring; >=60s floor).`;
+`random_seed` = `determinism for the train/eval split + bootstrap.`;
+`reproducibility_checksum` = `content hash of (base, LoRA config, corpus, seed) so a replication catches drift.`;
+`preconditions_checked` = `records base-cached/CUDA/candidate-cache checks; a missing resource emits blocked_, never a fabricated AUROC.`
+
+### SCENARIO-VERIFY-5003: Cached MuSR LoRA-EBM Evaluates Without Oracle Leakage
+
+Given a cached trainable Qwen base, CUDA, FoVer pairs, and at least 200 cached
+MuSR candidate checkpoints are available, when Exp 5003 runs, then it writes a
+resumable skeleton artifact, trains or resumes the LoRA-EBM checkpoint from
+contrastive FoVer and MuSR pairs, scores cached MuSR candidates through a
+guarded oracle-distinct view, evaluates against tuned self-consistency with
+paired CI and McNemar through the shared harness, runs adversarial artifact
+verification, and writes a terminal artifact with every required field and a
+terminal `honest_verdict`.
+
+If a trainable Qwen base, CUDA, FoVer pairs, or cached MuSR candidates are
+missing, then Exp 5003 writes a blocked artifact naming the missing resource,
+records the precondition checks, keeps `verifier_is_oracle=false`, and exits
+without claiming trained accuracy, AUROC, or a moat win.

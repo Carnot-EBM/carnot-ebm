@@ -682,3 +682,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['ARC_OUTER_LOOP_SOLVE'] on a non-negative verdict
 - artifact: results/experiment_headway_lp85_capture.json
+
+## experiment_5003_lora_ebm_scorer_musr.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_5003_lora_ebm_scorer_musr.json
