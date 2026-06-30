@@ -1,0 +1,54 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.464",
+  "generated_at": "2026-06-30T23:15:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 76.1,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] PHASE D1 powered LoRA-EBM/EORM -- gated on Exp 5043 SOTA model",
+      "duration_minutes": 19.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] PHASE D3 KAN/PURM calibration -- gated on Exp 5045 powered_sco",
+      "duration_minutes": 19.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] PHASE D2 dense process-reward repair -- gated on Exp 5043 SOTA",
+      "duration_minutes": 15.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] PHASE D4 second-corpus confirmation -- gated on Exp 5044 secon",
+      "duration_minutes": 15.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: PHASE D6 cross-model cascade -- gated on Exp 5",
+      "duration_minutes": 2.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.464 completed 11 synthesis-only experiments in 76.1 minutes, with 0 compute-bound experiments. Because the timing block lists no compute-bound work, the idle GPU snapshot is contextual only and not a failure signal.",
+  "bottlenecks_identified": [
+    "The top listed wall-time consumers were synthesis-only gated phases, not GPU tasks; the slowest four preserved entries were 19.6, 19.0, 15.9, and 15.2 minutes.",
+    "Several slowest entries were explicitly gated on prior phase artifacts, so milestone throughput was limited by dependency sequencing and synthesis latency rather than accelerator utilization."
+  ],
+  "improvements_suggested": [
+    "Add a standardized fast preflight for gated synthesis phases so missing prerequisites produce compact blocked artifacts before the full synthesis prompt is expanded.",
+    "Cache and reuse gate-state summaries across synthesis-only D-phase tasks so each phase does not reconstruct the same dependency context independently.",
+    "Keep GPU recommendations gated on compute_bound_experiments_count > 0 so idle synthesis-only milestones do not generate false DualGPURunner or GPU-idle action items."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement the fast preflight path for gated synthesis-only phases.",
+    "Persist a small per-milestone gate-state summary that downstream synthesis phases can read.",
+    "Add a retro validator that auto-answers compute-bound GPU questions as not applicable when compute_bound_experiments_count is 0."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No compute-bound experiment timing is available this milestone because the compute-bound count is 0. The supplied data supports synthesis-gate improvements, but not a quantified savings claim beyond the conservative 0 percent recorded here."
+}
