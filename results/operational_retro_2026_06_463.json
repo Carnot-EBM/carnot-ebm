@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.463",
+  "generated_at": "2026-06-30T18:30:52Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Timing data contains no experiment commits for this milestone: 0 experiments completed, 0 total wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, slowest experiments and compute-bound GPU utilization have no data available this milestone; the idle GPU snapshot is not a bottleneck under the provided rule.",
+  "bottlenecks_identified": [
+    "No per-experiment wall-time bottleneck can be identified because the timing data contains no experiment commits.",
+    "No compute-bound GPU-idle bottleneck is flagged because the timing data contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Have the retrospective timing producer emit an explicit empty-window reason when experiments_completed is 0.",
+    "Auto-fill slowest-experiment and compute-bound GPU sections with 'no data available this milestone' when the timing block contains no experiment entries.",
+    "Carry the GPU-idle interpretation rule into the retro generator so idle cards are only flagged when at least one compute-bound timing entry exists."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit an explicit empty-window status in the milestone timing data.",
+    "Suppress slowest-experiment and GPU-idle findings when compute_bound_experiments_count is 0.",
+    "Add a pre-retro sanity check that separates genuinely empty timing data from missing timing instrumentation."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally conservative: no experiment IDs, durations, or metrics were inferred outside the supplied TIMING DATA and GPU STATE blocks. Because the timing block contains no experiment commits, every compute-bound performance answer is no data available this milestone."
+}
