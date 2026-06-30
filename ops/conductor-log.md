@@ -9631,3 +9631,4 @@ The contro |
 | 2026-06-30 05:56 UTC | CAPSTONE v461 -- aggregate the FIRST PHASE D miles | OK | 86 passed, 1 warning in 8.48s |
 | 2026-06-30 06:52 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-30 06:54 UTC | Milestone 2026.06.462 activated | OK | 14 tasks queued |
+| 2026-06-30 07:07 UTC | PHASE 0 (TRANSITION) -- archive .461 -> activate . | OK | 87 passed, 1 warning in 6.79s |
