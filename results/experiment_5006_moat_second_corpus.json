@@ -1,0 +1,132 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "best_verifier_from": "D3",
+  "candidate_cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5006_candidates_mmlu_pro_hard.jsonl",
+  "deliverable_stage": "pregeneration_or_prescore_skeleton",
+  "delta_vs_tuned_sc_second": null,
+  "duration_s": 2.24477,
+  "experiment": "experiment_5006_moat_second_corpus",
+  "field_principles": {
+    "best_verifier_from": {
+      "principle": "which arm (D1/D2/D3) provided the best verifier by MuSR delta_vs_tuned_sc."
+    },
+    "delta_vs_tuned_sc_second": {
+      "principle": "the cross-corpus moat lift (signed); CI95-excl-0 is the generalization confirmation."
+    },
+    "headroom_present": {
+      "principle": "true required on the 2nd corpus for an informative result (FALSE_NEGATIVE_RISK guard); if false, the corpus is excluded from the moat claim."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_moat_generalizes_<corpus>_<delta>, a scoped result is complete_moat_musr_scoped_<corpus>_no_confirm."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (live generation; >=60s) or verifier_ensemble_against_cached_candidates if candidates are reused."
+    },
+    "model_specs": {
+      "principle": "the generator + the best verifier -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 (sample-size rigor)."
+    },
+    "paired_ci95_second": {
+      "principle": "paired bootstrap CI95 of the 2nd-corpus delta."
+    },
+    "preconditions_checked": {
+      "principle": "records verifier/corpus/headroom checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for generation + bootstrap."
+    },
+    "second_corpus": {
+      "principle": "the chosen confirmed-cached headroom-present oracle-distinct corpus (GPQA/MMLU-Pro-hard/MATH-500-hard)."
+    },
+    "second_corpus_accuracy": {
+      "principle": "the best verifier's oracle-distinct accuracy on the 2nd corpus."
+    },
+    "tuned_sc_accuracy_second": {
+      "principle": "the TUNED-SC baseline on the 2nd corpus (headroom-control)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the best verifier scores reasoning quality, never the answer's executable correctness (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "headroom_present": false,
+  "honest_verdict": "running_moat_second_corpus_mmlu_pro_hard_skeleton",
+  "inference_substrate": "precondition_check_only",
+  "mcnemar_p_second": null,
+  "model_specs": {
+    "best_verifier": "D3",
+    "best_verifier_model_specs": {
+      "abstention": "distribution_spread_threshold_to_tuned_sc",
+      "base_model_specs": {
+        "source_accuracy": 0.515,
+        "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr.json",
+        "source_schema": "carnot.distributional_energy_verifier_musr.v1",
+        "source_self_consistency_accuracy": 0.56
+      },
+      "base_scorer": "registry_quality_ensemble",
+      "base_scorer_detail": "checked-in distributional energy quality ensemble fallback",
+      "conflict_filter": "drop same-answer pseudo-pairs; require positive reward margin",
+      "hybrid_initialization": "base reward mean plus pool-disagreement spread",
+      "label_noise_training": "margin_over_margin_plus_distribution_spread",
+      "paper": "arXiv:2504.13134",
+      "refinement": "post_hoc_reward_distribution",
+      "tuned_self_consistency_config": {
+        "k": 1,
+        "temperature": "cached"
+      }
+    },
+    "best_verifier_musr_delta": 0.0,
+    "best_verifier_scorer_kind": "ebrm_uncertainty",
+    "generator_gpu": 0,
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B-it-GGUF"
+  },
+  "n_questions": 0,
+  "oracle_at_k_second": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95_second": null,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "D1 artifact is blocked/skeleton or lacks numeric verifier metrics",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5003_lora_ebm_scorer_musr.json",
+      "resource": "d1_verifier"
+    },
+    {
+      "available": false,
+      "detail": "D2 artifact is blocked/skeleton or lacks numeric verifier metrics",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5004_uprm_replication.json",
+      "resource": "d2_verifier"
+    },
+    {
+      "available": true,
+      "detail": "usable D3 verifier with MuSR delta_vs_tuned_sc=0.0",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "resource": "d3_verifier"
+    },
+    {
+      "available": false,
+      "detail": "CorpusUnavailableError: GPQA is not available in the local cache",
+      "resource": "second_corpus_gpqa"
+    },
+    {
+      "available": true,
+      "detail": "200 cached row(s), required >= 200",
+      "resource": "second_corpus_mmlu_pro_hard"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:7ea61ecd120ff69bdf824ea93515293a54108247cd57c86c18f3b1fca0f78533",
+  "schema": "carnot.experiment_5006_moat_second_corpus.v1",
+  "second_corpus": "MMLU-Pro-hard",
+  "second_corpus_accuracy": null,
+  "spec_refs": [
+    "REQ-VERIFY-5006",
+    "SCENARIO-VERIFY-5006"
+  ],
+  "summarize_artifact_exit_code": null,
+  "tuned_sc_accuracy_second": null,
+  "verifier_is_oracle": false
+}
