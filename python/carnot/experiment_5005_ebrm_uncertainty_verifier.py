@@ -101,8 +101,7 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
     "random_seed": {"principle": "determinism for the calibration split + bootstrap."},
     "preconditions_checked": {
         "principle": (
-            "records base-scorer/candidate-cache/CUDA checks; a missing resource emits "
-            "blocked_."
+            "records base-scorer/candidate-cache/CUDA checks; a missing resource emits blocked_."
         )
     },
 }
@@ -206,9 +205,10 @@ def resolve_base_scorer(root: Path) -> BaseScorer | None:
         if isinstance(payload, Mapping):
             checkpoint = payload.get("checkpoint_path")
             accuracy = _number(payload.get("trained_scorer_accuracy"))
-            clean = payload.get("flagged_adversarial") is not True and payload.get(
-                "adversarial_verify_clean"
-            ) is not False
+            clean = (
+                payload.get("flagged_adversarial") is not True
+                and payload.get("adversarial_verify_clean") is not False
+            )
             not_skeleton = not str(payload.get("deliverable_stage", "")).endswith("skeleton")
             if checkpoint and accuracy is not None and clean and not_skeleton:
                 return BaseScorer(
@@ -247,7 +247,9 @@ def check_preconditions(
         PreconditionCheck(
             "base_scorer",
             base is not None,
-            base.detail if base else "no landed Exp 5003 scorer or registry quality-ensemble artifact",
+            base.detail
+            if base
+            else "no landed Exp 5003 scorer or registry quality-ensemble artifact",
             base.artifact_path.as_posix() if base and base.artifact_path else None,
         )
     ]
@@ -460,7 +462,9 @@ def conflict_aware_training_rows(rows: Sequence[JsonMap]) -> list[JsonDict]:
                     "positive_candidate_id": best.get("candidate_id"),
                     "negative_candidate_id": other.get("candidate_id"),
                     "conflict_aware_filtered": margin > 0.0,
-                    "label_noise_weight": round(max(0.0, margin) / (abs(margin) + spread + 1e-9), 12),
+                    "label_noise_weight": round(
+                        max(0.0, margin) / (abs(margin) + spread + 1e-9), 12
+                    ),
                 }
             )
     return [pair for pair in pairs if pair["conflict_aware_filtered"]]
@@ -486,7 +490,9 @@ def point_estimate_answer(row: JsonMap) -> str | None:
     return str(answer) if answer is not None else None
 
 
-def select_ebrm_answer(row: JsonMap, *, tuned_sc_answer: str | None, threshold: float) -> str | None:
+def select_ebrm_answer(
+    row: JsonMap, *, tuned_sc_answer: str | None, threshold: float
+) -> str | None:
     candidate = _best_candidate(row)
     if candidate is None:
         raise EbrmScoringError("no candidates available for EBRM selection")
@@ -555,9 +561,18 @@ def build_uncertainty_calibration(
     calibration_indices: Sequence[int],
     thresholds: Sequence[float],
 ) -> JsonDict:
-    selected_rows = [rows[index] for index in calibration_indices if 0 <= index < len(rows)] or list(rows)
+    selected_rows = [
+        rows[index] for index in calibration_indices if 0 <= index < len(rows)
+    ] or list(rows)
     threshold = calibrate_uncertainty_threshold(rows, calibration_indices, thresholds)
     curve = calibration_curve(selected_rows, thresholds)
+    selected_curve_row = next(
+        (row for row in curve if float(row["threshold"]) == float(threshold)),
+        {"abstain_rate": 0.0},
+    )
+    degeneracy_guard = harness.abstention_degeneracy_guard(
+        float(selected_curve_row.get("abstain_rate", 0.0))
+    )
     point_predictions = [point_estimate_answer(row) for row in selected_rows]
     point_correct = [
         harness._is_correct(prediction, row.get("gold"))  # noqa: SLF001
@@ -574,6 +589,8 @@ def build_uncertainty_calibration(
         "best_abstaining_accuracy": round(best_accuracy, 6),
         "calibration_improvement_vs_point": round(best_accuracy - point_accuracy, 6),
         "claim": "post_hoc_reward_distribution_spread_abstains_to_tuned_sc",
+        "abstention_degeneracy_guard": degeneracy_guard,
+        "degeneracy_flag": bool(degeneracy_guard["degeneracy_flag"]),
     }
 
 
@@ -588,7 +605,12 @@ def evaluate_ebrm_rows(
     tuned_sc = harness.tuned_self_consistency(rows_list)
     tuned_predictions = list(tuned_sc.get("predictions", []))
     sc_correct = [int(value) for value in tuned_sc.get("correct", [])]
-    oracle_accuracy, oracle_correct = harness.oracle_at_k(rows_list)
+    oracle_k = int(tuned_sc.get("candidates_per_question") or 0)
+    oracle_accuracy, oracle_correct = harness.oracle_at_k(
+        rows_list,
+        k=oracle_k,
+        temperature=tuned_sc.get("config", {}).get("temperature"),
+    )
     ebrm_predictions = [
         select_ebrm_answer(row, tuned_sc_answer=tuned_predictions[index], threshold=threshold)
         for index, row in enumerate(rows_list)
@@ -602,6 +624,15 @@ def evaluate_ebrm_rows(
         harness._is_correct(prediction, row.get("gold"))  # noqa: SLF001
         for prediction, row in zip(point_predictions, rows_list)
     ]
+    direct_selects = [
+        (_number(row.get("ebrm_uncertainty")) or 0.0) <= float(threshold) for row in rows_list
+    ]
+    abstain_rate = (
+        round(sum(1 for value in direct_selects if not value) / len(direct_selects), 6)
+        if direct_selects
+        else 0.0
+    )
+    degeneracy_guard = harness.abstention_degeneracy_guard(abstain_rate)
     n_flips_possible = sum(
         1 for sc_ok, oracle_ok in zip(sc_correct, oracle_correct) if not sc_ok and oracle_ok
     )
@@ -618,11 +649,20 @@ def evaluate_ebrm_rows(
             "accuracy": tuned_sc["accuracy"],
             "config": tuned_sc["config"],
             "predictions": tuned_predictions,
+            "k_sweep": dict(tuned_sc.get("k_sweep") or {}),
+            "tuned_k": int(tuned_sc.get("tuned_k") or tuned_sc["config"]["k"]),
+            "candidates_per_question": int(tuned_sc.get("candidates_per_question") or 0),
+            "degenerate_candidate_pool": bool(tuned_sc.get("degenerate_candidate_pool")),
         },
         "oracle_at_k": oracle_accuracy,
+        "oracle_k": oracle_k,
+        "abstain_rate": abstain_rate,
+        "abstention_degeneracy_guard": degeneracy_guard,
+        "degeneracy_flag": bool(degeneracy_guard["degeneracy_flag"]),
         "n_flips_possible": n_flips_possible,
         "headroom_present": bool(
-            (oracle_accuracy - tuned_accuracy) >= harness.HEADROOM_THRESHOLD and n_flips_possible > 0
+            (oracle_accuracy - tuned_accuracy) >= harness.HEADROOM_THRESHOLD
+            and n_flips_possible > 0
         ),
         "delta_vs_tuned_sc": round(delta, 6),
         "paired_ci95": harness.paired_bootstrap_ci(
@@ -755,6 +795,11 @@ def build_complete_artifact(
     ci95 = [float(value) for value in evaluation["paired_ci95"]]
     mcnemar_p = float(evaluation["mcnemar_p"])
     headroom_present = bool(evaluation["headroom_present"])
+    degeneracy_guard = dict(
+        evaluation.get("abstention_degeneracy_guard")
+        or uncertainty_calibration.get("abstention_degeneracy_guard")
+        or {}
+    )
     win = delta > 0.0 and ci95[0] > 0.0 and mcnemar_p < 0.05 and headroom_present
     verdict_delta = _format_delta(delta)
     if win:
@@ -777,6 +822,8 @@ def build_complete_artifact(
             "paired_ci95": ci95,
             "mcnemar_p": mcnemar_p,
             "uncertainty_calibration": uncertainty_calibration,
+            "abstention_degeneracy_guard": degeneracy_guard,
+            "degeneracy_flag": bool(degeneracy_guard.get("degeneracy_flag", False)),
             "base_scorer_refined": base_scorer.name,
             "n_questions": int(evaluation["n_rows"]),
             "oracle_at_k": float(evaluation["oracle_at_k"]),

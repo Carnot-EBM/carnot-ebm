@@ -1,0 +1,140 @@
+{
+  "candidate_pool_count_summary": {
+    "histogram": {
+      "5": 3,
+      "6": 13,
+      "7": 40,
+      "8": 144
+    },
+    "max": 8,
+    "min": 5,
+    "unique": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "candidates_per_question": 5,
+  "corrected_musr_tuned_sc_baseline": {
+    "accuracy": 0.585,
+    "candidate_pool_count_summary": {
+      "histogram": {
+        "5": 3,
+        "6": 13,
+        "7": 40,
+        "8": 144
+      },
+      "max": 8,
+      "min": 5,
+      "unique": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    "candidates_per_question": 5,
+    "config": {
+      "k": 1,
+      "temperature": "cached"
+    },
+    "k_sweep": {
+      "1": 0.585,
+      "3": 0.53,
+      "5": 0.575
+    },
+    "tuned_k": 1
+  },
+  "degeneracy_guard_demo": {
+    "abstain_rate": 1.0,
+    "degeneracy_flag": true,
+    "threshold": 0.5,
+    "verdict": "degenerate_abstaining_selector_abstain_rate_1p000_gt_0p50"
+  },
+  "degeneracy_guard_fires": true,
+  "duration_s": 1.0,
+  "experiment": "experiment_5015_genuine_sc_baseline_fix",
+  "experiment_id": 5015,
+  "field_principles": {
+    "candidates_per_question": {
+      "principle": "how many cached candidates exist per question (if 1, SC and oracle@K are degenerate -- flagged honestly)."
+    },
+    "degeneracy_guard_fires": {
+      "principle": "true -- the always-abstain guard flags a >50%-abstain selector (so a future D arm cannot degenerate to SC undetected)."
+    },
+    "genuine_headroom_present": {
+      "principle": "(oracle@K - genuine_tuned_sc) >= 0.10 AND flips>0 -- the FALSE_NEGATIVE_RISK guard against the GENUINE baseline."
+    },
+    "genuine_tuned_sc_accuracy": {
+      "principle": "the K-way majority-vote tuned-SC on MuSR (the HONEST baseline to beat -- replaces the k=1 strawman 0.585 if K>1 helps)."
+    },
+    "harness_module_path": {
+      "principle": "python/carnot/moat_benchmark_harness.py -- the shared library the D arms import (fixed in place)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_genuine_sc_baseline_fixed_degeneracy_guard_shipped."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (re-scores cached candidates; 1s floor) -- no new LLM generation."
+    },
+    "oracle_at_k": {
+      "principle": "the selectable-headroom ceiling (recomputed)."
+    },
+    "preconditions_checked": {
+      "principle": "records the candidate-cache + harness-import checks; a missing cache emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the bootstrap + smoke."
+    },
+    "sc_k_sweep": {
+      "principle": "the full {K: accuracy} curve so the tuned-K choice is auditable (proves k=1 was/was-not genuinely best, not a default)."
+    },
+    "tuned_k": {
+      "principle": "the K that maximizes SC accuracy (the tuned choice)."
+    }
+  },
+  "genuine_headroom_present": true,
+  "genuine_tuned_sc_accuracy": 0.585,
+  "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+  "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "n_flips_possible": 56,
+  "n_questions": 200,
+  "no_new_llm_generation": true,
+  "oracle_at_k": 0.865,
+  "oracle_degenerate": false,
+  "oracle_k": 5,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "blocked_resource": null,
+    "candidate_cache_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+    "candidate_cache_files": 200,
+    "candidate_cache_nonempty": true,
+    "candidate_cache_present": true,
+    "codex_md_read": true,
+    "harness_import_error": null,
+    "harness_module_importable": true,
+    "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+    "harness_module_present": true,
+    "new_llm_generation": false,
+    "smoke_limit": 200
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:63f485b53d2bd670cd751a4bb2c2f9e21e19bb6e6d6e7aff10f76e2e8895a002",
+  "result_path": "results/experiment_5015_genuine_sc_baseline_fix.json",
+  "sc_k_sweep": {
+    "1": 0.585,
+    "3": 0.53,
+    "5": 0.575
+  },
+  "schema": "carnot.genuine_sc_baseline_fix.v1",
+  "single_candidate_degenerate": false,
+  "spec_refs": [
+    "REQ-KONA-5015",
+    "SCENARIO-KONA-5015-GENUINE-SC",
+    "SCENARIO-KONA-5015-DEGENERACY-GUARD",
+    "SCENARIO-KONA-5015-SMOKE"
+  ],
+  "tuned_k": 1
+}
