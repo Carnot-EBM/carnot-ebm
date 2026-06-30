@@ -20753,3 +20753,96 @@ uPRM-selection accuracy or a moat win.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5004 | Implemented (`python/carnot/experiment_5004_uprm_replication.py`, `results/experiment_5004_uprm_replication.json`) | Implemented (`tests/python/test_experiment_5004_uprm_replication.py`) |
+
+### REQ-VERIFY-5005: EBRM Uncertainty-Aware MuSR Selector
+
+The repository SHALL provide Exp 5005 at
+`python/carnot/experiment_5005_ebrm_uncertainty_verifier.py` to apply the
+arXiv:2504.13134 Energy-Based Reward Model post-hoc refinement pattern to
+cached MuSR candidates and to write
+`results/experiment_5005_ebrm_uncertainty_verifier.json`.
+
+Before scoring, the runner SHALL check that an acceptable base reward scorer
+exists and that at least 200 cached MuSR candidate checkpoints are available.
+The base scorer SHALL prefer a landed Exp 5003 LoRA-EBM artifact only when it
+is not a skeleton, not adversarially flagged, and has a checkpoint; otherwise
+it SHALL fall back to the checked-in registry quality-ensemble / cheap-proxy
+scorer. CUDA is required only for a training/refinement path, not for the
+cached post-hoc fallback. If any required resource is missing, the runner SHALL
+write an honest blocked artifact with `honest_verdict=blocked_<resource>`,
+`verifier_is_oracle=false`, `headroom_present=false`, and
+`preconditions_checked`, then stop without fabricating EBRM-selection metrics.
+
+When preconditions hold, the runner SHALL write a deliverable-first skeleton
+artifact, build conflict-aware filtered pseudo-pairs from cached candidates,
+derive label-noise-aware contrastive weights, model a per-candidate reward
+distribution rather than only a point reward, select the highest expected
+reward candidate, and abstain to tuned self-consistency whenever calibrated
+reward-distribution spread exceeds the tuned uncertainty threshold. The scorer
+SHALL use only oracle-distinct candidate text, cache index, temperature,
+cached scorer metadata, and pool-level disagreement features and SHALL NOT
+read gold, answer index, answer choice, or model identity fields at inference.
+Gold SHALL be used only after selection for evaluation and for threshold
+calibration on the designated calibration split. The runner SHALL reuse the
+shared Exp 5002 moat benchmark harness for tuned self-consistency, oracle@K,
+paired bootstrap CI, and McNemar calculations.
+
+The terminal artifact SHALL include `honest_verdict`, bare bool
+`verifier_is_oracle=false`, bare bool `headroom_present`,
+`ebrm_selection_accuracy`, `tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `uncertainty_calibration`,
+`base_scorer_refined`, `n_questions`, `model_specs`,
+`inference_substrate`, `random_seed`, `preconditions_checked`,
+`oracle_distinctness_enforced`, `adversarial_verify_clean`,
+`adversarial_verify_flags`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+`honest_verdict` SHALL start with `success_ebrm_beats_sc_musr_` only when the
+EBRM abstaining selector beats tuned self-consistency, the paired CI95
+excludes zero, McNemar `p<0.05`, `verifier_is_oracle=false`, and
+`headroom_present=true`. Otherwise, with an informative run, it SHALL start
+with `complete_ebrm_no_win_musr_` and include that the CI includes zero when
+applicable. A calibration-only improvement over the base point-estimate scorer
+MAY be reported in `uncertainty_calibration`, but it SHALL NOT be promoted to
+the success prefix unless the paired MuSR accuracy gate also passes.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_ebrm_beats_sc_musr_<delta>, a null is complete_ebrm_no_win_musr_<delta>_ci_incl_0.`;
+`verifier_is_oracle` = `false -- EBRM scores reasoning-candidate reward distributions, never reads gold at inference (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required for an informative result (FALSE_NEGATIVE_RISK guard).`;
+`ebrm_selection_accuracy` = `the oracle-distinct accuracy of the uncertainty-aware abstaining selector (the headline).`;
+`tuned_sc_accuracy` = `the TUNED-SC baseline (headroom-control).`;
+`delta_vs_tuned_sc` = `ebrm_selection_accuracy - tuned_sc_accuracy; the signed moat lift.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`uncertainty_calibration` = `the abstention-on-uncertainty calibration vs the point-estimate base scorer (EBRM's distinctive claim: delays reward-hacking / improves robustness).`;
+`base_scorer_refined` = `which base RM EBRM refined (D1 LoRA-EBM if it landed, else the registry quality-ensemble) -- EBRM is post-hoc.`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`model_specs` = `the base scorer + EBRM refinement substrate -- the methodology stamp.`;
+`inference_substrate` = `live_llm_inference if training/scoring on GPU (>=60s); else verifier_ensemble_against_cached_candidates.`;
+`random_seed` = `determinism for the calibration split + bootstrap.`;
+`preconditions_checked` = `records base-scorer/candidate-cache/CUDA checks; a missing resource emits blocked_.`
+
+### SCENARIO-VERIFY-5005: EBRM Abstains On High-Variance Reward Distributions
+
+Given either a landed D1 LoRA-EBM scorer or the checked-in registry
+quality-ensemble base scorer and at least 200 cached MuSR candidate
+checkpoints, when Exp 5005 runs, then it writes a resumable skeleton artifact,
+builds conflict-aware and label-noise-weighted post-hoc reward-distribution
+rows, calibrates an uncertainty abstention threshold, scores cached MuSR
+candidates through a guarded oracle-distinct view, abstains high-spread rows to
+tuned self-consistency, evaluates against tuned self-consistency with paired CI
+and McNemar through the shared harness, runs adversarial artifact verification,
+and writes a terminal artifact with every required field and a terminal
+`honest_verdict`.
+
+If the base scorer or cached MuSR candidates are missing, then Exp 5005 writes
+a blocked artifact naming the missing resource, records the precondition
+checks, keeps `verifier_is_oracle=false`, and exits without claiming
+EBRM-selection accuracy or a moat win.
+
+## Implementation Status (REQ-VERIFY-5005)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5005 | Implemented (`python/carnot/experiment_5005_ebrm_uncertainty_verifier.py`, `results/experiment_5005_ebrm_uncertainty_verifier.json`) | Implemented (`tests/python/test_experiment_5005_ebrm_uncertainty_verifier.py`) |
