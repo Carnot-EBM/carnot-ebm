@@ -53737,3 +53737,126 @@ milestones:
       (E1), continuous self-learning (E2), opportunistic ARC (E3). Skip any flagged_adversarial artifact.'
     deliverable: results/experiment_5013_capstone_v461.json
     result: OK (conductor)
+- id: 2026.06.462
+  title: "PHASE D (SECOND execution) -- the FIRST REAL oracle-distinct verifier-moat test. .461 did NOT test the decisive\
+    \ question: all three constructions failed to EXECUTE (D1 LoRA-EBM never trained = skeleton bail; D2 uPRM blocked on logprob\
+    \ cache; D3 EBRM degenerate = abstained 97.5% to a k=1 strawman tuned-SC over a weak base scorer). Zero real trained-verifier\
+    \ measurements landed. .462 fixes the two infra defects (B1 genuine K-way tuned-SC baseline + degeneracy guard; B2 shared\
+    \ logprob-enriched candidate cache) and re-executes the constructions PROPERLY: D1 trains a Qwen3.5-1.7B LoRA-EBM (train-first-not-skeleton-first,\
+    \ gate requires train_loss non-null), D2 uPRM unblocked via the B2 cache (+LC-ERD fallback), D3 EBRM refines the REAL\
+    \ D1 scorer with the E1-ingested uncertainty heads (UARM/pessimistic/RewardUQ) gated_on D1, plus a north-star-\xA75 EFFICIENCY\
+    \ arm (uncertainty-routed cheap->judge cascade, arXiv:2510.20369) and D4 cross-corpus -> D5 gate. FALSIFIABLE GATE: >=1\
+    \ oracle-distinct verifier beats GENUINE tuned-SC with McNemar CI95-excl-0 on a headroom-present domain (MuSR + >=1 second\
+    \ corpus), OR the cascade reaches accuracy-parity at materially fewer judge calls; retire_if_same_verdict if the PROPERLY-EXECUTED\
+    \ LoRA-EBM AND uPRM both null. 2 reserved infra (B1, B2), 1 hardware (C KV260 SSH-only), 1 SOTA-ingestion (E1), continuous\
+    \ self-learning (E2 ARC self-play/FR-11) + 1 opportunistic ARC level-up (E3). All codex; planner/retro stay Opus."
+  doc: openspec/change-proposals/research-roadmap-v462.md
+  completed: '2026-06-30'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp5014-phase0
+    title: PHASE 0 (TRANSITION) -- archive .461 -> activate .462; assert the ACTIVE roadmap YAML parses + the pre-test gate
+      is green (own-test + --no-cov); RESOLVE any poison pre-test. RECORD the .461 close-state (capstone exp5013 = MIXED-SCOPED
+      moat; the three PHASE D execution defects D1 skeleton-bail / D2 logprob-cache block / D3 degenerate-always-abstain;
+      ARC LOCKED at levels 69; PHASE D remains the majority lever for .462).
+    deliverable: results/experiment_5014_archive_461_activate_462.json
+    result: OK (conductor)
+  - id: exp5015-b1
+    title: 'PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) -- fix the moat harness baseline INTEGRITY: replace the k=1 strawman
+      "tuned-SC" with a GENUINE K-way majority-vote self-consistency (sweep K over the cached candidates, report the full
+      {{K: accuracy}} sweep so the tuned choice is auditable), and add an ALWAYS-ABSTAIN DEGENERACY GUARD (flag any abstaining
+      selector that abstains > 50% -> it IS tuned-SC, not a real verifier). Re- emit the corrected MuSR tuned-SC baseline
+      all D arms must beat. This makes every .462 moat delta honest.'
+    deliverable: results/experiment_5015_genuine_sc_baseline_fix.json
+    result: OK (conductor)
+  - id: exp5016-b2
+    title: 'PHASE B2 (INFRA; RESERVED SLOT 2 of 2; ENABLING) -- build the SHARED candidate cache the D arms need: generate
+      K reasoning+answer candidates per MuSR question WITH per-token logprobs (the +/- marker telemetry uPRM needs), checkpoint-per-question
+      to a JSONL (resumable under the codex cap). This UNBLOCKS D2 (the .461 blocker = empty logprob cache) and feeds D1/D3/cascade
+      -- generated ONCE = anti-churn.'
+    deliverable: results/experiment_5016_shared_logprob_candidate_cache.json
+    result: OK (conductor)
+  - id: exp5017-d1
+    title: 'PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAIN the REAL arXiv:2605.18871 LoRA-EBM holistic-quality scorer
+      FOR REAL this time (the .461 D1 bootstrap-and-bailed = skeleton, never trained). Qwen3.5-1.7B base + LoRA + scalar energy
+      head, contrastive on FoVer + gold-labeled candidate pairs; EVAL min-energy select vs the GENUINE tuned-SC (B1). The
+      decisive open question: does a TRAINED oracle-distinct verifier capture the MuSR headroom? TRAIN-FIRST-NOT-SKELETON-FIRST;
+      the gate REQUIRES train_loss non-null + duration>60s.'
+    deliverable: results/experiment_5017_lora_ebm_scorer_musr_v2.json
+    result: OK (conductor)
+  - id: exp5018-d2
+    title: 'PHASE D2 (VERIFIER MOAT; the published WIN-CONDITION existence proof) -- REPLICATE uPRM (arXiv:2605.10158) UNBLOCKED:
+      the .461 D2 blocked only on the empty logprob cache (the scorer + first-error formula are fully implemented). Consume
+      the B2 shared logprob cache, run the uPRM next-token-prob first-error process score as an oracle-distinct SELECTOR over
+      K candidates, gate beats-GENUINE-tuned-SC with McNemar CI95-excl-0 on MuSR. LC-ERD (arXiv:2605.24005) consistency-based
+      fallback if logprobs are incomplete.'
+    deliverable: results/experiment_5018_uprm_replication_v2.json
+    result: OK (conductor)
+  - id: exp5019-d3
+    title: 'PHASE D3 (VERIFIER MOAT; the uncertainty-aware construction, NON-DEGENERATE) -- rebuild EBRM (arXiv:2504.13134)
+      properly: refine the REAL D1 trained LoRA-EBM scorer (gated_on D1 scorer_trained, NOT the weak registry fallback that
+      made the .461 D3 degenerate), add the E1-ingested uncertainty heads (UARM 2606.19818 + distributional-pessimistic 2606.09073
+      + RewardUQ 2602.24040 calibration), and CAP the abstention so the selector cannot collapse to always-SC (the B1 degeneracy
+      guard). Gate beats-GENUINE-tuned-SC on MuSR.'
+    deliverable: results/experiment_5019_ebrm_uncertainty_verifier_v2.json
+    result: OK (conductor)
+  - id: exp5020-cascade
+    title: "PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- north-star \xA75 Pareto win) -- build the uncertainty-routed cheap-verifier\
+      \ -> strong-judge CASCADE (arXiv:2510.20369): the cheap oracle-distinct verifier selects when confident and routes ONLY\
+      \ uncertain questions to a strong LLM-judge. The WIN = accuracy parity (within CI) with the judge-only baseline at MATERIALLY\
+      \ FEWER judge calls. Charge the judge-call budget explicitly so the judge cannot become the moat (the E1 pitfall)."
+    deliverable: results/experiment_5020_uncertainty_routed_cascade.json
+    result: OK (conductor)
+  - id: exp5021-d4
+    title: 'PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATION) -- evaluate the BEST D1/D2/D3 oracle-distinct verifier on
+      a SECOND headroom-present oracle-distinct corpus (GPQA / MMLU-Pro-hard / MATH-500-hard, whichever is cached + headroom_present
+      vs the GENUINE tuned-SC). The gate requires MuSR + >=1 second corpus: a single-corpus win could be corpus-specific.
+      Honest MuSR-scoped record if no 2nd corpus is headroom-present.'
+    deliverable: results/experiment_5021_moat_second_corpus_v2.json
+    result: OK (conductor)
+  - id: exp5022-d5
+    title: 'PHASE D5 (VERIFIER MOAT; the falsifiable GATE + DiffusionGemma-gate resolution) -- aggregate D1/D2/D3/D4 + the
+      cascade and DECIDE the off-ARC verifier-moat verdict: does >=1 oracle-distinct verifier beat the GENUINE tuned-SC with
+      McNemar CI95-excl-0 on a headroom-present domain (ACCURACY), OR does the cascade hit parity at materially fewer judge
+      calls (EFFICIENCY)? POSITIVE = moat realized off ARC + DiffusionGemma conditions satisfied on the tested domain (activation
+      operator-gated). PROPERLY-EXECUTED D1 AND D2 both null = bounded retirement. A skeleton/degenerate arm is a FAILED execution,
+      NOT a null.'
+    deliverable: results/experiment_5022_moat_gate_resolution_v2.json
+    result: OK (conductor)
+  - id: exp5023-c
+    title: PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- KV260 reachability + a small on-board energy-eval smoke (the verifier's
+      analytical-penalty Ising constraint energy), SSH-only, ALWAYS-write-a-(blocked-or-success)- artifact. Per the KV260-focus
+      relaxation this is the single hardware-continuity slot.
+    deliverable: results/experiment_5023_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp5024-e1
+    title: PHASE E1 (SOTA-INGESTION; RESERVED SLOT) -- a FRESH focused literature sweep for NEW oracle-distinct verifier /
+      energy-RM / process-verifier / uncertainty-aware-RM / efficiency-cascade papers (2025-2026) beyond the 18 already ingested,
+      mapped onto the .463 verifier-moat direction (scale the winner, or pivot if D1+D2 both null). Reliable channel ONLY
+      (sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch); the /deep-research harness is BANNED from the
+      autonomous loop.
+    deliverable: results/experiment_5024_sota_ingestion_verifier_moat.json
+    result: OK (conductor)
+  - id: exp5025-e2
+    title: 'PHASE E2 (CONTINUOUS SELF-LEARNING / FR-11; ARC self-play) -- the standing arc_loop_solve self-play loop on a
+      banked checkpointed game (rotated OFF .461 r11l / .460 su15 / .459 ft09 / .458 sp80 -- prefer lf52; ls20 alternate):
+      warm-started verifier-routed solve -> reproduction gate -> TRAIN + CHECKPOINT the learned verifier. The learned verifier
+      improves across runs = continuous self-learning (research-program Tier 3 / FR-11). HONEST substrate (verifier_ensemble_against_cached_candidates
+      unless the generator ran >=60s).'
+    deliverable: results/experiment_5025_self_play_verifier_checkpoint.json
+    result: OK (conductor)
+  - id: exp5026-e3
+    title: 'PHASE E3 (OPPORTUNISTIC ARC LEVEL-UP) -- a single opportunistic deepen on a FRESH grounded game (rotate to a deepest
+      lane NOT recently attempted: prefer sc25 L5->L6 or lp85 L5->L6; cn04 L3->L4 alt), reproduction-gated, solve_provenance=live_agent_self_discovery,
+      HONEST no-bank if the deepen well is dry (it has been flat at 69 for 7+ milestones). ARC is opportunistic post-sprint
+      -- a no-bank rotation dead-end is the CORRECT outcome if dry.'
+    deliverable: results/experiment_5026_levelup_attempt.json
+    result: OK (conductor)
+  - id: exp5027-capstone
+    title: 'CAPSTONE v462 -- aggregate the SECOND PHASE D milestone (the FIRST REAL moat test): the off-ARC verifier- moat
+      verdict (does a TRAINED/principled oracle-distinct verifier beat the GENUINE tuned-SC, OR does the cascade hit an efficiency
+      Pareto win? D1 LoRA-EBM + D2 uPRM + D3 EBRM + D6 cascade + D4 cross-corpus -> D5 gate), the DiffusionGemma-gate status,
+      the infra (B1 genuine-SC + B2 logprob cache), KV260 (C), SOTA-ingestion (E1), continuous self-learning (E2), opportunistic
+      ARC (E3). Skip any flagged_adversarial artifact. Emit the .463 pointer.'
+    deliverable: results/experiment_5027_capstone_v462.json
+    result: OK (conductor)
