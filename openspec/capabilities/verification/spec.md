@@ -21807,3 +21807,93 @@ writes a blocked `oracle_distinctness_violation` artifact.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5031 | Implemented (`python/carnot/experiment_5031_lora_ebm_scorer_musr_v3.py`, `results/experiment_5031_lora_ebm_scorer_musr_v3.json`) | Implemented (`tests/python/test_experiment_5031_lora_ebm_scorer_musr_v3.py`) |
+
+### REQ-VERIFY-5033: EBRM V3 Refines The Trained D1 Base With Capped Conformal Abstention
+
+The repository SHALL provide Exp 5033 at
+`python/carnot/experiment_5033_ebrm_uncertainty_verifier_v3.py` to build an
+arXiv:2504.13134-style reward-distribution EBRM refinement over the REAL Exp
+5031 trained LoRA-EBM base scorer and evaluate it as an oracle-distinct
+abstaining selector on cached MuSR candidates, writing
+`results/experiment_5033_ebrm_uncertainty_verifier_v3.json`.
+
+Before scoring, the runner SHALL write a deliverable-first schema skeleton and
+SHALL check that `results/experiment_5031_lora_ebm_scorer_musr_v3.json` exists
+with `scorer_trained=true` and that the cached MuSR candidate rows exist. If
+the D1 base did not train, the terminal artifact SHALL use
+`honest_verdict=blocked_d1_base_scorer_not_trained`, record
+`preconditions_checked`, keep `verifier_is_oracle=false`, and SHALL NOT fall
+back to the registry ensemble.
+
+For each candidate, the runner SHALL model a reward distribution from the D1
+base score plus conflict-aware, label-noise-aware, CoT-entropy,
+heteroscedastic-variance, and distributional-pessimistic uncertainty features.
+It SHALL calibrate a CROP-style conformal abstention threshold on a held-out
+split, cap abstention at `<=0.50`, select the max reward candidate when
+covered, and abstain to the B1 genuine tuned-SC answer only when uncertainty
+exceeds the calibrated threshold. A threshold requiring more than 50%
+abstention SHALL be recorded as degenerate rather than promoted to a tie.
+
+The run SHALL evaluate with the B1-fixed shared moat harness, including genuine
+tuned self-consistency, oracle@K headroom, paired bootstrap CI95, McNemar
+statistics, an explicit `abstention_rate`, and the B1 degeneracy guard. The
+terminal artifact SHALL include `honest_verdict`, `verifier_is_oracle`,
+`headroom_present`, `abstention_rate`, `ebrm_selection_accuracy`,
+`genuine_tuned_sc_accuracy`, `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`,
+`uncertainty_calibration`, `base_scorer_refined`, `n_questions`,
+`model_specs`, `inference_substrate`, `random_seed`, `preconditions_checked`,
+`oracle_distinctness_enforced`, `degeneracy_guard`,
+`adversarial_verify_clean`, `adversarial_verify_flags`,
+`summarize_artifact_exit_code`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_ebrm_beats_sc_musr_<delta>, a clean null is complete_ebrm_no_win_musr_<delta>_ci_incl_0, a missing base is blocked_d1_base_scorer_not_trained.`;
+`verifier_is_oracle` = `false -- EBRM scores reasoning-candidate reward distributions, never reads gold at inference (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard).`;
+`abstention_rate` = `<=0.50 REQUIRED for a non-degenerate result -- the B1 degeneracy guard (the .461 D3 abstained 0.975 = degenerate).`;
+`ebrm_selection_accuracy` = `the oracle-distinct accuracy of the uncertainty-aware abstaining selector (the headline).`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE K-way tuned-SC (0.585) -- the honest baseline.`;
+`delta_vs_tuned_sc` = `ebrm_selection_accuracy - genuine_tuned_sc_accuracy; the signed moat lift.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`uncertainty_calibration` = `the calibration table (ECE, AUROC correct-vs-incorrect, selection delta after abstention) vs the point-estimate D1 base -- EBRM's distinctive claim (CoT-Entropy + CROP).`;
+`base_scorer_refined` = `the D1 TRAINED LoRA-EBM (NOT the registry fallback) -- EBRM is post-hoc over a REAL base.`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`model_specs` = `the D1 base scorer + the EBRM/uncertainty head -- the methodology stamp.`;
+`inference_substrate` = `verifier_ensemble_against_cached_candidates (post-hoc refinement + scoring of cached candidates; 1s floor).`;
+`random_seed` = `determinism for the calibration split + bootstrap.`;
+`preconditions_checked` = `records the D1-base / candidate-cache checks; a missing base emits blocked_d1_base_scorer_not_trained (NOT a registry fallback).`
+
+### SCENARIO-VERIFY-5033: EBRM V3 Selects Or Abstains Without Registry Fallback
+
+Given the Exp 5031 artifact exists with `scorer_trained=true` and the cached
+MuSR candidates contain at least 200 questions, when Exp 5033 runs, then it
+writes a schema skeleton first, loads the trained D1 base, builds
+reward-distribution and uncertainty rows without reading gold at inference,
+calibrates the conformal threshold on a held-out split with abstention capped at
+`<=0.50`, selects max reward or abstains to the B1 genuine tuned-SC answer,
+runs adversarial artifact verification plus artifact summarization, confirms
+`verifier_is_oracle=false`, records the calibration table, and writes every
+required field.
+
+If the D1 artifact is missing or `scorer_trained!=true`, then Exp 5033 SHALL
+write `honest_verdict=blocked_d1_base_scorer_not_trained`, set
+`base_scorer_refined` to the D1 artifact path/status, record the failed
+precondition, keep `verifier_is_oracle=false`, and exit without using the
+registry fallback. If the calibrated threshold would force
+`abstention_rate>0.50`, then the run SHALL record the selector as degenerate
+and SHALL NOT claim a win.
+
+If the non-degenerate selector beats genuine tuned-SC with paired CI95
+excluding zero, McNemar `p<0.05`, `verifier_is_oracle=false`, and
+`headroom_present=true`, then `honest_verdict` SHALL start with
+`success_ebrm_beats_sc_musr_`. If the selector does not win and the paired CI
+includes zero, then `honest_verdict` SHALL start with
+`complete_ebrm_no_win_musr_` and include `_ci_incl_0`.
+
+## Implementation Status (REQ-VERIFY-5033)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5033 | Proposed (`python/carnot/experiment_5033_ebrm_uncertainty_verifier_v3.py`, `results/experiment_5033_ebrm_uncertainty_verifier_v3.json`) | Proposed (`tests/python/test_experiment_5033_ebrm_uncertainty_verifier_v3.py`) |
