@@ -9678,3 +9678,4 @@ The contro |
 | 2026-06-30 20:54 UTC | PHASE D6 cross-model cascade -- gated on Exp 5043  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5043-b1.sota_judge_ready (actual=False  |
 | 2026-06-30 21:11 UTC | PHASE D4 second-corpus confirmation -- gated on Ex | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-06-30 21:28 UTC | PHASE D5 gate resolution -- aggregate powered D1,  | OK | 87 passed, 1 warning in 9.02s |
+| 2026-06-30 21:48 UTC | PHASE E1 continuous self-learning -- REVES/VSI-sty | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
