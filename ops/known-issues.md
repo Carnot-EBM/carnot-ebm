@@ -1280,6 +1280,24 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### PLANNER-TEMPLATE FIX 2026-06-30 — PHASE E self-learning/replay tasks must declare an aggregation substrate
+
+**Recurring false-positive (E1 exp5051, .463):** continuous-self-learning / replay-memory tasks read CACHED
+upstream verified-trace artifacts, build a replay memory, and compute pre/post held-out accuracy via a
+memory-selector LOOKUP — aggregation-class compute (~40ms). But the task template mandates a SOTA-GGUF
+`model_specs` and the experiment omits `inference_substrate`, so `adversarial_verify` applies the strict
+60s live-model floor → **DURATION_TOO_SHORT, quarantined** — even though the result is honest (exp5051's
+finding: replay-memory self-learning REGRESSED held-out −0.05; an honest negative, not a fabrication).
+
+**Fix applied (exemplar):** `python/carnot/experiment_5051_…py` now declares
+`inference_substrate: "aggregation_from_upstream_artifacts"` + `random_seed` → flag cleared (0 flagged),
+finding preserved. **Planner discipline going forward:** for any self-learning / replay / FR-11 / capstone
+task that scores against CACHED traces (no live model invocation), the REQUIRED ARTIFACT FIELDS must
+mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/lookup/delta tasks;
+`verifier_ensemble_against_cached_candidates` only if it actually runs a verifier-ensemble forward pass)
+and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
+"Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
+
 ### REVERT REMINDER 2026-06-30 (~20:00Z) — TEMPORARY Claude-quota-conserve: conductor on codex for EVERYTHING
 
 Operator directive 2026-06-30: Claude quota at 8% until ~2026-07-01 noon. The conductor was switched to
