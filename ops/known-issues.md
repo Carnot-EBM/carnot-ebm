@@ -1280,6 +1280,19 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### REVERT REMINDER 2026-06-30 (~20:00Z) — TEMPORARY Claude-quota-conserve: conductor on codex for EVERYTHING
+
+Operator directive 2026-06-30: Claude quota at 8% until ~2026-07-01 noon. The conductor was switched to
+**codex/gpt-5.5 for planner, retro, AND the milestone-close adversarial audits** (in addition to experiments,
+which were already codex). Mechanism: systemd drop-in
+`~/.config/systemd/user/carnot-conductor.service.d/50-claude-quota-conserve-20260630.conf` (overrides
+`AGENT_TYPE_PLANNER/RETRO=codex` + the new `AGENT_TYPE_AUDIT=codex`; the audit scripts gained a `--model codex`
+path, commit fd6c3a42b). Residual Claude: only the tier-0 **haiku** self-heal fix on intermittent pre-test
+failures (negligible; opus fix tier already off).
+**REVERT after the quota resets** (restores the standing planner/retro/audits-on-Opus directives):
+`rm ~/.config/systemd/user/carnot-conductor.service.d/50-claude-quota-conserve-20260630.conf && systemctl --user daemon-reload && systemctl --user restart carnot-conductor.service`
+(the `--model codex` audit support stays — inert unless selected.)
+
 ### NEW 2026-06-19 (TOP PRIORITY through 2026-06-30 — OPERATOR SUBMISSION SPRINT; preempts all carry-forward): ARC-AGI-3 LIVE-GAME SOLVING for the challenge submission
 
 **Origin:** 2026-06-19 operator directive — "The next 2 weeks will be focused on solving these games live...
