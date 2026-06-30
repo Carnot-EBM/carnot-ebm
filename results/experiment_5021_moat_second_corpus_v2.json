@@ -1,0 +1,118 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_flags": [],
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5021_moat_second_corpus_v2.json",
+    "exp_id": "experiment_5021_moat_second_corpus_v2",
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "blocked_no_best_verifier",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "best_verifier_from": null,
+  "blocked_error": "D1/D2/D3 v2 artifacts are all blocked or unusable",
+  "candidate_cache_path": null,
+  "deliverable_stage": "blocked_precondition",
+  "delta_vs_tuned_sc_second": null,
+  "duration_s": 0.000767,
+  "experiment": "experiment_5021_moat_second_corpus_v2",
+  "experiment_id": 5021,
+  "field_principles": {
+    "best_verifier_from": {
+      "principle": "which arm (D1/D2/D3) provided the best verifier by MuSR delta_vs_tuned_sc."
+    },
+    "delta_vs_tuned_sc_second": {
+      "principle": "the cross-corpus moat lift (signed); CI95-excl-0 is the generalization confirmation."
+    },
+    "genuine_tuned_sc_accuracy_second": {
+      "principle": "the GENUINE K-way tuned-SC on the 2nd corpus (headroom-control)."
+    },
+    "headroom_present": {
+      "principle": "true required on the 2nd corpus vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard); if false, the corpus is excluded from the moat claim."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_moat_generalizes_<corpus>_<delta>, a scoped result is complete_moat_musr_scoped_<corpus>_no_confirm, no verifier is blocked_no_best_verifier."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates if candidates are reused (1s floor); live_llm_inference only if generated fresh (>=60s)."
+    },
+    "model_specs": {
+      "principle": "the generator + the best verifier -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 (sample-size rigor)."
+    },
+    "paired_ci95_second": {
+      "principle": "paired bootstrap CI95 of the 2nd-corpus delta."
+    },
+    "preconditions_checked": {
+      "principle": "records verifier/corpus/headroom checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the bootstrap."
+    },
+    "second_corpus": {
+      "principle": "the chosen confirmed-cached headroom-present oracle-distinct corpus (GPQA/MMLU-Pro-hard/MATH-500-hard)."
+    },
+    "second_corpus_accuracy": {
+      "principle": "the best verifier's oracle-distinct accuracy on the 2nd corpus."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the best verifier scores reasoning quality, never the answer's executable correctness (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "genuine_tuned_sc_accuracy_second": null,
+  "headroom_present": false,
+  "honest_verdict": "blocked_no_best_verifier",
+  "inference_substrate": "precondition_check_only",
+  "mcnemar_p_second": null,
+  "model_specs": {
+    "best_verifier": null,
+    "best_verifier_artifact_path": null,
+    "best_verifier_model_specs": {},
+    "best_verifier_musr_delta": null,
+    "best_verifier_scorer_kind": null,
+    "generator_gpu": 0,
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B-it-GGUF"
+  },
+  "n_questions": 0,
+  "non_degenerate": false,
+  "oracle_at_k_second": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95_second": null,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "D1 artifact is blocked or lacks a usable oracle-distinct verifier",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+      "resource": "d1_verifier"
+    },
+    {
+      "available": false,
+      "detail": "D2 artifact is blocked or lacks a usable oracle-distinct verifier",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5018_uprm_replication_v2.json",
+      "resource": "d2_verifier"
+    },
+    {
+      "available": false,
+      "detail": "D3 artifact is blocked or lacks a usable oracle-distinct verifier",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5019_d3.json",
+      "resource": "d3_verifier"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:fe48b783141bed7a9d7838f92cba18cfc2b9991ecbf55997ddb6221ef88d5ef5",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5021_moat_second_corpus_v2.json",
+  "schema": "carnot.experiment_5021_moat_second_corpus_v2.v1",
+  "second_corpus": null,
+  "second_corpus_accuracy": null,
+  "spec_refs": [
+    "REQ-VERIFY-5021",
+    "SCENARIO-VERIFY-5021"
+  ],
+  "summarize_artifact_exit_code": 0,
+  "verifier_is_oracle": false
+}
