@@ -34,6 +34,16 @@ EXPERIMENT_NAME = "experiment_5051_verifier_trace_self_learning"
 SCHEMA = "carnot.experiment_5051_verifier_trace_self_learning.v1"
 RESULT_RELATIVE_PATH = "results/experiment_5051_verifier_trace_self_learning.json"
 MEMORY_RELATIVE_PATH = "results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json"
+# This experiment never loads the GGUF (model_specs only RESOLVES a path for provenance) and does NOT
+# run a verifier-ensemble forward pass. It READS cached upstream verified-trace artifacts (exp5045's
+# checkpoint, recorded in source_artifacts), builds a replay memory, and computes pre/post held-out
+# accuracy via a memory-selector LOOKUP -> aggregation-class compute (the ~40ms run is the evidence).
+# Declare aggregation so adversarial_verify applies the 0.0001s floor, not the 60s live-model floor,
+# avoiding a DURATION_TOO_SHORT false-positive on the legitimate sub-second run. See CLAUDE.md
+# "Inference-Substrate Declaration Discipline" (the exp2842 aggregation exemplar). Deterministic run ->
+# a fixed seed documents reproducibility (the TAUTOLOGY check excludes seed==experiment_id, 2026-05-31).
+INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
+RANDOM_SEED = 5051
 EXP5031_RELATIVE_PATH = "results/experiment_5031_lora_ebm_scorer_musr_v3.json"
 EXP5033_RELATIVE_PATH = "results/experiment_5033_ebrm_uncertainty_verifier_v3.json"
 EXP5045_RELATIVE_PATH = "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
@@ -602,6 +612,8 @@ def _blocked_artifact(
         "result_path": RESULT_RELATIVE_PATH,
         "honest_verdict": honest_verdict,
         "model_specs": dict(model_specs),
+        "inference_substrate": INFERENCE_SUBSTRATE,
+        "random_seed": RANDOM_SEED,
         "self_learning_loop_executed": False,
         "near_miss_count": 0,
         "verified_trace_count": 0,
@@ -723,6 +735,8 @@ def run(
         "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_"
         + _format_delta(float(heldout["heldout_delta"])),
         "model_specs": model_specs,
+        "inference_substrate": INFERENCE_SUBSTRATE,
+        "random_seed": RANDOM_SEED,
         "self_learning_loop_executed": True,
         "near_miss_count": len(near_misses),
         "verified_trace_count": len(verified_traces),
