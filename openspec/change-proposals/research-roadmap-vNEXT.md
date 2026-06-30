@@ -1,190 +1,188 @@
-# Research Roadmap v436 — VALID-TEST THE GUIDANCE-CLASS GENERATION LEVERS
+# Research Roadmap vNEXT - 2026.06.464 - Power the LoRA-EBM signal, repair the confirmation axes, and start verifier self-learning
 
-**Milestone:** 2026.06.436
-**Planned:** 2026-06-25 (Claude Opus 4.8, outer-loop planner)
-**Predecessor:** 2026.06.435 (STOP SELECTING, START ACTING)
-**Sprint:** ARC-AGI-3 Submission Sprint (MANDATORY through 2026-06-30 — **5 days to the ARC Prize Milestone #1 deadline**)
-
----
-
-## TL;DR
-
-`.435` was the **11th consecutive `bridge_crossed_for_solve=False` milestone**, but its real
-output was a sharp **trust-correction** that reframes the entire search:
-
-- **A1 (the leader's online action-learning driver) — the ONLY `.435` lever VALIDLY tested
-  (`arms_non_degenerate=True`) — genuinely nulled.** 66 online Adam steps, distinct per-arm
-  action distributions, coordinate head differs from frozen, yet `online_warm_vs_frozen_delta=0.0`
-  (all arms at the 0.04 baseline). The operator's highest-leverage 2026-06-24 bet is **answered: NO**.
-  → the online-action-learning lever **RETIRES**.
-- **A2 (active-probe disambiguation) tested DEAD CODE** (`probe_actions_taken=0`,
-  `hypothesis_posterior_built=False`, `reason: probe_mechanism_did_not_run`).
-- **B1 silent-bug audit (operator-mandated): 12 nulls audited, 5 must reopen.** The decisive finding —
-  the **guidance-class GENERATION levers were ALL tested on dead/byte-identical code** and are
-  therefore **untrustworthy nulls that were never validly tested**: P2 **goal-energy generation**
-  (cloned cached baseline), P3 **energy-fitness QD** (byte-identical arms), P1 Go-Explore amortized prior
-  (`(1,64,64)` archive), P4 hierarchical subgoal (empty decomposition).
-
-**`.436` valid-tests the two strongest guidance-class generation levers**, each with the
-non-degeneracy gate applied **INLINE** (the `.435`-A1 discipline) and the null-delta carve-out markers
-emitted so an honest no-lift null is **not quarantined**:
-
-- **A1 (HEADLINE): goal-energy candidate generation** — reopen of exp4640, the operator's explicit
-  guidance-class redirect target. The goal-energy arm must score **REAL candidate states** (not cloned
-  baseline) and generate a candidate pool that DIFFERS from baseline before any lift is measured.
-- **A2: energy-fitness QD generation** — reopen of exp4653, with **distinct QD + random-mutation
-  candidate pools** (not byte-identical arms). The MAP-Elites-with-gradients family applied to making
-  the winning L1 candidate appear.
-
-Plus the standing sprint pipeline: A3 self-play **bank +1 (64→65)** + verifier train, A4 held-out
-first-win readiness + submission-config confirm, A5 persist, A6 integration. Two **INFRA** tasks
-that fix the two `.435` adversarial-verify escapes (don't quarantine honest generation nulls;
-flag the A2-class declared-but-unrun mechanism). C KV260 continuity. D maps the `.437` SOTA frontier.
-E capstone + HEADLINE DECISION.
+**Milestone:** 2026.06.464
+**Planner:** Codex GPT-5, 2026-06-30 (UTC)
+**Prior milestone:** 2026.06.463 (PHASE D third execution)
+**Theme:** .463 finally produced the first real trained-verifier number: a clean LoRA-EBM selector at
+0.665 vs genuine tuned self-consistency 0.585 on MuSR (+0.080), but the confidence interval touched
+zero. The scalar uPRM arm went negative, the uncertainty wrapper matched D1 without improving it, and
+the two confirmation axes still did not execute (`blocked_judge_server`, `blocked_second_corpus_unavailable`).
+.464 therefore stops treating the moat as an infra-only rescue and asks the next scientific question:
+does the +8pp signal survive power, SOTA local GGUF candidates, a repaired cross-model cascade, and a
+solver-backed second corpus? It also adds the first verifier-trace self-learning loop required by FR-11.
 
 ---
 
-## What `.435` proved (the inputs to this plan)
+## 1. What .463 proved
 
-| Lever | Verdict | Read |
+| Area | .463 result | Read for .464 |
 |---|---|---|
-| **A1 online driver** (exp4726) | `online_action_learning_no_first_win_lift_residual_online_signal_genuinely_too_sparse`; `arms_non_degenerate=True`; `delta=0.0` | **Validly tested → genuine null → RETIRE.** The leader's mechanism does not lift first-win. (Quarantined by a TAUTOLOGY false-positive — INFRA-1 fixes the carve-out.) |
-| **A2 active probe** (exp4727) | `active_probe_no_new_level_residual_budget_insufficient`; `probe_actions_taken=0` | **Tested DEAD CODE** — the probe never ran. Reopen deferred to `.437` (tracked); INFRA-1 adds the guard. |
-| **A3 self-play** (exp4728) | `success: ar25_L3_offline_reproduced` | **Banked +1 → registry 63→64.** The self-play loop works for deepening. |
-| **B1 audit** (exp4725) | `silent_bug_audit_12_nulls_5_must_reopen` | **Guidance-class generation levers tested dead code** → the `.436` reopen list (P1–P4). |
-| **B2 guard** (exp4732) | shipped `LEVER_EXERCISE_EVIDENCE_DEGENERATE` | Mechanizes the dead-code catch going forward (missed A2's 0-probe case — INFRA-1 extends it). |
-| **A4 readiness** | **no artifact** (codex 4800s cap) | `.436` A4 uses the checkpoint/resume fix so the SCORE survives the cap. |
-| **D ingestion** (exp4734) | `flagged_for_v436`: epistemic-MCTS + causal-probe | Carried to `.437` (the `.436` reopens are the more-grounded headline). |
-| **Capstone** (exp4735) | `bridge_crossed_for_solve=False` (11th); `reproducible_total_levels_delta=1`; `paper_ready=True` | Capability grew (64), bridge not crossed. `next_milestone_fallback.b1_reopen_list` = the `.436` plan. |
+| D1 LoRA-EBM | `complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0`; 0.665 vs 0.585, CI `[0.0, 0.165]`, McNemar p=0.076369 | Real signal, underpowered. Power it and add margin/uncertainty shaping. |
+| D2 uPRM | `complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate` | Scalar logprob/uPRM should not be repeated as-is. Replace with dense process rewards/VPR. |
+| D3 EBRM | `complete_ebrm_no_win_musr_plus_0p080_ci_incl_0` | The wrapper did not beat D1. Try a calibrated KAN/FIS or PURM readout over the powered scorer. |
+| D6 cascade | `blocked_judge_server` | Confirmation axis missing. Add SOTA GGUF judge preflight and cross-model fallback. |
+| D4 second corpus | `blocked_second_corpus_unavailable` | Confirmation axis missing. Build the second corpus first, preferably PPBench/solver-backed. |
+| KV260 | `success_kv260_reachable_overlay_loaded_energy_ok` | Board path is alive. Next evidence should be timing/ratio parity for p-bit style workloads. |
+| Self-play | checkpoint refreshed, no new ARC level bank | Continuous self-learning needs to leave ARC-only dry runs and consume verifier traces. |
 
-**Triply-grounded direction.** (1) operator redirect 2026-06-23: "the 0.04 wall is generation-GUIDANCE,
-NOT depth/coverage — concentrate on the guidance class (goal-energy / expansion-prior)"; (2) B1's audit:
-the guidance-class generation levers tested dead code → must reopen; (3) the energy-config-space memory:
-"the live agent IS an energy-refinement loop; the wall is make-a-winner-appear, not select."
+The .463 capstone correctly stayed `moat_execution_incomplete`: a real positive margin appeared, but
+it did not satisfy the falsifiable gate because it was not statistically decisive and the cross-corpus
+and cascade confirmations were blocked.
 
----
+## 2. The three biggest gaps to the PRD vision
 
-## Architecture — the live agent + the `.436` generation valid-tests
+1. **Evidence gap: the verifier moat is suggestive, not decisive.** The PRD wants verifiable constraint
+   reasoning that improves local reasoning systems. .463's +8pp D1 result is the first credible sign,
+   but it is still MuSR-scoped and CI-touching-zero.
+2. **Confirmation gap: the independent axes are still missing.** The architecture needs domain
+   transfer and compute/latency Pareto evidence. D4 and D6 did not run, so the current proof is
+   single-corpus and single-arm.
+3. **Learning-loop gap: FR-11 is not yet closed.** The system has self-play checkpoints and verifier
+   artifacts, but it does not yet convert verifier near-misses into a verified, online/self-learning
+   improvement loop with contamination controls.
 
-```
-                ARC-AGI-3 LIVE HIDDEN-GAME DISCOVERY AGENT  (the scored deliverable)
-   +----------------------------------------------------------------------------------+
-   |  E3AgentPolicy  (arc_competition_agent.py -- the SCORED Kaggle agent)             |
-   |     StepwiseExplorer -- online world-model induction (arc_live_ttt / LocalGGUF)   |
-   |        |                       |  gated by WorldModelVerifier                     |
-   |        v                       v                                                  |
-   |   CANDIDATE GENERATION ---->  verifier-routed best-first search --> plan_in_model  |
-   |   (the 0.04 WALL: the winning L1 candidate is PRESENT but the                      |
-   |    generator's proposal distribution under-weights it -- make it APPEAR)          |
-   +----------------------------------------------------------------------------------+
-        ^                                   ^
-        |  A1 (HEADLINE)                    |  A2
-   +----+-------------------+        +------+------------------------+
-   | GOAL-ENERGY CANDIDATE  |        | ENERGY-FITNESS QD GENERATION  |
-   | GENERATION (reopen 4640)|       | (reopen 4653)                 |
-   | score REAL candidate    |       | distinct QD + random-mutation |
-   | states by graded        |       | pools; energy=fitness; evolve |
-   | goal-distance energy;    |       | the pool toward the winner    |
-   | bias proposals toward    |       | (MAP-Elites + gradients)      |
-   | low-goal-energy states   |       |                               |
-   +---------+---------------+        +----------+--------------------+
-             |  verifier_is_oracle:false (oracle-distinct: scores candidates, never the win-check)
-             v                                    v
-   +------------------------------------------------------------------+
-   |  NON-DEGENERACY GATE (INLINE, the .435-A1 discipline + B2)         |
-   |  PROVE first: distinct per-candidate scores, non-zero variance,    |
-   |  a candidate pool that DIFFERS from baseline.                      |
-   |  Degenerate -> *_generation_arms_degenerate_confirmed_harness_bug  |
-   |  (a BUG to fix, NOT a capability null). Non-degenerate + zero lift |
-   |  -> honest null WITH null_delta markers (not quarantined).         |
-   +------------------------------------------------------------------+
-```
+## 3. Fresh research incorporated before experiment design
 
-**Discipline (CLAUDE.md ARC Live-Path Reachability + Circularity):** both A1 and A2 modify the LIVE
-`E3AgentPolicy` candidate-generation path (in the scored agent's import closure — `arc_orphan_solver_lint`
-+ `test_arc_submitted_agent_parity` stay green). The goal-energy / QD-fitness signals are
-**oracle-distinct** (they score candidate states; they do NOT run the executable win-check) →
-`verifier_is_oracle:false`, gate-eligible. `solve_provenance: live_agent_self_discovery`.
+The `.464` planning sweep updated `research-references.md` with 2025-2026 references and hooks. The
+most actionable additions are:
 
----
+- REVES (arXiv:2606.18910) and Reliable Self-Improvement by Verifying Reasoning (arXiv:2603.21558):
+  use verified near-miss reasoning traces for self-learning, not final-answer correctness alone.
+- Pencil Puzzle Bench (arXiv:2603.02119 plus `approximatelabs/pencil-puzzle-bench`): a deterministic,
+  solver-checkable second corpus for constraint-reasoning verification.
+- ETS (arXiv:2601.21484, OpenReview): energy-guided test-time scaling and importance sampling are the
+  right comparator family for D1/D3 reranking.
+- DISC (arXiv:2606.21724): repair D6 with explicit cross-model verify/judge/correct loops.
+- ORLA (arXiv:2606.29366) and Formalize, Don't Optimize (arXiv:2605.12421): favor solver-backed
+  formulation/candidate generation over unverified LLM heuristics for the second corpus.
+- KANFIS (arXiv:2602.03034): use interpretable KAN/fuzzy readouts for uncertainty calibration.
+- FPGA p-bit paper (arXiv:2606.25313): local hardware claims should be modest timing-ratio/parity
+  packets, not scale claims.
 
-## Phases & dependency graph
+## 4. Architecture and dependency graph
 
 ```
-  exp4736  PHASE 0   transition (archive .435 -> activate .436)            [codex, 40t]
-     |
-     +--> exp4737  A1  goal-energy candidate generation (HEADLINE, reopen 4640)   [live, 160t]
-     +--> exp4738  A2  energy-fitness QD generation (reopen 4653)                 [live, 160t]
-     +--> exp4739  A3  self-play bank +1 (64->65) + verifier train               [150t]   (INDEPENDENT -- Level-Up Guarantee)
-     +--> exp4743  B1(INFRA-1)  adversarial_verify carve-out hardening           [60t]    (fixes the .435 A1+A2 escapes; runs EARLY)
-     +--> exp4744  B2(INFRA-2)  submission-package readiness validation          [60t]    (deadline-critical)
-     +--> exp4745  C   KV260 hardware continuity                                 [60t]
-     +--> exp4746  D   SOTA-ingestion -> .437 frontier                           [50t]
-                       |
-   (A1,A2 done) --> exp4740  A4  held-out first-win readiness + submission-config [60t]
-   (A1,A2 done) --> exp4741  A5  persist strongest .436 generation primitive      [60t]
-   (A1,A2 done) --> exp4742  A6  integration gate                                 [60t]
-                       |
-   (all done)  --> exp4747  E   CAPSTONE .436 + HEADLINE DECISION                 [60t]
+                         exp5042 PHASE 0
+            archive .463, activate .464, record close-state
+                                      |
+            +-------------------------+-------------------------+
+            |                                                   |
+   exp5043 B1 SOTA GGUF + judge preflight           exp5044 B2 second corpus cache
+   - mandated local GGUF availability               - PPBench/solver-backed or fallback
+   - top_logprobs/judge endpoint                     - SOTA candidate rows + genuine SC
+            |                                                   |
+            | sota_models_ready / sota_judge_ready              | second_corpus_cache_built
+            v                                                   v
+   exp5045 D1 powered EORM/LoRA-EBM                 exp5049 D4 second-corpus confirmation
+   - MuSR n>=400 or all cached                       - best powered arm on second corpus
+   - SOTA candidate pool
+            |
+            | powered_scorer_available
+            +--------------------+--------------------+
+                                 |                    |
+                       exp5047 D3 KAN/PURM       exp5046 D2 VPR/ProcessThinker
+                       calibration readout        dense process reward repair
+                                 |                    |
+                                 +---------+----------+
+                                           |
+                 exp5048 D6 cross-model cascade (also gated on exp5043 judge)
+                                           |
+                                           v
+                           exp5050 D5 moat gate resolution
+
+   Parallel continuity / reserved:
+     exp5051 FR-11 verifier-trace self-learning (REVES/VSI)
+     exp5052 KV260 p-bit timing-ratio parity packet
+     exp5053 SOTA ingestion for .465
+     exp5054 opportunistic ARC live-path self-discovery
+                                           |
+                                           v
+                                  exp5055 capstone
 ```
 
-- **A1 / A2** are the genuinely-independent guidance-class generation valid-tests (different mechanisms:
-  goal-distance energy scoring vs energy-as-fitness QD evolution).
-- **A3** is INDEPENDENT of A1/A2 so the **ARC Level-Up Attempt Guarantee** (≥1 banked level) holds even if both null.
-- **B1 (INFRA-1)** runs EARLY: it fixes the carve-out so A1/A2's honest nulls are not quarantined like `.435` A1 was.
-- **A4/A5/A6** read A1/A2's `chosen_submitted_config`; **E** aggregates everything.
+## 5. Phases
 
----
+### Phase 0 - Transition
 
-## Sprint-forcing-function compliance (CLAUDE.md, through 2026-06-30)
+- **exp5042:** archive .463 -> activate .464; record the actual .463 state: real D1 +8pp, D2 negative,
+  D3 no improvement, D4/D6 blocked, KV260 live, ARC no-bank.
 
-| Requirement | This milestone |
-|---|---|
-| Majority ARC live-solving | A1–A6 (6 of 12 tasks) — the generation valid-tests + self-play + readiness + persist + integration |
-| ≥1 level-up attempt that BANKS a new reproducible level | **A3** (64→65), plus A1/A2 L2 gates (`arc_levelup_guarantee_lint.py` ≥1) |
-| Self-play EVERY milestone (train+checkpoint the verifier) | **A3** trains + checkpoints `models/arc_verifier_<game>.json` |
-| 2 reserved infra | **B1** (carve-out hardening) + **B2** (submission-package readiness) |
-| 1 per-board hardware | **C** (KV260) |
-| 1 SOTA-ingestion | **D** (epistemic-MCTS + causal-probe + MATM efficiency → `.437`) |
-| All experiments codex/gpt-5.5; planner+retro Claude Opus | ✓ |
-| Frozen live generator = Qwen3.5-9B-MTP on the iGPU (port-8919 gemma-squat guard) | ✓ (A1/A2 construct the proposer on a FREE port + `/props`-verify Qwen) |
+### Phase B - Preflight and data repair
 
----
+- **exp5043:** preflight the mandated local SOTA GGUF models and repair the brittle judge-server axis:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. At least one must be usable for headline evidence; the judge path
+  must support top-logprob/confidence or a documented offline fallback.
+- **exp5044:** build the second-corpus candidate cache before D4 runs. Prefer PPBench/solver-verified
+  constraint puzzles; fall back only to already cached GPQA/MMLU-Pro style data with genuine SC,
+  oracle@K, and solver/verifier labels.
 
-## Continuous self-learning (research-program.md requirement)
+### Phase D - Verifier moat
 
-**A3** is the self-learning experiment: the standing `arc_loop_solve` loop banks a level AND
-trains+checkpoints the learned verifier on the run's positive (steps-to-go) + negative (dead-end)
-traces — the Phase-3 self-improving-verifier program, run every milestone. **A5** persists the
-strongest `.436` generation primitive into reusable `arc_solver_kit` scaffolding so the LIVE agent
-reuses it on hidden games (knowledge captured as reusable scaffolding, verified by the reproduction
-gate, compounding across games).
+- **exp5045:** power D1. Rerun the LoRA-EBM/EORM-style energy selector with a larger MuSR candidate set,
+  SOTA GGUF candidate generation, energy margins, uncertainty telemetry, and paired statistics.
+- **exp5046:** replace the failed scalar uPRM axis with VPR/ProcessThinker-style dense process rewards
+  or rollout process labels.
+- **exp5047:** calibrate the powered D1/D3 signal with a KAN/FIS or PURM readout; this must improve over
+  D1, not just tie it.
+- **exp5048:** repair D6 with a DISC-style cross-model cascade and explicit generator/judge separation.
+- **exp5049:** confirm the best powered arm on a second corpus. No second corpus means the task blocks
+  quickly via `gated_on`, not after a full agent call.
+- **exp5050:** resolve the moat gate: realized, bounded-retired, MuSR-scoped, or execution-incomplete.
 
----
+### Phase E/C - Continuity and reserved research slots
 
-## Hardware requirements
+- **exp5051:** FR-11 continuous self-learning from verifier traces. Convert near-misses into verified
+  revision/training examples, run a small update, and report held-out delta with contamination controls.
+- **exp5052:** KV260 continuity: p-bit/timing-ratio parity packet for the local overlay.
+- **exp5053:** reserved SOTA ingestion for .465.
+- **exp5054:** opportunistic ARC live-path self-discovery. Any solve claim must be live-agent provenance,
+  not offline source-reading or per-game BFS.
+- **exp5055:** capstone and .465 pointer.
 
-- **A1/A2 (live):** iGPU (Radeon 890M) for the frozen **Qwen3.5-9B-MTP** generator (NEVER the 3090s);
-  CUDA (RTX 3090) for any offline training arm; the Kaggle path is CPU under a 12h/600-RPM cap —
-  A1/A2 measure CPU candidate-scoring latency.
-- **C (KV260):** SSH-reachability of the board (`ssh kria`), NEVER host SD-card device nodes.
-- No new hardware required.
+## 6. Falsifiable gates
 
----
+- **Moat realized:** at least one oracle-distinct verifier arm beats genuine tuned self-consistency on
+  MuSR with CI excluding zero, and either confirms on the second corpus or D6 reaches accuracy parity at
+  materially lower judge cost.
+- **MuSR-scoped positive:** D1/D3 remains positive on MuSR but D4 or D6 is still blocked or negative.
+  This is progress, not a moat claim.
+- **Bounded retirement:** only if properly executed powered D1 plus the repaired D2/D3 arms clean-null
+  on headroom-present data and D6 has no efficiency win.
+- **Execution incomplete:** any blocked SOTA preflight, blocked second corpus, blocked judge, skeleton
+  training, degenerate abstention, or missing statistics.
 
-## What is RETIRED / must NOT be re-proposed
+## 7. Hardware requirements
 
-- The `.435` A1 **online-action-learning driver** — validly tested (`arms_non_degenerate=True`),
-  genuine null → retired. Do NOT re-run verbatim.
-- The `.434` static present-winner ranker (as-built); the `.434` single-frame structural-alignment L2 goal.
-- **Macro-action / horizon-collapse** + **click-heatmap-as-generator** — empirical nulls (2026-06-23);
-  the 0.04 wall is generation-GUIDANCE, not depth or coverage.
-- Re-running the dead-code generation nulls VERBATIM — `.436` A1/A2 reopen them WITH the non-degeneracy
-  gate inline + REAL candidate scoring / distinct pools (the structural difference).
+- **Dual RTX 3090 CUDA path:** SOTA GGUF local inference, candidate generation, judge/cascade scoring,
+  and any LoRA/EORM training. Do not iGPU-pin offline PHASE D runs.
+- **KV260 over SSH (`ssh kria`):** board-only overlay/timing checks. Never host SD-card operations.
+- **GateMate/PolarFire:** not required in .464 unless exp5052 finds an immediate parity extension.
 
-## Deferred to `.437` (tracked by the capstone fallback + INFRA-1 ledger)
+## 8. Model policy
 
-- P1 Go-Explore amortized prior reopen (frame-grid fix landed; rerun with positive archive cells).
-- P4 hierarchical subgoal reopen (non-empty decomposition).
-- A2 active-probe reopen (the `.435` probe never ran).
-- D's `.437` frontier: epistemic-MCTS probe planner + factored causal probe bank + MATM similarity-keyed retrieval.
+Every experiment that uses an LLM must include at least one mandated SOTA local GGUF model in
+`MODEL_SPECS`:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Legacy small models may appear only as CPU smoke tests and must not be headline-result models.
+
+## 9. Experiment order
+
+1. exp5042 transition
+2. exp5043 SOTA/judge preflight
+3. exp5044 second-corpus cache
+4. exp5045 powered D1
+5. exp5046 repaired D2
+6. exp5047 D3 calibration
+7. exp5048 D6 cascade
+8. exp5049 D4 second-corpus confirmation
+9. exp5050 gate resolution
+10. exp5051 continuous self-learning
+11. exp5052 hardware continuity
+12. exp5053 SOTA ingestion
+13. exp5054 ARC live-path continuity
+14. exp5055 capstone

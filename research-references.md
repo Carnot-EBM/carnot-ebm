@@ -1,3 +1,69 @@
+## 2026-06-30 — .464 planning sweep — POWER the positive LoRA-EBM margin, repair the blocked confirmation axes, and add verifier-driven self-learning + constraint-puzzle benchmarks
+
+Added by the `.464` planning sweep (Codex GPT-5, 2026-06-30). This sweep read the `.463` artifacts before searching:
+Exp 5031 finally trained a real LoRA-EBM verifier on MuSR and reached **0.665 vs genuine tuned-SC 0.585** (`delta=+0.08`,
+`paired_ci95=[0.0, 0.165]`, `mcnemar_p=0.076369`, clean but not statistically decisive). Exp 5032 uPRM was clean negative
+(`delta=-0.11`). Exp 5033 EBRM matched the D1 +0.08 margin without closing the CI. Exp 5034 D6 was `blocked_judge_server`
+and Exp 5035 D4 was `blocked_second_corpus_unavailable`, so the capstone correctly stayed
+`moat_execution_incomplete` rather than bounded-retiring the moat. The next milestone should therefore power and confirm
+the D1/D3 signal, repair D6/D4, and add self-learning evidence instead of repeating infrastructure-only rescue.
+
+Fresh source sweep across arXiv, OpenReview, Hugging Face Papers, GitHub discovery, Extropic writing, Semantic Scholar-style
+queries, and Logical Intelligence public pages found these actionable additions:
+
+- **arXiv:2606.18910 — REVES: REvision and VErification-Augmented Training for Test-Time Scaling** —
+  https://arxiv.org/abs/2606.18910. Near-miss revision traces are converted into decoupled revision and verification prompts;
+  the paper reports gains on LiveCodeBench and out-of-distribution constraint puzzles such as n-queens and mini-sudoku. Carnot
+  hook: turn D1/D3 MuSR near misses into a verifier-revision data product, then test whether a small self-learning update moves
+  the held-out margin without contaminating the benchmark.
+- **arXiv:2603.21558 — Reliable Self-Improvement Training by Verifying Reasoning, Not Just Answers** —
+  https://arxiv.org/abs/2603.21558. Verified Self-Improvement rejects correct-final-answer traces with flawed reasoning and
+  reports sustained multi-round gains on GSM8K. Carnot hook: FR-11 self-learning should retain examples by structural verifier
+  integrity, not final answer alone.
+- **arXiv:2603.02119 + GitHub `approximatelabs/pencil-puzzle-bench` — Pencil Puzzle Bench** —
+  https://arxiv.org/abs/2603.02119 and https://github.com/approximatelabs/pencil-puzzle-bench. 300 curated puzzles across 20
+  types, 62k+ full puzzles, deterministic step-level verification, local-model support. Carnot hook: a clean second
+  constraint-satisfaction corpus for verifier selection and dense process rewards, without relying on MuSR only.
+- **arXiv:2601.21484 / OpenReview — ETS: Energy-Guided Test-Time Scaling** —
+  https://arxiv.org/abs/2601.21484 and https://openreview.net/forum?id=oWdQIgCvmq. Estimates an energy term online with Monte
+  Carlo and uses acceleration/importance sampling to guide AR and diffusion language models. Carnot hook: use D1/D3 energy as a
+  SOTA-GGUF candidate re-ranker / lightweight transition guide, but charge all candidate and verifier calls.
+- **arXiv:2606.21724 — DISC structured verification loops** — https://arxiv.org/abs/2606.21724. Denoising-style verify/judge/
+  correct loops dominate Chain-of-Verification and Self-Refine on reported precision-recall tradeoffs; cross-model role
+  allocation mitigates self-confirmation. Carnot hook: repair the blocked D6 cascade with explicit cross-model generator/judge
+  separation using the mandated local GGUF models.
+- **arXiv:2606.29366 — ORLA solver-verified formulation generation and selection** — https://arxiv.org/abs/2606.29366.
+  LLMs generate candidate mathematical programming formulations, while solver feedback verifies executability, feasibility, and
+  solution quality. Carnot hook: build a solver-backed second-corpus candidate cache rather than relying on fragile freeform
+  answer candidates.
+- **arXiv:2605.12421 — Formalize, Don't Optimize: The Heuristic Trap in LLM-Generated Combinatorial Solvers** —
+  https://arxiv.org/abs/2605.12421. Solver-backed formalization is safer than LLM-authored heuristic optimization. Carnot hook:
+  for PPBench/solver corpora, ask SOTA GGUFs to formalize constraints for verified solvers; do not let them invent unverified
+  search heuristics.
+- **arXiv:2601.17789 — NSVIF** remains the strongest instruction-to-constraint verifier reference —
+  https://arxiv.org/abs/2601.17789. It models instruction following as logical and semantic constraint satisfaction. Carnot hook:
+  use it as the extraction/constraint-abstraction comparator for any new SMT-backed second corpus.
+- **arXiv:2602.03034 — KANFIS** — https://arxiv.org/abs/2602.03034. KAN-style additive fuzzy rules make uncertainty-aware,
+  interpretable rule sets. Carnot hook: a small KAN/FIS readout over D1/D3 energy margins may improve calibration without
+  retraining a larger base.
+- **arXiv:2606.25313 — Programmable Probabilistic Computer with 1,000,000 p-bits** —
+  https://arxiv.org/abs/2606.25313. Networked FPGA p-bit machine reports trillion-flip/s Gibbs sampling and a boundary-exchange
+  timing rule for distributed Ising machines. Carnot hook: KV260 should add a p-bit timing-ratio parity packet, not claim
+  million-p-bit scale locally.
+- **EBT / ARM-EBM / GitHub / Semantic Scholar check:** EBT (`arXiv:2507.02092`) remains strategic; EBT-Policy
+  (`arXiv:2510.27545`) is the strongest direct follow-on found in the search, using scalar energy for uncertainty-aware
+  action inference. ARM-EBM (`arXiv:2512.15605`) remains a theoretical bridge from next-token prediction to globally normalized
+  sequence energies; no new local dependency should be introduced from it.
+- **Extropic + Logical Intelligence status:** Extropic's TSU writing still frames TSUs as programmable samplers for EBMs/PGMs
+  (https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware). Logical Intelligence's Kona Sudoku update
+  reports an EBM-style constraint-satisfaction contrast (https://logicalintelligence.com/blog/energy-based-model-sudoku-demo).
+  Both are strategic architecture signals only; local claims must continue to come from KV260/GateMate/CPU/GPU artifacts.
+
+Concrete `.464` experiment hooks: (1) power the D1/D3 +8pp margin on MuSR with the mandated SOTA GGUF candidate set; (2) create
+a second-corpus candidate cache using PPBench/solver-verified puzzles and/or GPQA/MMLU if already cached; (3) rebuild D6 with
+cross-model SOTA GGUF generator/judge separation; (4) add VSI/REVES-style continuous verifier self-learning from near misses;
+(5) keep hardware continuity focused on KV260 p-bit/timing-ratio evidence.
+
 ## 2026-06-29 — .459 planning sweep — EXTEND the post-6/30 verifier-moat backlog with 2 MORE real papers (the discriminative-verifier efficiency axis + a 2026 unify-generation-and-self-verification instantiation)
 
 Added by the `.459` planning sweep (Claude Opus 4.8, outer-loop planner; 2026-06-29). `.459` is the
