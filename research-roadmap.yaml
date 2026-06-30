@@ -16,7 +16,7 @@
 #        published win-condition existence proof);
 #   D3 = EBRM (arXiv:2504.13134, energy RM modeling the reward DISTRIBUTION with uncertainty, COLM 2025).
 # FALSIFIABLE GATE (the only non-circular evidence): on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle
-# =False, headroom_present=True), >=1 of {LoRA-EBM, uPRM, EBRM} beats TUNED self-consistency with paired CI95 excluding
+# =False, headroom_present=True), >=1 of {{LoRA-EBM, uPRM, EBRM}} beats TUNED self-consistency with paired CI95 excluding
 # 0 (McNemar). retire_if_same_verdict: true -- if the trained LoRA-EBM AND uPRM both fail on any headroom-present
 # oracle-distinct corpus, the off-ARC verifier moat retires as bounded (a publishable null converging with the ARC
 # tie). A POSITIVE resolves the still-pending DiffusionGemma gate (docs/research-notes/diffusiongemma-energy-guided-
@@ -163,7 +163,7 @@ tasks:
     are enforced mechanically, not per-arm.
 
     WHAT TO BUILD (python/carnot/moat_benchmark_harness.py -- a library, not a one-off):
-      1. A CORPUS LOADER returning {question, narrative/context, choices, gold} rows for: MuSR/murder_mysteries
+      1. A CORPUS LOADER returning {{question, narrative/context, choices, gold}} rows for: MuSR/murder_mysteries
          (TAUR-Lab/mu_sr, already used), GPQA (if cached), MMLU-Pro-hard, and MATH-500-hard. Gold is for EVAL ONLY.
       2. CANDIDATE-CACHE REUSE: load the cached MuSR candidates from
          results/distributional_energy_verifier_musr_checkpoints/ (the cheap-proxy run already generated K per
@@ -607,8 +607,8 @@ tasks:
     NEVER aggregate an artifact carrying flagged_adversarial=true (the fabrication gate -- skip it).
 
     THE GATE (the ONLY non-circular evidence): on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle=False,
-    headroom_present=True, the verifier is NOT the executable oracle), at least one of {trained LoRA-EBM (D1), uPRM
-    (D2), EBRM (D3)} achieves selection accuracy beating TUNED-SC with paired CI95 excluding 0 (McNemar p<0.05),
+    headroom_present=True, the verifier is NOT the executable oracle), at least one of {{trained LoRA-EBM (D1), uPRM
+    (D2), EBRM (D3)}} achieves selection accuracy beating TUNED-SC with paired CI95 excluding 0 (McNemar p<0.05),
     confirmed on MuSR AND (D4) >=1 second corpus.
       - POSITIVE (>=1 arm wins, CI95-excl-0, headroom-present, oracle-distinct, cross-corpus confirmed): the off-ARC
         verifier moat is REALIZED. This satisfies the DiffusionGemma gate's three conditions ON THE TESTED DOMAIN
@@ -660,7 +660,7 @@ tasks:
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads D1-D4 JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {experiment_id, fields_imported, sha256} for each D arm so the verdict is traceable to a real measurement."
+        principle: "the {{experiment_id, fields_imported, sha256}} for each D arm so the verdict is traceable to a real measurement."
 
     Run: `.venv/bin/python python/carnot/experiment_5007_moat_gate_resolution.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1069,7 +1069,7 @@ tasks:
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {experiment_id, fields_imported, sha256} for each aggregated arm (traceable to real measurements)."
+        principle: "the {{experiment_id, fields_imported, sha256}} for each aggregated arm (traceable to real measurements)."
 
     Run: `.venv/bin/python python/carnot/experiment_5013_capstone_v461.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
