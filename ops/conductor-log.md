@@ -9657,3 +9657,4 @@ The contro |
 | 2026-06-30 15:28 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE; claude/ | OK | 134 passed, 1 warning in 10.70s |
 | 2026-06-30 15:45 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | OK | 88 passed, 1 warning in 9.47s |
 | 2026-06-30 16:10 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | OK | 87 passed, 1 warning in 10.45s |
+| 2026-06-30 16:36 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | OK | 88 passed, 1 warning in 7.06s |
