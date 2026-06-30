@@ -9628,3 +9628,4 @@ The contro |
 | 2026-06-30 05:08 UTC | PHASE E1 (SOTA-INGESTION; RESERVED SLOT) -- a FRES | OK | 98 passed, 1 warning in 7.01s |
 | 2026-06-30 05:22 UTC | PHASE E2 (CONTINUOUS SELF-LEARNING / FR-11; ARC se | OK | 109 passed, 1 warning in 10.23s |
 | 2026-06-30 05:39 UTC | PHASE E3 (OPPORTUNISTIC ARC LEVEL-UP) -- a single  | OK | 89 passed, 1 warning in 9.86s |
+| 2026-06-30 05:56 UTC | CAPSTONE v461 -- aggregate the FIRST PHASE D miles | OK | 86 passed, 1 warning in 8.48s |
