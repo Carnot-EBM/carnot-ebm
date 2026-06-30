@@ -1,0 +1,405 @@
+{
+  "activated_milestone": "2026.06.463",
+  "arc_locked": true,
+  "archived_milestone": "2026.06.462",
+  "cited_upstream_artifacts": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "3efcd23e1714c6fa34207d93180f08523f7198399b387a5fe46fbbe231e034c5"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "5253b1c020823a0945dd47462282b8f5a254907d059c567519a7e1c818fde13e"
+    },
+    {
+      "path": "results/experiment_5027_capstone_v462.json",
+      "sha256": "8c848fe6717263f2bc92b74dfa677b64583ea2a7f040e5ae17f048d7829687b4"
+    },
+    {
+      "path": "results/experiment_5015_genuine_sc_baseline_fix.json",
+      "sha256": "78af64c821451edcf0a6b71f2e8b0cfbfd5c9d105ac5250c4c7a70bdf2bc7711"
+    },
+    {
+      "path": "results/experiment_5016_shared_logprob_candidate_cache.json",
+      "sha256": "ed3c26d28ee7b27d75ce914dc68f2eb904180f25f8e612635a6bf4b6ac631962"
+    },
+    {
+      "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+      "sha256": "8ad95720951638b2408e99936236e63ad1b9d8316dc9d368aea295035bdb320e"
+    },
+    {
+      "path": "results/experiment_5018_uprm_replication_v2.json",
+      "sha256": "67ac465385ec774488fb6112441b08480117fca6393f291bbbeb75a69c2de4d9"
+    },
+    {
+      "path": "results/experiment_5019_d3.json",
+      "sha256": "bb5b38a3bfae335d40768ca6b522f8845d4a1f5eafb5cc4b00b619581be6c1ae"
+    },
+    {
+      "path": "results/experiment_5020_uncertainty_routed_cascade.json",
+      "sha256": "3e9c8721201ebea83ea66e8c95b87d3a5c09b820177f2779a5973c45056d5330"
+    },
+    {
+      "path": "results/experiment_5021_moat_second_corpus_v2.json",
+      "sha256": "eff9fa0e1e19e598964c74d83a470a23f2571921f240ff54ac7193eca2e45685"
+    },
+    {
+      "path": "python/carnot/moat_benchmark_harness.py",
+      "sha256": "db448ec2fe603bc0862b08ecbd7bb5700609989467f2d2e3e0f01a15ee35e515"
+    }
+  ],
+  "close_state_462": {
+    "arc": {
+      "locked": true,
+      "mode": "opportunistic_only"
+    },
+    "b2_zero_row_logprob_cache": {
+      "arm_id": "B2",
+      "candidate_cache_built": false,
+      "duration_s": 379.158895,
+      "honest_verdict": "blocked_generation_or_cache_error",
+      "n_cached_rows": 0,
+      "resource_detail": "UprmScoringError: marker completion lacked top_logprobs",
+      "scientific_null": false,
+      "source_experiment_id": 5016
+    },
+    "capstone": {
+      "capstone_ready": true,
+      "honest_verdict": "complete_capstone_v462_moat_execution_incomplete_ebrm"
+    },
+    "d1_404_base": {
+      "arm_id": "D1",
+      "base_model": "Qwen/Qwen3.5-1.7B",
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_trainable_qwen_base",
+      "resource_detail": "Qwen/Qwen3.5-1.7B not cached and download failed: RepositoryNotFoundError: 404 Client Error. (Request ID: Root=1-6a43791d-68f112307a421bbd1faafff9;386c009c-2b50-48cf-b9b7-585980bf32c2)\n\nRepository Not Found for url: https://huggingface.co/api/models/Qwen/Qwen3.5-1.7B/revision/main.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated and your token has the required permissions.\nFor more details, see https://huggingface.co/docs/huggingface_hub/authentication",
+      "scientific_null": false,
+      "scorer_trained": false,
+      "source_experiment_id": 5017,
+      "train_loss": null
+    },
+    "d2_cascade_block": {
+      "arm_id": "D2",
+      "blocked_on": "b2_logprob_cache",
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_b2_logprob_cache",
+      "resource_detail": "RuntimeError: only 0 uPRM-ready B2 cache rows available; need 200",
+      "scientific_null": false,
+      "source_experiment_id": 5018
+    },
+    "d3_cascade_block": {
+      "arm_id": "D3",
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == expected=True)",
+      "gated_on": "D1.scorer_trained",
+      "honest_verdict": "blocked_gate_check_failed",
+      "scientific_null": false,
+      "source_experiment_id": 5019
+    },
+    "d4_flagged_execution_failure": {
+      "arm_id": "D4",
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_no_best_verifier",
+      "scientific_null": false,
+      "source_experiment_id": 5021
+    },
+    "d6_flagged_execution_failure": {
+      "arm_id": "D6",
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_judge_server",
+      "scientific_null": false,
+      "source_experiment_id": 5020
+    },
+    "diffusiongemma_gate_status": {
+      "activation": "not_activated",
+      "autonomously_flipped_to_met": false,
+      "conditions_satisfied_off_arc": false,
+      "operator_gated": true,
+      "status": "STILL-PENDING"
+    },
+    "do_not_queue": [
+      "energy-as-ARC",
+      "verifier-as-reward"
+    ],
+    "flagged_adversarial_skipped": [
+      {
+        "experiment_id": 5017,
+        "honest_verdict": "blocked_trainable_qwen_base",
+        "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:8ad95720951638b2408e99936236e63ad1b9d8316dc9d368aea295035bdb320e",
+        "source": "D1_LORA_EBM"
+      },
+      {
+        "experiment_id": 5018,
+        "honest_verdict": "blocked_b2_logprob_cache",
+        "path": "results/experiment_5018_uprm_replication_v2.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:67ac465385ec774488fb6112441b08480117fca6393f291bbbeb75a69c2de4d9",
+        "source": "D2_UPRM"
+      },
+      {
+        "experiment_id": 5020,
+        "honest_verdict": "blocked_judge_server",
+        "path": "results/experiment_5020_uncertainty_routed_cascade.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:3e9c8721201ebea83ea66e8c95b87d3a5c09b820177f2779a5973c45056d5330",
+        "source": "D6_CASCADE"
+      },
+      {
+        "experiment_id": 5021,
+        "honest_verdict": "blocked_no_best_verifier",
+        "path": "results/experiment_5021_moat_second_corpus_v2.json",
+        "reason": "flagged_adversarial",
+        "sha256": "sha256:eff9fa0e1e19e598964c74d83a470a23f2571921f240ff54ac7193eca2e45685",
+        "source": "D4_SECOND_CORPUS"
+      }
+    ],
+    "moat_verdict": {
+      "decision": "EXECUTION-INCOMPLETE",
+      "execution_incomplete_arms": [
+        {
+          "arm": "EBRM",
+          "arm_id": "D3",
+          "corpus": "MuSR",
+          "execution_status": "blocked",
+          "honest_verdict": "blocked_gate_check_failed",
+          "source_experiment_id": 5019
+        }
+      ],
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "state": "execution_incomplete",
+      "summary": "D5 is execution-incomplete: EBRM did not cleanly execute, while flagged artifacts skipped were D1, D2, D6, D4. This is not a clean null and cannot bound-retire the moat."
+    },
+    "next_milestone_pointer": {
+      "arm_id": "D3",
+      "best_arm": "EBRM",
+      "direction": "rerun_unexecuted_arm",
+      "milestone": "2026.06.463",
+      "plan": "Re-run the unexecuted or pre-gated arm; route off Codex if the same arm bails twice.",
+      "route_off_codex_if_same_arm_bails_twice": true
+    },
+    "phase_d": {
+      "majority_lever_for_463": true,
+      "prior_execution_incomplete_milestones": [
+        "2026.06.461",
+        "2026.06.462"
+      ],
+      "third_execution_attempt": true
+    },
+    "prior_milestone_root_causes": [
+      {
+        "addressed_by_463": "real_cached_base_resolver_and_moat_trainer_smoke",
+        "base_model": "Qwen/Qwen3.5-1.7B",
+        "defect": "invalid_hf_base_repository_404",
+        "evidence": "Qwen/Qwen3.5-1.7B not cached and download failed: RepositoryNotFoundError: 404 Client Error. (Request ID: Root=1-6a43791d-68f112307a421bbd1faafff9;386c009c-2b50-48cf-b9b7-585980bf32c2)\n\nRepository Not Found for url: https://huggingface.co/api/models/Qwen/Qwen3.5-1.7B/revision/main.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated and your token has the required permissions.\nFor more details, see https://huggingface.co/docs/huggingface_hub/authentication",
+        "honest_verdict": "blocked_trainable_qwen_base",
+        "scientific_null": false,
+        "source": "D1_LORA_EBM",
+        "source_experiment_id": 5017
+      },
+      {
+        "addressed_by_463": "incremental_rescore_existing_candidates_not_regenerate",
+        "candidate_cache_built": false,
+        "cascaded_to": [
+          "D2",
+          "D3"
+        ],
+        "defect": "zero_row_logprob_cache_generator",
+        "duration_s": 379.158895,
+        "evidence": "UprmScoringError: marker completion lacked top_logprobs",
+        "honest_verdict": "blocked_generation_or_cache_error",
+        "n_cached_rows": 0,
+        "scientific_null": false,
+        "source": "B2_LOGPROB_CACHE",
+        "source_experiment_id": 5016
+      }
+    ],
+    "reproducible_total_levels": 69,
+    "reusable_b1_baseline": {
+      "degeneracy_guard_fires": true,
+      "genuine_tuned_sc_accuracy": 0.585,
+      "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+      "harness_module_present": true,
+      "headroom_delta": 0.28,
+      "headroom_present": true,
+      "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+      "no_new_llm_generation": true,
+      "oracle_at_k": 0.865,
+      "reuse_action": "reuse_not_rebuild",
+      "source_experiment_id": 5015,
+      "source_path": "results/experiment_5015_genuine_sc_baseline_fix.json"
+    },
+    "summary": "v462_execution_incomplete_phase_d_infra_failures_recorded_for_v463"
+  },
+  "diffusiongemma_gate_status": {
+    "activation": "not_activated",
+    "autonomously_flipped_to_met": false,
+    "conditions_satisfied_off_arc": false,
+    "operator_gated": true,
+    "status": "STILL-PENDING"
+  },
+  "duration_s": 6.007718,
+  "experiment": "experiment_5028_archive_462_activate_463",
+  "experiment_id": 5028,
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_462_archived_463_activated_phase_d_third_attempt."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "phase_d_third_execution_attempt": {
+      "principle": "true -- .463 is the THIRD PHASE D milestone; the first two both went EXECUTION-INCOMPLETE on infra."
+    },
+    "prior_milestone_root_causes": {
+      "principle": "the two .462 infra root causes .463 fixes (D1 404 base `Qwen/Qwen3.5-1.7B`, B2 0-rows generator)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the authoritative ARC progress metric carried from the registry (69; ARC LOCKED + opportunistic)."
+    },
+    "reusable_b1_baseline": {
+      "principle": "the .462 B1 genuine tuned-SC 0.585 / oracle@K 0.865 / degeneracy guard (moat_benchmark_harness.py) -- reused, not rebuilt."
+    }
+  },
+  "honest_verdict": "complete_462_archived_463_activated_phase_d_third_attempt",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leaderboard_submission": false,
+  "phase_d_majority_lever": true,
+  "phase_d_third_execution_attempt": true,
+  "poison_test_resolved": {
+    "quarantined": false,
+    "reason": "",
+    "test": ""
+  },
+  "preconditions_checked": {
+    "active_roadmap_yaml": {
+      "active_exists": true,
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "import yaml,os; p='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'; q='/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'; f=p if os.path.exists(p) else q; yaml.safe_load(open(f)); print('ok',f)"
+      ],
+      "exit_code": 0,
+      "fallback_path": "research-roadmap-next.yaml",
+      "next_exists": false,
+      "passed": true,
+      "primary_path": "research-roadmap.yaml",
+      "selected_path": "research-roadmap.yaml",
+      "stderr_tail": "",
+      "stdout_tail": "ok /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n"
+    },
+    "b1_genuine_sc_baseline": {
+      "exists": true,
+      "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+      "loadable": true,
+      "optional": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5015_genuine_sc_baseline_fix.json"
+    },
+    "capstone_v462": {
+      "exists": true,
+      "honest_verdict": "complete_capstone_v462_moat_execution_incomplete_ebrm",
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5027_capstone_v462.json"
+    },
+    "moat_benchmark_harness": {
+      "exists": true,
+      "optional": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/moat_benchmark_harness.py"
+    },
+    "offline_arcade": {
+      "command": [
+        ".venv/bin/python",
+        "-c",
+        "from carnot.agentic import arc_solver_kit as k; k.offline_arcade()"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n"
+    },
+    "registry": {
+      "exists": true,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "reproducible_total_levels": 69
+    }
+  },
+  "pretest_gate": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/python/test_experiment_5028_archive_462_activate_463.py",
+      "-q",
+      "--no-cov"
+    ],
+    "exit_code": 0,
+    "green": true,
+    "passed": true,
+    "ran": true,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [6 items]\n\n......                                                                   [100%]\n============================== 6 passed in 3.21s ===============================\n"
+  },
+  "prior_milestone_root_causes": [
+    {
+      "addressed_by_463": "real_cached_base_resolver_and_moat_trainer_smoke",
+      "base_model": "Qwen/Qwen3.5-1.7B",
+      "defect": "invalid_hf_base_repository_404",
+      "evidence": "Qwen/Qwen3.5-1.7B not cached and download failed: RepositoryNotFoundError: 404 Client Error. (Request ID: Root=1-6a43791d-68f112307a421bbd1faafff9;386c009c-2b50-48cf-b9b7-585980bf32c2)\n\nRepository Not Found for url: https://huggingface.co/api/models/Qwen/Qwen3.5-1.7B/revision/main.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated and your token has the required permissions.\nFor more details, see https://huggingface.co/docs/huggingface_hub/authentication",
+      "honest_verdict": "blocked_trainable_qwen_base",
+      "scientific_null": false,
+      "source": "D1_LORA_EBM",
+      "source_experiment_id": 5017
+    },
+    {
+      "addressed_by_463": "incremental_rescore_existing_candidates_not_regenerate",
+      "candidate_cache_built": false,
+      "cascaded_to": [
+        "D2",
+        "D3"
+      ],
+      "defect": "zero_row_logprob_cache_generator",
+      "duration_s": 379.158895,
+      "evidence": "UprmScoringError: marker completion lacked top_logprobs",
+      "honest_verdict": "blocked_generation_or_cache_error",
+      "n_cached_rows": 0,
+      "scientific_null": false,
+      "source": "B2_LOGPROB_CACHE",
+      "source_experiment_id": 5016
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "b85f3af4b895fda7f72dc8b130b43f88ab59405ecbb7b576e5201be735cbc8b3",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_5028_archive_462_activate_463.json",
+  "reusable_b1_baseline": {
+    "degeneracy_guard_fires": true,
+    "genuine_tuned_sc_accuracy": 0.585,
+    "harness_module_path": "python/carnot/moat_benchmark_harness.py",
+    "harness_module_present": true,
+    "headroom_delta": 0.28,
+    "headroom_present": true,
+    "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+    "no_new_llm_generation": true,
+    "oracle_at_k": 0.865,
+    "reuse_action": "reuse_not_rebuild",
+    "source_experiment_id": 5015,
+    "source_path": "results/experiment_5015_genuine_sc_baseline_fix.json"
+  },
+  "schema": "carnot.exp5028.archive_462_activate_463.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-5028",
+    "SCENARIO-CAPSTONE-5028",
+    "SCENARIO-CAPSTONE-5028-BLOCKED-PRECONDITION",
+    "SCENARIO-CAPSTONE-5028-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activated_milestone": "2026.06.463",
+    "activation_state": "already_active_or_activated_463",
+    "active_milestone_confirmed": "2026.06.463",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "archived_milestone": "2026.06.462",
+    "transition_performed": true
+  },
+  "transition_performed": true
+}
