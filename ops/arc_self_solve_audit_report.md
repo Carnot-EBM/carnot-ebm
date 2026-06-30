@@ -16,27 +16,33 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-## TL;DR
+TL;DR: **0/23 are `SELF_DISCOVERY_ADVANCE`**. Nothing is `OFF_PATH`. I’d count **21 as `DUPLICATE`**, **1 as `UNCLEAR` but non-countable (`dc22`)**, and **1 as `OUTER_LOOP_RE` (`lp85` L6 capture)**.
 
-**VERDICT: 0 / 23 are live-agent self-discovery. 22 are dev-proxy DUPLICATEs (reproduction harness re-confirming already-banked levels — no new live capability), and 1 is OUTER_LOOP_RE (`lp85` L6 via `used_env_source`) — already self-flagged `flagged_adversarial: true`.** The reachability pre-pass is clean (no orphaned solvers), so nothing is OFF_PATH — but nothing advanced the live agent's own self-discovery either. This is reproduction churn, not progress, consistent with `reproducible_total_levels` flat at 69.
+| Artifact | Verdict | Evidence | Recommended Action |
+|---|---:|---|---|
+| `arc_loop_solve_lp85.json` L3 | `DUPLICATE` | `development_proxy`; registry already beyond it at lp85 L5 | Do not count as progress |
+| `arc_loop_solve_r11l.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Keep only as replay proof |
+| `arc_loop_solve_ls20.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Keep only as replay proof |
+| `arc_loop_solve_tu93.json` L4 | `DUPLICATE` | `development_proxy`; registry already beyond it at L5 | Do not count |
+| `arc_loop_solve_tr87.json` L6 | `DUPLICATE` | `development_proxy`; registry already records L6 | Do not count |
+| `arc_loop_solve_dc22.json` L3 | `UNCLEAR` | Artifact now claims L3, but visible registry/4894 reconciliation still treats dc22 as prior/duplicate-depth; also `development_proxy`, not live self-discovery | Reconcile registry/artifact; do not count until provenance proves live-agent own attempts |
+| `arc_loop_solve_vc33.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_g50t.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_s5i5.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_cd82.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_sp80.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_su15.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_sk48.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_ft09.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
+| `arc_loop_solve_ar25.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
+| `arc_loop_solve_m0r0.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_cn04.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
+| `arc_loop_solve_lf52.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_bp35.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_re86.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `arc_loop_solve_ka59.json` L1 | `DUPLICATE` | `development_proxy`; registry already records L1 | Do not count |
+| `arc_loop_solve_sb26.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
+| `experiment_headway_lp85_capture.json` L6 | `OUTER_LOOP_RE` | Declares `used_env_source`; self-flagged `flagged_adversarial`; corrigendum says `ARC_OUTER_LOOP_SOLVE` | Restamp `outer_loop_re`, quarantine, exclude from totals |
 
-## Per-artifact verdicts
-
-### The 22 `standing_arc_loop_offline_no_quota` runs — all DUPLICATE
-
-| Game | Reached | Verdict |
-|---|---|---|
-| lp85 L3, r11l L2, ls20 L2, tu93 L4, tr87 L6, dc22 L3, vc33 L2, g50t L2, s5i5 L2, cd82 L2, sp80 L2, su15 L2, sk48 L2, ft09 L3, ar25 L3, m0r0 L2, cn04 L3, lf52 L2, bp35 L2, re86 L2, ka59 L1, sb26 L2 | as listed | **DUPLICATE** |
-
-- **Evidence:** `solve_provenance: development_proxy` (the discipline's own definition: *"allowed, but NOT proof the live agent self-discovers"*). `reproduced_levels == reached_level` and every reach sits at-or-below the registry's recorded depth (spot-checked: `lp85` standing run reaches L3 while registry holds lp85 ≥5; `tu93` reaches L4 vs registry L5). `reproducible_total_levels` is flat at 69, and the registry's own reconciliation lines repeatedly read *"no new executable level was banked, so reproducible_total_levels is unchanged."* These run through `scripts/arc_loop_solve.py` (a live entrypoint) → reachable, not off-path; declare no outer-loop inputs → not the anti-pattern.
-- **Recommended action:** Keep them — the reproduction gate is legitimate dev-proxy hygiene — but do **not** count them as milestone progress. Per the **ARC Level-Up Attempt Guarantee**, re-confirmations do not satisfy the ≥1 level-up floor; a roadmap of only these is churn. The milestone needs at least one genuine new-level bank or a `live_agent_self_discovery` artifact.
-
-### `experiment_headway_lp85_capture.json` (lp85 L6) — OUTER_LOOP_RE
-
-- **Evidence:** `solve_provenance: development_proxy` **but** `used_env_source: true`, with the deepen done offline (`deepen_log` L5→L6, 11069 nodes, 971s). The artifact already carries `flagged_adversarial: true` and a `corrigendum_pending` `ARC_OUTER_LOOP_SOLVE` (severity critical): *"reading the game source ... is RE the live agent CANNOT do on a HIDDEN game. Either set solve_provenance=outer_loop_re (and do not headline) or remove the dependency."* This is the exact `development_proxy` + outer-loop-input contradiction the discipline classes CRITICAL. The `honest_verdict` even names it: `..._bank_trajectory_captured` — a captured trajectory, not live self-discovery.
-- **Recommended action:** Layer 1b caught it correctly — leave it quarantined. Restamp `solve_provenance: outer_loop_re` (it is mislabeled `development_proxy`), and **confirm lp85 L6 is NOT in the `reproducible_total_levels: 69` count** (it must remain provisional/excluded). To legitimately bank lp85 L6, the live agent must re-derive it from its own attempts without `used_env_source`.
-
-## Pattern watch
-
-**Drift toward reproduction-without-discovery.** Seven days, 23 solve artifacts, **zero** `live_agent_self_discovery` — 22 dev-proxy re-confirmations of registry levels plus one env-source RE. This is precisely the "deepen well drying" state in memory (levels stuck at 69). The mechanical guards are holding (orphan-lint green; Layer 1b auto-flagged the env-source capture), so this is **not** an integrity breach — but it **is** the slow failure mode: the loop is busy re-proving what it already knows while the live agent banks nothing new. Watch for an outer-loop temptation to "rescue" the flat count by deepening via `used_env_source`/offline BFS — the lp85 L6 capture is the first instance of that temptation, and it should be read as a signal to redirect effort to live-path self-discovery, not as a level to keep.
+Pattern watch: the drift is **reproduction churn plus one outer-loop rescue attempt**. `development_proxy` standing-loop artifacts are reachable, but they are not evidence that the live hidden-game agent discovered anything from its own attempts. The lp85 L6 capture is the real danger signal: env-source-assisted deepening trying to patch a flat live-progress curve.
 

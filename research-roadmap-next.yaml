@@ -1,0 +1,774 @@
+# Pre-staged .464 roadmap (Pre-Staged Roadmap Convention).
+# Planner: Codex GPT-5, 2026-06-30 (UTC).
+# STRATEGIC READ (.463 -> .464): .463 finally executed the trained verifier moat enough to produce a
+# real number, but not enough to claim the moat. D1 LoRA-EBM trained cleanly and selected 0.665 vs the
+# genuine tuned-SC baseline 0.585 on MuSR (delta +0.080, CI [0.0, 0.165], p=0.076369). That is a real,
+# underpowered signal. D2 scalar/uPRM was a clean negative (-0.110). D3 uncertainty wrapping tied D1,
+# not improved it. D6 and D4 still did not execute (blocked_judge_server, blocked_second_corpus_unavailable).
+# The .464 job is therefore: POWER the positive D1 signal with SOTA local GGUF candidates and EORM/PURM
+# margins; REPAIR the blocked confirmation axes with a SOTA/judge preflight and a solver-backed second
+# corpus; ADD continuous verifier self-learning from near misses (FR-11); keep hardware and SOTA reserved
+# slots alive. This is not another infra-only rescue. If the powered arms clean-null after proper execution,
+# bounded retirement becomes credible. If D1 remains positive but D4/D6 remain blocked, the verdict is
+# MuSR-scoped/incomplete, not moat-realized.
+milestone: 2026.06.464
+milestone_title: 'PHASE D POWER + CONFIRMATION: .463 landed the first real trained-verifier signal
+  (LoRA-EBM 0.665 vs genuine tuned-SC 0.585 on MuSR, +0.080, CI touches zero) but not the moat. .464
+  powers that signal with mandated SOTA local GGUF candidates, repairs the blocked D6 judge cascade and D4
+  second-corpus axes, replaces the failed scalar uPRM with dense process rewards, adds a KAN/PURM calibration
+  readout, and starts FR-11 verifier-trace self-learning. Falsifiable result: realized moat if a proper
+  verifier beats genuine SC with CI excluding zero and confirms on second corpus or cascade efficiency;
+  bounded retirement only after properly executed clean nulls; otherwise MuSR-scoped or execution-incomplete.'
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+theme: 'Power the .463 +8pp LoRA-EBM result, repair the two missing confirmation axes, and convert verifier
+  near-misses into a continuous self-learning artifact. All LLM-dependent experiments use at least one mandated
+  SOTA local GGUF model in MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and/or
+  unsloth/gemma-4-26B-A4B-it-GGUF. Legacy small models are smoke-only.'
+tasks:
+- id: exp5042-phase0
+  title: 'PHASE 0 transition -- archive .463, activate .464, and record the true close-state: D1 real +8pp but
+    underpowered, D2 negative, D3 tie, D6 judge blocked, D4 second-corpus blocked, KV260 live, ARC no-bank.'
+  priority: critical
+  track: transition
+  max_turns: 30
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_5042_archive_463_activate_464.json
+  operator_override: '2026-06-30 planner directive: routine archive/activate transition for the next milestone;
+    false-positive scope match against prior transition tasks is expected and authorized.'
+  prior_failures:
+  - experiment_id: exp5028-phase0
+    verdict: complete_462_archived_463_activated_phase_d_third_attempt
+    addressed_by: "Routine transition continuation with new source milestone .463 and new target .464; included to
+      satisfy strict prior-scope audits that ignore operator_override for recurring transition tasks."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). Milestone 2026.06.463 has completed. Transition to 2026.06.464 without changing the active
+    conductor and record the real .463 close-state. This is a mechanical planning/ops task, but it must write the
+    deliverable even if activation has already happened.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/results/experiment_5041_capstone_v463.json
+    - {project_root}/results/experiment_5031_lora_ebm_scorer_musr_v3.json
+    - {project_root}/python/carnot/experiment_5028_archive_462_activate_463.py
+
+    TASK:
+    Create `python/carnot/experiment_5042_archive_463_activate_464.py` if it does not already exist and write
+    `results/experiment_5042_archive_463_activate_464.json`. The artifact must state that .463 produced a real
+    but underpowered LoRA-EBM signal (+0.080 on MuSR), a negative scalar/uPRM result, an EBRM tie, two blocked
+    confirmation axes, live KV260 continuity, and no ARC level bank.
+
+    CONCRETE STEPS:
+    1. Parse the active roadmap and the pre-staged roadmap with `yaml.safe_load`; if parsing fails, write
+       `blocked_yaml_parse`.
+    2. Read the .463 capstone and D1/D2/D3/D4/D6 artifacts. Do not infer missing fields silently.
+    3. Record `prior_milestone: 2026.06.463`, `next_milestone: 2026.06.464`, `d1_delta_vs_tuned_sc: 0.08`,
+       `d1_ci_touches_zero: true`, `d6_blocked_reason: blocked_judge_server`, and
+       `d4_blocked_reason: blocked_second_corpus_unavailable`.
+    4. Add a focused own-test using `--no-cov`; do not run the full suite with repository coverage addopts.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5042_archive_463_activate_464.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5043-b1
+  title: 'PHASE B1 preflight -- mandated SOTA GGUF + judge/top-logprob readiness. Repair the .463 D6
+    blocked_judge_server root cause before any cascade task can spend a full agent call.'
+  priority: critical
+  track: infra
+  max_turns: 100
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_5043_sota_gguf_judge_preflight.json
+  prior_failures:
+  - experiment_id: exp5034-cascade
+    verdict: blocked_judge_server
+    addressed_by: "This task is a preflight/fix, not another cascade attempt: it explicitly probes mandated SOTA
+      GGUF availability, server routing, top_logprobs/confidence support, and a documented offline fallback before
+      D6 can run. Same blocked_judge_server after this repair retires this preflight shape."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D6 did not test the cascade because the judge server was unavailable. Before any powered
+    verifier/cascade work, prove the local SOTA GGUF model path and judge/top-logprob path are actually usable.
+
+    MODEL_SPECS:
+    - flagship_moe: unsloth/Qwen3.6-35B-A3B-GGUF
+    - flagship_dense: unsloth/gemma-4-31B-it-GGUF
+    - middle_moe: unsloth/gemma-4-26B-A4B-it-GGUF
+    At least one of these must be usable for headline LLM evidence. Legacy small models are smoke-only.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5034_uncertainty_routed_cascade_v2.json
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+    - {project_root}/scripts/conductor_gates.py
+
+    TASK:
+    Build a preflight script that verifies local model cache presence, starts or probes the local llama.cpp-compatible
+    endpoint, checks a small completion call, checks top-logprob/confidence availability when supported, and writes
+    a machine-readable artifact for downstream gates.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5043_sota_gguf_judge_preflight.py`.
+    2. Probe the three MODEL_SPECS in local cache and record exact resolved paths or `missing`.
+    3. Probe at least one usable server endpoint for completion and, separately, confidence/top-logprob telemetry.
+    4. If no mandated model is usable, write `blocked_sota_gguf_unavailable`; if no judge/confidence route exists,
+       write `blocked_judge_server` with exact probe diagnostics.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `usable_sota_models`, `sota_models_ready`,
+       `sota_judge_ready`, `top_logprob_or_confidence_ready`, `endpoint_summary`, `legacy_models_smoke_only`.
+    6. Add an own-test with mocked probes; keep it `--no-cov`.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5043_sota_gguf_judge_preflight.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: claude
+  model: opus
+
+- id: exp5044-b2
+  title: 'PHASE B2 data repair -- build a solver-backed second-corpus candidate cache before D4 runs, addressing
+    .463 blocked_second_corpus_unavailable.'
+  priority: critical
+  track: infra
+  max_turns: 70
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_5044_second_corpus_candidate_cache.json
+  prior_failures:
+  - experiment_id: exp5035-d4
+    verdict: blocked_second_corpus_unavailable
+    addressed_by: "This task moves second-corpus construction upstream of D4, prefers PPBench/solver-verified
+      constraint puzzles, and emits a gate field before the D4 confirmation task can run."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D4 blocked because no usable second corpus existed. Build that data product first.
+    Prefer deterministic constraint puzzles (PPBench/solver-backed) over freeform answer tasks when available.
+
+    MODEL_SPECS:
+    - flagship_moe: unsloth/Qwen3.6-35B-A3B-GGUF
+    - flagship_dense: unsloth/gemma-4-31B-it-GGUF
+    - middle_moe: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use at least one mandated model for any generated candidate answers/formulations. Small models are smoke-only.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5035_moat_second_corpus_v3.json
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+    - {project_root}/research-references.md
+    - {project_root}/data
+
+    TASK:
+    Create a reusable second-corpus cache with candidate rows, labels, genuine self-consistency baseline, oracle@K,
+    and solver/verifier provenance. If PPBench is unavailable locally, use the best already-cached constraint or
+    reasoning corpus and record the fallback honestly.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5044_second_corpus_candidate_cache.py`.
+    2. Probe for PPBench or another deterministic solver-backed corpus. Do not download huge assets without an
+       explicit existing project pattern; if unavailable, fall back to cached GPQA/MMLU-style data only if labels and
+       candidate rows exist.
+    3. Generate or load at least 100 labeled questions/puzzles when feasible. Candidate generation that uses an LLM
+       must use at least one MODEL_SPECS model.
+    4. Compute genuine tuned-SC and oracle@K; require `headroom_present` and `verifier_is_oracle: false` for
+       headline D4 use.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `second_corpus_cache_built`, `second_corpus_name`,
+       `n_questions`, `n_candidate_rows`, `genuine_sc_accuracy`, `oracle_at_k`, `headroom_present`,
+       `verifier_is_oracle`, `candidate_cache_path`.
+    6. Add own-tests for schema and resume behavior.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5044_second_corpus_candidate_cache.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5045-d1
+  title: 'PHASE D1 powered LoRA-EBM/EORM -- gated on Exp 5043 SOTA models ready; power the .463 +8pp MuSR signal
+    with SOTA GGUF candidates, energy margins, and paired statistics.'
+  priority: critical
+  track: verifier_moat
+  max_turns: 100
+  inference_substrate: live_llm_inference_plus_training
+  deliverable: results/experiment_5045_powered_lora_ebm_eorm_musr.json
+  gated_on:
+  - upstream: exp5043-b1
+    artifact_field: sota_models_ready
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp5031-d1
+    verdict: complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0
+    addressed_by: "The previous attempt trained cleanly but was underpowered. This attempt changes the evidence
+      shape: larger/every-available MuSR set, mandated SOTA GGUF candidate pool, EORM-style energy margins, and
+      uncertainty telemetry. Same CI-touching-zero result after proper execution retires this powered D1 shape."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D1 finally trained a real LoRA-EBM selector and got +0.080 over genuine tuned-SC on MuSR,
+    but CI touched zero. Power the result and make it harder to dismiss.
+
+    MODEL_SPECS:
+    - flagship_moe: unsloth/Qwen3.6-35B-A3B-GGUF
+    - flagship_dense: unsloth/gemma-4-31B-it-GGUF
+    - middle_moe: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use at least one mandated SOTA GGUF for headline candidate generation or candidate refresh. Legacy small models
+    may only smoke-test script paths.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5031_lora_ebm_scorer_musr_v3.json
+    - {project_root}/results/experiment_5043_sota_gguf_judge_preflight.json
+    - {project_root}/python/carnot/moat_trainer.py
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+    - {project_root}/research-references.md
+
+    TASK:
+    Build and run a powered D1 experiment that reuses the .463 trained-verifier infrastructure but expands the MuSR
+    evidence. Add EORM/ETS-style energy margins and uncertainty telemetry. Do not count a skeleton as a null.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`.
+    2. Load .463 cached MuSR rows and expand to n>=400 or all available rows; if expansion is impossible, explain
+       the cap and keep n>=200 minimum.
+    3. Refresh candidate rows with at least one MODEL_SPECS local model when feasible; otherwise use the gated
+       preflight diagnostics and write a blocked artifact.
+    4. Train or resume the LoRA-EBM/EORM energy head. Require non-null train loss, nonzero pairs, and duration
+       evidence for `scorer_trained: true`.
+    5. Evaluate min-energy and margin-aware selection against genuine tuned-SC. Report paired bootstrap CI and
+       McNemar p-value.
+    6. Required artifact fields: `honest_verdict`, `model_specs`, `powered_scorer_available`, `scorer_trained`,
+       `n_questions`, `n_candidate_rows`, `genuine_tuned_sc_accuracy`, `powered_lora_ebm_accuracy`,
+       `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`, `energy_margin_auc`, `headroom_present`,
+       `verifier_is_oracle`, `checkpoint_path`.
+    7. Add own-tests for artifact schema and skeleton rejection.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: claude
+  model: opus
+
+- id: exp5046-d2
+  title: 'PHASE D2 dense process-reward repair -- gated on Exp 5043 SOTA models ready; replace the failed scalar
+    uPRM/logprob axis with VPR/ProcessThinker-style dense process rewards.'
+  priority: high
+  track: verifier_moat
+  max_turns: 70
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_5046_vpr_process_reward_repair.json
+  gated_on:
+  - upstream: exp5043-b1
+    artifact_field: sota_models_ready
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp5032-d2
+    verdict: complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate
+    addressed_by: "The failed scalar uPRM/logprob method is not repeated. This task switches to dense process reward
+      or rollout-derived step scores using SOTA local GGUF traces, then evaluates the same selector gate."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D2 showed scalar uPRM/logprob scoring is not useful on this MuSR cache. Replace it with
+    dense process rewards inspired by VPR/ProcessThinker rather than repeating the same negative.
+
+    MODEL_SPECS:
+    - flagship_moe: unsloth/Qwen3.6-35B-A3B-GGUF
+    - flagship_dense: unsloth/gemma-4-31B-it-GGUF
+    - middle_moe: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use at least one mandated local model for process traces or rollout judgments.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5032_uprm_replication_v3.json
+    - {project_root}/results/experiment_5029_shared_logprob_candidate_cache_v2.json
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+    - {project_root}/research-references.md
+
+    TASK:
+    Implement a process-reward selector over existing MuSR candidates using dense trace-level signals. It may consume
+    existing logprob caches, but it must not depend solely on scalar final-token markers.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5046_vpr_process_reward_repair.py`.
+    2. Generate or load process traces for each candidate using at least one MODEL_SPECS model.
+    3. Score candidates with dense features: step consistency, verifier acceptance, consequence penalties, and
+       uncertainty. Avoid final-answer oracle leakage.
+    4. Evaluate against genuine tuned-SC on the same MuSR split used by D1, with paired CI and McNemar.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `process_reward_available`,
+       `process_reward_accuracy`, `genuine_tuned_sc_accuracy`, `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`,
+       `n_questions`, `trace_count`, `verifier_is_oracle`, `headroom_present`.
+    6. Add own-tests for leakage guards and schema.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5046_vpr_process_reward_repair.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5047-d3
+  title: 'PHASE D3 KAN/PURM calibration -- gated on Exp 5045 powered_scorer_available; calibrate D1 energy margins
+    instead of tying D1 again.'
+  priority: high
+  track: verifier_moat
+  max_turns: 60
+  inference_substrate: local_training_and_cached_scores
+  deliverable: results/experiment_5047_kan_purm_energy_calibration.json
+  gated_on:
+  - upstream: exp5045-d1
+    artifact_field: powered_scorer_available
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp5033-d3
+    verdict: complete_ebrm_no_win_musr_plus_0p080_ci_incl_0
+    addressed_by: "The .463 uncertainty wrapper only tied D1. This attempt uses a distinct KAN/FIS or PURM-style
+      calibration readout over powered D1 margins and must report improvement over D1, not merely equality."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D3 matched the D1 +8pp result but did not improve it. Use KANFIS/PURM-style calibration
+    over the powered D1 margins to test whether uncertainty calibration closes the CI.
+
+    MODEL_SPECS:
+    - inherited_headline_models: use the Exp 5045 `model_specs` for any refreshed candidate or verifier scores.
+      No new LLM generation is required unless Exp 5045 artifacts are incomplete.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5033_ebrm_uncertainty_verifier_v3.json
+    - {project_root}/results/experiment_5045_powered_lora_ebm_eorm_musr.json
+    - {project_root}/research-references.md
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+
+    TASK:
+    Fit a small interpretable calibration/readout layer over powered D1 energy margins and uncertainty features.
+    The headline is incremental lift over powered D1, not just lift over genuine SC.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5047_kan_purm_energy_calibration.py`.
+    2. Load Exp 5045 candidate-level energies, margins, uncertainty telemetry, and labels.
+    3. Fit a KAN/FIS/PURM-style readout with held-out or cross-validated splits; include a simple logistic baseline.
+    4. Evaluate selection accuracy vs genuine tuned-SC and vs powered D1. Flag degeneracy if abstention exceeds 50%
+       or the model collapses to D1 choices.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `calibration_available`, `calibrated_accuracy`,
+       `powered_d1_accuracy`, `delta_vs_powered_d1`, `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`,
+       `abstention_rate`, `degeneracy_guard_fired`, `verifier_is_oracle`, `headroom_present`.
+    6. Add own-tests for split integrity and collapse detection.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5047_kan_purm_energy_calibration.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5048-d6
+  title: 'PHASE D6 cross-model cascade -- gated on Exp 5043 sota_judge_ready; repair blocked_judge_server with
+    DISC/VERDI-style generator-judge separation and explicit cost accounting.'
+  priority: high
+  track: verifier_moat
+  max_turns: 100
+  inference_substrate: live_llm_inference
+  deliverable: results/experiment_5048_cross_model_cascade_repair.json
+  gated_on:
+  - upstream: exp5043-b1
+    artifact_field: sota_judge_ready
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp5034-cascade
+    verdict: blocked_judge_server
+    addressed_by: "The cascade is rebuilt after an explicit SOTA/judge preflight and includes a fallback route; it
+      uses cross-model generator/judge separation instead of relying on the previously absent judge server."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D6 never tested efficiency because the judge route was unavailable. Rebuild D6 around
+    explicit cross-model routing and cost accounting.
+
+    MODEL_SPECS:
+    - generator: unsloth/Qwen3.6-35B-A3B-GGUF
+    - judge: unsloth/gemma-4-31B-it-GGUF
+    - fallback_or_ablation: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use at least one mandated model in any live run and record exact model availability.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5034_uncertainty_routed_cascade_v2.json
+    - {project_root}/results/experiment_5043_sota_gguf_judge_preflight.json
+    - {project_root}/results/experiment_5045_powered_lora_ebm_eorm_musr.json
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+
+    TASK:
+    Implement a DISC/VERDI-style cascade that uses cheap energy/process scores first, routes uncertain cases to a
+    separate SOTA judge, and reports accuracy/cost Pareto vs always-judge and genuine tuned-SC.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5048_cross_model_cascade_repair.py`.
+    2. Load Exp 5043 preflight endpoints and Exp 5045/5046/5047 scores when available.
+    3. Define uncertainty thresholds on held-out data; avoid tuning on final test labels.
+    4. Run cross-model judge calls only for uncertain cases. Record call counts, tokens, wall time, and endpoint IDs.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `cascade_executed`, `cascade_accuracy`,
+       `always_judge_accuracy`, `genuine_tuned_sc_accuracy`, `judge_call_fraction`, `cost_reduction_ratio`,
+       `paired_ci95_cascade_vs_judge`, `efficiency_win`, `n_questions`, `verifier_is_oracle`.
+    6. Add own-tests for gate behavior and cost accounting.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5048_cross_model_cascade_repair.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: claude
+  model: opus
+
+- id: exp5049-d4
+  title: 'PHASE D4 second-corpus confirmation -- gated on Exp 5044 second_corpus_cache_built and Exp 5045
+    powered_scorer_available; confirm the best powered verifier off MuSR.'
+  priority: high
+  track: verifier_moat
+  max_turns: 70
+  inference_substrate: live_llm_inference_or_cached_scores
+  deliverable: results/experiment_5049_second_corpus_confirmation.json
+  gated_on:
+  - upstream: exp5044-b2
+    artifact_field: second_corpus_cache_built
+    op: '=='
+    value: true
+  - upstream: exp5045-d1
+    artifact_field: powered_scorer_available
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp5035-d4
+    verdict: blocked_second_corpus_unavailable
+    addressed_by: "D4 now runs only after Exp 5044 emits a real second-corpus cache. If the cache exists and D4 still
+      produces the same blocked verdict, retire this D4 execution shape."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). .463 D4 could not confirm the verifier off MuSR. With Exp 5044 providing a candidate cache,
+    evaluate the best powered verifier on a second headroom-present corpus.
+
+    MODEL_SPECS:
+    - inherited_candidate_models: use Exp 5044 `model_specs` and Exp 5045 `model_specs` for any candidate/verifier
+      rows. Any new live generation must use one mandated SOTA local GGUF.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5035_moat_second_corpus_v3.json
+    - {project_root}/results/experiment_5044_second_corpus_candidate_cache.json
+    - {project_root}/results/experiment_5045_powered_lora_ebm_eorm_musr.json
+    - {project_root}/results/experiment_5047_kan_purm_energy_calibration.json
+    - {project_root}/python/carnot/moat_benchmark_harness.py
+
+    TASK:
+    Pick the best non-degenerate powered verifier from D1/D2/D3 and evaluate it on the second corpus. Report whether
+    the MuSR margin transfers.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5049_second_corpus_confirmation.py`.
+    2. Load Exp 5044 second-corpus rows and verify `headroom_present: true` and `verifier_is_oracle: false`.
+    3. Select the best available non-degenerate verifier using only upstream MuSR validation evidence.
+    4. Score second-corpus candidates and compare against genuine tuned-SC with paired CI and McNemar.
+    5. Required artifact fields: `honest_verdict`, `model_specs`, `second_corpus_name`, `second_corpus_confirmed`,
+       `best_arm`, `best_arm_source`, `n_questions_second`, `genuine_sc_accuracy_second`, `verifier_accuracy_second`,
+       `delta_vs_tuned_sc_second`, `paired_ci95_second`, `mcnemar_p_second`, `headroom_present`,
+       `verifier_is_oracle`.
+    6. Add own-tests for best-arm selection and no-oracle leakage.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5049_second_corpus_confirmation.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5050-d5
+  title: 'PHASE D5 gate resolution -- aggregate powered D1, repaired D2, D3 calibration, D6 cascade, and D4
+    second-corpus confirmation into realized / MuSR-scoped / bounded-retired / execution-incomplete.'
+  priority: high
+  track: verifier_moat
+  max_turns: 30
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_5050_moat_gate_resolution_v464.json
+  operator_override: '2026-06-30 planner directive: routine gate-resolution aggregator for the verifier-moat phase;
+    same-class scope matches prior capstone/gate tasks but it aggregates new upstream artifacts.'
+  prior_failures:
+  - experiment_id: exp5036-d5
+    verdict: complete_moat_execution_incomplete_cascade
+    addressed_by: "Aggregates new .464 powered D1, D2 repair, D3 calibration, D6 repair, and D4 second-corpus artifacts
+      instead of reusing the .463 incomplete evidence set."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). Resolve the .464 verifier-moat gate from the upstream artifacts. Do not treat blocked arms as
+    scientific nulls.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5045_powered_lora_ebm_eorm_musr.json
+    - {project_root}/results/experiment_5046_vpr_process_reward_repair.json
+    - {project_root}/results/experiment_5047_kan_purm_energy_calibration.json
+    - {project_root}/results/experiment_5048_cross_model_cascade_repair.json
+    - {project_root}/results/experiment_5049_second_corpus_confirmation.json
+    - {project_root}/results/experiment_5036_moat_gate_resolution_v3.json
+
+    TASK:
+    Create the gate-resolution artifact for .464. Classify the milestone as `moat_realized`, `musr_scoped_positive`,
+    `retired_bounded`, or `execution_incomplete`.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5050_moat_gate_resolution_v464.py`.
+    2. Read all available .464 Phase D artifacts. Missing or blocked artifacts must be listed explicitly.
+    3. Apply the gate: realized requires a proper verifier win with CI excluding zero plus second-corpus confirmation
+       or a cascade efficiency win. Bounded retirement requires properly executed clean-null powered D1/D2/D3 and no
+       efficiency win. Positive MuSR-only evidence is `musr_scoped_positive`.
+    4. Required artifact fields: `honest_verdict`, `moat_state`, `best_arm`, `best_arm_delta`, `best_arm_ci`,
+       `second_corpus_confirmed`, `cascade_efficiency_win`, `execution_incomplete_reasons`, `bounded_retirement_ok`,
+       `next_actions`.
+    5. Add own-tests for the four state classifications.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5050_moat_gate_resolution_v464.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5051-e1
+  title: 'PHASE E1 continuous self-learning -- REVES/VSI-style verifier-trace learning from D1/D2/D3 near misses
+    with contamination controls and held-out delta.'
+  priority: high
+  track: continuous_self_learning
+  max_turns: 100
+  inference_substrate: live_llm_inference_plus_training
+  deliverable: results/experiment_5051_verifier_trace_self_learning.json
+  operator_override: '2026-06-30 user directive explicitly requires at least one continuous self-learning experiment;
+    this is FR-11 scope, not a duplicate ARC self-play dry run.'
+  prior_failures:
+  - experiment_id: exp241-self-learning-replay-v2
+    verdict: not_met_real_held_out_task_gain_success_rate_gain_0p0
+    addressed_by: "Changes the learning substrate from old case-memory replay to verifier near-miss revision traces
+      filtered by structural verifier integrity, with SOTA local GGUF trace generation and held-out contamination guards."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). The PRD requires autonomous continuous self-learning. .463 refreshed a self-play checkpoint
+    but did not connect verifier near-misses to a learning loop. Build the first verifier-trace self-learning artifact.
+
+    MODEL_SPECS:
+    - revision_model: unsloth/Qwen3.6-35B-A3B-GGUF
+    - verifier_or_judge_model: unsloth/gemma-4-31B-it-GGUF
+    - fallback_middle_moe: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use at least one mandated local SOTA GGUF for any revision or verification trace generation.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/research-program.md
+    - {project_root}/_bmad/prd.md
+    - {project_root}/results/experiment_5031_lora_ebm_scorer_musr_v3.json
+    - {project_root}/results/experiment_5033_ebrm_uncertainty_verifier_v3.json
+    - {project_root}/results/experiment_5045_powered_lora_ebm_eorm_musr.json
+    - {project_root}/research-references.md
+
+    TASK:
+    Build a REVES/VSI-style self-learning loop from verifier near-misses: identify candidates where the verifier
+    preferred the wrong answer or was uncertain, generate revision/verification traces, filter them with structural
+    verifier checks, run a small update or replay-memory insertion, and test on held-out rows.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5051_verifier_trace_self_learning.py`.
+    2. Build a near-miss dataset from .463 and .464 verifier artifacts. Keep train/held-out split IDs explicit.
+    3. Use at least one MODEL_SPECS local model to produce revision or verifier traces. Filter by verifier integrity,
+       not final-answer correctness alone.
+    4. Run the smallest meaningful update: a replay-memory update, calibration update, or LoRA/energy-head micro-train.
+    5. Evaluate held-out delta vs the pre-update verifier and genuine tuned-SC. Do not leak held-out labels into trace
+       selection.
+    6. Required artifact fields: `honest_verdict`, `model_specs`, `self_learning_loop_executed`, `near_miss_count`,
+       `verified_trace_count`, `update_type`, `pre_update_accuracy`, `post_update_accuracy`, `heldout_delta`,
+       `contamination_guard_passed`, `checkpoint_or_memory_path`, `fr11_evidence`.
+    7. Add own-tests for split integrity and contamination guard.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5051_verifier_trace_self_learning.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: claude
+  model: opus
+
+- id: exp5052-c
+  title: 'PHASE C hardware continuity -- KV260 p-bit timing-ratio parity packet; no host SD-card work, no scale
+    claims beyond local evidence.'
+  priority: medium
+  track: hardware
+  max_turns: 100
+  inference_substrate: kv260_ssh_hardware
+  deliverable: results/experiment_5052_kv260_pbit_timing_ratio.json
+  operator_override: '2026-06-30 hardware-continuity reserved slot: repeated KV260 checks are intentional continuity,
+    not a failed-experiment rerun; SSH-only board access remains the constraint.'
+  prior_failures:
+  - experiment_id: exp242-kv260-roundtrip
+    verdict: blocked_missing_bitfile_config
+    addressed_by: "Uses the now-reachable SSH board path and .463 loaded overlay evidence instead of the old host
+      bitfile/SD-card precondition."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). KV260 was reachable in .463 with the energy overlay loaded. Add a p-bit/timing-ratio parity
+    packet inspired by the 2026 FPGA p-bit work, but make only local evidence claims.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5037_kv260_continuity.json
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/_bmad/architecture.md
+    - {project_root}/ops/status.md
+
+    TASK:
+    Probe the KV260 over SSH, run the existing local energy/Ising overlay path if available, and record timing-ratio
+    evidence suitable for comparing CPU/GPU/KV260 small Ising/p-bit style workloads.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5052_kv260_pbit_timing_ratio.py`.
+    2. Use SSH-only access (`ssh kria`). Do not perform host SD-card operations.
+    3. Probe overlay status, UIO devices, and a bounded n=64 or similar energy workload.
+    4. Record wall-clock timing, iterations/flips where available, and a parity check against CPU reference outputs.
+    5. Required artifact fields: `honest_verdict`, `kv260_ssh_reachable`, `overlay_loaded`, `workload_name`,
+       `n_variables`, `timing_ratio_packet_built`, `cpu_reference_ok`, `kv260_result_ok`, `local_claim_scope`.
+    6. Add own-tests that mock SSH output and schema.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5052_kv260_pbit_timing_ratio.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: claude
+  model: opus
+
+- id: exp5053-e2
+  title: 'PHASE E2 reserved SOTA ingestion -- search 2025-2026 verifier, EBM, KAN, constraint, hardware-sampling,
+    and hallucination-mitigation work for .465.'
+  priority: medium
+  track: sota_ingestion
+  max_turns: 70
+  inference_substrate: literature_search_and_docs
+  deliverable: results/experiment_5053_sota_ingestion_v465.json
+  operator_override: '2026-06-30 reserved SOTA-ingestion slot required by current roadmap discipline; same-class
+    ingestion tasks are legitimate continuations.'
+  prior_failures:
+  - experiment_id: exp5038-e1
+    verdict: success_sota_ingested_5_new_papers_mapped_to_phase_d
+    addressed_by: "Reserved next-cycle ingestion over a later source window; duplicate filtering must avoid simply
+      re-emitting the Exp 5038 source set."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). Keep the research frontier current after the .464 planning sweep. Search recent 2025-2026 work
+    and update `research-references.md` with only genuinely actionable additions for .465.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/research-references.md
+    - {project_root}/research-program.md
+    - {project_root}/results/experiment_5038_sota_ingestion_verifier_moat.json
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+
+    TASK:
+    Run a fresh SOTA ingestion pass focused on verifier moat, energy-guided decoding, constraint satisfaction,
+    KAN/KANFIS, hallucination mitigation, continual verifier learning, and hardware-accelerated sampling.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5053_sota_ingestion_v465.py`.
+    2. Search arXiv, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and citation trails
+       for EBT/ARM-EBM as feasible.
+    3. Add only actionable entries to `research-references.md`, with URLs and concrete Carnot hooks.
+    4. Avoid duplicate entries already recorded by Exp 5038 and the .464 planning sweep.
+    5. Required artifact fields: `honest_verdict`, `references_added`, `n_sources_checked`, `selected_sources`,
+       `next_milestone_candidates`, `research_references_updated`.
+    6. Add a small own-test for duplicate filtering if practical.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5053_sota_ingestion_v465.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5054-e3
+  title: 'PHASE E3 opportunistic ARC live-path self-discovery -- no duplicate solve; any level claim must use
+    solve_provenance=live_agent_self_discovery.'
+  priority: medium
+  track: arc_live_path
+  max_turns: 70
+  inference_substrate: live_agent_runtime_re
+  deliverable: results/experiment_5054_arc_live_path_self_discovery.json
+  prior_failures:
+  - experiment_id: exp5040-e3
+    verdict: complete_lp85_no_new_level_residual_no_grounded_l6_delta
+    addressed_by: "This is an opportunistic live-path continuity slot, not a re-solve of LP85. It must registry-precheck
+      solved levels, rotate target if needed, and report live-agent provenance. Same no-bank verdict retires this
+      exact level-up slot shape."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). ARC is no longer the sole milestone driver, but live-path continuity still matters. Try one
+    honest live-agent self-discovery improvement without offline source-reading or per-game BFS.
+
+    MODEL_SPECS:
+    - live_reasoning_model: unsloth/Qwen3.6-35B-A3B-GGUF
+    - fallback_reasoning_model: unsloth/gemma-4-26B-A4B-it-GGUF
+    Use a mandated local SOTA GGUF if any live LLM reasoning is invoked. Small models are smoke-only.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/results/experiment_5040_levelup_attempt.json
+    - {project_root}/python/carnot/agentic/arc_solver_kit.py
+    - {project_root}/research-program.md
+
+    TASK:
+    Run a bounded live-agent self-discovery attempt that improves the live path or honestly records no new level.
+    Do not solve already banked levels. Do not use offline ground-truth BFS, source reading, or hand-built per-game
+    adapters as the deliverable.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5054_arc_live_path_self_discovery.py`.
+    2. Registry-precheck `ops/arc_solve_registry.yaml`; if the current target is already reproduced, rotate to an
+       unsolved live-path target or write `blocked_duplicate_target`.
+    3. Run the live agent with runtime self-discovery only. If a solve is claimed, prove it came from the live agent's
+       own attempts/runtime RE.
+    4. Required artifact fields: `honest_verdict`, `solve_provenance`, `target_game`, `registry_precheck_passed`,
+       `live_agent_attempts`, `new_levels_banked`, `offline_reproduced`, `duplicate_solve_avoided`,
+       `reproducible_total_levels_before`, `reproducible_total_levels_after`.
+    5. `solve_provenance` must be one of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`; headline
+       credit requires `live_agent_self_discovery`.
+    6. Add own-tests for provenance and duplicate-target guards.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5054_arc_live_path_self_discovery.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
+
+- id: exp5055-capstone
+  title: 'CAPSTONE v464 -- aggregate powered moat, second-corpus/cascade confirmation, FR-11 self-learning,
+    hardware, SOTA, and ARC continuity; write the .465 pointer.'
+  priority: critical
+  track: capstone
+  max_turns: 40
+  inference_substrate: aggregation_from_upstream_artifacts
+  deliverable: results/experiment_5055_capstone_v464.json
+  operator_override: '2026-06-30 planner directive: routine milestone capstone aggregator over new upstream artifacts;
+    same-class capstone scope matches are expected and authorized.'
+  prior_failures:
+  - experiment_id: exp5041-capstone
+    verdict: complete_capstone_v463_moat_execution_incomplete_lora_ebm
+    addressed_by: "Aggregates the new .464 powered/confirmation/self-learning/hardware artifacts rather than repeating
+      the .463 incomplete artifact set."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT ({date}). Aggregate .464. The capstone must be blunt: realized moat, MuSR-scoped positive, bounded
+    retirement, or execution-incomplete. It must also state whether FR-11 self-learning produced credible evidence.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/results/experiment_5050_moat_gate_resolution_v464.json
+    - {project_root}/results/experiment_5051_verifier_trace_self_learning.json
+    - {project_root}/results/experiment_5052_kv260_pbit_timing_ratio.json
+    - {project_root}/results/experiment_5053_sota_ingestion_v465.json
+    - {project_root}/results/experiment_5054_arc_live_path_self_discovery.json
+    - {project_root}/ops/status.md
+    - {project_root}/ops/changelog.md
+    - {project_root}/research-complete.yaml
+
+    TASK:
+    Create the .464 capstone artifact and update only the standard planning/ops docs that the repo discipline expects
+    for completed research milestones. Do not modify the active conductor.
+
+    CONCRETE STEPS:
+    1. Create `python/carnot/experiment_5055_capstone_v464.py`.
+    2. Aggregate all .464 artifacts, preserving blocked reasons and no-bank results.
+    3. Record `moat_state`, `best_verifier_evidence`, `second_corpus_state`, `cascade_state`, `fr11_state`,
+       `hardware_state`, and `arc_state`.
+    4. Write a concrete `.465` pointer: next experiment class if moat positive, if MuSR-scoped, if bounded-retired,
+       and if execution-incomplete.
+    5. Required artifact fields: `honest_verdict`, `capstone_ready`, `milestone`, `moat_state`,
+       `best_arm_and_delta`, `fr11_self_learning_result`, `hardware_result`, `arc_result`,
+       `next_milestone_pointer`, `docs_updated`.
+    6. Add own-tests for capstone state aggregation.
+
+    Run command: `.venv/bin/python python/carnot/experiment_5055_capstone_v464.py`
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  milestone: 2026.06.464
+  agent_type: codex
+  model: gpt-5.5
