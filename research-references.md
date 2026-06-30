@@ -32,6 +32,17 @@ against the *discriminative* budget frontier (2510.14913) AND the *generative* f
 backlog is now 11 real-cited papers. (`/deep-research` was NOT used -- direct low-concurrency `WebSearch`
 per the SOTA-Ingestion Cycle Discipline.)
 
+<!-- EXP5038-VERIFIER-MOAT-REFERENCES-START -->
+## Exp 5038 verifier-moat literature source set
+
+These entries are new to the Exp 5038 selected set and are not in the 23-paper already-ingested exclusion list or the CompassVerifier / Generative Verifiers exclusions.
+
+- arXiv:2505.14999 - Learning to Rank Chain-of-Thought: Using a Small Model - https://arxiv.org/abs/2505.14999 - HTTP 200
+- arXiv:2605.10325 - Verifiable Process Rewards for Agentic Reasoning - https://arxiv.org/abs/2605.10325 - HTTP 200
+- arXiv:2606.11209 - ProcessThinker: Enhancing Multi-modal Large Language Models Reasoning via Rollout-based Process Reward - https://arxiv.org/abs/2606.11209 - HTTP 200
+- arXiv:2503.22480 - Probabilistic Uncertain Reward Model - https://arxiv.org/abs/2503.22480 - HTTP 200
+- arXiv:2602.06291 - Judging What We Cannot Solve: A Consequence-Based Approach for Oracle-Free Evaluation of Research-Level Math - https://arxiv.org/abs/2602.06291 - HTTP 200
+<!-- EXP5038-VERIFIER-MOAT-REFERENCES-END -->
 <!-- EXP5024-VERIFIER-MOAT-REFERENCES-START -->
 ## Exp 5024 verifier-moat literature source set
 

@@ -2,9 +2,9 @@
 
 ## Artifact fields
 - honest_verdict: terminal prefix; success_sota_ingested_<n>_new_papers_mapped_to_phase_d.
-- new_arxiv_ids: verified-real NEW arXiv IDs (http 200), NOT in the 18-paper ingested set (no fabrication -- every method cites a source).
+- new_arxiv_ids: verified-real NEW arXiv IDs (http 200), NOT in the 23-paper ingested set (no fabrication -- every method cites a source).
 - sota_to_phase_d_mapping: per NEW method: which PHASE D arm/direction it strengthens + the implementation delta over the current stack + the pitfall.
-- next_milestone_candidates: the strongest method(s) flagged as candidate inputs for the .463 roadmap (discover->ingest->plan->experiment).
+- next_milestone_candidates: the strongest method(s) flagged as candidate inputs for the .464 roadmap (discover->ingest->plan->experiment).
 - note_path: docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads).
 - reliable_channel_used: sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch (NOT /deep-research -- banned from the autonomous loop).
 - inference_substrate: aggregation_from_upstream_artifacts (literature synthesis, no LLM inference).
@@ -13,56 +13,56 @@
 ## Reliable channel
 - Used: sweep_clusters.py, sweep_semscholar.py, low-concurrency WebSearch/WebFetch.
 - Not used: /deep-research.
-- Semantic Scholar result: HTTP 429 was recorded for later focused queries, not promoted as evidence.
-- Prior .462 and planning-pass exclusions retained for continuity: arXiv:2408.15240, arXiv:2502.01989, arXiv:2502.11157, arXiv:2504.00891, arXiv:2504.01005, arXiv:2504.13134, arXiv:2504.16828, arXiv:2508.03686, arXiv:2508.10539, arXiv:2508.16665, arXiv:2509.24460, arXiv:2510.14913, arXiv:2510.20369, arXiv:2602.24040, arXiv:2603.04304, arXiv:2605.10158, arXiv:2605.18871, arXiv:2605.24005, arXiv:2606.09073, arXiv:2606.19818.
+- Semantic Scholar result: HTTP 429 was recorded and not promoted as evidence.
+- Prior .462/.463 exclusions retained for continuity: arXiv:2408.15240, arXiv:2502.01989, arXiv:2502.11157, arXiv:2502.11250, arXiv:2502.14356, arXiv:2504.00891, arXiv:2504.01005, arXiv:2504.13134, arXiv:2504.16828, arXiv:2507.01951, arXiv:2508.03686, arXiv:2508.10539, arXiv:2508.16665, arXiv:2509.24460, arXiv:2510.14913, arXiv:2510.20369, arXiv:2602.24040, arXiv:2603.04304, arXiv:2605.10158, arXiv:2605.11334, arXiv:2605.18871, arXiv:2605.24005, arXiv:2605.30085, arXiv:2606.09073, arXiv:2606.19818.
 
 ## D5 conditioning
-- Exp 5022 verdict: complete_moat_execution_incomplete_ebrm; moat_realized=false; moat_retired_bounded=false; decision=EXECUTION-INCOMPLETE.
-- .463 condition: repair or rerun D1/D2/D3/D6 before any retirement claim.
+- Exp 5036 verdict: complete_moat_execution_incomplete_cascade; moat_realized=false; moat_retired_bounded=false; decision=EXECUTION-INCOMPLETE.
+- .464 condition: repair D6/D4 and harden D1/D3; pivot only after clean D1+D2 nulls.
 
 ## SOTA to PHASE D mapping
 
-### CoT-Entropy uncertainty-aware generative PRM
-- Source: arXiv:2502.11250 (https://arxiv.org/abs/2502.11250)
+### EORM small energy outcome reward verifier
+- Source: arXiv:2505.14999 (https://arxiv.org/abs/2505.14999)
+- PHASE D arms: D1 LoRA-EBM, D3 EBRM
+- Signal: Uses an energy-based outcome reward model to rank chain-of-thought solutions with only outcome labels, reporting a 55M-parameter verifier that can select from candidate pools and generalize to unseen models.
+- Implementation delta: Over Exp 5031-5036, replace the scalar D1 LoRA scorer and D3 EBRM readout with an EORM-style small energy head over frozen MuSR candidates, then rerun delta_vs_tuned_sc and second-corpus confirmation.
+- Pitfall: Outcome-only labels can learn answer-shape shortcuts; the rerun needs frozen candidates, no model-id features, and the same genuine tuned-SC baseline.
+- .464 candidate: flagged_for_v464 (.464): eorm_small_energy_selector_for_d1_d3
+
+### VPR dense verifier-grounded process rewards
+- Source: arXiv:2605.10325 (https://arxiv.org/abs/2605.10325)
+- PHASE D arms: D2 uPRM, D6 verifier-judge cascade
+- Signal: Converts symbolic or algorithmic intermediate checks into dense turn-level rewards for agentic reasoning, improving credit assignment when reliable local verification is available.
+- Implementation delta: Over Exp 5031-5036, build a D2 process-reward replay that uses only oracle-distinct intermediate checks available before the final answer, then expose the same confidence as the cheap D6 router before judge calls.
+- Pitfall: The method is only non-circular if the intermediate verifier is not the answer oracle; weak or domain-leaking checks would invalidate the moat claim.
+- .464 candidate: flagged_for_v464 (.464): oracle_distinct_vpr_dense_process_rewards
+
+### ProcessThinker rollout-based process rewards
+- Source: arXiv:2606.11209 (https://arxiv.org/abs/2606.11209)
 - PHASE D arms: D2 uPRM, D3 EBRM
-- Signal: Adds uncertainty quantification to generative reward models for step-wise verification, using CoT Entropy to detect unreliable PRM judgments.
-- Implementation delta: Over Exp 5017-5022, attach CoT-Entropy uncertainty to the D2 step verifier and to the D3 EBRM selector, then require selection delta versus genuine tuned-SC after uncertainty-aware abstention.
-- Pitfall: The paper is math-reasoning PRM evidence; uncertainty may flag style variation rather than wrong reasoning unless calibrated on the MuSR cache.
-- .463 candidate: flagged_for_v463 (.463): cot_entropy_uprm_ebrm_uncertainty
+- Signal: Assigns step rewards by sampling continuations from intermediate reasoning states and using empirical final-verification success, avoiding an explicit trained PRM.
+- Implementation delta: Over Exp 5031-5036, compute rollout-success process scores for cached candidate prefixes and distill them into the D2 selector or D3 energy margin before comparing against tuned self-consistency.
+- Pitfall: Continuation rollouts can be expensive and can leak final-answer verification into the selector; the rerun must charge compute and keep the verifier oracle-distinct.
+- .464 candidate: flagged_for_v464 (.464): rollout_process_reward_distillation
 
-### VERDI single-call decomposed judge confidence
-- Source: arXiv:2605.11334 (https://arxiv.org/abs/2605.11334)
-- PHASE D arms: D6 verifier-judge cascade
-- Signal: Extracts confidence from verification sub-check traces without extra judge calls, replacing unavailable or saturated logprob confidence.
-- Implementation delta: Over Exp 5017-5022, rerun the blocked D6 cascade with VERDI-style step-verdict alignment, claim margin, and evidence-grounding features as the cheap confidence router before escalating to the judge.
-- Pitfall: A cascade win can silently become a judge win; the artifact must charge every fallback call and keep oracle-distinct cheap-verifier value separate.
-- .463 candidate: flagged_for_v463 (.463): verdi_confidence_routed_cascade
+### PURM reward-distribution uncertainty
+- Source: arXiv:2503.22480 (https://arxiv.org/abs/2503.22480)
+- PHASE D arms: D1 LoRA-EBM, D3 EBRM, D6 verifier-judge cascade
+- Signal: Generalizes Bradley-Terry reward modeling to reward distributions and uses distribution overlap as per-sample uncertainty to reduce reward hacking.
+- Implementation delta: Over Exp 5031-5036, turn D1/D3 scalar verifier scores into reward distributions, penalize high-overlap uncertain candidates, and route only uncertain pairs to D6 judge fallback.
+- Pitfall: PURM is preference-alignment evidence, not a direct reasoning-selector result; calibration gains must not be counted unless selection accuracy improves.
+- .464 candidate: flagged_for_v464 (.464): purm_uncertainty_calibrated_selector
 
-### Reflective generative self-supervised PRM
-- Source: arXiv:2507.01951 (https://arxiv.org/abs/2507.01951)
-- PHASE D arms: D1 LoRA-EBM, D2 uPRM
-- Signal: Uses a shared policy and process-reward interface with a lightweight scoring head and learns trajectory selection from outcome rewards without process labels.
-- Implementation delta: Over Exp 5017-5022, use the reflective self-supervised PRM recipe as the D2 unblock path and, if D1 remains base-model blocked, train only a small trajectory-scoring head over cached candidates.
-- Pitfall: Outcome-derived self-supervision can reproduce generator bias and reward answer-shape shortcuts; the no-model-id and oracle-distinct audits remain mandatory.
-- .463 candidate: flagged_for_v463 (.463): reflective_self_supervised_prm_unblock
-
-### CROP conformal clean-prefix certification
-- Source: arXiv:2605.30085 (https://arxiv.org/abs/2605.30085)
-- PHASE D arms: D3 EBRM, D6 verifier-judge cascade
-- Signal: Turns any step-risk proxy into a calibrated clean-prefix certificate, then routes uncertified suffixes for repair or review.
-- Implementation delta: Over Exp 5017-5022, wrap D3 energy or D6 confidence scores with a conformal prefix threshold and evaluate certified-prefix length plus answer-selection delta instead of scalar AUROC alone.
-- Pitfall: Exchangeability assumptions may fail across generated candidates; over-withholding can erase the headroom that a verifier moat needs to exploit.
-- .463 candidate: flagged_for_v463 (.463): crop_conformal_prefix_gate
-
-### Full-Step-DPO self-supervised process reward
-- Source: arXiv:2502.14356 (https://arxiv.org/abs/2502.14356)
-- PHASE D arms: D2 uPRM
-- Signal: Trains a self-supervised process reward model that scores every reasoning step instead of relying on human or GPT-4 step labels.
-- Implementation delta: Over Exp 5017-5022, replace the blocked D2 logprob-cache dependency with full-step self-supervised rewards over complete candidate traces, then compare the resulting selector with tuned-SC on the same cache.
-- Pitfall: It optimizes the generator as much as the verifier; using it as a selector requires a frozen-candidate evaluation to avoid claiming training lift as moat lift.
-- .463 candidate: flagged_for_v463 (.463): full_step_self_supervised_uprm
+### Consequence-Based Utility oracle-free evaluator
+- Source: arXiv:2602.06291 (https://arxiv.org/abs/2602.06291)
+- PHASE D arms: D6 verifier-judge cascade, D2 uPRM
+- Signal: Scores a candidate solution by testing whether it improves solving of related verifiable questions, outperforming reward models, generative reward models, and LLM judges on research-level math ranking.
+- Implementation delta: Over Exp 5031-5036, add a cheap consequence-evaluation branch to D6: candidate traces become exemplars for generated neighboring checks, and only low-margin cases escalate to the judge.
+- Pitfall: Generating related verifiable questions can become the expensive verifier; the cascade must charge that cost and prevent neighborhood tasks from leaking answers.
+- .464 candidate: flagged_for_v464 (.464): consequence_utility_cascade_pivot
 
 ## Next milestone candidates
-- flagged_for_v463 (.463): repair_d2_self_supervised_prm: D5 did not cleanly retire D1 or D2. The strongest .463 repair path is a frozen-candidate self-supervised PRM that removes the blocked logprob cache.
-- flagged_for_v463 (.463): rerun_d3_uncertainty_conformal_gate: D5 marks D3 execution incomplete. A .463 rerun should add CoT-entropy and CROP-style conformal thresholds before measuring delta_vs_tuned_sc.
-- flagged_for_v463 (.463): verdi_oracle_distinct_cascade: D6 was blocked, but VERDI gives a single-call confidence router. .463 should test judge-call savings while preserving oracle-distinct accounting.
+- flagged_for_v464 (.464): eorm_purm_d1_d3_rerun: Exp 5036 D1 and D3 had positive deltas but CI touched zero. The .464 rerun should test a small EORM head with PURM uncertainty penalties before spending on a larger verifier.
+- flagged_for_v464 (.464): vpr_processthinker_d2_repair: D2 was clean negative in Exp 5036. The best .464 repair is not another scalar logprob selector, but VPR-style local checks or rollout-derived process rewards evaluated on frozen candidates.
+- flagged_for_v464 (.464): consequence_uncertainty_cascade: Exp 5036 was execution-incomplete because D6 and second-corpus confirmation were blocked. Consequence utility plus PURM uncertainty gives a cheap-router path that can be costed separately from judge fallback.
