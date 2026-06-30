@@ -20648,3 +20648,108 @@ If a trainable Qwen base, CUDA, FoVer pairs, or cached MuSR candidates are
 missing, then Exp 5003 writes a blocked artifact naming the missing resource,
 records the precondition checks, keeps `verifier_is_oracle=false`, and exits
 without claiming trained accuracy, AUROC, or a moat win.
+
+## Implementation Status (REQ-VERIFY-5003)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5003 | Implemented (`python/carnot/experiment_5003_lora_ebm_scorer_musr.py`, `results/experiment_5003_lora_ebm_scorer_musr.json`) | Implemented (`tests/python/test_experiment_5003_lora_ebm_scorer_musr.py`) |
+
+### REQ-VERIFY-5004: uPRM Oracle-Distinct MuSR Replication
+
+The repository SHALL provide Exp 5004 at
+`python/carnot/experiment_5004_uprm_replication.py` to replicate the
+Unsupervised Process Reward Models uPRM construction from arXiv:2605.10158 as
+an oracle-distinct selector over a headroom-present corpus and to write
+`results/experiment_5004_uprm_replication.json`.
+
+Before scoring, the runner SHALL check that `unsloth/gemma-4-12B-it-GGUF` is
+cached as a GGUF, the conductor GPU-0 llama-server is reachable and returns
+per-token logprobs/top-logprobs, and a target corpus with at least 200 questions
+is locally cached. The default entrypoint SHALL also require an existing
+uPRM logprob candidate cache with at least 200 rows unless
+`CARNOT_UPRM_ENABLE_FRESH_GENERATION=1` explicitly opts into the long live
+generation job. If any precondition is missing, the runner SHALL write an honest
+blocked artifact with `honest_verdict=blocked_<resource>`,
+`verifier_is_oracle=false`, `headroom_present=false`, and
+`preconditions_checked`, then stop without fabricating uPRM-selection metrics.
+
+When preconditions hold, the runner SHALL write a deliverable-first skeleton
+artifact before generation/scoring, generate or reuse cached K
+reasoning-plus-answer candidates per question with token logprobs from
+`gemma-4-12B-it-GGUF` on CUDA GPU-0, derive the uPRM first-error process score
+from the generator's own next-token probabilities, select the candidate with
+the best process score, and evaluate accuracy against gold only after
+selection. The scorer SHALL use only oracle-distinct candidate text, parsed
+steps, and logprob/top-logprob telemetry and SHALL NOT read gold, answer index,
+answer choice, or model identity fields. The runner SHALL reuse the shared
+Exp 5002 moat benchmark harness for tuned self-consistency, oracle@K, paired
+bootstrap CI, and McNemar calculations.
+
+The uPRM process score SHALL follow the arXiv:2605.10158 first-error scoring
+formulation: for a trajectory with steps `y_1..y_T` and candidate first-error
+position `j`, score the marked sequence with
+`S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t`, where `p^+_t` and `p^-_t`
+are the LLM next-token probabilities of the `+` and `-` correctness marker
+tokens after step `t`, renormalized over `{+,-}`. Candidate-level selection
+SHALL use the paper's test-time aggregation preference by selecting the
+candidate with the strongest last-step/no-error process score, with the exact
+local approximation documented in `uprm_score_methodology_note`.
+
+The terminal artifact SHALL include `honest_verdict`, bare bool
+`verifier_is_oracle=false`, bare bool `headroom_present`,
+`uprm_selection_accuracy`, `tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `uprm_score_methodology_note`, `corpus`,
+`n_questions`, `oracle_at_k`, `model_specs`,
+`inference_substrate="live_llm_inference"`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`,
+`oracle_distinctness_enforced`, `adversarial_verify_clean`,
+`adversarial_verify_flags`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+`honest_verdict` SHALL start with `success_uprm_beats_sc_<corpus>_` only when
+uPRM selection beats tuned self-consistency, the paired CI95 excludes zero,
+McNemar `p<0.05`, `verifier_is_oracle=false`, and `headroom_present=true`.
+Otherwise, with an informative run, it SHALL start with
+`complete_uprm_no_win_<corpus>_` and include that the CI includes zero when
+applicable.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_uprm_beats_sc_<corpus>_<delta>, a null is complete_uprm_no_win_<corpus>_ci_incl_0.`;
+`verifier_is_oracle` = `false -- uPRM is UNSUPERVISED (scored from the generator's own logprobs); it never reads gold (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required for an informative result ((oracle@K - tuned_sc) >= 0.10, flips>0); FALSE_NEGATIVE_RISK guard.`;
+`uprm_selection_accuracy` = `the oracle-distinct selection accuracy of the uPRM process score (the headline).`;
+`tuned_sc_accuracy` = `the TUNED-SC baseline (headroom-control).`;
+`delta_vs_tuned_sc` = `uprm_selection_accuracy - tuned_sc_accuracy; the paper reports up to +0.069.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`uprm_score_methodology_note` = `the exact paper formulation of the next-token-prob first-error score (so a third party can replicate); the unsupervised-not-circular justification.`;
+`corpus` = `the headroom-present oracle-distinct corpus (MuSR / harder-math / GPQA slice).`;
+`n_questions` = `>=200 for the headline delta (sample-size rigor).`;
+`model_specs` = `gemma-4-12B-it-GGUF (the SOTA generator providing logprobs) -- the methodology stamp.`;
+`inference_substrate` = `live_llm_inference (live generation with logprobs; >=60s floor).`;
+`random_seed` = `determinism for generation + bootstrap.`;
+`preconditions_checked` = `records GGUF-cached/logprob/corpus checks; a missing resource emits blocked_.`
+
+### SCENARIO-VERIFY-5004: uPRM Scores Logprob Candidates Without Oracle Leakage
+
+Given cached `gemma-4-12B-it-GGUF`, a GPU-0 llama-server that returns
+logprobs/top-logprobs, and at least 200 cached MuSR rows, when Exp 5004 runs,
+then it writes a resumable skeleton artifact, generates or reuses K
+logprob-bearing candidates per question, scores candidates through a guarded
+oracle-distinct view using the uPRM marker-probability first-error score,
+evaluates against tuned self-consistency with paired CI and McNemar through the
+shared harness, runs adversarial artifact verification, and writes a terminal
+artifact with every required field and a terminal `honest_verdict`.
+
+If the GGUF cache, logprob-capable server, target corpus, or required uPRM
+logprob candidate cache/fresh-generation opt-in is missing, then Exp 5004
+writes a blocked artifact naming the missing resource, records the precondition
+checks, keeps `verifier_is_oracle=false`, and exits without claiming
+uPRM-selection accuracy or a moat win.
+
+## Implementation Status (REQ-VERIFY-5004)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5004 | Implemented (`python/carnot/experiment_5004_uprm_replication.py`, `results/experiment_5004_uprm_replication.json`) | Implemented (`tests/python/test_experiment_5004_uprm_replication.py`) |
