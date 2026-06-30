@@ -22196,6 +22196,89 @@ duration evidence, then Exp 5045 writes
 |---|---|---|
 | REQ-VERIFY-5045 | Proposed (`python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`, `results/experiment_5045_powered_lora_ebm_eorm_musr.json`) | Proposed (`tests/python/test_experiment_5045_powered_lora_ebm_eorm_musr.py`) |
 
+### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
+
+The repository SHALL provide Exp 5046 at
+`python/carnot/experiment_5046_vpr_process_reward_repair.py` to replace the
+Exp 5032 scalar final-marker uPRM failure with a VPR/ProcessThinker-inspired
+dense process-reward selector over the existing MuSR candidate cache, writing
+`results/experiment_5046_vpr_process_reward_repair.json`.
+
+The runner SHALL load or generate one process trace per candidate and SHALL
+include at least one mandated local model spec from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` in `model_specs`. If no local judge endpoint
+is ready, the runner MAY use cache-derived process traces, but it SHALL label
+them as derived traces and SHALL NOT claim live generated reasoning. The dense
+process reward SHALL include separate step-consistency, verifier-acceptance,
+consequence-penalty, and uncertainty features. It MAY consume the Exp 5029
+logprob cache, but selection SHALL NOT depend solely on scalar final-token
+markers.
+
+The selector SHALL remain oracle-distinct at inference: candidate scoring SHALL
+be performed through the shared guarded candidate view and SHALL NOT read gold,
+answer-index, answer-choice, or model-identity fields. Gold labels are used only
+after selection for evaluation. The runner SHALL evaluate on the same MuSR split
+used by D1/D2 through the shared moat benchmark harness, comparing against
+GENUINE tuned self-consistency with paired bootstrap CI95, McNemar exact p,
+oracle@K headroom, and a non-oracle verdict.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`process_reward_available`, `process_reward_accuracy`,
+`genuine_tuned_sc_accuracy`, `delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`,
+`n_questions`, `trace_count`, `verifier_is_oracle`, and `headroom_present`. It
+SHALL also include the process-trace source, dense feature weights,
+`scalar_marker_only=false`, candidate-cache path, oracle-distinctness audit,
+`spec_refs`, `schema`, `experiment`, `experiment_id`, `result_path`,
+`duration_s`, `field_principles`, and a reproducibility checksum.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_process_reward_beats_sc_musr_<delta>, a clean null is complete_process_reward_no_win_musr_<delta>.`;
+`model_specs` = `records all mandated SOTA GGUF ids plus the local mandated model used as process-trace provenance.`;
+`process_reward_available` = `true iff every candidate has a non-scalar dense process trace with step consistency, verifier acceptance, consequence penalty, and uncertainty.`;
+`process_reward_accuracy` = `the oracle-distinct dense-process-reward selection accuracy.`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE tuned-SC baseline on the same MuSR split.`;
+`delta_vs_tuned_sc` = `process_reward_accuracy - genuine_tuned_sc_accuracy.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`n_questions` = `number of MuSR questions evaluated on the D1/D2 split.`;
+`trace_count` = `one dense process trace per candidate row.`;
+`verifier_is_oracle` = `false -- the selector reads dense trace features only; gold is used after selection for evaluation.`;
+`headroom_present` = `true only when oracle@K beats genuine tuned-SC by the headroom gate.`
+
+If the process-reward selector beats genuine tuned-SC with positive
+`delta_vs_tuned_sc`, paired CI95 excluding zero, McNemar `p<0.05`,
+`headroom_present=true`, and `verifier_is_oracle=false`, then
+`honest_verdict` SHALL start with `success_process_reward_beats_sc_musr_`.
+Otherwise an informative run SHALL start with
+`complete_process_reward_no_win_musr_`. If the candidate cache or mandated local
+model provenance is missing, the runner SHALL write a blocked terminal artifact
+without claiming process-reward accuracy.
+
+### SCENARIO-VERIFY-5046: Dense Process Reward Is Evaluated Without Final-Marker Leakage
+
+Given the Exp 5029 MuSR candidate cache contains at least 200 questions and at
+least one mandated local GGUF model is cached, when Exp 5046 runs, then it
+builds or loads one trace per candidate, computes step-consistency,
+verifier-acceptance, consequence-penalty, and uncertainty features for each
+candidate, selects candidates through a guarded oracle-distinct scorer, compares
+against GENUINE tuned self-consistency with paired CI and McNemar, keeps
+`verifier_is_oracle=false`, sets `scalar_marker_only=false`, and writes every
+required artifact field.
+
+If a scorer attempts to read gold, answer-index, answer-choice, or model-id
+fields, the shared guard SHALL raise an oracle-distinctness violation and the
+run SHALL write a blocked terminal artifact instead of reporting a selector
+accuracy. If only scalar final-marker evidence is available, the run SHALL keep
+`process_reward_available=false` rather than relabeling the uPRM scalar as a
+dense process reward.
+
+## Implementation Status (REQ-VERIFY-5046)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5046 | Proposed (`python/carnot/experiment_5046_vpr_process_reward_repair.py`, `results/experiment_5046_vpr_process_reward_repair.json`) | Proposed (`tests/python/test_experiment_5046_vpr_process_reward_repair.py`) |
+
 ### REQ-VERIFY-5035: Phase D4 V3 Cross-Corpus Generalization Check
 
 The repository SHALL provide Exp 5035 at
