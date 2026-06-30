@@ -9660,3 +9660,4 @@ The contro |
 | 2026-06-30 16:36 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | OK | 88 passed, 1 warning in 7.06s |
 | 2026-06-30 16:53 UTC | PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATI | OK | 86 passed, 1 warning in 7.07s |
 | 2026-06-30 17:11 UTC | PHASE D5 (VERIFIER MOAT; the falsifiable GATE + Di | OK | 87 passed, 1 warning in 8.20s |
+| 2026-06-30 17:21 UTC | PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- K | OK | 86 passed, 1 warning in 8.11s |
