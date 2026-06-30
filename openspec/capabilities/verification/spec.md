@@ -20824,6 +20824,92 @@ claiming `candidate_cache_built=true`.
 |---|---|---|
 | REQ-VERIFY-5016 | Implemented (`python/carnot/experiment_5016_shared_logprob_candidate_cache.py`, `results/experiment_5016_shared_logprob_candidate_cache.json`) | Implemented (`tests/python/test_experiment_5016_shared_logprob_candidate_cache.py`) |
 
+### REQ-VERIFY-5017: Trained Qwen3.5-1.7B LoRA-EBM MuSR Scorer V2
+
+The repository SHALL provide Exp 5017 at
+`python/carnot/experiment_5017_lora_ebm_scorer_musr_v2.py` to make the
+arXiv:2605.18871-style LoRA-EBM holistic-quality scorer real on the small
+trainable base `Qwen/Qwen3.5-1.7B`, evaluate it as an oracle-distinct MuSR
+candidate selector, and write
+`results/experiment_5017_lora_ebm_scorer_musr_v2.json`.
+
+Before training, the runner SHALL check that the trainable HF base cache for
+`Qwen/Qwen3.5-1.7B` is present or can be downloaded, CUDA is available on
+conductor GPU 0 without iGPU pinning or rejecting `CUDA_VISIBLE_DEVICES`,
+either the Exp 5016 shared candidate cache or the
+`results/distributional_energy_verifier_musr_checkpoints/` fallback has at
+least 200 MuSR questions, and FoVer training pairs are present. Missing
+resources SHALL produce a terminal blocked artifact naming the resource and
+SHALL NOT fabricate trained-scorer metrics.
+
+When preconditions hold, the runner SHALL write a deliverable-first pretrain
+skeleton, build contrastive pairs from FoVer correct/error reasoning plus
+gold-labeled cached MuSR candidates for training only, train a QLoRA adapter
+with a scalar energy head so good reasoning receives lower energy than bad
+reasoning, and write an adapter checkpoint after each epoch. A terminal
+trained result SHALL set `scorer_trained=true` only when `train_loss` is
+non-null, `n_pairs>0`, and the measured live training/scoring duration exceeds
+60 seconds. A skeleton or sub-floor training run SHALL be
+`blocked_lora_ebm_train_did_not_run`, not a clean null.
+
+At evaluation time the scorer SHALL rank cached MuSR candidates through the
+shared guarded candidate view, SHALL NOT read gold, answer index, answer
+choice, or model identity fields at inference, and SHALL use the B1-fixed
+shared moat benchmark harness for genuine tuned self-consistency, oracle@K,
+paired bootstrap CI, and McNemar statistics. The artifact SHALL compare
+against the genuine tuned-SC baseline from
+`results/experiment_5015_genuine_sc_baseline_fix.json`, not a k=1 strawman.
+
+The terminal artifact SHALL include `honest_verdict`, `scorer_trained`,
+`train_loss`, `n_pairs`, `verifier_is_oracle`, `headroom_present`,
+`trained_scorer_accuracy`, `genuine_tuned_sc_accuracy`,
+`delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`, `n_questions`,
+`oracle_at_k`, `model_specs`, `inference_substrate="live_llm_inference"`,
+`random_seed`, `reproducibility_checksum`, `preconditions_checked`,
+`oracle_distinctness_enforced`, `adversarial_verify_clean`,
+`adversarial_verify_flags`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a clean null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0, a failed train is blocked_lora_ebm_train_did_not_run.`;
+`scorer_trained` = `true iff the model ACTUALLY trained (train_loss non-null, n_pairs>0, duration>60s) -- the anti-skeleton gate AND the field D3 gates on; false = a FAILED execution, not a null.`;
+`train_loss` = `the final contrastive training loss (non-null REQUIRED -- a null means the .461 skeleton bail recurred).`;
+`n_pairs` = `the contrastive-pair count (>0 REQUIRED -- 0 was the .461 skeleton signature).`;
+`verifier_is_oracle` = `false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required for an informative result -- (oracle@K - GENUINE tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard, vs the B1 genuine baseline).`;
+`trained_scorer_accuracy` = `the oracle-distinct selection accuracy of the TRAINED LoRA-EBM (the headline number).`;
+`genuine_tuned_sc_accuracy` = `the GENUINE K-way tuned-SC baseline from B1 (NOT the k=1 strawman) -- the honest baseline to beat.`;
+`delta_vs_tuned_sc` = `trained_scorer_accuracy - genuine_tuned_sc_accuracy; the moat lift (signed).`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired-test p; a win requires p<0.05.`;
+`n_questions` = `>=200 for the headline delta (sample-size rigor).`;
+`oracle_at_k` = `the selectable-headroom ceiling.`;
+`model_specs` = `the trainable base (Qwen3.5-1.7B base + LoRA + energy head) AND the cached-candidate generator -- the methodology stamp.`;
+`inference_substrate` = `live_llm_inference (GPU training + scoring; >=60s floor).`;
+`random_seed` = `determinism for the train/eval split + bootstrap.`;
+`reproducibility_checksum` = `content hash of (base, LoRA config, corpus, seed) so a replication catches drift.`;
+`preconditions_checked` = `records base-cached/CUDA/candidate-cache/FoVer checks; a missing resource emits blocked_, never a fabricated AUROC.`
+
+### SCENARIO-VERIFY-5017: Trained LoRA-EBM Beats Or Honestly Nulls Against Genuine SC
+
+Given `Qwen/Qwen3.5-1.7B` is cached or downloadable, CUDA is available on GPU
+0, FoVer pairs exist, and at least 200 cached MuSR candidate rows are available
+from Exp 5016 or the fallback checkpoints, when Exp 5017 runs, then it writes a
+pretrain skeleton, actually trains the LoRA-EBM for more than 60 seconds,
+checkpoints each epoch, scores cached candidates without oracle leakage,
+evaluates against genuine tuned-SC via the shared harness, runs adversarial
+artifact verification plus artifact summarization, and writes the terminal
+JSON artifact with every required field.
+
+If the trained scorer beats genuine tuned-SC with paired CI95 excluding zero,
+McNemar `p<0.05`, `verifier_is_oracle=false`, and `headroom_present=true`,
+then `honest_verdict` SHALL start with
+`success_lora_ebm_beats_sc_musr_`. If the scorer trained but the paired CI
+includes zero, then `honest_verdict` SHALL start with
+`complete_lora_ebm_no_win_musr_` and include `_ci_incl_0`. If training does
+not actually run, the artifact SHALL use `blocked_lora_ebm_train_did_not_run`
+and SHALL NOT retire the arm as a clean null.
+
 ### REQ-VERIFY-5005: EBRM Uncertainty-Aware MuSR Selector
 
 The repository SHALL provide Exp 5005 at
