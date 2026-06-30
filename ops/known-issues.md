@@ -6,6 +6,22 @@
 
 ### 2026-06-30 (MANDATORY-NEXT-MILESTONE, operator-directed "unlock the conductor running PHASE D experiments immediately"): EXECUTE the off-ARC distributional-energy verifier moat — the majority lever now
 
+> **UPDATE 2026-06-30 (outer-loop): D1 is ANSWERED — bounded null. Do NOT re-skeleton D1.** The conductor's
+> D1/D2 tasks skeletoned for 2 milestones (.461/.462) on concrete blockers (D1 404 base `Qwen3.5-1.7B`; D2
+> empty logprob cache; cached checkpoints lacked reasoning traces). The outer-loop bootstrapped the decisive
+> D1 test on GPU-1 (`results/experiment_phase_d_musr_trained_verifier.json`, commit d98ca024c, adversarial-
+> verify 0-flagged): regenerated 200-q MuSR reasoning traces (Qwen3.5-9B-MTP) + trained a k-fold leakage-safe
+> ORACLE-DISTINCT verifier (all-MiniLM embed → logistic head over question+reasoning). **RESULT: verifier
+> 0.570 vs SC 0.555, delta +0.015 CI95 [−0.06,+0.085] (includes 0), McNemar p=0.78 → does NOT beat SC.**
+> Despite **oracle@K=0.925** (~0.37 of headroom), the trained verifier captures ~none. `moat_realized=False`
+> → HONEST BOUNDED NULL, converging with the ARC verifier-tie: even a trained oracle-distinct verifier on
+> reasoning-text embeddings cannot capture MuSR headroom. **Planner: do NOT re-propose D1 (the trained-
+> embedding-verifier-vs-SC question is decided). DiffusionGemma stays gated.** The ONE genuinely-distinct
+> untested lever is **D2/uPRM** (`arXiv:2605.10158`) — a DIFFERENT signal (per-token logprobs + process-
+> reward, not reasoning-text embeddings). Building its logprob cache (the empty-0-rows blocker) on GPU-1 is
+> the only remaining moat-on-reasoning probe; **pending operator decision** (asked 2026-06-30) on whether to
+> run it vs. accept the bounded-null. EBRM (D3) is a 3rd construction but lower-priority than uPRM.
+
 **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
 (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
 (`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`) and its score is bounded ~0.08 by
@@ -9605,6 +9621,10 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
