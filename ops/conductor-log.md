@@ -9636,3 +9636,4 @@ The contro |
 | 2026-06-30 07:47 UTC | PHASE B2 (INFRA; RESERVED SLOT 2 of 2; ENABLING) - | OK | 99 passed, 1 warning in 7.62s |
 | 2026-06-30 08:09 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-30 08:26 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-30 08:28 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
