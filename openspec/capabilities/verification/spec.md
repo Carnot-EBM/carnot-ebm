@@ -22255,6 +22255,66 @@ rather than claiming that uncertainty calibration closed the CI.
 |---|---|---|
 | REQ-VERIFY-5047 | Proposed (`python/carnot/experiment_5047_kan_purm_energy_calibration.py`, `results/experiment_5047_kan_purm_energy_calibration.json`) | Proposed (`tests/python/test_experiment_5047_kan_purm_energy_calibration.py`) |
 
+### REQ-VERIFY-5049: Best Powered Verifier Second-Corpus Confirmation
+
+The repository SHALL provide Exp 5049 at
+`python/carnot/experiment_5049_second_corpus_confirmation.py` to load the Exp
+5044 second-corpus candidate cache, select the best non-degenerate powered
+verifier from D1/D2/D3 using only upstream MuSR validation evidence, evaluate
+that verifier on the second corpus, and write
+`results/experiment_5049_second_corpus_confirmation.json`.
+
+The runner SHALL require Exp 5044 to report `headroom_present=true`,
+`verifier_is_oracle=false`, `second_corpus_cache_built=true`, and a readable
+candidate JSONL cache before it reports a confirmation result. It SHALL inherit
+Exp 5044 `model_specs` for candidate rows and Exp 5045/5047 `model_specs` for
+powered verifier rows. It SHALL NOT perform fresh candidate generation.
+
+The best-arm selector SHALL consider only non-oracle, non-degenerate upstream
+MuSR evidence from D1, D2, and D3. A D1 powered LoRA-EBM row SHALL be eligible
+only when the powered scorer is available, trained, and has numeric
+`delta_vs_tuned_sc`; a D3 KAN/PURM row SHALL be eligible only when calibration
+is available and `degeneracy_guard_fired=false`. Oracle-tainted or degenerate
+rows SHALL be rejected even if their numeric delta is higher.
+
+Candidate scoring SHALL remain oracle-distinct: score inputs and guarded
+candidate scorers SHALL NOT read `gold`, `label`, `label_correct`,
+`candidate_label`, `solver_verdict`, answer-index fields, answer-choice fields,
+or model-identity fields. Gold labels MAY be used only after candidate
+selection for evaluation. Evaluation SHALL compare the verifier against genuine
+tuned self-consistency on the second corpus with paired bootstrap CI95 and
+McNemar exact p.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`second_corpus_name`, `second_corpus_confirmed`, `best_arm`,
+`best_arm_source`, `n_questions_second`, `genuine_sc_accuracy_second`,
+`verifier_accuracy_second`, `delta_vs_tuned_sc_second`,
+`paired_ci95_second`, `mcnemar_p_second`, `headroom_present`, and
+`verifier_is_oracle`. It SHALL also include schema metadata, `spec_refs`,
+source artifact paths, candidate cache path, oracle-distinctness evidence,
+evaluation details, duration, and a reproducibility checksum.
+
+### SCENARIO-VERIFY-5049: MuSR Margin Transfer Is Confirmed Or Refuted On Exp 5044 Cache
+
+Given Exp 5044 has a headroom-present, non-oracle second-corpus candidate
+cache and upstream D1/D2/D3 MuSR artifacts exist, when Exp 5049 runs, then it
+selects the highest-MuSR-delta non-degenerate powered verifier, scores the Exp
+5044 candidate rows without oracle fields, computes genuine tuned-SC,
+verifier accuracy, signed delta, paired CI95, and McNemar p through the shared
+moat harness, keeps `verifier_is_oracle=false`, and writes every required
+artifact field.
+
+If the best available powered verifier does not beat tuned-SC on the second
+corpus with a positive delta and positive paired CI, then Exp 5049 SHALL write
+an honest complete artifact that says the MuSR margin did not transfer rather
+than promoting the upstream MuSR result.
+
+## Implementation Status (REQ-VERIFY-5049)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5049 | Proposed (`python/carnot/experiment_5049_second_corpus_confirmation.py`, `results/experiment_5049_second_corpus_confirmation.json`) | Proposed (`tests/python/test_experiment_5049_second_corpus_confirmation.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
