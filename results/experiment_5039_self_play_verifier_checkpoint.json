@@ -1,0 +1,98 @@
+{
+  "checkpoint_mtime_after_ns": "1782841601128301853",
+  "checkpoint_mtime_before_ns": "1782594860145935988",
+  "checkpoint_mtime_delta_ns": 246740982365865,
+  "checkpoint_path": "models/arc_verifier_ls20.json",
+  "duration_s": 8.588541,
+  "experiment": "experiment_5039_self_play_verifier_checkpoint",
+  "field_principles": {
+    "checkpoint_path": "the models/arc_verifier_<game>.json path (mirror-ready per decentralization Rule 3).",
+    "duration_s": "measured wall-clock; consistent with inference_substrate.",
+    "flag_resolved": "true iff NOT flagged true_live_recheck=critical.",
+    "honest_verdict": "terminal prefix; refreshed + gate green is success_self_play_checkpoint_refreshed.",
+    "inference_substrate": "the HONEST substrate -- verifier_ensemble_against_cached_candidates (1s floor) for an offline gate run; live_llm_inference (60s floor) ONLY if the generator actually ran >=60s (maintains the .456 substrate fix).",
+    "offline_reproduced": "reproduction gate must pass on >=1 level for the checkpoint to be a real self-play artifact.",
+    "preconditions_checked": "records arcade/registry/checkpoint checks; a missing target emits blocked_, never a fabricated checkpoint.",
+    "reproduced_levels": "the depth confirmed this run.",
+    "solve_provenance": "live_agent_self_discovery -- self-play is the agent improving on its own attempts (NOT outer_loop_re).",
+    "target_game": "the rotated self-play target (differs from .462 lf52 / .461 r11l / .460 su15 / .459 ft09).",
+    "verifier_checkpoint_refreshed": "the self-improvement signal -- the learned verifier trained on this run's traces (FR-11 / continuous self-learning)."
+  },
+  "flag_resolved": true,
+  "honest_verdict": "success_self_play_checkpoint_refreshed",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "loop_result_path": "results/arc_loop_solve_ls20.json",
+  "loop_solve_provenance": "development_proxy",
+  "model_specs": {
+    "checkpoint_template": "models/arc_verifier_<game>.json",
+    "standing_loop": "scripts/arc_loop_solve.py"
+  },
+  "offline_reproduced": true,
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "checkpoint_existing": {
+      "game": "ls20",
+      "ok": true,
+      "path": "models/arc_verifier_ls20.json"
+    },
+    "offline_arcade": {
+      "check": "arc_solver_kit.offline_arcade()",
+      "ok": true
+    },
+    "ok": true,
+    "registry_loadable": {
+      "ok": true,
+      "path": "ops/arc_solve_registry.yaml"
+    },
+    "target_banked": {
+      "game": "ls20",
+      "ok": true,
+      "prior_level": 2,
+      "reason": "preferred_banked_target"
+    },
+    "target_rotation": {
+      "game": "ls20",
+      "ok": true,
+      "rotated_off": [
+        "lf52",
+        "r11l",
+        "su15",
+        "ft09"
+      ]
+    },
+    "target_selection": {
+      "banked": true,
+      "game": "ls20",
+      "prior_level": 2,
+      "reason": "preferred_banked_target"
+    }
+  },
+  "random_seed": 5039,
+  "reproduced_levels": 2,
+  "reproducibility_checksum": "f75b253e0e7823bf3f1bc7786242e78a70a99412e1bff982eac85a3d8bc35a12",
+  "reproduction_gate": {
+    "claimed_level": 2,
+    "game": "ls20",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "result_path": "results/experiment_5039_self_play_verifier_checkpoint.json",
+  "schema": "carnot.exp5039.self_play_verifier_checkpoint.v1",
+  "schema_errors": [],
+  "self_play_residual": "checkpoint_refreshed_gate_passed",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-LEARN-5039",
+    "SCENARIO-LEARN-5039-CHECKPOINT-REFRESHED",
+    "SCENARIO-LEARN-5039-SUBSTRATE-FIX",
+    "SCENARIO-LEARN-5039-RESIDUAL-NO-FABRICATION",
+    "SCENARIO-LEARN-5039-BLOCKED-PRECONDITION"
+  ],
+  "states_expanded": 58,
+  "target_game": "ls20",
+  "target_registry_prior_level": 2,
+  "target_selection_reason": "preferred_banked_target",
+  "verifier_checkpoint_refreshed": true
+}
