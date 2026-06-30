@@ -4,6 +4,42 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-06-30 (MANDATORY-NEXT-MILESTONE, operator-directed "unlock the conductor running PHASE D experiments immediately"): EXECUTE the off-ARC distributional-energy verifier moat — the majority lever now
+
+**Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
+(deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
+(`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`) and its score is bounded ~0.08 by
+the generation wall (this session's full survey — every ARC lever nulled or unvalidatable-in-time). So the
+planner's MAJORITY now shifts from ARC live-solving to **executing PHASE D** (the distributional-energy
+verifier moat, previously held TURNKEY for 7/1 in `exp4984`). Run it NOW.
+
+**What is DONE (do not re-run):** the cheap *prompted* energy proxy on MuSR
+(`results/distributional_energy_verifier_musr.json`, n=200): SC=0.56 is best; cheap energy 0.515–0.535;
+`energy_beats_sc=False` but **`sc_saturated=False`** (headroom present, UNrealized by the cheap proxy).
+The ARC-energy S0 program (2026-06-26 entry below) is CONCLUDED — do NOT re-propose S4 / energy-as-ARC.
+PHASE D is OFF-ARC (reasoning corpora where SC is not saturated), a DIFFERENT direction.
+
+**THE TASKS (execute, majority of the milestone; `agent_type: codex`, planner/retro stay Opus):**
+1. **Train the REAL `arXiv:2605.18871` LoRA-EBM holistic-quality scorer** (not the prompted proxy) and test
+   beats-SC on a headroom-present oracle-distinct domain (MuSR + ≥1 second corpus). The open question is
+   whether a *trained* verifier captures the unrealized headroom the cheap proxy missed.
+2. **Replicate uPRM (`arXiv:2605.10158`)** — the published unsupervised *process* reward model that beats
+   self-consistency by up to 6.9%. This is the strongest positive precedent / the win-condition existence
+   proof; its setup tells us which domain + verifier construction beats SC.
+3. **EBRM (`arXiv:2504.13134`)** — energy RM modeling the reward distribution with uncertainty; an
+   alternative construction to the simple distributional energy.
+
+**Falsifiable gate (the only non-circular evidence):** on a headroom-present ORACLE-DISTINCT domain
+(`verifier_is_oracle=False`, the verifier is NOT the executable oracle), the trained verifier's selection
+accuracy beats tuned SC with paired-test CI95 excluding 0 (McNemar). `retire_if_same_verdict: true` — if
+the trained LoRA-EBM AND uPRM-replication both fail to beat SC with CI95 excluding 0 on any headroom-present
+oracle-distinct corpus, the off-ARC verifier-moat retires as bounded (a publishable null converging with
+the ARC tie). A POSITIVE result is the discriminating energy that also unblocks the DiffusionGemma gate
+(`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`, STILL-PENDING — same thread).
+
+**Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion). ARC banked-level
+work continues opportunistically but no longer claims the majority.
+
 ### 2026-06-29 RESOLVED (outer-loop watchdog): milestone-TRANSITION pretest gate must use `--no-cov` + own-test (not full coverage-instrumented suite)
 
 **Incident:** the milestone .456 and .457 archive/activate TRANSITION tasks repeatedly FAILED with

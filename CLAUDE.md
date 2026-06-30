@@ -2945,7 +2945,28 @@ Depth-Over-Breadth / progress-not-churn ethos (north-star §1).
 - results/arc3_win_condition_survey.json — the 6 non-spatial first-solve targets
 - `ops/north-star.md` §1 — the headline-progress / no-churn ethos this specializes
 
-## ARC-AGI-3 Submission Sprint Forcing Function (MANDATORY — through 2026-06-30)
+## ARC-AGI-3 Submission Sprint Forcing Function (RETIRED 2026-06-30 — preserved per never-prune)
+
+> **STATUS (2026-06-30): RETIRED — both retirement conditions met.** It is now 2026-06-30 (the
+> deadline date) AND the operator explicitly lifted it ("let's unlock the conductor running PHASE D
+> experiments immediately"). The CUDA submission package is staged + the runbook committed
+> (`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`); the score is bounded at ~0.08
+> by the generation wall and no lever moves it before the deadline (this session's full survey). So the
+> majority-ARC reservation + the "do NOT execute the real PHASE D experiment" hold are LIFTED.
+>
+> **Effect — the conductor now EXECUTES PHASE D (the off-ARC distributional-energy verifier moat).** The
+> planner's majority shifts from ARC live-solving to the post-6/30 verifier-moat program: TRAIN the real
+> `arXiv:2605.18871` LoRA-EBM holistic-quality scorer (NOT the cheap prompted proxy, which was a clean
+> negative on MuSR — `results/distributional_energy_verifier_musr.json`, SC 0.56 best, headroom present
+> but UNrealized), REPLICATE uPRM (`arXiv:2605.10158`, the published beats-SC-6.9% process verifier), and
+> the EBRM (`arXiv:2504.13134`) construction — on a headroom-present ORACLE-DISTINCT domain. This is
+> DISTINCT from the CONCLUDED ARC-energy S0 program (`ops/known-issues.md` 2026-06-26; oracle-distinct
+> structural energy ON ARC adds no live ARC value — do NOT re-propose S4/ARC-energy stages). PHASE D is
+> OFF-ARC (reasoning corpora where SC is not saturated), so it is not that retired direction.
+>
+> **Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion). ARC work
+> continues OPPORTUNISTICALLY (banked levels still count) but no longer claims the milestone majority.
+> Per the never-prune rule the original prose is preserved unchanged below as historical context.
 
 **Origin:** 2026-06-19 operator directive: "The next 2 weeks will be focused on solving these games live
 as we have until the end of this month to make our submissions for the challenge contest... keep claude in
