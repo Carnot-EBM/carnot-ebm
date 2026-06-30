@@ -13321,6 +13321,96 @@ and the registry update records either the strict new bank or the no-bank
 dead-end without changing ops status, changelog, traceability, or the research
 conductor.
 
+### REQ-ARC-WMTE-5012: Opportunistic ARC Level-Up Attempt Ledger
+
+Experiment 5012 SHALL perform an opportunistic ARC level-up attempt for a fresh
+grounded deepen target while preserving the retired-sprint no-fabrication
+discipline. The workflow SHALL prefer `sc25` L5-to-L6, then `cn04` L3-to-L4,
+then `lp85` L5-to-L6; it SHALL read `ops/arc_solve_registry.yaml`, consult
+recorded grounded next-level deltas and dead ends before searching, call
+`arc_solve_learning.recommend_approach(game)` for the selected target, avoid
+the recently hammered lanes `tn36`, `g50t`, `tu93`, `bp35`, `tr87`, `s5i5`,
+`ar25`, `vc33`, `lf52`, `sb26`, `sp80`, `su15`, `m0r0`, and `dc22`, avoid
+hidden-state-bound `ka59`/`wa30`, differ from E2's `r11l`, and never count an
+already reproduced level as a new bank.
+
+The workflow SHALL verify that `arc_solver_kit.offline_arcade()` exits zero
+before claiming any runnable result. It SHALL run
+`.venv/bin/python scripts/arc_loop_solve.py --game <target> --target-level
+<prior+1>` only when the selected target has a grounded next-level delta via a
+live `GameAdapter`; if no grounded delta exists, it SHALL write the honest
+no-bank artifact and stop. Any counted level SHALL pass the executable
+`arc_solver_kit.reproduce` gate, and no LLM inference substrate may be claimed
+unless induction actually ran for the live-LLM path.
+
+Experiment 5012 SHALL write `results/experiment_5012_levelup_attempt.json` with
+principle-annotated top-level fields for `honest_verdict`,
+`solve_provenance`, `target_game`, `offline_reproduced`,
+`reproduced_levels`, `new_levels_banked`, `live_path_reachable`,
+`verifier_is_oracle`, `inference_substrate`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`. It SHALL also include
+`candidate_selection`, `approach_recommendation`, `dead_ends_consulted`,
+`delta_status`, `registry_update`, `standing_loop_command`,
+`standing_loop_result_path`, `standing_loop_ran`, `reproduction_gate`,
+`solution_labels`, `retire_if_same_verdict`, and `schema_errors`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; banked is success_<game>_levelup_banked, no-bank is complete_<game>_no_new_level_residual_<cause>."
+- `solve_provenance`: principle "live_agent_self_discovery -- the agent advanced via its own attempts/runtime RE; NOT outer_loop_re (CRITICAL) and NOT a re-solve of an already-banked level (duplicate CRITICAL)."
+- `target_game`: principle "the rotated FRESH grounded deepen target (differs from E2's r11l and the recently-attempted lanes)."
+- `offline_reproduced`: principle "only reproduced levels count toward reproducible_total_levels."
+- `reproduced_levels`: principle "the new reproducible depth; the monotonic ARC progress metric."
+- `new_levels_banked`: principle ">=1 for a PASS; 0 records the honest rotation dead-end (the deepen well is dry across all regimes)."
+- `live_path_reachable`: principle "true -- the deepen runs through arc_loop_solve + a live GameAdapter (arc_orphan_solver_lint passes)."
+- `verifier_is_oracle`: principle "the reproduction gate is the executable oracle (circularity discipline)."
+- `inference_substrate`: principle "verifier_ensemble_against_cached_candidates for an offline search/gate run (1s floor); live_llm_inference only if induction ran >=60s."
+- `preconditions_checked`: principle "records arcade/env/generator checks; a missing resource emits blocked_, never a fabricated solve."
+- `random_seed`: principle "determinism for the offline search."
+- `reproducibility_checksum`: principle "content hash of (game, plan, claimed level) so a replication catches drift."
+
+#### SCENARIO-ARC-WMTE-5012-ROTATED-TARGET-PRECHECK
+
+Given the registry records `sc25` at L5 with a prior no-grounded-L6 dead end,
+`cn04` at L3, and `lp85` at L5
+When Experiment 5012 selects a target
+Then it skips the recorded `sc25` L6 dead end, selects `cn04` L3-to-L4 ahead of
+the `lp85` alternate, records `recommend_approach(cn04)`, audits consulted dead
+ends and avoided lanes, and sets the standing-loop target level to 4.
+
+#### SCENARIO-ARC-WMTE-5012-NO-GROUNDED-DELTA
+
+Given the selected `cn04` row has a live adapter but no grounded L4 tail or
+other executable next-level delta
+When Experiment 5012 builds its artifact
+Then it emits `complete_cn04_no_new_level_residual_no_grounded_l4_delta`, keeps
+`offline_reproduced=false`, `reproduced_levels=3`, `new_levels_banked=0`,
+records `inference_substrate=verifier_ensemble_against_cached_candidates`,
+does not launch a fabricated standing-loop search, and records the dead-end in
+`ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-ARC-WMTE-5012-REPRODUCTION-GATE
+
+Given a grounded next-level delta exists and the standing loop result reports a
+reproduced depth greater than the registry prior
+When Experiment 5012 builds its terminal artifact
+Then `honest_verdict=success_<game>_levelup_banked`,
+`offline_reproduced=true`, `new_levels_banked>=1`,
+`reproduced_levels>=prior+1`, and
+`solve_provenance=live_agent_self_discovery`; otherwise it records a terminal
+no-bank residual and does not increment the registry total.
+
+#### SCENARIO-ARC-WMTE-5012-STABLE-ARTIFACT
+
+Given preconditions, target selection, recommendation, optional standing-loop
+result, and registry prior
+When Experiment 5012 writes `results/experiment_5012_levelup_attempt.json`
+Then the checksum is deterministic, `schema_errors=[]`, every required field is
+present, blocked offline resources produce `blocked_<game>_offline_env_missing`,
+and the registry update records either the strict new bank or the no-bank
+dead-end without changing ops status, changelog, traceability, or the research
+conductor.
+
 ### REQ-ARC-WMTE-4992: Fresh L2-To-L3 Rotation Level-Up Attempt Ledger
 
 Experiment 4992 SHALL perform the >=1-banking-attempt floor on a fresh L2-to-L3
