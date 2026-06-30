@@ -21075,6 +21075,103 @@ without claiming a clean null.
 |---|---|---|
 | REQ-VERIFY-5018 | Implemented (`python/carnot/experiment_5018_uprm_replication_v2.py`, `results/experiment_5018_uprm_replication_v2.json`) | Implemented (`tests/python/test_experiment_5018_uprm_replication_v2.py`) |
 
+### REQ-VERIFY-5032: uPRM Replication V3 From Fixed B2 Cache Or Frozen Fallback
+
+The repository SHALL provide Exp 5032 at
+`python/carnot/experiment_5032_uprm_replication_v3.py` to consume the fixed Exp
+5029 MuSR row-per-candidate logprob cache at
+`results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl`, compute
+the arXiv:2605.10158 uPRM first-error process score from the generator's own
+next-token marker probabilities, evaluate the selected candidate answer
+against gold only after scoring, and write
+`results/experiment_5032_uprm_replication_v3.json`.
+
+Before scoring, the runner SHALL write a deliverable-first schema skeleton and
+SHALL check whether the fixed B2 cache contains at least 200 MuSR questions,
+at least K=5 complete candidates per question, and complete per-candidate
+token logprobs plus `uprm_marker_logprobs` with both `+` and `-` marker
+alternatives. If the primary cache logprobs are missing or incomplete, the
+runner SHALL use a self-supervised frozen-candidate fallback from the existing
+cached MuSR candidate texts when those inputs exist. If both the B2 cache and
+frozen candidate inputs are missing, the terminal artifact SHALL use
+`honest_verdict=blocked_<resource>`, record `preconditions_checked`, keep
+`verifier_is_oracle=false`, and SHALL NOT fabricate accuracy, CI, McNemar, or
+headroom claims.
+
+When the uPRM logprob path is available, each candidate SHALL be scored with
+`S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t`, where `p^+_t` and `p^-_t` are
+the generator LLM next-token probabilities of `+` and `-` marker tokens after
+step `t`, renormalized over `{+,-}`. The selector SHALL use the mean no-error
+log-likelihood `S(T+1)/T` and SHALL rank candidates through the shared guarded
+candidate view without reading gold, answer index, answer choice, or model
+identity fields.
+
+When the fallback path is used, the runner SHALL derive a process-utility score
+from frozen candidate text only, using endogenous agreement across the frozen
+candidate batch and step-text overlap without reading gold or model identity.
+The fallback SHALL set `scoring_path="self_supervised_frozen"` and SHALL keep
+the no-model-id oracle-distinct audit.
+
+The run SHALL evaluate with the B1-fixed shared moat harness, including genuine
+tuned self-consistency, oracle@K, paired bootstrap CI95, McNemar statistics,
+and the non-abstention degeneracy guard. The terminal artifact SHALL include
+`honest_verdict`, `verifier_is_oracle`, `headroom_present`,
+`uprm_selection_accuracy`, `genuine_tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `scoring_path`, `uprm_score_methodology_note`,
+`n_questions`, `oracle_at_k`, `model_specs`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, `preconditions_checked`,
+`oracle_distinctness_enforced`, `adversarial_verify_clean`,
+`adversarial_verify_flags`, `summarize_artifact_exit_code`, `duration_s`,
+`field_principles`, and `spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_uprm_beats_sc_musr_<delta>, a clean null is complete_uprm_no_win_musr_<delta>_ci_incl_0.`;
+`verifier_is_oracle` = `false -- uPRM (and the self-supervised fallback) score from the candidates' own text/logprobs; never reads gold (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required for an informative result vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard).`;
+`uprm_selection_accuracy` = `the oracle-distinct selection accuracy of the process score (the headline).`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE K-way tuned-SC (0.585) -- the honest baseline to beat.`;
+`delta_vs_tuned_sc` = `uprm_selection_accuracy - genuine_tuned_sc_accuracy; the paper reports up to +0.069.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`scoring_path` = `uprm_logprob (primary) or self_supervised_frozen (fallback, no logprobs) -- which path scored; the fallback keeps the no-model-id audit.`;
+`uprm_score_methodology_note` = `the exact arXiv:2605.10158 first-error formula (replicable) + the unsupervised-not-circular justification.`;
+`n_questions` = `>=200 for the headline delta (sample-size rigor).`;
+`model_specs` = `the cached-candidate generator (gemma-4-12B-it-GGUF) -- the methodology stamp.`;
+`inference_substrate` = `verifier_ensemble_against_cached_candidates (scores cached candidates; 1s floor).`;
+`random_seed` = `determinism for the bootstrap.`;
+`preconditions_checked` = `records the B2-cache / self-supervised-fallback checks; a missing cache+fallback emits blocked_.`
+
+### SCENARIO-VERIFY-5032: uPRM V3 Selects From Fixed Cache Or Frozen Fallback
+
+Given the Exp 5029 fixed B2 cache contains at least 200 MuSR rows with at least
+K=5 complete candidates per row, when Exp 5032 runs, then it writes a schema
+skeleton first, scores candidates with the uPRM logprob path, selects the best
+process-score candidate per row, evaluates only after selection, runs
+adversarial artifact verification plus artifact summarization, records
+`scoring_path="uprm_logprob"`, confirms `verifier_is_oracle=false`,
+`headroom_present=true`, and the degeneracy guard does not fire, and writes a
+terminal JSON artifact with every required field.
+
+If the fixed B2 logprob cache is incomplete but the frozen MuSR candidate texts
+exist, then Exp 5032 SHALL score those frozen candidates with the
+self-supervised fallback, record `scoring_path="self_supervised_frozen"`, keep
+the no-model-id audit, evaluate against genuine tuned-SC, and write the same
+terminal schema. If neither input exists, then the run SHALL write a blocked
+artifact naming the missing resource and exit without claiming a clean null.
+
+If the selected process score beats genuine tuned-SC with paired CI95 excluding
+zero, McNemar `p<0.05`, `verifier_is_oracle=false`, and `headroom_present=true`,
+then `honest_verdict` SHALL start with `success_uprm_beats_sc_musr_`. If the
+selection does not beat genuine tuned-SC and the paired CI includes zero, then
+`honest_verdict` SHALL start with `complete_uprm_no_win_musr_` and include
+`_ci_incl_0`.
+
+## Implementation Status (REQ-VERIFY-5032)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5032 | Proposed (`python/carnot/experiment_5032_uprm_replication_v3.py`, `results/experiment_5032_uprm_replication_v3.json`) | Proposed (`tests/python/test_experiment_5032_uprm_replication_v3.py`) |
+
 ### REQ-VERIFY-5020: Uncertainty-Routed MuSR Cascade Efficiency
 
 The repository SHALL provide Exp 5020 at
