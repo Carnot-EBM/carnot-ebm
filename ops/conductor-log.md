@@ -9620,3 +9620,4 @@ The contro |
 | 2026-06-30 01:59 UTC | PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) - | OK | 88 passed, 1 warning in 6.60s |
 | 2026-06-30 02:21 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-30 02:44 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-30 03:04 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | OK | 87 passed, 1 warning in 7.88s |
