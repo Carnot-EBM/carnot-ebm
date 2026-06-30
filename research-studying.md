@@ -10,6 +10,21 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP5038-VERIFIER-MOAT-LITERATURE-START -->
+## Exp 5038 - verifier-moat literature SOTA ingestion - INGESTED
+
+- Honest verdict: `success_sota_ingested_5_new_papers_mapped_to_phase_d`
+- Note: `docs/research-notes/verifier-moat-literature-2026-06-30.md`
+- D5 conditioning: `complete_moat_execution_incomplete_cascade` means .464 repairs D6/D4 and hardens D1/D3.
+- Reliable channel: sweep_clusters/sweep_semscholar plus WebSearch/WebFetch; `/deep-research` was not invoked.
+
+### flagged_for_v464
+- EORM small energy outcome reward verifier (arXiv:2505.14999): flagged_for_v464 (.464): eorm_small_energy_selector_for_d1_d3
+- VPR dense verifier-grounded process rewards (arXiv:2605.10325): flagged_for_v464 (.464): oracle_distinct_vpr_dense_process_rewards
+- ProcessThinker rollout-based process rewards (arXiv:2606.11209): flagged_for_v464 (.464): rollout_process_reward_distillation
+- PURM reward-distribution uncertainty (arXiv:2503.22480): flagged_for_v464 (.464): purm_uncertainty_calibrated_selector
+- Consequence-Based Utility oracle-free evaluator (arXiv:2602.06291): flagged_for_v464 (.464): consequence_utility_cascade_pivot
+<!-- EXP5038-VERIFIER-MOAT-LITERATURE-END -->
 <!-- EXP5024-VERIFIER-MOAT-LITERATURE-START -->
 ## Exp 5024 - verifier-moat literature SOTA ingestion - INGESTED
 

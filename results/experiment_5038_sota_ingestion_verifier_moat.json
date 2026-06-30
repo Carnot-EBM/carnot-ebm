@@ -1,0 +1,286 @@
+{
+  "citations_verified": {
+    "2503.22480": {
+      "http_status": 200,
+      "title": "Probabilistic Uncertain Reward Model",
+      "url": "https://arxiv.org/abs/2503.22480"
+    },
+    "2505.14999": {
+      "http_status": 200,
+      "title": "Learning to Rank Chain-of-Thought: Using a Small Model",
+      "url": "https://arxiv.org/abs/2505.14999"
+    },
+    "2602.06291": {
+      "http_status": 200,
+      "title": "Judging What We Cannot Solve: A Consequence-Based Approach for Oracle-Free Evaluation of Research-Level Math",
+      "url": "https://arxiv.org/abs/2602.06291"
+    },
+    "2605.10325": {
+      "http_status": 200,
+      "title": "Verifiable Process Rewards for Agentic Reasoning",
+      "url": "https://arxiv.org/abs/2605.10325"
+    },
+    "2606.11209": {
+      "http_status": 200,
+      "title": "ProcessThinker: Enhancing Multi-modal Large Language Models Reasoning via Rollout-based Process Reward",
+      "url": "https://arxiv.org/abs/2606.11209"
+    }
+  },
+  "d5_conditioning": {
+    "best_clean_arm": {
+      "arm": "D1 LoRA-EBM",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "win_vs_tuned_sc": false
+    },
+    "decision": "EXECUTION-INCOMPLETE",
+    "execution_incomplete_arms": [
+      "D6 verifier-judge cascade",
+      "D4 second-corpus confirmation"
+    ],
+    "honest_verdict": "complete_moat_execution_incomplete_cascade",
+    "moat_realized": false,
+    "moat_retired_bounded": false,
+    "roadmap_condition": "Because D5 is execution-incomplete rather than realized or bounded-retired, .464 should repair the blocked cascade and second-corpus confirmation, harden D1/D3 uncertainty, and pivot only if a future rerun makes D1+D2 both clean nulls.",
+    "source_artifact": "results/experiment_5036_moat_gate_resolution_v3.json"
+  },
+  "field_principles": {
+    "citations_verified": {
+      "principle": "HTTP-200 arXiv title and URL evidence for every selected method."
+    },
+    "d5_conditioning": {
+      "principle": "Exp 5036 D5 verdict controls whether .464 scales a win, pivots after clean D1+D2 nulls, or repairs execution-incomplete verifier arms."
+    },
+    "field_principles": {
+      "principle": "principle annotations are part of the artifact contract."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_sota_ingested_<n>_new_papers_mapped_to_phase_d."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (literature synthesis, no LLM inference)."
+    },
+    "new_arxiv_ids": {
+      "principle": "verified-real NEW arXiv IDs (http 200), NOT in the 23-paper ingested set (no fabrication -- every method cites a source)."
+    },
+    "next_milestone_candidates": {
+      "principle": "the strongest method(s) flagged as candidate inputs for the .464 roadmap (discover->ingest->plan->experiment)."
+    },
+    "note_path": {
+      "principle": "docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads)."
+    },
+    "preconditions_checked": {
+      "principle": "records network/sweep-helper checks; unreachable network emits blocked_."
+    },
+    "reliable_channel_used": {
+      "principle": "sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch (NOT /deep-research -- banned from the autonomous loop)."
+    },
+    "sota_to_phase_d_mapping": {
+      "principle": "per NEW method: which PHASE D arm/direction it strengthens + the implementation delta over the current stack + the pitfall."
+    }
+  },
+  "honest_verdict": "success_sota_ingested_5_new_papers_mapped_to_phase_d",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "new_arxiv_ids": [
+    "2505.14999",
+    "2605.10325",
+    "2606.11209",
+    "2503.22480",
+    "2602.06291"
+  ],
+  "next_milestone_candidates": [
+    {
+      "candidate": "Rerun D1 and D3 with energy plus uncertainty margins",
+      "candidate_flag": "flagged_for_v464 (.464): eorm_purm_d1_d3_rerun",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D3 EBRM"
+      ],
+      "source_ids": [
+        "2505.14999",
+        "2503.22480"
+      ],
+      "why": "Exp 5036 D1 and D3 had positive deltas but CI touched zero. The .464 rerun should test a small EORM head with PURM uncertainty penalties before spending on a larger verifier."
+    },
+    {
+      "candidate": "Repair D2 with oracle-distinct dense process rewards",
+      "candidate_flag": "flagged_for_v464 (.464): vpr_processthinker_d2_repair",
+      "phase_d_arms": [
+        "D2 uPRM"
+      ],
+      "source_ids": [
+        "2605.10325",
+        "2606.11209"
+      ],
+      "why": "D2 was clean negative in Exp 5036. The best .464 repair is not another scalar logprob selector, but VPR-style local checks or rollout-derived process rewards evaluated on frozen candidates."
+    },
+    {
+      "candidate": "Rebuild the blocked D6 cascade before any retirement claim",
+      "candidate_flag": "flagged_for_v464 (.464): consequence_uncertainty_cascade",
+      "phase_d_arms": [
+        "D6 verifier-judge cascade"
+      ],
+      "source_ids": [
+        "2602.06291",
+        "2503.22480"
+      ],
+      "why": "Exp 5036 was execution-incomplete because D6 and second-corpus confirmation were blocked. Consequence utility plus PURM uncertainty gives a cheap-router path that can be costed separately from judge fallback."
+    }
+  ],
+  "note_path": "docs/research-notes/verifier-moat-literature-2026-06-30.md",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "already_ingested_exclusion_set_checked": [
+      "2408.15240",
+      "2502.01989",
+      "2502.11157",
+      "2502.11250",
+      "2502.14356",
+      "2504.00891",
+      "2504.01005",
+      "2504.13134",
+      "2504.16828",
+      "2507.01951",
+      "2508.03686",
+      "2508.10539",
+      "2508.16665",
+      "2509.24460",
+      "2510.14913",
+      "2510.20369",
+      "2602.24040",
+      "2603.04304",
+      "2605.10158",
+      "2605.11334",
+      "2605.18871",
+      "2605.24005",
+      "2605.30085",
+      "2606.09073",
+      "2606.19818"
+    ],
+    "codex_md_read": true,
+    "d5_artifact": "results/experiment_5036_moat_gate_resolution_v3.json",
+    "d5_artifact_read": true,
+    "d5_honest_verdict": "complete_moat_execution_incomplete_cascade",
+    "deep_research_invoked": false,
+    "network_arxiv_reachable": true,
+    "ops_docs_modified": false,
+    "reliable_channel_note": "sweep_clusters/sweep_semscholar plus low-concurrency WebSearch/WebFetch; /deep-research was not invoked.",
+    "research_conductor_modified": false,
+    "selected_arxiv_http_200": {
+      "2503.22480": "https://arxiv.org/abs/2503.22480",
+      "2505.14999": "https://arxiv.org/abs/2505.14999",
+      "2602.06291": "https://arxiv.org/abs/2602.06291",
+      "2605.10325": "https://arxiv.org/abs/2605.10325",
+      "2606.11209": "https://arxiv.org/abs/2606.11209"
+    },
+    "sweep_clusters_used": true,
+    "sweep_helpers_importable": true,
+    "sweep_semscholar_used": true,
+    "websearch_webfetch_used": true
+  },
+  "reliable_channel_used": {
+    "deep_research_invoked": false,
+    "semscholar_result": "Both focused Semantic Scholar helper queries returned HTTP 429 on 2026-06-30 and were not promoted as citation evidence.",
+    "sweep_cluster_commands": [
+      ".venv/bin/python scripts/sweep_clusters.py 0 --max-results 12",
+      ".venv/bin/python scripts/sweep_clusters.py 1 --max-results 12",
+      "encoded arXiv API fetch for clusters 0 and 1"
+    ],
+    "sweep_cluster_result": "Cluster 0 surfaced reward-hacking and process-reward neighbors, including arXiv:2606.30627 as a pessimism pitfall; cluster 1 was mostly broad energy/modeling noise and did not displace the selected verifier papers.",
+    "sweep_clusters_used": true,
+    "sweep_semscholar_commands": [
+      "energy based reward model verifier reasoning 2026",
+      "unsupervised process reward model verifier reasoning"
+    ],
+    "sweep_semscholar_used": true,
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/2505.14999",
+      "https://arxiv.org/abs/2605.10325",
+      "https://arxiv.org/abs/2606.11209",
+      "https://arxiv.org/abs/2503.22480",
+      "https://arxiv.org/abs/2602.06291",
+      "https://arxiv.org/abs/2604.24198",
+      "https://arxiv.org/abs/2604.07415",
+      "https://arxiv.org/abs/2606.28301"
+    ],
+    "websearch_queries": [
+      "site:arxiv.org/abs 2026 \"reward model\" uncertainty verifier judge cascade LLM",
+      "site:arxiv.org/abs 2026 \"process reward model\" unsupervised verifier reasoning",
+      "site:arxiv.org/abs 2026 \"energy\" \"reward model\" verifier reasoning LLM",
+      "site:arxiv.org/abs 2026 \"verifier\" \"judge\" \"cascade\" \"LLM\""
+    ],
+    "websearch_webfetch_used": true
+  },
+  "sota_to_phase_d_mapping": [
+    {
+      "arxiv_id": "2505.14999",
+      "candidate_flag": "flagged_for_v464 (.464): eorm_small_energy_selector_for_d1_d3",
+      "implementation_delta": "Over Exp 5031-5036, replace the scalar D1 LoRA scorer and D3 EBRM readout with an EORM-style small energy head over frozen MuSR candidates, then rerun delta_vs_tuned_sc and second-corpus confirmation.",
+      "method": "EORM small energy outcome reward verifier",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D3 EBRM"
+      ],
+      "pitfall": "Outcome-only labels can learn answer-shape shortcuts; the rerun needs frozen candidates, no model-id features, and the same genuine tuned-SC baseline.",
+      "source_signal": "Uses an energy-based outcome reward model to rank chain-of-thought solutions with only outcome labels, reporting a 55M-parameter verifier that can select from candidate pools and generalize to unseen models.",
+      "url": "https://arxiv.org/abs/2505.14999"
+    },
+    {
+      "arxiv_id": "2605.10325",
+      "candidate_flag": "flagged_for_v464 (.464): oracle_distinct_vpr_dense_process_rewards",
+      "implementation_delta": "Over Exp 5031-5036, build a D2 process-reward replay that uses only oracle-distinct intermediate checks available before the final answer, then expose the same confidence as the cheap D6 router before judge calls.",
+      "method": "VPR dense verifier-grounded process rewards",
+      "phase_d_arms": [
+        "D2 uPRM",
+        "D6 verifier-judge cascade"
+      ],
+      "pitfall": "The method is only non-circular if the intermediate verifier is not the answer oracle; weak or domain-leaking checks would invalidate the moat claim.",
+      "source_signal": "Converts symbolic or algorithmic intermediate checks into dense turn-level rewards for agentic reasoning, improving credit assignment when reliable local verification is available.",
+      "url": "https://arxiv.org/abs/2605.10325"
+    },
+    {
+      "arxiv_id": "2606.11209",
+      "candidate_flag": "flagged_for_v464 (.464): rollout_process_reward_distillation",
+      "implementation_delta": "Over Exp 5031-5036, compute rollout-success process scores for cached candidate prefixes and distill them into the D2 selector or D3 energy margin before comparing against tuned self-consistency.",
+      "method": "ProcessThinker rollout-based process rewards",
+      "phase_d_arms": [
+        "D2 uPRM",
+        "D3 EBRM"
+      ],
+      "pitfall": "Continuation rollouts can be expensive and can leak final-answer verification into the selector; the rerun must charge compute and keep the verifier oracle-distinct.",
+      "source_signal": "Assigns step rewards by sampling continuations from intermediate reasoning states and using empirical final-verification success, avoiding an explicit trained PRM.",
+      "url": "https://arxiv.org/abs/2606.11209"
+    },
+    {
+      "arxiv_id": "2503.22480",
+      "candidate_flag": "flagged_for_v464 (.464): purm_uncertainty_calibrated_selector",
+      "implementation_delta": "Over Exp 5031-5036, turn D1/D3 scalar verifier scores into reward distributions, penalize high-overlap uncertain candidates, and route only uncertain pairs to D6 judge fallback.",
+      "method": "PURM reward-distribution uncertainty",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D3 EBRM",
+        "D6 verifier-judge cascade"
+      ],
+      "pitfall": "PURM is preference-alignment evidence, not a direct reasoning-selector result; calibration gains must not be counted unless selection accuracy improves.",
+      "source_signal": "Generalizes Bradley-Terry reward modeling to reward distributions and uses distribution overlap as per-sample uncertainty to reduce reward hacking.",
+      "url": "https://arxiv.org/abs/2503.22480"
+    },
+    {
+      "arxiv_id": "2602.06291",
+      "candidate_flag": "flagged_for_v464 (.464): consequence_utility_cascade_pivot",
+      "implementation_delta": "Over Exp 5031-5036, add a cheap consequence-evaluation branch to D6: candidate traces become exemplars for generated neighboring checks, and only low-margin cases escalate to the judge.",
+      "method": "Consequence-Based Utility oracle-free evaluator",
+      "phase_d_arms": [
+        "D6 verifier-judge cascade",
+        "D2 uPRM"
+      ],
+      "pitfall": "Generating related verifiable questions can become the expensive verifier; the cascade must charge that cost and prevent neighborhood tasks from leaking answers.",
+      "source_signal": "Scores a candidate solution by testing whether it improves solving of related verifiable questions, outperforming reward models, generative reward models, and LLM judges on research-level math ranking.",
+      "url": "https://arxiv.org/abs/2602.06291"
+    }
+  ]
+}
