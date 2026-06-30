@@ -9639,3 +9639,4 @@ The contro |
 | 2026-06-30 08:28 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
 | 2026-06-30 08:30 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
 | 2026-06-30 08:32 UTC | PHASE D3 (VERIFIER MOAT; the uncertainty-aware con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == |
+| 2026-06-30 08:49 UTC | PHASE D6 (VERIFIER MOAT; the EFFICIENCY axis -- no | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
