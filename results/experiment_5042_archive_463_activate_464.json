@@ -1,0 +1,346 @@
+{
+  "blocked_confirmation_axes": [
+    "D6_judge_cascade",
+    "D4_second_corpus"
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "path": "research-roadmap.yaml",
+      "sha256": "acec02db4cc6c4101b09f6c57f4aa1d1db6748fd4be9434b486987a1fe84e127"
+    },
+    {
+      "path": "results/experiment_5041_capstone_v463.json",
+      "sha256": "9b66db82bd442f9d7b2d27e6175e0d132527f6411845c04887612ee201580fc8",
+      "source": "CAPSTONE"
+    },
+    {
+      "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "sha256": "e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e",
+      "source": "D1_LORA_EBM"
+    },
+    {
+      "path": "results/experiment_5032_uprm_replication_v3.json",
+      "sha256": "b07c49b48d35f952c2cac3a6d5514e3d669c0cecbc296f460b2a279827ca078e",
+      "source": "D2_UPRM"
+    },
+    {
+      "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "sha256": "5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6",
+      "source": "D3_EBRM"
+    },
+    {
+      "path": "results/experiment_5034_uncertainty_routed_cascade_v2.json",
+      "sha256": "9a96bf556e029d7743254e74e6dc7d9763dc04c6e2bedcc30d3476f1f536a031",
+      "source": "D6_CASCADE"
+    },
+    {
+      "path": "results/experiment_5035_moat_second_corpus_v3.json",
+      "sha256": "43e1f0bae4b18c82a473d1a822797926e1c4d8a63feafdcd3ef392fc99a07d72",
+      "source": "D4_SECOND_CORPUS"
+    },
+    {
+      "path": "results/experiment_5037_kv260_continuity.json",
+      "sha256": "3c2c1770e3e08334bef191d0bef2fa9702099ba0cc89674f574175b39edcfecc",
+      "source": "C_KV260"
+    },
+    {
+      "path": "results/experiment_5040_levelup_attempt.json",
+      "sha256": "27a5d6f74468206dd3a14c9af9fae26ed1130cfb73affeb6910fb0c035fbd084",
+      "source": "E3_ARC_LEVEL"
+    }
+  ],
+  "close_state_463": {
+    "arc_level_bank": {
+      "honest_verdict": "complete_lp85_no_new_level_residual_no_grounded_l6_delta",
+      "new_levels_banked": 0,
+      "no_arc_level_bank": true,
+      "reproducible_total_levels_after": 69,
+      "source_experiment_id": 5040,
+      "target_game": "lp85",
+      "target_level": 6
+    },
+    "blocked_confirmation_axes": [
+      {
+        "axis": "D6_judge_cascade",
+        "blocked_error": "URLError: <urlopen error [Errno 111] Connection refused>",
+        "blocked_reason": "blocked_judge_server",
+        "resource_detail": "URLError: <urlopen error [Errno 111] Connection refused>",
+        "source_experiment_id": 5034
+      },
+      {
+        "axis": "D4_second_corpus",
+        "blocked_error": "no priority second corpus had enough cached headroom candidate rows",
+        "blocked_reason": "blocked_second_corpus_unavailable",
+        "resource_detail": "CorpusUnavailableError: GPQA is not available in the local cache",
+        "source_experiment_id": 5035
+      }
+    ],
+    "capstone": {
+      "best_arm_and_delta": {
+        "abstention_rate": null,
+        "arm": "LoRA-EBM",
+        "arm_id": "D1",
+        "corpus": "MuSR",
+        "delta_vs_tuned_sc": 0.08,
+        "execution_status": "clean",
+        "headroom_present": true,
+        "judge_call_fraction": null,
+        "paired_ci95": [
+          0.0,
+          0.165
+        ],
+        "scorer_trained": true,
+        "source_experiment_id": 5031,
+        "verifier_is_oracle": false,
+        "win_vs_tuned_sc": false
+      },
+      "honest_verdict": "complete_capstone_v463_moat_execution_incomplete_lora_ebm"
+    },
+    "d1_lora_ebm_signal": {
+      "arm_id": "D1",
+      "ci_touches_zero": true,
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0",
+      "mcnemar_p": 0.076369,
+      "moat_claim": false,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "real_signal": true,
+      "scorer_trained": true,
+      "source_experiment_id": 5031,
+      "trained_scorer_accuracy": 0.665,
+      "underpowered": true,
+      "verifier_is_oracle": false
+    },
+    "d2_scalar_uprm_result": {
+      "arm_id": "D2",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": -0.11,
+      "honest_verdict": "complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate",
+      "mcnemar_p": 0.016853,
+      "n_questions": 200,
+      "negative_result": true,
+      "paired_ci95": [
+        -0.195,
+        -0.03
+      ],
+      "selection_accuracy": 0.475,
+      "source_experiment_id": 5032,
+      "verifier_is_oracle": false
+    },
+    "d3_ebrm_result": {
+      "abstention_rate": 0.0,
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p080_ci_incl_0",
+      "improved_over_d1": false,
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "selection_accuracy": 0.665,
+      "source_experiment_id": 5033,
+      "tied_d1": true,
+      "verifier_is_oracle": false
+    },
+    "kv260_continuity": {
+      "energy_smoke": {
+        "board_reported_duration_s": 3.526097862049937e-05,
+        "command_exit_code": 0,
+        "energy": -7,
+        "expected_energy": -7,
+        "problem": "tiny_quadratic_ising_constraint_energy",
+        "success": true
+      },
+      "honest_verdict": "success_kv260_reachable_overlay_loaded_energy_ok",
+      "kv260_ssh_reachable": true,
+      "live": true,
+      "loaded_overlay": "carnot_ising_v2_n64",
+      "source_experiment_id": 5037
+    },
+    "moat_verdict": {
+      "decision": "EXECUTION-INCOMPLETE",
+      "efficiency_win": false,
+      "execution_incomplete_arms": [
+        {
+          "arm": "cascade",
+          "arm_id": "D6",
+          "corpus": "MuSR",
+          "execution_status": "blocked",
+          "honest_verdict": "blocked_judge_server",
+          "source_experiment_id": 5034
+        },
+        {
+          "arm": "second-corpus-confirmation",
+          "arm_id": "D4",
+          "corpus": "second_corpus_unknown",
+          "execution_status": "blocked",
+          "honest_verdict": "blocked_second_corpus_unavailable",
+          "source_experiment_id": 5035
+        }
+      ],
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "state": "execution_incomplete"
+    },
+    "summary": "v463_real_underpowered_lora_ebm_signal_negative_uprm_ebrm_tie_d6_d4_blocked_kv260_live_arc_no_bank"
+  },
+  "d1_ci_touches_zero": true,
+  "d1_delta_vs_tuned_sc": 0.08,
+  "d4_blocked_reason": "blocked_second_corpus_unavailable",
+  "d6_blocked_reason": "blocked_judge_server",
+  "duration_s": 4.886206,
+  "ebrm_result": "tie_with_d1",
+  "experiment": "experiment_5042_archive_463_activate_464",
+  "experiment_id": 5042,
+  "field_principles": {
+    "d1_ci_touches_zero": {
+      "principle": "true iff the paired CI lower bound is <=0<=upper bound; explains why the D1 signal is underpowered."
+    },
+    "d1_delta_vs_tuned_sc": {
+      "principle": "the real but underpowered LoRA-EBM MuSR delta (+0.080) from Exp5031/Exp5041; CI touches zero so no moat claim."
+    },
+    "d4_blocked_reason": {
+      "principle": "blocked_second_corpus_unavailable from Exp5035, the second missing confirmation axis."
+    },
+    "d6_blocked_reason": {
+      "principle": "blocked_judge_server from Exp5034, one of the two missing confirmation axes."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; clean transition is complete_463_archived_464_activated_phase_d_power_confirmation."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads roadmap + upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "kv260_continuity_live": {
+      "principle": "true iff Exp5037 reports KV260 reachable with overlay/energy smoke OK."
+    },
+    "no_arc_level_bank": {
+      "principle": "true iff Exp5040/capstone reports zero new ARC levels banked and total remains 69."
+    }
+  },
+  "honest_verdict": "complete_463_archived_464_activated_phase_d_power_confirmation",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_continuity_live": true,
+  "leaderboard_submission": false,
+  "lora_ebm_signal": "real_but_underpowered",
+  "next_milestone": "2026.06.464",
+  "no_arc_level_bank": true,
+  "preconditions_checked": {
+    "roadmaps": {
+      "active": {
+        "exists": true,
+        "milestone": "2026.06.464",
+        "parse_ok": true,
+        "path": "research-roadmap.yaml",
+        "sha256": "acec02db4cc6c4101b09f6c57f4aa1d1db6748fd4be9434b486987a1fe84e127",
+        "status": "parsed"
+      },
+      "pre_staged": {
+        "exists": false,
+        "parse_ok": null,
+        "path": "research-roadmap-next.yaml",
+        "status": "absent_already_promoted"
+      }
+    },
+    "source_artifacts": {
+      "CAPSTONE": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5041_capstone_v463.json",
+        "sha256": "9b66db82bd442f9d7b2d27e6175e0d132527f6411845c04887612ee201580fc8"
+      },
+      "C_KV260": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5037_kv260_continuity.json",
+        "sha256": "3c2c1770e3e08334bef191d0bef2fa9702099ba0cc89674f574175b39edcfecc"
+      },
+      "D1_LORA_EBM": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+        "sha256": "e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e"
+      },
+      "D2_UPRM": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5032_uprm_replication_v3.json",
+        "sha256": "b07c49b48d35f952c2cac3a6d5514e3d669c0cecbc296f460b2a279827ca078e"
+      },
+      "D3_EBRM": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+        "sha256": "5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6"
+      },
+      "D4_SECOND_CORPUS": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5035_moat_second_corpus_v3.json",
+        "sha256": "43e1f0bae4b18c82a473d1a822797926e1c4d8a63feafdcd3ef392fc99a07d72"
+      },
+      "D6_CASCADE": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5034_uncertainty_routed_cascade_v2.json",
+        "sha256": "9a96bf556e029d7743254e74e6dc7d9763dc04c6e2bedcc30d3476f1f536a031"
+      },
+      "E3_ARC_LEVEL": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5040_levelup_attempt.json",
+        "sha256": "27a5d6f74468206dd3a14c9af9fae26ed1130cfb73affeb6910fb0c035fbd084"
+      }
+    }
+  },
+  "pretest_gate": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/python/test_experiment_5042_archive_463_activate_464.py",
+      "-q",
+      "--no-cov"
+    ],
+    "exit_code": 0,
+    "green": true,
+    "passed": true,
+    "ran": true,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [4 items]\n\n....                                                                     [100%]\n============================== 4 passed in 3.59s ===============================\n"
+  },
+  "prior_milestone": "2026.06.463",
+  "random_seed": 20260630,
+  "reproducibility_checksum": "530de4d292ffb940155fe5574406226bef875186649bc8402801d5d47e915e97",
+  "result_path": "results/experiment_5042_archive_463_activate_464.json",
+  "scalar_uprm_result": "negative",
+  "schema": "carnot.exp5042.archive_463_activate_464.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-5042",
+    "SCENARIO-CAPSTONE-5042",
+    "SCENARIO-CAPSTONE-5042-BLOCKED-YAML",
+    "SCENARIO-CAPSTONE-5042-FIELD-PRINCIPLES"
+  ],
+  "transition": {
+    "activation_state": "already_active_or_activated_464",
+    "active_conductor_changed": false,
+    "active_milestone_confirmed": "2026.06.464",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "next_milestone": "2026.06.464",
+    "pre_staged_milestone_confirmed": "",
+    "pre_staged_roadmap_path": "",
+    "pre_staged_roadmap_status": "absent_already_promoted",
+    "prior_milestone": "2026.06.463",
+    "transition_performed": true
+  },
+  "transition_performed": true
+}
