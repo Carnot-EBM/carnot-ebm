@@ -9655,3 +9655,4 @@ The contro |
 | 2026-06-30 14:45 UTC | PHASE B3 (INFRA; RESERVED SLOT 2 of 2; THE PERMANE | OK | 97 passed, 1 warning in 9.28s |
 | 2026-06-30 15:08 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE; claude/ | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-30 15:28 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE; claude/ | OK | 134 passed, 1 warning in 10.70s |
+| 2026-06-30 15:45 UTC | PHASE D2 (VERIFIER MOAT; the published WIN-CONDITI | OK | 88 passed, 1 warning in 9.47s |
