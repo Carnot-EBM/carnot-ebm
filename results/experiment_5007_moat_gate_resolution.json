@@ -1,0 +1,185 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5007_moat_gate_resolution.json",
+    "exp_id": "experiment_5007_moat_gate_resolution",
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_moat_scoped_no_realized_no_bounded_retirement",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "best_arm": {
+    "arm": "EBRM",
+    "arm_id": "D3",
+    "corpus": "MuSR",
+    "delta_vs_tuned_sc": 0.0,
+    "headroom_present": true,
+    "mcnemar_p": 1.0,
+    "n_questions": 200,
+    "oracle_at_k": 0.93,
+    "paired_ci95": [
+      -0.03,
+      0.025
+    ],
+    "selection_accuracy": 0.585,
+    "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5005_ebrm_uncertainty_verifier.json",
+    "source_experiment_id": 5005,
+    "tuned_sc_accuracy": 0.585,
+    "verifier_is_oracle": false,
+    "win_vs_tuned_sc": false
+  },
+  "cited_upstream_artifacts": [
+    {
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "experiment_id": 5003,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5003_lora_ebm_scorer_musr.json",
+      "sha256": "sha256:2737af698768a25d516f5c28067047f18477acd13f0a3d00974608b8ea44a5af"
+    },
+    {
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "experiment_id": 5004,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5004_uprm_replication.json",
+      "sha256": "sha256:df7f0b4ca5a4692ad3e3a3e8a66167c6f74ae95634c1c8c74efb393a9f12c79f"
+    },
+    {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "experiment_id": 5005,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "headroom_present",
+        "ebrm_selection_accuracy",
+        "tuned_sc_accuracy",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "oracle_at_k",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "sha256": "sha256:4d89e8df80f5961d0028187237066cb5af816a556f7d8aa8d1bb80f7bcad6dab"
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "experiment_id": 5006,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5006_moat_second_corpus.json",
+      "sha256": "sha256:db67fa3cff5ba1afc9e0c038fb1e00b58e345e2ce14b1ff94a0ce784a593e43b"
+    }
+  ],
+  "decision": "MIXED-SCOPED",
+  "diffusiongemma_activation": "not_activated",
+  "diffusiongemma_gate_conditions_satisfied_off_arc": false,
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.000636,
+  "experiment": "experiment_5007_moat_gate_resolution",
+  "field_principles": {
+    "best_arm": {
+      "principle": "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) + its corpus + delta + CI."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "the {experiment_id, fields_imported, sha256} for each D arm so the verdict is traceable to a real measurement."
+    },
+    "diffusiongemma_gate_conditions_satisfied_off_arc": {
+      "principle": "true iff a POSITIVE arm satisfies the gate's 3 conditions (headroom present + non-trivial oracle-distinct verifier + matched-control CI95-excl-0) ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip the gate to MET)."
+    },
+    "flagged_arms_skipped": {
+      "principle": "the list of D arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads D1-D4 JSON, no LLM; 0.0001s floor)."
+    },
+    "moat_realized": {
+      "principle": "true iff >=1 oracle-distinct arm beats tuned-SC with CI95-excl-0 on a headroom-present corpus, cross-corpus confirmed."
+    },
+    "moat_retired_bounded": {
+      "principle": "true iff D1 AND D2 both null on every headroom-present oracle-distinct corpus (the retire_if_same_verdict outcome; a publishable bounded null)."
+    },
+    "per_arm_table": {
+      "principle": "per arm per corpus: delta_vs_tuned_sc, paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present (the audit trail)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms are skipped)."
+    }
+  },
+  "flagged_arms_skipped": [
+    {
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "experiment_id": 5003,
+      "honest_verdict": "running_lora_ebm_scorer_musr_pretrain_skeleton",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5003_lora_ebm_scorer_musr.json"
+    },
+    {
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "experiment_id": 5004,
+      "honest_verdict": "blocked_uprm_logprob_candidate_cache",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5004_uprm_replication.json"
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "experiment_id": 5006,
+      "honest_verdict": "running_moat_second_corpus_mmlu_pro_hard_skeleton",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5006_moat_second_corpus.json"
+    }
+  ],
+  "honest_verdict": "complete_moat_scoped_no_realized_no_bounded_retirement",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "moat_realized": false,
+  "moat_retired_bounded": false,
+  "paper_summary": "D5 is scoped rather than realized or retired: best clean row is EBRM on MuSR delta_vs_tuned_sc=plus_0p000, CI95=[-0.03, 0.025], McNemar p=1.0, skipped flagged artifacts were D1, D2, D4, and the evidence did not provide both a clean positive MuSR arm and a clean D4 second-corpus confirmation. This is not a bounded retirement unless clean D1 and D2 nulls are both present.",
+  "per_arm_table": [
+    {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.0,
+      "headroom_present": true,
+      "mcnemar_p": 1.0,
+      "n_questions": 200,
+      "oracle_at_k": 0.93,
+      "paired_ci95": [
+        -0.03,
+        0.025
+      ],
+      "selection_accuracy": 0.585,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "source_experiment_id": 5005,
+      "tuned_sc_accuracy": 0.585,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    }
+  ],
+  "reproducibility_checksum": "sha256:42ee81ec31e0182f3dc902b6efe47e1ba763e52eafb84c8710a18b5941e98d0c",
+  "schema": "carnot.experiment_5007_moat_gate_resolution.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5007",
+    "SCENARIO-VERIFY-5007"
+  ],
+  "summarize_artifact_exit_code": 0,
+  "verifier_is_oracle": false
+}

@@ -30,6 +30,30 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
 
 ---
 
+## Exp 5007 off-ARC EBRM selection residual (2026-06-30)
+
+`results/experiment_5007_moat_gate_resolution.json` aggregated the D1-D4 off-ARC verifier-moat
+artifacts after skipping `flagged_adversarial=true` inputs. The only clean aggregated arm was
+Exp 5005 EBRM on MuSR: `verifier_is_oracle=false`, `headroom_present=true`, oracle@K `0.93`,
+TUNED-SC `0.585`, EBRM selection accuracy `0.585`, delta `0.0`, CI95 `[-0.03, 0.025]`,
+McNemar `p=1.0`. The correct-answer headroom is present but the current uncertainty-aware
+energy selector cannot choose beyond TUNED-SC.
+
+### GAP-MUSR-EBRM-HEADROOM-SELECTION: reasoning-quality energy does not capture selectable MuSR headroom
+- status: open
+- evidence: `results/experiment_5007_moat_gate_resolution.json`; clean D3/Exp 5005 null on
+  headroom-present MuSR, with D1/D2/D4 skipped as flagged and no cross-corpus confirmation.
+- failure mode: the EBRM reward-distribution selector distinguishes neither the TUNED-SC pick
+  nor the oracle-recoverable candidate strongly enough to move accuracy above the matched
+  self-consistency baseline.
+- missing discriminator: an oracle-distinct process/semantic signal that separates genuinely
+  entailed multi-hop MuSR reasoning from fluent but wrong candidate rationales under the same
+  answer-choice pool.
+- candidate design: mine MuSR oracle-recoverable rows where TUNED-SC misses, label candidate
+  rationales with contrastive entailment/decomposition features, and train a process-aware
+  selector whose evaluation remains paired against TUNED-SC with CI95 and McNemar gates.
+- priority: medium
+
 ## Exp 4381 FoVer BiPRM localization residual (2026-06-18)
 
 `results/experiment_4381_biprm_detector_localization_abstention.json` scored the cached

@@ -20935,3 +20935,84 @@ generalization.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5006 | Implemented (`python/carnot/experiment_5006_moat_second_corpus.py`, `results/experiment_5006_moat_second_corpus.json`) | Implemented (`tests/python/test_experiment_5006_moat_second_corpus.py`) |
+
+### REQ-VERIFY-5007: Off-ARC Verifier-Moat Gate Resolution
+
+The repository SHALL provide Exp 5007 at
+`python/carnot/experiment_5007_moat_gate_resolution.py` to aggregate the
+non-fabricated D1-D4 verifier-moat artifacts, decide the off-ARC verifier-moat
+verdict, and write
+`results/experiment_5007_moat_gate_resolution.json`.
+
+Before aggregation, the runner SHALL read the available Exp 5003 LoRA-EBM,
+Exp 5004 uPRM, Exp 5005 EBRM, and Exp 5006 second-corpus artifacts. Any
+artifact with `flagged_adversarial=true` SHALL be skipped and SHALL NOT
+contribute to the headline verdict. If no non-flagged D arm is available, the
+runner SHALL write an honest `blocked_no_moat_arms` verdict with empty
+headlines and the skipped-arm audit trail.
+
+For every non-flagged usable arm and corpus, the runner SHALL tabulate
+`delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`, `verifier_is_oracle`, and
+`headroom_present`. A positive win SHALL require `verifier_is_oracle=false`,
+`headroom_present=true`, positive `delta_vs_tuned_sc`, a paired CI95 excluding
+zero in the positive direction, and McNemar `p<0.05`. The off-ARC moat SHALL be
+realized only when at least one positive MuSR arm is confirmed by Exp 5006 on a
+second headroom-present oracle-distinct corpus. A bounded retirement SHALL be
+reported only when Exp 5003 LoRA-EBM and Exp 5004 uPRM are both null on every
+headroom-present oracle-distinct corpus; an uninformative no-headroom result
+SHALL be scoped rather than retired.
+
+The terminal artifact SHALL include `honest_verdict`, bare bool
+`moat_realized`, bare bool `moat_retired_bounded`, `best_arm`,
+`per_arm_table`, bare bool
+`diffusiongemma_gate_conditions_satisfied_off_arc`, bare bool
+`verifier_is_oracle=false`, `flagged_arms_skipped`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`cited_upstream_artifacts`, `paper_summary`, `decision`, `duration_s`,
+`field_principles`, and `spec_refs`.
+
+`honest_verdict` SHALL start with
+`success_moat_realized_off_arc_<arm>_<corpus>_<delta>` only for a
+cross-corpus-confirmed positive result. It SHALL equal
+`complete_moat_retired_bounded_lora_ebm_and_uprm_both_null` only for the
+bounded retirement condition. Mixed or unconfirmed outcomes SHALL use a
+`complete_moat_scoped_` prefix, and the all-blocked path SHALL use
+`blocked_no_moat_arms`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null.`;
+`moat_realized` = `true iff >=1 oracle-distinct arm beats tuned-SC with CI95-excl-0 on a headroom-present corpus, cross-corpus confirmed.`;
+`moat_retired_bounded` = `true iff D1 AND D2 both null on every headroom-present oracle-distinct corpus (the retire_if_same_verdict outcome; a publishable bounded null).`;
+`best_arm` = `the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) + its corpus + delta + CI.`;
+`per_arm_table` = `per arm per corpus: delta_vs_tuned_sc, paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present (the audit trail).`;
+`diffusiongemma_gate_conditions_satisfied_off_arc` = `true iff a POSITIVE arm satisfies the gate's 3 conditions (headroom present + non-trivial oracle-distinct verifier + matched-control CI95-excl-0) ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip the gate to MET).`;
+`verifier_is_oracle` = `false across all aggregated arms (the non-circular discipline; flagged_adversarial arms are skipped).`;
+`flagged_arms_skipped` = `the list of D arms skipped for flagged_adversarial=true (never aggregated into a headline).`;
+`inference_substrate` = `aggregation_from_upstream_artifacts (reads D1-D4 JSON, no LLM; 0.0001s floor).`;
+`cited_upstream_artifacts` = `the {experiment_id, fields_imported, sha256} for each D arm so the verdict is traceable to a real measurement.`
+
+### SCENARIO-VERIFY-5007: D5 Resolves The Moat Gate From D1-D4 Artifacts
+
+Given D1-D4 artifacts where a non-flagged oracle-distinct arm beats tuned
+self-consistency on MuSR with positive CI95 and McNemar significance, and the
+D4 artifact confirms that arm on a second headroom-present oracle-distinct
+corpus, when Exp 5007 runs, then it writes a terminal artifact that sets
+`moat_realized=true`,
+`diffusiongemma_gate_conditions_satisfied_off_arc=true`, keeps
+`verifier_is_oracle=false`, cites every imported upstream artifact with SHA256,
+and records an operator-gated DiffusionGemma status rather than autonomously
+flipping the activation gate.
+
+If D1 and D2 are both null on every headroom-present oracle-distinct corpus,
+then Exp 5007 writes
+`complete_moat_retired_bounded_lora_ebm_and_uprm_both_null` and records the
+retirement rationale. If the available evidence is mixed, no headroom-present
+corpus exists, or the second-corpus confirmation is absent, then Exp 5007
+writes a scoped verdict that does not over-claim a win and does not retire an
+uninformative null.
+
+## Implementation Status (REQ-VERIFY-5007)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5007 | Implemented (`python/carnot/experiment_5007_moat_gate_resolution.py`, `results/experiment_5007_moat_gate_resolution.json`) | Implemented (`tests/python/test_experiment_5007_moat_gate_resolution.py`) |
