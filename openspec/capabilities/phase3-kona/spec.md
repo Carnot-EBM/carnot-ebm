@@ -3765,6 +3765,55 @@ directory is missing or empty
 resource in `preconditions_checked`, keeps smoke metrics empty, and does not
 claim that a headroom-present corpus was loaded.
 
+### REQ-KONA-5015: Genuine Tuned Self-Consistency Baseline and Abstention Degeneracy Guard
+
+Carnot MUST correct the shared Phase D moat harness in
+`python/carnot/moat_benchmark_harness.py` so tuned self-consistency is measured
+as genuine K-way majority vote over cached candidates, not as a default
+single-sample strawman. The harness SHALL sweep odd K values `{1,3,5,7,...}` up
+to the available cached candidates per question, SHALL report the full
+`{K: accuracy}` curve, and SHALL expose the tuned best-K accuracy and chosen K
+with deterministic answer tie-breaking. If only one candidate exists per
+question, the harness SHALL flag that self-consistency and oracle@K are
+degenerate rather than presenting headroom as informative.
+
+The harness SHALL provide an abstention-degeneracy guard for D-arm selectors
+that abstain back to tuned self-consistency. Given an `abstain_rate`, the guard
+SHALL return a `degeneracy_flag=true` verdict when `abstain_rate > 0.50`, so a
+selector that mostly delegates to tuned self-consistency cannot report an
+uninformative delta as verifier evidence.
+
+Exp 5015 SHALL write
+`results/experiment_5015_genuine_sc_baseline_fix.json` from cached MuSR
+candidates only. The artifact SHALL report `genuine_tuned_sc_accuracy`,
+`sc_k_sweep`, `tuned_k`, `candidates_per_question`, `oracle_at_k`,
+`genuine_headroom_present`, and `degeneracy_guard_fires`, with precondition
+fields that block honestly if the candidate cache or harness import is missing.
+
+### SCENARIO-KONA-5015-GENUINE-SC: K-Way Self-Consistency Is Auditable
+
+**Given** a candidate pool with multiple cached answers per question
+**When** the shared harness computes tuned self-consistency
+**Then** it evaluates odd K-way majority votes, reports the full K-sweep,
+chooses the best K deterministically, and recomputes headroom against that
+genuine tuned self-consistency baseline.
+
+### SCENARIO-KONA-5015-DEGENERACY-GUARD: Mostly-Abstaining Selectors Are Flagged
+
+**Given** a D-arm selector whose abstain rate is greater than 0.50
+**When** the shared harness abstention-degeneracy guard is called
+**Then** it returns a verdict and `degeneracy_flag=true`, preventing a mostly
+tuned-SC selector from being treated as an informative verifier.
+
+### SCENARIO-KONA-5015-SMOKE: Cached MuSR Baseline Fix Is Re-Emitted
+
+**Given** the cached MuSR checkpoint slice exists with at most 200 questions
+**When** `.venv/bin/python python/carnot/experiment_5015_genuine_sc_baseline_fix.py`
+runs
+**Then** it writes `results/experiment_5015_genuine_sc_baseline_fix.json` with
+the genuine tuned-SC K-sweep, oracle@K, genuine headroom decision, and a
+synthetic always-abstain degeneracy-guard demonstration.
+
 ## Latent Symbol Bridge Falsification (Exp 3819)
 
 ### REQ-3819: Deep Think P3 Falsification Run

@@ -28,11 +28,14 @@ JsonMap = Mapping[str, Any]
 Scorer = Callable[[Mapping[str, Any]], float]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MUSR_CHECKPOINT_DIR = REPO_ROOT / "results" / "distributional_energy_verifier_musr_checkpoints"
+DEFAULT_MUSR_CHECKPOINT_DIR = (
+    REPO_ROOT / "results" / "distributional_energy_verifier_musr_checkpoints"
+)
 MUSR_CORPUS_NAME = "MuSR/murder_mysteries"
 HEADROOM_THRESHOLD = 0.10
 DEFAULT_RANDOM_SEED = 20260630
 FORBIDDEN_SCORER_KEYS = frozenset({"gold", "answer_index", "answer_choice", "model_id"})
+ABSTENTION_DEGENERACY_THRESHOLD = 0.50
 
 
 class CorpusUnavailableError(RuntimeError):
@@ -198,7 +201,9 @@ def load_mmlu_pro_hard_cached(*, limit: int | None = None) -> list[JsonDict]:
     dataset = _load_dataset_local("TIGER-Lab/MMLU-Pro")
     rows = _take_optional_rows(dataset, corpus="MMLU-Pro-hard", limit=None)
     hard_rows = [
-        row for row in rows if "hard" in str(row.get("difficulty", row.get("level", "hard"))).lower()
+        row
+        for row in rows
+        if "hard" in str(row.get("difficulty", row.get("level", "hard"))).lower()
     ]
     selected = hard_rows or rows
     return selected[:limit] if limit is not None else selected
@@ -277,7 +282,9 @@ def attach_musr_cached_candidates(
                 }
             )
         if not candidates:
-            raise CandidateCacheError(f"candidate checkpoint has no valid answers: {checkpoint_path}")
+            raise CandidateCacheError(
+                f"candidate checkpoint has no valid answers: {checkpoint_path}"
+            )
         merged = dict(row)
         merged["gold"] = str(row.get("gold") or checkpoint.get("gold") or "")
         merged["candidate_cache_path"] = checkpoint_path.as_posix()
@@ -286,7 +293,9 @@ def attach_musr_cached_candidates(
     return rows
 
 
-def _candidate_pool(row: JsonMap, *, k: int | None = None, temperature: Any = None) -> list[JsonMap]:
+def _candidate_pool(
+    row: JsonMap, *, k: int | None = None, temperature: Any = None
+) -> list[JsonMap]:
     candidates = list(row.get("candidates") or [])
     if temperature is not None:
         filtered = [
@@ -298,6 +307,33 @@ def _candidate_pool(row: JsonMap, *, k: int | None = None, temperature: Any = No
     if k is not None:
         candidates = candidates[:k]
     return candidates
+
+
+def _candidate_pool_counts(rows: Sequence[JsonMap], *, temperature: Any = None) -> list[int]:
+    return [len(_candidate_pool(row, temperature=temperature)) for row in rows]
+
+
+def _available_candidates_per_question(rows: Sequence[JsonMap], *, temperature: Any = None) -> int:
+    counts = _candidate_pool_counts(rows, temperature=temperature)
+    return min(counts) if counts else 0
+
+
+def _default_sc_k_values(candidates_per_question: int) -> list[int]:
+    if candidates_per_question <= 0:
+        return []
+    return list(range(1, candidates_per_question + 1, 2))
+
+
+def _sanitize_sc_k_values(k_values: Sequence[int], *, candidates_per_question: int) -> list[int]:
+    seen: set[int] = set()
+    values: list[int] = []
+    for raw in k_values:
+        k = int(raw)
+        if k <= 0 or k > candidates_per_question or k % 2 == 0 or k in seen:
+            continue
+        seen.add(k)
+        values.append(k)
+    return values
 
 
 def _majority_answer(candidates: Sequence[JsonMap]) -> str | None:
@@ -335,39 +371,138 @@ def tuned_self_consistency(
     temperatures: Sequence[Any] | None = None,
 ) -> JsonDict:
     if not rows:
-        return {"accuracy": 0.0, "config": {"k": 0, "temperature": None}, "predictions": []}
-    max_k = max(len(row.get("candidates") or []) for row in rows)
-    candidate_k_values = list(k_values) if k_values is not None else list(range(1, max_k + 1))
-    candidate_temperatures = list(temperatures) if temperatures is not None else _available_temperatures(rows)
+        return {
+            "accuracy": 0.0,
+            "config": {"k": 0, "temperature": None},
+            "predictions": [],
+            "correct": [],
+            "k_sweep": {},
+            "temperature_sweeps": {},
+            "tuned_k": 0,
+            "candidates_per_question": 0,
+            "candidate_pool_counts": [],
+            "degenerate_candidate_pool": False,
+            "oracle_degenerate": False,
+        }
+    candidate_temperatures = (
+        list(temperatures) if temperatures is not None else _available_temperatures(rows)
+    )
     best: JsonDict | None = None
+    temperature_sweeps: dict[str, dict[str, float]] = {}
     for temperature in candidate_temperatures:
+        candidates_per_question = _available_candidates_per_question(rows, temperature=temperature)
+        candidate_k_values = (
+            _sanitize_sc_k_values(k_values, candidates_per_question=candidates_per_question)
+            if k_values is not None
+            else _default_sc_k_values(candidates_per_question)
+        )
+        k_sweep: dict[str, float] = {}
+        temperature_records: list[JsonDict] = []
         for k in candidate_k_values:
-            predictions = [_majority_answer(_candidate_pool(row, k=k, temperature=temperature)) for row in rows]
-            correct = [_is_correct(prediction, row.get("gold")) for prediction, row in zip(predictions, rows)]
+            predictions = [
+                _majority_answer(_candidate_pool(row, k=k, temperature=temperature)) for row in rows
+            ]
+            correct = [
+                _is_correct(prediction, row.get("gold"))
+                for prediction, row in zip(predictions, rows)
+            ]
             accuracy = sum(correct) / len(rows)
             config = {"k": int(k), "temperature": temperature}
+            rounded_accuracy = round(accuracy, 6)
+            k_sweep[str(k)] = rounded_accuracy
             current = {
-                "accuracy": round(accuracy, 6),
+                "accuracy": rounded_accuracy,
                 "config": config,
                 "predictions": predictions,
                 "correct": correct,
+                "tuned_k": int(k),
+                "candidates_per_question": candidates_per_question,
+                "candidate_pool_counts": _candidate_pool_counts(rows, temperature=temperature),
+                "degenerate_candidate_pool": candidates_per_question == 1,
+                "oracle_degenerate": candidates_per_question == 1,
             }
-            if best is None or (accuracy, -k, str(temperature)) > (
-                float(best["accuracy"]),
-                -int(best["config"]["k"]),
-                str(best["config"]["temperature"]),
-            ):
-                best = current
-    return best or {"accuracy": 0.0, "config": {"k": 0, "temperature": None}, "predictions": []}
+            temperature_records.append(current)
+        temperature_sweeps[str(temperature)] = k_sweep
+        if not temperature_records:
+            continue
+        temperature_best = max(
+            temperature_records,
+            key=lambda item: (float(item["accuracy"]), -int(item["config"]["k"])),
+        )
+        temperature_best["k_sweep"] = dict(k_sweep)
+        temperature_best["temperature_sweeps"] = dict(temperature_sweeps)
+        if best is None or (
+            float(temperature_best["accuracy"]),
+            -int(temperature_best["config"]["k"]),
+            str(temperature),
+        ) > (
+            float(best["accuracy"]),
+            -int(best["config"]["k"]),
+            str(best["config"]["temperature"]),
+        ):
+            best = temperature_best
+    if best is None:
+        return {
+            "accuracy": 0.0,
+            "config": {"k": 0, "temperature": None},
+            "predictions": [None for _row in rows],
+            "correct": [0 for _row in rows],
+            "k_sweep": {},
+            "temperature_sweeps": dict(temperature_sweeps),
+            "tuned_k": 0,
+            "candidates_per_question": 0,
+            "candidate_pool_counts": _candidate_pool_counts(rows),
+            "degenerate_candidate_pool": False,
+            "oracle_degenerate": False,
+        }
+    best["temperature_sweeps"] = dict(temperature_sweeps)
+    return best
 
 
-def oracle_at_k(rows: Sequence[JsonMap]) -> tuple[float, list[int]]:
+def oracle_at_k(
+    rows: Sequence[JsonMap],
+    *,
+    k: int | None = None,
+    temperature: Any = None,
+) -> tuple[float, list[int]]:
     correct = []
+    oracle_k = (
+        k if k is not None else _available_candidates_per_question(rows, temperature=temperature)
+    )
     for row in rows:
         gold = str(row.get("gold"))
-        row_correct = any(str(candidate.get("answer")) == gold for candidate in row.get("candidates", []))
+        row_correct = any(
+            str(candidate.get("answer")) == gold
+            for candidate in _candidate_pool(row, k=oracle_k, temperature=temperature)
+        )
         correct.append(int(row_correct))
     return (round(sum(correct) / len(rows), 6) if rows else 0.0), correct
+
+
+def abstention_degeneracy_guard(
+    abstain_rate: float,
+    *,
+    threshold: float = ABSTENTION_DEGENERACY_THRESHOLD,
+) -> JsonDict:
+    rate = float(abstain_rate)
+    if not math.isfinite(rate):
+        raise ValueError("abstain_rate must be finite")
+    limit = float(threshold)
+    if not math.isfinite(limit):
+        raise ValueError("threshold must be finite")
+    degeneracy_flag = rate > limit
+    if degeneracy_flag:
+        rate_label = f"{rate:.3f}".replace(".", "p")
+        threshold_label = f"{limit:.2f}".replace(".", "p")
+        verdict = f"degenerate_abstaining_selector_abstain_rate_{rate_label}_gt_{threshold_label}"
+    else:
+        verdict = "nondegenerate_abstaining_selector"
+    return {
+        "verdict": verdict,
+        "degeneracy_flag": degeneracy_flag,
+        "abstain_rate": round(rate, 6),
+        "threshold": round(limit, 6),
+    }
 
 
 def _select_verifier_answer(row: JsonMap, scorer: Scorer) -> str | None:
@@ -409,8 +544,16 @@ def paired_bootstrap_ci(
 
 
 def mcnemar_exact_p(verifier_correct: Sequence[int], baseline_correct: Sequence[int]) -> float:
-    baseline_only = sum(1 for verifier, baseline in zip(verifier_correct, baseline_correct) if baseline and not verifier)
-    verifier_only = sum(1 for verifier, baseline in zip(verifier_correct, baseline_correct) if verifier and not baseline)
+    baseline_only = sum(
+        1
+        for verifier, baseline in zip(verifier_correct, baseline_correct)
+        if baseline and not verifier
+    )
+    verifier_only = sum(
+        1
+        for verifier, baseline in zip(verifier_correct, baseline_correct)
+        if verifier and not baseline
+    )
     discordant = baseline_only + verifier_only
     if discordant == 0:
         return 1.0
@@ -435,16 +578,20 @@ def evaluate_verifier(
     tuned_sc = tuned_self_consistency(rows_list)
     sc_correct = [int(value) for value in tuned_sc.get("correct", [])]
     sc_predictions = list(tuned_sc.get("predictions", []))
-    oracle_accuracy, oracle_correct = oracle_at_k(rows_list)
+    oracle_k = int(tuned_sc.get("candidates_per_question") or 0)
+    oracle_temperature = tuned_sc.get("config", {}).get("temperature")
+    oracle_accuracy, oracle_correct = oracle_at_k(
+        rows_list,
+        k=oracle_k,
+        temperature=oracle_temperature,
+    )
     verifier_predictions = [_select_verifier_answer(row, scorer) for row in rows_list]
     verifier_correct = [
         _is_correct(prediction, row.get("gold"))
         for prediction, row in zip(verifier_predictions, rows_list)
     ]
     n_flips_possible = sum(
-        1
-        for sc_ok, oracle_ok in zip(sc_correct, oracle_correct)
-        if not sc_ok and oracle_ok
+        1 for sc_ok, oracle_ok in zip(sc_correct, oracle_correct) if not sc_ok and oracle_ok
     )
     verifier_accuracy = sum(verifier_correct) / len(rows_list) if rows_list else 0.0
     delta = verifier_accuracy - float(tuned_sc["accuracy"])
@@ -460,8 +607,15 @@ def evaluate_verifier(
             "accuracy": tuned_sc["accuracy"],
             "config": tuned_sc["config"],
             "predictions": sc_predictions,
+            "k_sweep": dict(tuned_sc.get("k_sweep") or {}),
+            "tuned_k": int(tuned_sc.get("tuned_k") or tuned_sc["config"]["k"]),
+            "candidates_per_question": int(tuned_sc.get("candidates_per_question") or 0),
+            "candidate_pool_counts": list(tuned_sc.get("candidate_pool_counts") or []),
+            "degenerate_candidate_pool": bool(tuned_sc.get("degenerate_candidate_pool")),
+            "oracle_degenerate": bool(tuned_sc.get("oracle_degenerate")),
         },
         "oracle_at_k": oracle_accuracy,
+        "oracle_k": oracle_k,
         "n_flips_possible": n_flips_possible,
         "headroom_present": bool(
             (oracle_accuracy - float(tuned_sc["accuracy"])) >= headroom_threshold
