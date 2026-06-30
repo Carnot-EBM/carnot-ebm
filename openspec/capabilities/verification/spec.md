@@ -21982,6 +21982,69 @@ with `success_cascade_parity_at_`.
 |---|---|---|
 | REQ-VERIFY-5034 | Implemented (`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py`, `results/experiment_5034_uncertainty_routed_cascade_v2.json`) | Implemented (`tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py`) |
 
+### REQ-VERIFY-5043: SOTA GGUF Judge Preflight Before Powered Cascade Work
+
+The repository SHALL provide Exp 5043 at
+`python/carnot/experiment_5043_sota_gguf_judge_preflight.py` to verify, before
+any powered verifier/cascade rerun, that the mandated local SOTA GGUF cache and
+the llama.cpp-compatible judge endpoint can support headline LLM evidence. The
+runner SHALL write
+`results/experiment_5043_sota_gguf_judge_preflight.json`.
+
+The runner SHALL probe the three mandated model specs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, recording each exact resolved `.gguf` path
+or `missing`. At least one mandated model must be usable for
+`sota_models_ready=true`; legacy small models SHALL be recorded as
+`legacy_models_smoke_only=true` and SHALL NOT satisfy headline readiness.
+
+The runner SHALL probe at least one configured local llama.cpp-compatible
+endpoint for a small completion call and separately for top-logprob or
+confidence telemetry when supported. If no mandated model is usable, it SHALL
+write `honest_verdict=blocked_sota_gguf_unavailable`; if a mandated model is
+cached but no completion-capable judge/confidence route exists, it SHALL write
+`honest_verdict=blocked_judge_server` and include exact probe diagnostics. A
+successful preflight SHALL set `sota_judge_ready=true` only when completion and
+top-logprob-or-confidence telemetry are both available from a probed route.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`usable_sota_models`, `sota_models_ready`, `sota_judge_ready`,
+`top_logprob_or_confidence_ready`, `endpoint_summary`,
+`legacy_models_smoke_only`, `schema`, `experiment`, `experiment_id`,
+`spec_refs`, `result_path`, `duration_s`, and `field_principles`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix for the preflight: blocked_sota_gguf_unavailable, blocked_judge_server, or complete_sota_gguf_judge_preflight_ready.`;
+`model_specs` = `all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths or missing.`;
+`usable_sota_models` = `the subset of mandated SOTA GGUFs resolved to local .gguf paths.`;
+`sota_models_ready` = `true iff at least one mandated SOTA GGUF is locally usable.`;
+`sota_judge_ready` = `true iff a local endpoint can complete and expose top-logprob or confidence telemetry for a mandated SOTA model.`;
+`top_logprob_or_confidence_ready` = `true iff the probed judge route exposes top-logprob or confidence telemetry.`;
+`endpoint_summary` = `machine-readable completion and telemetry diagnostics for every probed llama.cpp-compatible endpoint.`;
+`legacy_models_smoke_only` = `legacy small models are allowed only for smoke tests, never headline evidence.`
+
+### SCENARIO-VERIFY-5043: Preflight Distinguishes Missing GGUF From Missing Judge Telemetry
+
+Given the local cache and judge endpoints may be partially configured, when Exp
+5043 runs, then it writes a machine-readable artifact that records all three
+mandated GGUF cache probes, attempts a small completion request on candidate
+llama.cpp endpoints, attempts a separate logprob/confidence telemetry request,
+and emits the required readiness booleans and endpoint diagnostics.
+
+If all mandated GGUFs are missing, then the artifact verdict is
+`blocked_sota_gguf_unavailable`, all readiness booleans are false, and endpoint
+diagnostics still record any probes attempted. If at least one mandated GGUF is
+present but no endpoint can return both completion and confidence telemetry,
+then the artifact verdict is `blocked_judge_server` with exact probe failures.
+If at least one mandated GGUF is present and an endpoint returns both signals,
+then the artifact verdict starts with `complete_sota_gguf_judge_preflight_ready`.
+
+## Implementation Status (REQ-VERIFY-5043)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5043 | Proposed (`python/carnot/experiment_5043_sota_gguf_judge_preflight.py`, `results/experiment_5043_sota_gguf_judge_preflight.json`) | Proposed (`tests/python/test_experiment_5043_sota_gguf_judge_preflight.py`) |
+
 ### REQ-VERIFY-5035: Phase D4 V3 Cross-Corpus Generalization Check
 
 The repository SHALL provide Exp 5035 at

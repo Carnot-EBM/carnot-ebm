@@ -1,0 +1,102 @@
+{
+  "duration_s": 0.00613,
+  "endpoint_summary": {
+    "candidate_endpoints": [
+      "http://127.0.0.1:8080"
+    ],
+    "completion_ready": false,
+    "confidence_ready": false,
+    "probes": [
+      {
+        "completion_probe": {
+          "detail": "http://127.0.0.1:8080/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:8080/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
+          "ready": false,
+          "status": null
+        },
+        "endpoint": "http://127.0.0.1:8080",
+        "telemetry_probe": {
+          "detail": "skipped: completion probe failed",
+          "ready": false,
+          "status": null
+        }
+      }
+    ],
+    "selected_endpoint": null,
+    "telemetry_signal": null,
+    "top_logprob_ready": false
+  },
+  "experiment": "experiment_5043_sota_gguf_judge_preflight",
+  "experiment_id": 5043,
+  "field_principles": {
+    "endpoint_summary": {
+      "principle": "machine-readable completion and telemetry diagnostics for every probed llama.cpp-compatible endpoint."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for the preflight: blocked_sota_gguf_unavailable, blocked_judge_server, or complete_sota_gguf_judge_preflight_ready."
+    },
+    "legacy_models_smoke_only": {
+      "principle": "legacy small models are allowed only for smoke tests, never headline evidence."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths or missing."
+    },
+    "sota_judge_ready": {
+      "principle": "true iff a local endpoint can complete and expose top-logprob or confidence telemetry for a mandated SOTA model."
+    },
+    "sota_models_ready": {
+      "principle": "true iff at least one mandated SOTA GGUF is locally usable."
+    },
+    "top_logprob_or_confidence_ready": {
+      "principle": "true iff the probed judge route exposes top-logprob or confidence telemetry."
+    },
+    "usable_sota_models": {
+      "principle": "the subset of mandated SOTA GGUFs resolved to local .gguf paths."
+    }
+  },
+  "honest_verdict": "blocked_judge_server",
+  "legacy_models_smoke_only": true,
+  "model_specs": {
+    "flagship_dense": {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    "flagship_moe": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    "middle_moe": {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  },
+  "reproducibility_checksum": "5c4b7704cf62656ec4dd1f96cee38aba6901f14ef124453671aaff90ef75b829",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5043_sota_gguf_judge_preflight.json",
+  "schema": "carnot.experiment_5043_sota_gguf_judge_preflight.v1",
+  "sota_judge_ready": false,
+  "sota_models_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-5043",
+    "SCENARIO-VERIFY-5043"
+  ],
+  "top_logprob_or_confidence_ready": false,
+  "usable_sota_models": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ]
+}
