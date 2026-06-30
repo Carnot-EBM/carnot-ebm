@@ -90,6 +90,88 @@ a terminal `blocked_<resource>` verdict, records the failed resource in
 |---|---|---|
 | REQ-REPORT-5010 | Planned (`python/carnot/experiment_5010_sota_ingestion_verifier_moat.py`) | Planned (`tests/python/test_experiment_5010_sota_ingestion_verifier_moat.py`) |
 
+### REQ-REPORT-5024: Phase E1 Verifier-Moat SOTA Ingestion For .463
+
+The Exp 5024 workflow SHALL run the reliable SOTA-ingestion channel reserved
+for the Phase E1 off-ARC verifier-moat slot and write
+`results/experiment_5024_sota_ingestion_verifier_moat.json`. It SHALL update
+the planner-facing synthesis note
+`docs/research-notes/verifier-moat-literature-2026-06-30.md`, mark the new
+papers ingested in `research-studying.md`, and add verified entries to
+`research-references.md`.
+
+Before promoting a complete artifact, the workflow SHALL verify that
+`https://arxiv.org` is reachable and that `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` are importable. Missing network or helper
+resources SHALL produce a terminal `blocked_<resource>` artifact that records
+the failed precondition and SHALL NOT fabricate citations or mappings.
+
+The workflow SHALL use `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, low-concurrency WebSearch, and WebFetch. It SHALL
+NOT invoke `/deep-research`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT launch training or live model inference, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md`.
+
+The complete artifact SHALL include principle-annotated top-level fields
+`honest_verdict`, `new_arxiv_ids`, `sota_to_phase_d_mapping`,
+`next_milestone_candidates`, `note_path`, `reliable_channel_used`,
+`inference_substrate`, `preconditions_checked`, and `field_principles`.
+It MAY include `citations_verified` and `d5_conditioning` to preserve source
+and gate context. `honest_verdict` SHALL equal
+`success_sota_ingested_5_new_papers_mapped_to_phase_d`.
+`new_arxiv_ids` SHALL contain at least three verified-real arXiv IDs, SHALL NOT
+contain any of the already-ingested set `2605.18871`, `2605.10158`,
+`2504.13134`, `2504.16828`, `2502.01989`, `2508.16665`, `2508.10539`,
+`2502.11157`, `2504.01005`, `2504.00891`, `2509.24460`, `2510.14913`,
+`2603.04304`, `2606.19818`, `2606.09073`, `2602.24040`, `2510.20369`,
+`2605.24005`, `2508.03686`, or `2408.15240`, and SHALL have HTTP 200 citation
+evidence. Each `sota_to_phase_d_mapping` row SHALL name the method, source
+arXiv ID, Phase D arm or direction strengthened (`D1 LoRA-EBM`, `D2 uPRM`,
+`D3 EBRM`, or `D6 verifier-judge cascade`), implementation delta over the
+current Exp 5017-5022 stack, pitfall, and `.463` candidate flag.
+`next_milestone_candidates` SHALL flag the strongest methods as candidate
+inputs for the `.463` roadmap, conditioned on Exp 5022's D5 verdict: scale a
+winning construction if a moat is realized, but for the current
+`complete_moat_execution_incomplete_ebrm` verdict, unblock and harden D1/D2/D3
+and keep cascades oracle-distinct.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success_sota_ingested_<n>_new_papers_mapped_to_phase_d."
+- `new_arxiv_ids`: principle "verified-real NEW arXiv IDs (http 200), NOT in the 18-paper ingested set (no fabrication -- every method cites a source)."
+- `sota_to_phase_d_mapping`: principle "per NEW method: which PHASE D arm/direction it strengthens + the implementation delta over the current stack + the pitfall."
+- `next_milestone_candidates`: principle "the strongest method(s) flagged as candidate inputs for the .463 roadmap (discover->ingest->plan->experiment)."
+- `note_path`: principle "docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads)."
+- `reliable_channel_used`: principle "sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch (NOT /deep-research -- banned from the autonomous loop)."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts (literature synthesis, no LLM inference)."
+- `preconditions_checked`: principle "records network/sweep-helper checks; unreachable network emits blocked_."
+
+#### SCENARIO-REPORT-5024: New Verifier-Moat SOTA Is Mapped To Phase D And .463
+
+Given arXiv is reachable, the sweep helpers are importable, and WebFetch
+verifies at least three non-excluded arXiv sources
+When the Exp 5024 workflow runs after Exp 5022 D5
+Then it writes the JSON artifact and note, maps the strongest new
+uncertainty-aware, self-supervised process, conformal-prefix, and
+cheap-verifier-vs-judge-cascade methods onto D1/D2/D3/D6, records the reliable
+channel, declares `aggregation_from_upstream_artifacts`, flags `.463`
+candidates, and records that `/deep-research` and
+`scripts/research_conductor.py` were not used.
+
+#### SCENARIO-REPORT-5024-BLOCKED-PRECONDITION: Missing Reliable Channel Blocks
+
+Given arXiv is unreachable or the sweep helpers are not importable
+When the Exp 5024 workflow starts
+Then it writes `results/experiment_5024_sota_ingestion_verifier_moat.json` with
+a terminal `blocked_<resource>` verdict, records the failed resource in
+`preconditions_checked`, and does not claim new SOTA was ingested.
+
+## Implementation Status (REQ-REPORT-5024)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5024 | Planned (`python/carnot/experiment_5024_sota_ingestion_verifier_moat.py`) | Planned (`tests/python/test_experiment_5024_sota_ingestion_verifier_moat.py`) |
+
 ### REQ-REPORT-5022: Phase D5 Off-ARC Verifier-Moat Gate Resolution v2
 
 The Exp 5022 workflow SHALL aggregate only non-fabricated upstream Phase D

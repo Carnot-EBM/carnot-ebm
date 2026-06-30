@@ -1,0 +1,276 @@
+{
+  "citations_verified": {
+    "2502.11250": {
+      "http_status": 200,
+      "title": "Uncertainty-Aware Step-wise Verification with Generative Reward Models",
+      "url": "https://arxiv.org/abs/2502.11250"
+    },
+    "2502.14356": {
+      "http_status": 200,
+      "title": "Full-Step-DPO: Self-Supervised Preference Optimization with Step-wise Rewards for Mathematical Reasoning",
+      "url": "https://arxiv.org/abs/2502.14356"
+    },
+    "2507.01951": {
+      "http_status": 200,
+      "title": "Test-Time Scaling with Reflective Generative Model",
+      "url": "https://arxiv.org/abs/2507.01951"
+    },
+    "2605.11334": {
+      "http_status": 200,
+      "title": "VERDI: Single-Call Confidence Estimation for Verification-Based LLM Judges via Decomposed Inference",
+      "url": "https://arxiv.org/abs/2605.11334"
+    },
+    "2605.30085": {
+      "http_status": 200,
+      "title": "Conformal Certification of Reasoning Trace Prefixes",
+      "url": "https://arxiv.org/abs/2605.30085"
+    }
+  },
+  "d5_conditioning": {
+    "decision": "EXECUTION-INCOMPLETE",
+    "execution_incomplete_arms": [
+      "D3 EBRM"
+    ],
+    "flagged_or_blocked_arms": [
+      "D1 LoRA-EBM",
+      "D2 uPRM",
+      "D6 verifier-judge cascade",
+      "D4 second-corpus-confirmation"
+    ],
+    "honest_verdict": "complete_moat_execution_incomplete_ebrm",
+    "moat_realized": false,
+    "moat_retired_bounded": false,
+    "roadmap_condition": "Because D5 is execution-incomplete rather than realized or clean-null, .463 should repair and harden D1/D2/D3/D6 before any retirement claim.",
+    "source_artifact": "results/experiment_5022_moat_gate_resolution_v2.json"
+  },
+  "field_principles": {
+    "citations_verified": {
+      "principle": "HTTP-200 arXiv title and URL evidence for every selected method."
+    },
+    "d5_conditioning": {
+      "principle": "Exp 5022 D5 verdict controls whether .463 scales a win or repairs execution-incomplete verifier arms."
+    },
+    "field_principles": {
+      "principle": "principle annotations are part of the artifact contract."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_sota_ingested_<n>_new_papers_mapped_to_phase_d."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (literature synthesis, no LLM inference)."
+    },
+    "new_arxiv_ids": {
+      "principle": "verified-real NEW arXiv IDs (http 200), NOT in the 18-paper ingested set (no fabrication -- every method cites a source)."
+    },
+    "next_milestone_candidates": {
+      "principle": "the strongest method(s) flagged as candidate inputs for the .463 roadmap (discover->ingest->plan->experiment)."
+    },
+    "note_path": {
+      "principle": "docs/research-notes/verifier-moat-literature-<date>.md (the synthesis the planner reads)."
+    },
+    "preconditions_checked": {
+      "principle": "records network/sweep-helper checks; unreachable network emits blocked_."
+    },
+    "reliable_channel_used": {
+      "principle": "sweep_clusters/sweep_semscholar + low-concurrency WebSearch/WebFetch (NOT /deep-research -- banned from the autonomous loop)."
+    },
+    "sota_to_phase_d_mapping": {
+      "principle": "per NEW method: which PHASE D arm/direction it strengthens + the implementation delta over the current stack + the pitfall."
+    }
+  },
+  "honest_verdict": "success_sota_ingested_5_new_papers_mapped_to_phase_d",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "new_arxiv_ids": [
+    "2502.11250",
+    "2605.11334",
+    "2507.01951",
+    "2605.30085",
+    "2502.14356"
+  ],
+  "next_milestone_candidates": [
+    {
+      "candidate": "Repair D2 with self-supervised process rewards",
+      "candidate_flag": "flagged_for_v463 (.463): repair_d2_self_supervised_prm",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D2 uPRM"
+      ],
+      "source_ids": [
+        "2507.01951",
+        "2502.14356"
+      ],
+      "why": "D5 did not cleanly retire D1 or D2. The strongest .463 repair path is a frozen-candidate self-supervised PRM that removes the blocked logprob cache."
+    },
+    {
+      "candidate": "Rerun D3 with uncertainty and conformal abstention",
+      "candidate_flag": "flagged_for_v463 (.463): rerun_d3_uncertainty_conformal_gate",
+      "phase_d_arms": [
+        "D3 EBRM"
+      ],
+      "source_ids": [
+        "2502.11250",
+        "2605.30085"
+      ],
+      "why": "D5 marks D3 execution incomplete. A .463 rerun should add CoT-entropy and CROP-style conformal thresholds before measuring delta_vs_tuned_sc."
+    },
+    {
+      "candidate": "Rebuild the cheap-verifier-vs-judge cascade",
+      "candidate_flag": "flagged_for_v463 (.463): verdi_oracle_distinct_cascade",
+      "phase_d_arms": [
+        "D6 verifier-judge cascade"
+      ],
+      "source_ids": [
+        "2605.11334"
+      ],
+      "why": "D6 was blocked, but VERDI gives a single-call confidence router. .463 should test judge-call savings while preserving oracle-distinct accounting."
+    }
+  ],
+  "note_path": "docs/research-notes/verifier-moat-literature-2026-06-30.md",
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "already_ingested_exclusion_set_checked": [
+      "2408.15240",
+      "2502.01989",
+      "2502.11157",
+      "2504.00891",
+      "2504.01005",
+      "2504.13134",
+      "2504.16828",
+      "2508.03686",
+      "2508.10539",
+      "2508.16665",
+      "2509.24460",
+      "2510.14913",
+      "2510.20369",
+      "2602.24040",
+      "2603.04304",
+      "2605.10158",
+      "2605.18871",
+      "2605.24005",
+      "2606.09073",
+      "2606.19818"
+    ],
+    "codex_md_read": true,
+    "d5_artifact": "results/experiment_5022_moat_gate_resolution_v2.json",
+    "d5_artifact_read": true,
+    "d5_honest_verdict": "complete_moat_execution_incomplete_ebrm",
+    "deep_research_invoked": false,
+    "network_arxiv_reachable": true,
+    "ops_docs_modified": false,
+    "reliable_channel_note": "sweep_clusters/sweep_semscholar plus low-concurrency WebSearch/WebFetch; /deep-research was not invoked.",
+    "research_conductor_modified": false,
+    "selected_arxiv_http_200": {
+      "2502.11250": "https://arxiv.org/abs/2502.11250",
+      "2502.14356": "https://arxiv.org/abs/2502.14356",
+      "2507.01951": "https://arxiv.org/abs/2507.01951",
+      "2605.11334": "https://arxiv.org/abs/2605.11334",
+      "2605.30085": "https://arxiv.org/abs/2605.30085"
+    },
+    "sweep_clusters_used": true,
+    "sweep_helpers_importable": true,
+    "sweep_semscholar_used": true,
+    "websearch_webfetch_used": true
+  },
+  "reliable_channel_used": {
+    "deep_research_invoked": false,
+    "semscholar_result": "One focused S2 query returned arXiv IDs including 2503.10291, 2504.15275, 2502.06737, 2501.04686, 2502.14361, 2505.20241, and 2504.10559; five later focused queries hit HTTP 429 and were not promoted as evidence.",
+    "sweep_cluster_commands": [
+      ".venv/bin/python scripts/sweep_clusters.py 0 --max-results 12",
+      ".venv/bin/python scripts/sweep_clusters.py 1 --max-results 12",
+      "encoded arXiv API fetches for clusters 0 and 1 after raw helper URL returned HTTP 400"
+    ],
+    "sweep_cluster_result": "Cluster 0 surfaced PASS/process-reward and reward-hacking papers; cluster 1 had no stronger energy-RM verifier hit than the mapped D3-adjacent papers.",
+    "sweep_clusters_used": true,
+    "sweep_semscholar_commands": [
+      "energy based reward model verifier reasoning 2026",
+      "unsupervised process reward model verifier reasoning",
+      "uncertainty aware reward model verifier LLM judge cascade",
+      "cheap verifier judge cascade reward model uncertainty",
+      "oracle distinct verification reward model reasoning",
+      "test time scaling discriminative verifier reward model"
+    ],
+    "sweep_semscholar_used": true,
+    "webfetch_top_sources": [
+      "https://arxiv.org/abs/2502.11250",
+      "https://arxiv.org/abs/2605.11334",
+      "https://arxiv.org/abs/2507.01951",
+      "https://arxiv.org/abs/2605.30085",
+      "https://arxiv.org/abs/2606.29296",
+      "https://arxiv.org/abs/2512.22245",
+      "https://arxiv.org/abs/2502.14356",
+      "https://arxiv.org/abs/2505.10320"
+    ],
+    "websearch_queries": [
+      "arXiv 2025 2026 energy reward model verifier reasoning LLM uncertainty reward model judge cascade",
+      "arXiv unsupervised process reward model verifier LLM reasoning 2025 2026",
+      "arXiv cheap verifier judge cascade reward model uncertainty LLM 2025 2026",
+      "arXiv test time scaling discriminative verifier process reward model 2025 2026"
+    ],
+    "websearch_webfetch_used": true
+  },
+  "sota_to_phase_d_mapping": [
+    {
+      "arxiv_id": "2502.11250",
+      "candidate_flag": "flagged_for_v463 (.463): cot_entropy_uprm_ebrm_uncertainty",
+      "implementation_delta": "Over Exp 5017-5022, attach CoT-Entropy uncertainty to the D2 step verifier and to the D3 EBRM selector, then require selection delta versus genuine tuned-SC after uncertainty-aware abstention.",
+      "method": "CoT-Entropy uncertainty-aware generative PRM",
+      "phase_d_arms": [
+        "D2 uPRM",
+        "D3 EBRM"
+      ],
+      "pitfall": "The paper is math-reasoning PRM evidence; uncertainty may flag style variation rather than wrong reasoning unless calibrated on the MuSR cache.",
+      "source_signal": "Adds uncertainty quantification to generative reward models for step-wise verification, using CoT Entropy to detect unreliable PRM judgments.",
+      "url": "https://arxiv.org/abs/2502.11250"
+    },
+    {
+      "arxiv_id": "2605.11334",
+      "candidate_flag": "flagged_for_v463 (.463): verdi_confidence_routed_cascade",
+      "implementation_delta": "Over Exp 5017-5022, rerun the blocked D6 cascade with VERDI-style step-verdict alignment, claim margin, and evidence-grounding features as the cheap confidence router before escalating to the judge.",
+      "method": "VERDI single-call decomposed judge confidence",
+      "phase_d_arms": [
+        "D6 verifier-judge cascade"
+      ],
+      "pitfall": "A cascade win can silently become a judge win; the artifact must charge every fallback call and keep oracle-distinct cheap-verifier value separate.",
+      "source_signal": "Extracts confidence from verification sub-check traces without extra judge calls, replacing unavailable or saturated logprob confidence.",
+      "url": "https://arxiv.org/abs/2605.11334"
+    },
+    {
+      "arxiv_id": "2507.01951",
+      "candidate_flag": "flagged_for_v463 (.463): reflective_self_supervised_prm_unblock",
+      "implementation_delta": "Over Exp 5017-5022, use the reflective self-supervised PRM recipe as the D2 unblock path and, if D1 remains base-model blocked, train only a small trajectory-scoring head over cached candidates.",
+      "method": "Reflective generative self-supervised PRM",
+      "phase_d_arms": [
+        "D1 LoRA-EBM",
+        "D2 uPRM"
+      ],
+      "pitfall": "Outcome-derived self-supervision can reproduce generator bias and reward answer-shape shortcuts; the no-model-id and oracle-distinct audits remain mandatory.",
+      "source_signal": "Uses a shared policy and process-reward interface with a lightweight scoring head and learns trajectory selection from outcome rewards without process labels.",
+      "url": "https://arxiv.org/abs/2507.01951"
+    },
+    {
+      "arxiv_id": "2605.30085",
+      "candidate_flag": "flagged_for_v463 (.463): crop_conformal_prefix_gate",
+      "implementation_delta": "Over Exp 5017-5022, wrap D3 energy or D6 confidence scores with a conformal prefix threshold and evaluate certified-prefix length plus answer-selection delta instead of scalar AUROC alone.",
+      "method": "CROP conformal clean-prefix certification",
+      "phase_d_arms": [
+        "D3 EBRM",
+        "D6 verifier-judge cascade"
+      ],
+      "pitfall": "Exchangeability assumptions may fail across generated candidates; over-withholding can erase the headroom that a verifier moat needs to exploit.",
+      "source_signal": "Turns any step-risk proxy into a calibrated clean-prefix certificate, then routes uncertified suffixes for repair or review.",
+      "url": "https://arxiv.org/abs/2605.30085"
+    },
+    {
+      "arxiv_id": "2502.14356",
+      "candidate_flag": "flagged_for_v463 (.463): full_step_self_supervised_uprm",
+      "implementation_delta": "Over Exp 5017-5022, replace the blocked D2 logprob-cache dependency with full-step self-supervised rewards over complete candidate traces, then compare the resulting selector with tuned-SC on the same cache.",
+      "method": "Full-Step-DPO self-supervised process reward",
+      "phase_d_arms": [
+        "D2 uPRM"
+      ],
+      "pitfall": "It optimizes the generator as much as the verifier; using it as a selector requires a frozen-candidate evaluation to avoid claiming training lift as moat lift.",
+      "source_signal": "Trains a self-supervised process reward model that scores every reasoning step instead of relying on human or GPT-4 step labels.",
+      "url": "https://arxiv.org/abs/2502.14356"
+    }
+  ]
+}

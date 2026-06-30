@@ -10,6 +10,21 @@ loop) executes the current experiments.
 
 **Historical (pre-pivot, preserved per never-prune):** Phase 1 ship-track was one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+<!-- EXP5024-VERIFIER-MOAT-LITERATURE-START -->
+## Exp 5024 - verifier-moat literature SOTA ingestion - INGESTED
+
+- Honest verdict: `success_sota_ingested_5_new_papers_mapped_to_phase_d`
+- Note: `docs/research-notes/verifier-moat-literature-2026-06-30.md`
+- D5 conditioning: `complete_moat_execution_incomplete_ebrm` means .463 repairs or reruns D1/D2/D3/D6.
+- Reliable channel: sweep_clusters/sweep_semscholar plus WebSearch/WebFetch; `/deep-research` was not invoked.
+
+### flagged_for_v463
+- CoT-Entropy uncertainty-aware generative PRM (arXiv:2502.11250): flagged_for_v463 (.463): cot_entropy_uprm_ebrm_uncertainty
+- VERDI single-call decomposed judge confidence (arXiv:2605.11334): flagged_for_v463 (.463): verdi_confidence_routed_cascade
+- Reflective generative self-supervised PRM (arXiv:2507.01951): flagged_for_v463 (.463): reflective_self_supervised_prm_unblock
+- CROP conformal clean-prefix certification (arXiv:2605.30085): flagged_for_v463 (.463): crop_conformal_prefix_gate
+- Full-Step-DPO self-supervised process reward (arXiv:2502.14356): flagged_for_v463 (.463): full_step_self_supervised_uprm
+<!-- EXP5024-VERIFIER-MOAT-LITERATURE-END -->
 <!-- EXP4890-SOTA-INGESTION-V451-FRONTIER-START -->
 <!-- EXP5010-VERIFIER-MOAT-LITERATURE-START -->
 ## Exp 5010 - verifier-moat literature SOTA ingestion - INGESTED
