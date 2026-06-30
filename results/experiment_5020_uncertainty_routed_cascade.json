@@ -1,0 +1,108 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_flags": [],
+  "best_routing_threshold": null,
+  "blocked_error": "URLError: <urlopen error [Errno 111] Connection refused>",
+  "cascade_accuracy": null,
+  "cascade_judge_calls": 0,
+  "cheap_verifier_only_accuracy": null,
+  "cheap_verifier_source": null,
+  "cost_quality_frontier": [],
+  "deliverable_stage": "blocked_precondition",
+  "duration_s": 0.009914,
+  "experiment": "experiment_5020_uncertainty_routed_cascade",
+  "experiment_id": 5020,
+  "field_principles": {
+    "cascade_accuracy": {
+      "principle": "the cascade accuracy at the best routing threshold (the headline)."
+    },
+    "cascade_judge_calls": {
+      "principle": "the judge-call count the cascade actually used (the efficiency number; a win = << N)."
+    },
+    "cheap_verifier_only_accuracy": {
+      "principle": "the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor)."
+    },
+    "cost_quality_frontier": {
+      "principle": "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
+    },
+    "genuine_tuned_sc_accuracy": {
+      "principle": "the B1 GENUINE tuned-SC (the accuracy context)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (the strong judge runs live; >=60s floor)."
+    },
+    "judge_call_fraction": {
+      "principle": "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
+    },
+    "judge_only_accuracy": {
+      "principle": "the strong-judge-only accuracy at N judge calls (the expensive ceiling)."
+    },
+    "judge_only_calls": {
+      "principle": "N -- the full judge-call count (the cost the cascade must beat)."
+    },
+    "model_specs": {
+      "principle": "the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 (sample-size rigor)."
+    },
+    "preconditions_checked": {
+      "principle": "records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the routing + bootstrap."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "genuine_tuned_sc_accuracy": null,
+  "honest_verdict": "blocked_judge_server",
+  "inference_substrate": "precondition_check_only",
+  "judge_call_fraction": null,
+  "judge_only_accuracy": null,
+  "judge_only_calls": 0,
+  "model_specs": {
+    "cheap_verifier": null,
+    "strong_judge": {
+      "gpu": 0,
+      "model": "gemma-4-12B-it-GGUF",
+      "server": "http://127.0.0.1:8080"
+    }
+  },
+  "n_questions": 0,
+  "oracle_distinctness_enforced": true,
+  "paired_ci95_cascade_vs_judge": null,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "selected registry quality ensemble fallback",
+      "resource": "cheap_verifier"
+    },
+    {
+      "available": false,
+      "detail": "URLError: <urlopen error [Errno 111] Connection refused>",
+      "path": "http://127.0.0.1:8080",
+      "resource": "judge_server"
+    },
+    {
+      "available": true,
+      "detail": "loaded 200 cached MuSR candidate rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+      "resource": "cached_musr_candidates"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "0d727a4165c9056bbd45b4bff3a9382b6b28bb7942ab05e6980f310a6dbb6c96",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5020_uncertainty_routed_cascade.json",
+  "schema": "carnot.experiment_5020_uncertainty_routed_cascade.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5020",
+    "SCENARIO-VERIFY-5020"
+  ],
+  "summarize_artifact_exit_code": 0,
+  "verifier_is_oracle": false
+}

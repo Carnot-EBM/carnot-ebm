@@ -21001,6 +21001,84 @@ without claiming a clean null.
 |---|---|---|
 | REQ-VERIFY-5018 | Implemented (`python/carnot/experiment_5018_uprm_replication_v2.py`, `results/experiment_5018_uprm_replication_v2.json`) | Implemented (`tests/python/test_experiment_5018_uprm_replication_v2.py`) |
 
+### REQ-VERIFY-5020: Uncertainty-Routed MuSR Cascade Efficiency
+
+The repository SHALL provide Exp 5020 at
+`python/carnot/experiment_5020_uncertainty_routed_cascade.py` to measure the
+arXiv:2510.20369-style uncertainty-routed cascade over cached MuSR candidates
+and write `results/experiment_5020_uncertainty_routed_cascade.json`.
+
+Before scoring, the runner SHALL write a deliverable-first schema skeleton and
+check three resources: a cheap oracle-distinct verifier, the GPU-0 CUDA
+`llama-server` judge endpoint, and at least 200 cached MuSR candidate rows. The
+cheap verifier SHALL prefer the Exp 5017 trained LoRA-EBM only when
+`scorer_trained=true`, then Exp 5018 uPRM when available, and otherwise the
+registry quality ensemble / cached non-oracle scorer. A missing cheap verifier,
+judge server, or candidate cache SHALL produce `honest_verdict=blocked_<resource>`
+with `verifier_is_oracle=false`, the precondition failure recorded, nullable
+accuracy fields, and no fabricated efficiency win.
+
+When preconditions hold, the runner SHALL evaluate three explicitly separated
+rows over the same MuSR questions: cheap-verifier-only accuracy with zero judge
+calls, judge-only accuracy with one charged strong-judge call per question, and
+an uncertainty-routed cascade that accepts the cheap verifier only when its
+candidate-score margin is at least a swept routing threshold and otherwise
+escalates exactly one question to the strong LLM judge. Every judge fallback
+SHALL increment the charged judge-call count. The strong judge SHALL run live
+through the GPU-0 CUDA `llama-server` for `gemma-4-12B-it-GGUF` or a stronger
+SOTA GGUF and SHALL NOT be described as the executable oracle on MuSR.
+
+The terminal artifact SHALL include `honest_verdict`, `verifier_is_oracle`,
+`cheap_verifier_only_accuracy`, `judge_only_accuracy`, `judge_only_calls`,
+`cascade_accuracy`, `cascade_judge_calls`, `judge_call_fraction`,
+`cost_quality_frontier`, `genuine_tuned_sc_accuracy`, `n_questions`,
+`model_specs`, `inference_substrate`, `random_seed`, `preconditions_checked`,
+`adversarial_verify_clean`, `adversarial_verify_flags`,
+`summarize_artifact_exit_code`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr.`;
+`verifier_is_oracle` = `false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim).`;
+`cheap_verifier_only_accuracy` = `the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor).`;
+`judge_only_accuracy` = `the strong-judge-only accuracy at N judge calls (the expensive ceiling).`;
+`judge_only_calls` = `N -- the full judge-call count (the cost the cascade must beat).`;
+`cascade_accuracy` = `the cascade accuracy at the best routing threshold (the headline).`;
+`cascade_judge_calls` = `the judge-call count the cascade actually used (the efficiency number; a win = << N).`;
+`judge_call_fraction` = `cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction.`;
+`cost_quality_frontier` = `the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall).`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE tuned-SC (the accuracy context).`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`model_specs` = `the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp.`;
+`inference_substrate` = `live_llm_inference (the strong judge runs live; >=60s floor).`;
+`random_seed` = `determinism for the routing + bootstrap.`;
+`preconditions_checked` = `records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_.`
+
+### SCENARIO-VERIFY-5020: Cascade Charges Judge Calls And Reports Frontier
+
+Given a usable cheap oracle-distinct verifier, a reachable GPU-0 CUDA
+`llama-server` judge, and at least 200 cached MuSR candidate rows, when Exp
+5020 runs, then it writes the skeleton first, measures cheap-only, judge-only,
+and cascade rows over the same question set, sweeps routing thresholds, charges
+every judge-only and cascade fallback call, runs adversarial artifact
+verification plus artifact summarization, and writes a terminal artifact whose
+frontier separates cheap-verifier value from judge-fallback value.
+
+If the best cascade point reaches accuracy within the paired bootstrap CI of
+the judge-only baseline while using a materially smaller judge-call fraction,
+then `honest_verdict` SHALL start with
+`success_cascade_parity_at_<pct>_judge_calls`. Otherwise the run SHALL write
+`complete_cascade_no_efficiency_win_musr` rather than over-claiming an
+efficiency moat. If the cheap verifier, judge server, or cached MuSR candidates
+are missing, the run SHALL write a blocked artifact naming the missing resource
+and exit without claiming cascade accuracy.
+
+## Implementation Status (REQ-VERIFY-5020)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5020 | Implemented (`python/carnot/experiment_5020_uncertainty_routed_cascade.py`, `results/experiment_5020_uncertainty_routed_cascade.json`) | Implemented (`tests/python/test_experiment_5020_uncertainty_routed_cascade.py`) |
+
 ### REQ-VERIFY-5005: EBRM Uncertainty-Aware MuSR Selector
 
 The repository SHALL provide Exp 5005 at
