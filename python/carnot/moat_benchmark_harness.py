@@ -690,6 +690,7 @@ def generate_candidates_with_logprobs(
                 "answer": answer,
                 "reasoning": text,
                 "token_logprobs": list(payload.get("token_logprobs") or []),
+                "top_logprobs": list(payload.get("top_logprobs") or []),
                 "mean_logprob": payload.get("mean_logprob"),
                 "cache_index": offset,
                 "temperature": cfg.temperature,
