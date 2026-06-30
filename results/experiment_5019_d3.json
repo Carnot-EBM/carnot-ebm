@@ -1,0 +1,24 @@
+{
+  "experiment": 5019,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-30",
+  "started_at": "2026-06-30T08:28:10.675728+00:00",
+  "finished_at": "2026-06-30T08:28:10.675728+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE D3 (VERIFIER MOAT; the uncertainty-aware construction, NON-DEGENERATE) -- rebuild EBRM (arXiv:2504.13134) properly: refine the REAL D1 trained LoRA-EBM scorer (gated_on D1 scorer_trained, NOT the weak registry fallback that made the .461 D3 degenerate), add the E1-ingested uncertainty heads (UARM 2606.19818 + distributional-pessimistic 2606.09073 + RewardUQ 2602.24040 calibration), and CAP the abstention so the selector cannot collapse to always-SC (the B1 degeneracy guard). Gate beats-GENUINE-tuned-SC on MuSR.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5017-d1.scorer_trained (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5017-d1",
+      "artifact_field": "scorer_trained",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
