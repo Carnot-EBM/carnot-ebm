@@ -9669,3 +9669,4 @@ The contro |
 | 2026-06-30 19:08 UTC | Milestone 2026.06.464 activated | OK | 14 tasks queued |
 | 2026-06-30 19:21 UTC | PHASE 0 transition -- archive .463, activate .464, | OK | 85 passed, 1 warning in 6.94s |
 | 2026-06-30 19:30 UTC | PHASE B1 preflight -- mandated SOTA GGUF + judge/t | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-30 19:47 UTC | PHASE B2 data repair -- build a solver-backed seco | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
