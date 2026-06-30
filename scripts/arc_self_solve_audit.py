@@ -101,6 +101,25 @@ def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -
         return False, str(exc)
 
 
+def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, str]:
+    """Codex (gpt-5.5) hostile reviewer — quota-conserve path (mirrors the conductor's codex exec
+    pattern; prompt on stdin via `-`). Added 2026-06-30 for the Claude-quota-conserve window."""
+    try:
+        proc = subprocess.run(
+            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
+             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            input=f"{prompt}\n\n---\n{body}",
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        return (proc.returncode == 0, proc.stdout if proc.returncode == 0 else proc.stderr[:300])
+    except Exception as exc:
+        return False, str(exc)
+
+
 def _reachability() -> str:
     """Run the orphan-solver lint and capture its verdict (the live-path reachability pre-pass)."""
     try:
@@ -159,7 +178,7 @@ def _recent_solve_artifacts(since_days: int) -> list[dict]:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--model", choices=("claude", "gemini", "none"), default="claude")
+    ap.add_argument("--model", choices=("claude", "gemini", "codex", "none"), default="claude")
     ap.add_argument("--model-name", default=None)
     ap.add_argument("--since-days", type=int, default=7)
     args = ap.parse_args()
@@ -215,7 +234,7 @@ def main() -> int:
     ]
 
     if args.model != "none":
-        caller = call_claude if args.model == "claude" else call_gemini
+        caller = {"claude": call_claude, "gemini": call_gemini, "codex": call_codex}[args.model]
         kwargs = {"model": args.model_name} if args.model_name else {}
         ok, resp = caller(HOSTILE_PROMPT, body, **kwargs)
         out += [
