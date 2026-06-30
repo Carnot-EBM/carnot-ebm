@@ -16,7 +16,7 @@
 # uncertainty heads, gated_on D1, non-degenerate abstention), and ADD the EFFICIENCY arm (uncertainty-routed
 # cheap->judge cascade, arXiv:2510.20369) so a north-star-§5 Pareto win is reachable even if every accuracy arm
 # ties SC. THE FALSIFIABLE GATE (the only non-circular evidence): on a headroom-present ORACLE-DISTINCT domain
-# (verifier_is_oracle=False, headroom_present vs GENUINE tuned-SC), >=1 of {LoRA-EBM, uPRM, EBRM} beats genuine
+# (verifier_is_oracle=False, headroom_present vs GENUINE tuned-SC), >=1 of {{LoRA-EBM, uPRM, EBRM}} beats genuine
 # tuned-SC with McNemar CI95-excl-0, MuSR + >=1 second corpus; OR the cascade hits accuracy-parity at materially
 # fewer judge calls. retire_if_same_verdict: true -- if the PROPERLY-EXECUTED LoRA-EBM AND uPRM both null, the
 # off-ARC accuracy moat retires as bounded (a publishable null converging with the ARC tie). A skeleton/degenerate
@@ -143,7 +143,7 @@ tasks:
 - id: exp5015-b1
   title: 'PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) -- fix the moat harness baseline INTEGRITY: replace the
     k=1 strawman "tuned-SC" with a GENUINE K-way majority-vote self-consistency (sweep K over the cached
-    candidates, report the full {K: accuracy} sweep so the tuned choice is auditable), and add an ALWAYS-ABSTAIN
+    candidates, report the full {{K: accuracy}} sweep so the tuned choice is auditable), and add an ALWAYS-ABSTAIN
     DEGENERACY GUARD (flag any abstaining selector that abstains > 50% -> it IS tuned-SC, not a real verifier). Re-
     emit the corrected MuSR tuned-SC baseline all D arms must beat. This makes every .462 moat delta honest.'
   priority: high
@@ -196,7 +196,7 @@ tasks:
       genuine_tuned_sc_accuracy:
         principle: "the K-way majority-vote tuned-SC on MuSR (the HONEST baseline to beat -- replaces the k=1 strawman 0.585 if K>1 helps)."
       sc_k_sweep:
-        principle: "the full {K: accuracy} curve so the tuned-K choice is auditable (proves k=1 was/was-not genuinely best, not a default)."
+        principle: "the full {{K: accuracy}} curve so the tuned-K choice is auditable (proves k=1 was/was-not genuinely best, not a default)."
       tuned_k:
         principle: "the K that maximizes SC accuracy (the tuned choice)."
       candidates_per_question:
@@ -448,7 +448,7 @@ tasks:
     THE CONSTRUCTION (uPRM as an oracle-distinct SELECTOR -- reuse the .461 impl):
       - Load the B2 shared logprob cache (results/experiment_5016_..._cache JSONL): K candidates-with-logprobs per
         MuSR question. The .461 artifact's uprm_score_methodology_note has the exact formula:
-        S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t over the +/- marker next-token probs; selector = mean no-error
+        S(j)=1[j<=T] log p^-_j + sum_{{t<j}} log p^+_t over the +/- marker next-token probs; selector = mean no-error
         log-likelihood. NO gold at scoring time (unsupervised + oracle-distinct).
       - SELECT the best-process-score candidate's answer; accuracy vs gold (EVAL only); paired CI + McNemar vs the
         GENUINE tuned-SC (B1). Report oracle@K + genuine headroom_present (do NOT claim a null on a no-headroom corpus).
@@ -694,7 +694,7 @@ tasks:
       judge_call_fraction:
         principle: "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
       cost_quality_frontier:
-        principle: "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
+        principle: "the swept {{routing_threshold: (accuracy, judge_calls)}} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
       genuine_tuned_sc_accuracy:
         principle: "the B1 GENUINE tuned-SC (the accuracy context)."
       n_questions:
@@ -828,8 +828,8 @@ tasks:
 
     THE GATE (the ONLY non-circular evidence):
       - ACCURACY win: on a headroom-present ORACLE-DISTINCT domain (verifier_is_oracle=False, headroom_present=True
-        vs the GENUINE tuned-SC), >=1 of {trained LoRA-EBM (D1, scorer_trained=true), uPRM (D2), EBRM (D3, non-
-        degenerate)} beats the GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05), confirmed on MuSR AND (D4)
+        vs the GENUINE tuned-SC), >=1 of {{trained LoRA-EBM (D1, scorer_trained=true), uPRM (D2), EBRM (D3, non-
+        degenerate)}} beats the GENUINE tuned-SC with paired CI95-excl-0 (McNemar p<0.05), confirmed on MuSR AND (D4)
         >=1 second corpus.
       - EFFICIENCY win (north-star §5): the cascade (D6) reaches accuracy within CI of the judge-only baseline at
         materially fewer judge calls (a Pareto point), with the judge cost charged + the cheap-vs-judge value separated.
@@ -883,7 +883,7 @@ tasks:
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads D1-D4 + cascade JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {experiment_id, fields_imported, sha256} for each arm so the verdict is traceable to a real measurement."
+        principle: "the {{experiment_id, fields_imported, sha256}} for each arm so the verdict is traceable to a real measurement."
 
     Run: `.venv/bin/python python/carnot/experiment_5022_moat_gate_resolution_v2.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1232,7 +1232,7 @@ tasks:
       inference_substrate:
         principle: "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
       cited_upstream_artifacts:
-        principle: "the {experiment_id, fields_imported, sha256} for each aggregated arm (traceable to real measurements)."
+        principle: "the {{experiment_id, fields_imported, sha256}} for each aggregated arm (traceable to real measurements)."
 
     Run: `.venv/bin/python python/carnot/experiment_5027_capstone_v462.py`
     Do NOT push. Do NOT modify scripts/research_conductor.py.
