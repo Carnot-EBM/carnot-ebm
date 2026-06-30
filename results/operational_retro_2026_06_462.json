@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.462",
+  "generated_at": "2026-06-30T10:57:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "TIMING DATA reports experiments_completed=0 / total_wall_time_minutes=0 / compute_bound=0 / gpu_idle=null -- the recurring milestone-scoped false-zero detector gap (documented .363->.461, now .462 = ~88 milestones), NOT an empty milestone. Reconstructed on-disk this turn (results/ mtimes + git log + ops/changelog.md): .462 ran 13 arms exp5014->exp5027 (exp5019 not emitted) over a ~222-min window (2026-06-30T03:05:05Z->06:47:30Z) -- the SECOND PHASE D off-ARC verifier-moat milestone (the first REAL moat test). The operational headline is a BLOCK-CASCADE: the B2 shared logprob-candidate cache failed to build (exp5016 blocked_generation_or_cache_error), cascade-blocking D2/D4/D6, while D1 blocked independently -- so capstone exp5027 = complete_capstone_v462_moat_execution_incomplete_ebrm (no clean moat verdict; DiffusionGemma gate STILL-PENDING).",
+  "bottlenecks_identified": [
+    "RECURRING (operational, ~88 milestones): the milestone-scoped TIMING-DATA detector false-zeroed again (0/0/0/null) -- it reported no experiment commits since activation, but on-disk results/ mtimes + git log + ops/changelog.md confirm 13 arms exp5014->exp5027 ran over a ~222-min window (03:05:05Z->06:47:30Z). The retro cannot use the detector's numbers and must reconstruct on-disk.",
+    "SUBSTANTIVE (this milestone, distinct from .461's flagged_adversarial story): a PHASE D BLOCK-CASCADE rooted in infra. The B2 shared logprob-candidate cache (exp5016) failed to build (blocked_generation_or_cache_error); it is the upstream dependency for D2 uPRM (exp5018 blocked_b2_logprob_cache) and, via no-clean-winner, D4 cross-corpus (exp5021 blocked_no_best_verifier). D1 LoRA-EBM (exp5017 blocked_trainable_qwen_base) and D6 cascade (exp5020 blocked_judge_server) blocked independently. Net: the first REAL moat test could not execute cleanly (exp5022/exp5027 = moat_execution_incomplete_ebrm); the off-ARC moat verdict is still unmeasured after two PHASE D milestones.",
+    "NOT-A-BOTTLENECK (evaluated + cleared): GPU idle is NOT flagged. gpu_idle_on_compute_bound_tasks is null -- there is no compute-bound milestone task in the TIMING DATA, the on-disk D scoring arms finished in-window hours before the 10:57:46Z GPU snapshot, the capstone exp5027 (06:47:30Z) is aggregation-only, and the GPU 1 llama.cpp process (PID 1876912, 95% util, wall 181s) is non-milestone outer-loop work on its operator-allocated GPU. The idle RTX 3090 (GPU 0, 0% / 4MB) is by-design."
+  ],
+  "improvements_suggested": [
+    "[RECURRING, UNBLOCKED] Wire the B3-confirmed results/-mtime fallback + runtime arm-stamping into the conductor's retro TIMING-DATA prompt-assembly call site so the detector stops false-zeroing. This is the single remaining step; it is out-of-scope for an autonomous retro task (must not edit scripts/research_conductor.py), so it requires an operator/outer-loop edit.",
+    "[ROOT CAUSE] Make B2 (the shared logprob-candidate cache) a HARD precondition gate for its dependents. If B2 emits blocked_*, fast-fail D2/D4/D6 in <1s with a single blocked_b2_dependency artifact each, instead of letting each independently attempt and block -- converts an opaque 4-arm cascade into one legible upstream block and saves the per-arm block wall-time.",
+    "[B2 RESILIENCE] exp5016 blocked on a mid-stream generation_or_cache_error -- add a PRECONDITIONS step that verifies the generator server/GPU is reachable BEFORE generation starts (emitting one blocked_b2_generation_server artifact), plus the checkpoint-per-question resumable JSONL already specified in the B2 prompt, so a partial cache survives a restart under the codex cap.",
+    "[D1 PRECONDITION] exp5017 blocked_trainable_qwen_base -- add a PRECONDITIONS check that the Qwen *base* repo (NOT the -GGUF repo, per the GGUF-tokenizer rule) is cached + LoRA-trainable before the train loop, so D1 emits blocked_model_not_cached cleanly rather than a generic base block."
+  ],
+  "top_3_highest_leverage_actions": [
+    "[RECURRING, UNBLOCKED, ~88 milestones] Wire the mtime-fallback + runtime-stamping into the conductor retro TIMING-DATA assembly -- eliminates the false-zero that forces every retro to hand-reconstruct the milestone on-disk.",
+    "[THIS MILESTONE'S ROOT CAUSE] Fix/precondition-gate the B2 shared logprob-candidate cache (exp5016) -- it is the single upstream unblock for D2/D4/D6; without it the PHASE D moat test cannot execute, and .461 + .462 have now both failed to produce a clean D1+D2 moat verdict.",
+    "[CASCADE HYGIENE] Make B2 a hard precondition for its dependents so a B2 block fast-fails D2/D4/D6 in <1s each instead of three independent block attempts -- one legible upstream block instead of a 4-arm opaque cascade."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "Two distinct operational signals this milestone. (1) The recurring false-zero detector gap is now ~88 milestones old and remains the single highest-leverage UNBLOCKED fix, but it is out-of-scope for an autonomous retro (cannot edit research_conductor.py), so it persists until an operator/outer-loop wires it. (2) Unlike .461 (arms flagged_adversarial then correctly skipped), .462's PHASE D failure mode was a genuine BLOCK-CASCADE rooted in the B2 logprob-cache build (exp5016): the first REAL moat test could not execute, so the off-ARC moat verdict stays unmeasured after two PHASE D milestones. The lesson: PHASE D's value is gated on B2 -- fix the shared-cache build and precondition-gate its dependents before scaling more D arms."
+}
