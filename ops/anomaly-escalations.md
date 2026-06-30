@@ -697,3 +697,38 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
 - artifact: results/experiment_5006_moat_second_corpus.json
+
+## experiment_4162_sota_ingestion_verifier_moat_guidance.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_4162_sota_ingestion_verifier_moat_guidance.json
+
+## experiment_4170_sota_ingestion_verifier_moat_guidance.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+
+## experiment_4967_capstone_v457.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_4967_capstone_v457.json
+
+## experiment_4978_capstone_v458.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_4978_capstone_v458.json
+
+## experiment_4989_capstone_v459.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_4989_capstone_v459.json
+
+## experiment_5000_capstone_v460.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_5000_capstone_v460.json
+
+## experiment_5008_moat_oracle_distinct_lint.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['MOAT_CLAIM_RIGOR'] on a non-negative verdict
+- artifact: results/experiment_5008_moat_oracle_distinct_lint.json

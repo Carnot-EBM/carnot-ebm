@@ -25030,3 +25030,33 @@ arXiv:2605.18871 is already filed; these EXTEND the program). All verified via W
 - arXiv:2502.11157 - Dyve: Thinking Fast and Slow for Dynamic Process Verification - https://arxiv.org/abs/2502.11157 - fast/slow dynamic verification = the EFFICIENCY-PARITY axis of the north-star win condition ("equally effective as the LM at lower cost/latency", north-star §5): a cheap fast path with selective slow escalation, the Meta-EBM Cascade Router shape. Candidate for the efficiency head-to-head.
 - arXiv:2408.15240 - Generative Verifiers: Reward Modeling as Next-Token Prediction - https://arxiv.org/abs/2408.15240 - foundational generative-verifier framing (reward modeling as next-token prediction); the lineage THINKPRM (2504.16828) and the distributional EBM (2605.18871) build on. Background/positioning, not a new method to implement.
 <!-- V457-PLANNER-REFERENCES-END -->
+
+<!-- V462-PLANNER-REFERENCES-START -->
+## V462 planner source set (2026-06-30) — PHASE D second execution: the FIRST REAL oracle-distinct verifier-moat test
+
+`.461` (the FIRST PHASE D milestone) did NOT actually test the decisive question — all three
+principled constructions failed to EXECUTE on attempt 1 (this is an execution failure, not a
+scientific null): D1 LoRA-EBM never trained (`running_..._pretrain_skeleton`, n_pairs=0,
+train_loss=null, bootstrap-and-bail at 0.99s — preconditions ALL passed); D2 uPRM blocked on the
+logprob candidate cache (`blocked_uprm_logprob_candidate_cache` — fresh generation disabled by an
+empty env flag; the uPRM scorer impl + formula are complete); D3 EBRM was the SOLE "clean" arm but
+DEGENERATE — it abstained 97.5% to a **k=1 "tuned-SC"** strawman over the weak registry quality
+ensemble (point-estimate 0.515 < SC 0.585), so its delta=+0.000 / McNemar p=1.0 is an artifact of
+always-abstaining-to-SC, NOT a measured trained-verifier null. D5 correctly read MIXED-SCOPED. So
+`.462` re-executes the three constructions PROPERLY + fixes the two infra defects the failures exposed
+(a genuine K-way tuned-SC baseline; a shared logprob-enriched candidate cache). The `.461` E1
+SOTA-ingestion (discover->ingest->plan->experiment) flagged the five papers below as the `.462` inputs;
+all verified HTTP 200 by E1 and re-confirmed this planning pass (WebSearch 2026-06-30):
+
+- arXiv:2606.19818 - Uncertainty-Aware Reward Modeling for Stable RLHF - https://arxiv.org/abs/2606.19818 - conformal + heteroscedastic uncertainty head over the reward score; the D3 EBRM uncertainty-refinement input (`uarm_uncertainty_head_for_d3_ebrm`). Pitfall: RLHF-domain calibration != a reasoning-selector win.
+- arXiv:2606.09073 - A Unifying Lens on Reward Uncertainty in RLHF - https://arxiv.org/abs/2606.09073 - frames the reward object as a distribution p(r|x,y) with pessimistic log-moment aggregation; the D3 distributional-pessimistic head (`distributional_pessimistic_ebrm_head`). Pitfall: excessive pessimism abstains away the very headroom D3 must capture.
+- arXiv:2602.24040 - RewardUQ: A Unified Framework for Uncertainty-Aware Reward Models - https://arxiv.org/abs/2602.24040 - compares RM uncertainty-quantification methods by accuracy + calibration (ECE, AUROC correct-vs-incorrect); the D1/D3 calibration table (`rewarduq_calibration_gate_for_d1_d3`). Pitfall: better calibration can still TIE SC — the gate must require delta_vs_tuned_sc, not calibration alone.
+- arXiv:2510.20369 - Ask a Strong LLM Judge when Your Reward Model is Uncertain - https://arxiv.org/abs/2510.20369 - routes uncertain cases from a cheap RM to a strong judge, improving the cost-quality tradeoff over random judge calls; the `.462` EFFICIENCY arm (north-star §5 Pareto win: equal accuracy at fewer judge calls). Pitfall: the judge can become the real verifier unless cost + oracle-distinct boundaries are charged explicitly.
+- arXiv:2605.24005 - LC-ERD: Mining Latent Logic for Self-Evolving Reasoning via Consistency-Regulated Reward Decomposition - https://arxiv.org/abs/2605.24005 - derives process utility from consistency-regulated latent logic when explicit process labels / logprobs are scarce; the D2 uPRM unblock fallback. Pitfall: endogenous consensus can preserve generator bias / create a model-identity shortcut — the no-model-id audit stays mandatory.
+
+NEW this planning pass (not in the ingested set; comparator candidates for `.463+`, verified WebSearch 2026-06-30):
+- arXiv:2508.03686 - CompassVerifier: A Unified and Robust Verifier for LLM Evaluation and Outcome Reward - https://arxiv.org/abs/2508.03686 - a unified robust verifier across reasoning domains; candidate as a strong oracle-distinct comparator / the "strong judge" tier in the `.462` cascade arm.
+- arXiv:2408.15240 - Generative Verifiers: Reward Modeling as Next-Token Prediction - https://arxiv.org/abs/2408.15240 - re-confirmed: generative verifiers DO beat standard verifiers on Best-of-N reranking with a fixed generator (the existence proof that a verifier CAN add selection value); but generative judges guide stepwise generation poorly, where dedicated process RMs (uPRM) remain superior — motivates D2 (process) + the cheap-vs-judge cascade.
+
+**Bottom line for the `.462` roadmap:** the moat is still UNTESTED (zero real trained-verifier measurements landed). `.462` builds the prerequisites (genuine tuned-SC baseline B1; shared logprob cache B2) and re-runs D1/D2/D3 to FIRST measure the decisive question, plus adds the efficiency-axis cascade (2510.20369) so a Pareto win is reachable even if every accuracy arm ties SC. Flag for `.463`: if a real arm produces a win, scale it (more corpora + the DiffusionGemma activation proposal); if D1+D2 both cleanly null, the off-ARC moat retires as bounded (a publishable null converging with the ARC tie).
+<!-- V462-PLANNER-REFERENCES-END -->
