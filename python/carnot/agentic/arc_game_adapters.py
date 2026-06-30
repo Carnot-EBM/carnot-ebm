@@ -2641,6 +2641,8 @@ def _sk48():
 
 def _r11l():
     """r11l -- click-template handle averaging with an offline-gated L2 tail."""
+    import numpy as np
+
     from carnot.agentic import arc_solver_kit as kit
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
@@ -2713,12 +2715,24 @@ def _r11l():
                     distance += 100
         return float(distance)
 
+    def featurize(game):
+        pixels = np.asarray(game.get_pixels(0, 0, 64, 64))
+        if pixels.ndim == 3:
+            pixels = pixels[0]
+        flat = [int(value) for value in pixels.reshape(-1).tolist()]
+        nonzero = [value for value in flat if value != 0]
+        return [
+            float(len(nonzero)),
+            float(len(set(nonzero))),
+            float(pixels.size),
+        ]
+
     return GameAdapter(
         game="r11l",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
-        featurize=None,
+        featurize=featurize,
         hand_verifier=hand_verifier,
         warmup_label=None,
         depth_caps={1: 0, 2: 0, 3: 0},
