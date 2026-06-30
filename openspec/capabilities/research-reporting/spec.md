@@ -1405,6 +1405,78 @@ the success gate passed.
 |---|---|---|
 | REQ-REPORT-4987 | Implemented (`python/carnot/experiment_4987_stamping_backfill_and_wiring_readiness.py`) | Implemented (`tests/python/test_experiment_4987_stamping_backfill_and_wiring_readiness.py`) |
 
+### REQ-REPORT-4998: V460 Runtime Stamping Backfill And Relaxed Mtime Window Readiness
+
+The Exp 4998 workflow SHALL apply the Exp 4920 runtime-stamping helper to the
+`.460` arm artifacts present under `results/experiment_4990_*.json`,
+`results/experiment_499{1..9}_*.json`, and
+`results/experiment_5000_*.json`, excluding its own deliverable, without
+editing `scripts/research_conductor.py`. For every scanned arm missing
+`duration_s`, `inference_substrate`, or `compute_bound`, it SHALL rewrite the
+artifact with all three runtime stamps, preserve the artifact mtime, and list
+the newly stamped arms under `stamping_backfilled_arms`; when no arm is missing
+runtime stamps it SHALL emit `stamping_backfilled_arms="none missing"` so the
+audit is explicit and idempotent.
+
+The workflow SHALL reconstruct the `.460` results-mtime window from the scanned
+arm artifact mtimes using the Exp 4920 mtime fallback core and the .460 activation artifact as the discovery anchor. The window gate SHALL maintain the
+Exp 4954 relaxed rule: a success result SHALL accept the arms present at run
+time when `n_arms>=7`, `wall_minutes>0`, and `compute_bound_count>=1`. The
+workflow SHALL record `window_gate_relaxed=true` and SHALL NOT require
+`n_arms>=10`. If the Exp 4920 helper modules, the Exp 4920 shipping artifact,
+the wiring proposal, the `.460` activation artifact, or enough `.460` arm
+evidence needed to satisfy the relaxed gate is missing, the workflow SHALL write
+a blocked deliverable rather than fabricating counts.
+
+The workflow SHALL reconfirm that
+`docs/retro_timing_mtime_fallback_wiring_proposal_4920.md` still names the
+retro prompt-assembly call site for the operator wire. It SHALL write
+`results/experiment_4998_stamping_backfill_and_wiring_readiness.json` with
+principle-annotated fields:
+
+- `honest_verdict`: terminal prefix; success_v460_stamping_backfilled_and_mtime_window_confirmed (the relaxed gate still does not false-block).
+- `mtime_fallback_window`: the .460 {n_arms, window_start, window_end, wall_minutes, compute_bound_count} from results/ mtimes -- NON-zero from the arms present (n_arms>=7), the verifiable fix for the false-zero + the false-block.
+- `window_gate_relaxed`: true -- the gate accepts the arms present at run time (n_arms>=7) instead of n_arms>=10, maintaining the .456 fix.
+- `stamping_backfilled_arms`: the list of .460 arms newly stamped with duration_s/inference_substrate/compute_bound (or 'none missing') -- closes the duration_s=None gap.
+- `wiring_proposal_reconfirmed`: true -- the conductor retro-prompt-assembly call site doc is present/current for the operator wire.
+- `research_conductor_modified`: false -- Public Documentation Discipline: the conductor is operator-wired, not autonomously edited.
+- `inference_substrate`: aggregation_from_upstream_artifacts (reads arm artifacts + mtimes; 0.0001s floor).
+- `preconditions_checked`: records module + arm-artifact presence; a missing input emits blocked_.
+
+#### SCENARIO-REPORT-4998: Backfill Stamps Missing V460 Runtime Fields
+
+**Given** `.460` arm artifacts include missing `duration_s`,
+`inference_substrate`, or `compute_bound` fields
+**When** Exp 4998 applies the runtime-stamping helper
+**Then** each missing arm is rewritten with all three runtime fields, the
+rewritten arm's original mtime is preserved, and the deliverable lists the
+newly stamped arm paths under `stamping_backfilled_arms`.
+
+#### SCENARIO-REPORT-4998-MTIME-WINDOW: Present V460 Arms Pass The Relaxed Gate
+
+**Given** the `.460` activation artifact and at least six additional `.460`
+arm artifacts are present on disk with at least one compute-bound live arm
+**When** Exp 4998 reconstructs the window from their result mtimes
+**Then** it writes a success deliverable with `window_gate_relaxed=true`,
+`n_arms>=7`, `wall_minutes>0`, `compute_bound_count>=1`,
+`research_conductor_modified=false`, and no `n_arms>=10` requirement.
+
+#### SCENARIO-REPORT-4998-BLOCKED-PRECONDITION: Missing Inputs Block The Claim
+
+**Given** the Exp 4920 modules, the Exp 4920 shipping artifact, wiring
+proposal, `.460` activation artifact, or enough `.460` arm evidence to satisfy
+the relaxed non-zero window gate is absent
+**When** Exp 4998 runs
+**Then** it writes a deliverable whose `honest_verdict` starts with `blocked_`,
+records the failed precondition in `preconditions_checked`, and does not claim
+the success gate passed.
+
+## Implementation Status (REQ-REPORT-4998)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4998 | Implemented (`python/carnot/experiment_4998_stamping_backfill_and_wiring_readiness.py`) | Implemented (`tests/python/test_experiment_4998_stamping_backfill_and_wiring_readiness.py`) |
+
 ### REQ-REPORT-001: Result Provenance Audit
 
 The repository shall provide a cleanup workflow that scans
