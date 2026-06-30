@@ -9643,3 +9643,4 @@ The contro |
 | 2026-06-30 09:12 UTC | PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-30 09:27 UTC | PHASE D5 (VERIFIER MOAT; the falsifiable GATE + Di | OK | 87 passed, 1 warning in 6.93s |
 | 2026-06-30 09:38 UTC | PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- K | OK | 86 passed, 1 warning in 11.89s |
+| 2026-06-30 09:53 UTC | PHASE E1 (SOTA-INGESTION; RESERVED SLOT) -- a FRES | OK | 99 passed, 1 warning in 12.05s |
