@@ -2125,6 +2125,21 @@ clean "catches X% the model misses" is the deliverable; a null result is also
 valuable and must be reported (don't fabricate a moat). Also re-scope Phase-3 prose
 to the hybrid (retire energy-generates language) per north-star §5.
 
+## RETIRED / SUPERSEDED PRIORITIES (pre-June 2026 — triaged 2026-06-30, preserved per never-prune)
+
+> **Triage 2026-06-30 (operator-directed "do that triage").** Everything below this heading is a
+> MANDATORY-NEXT-MILESTONE priority filed **2026-05-31 or earlier** — each has been pending **190–440
+> milestones** (the conductor closes ~30/day) without pickup. They are all CONCLUDED or SUPERSEDED by the
+> subsequent two months of work: the ARC-AGI-3 submission sprint, the verifier-moat / PHASE D pivot
+> (oracle-distinct distributional-energy), the per-milestone Hardware-Task Continuity rotation, the P0.1
+> HONEST-NEGATIVE verdict (energy-descent bounded; Depth-Over-Breadth retired), and the disciplines that
+> shipped into CLAUDE.md (fabrication gate, verdict-prefix, planner gate-field, etc.). Several entries in
+> this batch carry their own specific RETIRED-2026-06-30 rationale inline; the remainder are bulk-triaged
+> here. The content is preserved as the project's research record (never-prune). **This `## ` heading also
+> ends the lint-parsed MANDATORY section** — moving the whole stale batch out of the Overdue-Priority
+> Forcing Function's scope. If any entry below is genuinely still wanted, RE-FILE it as a fresh
+> `### NEW <today>:` entry ABOVE this heading.
+
 ### NEW 2026-05-31: P0.1 GRAPH-COLORING RE-TEST ON A HARD, HEADROOM-PRESERVING CORPUS (exp3518 was ceiling-saturated)
 
 **Origin:** 2026-05-31 outer-loop read of exp3518
@@ -2179,7 +2194,7 @@ negative — report it; do not fall back to the greedy-AR comparison as the head
 This is depth work (P0.1 existential test), not breadth — it directly determines
 whether the energy-descent-beats-autoregressive claim survives on a second CSP.
 
-### NEW 2026-05-30: KONA GLOBAL-OPT CORRECTNESS-FIRST GATE (solve-rate, NOT time)
+### RETIRED 2026-06-30 (overdue-priority triage — the Kona solve-rate existential gate is the P0.1 sibling; P0.1 is answered HONEST-NEGATIVE [energy-descent bounded on the tested corpora], so this gate is concluded too) — was: NEW 2026-05-30: KONA GLOBAL-OPT CORRECTNESS-FIRST GATE (solve-rate, NOT time)
 
 **Origin:** 2026-05-30 operator review of exp3394/exp3408 (Kona-Style Global
 Optimization). The artifacts are HONEST but the framing is misleading and the
@@ -2295,7 +2310,7 @@ endgame.
 Cross-ref: this is a concrete instance of P0.1 (exp3312) — Sudoku is the cleanest
 "does energy-based global inference actually solve, not just run fast" testbed.
 
-### NEW 2026-05-30: ADVERSARIAL-VERIFY CORRIGENDUM — exp3397 + exp3405 flagged (NOT headline-eligible)
+### RETIRED 2026-06-30 (overdue-priority triage — concluded: the fabrication gate that handles flagged_adversarial artifacts shipped into CLAUDE.md + the conductor; exp3397/3405 are quarantined; the stale energy_descent slug on this block was a copy-paste leftover) — was: NEW 2026-05-30: ADVERSARIAL-VERIFY CORRIGENDUM — exp3397 + exp3405 flagged (NOT headline-eligible)
 
 **Origin:** 2026-05-30 operator-requested adversarial-verify pass on recent
 "perfect-score" results. Both confirmed flagged by
@@ -2316,7 +2331,7 @@ checksum for exp3397; seed + checksum + non-trivial eval set for exp3405).
 
 ---
 
-### NEW 2026-05-29: PHASE-3 PATH DE-RISKING ROADMAP — the two existential link tests (run these INSTEAD OF Phase-1 re-measurement)
+### RETIRED 2026-06-30 (overdue-priority triage — P0.1 answered HONEST-NEGATIVE; the Depth-Over-Breadth Forcing Function already retired on this verdict 2026-05-31; do not re-propose) — was: NEW 2026-05-29: PHASE-3 PATH DE-RISKING ROADMAP — the two existential link tests (run these INSTEAD OF Phase-1 re-measurement)
 
 **Origin:** 2026-05-29 Opus 4.8 architecture review (with two Explore audits of
 the Phase-1→Kona theory-of-path). Finding: the path to the self-correcting
@@ -2342,7 +2357,7 @@ that justified deferring P0.1. There is now no resource reason not to run it.
 ```yaml
 - id: exp3312-energy-descent-vs-autoregressive-premise-v1
   milestone: "2026.05.<NNN>"
-  deliverable: "results/experiment_3312_energy_descent_vs_autoregressive_premise_v1.json"
+  deliverable [RETIRED 2026-06-30 — P0.1 answered HONEST-NEGATIVE; slug neutralized so the overdue lint no longer adopts this concluded marker]: results/experiment_3312_energy_descent_vs_autoregressive_premise_v1.json
   title: "Energy-Descent Reasoning vs Autoregressive Baseline — the Kona premise test"
   priority: critical
   agent_type: gemini
@@ -2515,7 +2530,7 @@ reuses the FoVer corpus) and directly tests the keystone.
 - exp2837 (FoVer headline; 3-of-4-verifiers-contribute-zero corroborates P0.2)
 - exp1222/1210/1165 (the toy predecessors P0.1 supersedes)
 
-### NEW 2026-05-28: Verifier-Ensemble vs Adaptive Prompt-Injection Corpus — does AND-composition beat the single-KAN 0.475?
+### RETIRED 2026-06-30 (overdue-priority triage — superseded by the PHASE D oracle-distinct distributional-energy verifier-moat reframing 2026-06-30; the ensemble-injection-robustness framing is dormant, revive only if ensemble robustness becomes the active question) — was: NEW 2026-05-28: Verifier-Ensemble vs Adaptive Prompt-Injection Corpus — does AND-composition beat the single-KAN 0.475?
 
 **Origin:** 2026-05-28 follow-up to the v4 negative result (see
 research-references.md "HEADLINE NEGATIVE RESULT: Distilled-KAN
@@ -2906,7 +2921,7 @@ any inference call. If any precondition fails, exits with
 - 2026-05-26 operator conversation (safety-gateway comparison; sample-size
   question) — origin
 
-### NEW 2026-05-24 (16:30Z): Verifier-Ensemble Multi-Axis Composition Robustness (.282+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — superseded by the PHASE D verifier-moat reframing; ensemble multi-axis robustness is dormant) — was: NEW 2026-05-24 (16:30Z): Verifier-Ensemble Multi-Axis Composition Robustness (.282+ MANDATORY)
 
 **Origin:** 2026-05-24 outer-loop analysis of a detailed external
 assessment of SubQuadratic's ARC-AGI architecture (sub-quadratic
@@ -3055,7 +3070,7 @@ becomes a paper-v6 claim with a defensible methodology.
 
 ---
 
-### NEW 2026-05-24 (13:30Z): Verifier-Ensemble Multi-Violation Degradation Curve (.281+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — superseded by the PHASE D verifier-moat reframing; ensemble multi-violation degradation is dormant) — was: NEW 2026-05-24 (13:30Z): Verifier-Ensemble Multi-Violation Degradation Curve (.281+ MANDATORY)
 
 **Origin:** 2026-05-24 outer-loop review of Appen's "Benchmarking
 Subquadratics SSA Kernel" whitepaper. The RULER benchmark reported
@@ -3196,7 +3211,7 @@ this task is wherever the actual curve lands.
 
 ---
 
-### NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 — Board Reattached (.279+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) — was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 — Board Reattached (.279+ MANDATORY)
 
 **Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is
 reattached after a power-cycle replug. exp2957 (`.278) had emitted
@@ -3291,7 +3306,7 @@ on the renamed-binary issue.
 
 ---
 
-### NEW 2026-05-23 (19:00Z): exp2934 AquaForte/BEAVER Reformulation Pipeline — Honest Substrate Corrigendum (.278+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — one-off honest-substrate corrigendum, moot after the project moved past the AquaForte/BEAVER line; not load-bearing) — was: NEW 2026-05-23 (19:00Z): exp2934 AquaForte/BEAVER Reformulation Pipeline — Honest Substrate Corrigendum (.278+ MANDATORY)
 
 **Origin:** 2026-05-23 outer-loop drill-down into exp2934's "+88.9pp
 optimality delta" headline. The per-task detail reveals that the
@@ -3419,7 +3434,7 @@ engineering pattern, just narrower than the original framing).
 
 ---
 
-### NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda — Three FATAL-Rescue Experiments (.276+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) — was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda — Three FATAL-Rescue Experiments (.276+ MANDATORY)
 
 **Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round
 (see `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`)
@@ -3592,7 +3607,7 @@ milestone.
 
 ---
 
-### NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 — Corrected Toolchain Invocation (.276+ MANDATORY)
+### RETIRED 2026-06-30 (overdue-priority triage — superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) — was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 — Corrected Toolchain Invocation (.276+ MANDATORY)
 
 **Origin:** 2026-05-23 operator directive ("can we unblock gatemate?") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present — `nextpnr-gatemate` as a standalone binary was retired upstream; the GateMate flow now uses `nextpnr-himbaechel --device CCGM1A1` via the himbaechel backend, with `gmpack` producing the flashable bitstream. End-to-end smoke test on 2026-05-23 06:14Z produced a working bitstream from a minimal counter design. exp2899's PRECONDITIONS step looked for the wrong binary name; the task was structurally blocked at PRECONDITIONS, never reaching the actual build.
 
