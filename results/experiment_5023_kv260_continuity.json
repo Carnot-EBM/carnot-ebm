@@ -1,0 +1,111 @@
+{
+  "command_probes": {
+    "kv260_energy_smoke": {
+      "combined_output": "{\"problem\": \"tiny_quadratic_ising_constraint_energy\", \"energy\": -7, \"expected_energy\": -7, \"duration_s\": 3.757001832127571e-05}\n",
+      "command": "ssh kria 'python3 -c '\"'\"'import json,time;started=time.perf_counter();spins=[1,-1,1,-1];edges=[(0,1,2),(1,2,-1),(2,3,3),(0,3,1)];bias=[1,0,-1,2];energy=sum(w*spins[i]*spins[j] for i,j,w in edges)+sum(b*s for b,s in zip(bias,spins));print(json.dumps({'\"'\"'\"'\"'\"'\"'\"'\"'problem'\"'\"'\"'\"'\"'\"'\"'\"':'\"'\"'\"'\"'\"'\"'\"'\"'tiny_quadratic_ising_constraint_energy'\"'\"'\"'\"'\"'\"'\"'\"','\"'\"'\"'\"'\"'\"'\"'\"'energy'\"'\"'\"'\"'\"'\"'\"'\"':energy,'\"'\"'\"'\"'\"'\"'\"'\"'expected_energy'\"'\"'\"'\"'\"'\"'\"'\"':-7,'\"'\"'\"'\"'\"'\"'\"'\"'duration_s'\"'\"'\"'\"'\"'\"'\"'\"':time.perf_counter()-started}))'\"'\"''",
+      "duration_s": 0.5638595852069557,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"problem\": \"tiny_quadratic_ising_constraint_energy\", \"energy\": -7, \"expected_energy\": -7, \"duration_s\": 3.757001832127571e-05}\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.590275635942817,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_uio_devices": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.4303211411461234,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n"
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7584594390355051,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9391063100192696,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    }
+  },
+  "duration_s": 7.2825,
+  "energy_smoke": {
+    "board_reported_duration_s": 3.757001832127571e-05,
+    "command_exit_code": 0,
+    "energy": -7,
+    "expected_energy": -7,
+    "problem": "tiny_quadratic_ising_constraint_energy",
+    "success": true
+  },
+  "experiment": 5023,
+  "field_principles": {
+    "honest_verdict": "terminal prefix; success_kv260_reachable_overlay_<state> or blocked_kv260_ssh_unreachable.",
+    "inference_substrate": "hardware_smoke (SSH-attached board test).",
+    "kv260_ssh_reachable": "the SSH reachability exit code (the SSH-only precondition; never host SD-card).",
+    "on_board_energy_duration_s": "real wall-clock of the on-board energy smoke if the overlay is loaded; null if reachability-only.",
+    "overlay_state": "xmutil listapps output -- whether the carnot_ising overlay is loaded (the continuity signal).",
+    "preconditions_checked": "records the SSH reachability check (never the host SD-card device path); a non-zero SSH emits blocked_kv260_ssh_unreachable."
+  },
+  "honest_verdict": "success_kv260_reachable_overlay_loaded_energy_ok",
+  "inference_substrate": "hardware_smoke",
+  "kv260_ssh_exit_code": 0,
+  "kv260_ssh_reachable": true,
+  "loaded_overlay": "carnot_ising_v2_n64",
+  "on_board_energy_duration_s": 0.56386,
+  "overlay_state": {
+    "carnot_ising_overlay_loaded": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "uio_exit_code": 0,
+    "uio_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+    "xmutil_listapps_exit_code": 1,
+    "xmutil_listapps_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+    "xmutil_requires_sudo": true
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.590275635942817,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 5023,
+  "reproducibility_checksum": "dca6b4ed5095550cce5e4812fe51e0336db2e870db4605265483a704cfcb697f",
+  "schema": "carnot.kv260_ssh_continuity.v17",
+  "spec_refs": [
+    "REQ-HW-5023",
+    "SCENARIO-HW-5023"
+  ],
+  "uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3",
+    "/dev/uio4"
+  ],
+  "verifier_is_oracle": false,
+  "xmutil_requires_sudo": true
+}
