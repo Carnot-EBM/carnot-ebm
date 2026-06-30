@@ -9618,3 +9618,4 @@ The contro |
 | 2026-06-30 01:30 UTC | Milestone 2026.06.461 activated | OK | 13 tasks queued |
 | 2026-06-30 01:44 UTC | PHASE 0 (TRANSITION) -- archive .460 -> activate . | OK | 88 passed, 1 warning in 7.61s |
 | 2026-06-30 01:59 UTC | PHASE B1 (INFRA; RESERVED SLOT 1 of 2; ENABLING) - | OK | 88 passed, 1 warning in 6.60s |
+| 2026-06-30 02:21 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE) -- TRAI | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
