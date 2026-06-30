@@ -22128,6 +22128,74 @@ eligibility.
 |---|---|---|
 | REQ-VERIFY-5044 | Proposed (`python/carnot/experiment_5044_second_corpus_candidate_cache.py`, `results/experiment_5044_second_corpus_candidate_cache.json`) | Proposed (`tests/python/test_experiment_5044_second_corpus_candidate_cache.py`) |
 
+### REQ-VERIFY-5045: Powered LoRA-EBM/EORM MuSR Rerun With SOTA Candidate Refresh Gate
+
+The repository SHALL provide Exp 5045 at
+`python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py` to reuse the Exp
+5031 trained LoRA-EBM verifier infrastructure, attempt to expand the MuSR
+evidence panel to at least 400 cached questions or all locally available cached
+candidate rows, and write
+`results/experiment_5045_powered_lora_ebm_eorm_musr.json`.
+
+The runner SHALL load the Exp 5031 MuSR candidate checkpoints and keep at least
+200 questions when expansion beyond 200 is impossible. If fewer than 400
+candidate checkpoints are locally available, the artifact SHALL explain the
+candidate-cache cap rather than treating the smaller panel as a powered
+confirmation. Before any headline candidate refresh, the runner SHALL use the
+mandated SOTA GGUF model specs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` through
+the Exp 5043 preflight diagnostics. If at least one mandated model and a
+completion/telemetry endpoint are ready, candidate refresh MAY run through the
+configured local backend. If the SOTA refresh gate is closed, the artifact
+SHALL use a blocked `honest_verdict` and include the preflight diagnostics; it
+MAY still report cached-panel scorer telemetry as non-headline evidence.
+
+The runner SHALL train or resume the LoRA-EBM/EORM energy head using
+`carnot.moat_trainer`. `scorer_trained` SHALL be true only when a non-null
+finite train loss, a positive pair count, checkpoint path evidence, and
+duration evidence are all present. Duration evidence MAY come from the resumed
+Exp 5031 trained artifact when the checkpoint already completed; a skeleton or
+zero-pair run SHALL be rejected as `blocked_lora_ebm_train_did_not_run`, not
+counted as a null.
+
+Evaluation SHALL compare the min-energy LoRA-EBM selector and a diagnostic
+margin-aware selector against genuine tuned self-consistency with paired
+bootstrap CI95 and McNemar exact p. The runner SHALL compute EORM/ETS-style
+energy-margin telemetry, including a margin AUROC for correctness when both
+classes are present, and SHALL keep the scorer oracle-distinct at inference.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`powered_scorer_available`, `scorer_trained`, `n_questions`,
+`n_candidate_rows`, `genuine_tuned_sc_accuracy`, `powered_lora_ebm_accuracy`,
+`delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`, `energy_margin_auc`,
+`headroom_present`, `verifier_is_oracle`, and `checkpoint_path`. It SHALL also
+include `spec_refs`, candidate-refresh diagnostics, expansion diagnostics,
+training evidence, uncertainty telemetry, margin-aware selection metrics,
+duration evidence, and a reproducibility checksum.
+
+### SCENARIO-VERIFY-5045: Cached Panel Is Reported But SOTA Refresh Gate Blocks Headline
+
+Given Exp 5031 has a trained checkpoint and exactly 200 cached MuSR candidate
+checkpoints, and Exp 5043 reports at least one mandated SOTA GGUF path but no
+ready completion/telemetry endpoint, when Exp 5045 runs, then it resumes the
+trained checkpoint without treating a skeleton as trained, loads the 200 cached
+MuSR rows, records that expansion to 400 is impossible because only 200
+candidate checkpoints exist, reports min-energy and margin-aware telemetry
+against genuine tuned self-consistency, keeps `verifier_is_oracle=false`, and
+writes every required field with a blocked candidate-refresh verdict rather
+than promoting cached-only evidence as a powered SOTA-refresh headline.
+
+If the train result has null loss, zero pairs, no checkpoint path, or no
+duration evidence, then Exp 5045 writes
+`honest_verdict=blocked_lora_ebm_train_did_not_run`, keeps
+`powered_scorer_available=false`, and SHALL NOT report a complete/null verdict.
+
+## Implementation Status (REQ-VERIFY-5045)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5045 | Proposed (`python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`, `results/experiment_5045_powered_lora_ebm_eorm_musr.json`) | Proposed (`tests/python/test_experiment_5045_powered_lora_ebm_eorm_musr.py`) |
+
 ### REQ-VERIFY-5035: Phase D4 V3 Cross-Corpus Generalization Check
 
 The repository SHALL provide Exp 5035 at
