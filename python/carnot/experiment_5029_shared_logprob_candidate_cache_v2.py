@@ -330,17 +330,18 @@ def _first_marker_top_logprobs(top_logprobs: Sequence[Mapping[str, float]]) -> d
 
 
 def build_scoring_prompt(question: JsonMap, candidate: JsonMap) -> str:
-    context = str(question.get("context") or "")[:3000]
-    choices = list(question.get("choices") or [])
+    context = " ".join(str(question.get("context") or "")[:3000].split())
+    question_text = " ".join(str(question.get("question") or "").split())
+    choices = ", ".join(str(choice) for choice in question.get("choices") or [])
+    answer = " ".join(str(candidate.get("answer") or "").split())
     return (
-        "You are scoring an existing cached answer. Do not write a new answer. "
-        "Reply with exactly '+' if the candidate answer is plausible for the "
-        "question so far, or '-' if it is not.\n\n"
-        f"CONTEXT:\n{context}\n\n"
-        f"QUESTION: {question.get('question', '')}\n"
-        f"CHOICES: {choices}\n\n"
-        f"CANDIDATE ANSWER:\n{candidate.get('answer', '')}\n\n"
-        "MARKER:"
+        "Context: "
+        f"{context} "
+        f"Question: {question_text} "
+        f"Choices: {choices}. "
+        f"Candidate answer: {answer}. "
+        "Use one label only (+ = plausible/correct, - = implausible/wrong). "
+        "Label:"
     )
 
 
@@ -359,9 +360,9 @@ def llama_server_echo_completion(  # pragma: no cover - live HTTP boundary
         "temperature": 0.0,
         "cache_prompt": True,
         "seed": int(seed),
-        "logprobs": LOGPROBS_TOP_K,
+        "n_probs": LOGPROBS_TOP_K,
+        "top_k": LOGPROBS_TOP_K,
         "echo": True,
-        "stop": ["\n"],
     }
     request = urllib.request.Request(
         f"http://127.0.0.1:{port}/completion",
@@ -532,7 +533,14 @@ def default_server_probe(  # pragma: no cover - live HTTP boundary
 ) -> PreconditionCheck:
     try:
         payload = llama_server_echo_completion(
-            "Candidate answer: yes\n\nMARKER:",
+            build_scoring_prompt(
+                {
+                    "question": "Is the cached candidate answer plausible?",
+                    "context": "Synthetic preflight row.",
+                    "choices": ["yes", "no"],
+                },
+                {"answer": "yes"},
+            ),
             port=port,
             seed=RANDOM_SEED,
             timeout_s=timeout_s,

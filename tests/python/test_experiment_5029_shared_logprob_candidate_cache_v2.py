@@ -159,7 +159,11 @@ def test_req_verify_5029_parser_and_checkpoint_edges(
     assert choices["top_logprobs"] == [{"+": -0.3, "-": -1.3}]
     assert empty["token_logprobs"] == []
     assert mod._first_marker_top_logprobs([{"x": -1.0}]) is None
-    assert "MARKER:" in mod.build_scoring_prompt(_questions()[0], {"answer": "Ada"})
+    prompt = mod.build_scoring_prompt(_questions()[0], {"answer": "Ada"})
+    assert "Use one label only" in prompt
+    assert "+ = plausible/correct" in prompt
+    assert "- = implausible/wrong" in prompt
+    assert prompt.endswith("Label:")
 
     checkpoint_dir = tmp_path / "checkpoints"
     checkpoint_dir.mkdir()
@@ -449,3 +453,46 @@ def test_req_verify_5029_preconditions_and_validation_fail_closed(tmp_path: Path
         "spec_refs",
     ):
         assert field in mod.artifact_schema_errors(bad_artifact)
+
+
+def test_req_verify_5029_server_probe_uses_scoring_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+    """REQ-VERIFY-5029: preflight probes the same marker surface used for rescoring."""
+
+    calls: list[dict[str, Any]] = []
+
+    def fake_completion(prompt: str, *, port: int, seed: int, timeout_s: int) -> dict[str, Any]:
+        calls.append({"prompt": prompt, "port": port, "seed": seed, "timeout_s": timeout_s})
+        return {
+            "content": " +",
+            "completion_probabilities": [
+                {
+                    "token": " +",
+                    "logprob": -0.1,
+                    "top_logprobs": [
+                        {"token": " +", "logprob": -0.1},
+                        {"token": " -", "logprob": -2.0},
+                    ],
+                }
+            ],
+        }
+
+    monkeypatch.setattr(mod, "llama_server_echo_completion", fake_completion)
+
+    check = mod.default_server_probe(port=8123, timeout_s=4)
+
+    assert check.available is True
+    assert calls == [
+        {
+            "prompt": mod.build_scoring_prompt(
+                {
+                    "question": "Is the cached candidate answer plausible?",
+                    "context": "Synthetic preflight row.",
+                    "choices": ["yes", "no"],
+                },
+                {"answer": "yes"},
+            ),
+            "port": 8123,
+            "seed": mod.RANDOM_SEED,
+            "timeout_s": 4,
+        }
+    ]
