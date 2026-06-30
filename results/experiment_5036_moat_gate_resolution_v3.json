@@ -1,0 +1,335 @@
+{
+  "best_arm": {
+    "abstention_rate": null,
+    "arm": "LoRA-EBM",
+    "arm_id": "D1",
+    "corpus": "MuSR",
+    "delta_vs_tuned_sc": 0.08,
+    "execution_status": "clean",
+    "genuine_tuned_sc_accuracy": 0.585,
+    "headroom_present": true,
+    "honest_verdict": "complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0",
+    "mcnemar_p": 0.076369,
+    "n_questions": 200,
+    "oracle_at_k": 0.865,
+    "paired_ci95": [
+      0.0,
+      0.165
+    ],
+    "scorer_trained": true,
+    "selection_accuracy": 0.665,
+    "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+    "source_experiment_id": 5031,
+    "verifier_is_oracle": false,
+    "win_vs_tuned_sc": false
+  },
+  "cited_upstream_artifacts": [
+    {
+      "arm": "genuine-tuned-SC",
+      "arm_id": "B1",
+      "experiment_id": 5015,
+      "fields_imported": [
+        "honest_verdict",
+        "genuine_tuned_sc_accuracy",
+        "genuine_headroom_present",
+        "oracle_at_k"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5015_genuine_sc_baseline_fix.json",
+      "sha256": "sha256:78af64c821451edcf0a6b71f2e8b0cfbfd5c9d105ac5250c4c7a70bdf2bc7711"
+    },
+    {
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "experiment_id": 5031,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "headroom_present",
+        "trained_scorer_accuracy",
+        "genuine_tuned_sc_accuracy",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "scorer_trained",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "sha256": "sha256:e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e"
+    },
+    {
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "experiment_id": 5032,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "headroom_present",
+        "uprm_selection_accuracy",
+        "genuine_tuned_sc_accuracy",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5032_uprm_replication_v3.json",
+      "sha256": "sha256:b07c49b48d35f952c2cac3a6d5514e3d669c0cecbc296f460b2a279827ca078e"
+    },
+    {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "experiment_id": 5033,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "headroom_present",
+        "ebrm_selection_accuracy",
+        "genuine_tuned_sc_accuracy",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "abstention_rate",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "sha256": "sha256:5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6"
+    },
+    {
+      "arm": "cascade",
+      "arm_id": "D6",
+      "experiment_id": 5034,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "cascade_accuracy",
+        "judge_only_accuracy",
+        "paired_ci95_cascade_vs_judge",
+        "judge_call_fraction",
+        "cascade_judge_calls",
+        "judge_only_calls",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5034_uncertainty_routed_cascade_v2.json",
+      "sha256": "sha256:9a96bf556e029d7743254e74e6dc7d9763dc04c6e2bedcc30d3476f1f536a031"
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "experiment_id": 5035,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_is_oracle",
+        "headroom_present",
+        "best_verifier_from",
+        "second_corpus",
+        "second_corpus_accuracy",
+        "genuine_tuned_sc_accuracy_second",
+        "delta_vs_tuned_sc_second",
+        "paired_ci95_second",
+        "mcnemar_p_second",
+        "n_questions"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5035_moat_second_corpus_v3.json",
+      "sha256": "sha256:43e1f0bae4b18c82a473d1a822797926e1c4d8a63feafdcd3ef392fc99a07d72"
+    }
+  ],
+  "decision": "EXECUTION-INCOMPLETE",
+  "diffusiongemma_activation": "not_activated",
+  "diffusiongemma_gate_conditions_satisfied_off_arc": false,
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.000844,
+  "efficiency_win": false,
+  "execution_incomplete_arms": [
+    {
+      "arm": "cascade",
+      "arm_id": "D6",
+      "corpus": "MuSR",
+      "execution_status": "blocked",
+      "honest_verdict": "blocked_judge_server",
+      "source_experiment_id": 5034
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "corpus": "second_corpus_unknown",
+      "execution_status": "blocked",
+      "honest_verdict": "blocked_second_corpus_unavailable",
+      "source_experiment_id": 5035
+    }
+  ],
+  "experiment": "experiment_5036_moat_gate_resolution_v3",
+  "experiment_id": 5036,
+  "field_principles": {
+    "best_arm": {
+      "principle": "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) OR the efficiency Pareto point + its corpus + delta + CI."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "the {experiment_id, fields_imported, sha256} for each arm so the verdict is traceable to a real measurement."
+    },
+    "diffusiongemma_gate_conditions_satisfied_off_arc": {
+      "principle": "true iff a POSITIVE arm satisfies the gate's 3 conditions ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip to MET)."
+    },
+    "efficiency_win": {
+      "principle": "true iff the cascade reached accuracy parity (within CI of judge-only) at materially fewer judge calls (north-star \u00a75)."
+    },
+    "execution_incomplete_arms": {
+      "principle": "arms that did NOT cleanly execute (D1 skeleton / D2 blocked / D3 degenerate) -- these are FAILED executions to re-run in .464, NOT nulls that bound the moat."
+    },
+    "flagged_arms_skipped": {
+      "principle": "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null, an unexecuted arm is complete_moat_execution_incomplete_<arm>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads D1-D4 + cascade JSON, no LLM; 0.0001s floor)."
+    },
+    "moat_realized": {
+      "principle": "true iff >=1 oracle-distinct arm beats the GENUINE tuned-SC with CI95-excl-0 on a headroom-present corpus (cross-corpus confirmed), OR the cascade hits an efficiency Pareto win."
+    },
+    "moat_retired_bounded": {
+      "principle": "true iff the PROPERLY-EXECUTED D1 (scorer_trained) AND D2 both clean-null on every headroom-present oracle-distinct corpus AND no efficiency win -- NOT triggered by a skeleton/degenerate/blocked arm."
+    },
+    "per_arm_table": {
+      "principle": "per arm per corpus: delta_vs_tuned_sc (vs GENUINE SC 0.585), paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present, scorer_trained/abstention_rate (the audit + execution-quality trail)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms skipped)."
+    }
+  },
+  "flagged_arms_skipped": [],
+  "honest_verdict": "complete_moat_execution_incomplete_cascade",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "moat_realized": false,
+  "moat_retired_bounded": false,
+  "paper_summary": "D5 is execution-incomplete: cascade, second-corpus-confirmation did not cleanly execute, while flagged artifacts skipped were none. This is not a clean null and cannot bound-retire the moat.",
+  "per_arm_table": [
+    {
+      "abstention_rate": null,
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "scorer_trained": true,
+      "selection_accuracy": 0.665,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "source_experiment_id": 5031,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": -0.11,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate",
+      "mcnemar_p": 0.016853,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        -0.195,
+        -0.03
+      ],
+      "scorer_trained": null,
+      "selection_accuracy": 0.475,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5032_uprm_replication_v3.json",
+      "source_experiment_id": 5032,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": 0.0,
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p080_ci_incl_0",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "scorer_trained": null,
+      "selection_accuracy": 0.665,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "source_experiment_id": 5033,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "cascade",
+      "arm_id": "D6",
+      "cascade_judge_calls": 0,
+      "corpus": "MuSR",
+      "delta_vs_judge_only": null,
+      "delta_vs_tuned_sc": null,
+      "efficiency_win": false,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "blocked_judge_server",
+      "judge_call_fraction": null,
+      "judge_only_calls": 0,
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5034_uncertainty_routed_cascade_v2.json",
+      "source_experiment_id": 5034,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "confirmation_source": "D4",
+      "corpus": "second_corpus_unknown",
+      "delta_vs_tuned_sc": null,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": null,
+      "headroom_present": false,
+      "honest_verdict": "blocked_second_corpus_unavailable",
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5035_moat_second_corpus_v3.json",
+      "source_experiment_id": 5035,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    }
+  ],
+  "reproducibility_checksum": "sha256:35bf3c9fee35452b706b25263e0542805145f9316357761b809780b2747ed59e",
+  "schema": "carnot.experiment_5036_moat_gate_resolution_v3.v1",
+  "spec_refs": [
+    "REQ-REPORT-5036",
+    "SCENARIO-REPORT-5036"
+  ],
+  "verifier_is_oracle": false
+}
