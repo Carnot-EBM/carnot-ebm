@@ -32,6 +32,17 @@ against the *discriminative* budget frontier (2510.14913) AND the *generative* f
 backlog is now 11 real-cited papers. (`/deep-research` was NOT used -- direct low-concurrency `WebSearch`
 per the SOTA-Ingestion Cycle Discipline.)
 
+<!-- EXP5024-VERIFIER-MOAT-REFERENCES-START -->
+## Exp 5024 verifier-moat literature source set
+
+These entries are new to the Exp 5024 selected set and are not in the 18-paper already-ingested exclusion list or the CompassVerifier / Generative Verifiers planning-pass exclusions.
+
+- arXiv:2502.11250 - Uncertainty-Aware Step-wise Verification with Generative Reward Models - https://arxiv.org/abs/2502.11250 - HTTP 200
+- arXiv:2605.11334 - VERDI: Single-Call Confidence Estimation for Verification-Based LLM Judges via Decomposed Inference - https://arxiv.org/abs/2605.11334 - HTTP 200
+- arXiv:2507.01951 - Test-Time Scaling with Reflective Generative Model - https://arxiv.org/abs/2507.01951 - HTTP 200
+- arXiv:2605.30085 - Conformal Certification of Reasoning Trace Prefixes - https://arxiv.org/abs/2605.30085 - HTTP 200
+- arXiv:2502.14356 - Full-Step-DPO: Self-Supervised Preference Optimization with Step-wise Rewards for Mathematical Reasoning - https://arxiv.org/abs/2502.14356 - HTTP 200
+<!-- EXP5024-VERIFIER-MOAT-REFERENCES-END -->
 <!-- EXP5010-VERIFIER-MOAT-REFERENCES-START -->
 ## Exp 5010 verifier-moat literature source set
 
