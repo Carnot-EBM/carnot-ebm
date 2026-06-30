@@ -5,31 +5,34 @@ proxy. Operator-only steps (B–D) are flagged; preparation (A + staging) is don
 
 ## The hardware reality (Kaggle env probe, `results/kaggle_env_probe.json`)
 - **Kaggle GPU: Tesla P100-PCIE-16GB**, driver **580.159.04**, **CUDA 12.8** toolkit (`nvcc 12.8`).
-- Dev box: **CUDA 13.3** + RTX 3090 (sm_86). A binary built here links `libcudart.so.13` and the 3090's
-  arch → **will not run on Kaggle's P100 / CUDA-12.8** (silent CPU fallback). The dev-box iGPU/HIP build
-  used in the harden checks was only a *local proxy*.
-- **Conclusion: the CUDA `llama-server` binary MUST be built ON Kaggle** (CUDA-version + GPU-arch match).
-  This is the one piece that cannot be prepared locally.
+- Dev box: **CUDA 13.3** + RTX 3090 (sm_86). A *native* dev-box build links `libcudart.so.13` and the
+  3090's arch → would not run on Kaggle's P100 / CUDA-12.8 (silent CPU fallback).
+- **RESOLVED (2026-06-30): the binary is now cross-built locally via Docker, no Kaggle build step.**
+  `nvcc` emits SASS for whatever `-DCMAKE_CUDA_ARCHITECTURES` lists regardless of the host GPU, so a
+  `nvidia/cuda:12.8.1-devel` container on the dev box builds the exact Kaggle-compatible binary (CUDA 12.8
+  runtime libs + archs 60=P100/75=T4/86/89=L4). The submission is now **fully self-contained** — the
+  binary + its 12-SONAME .so closure (real files, no symlinks, 1.4GB) is staged, smoke-validated on the
+  3090 via the exact `main.py` copy-to-/kaggle/working path. See
+  `/home/ianblenke/carnot_submission_staging/carnot-llamacpp-mtp-binary/build/BUILD_README.md`.
 
 ## The 4 payloads
 | Payload | Kaggle dataset / kernel | Status |
 |---|---|---|
 | Agent code (Python) | `iancblenke/carnot-agent-code` | **STAGED** at `/tmp/carnot_cuda_submission/carnot-agent-code/` (python/carnot + ops, guards passed) |
-| CUDA llama-server binary | `iancblenke/carnot-llamacpp-mtp-binary` | **BUILD ON KAGGLE** — Step A (the CUDA-vs-iGPU step) |
+| CUDA llama-server binary | `iancblenke/carnot-llamacpp-mtp-binary` | **PRE-BUILT (CUDA 12.8, Docker cross-build)** — staged + smoke-validated; just upload |
 | Generator GGUF (5.5 GB) | `iancblenke/carnot-qwen35-9b-mtp-gguf` | upload from `~/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/.../Qwen3.5-9B-Q4_K_M.gguf` |
 | Submission kernel | `iancblenke/carnot-arc-agi3-submission` | **STAGED** at `/tmp/carnot_cuda_submission/kernel/` (main.py + kernel-metadata.json) |
 
-## Step A — Build the CUDA binary ON Kaggle (operator; internet ON)
-1. New Kaggle notebook, **GPU on, internet ON**.
-2. Run `scripts/kaggle/build_verify_llamacpp_mtp.py` (paste the `# %% CELL` blocks, or run the file).
-   - Clones llama.cpp `b9714` (has native MTP), builds `llama-server` with
-     `-DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES="60;75;89;89-virtual"` against **Kaggle's CUDA 12.8**
-     (60=P100, 75=T4, 89=L4, 89-virtual=PTX JIT fallback — covers the whole Kaggle pool).
-   - Self-verifies MTP present, smoke-tests load+generate on the GGUF, probes real per-GPU VRAM.
-3. Save `/kaggle/working/llamacpp-cuda-mtp/` (the binary + its `.so` closure:
-   `libllama-server-impl, libllama-common.so.0, libmtmd.so.0, libllama.so.0, libggml.so.0,
-   libggml-cpu.so.0, libggml-cuda.so.0, libggml-base.so.0`) as the **`carnot-llamacpp-mtp-binary`**
-   dataset.
+## Step A — (DONE locally) Cross-build the CUDA binary via Docker
+Already done + staged. The binary was cross-built on the dev box:
+```bash
+docker run --rm -v /tmp/llamacpp_cuda128_build:/work nvidia/cuda:12.8.1-devel-ubuntu22.04 bash /work/build.sh
+```
+`-DCMAKE_CUDA_ARCHITECTURES="60;75;86;89;89-virtual"` (P100/T4/dev/L4 + PTX JIT) against CUDA 12.8;
+`-lcuda` forced via the toolkit stub at link time (real driver comes from Kaggle at runtime). Output
+(`llama-server` + 12-SONAME .so closure, real files no symlinks) is staged at
+`carnot-llamacpp-mtp-binary/`. Smoke-validated on the 3090 via the exact `main.py` copy-to-working path.
+The legacy build-ON-Kaggle notebook (`scripts/kaggle/build_verify_llamacpp_mtp.py`) is kept as a fallback.
 
 ## Step B — Upload the datasets (operator)
 - `carnot-agent-code`: `kaggle datasets version -p /tmp/carnot_cuda_submission/carnot-agent-code -m "cuda submission refresh"` (or `create` if first time).
@@ -67,4 +70,6 @@ proxy. Operator-only steps (B–D) are flagged; preparation (A + staging) is don
 - `results/experiment_4986_submission_package_harden.json` — the latest local harden (iGPU proxy)
 
 ## Staged (2026-06-30): /home/ianblenke/carnot_submission_staging/
-All four payloads staged + verified (agent-code guards pass, GGUF hardlinked, kernel parses, binary=build-on-Kaggle). See that dir's MANIFEST.md for the operator upload/build/submit steps.
+All four payloads staged + verified (agent-code guards pass, GGUF hardlinked, kernel parses, **binary
+pre-built CUDA 12.8 + smoke-validated on the 3090**). Submission is fully self-contained (no Kaggle build
+step). See that dir's MANIFEST.md for the operator upload/submit steps.
