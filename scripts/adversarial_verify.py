@@ -2211,6 +2211,56 @@ _MOAT_HEADLINE_MARKERS = (
     "verifier_value_added_true",
     "verifier_efficiency_win",
 )
+MOAT_CLAIM_RIGOR_KIND = "MOAT_CLAIM_RIGOR"
+MOAT_HEADROOM_MIN_DELTA = 0.10
+_MOAT_RIGOR_CLAIM_KEYS = (
+    "honest_verdict",
+    "headline_outcome",
+    "headline",
+    "paper_summary",
+    "decision",
+    "oracle_distinct_status",
+)
+_MOAT_RIGOR_RELEVANCE_MARKERS = (
+    "beats_sc",
+    "beats_tuned_sc",
+    "beats_naive_sc",
+    "beats_self_consistency",
+    "beat_self_consistency",
+    "does_not_beat_sc",
+    "does_not_beat_self_consistency",
+    "moat_realized",
+    "moat_retired",
+    "moat_won",
+    "moat_proven",
+    "success_moat",
+    "verifier_moat",
+    "verifier_value_added",
+    "no_win",
+)
+_MOAT_RIGOR_WIN_MARKERS = (
+    "beats_sc",
+    "beats_tuned_sc",
+    "beats_naive_sc",
+    "beats_self_consistency",
+    "beat_self_consistency",
+    "moat_realized",
+    "moat_won",
+    "success_moat",
+    "success_verifier_moat",
+    "verifier_value_added_true",
+)
+_MOAT_RIGOR_NULL_MARKERS = (
+    "does_not_beat_sc",
+    "does_not_beat_self_consistency",
+    "not_beat_sc",
+    "not_beat_self_consistency",
+    "moat_retired",
+    "retired_bounded",
+    "no_win",
+    "no_win_",
+    "ci_incl_0",
+)
 
 
 def _claims_moat(d: dict[str, Any]) -> bool:
@@ -2238,6 +2288,240 @@ def _flips_gate(d: dict[str, Any]) -> bool:
     if isinstance(hv, str) and ("gate_met" in hv.lower() or "diffusiongemma_met" in hv.lower()):
         return True
     return False
+
+
+def _moat_rigor_claim_text(d: dict[str, Any]) -> str:
+    return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()
+
+
+def _moat_rigor_norm(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
+
+
+def _moat_rigor_real_fields(d: dict[str, Any]) -> list[tuple[tuple[str, ...], Any]]:
+    return _iter_real_fields(d)
+
+
+def _moat_rigor_numeric_items(d: dict[str, Any]) -> list[tuple[str, float]]:
+    out: list[tuple[str, float]] = []
+    for path, value in _moat_rigor_real_fields(d):
+        if _is_finite_number(value):
+            out.append((_path_text(path).lower(), float(value)))
+    return out
+
+
+def _moat_rigor_positive_delta_items(d: dict[str, Any]) -> list[tuple[str, float]]:
+    out: list[tuple[str, float]] = []
+    for path_text, value in _moat_rigor_numeric_items(d):
+        leaf = path_text.rsplit(".", 1)[-1]
+        if "delta" not in leaf:
+            continue
+        if "sc" not in leaf and "self_consistency" not in leaf:
+            continue
+        if value > 0.0:
+            out.append((path_text, value))
+    return out
+
+
+def _moat_rigor_headroom_state(d: dict[str, Any]) -> tuple[bool, str]:
+    headroom_declared = False
+    for path, value in _moat_rigor_real_fields(d):
+        if path and path[-1].lower() == "headroom_present" and value is True:
+            headroom_declared = True
+            break
+    if not headroom_declared:
+        return False, "headroom_present is not declared true"
+
+    numeric = _moat_rigor_numeric_items(d)
+    oracle_values = [
+        value
+        for path_text, value in numeric
+        if "oracle_at_k" in path_text or "oracle@k" in path_text
+    ]
+    tuned_sc_values = [
+        value
+        for path_text, value in numeric
+        if ("tuned_sc" in path_text or "tuned_self_consistency" in path_text)
+        and "delta" not in path_text
+    ]
+    if oracle_values and tuned_sc_values:
+        best_headroom = max(o - s for o in oracle_values for s in tuned_sc_values)
+        if best_headroom < MOAT_HEADROOM_MIN_DELTA:
+            return (
+                False,
+                f"oracle@K - tuned_sc headroom is {best_headroom:.3g}, "
+                f"below {MOAT_HEADROOM_MIN_DELTA:.2f}",
+            )
+
+    flip_values = [
+        value for path_text, value in numeric if "flip" in path_text and value >= 0.0
+    ]
+    if flip_values and max(flip_values) <= 0.0:
+        return False, "flips evidence is zero"
+
+    return True, "headroom_present=true with no contradictory headroom evidence"
+
+
+def _moat_rigor_claims_relevant(d: dict[str, Any]) -> bool:
+    if (
+        d.get("verifier_value_added") is True
+        or d.get("verifier_efficiency_win") is True
+        or d.get("moat_realized") is True
+        or d.get("moat_retired_bounded") is True
+    ):
+        return True
+    if _claims_moat(d) or _flips_gate(d):
+        return True
+    norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
+    return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)
+
+
+def _moat_rigor_claims_win(d: dict[str, Any]) -> bool:
+    if not _moat_rigor_positive_delta_items(d):
+        return False
+    norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
+    if d.get("moat_realized") is True or d.get("verifier_value_added") is True:
+        return True
+    return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)
+
+
+def _moat_rigor_claims_null(d: dict[str, Any]) -> bool:
+    if d.get("moat_retired_bounded") is True:
+        return True
+    norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
+    return any(marker in norm for marker in _MOAT_RIGOR_NULL_MARKERS)
+
+
+def _moat_rigor_uses_naive_sc(d: dict[str, Any]) -> bool:
+    field_text = _field_name_text(d)
+    claim_text = _moat_rigor_claim_text(d)
+    combined = f"{claim_text} {field_text}"
+    norm = _moat_rigor_norm(combined)
+    has_tuned = "tuned_sc" in norm or "tuned_self_consistency" in norm
+    has_naive = "naive_sc" in norm or "naive_self_consistency" in norm
+
+    for path, value in _moat_rigor_real_fields(d):
+        leaf = path[-1].lower() if path else ""
+        path_text = _path_text(path).lower()
+        if isinstance(value, str):
+            value_norm = _moat_rigor_norm(value)
+            if "naive_sc" in value_norm or "naive_self_consistency" in value_norm:
+                has_naive = True
+            if "tuned_sc" in value_norm or "tuned_self_consistency" in value_norm:
+                has_tuned = True
+        if leaf in {
+            "self_consistency_accuracy",
+            "self_consistency_baseline",
+            "delta_vs_sc",
+            "sc_accuracy",
+        }:
+            has_naive = True
+        if "naive" in path_text and ("sc" in path_text or "self_consistency" in path_text):
+            has_naive = True
+        if "tuned_sc" in path_text or "tuned_self_consistency" in path_text:
+            has_tuned = True
+
+    return has_naive and not has_tuned
+
+
+def _moat_rigor_has_paired_significance(d: dict[str, Any]) -> bool:
+    has_ci = False
+    has_mcnemar = False
+    for path, value in _moat_rigor_real_fields(d):
+        leaf = path[-1].lower() if path else ""
+        if ("paired_ci95" in leaf or "paired_ci_95" in leaf) and (
+            isinstance(value, list)
+            and len(value) == 2
+            and all(_is_finite_number(item) for item in value)
+        ):
+            has_ci = True
+        if "mcnemar_p" in leaf and _is_finite_number(value):
+            has_mcnemar = True
+    return has_ci and has_mcnemar
+
+
+def check_moat_claim_rigor(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Enforce oracle-distinct, headroom-controlled moat claim rigor.
+
+    This complements `check_circular_moat_overclaim` and
+    `FALSE_NEGATIVE_RISK`: it guards artifacts that try to headline a
+    verifier-moat / beats-SC / verifier-value-added claim without the full
+    anti-trap contract of oracle distinctness, tuned-SC baseline, headroom, and
+    paired significance.
+    """
+    if not _moat_rigor_claims_relevant(d):
+        return
+
+    verifier_is_oracle = d.get("verifier_is_oracle")
+    if verifier_is_oracle is not False:
+        flags.append(
+            Flag(
+                kind=MOAT_CLAIM_RIGOR_KIND,
+                severity="critical",
+                detail=(
+                    f"Moat/verifier-value claim has verifier_is_oracle={verifier_is_oracle!r}. "
+                    "Every verifier-moat / beats-SC / verifier_value_added claim must declare "
+                    "verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+                ),
+            )
+        )
+
+    if _moat_rigor_uses_naive_sc(d):
+        flags.append(
+            Flag(
+                kind=MOAT_CLAIM_RIGOR_KIND,
+                severity="warn",
+                detail=(
+                    "Moat claim compares against naive self-consistency rather than a TUNED-SC "
+                    "baseline. Add tuned_sc_accuracy / tuned_self_consistency evidence before "
+                    "using the result as a headroom-controlled moat claim."
+                ),
+            )
+        )
+
+    is_win = _moat_rigor_claims_win(d)
+    headroom_ok, headroom_detail = _moat_rigor_headroom_state(d)
+    if is_win and not headroom_ok:
+        delta_detail = ", ".join(
+            f"{path}={value:g}" for path, value in _moat_rigor_positive_delta_items(d)
+        )
+        flags.append(
+            Flag(
+                kind=MOAT_CLAIM_RIGOR_KIND,
+                severity="critical",
+                detail=(
+                    "Positive beats-SC/moat win lacks a valid headroom_present=True anchor "
+                    f"({headroom_detail}; positive deltas: {delta_detail or 'unavailable'}). "
+                    "A win needs oracle@K - tuned_sc >= 0.10 and flips>0 when those fields "
+                    "are present."
+                ),
+            )
+        )
+
+    if is_win and not _moat_rigor_has_paired_significance(d):
+        flags.append(
+            Flag(
+                kind=MOAT_CLAIM_RIGOR_KIND,
+                severity="critical",
+                detail=(
+                    "Positive beats-SC/moat win lacks paired significance evidence: require "
+                    "paired_ci95 and mcnemar_p before a delta>0 headline can be cited."
+                ),
+            )
+        )
+
+    if _moat_rigor_claims_null(d) and not headroom_ok:
+        flags.append(
+            Flag(
+                kind=MOAT_CLAIM_RIGOR_KIND,
+                severity="warn",
+                detail=(
+                    f"Null/moat-retirement claim is uninformative because {headroom_detail}. "
+                    "A no-headroom corpus cannot support 'does not beat SC' or 'moat retired' "
+                    "as a moat bound."
+                ),
+            )
+        )
 
 
 def check_circular_moat_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
@@ -5007,6 +5291,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_degenerate_separation(d, flags)
     check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
+    check_moat_claim_rigor(d, flags)
     check_world_model_trust_degeneracy(d, flags)
     check_engine_selection_candidate_diversity(d, flags)
     check_arc_offline_live_overclaim(d, flags)

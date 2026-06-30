@@ -1,0 +1,175 @@
+{
+  "check_function_name": "check_moat_claim_rigor",
+  "d_arms_lint_findings": [
+    {
+      "artifact": "results/experiment_5003_lora_ebm_scorer_musr.json",
+      "loaded": true,
+      "moat_claim_rigor_flag_count": 0,
+      "moat_claim_rigor_flags": []
+    },
+    {
+      "artifact": "results/experiment_5004_uprm_replication.json",
+      "loaded": true,
+      "moat_claim_rigor_flag_count": 0,
+      "moat_claim_rigor_flags": []
+    },
+    {
+      "artifact": "results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "loaded": true,
+      "moat_claim_rigor_flag_count": 0,
+      "moat_claim_rigor_flags": []
+    },
+    {
+      "artifact": "results/experiment_5006_moat_second_corpus.json",
+      "loaded": true,
+      "moat_claim_rigor_flag_count": 0,
+      "moat_claim_rigor_flags": []
+    }
+  ],
+  "duration_s": 0.017131505999714136,
+  "experiment": "experiment_5008_moat_oracle_distinct_lint",
+  "field_principles": {
+    "check_function_name": {
+      "principle": "check_moat_claim_rigor (the added adversarial_verify check)."
+    },
+    "d_arms_lint_findings": {
+      "principle": "advisory findings on the existing D1-D4 artifacts (does not block them; surfaces any residual over-claim)."
+    },
+    "fixtures_passed": {
+      "principle": "each synthetic fixture (clean/circular/no-headroom/naive-SC/no-CI) fires the expected severity (the test evidence)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_moat_rigor_lint_shipped_fixtures_green."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads artifacts + runs a lint; no LLM)."
+    },
+    "preconditions_checked": {
+      "principle": "records adversarial_verify-importable check; a missing module emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the fixture generation."
+    },
+    "rules_implemented": {
+      "principle": "the (a)-(e) rule list -- the mechanical contract enforcing oracle-distinctness + headroom-control + paired-CI on moat claims."
+    }
+  },
+  "fixtures_passed": {
+    "circular": {
+      "actual_severities": [
+        "critical"
+      ],
+      "expected": "critical",
+      "flags": [
+        {
+          "detail": "Moat/verifier-value claim has verifier_is_oracle=True. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible.",
+          "kind": "MOAT_CLAIM_RIGOR",
+          "severity": "critical"
+        }
+      ],
+      "passed": true
+    },
+    "clean": {
+      "actual_severities": [],
+      "expected": "pass",
+      "flags": [],
+      "passed": true
+    },
+    "naive_sc": {
+      "actual_severities": [
+        "warn"
+      ],
+      "expected": "warn",
+      "flags": [
+        {
+          "detail": "Moat claim compares against naive self-consistency rather than a TUNED-SC baseline. Add tuned_sc_accuracy / tuned_self_consistency evidence before using the result as a headroom-controlled moat claim.",
+          "kind": "MOAT_CLAIM_RIGOR",
+          "severity": "warn"
+        }
+      ],
+      "passed": true
+    },
+    "no_ci": {
+      "actual_severities": [
+        "critical"
+      ],
+      "expected": "critical",
+      "flags": [
+        {
+          "detail": "Positive beats-SC/moat win lacks paired significance evidence: require paired_ci95 and mcnemar_p before a delta>0 headline can be cited.",
+          "kind": "MOAT_CLAIM_RIGOR",
+          "severity": "critical"
+        }
+      ],
+      "passed": true
+    },
+    "no_headroom_null": {
+      "actual_severities": [
+        "warn"
+      ],
+      "expected": "warn",
+      "flags": [
+        {
+          "detail": "Null/moat-retirement claim is uninformative because headroom_present is not declared true. A no-headroom corpus cannot support 'does not beat SC' or 'moat retired' as a moat bound.",
+          "kind": "MOAT_CLAIM_RIGOR",
+          "severity": "warn"
+        }
+      ],
+      "passed": true
+    },
+    "no_headroom_win": {
+      "actual_severities": [
+        "critical"
+      ],
+      "expected": "critical",
+      "flags": [
+        {
+          "detail": "Positive beats-SC/moat win lacks a valid headroom_present=True anchor (headroom_present is not declared true; positive deltas: delta_vs_tuned_sc=0.12). A win needs oracle@K - tuned_sc >= 0.10 and flips>0 when those fields are present.",
+          "kind": "MOAT_CLAIM_RIGOR",
+          "severity": "critical"
+        }
+      ],
+      "passed": true
+    }
+  },
+  "honest_verdict": "success_moat_rigor_lint_shipped_fixtures_green.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "adversarial_verify_importable": true,
+    "adversarial_verify_present": true,
+    "check_function_present": true,
+    "import_error": null
+  },
+  "random_seed": 20260630,
+  "rules_implemented": [
+    {
+      "contract": "verifier-moat / beats-SC / verifier_value_added claims require verifier_is_oracle=False.",
+      "rule": "a",
+      "severity": "critical"
+    },
+    {
+      "contract": "positive delta wins require headroom_present=True with oracle@K - tuned_sc >= 0.10 and flips>0 when those fields are present.",
+      "rule": "b",
+      "severity": "critical"
+    },
+    {
+      "contract": "naive self-consistency comparisons are not a tuned-SC headroom-control baseline.",
+      "rule": "c",
+      "severity": "warn"
+    },
+    {
+      "contract": "positive beats-SC wins require paired_ci95 and mcnemar_p significance evidence.",
+      "rule": "d",
+      "severity": "critical"
+    },
+    {
+      "contract": "no-headroom null or moat-retirement claims are uninformative and must not be mislabeled as a moat bound.",
+      "rule": "e",
+      "severity": "warn"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5008",
+    "SCENARIO-VERIFY-5008"
+  ]
+}

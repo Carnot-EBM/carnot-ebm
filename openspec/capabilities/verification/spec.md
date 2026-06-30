@@ -21016,3 +21016,58 @@ uninformative null.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5007 | Implemented (`python/carnot/experiment_5007_moat_gate_resolution.py`, `results/experiment_5007_moat_gate_resolution.json`) | Implemented (`tests/python/test_experiment_5007_moat_gate_resolution.py`) |
+
+### REQ-VERIFY-5008: Moat Claim Rigor Lint Guards Headline Eligibility
+
+The repository SHALL extend `scripts/adversarial_verify.py` with
+`check_moat_claim_rigor`, a mechanical verifier-moat artifact lint that runs
+inside the normal artifact scan path and does not modify
+`scripts/research_conductor.py`.
+
+For any artifact that makes a verifier-moat, beats-SC, or
+verifier-value-added claim, `check_moat_claim_rigor` SHALL emit
+`MOAT_CLAIM_RIGOR` with severity `critical` when `verifier_is_oracle` is
+missing or is not exactly `false`. It SHALL emit `critical` when a positive
+beats-SC / moat win with positive delta lacks `headroom_present=true` backed by
+the headroom contract (`oracle@K - tuned_sc >= 0.10` and flips > 0 when those
+fields are present). It SHALL emit `warn` when the claim compares against naive
+self-consistency instead of a tuned-SC baseline. It SHALL emit `critical` when
+a positive beats-SC win lacks paired significance evidence (`paired_ci95` and
+`mcnemar_p`). It SHALL emit `warn` when a null/retirement claim is made on a
+corpus with `headroom_present=false`, because that null is uninformative and
+must not be mislabeled as a moat bound.
+
+The repository SHALL provide Exp 5008 at
+`python/carnot/experiment_5008_moat_oracle_distinct_lint.py` to verify that the
+check is importable, run the check over synthetic fixtures and over existing
+D1-D4 artifacts (`results/experiment_5003_lora_ebm_scorer_musr.json`,
+`results/experiment_5004_uprm_replication.json`,
+`results/experiment_5005_ebrm_uncertainty_verifier.json`, and
+`results/experiment_5006_moat_second_corpus.json`), and write
+`results/experiment_5008_moat_oracle_distinct_lint.json`. The D-arm findings
+are advisory only; this lint surfaces residual over-claim risk without
+retroactively blocking those artifacts.
+
+The Exp 5008 artifact SHALL include `honest_verdict`,
+`check_function_name`, `rules_implemented`, `fixtures_passed`,
+`d_arms_lint_findings`, `inference_substrate`, `random_seed`,
+`preconditions_checked`, `duration_s`, and `field_principles`.
+`honest_verdict` SHALL equal
+`success_moat_rigor_lint_shipped_fixtures_green.` only when the clean fixture
+passes and the circular, no-headroom-win, naive-SC, no-CI, and no-headroom-null
+fixtures fire the expected severities.
+
+### SCENARIO-VERIFY-5008: Synthetic Moat Rigor Fixtures Fire The Contract
+
+Given synthetic fixture artifacts for a clean tuned-SC win, a circular
+over-claim, a positive win without headroom, a naive-SC comparison, a positive
+win without paired significance, and a no-headroom null, when
+`check_moat_claim_rigor` runs, then the clean fixture emits no
+`MOAT_CLAIM_RIGOR` flags, the circular, no-headroom-win, and no-CI fixtures emit
+`critical`, and the naive-SC and no-headroom-null fixtures emit `warn`.
+
+## Implementation Status (REQ-VERIFY-5008)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5008 | Implemented (`scripts/adversarial_verify.py`, `python/carnot/experiment_5008_moat_oracle_distinct_lint.py`, `results/experiment_5008_moat_oracle_distinct_lint.json`) | Implemented (`tests/python/test_adversarial_verify_moat_claim_rigor.py`) |
