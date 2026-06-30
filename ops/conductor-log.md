@@ -9653,3 +9653,4 @@ The contro |
 | 2026-06-30 13:26 UTC | PHASE B2 (INFRA; RESERVED SLOT 1 of 2; ROBUST REBU | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: d_principles", |
 | 2026-06-30 14:22 UTC | PHASE B2 (INFRA; RESERVED SLOT 1 of 2; ROBUST REBU | OK | 90 passed, 1 warning in 25.14s |
 | 2026-06-30 14:45 UTC | PHASE B3 (INFRA; RESERVED SLOT 2 of 2; THE PERMANE | OK | 97 passed, 1 warning in 9.28s |
+| 2026-06-30 15:08 UTC | PHASE D1 (VERIFIER MOAT; PRIMARY HEADLINE; claude/ | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
