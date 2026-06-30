@@ -187,6 +187,33 @@ def call_claude(prompt: str, model: str = "claude-opus-4-8") -> tuple[bool, str]
         return False, str(exc)
 
 
+def call_codex(prompt: str, model: str = "gpt-5.5") -> tuple[bool, str]:
+    """Codex (gpt-5.5) hostile-stranger reviewer — quota-conserve path (mirrors the conductor's
+    codex exec pattern; prompt on stdin via `-`). Added 2026-06-30 for the Claude-quota window."""
+    try:
+        full = (
+            f"{prompt}\n\n"
+            f"---\n"
+            f"docs/index.html CONTENT:\n\n"
+            f"{INDEX_HTML.read_text()}\n"
+        )
+        proc = subprocess.run(
+            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
+             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            input=full,
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except Exception as exc:
+        return False, str(exc)
+
+
 def write_report(content: str) -> None:
     """Write the audit output to ops/docs_audit_report.md."""
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -203,9 +230,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive
-        choices=["gemini", "claude"],
-        help="Which CLI backend to use (default: codex per the 2026-06-10 Codex-Default directive)",
+        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30 for the Claude-quota-conserve window.
+        choices=["gemini", "claude", "codex"],
+        help="Which CLI backend to use (default: claude=Opus; codex for the quota-conserve window)",
     )
     parser.add_argument(
         "--model-name",
@@ -221,6 +248,9 @@ def main() -> int:
     if args.model == "gemini":
         model_name = args.model_name or "gemini-3.1-pro-preview"
         ok, output = call_gemini(ADVERSARIAL_PROMPT, model=model_name)
+    elif args.model == "codex":
+        model_name = args.model_name or "gpt-5.5"
+        ok, output = call_codex(ADVERSARIAL_PROMPT, model=model_name)
     else:
         model_name = args.model_name or "sonnet"
         ok, output = call_claude(ADVERSARIAL_PROMPT, model=model_name)

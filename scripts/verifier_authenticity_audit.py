@@ -170,6 +170,28 @@ def call_claude(prompt: str, body: str, model: str = "claude-opus-4-8") -> tuple
         return False, str(exc)
 
 
+def call_codex(prompt: str, body: str, model: str = "gpt-5.5") -> tuple[bool, str]:
+    """Codex (gpt-5.5) hostile reviewer — quota-conserve path (mirrors the conductor's codex exec
+    pattern; prompt piped on stdin via `-`). Added 2026-06-30 for the Claude-quota-conserve window."""
+    try:
+        full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
+        proc = subprocess.run(
+            ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox", "--color", "never",
+             "--model", model, "--cd", str(PROJECT_ROOT), "--ephemeral", "-"],
+            input=full,
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except Exception as exc:
+        return False, str(exc)
+
+
 def parse_verdict(report: str) -> str:
     m = re.search(r"##\s*VERDICT\s*\n\s*(\S+)", report)
     return m.group(1).strip() if m else "UNKNOWN"
@@ -229,8 +251,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive
-        choices=["gemini", "claude"],
+        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive. codex added 2026-06-30 for the Claude-quota-conserve window.
+        choices=["gemini", "claude", "codex"],
     )
     parser.add_argument("--model-name", default=None)
     parser.add_argument(
@@ -290,6 +312,12 @@ def main() -> int:
                 PER_VERIFIER_PROMPT,
                 body,
                 model=args.model_name or "gemini-3.1-pro-preview",
+            )
+        elif args.model == "codex":
+            ok, report = call_codex(
+                PER_VERIFIER_PROMPT,
+                body,
+                model=args.model_name or "gpt-5.5",
             )
         else:
             ok, report = call_claude(

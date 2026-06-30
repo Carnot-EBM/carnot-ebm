@@ -99,6 +99,13 @@ AGENT_MODEL_RETRO = os.environ.get("AGENT_MODEL_RETRO")  # e.g. "opus"
 # milestone) while experiments stay on codex (bulk savings preserved).
 AGENT_TYPE_PLANNER = os.environ.get("AGENT_TYPE_PLANNER")  # e.g. "claude"
 AGENT_TYPE_RETRO = os.environ.get("AGENT_TYPE_RETRO")  # e.g. "claude"
+# 2026-06-30: per-role override for the milestone-close adversarial audits
+# (pages / verifier-authenticity / arc-self-solve). Default claude=Opus per the
+# 2026-06-08 directive; set AGENT_TYPE_AUDIT=codex + AGENT_MODEL_AUDIT=gpt-5.5 to
+# route the hostile reviewers off Claude during a quota-conserve window. Unset =
+# unchanged (claude/opus). The audit scripts now support --model codex.
+AGENT_TYPE_AUDIT = os.environ.get("AGENT_TYPE_AUDIT", "claude")
+AGENT_MODEL_AUDIT = os.environ.get("AGENT_MODEL_AUDIT", "claude-opus-4-8")
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY_BY_TYPE = {
@@ -4423,8 +4430,9 @@ def research_step(
                         [
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
-                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8 (was gemini)
-                            "--model", "claude", "--model-name", "claude-opus-4-8",
+                            # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=720,
@@ -4451,8 +4459,9 @@ def research_step(
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
                             "--limit", "20",
-                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8 (was gemini)
-                            "--model", "claude", "--model-name", "claude-opus-4-8",
+                            # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
+                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=900,
@@ -4479,8 +4488,9 @@ def research_step(
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
                             "--since-days", "7",
-                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8
-                            "--model", "claude", "--model-name", "claude-opus-4-8",
+                            # 2026-06-08: adversarial agent on Claude Opus 4.8; 2026-06-30:
+                            # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
+                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=900,
