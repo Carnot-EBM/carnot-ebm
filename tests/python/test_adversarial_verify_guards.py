@@ -635,6 +635,27 @@ def test_aggregation_with_semicolon_note_uses_aggregation_floor():
     assert floor["min_duration_s"] <= 0.001
 
 
+def test_blocked_precondition_check_only_has_no_live_model_floor(tmp_path: Path):
+    """REQ-VERIFY-5017: blocked precondition artifacts may name the missing model."""
+
+    artifact = {
+        "schema": "carnot.experiment_5017_lora_ebm_scorer_musr_v2.v1",
+        "honest_verdict": "blocked_trainable_qwen_base",
+        "inference_substrate": "precondition_check_only",
+        "duration_s": 1.0,
+        "model_specs": {"base_model": "Qwen/Qwen3.5-1.7B"},
+        "random_seed": 20260630,
+        "reproducibility_checksum": "sha256:fixture",
+    }
+    flags = []
+    av.check_duration_vs_claim(artifact, flags)
+    report = _report_for_payload(tmp_path, artifact)
+
+    assert av.duration_floor_for_artifact(artifact) is None
+    assert "DURATION_TOO_SHORT" not in _kinds(flags)
+    assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
+
+
 # --------------------------------------------------------------------------- #
 # TAUTOLOGY excludes wall-clock TIMESTAMP fields (2026-06-26 outer-loop fix)   #
 # Origin: .438 A3 self-play (exp4763) -- checkpoint_mtime_before_ns vs         #

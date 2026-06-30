@@ -1,0 +1,121 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "candidate_cache_source": null,
+  "checkpoint_path": null,
+  "delta_vs_tuned_sc": null,
+  "duration_s": 1.302254,
+  "epoch_checkpoints": [],
+  "experiment": "experiment_5017_lora_ebm_scorer_musr_v2",
+  "experiment_id": 5017,
+  "field_principles": {
+    "delta_vs_tuned_sc": {
+      "principle": "trained_scorer_accuracy - genuine_tuned_sc_accuracy; the moat lift (signed)."
+    },
+    "genuine_tuned_sc_accuracy": {
+      "principle": "the GENUINE K-way tuned-SC baseline from B1 (NOT the k=1 strawman) -- the honest baseline to beat."
+    },
+    "headroom_present": {
+      "principle": "true required for an informative result -- (oracle@K - GENUINE tuned_sc) >= 0.10 AND flips>0 (FALSE_NEGATIVE_RISK guard, vs the B1 genuine baseline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_lora_ebm_beats_sc_musr_<delta>, a clean null is complete_lora_ebm_no_win_musr_<delta>_ci_incl_0, a failed train is blocked_lora_ebm_train_did_not_run."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (GPU training + scoring; >=60s floor)."
+    },
+    "mcnemar_p": {
+      "principle": "McNemar paired-test p; a win requires p<0.05."
+    },
+    "model_specs": {
+      "principle": "the trainable base (Qwen3.5-1.7B base + LoRA + energy head) AND the cached-candidate generator -- the methodology stamp."
+    },
+    "n_pairs": {
+      "principle": "the contrastive-pair count (>0 REQUIRED -- 0 was the .461 skeleton signature)."
+    },
+    "n_questions": {
+      "principle": ">=200 for the headline delta (sample-size rigor)."
+    },
+    "oracle_at_k": {
+      "principle": "the selectable-headroom ceiling."
+    },
+    "paired_ci95": {
+      "principle": "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
+    },
+    "preconditions_checked": {
+      "principle": "records base-cached/CUDA/candidate-cache/FoVer checks; a missing resource emits blocked_, never a fabricated AUROC."
+    },
+    "random_seed": {
+      "principle": "determinism for the train/eval split + bootstrap."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (base, LoRA config, corpus, seed) so a replication catches drift."
+    },
+    "scorer_trained": {
+      "principle": "true iff the model ACTUALLY trained (train_loss non-null, n_pairs>0, duration>60s) -- the anti-skeleton gate AND the field D3 gates on; false = a FAILED execution, not a null."
+    },
+    "train_loss": {
+      "principle": "the final contrastive training loss (non-null REQUIRED -- a null means the .461 skeleton bail recurred)."
+    },
+    "trained_scorer_accuracy": {
+      "principle": "the oracle-distinct selection accuracy of the TRAINED LoRA-EBM (the headline number)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- the scorer ranks reasoning quality and NEVER reads gold/answer_index/model_id at inference (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "genuine_tuned_sc_accuracy": null,
+  "headroom_present": false,
+  "honest_verdict": "blocked_trainable_qwen_base",
+  "inference_substrate": "precondition_check_only",
+  "mcnemar_p": null,
+  "model_specs": {
+    "adapter": "LoRA",
+    "base_model": "Qwen/Qwen3.5-1.7B",
+    "cached_candidate_generator": "shared_cache_or_distributional_energy_verifier_musr_checkpoints",
+    "energy_head": "scalar"
+  },
+  "n_pairs": 0,
+  "n_questions": 0,
+  "oracle_at_k": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95": null,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "Qwen/Qwen3.5-1.7B not cached and download failed: RepositoryNotFoundError: 404 Client Error. (Request ID: Root=1-6a43791d-68f112307a421bbd1faafff9;386c009c-2b50-48cf-b9b7-585980bf32c2)\n\nRepository Not Found for url: https://huggingface.co/api/models/Qwen/Qwen3.5-1.7B/revision/main.\nPlease make sure you specified the correct `repo_id` and `repo_type`.\nIf you are trying to access a private or gated repo, make sure you are authenticated and your token has the required permissions.\nFor more details, see https://huggingface.co/docs/huggingface_hub/authentication",
+      "path": "/home/ianblenke/.cache/huggingface/hub",
+      "resource": "trainable_qwen_base"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available=true on conductor GPU-0",
+      "resource": "cuda"
+    },
+    {
+      "available": true,
+      "detail": "shared cache rows=0; using fallback 200 checkpoint MuSR rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+      "resource": "cached_musr_candidates"
+    },
+    {
+      "available": true,
+      "detail": "2 FoVer file(s) available",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train.json,/home/ianblenke/github.com/ianblenke/carnot/data/fover_train_v4.json",
+      "resource": "fover_pairs"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:a30a64c53ecce00ed8ca219ffa2a4726e9b196aec8dee464129bc4084cd84a0a",
+  "result_path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+  "schema": "carnot.experiment_5017_lora_ebm_scorer_musr_v2.v1",
+  "scorer_trained": false,
+  "spec_refs": [
+    "REQ-VERIFY-5017",
+    "SCENARIO-VERIFY-5017"
+  ],
+  "summarize_artifact_exit_code": null,
+  "train_loss": null,
+  "trained_scorer_accuracy": null,
+  "verifier_is_oracle": false
+}

@@ -1648,6 +1648,15 @@ def _is_live_llm_inference(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LIVE_LLM_SUBSTRATE)
 
 
+def _is_precondition_check_only_blocked(d: dict[str, Any]) -> bool:
+    """True when an artifact stopped before invoking the compute substrate."""
+    verdict = str(d.get("honest_verdict") or "")
+    return verdict.startswith("blocked_") and _inference_substrate_matches(
+        d,
+        "precondition_check_only",
+    )
+
+
 def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
     """True if the artifact declares it scored verifiers against
     cached candidate triples without invoking LLM inference.
@@ -1835,6 +1844,8 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     diagnostics. `None` means no compute-bound marker or floor-bearing
     substrate was declared.
     """
+    if _is_precondition_check_only_blocked(d):
+        return None
     if _is_verifier_scoring_only(d):
         cheap_floor = _cheap_learned_value_floor_descriptor(d)
         if cheap_floor is not None:
@@ -1875,6 +1886,8 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact with implausibly short duration."""
     duration = d.get("duration_s")
     if not _is_finite_number(duration):
+        return
+    if _is_precondition_check_only_blocked(d):
         return
     if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
         return
