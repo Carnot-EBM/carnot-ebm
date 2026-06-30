@@ -9661,3 +9661,4 @@ The contro |
 | 2026-06-30 16:53 UTC | PHASE D4 (VERIFIER MOAT; CROSS-CORPUS GENERALIZATI | OK | 86 passed, 1 warning in 7.07s |
 | 2026-06-30 17:11 UTC | PHASE D5 (VERIFIER MOAT; the falsifiable GATE + Di | OK | 87 passed, 1 warning in 8.20s |
 | 2026-06-30 17:21 UTC | PHASE C (HARDWARE CONTINUITY; KV260 SSH-ONLY) -- K | OK | 86 passed, 1 warning in 8.11s |
+| 2026-06-30 17:37 UTC | PHASE E1 (SOTA-INGESTION; RESERVED SLOT) -- a FRES | OK | 100 passed, 1 warning in 7.27s |
