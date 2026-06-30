@@ -13819,6 +13819,92 @@ precondition.
 
 ---
 
+### REQ-HW-5037
+
+**Title:** KV260 continuity MUST write the Exp 5037 SSH-only overlay/UIO and gated energy-smoke deliverable
+
+**Description:**
+Experiment 5037 MUST produce `results/experiment_5037_kv260_continuity.json`
+for the KV260 hardware-continuity slot. The only valid precondition is board
+SSH reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card device nodes MUST NOT be used. If the SSH command returns
+non-zero, the experiment MUST still write the artifact with
+`honest_verdict=blocked_kv260_ssh_unreachable`, `kv260_ssh_reachable=false`,
+`inference_substrate=hardware_smoke`, `on_board_energy_duration_s=null`, and
+`preconditions_checked` recording the failed SSH-only precondition.
+
+When SSH is reachable, the experiment MUST record the board state via
+`ssh kria 'xmutil listapps'` and `ssh kria 'ls /dev/uio*'`. If non-sudo
+`xmutil` reports that root privileges are required, the experiment MAY retry
+with `ssh kria 'sudo xmutil listapps'` as a read-only board-state fallback and
+MUST preserve both transcripts. If a Carnot Ising overlay is loaded, the
+experiment MUST run one tiny on-board Python quadratic-Ising constraint-energy
+evaluation over SSH, record its command transcript, and set
+`on_board_energy_duration_s` from the real command wall-clock duration. If no
+Carnot Ising overlay is loaded, the experiment MUST skip the energy smoke and
+record reachability plus overlay/UIO state as the continuity confirmation.
+
+The artifact MUST include bare values plus `field_principles` entries for these
+required fields:
+
+- `honest_verdict`: `terminal prefix; success_kv260_reachable_overlay_<state> or blocked_kv260_ssh_unreachable.`
+- `kv260_ssh_reachable`: `the SSH reachability exit code (the SSH-only precondition; never host SD-card).`
+- `overlay_state`: `xmutil listapps output -- whether the carnot_ising overlay is loaded (the continuity signal).`
+- `on_board_energy_duration_s`: `real wall-clock of the on-board energy smoke if the overlay is loaded; null if reachability-only.`
+- `inference_substrate`: `hardware_smoke (SSH-attached board test).`
+- `preconditions_checked`: `records the SSH reachability check (never the host SD-card device path); a non-zero SSH emits blocked_kv260_ssh_unreachable.`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_5037_kv260_continuity.py` writes
+  `results/experiment_5037_kv260_continuity.json` whether SSH is reachable or
+  unreachable.
+- `inference_substrate` is exactly `hardware_smoke`.
+- `preconditions_checked` records the SSH BatchMode command listed above and
+  contains no host SD-card device-node precondition.
+- If `kv260_ssh_reachable=false`, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, `overlay_state.loaded_overlay=null`,
+  `on_board_energy_duration_s=null`, and no overlay, UIO, or energy command is
+  run.
+- If `kv260_ssh_reachable=true`, `xmutil listapps` and `/dev/uio*` transcripts
+  are preserved in `overlay_state`/`command_probes`.
+- If a Carnot Ising overlay is loaded, `honest_verdict` begins
+  `success_kv260_reachable_overlay_loaded`, `on_board_energy_duration_s > 0`,
+  and the energy smoke transcript reports the deterministic tiny
+  quadratic-Ising energy.
+- If no Carnot Ising overlay is loaded, `honest_verdict` begins
+  `success_kv260_reachable_overlay_not_loaded`, `on_board_energy_duration_s=null`,
+  and no energy command is run.
+- `verifier_is_oracle=false`, `random_seed=5037`, `field_principles`,
+  `duration_s >= 0.0001`, `command_probes`, and a stable
+  `reproducibility_checksum` are present.
+
+**Implementation status:** Implemented (Exp 5037)
+
+---
+
+### SCENARIO-HW-5037
+
+**Scenario:** Exp 5037 writes SSH-attached KV260 overlay/UIO continuity with a gated on-board energy smoke.
+
+**Given:** The KV260 continuity task requires SSH reachability of the board and
+must not use a host SD-card device-node precondition.
+**When:** Experiment 5037 checks SSH and, only when reachable, records
+`xmutil listapps` plus `ls /dev/uio*` over SSH, and runs the tiny on-board
+quadratic-Ising energy smoke only when a Carnot Ising overlay is loaded.
+**Then:** It always writes `results/experiment_5037_kv260_continuity.json` with
+`honest_verdict=blocked_kv260_ssh_unreachable` when SSH is unreachable, or a
+`success_kv260_reachable_overlay_<state>` verdict plus overlay/UIO state when
+SSH is reachable, `inference_substrate=hardware_smoke`, principle-annotated
+required fields, deterministic `random_seed=5037`, and no host SD-card
+precondition.
+
+**Implementation status:** Implemented (Exp 5037)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
