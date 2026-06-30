@@ -1,0 +1,194 @@
+{
+  "best_arm": null,
+  "cited_upstream_artifacts": [
+    {
+      "arm": "genuine-tuned-SC",
+      "arm_id": "B1",
+      "experiment_id": 5015,
+      "fields_imported": [
+        "honest_verdict",
+        "genuine_tuned_sc_accuracy",
+        "genuine_headroom_present",
+        "oracle_at_k"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5015_genuine_sc_baseline_fix.json",
+      "sha256": "sha256:78af64c821451edcf0a6b71f2e8b0cfbfd5c9d105ac5250c4c7a70bdf2bc7711"
+    },
+    {
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "experiment_id": 5017,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+      "sha256": "sha256:8ad95720951638b2408e99936236e63ad1b9d8316dc9d368aea295035bdb320e"
+    },
+    {
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "experiment_id": 5018,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5018_uprm_replication_v2.json",
+      "sha256": "sha256:67ac465385ec774488fb6112441b08480117fca6393f291bbbeb75a69c2de4d9"
+    },
+    {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "experiment_id": 5019,
+      "fields_imported": [
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5019_d3.json",
+      "sha256": "sha256:bb5b38a3bfae335d40768ca6b522f8845d4a1f5eafb5cc4b00b619581be6c1ae"
+    },
+    {
+      "arm": "cascade",
+      "arm_id": "D6",
+      "experiment_id": 5020,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5020_uncertainty_routed_cascade.json",
+      "sha256": "sha256:3e9c8721201ebea83ea66e8c95b87d3a5c09b820177f2779a5973c45056d5330"
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "experiment_id": 5021,
+      "fields_imported": [
+        "flagged_adversarial",
+        "honest_verdict"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5021_moat_second_corpus_v2.json",
+      "sha256": "sha256:eff9fa0e1e19e598964c74d83a470a23f2571921f240ff54ac7193eca2e45685"
+    }
+  ],
+  "decision": "EXECUTION-INCOMPLETE",
+  "diffusiongemma_activation": "not_activated",
+  "diffusiongemma_gate_conditions_satisfied_off_arc": false,
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.000406,
+  "efficiency_win": false,
+  "execution_incomplete_arms": [
+    {
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "execution_status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "source_experiment_id": 5019
+    }
+  ],
+  "experiment": "experiment_5022_moat_gate_resolution_v2",
+  "experiment_id": 5022,
+  "field_principles": {
+    "best_arm": {
+      "principle": "the construction with the strongest oracle-distinct delta (LoRA-EBM/uPRM/EBRM) OR the efficiency Pareto point + its corpus + delta + CI."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "the {experiment_id, fields_imported, sha256} for each arm so the verdict is traceable to a real measurement."
+    },
+    "diffusiongemma_gate_conditions_satisfied_off_arc": {
+      "principle": "true iff a POSITIVE arm satisfies the gate's 3 conditions ON THE TESTED DOMAIN; activation stays operator-gated (do NOT autonomously flip to MET)."
+    },
+    "efficiency_win": {
+      "principle": "true iff the cascade reached accuracy parity (within CI of judge-only) at materially fewer judge calls (north-star \u00a75)."
+    },
+    "execution_incomplete_arms": {
+      "principle": "arms that did NOT cleanly execute (D1 skeleton / D2 blocked / D3 degenerate) -- these are FAILED executions to re-run in .463, NOT nulls that bound the moat."
+    },
+    "flagged_arms_skipped": {
+      "principle": "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a realized moat is success_moat_realized_off_arc_<arm>_<corpus>_<delta>, a bounded retirement is complete_moat_retired_bounded_lora_ebm_and_uprm_both_null, an unexecuted arm is complete_moat_execution_incomplete_<arm>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads D1-D4 + cascade JSON, no LLM; 0.0001s floor)."
+    },
+    "moat_realized": {
+      "principle": "true iff >=1 oracle-distinct arm beats the GENUINE tuned-SC with CI95-excl-0 on a headroom-present corpus (cross-corpus confirmed), OR the cascade hits an efficiency Pareto win."
+    },
+    "moat_retired_bounded": {
+      "principle": "true iff the PROPERLY-EXECUTED D1 (scorer_trained) AND D2 both clean-null on every headroom-present oracle-distinct corpus AND no efficiency win (the retire_if_same_verdict outcome) -- NOT triggered by a skeleton/degenerate/blocked arm."
+    },
+    "per_arm_table": {
+      "principle": "per arm per corpus: delta_vs_tuned_sc (vs GENUINE SC), paired_ci95, mcnemar_p, verifier_is_oracle, headroom_present, scorer_trained/abstention_rate (the audit + execution-quality trail)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false across all aggregated arms (the non-circular discipline; flagged_adversarial arms skipped)."
+    }
+  },
+  "flagged_arms_skipped": [
+    {
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "experiment_id": 5017,
+      "honest_verdict": "blocked_trainable_qwen_base",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5017_lora_ebm_scorer_musr_v2.json"
+    },
+    {
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "experiment_id": 5018,
+      "honest_verdict": "blocked_b2_logprob_cache",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5018_uprm_replication_v2.json"
+    },
+    {
+      "arm": "cascade",
+      "arm_id": "D6",
+      "experiment_id": 5020,
+      "honest_verdict": "blocked_judge_server",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5020_uncertainty_routed_cascade.json"
+    },
+    {
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "experiment_id": 5021,
+      "honest_verdict": "blocked_no_best_verifier",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5021_moat_second_corpus_v2.json"
+    }
+  ],
+  "honest_verdict": "complete_moat_execution_incomplete_ebrm",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "moat_realized": false,
+  "moat_retired_bounded": false,
+  "paper_summary": "D5 is execution-incomplete: EBRM did not cleanly execute, while flagged artifacts skipped were D1, D2, D6, D4. This is not a clean null and cannot bound-retire the moat.",
+  "per_arm_table": [
+    {
+      "abstention_rate": null,
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": null,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": null,
+      "headroom_present": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5019_d3.json",
+      "source_experiment_id": 5019,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    }
+  ],
+  "reproducibility_checksum": "sha256:bc3f05681a609a399696445d79a48b6adb166e61a95a3975629fa3702ada3486",
+  "schema": "carnot.experiment_5022_moat_gate_resolution_v2.v1",
+  "spec_refs": [
+    "REQ-REPORT-5022",
+    "SCENARIO-REPORT-5022"
+  ],
+  "verifier_is_oracle": false
+}
