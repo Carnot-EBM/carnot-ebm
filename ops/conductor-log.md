@@ -9667,3 +9667,4 @@ The contro |
 | 2026-06-30 18:25 UTC | CAPSTONE v463 -- aggregate the THIRD PHASE D miles | OK | 87 passed, 1 warning in 8.34s |
 | 2026-06-30 19:06 UTC | Plan milestone 2026.06.464 | OK | 14 tasks proposed |
 | 2026-06-30 19:08 UTC | Milestone 2026.06.464 activated | OK | 14 tasks queued |
+| 2026-06-30 19:21 UTC | PHASE 0 transition -- archive .463, activate .464, | OK | 85 passed, 1 warning in 6.94s |
