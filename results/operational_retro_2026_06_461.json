@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.461",
+  "generated_at": "2026-06-30T06:04:47Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "TIMING DATA reports 0/0/0/null, which is the recurring milestone-scoped detector FALSE-ZERO gap (documented .363->.460, now extending to .461, ~87 milestones) -- NOT an empty milestone. On-disk results/ mtimes + git log + ops/changelog.md (verified this turn) show .461 ran 13 arms exp5001->exp5013 over a ~252-min window (2026-06-30 01:42->05:53Z): the FIRST PHASE D off-ARC distributional-energy verifier-moat measurement (D1 LoRA-EBM / D2 uPRM / D3 EBRM / D4 cross-corpus -> D5 gate) plus infra (B1/B2), KV260 continuity (C), SOTA-ingestion (E1), self-play (E2), opportunistic ARC (E3), capstone exp5013. Headline = honest negative: best clean arm EBRM-on-MuSR delta_vs_tuned_sc +0.000 (CI95 [-0.03,0.025], oracle-distinct, headroom present, no win); D1/D2/D4 flagged_adversarial and correctly skipped; DiffusionGemma gate STILL-PENDING (did NOT autonomously flip). gpu_idle_on_compute_bound_tasks=null is CORRECT.",
+  "bottlenecks_identified": [
+    "Recurring milestone-scoped TIMING-DATA false-zero: the detector reported 0 commits since activation for ~the 87th time (.363->.461). The retro must reconstruct the real window (exp5001->exp5013, ~252 min) from on-disk results/ mtimes + git log + ops/changelog.md. This is the only standing operational bottleneck -- and it is a reporting gap, not lost work.",
+    "GPU idle is NOT flagged (gpu_idle_on_compute_bound_tasks=null): the 06:04:47Z GPU snapshot is ~11 min AFTER the capstone landed (05:53:51Z). The compute-bound PHASE D arms (D1 LoRA-EBM, D2 uPRM, D3 EBRM live scoring) ran earlier in the 01:42->05:53Z window and had finished, and the final capstone exp5013 is aggregation_from_upstream_artifacts (0.108s, no GPU path). Both idle RTX 3090s (0%/4MB) at snapshot time are by-design.",
+    "First-attempt PHASE D fabrication-gate flags: D1 (LoRA-EBM exp5003), D2 (uPRM), and D4 (cross-corpus) artifacts were flagged_adversarial and correctly skipped by the capstone, leaving EBRM (D3) the sole clean arm. The fabrication gate worked, but 3 of the moat arms produced no aggregatable number on attempt 1 -> the .462 pointer is 'tighten the strongest arm (EBRM) before broader activation'."
+  ],
+  "improvements_suggested": [
+    "Wire the mtime-fallback + runtime-stamping (confirmed ready-to-wire across the .456->.460 B3 arms) into the conductor's retro TIMING-DATA prompt-assembly call site so the detector stops false-zeroing. Out-of-scope for this autonomous retro task (must NOT edit scripts/research_conductor.py), but it is the single remaining step to close the ~87-milestone reporting gap.",
+    "For .462 PHASE D, tighten the strongest clean arm (EBRM on MuSR, delta +0.000, CI95 [-0.03,0.025]) and supply the missing clean D1/D2 nulls before a broader oracle-distinct activation, per the capstone next_milestone_pointer -- re-run D1/D2/D4 with full PRECONDITIONS + methodology (random_seed, reproducibility_checksum, inference_substrate, plausible duration) so they avoid the first-attempt fabrication flags and yield aggregatable numbers.",
+    "Schedule compute-bound PHASE D scoring arms on both 3090s via DualGPURunner ONLY when 2+ models load in parallel (e.g. EBRM scorer on GPU 0 + a tuned-SC comparator on GPU 1); single-GGUF scoring arms correctly use one GPU."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Close the recurring retro false-zero: wire the B3-confirmed mtime-fallback + runtime-stamping into the conductor's TIMING-DATA assembly (the single remaining step, ~87 milestones pending; out-of-scope to edit research_conductor.py from this task).",
+    "Tighten EBRM (the only clean PHASE D arm, MuSR delta +0.000) and supply clean D1/D2 nulls so the .462 D5 gate can reach a bounded retire-or-realize verdict instead of MIXED-SCOPED.",
+    "Re-run the fabrication-flagged moat arms (D1 LoRA-EBM exp5003, D2 uPRM, D4 cross-corpus) with full PRECONDITIONS + methodology so they produce clean, aggregatable numbers on the next attempt."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The operational signature of .461 is identical to .458-.460: a real, full ~252-min 13-arm milestone that the milestone-scoped detector reports as 0/0/0/null. The honest retro reconstructs reality from on-disk artifacts rather than trusting the buggy detector, and correctly declines to flag idle GPUs (the snapshot post-dates the compute window; the capstone is aggregation-only). The standing, UNBLOCKED leverage is wiring the already-built mtime-fallback into the conductor's retro path -- the one fix that would make every subsequent retro self-measuring."
+}
