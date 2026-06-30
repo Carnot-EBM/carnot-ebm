@@ -1,0 +1,140 @@
+{
+  "adversarial_verify_clean": true,
+  "adversarial_verify_flags": [],
+  "best_routing_threshold": null,
+  "blocked_error": "URLError: <urlopen error [Errno 111] Connection refused>",
+  "cascade_accuracy": null,
+  "cascade_judge_calls": 0,
+  "cheap_verifier_only_accuracy": null,
+  "cheap_verifier_source": "D1 trained LoRA-EBM",
+  "cost_quality_frontier": [],
+  "deliverable_stage": "blocked_precondition",
+  "duration_s": 0.017642,
+  "experiment": "experiment_5034_uncertainty_routed_cascade_v2",
+  "experiment_id": 5034,
+  "field_principles": {
+    "cascade_accuracy": {
+      "principle": "the cascade accuracy at the best routing threshold (the headline)."
+    },
+    "cascade_judge_calls": {
+      "principle": "the judge-call count the cascade actually used (the efficiency number; a win = << N)."
+    },
+    "cheap_verifier_only_accuracy": {
+      "principle": "the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor)."
+    },
+    "cheap_verifier_source": {
+      "principle": "which cheap verifier was used (D1 trained LoRA-EBM / D2 uPRM / registry ensemble)."
+    },
+    "cost_quality_frontier": {
+      "principle": "the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall)."
+    },
+    "genuine_tuned_sc_accuracy": {
+      "principle": "the B1 GENUINE tuned-SC (0.585; the accuracy context)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (the strong judge runs live; >=60s floor)."
+    },
+    "judge_call_fraction": {
+      "principle": "cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction."
+    },
+    "judge_only_accuracy": {
+      "principle": "the strong-judge-only accuracy at N judge calls (the expensive ceiling)."
+    },
+    "judge_only_calls": {
+      "principle": "N -- the full judge-call count (the cost the cascade must beat)."
+    },
+    "model_specs": {
+      "principle": "the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 (sample-size rigor)."
+    },
+    "preconditions_checked": {
+      "principle": "records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the routing + bootstrap."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "genuine_tuned_sc_accuracy": null,
+  "honest_verdict": "blocked_judge_server",
+  "inference_substrate": "precondition_check_only",
+  "judge_call_fraction": null,
+  "judge_only_accuracy": null,
+  "judge_only_calls": 0,
+  "model_specs": {
+    "cheap_verifier": {
+      "accuracy": 0.665,
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "cheap_verifier": "D1 trained LoRA-EBM",
+      "delta_vs_tuned_sc": 0.08,
+      "source_model_specs": {
+        "adapter": "LoRA",
+        "b1_genuine_sc_baseline_reference": {
+          "available": true,
+          "genuine_tuned_sc_accuracy": 0.585,
+          "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+          "oracle_at_k": 0.865,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5015_genuine_sc_baseline_fix.json"
+        },
+        "base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--Qwen--Qwen3.5-2B/snapshots/15852e8c16360a2fea060d615a32b45270f8a8fc",
+        "base_model": "Qwen/Qwen3.5-2B",
+        "cached_candidate_generator": "distributional_energy_verifier_musr_checkpoints",
+        "candidate_cache_source": "results/distributional_energy_verifier_musr_checkpoints",
+        "energy_head": "scalar_sequence_regression_head",
+        "lora_alpha": 16,
+        "lora_r": 8,
+        "max_length": 512,
+        "quantization": "4bit_nf4_QLoRA",
+        "tuned_self_consistency_config": {
+          "k": 1,
+          "temperature": "cached"
+        }
+      }
+    },
+    "strong_judge": {
+      "gpu": 0,
+      "model": "gemma-4-12B-it-GGUF",
+      "server": "http://127.0.0.1:8080"
+    }
+  },
+  "n_questions": 0,
+  "oracle_distinctness_enforced": true,
+  "paired_ci95_cascade_vs_judge": null,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "selected D1 trained LoRA-EBM",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "resource": "cheap_verifier"
+    },
+    {
+      "available": false,
+      "detail": "URLError: <urlopen error [Errno 111] Connection refused>",
+      "path": "http://127.0.0.1:8080",
+      "resource": "judge_server"
+    },
+    {
+      "available": true,
+      "detail": "loaded 200 cached MuSR candidate rows",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/distributional_energy_verifier_musr_checkpoints",
+      "resource": "cached_musr_candidates"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "0c138da03c03b3d4144496588fedd71e0776f2a419ee586663b58a6d6fe46021",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5034_uncertainty_routed_cascade_v2.json",
+  "schema": "carnot.experiment_5034_uncertainty_routed_cascade_v2.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5034",
+    "SCENARIO-VERIFY-5034"
+  ],
+  "summarize_artifact_exit_code": 0,
+  "verifier_is_oracle": false
+}

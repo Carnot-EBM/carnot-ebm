@@ -21897,3 +21897,87 @@ includes zero, then `honest_verdict` SHALL start with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5033 | Proposed (`python/carnot/experiment_5033_ebrm_uncertainty_verifier_v3.py`, `results/experiment_5033_ebrm_uncertainty_verifier_v3.json`) | Proposed (`tests/python/test_experiment_5033_ebrm_uncertainty_verifier_v3.py`) |
+
+### REQ-VERIFY-5034: Uncertainty-Routed Cascade Charges Strong-Judge Cost
+
+The repository SHALL provide Exp 5034 at
+`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py` to evaluate a
+MuSR uncertainty-routed cascade that separates cheap oracle-distinct verifier
+value from strong LLM-judge fallback value, writing
+`results/experiment_5034_uncertainty_routed_cascade_v2.json`.
+
+Before scoring, the runner SHALL write a deliverable-first schema skeleton and
+SHALL check that a cheap oracle-distinct verifier is available, that the GPU-0
+CUDA llama-server judge endpoint is reachable, and that cached MuSR candidates
+exist for at least 200 questions. The cheap verifier SHALL be the best available
+oracle-distinct cheap scorer from Exp 5031 / Exp 5032 by `delta_vs_tuned_sc`,
+preferring the trained D1 LoRA-EBM when `scorer_trained=true`; if neither D1 nor
+D2 is usable, the runner SHALL use the registry quality ensemble fallback and
+record that source. A missing resource SHALL write `blocked_<resource>`, keep
+`verifier_is_oracle=false`, record `preconditions_checked`, and stop without
+fabricating cascade metrics.
+
+The runner SHALL measure and report three rows: cheap-verifier-only accuracy at
+0 judge calls, strong-judge-only accuracy at `N` judge calls, and cascade
+accuracy at swept arXiv:2510.20369 / VERDI-style routing-confidence thresholds
+with the cascade judge-call count charged explicitly. The strong judge SHALL be
+`gemma-4-12B-it-GGUF` served by the GPU-0 CUDA llama-server and SHALL be invoked
+only for the judged baseline and for questions the cascade would route up at a
+selected threshold. The sweep MAY cache the judge-only predictions to evaluate
+multiple thresholds, but each frontier row SHALL report the judge-call count a
+single deployment of that threshold would spend. The run SHALL also report the
+B1 genuine tuned self-consistency accuracy (`0.585`) for context.
+
+The terminal artifact SHALL include `honest_verdict`, `verifier_is_oracle`,
+`cheap_verifier_only_accuracy`, `cheap_verifier_source`, `judge_only_accuracy`,
+`judge_only_calls`, `cascade_accuracy`, `cascade_judge_calls`,
+`judge_call_fraction`, `cost_quality_frontier`, `genuine_tuned_sc_accuracy`,
+`n_questions`, `model_specs`, `inference_substrate`, `random_seed`,
+`preconditions_checked`, `adversarial_verify_clean`,
+`adversarial_verify_flags`, `summarize_artifact_exit_code`, `duration_s`,
+`field_principles`, `reproducibility_checksum`, and `spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_cascade_parity_at_<pct>_judge_calls, a null is complete_cascade_no_efficiency_win_musr.`;
+`verifier_is_oracle` = `false -- neither the cheap verifier nor the LLM-judge is the executable oracle on MuSR (must pass check_circular_moat_overclaim).`;
+`cheap_verifier_only_accuracy` = `the cheap oracle-distinct verifier's accuracy at 0 judge calls (the floor).`;
+`cheap_verifier_source` = `which cheap verifier was used (D1 trained LoRA-EBM / D2 uPRM / registry ensemble).`;
+`judge_only_accuracy` = `the strong-judge-only accuracy at N judge calls (the expensive ceiling).`;
+`judge_only_calls` = `N -- the full judge-call count (the cost the cascade must beat).`;
+`cascade_accuracy` = `the cascade accuracy at the best routing threshold (the headline).`;
+`cascade_judge_calls` = `the judge-call count the cascade actually used (the efficiency number; a win = << N).`;
+`judge_call_fraction` = `cascade_judge_calls / N -- the cost saving; a Pareto win = parity at a small fraction.`;
+`cost_quality_frontier` = `the swept {routing_threshold: (accuracy, judge_calls)} curve -- separates cheap-verifier value from judge-fallback value (the E1 anti-pitfall).`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE tuned-SC (0.585; the accuracy context).`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`model_specs` = `the cheap verifier + the strong LLM-judge (gemma-4-12B-it-GGUF) -- the methodology stamp.`;
+`inference_substrate` = `live_llm_inference (the strong judge runs live; >=60s floor).`;
+`random_seed` = `determinism for the routing + bootstrap.`;
+`preconditions_checked` = `records the cheap-verifier / judge-server / candidate-cache checks; a missing resource emits blocked_.`
+
+### SCENARIO-VERIFY-5034: Cascade Frontier Separates Cheap Floor From Charged Judge Ceiling
+
+Given a usable D1/D2/registry cheap verifier, a reachable GPU-0
+`gemma-4-12B-it-GGUF` llama-server judge, and cached MuSR candidate rows for at
+least 200 questions, when Exp 5034 runs, then it writes a schema skeleton first,
+computes the cheap-verifier-only row with 0 judge calls, computes the
+judge-only row with `N` charged judge calls, sweeps VERDI-style confidence
+thresholds, records `cost_quality_frontier`, selects the minimal-judge-call
+threshold whose cascade accuracy is within the paired CI of judge-only when one
+exists, runs adversarial artifact verification plus artifact summarization,
+keeps `verifier_is_oracle=false`, and writes every required field.
+
+If the cheap verifier, judge server, or candidate cache is missing, then Exp
+5034 SHALL write `blocked_<resource>`, set cheap/judge/cascade metrics to null
+or zero cost as appropriate, record the failed precondition, and exit without
+claiming an efficiency win. If no swept threshold reaches parity with
+judge-only at materially fewer judge calls, then `honest_verdict` SHALL start
+with `complete_cascade_no_efficiency_win_musr`; if the cascade reaches parity
+within CI at `<=40%` of the judge-only calls, then `honest_verdict` SHALL start
+with `success_cascade_parity_at_`.
+
+## Implementation Status (REQ-VERIFY-5034)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5034 | Implemented (`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py`, `results/experiment_5034_uncertainty_routed_cascade_v2.json`) | Implemented (`tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py`) |
