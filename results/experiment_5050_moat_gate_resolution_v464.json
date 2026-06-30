@@ -1,0 +1,243 @@
+{
+  "best_arm": "D1",
+  "best_arm_ci": [
+    0.0,
+    0.165
+  ],
+  "best_arm_delta": 0.08,
+  "blocked_upstream_artifacts": [
+    {
+      "arm": "powered_lora_ebm_eorm",
+      "arm_id": "D1",
+      "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+      "status": null
+    },
+    {
+      "arm": "cross_model_cascade",
+      "arm_id": "D6",
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_d6.json",
+      "status": "blocked"
+    }
+  ],
+  "bounded_retirement_ok": false,
+  "cascade_artifact": {
+    "arm": "cross_model_cascade",
+    "arm_id": "D6",
+    "cascade_accuracy": null,
+    "delta_vs_judge_only": null,
+    "efficiency_win": false,
+    "execution_status": "blocked",
+    "experiment_id": 5048,
+    "honest_verdict": "blocked_gate_check_failed",
+    "judge_call_fraction": null,
+    "judge_only_accuracy": null,
+    "n_questions": 0,
+    "paired_ci95": null,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_d6.json",
+    "sha256": "sha256:330dbfd1c468e8fd75136bf8490f98edbc497d3174a42f6a6d285c4ea3938891",
+    "verifier_is_oracle": false
+  },
+  "cascade_efficiency_win": false,
+  "cited_upstream_artifacts": [
+    {
+      "arm_id": "D1",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+      "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff"
+    },
+    {
+      "arm_id": "D2",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
+      "sha256": "sha256:6edc002f070b5ac38c06195751904ef28e44fd2b2424cac3e3c26e0285db23ed"
+    },
+    {
+      "arm_id": "D3",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5047_kan_purm_energy_calibration.json",
+      "sha256": "sha256:2afff65f124a76674ce1b4c6050a3f537411948a17ec1195cbd930af6b3fcf40"
+    },
+    {
+      "arm_id": "D6",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_d6.json",
+      "sha256": "sha256:330dbfd1c468e8fd75136bf8490f98edbc497d3174a42f6a6d285c4ea3938891"
+    },
+    {
+      "arm_id": "D4",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5049_second_corpus_confirmation.json",
+      "sha256": "sha256:8cc6f49ccc158e662d147f92be92a09632c04068a24f4da9f67c08d90bf4ee2a"
+    },
+    {
+      "arm_id": "D5-prior",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5036_moat_gate_resolution_v3.json",
+      "sha256": "sha256:1f2cca42c83f426800ce0544b747b6211c455804b80598a4ee1243110bd43c25"
+    }
+  ],
+  "critical_corrigendum_artifacts": [],
+  "duration_s": 0.001012,
+  "execution_incomplete_reasons": [
+    "D1 blocked: blocked_sota_candidate_refresh_unavailable",
+    "D2 flagged: complete_process_reward_no_win_musr_minus_0p030",
+    "D6 blocked: blocked_gate_check_failed",
+    "D6 missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
+  ],
+  "experiment": "experiment_5050_moat_gate_resolution_v464",
+  "experiment_id": 5050,
+  "field_principles": {
+    "best_arm": {
+      "principle": "the strongest usable MuSR verifier arm, or cascade when the cascade efficiency gate wins."
+    },
+    "best_arm_ci": {
+      "principle": "paired CI95 for best_arm on the gate metric."
+    },
+    "best_arm_delta": {
+      "principle": "best_arm signed delta: verifier-vs-tuned-SC for D1/D2/D3 or cascade-vs-judge for D6."
+    },
+    "bounded_retirement_ok": {
+      "principle": "true only when clean D1/D2/D3 no-wins and a clean no-efficiency cascade are all present."
+    },
+    "cascade_efficiency_win": {
+      "principle": "true only for clean judge-parity CI with materially fewer judge calls."
+    },
+    "execution_incomplete_reasons": {
+      "principle": "concrete missing, blocked, flagged, critical-corrigendum, malformed, or unusable arms."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix summarizing the .464 moat_state without treating blocked arms as nulls."
+    },
+    "moat_state": {
+      "principle": "one of moat_realized, musr_scoped_positive, retired_bounded, execution_incomplete."
+    },
+    "next_actions": {
+      "principle": "state-conditioned follow-up actions for the next conductor step."
+    },
+    "second_corpus_confirmed": {
+      "principle": "true only for a non-flagged clean Exp 5049 confirmation matching the winning MuSR arm."
+    }
+  },
+  "flagged_upstream_artifacts": [
+    {
+      "arm": "vpr_process_reward",
+      "arm_id": "D2",
+      "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
+      "status": null
+    },
+    {
+      "arm": "second_corpus_confirmation",
+      "arm_id": "D4",
+      "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5049_second_corpus_confirmation.json",
+      "status": null
+    }
+  ],
+  "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "malformed_upstream_artifacts": [],
+  "missing_upstream_artifacts": [
+    {
+      "arm": "cross_model_cascade",
+      "arm_id": "D6",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5048_cross_model_cascade_repair.json"
+    }
+  ],
+  "moat_state": "execution_incomplete",
+  "next_actions": [
+    "Repair or rerun every blocked, flagged, missing, or critical Phase D arm before claiming a null.",
+    "Re-run Exp 5048 cascade with the judge-server gate open and explicit cost accounting.",
+    "Re-run Exp 5045 with the SOTA candidate-refresh gate satisfied or keep cached D1 non-headline.",
+    "Re-run flagged/corrigendum artifacts without critical audit findings before aggregation."
+  ],
+  "per_arm_table": [
+    {
+      "accuracy": 0.665,
+      "arm": "powered_lora_ebm_eorm",
+      "arm_id": "D1",
+      "clean_no_win": false,
+      "delta_vs_tuned_sc": 0.08,
+      "execution_status": "blocked",
+      "experiment_id": 5045,
+      "headroom_present": true,
+      "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+      "proper_musr_win": false,
+      "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff",
+      "verifier_is_oracle": false
+    },
+    {
+      "accuracy": 0.555,
+      "arm": "vpr_process_reward",
+      "arm_id": "D2",
+      "clean_no_win": false,
+      "delta_vs_tuned_sc": -0.03,
+      "execution_status": "flagged",
+      "experiment_id": 5046,
+      "headroom_present": true,
+      "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
+      "mcnemar_p": 0.470879,
+      "n_questions": 200,
+      "paired_ci95": [
+        -0.095,
+        0.035
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
+      "proper_musr_win": false,
+      "sha256": "sha256:6edc002f070b5ac38c06195751904ef28e44fd2b2424cac3e3c26e0285db23ed",
+      "verifier_is_oracle": false
+    },
+    {
+      "accuracy": 0.605,
+      "arm": "kan_purm_energy_calibration",
+      "arm_id": "D3",
+      "clean_no_win": true,
+      "delta_vs_tuned_sc": 0.02,
+      "execution_status": "clean",
+      "experiment_id": 5047,
+      "headroom_present": true,
+      "honest_verdict": "complete_kan_purm_no_incremental_lift_over_powered_d1_minus_0p060_mcnemar_or_headroom_gate",
+      "mcnemar_p": 0.016901,
+      "n_questions": 200,
+      "paired_ci95": [
+        -0.105,
+        -0.015
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5047_kan_purm_energy_calibration.json",
+      "proper_musr_win": false,
+      "sha256": "sha256:2afff65f124a76674ce1b4c6050a3f537411948a17ec1195cbd930af6b3fcf40",
+      "verifier_is_oracle": false
+    }
+  ],
+  "reproducibility_checksum": "sha256:332dda4d237fce824e4a035ee4eb12ac0fb6995a4dc75f0a4c1471f6d45f467b",
+  "result_path": "results/experiment_5050_moat_gate_resolution_v464.json",
+  "schema": "carnot.experiment_5050_moat_gate_resolution_v464.v1",
+  "second_corpus_artifact": {
+    "arm": "second_corpus_confirmation",
+    "arm_id": "D4",
+    "best_arm": "D1",
+    "delta_vs_tuned_sc_second": 0.37,
+    "execution_status": "flagged",
+    "experiment_id": 5049,
+    "headroom_present": true,
+    "honest_verdict": "success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370",
+    "mcnemar_p_second": 0.0,
+    "paired_ci95_second": [
+      0.28,
+      0.47
+    ],
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5049_second_corpus_confirmation.json",
+    "second_corpus_confirmed": true,
+    "second_corpus_name": "ConstraintBench-exact-v1",
+    "sha256": "sha256:8cc6f49ccc158e662d147f92be92a09632c04068a24f4da9f67c08d90bf4ee2a",
+    "verifier_is_oracle": false
+  },
+  "second_corpus_confirmed": false,
+  "spec_refs": [
+    "REQ-REPORT-5050",
+    "SCENARIO-REPORT-5050"
+  ]
+}

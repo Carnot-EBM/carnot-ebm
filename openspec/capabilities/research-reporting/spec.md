@@ -357,6 +357,83 @@ skeleton, blocked, degenerate, or flagged arm as a bounded retirement input.
 |---|---|---|
 | REQ-REPORT-5036 | Planned (`python/carnot/experiment_5036_moat_gate_resolution_v3.py`) | Planned (`tests/python/test_experiment_5036_moat_gate_resolution_v3.py`) |
 
+### REQ-REPORT-5050: Phase D .464 Verifier-Moat Gate Resolution
+
+The Exp 5050 workflow SHALL aggregate the .464 Phase D artifacts from Exp
+5045 powered LoRA-EBM/EORM MuSR, Exp 5046 VPR/process-reward repair, Exp
+5047 KAN/PURM energy calibration, Exp 5048 cross-model cascade repair or the
+available D6 cascade artifact, Exp 5049 second-corpus confirmation, and the
+prior Exp 5036 gate-resolution artifact. It SHALL write
+`results/experiment_5050_moat_gate_resolution_v464.json`, SHALL NOT run live
+LLM inference, SHALL NOT modify `scripts/research_conductor.py`, and SHALL
+record missing, blocked, flagged, or schema-invalid upstream artifacts
+explicitly rather than treating them as scientific nulls.
+
+The artifact SHALL classify the milestone into exactly one `moat_state`:
+`moat_realized`, `musr_scoped_positive`, `retired_bounded`, or
+`execution_incomplete`. `moat_realized` SHALL require either a proper
+non-oracle D1/D2/D3 verifier win on MuSR with headroom present, positive delta,
+paired CI95 excluding zero, and McNemar `p<0.05`, plus non-flagged
+second-corpus confirmation for the same arm, or a clean cascade efficiency win
+with judge parity and materially fewer judge calls. `musr_scoped_positive`
+SHALL be used when a proper MuSR-only verifier win exists but cross-corpus
+confirmation and cascade efficiency are absent or unavailable. `retired_bounded`
+SHALL require properly executed clean no-win D1, D2, and D3 arms plus a clean
+cascade artifact showing no efficiency win. `execution_incomplete` SHALL be
+used when missing, blocked, flagged, critical-corrigendum, malformed, or
+otherwise unexecuted required arms prevent either realization or bounded
+retirement.
+
+The artifact SHALL include top-level fields `honest_verdict`, `moat_state`,
+`best_arm`, `best_arm_delta`, `best_arm_ci`, `second_corpus_confirmed`,
+`cascade_efficiency_win`, `execution_incomplete_reasons`,
+`bounded_retirement_ok`, and `next_actions`. It SHALL also include traceable
+upstream summaries, missing/blocked artifact lists, `spec_refs`,
+`inference_substrate=aggregation_from_upstream_artifacts`, duration, and a
+reproducibility checksum.
+
+#### SCENARIO-REPORT-5050-REALIZED: Proper Win With Confirmation Or Efficiency Realizes The Moat
+
+**Given** a clean non-oracle MuSR verifier arm has a positive delta with paired
+CI95 excluding zero and McNemar `p<0.05` plus non-flagged second-corpus
+confirmation, or a clean cascade has judge parity at materially fewer calls
+**When** Exp 5050 resolves the .464 gate
+**Then** it writes `moat_state=moat_realized`,
+`bounded_retirement_ok=false`, and a success-prefixed `honest_verdict`.
+
+#### SCENARIO-REPORT-5050-MUSR-SCOPED: MuSR-Only Win Is Scoped Positive
+
+**Given** a clean non-oracle MuSR verifier arm has a proper positive win but
+second-corpus confirmation is absent, blocked, flagged, or not confirmed, and
+the cascade has no clean efficiency win
+**When** Exp 5050 resolves the .464 gate
+**Then** it writes `moat_state=musr_scoped_positive`, preserves the winning
+MuSR arm in `best_arm`, and records the missing or unusable confirmation as an
+execution-incomplete reason rather than as a null.
+
+#### SCENARIO-REPORT-5050-RETIRE: Clean D1/D2/D3 No-Wins And No Efficiency Bound Retirement
+
+**Given** D1, D2, and D3 are cleanly executed non-oracle no-win arms and a clean
+cascade artifact shows no efficiency win
+**When** Exp 5050 resolves the .464 gate
+**Then** it writes `moat_state=retired_bounded`,
+`bounded_retirement_ok=true`, and does not require second-corpus confirmation.
+
+#### SCENARIO-REPORT-5050-INCOMPLETE: Blocked Arms Do Not Count As Nulls
+
+**Given** any required D1/D2/D3/D6 evidence needed for realization or bounded
+retirement is missing, blocked, flagged, critical-corrigendum, malformed, or
+otherwise unexecuted
+**When** Exp 5050 resolves the .464 gate
+**Then** it writes `moat_state=execution_incomplete`, lists concrete
+`execution_incomplete_reasons`, and keeps `bounded_retirement_ok=false`.
+
+## Implementation Status (REQ-REPORT-5050)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5050 | Planned (`python/carnot/experiment_5050_moat_gate_resolution_v464.py`) | Planned (`tests/python/test_experiment_5050_moat_gate_resolution_v464.py`) |
+
 ### REQ-REPORT-5038: Phase E1 Verifier-Moat SOTA Ingestion For .464
 
 The Exp 5038 workflow SHALL run the reliable SOTA-ingestion channel reserved
