@@ -106,5 +106,13 @@
   "tuned_sc_accuracy": null,
   "uprm_score_methodology_note": "arXiv:2605.10158 uPRM scores a candidate first-error position j for trajectory steps y_1..y_T as S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t, where p^+_t and p^-_t are the generator LLM next-token probabilities of '+' and '-' marker tokens after step t, renormalized over {+,-}. This runner uses the generator's own logprob/top-logprob telemetry, never gold, to score each candidate by the mean no-error log-likelihood S(T+1)/T as a direct oracle-distinct selector; gold is read only after selection for evaluation.",
   "uprm_selection_accuracy": null,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.559929 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
