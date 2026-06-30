@@ -22196,6 +22196,84 @@ duration evidence, then Exp 5045 writes
 |---|---|---|
 | REQ-VERIFY-5045 | Proposed (`python/carnot/experiment_5045_powered_lora_ebm_eorm_musr.py`, `results/experiment_5045_powered_lora_ebm_eorm_musr.json`) | Proposed (`tests/python/test_experiment_5045_powered_lora_ebm_eorm_musr.py`) |
 
+### REQ-VERIFY-5051: Verifier-Trace Self-Learning From Near Misses
+
+The repository SHALL provide Exp 5051 at
+`python/carnot/experiment_5051_verifier_trace_self_learning.py` to build the
+first REVES/VSI-style verifier-trace self-learning artifact from the .463 and
+.464 MuSR verifier evidence, writing
+`results/experiment_5051_verifier_trace_self_learning.json`.
+
+The runner SHALL read the .463 Exp 5031/5033 verifier artifacts and the .464
+Exp 5045 powered verifier artifact, derive explicit train and held-out
+question-ID splits, and build near-miss rows only from train IDs for trace
+selection. Near misses SHALL include verifier-wrong, oracle-recoverable rows
+and verifier-uncertain rows such as abstention or verifier-vs-tuned-SC
+disagreement. Held-out labels SHALL NOT be used to select traces or replay
+memory entries; they may be used only after the update for evaluation.
+
+Trace generation SHALL record the mandated local SOTA GGUF model specs
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL use at least one resolved
+mandated local model as the revision or verifier-trace provenance when
+available. Every generated trace SHALL pass structural verifier-integrity
+checks before it can enter the update: required revision/verification sections
+must be present, candidate-set preservation must be stated, no held-out ID may
+appear in the trace or memory, and the trace must not justify itself by
+revealing the final gold answer or final-answer correctness alone.
+
+The smallest acceptable update is a replay-memory insertion, calibration
+threshold update, or micro-train artifact. The initial implementation MAY use a
+replay-memory update that learns a structural fallback rule from verified train
+traces and applies it to held-out rows without direct held-out ID lookup. The
+held-out evaluation SHALL compare the post-update selector against the
+pre-update verifier and against genuine tuned self-consistency.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`self_learning_loop_executed`, `near_miss_count`, `verified_trace_count`,
+`update_type`, `pre_update_accuracy`, `post_update_accuracy`,
+`heldout_delta`, `contamination_guard_passed`,
+`checkpoint_or_memory_path`, and `fr11_evidence`. It SHALL also include
+explicit split IDs, source artifact provenance, trace-filter diagnostics,
+held-out tuned-SC accuracy, and a reproducibility checksum.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix for complete, blocked, or contaminated verifier-trace self-learning outcomes.`;
+`model_specs` = `all mandated SOTA GGUF ids plus the resolved local trace-generation model path.`;
+`self_learning_loop_executed` = `true only when near-miss traces are verified, memory is updated, and contamination guard passes.`;
+`near_miss_count` = `number of train-split verifier near-miss rows eligible for trace generation.`;
+`verified_trace_count` = `number of generated traces that pass structural verifier-integrity checks.`;
+`update_type` = `the smallest executed update, initially replay_memory_insertion.`;
+`pre_update_accuracy` = `held-out accuracy of the pre-update .464 verifier before replay memory.`;
+`post_update_accuracy` = `held-out accuracy after applying the replay-memory selector.`;
+`heldout_delta` = `post_update_accuracy minus pre_update_accuracy on held-out IDs.`;
+`contamination_guard_passed` = `true only when held-out IDs are absent from trace inputs, verified traces, and memory.`;
+`checkpoint_or_memory_path` = `path to the replay-memory artifact or update checkpoint.`;
+`fr11_evidence` = `machine-readable evidence that the FR-11 self-learning loop ran with guardrails.`
+
+### SCENARIO-VERIFY-5051: Near-Miss Traces Update Replay Memory Without Held-Out Leakage
+
+Given the Exp 5031, Exp 5033, and Exp 5045 MuSR verifier artifacts plus the
+cached MuSR checkpoint rows are present, when Exp 5051 runs, then it constructs
+disjoint train and held-out question-ID splits, selects only train near-miss
+rows for trace generation, records at least one mandated local SOTA GGUF model
+as trace provenance, filters traces by verifier-integrity structure, inserts
+verified traces into a replay-memory update, and evaluates the updated selector
+on held-out rows against the pre-update verifier and genuine tuned-SC.
+
+If any held-out ID appears in trace inputs, verified traces, or replay memory,
+then the contamination guard SHALL fail and the artifact SHALL NOT mark
+`self_learning_loop_executed=true`. If no trace passes structural integrity
+checks, the artifact SHALL write an honest blocked verdict rather than claiming
+self-learning from final-answer labels alone.
+
+## Implementation Status (REQ-VERIFY-5051)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5051 | Proposed (`python/carnot/experiment_5051_verifier_trace_self_learning.py`, `results/experiment_5051_verifier_trace_self_learning.json`) | Proposed (`tests/python/test_experiment_5051_verifier_trace_self_learning.py`) |
+
 ### REQ-VERIFY-5047: KAN/PURM Energy Calibration Over Powered D1 Margins
 
 The repository SHALL provide Exp 5047 at

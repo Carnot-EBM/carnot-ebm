@@ -1,0 +1,1565 @@
+{
+  "checkpoint_or_memory_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
+  "contamination_guard_passed": true,
+  "delta_vs_genuine_tuned_sc": 0.125,
+  "duration_s": 0.028344,
+  "experiment": "experiment_5051_verifier_trace_self_learning",
+  "experiment_id": 5051,
+  "field_principles": {
+    "checkpoint_or_memory_path": {
+      "principle": "path to the replay-memory artifact or update checkpoint."
+    },
+    "contamination_guard_passed": {
+      "principle": "true only when held-out IDs are absent from trace inputs, verified traces, and memory."
+    },
+    "fr11_evidence": {
+      "principle": "machine-readable evidence that the FR-11 self-learning loop ran with guardrails."
+    },
+    "heldout_delta": {
+      "principle": "post_update_accuracy minus pre_update_accuracy on held-out IDs."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for complete, blocked, or contaminated verifier-trace self-learning outcomes."
+    },
+    "model_specs": {
+      "principle": "all mandated SOTA GGUF ids plus the resolved local trace-generation model path."
+    },
+    "near_miss_count": {
+      "principle": "number of train-split verifier near-miss rows eligible for trace generation."
+    },
+    "post_update_accuracy": {
+      "principle": "held-out accuracy after applying the replay-memory selector."
+    },
+    "pre_update_accuracy": {
+      "principle": "held-out accuracy of the pre-update .464 verifier before replay memory."
+    },
+    "self_learning_loop_executed": {
+      "principle": "true only when near-miss traces are verified, memory is updated, and contamination guard passes."
+    },
+    "update_type": {
+      "principle": "the smallest executed update, initially replay_memory_insertion."
+    },
+    "verified_trace_count": {
+      "principle": "number of generated traces that pass structural verifier-integrity checks."
+    }
+  },
+  "fr11_evidence": {
+    "guardrails": [
+      "explicit immutable held-out IDs",
+      "contamination guard",
+      "no final-answer leakage in verified traces"
+    ],
+    "heldout_labels_used_only_for_evaluation": true,
+    "loop_steps": [
+      "near_miss_mining",
+      "local_sota_trace_generation",
+      "structural_verifier_integrity_filter",
+      "replay_memory_update",
+      "heldout_evaluation"
+    ],
+    "objective_evaluator": "held-out verifier accuracy delta",
+    "prd_ref": "FR-11"
+  },
+  "genuine_tuned_sc_accuracy": 0.525,
+  "heldout_delta": -0.05,
+  "heldout_evaluation": {
+    "delta_vs_genuine_tuned_sc": 0.125,
+    "genuine_tuned_sc_accuracy": 0.525,
+    "heldout_delta": -0.05,
+    "heldout_n": 40,
+    "post_update_accuracy": 0.65,
+    "pre_update_accuracy": 0.7,
+    "selector_decisions": [
+      {
+        "row_id": "q0160",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0161",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0162",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0163",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0164",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0165",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0166",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0167",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0168",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0169",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0170",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0171",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0172",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0173",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0174",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0175",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0176",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0177",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0178",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0179",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0180",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0181",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0182",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0183",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0184",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0185",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0186",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0187",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0188",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0189",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0190",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0191",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0192",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0193",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0194",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0195",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0196",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0197",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      },
+      {
+        "row_id": "q0198",
+        "selector": "tuned_self_consistency",
+        "structural_trigger": "verifier_sc_disagreement"
+      },
+      {
+        "row_id": "q0199",
+        "selector": "pre_update_verifier",
+        "structural_trigger": "none"
+      }
+    ]
+  },
+  "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
+  "memory_update": {
+    "rules": [
+      {
+        "action": "fallback_to_genuine_tuned_sc",
+        "rule_id": "fallback_on_verifier_sc_disagreement",
+        "structural_only": true,
+        "support_trace_count": 117,
+        "trigger": {
+          "verifier_sc_disagreement": true
+        }
+      }
+    ],
+    "schema": "carnot.experiment_5051.replay_memory.v1",
+    "support_row_ids": [
+      "q0000",
+      "q0003",
+      "q0004",
+      "q0008",
+      "q0013",
+      "q0014",
+      "q0018",
+      "q0019",
+      "q0020",
+      "q0021",
+      "q0026",
+      "q0027",
+      "q0028",
+      "q0030",
+      "q0033",
+      "q0035",
+      "q0037",
+      "q0040",
+      "q0041",
+      "q0042",
+      "q0043",
+      "q0049",
+      "q0052",
+      "q0053",
+      "q0056",
+      "q0058",
+      "q0059",
+      "q0062",
+      "q0064",
+      "q0065",
+      "q0066",
+      "q0067",
+      "q0068",
+      "q0069",
+      "q0070",
+      "q0071",
+      "q0072",
+      "q0075",
+      "q0077",
+      "q0079",
+      "q0081",
+      "q0089",
+      "q0090",
+      "q0091",
+      "q0092",
+      "q0101",
+      "q0102",
+      "q0103",
+      "q0104",
+      "q0106",
+      "q0107",
+      "q0108",
+      "q0111",
+      "q0113",
+      "q0117",
+      "q0120",
+      "q0121",
+      "q0123",
+      "q0124",
+      "q0126",
+      "q0129",
+      "q0134",
+      "q0136",
+      "q0138",
+      "q0140",
+      "q0141",
+      "q0142",
+      "q0143",
+      "q0144",
+      "q0148",
+      "q0149",
+      "q0152",
+      "q0153",
+      "q0155",
+      "q0157"
+    ],
+    "support_trace_ids": [
+      "5051:5031:q0000",
+      "5051:5031:q0003",
+      "5051:5031:q0004",
+      "5051:5031:q0008",
+      "5051:5031:q0013",
+      "5051:5031:q0014",
+      "5051:5031:q0018",
+      "5051:5031:q0019",
+      "5051:5031:q0020",
+      "5051:5031:q0021",
+      "5051:5031:q0026",
+      "5051:5031:q0027",
+      "5051:5031:q0028",
+      "5051:5031:q0030",
+      "5051:5031:q0033",
+      "5051:5031:q0035",
+      "5051:5031:q0037",
+      "5051:5031:q0040",
+      "5051:5031:q0041",
+      "5051:5031:q0042",
+      "5051:5031:q0043",
+      "5051:5031:q0049",
+      "5051:5031:q0052",
+      "5051:5031:q0053",
+      "5051:5031:q0056",
+      "5051:5031:q0058",
+      "5051:5031:q0059",
+      "5051:5031:q0062",
+      "5051:5031:q0064",
+      "5051:5031:q0065",
+      "5051:5031:q0066",
+      "5051:5031:q0067",
+      "5051:5031:q0068",
+      "5051:5031:q0069",
+      "5051:5031:q0070",
+      "5051:5031:q0071",
+      "5051:5031:q0072",
+      "5051:5031:q0075",
+      "5051:5031:q0077",
+      "5051:5031:q0079",
+      "5051:5031:q0081",
+      "5051:5031:q0089",
+      "5051:5031:q0090",
+      "5051:5031:q0091",
+      "5051:5031:q0092",
+      "5051:5031:q0101",
+      "5051:5031:q0102",
+      "5051:5031:q0103",
+      "5051:5031:q0104",
+      "5051:5031:q0106",
+      "5051:5031:q0107",
+      "5051:5031:q0108",
+      "5051:5031:q0111",
+      "5051:5031:q0113",
+      "5051:5031:q0117",
+      "5051:5031:q0120",
+      "5051:5031:q0121",
+      "5051:5031:q0123",
+      "5051:5031:q0124",
+      "5051:5031:q0126",
+      "5051:5031:q0129",
+      "5051:5031:q0134",
+      "5051:5031:q0136",
+      "5051:5031:q0138",
+      "5051:5031:q0140",
+      "5051:5031:q0141",
+      "5051:5031:q0142",
+      "5051:5031:q0143",
+      "5051:5031:q0144",
+      "5051:5031:q0148",
+      "5051:5031:q0149",
+      "5051:5031:q0152",
+      "5051:5031:q0153",
+      "5051:5031:q0155",
+      "5051:5031:q0157",
+      "5051:5033:q0000",
+      "5051:5033:q0003",
+      "5051:5033:q0004",
+      "5051:5033:q0008",
+      "5051:5033:q0013",
+      "5051:5033:q0014",
+      "5051:5033:q0018",
+      "5051:5033:q0019",
+      "5051:5033:q0020",
+      "5051:5033:q0021",
+      "5051:5033:q0026",
+      "5051:5033:q0027",
+      "5051:5033:q0028",
+      "5051:5033:q0030",
+      "5051:5033:q0033",
+      "5051:5033:q0035",
+      "5051:5033:q0037",
+      "5051:5033:q0040",
+      "5051:5033:q0041",
+      "5051:5033:q0042",
+      "5051:5033:q0043",
+      "5051:5033:q0049",
+      "5051:5033:q0052",
+      "5051:5033:q0053",
+      "5051:5033:q0056",
+      "5051:5033:q0058",
+      "5051:5033:q0059",
+      "5051:5033:q0062",
+      "5051:5033:q0064",
+      "5051:5033:q0065",
+      "5051:5033:q0066",
+      "5051:5033:q0067",
+      "5051:5033:q0068",
+      "5051:5033:q0069",
+      "5051:5033:q0070",
+      "5051:5033:q0071",
+      "5051:5033:q0072",
+      "5051:5033:q0075",
+      "5051:5033:q0077",
+      "5051:5033:q0079",
+      "5051:5033:q0081",
+      "5051:5033:q0089",
+      "5051:5033:q0090",
+      "5051:5033:q0091",
+      "5051:5033:q0092",
+      "5051:5033:q0101",
+      "5051:5033:q0102",
+      "5051:5033:q0103",
+      "5051:5033:q0104",
+      "5051:5033:q0106",
+      "5051:5033:q0107",
+      "5051:5033:q0108",
+      "5051:5033:q0111",
+      "5051:5033:q0113",
+      "5051:5033:q0117",
+      "5051:5033:q0120",
+      "5051:5033:q0121",
+      "5051:5033:q0123",
+      "5051:5033:q0124",
+      "5051:5033:q0126",
+      "5051:5033:q0129",
+      "5051:5033:q0134",
+      "5051:5033:q0136",
+      "5051:5033:q0138",
+      "5051:5033:q0140",
+      "5051:5033:q0141",
+      "5051:5033:q0142",
+      "5051:5033:q0143",
+      "5051:5033:q0144",
+      "5051:5033:q0148",
+      "5051:5033:q0149",
+      "5051:5033:q0152",
+      "5051:5033:q0153",
+      "5051:5033:q0155",
+      "5051:5033:q0157",
+      "5051:5045:q0000",
+      "5051:5045:q0003",
+      "5051:5045:q0004",
+      "5051:5045:q0008",
+      "5051:5045:q0013",
+      "5051:5045:q0014",
+      "5051:5045:q0018",
+      "5051:5045:q0019",
+      "5051:5045:q0020",
+      "5051:5045:q0021",
+      "5051:5045:q0026",
+      "5051:5045:q0027",
+      "5051:5045:q0028",
+      "5051:5045:q0030",
+      "5051:5045:q0033",
+      "5051:5045:q0035",
+      "5051:5045:q0037",
+      "5051:5045:q0040",
+      "5051:5045:q0041",
+      "5051:5045:q0042",
+      "5051:5045:q0043",
+      "5051:5045:q0049",
+      "5051:5045:q0052",
+      "5051:5045:q0053",
+      "5051:5045:q0056",
+      "5051:5045:q0058",
+      "5051:5045:q0059",
+      "5051:5045:q0062",
+      "5051:5045:q0064",
+      "5051:5045:q0065",
+      "5051:5045:q0066",
+      "5051:5045:q0067",
+      "5051:5045:q0068",
+      "5051:5045:q0069",
+      "5051:5045:q0070",
+      "5051:5045:q0071",
+      "5051:5045:q0072",
+      "5051:5045:q0075",
+      "5051:5045:q0077",
+      "5051:5045:q0079",
+      "5051:5045:q0081",
+      "5051:5045:q0089",
+      "5051:5045:q0090",
+      "5051:5045:q0091",
+      "5051:5045:q0092",
+      "5051:5045:q0101",
+      "5051:5045:q0102",
+      "5051:5045:q0103",
+      "5051:5045:q0104",
+      "5051:5045:q0106",
+      "5051:5045:q0107",
+      "5051:5045:q0108",
+      "5051:5045:q0111",
+      "5051:5045:q0113",
+      "5051:5045:q0117",
+      "5051:5045:q0120",
+      "5051:5045:q0121",
+      "5051:5045:q0123",
+      "5051:5045:q0124",
+      "5051:5045:q0126",
+      "5051:5045:q0129",
+      "5051:5045:q0134",
+      "5051:5045:q0136",
+      "5051:5045:q0138",
+      "5051:5045:q0140",
+      "5051:5045:q0141",
+      "5051:5045:q0142",
+      "5051:5045:q0143",
+      "5051:5045:q0144",
+      "5051:5045:q0148",
+      "5051:5045:q0149",
+      "5051:5045:q0152",
+      "5051:5045:q0153",
+      "5051:5045:q0155",
+      "5051:5045:q0157"
+    ],
+    "update_type": "replay_memory_insertion",
+    "verified_trace_count": 225
+  },
+  "model_specs": {
+    "fallback_middle_moe": {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "used_for_trace_generation": false
+    },
+    "mandated_local_sota_used": true,
+    "revision_model": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "used_for_trace_generation": true
+    },
+    "trace_generation_model": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "revision_model"
+    },
+    "verifier_or_judge_model": {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "used_for_trace_generation": false
+    }
+  },
+  "near_miss_count": 312,
+  "post_update_accuracy": 0.65,
+  "pre_update_accuracy": 0.7,
+  "reproducibility_checksum": "sha256:83d53178670ebc9892d4435bbea3e0f5bd7635800beb13edc42c3733597ea626",
+  "result_path": "results/experiment_5051_verifier_trace_self_learning.json",
+  "schema": "carnot.experiment_5051_verifier_trace_self_learning.v1",
+  "self_learning_loop_executed": true,
+  "source_artifacts": [
+    {
+      "experiment_id": 5031,
+      "n_rows": 200,
+      "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "release_tag": ".463",
+      "sha256": "sha256:e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e",
+      "verifier_key": "verifier"
+    },
+    {
+      "experiment_id": 5033,
+      "n_rows": 200,
+      "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "release_tag": ".463",
+      "sha256": "sha256:5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6",
+      "verifier_key": "ebrm"
+    },
+    {
+      "experiment_id": 5045,
+      "n_rows": 200,
+      "path": "results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+      "release_tag": ".464",
+      "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff",
+      "verifier_key": "verifier"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5051",
+    "SCENARIO-VERIFY-5051"
+  ],
+  "split_ids": {
+    "heldout_ids": [
+      "q0160",
+      "q0161",
+      "q0162",
+      "q0163",
+      "q0164",
+      "q0165",
+      "q0166",
+      "q0167",
+      "q0168",
+      "q0169",
+      "q0170",
+      "q0171",
+      "q0172",
+      "q0173",
+      "q0174",
+      "q0175",
+      "q0176",
+      "q0177",
+      "q0178",
+      "q0179",
+      "q0180",
+      "q0181",
+      "q0182",
+      "q0183",
+      "q0184",
+      "q0185",
+      "q0186",
+      "q0187",
+      "q0188",
+      "q0189",
+      "q0190",
+      "q0191",
+      "q0192",
+      "q0193",
+      "q0194",
+      "q0195",
+      "q0196",
+      "q0197",
+      "q0198",
+      "q0199"
+    ],
+    "train_ids": [
+      "q0000",
+      "q0001",
+      "q0002",
+      "q0003",
+      "q0004",
+      "q0005",
+      "q0006",
+      "q0007",
+      "q0008",
+      "q0009",
+      "q0010",
+      "q0011",
+      "q0012",
+      "q0013",
+      "q0014",
+      "q0015",
+      "q0016",
+      "q0017",
+      "q0018",
+      "q0019",
+      "q0020",
+      "q0021",
+      "q0022",
+      "q0023",
+      "q0024",
+      "q0025",
+      "q0026",
+      "q0027",
+      "q0028",
+      "q0029",
+      "q0030",
+      "q0031",
+      "q0032",
+      "q0033",
+      "q0034",
+      "q0035",
+      "q0036",
+      "q0037",
+      "q0038",
+      "q0039",
+      "q0040",
+      "q0041",
+      "q0042",
+      "q0043",
+      "q0044",
+      "q0045",
+      "q0046",
+      "q0047",
+      "q0048",
+      "q0049",
+      "q0050",
+      "q0051",
+      "q0052",
+      "q0053",
+      "q0054",
+      "q0055",
+      "q0056",
+      "q0057",
+      "q0058",
+      "q0059",
+      "q0060",
+      "q0061",
+      "q0062",
+      "q0063",
+      "q0064",
+      "q0065",
+      "q0066",
+      "q0067",
+      "q0068",
+      "q0069",
+      "q0070",
+      "q0071",
+      "q0072",
+      "q0073",
+      "q0074",
+      "q0075",
+      "q0076",
+      "q0077",
+      "q0078",
+      "q0079",
+      "q0080",
+      "q0081",
+      "q0082",
+      "q0083",
+      "q0084",
+      "q0085",
+      "q0086",
+      "q0087",
+      "q0088",
+      "q0089",
+      "q0090",
+      "q0091",
+      "q0092",
+      "q0093",
+      "q0094",
+      "q0095",
+      "q0096",
+      "q0097",
+      "q0098",
+      "q0099",
+      "q0100",
+      "q0101",
+      "q0102",
+      "q0103",
+      "q0104",
+      "q0105",
+      "q0106",
+      "q0107",
+      "q0108",
+      "q0109",
+      "q0110",
+      "q0111",
+      "q0112",
+      "q0113",
+      "q0114",
+      "q0115",
+      "q0116",
+      "q0117",
+      "q0118",
+      "q0119",
+      "q0120",
+      "q0121",
+      "q0122",
+      "q0123",
+      "q0124",
+      "q0125",
+      "q0126",
+      "q0127",
+      "q0128",
+      "q0129",
+      "q0130",
+      "q0131",
+      "q0132",
+      "q0133",
+      "q0134",
+      "q0135",
+      "q0136",
+      "q0137",
+      "q0138",
+      "q0139",
+      "q0140",
+      "q0141",
+      "q0142",
+      "q0143",
+      "q0144",
+      "q0145",
+      "q0146",
+      "q0147",
+      "q0148",
+      "q0149",
+      "q0150",
+      "q0151",
+      "q0152",
+      "q0153",
+      "q0154",
+      "q0155",
+      "q0156",
+      "q0157",
+      "q0158",
+      "q0159"
+    ]
+  },
+  "trace_examples": [
+    {
+      "candidate_set_preserved": true,
+      "features": {
+        "candidate_count": 7,
+        "energy_abstained": false,
+        "verifier_sc_disagreement": true
+      },
+      "integrity_check": {
+        "failed_checks": [],
+        "passed": true,
+        "trace_id": "5051:5031:q0000"
+      },
+      "near_miss_reasons": [
+        "verifier_uncertain_disagreement"
+      ],
+      "row_id": "q0000",
+      "source_experiment": 5031,
+      "trace_generation_model": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "revision_model"
+      },
+      "trace_id": "5051:5031:q0000",
+      "trace_text": "OBSERVED_SIGNAL: q0000 source=5031 verifier_prediction=Mackenzie tuned_sc_prediction=Mackenzie energy_abstained=False verifier_sc_disagreement=True\nREVISION: preserve the candidate set and route future matching low-integrity verifier/sc disagreement cases to a replay-memory fallback.\nVERIFICATION: candidate_set_preserved; no_gold_answer_available; trace_uses_structural_signals.\nMEMORY_UPDATE: trigger=verifier_sc_disagreement action=fallback_to_genuine_tuned_sc."
+    },
+    {
+      "candidate_set_preserved": true,
+      "features": {
+        "candidate_count": 7,
+        "energy_abstained": false,
+        "verifier_sc_disagreement": true
+      },
+      "integrity_check": {
+        "failed_checks": [],
+        "passed": true,
+        "trace_id": "5051:5031:q0003"
+      },
+      "near_miss_reasons": [
+        "verifier_uncertain_disagreement"
+      ],
+      "row_id": "q0003",
+      "source_experiment": 5031,
+      "trace_generation_model": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "revision_model"
+      },
+      "trace_id": "5051:5031:q0003",
+      "trace_text": "OBSERVED_SIGNAL: q0003 source=5031 verifier_prediction=Rosemary tuned_sc_prediction=Rosemary energy_abstained=False verifier_sc_disagreement=True\nREVISION: preserve the candidate set and route future matching low-integrity verifier/sc disagreement cases to a replay-memory fallback.\nVERIFICATION: candidate_set_preserved; no_gold_answer_available; trace_uses_structural_signals.\nMEMORY_UPDATE: trigger=verifier_sc_disagreement action=fallback_to_genuine_tuned_sc."
+    },
+    {
+      "candidate_set_preserved": true,
+      "features": {
+        "candidate_count": 8,
+        "energy_abstained": true,
+        "verifier_sc_disagreement": true
+      },
+      "integrity_check": {
+        "failed_checks": [],
+        "passed": true,
+        "trace_id": "5051:5031:q0004"
+      },
+      "near_miss_reasons": [
+        "verifier_uncertain_abstention",
+        "verifier_uncertain_disagreement"
+      ],
+      "row_id": "q0004",
+      "source_experiment": 5031,
+      "trace_generation_model": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "revision_model"
+      },
+      "trace_id": "5051:5031:q0004",
+      "trace_text": "OBSERVED_SIGNAL: q0004 source=5031 verifier_prediction=Amelia tuned_sc_prediction=Amelia energy_abstained=True verifier_sc_disagreement=True\nREVISION: preserve the candidate set and route future matching low-integrity verifier/sc disagreement cases to a replay-memory fallback.\nVERIFICATION: candidate_set_preserved; no_gold_answer_available; trace_uses_structural_signals.\nMEMORY_UPDATE: trigger=verifier_sc_disagreement action=fallback_to_genuine_tuned_sc."
+    }
+  ],
+  "trace_filter_diagnostics": {
+    "contamination_guard": {
+      "passed": true,
+      "violations": []
+    },
+    "generated_trace_count": 312,
+    "rejected_trace_count": 87,
+    "rejections": [
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0002"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0010"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0011"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0012"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0023"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0024"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0025"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0044"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0048"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0054"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0061"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0063"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0074"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0078"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0082"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0087"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0088"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0093"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0094"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0096"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0109"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0112"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0115"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0118"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0122"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0130"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0154"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0158"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5031:q0159"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0002"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0010"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0011"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0012"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0023"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0024"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0025"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0044"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0048"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0054"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0061"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0063"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0074"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0078"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0082"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0087"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0088"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0093"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0094"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0096"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0109"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0112"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0115"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0118"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0122"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0130"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0154"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0158"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5033:q0159"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0002"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0010"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0011"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0012"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0023"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0024"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0025"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0044"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0048"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0054"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0061"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0063"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0074"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0078"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0082"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0087"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0088"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0093"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0094"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0096"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0109"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0112"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0115"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0118"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0122"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0130"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0154"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0158"
+      },
+      {
+        "failed_checks": [
+          "structural_signal"
+        ],
+        "passed": false,
+        "trace_id": "5051:5045:q0159"
+      }
+    ],
+    "verified_trace_count": 225
+  },
+  "update_type": "replay_memory_insertion",
+  "verified_trace_count": 225
+}
