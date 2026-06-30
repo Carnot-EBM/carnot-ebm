@@ -1,0 +1,110 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "candidate_cache_path": null,
+  "corpus": "MuSR/murder_mysteries",
+  "delta_vs_tuned_sc": null,
+  "duration_s": 1.559929,
+  "evaluation": {},
+  "experiment": "experiment_5004_uprm_replication",
+  "field_principles": {
+    "corpus": {
+      "principle": "the headroom-present oracle-distinct corpus (MuSR / harder-math / GPQA slice)."
+    },
+    "delta_vs_tuned_sc": {
+      "principle": "uprm_selection_accuracy - tuned_sc_accuracy; the paper reports up to +0.069."
+    },
+    "headroom_present": {
+      "principle": "true required for an informative result ((oracle@K - tuned_sc) >= 0.10, flips>0); FALSE_NEGATIVE_RISK guard."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_uprm_beats_sc_<corpus>_<delta>, a null is complete_uprm_no_win_<corpus>_ci_incl_0."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (live generation with logprobs; >=60s floor)."
+    },
+    "mcnemar_p": {
+      "principle": "McNemar paired p; a win requires p<0.05."
+    },
+    "model_specs": {
+      "principle": "gemma-4-12B-it-GGUF (the SOTA generator providing logprobs) -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 for the headline delta (sample-size rigor)."
+    },
+    "paired_ci95": {
+      "principle": "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
+    },
+    "preconditions_checked": {
+      "principle": "records GGUF-cached/logprob/corpus checks; a missing resource emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for generation + bootstrap."
+    },
+    "tuned_sc_accuracy": {
+      "principle": "the TUNED-SC baseline (headroom-control)."
+    },
+    "uprm_score_methodology_note": {
+      "principle": "the exact paper formulation of the next-token-prob first-error score (so a third party can replicate); the unsupervised-not-circular justification."
+    },
+    "uprm_selection_accuracy": {
+      "principle": "the oracle-distinct selection accuracy of the uPRM process score (the headline)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- uPRM is UNSUPERVISED (scored from the generator's own logprobs); it never reads gold (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "headroom_present": false,
+  "honest_verdict": "blocked_uprm_logprob_candidate_cache",
+  "inference_substrate": "precondition_check_only",
+  "mcnemar_p": null,
+  "model_specs": {
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B-it-GGUF",
+    "requires_token_logprobs": true,
+    "requires_top_logprobs_for_markers": true
+  },
+  "n_candidates_per_question": 8,
+  "n_questions": 0,
+  "oracle_at_k": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95": null,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "unsloth/gemma-4-12B-it-GGUF resolved",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "gemma_gguf_cache"
+    },
+    {
+      "available": true,
+      "detail": "server returns completion_probabilities with top_logprobs",
+      "path": "http://127.0.0.1:8919/completion",
+      "resource": "llama_server_logprobs"
+    },
+    {
+      "available": true,
+      "detail": "200 cached target-corpus row(s), required >= 200",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "resource": "target_corpus"
+    },
+    {
+      "available": false,
+      "detail": "0 cached uPRM logprob row(s), required >= 200; CARNOT_UPRM_ENABLE_FRESH_GENERATION=''",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5004_uprm_candidates_musr.jsonl",
+      "resource": "uprm_logprob_candidate_cache"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:c4cb997438f510bdd641b679c5138437c32359955dc4969370ad222f154f8828",
+  "schema": "carnot.experiment_5004_uprm_replication.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5004",
+    "SCENARIO-VERIFY-5004"
+  ],
+  "summarize_artifact_exit_code": null,
+  "tuned_sc_accuracy": null,
+  "uprm_score_methodology_note": "arXiv:2605.10158 uPRM scores a candidate first-error position j for trajectory steps y_1..y_T as S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t, where p^+_t and p^-_t are the generator LLM next-token probabilities of '+' and '-' marker tokens after step t, renormalized over {+,-}. This runner uses the generator's own logprob/top-logprob telemetry, never gold, to score each candidate by the mean no-error log-likelihood S(T+1)/T as a direct oracle-distinct selector; gold is read only after selection for evaluation.",
+  "uprm_selection_accuracy": null,
+  "verifier_is_oracle": false
+}
