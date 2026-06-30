@@ -288,5 +288,23 @@
     "SCENARIO-ARC-WMTE-5054-STABLE-ARTIFACT"
   ],
   "target_game": "tu93",
-  "target_level": 6
+  "target_level": 6,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.899488463997841 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    },
+    {
+      "kind": "LEVER_EXERCISE_EVIDENCE_DEGENERATE",
+      "severity": "warn",
+      "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: live_agent_attempts.[0].go_explore_archive.actions_injected=0; live_agent_attempts.[0].go_explore_archive.prefixes_injected=0"
+    }
+  ]
 }
