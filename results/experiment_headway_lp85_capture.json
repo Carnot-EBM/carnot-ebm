@@ -164,5 +164,14 @@
   "notes": [
     "CONFIRMED: L5->L6 banked + reproduced (trajectory captured)"
   ],
-  "methodology_note": "Deterministic re-run resolving the lp85 L6 bank conflict. lp85 branch_mode='replay'. Solved L1->L5 verifier-routed, gated the prefix to L5, then deepened L5->L6 with depth_cap=150, max_nodes=120000 (matching the on-disk attempt). Banks ONLY on kit.reproduce(reproduced=True) for level>5; solution_labels persisted for independent re-verification. development_proxy (no source read)."
+  "methodology_note": "Deterministic re-run resolving the lp85 L6 bank conflict. lp85 branch_mode='replay'. Solved L1->L5 verifier-routed, gated the prefix to L5, then deepened L5->L6 with depth_cap=150, max_nodes=120000 (matching the on-disk attempt). Banks ONLY on kit.reproduce(reproduced=True) for level>5; solution_labels persisted for independent re-verification. development_proxy (no source read).",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "ARC_OUTER_LOOP_SOLVE",
+      "severity": "critical",
+      "detail": "solve_provenance=development_proxy but the artifact declares outer-loop-only inputs ['used_env_source']: reading the game source / running an offline exhaustive ground-truth BFS / hand-calibrating per game is RE the live agent CANNOT do on a HIDDEN game. Either set solve_provenance=outer_loop_re (and do not headline) or remove the dependency."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

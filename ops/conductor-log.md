@@ -9614,3 +9614,5 @@ The contro |
 | 2026-06-30 00:02 UTC | PHASE B3 (RESERVED INFRA 3; OPERATIONAL -- maintai | OK | 85 passed, 1 warning in 10.08s |
 | 2026-06-30 00:14 UTC | PHASE C (HARDWARE CONTINUITY) -- KV260 SSH-only co | OK | 86 passed, 1 warning in 7.15s |
 | 2026-06-30 00:34 UTC | PHASE E (CAPSTONE .460) -- aggregate the FINAL sub | OK | 87 passed, 1 warning in 8.80s |
+| 2026-06-30 01:28 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-30 01:30 UTC | Milestone 2026.06.461 activated | OK | 13 tasks queued |
