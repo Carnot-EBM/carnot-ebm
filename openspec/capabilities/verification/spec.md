@@ -21981,3 +21981,98 @@ with `success_cascade_parity_at_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5034 | Implemented (`python/carnot/experiment_5034_uncertainty_routed_cascade_v2.py`, `results/experiment_5034_uncertainty_routed_cascade_v2.json`) | Implemented (`tests/python/test_experiment_5034_uncertainty_routed_cascade_v2.py`) |
+
+### REQ-VERIFY-5035: Phase D4 V3 Cross-Corpus Generalization Check
+
+The repository SHALL provide Exp 5035 at
+`python/carnot/experiment_5035_moat_second_corpus_v3.py` to take the best usable
+oracle-distinct verifier from Exp 5031, Exp 5032, and Exp 5033 by MuSR
+`delta_vs_tuned_sc`, evaluate it on one confirmed-cached second corpus, and
+write `results/experiment_5035_moat_second_corpus_v3.json`.
+
+Before scoring, the runner SHALL inspect the D1/D2/D3 v3 artifacts and select
+only a usable verifier with `verifier_is_oracle=false` and a numeric MuSR delta.
+Exp 5031 SHALL be usable only when `scorer_trained=true`; Exp 5032 SHALL be
+usable only when its scoring path is oracle-distinct; Exp 5033 SHALL be usable
+only when non-degenerate. If no D1/D2/D3 verifier is usable, Exp 5035 SHALL
+write `honest_verdict=blocked_no_best_verifier` and SHALL NOT fall back to a
+degenerate or registry scorer.
+
+The runner SHALL select the second corpus in priority order GPQA,
+MMLU-Pro-hard, then MATH-500-hard, but SHALL only make an informative
+cross-corpus claim for a confirmed-cached corpus whose candidate pool has
+headroom against the GENUINE tuned-SC baseline:
+`oracle@K - GENUINE tuned-SC >= 0.10` and at least one tuned-SC-wrong
+oracle-recoverable row. If no priority
+corpus is cached with at least 200 candidate rows, candidate reuse is
+unavailable, or no candidate pool is headroom-present, the runner SHALL write an
+honest `blocked_<resource>` or
+`complete_moat_musr_scoped_<corpus>_no_confirm` artifact rather than forcing a
+null on a saturated corpus.
+
+When preconditions hold, the runner SHALL write a deliverable-first schema
+skeleton, score at least 200 cached second-corpus candidate rows with the
+selected oracle-distinct verifier, and evaluate the selected answers against
+the GENUINE tuned-SC baseline through the shared moat benchmark harness,
+including paired bootstrap CI95 and McNemar. For MATH-500-hard, the verifier
+SHALL remain oracle-distinct and SHALL NOT execute or symbolically check the
+answer; gold and executable correctness are used only after selection for
+evaluation.
+
+The terminal artifact SHALL include `honest_verdict`, bare bool
+`verifier_is_oracle=false`, bare bool `headroom_present`, `best_verifier_from`,
+`second_corpus`, `second_corpus_accuracy`,
+`genuine_tuned_sc_accuracy_second`, `delta_vs_tuned_sc_second`,
+`paired_ci95_second`, `n_questions`, `model_specs`, `inference_substrate`,
+`random_seed`, `preconditions_checked`, `oracle_distinctness_enforced`,
+`oracle_at_k_second`, `mcnemar_p_second`, `candidate_cache_path`,
+`non_degenerate`, `adversarial_verify_clean`, `adversarial_verify_flags`,
+`summarize_artifact_exit_code`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_moat_generalizes_<corpus>_<delta>, a scoped result is complete_moat_musr_scoped_<corpus>_no_confirm, no verifier is blocked_no_best_verifier.`;
+`verifier_is_oracle` = `false -- the best verifier scores reasoning quality, never the answer's executable correctness (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required on the 2nd corpus vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard); if false, the corpus is excluded from the moat claim.`;
+`best_verifier_from` = `which arm (D1/D2/D3) provided the best verifier by MuSR delta_vs_tuned_sc.`;
+`second_corpus` = `the chosen confirmed-cached headroom-present oracle-distinct corpus (GPQA/MMLU-Pro-hard/MATH-500-hard).`;
+`second_corpus_accuracy` = `the best verifier's oracle-distinct accuracy on the 2nd corpus.`;
+`genuine_tuned_sc_accuracy_second` = `the GENUINE K-way tuned-SC on the 2nd corpus (headroom-control).`;
+`delta_vs_tuned_sc_second` = `the cross-corpus moat lift (signed); CI95-excl-0 is the generalization confirmation.`;
+`paired_ci95_second` = `paired bootstrap CI95 of the 2nd-corpus delta.`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`model_specs` = `the generator + the best verifier -- the methodology stamp.`;
+`inference_substrate` = `verifier_ensemble_against_cached_candidates if candidates are reused (1s floor); live_llm_inference only if generated fresh (>=60s).`;
+`random_seed` = `determinism for the bootstrap.`;
+`preconditions_checked` = `records verifier/corpus/headroom checks; a missing resource emits blocked_.`
+
+### SCENARIO-VERIFY-5035: V3 Second Corpus Generalization Is Headroom-Gated
+
+Given at least one usable D1/D2/D3 v3 verifier artifact and a cached priority
+second corpus with at least 200 candidate rows, when Exp 5035 runs, then it
+writes a schema skeleton, selects the best MuSR verifier by `delta_vs_tuned_sc`,
+confirms oracle@K headroom against the GENUINE tuned-SC baseline on the selected
+second corpus, scores candidates through a guarded oracle-distinct view,
+evaluates against GENUINE tuned-SC with paired CI and McNemar through the shared
+harness, runs adversarial artifact verification plus artifact summarization,
+keeps `verifier_is_oracle=false`, records `non_degenerate=true`, and writes
+every required field.
+
+If D1/D2/D3 artifacts are blocked, no priority second corpus is cached,
+candidate reuse is unavailable, fewer than 200 candidate rows are available, or
+no second corpus is headroom-present, then Exp 5035 records the missing or
+uninformative resource in `preconditions_checked`, keeps
+`verifier_is_oracle=false`, and exits without claiming cross-corpus
+generalization.
+
+If the selected verifier beats GENUINE tuned-SC on the second corpus with
+paired CI95 excluding zero in the positive direction and headroom present, then
+`honest_verdict` SHALL start with `success_moat_generalizes_`; otherwise, with
+an attempted headroom-present second-corpus check, it SHALL start with
+`complete_moat_musr_scoped_<corpus>_no_confirm`.
+
+## Implementation Status (REQ-VERIFY-5035)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5035 | Proposed (`python/carnot/experiment_5035_moat_second_corpus_v3.py`, `results/experiment_5035_moat_second_corpus_v3.json`) | Proposed (`tests/python/test_experiment_5035_moat_second_corpus_v3.py`) |
