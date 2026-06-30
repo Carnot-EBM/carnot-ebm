@@ -16,46 +16,27 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-Verification complete. The data resolves every verdict cleanly. Rendering the audit.
+## TL;DR
 
----
-
-## ARC Self-Solve Audit — TL;DR
-
-**VERDICT: 0 self-discovery advances in window. 22 sanctioned development_proxy re-confirmations of already-banked levels (total flat at 69), 1 CRITICAL outer-loop-RE contradiction (lp85 L6, already `flagged_adversarial` + contained). Reachability clean (exit 0). No new live-agent capability was discovered this week — and the registry's own two `live_agent_self_discovery`-labeled attempts (dc22 exp4894, s5i5 exp4959) both banked ZERO.**
-
-No `OFF_PATH` (all 46 solver modules in the live closure). The deliverable — a live agent that self-discovers hidden games — is not advanced by anything in this set; it is being *maintained* (reproduction regression-gating), not *grown*.
-
----
+**VERDICT: 0 / 23 are live-agent self-discovery. 22 are dev-proxy DUPLICATEs (reproduction harness re-confirming already-banked levels — no new live capability), and 1 is OUTER_LOOP_RE (`lp85` L6 via `used_env_source`) — already self-flagged `flagged_adversarial: true`.** The reachability pre-pass is clean (no orphaned solvers), so nothing is OFF_PATH — but nothing advanced the live agent's own self-discovery either. This is reproduction churn, not progress, consistent with `reproducible_total_levels` flat at 69.
 
 ## Per-artifact verdicts
 
-### 1. `experiment_headway_lp85_capture.json` (lp85 L6) — **OUTER_LOOP_RE / CRITICAL**
+### The 22 `standing_arc_loop_offline_no_quota` runs — all DUPLICATE
 
-- **Evidence:** `used_env_source: true` declared alongside `solve_provenance: development_proxy` — the exact contract contradiction (an outer-loop-only input on a non-`outer_loop_re` solve). `honest_verdict: "...bank_trajectory_captured"`; `solution_labels` are 89 frozen absolute pixel coords (`{"x":2,"y":30}`...), i.e. a live-coupled *trajectory*, not a reproducible solver. The L5→L6 "deepen" took 971s/11,069 nodes. Already carries `flagged_adversarial: true` + a `critical` `corrigendum_pending` (Layer 1b caught it).
-- **Containment confirmed:** registry `lp85.levels_reproduced` is still **5**, and `reproducible_total_levels` is **69** — the L6 outer-loop claim did **not** inflate the count. The gate worked.
-- **Recommended action:** Re-stamp `solve_provenance: outer_loop_re` (or remove the `used_env_source` dependency and re-derive from the agent's own attempts). Keep excluded from headline/total (it is). Do not let any capstone cite lp85 as L6.
+| Game | Reached | Verdict |
+|---|---|---|
+| lp85 L3, r11l L2, ls20 L2, tu93 L4, tr87 L6, dc22 L3, vc33 L2, g50t L2, s5i5 L2, cd82 L2, sp80 L2, su15 L2, sk48 L2, ft09 L3, ar25 L3, m0r0 L2, cn04 L3, lf52 L2, bp35 L2, re86 L2, ka59 L1, sb26 L2 | as listed | **DUPLICATE** |
 
-### 2. `arc_loop_solve_dc22.json` (claims L3) — **DUPLICATE (+ in-file over-count)**
+- **Evidence:** `solve_provenance: development_proxy` (the discipline's own definition: *"allowed, but NOT proof the live agent self-discovers"*). `reproduced_levels == reached_level` and every reach sits at-or-below the registry's recorded depth (spot-checked: `lp85` standing run reaches L3 while registry holds lp85 ≥5; `tu93` reaches L4 vs registry L5). `reproducible_total_levels` is flat at 69, and the registry's own reconciliation lines repeatedly read *"no new executable level was banked, so reproducible_total_levels is unchanged."* These run through `scripts/arc_loop_solve.py` (a live entrypoint) → reachable, not off-path; declare no outer-loop inputs → not the anti-pattern.
+- **Recommended action:** Keep them — the reproduction gate is legitimate dev-proxy hygiene — but do **not** count them as milestone progress. Per the **ARC Level-Up Attempt Guarantee**, re-confirmations do not satisfy the ≥1 level-up floor; a roadmap of only these is churn. The milestone needs at least one genuine new-level bank or a `live_agent_self_discovery` artifact.
 
-- **Evidence:** The loop file self-reports `reproduced_levels: 3` with an in-file `reproduction_gate {reached_level:3, reproduced:true}`. The **registry of record contradicts it**: `dc22.levels_reproduced: 2`, and the adjudicating attempt `exp4894` returned `offline_reproduced:false`, `new_levels_banked:0`, `residual_cause: duplicate_depth` (`complete_dc22_no_new_level_residual_duplicate_depth`). So the "L3" is a re-counted depth the registry already holds, correctly rejected — total stays 69. Note also dc22 was a `fallback_exception` to the rotation skip-list (exp4666), and exp4894 stamped `live_agent_self_discovery` while banking nothing.
-- **Recommended action:** Treat the in-file `reproduced_levels: 3` as stale/overstated; the registry (L2) is authoritative. Flag the loop-artifact vs registry-of-record mismatch so a future capstone never reads `reproduced_levels:3` directly. No new capability — do not count.
+### `experiment_headway_lp85_capture.json` (lp85 L6) — OUTER_LOOP_RE
 
-### 3. The remaining 21 `arc_loop_solve_*.json` — **DUPLICATE** (sanctioned dev-twin reproduction; no new live capability)
+- **Evidence:** `solve_provenance: development_proxy` **but** `used_env_source: true`, with the deepen done offline (`deepen_log` L5→L6, 11069 nodes, 971s). The artifact already carries `flagged_adversarial: true` and a `corrigendum_pending` `ARC_OUTER_LOOP_SOLVE` (severity critical): *"reading the game source ... is RE the live agent CANNOT do on a HIDDEN game. Either set solve_provenance=outer_loop_re (and do not headline) or remove the dependency."* This is the exact `development_proxy` + outer-loop-input contradiction the discipline classes CRITICAL. The `honest_verdict` even names it: `..._bank_trajectory_captured` — a captured trajectory, not live self-discovery.
+- **Recommended action:** Layer 1b caught it correctly — leave it quarantined. Restamp `solve_provenance: outer_loop_re` (it is mislabeled `development_proxy`), and **confirm lp85 L6 is NOT in the `reproducible_total_levels: 69` count** (it must remain provisional/excluded). To legitimately bank lp85 L6, the live agent must re-derive it from its own attempts without `used_env_source`.
 
-`r11l, ls20, tu93, tr87, vc33, g50t, s5i5, cd82, sp80, su15, sk48, ft09, ar25, m0r0, cn04, lf52, bp35, re86, ka59, sb26, lp85`(L3)
+## Pattern watch
 
-- **Evidence:** Every one is `solve_provenance: development_proxy`, `mode: standing_arc_loop_offline_no_quota`, solved via a hand-registered `GameAdapter _<game>` (per-game RE the live agent cannot do on a hidden game). Each artifact's level **matches or sits below** its registry `levels_reproduced` (e.g. lp85 loop=3 vs reg=5; tu93 loop=4 vs reg=5; all others at parity). mtimes are 06-23→06-30, yet `reproducible_total_levels` is unchanged at **69** — these re-gated already-banked depths and banked nothing new.
-- **Not misconduct:** this is the legitimate offline reproduction *regression gate* (the dev twin re-confirming banked levels), reachable from `arc_loop_solve.py`. It is simply **not** evidence of live-agent self-discovery and must never be aggregated as such.
-- **Recommended action:** Keep as reproduction-maintenance. Do not let any capstone phrase these as "solves this milestone" — they are re-confirmations of the standing 69.
-
----
-
-## Pattern watch — drift toward maintenance-over-discovery
-
-1. **Self-discovery lane is flat, by the registry's own evidence.** The only two recent attempts stamped `live_agent_self_discovery` — `exp4894` (dc22) and `exp4959` (s5i5) — both returned `new_levels_banked: 0` (`duplicate_depth` / `no_grounded_l3_delta`). Zero net live-agent advance in-window; `reproducible_total_levels` stuck at 69 across 2+ flat milestones (corroborates the final-sprint state note).
-2. **The window is 96% dev-twin re-gating.** 22/23 artifacts are `development_proxy` GameAdapter reproductions. Healthy as a regression net, but if the loop keeps emitting these as the bulk of "ARC solve" output, a capstone reading provenance-blind will read 22 "solves" where there were 0 discoveries. The Incremental-Progress / no-churn ethos (north-star §1) is being violated in spirit: same levels, recent mtimes, no headline movement.
-3. **One live contradiction slipped to disk before Layer-1b backfill** (lp85 capture: `used_env_source` + `development_proxy`). Contained — but it confirms the residual the discipline already admits: a self-contained `scripts/experiments/*` capture can declare a friendly provenance and reach disk; only the per-artifact lint + this review catch it. Watch for repeats of the `used_env_source`/`offline_ground_truth_bfs` + non-`outer_loop_re` pairing.
-
-**Net for the operator:** nothing here proves the live agent solved a hidden game from its own attempts. The mechanical layers held (reachability green, lp85 contained, dc22 over-count rejected by the registry). The real signal is absence: the self-discovery advance count is **zero** this window — that, not misconduct, is what to act on.
+**Drift toward reproduction-without-discovery.** Seven days, 23 solve artifacts, **zero** `live_agent_self_discovery` — 22 dev-proxy re-confirmations of registry levels plus one env-source RE. This is precisely the "deepen well drying" state in memory (levels stuck at 69). The mechanical guards are holding (orphan-lint green; Layer 1b auto-flagged the env-source capture), so this is **not** an integrity breach — but it **is** the slow failure mode: the loop is busy re-proving what it already knows while the live agent banks nothing new. Watch for an outer-loop temptation to "rescue" the flat count by deepening via `used_env_source`/offline BFS — the lp85 L6 capture is the first instance of that temptation, and it should be read as a signal to redirect effort to live-path self-discovery, not as a level to keep.
 
