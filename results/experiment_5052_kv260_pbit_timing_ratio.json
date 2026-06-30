@@ -1,0 +1,146 @@
+{
+  "command_probes": {
+    "kv260_pbit_workload": {
+      "combined_output": "{\"duration_s\": 0.057670145004522055, \"energy\": -71, \"final_state_checksum\": \"43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897\", \"flips\": 3800, \"iterations\": 128, \"n_variables\": 64, \"workload_name\": \"bounded_sparse_pbit_parity_n64\"}\n",
+      "command": "ssh kria 'python3 -c '\"'\"'import hashlib\nimport json\nimport time\n\nn = 64\niterations = 128\nstarted = time.perf_counter()\nspins = [1 if index % 2 == 0 else -1 for index in range(n)]\nfields = [((index * 17) % 7) - 3 for index in range(n)]\nflips = 0\nfor step in range(iterations):\n    for index in range(n):\n        left = spins[(index - 1) % n]\n        right = spins[(index + 1) % n]\n        long_edge = spins[(index + 7) % n]\n        local_field = fields[index] + 2 * left - right + long_edge\n        noise = ((1103515245 * (step * n + index + 5052) + 12345) >> 16) & 7\n        new_spin = 1 if local_field + noise - 3 >= 0 else -1\n        if new_spin != spins[index]:\n            flips += 1\n        spins[index] = new_spin\nenergy = 0\nfor index in range(n):\n    energy += -spins[index] * spins[(index + 1) % n]\n    energy += spins[index] * spins[(index + 7) % n]\n    energy += -fields[index] * spins[index]\nchecksum = hashlib.sha256(json.dumps(spins, separators=(\",\", \":\")).encode()).hexdigest()\nprint(json.dumps({\n    \"workload_name\": \"bounded_sparse_pbit_parity_n64\",\n    \"n_variables\": n,\n    \"iterations\": iterations,\n    \"flips\": flips,\n    \"energy\": energy,\n    \"final_state_checksum\": checksum,\n    \"duration_s\": max(time.perf_counter() - started, 0.000001),\n}, sort_keys=True))'\"'\"''",
+      "duration_s": 0.636992204003036,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"duration_s\": 0.057670145004522055, \"energy\": -71, \"final_state_checksum\": \"43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897\", \"flips\": 3800, \"iterations\": 128, \"n_variables\": 64, \"workload_name\": \"bounded_sparse_pbit_parity_n64\"}\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.603733672993258,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_uio_devices": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.43602006207220256,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n"
+    },
+    "kv260_xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7632754161022604,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "kv260_xmutil_listapps_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.9267119159922004,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n"
+    }
+  },
+  "cpu_reference": {
+    "duration_s": 0.00181530905,
+    "energy": -71,
+    "final_state_checksum": "43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897",
+    "flips": 3800,
+    "iterations": 128,
+    "n_variables": 64,
+    "workload_name": "bounded_sparse_pbit_parity_n64"
+  },
+  "cpu_reference_ok": true,
+  "duration_s": 7.3693,
+  "experiment": 5052,
+  "field_principles": {
+    "cpu_reference_ok": "true only when the local deterministic CPU reference is structurally valid.",
+    "honest_verdict": "terminal prefix for blocked SSH, overlay-not-loaded, parity failure, or packet-built outcomes.",
+    "kv260_result_ok": "true only when the SSH board workload exits zero and matches CPU parity.",
+    "kv260_ssh_reachable": "true only when the SSH BatchMode precondition exits zero; never host SD-card.",
+    "local_claim_scope": "limits the claim to local SSH evidence without FPGA, GPU, or paper-result speedup claims.",
+    "n_variables": "the variable count for the bounded parity workload.",
+    "overlay_loaded": "true only when xmutil output shows a loaded Carnot Ising overlay.",
+    "timing_ratio_packet_built": "true only when CPU and KV260 outputs pass parity checks.",
+    "workload_name": "the bounded p-bit-style parity workload used on CPU and KV260."
+  },
+  "gpu_reference": {
+    "reason": "Exp 5052 records CPU and KV260 SSH timing only.",
+    "status": "not_run_no_gpu_claim"
+  },
+  "honest_verdict": "success_kv260_pbit_timing_ratio_packet_built",
+  "inference_substrate": "hardware_smoke",
+  "kv260_result_ok": true,
+  "kv260_ssh_reachable": true,
+  "kv260_workload": {
+    "duration_s": 0.057670145004522055,
+    "energy": -71,
+    "final_state_checksum": "43a0b7dd45265d7f76840db3d49008258a0dc746a009f5527b97a998ab78c897",
+    "flips": 3800,
+    "iterations": 128,
+    "n_variables": 64,
+    "workload_name": "bounded_sparse_pbit_parity_n64"
+  },
+  "loaded_overlay": "carnot_ising_v2_n64",
+  "local_claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+  "n_variables": 64,
+  "overlay_loaded": true,
+  "overlay_state": {
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "overlay_loaded": true,
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "uio_exit_code": 0,
+    "uio_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+    "xmutil_listapps_exit_code": 1,
+    "xmutil_listapps_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)           0->0,\n",
+    "xmutil_requires_sudo": true
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.603733672993258,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 5052,
+  "reproducibility_checksum": "3e9c2ddd22e5396b2d8b07d19cf067d02f8df5ab343a08b277e7f542618a5fc9",
+  "schema": "carnot.kv260_pbit_timing_ratio.v1",
+  "spec_refs": [
+    "REQ-HW-5052",
+    "SCENARIO-HW-5052"
+  ],
+  "timing_ratio_packet": {
+    "cpu_to_kv260_board_workload_ratio": 0.031477449031,
+    "cpu_to_kv260_command_wall_ratio": 0.002849813606,
+    "cpu_wall_clock_s": 0.00181530905,
+    "flips": 3800,
+    "iterations": 128,
+    "kv260_board_reported_workload_s": 0.057670145005,
+    "kv260_command_wall_clock_s": 0.636992204003,
+    "n_variables": 64,
+    "parity_match": true,
+    "ratio_claim_scope": "local_ssh_attached_kv260_python_parity_workload_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+    "workload_name": "bounded_sparse_pbit_parity_n64"
+  },
+  "timing_ratio_packet_built": true,
+  "uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3",
+    "/dev/uio4"
+  ],
+  "verifier_is_oracle": false,
+  "workload_name": "bounded_sparse_pbit_parity_n64",
+  "xmutil_requires_sudo": true
+}
