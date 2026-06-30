@@ -22045,6 +22045,89 @@ then the artifact verdict starts with `complete_sota_gguf_judge_preflight_ready`
 |---|---|---|
 | REQ-VERIFY-5043 | Proposed (`python/carnot/experiment_5043_sota_gguf_judge_preflight.py`, `results/experiment_5043_sota_gguf_judge_preflight.json`) | Proposed (`tests/python/test_experiment_5043_sota_gguf_judge_preflight.py`) |
 
+### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
+
+The repository SHALL provide Exp 5044 at
+`python/carnot/experiment_5044_second_corpus_candidate_cache.py` to build a
+reusable second-corpus cache with labeled candidate rows, solver/verifier
+provenance, a GENUINE tuned self-consistency baseline, and oracle@K headroom
+metrics, then write
+`results/experiment_5044_second_corpus_candidate_cache.json`.
+
+The builder SHALL first probe local paths for PPBench/Pencil Puzzle Bench or
+another deterministic solver-backed puzzle corpus without downloading large
+assets. If PPBench is unavailable, it SHALL honestly record the fallback and
+use the best already-cached deterministic constraint/reasoning corpus with
+labels and candidate rows. The preferred local fallback is the checked-in
+ConstraintBench feasibility/objective pilot, whose labels come from exact
+bounded enumeration. It MAY derive deterministic variants from that cached
+solver-backed source to reach at least 100 labeled questions when feasible.
+
+The candidate cache SHALL be a resumable JSONL data product. Complete cached
+rows SHALL be reused on rerun, and missing rows SHALL be appended without
+erasing already-flushed rows. Each row SHALL include a stable row id, corpus
+name, question/context text, gold answer, candidate list, solver label
+provenance, verifier provenance, and a schema marker. Candidate generation MAY
+be deterministic. If any LLM is used to generate candidate answers or
+formulations, `model_specs` SHALL include at least one mandated model from
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`; small models are smoke-only and SHALL NOT
+provide headline candidate provenance.
+
+The terminal artifact SHALL include `honest_verdict`, `model_specs`,
+`second_corpus_cache_built`, `second_corpus_name`, `n_questions`,
+`n_candidate_rows`, `genuine_sc_accuracy`, `oracle_at_k`,
+`headroom_present`, `verifier_is_oracle`, and `candidate_cache_path`. It
+SHALL also record the PPBench probe result, fallback reason, corpus source
+paths, solver/verifier provenance, candidates per question, candidate cache
+schema, resume summary, `spec_refs`, `field_principles`, and a reproducibility
+checksum.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix for ready, blocked, or fallback cache outcomes.`;
+`model_specs` = `records mandated model ids and whether LLM generation was used.`;
+`second_corpus_cache_built` = `true iff the reusable JSONL cache has enough complete labeled rows.`;
+`second_corpus_name` = `the selected local second corpus or honest fallback corpus name.`;
+`n_questions` = `number of complete labeled questions in the cache.`;
+`n_candidate_rows` = `total candidate answers across complete questions.`;
+`genuine_sc_accuracy` = `GENUINE tuned self-consistency accuracy over cached candidates.`;
+`oracle_at_k` = `oracle recovery rate over the cached K-candidate pools.`;
+`headroom_present` = `true only when oracle@K exceeds genuine SC by the headroom threshold.`;
+`verifier_is_oracle` = `false because the cache builder labels rows but does not select with an oracle.`;
+`candidate_cache_path` = `path to the resumable second-corpus candidate JSONL cache.`
+
+For headline D4 use, `headroom_present` SHALL be true only when
+`oracle_at_k - genuine_sc_accuracy >= 0.10` and at least one tuned-SC-wrong
+row has a correct candidate in the candidate pool. `verifier_is_oracle` SHALL
+remain the bare boolean `false`; the cache builder may use a solver as label
+authority, but it SHALL NOT present that solver as an oracle-distinct verifier
+that selects candidates for the moat claim.
+
+### SCENARIO-VERIFY-5044: Cache Builds Or Resumes With Headroom Metrics
+
+Given PPBench is absent locally and the ConstraintBench exact pilot rows are
+available, when Exp 5044 runs, then it records PPBench as unavailable, records
+the ConstraintBench fallback honestly, builds or resumes at least 100 labeled
+solver-backed candidate rows when feasible, computes GENUINE tuned-SC and
+oracle@K over the cached candidates through the shared moat harness, sets
+`headroom_present=true` only when the oracle headroom gate passes, keeps
+`verifier_is_oracle=false`, and writes every required artifact field.
+
+If the cache JSONL already contains complete rows for part of the requested
+panel, the builder SHALL skip those rows, append only missing rows, and report
+resume accounting without duplicating candidate rows. If no usable deterministic
+solver-backed or labeled cached fallback exists, the builder SHALL still write a
+terminal blocked artifact with `second_corpus_cache_built=false`, zero
+candidate-row counts, explicit precondition diagnostics, and no D4 headline
+eligibility.
+
+## Implementation Status (REQ-VERIFY-5044)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5044 | Proposed (`python/carnot/experiment_5044_second_corpus_candidate_cache.py`, `results/experiment_5044_second_corpus_candidate_cache.json`) | Proposed (`tests/python/test_experiment_5044_second_corpus_candidate_cache.py`) |
+
 ### REQ-VERIFY-5035: Phase D4 V3 Cross-Corpus Generalization Check
 
 The repository SHALL provide Exp 5035 at
