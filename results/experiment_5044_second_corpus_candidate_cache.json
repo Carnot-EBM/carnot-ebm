@@ -1,0 +1,253 @@
+{
+  "candidate_cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5044_second_corpus_candidate_cache.jsonl",
+  "candidate_cache_schema": "carnot.second_corpus_candidate_cache.row.v1",
+  "candidates_per_question": 5,
+  "duration_s": 0.054471,
+  "experiment": "experiment_5044_second_corpus_candidate_cache",
+  "experiment_id": 5044,
+  "fallback_reason": "PPBench/Pencil Puzzle Bench not found locally; using checked-in ConstraintBench exact pilot fallback.",
+  "fallback_used": true,
+  "field_principles": {
+    "candidate_cache_path": {
+      "principle": "path to the resumable second-corpus candidate JSONL cache."
+    },
+    "genuine_sc_accuracy": {
+      "principle": "GENUINE tuned self-consistency accuracy over cached candidates."
+    },
+    "headroom_present": {
+      "principle": "true only when oracle@K exceeds genuine SC by the headroom threshold."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for ready, blocked, or fallback cache outcomes."
+    },
+    "model_specs": {
+      "principle": "records mandated model ids and whether LLM generation was used."
+    },
+    "n_candidate_rows": {
+      "principle": "total candidate answers across complete questions."
+    },
+    "n_questions": {
+      "principle": "number of complete labeled questions in the cache."
+    },
+    "oracle_at_k": {
+      "principle": "oracle recovery rate over the cached K-candidate pools."
+    },
+    "second_corpus_cache_built": {
+      "principle": "true iff the reusable JSONL cache has enough complete labeled rows."
+    },
+    "second_corpus_name": {
+      "principle": "the selected local second corpus or honest fallback corpus name."
+    },
+    "verifier_is_oracle": {
+      "principle": "false because the cache builder labels rows but does not select with an oracle."
+    }
+  },
+  "genuine_sc_accuracy": 0.0,
+  "headroom_present": true,
+  "honest_verdict": "complete_second_corpus_cache_ready_constraintbench_exact_v1_n100",
+  "inference_substrate": "deterministic_solver_backed_cache_build",
+  "metrics": {
+    "genuine_sc_accuracy": 0.0,
+    "headroom_present": true,
+    "headroom_threshold": 0.1,
+    "n_candidate_rows": 500,
+    "n_flips_possible": 100,
+    "n_questions": 100,
+    "oracle_at_k": 1.0,
+    "oracle_k": 5,
+    "oracle_temperature": "deterministic",
+    "tuned_self_consistency": {
+      "accuracy": 0.0,
+      "candidate_pool_counts": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "config": {
+        "k": 1,
+        "temperature": "deterministic"
+      },
+      "k_sweep": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0
+      },
+      "tuned_k": 1
+    }
+  },
+  "model_specs": {
+    "candidate_generation": "deterministic_solver_backed_constraint_variants",
+    "llm_generation_used": false,
+    "mandated_models": {
+      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "small_models_smoke_only": true
+  },
+  "n_candidate_rows": 500,
+  "n_questions": 100,
+  "oracle_at_k": 1.0,
+  "ppbench_probe": {
+    "available": false,
+    "detail": "PPBench/Pencil Puzzle Bench not found locally",
+    "download_attempted": false,
+    "existing_paths": [],
+    "probed_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/data/ppbench",
+      "/home/ianblenke/github.com/ianblenke/carnot/data/pencil_puzzle_bench",
+      "/home/ianblenke/github.com/ianblenke/carnot/data/pencil-puzzle-bench",
+      "/home/ianblenke/github.com/ianblenke/carnot/third_party/pencil-puzzle-bench"
+    ],
+    "selected_path": null
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "15 checked-in exact solver-backed row(s)",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/constraintbench_feasibility_objective_pilot_v1.jsonl",
+      "resource": "constraintbench_exact_pilot"
+    }
+  ],
+  "random_seed": 20260630,
+  "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "reproducibility_checksum": "sha256:b65947d796ce113615c77ffcd1b7784108e38bd75358c7ba8759793bb3d51953",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5044_second_corpus_candidate_cache.json",
+  "resume_summary": {
+    "appended_rows": 100,
+    "existing_complete_rows": 0,
+    "skipped_existing_rows": 0,
+    "target_rows": 100
+  },
+  "schema": "carnot.experiment_5044_second_corpus_candidate_cache.v1",
+  "second_corpus_cache_built": true,
+  "second_corpus_name": "ConstraintBench-exact-v1",
+  "solver_provenance": {
+    "authority": "local_exhaustive_enumeration",
+    "checker_backends": [
+      "exact_assignment_permutation_enumerator",
+      "exact_graph_coloring_enumerator",
+      "exact_knapsack_subset_enumerator"
+    ],
+    "label_source": "exact_reference.solution",
+    "sample": {
+      "authority": "local_exhaustive_enumeration",
+      "backend": "exact_knapsack_subset_enumerator",
+      "feasible_count": 6,
+      "objective_value": 15,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/constraintbench_feasibility_objective_pilot_v1.jsonl",
+      "source_row_id": "cbpilot-3211-knapsack-001"
+    },
+    "source_corpus": "ConstraintBench-exact-v1",
+    "source_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+  },
+  "source_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/data/research/constraintbench_feasibility_objective_pilot_v1.jsonl"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5044",
+    "SCENARIO-VERIFY-5044"
+  ],
+  "verifier_is_oracle": false,
+  "verifier_provenance": {
+    "selection_verifier": "not_run_cache_data_product",
+    "verifier_is_oracle": false
+  }
+}
