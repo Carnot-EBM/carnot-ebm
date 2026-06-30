@@ -1,0 +1,720 @@
+{
+  "arc_deliverable_locked": {
+    "arc_work_mode": "opportunistic",
+    "deliverable": "levels_69_plus_publishable_fover_paper",
+    "locked": true
+  },
+  "arc_opportunistic_rollup": {
+    "honest_verdict": "complete_lp85_no_new_level_residual_no_grounded_l6_delta",
+    "live_path_reachable": true,
+    "new_levels_banked": 0,
+    "offline_reproduced": false,
+    "reproduced_levels": 5,
+    "reproducible_total_levels_after": 69,
+    "status": "complete",
+    "target_game": "lp85",
+    "target_level": 6
+  },
+  "best_arm_and_delta": {
+    "abstention_rate": null,
+    "arm": "LoRA-EBM",
+    "arm_id": "D1",
+    "corpus": "MuSR",
+    "delta_vs_tuned_sc": 0.08,
+    "execution_status": "clean",
+    "headroom_present": true,
+    "judge_call_fraction": null,
+    "paired_ci95": [
+      0.0,
+      0.165
+    ],
+    "scorer_trained": true,
+    "source_experiment_id": 5031,
+    "verifier_is_oracle": false,
+    "win_vs_tuned_sc": false
+  },
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 5029,
+      "fields_imported": [
+        "honest_verdict",
+        "candidate_cache_built",
+        "cache_jsonl_path",
+        "n_cached_rows",
+        "n_questions",
+        "corpora_cached",
+        "has_per_token_logprobs",
+        "rescored_not_regenerated"
+      ],
+      "path": "results/experiment_5029_shared_logprob_candidate_cache_v2.json",
+      "sha256": "sha256:1035a986efe65a1fd634146f1b1243384885e251cddd33144fc7bd18541d3366",
+      "source": "B2_LOGPROB_CACHE"
+    },
+    {
+      "experiment_id": 5030,
+      "fields_imported": [
+        "honest_verdict",
+        "module_path",
+        "smoke_passed",
+        "smoke_train_loss",
+        "smoke_duration_s",
+        "checkpoint_path",
+        "base_used",
+        "resolver_base_list",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5030_moat_trainer_module.json",
+      "sha256": "sha256:c97f739e84c6f6bf59e2bf0210e7b50f30fd66f0cbcf840132e48ed208ab2496",
+      "source": "B3_MOAT_TRAINER"
+    },
+    {
+      "experiment_id": 5031,
+      "fields_imported": [
+        "honest_verdict",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "headroom_present",
+        "oracle_at_k",
+        "genuine_tuned_sc_accuracy",
+        "trained_scorer_accuracy",
+        "scorer_trained",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "sha256": "sha256:e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e",
+      "source": "D1_LORA_EBM"
+    },
+    {
+      "experiment_id": 5032,
+      "fields_imported": [
+        "honest_verdict",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "headroom_present",
+        "oracle_at_k",
+        "genuine_tuned_sc_accuracy",
+        "uprm_selection_accuracy",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5032_uprm_replication_v3.json",
+      "sha256": "sha256:b07c49b48d35f952c2cac3a6d5514e3d669c0cecbc296f460b2a279827ca078e",
+      "source": "D2_UPRM"
+    },
+    {
+      "experiment_id": 5033,
+      "fields_imported": [
+        "honest_verdict",
+        "delta_vs_tuned_sc",
+        "paired_ci95",
+        "mcnemar_p",
+        "headroom_present",
+        "oracle_at_k",
+        "genuine_tuned_sc_accuracy",
+        "ebrm_selection_accuracy",
+        "abstention_rate",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "sha256": "sha256:5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6",
+      "source": "D3_EBRM"
+    },
+    {
+      "experiment_id": 5034,
+      "fields_imported": [
+        "honest_verdict",
+        "cascade_accuracy",
+        "judge_only_accuracy",
+        "judge_call_fraction",
+        "paired_ci95_cascade_vs_judge",
+        "n_questions",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5034_uncertainty_routed_cascade_v2.json",
+      "sha256": "sha256:9a96bf556e029d7743254e74e6dc7d9763dc04c6e2bedcc30d3476f1f536a031",
+      "source": "D6_CASCADE"
+    },
+    {
+      "experiment_id": 5035,
+      "fields_imported": [
+        "honest_verdict",
+        "delta_vs_tuned_sc_second",
+        "paired_ci95_second",
+        "mcnemar_p_second",
+        "headroom_present",
+        "oracle_at_k_second",
+        "genuine_tuned_sc_accuracy_second",
+        "second_corpus_accuracy",
+        "verifier_is_oracle"
+      ],
+      "path": "results/experiment_5035_moat_second_corpus_v3.json",
+      "sha256": "sha256:43e1f0bae4b18c82a473d1a822797926e1c4d8a63feafdcd3ef392fc99a07d72",
+      "source": "D4_SECOND_CORPUS"
+    },
+    {
+      "experiment_id": 5036,
+      "fields_imported": [
+        "honest_verdict",
+        "decision",
+        "moat_realized",
+        "moat_retired_bounded",
+        "efficiency_win",
+        "best_arm",
+        "per_arm_table",
+        "execution_incomplete_arms",
+        "diffusiongemma_gate_status",
+        "diffusiongemma_gate_conditions_satisfied_off_arc",
+        "diffusiongemma_activation",
+        "flagged_arms_skipped",
+        "paper_summary"
+      ],
+      "path": "results/experiment_5036_moat_gate_resolution_v3.json",
+      "sha256": "sha256:1f2cca42c83f426800ce0544b747b6211c455804b80598a4ee1243110bd43c25",
+      "source": "D5_MOAT_GATE"
+    },
+    {
+      "experiment_id": 5037,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_reachable",
+        "loaded_overlay",
+        "energy_smoke",
+        "overlay_state",
+        "uio_devices",
+        "xmutil_requires_sudo"
+      ],
+      "path": "results/experiment_5037_kv260_continuity.json",
+      "sha256": "sha256:3c2c1770e3e08334bef191d0bef2fa9702099ba0cc89674f574175b39edcfecc",
+      "source": "C_KV260"
+    },
+    {
+      "experiment_id": 5038,
+      "fields_imported": [
+        "honest_verdict",
+        "new_arxiv_ids",
+        "next_milestone_candidates",
+        "sota_to_phase_d_mapping",
+        "d5_conditioning",
+        "note_path"
+      ],
+      "path": "results/experiment_5038_sota_ingestion_verifier_moat.json",
+      "sha256": "sha256:3d26461247a83ea20422b1cb608149564547f5ce3c056945cd245053b898a34c",
+      "source": "E1_SOTA"
+    },
+    {
+      "experiment_id": 5039,
+      "fields_imported": [
+        "honest_verdict",
+        "verifier_checkpoint_refreshed",
+        "checkpoint_path",
+        "target_game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "solve_provenance",
+        "flag_resolved"
+      ],
+      "path": "results/experiment_5039_self_play_verifier_checkpoint.json",
+      "sha256": "sha256:e6146e435d5a21c091a0b493c5a8d8adf6557ce862b6e72d4bc7dd3028d141f7",
+      "source": "E2_SELF_PLAY"
+    },
+    {
+      "experiment_id": 5040,
+      "fields_imported": [
+        "honest_verdict",
+        "target_game",
+        "target_level",
+        "new_levels_banked",
+        "offline_reproduced",
+        "reproduced_levels",
+        "reproducible_total_levels_after",
+        "live_path_reachable"
+      ],
+      "path": "results/experiment_5040_levelup_attempt.json",
+      "sha256": "sha256:27a5d6f74468206dd3a14c9af9fae26ed1130cfb73affeb6910fb0c035fbd084",
+      "source": "E3_ARC_LEVEL"
+    }
+  ],
+  "d1_finally_executed": true,
+  "diffusiongemma_gate_status": {
+    "activation": "not_activated",
+    "autonomously_flipped_to_met": false,
+    "conditions_satisfied_off_arc": false,
+    "operator_gated": true,
+    "status": "STILL-PENDING"
+  },
+  "duration_s": 0.132077,
+  "efficiency_win": false,
+  "experiment": "experiment_5041_capstone_v463",
+  "experiment_id": 5041,
+  "field_principles": {
+    "best_arm_and_delta": {
+      "principle": "the strongest oracle-distinct construction (or the efficiency Pareto point) + corpus + delta_vs_tuned_sc + CI (from D5)."
+    },
+    "cited_upstream_artifacts": {
+      "principle": "the {experiment_id, fields_imported, sha256} for each aggregated arm (traceable to real measurements)."
+    },
+    "d1_finally_executed": {
+      "principle": "true iff D1 scorer_trained=true -- whether the .463 de-risking (real base resolver + B3 smoke + B2-decoupling + claude/opus) finally landed a REAL trained-verifier measurement (the primary .463 success criterion)."
+    },
+    "diffusiongemma_gate_status": {
+      "principle": "the gate status from D5 (conditions satisfied off-ARC? activation stays operator-gated; not autonomously flipped to MET)."
+    },
+    "efficiency_win": {
+      "principle": "true iff the cascade (D6) reached accuracy parity at materially fewer judge calls (north-star \u00a75)."
+    },
+    "flagged_artifacts_skipped": {
+      "principle": "the list of arms skipped for flagged_adversarial=true (never aggregated into a headline)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_capstone_v463_moat_<realized|retired_bounded|execution_incomplete|musr_scoped>_<headline>."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts (reads upstream JSON, no LLM; 0.0001s floor)."
+    },
+    "infra_rollup": {
+      "principle": "B2 robust logprob cache (n_cached_rows) + B3 trainer module/smoke_passed status (the 2 reserved infra slots; the permanent 404-fix)."
+    },
+    "moat_verdict": {
+      "principle": "the off-ARC verifier-moat verdict carried from D5 (realized / retired_bounded / execution_incomplete / mixed-scoped) -- the milestone headline."
+    },
+    "next_milestone_pointer": {
+      "principle": ".464 direction conditioned on the moat verdict (scale the winner / pivot to the next verifier direction / ESCALATE to the operator if execution-incomplete a 3rd time / tighten the strongest arm)."
+    },
+    "per_arm_table": {
+      "principle": "D1/D2/D3/D6/D4 deltas + CIs + verifier_is_oracle + headroom_present + scorer_trained/abstention_rate (the audit + execution-quality trail)."
+    },
+    "reproducible_total_levels": {
+      "principle": "the ARC progress metric carried from the registry (the deliverable stays LOCKED; ARC opportunistic)."
+    }
+  },
+  "flagged_artifacts_skipped": [],
+  "hardware_rollup": {
+    "energy_smoke": {
+      "board_reported_duration_s": 3.526097862049937e-05,
+      "command_exit_code": 0,
+      "energy": -7,
+      "expected_energy": -7,
+      "problem": "tiny_quadratic_ising_constraint_energy",
+      "success": true
+    },
+    "honest_verdict": "success_kv260_reachable_overlay_loaded_energy_ok",
+    "kv260_reachable": true,
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "status": "complete",
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "xmutil_requires_sudo": true
+  },
+  "honest_verdict": "complete_capstone_v463_moat_execution_incomplete_lora_ebm",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "infra_rollup": {
+    "b2_logprob_cache": {
+      "cache_jsonl_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+      "corpora_cached": [
+        "MuSR/murder_mysteries"
+      ],
+      "has_per_token_logprobs": true,
+      "honest_verdict": "success_logprob_cache_rescored_musr_n200",
+      "n_cached_rows": 1525,
+      "rescored_not_regenerated": true,
+      "robust_cache_ready": true,
+      "status": "complete"
+    },
+    "b3_moat_trainer": {
+      "base_used": "Qwen/Qwen3.5-2B",
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5030_moat_smoke/epoch_2",
+      "honest_verdict": "success_moat_trainer_module_shipped_smoke_trained_Qwen_Qwen35-2B",
+      "module_path": "python/carnot/moat_trainer.py",
+      "smoke_duration_s": 84.0639,
+      "smoke_passed": true,
+      "smoke_train_loss": 0.04401,
+      "status": "complete",
+      "trainer_module_ready": true
+    }
+  },
+  "moat_verdict": {
+    "d5_missing": false,
+    "decision": "EXECUTION-INCOMPLETE",
+    "execution_incomplete_arms": [
+      {
+        "arm": "cascade",
+        "arm_id": "D6",
+        "corpus": "MuSR",
+        "execution_status": "blocked",
+        "honest_verdict": "blocked_judge_server",
+        "source_experiment_id": 5034
+      },
+      {
+        "arm": "second-corpus-confirmation",
+        "arm_id": "D4",
+        "corpus": "second_corpus_unknown",
+        "execution_status": "blocked",
+        "honest_verdict": "blocked_second_corpus_unavailable",
+        "source_experiment_id": 5035
+      }
+    ],
+    "moat_realized": false,
+    "moat_retired_bounded": false,
+    "source": "D5_MOAT_GATE",
+    "state": "execution_incomplete",
+    "summary": "D5 is execution-incomplete: cascade, second-corpus-confirmation did not cleanly execute, while flagged artifacts skipped were none. This is not a clean null and cannot bound-retire the moat."
+  },
+  "next_milestone_pointer": {
+    "arm_id": "D1",
+    "best_arm": "LoRA-EBM",
+    "direction": "escalate_to_operator",
+    "milestone": "2026.06.464",
+    "plan": "Escalate to the operator because execution remained incomplete for the third capstone cycle; off-Codex routing did not suffice."
+  },
+  "per_arm_table": [
+    {
+      "abstention_rate": null,
+      "arm": "LoRA-EBM",
+      "arm_id": "D1",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "scorer_trained": true,
+      "selection_accuracy": 0.665,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "source_experiment_id": 5031,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "uPRM",
+      "arm_id": "D2",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": -0.11,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate",
+      "mcnemar_p": 0.016853,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        -0.195,
+        -0.03
+      ],
+      "scorer_trained": null,
+      "selection_accuracy": 0.475,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5032_uprm_replication_v3.json",
+      "source_experiment_id": 5032,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": 0.0,
+      "arm": "EBRM",
+      "arm_id": "D3",
+      "corpus": "MuSR",
+      "delta_vs_tuned_sc": 0.08,
+      "execution_status": "clean",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p080_ci_incl_0",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "oracle_at_k": 0.865,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "scorer_trained": null,
+      "selection_accuracy": 0.665,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "source_experiment_id": 5033,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "cascade",
+      "arm_id": "D6",
+      "cascade_judge_calls": 0,
+      "corpus": "MuSR",
+      "delta_vs_judge_only": null,
+      "delta_vs_tuned_sc": null,
+      "efficiency_win": false,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": 0.585,
+      "headroom_present": true,
+      "honest_verdict": "blocked_judge_server",
+      "judge_call_fraction": null,
+      "judge_only_calls": 0,
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5034_uncertainty_routed_cascade_v2.json",
+      "source_experiment_id": 5034,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    },
+    {
+      "abstention_rate": null,
+      "arm": "second-corpus-confirmation",
+      "arm_id": "D4",
+      "confirmation_source": "D4",
+      "corpus": "second_corpus_unknown",
+      "delta_vs_tuned_sc": null,
+      "execution_status": "blocked",
+      "genuine_tuned_sc_accuracy": null,
+      "headroom_present": false,
+      "honest_verdict": "blocked_second_corpus_unavailable",
+      "mcnemar_p": null,
+      "n_questions": 0,
+      "oracle_at_k": null,
+      "paired_ci95": null,
+      "scorer_trained": null,
+      "selection_accuracy": null,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5035_moat_second_corpus_v3.json",
+      "source_experiment_id": 5035,
+      "verifier_is_oracle": false,
+      "win_vs_tuned_sc": false
+    }
+  ],
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 69,
+      "sha256": "sha256:57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877",
+      "yaml_loadable": true
+    },
+    "spec_has_req_5041": true,
+    "upstream_artifacts": {
+      "B2_LOGPROB_CACHE": {
+        "path": "results/experiment_5029_shared_logprob_candidate_cache_v2.json",
+        "present": true
+      },
+      "B3_MOAT_TRAINER": {
+        "path": "results/experiment_5030_moat_trainer_module.json",
+        "present": true
+      },
+      "C_KV260": {
+        "path": "results/experiment_5037_kv260_continuity.json",
+        "present": true
+      },
+      "D1_LORA_EBM": {
+        "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+        "present": true
+      },
+      "D2_UPRM": {
+        "path": "results/experiment_5032_uprm_replication_v3.json",
+        "present": true
+      },
+      "D3_EBRM": {
+        "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+        "present": true
+      },
+      "D4_SECOND_CORPUS": {
+        "path": "results/experiment_5035_moat_second_corpus_v3.json",
+        "present": true
+      },
+      "D5_MOAT_GATE": {
+        "path": "results/experiment_5036_moat_gate_resolution_v3.json",
+        "present": true
+      },
+      "D6_CASCADE": {
+        "path": "results/experiment_5034_uncertainty_routed_cascade_v2.json",
+        "present": true
+      },
+      "E1_SOTA": {
+        "path": "results/experiment_5038_sota_ingestion_verifier_moat.json",
+        "present": true
+      },
+      "E2_SELF_PLAY": {
+        "path": "results/experiment_5039_self_play_verifier_checkpoint.json",
+        "present": true
+      },
+      "E3_ARC_LEVEL": {
+        "path": "results/experiment_5040_levelup_attempt.json",
+        "present": true
+      }
+    }
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:94e6eee62aa959968337a33d91e91670dae5dbe44eab3e31cb9d88ff7839a5d5",
+  "reproducible_total_levels": 69,
+  "result_path": "results/experiment_5041_capstone_v463.json",
+  "schema": "carnot.exp5041.capstone_v463.v1",
+  "self_play_rollup": {
+    "checkpoint_path": "models/arc_verifier_ls20.json",
+    "checkpoint_refreshed": true,
+    "continuous_self_learning": true,
+    "flag_resolved": true,
+    "honest_verdict": "success_self_play_checkpoint_refreshed",
+    "offline_reproduced": true,
+    "status": "complete",
+    "target_game": "ls20"
+  },
+  "sota_ingestion_rollup": {
+    "d5_conditioning": {
+      "best_clean_arm": {
+        "arm": "D1 LoRA-EBM",
+        "corpus": "MuSR",
+        "delta_vs_tuned_sc": 0.08,
+        "paired_ci95": [
+          0.0,
+          0.165
+        ],
+        "win_vs_tuned_sc": false
+      },
+      "decision": "EXECUTION-INCOMPLETE",
+      "execution_incomplete_arms": [
+        "D6 verifier-judge cascade",
+        "D4 second-corpus confirmation"
+      ],
+      "honest_verdict": "complete_moat_execution_incomplete_cascade",
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "roadmap_condition": "Because D5 is execution-incomplete rather than realized or bounded-retired, .464 should repair the blocked cascade and second-corpus confirmation, harden D1/D3 uncertainty, and pivot only if a future rerun makes D1+D2 both clean nulls.",
+      "source_artifact": "results/experiment_5036_moat_gate_resolution_v3.json"
+    },
+    "new_arxiv_ids": [
+      "2505.14999",
+      "2605.10325",
+      "2606.11209",
+      "2503.22480",
+      "2602.06291"
+    ],
+    "new_papers_ingested": 5,
+    "next_milestone_candidates": [
+      {
+        "candidate": "Rerun D1 and D3 with energy plus uncertainty margins",
+        "candidate_flag": "flagged_for_v464 (.464): eorm_purm_d1_d3_rerun",
+        "phase_d_arms": [
+          "D1 LoRA-EBM",
+          "D3 EBRM"
+        ],
+        "source_ids": [
+          "2505.14999",
+          "2503.22480"
+        ],
+        "why": "Exp 5036 D1 and D3 had positive deltas but CI touched zero. The .464 rerun should test a small EORM head with PURM uncertainty penalties before spending on a larger verifier."
+      },
+      {
+        "candidate": "Repair D2 with oracle-distinct dense process rewards",
+        "candidate_flag": "flagged_for_v464 (.464): vpr_processthinker_d2_repair",
+        "phase_d_arms": [
+          "D2 uPRM"
+        ],
+        "source_ids": [
+          "2605.10325",
+          "2606.11209"
+        ],
+        "why": "D2 was clean negative in Exp 5036. The best .464 repair is not another scalar logprob selector, but VPR-style local checks or rollout-derived process rewards evaluated on frozen candidates."
+      },
+      {
+        "candidate": "Rebuild the blocked D6 cascade before any retirement claim",
+        "candidate_flag": "flagged_for_v464 (.464): consequence_uncertainty_cascade",
+        "phase_d_arms": [
+          "D6 verifier-judge cascade"
+        ],
+        "source_ids": [
+          "2602.06291",
+          "2503.22480"
+        ],
+        "why": "Exp 5036 was execution-incomplete because D6 and second-corpus confirmation were blocked. Consequence utility plus PURM uncertainty gives a cheap-router path that can be costed separately from judge fallback."
+      }
+    ],
+    "sota_to_phase_d_mapping": [
+      {
+        "arxiv_id": "2505.14999",
+        "candidate_flag": "flagged_for_v464 (.464): eorm_small_energy_selector_for_d1_d3",
+        "implementation_delta": "Over Exp 5031-5036, replace the scalar D1 LoRA scorer and D3 EBRM readout with an EORM-style small energy head over frozen MuSR candidates, then rerun delta_vs_tuned_sc and second-corpus confirmation.",
+        "method": "EORM small energy outcome reward verifier",
+        "phase_d_arms": [
+          "D1 LoRA-EBM",
+          "D3 EBRM"
+        ],
+        "pitfall": "Outcome-only labels can learn answer-shape shortcuts; the rerun needs frozen candidates, no model-id features, and the same genuine tuned-SC baseline.",
+        "source_signal": "Uses an energy-based outcome reward model to rank chain-of-thought solutions with only outcome labels, reporting a 55M-parameter verifier that can select from candidate pools and generalize to unseen models.",
+        "url": "https://arxiv.org/abs/2505.14999"
+      },
+      {
+        "arxiv_id": "2605.10325",
+        "candidate_flag": "flagged_for_v464 (.464): oracle_distinct_vpr_dense_process_rewards",
+        "implementation_delta": "Over Exp 5031-5036, build a D2 process-reward replay that uses only oracle-distinct intermediate checks available before the final answer, then expose the same confidence as the cheap D6 router before judge calls.",
+        "method": "VPR dense verifier-grounded process rewards",
+        "phase_d_arms": [
+          "D2 uPRM",
+          "D6 verifier-judge cascade"
+        ],
+        "pitfall": "The method is only non-circular if the intermediate verifier is not the answer oracle; weak or domain-leaking checks would invalidate the moat claim.",
+        "source_signal": "Converts symbolic or algorithmic intermediate checks into dense turn-level rewards for agentic reasoning, improving credit assignment when reliable local verification is available.",
+        "url": "https://arxiv.org/abs/2605.10325"
+      },
+      {
+        "arxiv_id": "2606.11209",
+        "candidate_flag": "flagged_for_v464 (.464): rollout_process_reward_distillation",
+        "implementation_delta": "Over Exp 5031-5036, compute rollout-success process scores for cached candidate prefixes and distill them into the D2 selector or D3 energy margin before comparing against tuned self-consistency.",
+        "method": "ProcessThinker rollout-based process rewards",
+        "phase_d_arms": [
+          "D2 uPRM",
+          "D3 EBRM"
+        ],
+        "pitfall": "Continuation rollouts can be expensive and can leak final-answer verification into the selector; the rerun must charge compute and keep the verifier oracle-distinct.",
+        "source_signal": "Assigns step rewards by sampling continuations from intermediate reasoning states and using empirical final-verification success, avoiding an explicit trained PRM.",
+        "url": "https://arxiv.org/abs/2606.11209"
+      },
+      {
+        "arxiv_id": "2503.22480",
+        "candidate_flag": "flagged_for_v464 (.464): purm_uncertainty_calibrated_selector",
+        "implementation_delta": "Over Exp 5031-5036, turn D1/D3 scalar verifier scores into reward distributions, penalize high-overlap uncertain candidates, and route only uncertain pairs to D6 judge fallback.",
+        "method": "PURM reward-distribution uncertainty",
+        "phase_d_arms": [
+          "D1 LoRA-EBM",
+          "D3 EBRM",
+          "D6 verifier-judge cascade"
+        ],
+        "pitfall": "PURM is preference-alignment evidence, not a direct reasoning-selector result; calibration gains must not be counted unless selection accuracy improves.",
+        "source_signal": "Generalizes Bradley-Terry reward modeling to reward distributions and uses distribution overlap as per-sample uncertainty to reduce reward hacking.",
+        "url": "https://arxiv.org/abs/2503.22480"
+      },
+      {
+        "arxiv_id": "2602.06291",
+        "candidate_flag": "flagged_for_v464 (.464): consequence_utility_cascade_pivot",
+        "implementation_delta": "Over Exp 5031-5036, add a cheap consequence-evaluation branch to D6: candidate traces become exemplars for generated neighboring checks, and only low-margin cases escalate to the judge.",
+        "method": "Consequence-Based Utility oracle-free evaluator",
+        "phase_d_arms": [
+          "D6 verifier-judge cascade",
+          "D2 uPRM"
+        ],
+        "pitfall": "Generating related verifiable questions can become the expensive verifier; the cascade must charge that cost and prevent neighborhood tasks from leaking answers.",
+        "source_signal": "Scores a candidate solution by testing whether it improves solving of related verifiable questions, outperforming reward models, generative reward models, and LLM judges on research-level math ranking.",
+        "url": "https://arxiv.org/abs/2602.06291"
+      }
+    ],
+    "status": "complete"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5041",
+    "SCENARIO-CAPSTONE-5041",
+    "SCENARIO-CAPSTONE-5041-FIELD-PRINCIPLES"
+  ]
+}
