@@ -1,0 +1,95 @@
+{
+  "cache_jsonl_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5016_shared_logprob_candidate_cache_musr.jsonl",
+  "candidate_cache_built": false,
+  "candidates_per_question": 5,
+  "corpora_cached": [],
+  "duration_s": 379.158895,
+  "experiment": "experiment_5016_shared_logprob_candidate_cache",
+  "experiment_id": 5016,
+  "field_principles": {
+    "cache_jsonl_path": {
+      "principle": "the resumable JSONL path (results/...candidates...jsonl) D2 consumes for uPRM scoring + D1/D3/cascade reuse."
+    },
+    "candidate_cache_built": {
+      "principle": "true iff >=200 MuSR questions x K>=5 candidates-with-logprobs were cached (the field D1/D2/D3 gate/precondition on)."
+    },
+    "candidates_per_question": {
+      "principle": "K>=5 -- enough for a genuine K-way SC vote AND a non-degenerate oracle@K."
+    },
+    "corpora_cached": {
+      "principle": "MuSR (required) + any best-effort 2nd corpus (GPQA/MMLU-Pro-hard) for D4."
+    },
+    "has_per_token_logprobs": {
+      "principle": "true -- the +/- marker telemetry uPRM's first-error score needs (the .461 D2 blocker)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_logprob_candidate_cache_built_musr_n<N>_k<K>."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference (live generation with logprobs; >=60s floor)."
+    },
+    "model_specs": {
+      "principle": "gemma-4-12B-it-GGUF on the GPU-0 CUDA llama-server -- the generation methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 (sample-size rigor)."
+    },
+    "preconditions_checked": {
+      "principle": "records GGUF-cached/logprob-server/corpus checks; a missing resource emits blocked_, never a fabricated cache."
+    },
+    "random_seed": {
+      "principle": "determinism for sampling (vary by question index)."
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash of (generator, corpus, K, seed) so a replication catches drift."
+    }
+  },
+  "has_per_token_logprobs": false,
+  "honest_verdict": "blocked_generation_or_cache_error",
+  "inference_substrate": "precondition_check_only",
+  "model_specs": {
+    "cuda_gpu": 0,
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B-it-GGUF",
+    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+    "logprobs_requested": 20,
+    "requires_completion_probabilities": true,
+    "requires_top_logprobs_for_markers": true,
+    "server_url": "http://127.0.0.1:8919/completion"
+  },
+  "n_cached_rows": 0,
+  "n_questions": 0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "unsloth/gemma-4-12B-it-GGUF resolved",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "gemma_gguf_cache"
+    },
+    {
+      "available": true,
+      "detail": "server returns completion_probabilities with top_logprobs",
+      "path": "http://127.0.0.1:8919/completion",
+      "resource": "llama_server_logprobs"
+    },
+    {
+      "available": true,
+      "detail": "200 cached MuSR row(s), required >= 200",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "resource": "musr_corpus"
+    },
+    {
+      "available": false,
+      "detail": "UprmScoringError: marker completion lacked top_logprobs",
+      "resource": "generation_or_cache_error"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:cbfe11b8dfac5e94686b5dea1aba89243d288b45e72347f2607877f53a512b33",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5016_shared_logprob_candidate_cache.json",
+  "schema": "carnot.experiment_5016_shared_logprob_candidate_cache.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5016",
+    "SCENARIO-VERIFY-5016"
+  ]
+}

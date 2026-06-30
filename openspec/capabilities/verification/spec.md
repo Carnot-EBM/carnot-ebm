@@ -20754,6 +20754,76 @@ uPRM-selection accuracy or a moat win.
 |---|---|---|
 | REQ-VERIFY-5004 | Implemented (`python/carnot/experiment_5004_uprm_replication.py`, `results/experiment_5004_uprm_replication.json`) | Implemented (`tests/python/test_experiment_5004_uprm_replication.py`) |
 
+### REQ-VERIFY-5016: Shared Logprob Candidate Cache For MuSR Moat Arms
+
+The repository SHALL provide Exp 5016 at
+`python/carnot/experiment_5016_shared_logprob_candidate_cache.py` to build a
+shared, reusable JSONL candidate cache for MuSR/murder_mysteries and to write
+`results/experiment_5016_shared_logprob_candidate_cache.json`.
+
+Before generation, the runner SHALL check that `unsloth/gemma-4-12B-it-GGUF`
+is cached as a GGUF, the conductor GPU-0 llama-server at
+`http://127.0.0.1:8919/completion` is reachable and returns
+`completion_probabilities` with per-token logprobs/top-logprobs, and at least
+200 MuSR/murder_mysteries rows are locally cached. Missing resources SHALL
+produce a blocked artifact with `honest_verdict=blocked_<resource>`,
+`candidate_cache_built=false`, and `preconditions_checked`, without fabricating
+cached candidate rows.
+
+When preconditions hold, the runner SHALL generate at least K=5
+reasoning-plus-answer candidates for at least 200 MuSR questions using
+`gemma-4-12B-it-GGUF` on CUDA GPU-0. Every cached candidate SHALL carry
+per-token completion logprobs and the uPRM marker top-logprob telemetry used by
+Exp 5004, stored as `uprm_marker_logprobs` rows containing the `+` and `-`
+marker alternatives. The JSONL cache SHALL checkpoint per question by appending
+one complete question row at a time, and resume capped runs by skipping rows
+that already have at least K valid logprob-bearing candidates.
+
+The terminal artifact SHALL include `honest_verdict`,
+`candidate_cache_built`, `cache_jsonl_path`, `n_questions`,
+`candidates_per_question`, `n_cached_rows`, `has_per_token_logprobs`,
+`corpora_cached`, `model_specs`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `duration_s`,
+`field_principles`, and `spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; success_logprob_candidate_cache_built_musr_n<N>_k<K>.`;
+`candidate_cache_built` = `true iff >=200 MuSR questions x K>=5 candidates-with-logprobs were cached (the field D1/D2/D3 gate/precondition on).`;
+`cache_jsonl_path` = `the resumable JSONL path (results/...candidates...jsonl) D2 consumes for uPRM scoring + D1/D3/cascade reuse.`;
+`n_questions` = `>=200 (sample-size rigor).`;
+`candidates_per_question` = `K>=5 -- enough for a genuine K-way SC vote AND a non-degenerate oracle@K.`;
+`has_per_token_logprobs` = `true -- the +/- marker telemetry uPRM's first-error score needs (the .461 D2 blocker).`;
+`corpora_cached` = `MuSR (required) + any best-effort 2nd corpus (GPQA/MMLU-Pro-hard) for D4.`;
+`model_specs` = `gemma-4-12B-it-GGUF on the GPU-0 CUDA llama-server -- the generation methodology stamp.`;
+`inference_substrate` = `live_llm_inference (live generation with logprobs; >=60s floor).`;
+`random_seed` = `determinism for sampling (vary by question index).`;
+`reproducibility_checksum` = `content hash of (generator, corpus, K, seed) so a replication catches drift.`;
+`preconditions_checked` = `records GGUF-cached/logprob-server/corpus checks; a missing resource emits blocked_, never a fabricated cache.`
+
+### SCENARIO-VERIFY-5016: Shared Cache Round-Trips And Resumes
+
+Given cached `gemma-4-12B-it-GGUF`, a GPU-0 llama-server that returns
+logprobs/top-logprobs, and at least 200 cached MuSR rows, when Exp 5016 runs,
+then it writes a resumable JSONL cache with at least 200 MuSR question rows,
+each carrying at least K=5 candidates with per-token logprobs and
+`uprm_marker_logprobs`, writes a terminal artifact with
+`candidate_cache_built=true`, and sets `honest_verdict` to
+`success_logprob_candidate_cache_built_musr_n<N>_k<K>`.
+
+Given a partially populated JSONL cache, when Exp 5016 resumes, then it skips
+complete question rows, appends only missing complete question rows, and the
+schema round-trips through JSON without losing candidate logprob telemetry.
+
+If the GGUF cache, logprob-capable server, or MuSR corpus is missing, then Exp
+5016 writes a blocked artifact naming the missing resource and exits without
+claiming `candidate_cache_built=true`.
+
+## Implementation Status (REQ-VERIFY-5016)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5016 | Implemented (`python/carnot/experiment_5016_shared_logprob_candidate_cache.py`, `results/experiment_5016_shared_logprob_candidate_cache.json`) | Implemented (`tests/python/test_experiment_5016_shared_logprob_candidate_cache.py`) |
+
 ### REQ-VERIFY-5005: EBRM Uncertainty-Aware MuSR Selector
 
 The repository SHALL provide Exp 5005 at
