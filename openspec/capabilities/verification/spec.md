@@ -21625,3 +21625,88 @@ claiming a trained smoke loss or checkpoint.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5030 | Implemented (`python/carnot/moat_trainer.py`, `python/carnot/experiment_5030_moat_trainer_module.py`, `results/experiment_5030_moat_trainer_module.json`) | Implemented (`tests/python/test_moat_trainer.py`) |
+
+### REQ-VERIFY-5031: Trained LoRA-EBM Holistic-Quality Scorer Beats Genuine SC On MuSR (PHASE D1)
+
+The repository SHALL provide Exp 5031 (PHASE D1) at
+`python/carnot/experiment_5031_lora_ebm_scorer_musr_v3.py` which TRAINS the real
+arXiv:2605.18871 LoRA-EBM holistic-quality scorer through the reusable
+`carnot.moat_trainer` module (REQ-VERIFY-5030) and tests whether a TRAINED
+oracle-distinct verifier beats the GENUINE tuned self-consistency baseline on
+MuSR, writing `results/experiment_5031_lora_ebm_scorer_musr_v3.json`.
+
+The base SHALL be resolved via `moat_trainer.resolve_trainable_base()` (NEVER a
+hardcoded id — that fixes the `Qwen/Qwen3.5-1.7B` 404 class of REQ-VERIFY-5017).
+The contrastive corpus SHALL be built from candidate TEXT plus gold with NO
+logprobs and NO dependency on the B2 shared-logprob cache: (a) the cached FoVer
+step-labeled pairs (`data/fover_train_v4.json` — correct vs incorrect reasoning
+steps) and (b) the cached MuSR candidates
+(`results/distributional_energy_verifier_musr_checkpoints/`) labeled by gold FOR
+TRAINING ONLY (the gold-answer candidate is the positive, a wrong-answer
+candidate is the negative). Gold BUILDS pairs (standard RM/EBM training); the
+verifier SHALL remain oracle-distinct at INFERENCE — it scores reasoning/answer
+quality given the narrative and NEVER reads `gold`/`answer_index`/`model_id`.
+
+Training SHALL run via `moat_trainer.train_energy_head` on conductor GPU 0 (CUDA
+device 0, `CUDA_VISIBLE_DEVICES=0`, no iGPU pinning) for 1-2 epochs with
+per-epoch checkpoints. At EVAL the trained scorer SHALL re-score the cached MuSR
+candidates (n>=200 questions) via `moat_trainer.score_candidates`, select the
+min-energy candidate's answer per question, and compare accuracy against the
+GENUINE K-way tuned self-consistency baseline (≈0.585 via
+`moat_benchmark_harness`, NOT a k=1 strawman) with a paired bootstrap CI95 and
+McNemar exact p, and confirm the abstention-degeneracy guard does not fire.
+
+Before any training Exp 5031 SHALL check that the `moat_trainer` module imports,
+that the REQ-VERIFY-5030 smoke passed (`smoke_passed=true` in
+`results/experiment_5030_moat_trainer_module.json`), that CUDA is available, that
+a resolver base is cached, and that the cached MuSR candidates and FoVer pairs
+exist; a missing resource SHALL write an honest `honest_verdict=blocked_<resource>`
+artifact with `preconditions_checked` and stop without fabricating an accuracy.
+
+The terminal artifact SHALL include `honest_verdict` (terminal prefix
+`success_lora_ebm_beats_sc_musr_<delta>` on a win, `complete_lora_ebm_no_win_musr_<delta>_ci_incl_0`
+on a clean null, `blocked_lora_ebm_train_did_not_run` on a failed/skeleton
+train), bare bool `scorer_trained`, `train_loss`, `n_pairs`, `base_used`, bare
+bool `verifier_is_oracle` (false), bare bool `headroom_present`,
+`trained_scorer_accuracy`, `genuine_tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `n_questions`, `oracle_at_k`, `model_specs`,
+`inference_substrate="live_llm_inference"`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `duration_s`,
+`field_principles`, and `spec_refs`. `scorer_trained` SHALL be true ONLY when the
+model ACTUALLY trained (`train_loss` non-null, `n_pairs>0`, `duration_s>60`); a
+skeleton is a FAILED execution (`blocked_lora_ebm_train_did_not_run`), not a
+null. The moat win-condition SHALL be `scorer_trained` AND
+`delta_vs_tuned_sc>0` AND `paired_ci95` excludes 0 AND `mcnemar_p<0.05` AND
+`headroom_present` AND `verifier_is_oracle=false`. A clean trained null (CI
+includes 0) tightens the moat honestly.
+
+### SCENARIO-VERIFY-5031: Trained Scorer Is Evaluated Oracle-Distinct Against Genuine SC
+
+Given the `moat_trainer` module imports, the REQ-VERIFY-5030 smoke passed, CUDA
+is available on conductor GPU 0, a resolver base (`Qwen/Qwen3.5-2B`) is cached,
+the cached MuSR candidate checkpoints (n>=200) exist, and
+`data/fover_train_v4.json` exists, when Exp 5031 runs, then it builds a non-empty
+contrastive corpus (FoVer + gold-labeled MuSR pairs), `train_energy_head` trains
+the LoRA energy head for >60s and checkpoints, `score_candidates` re-scores the
+cached MuSR candidates, the harness selects the min-energy answer per question
+oracle-distinct (no gold/answer_index read), and the runner writes a terminal
+artifact with `scorer_trained=true`, a non-null `train_loss`, `n_pairs>0`,
+`base_used` naming the resolved base, `verifier_is_oracle=false`,
+`headroom_present=true`, `genuine_tuned_sc_accuracy`≈0.585, a paired CI95 and
+McNemar p versus genuine tuned SC, and every required field. A win
+(`delta>0`, CI95 excludes 0, `mcnemar_p<0.05`, headroom present) yields a
+`success_` verdict; a clean null yields `complete_lora_ebm_no_win_musr_..._ci_incl_0`.
+
+If the `moat_trainer` module is unimportable, the REQ-VERIFY-5030 smoke did not
+pass, CUDA is unavailable, no resolver base is cached, the cached MuSR
+candidates are missing, or `data/fover_train_v4.json` is missing, then Exp 5031
+writes a blocked artifact naming the missing resource, records the precondition
+checks, keeps `scorer_trained=false`, and exits without claiming a trained
+accuracy. If a scorer tries to read `gold`/`answer_index` at inference, the run
+writes a blocked `oracle_distinctness_violation` artifact.
+
+## Implementation Status (REQ-VERIFY-5031)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5031 | Implemented (`python/carnot/experiment_5031_lora_ebm_scorer_musr_v3.py`, `results/experiment_5031_lora_ebm_scorer_musr_v3.json`) | Implemented (`tests/python/test_experiment_5031_lora_ebm_scorer_musr_v3.py`) |
