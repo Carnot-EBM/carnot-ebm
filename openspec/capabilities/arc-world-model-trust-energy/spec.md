@@ -14074,3 +14074,71 @@ required, `solve_provenance=live_agent_self_discovery`,
 `inference_substrate=verifier_ensemble_against_cached_candidates`,
 `verifier_is_oracle=true`, and the reproducibility checksum matches the content
 hash of the game, plan, and claimed level payload.
+
+### REQ-ARC-WMTE-5054: ARC Live-Path Self-Discovery Duplicate Guard
+
+Experiment 5054 SHALL run one bounded live-path self-discovery attempt through
+the generic scored-agent path, not through offline source-reading,
+ground-truth BFS, or a hand-built per-game adapter. Before any attempt, it SHALL
+read `ops/arc_solve_registry.yaml`, compare the requested target against the
+registry's reproduced depth, and either rotate to an unsolved next-level target
+or write a terminal `blocked_duplicate_target` artifact. A target SHALL be
+treated as duplicate when its requested target level is already less than or
+equal to the registry's `levels_reproduced`; previously recorded dry
+next-level dead ends SHALL be skipped before spending the live-agent budget.
+
+Experiment 5054 SHALL write
+`results/experiment_5054_arc_live_path_self_discovery.json` with required
+top-level fields `honest_verdict`, `solve_provenance`, `target_game`,
+`registry_precheck_passed`, `live_agent_attempts`, `new_levels_banked`,
+`offline_reproduced`, `duplicate_solve_avoided`,
+`reproducible_total_levels_before`, and
+`reproducible_total_levels_after`. The `solve_provenance` value SHALL be one of
+`live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`, and any
+headline banked solve SHALL require `solve_provenance=live_agent_self_discovery`
+with runtime-attempt evidence showing that the plan came from the live agent's
+own action trace.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success_<game>_levelup_banked only for a strict live-agent reproduced level, complete_<game>_no_new_level_residual_* for honest no-bank, blocked_* for failed preconditions."
+- `solve_provenance`: principle "one of live_agent_self_discovery, development_proxy, outer_loop_re; headline credit requires live_agent_self_discovery with runtime trace evidence."
+- `target_game`: principle "selected unsolved next-level target after registry duplicate/dead-end precheck."
+- `registry_precheck_passed`: principle "bare bool: false only when duplicate or malformed registry preconditions block."
+- `live_agent_attempts`: principle "the bounded E3AgentPolicy runtime attempts; these are action traces from the live path, not offline source-reading, per-game BFS, or hand-built adapters."
+- `new_levels_banked`: principle "bare int: increments only for strict reproduction-gated progress beyond registry depth."
+- `offline_reproduced`: principle "bare bool: true only when the live-agent trace passes arc_solver_kit.reproduce."
+- `duplicate_solve_avoided`: principle "bare bool: true when already-banked or duplicate-depth outcomes are not credited."
+- `reproducible_total_levels_before`: principle "registry reproducible_total_levels before the attempt."
+- `reproducible_total_levels_after`: principle "before + new_levels_banked; unchanged for no-bank and blocked artifacts."
+- `reproducibility_checksum`: principle "content hash of target selection, provenance, live attempts, and bank summary."
+
+Experiment 5054 SHALL count a new bank only when the live-agent action trace
+reproduces through the executable offline gate and reaches a level strictly
+deeper than the selected target game's registry depth. Reaching only already
+banked levels SHALL keep `new_levels_banked=0`,
+`duplicate_solve_avoided=true`, and the reproducible total unchanged.
+
+#### SCENARIO-ARC-WMTE-5054-DUPLICATE-TARGET-GUARD
+
+Given the requested current target is already reproduced in the ARC solve
+registry
+When Experiment 5054 runs the registry precheck
+Then it does not spend a live-agent attempt on that duplicate target and either
+rotates to an unsolved next-level target or writes `blocked_duplicate_target`.
+
+#### SCENARIO-ARC-WMTE-5054-PROVENANCE-GATE
+
+Given Experiment 5054 validates a result artifact
+When `solve_provenance` is not one of the approved provenance values, or a
+success artifact lacks live-agent self-discovery provenance
+Then artifact validation fails closed before a solve can be credited.
+
+#### SCENARIO-ARC-WMTE-5054-STABLE-ARTIFACT
+
+Given Experiment 5054 completes or blocks
+When it writes `results/experiment_5054_arc_live_path_self_discovery.json`
+Then all required schema fields are present, duplicate-depth attempts do not
+increment the reproducible total, and the reproducibility checksum matches the
+content hash of the selected target, live-agent attempts, provenance, and banked
+level summary.
