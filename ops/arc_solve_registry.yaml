@@ -1,5 +1,5 @@
 schema_version: 1
-updated: '2026-06-29'
+updated: '2026-06-30'
 general_gotchas:
 - id: offline_is_a_simulator
   note: Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero
@@ -1221,6 +1221,7 @@ games:
   - Use fresh-env branching; reuse-one-env replay can stop at the L1 seed even though the full L1+L2 label sequence reproduces on a fresh offline arcade.
   dead_ends:
   - Pre-adapter arc_loop_solve --game cn04 returned needs_per_game_RE; broad graph exploration preserved L1 but did not derive the L2 marker-pair delta.
+  - 'Exp5012 cn04 no-bank no_grounded_l4_delta: complete_cn04_no_new_level_residual_no_grounded_l4_delta.'
   latest_exp4915_levelup_attempt:
     artifact: results/experiment_4915_levelup_attempt.json
     loop_artifact: results/arc_loop_solve_cn04.json
@@ -1230,6 +1231,16 @@ games:
     solve_provenance: live_agent_self_discovery
     target_rotation: rotated_off_m0r0_dc22_g50t_s5i5_r11l_and_a3_vc33
     reproducibility_checksum: 98a1e05492d2083832b4218271dc72102521b3424be591e5ad286436543af75c
+  latest_exp5012_levelup_attempt:
+    artifact: results/experiment_5012_levelup_attempt.json
+    loop_artifact: results/arc_loop_solve_cn04.json
+    offline_reproduced: false
+    reproduced_levels: 3
+    new_levels_banked: 0
+    residual_cause: no_grounded_l4_delta
+    solve_provenance: live_agent_self_discovery
+    target_rotation: sc25_recorded_l6_dead_end_then_cn04_l4_before_lp85_alt
+    reproducibility_checksum: b818a5fd174436b543c9b6663ab33d9cfe15b4435b7358ebbe6728215bc38043
 - game: m0r0
   reproducibility: reproduced
   levels_reproduced: 2
