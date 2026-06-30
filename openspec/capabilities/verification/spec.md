@@ -20910,6 +20910,97 @@ includes zero, then `honest_verdict` SHALL start with
 not actually run, the artifact SHALL use `blocked_lora_ebm_train_did_not_run`
 and SHALL NOT retire the arm as a clean null.
 
+## Implementation Status (REQ-VERIFY-5017)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5017 | Implemented (`python/carnot/experiment_5017_lora_ebm_scorer_musr_v2.py`, `results/experiment_5017_lora_ebm_scorer_musr_v2.json`) | Implemented (`tests/python/test_experiment_5017_lora_ebm_scorer_musr_v2.py`) |
+
+### REQ-VERIFY-5018: uPRM Replication V2 From Shared Logprob Cache
+
+The repository SHALL provide Exp 5018 at
+`python/carnot/experiment_5018_uprm_replication_v2.py` to consume the Exp 5016
+shared MuSR candidate cache at
+`results/experiment_5016_shared_logprob_candidate_cache_musr.jsonl`, compute
+the arXiv:2605.10158 uPRM first-error process score from the generator's own
+next-token marker probabilities, evaluate the selected candidate answer against
+gold only after scoring, and write
+`results/experiment_5018_uprm_replication_v2.json`.
+
+Before scoring, the runner SHALL write a deliverable-first schema skeleton and
+SHALL check whether the B2 cache contains at least 200 MuSR questions, at least
+K=5 candidates per question, and complete per-candidate token logprobs plus
+`uprm_marker_logprobs` with both `+` and `-` marker alternatives. If the primary
+cache logprobs are incomplete, the runner MAY use an LC-ERD (arXiv:2605.24005)
+consistency fallback only when explicit fallback inputs exist; the fallback
+SHALL keep the no-model-id oracle-distinct audit. If both the B2 cache and
+LC-ERD fallback are missing, the terminal artifact SHALL use
+`honest_verdict=blocked_<resource>`, record `preconditions_checked`, keep
+`verifier_is_oracle=false`, and SHALL NOT fabricate accuracy, CI, McNemar, or
+headroom claims.
+
+When the uPRM logprob path is available, each candidate SHALL be scored with
+`S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t`, where `p^+_t` and `p^-_t` are
+the generator LLM next-token probabilities of `+` and `-` marker tokens after
+step `t`, renormalized over `{+,-}`. The selector SHALL use the mean no-error
+log-likelihood `S(T+1)/T` and SHALL rank candidates through the shared guarded
+candidate view without reading gold, answer index, answer choice, or model
+identity fields. The run SHALL evaluate with the B1-fixed shared moat harness,
+including genuine tuned self-consistency, oracle@K, paired bootstrap CI95, and
+McNemar statistics.
+
+The terminal artifact SHALL include `honest_verdict`, `verifier_is_oracle`,
+`headroom_present`, `uprm_selection_accuracy`, `genuine_tuned_sc_accuracy`,
+`delta_vs_tuned_sc`, `paired_ci95`, `mcnemar_p`, `scoring_path`,
+`uprm_score_methodology_note`, `n_questions`, `oracle_at_k`, `model_specs`,
+`inference_substrate`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `oracle_distinctness_enforced`,
+`adversarial_verify_clean`, `adversarial_verify_flags`,
+`summarize_artifact_exit_code`, `duration_s`, `field_principles`, and
+`spec_refs`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; a win is success_uprm_beats_sc_musr_<delta>, a clean null is complete_uprm_no_win_musr_<delta>_ci_incl_0.`;
+`verifier_is_oracle` = `false -- uPRM is UNSUPERVISED (scored from the generator's own logprobs); it never reads gold (must pass check_circular_moat_overclaim).`;
+`headroom_present` = `true required for an informative result vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard).`;
+`uprm_selection_accuracy` = `the oracle-distinct selection accuracy of the uPRM process score (the headline).`;
+`genuine_tuned_sc_accuracy` = `the B1 GENUINE K-way tuned-SC (NOT k=1) -- the honest baseline to beat.`;
+`delta_vs_tuned_sc` = `uprm_selection_accuracy - genuine_tuned_sc_accuracy; the paper reports up to +0.069.`;
+`paired_ci95` = `paired bootstrap CI95 of the delta; a win requires CI95 excluding 0.`;
+`mcnemar_p` = `McNemar paired p; a win requires p<0.05.`;
+`scoring_path` = `uprm_logprob (primary) or lc_erd_consistency (fallback) -- which path scored; the LC-ERD path keeps the no-model-id audit.`;
+`uprm_score_methodology_note` = `the exact arXiv:2605.10158 first-error formula (so a third party can replicate) + the unsupervised-not-circular justification.`;
+`n_questions` = `>=200 for the headline delta (sample-size rigor).`;
+`model_specs` = `the cached-candidate generator (gemma-4-12B-it-GGUF) -- the methodology stamp.`;
+`inference_substrate` = `verifier_ensemble_against_cached_candidates (scores the B2 cached candidates; 1s floor) -- declare live_llm_inference ONLY if it regenerates fresh.`;
+`random_seed` = `determinism for the bootstrap.`;
+`preconditions_checked` = `records the B2-cache / LC-ERD-fallback checks; a missing cache+fallback emits blocked_.`
+
+### SCENARIO-VERIFY-5018: uPRM Selects From Cache Or Blocks Honestly
+
+Given the Exp 5016 shared logprob cache contains at least 200 MuSR rows with at
+least K=5 complete candidates per row, when Exp 5018 runs, then it writes a
+schema skeleton first, scores candidates with the uPRM logprob path, selects
+the best process-score candidate per row, evaluates only after selection, runs
+adversarial artifact verification plus artifact summarization, and writes a
+terminal JSON artifact with `scoring_path="uprm_logprob"` and every required
+field.
+
+If uPRM selection beats genuine tuned-SC with paired CI95 excluding zero,
+McNemar `p<0.05`, `verifier_is_oracle=false`, and `headroom_present=true`, then
+`honest_verdict` SHALL start with `success_uprm_beats_sc_musr_`. If the uPRM
+selection does not beat genuine tuned-SC and the paired CI includes zero, then
+`honest_verdict` SHALL start with `complete_uprm_no_win_musr_` and include
+`_ci_incl_0`. If no complete B2 cache and no LC-ERD fallback inputs exist, then
+the run SHALL write a blocked artifact naming the missing resource and exit
+without claiming a clean null.
+
+## Implementation Status (REQ-VERIFY-5018)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5018 | Implemented (`python/carnot/experiment_5018_uprm_replication_v2.py`, `results/experiment_5018_uprm_replication_v2.json`) | Implemented (`tests/python/test_experiment_5018_uprm_replication_v2.py`) |
+
 ### REQ-VERIFY-5005: EBRM Uncertainty-Aware MuSR Selector
 
 The repository SHALL provide Exp 5005 at

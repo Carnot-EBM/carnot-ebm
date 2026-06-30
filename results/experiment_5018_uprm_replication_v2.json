@@ -1,0 +1,99 @@
+{
+  "adversarial_verify_clean": false,
+  "adversarial_verify_flags": [],
+  "candidate_cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5016_shared_logprob_candidate_cache_musr.jsonl",
+  "delta_vs_tuned_sc": null,
+  "duration_s": 0.000597,
+  "experiment": "experiment_5018_uprm_replication_v2",
+  "experiment_id": 5018,
+  "field_principles": {
+    "delta_vs_tuned_sc": {
+      "principle": "uprm_selection_accuracy - genuine_tuned_sc_accuracy; the paper reports up to +0.069."
+    },
+    "genuine_tuned_sc_accuracy": {
+      "principle": "the B1 GENUINE K-way tuned-SC (NOT k=1) -- the honest baseline to beat."
+    },
+    "headroom_present": {
+      "principle": "true required for an informative result vs the GENUINE tuned-SC (FALSE_NEGATIVE_RISK guard)."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; a win is success_uprm_beats_sc_musr_<delta>, a clean null is complete_uprm_no_win_musr_<delta>_ci_incl_0."
+    },
+    "inference_substrate": {
+      "principle": "verifier_ensemble_against_cached_candidates (scores the B2 cached candidates; 1s floor) -- declare live_llm_inference ONLY if it regenerates fresh."
+    },
+    "mcnemar_p": {
+      "principle": "McNemar paired p; a win requires p<0.05."
+    },
+    "model_specs": {
+      "principle": "the cached-candidate generator (gemma-4-12B-it-GGUF) -- the methodology stamp."
+    },
+    "n_questions": {
+      "principle": ">=200 for the headline delta (sample-size rigor)."
+    },
+    "paired_ci95": {
+      "principle": "paired bootstrap CI95 of the delta; a win requires CI95 excluding 0."
+    },
+    "preconditions_checked": {
+      "principle": "records the B2-cache / LC-ERD-fallback checks; a missing cache+fallback emits blocked_."
+    },
+    "random_seed": {
+      "principle": "determinism for the bootstrap."
+    },
+    "scoring_path": {
+      "principle": "uprm_logprob (primary) or lc_erd_consistency (fallback) -- which path scored; the LC-ERD path keeps the no-model-id audit."
+    },
+    "uprm_score_methodology_note": {
+      "principle": "the exact arXiv:2605.10158 first-error formula (so a third party can replicate) + the unsupervised-not-circular justification."
+    },
+    "uprm_selection_accuracy": {
+      "principle": "the oracle-distinct selection accuracy of the uPRM process score (the headline)."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- uPRM is UNSUPERVISED (scored from the generator's own logprobs); it never reads gold (must pass check_circular_moat_overclaim)."
+    }
+  },
+  "genuine_tuned_sc_accuracy": null,
+  "headroom_present": false,
+  "honest_verdict": "blocked_b2_logprob_cache",
+  "inference_substrate": "precondition_check_only",
+  "mcnemar_p": null,
+  "model_specs": {
+    "cached_candidate_generator": "gemma-4-12B-it-GGUF",
+    "candidate_cache_schema": "carnot.shared_logprob_candidate_cache.row.v1",
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "requires_token_logprobs": true,
+    "requires_uprm_marker_logprobs": true
+  },
+  "n_questions": 0,
+  "oracle_at_k": null,
+  "oracle_distinctness_enforced": false,
+  "paired_ci95": null,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "detail": "RuntimeError: only 0 uPRM-ready B2 cache rows available; need 200",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5016_shared_logprob_candidate_cache_musr.jsonl",
+      "resource": "b2_logprob_cache"
+    },
+    {
+      "available": false,
+      "detail": "no LC-ERD fallback input files found",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5018_lc_erd_fallback_inputs.jsonl",
+      "resource": "lc_erd_fallback_inputs"
+    }
+  ],
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:fa8b0c49e72079e97f3cbce35167cffbc24464e7ca4994340c39aa08aac62586",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5018_uprm_replication_v2.json",
+  "schema": "carnot.experiment_5018_uprm_replication_v2.v1",
+  "scoring_path": "blocked",
+  "spec_refs": [
+    "REQ-VERIFY-5018",
+    "SCENARIO-VERIFY-5018"
+  ],
+  "summarize_artifact_exit_code": null,
+  "uprm_score_methodology_note": "arXiv:2605.10158 uPRM scores a candidate first-error position j for trajectory steps y_1..y_T as S(j)=1[j<=T] log p^-_j + sum_{t<j} log p^+_t, where p^+_t and p^-_t are the generator LLM next-token probabilities of '+' and '-' marker tokens after step t, renormalized over {+,-}. This v2 runner consumes the Exp 5016 cached generator logprobs, never gold, to score each candidate by the mean no-error log-likelihood S(T+1)/T; gold is read only after selection for evaluation, so the selector is unsupervised and oracle-distinct.",
+  "uprm_selection_accuracy": null,
+  "verifier_is_oracle": false
+}
