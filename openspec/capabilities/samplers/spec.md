@@ -924,3 +924,47 @@ PT are compared on the same instances
 **And** beta-axis and penalty-axis swap bookkeeping is recorded
 **And** `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` is
 written with `hardware_speedup_claimed=false` and a terminal honest verdict.
+
+### REQ-SAMPLE-5129: Adaptive HUBO/p-Spin 2D PT Temperature Ladder
+
+Carnot MUST extend the exact-checked CPU HUBO/p-spin 2D parallel-tempering
+reference with adaptive inverse-temperature ladder optimization while
+preserving exact-label authority and detailed-balance diagnostics.
+
+Sub-requirements:
+- REQ-SAMPLE-5129-1: The adaptive ladder update SHALL keep inverse
+  temperatures positive and monotonically ordered, with fixed endpoints unless
+  explicitly configured otherwise.
+- REQ-SAMPLE-5129-2: The adaptive sampler SHALL record beta-axis and
+  penalty-axis swap acceptance rates, per-sweep residual energy against exact
+  enumeration, round-trip proxies, and local reversibility or detailed-balance
+  sanity checks.
+- REQ-SAMPLE-5129-3: Exp 5129 SHALL load or reproduce the Exp 5116 fixed-grid
+  baseline on the same tiny exact-enumerable instance families.
+- REQ-SAMPLE-5129-4: Exp 5129 SHALL run exact enumeration for every tiny
+  instance and preserve optimum labels before reporting adaptive readiness.
+- REQ-SAMPLE-5129-5: The terminal artifact
+  `results/experiment_5129_hubo_adaptive_2dpt_v470.json` SHALL include
+  `experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+  `duration_s`, `exp5116_baseline_loaded`, `instance_families`,
+  `exact_enumeration_checked`, `adaptive_temperature_config`,
+  `swap_acceptance_rates`, `residual_energy_by_sweep`, `optimum_hit_rate`,
+  `detailed_balance_sanity`, `best_energy_delta_vs_baselines`,
+  `adaptive_2dpt_ready`, `hardware_speedup_claimed`, `flagged_adversarial`,
+  `conductor_modified`, and `tests_run`.
+- REQ-SAMPLE-5129-6: `adaptive_2dpt_ready` SHALL be true only when exact labels
+  are preserved, no hardware speedup is claimed, and at least one mixing or
+  energy metric improves over the fixed-grid baseline without harmful energy or
+  optimum-hit regressions.
+
+### SCENARIO-SAMPLE-5129: Adaptive HUBO 2D PT Artifact
+
+**Given** the Exp 5116 tiny exact-checkable HUBO/p-spin instance families
+**When** Exp 5129 runs adaptive inverse-temperature 2D PT on CPU
+**Then** every instance is exact-enumerated before adaptive metrics are gated
+**And** the adaptive beta ladder remains positive and monotonically ordered
+**And** residual-energy, swap-acceptance, round-trip, and detailed-balance
+telemetry are recorded
+**And** `results/experiment_5129_hubo_adaptive_2dpt_v470.json` is written with
+`hardware_speedup_claimed=false`, `conductor_modified=false`, and a terminal
+honest verdict.
