@@ -14142,3 +14142,72 @@ Then all required schema fields are present, duplicate-depth attempts do not
 increment the reproducible total, and the reproducibility checksum matches the
 content hash of the selected target, live-agent attempts, provenance, and banked
 level summary.
+
+### REQ-ARC-WMTE-5067: ARC Live-Path Self-Discovery No-Duplicate Artifact
+
+Experiment 5067 SHALL repeat the bounded live-path self-discovery discipline
+from Experiment 5054 while treating earlier live-path no-bank artifacts as
+precheck evidence. Before spending the live-agent budget, it SHALL read
+`ops/arc_solve_registry.yaml`, consult prior
+`results/*_arc_live_path_self_discovery.json` artifacts, skip already
+reproduced target depths, skip recorded dry next-level dead ends, and skip a
+target level whose same live-path mechanism already attempted and failed to
+bank. It SHALL then either rotate to an unsolved next-level target or write a
+terminal blocked/no-bank artifact. The live mechanism SHALL be reachable from
+the scored agent path and SHALL NOT read hidden game source, run offline
+ground-truth BFS, or create a hand-built per-game adapter for the target.
+
+Experiment 5067 SHALL write
+`results/experiment_5067_arc_live_path_self_discovery.json` with required
+top-level fields `honest_verdict`, `registry_precheck_passed`, `target_game`,
+`target_level`, `prior_reproduced_level`, `new_levels_banked`,
+`duplicate_solve_avoided`, `solve_claim`, `solve_provenance`,
+`provenance_evidence`, `reproducible_total_levels_before`,
+`reproducible_total_levels_after`, `model_specs`, and
+`legacy_models_smoke_only`. Any banked solve SHALL require
+`solve_provenance=live_agent_self_discovery`, live-agent runtime evidence, and
+offline reproduction strictly beyond the registry depth. A no-bank artifact
+SHALL still declare `solve_provenance=live_agent_self_discovery` and record the
+attempted path in `provenance_evidence` without crediting a solve.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success_<game>_levelup_banked only for a strict live-agent reproduced level, complete_<game>_no_new_level_residual_* for honest no-bank, blocked_* for failed preconditions."
+- `registry_precheck_passed`: principle "bare bool confirming the registry/prior-artifact duplicate guard ran before target selection."
+- `target_game`: principle "selected unsolved next-level target after registry, prior-artifact, duplicate, and dead-end precheck."
+- `target_level`: principle "the next level attempted for the selected target game."
+- `prior_reproduced_level`: principle "the registry depth before this live-path attempt."
+- `new_levels_banked`: principle "bare int; increments only for strict reproduction-gated progress beyond registry depth."
+- `duplicate_solve_avoided`: principle "bare bool; true when duplicate, prior no-bank, or same-depth outcomes are not credited."
+- `solve_claim`: principle "bare claim object; claimed=true only when the live-agent trace reproduces beyond registry depth."
+- `solve_provenance`: principle "live_agent_self_discovery for live-path attempts; never outer_loop_re for a headline bank."
+- `provenance_evidence`: principle "auditable runtime path showing no hidden source reading, no offline ground-truth BFS, no hand-built adapter, and whether an LLM was invoked."
+- `reproducible_total_levels_before`: principle "registry reproducible_total_levels before the attempt."
+- `reproducible_total_levels_after`: principle "before + new_levels_banked; unchanged for no-bank and blocked artifacts."
+- `model_specs`: principle "records the mandated flagship_moe, flagship_dense, and middle_moe GGUF specs; if no LLM is invoked, records that fact explicitly."
+- `legacy_models_smoke_only`: principle "bare bool; legacy small models are smoke-only and cannot provide live reasoning credit."
+- `reproducibility_checksum`: principle "content hash of target selection, provenance, live attempts, model specs, and bank summary."
+
+#### SCENARIO-ARC-WMTE-5067-REGISTRY-PRIOR-PRECHECK
+
+Given the current target is duplicate, dry, or already attempted by the same
+live-path mechanism
+When Experiment 5067 selects a target
+Then it consults the registry and prior live-path artifacts before any live
+agent attempt and rotates to the first eligible next-level target.
+
+#### SCENARIO-ARC-WMTE-5067-PROVENANCE-GATE
+
+Given Experiment 5067 validates an artifact
+When a solve is claimed without `solve_provenance=live_agent_self_discovery`,
+runtime trace evidence, or strict offline reproduction beyond registry depth
+Then validation fails closed and no new level is banked.
+
+#### SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT
+
+Given Experiment 5067 completes or blocks
+When it writes `results/experiment_5067_arc_live_path_self_discovery.json`
+Then every required field is present, no-bank artifacts keep the reproducible
+total unchanged, mandated GGUF model specs are recorded, legacy models are
+smoke-only, and the reproducibility checksum matches the target, provenance,
+attempt, model, and bank-summary payload.
