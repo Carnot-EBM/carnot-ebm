@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.465",
+  "generated_at": "2026-07-01T05:03:20Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Milestone-scoped timing reports no experiment commits since activation: 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, the idle GPU snapshot is not evidence of wasted compute and DualGPURunner applicability is no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone"
+  ],
+  "improvements_suggested": [
+    "Emit a first-class no-experiment timing status when milestone-scoped timing finds no experiment commits.",
+    "Keep GPU-idle warnings gated on at least one compute-bound timing entry.",
+    "Auto-fill empty slowest-experiment and DualGPURunner sections from the bounded timing block instead of relying on retrospective prose."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an explicit no-data branch to operational retrospective generation.",
+    "Include the empty timing-window reason directly in the generated artifact.",
+    "Preserve the compute-bound gate before making any GPU-idle or DualGPURunner claim."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Because the timing block contains no completed experiments, this retrospective cannot identify a slow compute-bound run or an execution-time bottleneck. The right operational response is to make the empty-window path explicit and avoid importing context from prior milestones."
+}
