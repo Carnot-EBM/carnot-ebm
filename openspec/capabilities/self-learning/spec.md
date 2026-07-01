@@ -16100,3 +16100,75 @@ baseline unless all promotion gates pass.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5092 | Planned (`python/carnot/experiment_5092_fr11_budgeted_onpolicy_memory.py`) | Planned (`tests/python/test_experiment_5092_fr11_budgeted_onpolicy_memory.py`) |
+
+---
+
+## REQ-LEARN-5105: FR-11 SEVerA Search-Verify-Learn Contract-Guarded Memory/SOP Updates
+
+Experiment 5105 SHALL run a governed FR-11 self-learning attempt where memory
+or SOP candidates are searched from current misses or verified traces, verified
+against formal contracts, evaluated on frozen held-out and non-forgetting
+slices, and promoted only when every guard passes. Candidate generation SHALL
+exclude held-out final-answer leakage and SHALL record train/dev/held-out split
+hashes before verification.
+
+The experiment SHALL define and apply formal contracts for provenance, schema
+validity, scope, evidence support, non-regression, TTL/staleness, and
+poison/injection resistance. A candidate SHALL count as contract-passing only
+when all contracts pass. The global promotion gate SHALL forbid promotion
+unless at least one candidate passes all contracts, held-out utility is
+positive, non-forgetting is non-negative, contamination and poison guards pass,
+and the rollback/no-promote arm preserves baseline behavior.
+
+The experiment SHALL compare baseline, prior budgeted memory from Exp 5092,
+and contract-guarded memory/SOP updates on the same held-out split. When live
+LLM proposals, critiques, or replay generations are not invoked, the artifact
+SHALL set `inference_substrate=exact_guarded_self_learning_eval` and
+`llm_invoked=false`. If any LLM proposal, critique, or replay generation is
+invoked, `model_specs` SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` with that provenance recorded separately.
+
+The result artifact SHALL be written to
+`results/experiment_5105_fr11_severa_guarded_memory_v468.json` by
+`python/carnot/experiment_5105_fr11_severa_guarded_memory.py`. It SHALL include
+principle annotations for `honest_verdict`, `duration_s`,
+`inference_substrate`, `preconditions_checked`, `model_specs`,
+`candidate_updates_total`, `contract_pass_count`, `promoted_count`,
+`heldout_delta`, `nonforgetting_delta`, `rollback_guard_passed`,
+`poison_guard_passed`, `contamination_guard_passed`, `formal_contracts`,
+`promotion_decision`, `llm_invoked`, and `flagged_adversarial`. The terminal
+verdict SHALL begin with either
+`success_fr11_severa_guarded_memory_promoted_under_contracts` or
+`complete_fr11_severa_guarded_memory_no_promote_contracts_working`.
+
+### SCENARIO-LEARN-5105-SEVERA-CONTRACT-NO-PROMOTE
+
+**Given** frozen train/dev/held-out IDs and candidate memory/SOP updates derived
+only from current misses or verified traces
+**When** Experiment 5105 runs Search-Verify-Learn
+**Then** the preconditions record split hashes, memory/SOP store path,
+candidate-generation provenance, exact verifier path, contamination guard, and
+rollback path
+**And** candidate payloads do not include held-out final answers.
+
+**Given** candidates with clean provenance, stale metadata, poison-like payloads,
+or unsupported/non-regression-failing evidence
+**When** the formal contract verifier runs
+**Then** only candidates satisfying all provenance, schema, scope, evidence,
+non-regression, TTL/staleness, and poison/injection contracts count toward
+`contract_pass_count`.
+
+**Given** contract-passing updates preserve held-out behavior but do not improve
+the held-out slice over baseline
+**When** the promotion gate evaluates held-out and non-forgetting metrics
+**Then** `promoted_count=0`, `rollback_guard_passed=true`,
+`poison_guard_passed=true`, `contamination_guard_passed=true`,
+`llm_invoked=false`, and the verdict begins with
+`complete_fr11_severa_guarded_memory_no_promote_contracts_working`.
+
+## Implementation Status (Exp 5105)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5105 | Planned (`python/carnot/experiment_5105_fr11_severa_guarded_memory.py`) | Planned (`tests/python/test_experiment_5105_fr11_severa_guarded_memory.py`) |
