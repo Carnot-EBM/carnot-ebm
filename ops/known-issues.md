@@ -1280,6 +1280,53 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### MMLU-PRO FRESH HEADROOM CHECK — FIRST GENUINE HEADROOM FOUND 2026-07-01 (outer-loop, item 2, "generate a small fresh corpus now")
+
+**After three consecutive dead ends this session on the oracle-distinct-headroom-present moat corpus
+search** (MuSR: SC near-ceiling, no headroom; FoVer: headroom claim was a construction artifact of
+`load_fover_domain_pool`'s mode-formula; ConstraintBench/exp5044: candidates are
+`generator_kind="deterministic_solver_backed_variant"`, not real LLM samples) — **and a repo-wide
+grep for any non-deterministic real-LLM-generated multi-candidate pool coming back empty** — generated
+a small, genuinely real corpus from scratch instead of reusing anything cached.
+
+`scripts/experiments/exp_mmlu_pro_fresh_headroom_check.py` /
+`results/experiment_mmlu_pro_fresh_headroom_check.json` (adversarial_verify: 0 flagged). 40 real
+MMLU-Pro questions (TIGER-Lab/MMLU-Pro test split, random sample, 10-way multiple choice — built
+specifically to defeat the ceiling effects that plague base MMLU), K=6 real LLM samples per question
+(temperature=0.8, distinct seed per sample) via gemma-4-12B-it-GGUF.
+
+**Real result (2nd of 2 independent runs, both real GPU compute, qualitatively consistent):
+`oracle_at_k=0.350, sc_vote=0.075, headroom=0.275, CI95=[0.150, 0.425]` — CI clearly excludes 0.**
+This is the FIRST statistically-significant, genuinely-real oracle-distinct headroom found this
+session. `oracle_distinct=true` (ground truth is MMLU-Pro's own human-curated answer, not an
+executable oracle a verifier would replicate).
+
+**Infrastructure incident along the way (fixed, worth recording):** the first generation attempt
+silently ran on CPU for 4+ hours with zero progress in the final stretch — traced to the SHARED
+venv's `llama-cpp-python` being a CPU-only wheel (`llama_supports_gpu_offload()==False`). Fixed by
+reusing the CUDA 12.8 `llama-server` binary already built for the Kaggle ARC submission (via its
+HTTP API, not touching the shared venv/conductor's dependencies) — real GPU throughput went from
+~340s/question to ~32s/question (240 real calls in ~1275s). Also caught and fixed a real answer-
+parsing bug (`"ANSWER:"` contains the letter 'A', which false-matched before ever reaching the real
+answer after the colon — a smoke test where the model's real answer was B initially returned A).
+
+**Honest caveat (do not overclaim):** `sc_vote=0.075` is close to the 10-way random-chance floor
+(0.10) — the zero-shot, no-few-shot, Q4-quantized 12B generator is weak on this specifically-hard
+benchmark. Some headroom likely reflects generator weakness, not purely a subtle-correct-answer-a-
+verifier-could-find signal. `oracle_at_k=0.35` (the correct answer appears among 6 diverse samples
+about a third of the time) is the load-bearing number for verifier-buildability regardless of why
+`sc_vote` itself is low — but any verifier-value claim built on this corpus should ALSO report
+SC-vote-vs-a-stronger-generator as context, so a real verifier win isn't confounded with a separate,
+distinct generator-quality lever.
+
+**Recommended next step (not yet executed, queued):** scale this corpus (n=40 -> a few hundred
+questions, same real-generation methodology) and build a genuinely oracle-distinct verifier (e.g. an
+embedding-based scorer, matching the exp_fover_stepverifier_vs_cheap_baseline.py / MuSR-bootstrap
+pattern) to test whether a learned verifier actually captures this headroom — the open question this
+whole search was for. This is the first candidate corpus in this program that has cleared the
+"genuinely real, statistically significant headroom" bar; it has NOT yet been tested for
+"verifier-beats-cheap-baseline" (the actual moat claim).
+
 ### FOVER STEP-VERIFIER VS CHEAP BASELINE — RESOLVED 2026-07-01 (outer-loop, same session as the NUDGE retraction above)
 
 **The corrected, well-posed FoVer follow-up — actually run, not just drafted.** Replaces the retracted
