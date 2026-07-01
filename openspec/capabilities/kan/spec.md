@@ -560,6 +560,52 @@ reports either `largest_n_reached >= 100` (scales to production) or the exact
 N at which the wall-clock budget was exceeded (does not scale) — without
 extrapolating beyond what was actually measured.
 
+## REQ-KAN-5114: KAN Abstraction-Refinement Post-Wall Diagnostic
+
+The KAN verification tier SHALL provide an Exp 5114 CPU-only post-wall
+diagnostic that changes technique after the Exp 5108 exact-MILP scale wall.
+The diagnostic MUST load the Exp 5108 wall artifact, reuse the Exp 5098 true,
+false-control, and near-margin property pattern, and avoid repeating the same
+exact-MILP scale sweep. It MUST instead use a conservative local/global
+abstraction-refinement certificate over additive KAEM units: bound each unit
+locally, allocate a bounded piece budget by refining the largest local error
+contributors, sum the global conservative bound, and abstain rather than prove
+near-margin properties when the residual abstraction bound consumes the margin.
+
+The diagnostic MUST attempt at least one N larger than Exp 5108's solved ceiling
+and SHOULD include the documented N=100 production reference. It MUST test at
+least three property classes: an expected-true safe property, an expected-false
+property with a counterexample, and a near-margin property that safely abstains.
+It MUST write
+`results/experiment_5114_kan_abstraction_refinement_post_wall_v469.json` with
+these top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `preconditions_checked`,
+`technique_changed_from_exp5108`, `exp5108_baseline_loaded`, `solved_n`,
+`attempted_n`, `certificate_soundness`, `false_property_detected`,
+`near_margin_abstained`, `abstraction_error_bounds`, `post_wall_progress`,
+`seeds_or_checksums`, `flagged_adversarial`, and `tests_run`.
+
+The artifact MUST also report `abstain_rate`, `piece_budget`, `binary_vars`,
+`constraints`, and runtime telemetry. `post_wall_progress` may be true only
+when the method proves or safely abstains at a larger or more realistic N than
+Exp 5108 without unsoundly proving any false-property control. The artifact
+MUST set `inference_substrate="kan_abstraction_refinement_cpu"` and MUST NOT
+claim trained-network soundness, hardware execution, live LLM inference,
+general KAN verifier readiness, or exact-MILP scalability.
+
+### SCENARIO-KAN-5114: Post-Wall Certificate Progress Without False Positives
+
+Given the Exp 5098 property-control pattern and the Exp 5108 wall artifact
+showing N=10 solved and N=20 timed out,
+When the Exp 5114 abstraction-refinement diagnostic runs on CPU,
+Then it loads the Exp 5108 baseline, attempts a larger N using local/global
+error-bounded decomposition rather than exact MILP, verifies only properties
+whose conservative bound is below threshold, emits a counterexample for the
+false-property control, abstains on near-margin cases whose residual
+abstraction bound consumes the margin, reports piece budget, binary-variable,
+constraint, runtime, and checksum telemetry, and sets `post_wall_progress=true`
+only if those controls remain sound at the larger attempted scale.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -595,6 +641,7 @@ extrapolating beyond what was actually measured.
 | REQ-KAN-5091 | Proposed | Exp 5091 target: two-input KAEM PWA/MILP scale telemetry with solver counts, error budgets, and bound tightness. |
 | REQ-KAN-5098 | Proposed | Exp 5098 target: bounded multi-property KAEM PWA/MILP suite with false controls and scale telemetry. |
 | REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
+| REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
