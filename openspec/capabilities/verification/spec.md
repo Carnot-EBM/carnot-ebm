@@ -23571,3 +23571,82 @@ mandated SOTA GGUF IDs must remain present in `model_specs`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5099 | Proposed (`python/carnot/experiment_5099_beaver_prefix_bound_verifier.py`, `results/experiment_5099_beaver_prefix_bound_verifier_v468.json`) | Proposed (`tests/python/test_experiment_5099_beaver_prefix_bound_verifier.py`) |
+
+### REQ-VERIFY-5100: ConstrainPrompt Code Assurance Exact Checks
+
+The repository SHALL provide Exp 5100 at
+`python/carnot/experiment_5100_constrainprompt_code_assurance.py` to prototype
+code-based assurance for prompt-defined constraints over a finite Carnot
+verifier verdict JSON schema and write
+`results/experiment_5100_constrainprompt_code_assurance_v468.json`.
+
+The runner SHALL declare the selected schema path/name, the finite
+prompt-level constraints, the parser/checker backend, and whether any LLM was
+invoked in `preconditions_checked` before executing checks. The selected
+constraint set SHALL contain between five and ten prompt-level constraints and
+SHALL compile each accepted constraint into an executable Python check or
+logical evaluation-tree node. Constraint acceptance SHALL be owned by the
+executable checker, not by hidden judge preference or LLM self-judgment.
+
+The finite schema SHALL be a canonical verifier verdict JSON object with
+fields for `schema`, `verdict`, `confidence`, `evidence_label`,
+`evidence_refs`, `claim_id`, `checker_backend`, `duration_s`, and
+`rationale`. The executable checks SHALL cover required fields and exact
+schema identity, verdict enumeration, confidence/evidence consistency,
+evidence-reference shape, claim-id format, exact-checker backend declaration,
+duration bounds, rationale length, and rejection/abstention evidence
+requirements.
+
+The runner SHALL build positive, negative, and adversarial/no-op fixtures and
+prove that positives are accepted while negatives and adversarial/no-op rows
+are rejected with named failing constraints. If any LLM is used to extract,
+rewrite, or propose constraints or code, `model_specs` MUST include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; proposed code SHALL be included only after
+the executable tests pass, and rejected proposals SHALL be recorded. If no LLM
+is invoked, the same three mandated model IDs SHALL still be recorded as
+`not_invoked_reference_only` methodology declarations.
+
+The terminal artifact SHALL include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `schema_name`, `constraints_total`,
+`executable_constraints_total`, `positive_tests_passed`,
+`negative_tests_passed`, `adversarial_tests_passed`, `rejected_constraints`,
+`llm_invoked`, `exact_checker_backend`, and `flagged_adversarial`. It SHOULD
+also include fixture telemetry, failure summaries, prompt constraints,
+evaluation-tree metadata, validation commands, and a reproducibility checksum.
+
+`honest_verdict` SHALL begin with
+`success_constrainprompt_code_assurance_exact_checks_passed` when all selected
+prompt constraints have executable checks, all positive fixtures pass, all
+negative and adversarial/no-op fixtures reject, no LLM-only authority is used,
+and no adversarial contradiction is flagged. If only a strict subset of
+constraints is executable, it SHALL begin with
+`complete_constrainprompt_assurance_partial_constraints_only` and record the
+rejected constraints. The artifact MUST NOT claim live LLM inference when
+`llm_invoked=false`.
+
+### SCENARIO-VERIFY-5100: Prompt Constraints Become Executable Verdict Checks
+
+Given Exp 5100 runs on the finite verifier verdict JSON schema without a live
+LLM substrate, when the runner executes, then it records the schema path,
+selected prompt constraints, Python JSON parser/checker backend, and
+`llm_invoked=false` preconditions; compiles five to ten prompt-level
+constraints into executable checks; evaluates positive, negative, and
+adversarial/no-op fixture sets; records named failing constraints for every
+rejected row; writes the required terminal JSON artifact; sets
+`exact_checker_backend=python_json_logical_tree`; includes the three mandated
+GGUF model IDs as not-invoked methodology declarations; and emits the terminal
+`success_constrainprompt_code_assurance_exact_checks_passed` verdict without
+modifying `scripts/research_conductor.py`.
+
+If a later bounded LLM proposal path is explicitly enabled, the same artifact
+contract still applies and all proposed checks must pass the executable test
+suite before inclusion; rejected proposals remain listed in
+`rejected_constraints`.
+
+## Implementation Status (REQ-VERIFY-5100)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5100 | Proposed (`python/carnot/experiment_5100_constrainprompt_code_assurance.py`, `results/experiment_5100_constrainprompt_code_assurance_v468.json`) | Proposed (`tests/python/test_experiment_5100_constrainprompt_code_assurance.py`) |
