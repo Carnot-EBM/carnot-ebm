@@ -9791,3 +9791,4 @@ web search: |
 | 2026-07-01 21:07 UTC | PHASE 0 transition -- archive .469 truth, activate | OK | 87 passed, 1 warning in 8.87s |
 | 2026-07-01 21:20 UTC | PHASE R1 source/scope audit -- verify V470 referen | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 21:40 UTC | PHASE A0 runtime gate -- clean local SOTA GGUF com | OK | 86 passed, 1 warning in 7.02s |
+| 2026-07-01 22:03 UTC | PHASE A1 structured pool -- non-FoVer exact-constr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
