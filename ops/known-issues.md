@@ -1314,7 +1314,26 @@ so no `prior_failures`/`operator_override` gymnastics are needed — it simply h
 
 (the full "MOAT REDIRECT 2026-06-30" entry this NUDGE elevates is further below, unchanged.)
 
-### KAN-MILP SCALE STRESS TEST 2026-07-01 (operator-directed investigation, "let's start digging into KAN-MILP") — answer the ONE question 6+ weeks of this lineage never tested
+### KAN-MILP SCALE STRESS TEST — RESOLVED 2026-07-01 (outer-loop, same session: "can we tackle this instead of waiting for the conductor" -> yes)
+
+> **ANSWER: the scale wall is real and it is close.** `exp5108` (`python/carnot/
+> experiment_5108_kan_pwa_milp_scale_stress_test.py`,
+> `results/experiment_5108_kan_pwa_milp_scale_stress_test.json`, REQ-KAN-5108/SCENARIO-KAN-5108,
+> tests green) swept N=5/10/20 with a 300s/solve wall-clock budget (reusing the exp5091/5098
+> encoding unchanged, solving once per N instead of 3x per N -- documented efficiency change, no
+> rigor lost). Result: **N=5 solved in 0.15s; N=10 solved in 120.9s (~800x jump for 2x the units);
+> N=20 TIMED OUT at 300s.** The wall sits between N=10 and N=20 -- an order of magnitude below the
+> real production reference (N=100, the documented low-rank/full-rank KAEM cutover in
+> `verify_repair.py`, REQ-SAMPLE-029). Binary-variable/constraint counts scaled perfectly LINEARLY
+> (3N / ~21N+1) while solve time exploded combinatorially -- the classic MILP NP-hardness
+> signature, not a bug. Adversarial rigor (the false-property control + margin abstention) held at
+> every N that solved. **Honest conclusion: this exact-MILP verification approach does NOT
+> currently scale to Carnot's deployed KAEM configuration.** Do not re-propose more toy-scale
+> (N<=3) KAN-PWA/MILP wins as if they advance this question -- it is now answered. Future formal-
+> verification work on KAN energy models should pursue abstraction-refinement or sampling-bound
+> alternatives instead of more exact-MILP scale attempts, unless a fundamentally different encoding
+> (e.g. LP relaxation + branch-and-bound tuning, or decomposition across independent unit groups)
+> is proposed with a specific reason to expect better scaling.
 
 **Context (outer-loop investigation of the `.467`/`.468` "exact_verifier_pivot" capstone claim).** The
 KAN-PWA/MILP lineage (`exp2051` .. `exp5098`, 2026-05-16 through `.468`, 15+ experiments) formally
