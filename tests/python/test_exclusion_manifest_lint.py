@@ -43,6 +43,22 @@ def _load():
     mod = importlib.util.module_from_spec(spec)
     sys.modules["exclusion_manifest_lint"] = mod
     spec.loader.exec_module(mod)
+    # Pre-cache the REAL failure_ledger module in sys.modules before any test
+    # monkeypatches PROJECT_ROOT: lint()'s lazy `from failure_ledger import ...`
+    # does `sys.path.insert(0, str(PROJECT_ROOT / "scripts"))` using whatever
+    # PROJECT_ROOT is AT CALL TIME -- with PROJECT_ROOT monkeypatched to an
+    # isolated tmp_path (empty scripts/ dir), that import would silently fail
+    # (caught by lint()'s broad except Exception), leaving validate_prior_failures
+    # None and every match forced to the not-valid-priors HARD path regardless
+    # of a task's actual prior_failures content. Importing it here, from the
+    # real scripts/ dir, caches it in sys.modules so the later `from
+    # failure_ledger import ...` inside lint() resolves from cache regardless
+    # of sys.path at call time (failure_ledger itself doesn't read PROJECT_ROOT
+    # at import time -- only FailureLedger.load_from_artifacts(PROJECT_ROOT),
+    # called explicitly with the correct, monkeypatched value, does).
+    sys.path.insert(0, str(repo_root / "scripts"))
+    import failure_ledger  # noqa: F401
+
     return mod
 
 
@@ -147,7 +163,13 @@ class TestBlockedPatternMatched:
         assert matched[0].severity == "WARNING"
         assert matched[0].has_operator_override is True
 
-    def test_valid_prior_failures_downgrades_to_warning(self, isolated_project: Path) -> None:
+    def test_valid_prior_failures_clears_the_check_entirely(self, isolated_project: Path) -> None:
+        """A well-formed prior_failures: block means the task properly addressed
+        the retirement (per Failed-Experiment Rerun Discipline) -- matching
+        CLASS 2 (SCOPE_MATCHED_PRIOR_FAILURE)'s convention, this clears the
+        check entirely (no risk at all), not a downgrade to WARNING. Only
+        operator_override downgrades to WARNING; a valid prior_failures block
+        is a full pass."""
         roadmap = _write_roadmap(
             isolated_project,
             [
@@ -168,9 +190,7 @@ class TestBlockedPatternMatched:
             ],
         )
         risks = _MOD.lint(roadmap)
-        matched = [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]
-        assert len(matched) == 1
-        assert matched[0].severity == "WARNING"
+        assert [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"] == []
 
     def test_matching_is_case_insensitive(self, isolated_project: Path) -> None:
         roadmap = _write_roadmap(
