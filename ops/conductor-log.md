@@ -9766,3 +9766,4 @@ web search: |
 | 2026-07-01 16:44 UTC | Milestone 2026.07.469 activated | OK | 13 tasks queued |
 | 2026-07-01 16:57 UTC | PHASE 0 transition -- archive .468 truth, include  | OK | 91 passed, 1 warning in 7.16s |
 | 2026-07-01 17:16 UTC | PHASE R1 SOTA ingestion -- verify V469 source set  | OK | 110 passed, 1 warning in 8.12s |
+| 2026-07-01 17:32 UTC | PHASE A1 FoVer pool -- build an in-domain n>=150 o | OK | 113 passed, 1 warning in 8.80s |
