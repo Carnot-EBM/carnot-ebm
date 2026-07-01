@@ -9783,3 +9783,5 @@ web search: |
 | 2026-07-01 19:34 UTC | PHASE C2 runtime repair -- root-cause local SOTA G | FAIL | Post-tests failed:  |
 | 2026-07-01 19:36 UTC | PHASE C1 continuous self-learning -- FoVer residua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
 | 2026-07-01 19:36 UTC | PHASE C2 runtime repair -- root-cause local SOTA G | OK | Deliverable already exists in repo |
+| 2026-07-01 19:57 UTC | PHASE C3 hardware continuity -- KV260 residual-ene | OK | 136 passed, 1 warning in 14.68s |
+| 2026-07-01 19:59 UTC | PHASE C1 continuous self-learning -- FoVer residua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
