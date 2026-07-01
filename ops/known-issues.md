@@ -1475,7 +1475,37 @@ This is NEW work (scale was never tested), not a rerun of prior small-N results 
 6+ weeks. Cross-refs: `exp5080`/`exp5091`/`exp5098` (the reusable composition pattern),
 `exp2871` (the honest "no general MILP claim" precedent this task finally resolves either way).
 
-### ARC VALUE-HEAD ENERGY DISTILLATION 2026-06-30 (operator-directed investigation) — attack the CONFIRMED compute-cost bottleneck, not representation/distribution-shift/calibration (already ruled out)
+### ARC VALUE-HEAD ENERGY DISTILLATION — RETRACTED/CLOSED 2026-07-01 (outer-loop, "1 then 2" item 1b): the premise was wrong — this was already tried and already nulled
+
+> **CLOSURE.** Before building the distillation this task called for, checked whether exp4652 (cited
+> below as ONLY a call-frequency fix) already covered cost-PER-CALL reduction too. It did.
+> `results/experiment_4652_value_routing_cost_fix_live.json`: `feature_subset:
+> "cross_game_features_v3:v2_plus_frame_delta"` — exp4652 already used
+> `cross_game_features_v3_value_routing` (`python/carnot/agentic/arc_value_learner.py:462`), a
+> pre-existing cheap feature variant whose docstring states plainly: "Those classes [object-relational,
+> action, predicate-distance] were measured as dead weight for live routing." Measured cost:
+> `per_node_feature_cost_ms: 0.397451`. Measured 2026-07-01 on the real Kaggle sandbox (kernel
+> `carnot-arc-cgf3-diag`) the TRUE full-`cross_game_features_v3` baseline this task's precondition (a)
+> called for: **4283.53 us/call** — 8.8x the component-stats sub-step alone (485.46 us/call), confirming
+> the object-relational/action/predicate-distance steps dominate. exp4652's already-tried distilled
+> subset (397 us/call) is **~10.8x faster than the true full-feature baseline** — a genuine
+> order-of-magnitude speedup, clearing this task's own gate ("ONLY if (a) shows a large, real speedup...
+> re-run the equal-wall-clock A/B"). exp4652 ALREADY ran that live A/B with this exact cost-reduced
+> value head: `live_lift_ci: {"ci95": [0.0, 0.0]}` — an EXACT zero-width interval, `honest_verdict:
+> "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration."` The residual
+> hypotheses it names (distribution-shift, calibration) were THEMSELVES separately tested and nulled
+> (exp4665, exp4616). **Building a new distillation experiment here would have been a doomed rerun of
+> exp4652 under a different name** (Failed-Experiment Rerun Discipline) — caught before building, not
+> after.
+>
+> **Net: all FIVE sub-hypotheses on the selection/value-head axis are now exhausted and nulled** —
+> representation (0.725 LOO-AUROC, already sufficient), distribution-shift (exp4665, driven to ~0),
+> calibration (exp4616, monotonicity 1.0), call-frequency (exp4652 lazy top-k), AND cost-per-call
+> (exp4652's bundled feature-subset arm, this closure). **RETIRE the selection/value-head axis entirely
+> for future ARC milestones** — do not re-propose any lever on this axis without a genuinely new
+> mechanism not covered by the five above. Redirect all future ARC effort to the generation axis
+> (L1-first-contact / candidate-generation wall per `project_arc_l1_first_contact_wall` memory), which
+> is where the actual, still-open headroom lives.
 
 **Do NOT re-propose:** representation improvement (0.725 LOO-AUROC already achieved,
 `docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`), distribution-shift correction
