@@ -9687,3 +9687,4 @@ The contro |
 | 2026-07-01 00:11 UTC | Milestone 2026.06.465 activated | OK | 13 tasks queued |
 | 2026-07-01 00:25 UTC | PHASE 0 transition -- archive .464, activate .465, | OK | 86 passed, 1 warning in 6.95s |
 | 2026-07-01 00:40 UTC | PHASE A1 preflight -- split SOTA model readiness,  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-01 00:56 UTC | PHASE A2 SOTA candidate refresh -- use delayed con | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
