@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.468",
+  "generated_at": "2026-07-01T15:28:08.868174Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "summary": "No data available this milestone: the authoritative timing data reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, the idle GPU snapshot is not evidence of wasted compute-bound execution or a DualGPURunner miss.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No experiment commits were found since activation, so no per-experiment wall-time bottleneck can be ranked from the supplied timing data.",
+    "No compute-bound GPU bottleneck is identifiable because the timing data contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit no-data timing status when a milestone has no experiment commits, including whether the empty window was expected.",
+    "Auto-fill the slowest-experiment, GPU-efficiency, and DualGPURunner sections with no-data answers when experiments_completed is 0.",
+    "Keep GPU idle alerts gated on compute_bound_experiments_count so idle synthesis-only or empty-window snapshots do not become false bottlenecks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an empty-window reason field to the retrospective timing input.",
+    "Trigger an early warning if no experiment artifact lands after milestone activation.",
+    "Preserve compute-bound gating for GPU-idle and DualGPURunner findings."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective intentionally does not reconstruct experiment IDs, durations, or metrics outside the supplied TIMING DATA block. Because that block contains no experiment entries, the compute-bound, GPU-efficiency, and DualGPURunner questions all resolve to no data available this milestone."
+}

@@ -1,0 +1,147 @@
+{
+  "adversarial_rigor_preserved_at_scale": true,
+  "artifact": "experiment_5108_kan_pwa_milp_scale_stress_test",
+  "binary_variable_counts_by_n": {
+    "10": 30,
+    "5": 15
+  },
+  "constraint_counts_by_n": {
+    "10": 211,
+    "5": 106
+  },
+  "duration_s": 120.686887,
+  "experiment": 5108,
+  "field_principles": {
+    "adversarial_rigor_preserved_at_scale": {
+      "principle": "True only if the false-property control and margin abstention BOTH still behave correctly at EVERY successfully-solved N, not just at toy N=2/3 -- a solver behaving correctly at small scale and incorrectly at larger scale would be a serious finding, not silently assumed away."
+    },
+    "duration_s": {
+      "principle": "Total wall-clock for the whole sweep, all N attempted."
+    },
+    "flagged_adversarial": {
+      "principle": "Remains false only when every false-property control was genuinely counterexampled at every N reached -- never force-set to pass."
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict reports whether the sweep reached the production reference scale (N=100) cleanly, or found the actual scale wall first -- either is a valid, reportable answer."
+    },
+    "inference_substrate": {
+      "principle": "Names the exact CPU MILP/SMT solver path -- no live model, no fabrication risk."
+    },
+    "largest_n_reached": {
+      "principle": "The honest ceiling this run found (last N solved to optimal status), for comparison against the realistic KAN model unit count."
+    },
+    "per_n_results": {
+      "principle": "One row per N with full solver telemetry, so the growth curve and any control failures are independently auditable."
+    },
+    "random_seed": {
+      "principle": "Deterministic control-point generation for reproducibility."
+    },
+    "realistic_kan_unit_count_reference": {
+      "principle": "The actual production KAEM cutover (REQ-SAMPLE-029), so largest_n_reached is judged against a real target, not an arbitrary toy number."
+    },
+    "reproducibility_checksum": {
+      "principle": "Hashes the deterministic sweep inputs/outputs, excluding wall-clock time."
+    },
+    "solve_times_s_by_n": {
+      "principle": "The actual measured growth, reported for EVERY N attempted including one that timed out, not just the ones that solved fast."
+    },
+    "solver_timeout_hit": {
+      "principle": "True if any N hit the wall-clock budget without solving -- this IS a real, reportable finding (the scale wall), not a failure to hide."
+    },
+    "unit_counts_tested": {
+      "principle": "The x-axis of the scaling curve; a single N (as every prior iteration in this lineage has done) cannot answer a scaling question."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "complete_kan_pwa_milp_scale_stress_wall_found_at_n5_reason_timeout",
+  "inference_substrate": "exact_milp_solver_cpu",
+  "kan_component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+  "largest_n_reached": 5,
+  "methodology_note": "First scale test in the exp2051..exp5098 KAN-PWA/MILP lineage (6+ weeks, 15+ experiments, all previously toy-scale at N<=3). Solves ONCE per N (not 3x per N like exp5098) and derives the true/false-control/margin-abstention checks from the single certified_upper_bound -- the solver's exact global maximum is identical regardless of which threshold it is later compared against, so this loses no adversarial rigor while avoiding redundant re-solves at large N. Sweep STOPS at the first timeout or non-optimal status rather than continuing to larger (even less likely to succeed) N.",
+  "per_n_results": [
+    {
+      "binary_variable_count": 15,
+      "certified_upper_bound": 4.531925618648529,
+      "constraint_count": 106,
+      "false_control_counterexample": {
+        "certified_upper_bound": 4.531925618648529,
+        "inputs": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "n_units": 5,
+        "threshold": 4.481925618648529,
+        "violation_margin": 0.04999999999999982
+      },
+      "false_control_counterexampled": true,
+      "margin_property_status": "unproved_approximation_budget",
+      "n_units": 5,
+      "pwa_piece_count": 15,
+      "solve_time_s": 0.137605,
+      "solver_status": "optimal",
+      "timed_out": false,
+      "true_property_status": "verified",
+      "witness_inputs": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "binary_variable_count": 30,
+      "certified_upper_bound": null,
+      "constraint_count": 211,
+      "false_control_counterexample": null,
+      "false_control_counterexampled": null,
+      "margin_property_status": null,
+      "n_units": 10,
+      "pwa_piece_count": 30,
+      "solve_time_s": 120.002212,
+      "solver_status": "unknown_timeout",
+      "timed_out": true,
+      "true_property_status": null,
+      "witness_inputs": null
+    }
+  ],
+  "random_seed": 5108,
+  "reached_production_reference": false,
+  "realistic_kan_unit_count_reference": 100,
+  "realistic_kan_unit_count_source": "carnot.pipeline.verify_repair.VerifyRepairPipeline._build_kan_fast_path_model (REQ-SAMPLE-029): 'low-rank for n_vars <= 100' is the documented deployed cutover.",
+  "reproducibility_checksum": "d9bc302d02ec125e926bbe1fa4e019932ca6314bb628d0dd6dcd16f025aef638",
+  "run_date": "20260701",
+  "schema": "carnot.kan_pwa_milp_scale_stress_test.v1",
+  "solve_times_s_by_n": {
+    "10": 120.002212,
+    "5": 0.137605
+  },
+  "solver_timeout_hit": true,
+  "solver_timeout_ms": 120000,
+  "source_artifacts": [
+    "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+    "results/experiment_5098_kan_pwa_milp_scale_v2.json",
+    "results/experiment_5080_kan_pwa_milp_bridge_v466.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5108",
+    "SCENARIO-KAN-5108"
+  ],
+  "tests_run": [
+    ".venv/bin/python -m pytest tests/python/test_experiment_5108_kan_pwa_milp_scale_stress_test.py -q --no-cov"
+  ],
+  "unit_counts_configured": [
+    5,
+    10,
+    20,
+    50,
+    100
+  ],
+  "unit_counts_tested": [
+    5,
+    10
+  ]
+}
