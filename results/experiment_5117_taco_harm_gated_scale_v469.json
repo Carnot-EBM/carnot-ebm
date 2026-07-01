@@ -1,0 +1,4083 @@
+{
+  "average_effort_reduction_ratio_guarded": 0.963671,
+  "baseline_effort": {
+    "backtracks": 16941,
+    "constraint_checks": 60414,
+    "duration_s": 0.027683,
+    "instances": 18,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 17018,
+    "total_effort_score": 77432
+  },
+  "duration_s": 0.055436,
+  "exact_solver_backend": "deterministic_backtracking_finite_domain_csp_cpu",
+  "exp5103_reproduction": {
+    "artifact_sha256": "5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570",
+    "computed": {
+      "adapted_effort": {
+        "backtracks": 134,
+        "constraint_checks": 1195,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 161,
+        "total_effort_score": 1356
+      },
+      "baseline_effort": {
+        "backtracks": 14936,
+        "constraint_checks": 93247,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 14963,
+        "total_effort_score": 108210
+      },
+      "harmful_instance_count": 2,
+      "instances_total": 8
+    },
+    "matches_artifact": true,
+    "recorded": {
+      "adapted_effort": {
+        "backtracks": 134,
+        "constraint_checks": 1195,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 161,
+        "total_effort_score": 1356
+      },
+      "baseline_effort": {
+        "backtracks": 14936,
+        "constraint_checks": 93247,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 14963,
+        "total_effort_score": 108210
+      },
+      "harmful_instance_count": 2,
+      "instances_total": 8
+    },
+    "source_path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json"
+  },
+  "experiment_id": "exp5117-taco-harm-gated-scale-v469",
+  "field_principles": {
+    "baseline_effort": "baseline transparency",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "guarded_effort": "gated comparison",
+    "harmful_instance_count_guarded": "harm mitigation",
+    "harmful_instance_count_unguarded": "harm measurement",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "instance_count": "scale transparency",
+    "milestone": "milestone accountability",
+    "preconditions_checked": "solver preflight accountability",
+    "seeds_or_checksums": "reproducibility",
+    "taco_harm_gate_ready": "decision bool",
+    "tests_run": "verification evidence",
+    "unguarded_effort": "unguarded comparison",
+    "wrong_label_count": "correctness"
+  },
+  "flagged_adversarial": false,
+  "guarded_effort": {
+    "backtracks": 289,
+    "constraint_checks": 2447,
+    "duration_s": 0.000844,
+    "instances": 18,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 366,
+    "total_effort_score": 2813
+  },
+  "harm_definition": [
+    "increased_effort_vs_baseline",
+    "wrong_label",
+    "timeout",
+    "degraded_certificate_quality"
+  ],
+  "harm_gate_rule": "Fallback when pre-solve graph structure and early adaptive telemetry show hub-first ordering on an even wheel, or unnecessary reordering of a complete graph with enough colors.",
+  "harmful_instance_count_guarded": 4,
+  "harmful_instance_count_unguarded": 7,
+  "honest_verdict": "success_taco_harm_gate_ready_exact_labels_preserved",
+  "inference_substrate": "exact_solver_with_harm_gated_adaptive_cpu_heuristic",
+  "instance_count": 18,
+  "methodology_note": "All policy labels and certificates come from complete exact search. The adaptive loop and harm gate only choose a variable order before the final exact solve.",
+  "milestone": "2026.07.469",
+  "per_instance_results": [
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          9,
+          2,
+          2,
+          20,
+          19,
+          18
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          5
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          15.0,
+          8.0,
+          8.0,
+          26.0,
+          25.0,
+          28.0
+        ],
+        "order": [
+          5,
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "relaxed_coloring": [
+          0,
+          1,
+          0,
+          1,
+          1,
+          2
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 76,
+          "constraint_checks": 504,
+          "duration_s": 0.000188,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 76,
+          "total_effort_score": 580
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 10,
+      "density_bucket": "high",
+      "description": "5-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 5,
+          "first_node_degree": 5,
+          "first_node_score": 28.0,
+          "max_conflict_observations": 20,
+          "total_conflict_observations": 70
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "high",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": 5,
+          "max_degree": 5,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 6
+        },
+        "selected_order": [
+          5,
+          3,
+          4,
+          0,
+          1,
+          2
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 28,
+          "constraint_checks": 216,
+          "duration_s": 6.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 28,
+          "total_effort_score": 244
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          5,
+          3,
+          4,
+          0,
+          1,
+          2
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "train_wheel5_odd_unsat",
+      "n_colors": 3,
+      "n_nodes": 6,
+      "split": "train",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 28,
+          "constraint_checks": 216,
+          "duration_s": 7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 28,
+          "total_effort_score": 244
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          5,
+          3,
+          4,
+          0,
+          1,
+          2
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          16,
+          18,
+          0
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          2.0,
+          3.0,
+          2.0,
+          2.0,
+          3.0,
+          24.0,
+          26.0,
+          6.0
+        ],
+        "order": [
+          6,
+          5,
+          7,
+          1,
+          4,
+          0,
+          2,
+          3
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          1,
+          2,
+          2,
+          0,
+          1,
+          2
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          2,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 33,
+          "constraint_checks": 235,
+          "duration_s": 8e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 42,
+          "total_effort_score": 277
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 8,
+      "density_bucket": "medium",
+      "description": "A satisfiable triangle appears after low-degree prefix nodes.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "low",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 6,
+          "first_node_degree": 4,
+          "first_node_score": 26.0,
+          "max_conflict_observations": 18,
+          "total_conflict_observations": 36
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "low",
+          "hub_node": null,
+          "max_degree": 4,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 8
+        },
+        "selected_order": [
+          6,
+          5,
+          7,
+          1,
+          4,
+          0,
+          2,
+          3
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 35
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          6,
+          5,
+          7,
+          1,
+          4,
+          0,
+          2,
+          3
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "train_late_triangle_sat",
+      "n_colors": 3,
+      "n_nodes": 8,
+      "split": "train",
+      "unguarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 35
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          6,
+          5,
+          7,
+          1,
+          4,
+          0,
+          2,
+          3
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "conflict_counts": [
+          3,
+          2,
+          1,
+          0,
+          0,
+          33,
+          33,
+          33,
+          33
+        ],
+        "degree_counts": [
+          4,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          11.0,
+          4.0,
+          3.0,
+          2.0,
+          2.0,
+          55.0,
+          55.0,
+          55.0,
+          55.0
+        ],
+        "order": [
+          5,
+          6,
+          7,
+          8,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          2,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 814,
+          "constraint_checks": 2451,
+          "duration_s": 0.001192,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 814,
+          "total_effort_score": 3265
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "constraint_arities": [
+        2,
+        4
+      ],
+      "constraint_count": 5,
+      "density_bucket": "medium",
+      "description": "A high-degree star hub distracts from a late arity-4 all-different obstruction.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 5,
+          "first_node_degree": 3,
+          "first_node_score": 55.0,
+          "max_conflict_observations": 33,
+          "total_conflict_observations": 138
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            4
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": 0,
+          "max_degree": 4,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 9
+        },
+        "selected_order": [
+          5,
+          6,
+          7,
+          8,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 48,
+          "duration_s": 2.4e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 64
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          5,
+          6,
+          7,
+          8,
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "train_hub_distractor_k4_4",
+      "n_colors": 3,
+      "n_nodes": 9,
+      "split": "train",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 48,
+          "duration_s": 2.5e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 64
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          5,
+          6,
+          7,
+          8,
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "conflict_counts": [
+          7,
+          4,
+          0,
+          27,
+          24,
+          20
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          9.0,
+          6.0,
+          2.0,
+          41.0,
+          38.0,
+          34.0
+        ],
+        "order": [
+          3,
+          4,
+          5,
+          0,
+          1,
+          2
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          1,
+          2,
+          1,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          0,
+          1,
+          1,
+          2,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 5,
+          "constraint_checks": 39,
+          "duration_s": 1.6e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 12,
+          "total_effort_score": 51
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "constraint_arities": [
+        2,
+        3
+      ],
+      "constraint_count": 4,
+      "density_bucket": "medium",
+      "description": "A satisfiable arity-3 all-different block with sparse feeders.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "low",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 3,
+          "first_node_degree": 3,
+          "first_node_score": 41.0,
+          "max_conflict_observations": 27,
+          "total_conflict_observations": 82
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            3
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "low",
+          "hub_node": null,
+          "max_degree": 3,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 6
+        },
+        "selected_order": [
+          3,
+          4,
+          5,
+          0,
+          1,
+          2
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 16,
+          "duration_s": 8e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 7,
+          "total_effort_score": 23
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          3,
+          4,
+          5,
+          0,
+          1,
+          2
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "train_all_diff3_sat",
+      "n_colors": 3,
+      "n_nodes": 6,
+      "split": "train",
+      "unguarded": {
+        "assignment": [
+          1,
+          0,
+          0,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 16,
+          "duration_s": 8e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 7,
+          "total_effort_score": 23
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          3,
+          4,
+          5,
+          0,
+          1,
+          2
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          12,
+          14,
+          2,
+          0,
+          1,
+          1,
+          0,
+          2,
+          2
+        ],
+        "degree_counts": [
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          1
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          14.0,
+          18.0,
+          6.0,
+          4.0,
+          5.0,
+          5.0,
+          4.0,
+          6.0,
+          4.0
+        ],
+        "order": [
+          1,
+          0,
+          2,
+          7,
+          4,
+          5,
+          3,
+          6,
+          8
+        ],
+        "relaxed_coloring": [
+          2,
+          2,
+          0,
+          3,
+          2,
+          0,
+          1,
+          2,
+          3
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 20,
+          "duration_s": 1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 30
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 8,
+      "density_bucket": "low",
+      "description": "A low-density 4-color chain sanity case.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "low",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 1,
+          "first_node_degree": 2,
+          "first_node_score": 18.0,
+          "max_conflict_observations": 14,
+          "total_conflict_observations": 34
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "low",
+          "even_wheel_like": false,
+          "frustration": "low",
+          "hub_node": null,
+          "max_degree": 2,
+          "min_degree": 1,
+          "n_colors": 4,
+          "n_nodes": 9
+        },
+        "selected_order": [
+          1,
+          0,
+          2,
+          7,
+          4,
+          5,
+          3,
+          6,
+          8
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          1,
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 36
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          1,
+          0,
+          2,
+          7,
+          4,
+          5,
+          3,
+          6,
+          8
+        ]
+      },
+      "guarded_harmful": true,
+      "harm_reasons": {
+        "guarded": [
+          "increased_effort_vs_baseline"
+        ],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "train_sparse_chain_4color_sat",
+      "n_colors": 4,
+      "n_nodes": 9,
+      "split": "train",
+      "unguarded": {
+        "assignment": [
+          1,
+          0,
+          1,
+          2,
+          0,
+          1,
+          2,
+          0,
+          1
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 36
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          1,
+          0,
+          2,
+          7,
+          4,
+          5,
+          3,
+          6,
+          8
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          16,
+          0,
+          16,
+          0
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          22.0,
+          6.0,
+          22.0,
+          6.0
+        ],
+        "order": [
+          0,
+          2,
+          1,
+          3
+        ],
+        "relaxed_coloring": [
+          1,
+          3,
+          2,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 22,
+          "duration_s": 8e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 5,
+          "total_effort_score": 27
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 6,
+      "density_bucket": "high",
+      "description": "Complete graph K4 under 4-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "low",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 0,
+          "first_node_degree": 3,
+          "first_node_score": 22.0,
+          "max_conflict_observations": 16,
+          "total_conflict_observations": 32
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": true,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "high",
+          "even_wheel_like": false,
+          "frustration": "low",
+          "hub_node": null,
+          "max_degree": 3,
+          "min_degree": 3,
+          "n_colors": 4,
+          "n_nodes": 4
+        },
+        "selected_order": [
+          0,
+          2,
+          1,
+          3
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          2,
+          1,
+          3
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 22,
+          "duration_s": 8e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 5,
+          "total_effort_score": 27
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          2,
+          1,
+          3
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "train_k4_4color_sat",
+      "n_colors": 4,
+      "n_nodes": 4,
+      "split": "train",
+      "unguarded": {
+        "assignment": [
+          0,
+          2,
+          1,
+          3
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 22,
+          "duration_s": 9e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 5,
+          "total_effort_score": 27
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          2,
+          1,
+          3
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "conflict_counts": [
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          33,
+          33,
+          33,
+          33
+        ],
+        "degree_counts": [
+          8,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          19.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          5.0,
+          2.0,
+          55.0,
+          55.0,
+          55.0,
+          55.0
+        ],
+        "order": [
+          9,
+          10,
+          11,
+          12,
+          0,
+          7,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "relaxed_coloring": [
+          0,
+          2,
+          1,
+          1,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          1,
+          2,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 13054,
+          "constraint_checks": 39183,
+          "duration_s": 0.019648,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 13054,
+          "total_effort_score": 52237
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "constraint_arities": [
+        2,
+        4
+      ],
+      "constraint_count": 9,
+      "density_bucket": "low",
+      "description": "A high-degree star hub distracts from a late arity-4 all-different obstruction.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 9,
+          "first_node_degree": 3,
+          "first_node_score": 55.0,
+          "max_conflict_observations": 33,
+          "total_conflict_observations": 138
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            4
+          ],
+          "density_bucket": "low",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": 0,
+          "max_degree": 8,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 13
+        },
+        "selected_order": [
+          9,
+          10,
+          11,
+          12,
+          0,
+          7,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 48,
+          "duration_s": 2.5e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 64
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          9,
+          10,
+          11,
+          12,
+          0,
+          7,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "dev_hub_distractor_k4_8",
+      "n_colors": 3,
+      "n_nodes": 13,
+      "split": "dev",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 48,
+          "duration_s": 2.5e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 64
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          9,
+          10,
+          11,
+          12,
+          0,
+          7,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          3,
+          13,
+          5,
+          18,
+          9,
+          11,
+          45
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          6
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          9.0,
+          19.0,
+          11.0,
+          24.0,
+          15.0,
+          17.0,
+          57.0
+        ],
+        "order": [
+          6,
+          3,
+          1,
+          5,
+          4,
+          2,
+          0
+        ],
+        "relaxed_coloring": [
+          1,
+          2,
+          1,
+          0,
+          1,
+          0,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 30,
+          "duration_s": 1.3e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 38
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 12,
+      "density_bucket": "medium",
+      "description": "6-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "medium",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 6,
+          "first_node_degree": 6,
+          "first_node_score": 57.0,
+          "max_conflict_observations": 45,
+          "total_conflict_observations": 104
+        },
+        "fallback_reasons": [
+          "even_wheel_hub_first_hurts_exp5103_pattern"
+        ],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": true,
+          "frustration": "medium",
+          "hub_node": 6,
+          "max_degree": 6,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 7
+        },
+        "selected_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "use_adaptive": false
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 30,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 38
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "dev_wheel6_even_sat",
+      "n_colors": 3,
+      "n_nodes": 7,
+      "split": "dev",
+      "unguarded": {
+        "assignment": [
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 45,
+          "duration_s": 1.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 53
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          6,
+          3,
+          1,
+          5,
+          4,
+          2,
+          0
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          22,
+          12,
+          15,
+          8,
+          13,
+          11,
+          17,
+          10,
+          9,
+          9,
+          66
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          10
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          28.0,
+          18.0,
+          21.0,
+          14.0,
+          19.0,
+          17.0,
+          23.0,
+          16.0,
+          15.0,
+          15.0,
+          86.0
+        ],
+        "order": [
+          10,
+          0,
+          6,
+          2,
+          4,
+          1,
+          5,
+          7,
+          8,
+          9,
+          3
+        ],
+        "relaxed_coloring": [
+          1,
+          2,
+          1,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          0,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 48,
+          "duration_s": 1.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 12,
+          "total_effort_score": 60
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 20,
+      "density_bucket": "medium",
+      "description": "10-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "medium",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 10,
+          "first_node_degree": 10,
+          "first_node_score": 86.0,
+          "max_conflict_observations": 66,
+          "total_conflict_observations": 192
+        },
+        "fallback_reasons": [
+          "even_wheel_hub_first_hurts_exp5103_pattern"
+        ],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": true,
+          "frustration": "medium",
+          "hub_node": 10,
+          "max_degree": 10,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 11
+        },
+        "selected_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "use_adaptive": false
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 48,
+          "duration_s": 1.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 12,
+          "total_effort_score": 60
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "dev_wheel10_even_sat",
+      "n_colors": 3,
+      "n_nodes": 11,
+      "split": "dev",
+      "unguarded": {
+        "assignment": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 75,
+          "duration_s": 2.6e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 12,
+          "total_effort_score": 87
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          10,
+          0,
+          6,
+          2,
+          4,
+          1,
+          5,
+          7,
+          8,
+          9,
+          3
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "conflict_counts": [
+          2,
+          0,
+          0,
+          0,
+          36,
+          34,
+          34,
+          34
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4,
+          4
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          4.0,
+          2.0,
+          2.0,
+          2.0,
+          60.0,
+          58.0,
+          58.0,
+          58.0
+        ],
+        "order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          0,
+          0,
+          1,
+          0,
+          2,
+          1
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 643,
+          "constraint_checks": 3135,
+          "duration_s": 0.001259,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 643,
+          "total_effort_score": 3778
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "constraint_arities": [
+        2,
+        4
+      ],
+      "constraint_count": 5,
+      "density_bucket": "medium",
+      "description": "A late arity-4 all-different obstruction after low-degree prefix nodes.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 4,
+          "first_node_degree": 4,
+          "first_node_score": 60.0,
+          "max_conflict_observations": 36,
+          "total_conflict_observations": 140
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            4
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": null,
+          "max_degree": 4,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 8
+        },
+        "selected_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 96,
+          "duration_s": 3.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 112
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "dev_late_k4_unsat",
+      "n_colors": 3,
+      "n_nodes": 8,
+      "split": "dev",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 96,
+          "duration_s": 3.4e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 112
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          2,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          43,
+          43,
+          41,
+          39,
+          4,
+          4,
+          2
+        ],
+        "degree_counts": [
+          4,
+          4,
+          4,
+          3,
+          1,
+          1,
+          1
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          67.0,
+          67.0,
+          65.0,
+          61.0,
+          6.0,
+          6.0,
+          4.0
+        ],
+        "order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          2,
+          0,
+          1,
+          0,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 63,
+          "duration_s": 2.8e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 79
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "constraint_arities": [
+        2,
+        4
+      ],
+      "constraint_count": 4,
+      "density_bucket": "medium",
+      "description": "An arity-4 all-different block with only three colors.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 0,
+          "first_node_degree": 4,
+          "first_node_score": 67.0,
+          "max_conflict_observations": 43,
+          "total_conflict_observations": 176
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            4
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": null,
+          "max_degree": 4,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 7
+        },
+        "selected_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 63,
+          "duration_s": 2.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 79
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "dev_all_diff4_3color_unsat",
+      "n_colors": 3,
+      "n_nodes": 7,
+      "split": "dev",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 63,
+          "duration_s": 2.8e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 79
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          2,
+          2,
+          4,
+          4,
+          2,
+          2
+        ],
+        "conflict_counts": [
+          22,
+          22,
+          41,
+          41,
+          19,
+          19
+        ],
+        "degree_counts": [
+          3,
+          3,
+          5,
+          5,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          44.0,
+          44.0,
+          83.0,
+          83.0,
+          41.0,
+          41.0
+        ],
+        "order": [
+          2,
+          3,
+          0,
+          1,
+          4,
+          5
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          3,
+          1,
+          2,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          2,
+          3,
+          0,
+          1
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 15,
+          "duration_s": 8e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 7,
+          "total_effort_score": 22
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "constraint_arities": [
+        4
+      ],
+      "constraint_count": 2,
+      "density_bucket": "high",
+      "description": "Two satisfiable overlapping arity-4 all-different constraints.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "medium",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 2,
+          "first_node_degree": 5,
+          "first_node_score": 83.0,
+          "max_conflict_observations": 41,
+          "total_conflict_observations": 164
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            4
+          ],
+          "density_bucket": "high",
+          "even_wheel_like": false,
+          "frustration": "medium",
+          "hub_node": null,
+          "max_degree": 5,
+          "min_degree": 3,
+          "n_colors": 4,
+          "n_nodes": 6
+        },
+        "selected_order": [
+          2,
+          3,
+          0,
+          1,
+          4,
+          5
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 19,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 7,
+          "total_effort_score": 26
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          2,
+          3,
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "guarded_harmful": true,
+      "harm_reasons": {
+        "guarded": [
+          "increased_effort_vs_baseline"
+        ],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "dev_overlapping_all_diff4_sat",
+      "n_colors": 4,
+      "n_nodes": 6,
+      "split": "dev",
+      "unguarded": {
+        "assignment": [
+          2,
+          3,
+          0,
+          1,
+          2,
+          3
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 19,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 7,
+          "total_effort_score": 26
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          2,
+          3,
+          0,
+          1,
+          4,
+          5
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          2,
+          2,
+          2
+        ],
+        "conflict_counts": [
+          0,
+          0,
+          0,
+          0,
+          36,
+          36,
+          36,
+          36
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4,
+          4
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0
+        ],
+        "order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          2,
+          2,
+          1,
+          2,
+          1,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 643,
+          "constraint_checks": 3135,
+          "duration_s": 0.001265,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 643,
+          "total_effort_score": 3778
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "constraint_arities": [
+        2,
+        4
+      ],
+      "constraint_count": 5,
+      "density_bucket": "medium",
+      "description": "A late arity-4 all-different obstruction after low-degree prefix nodes.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 4,
+          "first_node_degree": 4,
+          "first_node_score": 60.0,
+          "max_conflict_observations": 36,
+          "total_conflict_observations": 144
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2,
+            4
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": null,
+          "max_degree": 4,
+          "min_degree": 1,
+          "n_colors": 3,
+          "n_nodes": 8
+        },
+        "selected_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 96,
+          "duration_s": 3.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 112
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "heldout_late_k4_unsat",
+      "n_colors": 3,
+      "n_nodes": 8,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 96,
+          "duration_s": 3.4e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 112
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          3,
+          7,
+          7,
+          6,
+          4,
+          14,
+          12,
+          19
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          7
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          9.0,
+          13.0,
+          13.0,
+          12.0,
+          10.0,
+          20.0,
+          18.0,
+          33.0
+        ],
+        "order": [
+          7,
+          5,
+          6,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "relaxed_coloring": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 316,
+          "constraint_checks": 2130,
+          "duration_s": 0.000732,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 316,
+          "total_effort_score": 2446
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 14,
+      "density_bucket": "medium",
+      "description": "7-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 7,
+          "first_node_degree": 7,
+          "first_node_score": 33.0,
+          "max_conflict_observations": 19,
+          "total_conflict_observations": 72
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": 7,
+          "max_degree": 7,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 8
+        },
+        "selected_order": [
+          7,
+          5,
+          6,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 58,
+          "constraint_checks": 432,
+          "duration_s": 0.000144,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 58,
+          "total_effort_score": 490
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          7,
+          5,
+          6,
+          1,
+          2,
+          3,
+          4,
+          0
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "heldout_wheel7_odd_unsat",
+      "n_colors": 3,
+      "n_nodes": 8,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 58,
+          "constraint_checks": 432,
+          "duration_s": 0.000144,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 58,
+          "total_effort_score": 490
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          7,
+          5,
+          6,
+          1,
+          2,
+          3,
+          4,
+          0
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          1,
+          12,
+          5,
+          16,
+          11,
+          15,
+          13,
+          9,
+          54
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          8
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          7.0,
+          18.0,
+          11.0,
+          22.0,
+          17.0,
+          21.0,
+          19.0,
+          15.0,
+          70.0
+        ],
+        "order": [
+          8,
+          3,
+          5,
+          6,
+          1,
+          4,
+          7,
+          2,
+          0
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          2,
+          1,
+          2,
+          0,
+          2,
+          1,
+          1
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 39,
+          "duration_s": 1.4e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 49
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 16,
+      "density_bucket": "medium",
+      "description": "8-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "medium",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 8,
+          "first_node_degree": 8,
+          "first_node_score": 70.0,
+          "max_conflict_observations": 54,
+          "total_conflict_observations": 136
+        },
+        "fallback_reasons": [
+          "even_wheel_hub_first_hurts_exp5103_pattern"
+        ],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": true,
+          "frustration": "medium",
+          "hub_node": 8,
+          "max_degree": 8,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 9
+        },
+        "selected_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "use_adaptive": false
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 39,
+          "duration_s": 1.3e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 49
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "heldout_wheel8_even_sat",
+      "n_colors": 3,
+      "n_nodes": 9,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": [
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          0
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 60,
+          "duration_s": 2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 70
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          8,
+          3,
+          5,
+          6,
+          1,
+          4,
+          7,
+          2,
+          0
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          7,
+          7,
+          0,
+          1,
+          3,
+          3,
+          5,
+          18,
+          24,
+          32
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          9
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          13.0,
+          13.0,
+          6.0,
+          7.0,
+          9.0,
+          9.0,
+          11.0,
+          24.0,
+          30.0,
+          50.0
+        ],
+        "order": [
+          9,
+          8,
+          7,
+          0,
+          1,
+          6,
+          4,
+          5,
+          3,
+          2
+        ],
+        "relaxed_coloring": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          2
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 1276,
+          "constraint_checks": 8652,
+          "duration_s": 0.002955,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 1276,
+          "total_effort_score": 9928
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 18,
+      "density_bucket": "medium",
+      "description": "9-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 9,
+          "first_node_degree": 9,
+          "first_node_score": 50.0,
+          "max_conflict_observations": 32,
+          "total_conflict_observations": 100
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": 9,
+          "max_degree": 9,
+          "min_degree": 3,
+          "n_colors": 3,
+          "n_nodes": 10
+        },
+        "selected_order": [
+          9,
+          8,
+          7,
+          0,
+          1,
+          6,
+          4,
+          5,
+          3,
+          2
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 58,
+          "constraint_checks": 456,
+          "duration_s": 0.000149,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 58,
+          "total_effort_score": 514
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          9,
+          8,
+          7,
+          0,
+          1,
+          6,
+          4,
+          5,
+          3,
+          2
+        ]
+      },
+      "guarded_harmful": false,
+      "harm_reasons": {
+        "guarded": [],
+        "unguarded": []
+      },
+      "instance_id": "heldout_wheel9_odd_unsat",
+      "n_colors": 3,
+      "n_nodes": 10,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 58,
+          "constraint_checks": 456,
+          "duration_s": 0.000152,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 58,
+          "total_effort_score": 514
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          9,
+          8,
+          7,
+          0,
+          1,
+          6,
+          4,
+          5,
+          3,
+          2
+        ]
+      },
+      "unguarded_harmful": false,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          10,
+          11,
+          31,
+          9,
+          11
+        ],
+        "degree_counts": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          18.0,
+          19.0,
+          39.0,
+          17.0,
+          19.0
+        ],
+        "order": [
+          2,
+          1,
+          4,
+          0,
+          3
+        ],
+        "relaxed_coloring": [
+          1,
+          3,
+          3,
+          0,
+          2
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 65,
+          "constraint_checks": 680,
+          "duration_s": 0.000237,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 65,
+          "total_effort_score": 745
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 10,
+      "density_bucket": "high",
+      "description": "Complete graph K5 under 4-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "frustration": "high",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 2,
+          "first_node_degree": 4,
+          "first_node_score": 39.0,
+          "max_conflict_observations": 31,
+          "total_conflict_observations": 72
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "high",
+          "even_wheel_like": false,
+          "frustration": "high",
+          "hub_node": null,
+          "max_degree": 4,
+          "min_degree": 4,
+          "n_colors": 4,
+          "n_nodes": 5
+        },
+        "selected_order": [
+          2,
+          1,
+          4,
+          0,
+          3
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 65,
+          "constraint_checks": 732,
+          "duration_s": 0.000245,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 65,
+          "total_effort_score": 797
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          2,
+          1,
+          4,
+          0,
+          3
+        ]
+      },
+      "guarded_harmful": true,
+      "harm_reasons": {
+        "guarded": [
+          "increased_effort_vs_baseline"
+        ],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "heldout_k5_4color_unsat",
+      "n_colors": 4,
+      "n_nodes": 5,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": null,
+        "certificate_quality": "exact_complete",
+        "colorable": false,
+        "effort": {
+          "backtracks": 65,
+          "constraint_checks": 732,
+          "duration_s": 0.00025,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 65,
+          "total_effort_score": 797
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "timeout": false,
+        "variable_order": [
+          2,
+          1,
+          4,
+          0,
+          3
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    },
+    {
+      "adaptation": {
+        "arity_pressure": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conflict_counts": [
+          19,
+          15,
+          0,
+          0,
+          3,
+          1,
+          0,
+          2
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          25.0,
+          21.0,
+          6.0,
+          6.0,
+          9.0,
+          7.0,
+          6.0,
+          8.0
+        ],
+        "order": [
+          0,
+          1,
+          4,
+          7,
+          5,
+          2,
+          3,
+          6
+        ],
+        "relaxed_coloring": [
+          2,
+          3,
+          1,
+          3,
+          0,
+          1,
+          2,
+          0
+        ],
+        "steps": 32
+      },
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          2,
+          0,
+          1,
+          2
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 33,
+          "duration_s": 1.3e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 42
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "constraint_arities": [
+        2
+      ],
+      "constraint_count": 12,
+      "density_bucket": "medium",
+      "description": "A medium-density 4-color cycle with cross chords.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_finite_domain_csp_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "frustration": "medium",
+      "gate_decision": {
+        "early_telemetry": {
+          "adaptive_first_node": 0,
+          "first_node_degree": 3,
+          "first_node_score": 25.0,
+          "max_conflict_observations": 19,
+          "total_conflict_observations": 40
+        },
+        "fallback_reasons": [],
+        "features": {
+          "complete_easy_coloring": false,
+          "constraint_arities": [
+            2
+          ],
+          "density_bucket": "medium",
+          "even_wheel_like": false,
+          "frustration": "medium",
+          "hub_node": null,
+          "max_degree": 3,
+          "min_degree": 3,
+          "n_colors": 4,
+          "n_nodes": 8
+        },
+        "selected_order": [
+          0,
+          1,
+          4,
+          7,
+          5,
+          2,
+          3,
+          6
+        ],
+        "use_adaptive": true
+      },
+      "guarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          2,
+          1,
+          0,
+          2,
+          1
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 34,
+          "duration_s": 1.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 43
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          4,
+          7,
+          5,
+          2,
+          3,
+          6
+        ]
+      },
+      "guarded_harmful": true,
+      "harm_reasons": {
+        "guarded": [
+          "increased_effort_vs_baseline"
+        ],
+        "unguarded": [
+          "increased_effort_vs_baseline"
+        ]
+      },
+      "instance_id": "heldout_color4_cycle_chord_sat",
+      "n_colors": 4,
+      "n_nodes": 8,
+      "split": "heldout",
+      "unguarded": {
+        "assignment": [
+          0,
+          1,
+          0,
+          2,
+          1,
+          0,
+          2,
+          1
+        ],
+        "certificate_quality": "exact_complete",
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 34,
+          "duration_s": 1.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 43
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "timeout": false,
+        "variable_order": [
+          0,
+          1,
+          4,
+          7,
+          5,
+          2,
+          3,
+          6
+        ]
+      },
+      "unguarded_harmful": true,
+      "wrong_label": false
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
+      "resource": "exp5103_artifact"
+    },
+    {
+      "available": true,
+      "resource": "cpu_exact_solver"
+    }
+  ],
+  "random_seed": 5117,
+  "reproducibility_checksum": "1fcafb60cd84eeb5ff56fc58114a4aad31c490b1d03f005f3da6cdf9934fcdb1",
+  "result_path": "results/experiment_5117_taco_harm_gated_scale_v469.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5117_taco_harm_gated_scale.v469",
+  "seeds_or_checksums": {
+    "adaptation_steps": 32,
+    "exp5103_artifact_sha256": "5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570",
+    "random_seed": 5117,
+    "suite_checksum": "53d0d7c5ca4fbc2017de44ebd41941a5a37d448e05b3e3c82d2c818b9e777680"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5117",
+    "SCENARIO-VERIFY-5117"
+  ],
+  "suite_summary": {
+    "color_counts": [
+      3,
+      4
+    ],
+    "colorable_counts": {
+      "colorable": 9,
+      "uncolorable": 9
+    },
+    "constraint_arities": [
+      2,
+      3,
+      4
+    ],
+    "density_buckets": {
+      "high": 4,
+      "low": 2,
+      "medium": 12
+    },
+    "frustration": {
+      "high": 9,
+      "low": 4,
+      "medium": 5
+    },
+    "splits": {
+      "dev": 6,
+      "heldout": 6,
+      "train": 6
+    }
+  },
+  "taco_harm_gate_ready": true,
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5117_taco_harm_gated_scale_v469.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py -q",
+    ".venv/bin/pytest tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py --cov=python/carnot/experiment_5117_taco_harm_gated_scale_v469.py --cov=scripts/experiment_5117_taco_harm_gated_scale_v469.py --cov-report=term-missing --cov-fail-under=100 -q",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "unguarded_effort": {
+    "backtracks": 289,
+    "constraint_checks": 2510,
+    "duration_s": 0.000887,
+    "instances": 18,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 366,
+    "total_effort_score": 2876
+  },
+  "wrong_label_count": 0
+}

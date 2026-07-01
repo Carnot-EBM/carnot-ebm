@@ -23891,3 +23891,69 @@ any heuristic-only answer as solved.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5103 | Proposed (`python/carnot/experiment_5103_taco_adaptive_csp_heuristic.py`, `results/experiment_5103_taco_adaptive_csp_heuristic_v468.json`) | Proposed (`tests/python/test_experiment_5103_taco_adaptive_csp_heuristic.py`) |
+
+### REQ-VERIFY-5117: Harm-Gated TACO Adaptive CSP Scale Diagnostic
+
+The repository SHALL provide Exp 5117 at
+`python/carnot/experiment_5117_taco_harm_gated_scale_v469.py` with a CLI
+wrapper at `scripts/experiment_5117_taco_harm_gated_scale_v469.py` to scale
+the Exp 5103 TACO-style adaptive graph-coloring CSP heuristic across a larger
+deterministic instance suite and write
+`results/experiment_5117_taco_harm_gated_scale_v469.json`.
+
+The runner SHALL reproduce the Exp 5103 baseline metrics from the checked-in
+artifact before running the scale diagnostic. The larger suite SHALL be
+deterministic for fixed seeds or checksums and SHALL vary density, arity, and
+frustration through graph-coloring CSP instances with at least two color-count
+settings, satisfiable and unsatisfiable instances, and multiple graph families.
+
+The experiment SHALL compare three exact-solver policies on every instance:
+the no-help baseline exact solver, the unguarded adaptive heuristic from Exp
+5103, and a harm-gated adaptive policy. The adaptive policies MAY propose
+variable-order help from pre-solve features and bounded early telemetry, but
+all colorable/uncolorable labels and accepted assignments SHALL come from the
+complete exact solver. Harm SHALL include increased exact-solver effort versus
+the no-help baseline, wrong labels, timeout indicators, or degraded certificate
+quality.
+
+The harm gate SHALL be simple and auditable. It SHALL use only pre-solve
+features and early heuristic telemetry to choose either the adaptive order or a
+fallback to the no-help exact-solver order before the final guarded exact solve.
+The artifact SHALL expose per-instance gate decisions and the features used by
+the rule so harmful fallbacks are inspectable.
+
+The terminal artifact SHALL include top-level fields `experiment_id`,
+`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+`preconditions_checked`, `instance_count`, `baseline_effort`,
+`unguarded_effort`, `guarded_effort`, `wrong_label_count`,
+`harmful_instance_count_unguarded`, `harmful_instance_count_guarded`,
+`taco_harm_gate_ready`, `seeds_or_checksums`, `flagged_adversarial`, and
+`tests_run`. `experiment_id` SHALL equal
+`exp5117-taco-harm-gated-scale-v469`, `milestone` SHALL equal
+`2026.07.469`, and `inference_substrate` SHALL equal
+`exact_solver_with_harm_gated_adaptive_cpu_heuristic`.
+
+`honest_verdict` SHALL begin with
+`success_taco_harm_gate_ready_exact_labels_preserved` only when exact labels
+are preserved, `wrong_label_count` is zero, guarded harmful instances are fewer
+than unguarded harmful instances, guarded effort is below baseline effort, and
+the gated policy retains useful average effort reduction. Otherwise it SHALL
+begin with `complete_taco_harm_gate_not_ready`.
+
+### SCENARIO-VERIFY-5117: Harm Gate Falls Back Without Changing Exact Labels
+
+Given the Exp 5117 deterministic CSP suite, when the diagnostic runs, then it
+loads the Exp 5103 artifact, verifies the reproduced Exp 5103 baseline metrics,
+solves each scaled instance with no-help baseline, unguarded adaptive, and
+harm-gated adaptive policies, reports harm under the declared definition,
+falls back to the exact baseline order on predicted-harmful cases, writes the
+required JSON artifact, sets
+`inference_substrate=exact_solver_with_harm_gated_adaptive_cpu_heuristic`, and
+emits `taco_harm_gate_ready=true` only if the gated policy preserves exact
+labels while reducing harmful instances relative to the unguarded policy.
+
+## Implementation Status (REQ-VERIFY-5117)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5117 | Proposed (`python/carnot/experiment_5117_taco_harm_gated_scale_v469.py`, `results/experiment_5117_taco_harm_gated_scale_v469.json`) | Proposed (`tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py`) |
