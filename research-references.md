@@ -25543,3 +25543,147 @@ papers below include looped/fixed-point reasoners, distributional EBMs, and feat
   framing reinforces that the language model should interface with a verifier, not replace it.
 
 <!-- V467-PLANNER-REFERENCES-END -->
+
+<!-- V468-PLANNER-REFERENCES-START -->
+## V468 planner source set (2026-07-01) - exact-verifier scale-up, evidence energy, and formal FR-11
+
+Search coverage: arXiv, OpenReview, Hugging Face Papers, GitHub, Extropic, Logical Intelligence, and
+Semantic Scholar citation-lineage checks for EBT (`2507.02092`) and ARM-EBM (`2512.15605`). Semantic
+Scholar API returned HTTP 429 during the planner scan, so citation-lineage notes below come from public
+search snippets and source pages rather than bulk API metadata.
+
+### BEAVER: Efficient Deterministic LLM Verifier
+- **Source:** arXiv:2512.05439 - https://arxiv.org/abs/2512.05439
+- **Code:** https://github.com/uiuc-focal-lab/Beaver
+- **Tracks:** deterministic verification, prefix constraints, hallucination risk bounds, constrained
+  generation
+- **Carnot hook:** BEAVER computes deterministic probability bounds for prefix-closed semantic
+  constraints by traversing token-prefix structure rather than relying on rejection sampling. This is a
+  direct next step after `.467` showed that clean exact-verifier artifacts can survive adversarial
+  review while process-verifier runtime claims remain blocked.
+- **Actionability:** Build a small BEAVER-style prefix-bound verifier over finite Carnot schemas first,
+  then connect it to local SOTA GGUF logprobs only after endpoint/cache provenance is clean.
+
+### Grounding LLM Reasoning Under Incomplete Graph Evidence
+- **Source:** arXiv:2606.30247 - https://arxiv.org/abs/2606.30247
+- **Tracks:** evidence-relative reasoning, graph energies, soft grounding, hallucination mitigation
+- **Carnot hook:** The paper frames reasoning under incomplete evidence with entity anchors, typed
+  relation residuals, path energies, and support regions. This matches Carnot's need to reject
+  contradictions without over-rejecting true-but-unobserved claims.
+- **Actionability:** Add a graph-evidence energy experiment that separates contradiction rejection from
+  unsupported-claim abstention on a small auditable knowledge graph.
+
+### SEVerA: Verified Synthesis of Self-Evolving Agents
+- **Source:** arXiv:2603.25111 - https://arxiv.org/abs/2603.25111
+- **Tracks:** self-evolving agents, formal guards, Search-Verify-Learn, continuous self-learning
+- **Carnot hook:** SEVerA's formally guarded generative model pattern is a better FR-11 mechanism than
+  blind replay: candidate memories or skills are generated, verified against contracts, then learned or
+  promoted only if guards pass.
+- **Actionability:** Use the idea for a no-weight-update, contract-governed memory/SOP promotion task
+  with exact non-regression and provenance checks.
+
+### Test-Time Adaptation for Unsupervised Combinatorial Optimization (TACO)
+- **Source:** arXiv:2601.21048 - https://arxiv.org/abs/2601.21048
+- **Tracks:** neural combinatorial optimization, instance-wise adaptation, exact-solver warm starts
+- **Carnot hook:** TACO's strategic warm-start and partial-relaxation framing suggests a safer neural
+  helper role: adapt a heuristic for the current CSP instance while an exact solver remains the
+  correctness authority.
+- **Actionability:** Test whether adaptation improves exact-solver effort on generated CSP families;
+  never count a heuristic answer as solved unless the exact checker agrees.
+
+### PLANCK: p-Spin Optimization With Hypergraph Neural Networks And DRL
+- **Source:** arXiv:2602.16665 - https://arxiv.org/abs/2602.16665
+- **Tracks:** high-order Ising/p-spin models, HUBO, quadratization avoidance, hardware mapping
+- **Carnot hook:** Carnot has pairwise p-bit and QUBO paths, but many verifier constraints are naturally
+  higher-order. Direct p-spin/HUBO formulations may reduce gadget blowup before any FPGA or future TSU
+  mapping.
+- **Actionability:** Add a direct high-order energy vs QUBO-gadget experiment with exact enumeration on
+  tiny hypergraph/XORSAT instances and report variable/coupling blowup honestly.
+
+### Implicitly Parallel Neuromorphic Solver Design For CSPs
+- **Source:** arXiv:2603.01150 - https://arxiv.org/abs/2603.01150
+- **Tracks:** neuromorphic CSP solving, parallelism, constraint partitioning, hardware acceleration
+- **Carnot hook:** The reported parallel CSP speedups are a reminder that hardware work should measure
+  update partitioning, communication overhead, and boundary exchange, not only end-to-end latency.
+- **Actionability:** Fold partition/update telemetry into the hardware-continuity slot before making any
+  KV260, GateMate, PolarFire, or simulated TSU speed claim.
+
+### CFG-Constrained Diffusion Language Models: EPIC, LAVE, And Constrained Diffusion
+- **Sources:** EPIC arXiv:2606.00722 - https://arxiv.org/abs/2606.00722; LAVE arXiv:2602.00612 -
+  https://arxiv.org/abs/2602.00612; Constrained Diffusion arXiv:2508.10111 -
+  https://arxiv.org/abs/2508.10111; code - https://github.com/eth-sri/constrained-diffusion
+- **Tracks:** constrained generation, CFG validity, prefix reachability, diffusion LMs
+- **Carnot hook:** Even if Carnot is not using diffusion LMs locally, these papers sharpen the key
+  abstraction: a constraint mask should preserve reachability to complete valid outputs, not merely pass
+  local token checks.
+- **Actionability:** Use prefix-reachability and completion-existence checks when hardening `.467`'s
+  STATIC CSR result, which was flagged as too synthetic/tautological for a headline.
+
+### Grammar-Aligned Decoding And Distribution-Distortion Caveat
+- **Source:** arXiv:2405.21047 - https://arxiv.org/abs/2405.21047
+- **Tracks:** constrained decoding, grammar alignment, distribution shift
+- **Carnot hook:** The paper is older than the 2025-2026 scan window but important: constrained decoding
+  can distort the model distribution. Carnot should not treat syntactic validity alone as semantic
+  verification.
+- **Actionability:** Include semantic no-op/tautology controls and a non-degenerate candidate pool in
+  the next constrained-decoding audit.
+
+### Code-Based Assurance Of Prompt-Defined Constraints (CONSTRAINPROMPT)
+- **Source:** OpenReview - https://openreview.net/forum?id=O3Kg4dLdpg
+- **Tracks:** prompt-defined constraints, executable checks, structured generation assurance
+- **Carnot hook:** Translating prompt constraints into code-verifiable logical evaluation trees gives
+  Carnot a bridge from natural-language task specs to exact checkers.
+- **Actionability:** Prototype prompt-to-code constraint assurance over a small tool-call or verifier
+  schema, with generated constraints accepted only if unit tests and exact checks pass.
+
+### HALT: Hallucination Assessment Via Log-Probabilities As Time Series
+- **Source:** arXiv:2602.02888 - https://arxiv.org/abs/2602.02888
+- **Tracks:** hallucination detection, logprob telemetry, local runtime requirements
+- **Carnot hook:** HALT is a good process-signal candidate only after local GGUF logprob telemetry is
+  reliable. It should not be scheduled ahead of endpoint/cache cleanup.
+- **Actionability:** Keep as a downstream process-verifier option once `.468` proves clean logprob
+  substrate; do not use it to headline the current milestone.
+
+### GenericAgent, ALMA, And Memory Design Search
+- **Sources:** GenericAgent arXiv:2604.17091 - https://arxiv.org/abs/2604.17091; ALMA arXiv:2602.07755 -
+  https://arxiv.org/abs/2602.07755
+- **Tracks:** agent memory, verified trajectories, hierarchical memory, meta-learned memory
+- **Carnot hook:** These papers support the FR-11 direction of compact, evidence-backed, reusable
+  procedural memory, but Carnot should keep promotion under exact guards rather than meta-learning
+  memory policies in this milestone.
+- **Actionability:** Use evidence snapshots, provenance hashes, and non-regression tests in the
+  SEVerA-style guarded memory experiment.
+
+### EBT / ARM-EBM Citation-Lineage Candidates
+- **Sources:** Transformers as Intrinsic Optimizers arXiv:2511.00907 -
+  https://arxiv.org/abs/2511.00907; ShiQ arXiv:2505.11081 - https://arxiv.org/abs/2505.11081
+- **Tracks:** energy-principle inference, Bellman-style reasoning, EBT/ARM-EBM follow-ons
+- **Carnot hook:** These are medium-term architecture signals: energy-style objectives and Bellman-style
+  reasoning can guide Carnot's verifier/actor split, but they are not as immediately executable as
+  exact prefix bounds, MILP, and code constraints.
+- **Actionability:** Record as architecture pressure for future Phase-3/Phase-7 work; do not schedule a
+  training-heavy reproduction in `.468`.
+
+### llguidance And Constraint-Decoding Engineering Baselines
+- **Source:** https://github.com/guidance-ai/llguidance
+- **Tracks:** structured outputs, grammar-constrained decoding, CPU-side mask latency
+- **Carnot hook:** llguidance gives a practical baseline for grammar/regex/JSON constraint masks and can
+  prevent Carnot from mistaking a hand-built toy CSR loop for state-of-the-art constrained decoding.
+- **Actionability:** Compare any finite-schema constrained-generation result against a real grammar
+  engine or explicitly mark the experiment as an internal diagnostic.
+
+### Extropic XTR-0 / TSU And Logical Intelligence Kona/Aleph Updates
+- **Sources:** https://extropic.ai/writing/inside-x0-and-xtr-0,
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware,
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo,
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation, and
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks
+- **Tracks:** thermodynamic accelerators, EBM reasoning products, formal verification, Sudoku/CSP
+  benchmarks
+- **Carnot hook:** Extropic still appears to be an early-access hardware path, not a local execution
+  target. Logical's Kona/Aleph updates strengthen the product-level argument for verifiers/checkers as
+  the source of truth.
+- **Actionability:** Keep TSU work in architecture/simulation and use Kona/Aleph as motivation for
+  exact-verifier scale-up rather than free-form judge imitation.
+
+<!-- V468-PLANNER-REFERENCES-END -->
