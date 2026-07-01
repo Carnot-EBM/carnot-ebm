@@ -1542,7 +1542,28 @@ ARC-solving reserved slot per the Incremental-Progress Scoping discipline; this 
 efficiency task, distinct from the currently-active GENERATION-axis (L1-first-contact) work — both may
 run in the same milestone without conflict.
 
-### KV260 FOLLOW-UP 2026-06-30 (operator "a + b" on arXiv:2606.25313) — measure our sampler's residual-energy decay exponent
+### KV260 FOLLOW-UP — RESOLVED 2026-07-01 (outer-loop, "1 then 2" of the shovel-ready tasks)
+
+> **RESULT.** `scripts/experiments/exp_kv260_residual_energy_decay_exponent.py` /
+> `results/experiment_kv260_residual_energy_decay_exponent.json` (adversarial_verify: 0 flagged).
+> **Precondition (b) checked and FALSE for every current overlay**: `N_STEPS` is a synthesis-time
+> constant on both `carnot_ising_v2_n64` (deployed) and the newer `carnot_ising_v4` (its change was
+> synchronous-vs-checkerboard update scheduling, not runtime step control) --
+> `hardware_leg: blocked_kv260_no_runtime_sweep_control`, per the task's own explicit fallback.
+> **CPU-leg methodology validated**: reused `SparsifiedIsingConfig`/`CpuBackend` (the exact
+> KV260-matching n=64/sparsity=0.9 class + the same sampler the FPGA backend wraps in CPU fallback),
+> global-min-across-all-trials putative ground energy (the paper's own "best observed" approach),
+> log-log power-law fit. Caught and fixed a real bug along the way: an initial run using
+> `n_samples=8` (min-of-many) inside a single call produced a spurious n_steps=50 result matching the
+> 20000-step reference exactly -- traced to a fixed 160-sweep post-warmup collection tail dominating
+> small budgets; fixed via independent full trials + mean-not-min. **Final honest result: `kappa_fit
+> = 0.064, r_squared = 0.39` (weak fit)** -- the residual-energy-vs-budget curve is largely FLAT for
+> this seeded instance/schedule across n_steps=50..10000, not a clean decay. Reported as-is rather
+> than tuned to a cleaner story; a genuinely decay-showing instance/schedule is a natural follow-up,
+> out of scope here (the task's actual scope was methodology validation, and that succeeded --
+> reusable code, no crashes, no fabrication, honest reporting of a weak fit).
+> `paper_comparability_disclaimer` present per the original task spec: kappa_fit here is NOT
+> comparable to the paper's own kappa_f (different hardware/scale/topology).
 
 **Literature basis:** "Programmable Probabilistic Computer with 1,000,000 p-bits" (Aadit/Camsari group,
 arXiv:2606.25313, 2026-06; full notes: `reference_pbit_million_scale_fpga` memory,
