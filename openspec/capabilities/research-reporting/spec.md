@@ -94,6 +94,91 @@ modify `research-roadmap.yaml`.
 |---|---|---|
 | REQ-REPORT-5109 | Planned (`python/carnot/reporting/archive_468_activate_469_5109.py`, `scripts/experiment_5109_archive_468_activate_469.py`) | Planned (`tests/python/test_experiment_5109_archive_468_activate_469.py`) |
 
+### REQ-REPORT-5122: Archive .469, Retire Same-Verdict FoVer Reruns, And Activate .470
+
+The Exp 5122 workflow SHALL aggregate milestone `2026.07.469` from
+`results/experiment_5121_capstone_v469.json`, the `.469` result artifacts it
+references, `openspec/change-proposals/research-roadmap-vNEXT.md`, and the
+`.470` roadmap state. It SHALL write
+`results/experiment_5122_archive_469_activate_470.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the `.469` close-state truthfully: the FoVer
+selector path is blocked/retracted, same-verdict FoVer selector/audit reruns are
+retired, the FoVer residual FR-11 route SHOULD NOT be rerun because its upstream
+selector premise is invalid, KAN post-wall verification is a clean positive,
+HUBO/TACO are clean positives, local SOTA runtime is quarantined or blocked if
+adversarially flagged, and hardware continuity is clean while preserving
+`no_speedup_claim=true`.
+
+The workflow SHALL confirm
+`openspec/change-proposals/research-roadmap-vNEXT.md` names milestone
+`2026.07.470`. It SHALL also inspect `research-roadmap-next.yaml` for milestone
+`2026.07.470` and task ids `exp5122` through `exp5133`. If
+`research-roadmap-next.yaml` is absent because the roadmap has already been
+activated, the workflow SHALL record that fact honestly, SHALL inspect
+`research-roadmap.yaml` for the activated `.470` task set, and SHALL NOT repair
+the missing next-roadmap file by editing either roadmap. A missing or mismatched
+next-roadmap file SHALL produce a terminal `blocked_*` artifact unless the task
+explicitly records the already-activated active-roadmap fallback.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `fover_selector_retired_for_same_verdict`,
+`roadmap_next_present`, `active_roadmap_modified`, `conductor_modified`,
+`flagged_adversarial`, and `tests_run`. It SHOULD also record derived
+aggregation sections for FoVer retirement, KAN post-wall status, solver/sampling
+status, FR-11 residual rerun policy, runtime quarantine, hardware continuity,
+vNEXT document readiness, next-roadmap readiness, and active-roadmap fallback.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `fover_selector_retired_for_same_verdict`: principle "no doomed rerun"
+- `roadmap_next_present`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5122: Archive Artifact Records .469 Close-State And .470 Readiness
+
+**Given** the `.469` capstone artifact, the `.469` result artifacts it
+references, `research-roadmap-next.yaml` naming `2026.07.470` with tasks
+`exp5122` through `exp5133`, and
+`openspec/change-proposals/research-roadmap-vNEXT.md` naming `2026.07.470`
+**When** the Exp 5122 workflow runs
+**Then** it writes the JSON artifact, records the FoVer selector retirement
+recommendation, records that the FoVer residual FR-11 route should not be
+rerun, records KAN/HUBO/TACO positives, records runtime quarantine, records
+hardware continuity without speedup, declares
+`aggregation_from_upstream_artifacts`, records adversarial verification or
+artifact summarization of its own deliverable, and sets
+`active_roadmap_modified=false` and `conductor_modified=false`.
+
+#### SCENARIO-REPORT-5122-ACTIVE-FALLBACK: Already-Activated .470 Is Preserved Without Mutation
+
+**Given** `research-roadmap-next.yaml` is absent
+**And** `research-roadmap.yaml` already names milestone `2026.07.470` with
+tasks `exp5122` through `exp5133`
+**When** the Exp 5122 workflow runs
+**Then** it writes a terminal artifact that records `roadmap_next_present=false`,
+records the active-roadmap fallback, keeps `active_roadmap_modified=false`,
+keeps `conductor_modified=false`, and does not recreate
+`research-roadmap-next.yaml`.
+
+## Implementation Status (REQ-REPORT-5122)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5122 | Planned (`python/carnot/experiment_5122_archive_469_activate_470.py`, `scripts/experiment_5122_archive_469_activate_470.py`) | Planned (`tests/python/test_experiment_5122_archive_469_activate_470.py`) |
+
 ### REQ-REPORT-5110: V469 Source Freshness And Task-Mapping Gate
 
 The Exp 5110 workflow SHALL inspect `research-references.md` between
