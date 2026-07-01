@@ -655,6 +655,77 @@ Then the existing source is listed under rejected duplicates, is absent from
 |---|---|---|
 | REQ-REPORT-5053 | Planned (`python/carnot/experiment_5053_sota_ingestion_v465.py`) | Planned (`tests/python/test_experiment_5053_sota_ingestion_v465.py`) |
 
+### REQ-REPORT-5070: V466 SOTA Ingestion Backfill Verification
+
+The Exp 5070 workflow SHALL repair the failed Exp 5066 SOTA-ingestion slot by
+verifying the already-written V466 planner source set in
+`research-references.md` and writing
+`results/experiment_5070_sota_ingestion_backfill_v466.json`. It SHALL NOT run
+local model inference, SHALL NOT claim `live_llm_inference`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave ops/status/traceability
+reconciliation to the conductor reconciler.
+
+The workflow SHALL verify that the V466 managed section exists and covers
+arXiv, OpenReview/GitHub, Hugging Face Papers, Extropic, Semantic Scholar
+citation attempts, and Logical Intelligence public updates. It SHALL confirm
+the following references are present with URLs and Carnot hooks:
+`arXiv:2605.10158` uPRM, `arXiv:2605.10325` VPR, `arXiv:2603.03305` DCCD plus
+`github.com/avinashreddydev/dccd`, `arXiv:2602.06737` KAN verification,
+`arXiv:2505.11942` LifelongAgentBench, Hugging Face Papers 2605.13941
+EvolveMem plus `github.com/aiming-lab/SimpleMem`, Hugging Face Papers 2605.27366
+MUSE-Autoskill, `arXiv:2602.15985` FPGA Ising decomposition,
+Extropic XTR-0/TSU public sources, Semantic Scholar EBT/ARM citation-attempt
+status, and Logical Intelligence Kona/Aleph positioning.
+
+The complete artifact SHALL include top-level fields `honest_verdict`,
+`duration_s`, `inference_substrate`, `sources_checked`,
+`references_section_found`, `references_added_count`,
+`semantic_scholar_status`, `planning_hooks`, `flagged_adversarial`,
+`field_principles`, and `spec_refs`. `honest_verdict` SHALL equal
+`success_sota_ingestion_backfill_v466_references_verified`.
+`inference_substrate` SHALL equal `literature_review_and_repo_inspection`.
+`references_added_count` SHALL be zero unless one clearly stronger 2025-2026
+source is appended to the V466 section with URL and Carnot hook.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success only when the V466 source set is verified."
+- `duration_s`: principle "bounded repo/literature inspection duration; not a model-inference runtime claim."
+- `inference_substrate`: principle "literature_review_and_repo_inspection; no local model inference or live LLM claim."
+- `sources_checked`: principle "per-channel evidence for arXiv, OpenReview/GitHub, Hugging Face Papers, Extropic, Semantic Scholar, and Logical Intelligence."
+- `references_section_found`: principle "true only when V466 planner markers bracket the checked research-references.md section."
+- `references_added_count`: principle "zero when no clearly stronger missing 2025-2026 source is found; otherwise equals appended references."
+- `semantic_scholar_status`: principle "records citation API attempts and forbids citation-count claims on HTTP 429."
+- `planning_hooks`: principle "maps verified sources to concrete .466 experiment hooks."
+- `flagged_adversarial`: principle "true if required sources are missing, fabricated, or claim local inference."
+
+#### SCENARIO-REPORT-5070: V466 References Are Verified Without New Additions
+
+Given the V466 planner section in `research-references.md` contains the
+required source IDs, public URLs, code links, Semantic Scholar 429 note, and
+Carnot hooks
+When the Exp 5070 workflow runs
+Then it writes the JSON artifact with the success verdict, sets
+`inference_substrate` to `literature_review_and_repo_inspection`, reports all
+source channels in `sources_checked`, records `references_added_count=0`, keeps
+`flagged_adversarial=false`, and exposes planning hooks for uPRM, VPR, DCCD,
+KAN/PWA/MILP, guarded FR-11 memory, hardware continuity, and external
+Extropic/Logical architecture positioning.
+
+#### SCENARIO-REPORT-5070-MISSING-REFERENCE: Missing V466 Source Fails Closed
+
+Given the V466 planner section is absent or one required source ID, URL, code
+link, Semantic Scholar status note, or Carnot hook is missing
+When validation is applied
+Then the workflow raises a schema error and refuses to write a successful
+artifact.
+
+## Implementation Status (REQ-REPORT-5070)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5070 | Implemented (`python/carnot/experiment_5070_sota_ingestion_backfill_v466.py`) | Implemented (`tests/python/test_experiment_5070_sota_ingestion_backfill_v466.py`) |
+
 ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
 
 The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt

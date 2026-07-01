@@ -1,0 +1,244 @@
+{
+  "duration_s": 0.0,
+  "field_principles": {
+    "duration_s": {
+      "principle": "bounded repo/literature inspection duration; not a model-inference runtime claim."
+    },
+    "field_principles": {
+      "principle": "principle annotations are part of the artifact contract."
+    },
+    "flagged_adversarial": {
+      "principle": "true if required sources are missing, fabricated, or claim local inference."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success only when the V466 source set is verified."
+    },
+    "inference_substrate": {
+      "principle": "literature_review_and_repo_inspection; no local model inference or live LLM claim."
+    },
+    "planning_hooks": {
+      "principle": "maps verified sources to concrete .466 experiment hooks."
+    },
+    "references_added_count": {
+      "principle": "zero when no clearly stronger missing 2025-2026 source is found; otherwise equals appended references."
+    },
+    "references_section_found": {
+      "principle": "true only when V466 planner markers bracket the checked research-references.md section."
+    },
+    "semantic_scholar_status": {
+      "principle": "records citation API attempts and forbids citation-count claims on HTTP 429."
+    },
+    "sources_checked": {
+      "principle": "per-channel evidence for arXiv, OpenReview/GitHub, Hugging Face Papers, Extropic, Semantic Scholar, and Logical Intelligence."
+    },
+    "spec_refs": {
+      "principle": "OpenSpec requirements and scenarios verified by this artifact."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "success_sota_ingestion_backfill_v466_references_verified",
+  "inference_substrate": "literature_review_and_repo_inspection",
+  "planning_hooks": [
+    {
+      "hook": "Stage real SOTA GGUF top-logprob readiness before any uPRM claim.",
+      "hook_id": "exp5071_gguf_logprob_preflight",
+      "source_tokens": [
+        "arXiv:2605.10158"
+      ]
+    },
+    {
+      "hook": "Test batch first-error uPRM scoring only after token/step cache provenance exists.",
+      "hook_id": "exp5073_uprm_selector",
+      "source_tokens": [
+        "arXiv:2605.10158"
+      ]
+    },
+    {
+      "hook": "Count VPR rewards only when intermediate checks are objective and auditable.",
+      "hook_id": "exp5074_vpr_diagnostic",
+      "source_tokens": [
+        "arXiv:2605.10325"
+      ]
+    },
+    {
+      "hook": "Scale DCCD/guided decoding against unguided, hard-constrained, and rerank-only arms.",
+      "hook_id": "exp5075_dccd_guided_scale",
+      "source_tokens": [
+        "arXiv:2603.03305",
+        "github.com/avinashreddydev/dccd"
+      ]
+    },
+    {
+      "hook": "Use rollback, group self-consistency, and per-skill held-out evidence for FR-11.",
+      "hook_id": "exp5077_guarded_fr11_memory",
+      "source_tokens": [
+        "arXiv:2505.11942",
+        "2605.13941",
+        "2605.27366"
+      ]
+    },
+    {
+      "hook": "Separate host-device dispatch, decomposition overhead, and solver timing.",
+      "hook_id": "exp5079_board_continuity",
+      "source_tokens": [
+        "arXiv:2602.15985",
+        "Extropic"
+      ]
+    },
+    {
+      "hook": "Attempt a tiny KAN/PWA/MILP property proof or emit a size/error-budget blocker.",
+      "hook_id": "exp5080_kan_pwa_milp_bridge",
+      "source_tokens": [
+        "arXiv:2602.06737"
+      ]
+    },
+    {
+      "hook": "Treat Extropic and Kona/Aleph as strategic pressure, not local evidence.",
+      "hook_id": "external_architecture_positioning",
+      "source_tokens": [
+        "Extropic",
+        "Logical Intelligence"
+      ]
+    }
+  ],
+  "references_added_count": 0,
+  "references_section_found": true,
+  "semantic_scholar_status": {
+    "attempted": true,
+    "checked_on": "2026-07-01",
+    "citation_count_claim_made": false,
+    "status": "http_429_rate_limited_no_citation_count_claim",
+    "targets": [
+      {
+        "http_status": 429,
+        "label": "EBT",
+        "paper_id": "arXiv:2507.02092",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092"
+      },
+      {
+        "http_status": 429,
+        "label": "ARM-EBM",
+        "paper_id": "arXiv:2512.15605",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605"
+      }
+    ]
+  },
+  "sources_checked": [
+    {
+      "channel": "Extropic",
+      "reference_found": true,
+      "source_id": "Extropic",
+      "status": "present_in_v466_section",
+      "title": "Extropic XTR-0 / TSU updates",
+      "url": "https://extropic.ai/writing/inside-x0-and-xtr-0"
+    },
+    {
+      "channel": "GitHub",
+      "reference_found": true,
+      "source_id": "github.com/aiming-lab/SimpleMem",
+      "status": "present_in_v466_section",
+      "title": "EvolveMem code",
+      "url": "https://github.com/aiming-lab/SimpleMem/tree/main/EvolveMem"
+    },
+    {
+      "channel": "GitHub",
+      "reference_found": true,
+      "source_id": "github.com/avinashreddydev/dccd",
+      "status": "present_in_v466_section",
+      "title": "DCCD code",
+      "url": "https://github.com/avinashreddydev/dccd"
+    },
+    {
+      "channel": "Hugging Face Papers",
+      "reference_found": true,
+      "source_id": "Hugging Face Papers 2605.13941",
+      "status": "present_in_v466_section",
+      "title": "EvolveMem",
+      "url": "https://huggingface.co/papers/2605.13941"
+    },
+    {
+      "channel": "Hugging Face Papers",
+      "reference_found": true,
+      "source_id": "Hugging Face Papers 2605.27366",
+      "status": "present_in_v466_section",
+      "title": "MUSE-Autoskill",
+      "url": "https://huggingface.co/papers/2605.27366"
+    },
+    {
+      "channel": "Logical Intelligence",
+      "reference_found": true,
+      "source_id": "Logical Intelligence",
+      "status": "present_in_v466_section",
+      "title": "Logical Intelligence public Kona/Aleph updates",
+      "url": "https://logicalintelligence.com/"
+    },
+    {
+      "channel": "OpenReview",
+      "reference_found": true,
+      "source_id": "openreview_coverage",
+      "status": "coverage_declared_in_v466_section_no_openreview_only_addition",
+      "title": "OpenReview-style query coverage",
+      "url": "https://openreview.net/"
+    },
+    {
+      "channel": "Semantic Scholar",
+      "reference_found": true,
+      "source_id": "Semantic Scholar",
+      "status": "present_in_v466_section",
+      "title": "Semantic Scholar citation attempts",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2505.11942",
+      "status": "present_in_v466_section",
+      "title": "LifelongAgentBench",
+      "url": "https://arxiv.org/abs/2505.11942"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2602.06737",
+      "status": "present_in_v466_section",
+      "title": "Optimal Abstractions for Verifying Properties of KANs",
+      "url": "https://arxiv.org/abs/2602.06737"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2602.15985",
+      "status": "present_in_v466_section",
+      "title": "Decomposing Large-Scale Ising Problems on FPGAs",
+      "url": "https://arxiv.org/abs/2602.15985"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2603.03305",
+      "status": "present_in_v466_section",
+      "title": "Draft-Conditioned Constrained Decoding",
+      "url": "https://arxiv.org/abs/2603.03305"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2605.10158",
+      "status": "present_in_v466_section",
+      "title": "Unsupervised Process Reward Models",
+      "url": "https://arxiv.org/abs/2605.10158"
+    },
+    {
+      "channel": "arXiv",
+      "reference_found": true,
+      "source_id": "arXiv:2605.10325",
+      "status": "present_in_v466_section",
+      "title": "Verifiable Process Rewards for Agentic Reasoning",
+      "url": "https://arxiv.org/abs/2605.10325"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5070",
+    "SCENARIO-REPORT-5070"
+  ]
+}
