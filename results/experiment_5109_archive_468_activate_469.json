@@ -1,0 +1,367 @@
+{
+  "active_roadmap_modified": false,
+  "adversarial_verification": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5109_archive_468_activate_469.json"
+    ],
+    "exit_code": 0,
+    "flagged_adversarial": false,
+    "flags": [],
+    "green": true,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "archive_state": {
+    "archived_milestone": "2026.07.468",
+    "blocked_runtime_substrate": {
+      "blocked_reason": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+      "blocked_runtime_substrate": true,
+      "experiment_id": 5097,
+      "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+      "inference_substrate": "precondition_check_only",
+      "llm_backed_claims_downstream_blocked": true,
+      "runtime_ready": false
+    },
+    "capstone_verdict": "complete_capstone_v468_exact_verifier_scale_decision_recorded",
+    "clean_positives": [
+      {
+        "experiment_id": 5098,
+        "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+        "inference_substrate": "exact_milp_solver_cpu"
+      },
+      {
+        "experiment_id": 5101,
+        "honest_verdict": "success_graph_evidence_energy_separates_contradiction_from_unsupported",
+        "inference_substrate": "synthetic_graph_exact_labels"
+      },
+      {
+        "experiment_id": 5102,
+        "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+        "inference_substrate": "exact_enumeration_cpu"
+      },
+      {
+        "experiment_id": 5103,
+        "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+        "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic"
+      }
+    ],
+    "exp5108_kan_wall": {
+      "adversarial_rigor_preserved_at_scale": true,
+      "exact_milp_wall_measured": true,
+      "experiment_id": 5108,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_kan_pwa_milp_scale_stress_wall_found_at_n10_reason_timeout",
+      "largest_n_reached": 10,
+      "n10_solve_time_s": 120.900356,
+      "n20_solve_time_s": 300.007705,
+      "n20_timed_out": true,
+      "realistic_kan_unit_count_reference": 100,
+      "realistic_n100_reached": false,
+      "scale_premise_for_v469": "exact_milp_does_not_scale_to_realistic_n100"
+    },
+    "flagged_diagnostics": {
+      "diagnostics": [
+        {
+          "experiment_id": 5099,
+          "headline_eligible": false,
+          "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean"
+        },
+        {
+          "experiment_id": 5100,
+          "headline_eligible": false,
+          "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed"
+        },
+        {
+          "experiment_id": 5104,
+          "headline_eligible": false,
+          "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline"
+        },
+        {
+          "experiment_id": 5105,
+          "headline_eligible": false,
+          "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000"
+        }
+      ],
+      "experiment_ids": [
+        5099,
+        5100,
+        5104,
+        5105
+      ],
+      "headline_policy": "flagged_artifacts_excluded_from_clean_headlines"
+    },
+    "fr11_no_promote_state": {
+      "contract_pass_count": 3,
+      "experiment_id": 5105,
+      "flagged_adversarial": true,
+      "heldout_delta": 0.0,
+      "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000",
+      "no_promote_reason": "positive_utility_not_observed",
+      "nonforgetting_delta": 0.0,
+      "promoted": false,
+      "promoted_count": 0,
+      "state": "no_promote_safe_but_inert"
+    },
+    "hardware_continuity_state": {
+      "destructive_actions_taken": [],
+      "experiment_id": 5106,
+      "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+      "honest_verdict": "complete_hardware_partition_telemetry_no_speedup_claim",
+      "kv260_blocker": "no_safe_kv260_uio_register_transcript_collected",
+      "kv260_ssh_ready": true,
+      "kv260_uio_transcript_collected": false,
+      "polarfire_dispatch_executed": false,
+      "polarfire_dispatch_ready": true,
+      "polarfire_ssh_ready": true,
+      "speedup_claimed": false,
+      "state": "continuity_only_no_speedup_claim"
+    },
+    "v469_research_frame": {
+      "doc_names_milestone": true,
+      "fr11_instruction": "use_fover_residuals_only_under_promotion_guards",
+      "kan_research_instruction": "move_beyond_exact_milp_scale_sweep",
+      "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "primary_frame": "fover_in_domain_selection_post_wall_kan_continuity_repair",
+      "runtime_instruction": "repair_endpoint_before_llm_backed_claims"
+    }
+  },
+  "archived_milestone": "2026.07.468",
+  "conductor_modified": false,
+  "duration_s": 2.38332,
+  "exp5108_kan_wall_recorded": true,
+  "experiment_id": "exp5109-archive-468-activate-469",
+  "field_principles": {
+    "active_roadmap_modified": "operator instruction compliance",
+    "conductor_modified": "conductor immutability",
+    "duration_s": "timing accountability",
+    "exp5108_kan_wall_recorded": "no stale KAN scale premise",
+    "experiment_id": "traceability",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "roadmap_next_present": "activation readiness",
+    "source_artifacts_read": "evidence provenance",
+    "tests_run": "verification evidence"
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "blocked_research_roadmap_next_missing",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.469",
+  "preconditions_checked": {
+    "ops_changelog": {
+      "exists": true,
+      "path": "ops/changelog.md"
+    },
+    "ops_conductor_log": {
+      "exists": true,
+      "path": "ops/conductor-log.md"
+    },
+    "required_result_artifacts": {
+      "all_present": true,
+      "missing": []
+    },
+    "research_complete_yaml": {
+      "contains_archived_milestone": true,
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "research_roadmap_next": {
+      "exists": false,
+      "milestone": "missing",
+      "names_milestone": false,
+      "path": "research-roadmap-next.yaml"
+    },
+    "vnext_doc": {
+      "exists": true,
+      "names_milestone": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 5109,
+  "reproducibility_checksum": "088ac8ef0155bd935da5f0e4a63bb4ae35a79a31fe56ef85501c0779490dcfbe",
+  "roadmap_next_milestone": "missing",
+  "roadmap_next_path": "research-roadmap-next.yaml",
+  "roadmap_next_present": false,
+  "run_label_date": "20260701",
+  "schema": "carnot.archive_activation.v468_to_v469_5109.v1",
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "kind": "document",
+      "path": "research-complete.yaml",
+      "sha256": "3e33e6ffcdcd5224d46f69e7c3d4e06851b1b9672467c816fef4f438747d268f",
+      "source_id": "research_complete"
+    },
+    {
+      "exists": true,
+      "kind": "document",
+      "path": "ops/changelog.md",
+      "sha256": "61e74938dc8e63cd925aea0898b2cdc07ae72a248acc94930ee8f61f6468a7bb",
+      "source_id": "ops_changelog"
+    },
+    {
+      "exists": true,
+      "kind": "document",
+      "path": "ops/conductor-log.md",
+      "sha256": "5a3b67bbccc56e49456ff66352f00b300aa88eb709653690930d7917f85b9011",
+      "source_id": "ops_conductor_log"
+    },
+    {
+      "exists": true,
+      "kind": "document",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "ae54bd0e4a7e2e6e22682e548d5871a9a8acae29f8bdc4c56753bfa7a31f22d9",
+      "source_id": "vnext_doc"
+    },
+    {
+      "exists": false,
+      "kind": "document",
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source_id": "roadmap_next"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5095,
+      "kind": "result_artifact",
+      "path": "results/experiment_5095_archive_467_activate_468.json",
+      "sha256": "2b8be581b9b3391ffed6eea5a60b62f8234bd16d0ea86e8f23f451719f02097d",
+      "source_id": "exp5095"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5096,
+      "kind": "result_artifact",
+      "path": "results/experiment_5096_sota_ingestion_v468.json",
+      "sha256": "3a2605ff359c8a0465d85eaf90133ec39985d834ab33edef15944b2cfac0da1f",
+      "source_id": "exp5096"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5097,
+      "kind": "result_artifact",
+      "path": "results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+      "sha256": "028c3eba7b176c5d10d9e16594913182afec17fc2828fe8283ee6d63d48fe952",
+      "source_id": "exp5097"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5098,
+      "kind": "result_artifact",
+      "path": "results/experiment_5098_kan_pwa_milp_scale_v2.json",
+      "sha256": "3e59867be459f493b99020442f29d09b22225b1e1788e1d5eb23807a5e56e86f",
+      "source_id": "exp5098"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5099,
+      "kind": "result_artifact",
+      "path": "results/experiment_5099_beaver_prefix_bound_verifier_v468.json",
+      "sha256": "d50730b952e7de050a2e767864c29600eccc407d017427b41ffb5e020bd1bdd3",
+      "source_id": "exp5099"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5100,
+      "kind": "result_artifact",
+      "path": "results/experiment_5100_constrainprompt_code_assurance_v468.json",
+      "sha256": "9f8f3a956cd1774fb23d65cb02d040c7d4408d9c06c9be7373d30494f1d5789b",
+      "source_id": "exp5100"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5101,
+      "kind": "result_artifact",
+      "path": "results/experiment_5101_incomplete_graph_evidence_energy_v468.json",
+      "sha256": "be720dc2bc2f6114393559eae0c9fb20685af243bae3ef73842545a0fa42244a",
+      "source_id": "exp5101"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5102,
+      "kind": "result_artifact",
+      "path": "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
+      "sha256": "8d2dbc73f45aa93358cf22d9312f8a00008966472d3ed7de399bd5ff58526fec",
+      "source_id": "exp5102"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5103,
+      "kind": "result_artifact",
+      "path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
+      "sha256": "5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570",
+      "source_id": "exp5103"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5104,
+      "kind": "result_artifact",
+      "path": "results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json",
+      "sha256": "3f8c70916f2dd0a6be1e5514695c230b8dde59c3287cf4e87e7b0ee679111b17",
+      "source_id": "exp5104"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5105,
+      "kind": "result_artifact",
+      "path": "results/experiment_5105_fr11_severa_guarded_memory_v468.json",
+      "sha256": "8f0c1105e9ea75fbeaef2d235d59f1f5df64d67d7c9dc3ecddf5dd02a9e8e882",
+      "source_id": "exp5105"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5106,
+      "kind": "result_artifact",
+      "path": "results/experiment_5106_hardware_partition_telemetry_v468.json",
+      "sha256": "23b8709897b3ff400e3414f6716de5b7a6fbb8b3104ccfdc9d99231be4128516",
+      "source_id": "exp5106"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5107,
+      "kind": "result_artifact",
+      "path": "results/experiment_5107_capstone_v468.json",
+      "sha256": "819090d301b52e05eea0597414cc194c98884f8fd71bfc52a754124c14226725",
+      "source_id": "exp5107"
+    },
+    {
+      "exists": true,
+      "experiment_id": 5108,
+      "kind": "result_artifact",
+      "path": "results/experiment_5108_kan_pwa_milp_scale_stress_test.json",
+      "sha256": "ac6dc5dfb4d33a29aac675489bda5937f4ec02f9b8af6b20b5cc8216aa91b0c6",
+      "source_id": "exp5108"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5109",
+    "SCENARIO-REPORT-5109",
+    "SCENARIO-REPORT-5109-BLOCKED-NEXT-ROADMAP"
+  ],
+  "tests_run": [
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5109_archive_468_activate_469.json"
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+    },
+    {
+      "command": [
+        "internal_schema_validation"
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "passed"
+    }
+  ]
+}

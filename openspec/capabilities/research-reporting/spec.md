@@ -15,6 +15,85 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-5109: Archive .468, Record Exp5108 KAN Wall, And Activate .469 Frame
+
+The Exp 5109 workflow SHALL aggregate milestone `2026.07.468` from
+`research-complete.yaml`, `ops/changelog.md`, `ops/conductor-log.md`, result
+artifacts `exp5095` through `exp5108`, and the `.469` planning files. It SHALL
+write `results/experiment_5109_archive_468_activate_469.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the `.468` close-state truthfully: clean positives
+from exact-verifier and evidence-energy artifacts, flagged diagnostics excluded
+from headlines, blocked local SOTA runtime substrate, FR-11 no-promote state,
+hardware continuity without speedup claim, and the post-milestone Exp 5108 KAN
+exact-MILP wall (`N=10` solved at about `120.9s`, `N=20` timed out, realistic
+`N=100` not reached). It SHALL confirm
+`openspec/change-proposals/research-roadmap-vNEXT.md` exists and names
+milestone `2026.07.469`.
+
+The workflow SHALL also confirm `research-roadmap-next.yaml` exists and names
+milestone `2026.07.469`. If that next-roadmap file is absent or names a
+different milestone, the workflow SHALL write a terminal `blocked_<reason>`
+artifact that records `roadmap_next_present=false` or the observed mismatch and
+SHALL NOT repair the condition by editing `research-roadmap.yaml`.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `exp5108_kan_wall_recorded`,
+`roadmap_next_present`, `active_roadmap_modified`, `conductor_modified`,
+`flagged_adversarial`, and `tests_run`. It SHOULD also record derived
+aggregation sections for clean positives, flagged diagnostics, blocked runtime
+substrate, FR-11 no-promote state, hardware continuity, KAN wall, and `.469`
+research frame so the next milestone cannot reuse stale premises.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `exp5108_kan_wall_recorded`: principle "no stale KAN scale premise"
+- `roadmap_next_present`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5109: Archive Artifact Records .468 And Exp5108 Truth
+
+**Given** the `.468` completion record, changelog, conductor log, result
+artifacts `exp5095` through `exp5108`, `research-roadmap-next.yaml` naming
+`2026.07.469`, and `openspec/change-proposals/research-roadmap-vNEXT.md` naming
+`2026.07.469`
+**When** the Exp 5109 workflow runs
+**Then** it writes the JSON artifact, records the exact-verifier clean positives,
+quarantines flagged diagnostics from headlines, records the blocked runtime
+substrate, records FR-11 as no-promote, records hardware as continuity without
+speedup, records the Exp 5108 exact-MILP wall, declares
+`aggregation_from_upstream_artifacts`, records adversarial verification, and
+sets `active_roadmap_modified=false` and `conductor_modified=false`.
+
+#### SCENARIO-REPORT-5109-BLOCKED-NEXT-ROADMAP: Missing Next Queue Blocks Activation Readiness
+
+**Given** the upstream `.468` artifacts and `.469` roadmap document exist
+**And** `research-roadmap-next.yaml` is missing or does not name milestone
+`2026.07.469`
+**When** the Exp 5109 workflow runs
+**Then** it writes a terminal blocked artifact, records the missing or
+mismatched next-roadmap precondition, keeps
+`active_roadmap_modified=false`, keeps `conductor_modified=false`, and does not
+modify `research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5109)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5109 | Planned (`python/carnot/reporting/archive_468_activate_469_5109.py`, `scripts/experiment_5109_archive_468_activate_469.py`) | Planned (`tests/python/test_experiment_5109_archive_468_activate_469.py`) |
+
 ### REQ-REPORT-5010: Verifier-Moat Literature Ingestion Maps New SOTA Onto Phase D
 
 The Exp 5010 workflow SHALL run the reliable SOTA-ingestion channel for the
