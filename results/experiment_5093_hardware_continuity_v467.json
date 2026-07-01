@@ -1,0 +1,269 @@
+{
+  "board_matrix": {
+    "gatemate": {
+      "action_scope": "detect_only_no_flash_no_program_no_latency_claim",
+      "board": "gatemate_a1_dirtyjtag",
+      "cable_state_inference": "dirtyjtag_cable_seen_no_gatemate_idcode",
+      "command_available": true,
+      "destructive_actions_taken": [],
+      "detected": false,
+      "evidence": {
+        "detect_exit_code": 0,
+        "detect_log": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+        "detected_idcode": null
+      },
+      "limitations": [
+        "no_gatemate_flash_or_programming_performed",
+        "no_gatemate_sampler_output_verified"
+      ],
+      "next_safe_step": "Resolve DirtyJTAG/target IDCODE detection before any separate flash or timing task.",
+      "precondition": {
+        "available": true,
+        "command": "sh -lc 'command -v openFPGALoader'",
+        "discipline": "command_availability_only_no_detect_side_effect",
+        "duration_s": 0.071262,
+        "exit_code": 0,
+        "observed": "/opt/oss-cad-suite/bin/openFPGALoader",
+        "resource": "gatemate_detect_command"
+      },
+      "precondition_resource": "gatemate_detect_command",
+      "terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal"
+    },
+    "kv260": {
+      "action_scope": "ssh_only_and_existing_transcript_audit_no_register_touch_by_exp5093",
+      "board": "kv260",
+      "destructive_actions_taken": [],
+      "limitations": [
+        "no_kv260_speedup_claim",
+        "no_new_uio_register_read_run_by_this_experiment"
+      ],
+      "next_safe_step": "Run a separate established safe UIO/register transcript script only when that register-read path is explicitly in scope.",
+      "precondition": {
+        "available": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "discipline": "ssh_only_no_host_sd_card",
+        "duration_s": 4.618353,
+        "exit_code": 0,
+        "observed": "returncode=0",
+        "resource": "kv260_ssh"
+      },
+      "precondition_resource": "kv260_ssh",
+      "speedup_claim_allowed": false,
+      "ssh_ready": true,
+      "terminal_state": "blocked_kv260_no_safe_uio_register_transcript_no_speedup_claim",
+      "uio_transcript_path": null,
+      "uio_transcript_status": {
+        "blocker": "no_existing_safe_kv260_uio_register_transcript_verified",
+        "detail": "Exp 5065 lists UIO devices but does not read a register; older latency scripts write UIO control registers and are outside this audit-only scope.",
+        "path": null,
+        "prior_transcript_path": "results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl",
+        "sha256": null,
+        "verified": false
+      }
+    },
+    "polarfire": {
+      "action_scope": "ssh_and_hash_dispatch_preconditions_only_no_scp_no_dispatch",
+      "board": "polarfire_soc",
+      "destructive_actions_taken": [],
+      "detected": true,
+      "dispatch_executed": false,
+      "dispatch_precheck": {
+        "arch": "riscv64",
+        "blockers": [],
+        "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+        "known_safe_dispatch_path": "carnot.hardware.polarfire_dispatch_smoke.check_preconditions",
+        "mutating_dispatch_steps_skipped": true,
+        "python": "Python 3.12.12",
+        "uptime": "11:02:38 up 18 days, 18:15,  0 user,  load average: 0.00, 0.00, 0.00"
+      },
+      "dispatch_precheck_ready": true,
+      "limitations": [
+        "no_polarfire_scp_performed",
+        "no_polarfire_carnot_dispatch_executed",
+        "no_hash_verified_workload_completion_claimed_by_exp5093"
+      ],
+      "next_safe_step": "Use the established PolarFire dispatch smoke only in a separate task that explicitly allows file copy and workload dispatch.",
+      "precondition": {
+        "available": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "discipline": "ssh_reachability_before_hash_dispatch_precheck",
+        "duration_s": 0.892843,
+        "exit_code": 0,
+        "observed": "returncode=0",
+        "resource": "polarfire_ssh"
+      },
+      "precondition_resource": "polarfire_ssh",
+      "terminal_state": "polarfire_ssh_hash_dispatch_precheck_ready_no_dispatch_executed"
+    }
+  },
+  "command_probes": {
+    "gatemate_detect_command": {
+      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "duration_s": 0.071262,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
+    },
+    "gatemate_dirtyjtag_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.016106,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.618353,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_arch": {
+      "combined_output": "riscv64\n",
+      "command": "ssh polarfire 'uname -m'",
+      "duration_s": 0.865361,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "riscv64\n"
+    },
+    "polarfire_kernel": {
+      "combined_output": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d\n",
+      "command": "ssh polarfire 'uname -r'",
+      "duration_s": 0.783281,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d\n"
+    },
+    "polarfire_python": {
+      "combined_output": "Python 3.12.12\n",
+      "command": "ssh polarfire 'python3 --version'",
+      "duration_s": 0.815972,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Python 3.12.12\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.892843,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_uptime": {
+      "combined_output": " 11:02:38 up 18 days, 18:15,  0 user,  load average: 0.00, 0.00, 0.00\n",
+      "command": "ssh polarfire uptime",
+      "duration_s": 0.818392,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": " 11:02:38 up 18 days, 18:15,  0 user,  load average: 0.00, 0.00, 0.00\n"
+    }
+  },
+  "destructive_actions_allowed": false,
+  "destructive_actions_taken": [],
+  "duration_s": 8.882491,
+  "experiment": "experiment_5093_hardware_continuity",
+  "experiment_id": 5093,
+  "field_principles": {
+    "board_matrix": {
+      "principle": "one row per active board preserves evidence, blockers, terminal state, and safe next step."
+    },
+    "destructive_actions_taken": {
+      "principle": "must be empty because this continuity audit is precheck-only."
+    },
+    "duration_s": {
+      "principle": "measured wall-clock time makes live prechecks auditable and discourages fabricated hardware state."
+    },
+    "flagged_adversarial": {
+      "principle": "false only when schema checks pass and the artifact preserves no-speedup and no-destructive-action boundaries."
+    },
+    "gatemate_detected": {
+      "principle": "true only when non-destructive DirtyJTAG detection reports GateMate/GM1Ax/IDCODE evidence."
+    },
+    "gatemate_terminal_state": {
+      "principle": "names the current GateMate state without flashing, programming, or claiming sampler output."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed verdict distinguishes a clean audit from partial board blockers without retrying hardware."
+    },
+    "inference_substrate": {
+      "principle": "declares hardware_precheck_and_transcript_audit so SSH/detect transcripts are not mistaken for benchmark inference."
+    },
+    "kv260_speedup_claim_allowed": {
+      "principle": "must stay false because this artifact is continuity/precheck evidence, not a latency or speedup benchmark."
+    },
+    "kv260_ssh_ready": {
+      "principle": "true only from the required BatchMode SSH command to kria; host storage checks are invalid for KV260."
+    },
+    "kv260_uio_transcript_path": {
+      "principle": "points only to an already-existing safe read-only UIO/register transcript, or null with an explicit blocker."
+    },
+    "polarfire_detected": {
+      "principle": "true only from non-destructive PolarFire BatchMode SSH reachability."
+    },
+    "polarfire_dispatch_precheck_ready": {
+      "principle": "true only when non-mutating hash-dispatch prerequisites pass; no SCP or workload dispatch is performed."
+    },
+    "preconditions_checked": {
+      "principle": "records the resources checked before any follow-on probe, including the explicit no-destructive-actions policy."
+    }
+  },
+  "flagged_adversarial": false,
+  "gatemate_detected": false,
+  "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+  "honest_verdict": "complete_hardware_continuity_v467_partial_board_blockers",
+  "inference_substrate": "hardware_precheck_and_transcript_audit",
+  "kv260_speedup_claim_allowed": false,
+  "kv260_ssh_ready": true,
+  "kv260_uio_transcript_path": null,
+  "polarfire_detected": true,
+  "polarfire_dispatch_precheck_ready": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.618353,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "discipline": "command_availability_only_no_detect_side_effect",
+      "duration_s": 0.071262,
+      "exit_code": 0,
+      "observed": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "gatemate_detect_command"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_reachability_before_hash_dispatch_precheck",
+      "duration_s": 0.892843,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    },
+    {
+      "available": false,
+      "command": "policy",
+      "discipline": "explicit_no_destructive_actions",
+      "duration_s": 0.0001,
+      "exit_code": 0,
+      "observed": "false",
+      "resource": "destructive_actions_allowed"
+    }
+  ],
+  "random_seed": 5093,
+  "reproducibility_checksum": "24e824ab176c51e58cb7bbb1558ec64a7ee4bbbcf98d93b8bbf56c8a70898183",
+  "schema": "carnot.experiment_5093_hardware_continuity.v467",
+  "spec_refs": [
+    "REQ-HW-5093",
+    "SCENARIO-HW-5093"
+  ]
+}
