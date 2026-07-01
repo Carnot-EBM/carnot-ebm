@@ -281,3 +281,32 @@ Known v1 limitations:
 5. Re-run `scripts/experiment_290_fpga_cpu_benchmark.py` — it will re-label
    entries as `hardware` and record true FPGA throughput numbers.
 6. Replace software-model timing in this doc with on-board throughput numbers.
+
+## Literature: Multi-FPGA p-bit Scaling (2026-06-30)
+
+**"Programmable Probabilistic Computer with 1,000,000 p-bits"** — Aadit, Zhang, Chowdhury, et al.
+(Camsari group), arXiv:2606.25313 (2026-06). Networks FPGAs into a distributed Ising/p-bit machine
+(up to 1M p-bits, an 18-FPGA AMD VP1902 system) by exchanging ONLY 1-bit boundary states between
+partitions; >10^12 Gibbs-sampling flips/sec. Demonstrated on 3D spin glasses, Max-Cut, and a
+13,042-variable/55,558-clause 3-SAT instance (99.74% satisfied).
+
+**The result directly relevant to Carnot's KV260 track:** a single dimensionless ratio
+eta = f_comm/f_p-bit (boundary-exchange frequency vs local p-bit update frequency) governs whether a
+partitioned sampler behaves like an unpartitioned/monolithic one. Above a topology-dependent threshold
+the distributed machine matches a monolithic GPU reference; below it, residual energy still decays as a
+POWER LAW but with a REDUCED EXPONENT — a quantifiable throughput-accuracy tradeoff, not a binary
+thermalized/not-thermalized judgment.
+
+**Why this matters here:** CLAUDE.md's Paper-v6 Narrowing Discipline retracted the claim "KV260 samples
+reach Boltzmann thermalization" (narrowed to a vague "fixed-compute heuristic budget") because we had no
+principled instrument to characterize how far from ideal our sampler runs. This paper's
+eta/threshold/power-law-exponent framework is exactly that instrument. `fpga_ising.py` currently has NO
+residual-energy or ground-state tracking (checked 2026-06-30) — see `ops/known-issues.md` for the
+follow-up task: measure our sampler's residual-energy decay exponent vs a computed/known reference,
+across a schedule sweep, and report the exponent instead of the vague budget label. This would upgrade
+the retracted claim into a real, quantitative, defensible one.
+
+Not directly portable as code (different substrate — real p-bit hardware vs our quantized-fixed-point
+FPGA sampler; their scale is 1000x+ ours), but the design pattern (1-bit boundary sync, graph-coloring
+update schedules, METIS/KaHIP sparse partitioning) is the right citable precedent if Carnot ever scales
+Ising work past single-board n=64. Full notes: `reference_pbit_million_scale_fpga` memory.
