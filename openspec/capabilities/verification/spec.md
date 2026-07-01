@@ -22623,6 +22623,75 @@ than promoting the upstream MuSR result.
 |---|---|---|
 | REQ-VERIFY-5049 | Proposed (`python/carnot/experiment_5049_second_corpus_confirmation.py`, `results/experiment_5049_second_corpus_confirmation.json`) | Proposed (`tests/python/test_experiment_5049_second_corpus_confirmation.py`) |
 
+### REQ-VERIFY-5060: Audited D4 Second-Corpus Confirmation V2
+
+The repository SHALL provide Exp 5060 at
+`python/carnot/experiment_5060_second_corpus_audit_v2.py` to rerun the D4
+second-corpus confirmation after Exp 5059 has produced a best executable D1
+arm, then write `results/experiment_5060_second_corpus_audit_v2.json`.
+
+The runner SHALL load the Exp 5044 second-corpus candidate cache and compute
+stable row hashes over canonical row content before scoring. It SHALL audit
+train/test overlap against the upstream MuSR D-arm evidence, exact and
+source-instance duplicate rows, gold-label leakage in the scorer-rendered
+candidate text, and oracle-derived selection features such as `label`,
+`label_correct`, `candidate_label`, `solver_verdict`,
+`solver_score_used_for_selection`, answer-key fields, and model-identity fields.
+Those oracle-derived fields MAY remain in raw cache rows for offline audit, but
+they SHALL NOT be visible to the candidate-selection scorer.
+
+The runner SHALL load Exp 5059 as the executable-arm gate. If Exp 5059 does not
+report `best_arm_available=true`, `verifier_is_oracle=false`, and a deployable
+D1 checkpoint, Exp 5060 SHALL write a blocked artifact rather than reusing the
+Exp 5049 confirmation. When the gate is open, Exp 5060 SHALL evaluate the Exp
+5059 best executable arm against genuine tuned self-consistency on the Exp 5044
+second corpus, using the shared moat harness paired bootstrap CI95 and McNemar
+exact p. New candidate generation is out of scope; if it becomes necessary, at
+least one mandated SOTA GGUF from the model specs must provide headline
+candidate provenance and legacy small models remain smoke-only.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`second_corpus_name`, `second_corpus_confirmed`, `second_corpus_audit_clean`,
+`delta_vs_tuned_sc_second`, `paired_ci95_second`, `mcnemar_p_second`,
+`n_questions_second`, `row_hash_manifest`, `leak_audit_passed`,
+`oracle_provenance_passed`, `duplicate_audit_passed`, and
+`legacy_models_smoke_only`. It SHOULD also include the D4 verdict class,
+train/test overlap status, no-oracle receipts, headroom metrics, upstream
+artifact citations, duration, field principles, and a reproducibility checksum.
+
+`second_corpus_confirmed` SHALL be true only for a clean D4 confirmation:
+Exp 5059 must have a proper first-corpus executable-arm win, all second-corpus
+audits must pass, headroom must be present, the second-corpus verifier delta
+must be positive with paired CI95 excluding zero, and McNemar p must be below
+0.05. If the second-corpus statistics are positive but Exp 5059 is not a proper
+first-corpus win, Exp 5060 SHALL report a scoped clue rather than a confirmation.
+If an audit control fails after scoring, Exp 5060 SHALL retire or flag the D4
+claim rather than promote a confirmation verdict. If a required artifact or
+scorer is unavailable, Exp 5060 SHALL report a blocked verdict.
+
+### SCENARIO-VERIFY-5060: D4 Confirmation Is Audited Before Promotion
+
+Given Exp 5044 has a readable ConstraintBench second-corpus cache and Exp 5059
+reports a best executable D1 arm, when Exp 5060 runs, then it computes the row
+hash manifest, audits overlap, duplicates, label leakage, and oracle-derived
+selection features, scores only sanitized candidate text, computes genuine
+tuned-SC, verifier accuracy, signed delta, paired CI95, McNemar p, headroom,
+and no-oracle receipts, and writes every required artifact field.
+
+If duplicate source instances, gold-label leakage outside the candidate answer,
+or oracle-derived selection features are available to the scorer, then Exp 5060
+sets `second_corpus_audit_clean=false`, sets `second_corpus_confirmed=false`,
+and emits a retired or blocked honest verdict instead of a clean confirmation.
+If the audits pass but Exp 5059 lacks a proper first-corpus win, then a positive
+second-corpus result is recorded as a scoped clue. If Exp 5059 has no deployable
+best arm, Exp 5060 writes a blocked artifact with null second-corpus statistics.
+
+## Implementation Status (REQ-VERIFY-5060)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5060 | Proposed (`python/carnot/experiment_5060_second_corpus_audit_v2.py`, `results/experiment_5060_second_corpus_audit_v2.json`) | Proposed (`tests/python/test_experiment_5060_second_corpus_audit_v2.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
