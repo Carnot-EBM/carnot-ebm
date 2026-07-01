@@ -1,0 +1,24 @@
+{
+  "experiment": 5072,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-01",
+  "started_at": "2026-07-01T06:34:21.719332+00:00",
+  "finished_at": "2026-07-01T06:34:21.719332+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE A2 uPRM substrate -- build token/step SOTA GGUF logprob cache for process-reward scoring",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5071-gguf-logprob-preflight-v466",
+      "artifact_field": "logprob_endpoint_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
