@@ -1,0 +1,169 @@
+{
+  "cache_input_summary": {
+    "available": true,
+    "candidate_source": "exp5058_enriched_by_exp5029",
+    "detail": "existing MuSR candidate strings selected",
+    "fallback_enrichment_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+    "n_candidates": 1525,
+    "n_questions": 200,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl",
+    "resource": "existing_musr_candidate_cache"
+  },
+  "cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5086_uprm_logprob_cache_retry_v467.jsonl",
+  "cache_row_schema": "carnot.experiment_5086_uprm_logprob_cache_retry.row.v1",
+  "duration_s": 0.289489,
+  "endpoint_used": "http://127.0.0.1:46097/completion",
+  "experiment": "experiment_5086_uprm_logprob_cache_retry",
+  "experiment_id": 5086,
+  "field_principles": {
+    "cache_path": {
+      "principle": "resumable JSONL cache path consumed by downstream uPRM scoring."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration records whether this was live endpoint scoring or a blocked precondition pass."
+    },
+    "endpoint_used": {
+      "principle": "concrete Exp5085 endpoint route used for scoring or attempted during the blocker."
+    },
+    "flagged_adversarial": {
+      "principle": "false for honest blocked/ready artifacts unless the runner itself detects inconsistent provenance."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix distinguishes ready cache from endpoint/input blockers; no 0-row success is allowed."
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference only when rows were scored through the Exp5085 endpoint; otherwise precondition_check_only."
+    },
+    "logprob_cache_ready": {
+      "principle": "true only when every target candidate row has token logprobs from the endpoint."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF IDs plus resolved paths and the selected Exp5085 endpoint model."
+    },
+    "n_candidates": {
+      "principle": "number of target existing candidate strings selected for scoring."
+    },
+    "n_questions": {
+      "principle": "number of MuSR questions represented by complete scored rows."
+    },
+    "n_rows_complete": {
+      "principle": "number of valid row-level token/step telemetry rows flushed to disk."
+    },
+    "parse_rate": {
+      "principle": "complete valid rows divided by target candidates; catches partial runs honestly."
+    },
+    "preconditions_checked": {
+      "principle": "records Exp5085 artifact hash, endpoint URL, selected model path, cache input path, disk space, and live endpoint probe evidence before scoring."
+    },
+    "step_cache_ready": {
+      "principle": "true only when every complete row has deterministic step boundaries with token spans."
+    },
+    "top_logprob_coverage": {
+      "principle": "fraction of complete rows whose endpoint response exposed top-logprob alternatives."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+  "inference_substrate": "precondition_check_only",
+  "logprob_cache_ready": false,
+  "model_specs": {
+    "endpoint_route": "http://127.0.0.1:46097/completion",
+    "endpoint_url": "http://127.0.0.1:46097",
+    "mandatory_models": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "flagship_moe",
+        "selected_for_endpoint": false
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "role": "flagship_dense",
+        "selected_for_endpoint": false
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "role": "middle_moe",
+        "selected_for_endpoint": true
+      }
+    ],
+    "selected_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "telemetry_request": {
+      "echo_prompt_for_candidate_tokens": true,
+      "n_probs": 20,
+      "top_logprobs_required": true
+    }
+  },
+  "n_candidates": 1525,
+  "n_questions": 0,
+  "n_rows_complete": 0,
+  "parse_rate": 0.0,
+  "preconditions_checked": {
+    "cache_input": {
+      "available": true,
+      "candidate_source": "exp5058_enriched_by_exp5029",
+      "detail": "existing MuSR candidate strings selected",
+      "fallback_enrichment_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+      "n_candidates": 1525,
+      "n_questions": 200,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl",
+      "resource": "existing_musr_candidate_cache"
+    },
+    "disk_space": {
+      "available": true,
+      "detail": "disk space available",
+      "free_bytes": 1490471378944,
+      "free_gib": 1388.11,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "resource": "disk_space"
+    },
+    "endpoint_live_probe": {
+      "available": false,
+      "detail": "URLError: <urlopen error [Errno 111] Connection refused>",
+      "endpoint_used": "http://127.0.0.1:46097/completion",
+      "resource": "exp5085_endpoint_live_probe",
+      "token_logprob_count": 0,
+      "top_logprob_row_count": 0
+    },
+    "exp5085_artifact": {
+      "available": true,
+      "detail": "Exp5085 artifact loaded",
+      "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+      "logprob_endpoint_ready": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json",
+      "resource": "exp5085_artifact",
+      "sha256": "sha256:8f0ae4812df8d9108c09d34017f6c8fa09db1f059319d03b2757d8ad641a086f"
+    },
+    "structured_gate": {
+      "available": true,
+      "detail": "Exp5085 structured gate records endpoint and selected model",
+      "endpoint_url": "http://127.0.0.1:46097",
+      "resource": "exp5085_structured_gate",
+      "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:bdc7ec6ef50801075c0565608428edf8fcb854787c75fc54256f2776f8b367d0",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5086_uprm_logprob_cache_retry_v467.json",
+  "resume_summary": {
+    "appended_rows": 0,
+    "existing_complete_rows": 0,
+    "skipped_existing_rows": 0,
+    "target_rows": 1525
+  },
+  "row_errors": [],
+  "schema": "carnot.experiment_5086_uprm_logprob_cache_retry.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5086",
+    "SCENARIO-VERIFY-5086"
+  ],
+  "step_cache_ready": false,
+  "top_logprob_coverage": 0.0
+}
