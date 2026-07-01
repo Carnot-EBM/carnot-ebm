@@ -22904,6 +22904,68 @@ differentiated result instead of a generation-frontier claim.
 |---|---|---|
 | REQ-VERIFY-5062 | Proposed (`python/carnot/experiment_5062_guided_decoding_cost_frontier.py`, `results/experiment_5062_guided_decoding_cost_frontier.json`) | Proposed (`tests/python/test_experiment_5062_guided_decoding_cost_frontier.py`) |
 
+### REQ-VERIFY-5075: DCCD Guided Decoding Scale Frontier
+
+The repository SHALL provide Exp 5075 at
+`python/carnot/experiment_5075_dccd_guided_decoding_scale.py` to scale the
+guided decoding frontier on a meaningful matched sample and write
+`results/experiment_5075_dccd_guided_decoding_scale_v466.json`.
+
+The runner SHALL compare exactly these arms on the same prompt set:
+`unguided`, `hard_constrained`, `reward_guided`, `dccd`, and `rerank_only`.
+`MODEL_SPECS` SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+The runner SHALL load the Exp 5058 refreshed candidate cache, Exp 5059
+rerank/scorer artifact, and Exp 5071 GGUF logprob preflight before producing
+a terminal artifact. If the local SOTA endpoint is unavailable, the runner
+MUST continue only as a replay/accounting frontier, mark every arm's live
+local SOTA inference usage as false, and use an underpowered/no-headline
+terminal verdict rather than claiming a live generated headline.
+
+The DCCD arm SHALL reuse the public DCCD algorithm shape without vendoring
+external code: first choose a semantic draft from the candidate pool without
+hard structural masking, then perform a draft-conditioned structural
+enforcement step that returns only a parseable answer from the allowed answer
+schema. The hard-constrained arm SHALL represent immediate structural
+enforcement, the reward-guided arm SHALL represent in-generation reward/energy
+selection, and the rerank-only arm SHALL select after candidate generation.
+All arms SHALL record candidate hashes, candidate-difference rates,
+parse/validity rates, answer accuracy, token budget, NFE, estimated cost,
+wall time, and whether live local SOTA inference was used.
+
+The terminal artifact MUST include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`, `model_specs`,
+`n_questions`, `arms`, `unguided_accuracy`, `dccd_accuracy`,
+`guided_accuracy`, `rerank_only_accuracy`, `delta_dccd_vs_rerank`,
+`ci95_delta`, `nfe_by_arm`, `token_budget_by_arm`,
+`beats_rerank_only`, and `flagged_adversarial`. It SHOULD also include
+hard-constrained accuracy, parse and validity rates by arm, per-arm live
+inference flags, candidate-difference rates, source artifact paths, a
+reproducibility checksum, and the exact sample-size/readiness blockers.
+
+### SCENARIO-VERIFY-5075: DCCD Scale Frontier Reports Honest Underpowered Replay
+
+Given Exp 5058 has refreshed mandated-SOTA candidate rows, Exp 5059 exposes
+rerank-only predictions, and Exp 5071 reports cached GGUF models without a
+live completion/logprob endpoint, when Exp 5075 runs, then it evaluates the
+matched prompt set across unguided, hard-constrained, reward-guided, DCCD, and
+rerank-only arms; writes every required artifact field; records token/NFE/cost
+accounting by arm; computes the paired DCCD-vs-rerank delta and CI95; sets
+per-arm live local SOTA inference flags to false; and emits a terminal
+`complete_dccd_guided_frontier_no_headline_underpowered` verdict unless DCCD
+beats rerank-only with live local SOTA evidence.
+
+If the matched sample has too few questions, if required upstream artifacts are
+missing, or if the arm outputs cannot be parsed into the required accounting
+schema, Exp 5075 SHALL fail closed with a blocked or underpowered terminal
+verdict that includes exact counts instead of fabricating live inference.
+
+## Implementation Status (REQ-VERIFY-5075)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5075 | Proposed (`python/carnot/experiment_5075_dccd_guided_decoding_scale.py`, `results/experiment_5075_dccd_guided_decoding_scale_v466.json`) | Proposed (`tests/python/test_experiment_5075_dccd_guided_decoding_scale.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
