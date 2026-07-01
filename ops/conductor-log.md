@@ -9721,3 +9721,5 @@ The contro |
 | 2026-07-01 07:18 UTC | PHASE C1 continuous self-learning -- group self-co | OK | 86 passed, 1 warning in 6.58s |
 | 2026-07-01 07:29 UTC | PHASE C2 FR-11 memory-gap ledger -- explain remain | OK | 87 passed, 1 warning in 8.95s |
 | 2026-07-01 07:40 UTC | PHASE C3 hardware continuity -- KV260 transcript s | OK | 87 passed, 1 warning in 6.27s |
+| 2026-07-01 07:49 UTC | PHASE C4 KAN formal bridge -- tiny PWA/MILP abstra | OK | 87 passed, 1 warning in 6.64s |
+| 2026-07-01 07:51 UTC | PHASE D1 decision gate -- aggregate uPRM/VPR/DCCD/ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5073-uprm-process-verifier-v466, exp5074- |
