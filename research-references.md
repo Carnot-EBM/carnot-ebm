@@ -25363,3 +25363,183 @@ made from that source.
   aligning with Carnot's verifier-product direction after the ARC sprint.
 
 <!-- V466-PLANNER-REFERENCES-END -->
+
+<!-- V467-PLANNER-REFERENCES-START -->
+## V467 planner source set (2026-07-01) - endpoint repair, exact-verifier pivot, and governed FR-11
+
+`.466` completed its conductor pass but not its intended scientific decision: the SOTA GGUF model
+files were present, while the live completion/logprob endpoint was not; the uPRM/VPR tasks were
+therefore gate-blocked, DCCD did not beat rerank-only, the tool-first cascade did not show a Pareto
+win, FR-11 memory rolled back on held-out regression, KV260/PolarFire remained reachable without a
+speedup claim, and the KAN/PWA/MILP bridge verified only a tiny property. This sweep therefore
+prioritizes (a) fixing the local inference substrate before any more logprob-dependent verifier claims,
+(b) moving Carnot's verifier moat toward objective solvers/formal checkers, and (c) testing continuous
+self-learning with memory budgets, provenance, and rollback instead of blind accumulation.
+
+Search coverage: arXiv, OpenReview, Hugging Face Papers, GitHub repositories, Extropic writing,
+Logical Intelligence updates, and Semantic Scholar citation links for EBT (`arXiv:2507.02092`) and
+ARM-EBM (`arXiv:2512.15605`) were checked on 2026-07-01. Semantic Scholar returned live metadata in
+this pass: EBT had 26 listed citations and ARM-EBM had 7 listed citations; the actionable citing
+papers below include looped/fixed-point reasoners, distributional EBMs, and feature-matching EBFT.
+
+### Programmable Probabilistic Computer with 1,000,000 p-bits
+- **Source:** arXiv:2606.25313 - https://arxiv.org/abs/2606.25313
+- **Tracks:** hardware-accelerated sampling, Ising systems, constraint satisfaction
+- **Carnot hook:** Move hardware reporting from raw board presence to partitioned-sampler telemetry:
+  boundary-exchange cadence, host/device dispatch overhead, and accuracy-throughput tradeoff. KV260,
+  GateMate, and PolarFire tasks should not claim speedup until this split is measured.
+- **Actionability:** The paper's FPGA-network result makes the relevant hardware question explicit:
+  p-bit local update rate is not enough; the communication/update timing ratio determines whether a
+  partitioned stochastic solver behaves like a monolithic one.
+
+### Probabilistic-bit Guided CDCL for SAT Solving using Ising Consensus Assumptions
+- **Source:** arXiv:2605.04033 - https://arxiv.org/abs/2605.04033
+- **Tracks:** Ising applications in ML, constraint satisfaction, verification
+- **Carnot hook:** Prototype an Ising-to-CDCL bridge where stochastic samples propose assumptions and
+  a sound SAT/Z3 solver remains the authority. This is a better verifier-moat fit than free-form
+  MuSR judging because correctness is preserved by the exact fallback.
+- **Actionability:** The hybrid method reports large conflict/propagation reductions on selected
+  controlled-backbone SAT instances while explicitly warning that benefits are distribution-sensitive,
+  which maps cleanly to a gated Carnot experiment.
+
+### Vectorizing the Trie: Efficient Constrained Decoding for LLM-based Generative Retrieval on Accelerators
+- **Source:** arXiv:2602.22647 - https://arxiv.org/abs/2602.22647
+- **Code:** https://github.com/youtube/static-constraint-decoding
+- **Tracks:** constrained generation, energy-guided decoding, hardware-aware inference
+- **Carnot hook:** Replace the failed DCCD-style free-form guided decoding continuation with a
+  STATIC-style CSR constraint mask for finite verifier schemas and structured outputs. Report mask
+  latency and validity against a CPU trie and rerank-only baseline.
+- **Actionability:** STATIC flattens a trie into sparse CSR matrices so constraint enforcement becomes
+  accelerator-native instead of host pointer chasing; this directly targets Carnot's local GGUF and
+  future FPGA/GPU dispatch constraints.
+
+### Temporal Consistency for LLM Reasoning Process Error Identification
+- **Source:** arXiv:2503.14495 - https://arxiv.org/abs/2503.14495
+- **OpenReview:** https://openreview.net/forum?id=sM5QDzIg3j
+- **Code:** https://github.com/jcguo123/Temporal-Consistency
+- **Tracks:** process verification, hallucination detection, logprob-free verifier repair
+- **Carnot hook:** Add a logprob-free process-verifier fallback that iteratively refines step-error
+  judgments and audits consistency over time, instead of blocking all process-verifier work on uPRM
+  telemetry.
+- **Actionability:** The method improves process error identification without human step labels or a
+  multi-model debate, and gives Carnot a falsifiable fallback if GGUF top-logprob telemetry remains
+  unavailable.
+
+### PathFinder-PRM / Error-Aware Hierarchical Supervision
+- **Source:** arXiv:2505.19706 - https://arxiv.org/abs/2505.19706
+- **Code:** https://github.com/declare-lab/PathFinder-PRM
+- **Tracks:** process reward models, hallucination mitigation, verifier moat
+- **Carnot hook:** If Carnot continues PRM work, separate error-type classification from scalar reward
+  estimation and report first-error accuracy by error class. Do not treat one scalar reward as the
+  whole process-verifier object.
+- **Actionability:** The paper reports PRMBench gains from hierarchical error labels and gives a
+  concrete design for diagnosing process-verifier failures rather than only observing no-win deltas.
+
+### SmartSnap: Proactive Evidence Seeking for Self-Verifying Agents
+- **Source:** arXiv:2512.22322 - https://arxiv.org/abs/2512.22322
+- **Tracks:** self-verifying agents, evidence-grounded verification, continuous learning
+- **Carnot hook:** Continuous self-learning artifacts should include concise evidence snapshots chosen
+  by the live agent or learner, so later verification and promotion decisions do not depend on noisy
+  full trajectories.
+- **Actionability:** SmartSnap reframes verification from post-hoc judging to evidence curation, which
+  supports Carnot's FR-11 requirement for auditable memory/skill promotion.
+
+### ReVeal: Self-Evolving Code Agents via Reliable Self-Verification
+- **Source:** arXiv:2506.11442 - https://arxiv.org/abs/2506.11442
+- **OpenReview:** https://openreview.net/forum?id=q56ZI1Co43
+- **Tracks:** reliable self-verification, code verification, continual agent learning
+- **Carnot hook:** Code/formal tasks are stronger next verifier domains than free-form commonsense:
+  tests, compilers, SAT/SMT, and proof assistants provide dense external feedback without turning the
+  LLM into the judge.
+- **Actionability:** ReVeal shows that self-verification can improve when tool feedback is part of the
+  learning loop, aligning with Carnot's local-first verifier-cascade design.
+
+### Forget to Improve: On-Device LLM-Agent Continual Learning via Budget-Curated Memory
+- **Source:** arXiv:2606.25115 - https://arxiv.org/abs/2606.25115
+- **Tracks:** continuous self-learning, memory governance, on-device constraints
+- **Carnot hook:** The next FR-11 attempt should score memories by net value per byte, include TTL and
+  poisoning/provenance guards, and delete or quarantine stale/harmful entries. Memory growth alone is
+  now a known wrong mechanism for Carnot.
+- **Actionability:** The paper's keep/share/trust framing gives a direct implementation target for a
+  guarded memory lifecycle that can improve held-out performance or honestly roll back.
+
+### On-Policy Replay for Continual Supervised Fine-Tuning
+- **Source:** arXiv:2605.29495 - https://arxiv.org/abs/2605.29495
+- **Code:** https://github.com/Yancey2024/OnPolicyReplay
+- **Tracks:** continual learning, replay, self-learning verification
+- **Carnot hook:** Replace off-policy replay with examples generated from the current verifier/generator
+  state, filtered by exact or deterministic rewards. This directly addresses `.466`'s failed
+  promote-on-dev memory behavior.
+- **Actionability:** The method routes on-policy signal through the data source rather than auxiliary
+  losses, making it a lightweight fit for Carnot's no-weight-update FR-11 experiments.
+
+### MemoryBench and Hierarchical Procedural Memory
+- **Sources:** arXiv:2510.17281 - https://arxiv.org/abs/2510.17281 and
+  arXiv:2512.18950 - https://arxiv.org/abs/2512.18950
+- **Tracks:** continuous self-learning, procedural memory, service-time feedback
+- **Carnot hook:** Evaluate memory on service-time feedback and procedural reuse, not only homogeneous
+  reading-comprehension traces. Add Bayesian reliability and contrastive success/failure refinement if
+  skills are promoted.
+- **Actionability:** These papers support the FR-11 pivot from "store more traces" to "govern reusable
+  procedures with reliability, evidence, and held-out non-forgetting gates."
+
+### Fixed-Point Reasoners and LoopUS
+- **Sources:** arXiv:2606.18206 - https://arxiv.org/abs/2606.18206 and
+  arXiv:2605.11011 - https://arxiv.org/abs/2605.11011
+- **Tracks:** EBT citations, latent refinement, adaptive compute
+- **Carnot hook:** Treat looped/fixed-point reasoning as architectural pressure for Phase-3/Phase-7,
+  especially convergence/halting telemetry. Do not schedule a training-heavy looped-transformer build
+  until the local SOTA inference substrate is repaired.
+- **Actionability:** Both papers support adaptive latent refinement, which is aligned with Carnot's
+  energy-minimization thesis but not a short `.467` execution target.
+
+### Matching Features, Not Tokens: Energy-Based Fine-Tuning of Language Models
+- **Source:** arXiv:2603.12248 - https://arxiv.org/abs/2603.12248
+- **Tracks:** energy-based fine-tuning, on-policy rollouts, sequence-level calibration
+- **Carnot hook:** Use feature-matching ideas for future verifier/self-learning objectives only after
+  exact-verifier domains are established; `.467` can record the design pressure but should avoid a
+  weight-update experiment.
+- **Actionability:** EBFT shows that rollout-level feature statistics can be an energy target without
+  a task-specific verifier, a useful medium-term bridge for FR-11.
+
+### Agentic MIP Research and KAN PWA/MILP Verification
+- **Sources:** arXiv:2605.09186 - https://arxiv.org/abs/2605.09186 and
+  arXiv:2602.06737 - https://arxiv.org/abs/2602.06737
+- **Tracks:** constraint-handler generation, KAN verification, formal solver integration
+- **Carnot hook:** Scale `.466`'s tiny KAN proof by adding MILP size/error-budget telemetry and keep
+  any LLM-generated constraint-handler work under exact solver tests. This is an objective-verifier
+  path toward the PRD's verifiable reasoning requirement.
+- **Actionability:** Both papers make solver-aware generation/verification concrete enough for local
+  experiments without relying on a free-form judge.
+
+### Restoring Sparsity in Potts Machines via Mean-Field Constraints
+- **Source:** arXiv:2602.04200 - https://arxiv.org/abs/2602.04200
+- **Tracks:** Ising/Potts hardware, sparse constraints, FPGA scaling
+- **Carnot hook:** When SAT/constraint problems become dense after encoding, test mean-field or
+  p-dit-style sparse formulations before mapping to hardware. This belongs in hardware design notes,
+  not in an immediate speedup claim.
+- **Actionability:** The paper gives a concrete reason to measure coupling density and bias-update
+  overhead in future KV260/GateMate/PolarFire sampler work.
+
+### Boltzmann-GPT
+- **Source:** arXiv:2601.17094 - https://arxiv.org/abs/2601.17094
+- **Tracks:** EBM world models, language conditioning, structured generation
+- **Carnot hook:** Keep the "world model separate from language surface" idea for architecture: Carnot's
+  energy model should score structured state and constraints, while local GGUF models provide the
+  language interface.
+- **Actionability:** The result supports small scoped demonstrations where an energy-based world model
+  conditions generation, but it is not stronger than the exact-verifier pivot for `.467`.
+
+### Extropic XTR-0 / TSU and Logical Intelligence Kona/Aleph updates
+- **Sources:** https://extropic.ai/writing/inside-x0-and-xtr-0,
+  https://logicalintelligence.com/kona-ebms-energy-based-models,
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation, and
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks
+- **Tracks:** thermodynamic sampling hardware, EBRM product architecture, formal verification
+- **Carnot hook:** Keep TSU work as architecture/simulation until hardware exists locally. Treat
+  Logical's Kona/Aleph updates as pressure to move Carnot toward deterministic/formal verification
+  surfaces where a checker, compiler, SAT solver, or proof assistant owns correctness.
+- **Actionability:** XTR-0 confirms the CPU+FPGA+TSU platform shape; Logical's public formal-verifier
+  framing reinforces that the language model should interface with a verifier, not replace it.
+
+<!-- V467-PLANNER-REFERENCES-END -->
