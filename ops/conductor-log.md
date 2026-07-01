@@ -9730,3 +9730,4 @@ The contro |
 | 2026-07-01 07:55 UTC | PHASE D2 capstone -- final .466 milestone synthesi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.de |
 | 2026-07-01 08:28 UTC | Plan milestone 2026.07.467 | OK | 12 tasks proposed |
 | 2026-07-01 08:31 UTC | Milestone 2026.07.467 activated | OK | 12 tasks queued |
+| 2026-07-01 08:44 UTC | PHASE 0 transition -- archive .466 truth, activate | OK | 85 passed, 1 warning in 8.96s |
