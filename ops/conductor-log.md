@@ -9685,3 +9685,4 @@ The contro |
 | 2026-06-30 23:09 UTC | CAPSTONE v464 -- aggregate powered moat, second-co | OK | 88 passed, 1 warning in 7.09s |
 | 2026-07-01 00:08 UTC | Plan milestone 2026.06.465 | OK | 13 tasks proposed |
 | 2026-07-01 00:11 UTC | Milestone 2026.06.465 activated | OK | 13 tasks queued |
+| 2026-07-01 00:25 UTC | PHASE 0 transition -- archive .464, activate .465, | OK | 86 passed, 1 warning in 6.95s |
