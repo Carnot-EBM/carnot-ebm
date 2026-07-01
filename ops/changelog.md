@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-07-01 (Milestone 2026.07.466 research roadmap staged — codex)
+
+- Appended the `.466` planner source set to `research-references.md`, covering uPRM, VPR, DCCD,
+  KAN verification, LifelongAgentBench, EvolveMem, MUSE-Autoskill, FPGA Ising decomposition,
+  Extropic TSU/XTR-0, and Logical Intelligence public updates.
+- Replaced `openspec/change-proposals/research-roadmap-vNEXT.md` with the `.466` milestone design:
+  final process-verifier check, powered guided-decoding frontier, guarded FR-11 memory evolution,
+  hardware continuity, and KAN PWA/MILP formal bridge.
+- Added `research-roadmap-next.yaml` with 14 conductor tasks for milestone `2026.07.466`, including
+  structured gates and prior-failure metadata for the rerun-prone scopes. Did not modify the active
+  `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
 ## 2026-06-29 (Exp 4981 level-up attempt selector/artifact fix — codex)
 
 - Fixed the failing Exp 4981 tests without reverting prior changes and without modifying

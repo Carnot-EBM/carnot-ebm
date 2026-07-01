@@ -25253,3 +25253,113 @@ NEW this planning pass (not in the ingested set; comparator candidates for `.463
 - **Actionability:** Frames scale gains as improved constraint-guided reasoning, which gives the verifier program a target for smaller-model distillation.
 
 <!-- EXP5053-SOTA-INGESTION-V465-REFERENCES-END -->
+
+<!-- V466-PLANNER-REFERENCES-START -->
+## V466 planner source set (2026-07-01) - remaining process-verifier lever and guarded FR-11
+
+`.465` ended execution-incomplete rather than scientifically positive: D1 had a bounded MuSR signal
+that did not clear the proper-win gate, D4's second-corpus cache failed the duplicate audit, D6 showed
+an efficiency/parity path but not a statistically resolved accuracy win, Exp5066 never ran because the
+task routed to unavailable `gemini-3.1-pro-preview`, and FR-11 self-learning produced a guarded
+no-promote negative delta. This source sweep therefore prioritizes (a) the one remaining verifier-moat
+lever called out in `ops/known-issues.md` - uPRM/process reward with real token logprobs, (b) structured
+generation methods that can turn `.465`'s tiny guided-decoding signal into a powered frontier, and
+(c) self-learning systems with automatic rollback instead of blind replay/promotion.
+
+Search coverage: arXiv, OpenReview, Hugging Face Papers, Extropic writing, Semantic Scholar citation
+links, GitHub repository search, and Logical Intelligence public updates were checked on 2026-07-01.
+Semantic Scholar API citation checks for EBT/ARM returned HTTP 429, so no new citation-count claim is
+made from that source.
+
+### Unsupervised Process Reward Models
+- **Source:** arXiv:2605.10158 - https://arxiv.org/abs/2605.10158
+- **Tracks:** verifier moat, continual verifier learning, energy-guided selection
+- **Carnot hook:** `.466` should not re-run scalar uPRM. It should first prove SOTA GGUF top-logprob
+  telemetry, then rebuild a token/step cache and test the batch first-error score as the final distinct
+  D2 lever before bounded retirement.
+- **Actionability:** The paper derives process scores from next-token probabilities without human
+  step labels and reports verifier/test-time-scaling gains over majority voting; Carnot's prior D2 null
+  did not have a clean SOTA GGUF logprob path.
+
+### Verifiable Process Rewards for Agentic Reasoning
+- **Source:** arXiv:2605.10325 - https://arxiv.org/abs/2605.10325
+- **Tracks:** process verification, constraint satisfaction, verifier moat
+- **Carnot hook:** Add a VPR diagnostic that only counts intermediate rewards when the checker is
+  objective and auditable; artifact fields must declare whether the verifier is an oracle.
+- **Actionability:** VPR turns symbolic/algorithmic intermediate checks into dense supervision. This
+  is relevant to Carnot only where the intermediate checker is genuinely available; otherwise it becomes
+  another judge-shaped shortcut.
+
+### The Hidden Cost of Structured Generation in LLMs: Draft-Conditioned Constrained Decoding
+- **Source:** arXiv:2603.03305 - https://arxiv.org/abs/2603.03305
+- **Code:** https://github.com/avinashreddydev/dccd
+- **Tracks:** energy-guided decoding, constrained generation, hallucination mitigation
+- **Carnot hook:** Scale `.465`'s guided decoding frontier with a DCCD arm: draft first, enforce
+  constraints second, and report accuracy per generated token/NFE against unguided, hard-constrained,
+  reward-guided, and rerank-only baselines.
+- **Actionability:** DCCD is training-free and has a public implementation; it specifically targets
+  the local-validity/semantic-drift failure that can make hard token masks hurt reasoning.
+
+### Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks
+- **Source:** arXiv:2602.06737 - https://arxiv.org/abs/2602.06737
+- **Tracks:** KAN, formal verification, constraint satisfaction
+- **Carnot hook:** Add a small KAN/PWA/MILP abstraction experiment for Carnot energy heads: prove a
+  bounded property on a tiny KAN/KAEM instance or emit an honest blocker with MILP size/error-budget
+  diagnostics.
+- **Actionability:** The paper gives a concrete bridge from KAN nonlinear units to piecewise-affine
+  abstractions with MILP verification, matching Carnot's KAN fast-path ambitions.
+
+### LifelongAgentBench
+- **Source:** arXiv:2505.11942 - https://arxiv.org/abs/2505.11942
+- **Tracks:** continuous self-learning, memory, verifier learning
+- **Carnot hook:** Replace blind replay/promotion with group self-consistency and retrieval ablations
+  on held-out verifier tasks; no skill/memory may promote unless non-forgetting and contamination guards
+  pass.
+- **Actionability:** The benchmark explicitly reports that conventional replay has limited effect due
+  to irrelevant information/context limits and that group self-consistency improves lifelong learning.
+
+### EvolveMem: Self-Evolving Memory Architecture via AutoResearch
+- **Source:** Hugging Face Papers 2605.13941 - https://huggingface.co/papers/2605.13941
+- **Code:** https://github.com/aiming-lab/SimpleMem/tree/main/EvolveMem
+- **Tracks:** continuous self-learning, memory evolution
+- **Carnot hook:** Use an evaluate -> diagnose -> propose -> guard loop for retrieval/memory config,
+  with automatic rollback on held-out regression. This is a safer successor to `.465` skillgraph
+  promotion.
+- **Actionability:** The public repo exposes the design pattern Carnot needs: optimize retrieval
+  configuration, not just stored memories, under a regression guard.
+
+### MUSE-Autoskill
+- **Source:** Hugging Face Papers 2605.27366 - https://huggingface.co/papers/2605.27366
+- **Tracks:** continuous self-learning, skill lifecycle management
+- **Carnot hook:** If Carnot keeps a skill library, require lifecycle fields for create/reuse/evaluate/
+  refine and per-skill held-out evidence; do not promote a skill based only on in-family improvement.
+- **Actionability:** The framework treats skills as long-lived, testable assets with runtime feedback,
+  which maps to FR-11 only if Carnot adds non-forgetting and contamination gates.
+
+### Decomposing Large-Scale Ising Problems on FPGAs
+- **Source:** arXiv:2602.15985 - https://arxiv.org/abs/2602.15985
+- **Tracks:** hardware-accelerated sampling, Ising systems
+- **Carnot hook:** Continue KV260/GateMate/PolarFire visibility, but measure host-device dispatch and
+  decomposition overhead separately from solver time. Do not claim speedup from the KV260 packet alone.
+- **Actionability:** The result supports Carnot's asymptotic thesis that hardware value appears when
+  preprocessing/decomposition is co-designed with the sampling substrate.
+
+### Extropic XTR-0 / TSU updates
+- **Sources:** https://extropic.ai/writing/inside-x0-and-xtr-0 and
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+- **Tracks:** thermodynamic sampling hardware, EBM acceleration
+- **Carnot hook:** Keep TSU work as simulation/architecture alignment only; no local TSU hardware is
+  available. The relevant design pressure is local sampling and EBM-native compilation.
+- **Actionability:** Extropic's public update confirms the XTR-0 platform shape (CPU + FPGA + TSU
+  daughterboard sockets) and the TSU programming model, but this is not a runnable Carnot target.
+
+### Logical Intelligence public Kona/Aleph updates
+- **Source:** https://logicalintelligence.com/
+- **Tracks:** EBRM positioning, formal verification, constrained reasoning
+- **Carnot hook:** Treat Kona/Aleph as external architecture pressure, not evidence for Carnot. The
+  useful lesson is product framing: EBMs/EBRMs own correctness-critical reasoning while LLMs remain the
+  interface.
+- **Actionability:** Public pages emphasize energy-based reasoning for deterministic/formal tasks,
+  aligning with Carnot's verifier-product direction after the ARC sprint.
+
+<!-- V466-PLANNER-REFERENCES-END -->

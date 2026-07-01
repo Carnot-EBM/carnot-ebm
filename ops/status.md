@@ -1,6 +1,18 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-06-29 (Exp 4981 level-up attempt selector/artifact fix)
+**Last Updated:** 2026-07-01 (Milestone 2026.07.466 planning staged)
+
+## Session 2026-07-01 — Milestone 2026.07.466 Planning Staged
+
+Planned the next research milestone after `.465` completed with
+`complete_capstone_v465_execution_incomplete_fr11_no_credible_positive_evidence_missing_sota`.
+The staged `.466` roadmap focuses on the final distinct process-verifier lever
+(SOTA GGUF logprob/uPRM/VPR), a powered DCCD/guided-decoding frontier, guarded
+FR-11 memory evolution, board continuity, and a KAN PWA/MILP formal bridge.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The active `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified.
 
 ## Session 2026-06-29 — Exp 4981 Level-Up Attempt Selector/Artifact Fix
 
