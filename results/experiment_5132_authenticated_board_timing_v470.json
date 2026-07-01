@@ -1,0 +1,427 @@
+{
+  "board_precheck_summary": {
+    "authenticated_board_precheck_count": 2,
+    "cpu_reference_residual_sweep_recorded": true,
+    "full_speedup_evidence_present": false,
+    "gatemate_flash_blocker": "no_safe_gatemate_flash_manifest",
+    "kv260_blockers": [
+      "no_checked_in_safe_kv260_uio_timing_workload"
+    ],
+    "polarfire_dispatch_blockers": []
+  },
+  "command_transcripts": {
+    "gatemate_dirtyjtag_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.022337,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "gatemate_gmpack_version": {
+      "combined_output": "/opt/oss-cad-suite/bin/gmpack\nError: input file is mandatory.\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file\n\n",
+      "command": "sh -lc 'command -v gmpack && gmpack -h | head -n 2'",
+      "duration_s": 0.12197,
+      "exit_code": 0,
+      "stderr": "Error: input file is mandatory.\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file\n\n",
+      "stdout": "/opt/oss-cad-suite/bin/gmpack\n"
+    },
+    "gatemate_nextpnr_version": {
+      "combined_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)\n",
+      "command": "nextpnr-himbaechel --version",
+      "duration_s": 0.01357,
+      "exit_code": 0,
+      "stderr": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)\n",
+      "stdout": ""
+    },
+    "gatemate_openfpgaloader": {
+      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "duration_s": 0.103548,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
+    },
+    "gatemate_usb_evidence": {
+      "combined_output": "1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n",
+      "command": "sh -lc 'lsusb | grep -Ei '\"'\"'1209:c0ca|dirtyjtag|gatemate|cologne|olimex|1514:2008|flashpro'\"'\"' || true'",
+      "duration_s": 0.154539,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n"
+    },
+    "gatemate_yosys_version": {
+      "combined_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\n",
+      "command": "yosys -V",
+      "duration_s": 0.007538,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.455558,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_timing_workload": null,
+    "kv260_uio_devices": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'ls /dev/uio*'",
+      "duration_s": 0.432989,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n"
+    },
+    "kv260_uio_sysfs": {
+      "combined_output": "uio0 axi-pmon\nuio1 axi-pmon\nuio2 axi-pmon\nuio3 axi-pmon\nuio4 ising_sampler\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'for u in /sys/class/uio/uio*; do [ -e \"$u\" ] || continue; printf '\"'\"'%s '\"'\"' \"$(basename \"$u\")\"; cat \"$u/name\" 2>/dev/null || true; done'",
+      "duration_s": 0.478924,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "uio0 axi-pmon\nuio1 axi-pmon\nuio2 axi-pmon\nuio3 axi-pmon\nuio4 ising_sampler\n"
+    },
+    "polarfire_arch": {
+      "combined_output": "riscv64\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'uname -m'",
+      "duration_s": 0.807544,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "riscv64\n"
+    },
+    "polarfire_dispatch_precheck": {
+      "combined_output": "{\"duration_s\": 5.7001132518053055e-05, \"energy\": 4, \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 4}, \"workload_sha256\": \"5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, time\npayload = '\"'\"'{\"experiment_id\": \"exp5132-authenticated-board-timing-v470\", \"spins\": [1, -1, 1, -1], \"workload\": \"polarfire_inline_dispatch_precheck_no_carnot_runtime\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nenergy = sum(value * value for value in data['\"'\"'spins'\"'\"'])\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(data['\"'\"'spins'\"'\"']), '\"'\"'finite_energy'\"'\"': True},\n}, sort_keys=True))\nPY'",
+      "duration_s": 1.288389,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"duration_s\": 5.7001132518053055e-05, \"energy\": 4, \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 4}, \"workload_sha256\": \"5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3\"}\n"
+    },
+    "polarfire_python": {
+      "combined_output": "Python 3.12.12\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 --version'",
+      "duration_s": 0.825432,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Python 3.12.12\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.768859,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "conductor_modified": false,
+  "decay_exponent": 2.0,
+  "duration_s": 9.482314,
+  "experiment": "experiment_5132_authenticated_board_timing",
+  "experiment_id": "exp5132-authenticated-board-timing-v470",
+  "extropic_tsu_context": "architecture_only_no_execution_attempted",
+  "extropic_tsu_execution_claimed": false,
+  "field_principles": {
+    "command_transcripts": "authenticated evidence",
+    "conductor_modified": "conductor immutability",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "extropic_tsu_execution_claimed": "hardware honesty",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "gatemate_checked": "board continuity",
+    "gatemate_transcript": "authenticated evidence",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "kv260_host_block_devices_touched": "safety",
+    "kv260_ssh_checked": "board continuity",
+    "kv260_timing_transcript": "authenticated evidence",
+    "milestone": "milestone accountability",
+    "no_speedup_claim": "no false acceleration",
+    "polarfire_checked": "board continuity",
+    "polarfire_transcript": "authenticated evidence",
+    "preconditions_checked": "hardware preflight accountability",
+    "residual_energy_by_sweep": "sample-quality telemetry",
+    "sample_quality_evidence": "no latency-only claim",
+    "tests_run": "verification evidence",
+    "timing_measurements": "latency evidence",
+    "workload_hashes": "reproducibility"
+  },
+  "flagged_adversarial": false,
+  "gatemate_checked": true,
+  "gatemate_detected": false,
+  "gatemate_transcript": {
+    "action_scope": "detect_and_flash_precheck_only_no_programming",
+    "detected": false,
+    "detected_idcode": null,
+    "flash_attempted": false,
+    "flash_precheck": {
+      "blocker": "no_safe_gatemate_flash_manifest",
+      "manifest_present": false,
+      "manifest_sha256": null
+    },
+    "gmpack_available": true,
+    "nextpnr_himbaechel_available": true,
+    "openfpgaloader_available": true,
+    "toolchain_checked": true,
+    "usb_dirtyjtag_seen": true,
+    "yosys_available": true
+  },
+  "honest_verdict": "complete_authenticated_board_blockers_cpu_residual_no_speedup_claim",
+  "inference_substrate": "hardware_smoke_or_authenticated_blockers",
+  "kv260_host_block_devices_touched": false,
+  "kv260_ssh_checked": true,
+  "kv260_ssh_ready": true,
+  "kv260_timing_transcript": {
+    "blockers": [
+      "no_checked_in_safe_kv260_uio_timing_workload"
+    ],
+    "safe_workload_path": null,
+    "ssh_checked": true,
+    "ssh_ready": true,
+    "timing_output": {},
+    "transcript": null,
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "uio_sysfs_observed": "uio0 axi-pmon",
+    "uio_timing_attempted": false,
+    "workload_hash": null
+  },
+  "milestone": "2026.07.470",
+  "no_speedup_claim": true,
+  "polarfire_checked": true,
+  "polarfire_ssh_ready": true,
+  "polarfire_transcript": {
+    "action_scope": "ssh_inline_dispatch_precheck_no_file_copy_no_flash",
+    "arch": "riscv64",
+    "blockers": [],
+    "dispatch_output": {
+      "duration_s": 5.7001132518053055e-05,
+      "energy": 4,
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 4
+      },
+      "workload_sha256": "5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3"
+    },
+    "dispatch_precheck_attempted": true,
+    "python": "Python 3.12.12",
+    "ssh_checked": true,
+    "ssh_ready": true,
+    "transcript": {
+      "combined_output": "{\"duration_s\": 5.7001132518053055e-05, \"energy\": 4, \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 4}, \"workload_sha256\": \"5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, time\npayload = '\"'\"'{\"experiment_id\": \"exp5132-authenticated-board-timing-v470\", \"spins\": [1, -1, 1, -1], \"workload\": \"polarfire_inline_dispatch_precheck_no_carnot_runtime\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nenergy = sum(value * value for value in data['\"'\"'spins'\"'\"'])\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(data['\"'\"'spins'\"'\"']), '\"'\"'finite_energy'\"'\"': True},\n}, sort_keys=True))\nPY'",
+      "duration_s": 1.288389,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"duration_s\": 5.7001132518053055e-05, \"energy\": 4, \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 4}, \"workload_sha256\": \"5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3\"}\n"
+    },
+    "workload_hash": "5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_block_device_probe",
+      "duration_s": 4.455558,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh",
+      "safety_constraints": [
+        "ssh_only",
+        "no_host_block_device_access",
+        "no_destructive_actions"
+      ]
+    },
+    {
+      "available": false,
+      "command": "policy",
+      "discipline": "explicit_no_host_block_device_precondition",
+      "duration_s": 0.0001,
+      "exit_code": 0,
+      "observed": "false",
+      "resource": "kv260_host_block_devices_touched",
+      "safety_constraints": [
+        "host_block_devices_touched_false"
+      ]
+    },
+    {
+      "available": false,
+      "command": "hardware/kv260/exp5132_safe_uio_read_only_workload.py",
+      "discipline": "read_only_uio_workload_required_before_register_access",
+      "duration_s": 0.0001,
+      "exit_code": 1,
+      "observed": "missing",
+      "resource": "kv260_safe_uio_timing_workload",
+      "safety_constraints": [
+        "read_only",
+        "hash_matched",
+        "ssh_only"
+      ]
+    },
+    {
+      "available": true,
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "discipline": "toolchain_and_dirtyjtag_detect_only",
+      "duration_s": 0.103548,
+      "exit_code": 0,
+      "observed": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "gatemate_toolchain",
+      "safety_constraints": [
+        "detect_only",
+        "no_flash_without_manifest"
+      ]
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "discipline": "dirtyjtag_detect_no_flash",
+      "duration_s": 0.022337,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_dirtyjtag_detect",
+      "safety_constraints": [
+        "detect_only",
+        "no_program"
+      ]
+    },
+    {
+      "available": false,
+      "command": "hardware/gatemate/exp5132_safe_flash_manifest.json",
+      "discipline": "flash_requires_safe_tiny_design_manifest",
+      "duration_s": 0.0001,
+      "exit_code": 1,
+      "observed": "missing_or_blocked",
+      "resource": "gatemate_safe_flash_manifest",
+      "safety_constraints": [
+        "no_flash_without_manifest",
+        "hash_matched"
+      ]
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_precheck_only",
+      "duration_s": 0.768859,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh",
+      "safety_constraints": [
+        "ssh_only",
+        "no_flash"
+      ]
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, time\npayload = '\"'\"'{\"experiment_id\": \"exp5132-authenticated-board-timing-v470\", \"spins\": [1, -1, 1, -1], \"workload\": \"polarfire_inline_dispatch_precheck_no_carnot_runtime\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nenergy = sum(value * value for value in data['\"'\"'spins'\"'\"'])\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(data['\"'\"'spins'\"'\"']), '\"'\"'finite_energy'\"'\"': True},\n}, sort_keys=True))\nPY'",
+      "discipline": "inline_hash_matched_python_precheck_no_carnot_dispatch_claim",
+      "duration_s": 1.288389,
+      "exit_code": 0,
+      "observed": "{\"duration_s\": 5.7001132518053055e-05, \"energy\": 4, \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 4}, \"workload_sha256\": \"5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3\"}",
+      "resource": "polarfire_dispatch_precheck",
+      "safety_constraints": [
+        "ssh_only",
+        "no_scp",
+        "no_flash"
+      ]
+    }
+  ],
+  "random_seed": 5132,
+  "reproducibility_checksum": "e84f064ed6da29d782b3bd895fdf0553e94afc3bec7cae807bce68a0c3c7efa2",
+  "residual_energy_by_sweep": [
+    {
+      "max_abs_residual": 1.75,
+      "residual_energy": 1.3671875,
+      "residual_sample_checksum": "d977041bdaa15efe",
+      "sweep": 0
+    },
+    {
+      "max_abs_residual": 0.875,
+      "residual_energy": 0.341796875,
+      "residual_sample_checksum": "9baf4e9b0f736691",
+      "sweep": 1
+    },
+    {
+      "max_abs_residual": 0.583333333333,
+      "residual_energy": 0.151909722222,
+      "residual_sample_checksum": "5dee5cb72da64fc3",
+      "sweep": 2
+    },
+    {
+      "max_abs_residual": 0.4375,
+      "residual_energy": 0.08544921875,
+      "residual_sample_checksum": "4e62ddd527da0e6d",
+      "sweep": 3
+    },
+    {
+      "max_abs_residual": 0.35,
+      "residual_energy": 0.0546875,
+      "residual_sample_checksum": "f3773da10c1311ae",
+      "sweep": 4
+    },
+    {
+      "max_abs_residual": 0.291666666667,
+      "residual_energy": 0.037977430556,
+      "residual_sample_checksum": "1d9253e984fa4d0e",
+      "sweep": 5
+    },
+    {
+      "max_abs_residual": 0.25,
+      "residual_energy": 0.027901785714,
+      "residual_sample_checksum": "72c13330f9292aa2",
+      "sweep": 6
+    },
+    {
+      "max_abs_residual": 0.21875,
+      "residual_energy": 0.021362304688,
+      "residual_sample_checksum": "775b8c0753803ac6",
+      "sweep": 7
+    }
+  ],
+  "residual_source": "cpu_reference_residual_sweep",
+  "run_date": "20260701",
+  "sample_quality_evidence": {
+    "board_speedup_evidence_complete": false,
+    "cpu_residual_sample_count": 8,
+    "decay_exponent_fit_from_samples": true,
+    "kv260_read_only_sample_quality": null,
+    "polarfire_dispatch_precheck_quality": {
+      "finite_energy": true,
+      "sample_count": 4
+    }
+  },
+  "schema": "carnot.experiment_5132_authenticated_board_timing.v470",
+  "spec_refs": [
+    "REQ-HW-5132",
+    "SCENARIO-HW-5132"
+  ],
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5132_authenticated_board_timing_v470.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5132_authenticated_board_timing.py -q",
+    ".venv/bin/coverage run --source=python/carnot/experiment_5132_authenticated_board_timing.py -m pytest tests/python/test_experiment_5132_authenticated_board_timing.py -q",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5132_authenticated_board_timing.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "timing_measurements": {
+    "cpu_residual_sweep_samples": 8,
+    "full_board_speedup_evidence_present": false,
+    "gatemate_detect_s": 0.022337,
+    "kv260_authenticated_workload_s": null,
+    "kv260_ssh_s": 4.455558,
+    "kv260_uio_list_s": 0.432989,
+    "polarfire_dispatch_precheck_s": 1.288389
+  },
+  "workload_hashes": {
+    "cpu_reference_residual_sweep": "4f8e211e80275c39daef6f47d958677f3c183797666693c14fea7cae035a4650",
+    "cpu_residual_samples": "0e1698da99610857b7bdee5df22c3105a31c1d9e7d57c6324b3c20e029806404",
+    "gatemate_safe_flash_manifest": null,
+    "kv260_timing_workload": null,
+    "polarfire_dispatch_precheck_workload": "5901266f981fd566f2c488d8f65dc09c24c73d93395370630754a53801439ae3"
+  }
+}

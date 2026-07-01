@@ -14494,6 +14494,103 @@ workload hashes, residual-energy-by-sweep data, a fitted decay exponent,
 
 ---
 
+### REQ-HW-5132
+
+**Title:** Authenticated board timing continuity MUST record safe KV260, GateMate, and PolarFire evidence or precise blockers
+
+**Description:**
+Experiment 5132 MUST produce
+`results/experiment_5132_authenticated_board_timing_v470.json` as a v470
+hardware-continuity artifact. The artifact MUST use
+`inference_substrate=hardware_smoke_or_authenticated_blockers`, cover KV260,
+GateMate A1/DirtyJTAG, PolarFire, and CPU residual-energy telemetry, and MUST
+preserve `no_speedup_claim=true` unless the same run records command
+transcripts, workload hashes, board timing, and sample-quality evidence for the
+same workload.
+
+KV260 MUST be checked over SSH only. The experiment MUST NOT inspect host block
+devices as a KV260 precondition. If a checked-in, explicitly read-only UIO/register
+workload is available, the experiment may run it over SSH and record the exact
+transcript, workload hash, timing, and sample-quality evidence. Otherwise, it
+MUST write a precise blocker in `kv260_timing_transcript`.
+
+GateMate triage MUST record USB/DirtyJTAG detection and toolchain command
+transcripts. Flashing is allowed only when a safe tiny-design flash manifest is
+present and hash-matched; otherwise the artifact MUST record a flash blocker
+without programming the board.
+
+PolarFire triage MUST record SSH and dispatch-precondition transcripts plus a
+hash for any inline workload used by the precheck. Extropic/TSU context MUST
+remain architecture-only: the artifact MUST set
+`extropic_tsu_execution_claimed=false` and MUST NOT claim TSU execution.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `experiment_id`
+- `milestone`
+- `honest_verdict`
+- `inference_substrate`
+- `duration_s`
+- `preconditions_checked`
+- `kv260_ssh_checked`
+- `kv260_host_block_devices_touched`
+- `kv260_timing_transcript`
+- `gatemate_checked`
+- `gatemate_transcript`
+- `polarfire_checked`
+- `polarfire_transcript`
+- `command_transcripts`
+- `workload_hashes`
+- `timing_measurements`
+- `residual_energy_by_sweep`
+- `sample_quality_evidence`
+- `no_speedup_claim`
+- `extropic_tsu_execution_claimed`
+- `flagged_adversarial`
+- `conductor_modified`
+- `tests_run`
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5132_authenticated_board_timing_v470.py --date 20260701`
+  writes `results/experiment_5132_authenticated_board_timing_v470.json`.
+- The artifact includes `experiment_id="exp5132-authenticated-board-timing-v470"`,
+  `milestone="2026.07.470"`, `spec_refs` containing `REQ-HW-5132` and
+  `SCENARIO-HW-5132`, `field_principles`, command transcripts, workload hashes,
+  timing measurements, residual telemetry, and a stable
+  `reproducibility_checksum`.
+- `honest_verdict` starts with `complete_`, `success_`, or `blocked_`.
+- `kv260_host_block_devices_touched=false`, and no artifact field cites host
+  storage markers such as `/dev/mmcblk` or `/dev/disk`.
+- GateMate flash is not attempted without a safe hash-matched flash manifest.
+- `no_speedup_claim=true`, `extropic_tsu_execution_claimed=false`,
+  `flagged_adversarial=false`, and `conductor_modified=false`.
+
+**Implementation status:** Pending (Exp 5132)
+
+---
+
+### SCENARIO-HW-5132
+
+**Scenario:** Exp 5132 writes authenticated board timing evidence or honest blockers.
+
+**Given:** KV260 may only be checked over SSH, GateMate may only be detected or
+flashed when a safe manifest permits it, PolarFire dispatch must be prechecked
+with authenticated command output, and speedup claims require same-run
+transcripts, workload hashes, timing, and sample-quality evidence.
+**When:** Experiment 5132 runs the safe prechecks and records either a tiny
+hash-matched board workload or a precise blocker for each unavailable board
+timing path.
+**Then:** It writes
+`results/experiment_5132_authenticated_board_timing_v470.json` with all required
+fields, principle annotations, transcripts, workload hashes, timing
+measurements, residual-energy telemetry, no Extropic/TSU execution claim, and
+`no_speedup_claim=true`.
+
+**Implementation status:** Pending (Exp 5132)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
