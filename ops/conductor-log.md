@@ -9734,3 +9734,4 @@ The contro |
 | 2026-07-01 09:01 UTC | PHASE R1 SOTA ingestion -- verify V467 source set  | OK | 92 passed, 1 warning in 6.72s |
 | 2026-07-01 09:26 UTC | PHASE A1 runtime repair -- bring up local llama.cp | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 09:43 UTC | PHASE A2 uPRM substrate retry -- gated on Exp5085  | OK | 86 passed, 1 warning in 6.68s |
+| 2026-07-01 09:45 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
