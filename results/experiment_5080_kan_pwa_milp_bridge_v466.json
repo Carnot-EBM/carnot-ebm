@@ -1,0 +1,136 @@
+{
+  "artifact": "experiment_5080_kan_pwa_milp_bridge_v466",
+  "binary_variable_count": 3,
+  "blocked_reason": null,
+  "certified_upper_bound": 1.0,
+  "counterexample_or_certificate": {
+    "abstraction_error_bound": 0.0,
+    "certified_upper_bound": 1.0,
+    "kind": "certificate",
+    "method": "z3_mixed_integer_linear_pwa_bound",
+    "property": "For all x in [-1, 1], KAEM unit energy(x) <= 1.0.",
+    "property_threshold": 1.0,
+    "selected_segment": 2,
+    "witness_maximizer_x": 1.0
+  },
+  "duration_s": 0.348543,
+  "error_bound": 0.0,
+  "error_bound_detail": {
+    "global_output_error": 0.0,
+    "local_max_abs": 0.0,
+    "reason": "exact piecewise-affine export of KAEM linear interpolation"
+  },
+  "experiment": 5080,
+  "field_principles": {
+    "binary_variable_count": {
+      "principle": "Counts one-hot segment selector variables, the complexity cost highlighted by KAN/PWA/MILP verification work."
+    },
+    "blocked_reason": {
+      "principle": "Blocked artifacts must say exactly which dependency or solver condition prevented a proof."
+    },
+    "duration_s": {
+      "principle": "Wall-clock duration is declared for fabrication checks; this is a deterministic formal check, not live model inference."
+    },
+    "error_bound": {
+      "principle": "Quantifies the abstraction gap; zero is allowed here only because KAEM's layer is already piecewise affine."
+    },
+    "flagged_adversarial": {
+      "principle": "Artifact quarantine bit remains false only when the result is honest about scope, solver use, and substrate."
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict prefix lets the conductor distinguish success from a blocked solver dependency."
+    },
+    "inference_substrate": {
+      "principle": "Substrate names the actual compute path and prevents a tiny solver run from being mistaken for LLM or hardware execution."
+    },
+    "kan_component_path": {
+      "principle": "The bridge must point to the real KAEM component it abstracts instead of an invented toy-only class."
+    },
+    "milp_solver_available": {
+      "principle": "A solver availability bit prevents claiming MILP verification when the dependency is missing."
+    },
+    "property_checked": {
+      "principle": "Distinguishes a built abstraction from a property actually submitted to linear-integer constraints."
+    },
+    "property_holds": {
+      "principle": "Records the formal conclusion only after the solver returns an optimal certificate."
+    },
+    "pwa_abstraction_built": {
+      "principle": "Separates a real knot-to-segment abstraction from a solver-only placeholder."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "success_kan_pwa_milp_property_verified_tiny",
+  "inference_substrate": "deterministic_formal_check",
+  "kan_component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+  "methodology_note": "error_bound is exactly 0.0 because UnivariateKAEMLayer evaluates a linear interpolation spline; the exported segments are the same exact piecewise-affine representation, not an approximation to a curved unit.",
+  "milp_solver_available": true,
+  "property_checked": true,
+  "property_holds": true,
+  "property_statement": "For all x in [-1, 1], the tiny KAEM unit energy(x) <= 1.0.",
+  "pwa_abstraction": {
+    "binary_variable_count": 3,
+    "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+    "control_points": [
+      0.0,
+      0.25,
+      0.75,
+      1.0
+    ],
+    "error_bound": 0.0,
+    "exact_for_linear_kaem_spline": true,
+    "knots": [
+      -1.0,
+      -0.333333283662796,
+      0.3333333730697632,
+      1.0
+    ],
+    "n_segments": 3,
+    "segments": [
+      {
+        "index": 0,
+        "intercept": 0.3749999720603248,
+        "slope": 0.3749999720603248,
+        "x_max": -0.333333283662796,
+        "x_min": -1.0,
+        "y_max": 0.25,
+        "y_min": 0.0
+      },
+      {
+        "index": 1,
+        "intercept": 0.49999996647238687,
+        "slope": 0.7500000111758711,
+        "x_max": 0.3333333730697632,
+        "x_min": -0.333333283662796,
+        "y_max": 0.75,
+        "y_min": 0.25
+      },
+      {
+        "index": 2,
+        "intercept": 0.6249999776482569,
+        "slope": 0.3750000223517431,
+        "x_max": 1.0,
+        "x_min": 0.3333333730697632,
+        "y_max": 1.0,
+        "y_min": 0.75
+      }
+    ],
+    "variable_index": 0
+  },
+  "pwa_abstraction_built": true,
+  "random_seed": 5080,
+  "reproducibility_checksum": "1ffb3048f4a579a1c00dd6f9f7b6502ca41e95303f250c57efd70736333af835",
+  "run_date": "20260701",
+  "schema": "carnot.kan_pwa_milp_bridge.v466",
+  "selected_segment": 2,
+  "solver_name": "z3",
+  "solver_status": "optimal",
+  "spec_refs": [
+    "REQ-KAN-5080",
+    "SCENARIO-KAN-5080"
+  ],
+  "tests_run": [
+    ".venv/bin/python -m pytest tests/python/test_experiment_5080_kan_pwa_milp_bridge.py -q --no-cov"
+  ],
+  "witness_x": 1.0
+}

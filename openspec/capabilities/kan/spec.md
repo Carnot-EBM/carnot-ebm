@@ -392,6 +392,42 @@ Given a CIKAN verifier and a mock language model pipeline,
 When the benchmark script is run,
 Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `results/experiment_1819_kan_latency.json` is generated.
 
+## REQ-KAN-5080: Tiny KAEM PWA/MILP Bridge Experiment
+
+The KAN verification tier SHALL provide an Exp 5080 CPU-only diagnostic bridge
+from an existing `UnivariateKAEMLayer` energy head to a piecewise-affine (PWA)
+abstraction and a bounded mixed-integer linear property check. The experiment
+MUST build the PWA abstraction from the KAEM layer's real knot/control-point
+structure, record the abstraction error bound, and use an available local
+linear-integer solver before claiming the property was checked.
+
+The experiment MUST write
+`results/experiment_5080_kan_pwa_milp_bridge_v466.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`kan_component_path`, `pwa_abstraction_built`, `milp_solver_available`,
+`property_checked`, `property_holds`, `error_bound`, `binary_variable_count`,
+`blocked_reason`, and `flagged_adversarial`. The artifact MUST set
+`inference_substrate="deterministic_formal_check"` and MUST use a terminal
+verdict prefix such as `success_kan_pwa_milp_property_verified_tiny` when a
+solver proves the property or `blocked_kan_pwa_milp_solver_unavailable` when no
+solver dependency is available.
+
+The experiment MUST NOT claim a production KAN verifier, trained-network
+soundness, hardware execution, or general MILP scalability. If the solver is
+unavailable, it MUST emit the blocked artifact instead of silently substituting
+an enumeration-only proof.
+
+### SCENARIO-KAN-5080: Tiny KAEM Bound Property Uses Solver Or Blocks
+
+Given a deterministic one-variable `UnivariateKAEMLayer` with monotone control
+points on `[-1, 1]`,
+When the Exp 5080 bridge builds the exact PWA segment representation and checks
+the bound property `energy(x) <= 1.0`,
+Then the artifact records the KAEM component path, a built PWA abstraction, the
+solver availability decision, the binary variable count for segment selection,
+the zero exact-PWA error bound with methodology note, and either a successful
+solver certificate or a blocked solver-dependency reason.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -423,6 +459,7 @@ Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `res
 | REQ-KAN-2005 | Proposed | Exp 2005 target: adaptive KAEM/KAN spline mesh refinement emits structural-change metrics and a completed artifact. |
 | REQ-KAN-2876 | Implemented | Exp 2876 corrigendum separates local/global bounds and reports the local Z3 solver path or blocked-solver fallback. |
 | REQ-KAN-2893 | Proposed | Exp 2893 target: no-hardware-claim RM/BOP/NABS accounting for the clean Exp 2876 tiny PWA/MILP fixture. |
+| REQ-KAN-5080 | Proposed | Exp 5080 target: tiny KAEM PWA/MILP bridge artifact with success-or-blocked solver boundary. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
