@@ -23776,3 +23776,60 @@ emits a terminal verdict without modifying `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5102 | Proposed (`python/carnot/experiment_5102_hubo_pspin_direct_energy.py`, `results/experiment_5102_hubo_pspin_direct_energy_v468.json`) | Proposed (`tests/python/test_experiment_5102_hubo_pspin_direct_energy.py`) |
+
+### REQ-VERIFY-5103: TACO-Style Adaptive CSP Heuristic With Exact Solver Authority
+
+The repository SHALL provide Exp 5103 at
+`python/carnot/experiment_5103_taco_adaptive_csp_heuristic.py` to prototype a
+TACO-style instance-wise adaptive heuristic on a bounded graph-coloring CSP
+family and write
+`results/experiment_5103_taco_adaptive_csp_heuristic_v468.json`.
+
+The runner SHALL generate deterministic train, dev, and held-out graph-coloring
+instances with bounded node counts and a CPU exact solver baseline. The exact
+solver SHALL remain the only correctness authority: heuristic-only colorings,
+warm starts, scores, variable orders, or relaxation states MUST NOT be counted
+as solved unless the exact solver completes and the resulting coloring verifies.
+
+The experiment SHALL compare exact-solver effort for three arms on every
+instance: no-help baseline variable order, a static degree-order heuristic, and
+an adapted instance-wise CPU heuristic that proposes variable-order help from a
+bounded unsupervised conflict-relaxation loop. Effort SHALL be measured from the
+exact solver using deterministic search-node and constraint-check counts, with
+wall-clock duration reported only as supporting telemetry. The artifact SHALL
+include split summaries for train, dev, and held-out instances and SHALL expose
+failure cases where adapted help increases effort versus the no-help baseline.
+
+The terminal artifact SHALL include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`, `csp_family`,
+`exact_solver_backend`, `instances_total`, `baseline_effort`,
+`static_heuristic_effort`, `adapted_effort`,
+`delta_effort_vs_baseline`, `correctness_preserved`,
+`harmful_instance_count`, `adaptation_steps`, and `flagged_adversarial`.
+`inference_substrate` MUST equal `exact_solver_with_adaptive_cpu_heuristic`
+unless a different real substrate is used and proven, and MUST NOT claim
+`live_llm_inference`.
+
+`honest_verdict` SHALL begin with
+`success_taco_adaptive_heuristic_reduces_exact_solver_effort` only when the
+adapted exact-solver effort is strictly below the no-help exact-solver effort
+on the declared family while correctness is preserved. Otherwise it SHALL begin
+with `complete_taco_adaptive_heuristic_no_effort_win`.
+
+### SCENARIO-VERIFY-5103: Adaptive Ordering Is Solver Help, Not A Solver
+
+Given the Exp 5103 bounded graph-coloring family, when the diagnostic runs,
+then it solves each train, dev, and held-out instance with the exact
+backtracking authority under no-help, static-degree, and adapted-order arms,
+verifies every claimed coloring with the exact checker, records exact-solver
+effort for all arms, reports harmful adapted instances, writes the required
+JSON artifact, sets
+`inference_substrate=exact_solver_with_adaptive_cpu_heuristic`, and emits a
+terminal verdict without modifying `scripts/research_conductor.py` or counting
+any heuristic-only answer as solved.
+
+## Implementation Status (REQ-VERIFY-5103)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5103 | Proposed (`python/carnot/experiment_5103_taco_adaptive_csp_heuristic.py`, `results/experiment_5103_taco_adaptive_csp_heuristic_v468.json`) | Proposed (`tests/python/test_experiment_5103_taco_adaptive_csp_heuristic.py`) |
