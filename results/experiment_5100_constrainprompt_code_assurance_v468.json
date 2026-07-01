@@ -1,0 +1,539 @@
+{
+  "adversarial_tests_passed": true,
+  "constraints_total": 9,
+  "duration_s": 0.000157,
+  "evaluation_tree": {
+    "backend": "python_json_logical_tree",
+    "nodes": [
+      {
+        "authority": "python_exact_check",
+        "check_name": "required_fields_and_schema",
+        "node_id": "required_fields_and_schema",
+        "prompt": "Verdict JSON must be an object with all required fields and exact schema name."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "verdict_enum",
+        "node_id": "verdict_enum",
+        "prompt": "The verdict field must be exactly accept, reject, or abstain."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "confidence_enum_and_mapping",
+        "node_id": "confidence_enum_and_mapping",
+        "prompt": "Confidence must be low, medium, or high; decisive verdicts cannot be low."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "verdict_evidence_consistency",
+        "node_id": "verdict_evidence_consistency",
+        "prompt": "Evidence labels must match accept, reject, or abstain verdict semantics."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "evidence_refs_for_decisive_verdicts",
+        "node_id": "evidence_refs_for_decisive_verdicts",
+        "prompt": "Accept and reject verdicts must cite at least one evidence:// reference."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "claim_id_format",
+        "node_id": "claim_id_format",
+        "prompt": "Claim IDs must use the stable claim-0000 decimal format."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "checker_backend_exact",
+        "node_id": "checker_backend_exact",
+        "prompt": "The checker_backend field must name the exact Python logical-tree checker."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "duration_bounds",
+        "node_id": "duration_bounds",
+        "prompt": "Verifier duration must be a measured finite number from 0 to 30 seconds."
+      },
+      {
+        "authority": "python_exact_check",
+        "check_name": "rationale_bounded",
+        "node_id": "rationale_bounded",
+        "prompt": "Rationale must be present, bounded, and non-trivial."
+      }
+    ],
+    "root": {
+      "children": [
+        "required_fields_and_schema",
+        "verdict_enum",
+        "confidence_enum_and_mapping",
+        "verdict_evidence_consistency",
+        "evidence_refs_for_decisive_verdicts",
+        "claim_id_format",
+        "checker_backend_exact",
+        "duration_bounds",
+        "rationale_bounded"
+      ],
+      "op": "all"
+    }
+  },
+  "exact_checker_backend": "python_json_logical_tree",
+  "executable_constraints_total": 9,
+  "experiment_id": 5100,
+  "experiment_name": "experiment_5100_constrainprompt_code_assurance",
+  "field_principles": {
+    "adversarial_tests_passed": {
+      "principle": "True only when no-op, schema-spoof, and LLM-judge substitution fixtures are rejected."
+    },
+    "constraints_total": {
+      "principle": "Counts selected prompt-level constraints before compilation."
+    },
+    "duration_s": {
+      "principle": "Wall-clock duration for deterministic JSON parsing, logical-tree checks, fixture evaluation, and artifact assembly."
+    },
+    "exact_checker_backend": {
+      "principle": "Names the executable Python logical tree that owns acceptance."
+    },
+    "executable_constraints_total": {
+      "principle": "Counts constraints that compiled to allow-listed executable checks."
+    },
+    "flagged_adversarial": {
+      "principle": "False only when fixture gates pass and the artifact contains no live-LLM or checker-authority contradiction."
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix states whether exact code checks accepted every prompt constraint or only a partial subset."
+    },
+    "inference_substrate": {
+      "principle": "Declares the actual deterministic Python JSON checker; live_llm_inference is forbidden when llm_invoked=false."
+    },
+    "llm_invoked": {
+      "principle": "False for this prototype; any future true value must be accompanied by mandated GGUF proposal provenance and passing tests."
+    },
+    "model_specs": {
+      "principle": "Carries the three mandated GGUF IDs as required methodology declarations without implying they were invoked."
+    },
+    "negative_tests_passed": {
+      "principle": "True only when every known-bad fixture is rejected with named failing checks."
+    },
+    "positive_tests_passed": {
+      "principle": "True only when every known-good fixture is accepted by executable checks."
+    },
+    "preconditions_checked": {
+      "principle": "Records schema path, prompt constraints, parser/checker backend, and LLM invocation state before checks run."
+    },
+    "rejected_constraints": {
+      "principle": "Lists prompt constraints not accepted into executable authority, rather than silently trusting them."
+    },
+    "schema_name": {
+      "principle": "Names the finite verifier verdict schema under exact code assurance."
+    }
+  },
+  "fixture_results": [
+    {
+      "accepted": true,
+      "expected_accepted": true,
+      "failing_constraints": [],
+      "fixture_id": "accept_solver_verified",
+      "group": "positive",
+      "rejection_reasons": []
+    },
+    {
+      "accepted": true,
+      "expected_accepted": true,
+      "failing_constraints": [],
+      "fixture_id": "reject_schema_missing",
+      "group": "positive",
+      "rejection_reasons": []
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "required_fields_and_schema"
+      ],
+      "fixture_id": "missing_schema_field",
+      "group": "negative",
+      "rejection_reasons": [
+        "missing_required_field"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "verdict_enum",
+        "verdict_evidence_consistency"
+      ],
+      "fixture_id": "unknown_verdict",
+      "group": "negative",
+      "rejection_reasons": [
+        "verdict_not_allowed",
+        "evidence_label_inconsistent_with_verdict"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "confidence_enum_and_mapping"
+      ],
+      "fixture_id": "low_confidence_accept",
+      "group": "negative",
+      "rejection_reasons": [
+        "decisive_verdict_confidence_too_low"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "verdict_evidence_consistency"
+      ],
+      "fixture_id": "accept_with_reject_evidence",
+      "group": "negative",
+      "rejection_reasons": [
+        "evidence_label_inconsistent_with_verdict"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "evidence_refs_for_decisive_verdicts"
+      ],
+      "fixture_id": "empty_decisive_evidence_refs",
+      "group": "negative",
+      "rejection_reasons": [
+        "decisive_verdict_missing_evidence_ref"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "claim_id_format"
+      ],
+      "fixture_id": "bad_claim_id",
+      "group": "negative",
+      "rejection_reasons": [
+        "claim_id_format_invalid"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "checker_backend_exact"
+      ],
+      "fixture_id": "wrong_checker_backend",
+      "group": "negative",
+      "rejection_reasons": [
+        "checker_backend_not_exact"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "duration_bounds"
+      ],
+      "fixture_id": "negative_duration",
+      "group": "negative",
+      "rejection_reasons": [
+        "duration_out_of_bounds"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "rationale_bounded"
+      ],
+      "fixture_id": "short_rationale",
+      "group": "negative",
+      "rejection_reasons": [
+        "rationale_length_out_of_bounds"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "evidence_refs_for_decisive_verdicts",
+        "rationale_bounded"
+      ],
+      "fixture_id": "noop_success_empty_evidence",
+      "group": "adversarial",
+      "rejection_reasons": [
+        "decisive_verdict_missing_evidence_ref",
+        "rationale_length_out_of_bounds"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "checker_backend_exact"
+      ],
+      "fixture_id": "llm_judge_substitution",
+      "group": "adversarial",
+      "rejection_reasons": [
+        "checker_backend_not_exact"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "required_fields_and_schema"
+      ],
+      "fixture_id": "schema_spoof_with_good_shape",
+      "group": "adversarial",
+      "rejection_reasons": [
+        "schema_name_mismatch"
+      ]
+    },
+    {
+      "accepted": false,
+      "expected_accepted": false,
+      "failing_constraints": [
+        "required_fields_and_schema",
+        "verdict_enum",
+        "confidence_enum_and_mapping",
+        "verdict_evidence_consistency",
+        "evidence_refs_for_decisive_verdicts",
+        "claim_id_format",
+        "checker_backend_exact",
+        "duration_bounds",
+        "rationale_bounded"
+      ],
+      "fixture_id": "non_object_noop_json",
+      "group": "adversarial",
+      "rejection_reasons": [
+        "candidate_not_json_object"
+      ]
+    }
+  ],
+  "fixture_summary": {
+    "adversarial_count": 4,
+    "adversarial_tests_passed": true,
+    "groups": [
+      "adversarial",
+      "negative",
+      "positive"
+    ],
+    "negative_count": 9,
+    "negative_tests_passed": true,
+    "positive_count": 2,
+    "positive_tests_passed": true
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
+  "inference_substrate": "deterministic_python_json_logical_tree",
+  "llm_invoked": false,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "invocation_status": "not_invoked_reference_only",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "invocation_status": "not_invoked_reference_only",
+      "preferred_quant": "Q4_K_M",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "invocation_status": "not_invoked_reference_only",
+      "preferred_quant": "Q4_K_M",
+      "role": "middle_moe"
+    }
+  ],
+  "negative_tests_passed": true,
+  "positive_tests_passed": true,
+  "preconditions_checked": {
+    "checker_backend": "python_json_logical_tree",
+    "llm_invoked": false,
+    "llm_proposal_path": "disabled_for_exact_checker_prototype",
+    "parser_backend": "python_json_parser",
+    "prompt_constraints": [
+      {
+        "check_name": "required_fields_and_schema",
+        "constraint_id": "required_fields_and_schema",
+        "prompt": "Verdict JSON must be an object with all required fields and exact schema name."
+      },
+      {
+        "check_name": "verdict_enum",
+        "constraint_id": "verdict_enum",
+        "prompt": "The verdict field must be exactly accept, reject, or abstain."
+      },
+      {
+        "check_name": "confidence_enum_and_mapping",
+        "constraint_id": "confidence_enum_and_mapping",
+        "prompt": "Confidence must be low, medium, or high; decisive verdicts cannot be low."
+      },
+      {
+        "check_name": "verdict_evidence_consistency",
+        "constraint_id": "verdict_evidence_consistency",
+        "prompt": "Evidence labels must match accept, reject, or abstain verdict semantics."
+      },
+      {
+        "check_name": "evidence_refs_for_decisive_verdicts",
+        "constraint_id": "evidence_refs_for_decisive_verdicts",
+        "prompt": "Accept and reject verdicts must cite at least one evidence:// reference."
+      },
+      {
+        "check_name": "claim_id_format",
+        "constraint_id": "claim_id_format",
+        "prompt": "Claim IDs must use the stable claim-0000 decimal format."
+      },
+      {
+        "check_name": "checker_backend_exact",
+        "constraint_id": "checker_backend_exact",
+        "prompt": "The checker_backend field must name the exact Python logical-tree checker."
+      },
+      {
+        "check_name": "duration_bounds",
+        "constraint_id": "duration_bounds",
+        "prompt": "Verifier duration must be a measured finite number from 0 to 30 seconds."
+      },
+      {
+        "check_name": "rationale_bounded",
+        "constraint_id": "rationale_bounded",
+        "prompt": "Rationale must be present, bounded, and non-trivial."
+      }
+    ],
+    "schema_fields": [
+      "schema",
+      "verdict",
+      "confidence",
+      "evidence_label",
+      "evidence_refs",
+      "claim_id",
+      "checker_backend",
+      "duration_s",
+      "rationale"
+    ],
+    "schema_name": "verifier_verdict_schema_v1",
+    "schema_path": "python/carnot/experiment_5100_constrainprompt_code_assurance.py::VERIFIER_VERDICT_SCHEMA"
+  },
+  "prompt_constraints": [
+    {
+      "check_name": "required_fields_and_schema",
+      "constraint_id": "required_fields_and_schema",
+      "prompt": "Verdict JSON must be an object with all required fields and exact schema name."
+    },
+    {
+      "check_name": "verdict_enum",
+      "constraint_id": "verdict_enum",
+      "prompt": "The verdict field must be exactly accept, reject, or abstain."
+    },
+    {
+      "check_name": "confidence_enum_and_mapping",
+      "constraint_id": "confidence_enum_and_mapping",
+      "prompt": "Confidence must be low, medium, or high; decisive verdicts cannot be low."
+    },
+    {
+      "check_name": "verdict_evidence_consistency",
+      "constraint_id": "verdict_evidence_consistency",
+      "prompt": "Evidence labels must match accept, reject, or abstain verdict semantics."
+    },
+    {
+      "check_name": "evidence_refs_for_decisive_verdicts",
+      "constraint_id": "evidence_refs_for_decisive_verdicts",
+      "prompt": "Accept and reject verdicts must cite at least one evidence:// reference."
+    },
+    {
+      "check_name": "claim_id_format",
+      "constraint_id": "claim_id_format",
+      "prompt": "Claim IDs must use the stable claim-0000 decimal format."
+    },
+    {
+      "check_name": "checker_backend_exact",
+      "constraint_id": "checker_backend_exact",
+      "prompt": "The checker_backend field must name the exact Python logical-tree checker."
+    },
+    {
+      "check_name": "duration_bounds",
+      "constraint_id": "duration_bounds",
+      "prompt": "Verifier duration must be a measured finite number from 0 to 30 seconds."
+    },
+    {
+      "check_name": "rationale_bounded",
+      "constraint_id": "rationale_bounded",
+      "prompt": "Rationale must be present, bounded, and non-trivial."
+    }
+  ],
+  "rejected_constraints": [],
+  "reproducibility_checksum": "02e359e58d7a10c70be0dc58cc774a36451e7153a0b1c688c8c6ee1e40836378",
+  "result_path": "results/experiment_5100_constrainprompt_code_assurance_v468.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5100_constrainprompt_code_assurance.v468",
+  "schema_name": "verifier_verdict_schema_v1",
+  "spec_refs": [
+    "REQ-VERIFY-5100",
+    "SCENARIO-VERIFY-5100"
+  ],
+  "validation_commands": [],
+  "verifier_verdict_schema": {
+    "canonicalization": "json.dumps(sort_keys=True,separators=(',',':'))",
+    "fields": {
+      "checker_backend": {
+        "const": "python_json_logical_tree",
+        "type": "string"
+      },
+      "claim_id": {
+        "pattern": "^claim-[0-9]{4}$",
+        "type": "string"
+      },
+      "confidence": {
+        "enum": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "type": "string"
+      },
+      "duration_s": {
+        "maximum": 30.0,
+        "minimum": 0.0,
+        "type": "number"
+      },
+      "evidence_label": {
+        "enum": [
+          "ambiguous_instruction",
+          "arithmetic_mismatch",
+          "citation_gap",
+          "schema_missing_field",
+          "schema_valid",
+          "solver_counterexample",
+          "solver_verified",
+          "unsupported_prompt"
+        ],
+        "type": "string"
+      },
+      "evidence_refs": {
+        "items": "evidence_uri",
+        "type": "array"
+      },
+      "rationale": {
+        "max_length": 240,
+        "min_length": 12,
+        "type": "string"
+      },
+      "schema": {
+        "const": "verifier_verdict_schema_v1",
+        "type": "string"
+      },
+      "verdict": {
+        "enum": [
+          "abstain",
+          "accept",
+          "reject"
+        ],
+        "type": "string"
+      }
+    },
+    "schema_name": "verifier_verdict_schema_v1"
+  }
+}
