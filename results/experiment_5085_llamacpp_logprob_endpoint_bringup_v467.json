@@ -30,6 +30,11 @@
       "detail": "live_completion_invoked=true with live_llm_inference but duration_s=18.88467 < 60.0",
       "kind": "DURATION_TOO_SHORT",
       "severity": "critical"
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=18.88467 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
     }
   ],
   "duration_s": 18.88467,
