@@ -876,3 +876,51 @@ Sub-requirements:
 **When** both ALPS and standard Langevin samplers are run
 **Then** ALPS reaches the target minimum in significantly fewer steps
 **And** the experiment artifact is written to `results/experiment_2109_alps_module.json`.
+
+### REQ-SAMPLE-5116: HUBO/p-Spin 2D Parallel Tempering CPU Reference
+
+Carnot MUST provide a deterministic CPU reference sampler for direct
+HUBO/p-spin constraint energies that runs replicas over both inverse
+temperature and constraint-penalty dimensions without making any hardware
+speedup claim.
+
+Sub-requirements:
+- REQ-SAMPLE-5116-1: The implementation SHALL expose direct HUBO/p-spin energy
+  evaluation over binary states and exact enumeration helpers for tiny
+  instances.
+- REQ-SAMPLE-5116-2: The CPU sampler SHALL support deterministic-seeded
+  unguided Gibbs, one-dimensional beta parallel tempering, and two-dimensional
+  beta/penalty parallel tempering runs over declared grids.
+- REQ-SAMPLE-5116-3: Adjacent replica swaps SHALL use the Metropolis ratio for
+  the fixed parameter slots being exchanged, and SHALL record beta-axis and
+  penalty-axis swap attempts, acceptances, and acceptance rates.
+- REQ-SAMPLE-5116-4: Exp 5116 SHALL validate tiny instances by exact
+  enumeration of optima and energy distributions before reporting sampler
+  utility metrics.
+- REQ-SAMPLE-5116-5: Exp 5116 SHALL compare unguided Gibbs, one-dimensional
+  beta parallel tempering, and two-dimensional beta/penalty parallel
+  tempering on at least two synthetic constraint families.
+- REQ-SAMPLE-5116-6: The terminal artifact
+  `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` SHALL
+  include `experiment_id`, `milestone`, `honest_verdict`,
+  `inference_substrate`, `duration_s`, `preconditions_checked`,
+  `exact_enumeration_checked`, `instance_families`, `beta_grid`,
+  `penalty_grid`, `swap_acceptance_rates`,
+  `best_energy_delta_vs_baselines`, `optimum_hit_rate`,
+  `hubo_2dpt_reference_ready`, `hardware_speedup_claimed`,
+  `seeds_or_checksums`, `flagged_adversarial`, and `tests_run`.
+- REQ-SAMPLE-5116-7: `hubo_2dpt_reference_ready` SHALL be true only when exact
+  enumeration checks pass and the two-dimensional beta/penalty PT arm improves
+  on or honestly ties both CPU baselines without claiming hardware execution.
+
+### SCENARIO-SAMPLE-5116: Exact-Checked HUBO 2D PT Artifact
+
+**Given** tiny direct HUBO/p-spin constraint instances from at least two
+synthetic families
+**When** Exp 5116 runs on CPU with fixed seeds
+**Then** exact enumeration verifies optima and energy distributions
+**And** unguided Gibbs, one-dimensional beta PT, and two-dimensional beta/penalty
+PT are compared on the same instances
+**And** beta-axis and penalty-axis swap bookkeeping is recorded
+**And** `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` is
+written with `hardware_speedup_claimed=false` and a terminal honest verdict.
