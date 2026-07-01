@@ -9719,3 +9719,4 @@ The contro |
 | 2026-07-01 07:07 UTC | PHASE B1 uPRM verifier -- test first-error process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
 | 2026-07-01 07:07 UTC | PHASE B2 VPR diagnostic -- dense objective process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
 | 2026-07-01 07:18 UTC | PHASE C1 continuous self-learning -- group self-co | OK | 86 passed, 1 warning in 6.58s |
+| 2026-07-01 07:29 UTC | PHASE C2 FR-11 memory-gap ledger -- explain remain | OK | 87 passed, 1 warning in 8.95s |
