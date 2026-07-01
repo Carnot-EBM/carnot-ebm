@@ -1,0 +1,409 @@
+{
+  "blocked_artifacts": [
+    {
+      "duration_s": 0.0,
+      "exists": true,
+      "experiment_id": 5072,
+      "flagged_adversarial": false,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "path": "results/experiment_5072_uprm_logprob_cache_v466.json",
+      "present": true,
+      "sha256": "sha256:44e7b1706466fd944aca56e38ff7f226939899f00f4c70b9eb00c4c7ef82d5cb",
+      "status": "gate_blocked"
+    },
+    {
+      "duration_s": 0.0,
+      "exists": true,
+      "experiment_id": 5082,
+      "flagged_adversarial": false,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.decision_ready (upstream artifact not found for task id 'exp5081-phase-d-fr11-decision-gate-v466')",
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "path": "results/experiment_5082_capstone_v466.json",
+      "present": true,
+      "sha256": "sha256:5d99d948970b71db41d4b8203314d6f9ed0a3b3b57330e3fb4a2b0e44664562f",
+      "status": "gate_blocked"
+    }
+  ],
+  "blockers_carried_forward": [
+    {
+      "blocker_id": "missing_live_completion_logprob_endpoint",
+      "label": "missing live completion/logprob endpoint",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "completion_endpoint_ready": false,
+        "logprob_endpoint_ready": false,
+        "top_logprob_or_confidence_ready": false
+      },
+      "principle": "Cached GGUF files are not a live endpoint or token-logprob substrate.",
+      "source_experiment_id": 5071
+    },
+    {
+      "blocker_id": "skipped_uprm_vpr",
+      "label": "skipped uPRM/VPR",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "uprm_cache_blocked": true,
+        "uprm_process_skipped": true,
+        "vpr_skipped": true
+      },
+      "principle": "Gated or skipped process-verifier tasks cannot count as null or positive evidence.",
+      "source_experiment_ids": [
+        5072,
+        5073,
+        5074
+      ]
+    },
+    {
+      "blocker_id": "dccd_worse_than_rerank_only",
+      "label": "DCCD worse than rerank-only",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "beats_rerank_only": false,
+        "dccd_accuracy": 0.515,
+        "delta_dccd_vs_rerank": -0.15,
+        "rerank_only_accuracy": 0.665
+      },
+      "principle": "A constrained decoding surface that loses to rerank-only is not a headline win.",
+      "source_experiment_id": 5075
+    },
+    {
+      "blocker_id": "d6_no_pareto_win",
+      "label": "D6 no Pareto win",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "accuracy_headline_allowed": false,
+        "ci95_delta": [
+          -0.005,
+          0.16
+        ],
+        "efficiency_win": false
+      },
+      "principle": "A point estimate with a CI touching zero is not a Pareto headline.",
+      "source_experiment_id": 5076
+    },
+    {
+      "blocker_id": "fr11_no_promote_rollback",
+      "label": "FR-11 no-promote rollback",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "heldout_delta": -0.05,
+        "nonforgetting_delta": -0.142857,
+        "promoted": false,
+        "rollback_guard_passed": true
+      },
+      "principle": "The guard prevented harmful memory promotion; that is not self-learning success.",
+      "source_experiment_id": 5077
+    },
+    {
+      "blocker_id": "hardware_no_speedup_claim",
+      "label": "hardware no speedup claim",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "gatemate_detected": false,
+        "kv260_speedup_claim_allowed": false,
+        "kv260_ssh_ready": true,
+        "polarfire_detected": true
+      },
+      "principle": "Reachability and continuity evidence must not be promoted into speedup evidence.",
+      "source_experiment_id": 5079
+    },
+    {
+      "blocker_id": "kan_tiny_only_proof",
+      "label": "KAN tiny-only proof",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "binary_variable_count": 3.0,
+        "property_holds": true,
+        "tiny_only_proof": true
+      },
+      "principle": "A tiny PWA/MILP proof is a foothold, not a scaled KAN verification claim.",
+      "source_experiment_id": 5080
+    },
+    {
+      "blocker_id": "blocked_decision_capstone",
+      "label": "blocked decision/capstone",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "capstone_blocked": true,
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.decision_ready (upstream artifact not found for task id 'exp5081-phase-d-fr11-decision-gate-v466')"
+      },
+      "principle": "The milestone ended with a blocked decision path, not a completed decision.",
+      "source_experiment_ids": [
+        5081,
+        5082
+      ]
+    }
+  ],
+  "close_state": {
+    "blocked_artifact_count": 2,
+    "capstone_state": {
+      "blocked": true,
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.decision_ready (upstream artifact not found for task id 'exp5081-phase-d-fr11-decision-gate-v466')",
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "d6_state": {
+      "accuracy_headline_allowed": false,
+      "cascade_accuracy": 0.665,
+      "ci95_delta": [
+        -0.005,
+        0.16
+      ],
+      "delta_vs_judge_only": 0.08,
+      "efficiency_win": false,
+      "honest_verdict": "complete_d6_replication_no_pareto_win",
+      "judge_call_fraction": 0.0,
+      "judge_only_accuracy": 0.585
+    },
+    "dccd_state": {
+      "beats_rerank_only": false,
+      "ci95_delta": [
+        -0.240844,
+        -0.059156
+      ],
+      "dccd_accuracy": 0.515,
+      "delta_dccd_vs_rerank": -0.15,
+      "honest_verdict": "complete_dccd_guided_frontier_no_headline_underpowered",
+      "n_questions": 200.0,
+      "rerank_only_accuracy": 0.665,
+      "unguided_accuracy": 0.515
+    },
+    "endpoint_state": {
+      "completion_endpoint_ready": false,
+      "honest_verdict": "complete_gguf_logprob_preflight_partial_ready",
+      "live_completion_invoked": false,
+      "logprob_endpoint_ready": false,
+      "source_experiment_id": 5071,
+      "top_logprob_or_confidence_ready": false,
+      "usable_sota_model_count": 3
+    },
+    "fr11_state": {
+      "attempt_completed": true,
+      "heldout_delta": -0.05,
+      "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
+      "no_promote_reason": "heldout_delta_negative;nonforgetting_regressed",
+      "nonforgetting_delta": -0.142857,
+      "promoted": false,
+      "promoted_count": 0.0,
+      "quarantined_count": 3.0,
+      "rollback_guard_passed": true
+    },
+    "hardware_state": {
+      "gatemate_detected": false,
+      "gatemate_terminal_state": "blocked_gatemate_usb_undetected",
+      "honest_verdict": "success_board_continuity_matrix_written_no_speedup_claim",
+      "kv260_speedup_claim_allowed": false,
+      "kv260_ssh_ready": true,
+      "polarfire_detected": true
+    },
+    "kan_state": {
+      "binary_variable_count": 3.0,
+      "error_bound": 0.0,
+      "honest_verdict": "success_kan_pwa_milp_property_verified_tiny",
+      "milp_solver_available": true,
+      "property_checked": true,
+      "property_holds": true,
+      "pwa_abstraction_built": true,
+      "solver_status": "optimal",
+      "tiny_only_proof": true
+    },
+    "scientific_decision_completed": false,
+    "transition_record_only": true,
+    "uprm_vpr_state": {
+      "uprm_cache_blocked": true,
+      "uprm_cache_gate_summary": "1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logprob_endpoint_ready (actual=False == expected=True)",
+      "uprm_process_skipped": true,
+      "vpr_skipped": true
+    }
+  },
+  "docs_updated": [],
+  "duration_s": 0.021615,
+  "experiment": "experiment_5083_archive_466_activate_467",
+  "experiment_id": 5083,
+  "field_principles": {
+    "blocked_artifacts": {
+      "principle": "gate-blocked artifacts such as Exp5072 and Exp5082 recorded as blocked, not missing or successful."
+    },
+    "blockers_carried_forward": {
+      "principle": "the exact endpoint/uPRM/VPR/DCCD/D6/FR-11/hardware/KAN/capstone blockers that must constrain .467 planning."
+    },
+    "close_state": {
+      "principle": "the blunt .466 close-state preserved without promoting skipped, blocked, tiny-only, or no-speedup evidence."
+    },
+    "docs_updated": {
+      "principle": "empty when the conductor stop rule delegates ops/status/changelog/traceability reconciliation."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration for the aggregation run; it must stay compatible with aggregation_from_upstream_artifacts and not imply live inference."
+    },
+    "flagged_adversarial": {
+      "principle": "false because this record is a transparent aggregation artifact, not a fast compute-bound claim."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_466_archived_467_activated_endpoint_blockers_carried_forward or blocked_yaml_parse."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads roadmap and upstream JSON only; never live model inference."
+    },
+    "milestone_from": {
+      "principle": "the archived milestone 2026.07.466 from the prior conductor pass."
+    },
+    "milestone_to": {
+      "principle": "the activated/staged milestone 2026.07.467 from the active roadmap."
+    },
+    "missing_artifacts": {
+      "principle": "skipped or absent .466 artifacts such as Exp5073, Exp5074, and Exp5081 recorded explicitly."
+    },
+    "next_milestone_doc": {
+      "principle": "the .467 milestone document path read from the active roadmap."
+    },
+    "source_artifacts": {
+      "principle": "the present .466 artifacts loaded with sha256 provenance."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "complete_466_archived_467_activated_endpoint_blockers_carried_forward",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_from": "2026.07.466",
+  "milestone_to": "2026.07.467",
+  "missing_artifacts": [
+    {
+      "exists": false,
+      "experiment_id": 5073,
+      "loadable": false,
+      "path": "results/experiment_5073_uprm_process_verifier_v466.json",
+      "reason": "preemptive_skip_upstream_exp5072_retired_no_artifact",
+      "status": "skipped_or_absent"
+    },
+    {
+      "exists": false,
+      "experiment_id": 5074,
+      "loadable": false,
+      "path": "results/experiment_5074_vpr_tool_process_reward_v466.json",
+      "reason": "preemptive_skip_upstream_exp5072_retired_no_artifact",
+      "status": "skipped_or_absent"
+    },
+    {
+      "exists": false,
+      "experiment_id": 5081,
+      "loadable": false,
+      "path": "results/experiment_5081_phase_d_fr11_decision_gate_v466.json",
+      "reason": "preemptive_skip_upstream_exp5073_exp5074_retired_no_artifact",
+      "status": "skipped_or_absent"
+    }
+  ],
+  "next_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+  "preconditions_checked": {
+    "roadmaps": {
+      "active": {
+        "exists": true,
+        "milestone": "2026.07.467",
+        "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "parse_ok": true,
+        "path": "research-roadmap.yaml",
+        "sha256": "sha256:2caf4f8a882f4e6e81da05c3342e1e68a4b3a2a462e36d68cab30144c86dc1b9",
+        "status": "parsed"
+      },
+      "pre_staged": {
+        "exists": false,
+        "parse_ok": null,
+        "path": "research-roadmap-next.yaml",
+        "status": "absent_already_promoted"
+      }
+    }
+  },
+  "random_seed": 5083,
+  "reproducibility_checksum": "sha256:226f71f4244eec175e3cfc9a3ed734925e2bc321195e64551d4eaafb036aa526",
+  "result_path": "results/experiment_5083_archive_466_activate_467.json",
+  "schema": "carnot.experiment_5083_archive_466_activate_467.v1",
+  "source_artifacts": [
+    {
+      "duration_s": 2.003356,
+      "exists": true,
+      "experiment_id": 5071,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_gguf_logprob_preflight_partial_ready",
+      "loadable": true,
+      "path": "results/experiment_5071_gguf_logprob_preflight_v466.json",
+      "present": true,
+      "sha256": "sha256:3dbe0ff79167a9105aaadca8b9712fc6c5467c1aedabc224782624f18d72f5e5"
+    },
+    {
+      "duration_s": 0.278656,
+      "exists": true,
+      "experiment_id": 5075,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_dccd_guided_frontier_no_headline_underpowered",
+      "loadable": true,
+      "path": "results/experiment_5075_dccd_guided_decoding_scale_v466.json",
+      "present": true,
+      "sha256": "sha256:47bad53e1a82ac3d4c0785b2c2eb45e85917cb17c48f2b4ad67a5e1d8629f004"
+    },
+    {
+      "duration_s": 0.016732,
+      "exists": true,
+      "experiment_id": 5076,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_d6_replication_no_pareto_win",
+      "loadable": true,
+      "path": "results/experiment_5076_d6_efficiency_replication_v466.json",
+      "present": true,
+      "sha256": "sha256:11541d98fa82782f0d4471f018667c8a65d7f8be84a43c4579880300bfdb6f3c"
+    },
+    {
+      "duration_s": 0.005109,
+      "exists": true,
+      "experiment_id": 5077,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
+      "loadable": true,
+      "path": "results/experiment_5077_fr11_group_sc_memory_v466.json",
+      "present": true,
+      "sha256": "sha256:fd93d059904f95cac19c4f918b2edb4211a1d4f3fa8f59e818a3dc95f1543d93"
+    },
+    {
+      "duration_s": 6.323637,
+      "exists": true,
+      "experiment_id": 5079,
+      "flagged_adversarial": false,
+      "honest_verdict": "success_board_continuity_matrix_written_no_speedup_claim",
+      "loadable": true,
+      "path": "results/experiment_5079_board_continuity_matrix_v466.json",
+      "present": true,
+      "sha256": "sha256:f192acef045a657305b556d93038f39b28225982552a6217dd19f22b35e9e347"
+    },
+    {
+      "duration_s": 0.348543,
+      "exists": true,
+      "experiment_id": 5080,
+      "flagged_adversarial": false,
+      "honest_verdict": "success_kan_pwa_milp_property_verified_tiny",
+      "loadable": true,
+      "path": "results/experiment_5080_kan_pwa_milp_bridge_v466.json",
+      "present": true,
+      "sha256": "sha256:e350965201e41a3077e936e8ea32d44a03a9e7c51a75d44de0f9208f79e93e18"
+    },
+    {
+      "duration_s": 0.0,
+      "exists": true,
+      "experiment_id": 5082,
+      "flagged_adversarial": false,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.decision_ready (upstream artifact not found for task id 'exp5081-phase-d-fr11-decision-gate-v466')",
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "path": "results/experiment_5082_capstone_v466.json",
+      "present": true,
+      "sha256": "sha256:5d99d948970b71db41d4b8203314d6f9ed0a3b3b57330e3fb4a2b0e44664562f"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5083",
+    "SCENARIO-CAPSTONE-5083",
+    "SCENARIO-CAPSTONE-5083-BLOCKED-YAML",
+    "SCENARIO-CAPSTONE-5083-FIELD-PRINCIPLES"
+  ]
+}
