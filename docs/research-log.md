@@ -5601,3 +5601,9 @@ The critical path for milestone .250:
 - theme: bounded operational retro for a milestone with no timing entries
 - key result: no data available this milestone; the timing block contains 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so there is no slowest run, compute-bound GPU-idle finding, or DualGPURunner finding to report
 - acceptance: 0/0 criteria met -- no experiment criteria were present in the supplied timing data
+
+### Milestone 2026.07.466
+- exp_range: no data available this milestone
+- theme: operational retro for a milestone with no experiment commits in the supplied timing block
+- key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no slowest experiment, compute-bound GPU-idle finding, or DualGPURunner finding can be derived
+- acceptance: 0/0 criteria met -- no experiment criteria were present in the supplied timing data
