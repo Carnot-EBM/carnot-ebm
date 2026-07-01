@@ -16,32 +16,30 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: **0 SELF_DISCOVERY_ADVANCE, 1 OUTER_LOOP_RE, 19 UNCLEAR.** Reachability is clean, but provenance is not. `development_proxy` + `offline_no_quota` + blank `honest_verdict` is not enough to credit live hidden-game self-discovery.
+TL;DR: 19/20 are **UNCLEAR** at best because `development_proxy` + `offline_no_quota` does not prove live self-discovery; 1/20 is clear **OUTER_LOOP_RE** because it declares `used_env_source`. Zero clean **SELF_DISCOVERY_ADVANCE**.
 
 | Artifact | Verdict | Evidence | Recommended Action |
 |---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` | UNCLEAR | Reachable live entrypoint pattern, but `solve_provenance=development_proxy`, `mode=standing_arc_loop_offline_no_quota`, no honest verdict, no attempt/runtime trace shown. | Do not count as ARC live advance until artifact records live attempts, observations, rule discovery, and no source/BFS/hand model inputs. |
-| `results/arc_loop_solve_r11l.json` | UNCLEAR | Same: reachable-looking artifact, proxy/offline provenance, no proof of autonomous discovery. | Same gating. |
-| `results/arc_loop_solve_ls20.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_dc22.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_vc33.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_g50t.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_s5i5.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_sp80.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_su15.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_sk48.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_ft09.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_ar25.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_m0r0.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_cn04.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_lf52.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_bp35.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_re86.json` | UNCLEAR | Same. | Same gating. |
-| `results/arc_loop_solve_ka59.json` | UNCLEAR | Same, plus level 1 is especially weak evidence of generalized hidden-game solving. | Same gating; avoid inflating capability from low-level proxy solves. |
-| `results/arc_loop_solve_sb26.json` | UNCLEAR | Same. | Same gating. |
-| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Explicit `outer_loop_inputs_declared=["used_env_source"]`. That is source-assisted reverse engineering, regardless of the captured trajectory. | Quarantine as non-credit. Keep only as diagnostic/dev fixture, clearly excluded from live capability metrics. |
+| `results/arc_loop_solve_lp85.json` | UNCLEAR | Reachable path, but provenance is `development_proxy`; no honest verdict; offline no-quota mode. | Do not count as live solve until artifact records live attempts, observations, policy decisions, and no outer-loop inputs. |
+| `results/arc_loop_solve_r11l.json` | UNCLEAR | Same: `development_proxy`, empty verdict, offline no-quota. | Require live-agent trace proof. |
+| `results/arc_loop_solve_ls20.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_dc22.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_vc33.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_g50t.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_s5i5.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_sp80.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_su15.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_sk48.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_ft09.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_ar25.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_m0r0.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_cn04.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_lf52.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_bp35.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_re86.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_ka59.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/arc_loop_solve_sb26.json` | UNCLEAR | Same. | Require live-agent trace proof. |
+| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Declares `outer_loop_inputs_declared: ["used_env_source"]`; artifact is `experiment_headway`, not live entrypoint evidence. | Quarantine from solve registry; keep only as development/debug evidence, clearly marked non-qualifying. |
 
-**Pattern Watch**
-
-The drift is obvious: many artifacts are reachable from the live path, but they are labeled `development_proxy` and `offline_no_quota` without the provenance needed to prove self-discovery. Reachability is necessary, not sufficient. The project should stop treating proxy/offline solve files as capability evidence unless they carry a live-agent provenance record: attempts made, observations received, hypotheses formed at runtime, no source access, no offline ground-truth BFS, no hand-built adapter, and replayable entrypoint invocation.
+**Pattern Watch:** The drift is toward laundering development/proxy/offline artifacts as solve progress. Reachability is necessary but not sufficient: a reachable module can still be fed outer-loop knowledge or proxy-derived structure. Counting `development_proxy` artifacts without live trace evidence weakens the core claim that Carnot discovers hidden-game solves from its own runtime attempts.
 

@@ -25804,3 +25804,147 @@ Planner date: 2026-07-01.
   telemetry or honest blockers.
 
 <!-- V469-PLANNER-REFERENCES-END -->
+
+<!-- V470-PLANNER-REFERENCES-START -->
+
+## V470 Planner References - Post-FoVer Retrenchment, Auditable FR-11, And Energy-Guided Runtime
+
+Planner date: 2026-07-01.
+
+Search coverage: arXiv, OpenReview, Hugging Face Papers, GitHub discovery, Extropic writing,
+Logical Intelligence public pages, and Semantic Scholar citation-list checks for EBT
+(`arXiv:2507.02092`) and ARM-EBM (`arXiv:2512.15605`). The direct Semantic Scholar
+paper-metadata endpoints returned HTTP 429 for the two root papers during this sweep, but the
+citation-list endpoints returned current candidate citing papers. Treat all citation-count claims as
+unknown in this block.
+
+### Energy-Based Decoding For Frozen LLMs
+- **Source:** arXiv:2605.28020 - https://arxiv.org/abs/2605.28020
+- **Tracks:** energy-guided decoding, reward-tilted target distributions, local SOTA GGUF runtime,
+  constrained generation
+- **Carnot hook:** `.466`/`.467` showed guided decoding can produce gains but did not yield a clean
+  headline under runtime/cache constraints. EBD is a training-free way to steer frozen models with an
+  external lightweight reward while preserving a base-model prior.
+- **Actionability:** Run a small local-GGUF EBD-style decode only after the endpoint artifact has clean
+  live-duration/cache evidence. Gate it against rerank-only and fixed-token/NFE controls; do not
+  headline if local logprobs or adversarial verification remain dirty.
+
+### Energy-Based Fine-Tuning By Feature Matching
+- **Source:** arXiv:2603.12248 - https://arxiv.org/abs/2603.12248
+- **Tracks:** EBMs for language models, rollout feature matching, on-policy sequence-level training
+- **Carnot hook:** EBFT supports the Phase-3 view that sequence-level energy/feature statistics can be
+  optimized directly rather than only next-token CE. It is too training-heavy for an immediate
+  milestone reproduction, but it informs how Carnot should evaluate sequence-level verifier residuals.
+- **Actionability:** Add a diagnostic that compares residual feature moments for accepted/rejected
+  verifier traces before any future fine-tuning plan. Keep it as an offline analysis unless a clean
+  low-cost adaptation path exists.
+
+### Distributional EBMs For Structured LLM Reasoning
+- **Source:** arXiv:2605.18871 - https://arxiv.org/abs/2605.18871
+- **Tracks:** decomposed energy, uncertainty-aware structured reasoning, deterministic penalties plus
+  learned quality scorer
+- **Carnot hook:** This is the closest external match to Carnot's verifier thesis: learned quality
+  scorer + deterministic analytical constraint penalties + ensemble uncertainty + regenerate/abstain.
+  It also cites ARM-EBM in the Semantic Scholar ARM citation list.
+- **Actionability:** Use it to shape a non-FoVer structured reasoning benchmark: deterministic
+  constraints remain the source of truth, learned energy ranks candidates, uncertainty triggers
+  abstention, and code/spec tasks must be checked for model-identity shortcuts.
+
+### SEVA: Self-Evolving Verification Agent
+- **Source:** arXiv:2606.29713 - https://arxiv.org/abs/2606.29713
+- **Tracks:** hallucination verification, process reward decomposition, self-evolving verifier,
+  fact attribution
+- **Carnot hook:** SEVA's main lesson for FR-11 is negative as much as positive: self-evolution improved
+  benchmark specialists but hurt other factual datasets. That matches Carnot's repeated no-promote
+  results and strengthens the need for nonforgetting gates.
+- **Actionability:** The V470 FR-11 task should adopt multi-component process scoring and a
+  specialist-vs-generalist audit. Promotion is valid only if held-out utility improves and cross-domain
+  nonforgetting holds.
+
+### Deployment-Time Learning Without Weight Updates
+- **Sources:** CASCADE arXiv:2605.06702 - https://arxiv.org/abs/2605.06702; JitRL arXiv:2601.18510 -
+  https://arxiv.org/abs/2601.18510
+- **Tracks:** continual learning, episodic memory, contextual bandits, logit/action modulation,
+  no-gradient adaptation
+- **Carnot hook:** Both papers support a safer FR-11 design: choose and reuse cases online without
+  mutating model weights. CASCADE supplies no-regret case selection; JitRL supplies a KL-constrained
+  additive action/logit update interpretation.
+- **Actionability:** Replace the blocked FoVer residual-memory route with a nonparametric
+  case-selection policy over exact-solver/CSP traces. Require bandit regret/coverage telemetry,
+  rollback, and a no-action baseline.
+
+### Tool Receipts For Agent Hallucination Detection
+- **Source:** arXiv:2603.10060 - https://arxiv.org/abs/2603.10060
+- **Tracks:** tool-result hallucination detection, signed receipts, epistemic source labels, agent
+  verification
+- **Carnot hook:** Carnot's conductor and experiment artifacts already need evidence provenance. Signed
+  tool receipts provide an immediate way to harden LLM claims about commands, files, and counts without
+  expensive cryptographic proof systems.
+- **Actionability:** Add an agent-output verification experiment that attaches receipt hashes to
+  command/file evidence and checks generated result claims against them. This is an operational
+  verifier, not a model-quality headline.
+
+### Cycle-Consistent Explanation Of Formal Certificates
+- **Source:** arXiv:2606.24414 - https://arxiv.org/abs/2606.24414
+- **Tracks:** formal-verification certificate explanation, cycle consistency, symbolic verifier loop,
+  offline specialization
+- **Carnot hook:** `exp5114` produced clean KAN certificates, but certificates need faithful explanation
+  if they are to become product artifacts. Cycle consistency provides a verifier-backed explanation
+  pattern rather than LLM-only prose.
+- **Actionability:** Extend the KAN/certificate path with a small certificate-to-explanation
+  round-trip audit: explanation must reconstruct the property/verdict metadata and pass an exact
+  checker.
+
+### Constrained Decoding Without Intent Distortion
+- **Source:** AdapTrack arXiv:2510.17376 - https://arxiv.org/abs/2510.17376; constrained-decoding
+  implementation survey - https://github.com/Saibo-creator/Awesome-LLM-Constrained-Decoding
+- **Tracks:** constrained generation, backtracking, syntax/semantic constraints, distribution
+  distortion controls
+- **Carnot hook:** `.468` concluded syntax-only constrained decoding should not be headlined. AdapTrack
+  and the GitHub survey reinforce that backtracking and semantic reachability are the meaningful next
+  controls.
+- **Actionability:** If V470 includes constrained decoding, it must be an audit/engineering comparison
+  against an established library or backtracking baseline, with semantic no-op controls.
+
+### Logprob/Spilled-Energy Hallucination Signals
+- **Sources:** HALT arXiv:2602.02888 - https://arxiv.org/abs/2602.02888; OpenReview Spilled Energy -
+  https://openreview.net/forum?id=EXFKk4Y3yc; BEAVER Hugging Face page -
+  https://huggingface.co/papers/2512.05439
+- **Tracks:** hallucination detection, logprob time series, final-softmax energy, deterministic
+  probability bounds
+- **Carnot hook:** These signals are attractive only after local GGUF logprobs are clean. BEAVER remains
+  the deterministic-bound anchor; HALT/Spilled Energy are process signals that must not bypass exact
+  constraints.
+- **Actionability:** First repair the endpoint/cache/duration provenance. Then run a bounded diagnostic
+  comparing logprob time-series energy against exact verifier outcomes; skip cheaply if logprob telemetry
+  is unavailable.
+
+### Sampling And Hardware Telemetry
+- **Sources:** RXMC temperature optimization arXiv:2601.13542 - https://arxiv.org/abs/2601.13542;
+  reversible generative sampler arXiv:2603.09251 - https://arxiv.org/abs/2603.09251; Extropic -
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+- **Tracks:** replica exchange, temperature ladder adaptation, Ising sampling, detailed balance,
+  thermodynamic hardware
+- **Carnot hook:** `exp5116` built a CPU exact-checked 2D-PT reference. RXMC temperature adaptation and
+  reversible trajectory constraints are natural follow-ups before board speed claims. Extropic confirms
+  TSU remains an architecture/simulation signal, not local execution evidence.
+- **Actionability:** Add online temperature-ladder adaptation to the HUBO/2D-PT reference with exact
+  enumeration checks and residual-energy telemetry. Hardware tasks should record authenticated KV260/
+  GateMate/PolarFire transcripts only; no TSU execution claim.
+
+### Logical Intelligence And EBT/ARM Citation-Lineage Watch
+- **Sources:** Logical Intelligence public page - https://logicalintelligence.com/; EBT
+  arXiv:2507.02092 - https://arxiv.org/abs/2507.02092; ARM-EBM arXiv:2512.15605 -
+  https://arxiv.org/abs/2512.15605; Semantic Scholar citation-list API checks on 2026-07-01.
+- **Observed citing-paper candidates:** EBT citation list returned `Fixed-Point Reasoners`, `LoopUS`,
+  and causal-energy/layer-parameterization items; ARM-EBM citation list returned Distributional EBMs,
+  LoopUS, ontology-constrained neural reasoning, and Graph Energy Matching among its first five
+  results.
+- **Carnot hook:** These are architecture pressure, not immediate training obligations. The local
+  milestone should not reproduce EBT-scale training. It should continue exact-verifier, solver, and
+  auditable self-learning work that preserves Carnot's local-first advantage.
+- **Actionability:** Keep EBT/ARM/Kona in the architecture section of the roadmap and map only the
+  locally executable parts into experiments: exact constraints, energy-ranked structured reasoning,
+  certificate explanations, and hardware-compatible sampling telemetry.
+
+<!-- V470-PLANNER-REFERENCES-END -->

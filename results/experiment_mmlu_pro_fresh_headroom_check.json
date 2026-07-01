@@ -1,0 +1,626 @@
+{
+  "experiment": "mmlu_pro_fresh_headroom_check",
+  "corpus": "TIGER-Lab/MMLU-Pro (test split, random sample)",
+  "n_questions_sampled": 40,
+  "n_questions_scored": 40,
+  "n_questions_unparseable": 0,
+  "k_samples_per_question": 6,
+  "temperature": 0.8,
+  "oracle_at_k": 0.325,
+  "sc_vote": 0.075,
+  "headroom": 0.25,
+  "headroom_definition": "oracle_at_k - sc_vote = selectable headroom a verifier could capture",
+  "oracle_distinct": true,
+  "oracle_distinct_note": "Ground truth is MMLU-Pro's own human-curated answer_index, an exact-match multiple-choice label -- NOT an executable oracle a verifier would replicate. A text-based verifier scoring candidate reasoning/answers is oracle-distinct by construction here.",
+  "genuinely_real_candidates": true,
+  "genuinely_real_candidates_note": "Candidates are real llama.cpp generations (temperature=0.8, distinct seed per sample) from a real cached GGUF model -- NOT deterministic templates or synthetic constructions. This directly addresses the failure mode found in ConstraintBench/exp5044 (candidates there were generator_kind='deterministic_solver_backed_variant', not real LLM output).",
+  "model_id": "unsloth/gemma-4-12B-it-GGUF",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+  "categories_sampled": [
+    "biology",
+    "business",
+    "chemistry",
+    "computer science",
+    "economics",
+    "engineering",
+    "health",
+    "history",
+    "law",
+    "math",
+    "other",
+    "philosophy",
+    "physics",
+    "psychology"
+  ],
+  "per_question_results": [
+    {
+      "question_id": 1338,
+      "category": "law",
+      "gold": "H",
+      "parsed_letters": [
+        "I",
+        "I",
+        "B",
+        "I",
+        "E",
+        "I"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 8486,
+      "category": "math",
+      "gold": "H",
+      "parsed_letters": [
+        "I",
+        "H",
+        "H",
+        "E",
+        "G",
+        "H"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 2988,
+      "category": "biology",
+      "gold": "C",
+      "parsed_letters": [
+        "G",
+        "I",
+        "G",
+        "A",
+        "I",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 2816,
+      "category": "biology",
+      "gold": "G",
+      "parsed_letters": [
+        "I",
+        "J",
+        "J",
+        "I",
+        "B",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 12006,
+      "category": "engineering",
+      "gold": "B",
+      "parsed_letters": [
+        "C",
+        "C",
+        "H",
+        "I",
+        "F",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 10398,
+      "category": "computer science",
+      "gold": "C",
+      "parsed_letters": [
+        "D",
+        "I",
+        "I",
+        "I",
+        "D",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 6624,
+      "category": "health",
+      "gold": "C",
+      "parsed_letters": [
+        "C",
+        "C",
+        "D",
+        "C",
+        "I",
+        "G"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 10171,
+      "category": "physics",
+      "gold": "C",
+      "parsed_letters": [
+        "D",
+        "I",
+        "D",
+        "I",
+        "I",
+        "I"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 12034,
+      "category": "engineering",
+      "gold": "J",
+      "parsed_letters": [
+        "A",
+        "F",
+        "F",
+        "F",
+        "F",
+        "F"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 10729,
+      "category": "computer science",
+      "gold": "B",
+      "parsed_letters": [
+        "H",
+        "I",
+        "H",
+        "B",
+        "A",
+        "H"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 8180,
+      "category": "math",
+      "gold": "E",
+      "parsed_letters": [
+        "G",
+        "D",
+        "I",
+        "H",
+        "J",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 10654,
+      "category": "computer science",
+      "gold": "C",
+      "parsed_letters": [
+        "I",
+        "I",
+        "I",
+        "I",
+        "I",
+        "I"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 4915,
+      "category": "history",
+      "gold": "E",
+      "parsed_letters": [
+        "A",
+        "D",
+        "F",
+        "F",
+        "D",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 11793,
+      "category": "engineering",
+      "gold": "H",
+      "parsed_letters": [
+        "I",
+        "I",
+        "I",
+        "I",
+        "I",
+        "E"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 2943,
+      "category": "biology",
+      "gold": "C",
+      "parsed_letters": [
+        "G",
+        "G",
+        "G",
+        null,
+        "I",
+        "G"
+      ],
+      "n_parsed": 5
+    },
+    {
+      "question_id": 10882,
+      "category": "philosophy",
+      "gold": "G",
+      "parsed_letters": [
+        "I",
+        "I",
+        "A",
+        "H",
+        "B",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 6148,
+      "category": "health",
+      "gold": "F",
+      "parsed_letters": [
+        "J",
+        "D",
+        "F",
+        "H",
+        "H",
+        "B"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 1123,
+      "category": "law",
+      "gold": "D",
+      "parsed_letters": [
+        "B",
+        "C",
+        "H",
+        "H",
+        "I",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 817,
+      "category": "business",
+      "gold": "F",
+      "parsed_letters": [
+        "I",
+        "A",
+        "C",
+        "A",
+        "B",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 9448,
+      "category": "physics",
+      "gold": "F",
+      "parsed_letters": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 11319,
+      "category": "engineering",
+      "gold": "H",
+      "parsed_letters": [
+        "A",
+        "A",
+        "C",
+        "C",
+        "I",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 10766,
+      "category": "computer science",
+      "gold": "J",
+      "parsed_letters": [
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 2321,
+      "category": "psychology",
+      "gold": "J",
+      "parsed_letters": [
+        "H",
+        "D",
+        "I",
+        "D",
+        "D",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 7506,
+      "category": "economics",
+      "gold": "B",
+      "parsed_letters": [
+        "I",
+        "I",
+        "H",
+        "I",
+        "H",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 9705,
+      "category": "physics",
+      "gold": "C",
+      "parsed_letters": [
+        "C",
+        "D",
+        "H",
+        "C",
+        "D",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 7382,
+      "category": "economics",
+      "gold": "D",
+      "parsed_letters": [
+        "D",
+        "D",
+        "C",
+        "D",
+        "A",
+        "D"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 2498,
+      "category": "psychology",
+      "gold": "B",
+      "parsed_letters": [
+        "D",
+        "A",
+        "F",
+        "D",
+        "B",
+        "I"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 1419,
+      "category": "law",
+      "gold": "F",
+      "parsed_letters": [
+        "C",
+        "B",
+        "C",
+        "A",
+        "A",
+        "G"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 1047,
+      "category": "law",
+      "gold": "C",
+      "parsed_letters": [
+        "I",
+        "A",
+        "H",
+        "I",
+        "A",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 7361,
+      "category": "economics",
+      "gold": "I",
+      "parsed_letters": [
+        "D",
+        "I",
+        "D",
+        "D",
+        "C",
+        "J"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 6787,
+      "category": "health",
+      "gold": "A",
+      "parsed_letters": [
+        "C",
+        "E",
+        "G",
+        "D",
+        "J",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 11517,
+      "category": "engineering",
+      "gold": "H",
+      "parsed_letters": [
+        "C",
+        "C",
+        "C",
+        "F",
+        "F",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 3562,
+      "category": "chemistry",
+      "gold": "C",
+      "parsed_letters": [
+        "J",
+        "J",
+        "J",
+        "J",
+        "J",
+        "J"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 9177,
+      "category": "physics",
+      "gold": "E",
+      "parsed_letters": [
+        "D",
+        "J",
+        "H",
+        "J",
+        "J",
+        "J"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 4997,
+      "category": "history",
+      "gold": "B",
+      "parsed_letters": [
+        "G",
+        "F",
+        "G",
+        "G",
+        "B",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 8570,
+      "category": "math",
+      "gold": "F",
+      "parsed_letters": [
+        "G",
+        "C",
+        "C",
+        "F",
+        "J",
+        "H"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 3050,
+      "category": "biology",
+      "gold": "D",
+      "parsed_letters": [
+        "A",
+        "I",
+        "E",
+        "I",
+        "A",
+        "A"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 5878,
+      "category": "other",
+      "gold": "B",
+      "parsed_letters": [
+        "I",
+        "C",
+        "A",
+        "F",
+        "C",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 901,
+      "category": "law",
+      "gold": "G",
+      "parsed_letters": [
+        "F",
+        "A",
+        "A",
+        "I",
+        "A",
+        "C"
+      ],
+      "n_parsed": 6
+    },
+    {
+      "question_id": 419,
+      "category": "business",
+      "gold": "G",
+      "parsed_letters": [
+        "D",
+        "D",
+        "D",
+        "C",
+        "D",
+        "D"
+      ],
+      "n_parsed": 6
+    }
+  ],
+  "load_duration_s": 0.0,
+  "generation_duration_s": 1274.89,
+  "gpu_device": 1,
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "Generation via a real CUDA llama-server (the Kaggle-submission CUDA 12.8 build, reused here via HTTP) on GPU 1, NOT the shared venv's llama_cpp Python bindings -- diagnosed mid-run: that package's llama_supports_gpu_offload()==False (CPU-only wheel), which had silently run the first attempt at ~340s/question on CPU for 4+ hours before being killed and restarted this way. load_duration_s=0 because the server was warm-started separately (its own real load cost is not part of this script's measured wall-clock, but IS real -- generation_duration_s is the load-bearing number here).",
+  "model_specs": {
+    "model": "unsloth/gemma-4-12B-it-GGUF",
+    "quantization": "Q4_K_M"
+  },
+  "target_model": "unsloth/gemma-4-12B-it-GGUF",
+  "random_seed": 20260701,
+  "duration_s": 1274.89,
+  "honest_verdict": "complete_mmlu_pro_headroom_present_oracle_0.325_sc_0.075_headroom_0.250_candidate_for_verifier_build",
+  "reproducibility_checksum": "sha256:96dc7669426a1a5679d33548cda62be4407aada1c82a806725d2a9cdb2829980",
+  "headroom_ci95": [
+    0.125,
+    0.4
+  ],
+  "headroom_ci_method": "3000-resample percentile bootstrap over questions, seed=1",
+  "generator_weakness_caveat": "HONEST CAVEAT: sc_vote=0.075 is close to the 10-way multiple-choice random-chance floor (0.10), meaning the zero-shot gemma-4-12B-it (Q4_K_M) generator is weak on this benchmark -- MMLU-Pro is specifically constructed with harder distractors than base MMLU to defeat ceiling effects, and this setup used no few-shot examples. Some of the measured headroom likely reflects \"the generator is weak\" rather than purely \"a subtle correct answer is buried among plausible near-misses that only a sophisticated verifier could select.\" A stronger generator or few-shot prompting could close part of this gap WITHOUT any verifier. This does not invalidate the headroom as real and statistically significant (CI95 excludes 0) -- oracle_at_k=0.325 shows the correct answer genuinely appears among K=6 diverse samples a third of the time, which a verifier could in principle capture regardless of why SC-vote itself is low -- but it means a verifier-value claim built on this corpus should also report SC-vote-vs-a-stronger-generator as context, not just SC-vote-vs-oracle, so the comparison is not confounded with \"we just made the generator better,\" which is a different (and separately valuable, but distinct) lever from verifier value.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "generation_duration_s=1274.89 and duration_s=1274.89 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+}
