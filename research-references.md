@@ -25687,3 +25687,97 @@ search snippets and source pages rather than bulk API metadata.
   exact-verifier scale-up rather than free-form judge imitation.
 
 <!-- V468-PLANNER-REFERENCES-END -->
+
+<!-- V469-PLANNER-REFERENCES-START -->
+
+## V469 Planner References - FoVer Redirect, Post-MILP KAN Verification, And Hardware Sampling
+
+Planner date: 2026-07-01.
+
+### FoVer: Training Step-Level Reasoning Verifiers With Formal Verification Tools
+- **Source:** arXiv:2505.15960 - https://arxiv.org/abs/2505.15960; code -
+  https://github.com/psunlpgroup/FoVer; Hugging Face Papers -
+  https://huggingface.co/papers/2505.15960
+- **Tracks:** formal-verifier labels, step-level reasoning verification, Best-of-K selection,
+  hallucination mitigation
+- **Carnot hook:** The operator-directed FoVer redirect needs oracle-distinct candidate selection rather
+  than another no-headroom MuSR verifier. FoVer's step labels from formal tools give Carnot an
+  auditable, non-circular target for verifier-selection energy over candidate reasoning traces.
+- **Actionability:** Build an in-domain FoVer candidate-selection pool with n>=150, K candidates,
+  parsed answers, oracle@K<1.0, tuned self-consistency baseline, label-ablation control, and
+  `verifier_is_oracle=false`.
+
+### FormalRewardBench: Benchmarking Reward Models For Formal Reasoning
+- **Source:** arXiv:2605.10141 - https://arxiv.org/abs/2605.10141
+- **Tracks:** formal theorem proving reward models, Lean 4 preference pairs, error-injected controls,
+  reward-model evaluation
+- **Carnot hook:** FormalRewardBench reinforces that formal-reasoning verifiers must be tested against
+  controlled proof-error injections, not only aggregate accuracy. This directly informs FoVer negative
+  controls and FR-11 promotion contracts.
+- **Actionability:** Add error-family and label-ablation audits to the FoVer selector, and require
+  non-forgetting checks before any self-learning memory promotion.
+
+### The Self-Verification Cliff: Generation Outpaces Self-Selection
+- **Source:** OpenReview - https://openreview.net/forum?id=QJTSAvHFQn
+- **Tracks:** self-verification, Best-of-N selection, verifier-selection gap, reasoning models
+- **Carnot hook:** The paper matches Carnot's current failure mode: candidate generation can expose a
+  correct answer while the selector fails to identify it. The FoVer pool's oracle@K versus tuned-SC gap
+  should be measured explicitly before claiming a verifier moat.
+- **Actionability:** Treat `oracle@K - tuned_sc` as headroom, and require the learned/energy verifier to
+  beat tuned self-consistency with CI95 excluding 0 while shuffled-label selection does not.
+
+### Optimal Abstractions For Verifying Properties Of KANs
+- **Source:** arXiv:2602.06737 - https://arxiv.org/abs/2602.06737
+- **Tracks:** Kolmogorov-Arnold Networks, piecewise-affine abstraction, MILP verification,
+  abstraction refinement
+- **Carnot hook:** Post-milestone `exp5108` found the exact-MILP wall at N=10 solved / N=20 timeout
+  against a realistic N=100 target. The natural next KAN question is no longer another exact-MILP scale
+  sweep; it is whether local/global error budgeting, piece allocation, or decomposition can produce a
+  useful conservative certificate beyond the wall.
+- **Actionability:** Prototype a post-wall KAN abstraction-refinement diagnostic with false-property
+  controls, margin abstention, piece-budget telemetry, and explicit comparison to the `exp5108` wall.
+
+### Probabilistic Computers For MIMO Detection: Sparsification To 2D Parallel Tempering
+- **Source:** arXiv:2601.09037 - https://arxiv.org/abs/2601.09037
+- **Tracks:** p-bit sampling, FPGA probabilistic computing, parallel tempering, hardware-accelerated
+  Ising methods
+- **Carnot hook:** `.468` showed direct HUBO/p-spin encodings reduce QUBO gadget blowup, but did not
+  address mixing. Two-dimensional parallel tempering suggests an algorithmic next step before claiming
+  board speedups.
+- **Actionability:** Add a CPU reference for HUBO/p-spin sampling with temperature and constraint-axis
+  tempering, exact enumeration checks on tiny instances, and no hardware speed claim.
+
+### Programmable Probabilistic Computer With 1,000,000 p-bits
+- **Source:** arXiv:2606.25313 - https://arxiv.org/abs/2606.25313
+- **Tracks:** FPGA p-bits, residual-energy decay, partitioning, boundary communication, hardware
+  sampling telemetry
+- **Carnot hook:** The paper gives a better hardware-continuity metric than raw latency: residual energy
+  decay and communication/update partition costs. This matches the KV260 known-issues request for a
+  residual-energy exponent when a runtime sweep is available.
+- **Actionability:** Extend hardware continuity with KV260-safe residual-energy sweep methodology,
+  kappa/exponent fitting when real board data is available, and explicit CPU-only fallback when not.
+
+### EBT / ARM-EBM Citation-Lineage Updates
+- **Sources:** NRGPT arXiv:2512.16762 - https://arxiv.org/abs/2512.16762; Neurosymbolic
+  Domain-Grounded AI Agents arXiv:2604.00555 - https://arxiv.org/abs/2604.00555
+- **Tracks:** energy-based alternatives to GPT, neurosymbolic agents, EBT/ARM-EBM follow-ons,
+  domain-grounded verification
+- **Carnot hook:** These are architecture pressure, not immediate reproductions. They support keeping
+  Carnot's verifier/actor split explicit and making domain-grounded constraints the source of truth.
+- **Actionability:** Record as medium-term architecture context; do not schedule a training-heavy
+  reproduction until FoVer selection and local runtime substrate are clean.
+
+### Extropic XTR-0/TSU And Logical Intelligence Kona/Aleph Status Check
+- **Sources:** https://extropic.ai/writing/inside-x0-and-xtr-0,
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware,
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks, and
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo
+- **Tracks:** thermodynamic sampling hardware, EBM-native reasoning products, formal verification,
+  CSP benchmarks
+- **Carnot hook:** Extropic remains an architecture/simulation signal rather than an available local
+  execution target. Logical's Kona/Aleph updates continue to validate exact-verifier-first reasoning,
+  especially on CSP-style tasks.
+- **Actionability:** Keep TSU work as simulation/roadmap context. For local work, spend the milestone on
+  FoVer selection, post-wall KAN abstraction, CPU sampling references, and authenticated board telemetry.
+
+<!-- V469-PLANNER-REFERENCES-END -->

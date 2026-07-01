@@ -1,256 +1,265 @@
-# Research Roadmap vNEXT: 2026.07.468
+# Research Roadmap vNEXT: 2026.07.469
 
 ## Milestone Title
 
-EXACT-VERIFIER SCALE-UP + EVIDENCE ENERGY + FORMAL FR-11
+FOVER IN-DOMAIN SELECTION + POST-WALL KAN ABSTRACTION + CONTINUITY REPAIR
 
 ## Why This Milestone Exists
 
-Milestone `2026.07.467` completed and produced a useful decision: the cleanest progress came from
-objective, exact-verifier surfaces, while runtime/process-verifier work remained operationally fragile.
-The next milestone should not spend its center of gravity on another free-form verifier retry. It should
-scale the exact-verifier path, add evidence-relative energy checks, repair local SOTA runtime provenance
-only enough to unblock future work, and make continuous self-learning contract-governed instead of
-memory-accumulation-driven.
+Milestone `2026.07.468` completed with useful exact-verifier evidence, but not with a clean local runtime
+substrate, not with a productive FR-11 update, and not with a verifier-moat result on an oracle-distinct
+domain. A post-milestone operator-directed artifact, `exp5108`, also answered the KAN exact-MILP scale
+question: the current exact PWA/MILP encoding solved N=10 in 120.9s, timed out at N=20, and is far below
+the realistic N=100 reference. The next milestone should therefore move the center of gravity to the
+FoVer in-domain redirect, while turning exact-verifier scale work toward different mechanisms rather than
+more toy exact-MILP wins.
 
-What `.467` proved:
+What `.468` and the immediate follow-up proved:
 
-1. **Exact verification is the current positive path.** `exp5091` produced a clean KAN/PWA/MILP property
-   proof with `property_holds=true`, `solver_status=optimal`, 6 binary variables, 43 constraints, and no
-   adversarial flag. This is the first surface worth scaling.
-2. **Runtime/process-verifier claims are still blocked by provenance.** `exp5085` reported completion and
-   logprob readiness but was flagged because the run was too short for a live inference claim. `exp5086`
-   then blocked on endpoint/cache state, and `exp5087` gate-blocked. `.468` needs a clean substrate
-   artifact, not another downstream uPRM promise.
-3. **Constrained generation needs semantic controls.** `exp5090` found a STATIC CSR mask win on latency
-   and validity, but the artifact was flagged as tautological and too short. The next constrained
-   decoding task must audit semantic distortion and no-op validity, not simply show syntactic masks.
-4. **p-bit/CDCL was correctness-preserving but not yet useful.** `exp5089` preserved exact SAT authority
-   but produced no effort win. Future Ising work should change representation or hardware telemetry,
-   not repeat the same pairwise assumption heuristic.
-5. **FR-11 memory remains safe but inert.** `exp5092` correctly refused to promote budgeted/on-policy
-   memory when held-out and non-forgetting deltas were zero. The next self-learning experiment needs
-   formal update contracts and richer evidence snapshots.
-6. **Hardware continuity exists but no acceleration claim is justified.** `exp5093` kept KV260 and
-   PolarFire paths alive, but GateMate detection still failed and no board-level speedup was proven.
-7. **The milestone decision is an exact-verifier pivot.** `exp5094` recorded
-   `complete_capstone_v467_exact_verifier_pivot_positive_runtime_process_blocked`, excluding flagged
-   runtime and constrained-generation claims from the headline.
+1. **Bounded exact-verifier work remains the cleanest positive path.** `exp5098`, `exp5101`, `exp5102`,
+   and `exp5103` produced clean bounded positives for KAN/PWA/MILP, graph evidence energy, direct
+   HUBO/p-spin encoding, and TACO-style exact-solver help.
+2. **The KAN exact-MILP scale wall is now measured.** `exp5108` reached N=10, timed out at N=20, preserved
+   adversarial controls where solved, and did not approach the realistic N=100 KAEM reference. Repeating
+   the same exact-MILP sweep is no longer research progress.
+3. **The FoVer in-domain redirect remains unrun and is now the highest-value verifier-moat question.**
+   Prior cross-domain FoVer selector attempts (`exp4305`, `exp4314`) found real headroom but collapsed
+   under label ablation. The untested question is in-domain FoVer selection versus tuned
+   self-consistency on a proper n>=150 oracle-distinct pool.
+4. **Local SOTA runtime is still blocked.** `exp5097` resolved mandatory GGUF files but could not prove
+   live completion/logprob readiness. LLM-backed claims remain downstream of a clean endpoint artifact.
+5. **Constrained-generation evidence was not clean enough to keep as a headline.** `exp5099`, `exp5100`,
+   and `exp5104` were useful diagnostics but adversarially flagged or semantic-audit-only.
+6. **FR-11 self-learning is safe but inert.** `exp5105` preserved contracts and did not promote unsafe
+   memory; held-out utility stayed at zero and the artifact was not a clean promotion result.
+7. **Hardware progress is continuity, not acceleration.** `exp5106` kept KV260, GateMate, and PolarFire
+   context alive without a speedup claim. The next hardware task should measure residual-energy
+   methodology or record an honest blocker, not infer acceleration from static mappings.
 
 ## Three Biggest Gaps Versus The PRD
 
-### Gap 1: Exact Verifiers Are Clean But Too Small
+### Gap 1: The Verifier Moat Has Not Been Tested Where Headroom Exists
 
-PRD FR-12 calls for verifiable reasoning with auditable provenance. `.467` showed one small KAN/MILP
-proof, but Carnot still lacks scale curves, multiple constraint families, prefix-probability bounds,
-prompt-to-code assurance, and graph-evidence energies. `.468` must diversify exact checker surfaces
-while keeping every claim under a solver, executable constraint, or deterministic bound.
+PRD FR-12 calls for verifiable reasoning that improves outcomes, not only discriminates errors after the
+fact. MuSR/math/CSP selector attempts have repeatedly lacked oracle-distinct headroom. FoVer is the
+known oracle-distinct domain with headroom (`oracle@K` around 0.77 versus vote around 0.27), but the only
+previous FoVer selector result was cross-domain and label-ablation-collapsed. `.469` must answer the
+in-domain FoVer selection question directly.
 
-### Gap 2: Local SOTA Runtime Is Not Yet A Trustworthy Experimental Substrate
+### Gap 2: Exact Verification Needs Alternatives Beyond Exact-MILP Scaling
 
-The mandated SOTA GGUF files are available, but the prior endpoint/cache artifacts were either blocked
-or adversarially flagged. LLM-backed experiments must include the required local SOTA model specs, but
-the milestone should only use live local inference as a substrate after an endpoint artifact records
-long-enough execution, server command, logs, completion proof, and logprob/top-logprob proof.
+The KAN exact-MILP scale wall means Carnot needs post-wall formal methods: abstraction refinement,
+piece-budget allocation, decomposition, conservative sampling bounds, and high-order energy methods that
+keep exact checks on small instances. This milestone should avoid another N<=3 proof and instead test
+whether a different KAN abstraction can produce useful conservative certificates beyond `exp5108`.
 
-### Gap 3: Continuous Self-Learning Has Governance But No Productive Update Path
+### Gap 3: Continuous Self-Learning Still Lacks A Productive, Auditable Update Source
 
-PRD FR-11 needs autonomous directed self-learning. Carnot has repeatedly shown that blind memory, replay,
-or promote-on-dev strategies are unsafe or inert. The next step is a SEVerA-style Search-Verify-Learn
-loop: candidate memories or skills are generated, checked against formal contracts, and promoted only
-when exact held-out and non-forgetting guards pass.
+PRD FR-11 requires autonomous directed self-learning. Carnot has governance and rollback, but no safe
+nonzero update path. FoVer selection residuals are a better update stream than blind replay: they contain
+formal step labels, candidate-selection failures, and auditable error families. `.469` should use FoVer
+residuals to test contract-guarded memory/SOP promotion with held-out and non-forgetting guards.
 
 ## Fresh Research Folded In
 
-Added to `research-references.md` before this plan under `V468-PLANNER-REFERENCES`:
+Added to `research-references.md` before this plan under `V469-PLANNER-REFERENCES`:
 
-- `arXiv:2512.05439` and `uiuc-focal-lab/Beaver` - deterministic prefix-probability bounds for LLM
-  constraints.
-- `arXiv:2606.30247` - evidence-relative graph grounding with path energies and support regions.
-- `arXiv:2603.25111` - SEVerA formally guarded self-evolving agents.
-- `arXiv:2601.21048` - TACO test-time adaptation for unsupervised combinatorial optimization.
-- `arXiv:2602.16665` - PLANCK direct p-spin/HUBO optimization without quadratization-first thinking.
-- `arXiv:2603.01150` - implicitly parallel neuromorphic CSP solver design and partition telemetry.
-- `arXiv:2606.00722`, `arXiv:2602.00612`, `arXiv:2508.10111`, and `eth-sri/constrained-diffusion` -
-  CFG-constrained diffusion LMs, prefix reachability, and completion-existence checks.
-- `arXiv:2405.21047` - grammar-aligned decoding caveat about distribution distortion.
-- OpenReview `O3Kg4dLdpg` - code-based assurance of prompt-defined constraints.
-- `arXiv:2602.02888` - HALT logprob time-series hallucination assessment, held for after substrate
-  cleanup.
-- `arXiv:2604.17091` and `arXiv:2602.07755` - GenericAgent/ALMA memory design pressure.
-- `arXiv:2511.00907` and `arXiv:2505.11081` - EBT/ARM-EBM citation-lineage architecture signals.
-- `guidance-ai/llguidance` - practical grammar-constrained decoding baseline.
-- Extropic XTR-0/TSU and Logical Intelligence Kona/Aleph updates.
+- `arXiv:2505.15960` FoVer and its code/Hugging Face records - formal-tool labels for step-level
+  verifier training and Best-of-K selection.
+- `arXiv:2605.10141` FormalRewardBench - formal theorem-proving reward-model evaluation with
+  error-injected controls.
+- OpenReview `QJTSAvHFQn` - the self-verification cliff between candidate generation and selection.
+- `arXiv:2602.06737` - KAN property verification through optimal piecewise-affine abstraction and
+  abstraction-budgeting.
+- `arXiv:2601.09037` - FPGA p-bit methods with sparsification and two-dimensional parallel tempering.
+- `arXiv:2606.25313` - million p-bit probabilistic computer with residual-energy and partition telemetry.
+- `arXiv:2512.16762` and `arXiv:2604.00555` - EBT/ARM-EBM citation-lineage architecture signals.
+- Extropic XTR-0/TSU and Logical Intelligence Kona/Aleph updates - architecture context, not local
+  execution claims.
 
-## Architecture For .468
+## Architecture For .469
 
 ```text
-                           research-references.md
-                                    |
-                                    v
-                 +--------------------------------------+
-                 | Exp5095 archive .467 / activate .468 |
-                 +--------------------------------------+
-                                    |
-                                    v
-                 +--------------------------------------+
-                 | Exp5096 SOTA source ingestion audit  |
-                 +--------------------------------------+
-                                    |
-                                    v
-                 +--------------------------------------+
-                 | Exp5097 clean GGUF endpoint/cache    |
-                 +--------------------------------------+
-                         |                         |
-          clean logprobs |                         | optional live LLM substrate
-                         v                         v
-       +--------------------------------+   +---------------------------------+
-       | Exp5099 BEAVER prefix bounds   |   | Exp5104 constrained audit       |
-       +--------------------------------+   +---------------------------------+
-
-       +--------------------------------+   +---------------------------------+
-       | Exp5098 KAN/PWA/MILP scale     |   | Exp5100 code-assurance checks   |
-       +--------------------------------+   +---------------------------------+
-                         |                         |
-                         v                         v
-       +--------------------------------+   +---------------------------------+
-       | Exp5101 graph evidence energy  |   | Exp5102 direct HUBO/p-spin      |
-       +--------------------------------+   +---------------------------------+
-                         |                         |
-                         v                         v
-       +--------------------------------+   +---------------------------------+
-       | Exp5103 TACO adaptive CSP      |   | Exp5105 SEVerA FR-11 memory     |
-       +--------------------------------+   +---------------------------------+
-
-                 +--------------------------------------+
-                 | Exp5106 hardware partition telemetry |
-                 +--------------------------------------+
-                                    |
-                                    v
-                 +--------------------------------------+
-                 | Exp5107 capstone decision            |
-                 +--------------------------------------+
+                         research-references.md
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5109 archive .468 + exp5108 baseline |
+              +-----------------------------------------+
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5110 V469 source ingestion audit     |
+              +-----------------------------------------+
+                                  |
+           +----------------------+----------------------+
+           |                                             |
+           v                                             v
++----------------------------+              +------------------------------+
+| exp5111 FoVer pool n>=150  |              | exp5119 GGUF endpoint RCA    |
++----------------------------+              +------------------------------+
+           |                                             |
+           v                                             v
++----------------------------+              +------------------------------+
+| exp5112 in-domain selector |              | future live LLM experiments  |
++----------------------------+              +------------------------------+
+           |
+           +-----------------------------+
+           |                             |
+           v                             v
++----------------------------+  +------------------------------+
+| exp5113 adversarial audit  |  | exp5118 FR-11 FoVer memory   |
++----------------------------+  +------------------------------+
+           |
+           v
++----------------------------+  +------------------------------+
+| exp5115 graph/FoVer energy |  | exp5114 KAN abstraction      |
++----------------------------+  +------------------------------+
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5116 HUBO 2D-PT CPU reference        |
+              +-----------------------------------------+
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5117 TACO harm-gated scale           |
+              +-----------------------------------------+
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5120 hardware residual telemetry     |
+              +-----------------------------------------+
+                                  |
+                                  v
+              +-----------------------------------------+
+              | exp5121 capstone decision               |
+              +-----------------------------------------+
 ```
 
 ## Phases
 
-### Phase 0: Transition And SOTA Ingestion
+### Phase 0: Transition And Source Freshness
 
-Experiments: `exp5095`, `exp5096`
+Experiments: `exp5109`, `exp5110`
 
-Archive the `.467` truth record, activate `.468`, and verify that the new source set is present and
-mapped to experiments. `exp5096` is the formal SOTA-ingestion slot required by the local research
-program. It must confirm the BEAVER, SEVerA, graph-evidence, TACO, p-spin, constrained-generation,
-hardware, and Logical/Extropic source hooks before the milestone claims novelty.
+Archive the `.468` close-state, include the post-milestone `exp5108` KAN scale-wall result, and activate
+`.469` without modifying the active `research-roadmap.yaml`. Verify that the V469 source set is present,
+that each source maps to a task or is explicitly background-only, and that the FoVer redirect is treated
+as the primary science question.
 
-### Phase 1: Runtime Provenance And Exact-Verifier Scale-Up
+### Phase 1: FoVer In-Domain Verifier Selection
 
-Experiments: `exp5097`, `exp5098`, `exp5099`, `exp5100`
+Experiments: `exp5111`, `exp5112`, `exp5113`
 
-`exp5097` repairs runtime truth by producing a clean endpoint/cache artifact or an actionable blocker.
-It is not allowed to headline unless duration, server logs, completion proof, and logprob/top-logprob
-proof pass adversarial review. In parallel, `exp5098` scales the clean KAN/PWA/MILP path, `exp5099`
-prototypes BEAVER-style deterministic prefix bounds, and `exp5100` tests prompt-defined constraints as
-executable code assurance.
+Build the n>=150 FoVer candidate-selection pool, then run in-domain train/test verifier selection versus
+tuned self-consistency. The selector must be oracle-distinct, must not use answer-key leakage, and must
+survive the mandatory shuffled-label ablation. The audit is separate so a positive selector result cannot
+headline until leakage, label ablation, vote tuning, and CI handling are checked independently.
 
-### Phase 2: Evidence Energy, High-Order Constraints, And Adaptive Solver Help
+### Phase 2: Exact-Verifier Alternatives And Solver Help
 
-Experiments: `exp5101`, `exp5102`, `exp5103`, `exp5104`
+Experiments: `exp5114`, `exp5115`, `exp5116`, `exp5117`
 
-This phase expands the exact-verifier pivot into four adjacent mechanisms:
+Move beyond the measured exact-MILP wall. `exp5114` tests KAN abstraction-refinement or decomposition
+against `exp5108` with false-property and margin controls. `exp5115` transfers graph-evidence energy to
+FoVer step/support traces. `exp5116` builds a CPU exact-checked HUBO/p-spin two-dimensional
+parallel-tempering reference before any board claim. `exp5117` scales TACO-style exact-solver help and
+learns a harm gate so `.468`'s helpful average does not hide harmful instances.
 
-- Evidence-relative graph energy distinguishes contradictions from unsupported but possible claims.
-- Direct HUBO/p-spin encoding tests whether high-order constraints avoid QUBO gadget blowup.
-- TACO-style adaptation tests neural/energy warm starts with exact solver fallback.
-- Constrained-decoding audit revisits `.467` STATIC CSR only with semantic no-op, distribution-distortion,
-  and external grammar-baseline controls.
+### Phase 3: Continuous Self-Learning, Runtime Repair, And Hardware Continuity
 
-### Phase 3: Formal Self-Learning, Hardware Continuity, And Capstone
+Experiments: `exp5118`, `exp5119`, `exp5120`
 
-Experiments: `exp5105`, `exp5106`, `exp5107`
+`exp5118` is the required continuous self-learning task. It uses FoVer selector residuals to propose
+memory/SOP updates and promotes only when exact contracts, held-out utility, and non-forgetting guards
+pass. `exp5119` is runtime root-cause work for the local SOTA GGUF endpoint and logprob cache. `exp5120`
+keeps hardware continuity honest with KV260 residual-energy methodology, GateMate/PolarFire prechecks,
+and no speedup claim without authenticated board timing.
 
-`exp5105` is the required continuous self-learning task. It uses a SEVerA-style Search-Verify-Learn
-contract for memory/SOP updates and promotes nothing unless held-out and non-forgetting guards are
-positive. `exp5106` keeps the hardware line alive with KV260 SSH/UIO-safe transcripts, GateMate detect
-triage, PolarFire precheck, and partition/update telemetry. `exp5107` is deliberately ungated and must
-aggregate clean wins, blockers, and flagged claims into one honest milestone decision.
+### Phase Z: Capstone
+
+Experiment: `exp5121`
+
+Aggregate all artifacts into one decision: FoVer moat status, selector-audit status, post-wall KAN path,
+exact-solver alternatives, FR-11 promotion safety, runtime readiness, hardware status, and the next
+milestone's focus. The capstone has no structured gate and must run even if runtime or hardware remains
+blocked.
 
 ## Dependency Graph
 
 ```text
-exp5095
-  -> exp5096
-      -> exp5097
-      -> exp5098
-      -> exp5099
-      -> exp5100
-      -> exp5101
-      -> exp5102
-      -> exp5103
-      -> exp5104
-      -> exp5105
-      -> exp5106
+exp5109
+  -> exp5110
+      -> exp5111
+          -> exp5112
+              -> exp5113
+              -> exp5118
+          -> exp5115
+      -> exp5114
+      -> exp5116
+      -> exp5117
+      -> exp5119
+      -> exp5120
 
-exp5095, exp5096, exp5097, exp5098, exp5099, exp5100,
-exp5101, exp5102, exp5103, exp5104, exp5105, exp5106
-  -> exp5107
+exp5109, exp5110, exp5111, exp5112, exp5113, exp5114, exp5115,
+exp5116, exp5117, exp5118, exp5119, exp5120
+  -> exp5121
 ```
 
-Structured `gated_on` entries are used only where the conductor can skip wasted calls safely:
+Structured `gated_on` entries are used where the conductor can skip work safely:
 
-- `exp5099` waits for `exp5096.references_section_found == true`.
-- `exp5104` waits for `exp5096.references_section_found == true`.
-- No task depends structurally on `exp5097` being clean because exact-verifier diagnostics should still
-  run with deterministic toy distributions or non-LLM checkers when local runtime remains blocked.
+- `exp5111` waits for `exp5110.references_section_found == true`.
+- `exp5112` waits for `exp5111.pool_n >= 150` and `exp5111.headroom_present == true`.
+- `exp5113` waits for `exp5112.selection_result_available == true`.
+- `exp5115` waits for `exp5111.pool_n >= 150`.
+- `exp5118` waits for `exp5112.selection_result_available == true`.
 
-The capstone has no structured gate. It must run even if runtime or hardware tasks block.
+The capstone is deliberately ungated.
 
 ## Hardware Requirements
 
-- **Dual RTX 3090 / CUDA host:** required for `exp5097` and any task that invokes local SOTA inference.
-  Use `scripts/experiment_template.py::cached_sota_pair()` patterns and resolved local `.gguf` files;
-  never call `AutoTokenizer.from_pretrained()` on `-GGUF` repo IDs.
+- **Dual RTX 3090 / CUDA host:** required only for `exp5119` and any FoVer task that chooses to generate
+  new LLM candidates instead of using cached candidates. Use `scripts/experiment_template.py` local GGUF
+  cache helpers and llama.cpp; never call Hugging Face `AutoTokenizer` on `-GGUF` repositories.
 - **Mandated local GGUFs for every LLM-backed experiment:**
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
-- **KV260:** SSH-only checks via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; use only the
-  board SSH path and do not inspect host block devices. Any UIO/register interaction must be
-  transcript-backed and safe.
-- **GateMate A1 / DirtyJTAG:** detect/terminal-state triage only unless USB ID, IDCODE, and bitstream
-  path are proven in the artifact.
-- **PolarFire:** SSH reachability and hash-verified dispatch/precheck only; no flash/timing claim without
-  transcript.
-- **Extropic/TSU:** architecture and simulation reference only; no local TSU hardware target exists.
-- **CPU-only exact solver fallback:** every exact-verifier task must have a deterministic CPU path so the
-  milestone still produces useful science if GPU runtime is unavailable.
+- **KV260:** SSH-only checks through `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Do not
+  inspect host block devices. Any UIO/register interaction must be transcript-backed and safe.
+- **GateMate A1 / DirtyJTAG:** detection and terminal-state triage only unless USB ID, IDCODE,
+  bitstream flash, and timing transcript are all present.
+- **PolarFire:** SSH/precheck only unless hash-matched dispatch and timing are authenticated.
+- **Extropic TSU / XTR-0:** architecture/simulation context only; no local execution target exists.
 
-## Falsifiable Milestone Gates
+## Planned Deliverables
 
-- A headline exact-verifier win must come from an artifact with `flagged_adversarial=false`,
-  `inference_substrate` matching the actual substrate, and an objective checker/bound/solver as the
-  correctness authority.
-- A live local SOTA claim must include one of the mandated GGUF models, server command/logs, duration,
-  completion proof, and logprob/top-logprob proof.
-- A constrained-generation claim must report semantic controls and cannot headline on syntactic validity
-  alone.
-- A self-learning claim must report held-out and non-forgetting deltas and must refuse promotion unless
-  both are positive under exact guards.
-- A hardware claim may report reachability, transcript, and telemetry. It may not report acceleration
-  unless board execution and timing are directly measured.
+| Task | Deliverable |
+|---|---|
+| `exp5109` | `results/experiment_5109_archive_468_activate_469.json` |
+| `exp5110` | `results/experiment_5110_sota_ingestion_v469.json` |
+| `exp5111` | `results/experiment_5111_fover_in_domain_pool_v469.json` |
+| `exp5112` | `results/experiment_5112_fover_in_domain_selector_v469.json` |
+| `exp5113` | `results/experiment_5113_fover_selector_adversarial_audit_v469.json` |
+| `exp5114` | `results/experiment_5114_kan_abstraction_refinement_post_wall_v469.json` |
+| `exp5115` | `results/experiment_5115_graph_evidence_fover_transfer_v469.json` |
+| `exp5116` | `results/experiment_5116_hubo_2dpt_sampling_reference_v469.json` |
+| `exp5117` | `results/experiment_5117_taco_harm_gated_scale_v469.json` |
+| `exp5118` | `results/experiment_5118_fr11_fover_residual_memory_v469.json` |
+| `exp5119` | `results/experiment_5119_sota_endpoint_rootcause_v469.json` |
+| `exp5120` | `results/experiment_5120_hardware_residual_telemetry_v469.json` |
+| `exp5121` | `results/experiment_5121_capstone_v469.json` |
 
-## Expected Deliverables
+## Success Criteria
 
-- `results/experiment_5095_archive_467_activate_468.json`
-- `results/experiment_5096_sota_ingestion_v468.json`
-- `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`
-- `results/experiment_5098_kan_pwa_milp_scale_v2.json`
-- `results/experiment_5099_beaver_prefix_bound_verifier_v468.json`
-- `results/experiment_5100_constrainprompt_code_assurance_v468.json`
-- `results/experiment_5101_incomplete_graph_evidence_energy_v468.json`
-- `results/experiment_5102_hubo_pspin_direct_energy_v468.json`
-- `results/experiment_5103_taco_adaptive_csp_heuristic_v468.json`
-- `results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json`
-- `results/experiment_5105_fr11_severa_guarded_memory_v468.json`
-- `results/experiment_5106_hardware_partition_telemetry_v468.json`
-- `results/experiment_5107_capstone_v468.json`
+1. FoVer pool exists with n>=150, K candidates, parsed answers, `oracle@K < 1.0`, positive headroom,
+   and `verifier_is_oracle=false`.
+2. In-domain FoVer selector either beats tuned self-consistency with CI95 excluding 0 while label
+   ablation fails, or records a clean negative that retires the immediate verifier-moat claim.
+3. No KAN task repeats toy exact-MILP scale; the post-wall task changes technique and compares honestly
+   against `exp5108`.
+4. FR-11 promotion happens only if held-out utility and non-forgetting guards are positive; no-promotion
+   remains a valid outcome.
+5. Runtime and hardware tasks report clean readiness only with transcript-backed evidence; otherwise
+   they write blocked/continuity artifacts with root causes.
