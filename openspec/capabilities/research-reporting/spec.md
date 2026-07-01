@@ -94,6 +94,103 @@ modify `research-roadmap.yaml`.
 |---|---|---|
 | REQ-REPORT-5109 | Planned (`python/carnot/reporting/archive_468_activate_469_5109.py`, `scripts/experiment_5109_archive_468_activate_469.py`) | Planned (`tests/python/test_experiment_5109_archive_468_activate_469.py`) |
 
+### REQ-REPORT-5110: V469 Source Freshness And Task-Mapping Gate
+
+The Exp 5110 workflow SHALL inspect `research-references.md` between
+`V469-PLANNER-REFERENCES-START` and `V469-PLANNER-REFERENCES-END`, including
+the `V469 Fresh Sweep Addendum`, and SHALL inspect
+`openspec/change-proposals/research-roadmap-vNEXT.md` for milestone
+`2026.07.469` tasks `exp5111` through `exp5120`. It SHALL identify the run as
+`exp5110-source-freshness-sota-ingestion-v469`. It SHALL write
+`results/experiment_5110_sota_ingestion_v469.json` without modifying
+`research-roadmap.yaml` and without modifying `scripts/research_conductor.py`.
+
+The workflow SHALL verify that the V469 source set covers FoVer,
+FormalRewardBench, the self-verification cliff, KAN abstraction, p-bit
+two-dimensional parallel tempering, million p-bit residual telemetry, FALCON,
+Verus-SpecGym/Verus-SpecBench, EBT, ARM-EBM, Extropic TSU/XTR-0, and Logical
+Intelligence Kona/Aleph. Every checked source SHALL include at least one real
+URL and a source-access status. If a source URL is dead, stale, or only
+partially accessible, the artifact SHALL record the condition explicitly and
+the verdict SHALL be `blocked_*` or `partial_*` unless alternate live metadata
+justifies a non-blocking access note.
+
+Every actionable source SHALL map to one or more concrete downstream tasks in
+`exp5111` through `exp5120`. FoVer-style verifier and selector sources SHOULD
+map to the FoVer pool, selector, audit, graph-evidence transfer, and FR-11
+residual-memory tasks when applicable. KAN abstraction sources SHOULD map to
+`exp5114`. p-bit/2D-PT sampling sources SHOULD map to `exp5116`. residual
+telemetry hardware sources SHOULD map to `exp5120`. FALCON and
+Verus-SpecGym-style semantic-faithfulness sources SHOULD map only to local
+semantic/audit or harm-gated exact-solver tasks, not to a syntax-only
+constrained-generation headline.
+
+EBT, ARM-EBM, Extropic TSU/XTR-0, and Logical Intelligence Kona/Aleph SHALL be
+marked as architecture/background-only unless the current roadmap contains a
+truthful local task that can execute them. The artifact SHALL NOT imply an
+unplanned training-heavy reproduction, local TSU/Kona execution, hardware
+speedup, or board-execution claim.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `references_section_found`, `sources_checked`, `task_mapping`,
+`background_only_sources`, `active_roadmap_modified`, `flagged_adversarial`,
+and `tests_run`. It SHOULD also include field principles, coverage-by-topic,
+claim-boundary notes, and the concrete V469 reference-section bounds so the
+structured downstream gate can audit why `references_section_found` is true or
+false.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `references_section_found`: principle "downstream gate signal"
+- `sources_checked`: principle "provenance"
+- `task_mapping`: principle "actionability"
+- `background_only_sources`: principle "no false execution claims"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+- `field_principles`: principle "principle annotations for every top-level artifact field"
+- `coverage_by_required_topic`: principle "source coverage completeness"
+- `claim_boundary_findings`: principle "no unplanned training or hardware execution claims"
+- `references_section_bounds`: principle "auditable source-section extraction"
+- `training_or_hardware_execution_claims_detected`: principle "false execution claim detection"
+- `repo_inputs_read`: principle "repo inspection provenance"
+- `run_date`: principle "run labeling"
+
+#### SCENARIO-REPORT-5110: V469 Sources Are Fresh And Mapped
+
+**Given** `research-references.md` contains the V469 planner references section
+and fresh sweep addendum
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names milestone
+`2026.07.469` and tasks `exp5111` through `exp5120`
+**When** the Exp 5110 source-freshness workflow runs
+**Then** it writes the required JSON artifact, sets
+`references_section_found=true`, lists every source checked with URL evidence,
+maps every actionable source to one or more tasks in `exp5111` through
+`exp5120`, marks EBT/ARM-EBM/Kona/TSU as architecture pressure when no truthful
+local execution task exists, records no active-roadmap modification, and makes
+no training-heavy or hardware-execution claim.
+
+#### SCENARIO-REPORT-5110-BLOCKED-OR-PARTIAL-SOURCE: Dead Or Stale Sources Are Preserved
+
+**Given** one V469 source URL is dead, stale, or otherwise not verifiable
+**When** the Exp 5110 source-freshness workflow runs
+**Then** it writes a terminal `blocked_*` or `partial_*` artifact, preserves the
+problematic source in `sources_checked`, records the source-specific access
+condition, and does not silently drop the source from `task_mapping` or
+`background_only_sources`.
+
+## Implementation Status (REQ-REPORT-5110)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5110 | Implemented (`python/carnot/experiment_5110_sota_ingestion_v469.py`, `scripts/experiment_5110_sota_ingestion_v469.py`) | Implemented (`tests/python/test_experiment_5110_sota_ingestion_v469.py`) |
+
 ### REQ-REPORT-5010: Verifier-Moat Literature Ingestion Maps New SOTA Onto Phase D
 
 The Exp 5010 workflow SHALL run the reliable SOTA-ingestion channel for the
