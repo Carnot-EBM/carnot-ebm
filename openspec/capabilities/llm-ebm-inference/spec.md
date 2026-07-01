@@ -1175,6 +1175,24 @@ contains token logprob and top-k alternative data; live transcript generation
 without telemetry SHALL leave `sota_logprob_ready=false` without fabricating
 telemetry.
 
+The Exp 3013 runner SHALL also support the v466 runtime-truth artifact shape
+used by downstream uPRM/VPR/DCCD/D6 gates.  The artifact SHALL resolve all
+three mandated GGUFs through the local cache or shared `cached_sota_pair()` /
+resolver pattern, SHALL NOT call `AutoTokenizer` on a `*-GGUF` repo ID, SHALL
+probe configured llama.cpp-compatible endpoints such as
+`http://127.0.0.1:8080` for completion plus top-logprob or confidence
+telemetry, and SHALL expose `usable_sota_models`, `sota_models_ready`,
+`completion_endpoint_ready`, `logprob_endpoint_ready`,
+`top_logprob_or_confidence_ready`, `tool_first_verifier_ready`,
+`live_completion_invoked`, `skip_reasons`, and `flagged_adversarial`.
+When no endpoint returns a non-empty completion, the artifact SHALL set
+`live_completion_invoked=false`, SHALL avoid the `live_llm_inference`
+substrate declaration, and SHALL use a terminal-prefix verdict such as
+`complete_gguf_logprob_preflight_partial_ready` or
+`blocked_gguf_logprob_preflight_no_ready_paths`.  When a live endpoint
+completion is invoked, the artifact SHALL record endpoint timing and enough
+probe detail to distinguish a real endpoint call from a cache-only preflight.
+
 ### SCENARIO-INFER-SOTA-021-001: Live Transcript With Telemetry Opens Both Gates
 
 **Given** Exp 3013 has recorded preconditions before model loading
@@ -1207,6 +1225,26 @@ fabricating logprob, top-k, or logits evidence.
 auditable missing-cache, precondition-failure, or generation-failure status
 **And** any legacy small-model smoke context is labeled smoke-only and never
 contributes to headline readiness or logprob readiness.
+
+### SCENARIO-INFER-SOTA-021-004: Endpoint Runtime Truth Is Split From Cache Readiness
+
+**Given** all three mandated GGUFs resolve to local `.gguf` files
+**And** no configured llama.cpp endpoint returns a completion
+**When** Exp 3013 writes the v466 runtime-truth artifact
+**Then** `sota_models_ready=true`
+**And** `completion_endpoint_ready=false`
+**And** `live_completion_invoked=false`
+**And** `inference_substrate` does not claim `live_llm_inference`
+**And** `skip_reasons` records the missing endpoint and telemetry lanes.
+
+**Given** a configured llama.cpp endpoint returns a non-empty completion with
+top-logprob telemetry
+**When** Exp 3013 writes the v466 runtime-truth artifact
+**Then** `completion_endpoint_ready=true`
+**And** `logprob_endpoint_ready=true`
+**And** `top_logprob_or_confidence_ready=true`
+**And** the artifact records endpoint timing and a terminal
+`complete_gguf_logprob_preflight_ready` verdict.
 
 ### REQ-INFER-SOTA-022: Exp 3043 Transcript Fingerprint Replay Preflight
 

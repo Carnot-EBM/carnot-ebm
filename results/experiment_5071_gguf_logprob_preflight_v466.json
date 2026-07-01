@@ -1,0 +1,491 @@
+{
+  "artifact": "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1",
+  "cache_paths": {
+    "headline_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    "roots": {
+      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+      "huggingface_hub_cache_exists": true,
+      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+      "local_models_exists": true
+    },
+    "smoke_only_models": {
+      "Qwen/Qwen3.5-0.8B": null,
+      "unsloth/gemma-4-E4B-it-GGUF": null
+    }
+  },
+  "completion_endpoint_ready": false,
+  "duration_s": 2.003356,
+  "endpoint_summary": {
+    "candidate_endpoints": [
+      "http://127.0.0.1:8080"
+    ],
+    "completion_ready": false,
+    "confidence_ready": false,
+    "duration_s": 0.008554,
+    "probes": [
+      {
+        "completion_probe": {
+          "detail": "http://127.0.0.1:8080/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:8080/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
+          "ready": false,
+          "status": null
+        },
+        "endpoint": "http://127.0.0.1:8080",
+        "telemetry_probe": {
+          "detail": "skipped: completion probe failed",
+          "ready": false,
+          "status": null
+        }
+      }
+    ],
+    "selected_endpoint": null,
+    "telemetry_signal": null,
+    "top_logprob_ready": false
+  },
+  "field_principles": {
+    "completion_endpoint_ready": {
+      "principle": "true iff a llama.cpp-compatible endpoint returns non-empty completion text."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration separates live endpoint work from cache-only preflight."
+    },
+    "flagged_adversarial": {
+      "principle": "true when the artifact itself detects a duration/substrate inconsistency."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefix runtime verdict: complete_gguf_logprob_preflight_ready, complete_gguf_logprob_preflight_partial_ready, or blocked_gguf_logprob_preflight_no_ready_paths."
+    },
+    "inference_substrate": {
+      "principle": "declares whether the run invoked a live LLM endpoint or only performed deterministic cache/endpoint checks."
+    },
+    "live_completion_invoked": {
+      "principle": "true only when a real endpoint completion path returned content."
+    },
+    "logprob_endpoint_ready": {
+      "principle": "true iff the endpoint exposes top-logprob telemetry, not just text."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF IDs with exact local .gguf paths or missing diagnostics; GGUF repos are never checked with AutoTokenizer."
+    },
+    "skip_reasons": {
+      "principle": "machine-readable reasons for every false readiness lane."
+    },
+    "sota_models_ready": {
+      "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
+    },
+    "tool_first_verifier_ready": {
+      "principle": "true iff deterministic JSON, arithmetic, and evidence checks pass without LLM inference."
+    },
+    "top_logprob_or_confidence_ready": {
+      "principle": "true iff endpoint telemetry exposes top-logprobs or structured confidence."
+    },
+    "usable_sota_models": {
+      "principle": "subset of mandated SOTA GGUF roles that resolve to local .gguf files."
+    }
+  },
+  "flagged_adversarial": false,
+  "headline_models_attempted": [
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1780046332847654213,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 22134528992,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1780838958726406205,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 18323731456,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1778129415691941084,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 16947539744,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    }
+  ],
+  "headline_models_available": [
+    {
+      "generated": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    },
+    {
+      "generated": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    },
+    {
+      "generated": false,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    }
+  ],
+  "honest_verdict": "complete_gguf_logprob_preflight_partial_ready",
+  "inference_substrate": "deterministic_verifier",
+  "legacy_smoke_context": {
+    "model_ids": [
+      "Qwen/Qwen3.5-0.8B",
+      "unsloth/gemma-4-E4B-it-GGUF"
+    ],
+    "smoke_only": false,
+    "used_for_headline_readiness": false
+  },
+  "legacy_smoke_only_used": false,
+  "live_completion_invoked": false,
+  "live_transcript_paths": [],
+  "logprob_endpoint_ready": false,
+  "model_checksums": {
+    "Qwen/Qwen3.5-0.8B": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    },
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1780046332847654213,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 22134528992,
+      "status": "available"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 16947539744,
+      "status": "available"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1780838958726406205,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 18323731456,
+      "status": "available"
+    },
+    "unsloth/gemma-4-E4B-it-GGUF": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    }
+  },
+  "model_specs": {
+    "experiment_id": 3013,
+    "headline_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "loader": "llama_cpp",
+    "preferred_quantization": "Q4_K_M",
+    "random_seed": 3013,
+    "resolved_models": {
+      "flagship_dense": {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+      },
+      "flagship_moe": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+      },
+      "middle_moe": {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    },
+    "smoke_only_models": [
+      "Qwen/Qwen3.5-0.8B",
+      "unsloth/gemma-4-E4B-it-GGUF"
+    ],
+    "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1",
+    "telemetry_request": {
+      "logits_all": true,
+      "logprobs": 5,
+      "top_k_alternatives_required": true
+    }
+  },
+  "precondition_evidence": {
+    "cache_roots": {
+      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+      "huggingface_hub_cache_exists": true,
+      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+      "local_models_exists": true
+    },
+    "cached_sota_pair": {
+      "called": true,
+      "error": null,
+      "result": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "returned_two_loadable_specs": true
+    },
+    "checksum_feasibility": {
+      "available_model_count": 3,
+      "available_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "bounded_sha256_model_count": 3,
+      "feasible": true,
+      "full_sha256_model_count": 0,
+      "method": "sha256_full_for_small_files_or_bounded_head_tail_for_large_files",
+      "model_count": 5
+    },
+    "gpu_inventory": {
+      "available": true,
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+        "--format=csv,noheader,nounits"
+      ],
+      "free_vram_mib_total": 48240,
+      "gpus": [
+        {
+          "driver_version": "610.43.02",
+          "index": 0,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.02",
+          "index": 1,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n1, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n"
+    },
+    "llama_cpp": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False, 'llama_cpp_supports_gpu_offload': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "llama_cpp_import_ok": true,
+      "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "llama_cpp_supports_gpu_offload": false,
+      "llama_cpp_version": "0.3.29",
+      "returncode": 0,
+      "stderr_summary": ""
+    },
+    "python_environment": {
+      "current_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "current_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+      "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+      "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "venv_active": true,
+      "virtual_env": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv"
+    },
+    "recorded_before_model_load": true,
+    "repo_commit": {
+      "command": [
+        "git",
+        "-C",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "rev-parse",
+        "HEAD"
+      ],
+      "commit": "1a07d489cf36fa040844aba9dd33bf255df922a1",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "1a07d489cf36fa040844aba9dd33bf255df922a1\n"
+    },
+    "torch_cuda": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+      ],
+      "cuda_available": true,
+      "cuda_device_count": 2,
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "2.11.0+cu128 True 2\n",
+      "torch_version": "2.11.0+cu128"
+    }
+  },
+  "preconditions_checked": true,
+  "random_seed": 3013,
+  "reproducibility_checksum": "5c6aefb1793e6f62864dbb33255c002f424120b5a5f7720619dde8337e6d4767",
+  "run_date": "20260701",
+  "schema_version": 1,
+  "skip_reasons": [
+    "endpoint_completion_unavailable",
+    "logprob_endpoint_unavailable",
+    "top_logprob_or_confidence_unavailable",
+    "live_completion_not_invoked"
+  ],
+  "sota_headline_ready": false,
+  "sota_judge_ready": false,
+  "sota_logprob_ready": false,
+  "sota_models_ready": true,
+  "telemetry_capabilities": {
+    "blockers": [
+      "no_live_headline_generation"
+    ],
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      }
+    },
+    "overall": {
+      "any_live_generation": false,
+      "cactus_acceptance_ready": false,
+      "logits_exposed": false,
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false
+    },
+    "requested": {
+      "logprobs": 5,
+      "top_k_alternatives_required": true
+    }
+  },
+  "tests_run": [],
+  "tool_first_verifier_ready": true,
+  "top_logprob_or_confidence_ready": false,
+  "usable_sota_models": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ]
+}

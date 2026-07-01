@@ -3,7 +3,8 @@
 Spec: REQ-INFER-SOTA-021,
       SCENARIO-INFER-SOTA-021-001,
       SCENARIO-INFER-SOTA-021-002,
-      SCENARIO-INFER-SOTA-021-003
+      SCENARIO-INFER-SOTA-021-003,
+      SCENARIO-INFER-SOTA-021-004
 """
 
 from __future__ import annotations
@@ -91,6 +92,13 @@ def _write_cached_model(tmp_path: Path, hf_id: str = QWEN) -> tuple[Path, dict[s
     return gguf, {"HUGGINGFACE_HUB_CACHE": str(hub)}
 
 
+def _write_all_cached_models(tmp_path: Path) -> dict[str, str]:
+    env: dict[str, str] = {}
+    for hf_id in (QWEN, GEMMA31, GEMMA26):
+        _gguf, env = _write_cached_model(tmp_path, hf_id)
+    return env
+
+
 def _raw_with_topk(text: str = " exp3013 live") -> dict[str, Any]:
     return {
         "choices": [
@@ -118,7 +126,128 @@ def test_req_infer_sota_021_spec_anchor_exists() -> None:
     assert "SCENARIO-INFER-SOTA-021-001" in spec
     assert "SCENARIO-INFER-SOTA-021-002" in spec
     assert "SCENARIO-INFER-SOTA-021-003" in spec
+    assert "SCENARIO-INFER-SOTA-021-004" in spec
     assert exp.ARTIFACT_FILENAME in spec
+
+
+def test_scenario_021_004_cached_models_without_endpoint_are_partial_not_live(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-INFER-SOTA-021-004: cached GGUFs do not imply live endpoint readiness."""
+    env = _write_all_cached_models(tmp_path)
+
+    artifact = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [
+                {
+                    "endpoint": endpoints[0],
+                    "completion_probe": {
+                        "ready": False,
+                        "status": None,
+                        "detail": "connection refused",
+                    },
+                    "telemetry_probe": {
+                        "ready": False,
+                        "status": None,
+                        "detail": "skipped: completion probe failed",
+                    },
+                }
+            ],
+        },
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        monotonic=iter([10.0, 11.0]).__next__,
+    )
+
+    assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
+    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+    assert artifact["sota_models_ready"] is True
+    assert artifact["completion_endpoint_ready"] is False
+    assert artifact["logprob_endpoint_ready"] is False
+    assert artifact["top_logprob_or_confidence_ready"] is False
+    assert artifact["tool_first_verifier_ready"] is True
+    assert artifact["live_completion_invoked"] is False
+    assert artifact["inference_substrate"] != exp.LIVE_LLM_SUBSTRATE
+    assert artifact["flagged_adversarial"] is False
+    assert "endpoint_completion_unavailable" in artifact["skip_reasons"]
+    assert "live_completion_not_invoked" in artifact["skip_reasons"]
+    assert [row["hf_id"] for row in artifact["usable_sota_models"]] == [QWEN, GEMMA31, GEMMA26]
+    assert all(row["model_path"].endswith(".gguf") for row in artifact["usable_sota_models"])
+    assert artifact["model_specs"]["headline_models"] == [QWEN, GEMMA31, GEMMA26]
+    assert artifact["model_specs"]["resolved_models"]["flagship_moe"]["resolved_path"]
+    assert artifact["model_specs"]["resolved_models"]["flagship_dense"]["resolved_path"]
+    assert artifact["model_specs"]["resolved_models"]["middle_moe"]["resolved_path"]
+    assert artifact["model_specs"]["resolved_models"]["flagship_moe"]["resolved_path"].endswith(
+        ".gguf"
+    )
+
+
+def test_scenario_021_004_endpoint_completion_with_toplogprobs_is_ready(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-INFER-SOTA-021-004: live endpoint top-logprobs open the runtime path."""
+    env = _write_all_cached_models(tmp_path)
+
+    artifact = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0],
+            "completion_ready": True,
+            "top_logprob_ready": True,
+            "confidence_ready": False,
+            "telemetry_signal": "top_logprobs",
+            "duration_s": 65.0,
+            "probes": [
+                {
+                    "endpoint": endpoints[0],
+                    "completion_probe": {
+                        "ready": True,
+                        "status": 200,
+                        "detail": "completion returned non-empty content",
+                        "route": f"{endpoints[0]}/completion",
+                    },
+                    "telemetry_probe": {
+                        "ready": True,
+                        "status": 200,
+                        "detail": "top-logprob telemetry present",
+                        "signal": "top_logprobs",
+                        "route": f"{endpoints[0]}/completion",
+                    },
+                }
+            ],
+        },
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        monotonic=iter([1.0, 66.0]).__next__,
+    )
+
+    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_ready"
+    assert artifact["sota_headline_ready"] is True
+    assert artifact["sota_logprob_ready"] is True
+    assert artifact["completion_endpoint_ready"] is True
+    assert artifact["logprob_endpoint_ready"] is True
+    assert artifact["top_logprob_or_confidence_ready"] is True
+    assert artifact["live_completion_invoked"] is True
+    assert artifact["inference_substrate"] == exp.LIVE_LLM_SUBSTRATE
+    assert artifact["duration_s"] == pytest.approx(65.0)
+    assert artifact["endpoint_summary"]["duration_s"] == pytest.approx(65.0)
+    assert artifact["flagged_adversarial"] is False
+    assert artifact["skip_reasons"] == []
 
 
 def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
@@ -157,20 +286,33 @@ def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
         selected_python=SELECTED_PYTHON,
         env=env,
         command_runner=command_runner,
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
         prompt_runner_fn=prompt_runner,
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
         monotonic=iter([10.0, 12.75]).__next__,
         tests_run=("focused-exp3013",),
+        direct_load_enabled=True,
     )
 
     assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
     assert artifact["artifact"] == exp.ARTIFACT_NAME
     assert artifact["sota_headline_ready"] is True
     assert artifact["sota_logprob_ready"] is True
-    assert artifact["honest_verdict"].startswith("complete:")
+    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
     assert artifact["preconditions_checked"] is True
     assert artifact["model_specs"]["experiment_id"] == 3013
     assert artifact["model_specs"]["headline_models"] == [QWEN, GEMMA31, GEMMA26]
+    assert artifact["completion_endpoint_ready"] is False
+    assert artifact["live_completion_invoked"] is False
     assert artifact["headline_models_available"] == [
         {
             "hf_id": QWEN,
@@ -234,14 +376,25 @@ def test_scenario_021_002_transcript_without_telemetry_keeps_logprob_gate_false(
         selected_python=SELECTED_PYTHON,
         env=env,
         command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
         prompt_runner_fn=prompt_runner,
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA31}],
         monotonic=iter([1.0, 2.0]).__next__,
+        direct_load_enabled=True,
     )
 
     assert artifact["sota_headline_ready"] is True
     assert artifact["sota_logprob_ready"] is False
-    assert artifact["honest_verdict"].startswith("complete:")
+    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
     assert artifact["telemetry_capabilities"]["overall"]["any_live_generation"] is True
     assert artifact["telemetry_capabilities"]["overall"]["token_logprobs_exposed"] is False
     assert artifact["telemetry_capabilities"]["overall"]["topk_logprobs_exposed"] is False
@@ -265,6 +418,16 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
         selected_python=SELECTED_PYTHON,
         env={"HUGGINGFACE_HUB_CACHE": str(tmp_path / "empty-hf")},
         command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
         monotonic=iter([3.0, 3.4]).__next__,
@@ -272,7 +435,7 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
 
     assert artifact["sota_headline_ready"] is False
     assert artifact["sota_logprob_ready"] is False
-    assert artifact["honest_verdict"] == "blocked_sota_headline_model_unavailable"
+    assert artifact["honest_verdict"] == "blocked_gguf_logprob_preflight_no_ready_paths"
     assert artifact["headline_models_available"] == []
     assert artifact["live_transcript_paths"] == []
     assert artifact["legacy_smoke_only_used"] is False
@@ -286,9 +449,12 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
     assert {row["cache_status"] for row in artifact["headline_models_attempted"]} == {"missing"}
     assert artifact["inference_substrate"] == "blocked_no_headline_cache"
     assert artifact["telemetry_capabilities"]["overall"]["any_live_generation"] is False
+    assert artifact["live_completion_invoked"] is False
 
 
-def test_req_021_runtime_precondition_failure_skips_large_load(tmp_path: Path) -> None:
+def test_req_021_runtime_precondition_failure_skips_large_load_when_direct_enabled(
+    tmp_path: Path,
+) -> None:
     """REQ-INFER-SOTA-021: failed runtime preconditions are recorded before load."""
     _gguf, env = _write_cached_model(tmp_path, GEMMA26)
 
@@ -297,18 +463,30 @@ def test_req_021_runtime_precondition_failure_skips_large_load(tmp_path: Path) -
         selected_python=SELECTED_PYTHON,
         env=env,
         command_runner=_runner(llama_gpu=False),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA26}],
         monotonic=iter([7.0, 8.0]).__next__,
+        direct_load_enabled=True,
     )
 
     gemma_attempt = next(row for row in artifact["headline_models_attempted"] if row["hf_id"] == GEMMA26)
-    assert artifact["honest_verdict"] == "blocked_sota_headline_model_unavailable"
+    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
     assert gemma_attempt["cache_status"] == "resolved"
     assert gemma_attempt["load_status"] == "not_attempted_runtime_precondition_failed"
     assert gemma_attempt["generation_status"] == "not_attempted"
     assert artifact["precondition_evidence"]["llama_cpp"]["llama_cpp_supports_gpu_offload"] is False
     assert artifact["telemetry_capabilities"]["blockers"] == ["no_live_headline_generation"]
+    assert artifact["live_completion_invoked"] is False
 
 
 def test_req_021_helpers_prompt_parser_writer_and_cli(
@@ -418,6 +596,16 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
         selected_python=SELECTED_PYTHON,
         env=env,
         command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
         prompt_runner_fn=lambda model, **_: {
             "attempted": True,
             "load_status": "loaded",
@@ -437,6 +625,7 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
         monotonic=iter([1.0, 1.2]).__next__,
         tests_run=("coverage",),
+        direct_load_enabled=True,
     )
     assert json.loads(output.read_text(encoding="utf-8")) == artifact
     assert artifact["artifact"] == exp.ARTIFACT_NAME
