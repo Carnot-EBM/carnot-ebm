@@ -14190,6 +14190,100 @@ actions, and no speedup claim.
 
 ---
 
+### REQ-HW-5093
+
+**Title:** Hardware continuity v2 MUST audit KV260, GateMate, and PolarFire with precheck-only boundaries
+
+**Description:**
+Experiment 5093 MUST produce
+`results/experiment_5093_hardware_continuity_v467.json` as a v467
+hardware-continuity artifact covering KV260, GateMate A1/DirtyJTAG, and
+PolarFire. The artifact MUST use
+`inference_substrate=hardware_precheck_and_transcript_audit` and MUST NOT
+perform destructive actions, flash a board, program a bitstream, or claim
+speedup.
+
+The KV260 precondition MUST be exactly:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card device nodes MUST NOT be inspected for KV260. If an existing safe
+repo script or artifact provides a KV260 UIO/register transcript, Experiment
+5093 MUST verify and cite the transcript path. If no established safe
+UIO/register transcript is in scope, it MUST record the exact blocker in the
+KV260 row while keeping `kv260_speedup_claim_allowed=false`.
+
+GateMate triage MUST be non-destructive. The artifact MUST record GateMate
+detect-command availability, run `openFPGALoader -c dirtyJtag --detect` only
+when the command is available, preserve IDCODE/log output, infer cable state,
+and emit `gatemate_detected` plus `gatemate_terminal_state`.
+
+PolarFire triage MUST run SSH reachability and hash-dispatch preconditions only.
+It MAY check non-mutating dispatch prerequisites such as `uname -m`,
+`python3 --version`, `uptime`, and `uname -r`, but MUST NOT SCP files, flash,
+or dispatch a workload. It MUST emit `polarfire_detected` and
+`polarfire_dispatch_precheck_ready`.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `honest_verdict`
+- `duration_s`
+- `inference_substrate`
+- `preconditions_checked`
+- `kv260_ssh_ready`
+- `kv260_uio_transcript_path`
+- `kv260_speedup_claim_allowed`
+- `gatemate_detected`
+- `gatemate_terminal_state`
+- `polarfire_detected`
+- `polarfire_dispatch_precheck_ready`
+- `destructive_actions_taken`
+- `board_matrix`
+- `flagged_adversarial`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_5093_hardware_continuity.py`
+  writes `results/experiment_5093_hardware_continuity_v467.json`.
+- The artifact includes `schema`, `experiment_id=5093`, `spec_refs`
+  containing `REQ-HW-5093` and `SCENARIO-HW-5093`, `random_seed=5093`,
+  `field_principles`, `preconditions_checked`, `command_probes`,
+  `board_matrix`, and a stable `reproducibility_checksum`.
+- `honest_verdict` starts with a terminal prefix such as
+  `success_hardware_continuity_v467_no_speedup_claim` or
+  `complete_hardware_continuity_v467_partial_board_blockers`.
+- `preconditions_checked` records the exact KV260 SSH command result,
+  GateMate detect-command availability, the PolarFire SSH command result, and
+  `destructive_actions_allowed=false`.
+- The artifact contains no `/dev/mmcblk` or `/dev/disk` host-storage marker.
+- `destructive_actions_taken=[]`, `kv260_speedup_claim_allowed=false`, and
+  `flagged_adversarial=false`.
+
+**Implementation status:** Pending (Exp 5093)
+
+---
+
+### SCENARIO-HW-5093
+
+**Scenario:** Exp 5093 writes a non-destructive v467 hardware continuity artifact.
+
+**Given:** KV260 must be checked through SSH-only reachability, GateMate can
+only be triaged through DirtyJTAG detection, and PolarFire may only run
+reachability/hash-dispatch preconditions in this task.
+**When:** Experiment 5093 runs the exact KV260 SSH precondition, verifies or
+blocks on a safe UIO/register transcript path, checks GateMate detect-command
+availability and runs non-destructive detection when possible, and checks
+PolarFire SSH plus non-mutating hash-dispatch prerequisites.
+**Then:** It writes
+`results/experiment_5093_hardware_continuity_v467.json` with KV260, GateMate,
+and PolarFire `board_matrix` rows, terminal per-board states, no destructive
+actions, no speedup claim, and
+`inference_substrate=hardware_precheck_and_transcript_audit`.
+
+**Implementation status:** Pending (Exp 5093)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
