@@ -1,0 +1,406 @@
+{
+  "auxiliary_variable_blowup": {
+    "auxiliary_variables_by_instance": {
+      "xor3_chain_sat": 3,
+      "xor3_xor4_frustrated": 2,
+      "xor4_planted_overlap": 8
+    },
+    "mean_auxiliary_variables": 4.333333,
+    "mean_qubo_to_hubo_variable_ratio": 1.95,
+    "qubo_to_hubo_variable_ratio_by_instance": {
+      "xor3_chain_sat": 1.75,
+      "xor3_xor4_frustrated": 1.5,
+      "xor4_planted_overlap": 2.6
+    },
+    "total_auxiliary_variables": 13
+  },
+  "coupling_density_hubo": {
+    "by_instance": {
+      "xor3_chain_sat": 0.75,
+      "xor3_xor4_frustrated": 1.0,
+      "xor4_planted_overlap": 0.6
+    },
+    "coupling_counts_by_instance": {
+      "xor3_chain_sat": 3,
+      "xor3_xor4_frustrated": 5,
+      "xor4_planted_overlap": 3
+    },
+    "max": 1.0,
+    "mean": 0.783333
+  },
+  "coupling_density_qubo": {
+    "by_instance": {
+      "xor3_chain_sat": 0.666667,
+      "xor3_xor4_frustrated": 0.8,
+      "xor4_planted_overlap": 0.448718
+    },
+    "coupling_counts_by_instance": {
+      "xor3_chain_sat": 14,
+      "xor3_xor4_frustrated": 12,
+      "xor4_planted_overlap": 35
+    },
+    "max": 0.8,
+    "mean": 0.638462
+  },
+  "direct_hubo_advantage": true,
+  "duration_s": 0.882755,
+  "energy_scale_distortion": {
+    "by_instance": {
+      "xor3_chain_sat": 168.0,
+      "xor3_xor4_frustrated": 180.0,
+      "xor4_planted_overlap": 474.0
+    },
+    "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
+    "max_qubo_to_hubo_coefficient_ratio": 474.0,
+    "mean_qubo_to_hubo_coefficient_ratio": 274.0
+  },
+  "exact_authority": "exhaustive_binary_enumeration",
+  "exact_optima_verified": true,
+  "experiment_id": 5102,
+  "field_principles": {
+    "auxiliary_variable_blowup": "Auxiliary variables introduced only by quadratization, reported per instance and in aggregate.",
+    "coupling_density_hubo": "Direct high-order hyperedge density over the clause degrees used by each instance.",
+    "coupling_density_qubo": "Pairwise QUBO coupler density over all original plus auxiliary variables.",
+    "direct_hubo_advantage": "True only when exactness holds and direct HUBO avoids the QUBO auxiliary-variable blowup.",
+    "duration_s": "Measured local CPU time for deterministic encoding, exact enumeration, and JSON assembly.",
+    "energy_scale_distortion": "Coefficient-scale ratio from QUBO penalties versus native direct p-spin coefficients.",
+    "exact_optima_verified": "True only when direct and QUBO optima and projected optimum assignments match for every instance.",
+    "flagged_adversarial": "False only when substrate, exactness, projection, and metric consistency checks pass.",
+    "hardware_mapping_notes": "Maps the result to native high-order/p-spin hardware versus pairwise QUBO hardware costs.",
+    "honest_verdict": "Terminal prefix; success only when exact optima match and direct HUBO uses fewer variables than QUBO gadgets.",
+    "hubo_variable_counts": "Original variable counts for direct high-order HUBO/p-spin encodings.",
+    "inference_substrate": "Must be exact_enumeration_cpu unless another exact substrate is proven.",
+    "instance_family": "Declared deterministic tiny high-order parity CSP family.",
+    "qubo_variable_counts": "Original plus auxiliary variable counts for quadratized pairwise QUBO gadgets."
+  },
+  "flagged_adversarial": false,
+  "hardware_mapping_notes": "Direct HUBO keeps native high-order p-spin parity terms over original variables. QUBO maps to pairwise hardware but pays auxiliary-variable, coupler-density, and large penalty-coefficient costs.",
+  "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+  "hubo_variable_counts": {
+    "by_instance": {
+      "xor3_chain_sat": 4,
+      "xor3_xor4_frustrated": 4,
+      "xor4_planted_overlap": 5
+    },
+    "max": 5,
+    "mean": 4.333333,
+    "total": 13
+  },
+  "inference_substrate": "exact_enumeration_cpu",
+  "instance_family": "tiny_high_order_xorsat_parity_v1",
+  "instance_results": [
+    {
+      "auxiliary_definitions": {
+        "aux_0": [
+          "x_0",
+          "x_1"
+        ],
+        "aux_1": [
+          "x_0",
+          "x_2"
+        ],
+        "aux_2": [
+          "x_1",
+          "x_2"
+        ]
+      },
+      "auxiliary_variable_count": 3,
+      "clause_degrees": [
+        3,
+        3,
+        3
+      ],
+      "coupling_density_hubo": 0.75,
+      "coupling_density_qubo": 0.666667,
+      "description": "Three overlapping 3-XOR clauses with nonempty exact optimum set.",
+      "direct_optimal_assignments": [
+        [
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "direct_optimum_energy": 0,
+      "energy_scale_distortion": 168.0,
+      "enumeration_time_s": {
+        "hubo": 8.8e-05,
+        "qubo": 0.002859
+      },
+      "exact_optima_verified": true,
+      "hubo_coupling_count": 3,
+      "hubo_variable_count": 4,
+      "instance_id": "xor3_chain_sat",
+      "n_clauses": 3,
+      "projected_qubo_optimal_assignments": [
+        [
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "projection_energy_match_for_all_assignments": true,
+      "qubo_coupling_count": 14,
+      "qubo_optimum_energy": 0,
+      "qubo_penalty_strength": 28,
+      "qubo_variable_count": 7
+    },
+    {
+      "auxiliary_definitions": {
+        "aux_0": [
+          "x_0",
+          "x_1"
+        ],
+        "aux_1": [
+          "aux_0",
+          "x_2"
+        ]
+      },
+      "auxiliary_variable_count": 2,
+      "clause_degrees": [
+        3,
+        3,
+        3,
+        3,
+        4
+      ],
+      "coupling_density_hubo": 1.0,
+      "coupling_density_qubo": 0.8,
+      "description": "Four 3-XOR equations force even 4-parity, while a 4-XOR clause asks for odd parity.",
+      "direct_optimal_assignments": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "direct_optimum_energy": 1,
+      "energy_scale_distortion": 180.0,
+      "enumeration_time_s": {
+        "hubo": 0.000104,
+        "qubo": 0.001385
+      },
+      "exact_optima_verified": true,
+      "hubo_coupling_count": 5,
+      "hubo_variable_count": 4,
+      "instance_id": "xor3_xor4_frustrated",
+      "n_clauses": 5,
+      "projected_qubo_optimal_assignments": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "projection_energy_match_for_all_assignments": true,
+      "qubo_coupling_count": 12,
+      "qubo_optimum_energy": 1,
+      "qubo_penalty_strength": 30,
+      "qubo_variable_count": 6
+    },
+    {
+      "auxiliary_definitions": {
+        "aux_0": [
+          "x_0",
+          "x_1"
+        ],
+        "aux_1": [
+          "x_0",
+          "x_2"
+        ],
+        "aux_2": [
+          "x_0",
+          "x_3"
+        ],
+        "aux_3": [
+          "x_1",
+          "x_2"
+        ],
+        "aux_4": [
+          "x_2",
+          "x_3"
+        ],
+        "aux_5": [
+          "aux_0",
+          "x_2"
+        ],
+        "aux_6": [
+          "aux_0",
+          "x_3"
+        ],
+        "aux_7": [
+          "aux_3",
+          "x_3"
+        ]
+      },
+      "auxiliary_variable_count": 8,
+      "clause_degrees": [
+        4,
+        4,
+        4
+      ],
+      "coupling_density_hubo": 0.6,
+      "coupling_density_qubo": 0.448718,
+      "description": "Overlapping 4-XOR clauses with a planted-compatible optimum.",
+      "direct_optimal_assignments": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "direct_optimum_energy": 0,
+      "energy_scale_distortion": 474.0,
+      "enumeration_time_s": {
+        "hubo": 0.000133,
+        "qubo": 0.414469
+      },
+      "exact_optima_verified": true,
+      "hubo_coupling_count": 3,
+      "hubo_variable_count": 5,
+      "instance_id": "xor4_planted_overlap",
+      "n_clauses": 3,
+      "projected_qubo_optimal_assignments": [
+        [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "projection_energy_match_for_all_assignments": true,
+      "qubo_coupling_count": 35,
+      "qubo_optimum_energy": 0,
+      "qubo_penalty_strength": 79,
+      "qubo_variable_count": 13
+    }
+  ],
+  "methodology_note": "All optima are proven by enumerating every binary assignment; no stochastic sampler, LLM judge, or hardware backend is used.",
+  "qubo_variable_counts": {
+    "by_instance": {
+      "xor3_chain_sat": 7,
+      "xor3_xor4_frustrated": 6,
+      "xor4_planted_overlap": 13
+    },
+    "max": 13,
+    "mean": 8.666667,
+    "total": 26
+  },
+  "random_seed": 5102,
+  "reproducibility_checksum": "507a6ff6ee9b3227f03dc3a5e74ef0e95d5e4bf81e4510a28e656eb30262aba5",
+  "result_path": "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5102_hubo_pspin_direct_energy.v468",
+  "spec_refs": [
+    "REQ-VERIFY-5102",
+    "SCENARIO-VERIFY-5102"
+  ]
+}
