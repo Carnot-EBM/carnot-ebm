@@ -606,6 +606,53 @@ abstraction bound consumes the margin, reports piece budget, binary-variable,
 constraint, runtime, and checksum telemetry, and sets `post_wall_progress=true`
 only if those controls remain sound at the larger attempted scale.
 
+## REQ-KAN-5128: KAN Certificate Breadth And Cycle-Consistent Explanation Audit
+
+The KAN verification tier SHALL provide an Exp 5128 CPU-only audit that extends
+the Exp 5114 post-wall abstraction-refinement certificate across at least three
+independent property families. The suite MUST load both the Exp 5108 exact-MILP
+wall artifact and the Exp 5114 post-wall baseline artifact, and MUST preserve
+their measured boundary: Exp 5128 is not another exact-MILP timing sweep.
+
+The audit MUST include at least one expected-true property family, one
+false-property control family that is detected by a counterexample, and one
+near-margin family that abstains rather than overclaiming when the residual
+abstraction error consumes the certification margin. For every property family
+it MUST emit a machine-readable certificate containing `property`, `verdict`,
+`margin`, `abstraction_error`, and `proof_status`.
+
+The audit MUST generate deterministic explanations from the certificates,
+reconstruct the certificate metadata from each explanation, and check the
+reconstruction with a symbolic validator. The deliverable MUST be written to
+`results/experiment_5128_kan_certificate_explanation_v470.json` with these
+top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `exp5108_wall_loaded`,
+`exp5114_baseline_loaded`, `property_families`, `certificates_emitted`,
+`certificate_soundness`, `false_property_detected`, `near_margin_abstained`,
+`explanation_records`, `explanation_cycle_soundness`,
+`kan_certificate_breadth_ready`, `flagged_adversarial`, `conductor_modified`,
+and `tests_run`.
+
+The artifact MUST set
+`experiment_id="exp5128-kan-certificate-explanation-v470"`,
+`milestone="2026.07.470"`, and
+`inference_substrate="cpu_kan_abstraction_and_symbolic_certificate_check"`.
+It MUST NOT claim trained-network soundness, hardware execution, live LLM
+inference, general KAN verifier readiness, or exact-MILP scalability.
+
+### SCENARIO-KAN-5128: Explanations Reconstruct And Validate Certificates
+
+Given the Exp 5108 exact-MILP wall artifact and the Exp 5114 post-wall
+abstraction-refinement baseline,
+When the Exp 5128 audit evaluates independent property families on CPU,
+Then it emits one certificate per family, detects the false-property control,
+abstains on the near-margin family, generates deterministic explanations,
+reconstructs each certificate's property, verdict, margin, abstraction error,
+and proof status from its explanation, validates those reconstructions with a
+symbolic checker, reports certificate breadth and cycle soundness, and sets
+`kan_certificate_breadth_ready=true` only when all controls and explanation
+cycles are sound.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -642,6 +689,7 @@ only if those controls remain sound at the larger attempted scale.
 | REQ-KAN-5098 | Proposed | Exp 5098 target: bounded multi-property KAEM PWA/MILP suite with false controls and scale telemetry. |
 | REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
 | REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
+| REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

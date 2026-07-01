@@ -9795,3 +9795,4 @@ web search: |
 | 2026-07-01 22:23 UTC | PHASE A2 structured energy -- Distributional-EBM r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 22:25 UTC | PHASE A3 structured energy audit -- gated on posit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470. |
 | 2026-07-01 22:27 UTC | PHASE A3 structured energy audit -- gated on posit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470. |
+| 2026-07-01 22:29 UTC | PHASE A3 structured energy audit -- gated on posit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470. |
