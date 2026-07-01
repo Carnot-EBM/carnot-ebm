@@ -16026,3 +16026,77 @@ this domain.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5078 | Planned (`python/carnot/experiment_5078_fr11_memory_gap_ledger.py`) | Planned (`tests/python/test_experiment_5078_fr11_memory_gap_ledger.py`) |
+
+---
+
+## REQ-LEARN-5092: FR-11 Budgeted On-Policy Replay Memory Attempt
+
+Experiment 5092 SHALL run a guarded FR-11 self-learning attempt using
+budget-curated memory and on-policy replay. It SHALL build train/dev/held-out
+splits from current verifier misses or exact-constraint tasks, freeze held-out
+IDs before replay or memory scoring, record split hashes, and keep final-answer
+labels out of train/dev memory entries. The precondition record SHALL include
+dataset split hashes, memory store path, verifier and generator provenance, and
+contamination-guard status.
+
+The experiment SHALL generate on-policy replay from the current deterministic
+system on a small historical prompt budget, filter replay with exact or
+deterministic rewards when available, and score candidate memory entries by net
+value per byte. Each memory entry SHALL record provenance, KEEP/TRUST decisions,
+TTL or staleness metadata, and poison/injection guard results. Entries that
+fail the poison guard, exceed the memory budget, are stale, or have nonpositive
+net value per byte SHALL be quarantined or evicted rather than promoted.
+
+The experiment SHALL compare baseline, uncurated memory, budget-curated memory,
+and rollback/no-promote ablations on the same frozen held-out split. Promotion
+SHALL be forbidden unless `heldout_delta >= 0`, `nonforgetting_delta >= 0`,
+`contamination_guard_passed=true`, `rollback_guard_passed=true`, and
+`poison_guard_passed=true`. The rollback/no-promote arm SHALL preserve baseline
+behavior when any gate fails.
+
+The result artifact SHALL be written to
+`results/experiment_5092_fr11_budgeted_onpolicy_memory_v467.json` by
+`python/carnot/experiment_5092_fr11_budgeted_onpolicy_memory.py`. It SHALL
+include principle annotations for `honest_verdict`, `duration_s`,
+`inference_substrate`, `preconditions_checked`, `model_specs`,
+`fr11_attempt_completed`, `heldout_delta`, `nonforgetting_delta`,
+`contamination_guard_passed`, `poison_guard_passed`,
+`rollback_guard_passed`, `promoted_count`, `quarantined_count`,
+`evicted_count`, `memory_budget_bytes`, `onpolicy_replay_count`,
+`memory_policy`, and `flagged_adversarial`. The `model_specs` field SHALL
+include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` whenever LLM proposals, critiques, or
+replay generations are invoked or deterministically replayed. The terminal
+verdict SHALL begin with either
+`success_fr11_budgeted_onpolicy_memory_promoted_plus_` or
+`complete_fr11_budgeted_onpolicy_memory_guarded_no_promote_delta_`.
+
+### SCENARIO-LEARN-5092-BUDGETED-ONPOLICY-NO-PROMOTE
+
+**Given** frozen train/dev/held-out IDs, checked-in verifier outputs, and a
+small historical prompt budget
+**When** Experiment 5092 generates deterministic on-policy replay
+**Then** replay entries are filtered by deterministic reward, contain no
+held-out final-answer leakage, and preserve model and generator provenance.
+
+**Given** candidate memory entries with different byte costs, staleness,
+provenance, and poison-guard results
+**When** the budget-curated policy scores them
+**Then** only KEEP/TRUST entries with positive net value per byte and clean
+poison guards are admitted until the memory budget is reached, while stale,
+poisoned, over-budget, or nonpositive entries are quarantined or evicted.
+
+**Given** uncurated memory may improve some errors but regresses previously
+correct held-out rows
+**When** the promotion gate evaluates baseline, uncurated, curated, and
+rollback/no-promote ablations
+**Then** `promoted_count=0`, `rollback_guard_passed=true`,
+`poison_guard_passed=true`, and the rollback/no-promote arm remains equal to
+baseline unless all promotion gates pass.
+
+## Implementation Status (Exp 5092)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5092 | Planned (`python/carnot/experiment_5092_fr11_budgeted_onpolicy_memory.py`) | Planned (`tests/python/test_experiment_5092_fr11_budgeted_onpolicy_memory.py`) |
