@@ -1,0 +1,697 @@
+{
+  "blocked_artifacts": [
+    {
+      "blocked": true,
+      "blocker_reason": "blocked_verdict_or_status",
+      "duration_s": 0.289489,
+      "exists": true,
+      "experiment_id": 5086,
+      "fields_imported": [
+        "honest_verdict",
+        "logprob_cache_ready",
+        "step_cache_ready",
+        "endpoint_used"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+      "label": "uprm_logprob_cache",
+      "loadable": true,
+      "path": "results/experiment_5086_uprm_logprob_cache_retry_v467.json",
+      "present": true,
+      "sha256": "sha256:da0adf6523965beb7603c6f1f7e2eb142d7831f2c7613b6c9f9b422ff5e60921"
+    },
+    {
+      "blocked": true,
+      "blocker_reason": "blocked_verdict_or_status",
+      "duration_s": 0.0,
+      "exists": true,
+      "experiment_id": 5087,
+      "fields_imported": [
+        "honest_verdict",
+        "status",
+        "gate_check_summary"
+      ],
+      "flagged_adversarial": false,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logprob_cache_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "label": "uprm_process_verifier_retry",
+      "loadable": true,
+      "path": "results/experiment_5087_uprm_process_verifier_retry_v467.json",
+      "present": true,
+      "sha256": "sha256:a3c6fd125c83be7c3f77ad0497e9647df930d2d19cd326612cf74d6d38c9dba8"
+    }
+  ],
+  "blockers_carried_forward": [
+    {
+      "blocker_id": "clean_kan_pwa_milp_small_property_scale_boundary",
+      "label": "clean KAN/PWA/MILP proof with small-property scale boundary",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "binary_variable_count": 6.0,
+        "clean_positive": true,
+        "constraint_count": 43.0,
+        "property_holds": true,
+        "scale_boundary": "small_multi_unit_property_not_architecture_scale_claim",
+        "solver_status": "optimal"
+      },
+      "principle": "This is the positive path to scale, not a broad architecture-scale proof.",
+      "source_experiment_id": 5091
+    },
+    {
+      "blocker_id": "flagged_endpoint_live_runtime_claim",
+      "label": "flagged endpoint/live-runtime claim",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "endpoint_live_runtime_claim_flagged": true,
+        "headline_runtime_ready": false,
+        "reported_completion_endpoint_ready": true,
+        "reported_logprob_endpoint_ready": true,
+        "reported_top_logprob_or_confidence_ready": true
+      },
+      "principle": "A flagged endpoint artifact cannot make local runtime a clean substrate.",
+      "source_experiment_id": 5085
+    },
+    {
+      "blocker_id": "blocked_uprm_logprob_cache",
+      "label": "blocked uPRM/logprob cache",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "blocked": true,
+        "logprob_cache_ready": false,
+        "step_cache_ready": false
+      },
+      "principle": "uPRM work remains blocked until the cache substrate is real.",
+      "source_experiment_id": 5086
+    },
+    {
+      "blocker_id": "non_winning_process_verifier",
+      "label": "non-winning process verifier",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "process_verifier_win": false,
+        "temporal_fallback_flagged": true,
+        "temporal_fallback_reported_win": false,
+        "uprm_process_retry_blocked": true
+      },
+      "principle": "Blocked or non-winning process evidence cannot be headlined.",
+      "source_experiment_ids": [
+        5087,
+        5088
+      ]
+    },
+    {
+      "blocker_id": "flagged_static_csr_toy_result",
+      "label": "flagged STATIC CSR toy result",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "flagged_toy_result": true,
+        "headline_allowed": false,
+        "reported_mask_speedup": 77.420013,
+        "reported_validity_rate": 1.0
+      },
+      "principle": "Syntax-mask toy wins need semantic controls before any headline.",
+      "source_experiment_id": 5090
+    },
+    {
+      "blocker_id": "pbit_cdcl_no_effort_win",
+      "label": "p-bit/CDCL no effort win",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "correctness_preserved": true,
+        "delta_effort_vs_pure": {
+          "pbit_guided": 0,
+          "random_assumption": 3
+        },
+        "effort_win": false,
+        "helps_declared_family": false
+      },
+      "principle": "Correctness preservation without effort reduction is not a solver win.",
+      "source_experiment_id": 5089
+    },
+    {
+      "blocker_id": "governed_fr11_no_promote",
+      "label": "governed FR-11 no-promote",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "heldout_delta": 0.0,
+        "nonforgetting_delta": 0.0,
+        "positive_utility_observed": false,
+        "promoted": false,
+        "safe_governed_mechanism": true
+      },
+      "principle": "Safe no-promote governance is useful, but it is not self-learning progress.",
+      "source_experiment_id": 5092
+    },
+    {
+      "blocker_id": "hardware_continuity_without_speedup",
+      "label": "hardware continuity without speedup",
+      "must_not_be_laundered_into_success": true,
+      "observed_state": {
+        "clean_continuity_without_speedup": true,
+        "gatemate_detected": false,
+        "kv260_ssh_ready": true,
+        "polarfire_detected": true,
+        "speedup_claim_allowed": false
+      },
+      "principle": "Continuity evidence keeps boards alive; it is not acceleration evidence.",
+      "source_experiment_id": 5093
+    }
+  ],
+  "clean_positive_artifacts": [
+    {
+      "blocked": false,
+      "duration_s": 0.368275,
+      "exists": true,
+      "experiment_id": 5091,
+      "fields_imported": [
+        "honest_verdict",
+        "property_holds",
+        "property_status",
+        "solver_status",
+        "binary_variable_count",
+        "pwa_piece_count",
+        "constraint_count",
+        "global_error_bound"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "success_kan_pwa_milp_scale_property_verified_small",
+      "label": "kan_pwa_milp_scale",
+      "loadable": true,
+      "path": "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+      "positive_reason": "clean_exact_verifier_pivot",
+      "present": true,
+      "sha256": "sha256:60b78d1bb0b90b086597f0fd6daafe4eb74373222b5d92fe9c2dd2337e9e21c9"
+    }
+  ],
+  "close_state": {
+    "capstone_state": {
+      "exact_verifier_pivot_positive": true,
+      "honest_verdict": "complete_capstone_v467_exact_verifier_pivot_positive_runtime_process_blocked",
+      "milestone_decision": "exact_verifier_pivot_positive",
+      "source_experiment_id": 5094
+    },
+    "fr11_state": {
+      "contamination_guard_passed": true,
+      "heldout_delta": 0.0,
+      "no_promote_reason": "positive_utility_not_observed",
+      "nonforgetting_delta": 0.0,
+      "poison_guard_passed": true,
+      "positive_utility_observed": false,
+      "promoted": false,
+      "rollback_guard_passed": true,
+      "safe_governed_mechanism": true,
+      "source_experiment_id": 5092
+    },
+    "hardware_state": {
+      "clean_continuity_without_speedup": true,
+      "destructive_actions_taken": [],
+      "gatemate_detected": false,
+      "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+      "kv260_ssh_ready": true,
+      "kv260_uio_transcript_path": null,
+      "polarfire_detected": true,
+      "polarfire_dispatch_precheck_ready": true,
+      "source_experiment_id": 5093,
+      "speedup_claim_allowed": false
+    },
+    "kan_state": {
+      "binary_variable_count": 6.0,
+      "clean_positive": true,
+      "constraint_count": 43.0,
+      "global_error_bound": 0.0,
+      "property_holds": true,
+      "property_status": "verified",
+      "pwa_piece_count": 6.0,
+      "scale_boundary": "small_multi_unit_property_not_architecture_scale_claim",
+      "solver_available": true,
+      "solver_status": "optimal",
+      "source_experiment_id": 5091
+    },
+    "pbit_cdcl_state": {
+      "correctness_preserved": true,
+      "delta_effort_vs_pure": {
+        "pbit_guided": 0,
+        "random_assumption": 3
+      },
+      "effort_win": false,
+      "flagged": true,
+      "headline_allowed": false,
+      "helps_declared_family": false,
+      "source_experiment_id": 5089
+    },
+    "process_verifier_state": {
+      "delta_vs_one_pass": 0.0,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logprob_cache_ready (actual=False == expected=True)",
+      "process_verifier_ready": false,
+      "process_verifier_win": false,
+      "source_experiment_ids": [
+        5087,
+        5088
+      ],
+      "temporal_fallback_flagged": true,
+      "temporal_fallback_reported_win": false,
+      "uprm_process_retry_blocked": true
+    },
+    "runtime_state": {
+      "endpoint_live_runtime_claim_flagged": true,
+      "headline_runtime_ready": false,
+      "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+      "reported_completion_endpoint_ready": true,
+      "reported_live_completion_invoked": true,
+      "reported_logprob_endpoint_ready": true,
+      "reported_top_logprob_or_confidence_ready": true,
+      "reported_usable_sota_model_count": 3,
+      "source_experiment_id": 5085
+    },
+    "scientific_decision_completed": true,
+    "static_csr_state": {
+      "flagged_toy_result": true,
+      "headline_allowed": false,
+      "reported_beats_cpu_trie": true,
+      "reported_beats_rerank_only_on_validity_or_cost": true,
+      "reported_mask_speedup": 77.420013,
+      "reported_rerank_only_validity_rate": 0.666667,
+      "reported_validity_rate": 1.0,
+      "source_experiment_id": 5090
+    },
+    "transition_record_only": true,
+    "uprm_cache_state": {
+      "blocked": true,
+      "endpoint_used_recorded": true,
+      "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+      "logprob_cache_ready": false,
+      "source_experiment_id": 5086,
+      "step_cache_ready": false
+    }
+  },
+  "docs_updated": [],
+  "duration_s": 0.033921,
+  "exact_verifier_pivot": {
+    "binary_variable_count": 6.0,
+    "carried_to_milestone": "2026.07.468",
+    "clean_positive": true,
+    "constraint_count": 43.0,
+    "driver_artifact": "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+    "driver_experiment_id": 5091,
+    "global_error_bound": 0.0,
+    "pivot_decision": "exact_verifier_pivot_positive",
+    "property_holds": true,
+    "property_status": "verified",
+    "pwa_piece_count": 6.0,
+    "scale_boundary": "small_multi_unit_property_not_architecture_scale_claim",
+    "solver_status": "optimal"
+  },
+  "experiment": "experiment_5095_archive_467_activate_468",
+  "experiment_id": 5095,
+  "field_principles": {
+    "blocked_artifacts": {
+      "principle": "gate-blocked or blocked-verdict artifacts such as Exp5086 and Exp5087 recorded as blocked, not missing or successful."
+    },
+    "blockers_carried_forward": {
+      "principle": "the exact endpoint/uPRM/process/STATIC/p-bit/FR-11/hardware boundaries and the clean KAN scale boundary that must constrain .468 planning."
+    },
+    "clean_positive_artifacts": {
+      "principle": "clean non-flagged .467 positives that may seed .468, especially Exp5091 KAN/PWA/MILP."
+    },
+    "close_state": {
+      "principle": "the blunt .467 close-state preserving clean positives, blocked runtime/process substrate, flagged toy/static claims, no-promote FR-11, and no-speedup hardware."
+    },
+    "docs_updated": {
+      "principle": "empty when the conductor stop rule delegates ops/status/changelog/traceability reconciliation."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration for the aggregation run; it must stay compatible with aggregation_from_upstream_artifacts and not imply live inference."
+    },
+    "exact_verifier_pivot": {
+      "principle": "the Exp5091-driven .468 pivot path and its small-property scale boundary."
+    },
+    "flagged_adversarial": {
+      "principle": "false because this record is a transparent aggregation artifact, not a fast compute-bound claim."
+    },
+    "flagged_artifacts": {
+      "principle": "flagged .467 artifacts preserved with excluded-from-headline status so their numbers are not promoted."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; complete_467_archived_468_activated_exact_verifier_pivot_carried_forward or blocked_yaml_parse."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- reads roadmaps and upstream JSON only; never live model inference."
+    },
+    "milestone_from": {
+      "principle": "the archived milestone 2026.07.467 from the prior conductor pass."
+    },
+    "milestone_to": {
+      "principle": "the activated/staged milestone 2026.07.468 from the active roadmap."
+    },
+    "missing_artifacts": {
+      "principle": "prompt-listed or expected .467 artifacts absent or unreadable, recorded explicitly."
+    },
+    "next_milestone_doc": {
+      "principle": "the .468 milestone document path read from the active roadmap."
+    },
+    "source_artifacts": {
+      "principle": "the present .467 artifacts loaded with sha256 provenance."
+    }
+  },
+  "flagged_adversarial": false,
+  "flagged_artifacts": [
+    {
+      "blocked": false,
+      "duration_s": 18.88467,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5085,
+      "fields_imported": [
+        "honest_verdict",
+        "completion_endpoint_ready",
+        "logprob_endpoint_ready",
+        "top_logprob_or_confidence_ready",
+        "live_completion_invoked",
+        "usable_sota_models"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+      "label": "runtime_endpoint",
+      "loadable": true,
+      "path": "results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json",
+      "present": true,
+      "sha256": "sha256:8f0ae4812df8d9108c09d34017f6c8fa09db1f059319d03b2757d8ad641a086f"
+    },
+    {
+      "blocked": false,
+      "duration_s": 1.102074,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5088,
+      "fields_imported": [
+        "honest_verdict",
+        "beats_one_pass",
+        "delta_vs_one_pass"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_temporal_consistency_prm_no_win",
+      "label": "temporal_consistency_prm",
+      "loadable": true,
+      "path": "results/experiment_5088_temporal_consistency_prm_v467.json",
+      "present": true,
+      "sha256": "sha256:d3b4fdf825642eeedfac47e5c673dc49662d6d5cc43e089673f2bf8ac42e8714"
+    },
+    {
+      "blocked": false,
+      "duration_s": 0.056744,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5089,
+      "fields_imported": [
+        "honest_verdict",
+        "correctness_preserved",
+        "helps_declared_family",
+        "delta_effort_vs_pure"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_pbit_guided_cdcl_distribution_sensitive_no_win",
+      "label": "pbit_cdcl_bridge",
+      "loadable": true,
+      "path": "results/experiment_5089_pbit_guided_cdcl_bridge_v467.json",
+      "present": true,
+      "sha256": "sha256:301af2e6532130f047aa79f3dcb82b0d7122652a01b8f76e703784f8f01b7f6b"
+    },
+    {
+      "blocked": false,
+      "duration_s": 35.628679,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5090,
+      "fields_imported": [
+        "honest_verdict",
+        "beats_cpu_trie",
+        "beats_rerank_only_on_validity_or_cost",
+        "mask_speedup",
+        "validity_rate"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "success_static_csr_masks_speedup_and_validity_win",
+      "label": "static_csr_constrained_decoding",
+      "loadable": true,
+      "path": "results/experiment_5090_static_csr_constrained_decoding_v467.json",
+      "present": true,
+      "sha256": "sha256:52609b7ad8d4699c2468028fb45b7f61a4e8925f2e21db17876d45bfd66843f9"
+    }
+  ],
+  "honest_verdict": "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_from": "2026.07.467",
+  "milestone_to": "2026.07.468",
+  "missing_artifacts": [
+    {
+      "exists": false,
+      "experiment_id": 5088,
+      "label": "temporal_consistency_process_verifier_prompt_listed_path",
+      "loadable": false,
+      "path": "results/experiment_5088_temporal_consistency_process_verifier_v467.json",
+      "reason": "prompt_listed_process_verifier_path_absent; actual available artifact is results/experiment_5088_temporal_consistency_prm_v467.json",
+      "status": "prompt_listed_absent"
+    }
+  ],
+  "next_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+  "preconditions_checked": {
+    "blocked_artifact_count": 2,
+    "clean_positive_artifact_count": 1,
+    "expected_artifact_count": 10,
+    "flagged_artifact_count": 4,
+    "headline_inputs_exclude_flagged": true,
+    "loaded_artifact_count": 10,
+    "missing_artifact_count": 1,
+    "roadmaps": {
+      "active": {
+        "exists": true,
+        "milestone": "2026.07.468",
+        "milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "parse_ok": true,
+        "path": "research-roadmap.yaml",
+        "sha256": "sha256:aea0043b78c96a0f166f8afe6c5c50ae61fed0f04e5146f867754d515d44576b",
+        "status": "parsed"
+      },
+      "pre_staged": {
+        "exists": false,
+        "parse_ok": null,
+        "path": "research-roadmap-next.yaml",
+        "status": "absent_already_promoted"
+      }
+    }
+  },
+  "random_seed": 5095,
+  "reproducibility_checksum": "sha256:7f5c50d027061ee0e14e0d20c78b6fff05636db52ca99e3cb6ea5b32d0b76694",
+  "result_path": "results/experiment_5095_archive_467_activate_468.json",
+  "schema": "carnot.experiment_5095_archive_467_activate_468.v1",
+  "source_artifacts": [
+    {
+      "blocked": false,
+      "duration_s": 18.88467,
+      "exists": true,
+      "experiment_id": 5085,
+      "fields_imported": [
+        "honest_verdict",
+        "completion_endpoint_ready",
+        "logprob_endpoint_ready",
+        "top_logprob_or_confidence_ready",
+        "live_completion_invoked",
+        "usable_sota_models"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+      "label": "runtime_endpoint",
+      "loadable": true,
+      "path": "results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json",
+      "present": true,
+      "sha256": "sha256:8f0ae4812df8d9108c09d34017f6c8fa09db1f059319d03b2757d8ad641a086f"
+    },
+    {
+      "blocked": true,
+      "duration_s": 0.289489,
+      "exists": true,
+      "experiment_id": 5086,
+      "fields_imported": [
+        "honest_verdict",
+        "logprob_cache_ready",
+        "step_cache_ready",
+        "endpoint_used"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+      "label": "uprm_logprob_cache",
+      "loadable": true,
+      "path": "results/experiment_5086_uprm_logprob_cache_retry_v467.json",
+      "present": true,
+      "sha256": "sha256:da0adf6523965beb7603c6f1f7e2eb142d7831f2c7613b6c9f9b422ff5e60921"
+    },
+    {
+      "blocked": true,
+      "duration_s": 0.0,
+      "exists": true,
+      "experiment_id": 5087,
+      "fields_imported": [
+        "honest_verdict",
+        "status",
+        "gate_check_summary"
+      ],
+      "flagged_adversarial": false,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logprob_cache_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "label": "uprm_process_verifier_retry",
+      "loadable": true,
+      "path": "results/experiment_5087_uprm_process_verifier_retry_v467.json",
+      "present": true,
+      "sha256": "sha256:a3c6fd125c83be7c3f77ad0497e9647df930d2d19cd326612cf74d6d38c9dba8"
+    },
+    {
+      "blocked": false,
+      "duration_s": 1.102074,
+      "exists": true,
+      "experiment_id": 5088,
+      "fields_imported": [
+        "honest_verdict",
+        "beats_one_pass",
+        "delta_vs_one_pass"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_temporal_consistency_prm_no_win",
+      "label": "temporal_consistency_prm",
+      "loadable": true,
+      "path": "results/experiment_5088_temporal_consistency_prm_v467.json",
+      "present": true,
+      "sha256": "sha256:d3b4fdf825642eeedfac47e5c673dc49662d6d5cc43e089673f2bf8ac42e8714"
+    },
+    {
+      "blocked": false,
+      "duration_s": 0.056744,
+      "exists": true,
+      "experiment_id": 5089,
+      "fields_imported": [
+        "honest_verdict",
+        "correctness_preserved",
+        "helps_declared_family",
+        "delta_effort_vs_pure"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_pbit_guided_cdcl_distribution_sensitive_no_win",
+      "label": "pbit_cdcl_bridge",
+      "loadable": true,
+      "path": "results/experiment_5089_pbit_guided_cdcl_bridge_v467.json",
+      "present": true,
+      "sha256": "sha256:301af2e6532130f047aa79f3dcb82b0d7122652a01b8f76e703784f8f01b7f6b"
+    },
+    {
+      "blocked": false,
+      "duration_s": 35.628679,
+      "exists": true,
+      "experiment_id": 5090,
+      "fields_imported": [
+        "honest_verdict",
+        "beats_cpu_trie",
+        "beats_rerank_only_on_validity_or_cost",
+        "mask_speedup",
+        "validity_rate"
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "success_static_csr_masks_speedup_and_validity_win",
+      "label": "static_csr_constrained_decoding",
+      "loadable": true,
+      "path": "results/experiment_5090_static_csr_constrained_decoding_v467.json",
+      "present": true,
+      "sha256": "sha256:52609b7ad8d4699c2468028fb45b7f61a4e8925f2e21db17876d45bfd66843f9"
+    },
+    {
+      "blocked": false,
+      "duration_s": 0.368275,
+      "exists": true,
+      "experiment_id": 5091,
+      "fields_imported": [
+        "honest_verdict",
+        "property_holds",
+        "property_status",
+        "solver_status",
+        "binary_variable_count",
+        "pwa_piece_count",
+        "constraint_count",
+        "global_error_bound"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "success_kan_pwa_milp_scale_property_verified_small",
+      "label": "kan_pwa_milp_scale",
+      "loadable": true,
+      "path": "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+      "present": true,
+      "sha256": "sha256:60b78d1bb0b90b086597f0fd6daafe4eb74373222b5d92fe9c2dd2337e9e21c9"
+    },
+    {
+      "blocked": false,
+      "duration_s": 0.002725,
+      "exists": true,
+      "experiment_id": 5092,
+      "fields_imported": [
+        "honest_verdict",
+        "heldout_delta",
+        "nonforgetting_delta",
+        "contamination_guard_passed",
+        "poison_guard_passed",
+        "rollback_guard_passed",
+        "promotion_decision"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_fr11_budgeted_onpolicy_memory_guarded_no_promote_delta_plus_0p000",
+      "label": "fr11_budgeted_onpolicy_memory",
+      "loadable": true,
+      "path": "results/experiment_5092_fr11_budgeted_onpolicy_memory_v467.json",
+      "present": true,
+      "sha256": "sha256:abf67d7a3a49e2be44edffd778d0ce70ec3a6661fc82c8c442e4f02d6bfd3ac2"
+    },
+    {
+      "blocked": false,
+      "duration_s": 8.882491,
+      "exists": true,
+      "experiment_id": 5093,
+      "fields_imported": [
+        "honest_verdict",
+        "kv260_ssh_ready",
+        "kv260_uio_transcript_path",
+        "kv260_speedup_claim_allowed",
+        "gatemate_detected",
+        "gatemate_terminal_state",
+        "polarfire_detected",
+        "polarfire_dispatch_precheck_ready",
+        "destructive_actions_taken"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_hardware_continuity_v467_partial_board_blockers",
+      "label": "hardware_continuity",
+      "loadable": true,
+      "path": "results/experiment_5093_hardware_continuity_v467.json",
+      "present": true,
+      "sha256": "sha256:8e92a4294156f1f1fafd605eee00473e1ef13c34cb640d50797d49fb5de5445f"
+    },
+    {
+      "blocked": false,
+      "duration_s": 0.001286,
+      "exists": true,
+      "experiment_id": 5094,
+      "fields_imported": [
+        "honest_verdict",
+        "milestone_decision"
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_capstone_v467_exact_verifier_pivot_positive_runtime_process_blocked",
+      "label": "capstone_v467",
+      "loadable": true,
+      "path": "results/experiment_5094_capstone_v467.json",
+      "present": true,
+      "sha256": "sha256:57ed4042ccb38733b90a6782087c25e1f23adbd64f3d7f47684a8dc32070cba5"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5095",
+    "SCENARIO-CAPSTONE-5095",
+    "SCENARIO-CAPSTONE-5095-BLOCKED-YAML",
+    "SCENARIO-CAPSTONE-5095-FIELD-PRINCIPLES"
+  ]
+}
