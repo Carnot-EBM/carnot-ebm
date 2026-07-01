@@ -35,7 +35,7 @@
       "principle": "OpenSpec requirements and scenarios verified by this artifact."
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "honest_verdict": "success_sota_ingestion_backfill_v466_references_verified",
   "inference_substrate": "literature_review_and_repo_inspection",
   "planning_hooks": [
@@ -240,5 +240,17 @@
   "spec_refs": [
     "REQ-REPORT-5070",
     "SCENARIO-REPORT-5070"
+  ],
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
