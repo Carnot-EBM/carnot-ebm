@@ -1,0 +1,341 @@
+{
+  "docs_update_recommendations": [
+    {
+      "recommendation": "Record FR-11 replay-memory for this domain as no-promote pending a stronger process-verifier or retirement gate.",
+      "target": "research-program.md"
+    },
+    {
+      "recommendation": "Add the Exp5051/5064/5077 memory-gap pattern and preserve the aggregation-substrate discipline.",
+      "target": "ops/known-issues.md"
+    },
+    {
+      "recommendation": "Clarify that FR-11 success requires positive held-out utility and nonforgetting, not merely a completed self-learning loop.",
+      "target": "_bmad/prd.md"
+    }
+  ],
+  "duration_s": 0.000739,
+  "experiment": "experiment_5078_fr11_memory_gap_ledger",
+  "experiment_id": 5078,
+  "field_principles": {
+    "docs_update_recommendations": {
+      "principle": "documentation reconciliation hints only; this experiment does not edit ops or BMAD docs."
+    },
+    "duration_s": {
+      "principle": "measured wall-clock time for deterministic aggregation over existing artifacts."
+    },
+    "flagged_adversarial": {
+      "principle": "false only when this ledger is internally schema-clean and preserves upstream flags separately."
+    },
+    "fr11_attempts_summarized": {
+      "principle": "one compact row per upstream self-learning attempt so planners can audit the source of each blocker."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix that states this is a written FR-11 blocker ledger, not a promotion."
+    },
+    "inference_substrate": {
+      "principle": "declares aggregation_from_upstream_artifacts because no live model or verifier pass runs here."
+    },
+    "promotion_blockers": {
+      "principle": "the concrete guard failures or evidence gaps that prevent FR-11 promotion."
+    },
+    "recurring_failure_modes": {
+      "principle": "controlled-vocabulary classification of observed, guarded, or unobserved FR-11 failure modes."
+    },
+    "retired_mechanisms": {
+      "principle": "mechanisms contradicted by the recent upstream evidence and unsafe to rerun unchanged."
+    },
+    "safe_next_mechanisms": {
+      "principle": "planner-facing mechanisms that are safe because they preserve no-promotion and guard requirements."
+    }
+  },
+  "flagged_adversarial": false,
+  "fr11_attempts_summarized": [
+    {
+      "artifact_path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "artifact_present": true,
+      "contamination_guard_passed": true,
+      "experiment_id": 5051,
+      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
+      "heldout_delta": -0.05,
+      "heldout_n": 40,
+      "honest_verdict": "complete_verifier_trace_self_learning_replay_memory_minus_0p050",
+      "improved_previously_wrong_ids": [],
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "no_promote_reason": "",
+      "nonforgetting_delta": null,
+      "promoted": false,
+      "promotion_attempted": false,
+      "regressed_previously_correct_ids": []
+    },
+    {
+      "artifact_path": "results/experiment_5064_audited_skillgraph_self_learning.json",
+      "artifact_present": true,
+      "contamination_guard_passed": true,
+      "experiment_id": 5064,
+      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
+      "heldout_delta": -0.05,
+      "heldout_n": 40,
+      "honest_verdict": "complete_guarded_no_promote_minus_0p050",
+      "improved_previously_wrong_ids": [
+        "q0166",
+        "q0181"
+      ],
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
+      "nonforgetting_delta": -0.142857,
+      "promoted": false,
+      "promotion_attempted": true,
+      "regressed_previously_correct_ids": [
+        "q0167",
+        "q0176",
+        "q0182",
+        "q0198"
+      ]
+    },
+    {
+      "artifact_path": "results/experiment_5077_fr11_group_sc_memory_v466.json",
+      "artifact_present": true,
+      "contamination_guard_passed": true,
+      "experiment_id": 5077,
+      "guard_that_worked": "heldout_delta_gate_blocked_promotion",
+      "heldout_delta": -0.05,
+      "heldout_n": 20,
+      "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
+      "improved_previously_wrong_ids": [
+        "q0181"
+      ],
+      "inference_substrate": "deterministic_group_sc_memory_replay_no_live_llm",
+      "no_promote_reason": "heldout_delta_negative;nonforgetting_regressed",
+      "nonforgetting_delta": -0.142857,
+      "promoted": false,
+      "promotion_attempted": true,
+      "regressed_previously_correct_ids": [
+        "q0182",
+        "q0198"
+      ]
+    }
+  ],
+  "honest_verdict": "complete_fr11_memory_gap_ledger_written_no_promotion",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "promoted_updates": [],
+  "promotion_blockers": [
+    {
+      "affected_experiments": [
+        5051,
+        5064,
+        5077
+      ],
+      "blocker": "heldout_delta_nonpositive",
+      "principle": "FR-11 updates cannot promote without positive held-out utility."
+    },
+    {
+      "affected_experiments": [
+        5064,
+        5077
+      ],
+      "blocker": "nonforgetting_regressed",
+      "principle": "A useful memory update must not erase previously correct held-out behavior."
+    },
+    {
+      "affected_experiments": [
+        5078
+      ],
+      "blocker": "no_new_promotion_executed",
+      "principle": "This aggregation task is explicitly read-only and cannot promote memory or skills."
+    },
+    {
+      "affected_experiments": [
+        5077
+      ],
+      "blocker": "upstream_adversarial_source_preserved",
+      "principle": "Upstream adversarial flags remain blockers until the flagged source is revalidated.",
+      "sources": [
+        "results/experiment_5059_d1_sota_refresh_audit.json"
+      ]
+    },
+    {
+      "affected_experiments": [
+        5051,
+        5064,
+        5077
+      ],
+      "blocker": "insufficient_evaluation_power",
+      "principle": "Small held-out slices without paired confidence bounds are not enough to justify promotion."
+    }
+  ],
+  "promotion_executed": false,
+  "recurring_failure_modes": [
+    {
+      "affected_experiments": [],
+      "evidence": [
+        "all loaded attempts report contamination_guard_passed=true"
+      ],
+      "guard_or_blocker": "contamination_guard_passed blocked leakage checks before promotion",
+      "mode": "data_contamination",
+      "observed": false
+    },
+    {
+      "affected_experiments": [
+        5051,
+        5077
+      ],
+      "evidence": [
+        "Exp5051 rejected_trace_count=87",
+        "Exp5077 quarantined_count=3"
+      ],
+      "guard_or_blocker": "structural trace filter and group-SC quarantine kept replay evidence from auto-promotion",
+      "mode": "irrelevant_replay",
+      "observed": true
+    },
+    {
+      "affected_experiments": [
+        5051,
+        5077
+      ],
+      "evidence": [
+        "Exp5051 heldout_delta=-0.05",
+        "Exp5077 memory_policy=fallback_to_tuned_on_verifier_sc_disagreement",
+        "Exp5077 heldout_delta=-0.05"
+      ],
+      "guard_or_blocker": "heldout utility gate blocked retrieval policy promotion",
+      "mode": "retrieval_mismatch",
+      "observed": true
+    },
+    {
+      "affected_experiments": [
+        5077
+      ],
+      "evidence": [
+        "Exp5077 dev_delta=0.375",
+        "Exp5077 heldout_delta=-0.05"
+      ],
+      "guard_or_blocker": "held-out split exposed a dev-only gain",
+      "mode": "overfitting",
+      "observed": true
+    },
+    {
+      "affected_experiments": [
+        5064,
+        5077
+      ],
+      "evidence": [
+        "Exp5064 nonforgetting_delta=-0.142857",
+        "Exp5077 nonforgetting_delta=-0.142857"
+      ],
+      "guard_or_blocker": "nonforgetting gate and rollback guard prevented promotion",
+      "mode": "nonforgetting_regression",
+      "observed": true
+    },
+    {
+      "affected_experiments": [
+        5077
+      ],
+      "evidence": [
+        "upstream flagged adversarial sources: results/experiment_5059_d1_sota_refresh_audit.json"
+      ],
+      "guard_or_blocker": "ledger preserves upstream adversarial flags and does not convert them into promotion evidence",
+      "mode": "verifier_shortcut",
+      "observed": true
+    },
+    {
+      "affected_experiments": [
+        5051,
+        5064,
+        5077
+      ],
+      "evidence": [
+        "heldout_n values=[40, 40, 20]",
+        "no paired CI or power calculation is present in these upstream artifacts"
+      ],
+      "guard_or_blocker": "promotion remains blocked until held-out effect size and nonforgetting survive stronger evaluation",
+      "mode": "insufficient_evaluation_power",
+      "observed": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:5e6d1dc0d98b055d12c1be0848c5a32d01a07f6752df1676a1e93a0c59f1f529",
+  "result_path": "results/experiment_5078_fr11_memory_gap_ledger_v466.json",
+  "retired_mechanisms": [
+    {
+      "evidence": "Exp5051 replay insertion reduced held-out accuracy by 0.05.",
+      "mechanism": "blind_replay_memory_insertion",
+      "retired_for_domain": true
+    },
+    {
+      "evidence": "Exp5077 dev gain did not transfer to held-out, and Exp5064 no-promoted verified skills.",
+      "mechanism": "promote_on_dev_or_consensus_without_heldout_gain",
+      "retired_for_domain": true
+    },
+    {
+      "evidence": "Exp5077 fallback_to_tuned_on_verifier_sc_disagreement regressed held-out and nonforgetting.",
+      "mechanism": "group_sc_disagreement_fallback_policy",
+      "retired_for_domain": true
+    }
+  ],
+  "safe_next_mechanisms": [
+    {
+      "mechanism": "retrieval_config_evolution",
+      "must_keep_guards": [
+        "contamination_guard",
+        "heldout_delta_gate",
+        "nonforgetting_gate"
+      ],
+      "safe_to_try": true,
+      "why": "changes only retrieval triggers, thresholds, and fallback routing under the same held-out and nonforgetting gates."
+    },
+    {
+      "mechanism": "skill_lifecycle_governance",
+      "must_keep_guards": [
+        "external_audit_receipts",
+        "rollback_guard",
+        "no_promote_on_negative_delta"
+      ],
+      "safe_to_try": true,
+      "why": "keeps candidate skills quarantined until promotion, rollback, demotion, and external-audit receipts all agree."
+    },
+    {
+      "mechanism": "process_verifier_replay",
+      "must_keep_guards": [
+        "oracle_distinct_labels",
+        "answer_leakage_check",
+        "paired_heldout_eval"
+      ],
+      "safe_to_try": true,
+      "why": "tests process-level evidence instead of answer-level replay and can directly target verifier shortcut risk."
+    },
+    {
+      "mechanism": "bounded_fr11_retirement_for_domain",
+      "must_keep_guards": [
+        "same_verdict_retirement_gate",
+        "headroom_recheck",
+        "docs_reconciliation"
+      ],
+      "safe_to_try": true,
+      "why": "turns repeated no-promote evidence into an explicit bounded retirement rather than another replay attempt."
+    }
+  ],
+  "schema": "carnot.experiment_5078_fr11_memory_gap_ledger.v466",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "present": true,
+      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a"
+    },
+    {
+      "path": "results/experiment_5064_audited_skillgraph_self_learning.json",
+      "present": true,
+      "sha256": "sha256:c2a192be047f45a6231086e0f4f13acfcd0670dd0d6febfd48028424b20895eb"
+    },
+    {
+      "path": "results/experiment_5077_fr11_group_sc_memory_v466.json",
+      "present": true,
+      "sha256": "sha256:fd93d059904f95cac19c4f918b2edb4211a1d4f3fa8f59e818a3dc95f1543d93"
+    }
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5078",
+    "SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER"
+  ],
+  "upstream_flagged_adversarial_sources": [
+    "results/experiment_5059_d1_sota_refresh_audit.json"
+  ]
+}
