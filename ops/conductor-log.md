@@ -9778,3 +9778,5 @@ web search: |
 | 2026-07-01 18:00 UTC | PHASE B2 graph evidence transfer -- apply contradi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
 | 2026-07-01 18:02 UTC | PHASE B2 graph evidence transfer -- apply contradi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
 | 2026-07-01 18:17 UTC | PHASE B3 HUBO/p-spin sampling -- CPU exact-checked | OK | 88 passed, 1 warning in 15.74s |
+| 2026-07-01 18:33 UTC | PHASE B4 TACO scale -- adaptive CSP heuristic with | OK | 88 passed, 1 warning in 14.15s |
+| 2026-07-01 18:35 UTC | PHASE C1 continuous self-learning -- FoVer residua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
