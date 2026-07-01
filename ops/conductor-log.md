@@ -9736,3 +9736,4 @@ The contro |
 | 2026-07-01 09:43 UTC | PHASE A2 uPRM substrate retry -- gated on Exp5085  | OK | 86 passed, 1 warning in 6.68s |
 | 2026-07-01 09:45 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
 | 2026-07-01 09:47 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
+| 2026-07-01 09:49 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
