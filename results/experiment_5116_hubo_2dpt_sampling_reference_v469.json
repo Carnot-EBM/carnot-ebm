@@ -1,0 +1,3590 @@
+{
+  "best_energy_delta_vs_baselines": {
+    "two_d_vs_beta_pt": 0.0,
+    "two_d_vs_unguided_gibbs": -2.0
+  },
+  "beta_grid": [
+    0.35,
+    0.8,
+    1.6,
+    3.0
+  ],
+  "duration_s": 0.649255,
+  "exact_enumeration_checked": true,
+  "experiment_id": "exp5116-hubo-2dpt-sampling-reference-v469",
+  "field_principles": {
+    "best_energy_delta_vs_baselines": "utility measurement",
+    "beta_grid": "algorithm provenance",
+    "duration_s": "timing accountability",
+    "exact_enumeration_checked": "correctness",
+    "experiment_id": "traceability",
+    "field_principles": "principle annotations for top-level fields",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "hardware_speedup_claimed": "no false hardware claim",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "hubo_2dpt_reference_ready": "decision bool",
+    "inference_substrate": "substrate honesty",
+    "instance_families": "distribution transparency",
+    "methodology_note": "claim-boundary explanation",
+    "milestone": "milestone accountability",
+    "optimum_hit_rate": "exact-check utility",
+    "penalty_grid": "algorithm provenance",
+    "per_instance_results": "per-distribution evidence, not only aggregates",
+    "preconditions_checked": "sampler preflight accountability",
+    "random_seed": "deterministic replay anchor",
+    "reproducibility_checksum": "content-addressed reproducibility",
+    "result_path": "artifact reachability",
+    "run_date": "run labeling",
+    "sampler_config": "algorithm replay parameters",
+    "schema": "artifact schema stability",
+    "seeds_or_checksums": "reproducibility",
+    "spec_refs": "OpenSpec traceability",
+    "swap_acceptance_rates": "mixing evidence",
+    "tests_run": "verification evidence"
+  },
+  "flagged_adversarial": false,
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete_hubo_2dpt_reference_ready_exact_checked_cpu",
+  "hubo_2dpt_reference_ready": true,
+  "inference_substrate": "cpu_hubo_2d_parallel_tempering_reference",
+  "instance_families": {
+    "families": [
+      "frustrated_high_order_parity",
+      "sat_high_order_parity"
+    ],
+    "instances": [
+      {
+        "family": "sat_high_order_parity",
+        "instance_id": "xor3_chain_sat",
+        "n_vars": 4
+      },
+      {
+        "family": "frustrated_high_order_parity",
+        "instance_id": "xor3_xor4_frustrated",
+        "n_vars": 4
+      },
+      {
+        "family": "sat_high_order_parity",
+        "instance_id": "xor4_planted_overlap",
+        "n_vars": 5
+      }
+    ]
+  },
+  "methodology_note": "Tiny instances are exact-enumerated on CPU before sampler metrics are reported. 2D PT readiness is a CPU reference gate only and does not claim FPGA, p-bit, or other hardware speedup.",
+  "milestone": "2026.07.469",
+  "optimum_hit_rate": {
+    "beta_pt": 1.0,
+    "two_d_beta_penalty_pt": 1.0,
+    "unguided_gibbs": 0.5
+  },
+  "penalty_grid": [
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "per_instance_results": [
+    {
+      "best_energy_by_algorithm": {
+        "beta_pt": 0.0,
+        "two_d_beta_penalty_pt": 0.0,
+        "unguided_gibbs": 0.0
+      },
+      "description": "Three overlapping 3-XOR clauses with nonempty exact optimum set.",
+      "exact": {
+        "energy_distribution": [
+          {
+            "count": 2,
+            "energy": 0.0
+          },
+          {
+            "count": 6,
+            "energy": 4.0
+          },
+          {
+            "count": 6,
+            "energy": 8.0
+          },
+          {
+            "count": 2,
+            "energy": 12.0
+          }
+        ],
+        "n_optimal_states": 2,
+        "n_states_enumerated": 16,
+        "optimal_states": [
+          [
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        "optimum_energy": 0.0
+      },
+      "exact_enumeration_checked": true,
+      "family": "sat_high_order_parity",
+      "instance_id": "xor3_chain_sat",
+      "mean_best_energy_by_algorithm": {
+        "beta_pt": 0.0,
+        "two_d_beta_penalty_pt": 0.0,
+        "unguided_gibbs": 3.0
+      },
+      "n_vars": 4,
+      "optimum_hits_by_algorithm": {
+        "beta_pt": 4,
+        "two_d_beta_penalty_pt": 4,
+        "unguided_gibbs": 1
+      },
+      "runs": {
+        "beta_pt": [
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.902778,
+                "accepted": 65,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.819444,
+                "accepted": 59,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.722222,
+                "accepted": 52,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.805556,
+                "accepted": 58,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ],
+        "two_d_beta_penalty_pt": [
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.829861,
+                "accepted": 239,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.78125,
+                "accepted": 225,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.753472,
+                "accepted": 217,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.791667,
+                "accepted": 228,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.791667,
+                "accepted": 228,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.809028,
+                "accepted": 233,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.819444,
+                "accepted": 236,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.760417,
+                "accepted": 219,
+                "attempts": 288
+              }
+            }
+          }
+        ],
+        "unguided_gibbs": [
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              0,
+              1,
+              1
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "best_energy_by_algorithm": {
+        "beta_pt": 4.0,
+        "two_d_beta_penalty_pt": 4.0,
+        "unguided_gibbs": 4.0
+      },
+      "description": "Four 3-XOR equations force even 4-parity, while a 4-XOR clause asks for odd parity.",
+      "exact": {
+        "energy_distribution": [
+          {
+            "count": 5,
+            "energy": 4.0
+          },
+          {
+            "count": 10,
+            "energy": 12.0
+          },
+          {
+            "count": 1,
+            "energy": 20.0
+          }
+        ],
+        "n_optimal_states": 5,
+        "n_states_enumerated": 16,
+        "optimal_states": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            0
+          ]
+        ],
+        "optimum_energy": 4.0
+      },
+      "exact_enumeration_checked": true,
+      "family": "frustrated_high_order_parity",
+      "instance_id": "xor3_xor4_frustrated",
+      "mean_best_energy_by_algorithm": {
+        "beta_pt": 4.0,
+        "two_d_beta_penalty_pt": 4.0,
+        "unguided_gibbs": 4.0
+      },
+      "n_vars": 4,
+      "optimum_hits_by_algorithm": {
+        "beta_pt": 4,
+        "two_d_beta_penalty_pt": 4,
+        "unguided_gibbs": 4
+      },
+      "runs": {
+        "beta_pt": [
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 1.0,
+                "accepted": 72,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              0,
+              1,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              0,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.972222,
+                "accepted": 70,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.958333,
+                "accepted": 69,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              0,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.944444,
+                "accepted": 68,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ],
+        "two_d_beta_penalty_pt": [
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.885417,
+                "accepted": 255,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.857639,
+                "accepted": 247,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              0,
+              1,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.854167,
+                "accepted": 246,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.881944,
+                "accepted": 254,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.923611,
+                "accepted": 266,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.930556,
+                "accepted": 268,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              1,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.878472,
+                "accepted": 253,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.888889,
+                "accepted": 256,
+                "attempts": 288
+              }
+            }
+          }
+        ],
+        "unguided_gibbs": [
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "best_energy_by_algorithm": {
+        "beta_pt": 0.0,
+        "two_d_beta_penalty_pt": 0.0,
+        "unguided_gibbs": 0.0
+      },
+      "description": "Overlapping 4-XOR clauses with a planted-compatible optimum.",
+      "exact": {
+        "energy_distribution": [
+          {
+            "count": 4,
+            "energy": 0.0
+          },
+          {
+            "count": 12,
+            "energy": 4.0
+          },
+          {
+            "count": 12,
+            "energy": 8.0
+          },
+          {
+            "count": 4,
+            "energy": 12.0
+          }
+        ],
+        "n_optimal_states": 4,
+        "n_states_enumerated": 32,
+        "optimal_states": [
+          [
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0,
+            1,
+            1
+          ]
+        ],
+        "optimum_energy": 0.0
+      },
+      "exact_enumeration_checked": true,
+      "family": "sat_high_order_parity",
+      "instance_id": "xor4_planted_overlap",
+      "mean_best_energy_by_algorithm": {
+        "beta_pt": 0.0,
+        "two_d_beta_penalty_pt": 0.0,
+        "unguided_gibbs": 3.0
+      },
+      "n_vars": 5,
+      "optimum_hits_by_algorithm": {
+        "beta_pt": 4,
+        "two_d_beta_penalty_pt": 4,
+        "unguided_gibbs": 1
+      },
+      "runs": {
+        "beta_pt": [
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.805556,
+                "accepted": 58,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.777778,
+                "accepted": 56,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.833333,
+                "accepted": 60,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "beta_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.847222,
+                "accepted": 61,
+                "attempts": 72
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ],
+        "two_d_beta_penalty_pt": [
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.8125,
+                "accepted": 234,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.784722,
+                "accepted": 226,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.809028,
+                "accepted": 233,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.78125,
+                "accepted": 225,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              1,
+              1
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.75,
+                "accepted": 216,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.798611,
+                "accepted": 230,
+                "attempts": 288
+              }
+            }
+          },
+          {
+            "algorithm": "two_d_beta_penalty_pt",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              0.35,
+              0.8,
+              1.6,
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              0,
+              1
+            ],
+            "penalty_grid": [
+              0.5,
+              1.0,
+              2.0,
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.798611,
+                "accepted": 230,
+                "attempts": 288
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.777778,
+                "accepted": 224,
+                "attempts": 288
+              }
+            }
+          }
+        ],
+        "unguided_gibbs": [
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              0,
+              0,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 0.0,
+            "best_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "final_energy": 0.0,
+            "final_state": [
+              0,
+              1,
+              1,
+              1,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          },
+          {
+            "algorithm": "unguided_gibbs",
+            "best_energy": 4.0,
+            "best_state": [
+              1,
+              1,
+              1,
+              0,
+              1
+            ],
+            "beta_grid": [
+              3.0
+            ],
+            "energy_trace": [
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0,
+              4.0
+            ],
+            "final_energy": 4.0,
+            "final_state": [
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "penalty_grid": [
+              4.0
+            ],
+            "swap_stats": {
+              "beta_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              },
+              "penalty_axis": {
+                "acceptance_rate": 0.0,
+                "accepted": 0,
+                "attempts": 0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "NumPy CPU reference uses local process execution only.",
+      "resource": "local_cpu_runtime"
+    },
+    {
+      "available": true,
+      "detail": "numpy 2.4.4 default_rng deterministic seeds are used.",
+      "resource": "numpy_rng"
+    },
+    {
+      "available": false,
+      "detail": "No FPGA, p-bit hardware, GPU, or network resource is required or invoked.",
+      "not_required": true,
+      "resource": "hardware_execution"
+    }
+  ],
+  "random_seed": 5116,
+  "reproducibility_checksum": "e432c288d9d2cd0d21ba51a2db98b9773962a307343841ff4c910b0ecf666110",
+  "result_path": "results/experiment_5116_hubo_2dpt_sampling_reference_v469.json",
+  "run_date": "20260701",
+  "sampler_config": {
+    "algorithms_compared": [
+      "unguided_gibbs",
+      "beta_pt",
+      "two_d_beta_penalty_pt"
+    ],
+    "swap_interval": 1,
+    "sweeps": 48,
+    "target_penalty": 4.0
+  },
+  "schema": "carnot.experiment_5116_hubo_2dpt_sampling_reference.v469",
+  "seeds_or_checksums": {
+    "problem_family_checksum": "342ef9d8a9fc13e0d7107b2d71c48de3bae6a7eb4d90feb08c1192f286f9aeea",
+    "reproducibility_checksum": "e432c288d9d2cd0d21ba51a2db98b9773962a307343841ff4c910b0ecf666110",
+    "seeds": [
+      5116,
+      5117,
+      5118,
+      5119
+    ]
+  },
+  "spec_refs": [
+    "REQ-SAMPLE-5116",
+    "SCENARIO-SAMPLE-5116"
+  ],
+  "swap_acceptance_rates": {
+    "beta_pt": {
+      "beta_axis": {
+        "acceptance_rate": 0.865741,
+        "accepted": 748,
+        "attempts": 864
+      },
+      "penalty_axis": {
+        "acceptance_rate": 0.0,
+        "accepted": 0,
+        "attempts": 0
+      }
+    },
+    "two_d_beta_penalty_pt": {
+      "beta_axis": {
+        "acceptance_rate": 0.825521,
+        "accepted": 2853,
+        "attempts": 3456
+      },
+      "penalty_axis": {
+        "acceptance_rate": 0.820312,
+        "accepted": 2835,
+        "attempts": 3456
+      }
+    }
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py -q",
+    ".venv/bin/pytest tests/python/test_hubo_2dpt_sampling_reference_5116.py --cov=python/carnot/samplers/hubo_2dpt.py --cov=python/carnot/experiment_5116_hubo_2dpt_sampling_reference_v469.py --cov-report=term-missing --cov-fail-under=100 -q",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
