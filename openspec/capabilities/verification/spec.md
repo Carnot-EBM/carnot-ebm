@@ -23496,3 +23496,78 @@ whether the live smoke was actually invoked.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5090 | Proposed (`python/carnot/experiment_5090_static_csr_constrained_decoding.py`, `results/experiment_5090_static_csr_constrained_decoding_v467.json`) | Proposed (`tests/python/test_experiment_5090_static_csr_constrained_decoding.py`) |
+
+### REQ-VERIFY-5099: BEAVER Prefix-Bound Verifier On Finite Schema
+
+The repository SHALL provide Exp 5099 at
+`python/carnot/experiment_5099_beaver_prefix_bound_verifier.py` to implement a
+BEAVER-style prefix-bound verifier over a finite Carnot verifier verdict JSON
+schema and write
+`results/experiment_5099_beaver_prefix_bound_verifier_v468.json`.
+
+The runner SHALL declare the selected finite schema, canonical ASCII JSON
+serialization, byte-token-plus-EOS assumptions, and a prefix-closed semantic
+constraint before computing probability bounds. The selected constraint SHALL
+define admissible prefixes as exactly the prefixes that can still extend to at
+least one satisfying terminal schema output, so once a prefix is inadmissible no
+continuation can satisfy the constraint.
+
+The runner SHALL build an exact finite distribution or, only if Exp 5097
+reports a clean local logprob substrate, a live-logprob-backed frontier. When
+Exp 5097 is missing, blocked, stale, or adversarially flagged, the runner SHALL
+use `backend_used=toy_distribution`, SHALL set `live_llm_invoked=false`, and
+SHALL NOT claim `live_llm_inference`. If any live local LLM logprobs are
+invoked, `model_specs` MUST include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The verifier SHALL traverse a prefix trie/frontier and return lower and upper
+probability bounds for satisfying the constraint. Lower mass SHALL include only
+frontier nodes whose every terminal continuation satisfies the constraint, and
+upper mass SHALL include every frontier node with at least one satisfying
+terminal continuation. For enumerable finite distributions, the runner SHALL
+also compute the exact satisfying probability by terminal enumeration and prove
+`lower_bound <= exact_probability_if_enumerable <= upper_bound`.
+
+The terminal artifact SHALL include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `prefix_closed_constraint`,
+`backend_used`, `lower_bound`, `upper_bound`, `bound_gap`,
+`exact_probability_if_enumerable`, `monotonic_bounds`,
+`soundness_checks_passed`, `frontier_nodes`, `live_llm_invoked`, and
+`flagged_adversarial`. It SHOULD also include the finite schema descriptor,
+toy distribution checksum, selected frontier depth, exact probability fraction,
+frontier node count, soundness check details, source artifact path, and a
+stable reproducibility checksum.
+
+`honest_verdict` SHALL begin with
+`success_beaver_prefix_bounds_sound_on_finite_schema` when sound deterministic
+bounds are produced on a clean substrate, and SHALL begin with
+`complete_beaver_prefix_bounds_toy_only_runtime_not_clean` when Exp 5097 does
+not provide a clean live logprob substrate but the finite toy-distribution
+bounds are sound. The artifact MUST NOT claim a clean live-logprob result when
+`live_llm_invoked=false`.
+
+### SCENARIO-VERIFY-5099: Toy Finite Distribution Produces Sound Prefix Bounds
+
+Given Exp 5097 is blocked or not clean, when Exp 5099 runs, then it records the
+selected finite verifier verdict schema, prefix-closed constraint definition,
+tokenization assumptions, and Exp 5097 cleanliness in `preconditions_checked`;
+builds an exact finite toy distribution over canonical JSON outputs; traverses
+the trie frontier to compute lower and upper satisfying-probability bounds;
+enumerates every terminal output to compute the exact probability; records
+monotone nondecreasing lower bounds, nonincreasing upper bounds, nonincreasing
+gaps, and exact-probability containment across checked depths; writes the
+required JSON artifact; sets `backend_used=toy_distribution`; sets
+`live_llm_invoked=false`; and emits a terminal `complete_` verdict without
+modifying `scripts/research_conductor.py`.
+
+If Exp 5097 later reports a clean logprob substrate and a bounded live smoke is
+explicitly invoked, the same artifact contract still applies and the three
+mandated SOTA GGUF IDs must remain present in `model_specs`.
+
+## Implementation Status (REQ-VERIFY-5099)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5099 | Proposed (`python/carnot/experiment_5099_beaver_prefix_bound_verifier.py`, `results/experiment_5099_beaver_prefix_bound_verifier_v468.json`) | Proposed (`tests/python/test_experiment_5099_beaver_prefix_bound_verifier.py`) |
