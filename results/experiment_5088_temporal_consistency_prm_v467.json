@@ -1,0 +1,487 @@
+{
+  "beats_one_pass": false,
+  "candidate_selection_value": {
+    "delta_vs_one_pass": 0.0,
+    "one_pass_accuracy": 0.585,
+    "temporal_consistency_accuracy": 0.585,
+    "tuned_self_consistency_accuracy": 0.585
+  },
+  "comparator_metrics": {
+    "available_uprm_output": {
+      "exp5046_process_reward": {
+        "accuracy": 0.555,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
+        "present": true
+      },
+      "exp5086_logprob_cache": {
+        "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+        "logprob_cache_ready": false,
+        "present": true
+      },
+      "exp5087_uprm_process_verifier": {
+        "honest_verdict": "blocked_gate_check_failed",
+        "present": true,
+        "status": "blocked"
+      }
+    },
+    "one_pass_candidate_selection_accuracy": 0.585,
+    "one_pass_process_classification": {
+      "accuracy": 0.531148,
+      "false_error_rate": 0.0,
+      "false_no_error_rate": 0.468852,
+      "n_examples": 1525
+    },
+    "temporal_candidate_selection_accuracy": 0.585,
+    "temporal_process_classification": {
+      "accuracy": 0.531148,
+      "false_error_rate": 0.0,
+      "false_no_error_rate": 0.468852,
+      "n_examples": 1525
+    },
+    "tuned_self_consistency_accuracy": 0.585
+  },
+  "delta_vs_one_pass": 0.0,
+  "duration_s": 1.102074,
+  "experiment": "experiment_5088_temporal_consistency_prm",
+  "experiment_id": 5088,
+  "field_principles": {
+    "beats_one_pass": {
+      "principle": "true iff the temporal-consistency accuracy exceeds the one-pass baseline."
+    },
+    "delta_vs_one_pass": {
+      "principle": "temporal_consistency_accuracy - one_pass_accuracy."
+    },
+    "duration_s": {
+      "principle": "wall-clock diagnostic duration over existing traces or live judgments."
+    },
+    "flagged_adversarial": {
+      "principle": "true if required schema fields, leakage checks, or source provenance fail."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; success_temporal_consistency_prm_improves_plus_X for a positive delta, otherwise complete_temporal_consistency_prm_no_win."
+    },
+    "inference_substrate": {
+      "principle": "deterministic_proxy_over_cached_candidate_traces unless live LLM judgment rows are actually produced."
+    },
+    "leakage_audit": {
+      "principle": "model-identity and answer-key oracle leakage checks, both required to pass."
+    },
+    "live_llm_invoked": {
+      "principle": "true only when live judgment or critique calls were made."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF IDs plus endpoint/model readiness provenance."
+    },
+    "n_examples": {
+      "principle": "number of candidate-level examples used for first-error/process classification."
+    },
+    "one_pass_accuracy": {
+      "principle": "accuracy of the one-pass verifier baseline on the same examples."
+    },
+    "preconditions_checked": {
+      "principle": "records trace source paths, label/proxy availability, and Exp5085 live endpoint usability before scoring."
+    },
+    "stability_score": {
+      "principle": "mean repeated-state agreement/convergence score."
+    },
+    "temporal_consistency_accuracy": {
+      "principle": "accuracy after repeated judgment states and convergence refinement."
+    }
+  },
+  "first_error_metrics": {
+    "examples": [
+      {
+        "one_pass_first_error_index": null,
+        "question_id": "MuSR/murder_mysteries:0",
+        "temporal_first_error_index": null,
+        "true_first_error_index": 1
+      },
+      {
+        "one_pass_first_error_index": null,
+        "question_id": "MuSR/murder_mysteries:1",
+        "temporal_first_error_index": null,
+        "true_first_error_index": 3
+      },
+      {
+        "one_pass_first_error_index": null,
+        "question_id": "MuSR/murder_mysteries:2",
+        "temporal_first_error_index": null,
+        "true_first_error_index": 0
+      },
+      {
+        "one_pass_first_error_index": null,
+        "question_id": "MuSR/murder_mysteries:3",
+        "temporal_first_error_index": null,
+        "true_first_error_index": 1
+      },
+      {
+        "one_pass_first_error_index": null,
+        "question_id": "MuSR/murder_mysteries:4",
+        "temporal_first_error_index": null,
+        "true_first_error_index": 1
+      }
+    ],
+    "n_questions": 200,
+    "one_pass_first_error_accuracy": 0.115,
+    "temporal_first_error_accuracy": 0.115
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "complete_temporal_consistency_prm_no_win",
+  "inference_substrate": "deterministic_proxy_over_cached_candidate_traces",
+  "leakage_audit": {
+    "answer_key_oracle_leakage": false,
+    "forbidden_keys": [
+      "gold",
+      "answer_choice",
+      "answer_index",
+      "model_id"
+    ],
+    "model_identity_leakage": false,
+    "passed": true,
+    "violations": []
+  },
+  "live_llm_invoked": false,
+  "model_specs": {
+    "live_endpoint_fields_usable": false,
+    "mandatory_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "mandatory_models": [
+      {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "flagship_moe"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "role": "flagship_dense"
+      },
+      {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "role": "middle_moe"
+      }
+    ],
+    "selected_endpoint_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+  },
+  "n_examples": 1525,
+  "one_pass_accuracy": 0.531148,
+  "preconditions_checked": {
+    "exp5085_live_endpoint_fields": {
+      "available": true,
+      "endpoint_url": "http://127.0.0.1:46097",
+      "flagged_adversarial": true,
+      "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+      "logprob_endpoint_ready": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json",
+      "sample_route": "http://127.0.0.1:46097/completion",
+      "usable": false
+    },
+    "label_proxy_availability": {
+      "candidate_rows_loaded": 1525,
+      "candidate_source": "exp5058_enriched_by_exp5029",
+      "deterministic_proxy_available": true,
+      "gold_labels_available": true,
+      "proxy_rows_loaded": 1525,
+      "questions_loaded": 200
+    },
+    "trace_sources": {
+      "exp5029_candidate_cache": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+        "row_count": 1525,
+        "sha256": "sha256:fcc34e5a075b891ea9f75f157d51a1c4a61ee497d5a39a50a250613222235703"
+      },
+      "exp5046_vpr_process_reward_repair": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5046_vpr_process_reward_repair.json",
+        "sha256": "sha256:6edc002f070b5ac38c06195751904ef28e44fd2b2424cac3e3c26e0285db23ed"
+      },
+      "exp5058_candidate_refresh": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl",
+        "row_count": 1525,
+        "sha256": "sha256:d2d67a09a1aa6148bf6b13d236038d62d8dbe330fa2610271220f2f1c021948e"
+      },
+      "exp5074_vpr_tool_process_reward_v466": {
+        "exists": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5074_vpr_tool_process_reward_v466.json",
+        "sha256": null
+      },
+      "exp5086_logprob_cache_artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5086_uprm_logprob_cache_retry_v467.json",
+        "sha256": "sha256:da0adf6523965beb7603c6f1f7e2eb142d7831f2c7613b6c9f9b422ff5e60921"
+      },
+      "exp5086_logprob_cache_rows": {
+        "exists": false,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5086_uprm_logprob_cache_retry_v467.jsonl",
+        "sha256": null
+      },
+      "exp5087_uprm_process_verifier": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5087_uprm_process_verifier_retry_v467.json",
+        "sha256": "sha256:a3c6fd125c83be7c3f77ad0497e9647df930d2d19cd326612cf74d6d38c9dba8"
+      }
+    }
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:f921d57f8fc1c7d2ae167ea40c5904ac4b7503b3489e1a96de1cb1c53188b430",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5088_temporal_consistency_prm_v467.json",
+  "schema": "carnot.experiment_5088_temporal_consistency_prm.v1",
+  "source_trace_summary": {
+    "candidate_source": "exp5058_enriched_by_exp5029",
+    "fallback_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+    "n_candidates": 1525,
+    "n_questions": 200,
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5088",
+    "SCENARIO-VERIFY-5088"
+  ],
+  "stability_score": 1.0,
+  "temporal_consistency_accuracy": 0.531148,
+  "temporal_state_sample": [
+    {
+      "candidate_id": "MuSR/murder_mysteries:0/sota5058-0000",
+      "one_pass_decision": "no_error",
+      "question_id": "MuSR/murder_mysteries:0",
+      "states": [
+        {
+          "confidence": 1.0,
+          "decision": "no_error",
+          "signals": {
+            "allowed_choice": true,
+            "delayed_after_draft": true,
+            "nonempty": true,
+            "parsed": true
+          },
+          "state_id": "one_pass_format_check"
+        },
+        {
+          "confidence": 6.9e-05,
+          "decision": "no_error",
+          "signals": {
+            "negative_trace_probability": 6e-06,
+            "positive_trace_probability": 6.9e-05
+          },
+          "state_id": "temporal_token_process_recheck"
+        },
+        {
+          "confidence": 0.500064,
+          "decision": "no_error",
+          "signals": {
+            "process_margin": 6.4e-05
+          },
+          "state_id": "temporal_margin_recheck"
+        },
+        {
+          "confidence": 0.984685,
+          "decision": "no_error",
+          "signals": {
+            "mean_token_probability": 0.984685,
+            "negative_trace_probability": 6e-06
+          },
+          "state_id": "temporal_convergence_recheck"
+        }
+      ],
+      "temporal_decision": "no_error",
+      "temporal_stability": 1.0
+    },
+    {
+      "candidate_id": "MuSR/murder_mysteries:0/sota5058-0001",
+      "one_pass_decision": "no_error",
+      "question_id": "MuSR/murder_mysteries:0",
+      "states": [
+        {
+          "confidence": 1.0,
+          "decision": "no_error",
+          "signals": {
+            "allowed_choice": true,
+            "delayed_after_draft": true,
+            "nonempty": true,
+            "parsed": true
+          },
+          "state_id": "one_pass_format_check"
+        },
+        {
+          "confidence": 8e-05,
+          "decision": "no_error",
+          "signals": {
+            "negative_trace_probability": 3e-06,
+            "positive_trace_probability": 8e-05
+          },
+          "state_id": "temporal_token_process_recheck"
+        },
+        {
+          "confidence": 0.500077,
+          "decision": "no_error",
+          "signals": {
+            "process_margin": 7.7e-05
+          },
+          "state_id": "temporal_margin_recheck"
+        },
+        {
+          "confidence": 0.988942,
+          "decision": "no_error",
+          "signals": {
+            "mean_token_probability": 0.988942,
+            "negative_trace_probability": 3e-06
+          },
+          "state_id": "temporal_convergence_recheck"
+        }
+      ],
+      "temporal_decision": "no_error",
+      "temporal_stability": 1.0
+    },
+    {
+      "candidate_id": "MuSR/murder_mysteries:0/sota5058-0002",
+      "one_pass_decision": "no_error",
+      "question_id": "MuSR/murder_mysteries:0",
+      "states": [
+        {
+          "confidence": 1.0,
+          "decision": "no_error",
+          "signals": {
+            "allowed_choice": true,
+            "delayed_after_draft": true,
+            "nonempty": true,
+            "parsed": true
+          },
+          "state_id": "one_pass_format_check"
+        },
+        {
+          "confidence": 9.2e-05,
+          "decision": "no_error",
+          "signals": {
+            "negative_trace_probability": 2e-06,
+            "positive_trace_probability": 9.2e-05
+          },
+          "state_id": "temporal_token_process_recheck"
+        },
+        {
+          "confidence": 0.50009,
+          "decision": "no_error",
+          "signals": {
+            "process_margin": 9e-05
+          },
+          "state_id": "temporal_margin_recheck"
+        },
+        {
+          "confidence": 0.992448,
+          "decision": "no_error",
+          "signals": {
+            "mean_token_probability": 0.992448,
+            "negative_trace_probability": 2e-06
+          },
+          "state_id": "temporal_convergence_recheck"
+        }
+      ],
+      "temporal_decision": "no_error",
+      "temporal_stability": 1.0
+    },
+    {
+      "candidate_id": "MuSR/murder_mysteries:0/sota5058-0003",
+      "one_pass_decision": "no_error",
+      "question_id": "MuSR/murder_mysteries:0",
+      "states": [
+        {
+          "confidence": 1.0,
+          "decision": "no_error",
+          "signals": {
+            "allowed_choice": true,
+            "delayed_after_draft": true,
+            "nonempty": true,
+            "parsed": true
+          },
+          "state_id": "one_pass_format_check"
+        },
+        {
+          "confidence": 8.4e-05,
+          "decision": "no_error",
+          "signals": {
+            "negative_trace_probability": 8e-06,
+            "positive_trace_probability": 8.4e-05
+          },
+          "state_id": "temporal_token_process_recheck"
+        },
+        {
+          "confidence": 0.500076,
+          "decision": "no_error",
+          "signals": {
+            "process_margin": 7.6e-05
+          },
+          "state_id": "temporal_margin_recheck"
+        },
+        {
+          "confidence": 0.976371,
+          "decision": "no_error",
+          "signals": {
+            "mean_token_probability": 0.976371,
+            "negative_trace_probability": 8e-06
+          },
+          "state_id": "temporal_convergence_recheck"
+        }
+      ],
+      "temporal_decision": "no_error",
+      "temporal_stability": 1.0
+    },
+    {
+      "candidate_id": "MuSR/murder_mysteries:0/sota5058-0004",
+      "one_pass_decision": "no_error",
+      "question_id": "MuSR/murder_mysteries:0",
+      "states": [
+        {
+          "confidence": 1.0,
+          "decision": "no_error",
+          "signals": {
+            "allowed_choice": true,
+            "delayed_after_draft": true,
+            "nonempty": true,
+            "parsed": true
+          },
+          "state_id": "one_pass_format_check"
+        },
+        {
+          "confidence": 8.4e-05,
+          "decision": "no_error",
+          "signals": {
+            "negative_trace_probability": 8e-06,
+            "positive_trace_probability": 8.4e-05
+          },
+          "state_id": "temporal_token_process_recheck"
+        },
+        {
+          "confidence": 0.500076,
+          "decision": "no_error",
+          "signals": {
+            "process_margin": 7.6e-05
+          },
+          "state_id": "temporal_margin_recheck"
+        },
+        {
+          "confidence": 0.976371,
+          "decision": "no_error",
+          "signals": {
+            "mean_token_probability": 0.976371,
+            "negative_trace_probability": 8e-06
+          },
+          "state_id": "temporal_convergence_recheck"
+        }
+      ],
+      "temporal_decision": "no_error",
+      "temporal_stability": 1.0
+    }
+  ]
+}
