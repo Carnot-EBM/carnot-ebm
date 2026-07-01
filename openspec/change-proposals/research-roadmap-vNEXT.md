@@ -1,188 +1,221 @@
-# Research Roadmap vNEXT - 2026.06.464 - Power the LoRA-EBM signal, repair the confirmation axes, and start verifier self-learning
+# Research Roadmap vNEXT - 2026.06.465 - Repair Phase D execution, audit the positive signal, and replace raw replay with audited self-learning
 
-**Milestone:** 2026.06.464
+**Milestone:** 2026.06.465
 **Planner:** Codex GPT-5, 2026-06-30 (UTC)
-**Prior milestone:** 2026.06.463 (PHASE D third execution)
-**Theme:** .463 finally produced the first real trained-verifier number: a clean LoRA-EBM selector at
-0.665 vs genuine tuned self-consistency 0.585 on MuSR (+0.080), but the confidence interval touched
-zero. The scalar uPRM arm went negative, the uncertainty wrapper matched D1 without improving it, and
-the two confirmation axes still did not execute (`blocked_judge_server`, `blocked_second_corpus_unavailable`).
-.464 therefore stops treating the moat as an infra-only rescue and asks the next scientific question:
-does the +8pp signal survive power, SOTA local GGUF candidates, a repaired cross-model cascade, and a
-solver-backed second corpus? It also adds the first verifier-trace self-learning loop required by FR-11.
+**Prior milestone:** 2026.06.464 (PHASE D power + confirmation)
+**Theme:** `.464` completed all tasks, but the capstone correctly stayed `execution_incomplete`: the
+best verifier evidence remained a blocked D1 artifact with a promising +8pp MuSR signal, D6 never ran
+because the SOTA/judge preflight failed, D4 produced a strong second-corpus confirmation that still needs
+an independent no-leak audit, and FR-11 replay memory hurt held-out accuracy. `.465` therefore does not
+add a new moat family. It repairs the execution path, reuses the mandated SOTA local GGUF cache, audits
+the two positive signals, reruns D6 as a tool-first cascade that can execute without brittle confidence
+telemetry, and replaces raw replay memory with audited skill-graph self-learning.
 
 ---
 
-## 1. What .463 proved
+## 1. What .464 proved
 
-| Area | .463 result | Read for .464 |
+| Area | .464 result | Read for .465 |
 |---|---|---|
-| D1 LoRA-EBM | `complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0`; 0.665 vs 0.585, CI `[0.0, 0.165]`, McNemar p=0.076369 | Real signal, underpowered. Power it and add margin/uncertainty shaping. |
-| D2 uPRM | `complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate` | Scalar logprob/uPRM should not be repeated as-is. Replace with dense process rewards/VPR. |
-| D3 EBRM | `complete_ebrm_no_win_musr_plus_0p080_ci_incl_0` | The wrapper did not beat D1. Try a calibrated KAN/FIS or PURM readout over the powered scorer. |
-| D6 cascade | `blocked_judge_server` | Confirmation axis missing. Add SOTA GGUF judge preflight and cross-model fallback. |
-| D4 second corpus | `blocked_second_corpus_unavailable` | Confirmation axis missing. Build the second corpus first, preferably PPBench/solver-backed. |
-| KV260 | `success_kv260_reachable_overlay_loaded_energy_ok` | Board path is alive. Next evidence should be timing/ratio parity for p-bit style workloads. |
-| Self-play | checkpoint refreshed, no new ARC level bank | Continuous self-learning needs to leave ARC-only dry runs and consume verifier traces. |
-
-The .463 capstone correctly stayed `moat_execution_incomplete`: a real positive margin appeared, but
-it did not satisfy the falsifiable gate because it was not statistically decisive and the cross-corpus
-and cascade confirmations were blocked.
+| SOTA/Judge preflight | `blocked_judge_server`; all three mandated GGUF repos resolved locally, but judge/confidence path was not ready | Split readiness into `sota_models_ready`, `sota_judge_ready`, and `tool_first_verifier_ready`. D6 must not depend on one brittle boolean. |
+| D1 powered LoRA-EBM/EORM | `blocked_sota_candidate_refresh_unavailable`, but powered scorer was available and reported 0.665 vs tuned-SC 0.585 on MuSR (`delta=+0.080`, CI touches zero, n=200) | Audit and refresh candidates before any headline claim. If refreshed D1 clean-null executes properly, retire this shape. |
+| D2 process reward repair | `complete_process_reward_no_win_musr_minus_0p030` | Do not spend another slot on scalar/process-reward repair unless it is part of a differentiated cascade or audit. |
+| D3 KAN/PURM | `complete_kan_purm_no_incremental_lift_over_powered_d1_minus_0p060` | KAN/PURM calibration did not improve the powered D1 arm. Treat as negative unless a later audit finds a data/field issue. |
+| D4 second corpus | `success_second_corpus_confirms_musr_margin_constraintbench_exact_v1_plus_0p370` | Promising but not enough by itself because D1/D6 execution was incomplete. Audit leak/oracle controls and re-evaluate the best executable arm. |
+| D6 cascade | gated/blocked because `exp5043.sota_judge_ready=false`; no artifact | Rerun as tool-first T1/SAFE cascade with optional SOTA judge fallback, not as a judge-server-only task. |
+| Moat gate | `complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d` | Gate logic worked: it refused to headline positive but incomplete evidence. `.465` must provide complete artifacts or bounded retirement. |
+| FR-11 self-learning | `complete_verifier_trace_self_learning_replay_memory_minus_0p050`; held-out accuracy fell from 0.70 to 0.65 | Raw replay memory is not credible positive self-learning. Use audited skill graphs, self-audit, nonforgetting guards, and no-promote rules. |
+| KV260 | `success_kv260_pbit_timing_ratio_packet_built` | Board path is live. Next hardware slot should add reproducible board transcript/testbench evidence, not broader speedup claims. |
+| SOTA ingestion | `success_sota_ingestion_v465_actionable_references_added` | `.465` has enough current literature hooks; it should execute them before expanding the backlog. |
+| ARC | `complete_tu93_no_new_level_residual_duplicate_depth`; no new bank | ARC remains opportunistic. Do not propose duplicate level solves; improve live self-discovery only. |
 
 ## 2. The three biggest gaps to the PRD vision
 
-1. **Evidence gap: the verifier moat is suggestive, not decisive.** The PRD wants verifiable constraint
-   reasoning that improves local reasoning systems. .463's +8pp D1 result is the first credible sign,
-   but it is still MuSR-scoped and CI-touching-zero.
-2. **Confirmation gap: the independent axes are still missing.** The architecture needs domain
-   transfer and compute/latency Pareto evidence. D4 and D6 did not run, so the current proof is
-   single-corpus and single-arm.
-3. **Learning-loop gap: FR-11 is not yet closed.** The system has self-play checkpoints and verifier
-   artifacts, but it does not yet convert verifier near-misses into a verified, online/self-learning
-   improvement loop with contamination controls.
+1. **Execution gap:** the PRD requires verifiable, reproducible constraint-reasoning wins. The strongest
+   current verifier evidence is still behind blocked candidate-refresh and judge/cascade prerequisites.
+2. **Generalization/audit gap:** the D4 second-corpus result is large, but it is not yet independently
+   audited against leakage, oracle use, duplicate rows, and dependence on a blocked D1 upstream.
+3. **Continuous learning gap:** FR-11 requires autonomous directed self-learning. `.464` ran a loop, but
+   the loop reduced held-out performance, so `.465` must add audited memory promotion and nonforgetting
+   gates rather than simply inserting more replay traces.
 
 ## 3. Fresh research incorporated before experiment design
 
-The `.464` planning sweep updated `research-references.md` with 2025-2026 references and hooks. The
-most actionable additions are:
+The `.465` planner added a synthesis section at the top of `research-references.md`, grounded in the
+Exp5053 `.465` ingestion set plus a live web sweep. The most actionable research hooks are:
 
-- REVES (arXiv:2606.18910) and Reliable Self-Improvement by Verifying Reasoning (arXiv:2603.21558):
-  use verified near-miss reasoning traces for self-learning, not final-answer correctness alone.
-- Pencil Puzzle Bench (arXiv:2603.02119 plus `approximatelabs/pencil-puzzle-bench`): a deterministic,
-  solver-checkable second corpus for constraint-reasoning verification.
-- ETS (arXiv:2601.21484, OpenReview): energy-guided test-time scaling and importance sampling are the
-  right comparator family for D1/D3 reranking.
-- DISC (arXiv:2606.21724): repair D6 with explicit cross-model verify/judge/correct loops.
-- ORLA (arXiv:2606.29366) and Formalize, Don't Optimize (arXiv:2605.12421): favor solver-backed
-  formulation/candidate generation over unverified LLM heuristics for the second corpus.
-- KANFIS (arXiv:2602.03034): use interpretable KAN/fuzzy readouts for uncertainty calibration.
-- FPGA p-bit paper (arXiv:2606.25313): local hardware claims should be modest timing-ratio/parity
-  packets, not scale claims.
+- **T1 / SAFE tool-first verification** (`arXiv:2504.04718`, `arXiv:2604.01993`): use deterministic
+  tools and evidence-grounded checks before expensive judge fallback. This directly addresses the D6
+  blocked-judge failure.
+- **In-Writing / delayed constrained decoding** (`arXiv:2601.07525`): rebuild SOTA candidate refresh
+  through structured constraint fields when top-logprob telemetry is unavailable.
+- **Vegas and Reward-Guided Decoding** (`arXiv:2602.07223`, `arXiv:2605.28020`): add a cost-frontier arm
+  that measures accuracy per generated token, verifier call, and judge call.
+- **SAVeR / Audited Skill-Graph Self-Improvement / constraint-guided reasoning** (`arXiv:2604.08401`,
+  `arXiv:2512.23760`, `arXiv:2606.26108`): convert FR-11 from raw replay memory into audited skill
+  promotion with no-promote and nonforgetting guards.
+- **Structured Testbench Generation and p-bit hardware references** (`arXiv:2606.12983`, prior p-bit
+  FPGA work): keep hardware evidence board-local, transcript-backed, and parity/timing focused.
+
+Extropic TSU and Logical Intelligence Kona remain strategic architecture signals only. No `.465`
+experiment may claim external hardware parity or speedup from those sources.
 
 ## 4. Architecture and dependency graph
 
 ```
-                         exp5042 PHASE 0
-            archive .463, activate .464, record close-state
+                                 exp5056 PHASE 0
+                 archive .464 close-state and activate .465 records
+                                         |
+                                         v
+                         exp5057 gate-state preflight
+        split SOTA model cache, judge/confidence, tool-first verifier readiness
+                                         |
+                   +---------------------+----------------------+
+                   |                                            |
+                   v                                            v
+       exp5058 SOTA candidate refresh              exp5065 KV260/testbench continuity
+       delayed constrained decoding                board transcript, no speedup claim
+                   |
+                   v
+       exp5059 D1 refreshed-audit scorer
+       MuSR powered signal, frozen-old vs refreshed candidates
+                   |
+       +-----------+------------------+-----------------+
+       |                              |                 |
+       v                              v                 v
+ exp5060 D4 second-corpus audit  exp5061 D6 tool-first  exp5062 guided decoding
+ no-leak / no-oracle controls    cascade with fallback   cost frontier
+       |                              |                 |
+       +------------------------------+-----------------+
                                       |
-            +-------------------------+-------------------------+
-            |                                                   |
-   exp5043 B1 SOTA GGUF + judge preflight           exp5044 B2 second corpus cache
-   - mandated local GGUF availability               - PPBench/solver-backed or fallback
-   - top_logprobs/judge endpoint                     - SOTA candidate rows + genuine SC
-            |                                                   |
-            | sota_models_ready / sota_judge_ready              | second_corpus_cache_built
-            v                                                   v
-   exp5045 D1 powered EORM/LoRA-EBM                 exp5049 D4 second-corpus confirmation
-   - MuSR n>=400 or all cached                       - best powered arm on second corpus
-   - SOTA candidate pool
-            |
-            | powered_scorer_available
-            +--------------------+--------------------+
-                                 |                    |
-                       exp5047 D3 KAN/PURM       exp5046 D2 VPR/ProcessThinker
-                       calibration readout        dense process reward repair
-                                 |                    |
-                                 +---------+----------+
-                                           |
-                 exp5048 D6 cross-model cascade (also gated on exp5043 judge)
-                                           |
-                                           v
-                           exp5050 D5 moat gate resolution
+                                      v
+                    exp5063 moat gate resolution v465
+          realized / MuSR-scoped / bounded-retired / execution-incomplete
 
-   Parallel continuity / reserved:
-     exp5051 FR-11 verifier-trace self-learning (REVES/VSI)
-     exp5052 KV260 p-bit timing-ratio parity packet
-     exp5053 SOTA ingestion for .465
-     exp5054 opportunistic ARC live-path self-discovery
-                                           |
-                                           v
-                                  exp5055 capstone
+Parallel continuous/reserved slots:
+
+    exp5064 FR-11 audited skill-graph self-learning
+    exp5066 SOTA ingestion for .466
+    exp5067 ARC live-path self-discovery, no duplicate solves
+                                      |
+                                      v
+                              exp5068 capstone
 ```
+
+Structured gate edges in `research-roadmap-next.yaml`:
+
+- `exp5058` runs only if `exp5057.sota_models_ready == true`.
+- `exp5059` runs only if `exp5058.candidate_refresh_ready == true`.
+- `exp5060` runs only if `exp5059.best_arm_available == true`.
+- `exp5061` runs only if `exp5057.tool_first_verifier_ready == true` and `exp5059.best_arm_available == true`.
+- `exp5062` runs only if `exp5058.candidate_refresh_ready == true` and `exp5059.best_arm_available == true`.
 
 ## 5. Phases
 
-### Phase 0 - Transition
+### Phase 0 - Transition and state capture
 
-- **exp5042:** archive .463 -> activate .464; record the actual .463 state: real D1 +8pp, D2 negative,
-  D3 no improvement, D4/D6 blocked, KV260 live, ARC no-bank.
+- **exp5056:** archive the `.464` close-state and activate `.465` records. This task must record that the
+  prior milestone completed all tasks but ended execution-incomplete because D1 candidate refresh and D6
+  cascade were blocked, despite D4 and KV260 successes.
 
-### Phase B - Preflight and data repair
+### Phase A - Execution repair
 
-- **exp5043:** preflight the mandated local SOTA GGUF models and repair the brittle judge-server axis:
-  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
-  `unsloth/gemma-4-26B-A4B-it-GGUF`. At least one must be usable for headline evidence; the judge path
-  must support top-logprob/confidence or a documented offline fallback.
-- **exp5044:** build the second-corpus candidate cache before D4 runs. Prefer PPBench/solver-verified
-  constraint puzzles; fall back only to already cached GPQA/MMLU-Pro style data with genuine SC,
-  oracle@K, and solver/verifier labels.
+- **exp5057:** write a gate-state summary and runtime preflight. It must distinguish local SOTA model
+  readiness from judge readiness and from tool-first verifier readiness. It should also leave a short
+  machine-readable skip reason for downstream tasks.
+- **exp5058:** rebuild the SOTA candidate refresh path using delayed constrained decoding and structured
+  candidate rows. This is the direct repair for the D1 `blocked_sota_candidate_refresh_unavailable` state.
 
-### Phase D - Verifier moat
+### Phase D - Verifier moat execution
 
-- **exp5045:** power D1. Rerun the LoRA-EBM/EORM-style energy selector with a larger MuSR candidate set,
-  SOTA GGUF candidate generation, energy margins, uncertainty telemetry, and paired statistics.
-- **exp5046:** replace the failed scalar uPRM axis with VPR/ProcessThinker-style dense process rewards
-  or rollout process labels.
-- **exp5047:** calibrate the powered D1/D3 signal with a KAN/FIS or PURM readout; this must improve over
-  D1, not just tie it.
-- **exp5048:** repair D6 with a DISC-style cross-model cascade and explicit generator/judge separation.
-- **exp5049:** confirm the best powered arm on a second corpus. No second corpus means the task blocks
-  quickly via `gated_on`, not after a full agent call.
-- **exp5050:** resolve the moat gate: realized, bounded-retired, MuSR-scoped, or execution-incomplete.
+- **exp5059:** audit and rerun the D1 powered signal on refreshed candidates, while also freezing the old
+  candidate cache for an apples-to-apples comparison. The deliverable must decide whether the +8pp signal
+  survives a real refresh.
+- **exp5060:** independently audit the D4 second-corpus confirmation. Required controls: row hashes,
+  no-oracle candidate provenance, duplicate/leak checks, and a comparison against genuine tuned-SC.
+- **exp5061:** rerun D6 as a tool-first cascade: deterministic checks, SAFE-style evidence checks, cheap
+  verifier, and optional SOTA local GGUF judge fallback. If judge telemetry is unavailable, the task should
+  still produce a bounded tool-first artifact.
+- **exp5062:** measure guided decoding and verifier-cost frontier. The intervention must create genuinely
+  different candidates and report generated tokens, verifier calls, judge calls, latency, and accuracy.
+- **exp5063:** resolve the moat gate for `.465`: realized, MuSR-scoped positive, bounded retirement, or
+  execution-incomplete. The gate must not headline blocked artifacts or un-audited second-corpus wins.
 
-### Phase E/C - Continuity and reserved research slots
+### Phase E - Continuous self-learning
 
-- **exp5051:** FR-11 continuous self-learning from verifier traces. Convert near-misses into verified
-  revision/training examples, run a small update, and report held-out delta with contamination controls.
-- **exp5052:** KV260 continuity: p-bit/timing-ratio parity packet for the local overlay.
-- **exp5053:** reserved SOTA ingestion for .465.
-- **exp5054:** opportunistic ARC live-path self-discovery. Any solve claim must be live-agent provenance,
-  not offline source-reading or per-game BFS.
-- **exp5055:** capstone and .465 pointer.
+- **exp5064:** replace raw replay memory with audited skill-graph self-learning. The loop must mine
+  near-misses, create self-audited/verifier-audited skills or memory entries, evaluate held-out performance,
+  and refuse promotion when the held-out delta is non-positive.
+
+### Phase C/R - Hardware, SOTA, and ARC continuity
+
+- **exp5065:** extend the KV260 p-bit/timing-ratio packet with board transcript and structured testbench
+  evidence. Optional GateMate/PolarFire checks are allowed only as prechecks, not as speedup claims.
+- **exp5066:** reserved SOTA ingestion for `.466`, focused on sources that directly change the next
+  experiment plan and de-duplicated against Exp5053.
+- **exp5067:** opportunistic ARC live-path self-discovery. It must run registry precheck first, avoid
+  duplicate solves, and include `solve_provenance: live_agent_self_discovery` for any solve claim.
+- **exp5068:** capstone: reconcile artifacts, state the `.465` moat and FR-11 verdicts, and choose the
+  `.466` route.
 
 ## 6. Falsifiable gates
 
-- **Moat realized:** at least one oracle-distinct verifier arm beats genuine tuned self-consistency on
-  MuSR with CI excluding zero, and either confirms on the second corpus or D6 reaches accuracy parity at
-  materially lower judge cost.
-- **MuSR-scoped positive:** D1/D3 remains positive on MuSR but D4 or D6 is still blocked or negative.
-  This is progress, not a moat claim.
-- **Bounded retirement:** only if properly executed powered D1 plus the repaired D2/D3 arms clean-null
-  on headroom-present data and D6 has no efficiency win.
-- **Execution incomplete:** any blocked SOTA preflight, blocked second corpus, blocked judge, skeleton
-  training, degenerate abstention, or missing statistics.
+- **Moat realized:** a properly executed, oracle-distinct verifier or cascade beats genuine tuned-SC on
+  MuSR with CI excluding zero and either passes the D4 audit or reaches a D6 cost/accuracy efficiency win.
+- **MuSR-scoped positive:** refreshed D1 remains positive on MuSR, but D4 audit or D6 cascade is blocked,
+  negative, or inconclusive. This is progress, not a PRD-level moat claim.
+- **Second-corpus scoped positive:** D4 remains positive after leak/no-oracle audit, but MuSR D1/D6 do not
+  execute cleanly. This is a transfer clue, not a headline verifier-moat claim.
+- **Bounded retirement:** refreshed D1, D4 audit, and tool-first D6 all execute and clean-null or regress
+  on headroom-present data. If the same blocked or negative verdict recurs for a prior failed scope, the
+  task's `prior_failures.retire_if_same_verdict: true` entry makes retirement mechanical.
+- **Execution incomplete:** any missing required artifact field, blocked SOTA model path, unbuilt candidate
+  cache, skipped D6 without tool-first artifact, skeleton training, degenerate abstention, or missing paired
+  statistics.
+- **FR-11 positive evidence:** held-out delta is positive, contamination guard passes, promoted skills are
+  self-audited and externally verifier-audited, and no nonforgetting guard fails.
+- **FR-11 guarded negative:** loop executes but no-promote triggers or held-out delta is non-positive. This
+  is an honest negative, not a failure to run.
 
 ## 7. Hardware requirements
 
-- **Dual RTX 3090 CUDA path:** SOTA GGUF local inference, candidate generation, judge/cascade scoring,
-  and any LoRA/EORM training. Do not iGPU-pin offline PHASE D runs.
-- **KV260 over SSH (`ssh kria`):** board-only overlay/timing checks. Never host SD-card operations.
-- **GateMate/PolarFire:** not required in .464 unless exp5052 finds an immediate parity extension.
+- **Dual RTX 3090 CUDA local runtime:** preferred for mandated SOTA GGUF inference, candidate refresh,
+  judge fallback, LoRA/EORM scoring, and guided decoding. Do not iGPU-pin Phase D headline runs.
+- **Mandated SOTA local GGUF models:** every LLM-dependent experiment must include at least one of
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`. Legacy small models are smoke tests only.
+- **KV260 over SSH (`ssh kria`):** allowed for board-local overlay/timing/testbench checks. No host SD-card
+  operations. No speedup claim without board transcript and CPU reference parity.
+- **GateMate and PolarFire:** optional prechecks only in `.465`; no Carnot latency/speedup claim unless a
+  flashed or dispatched board transcript is included.
+- **Extropic TSU / external thermodynamic hardware:** architecture context only. No local experiment may
+  imply access or performance equivalence.
 
-## 8. Model policy
+## 8. Expected deliverables
 
-Every experiment that uses an LLM must include at least one mandated SOTA local GGUF model in
-`MODEL_SPECS`:
+| Experiment | Primary deliverable |
+|---|---|
+| exp5056 | `results/experiment_5056_archive_464_activate_465.json` |
+| exp5057 | `results/experiment_5057_gate_state_preflight_v465.json` |
+| exp5058 | `results/experiment_5058_sota_candidate_refresh_inwriting.json` |
+| exp5059 | `results/experiment_5059_d1_sota_refresh_audit.json` |
+| exp5060 | `results/experiment_5060_second_corpus_audit_v2.json` |
+| exp5061 | `results/experiment_5061_tool_first_cascade.json` |
+| exp5062 | `results/experiment_5062_guided_decoding_cost_frontier.json` |
+| exp5063 | `results/experiment_5063_moat_gate_resolution_v465.json` |
+| exp5064 | `results/experiment_5064_audited_skillgraph_self_learning.json` |
+| exp5065 | `results/experiment_5065_kv260_testbench_timing_packet.json` |
+| exp5066 | `results/experiment_5066_sota_ingestion_v466.json` |
+| exp5067 | `results/experiment_5067_arc_live_path_self_discovery.json` |
+| exp5068 | `results/experiment_5068_capstone_v465.json` |
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
+## 9. Why this is the natural next milestone
 
-Legacy small models may appear only as CPU smoke tests and must not be headline-result models.
-
-## 9. Experiment order
-
-1. exp5042 transition
-2. exp5043 SOTA/judge preflight
-3. exp5044 second-corpus cache
-4. exp5045 powered D1
-5. exp5046 repaired D2
-6. exp5047 D3 calibration
-7. exp5048 D6 cascade
-8. exp5049 D4 second-corpus confirmation
-9. exp5050 gate resolution
-10. exp5051 continuous self-learning
-11. exp5052 hardware continuity
-12. exp5053 SOTA ingestion
-13. exp5054 ARC live-path continuity
-14. exp5055 capstone
+`.464` already answered the broad-planning question: the positive D1/D4 evidence is worth repairing and
+auditing, while D2/D3 and raw replay memory should not be repeated as-is. `.465` is therefore an execution
+milestone. It makes the blocked gates cheap and explicit, moves D6 to a tool-first architecture that can
+produce evidence without a fragile judge endpoint, audits the second-corpus result before using it as
+confirmation, and replaces negative replay-memory self-learning with an audited no-promote loop aligned
+with FR-11. If `.465` executes cleanly and still cannot produce a robust win, bounded retirement becomes
+credible; if it succeeds, the program finally has a properly audited verifier-moat and self-learning path
+to scale in `.466`.
