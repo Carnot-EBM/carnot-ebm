@@ -9753,3 +9753,4 @@ web search: |
 | 2026-07-01 13:07 UTC | PHASE A1 runtime provenance -- clean local SOTA en | OK | 85 passed, 1 warning in 7.28s |
 | 2026-07-01 13:19 UTC | PHASE A2 exact verifier scale -- KAN/PWA/MILP mult | OK | 89 passed, 1 warning in 7.23s |
 | 2026-07-01 13:31 UTC | PHASE A3 deterministic verification -- BEAVER-styl | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+| 2026-07-01 13:42 UTC | PHASE A4 prompt constraints -- code-based assuranc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
