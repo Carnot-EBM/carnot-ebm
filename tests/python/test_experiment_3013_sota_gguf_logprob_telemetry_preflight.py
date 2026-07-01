@@ -4,7 +4,8 @@ Spec: REQ-INFER-SOTA-021,
       SCENARIO-INFER-SOTA-021-001,
       SCENARIO-INFER-SOTA-021-002,
       SCENARIO-INFER-SOTA-021-003,
-      SCENARIO-INFER-SOTA-021-004
+      SCENARIO-INFER-SOTA-021-004,
+      SCENARIO-INFER-SOTA-021-005
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
 
 import pytest
 
@@ -88,7 +90,8 @@ def _write_cached_model(tmp_path: Path, hf_id: str = QWEN) -> tuple[Path, dict[s
     repo.mkdir(parents=True)
     filename = hf_id.split("/", 1)[-1].removesuffix("-GGUF")
     gguf = repo / f"{filename}-Q4_K_M.gguf"
-    gguf.write_text("tiny gguf fixture\n", encoding="utf-8")
+    fixture_sizes = {QWEN: 30, GEMMA31: 20, GEMMA26: 10}
+    gguf.write_text("x" * fixture_sizes.get(hf_id, 12), encoding="utf-8")
     return gguf, {"HUGGINGFACE_HUB_CACHE": str(hub)}
 
 
@@ -97,6 +100,73 @@ def _write_all_cached_models(tmp_path: Path) -> dict[str, str]:
     for hf_id in (QWEN, GEMMA31, GEMMA26):
         _gguf, env = _write_cached_model(tmp_path, hf_id)
     return env
+
+
+def _free_port(port: int = 45555) -> dict[str, Any]:
+    return {
+        "available": True,
+        "host": "127.0.0.1",
+        "port": port,
+        "endpoint_url": f"http://127.0.0.1:{port}",
+        "error": None,
+    }
+
+
+def _server_unavailable(env: dict[str, str]) -> dict[str, Any]:
+    path = env.get("CARNOT_LLAMA_SERVER") or "/missing/llama-server"
+    return {
+        "available": False,
+        "selected_path": None,
+        "candidates": [
+            {
+                "source": "env:CARNOT_LLAMA_SERVER",
+                "path": path,
+                "exists": False,
+                "is_file": False,
+                "executable": False,
+            }
+        ],
+        "missing_diagnostic": f"llama-server binary not found or not executable: {path}",
+    }
+
+
+def _server_available(path: Path) -> exp.JsonDict:
+    return {
+        "available": True,
+        "selected_path": str(path),
+        "candidates": [
+            {
+                "source": "test",
+                "path": str(path),
+                "exists": True,
+                "is_file": True,
+                "executable": True,
+            }
+        ],
+        "missing_diagnostic": None,
+    }
+
+
+def _sample_with_topk(endpoint: str, timeout_s: float) -> dict[str, Any]:
+    del timeout_s
+    return {
+        "ready": True,
+        "route": f"{endpoint}/completion",
+        "status": 200,
+        "completion_text": "exp3013 endpoint live",
+        "logprob_ready": True,
+        "top_logprob_ready": True,
+        "confidence_ready": False,
+        "telemetry_signal": "top_logprobs",
+        "evidence": {
+            "token_logprob_count": 2,
+            "top_logprob_row_count": 2,
+            "token_logprobs": [-0.1, -0.2],
+            "top_logprobs": [{" exp": -0.1, " run": -1.2}, {" live": -0.2, " cached": -1.4}],
+            "raw_response_keys": ["content", "completion_probabilities"],
+        },
+        "error": None,
+    }
 
 
 def _raw_with_topk(text: str = " exp3013 live") -> dict[str, Any]:
@@ -127,6 +197,7 @@ def test_req_infer_sota_021_spec_anchor_exists() -> None:
     assert "SCENARIO-INFER-SOTA-021-002" in spec
     assert "SCENARIO-INFER-SOTA-021-003" in spec
     assert "SCENARIO-INFER-SOTA-021-004" in spec
+    assert "SCENARIO-INFER-SOTA-021-005" in spec
     assert exp.ARTIFACT_FILENAME in spec
 
 
@@ -167,11 +238,16 @@ def test_scenario_021_004_cached_models_without_endpoint_are_partial_not_live(
         },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([10.0, 11.0]).__next__,
     )
 
     assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
-    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+    assert (
+        artifact["honest_verdict"]
+        == "blocked_llamacpp_logprob_endpoint_bringup_no_binary_or_runtime"
+    )
     assert artifact["sota_models_ready"] is True
     assert artifact["completion_endpoint_ready"] is False
     assert artifact["logprob_endpoint_ready"] is False
@@ -180,6 +256,14 @@ def test_scenario_021_004_cached_models_without_endpoint_are_partial_not_live(
     assert artifact["live_completion_invoked"] is False
     assert artifact["inference_substrate"] != exp.LIVE_LLM_SUBSTRATE
     assert artifact["flagged_adversarial"] is False
+    assert artifact["server_command"] is None
+    assert artifact["endpoint_url"] == "http://127.0.0.1:45555"
+    assert artifact["sample_completion"] is None
+    assert artifact["sample_logprob_evidence"]["ready"] is False
+    assert artifact["blocker_root_cause"]["kind"] == "llama_server_binary_unavailable"
+    assert artifact["preconditions_checked"]["free_port"]["available"] is True
+    assert artifact["preconditions_checked"]["llama_cpp_server"]["available"] is False
+    assert artifact["preconditions_checked"]["resolved_local_gguf_paths"][QWEN].endswith(".gguf")
     assert "endpoint_completion_unavailable" in artifact["skip_reasons"]
     assert "live_completion_not_invoked" in artifact["skip_reasons"]
     assert [row["hf_id"] for row in artifact["usable_sota_models"]] == [QWEN, GEMMA31, GEMMA26]
@@ -233,10 +317,11 @@ def test_scenario_021_004_endpoint_completion_with_toplogprobs_is_ready(
         },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        endpoint_sample_fn=_sample_with_topk,
         monotonic=iter([1.0, 66.0]).__next__,
     )
 
-    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_ready"
+    assert artifact["honest_verdict"] == "success_llamacpp_logprob_endpoint_ready"
     assert artifact["sota_headline_ready"] is True
     assert artifact["sota_logprob_ready"] is True
     assert artifact["completion_endpoint_ready"] is True
@@ -248,6 +333,78 @@ def test_scenario_021_004_endpoint_completion_with_toplogprobs_is_ready(
     assert artifact["endpoint_summary"]["duration_s"] == pytest.approx(65.0)
     assert artifact["flagged_adversarial"] is False
     assert artifact["skip_reasons"] == []
+    assert artifact["sample_completion"]["text"] == "exp3013 endpoint live"
+    assert artifact["sample_logprob_evidence"]["token_logprob_count"] == 2
+
+
+def test_scenario_021_005_bringup_starts_smallest_cached_sota_and_cleans_up(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-INFER-SOTA-021-005: bring-up records command, PID, sample, and cleanup."""
+    env = _write_all_cached_models(tmp_path)
+    server = tmp_path / "llama-server"
+    server.write_text("#!/bin/sh\n", encoding="utf-8")
+    start_calls: list[dict[str, Any]] = []
+    cleanup_calls: list[Any] = []
+    probe_calls: list[list[str]] = []
+
+    class FakeProcess:
+        pid = 4242
+
+        def poll(self) -> None:
+            return None
+
+    def endpoint_probe(endpoints: list[str], timeout_s: float) -> dict[str, Any]:
+        probe_calls.append(list(endpoints))
+        ready = endpoints == ["http://127.0.0.1:45678"]
+        return {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0] if ready else None,
+            "completion_ready": ready,
+            "top_logprob_ready": ready,
+            "confidence_ready": False,
+            "telemetry_signal": "top_logprobs" if ready else None,
+            "duration_s": timeout_s,
+            "probes": [],
+        }
+
+    def start_server(command: list[str], server_env: dict[str, str], log_path: Path) -> FakeProcess:
+        start_calls.append({"command": command, "env": server_env, "log_path": log_path})
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text("server ready\n", encoding="utf-8")
+        return FakeProcess()
+
+    artifact = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env,
+        command_runner=_runner(),
+        endpoint_probe_fn=endpoint_probe,
+        endpoint_sample_fn=_sample_with_topk,
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected direct load: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=lambda runtime_env: _server_available(server),
+        free_port_fn=lambda host: _free_port(45678),
+        server_start_fn=start_server,
+        server_cleanup_fn=lambda process: cleanup_calls.append(process) or {"terminated": True},
+        monotonic=iter([1.0, 66.0]).__next__,
+    )
+
+    assert artifact["honest_verdict"] == "success_llamacpp_logprob_endpoint_ready"
+    assert artifact["server_pid"] == 4242
+    assert artifact["server_command"] == start_calls[0]["command"]
+    assert artifact["server_command"][0] == str(server)
+    assert artifact["server_command"][1:3] == ["-m", artifact["model_specs"]["resolved_models"]["middle_moe"]["resolved_path"]]
+    assert artifact["endpoint_url"] == "http://127.0.0.1:45678"
+    assert artifact["sample_completion"]["text"] == "exp3013 endpoint live"
+    assert artifact["sample_logprob_evidence"]["top_logprob_row_count"] == 2
+    assert artifact["server_logs"]["tail"] == "server ready\n"
+    assert artifact["cleanup_behavior"] == {"terminated": True}
+    assert cleanup_calls and cleanup_calls[0].pid == 4242
+    assert probe_calls[0] == ["http://127.0.0.1:8080"]
+    assert probe_calls[1] == ["http://127.0.0.1:45678"]
+    assert artifact["blocker_root_cause"] is None
+    assert artifact["live_completion_invoked"] is True
 
 
 def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
@@ -298,6 +455,8 @@ def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
         },
         prompt_runner_fn=prompt_runner,
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([10.0, 12.75]).__next__,
         tests_run=("focused-exp3013",),
         direct_load_enabled=True,
@@ -307,8 +466,11 @@ def test_scenario_021_001_live_transcript_with_topk_opens_both_gates(
     assert artifact["artifact"] == exp.ARTIFACT_NAME
     assert artifact["sota_headline_ready"] is True
     assert artifact["sota_logprob_ready"] is True
-    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
-    assert artifact["preconditions_checked"] is True
+    assert (
+        artifact["honest_verdict"]
+        == "blocked_llamacpp_logprob_endpoint_bringup_no_binary_or_runtime"
+    )
+    assert artifact["preconditions_checked"]["recorded_before_model_load"] is True
     assert artifact["model_specs"]["experiment_id"] == 3013
     assert artifact["model_specs"]["headline_models"] == [QWEN, GEMMA31, GEMMA26]
     assert artifact["completion_endpoint_ready"] is False
@@ -388,13 +550,15 @@ def test_scenario_021_002_transcript_without_telemetry_keeps_logprob_gate_false(
         },
         prompt_runner_fn=prompt_runner,
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA31}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([1.0, 2.0]).__next__,
         direct_load_enabled=True,
     )
 
     assert artifact["sota_headline_ready"] is True
     assert artifact["sota_logprob_ready"] is False
-    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+    assert artifact["honest_verdict"].startswith("blocked_llamacpp_logprob_endpoint_bringup_")
     assert artifact["telemetry_capabilities"]["overall"]["any_live_generation"] is True
     assert artifact["telemetry_capabilities"]["overall"]["token_logprobs_exposed"] is False
     assert artifact["telemetry_capabilities"]["overall"]["topk_logprobs_exposed"] is False
@@ -430,12 +594,14 @@ def test_scenario_021_003_missing_headline_blocks_without_legacy_promotion(
         },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([3.0, 3.4]).__next__,
     )
 
     assert artifact["sota_headline_ready"] is False
     assert artifact["sota_logprob_ready"] is False
-    assert artifact["honest_verdict"] == "blocked_gguf_logprob_preflight_no_ready_paths"
+    assert artifact["honest_verdict"] == "blocked_llamacpp_logprob_endpoint_bringup_no_usable_sota_model"
     assert artifact["headline_models_available"] == []
     assert artifact["live_transcript_paths"] == []
     assert artifact["legacy_smoke_only_used"] is False
@@ -475,12 +641,14 @@ def test_req_021_runtime_precondition_failure_skips_large_load_when_direct_enabl
         },
         prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": GEMMA26}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([7.0, 8.0]).__next__,
         direct_load_enabled=True,
     )
 
     gemma_attempt = next(row for row in artifact["headline_models_attempted"] if row["hf_id"] == GEMMA26)
-    assert artifact["honest_verdict"] == "complete_gguf_logprob_preflight_partial_ready"
+    assert artifact["honest_verdict"].startswith("blocked_llamacpp_logprob_endpoint_bringup_")
     assert gemma_attempt["cache_status"] == "resolved"
     assert gemma_attempt["load_status"] == "not_attempted_runtime_precondition_failed"
     assert gemma_attempt["generation_status"] == "not_attempted"
@@ -623,6 +791,8 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
             **exp._extract_loader_telemetry(_raw_with_topk("ok")),
         },
         cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
         monotonic=iter([1.0, 1.2]).__next__,
         tests_run=("coverage",),
         direct_load_enabled=True,
@@ -649,6 +819,19 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
     assert exp.main(
         ["--output", str(tmp_path / "out2.json"), "--selected-python", SELECTED_PYTHON, "--prompt-timeout-s", "7"]
     ) == 0
+    assert exp.main(
+        [
+            "--output",
+            str(tmp_path / "out3.json"),
+            "--selected-python",
+            SELECTED_PYTHON,
+            "--endpoint",
+            "http://127.0.0.1:45555",
+            "--endpoint-timeout-s",
+            "3.5",
+            "--direct-load",
+        ]
+    ) == 0
     assert calls == [
         {
             "output_path": tmp_path / "out.json",
@@ -661,4 +844,542 @@ def test_req_021_helpers_prompt_parser_writer_and_cli(
             "tests_run": [],
             "prompt_timeout_s": 7,
         },
+        {
+            "output_path": tmp_path / "out3.json",
+            "selected_python": SELECTED_PYTHON,
+            "tests_run": [],
+            "endpoints": ["http://127.0.0.1:45555"],
+            "endpoint_timeout_s": 3.5,
+            "direct_load_enabled": True,
+        },
     ]
+
+
+def test_scenario_021_005_endpoint_helper_edges(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-INFER-SOTA-021-005: endpoint helper edges stay deterministic."""
+    server = tmp_path / "llama-server"
+    server.write_text("#!/bin/sh\n", encoding="utf-8")
+    server.chmod(0o755)
+    monkeypatch.setattr(exp.shutil, "which", lambda name: str(server) if name == "llama-server" else None)
+
+    endpoints = exp._default_endpoint_list({"CARNOT_5085_ENDPOINTS": " http://a:1/, http://b:2 "})
+    assert endpoints == ["http://a:1", "http://b:2"]
+    assert exp._normalize_endpoints(["http://a:1/", "http://a:1", "http://b:2/"]) == [
+        "http://a:1",
+        "http://b:2",
+    ]
+    monkeypatch.setattr(
+        exp,
+        "_probe_llama_cpp_endpoints",
+        lambda endpoints, timeout_s: {"completion_ready": True},
+    )
+    assert exp._probe_endpoint_summary(["http://a:1"], 1.0)["completion_ready"] is True
+    assert exp._find_free_port()["available"] is True
+    assert exp._find_free_port("256.256.256.256")["available"] is False
+
+    availability = exp._llama_server_availability(
+        {"CARNOT_LLAMA_SERVER": str(server), "LLAMA_SERVER": str(server)}
+    )
+    assert availability["available"] is True
+    assert availability["selected_path"] == str(server)
+    assert exp._build_server_command(
+        server_path=str(server),
+        model_path="/models/small.gguf",
+        host="127.0.0.1",
+        port=45555,
+        extra_args="--parallel 1",
+    )[-2:] == ["--parallel", "1"]
+
+    class FakeResponse:
+        status = 201
+
+        def __init__(self, body: bytes) -> None:
+            self.body = body
+
+        def __enter__(self) -> "FakeResponse":
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            return None
+
+        def read(self) -> bytes:
+            return self.body
+
+    responses = iter([FakeResponse(b'{"ok": true}'), FakeResponse(b"not-json")])
+    monkeypatch.setattr(exp, "urlopen", lambda request, timeout: next(responses))
+    assert exp._http_post_json("http://endpoint/completion", {"x": 1}, 2.0) == (
+        201,
+        {"ok": True},
+    )
+    assert exp._http_post_json("http://endpoint/completion", {"x": 1}, 2.0) == (
+        201,
+        {"raw": "not-json"},
+    )
+
+    http_error = HTTPError("http://endpoint", 500, "bad", {}, None)
+    assert "HTTPError 500" in exp._http_error_detail(http_error)
+    class BadBody:
+        def read(self) -> bytes:
+            raise OSError("unreadable")
+
+        def close(self) -> None:
+            return None
+
+    unreadable_http_error = HTTPError("http://endpoint", 502, "bad", {}, BadBody())
+    assert exp._http_error_detail(unreadable_http_error) == "HTTPError 502"
+    assert "URLError" in exp._http_error_detail(URLError("down"))
+    assert exp._http_error_detail(RuntimeError("bad")) == "RuntimeError: bad"
+    assert exp._response_text([]) == ""
+    assert exp._response_text({"choices": [{"message": {"content": " ok "}}]}) == "ok"
+    assert exp._response_text({"choices": [{"logprobs": None}]}) == ""
+    assert exp._top_logprob_row(
+        [{"token": "A", "logprob": "-0.5"}, {"token": "B", "logprob": True}]
+    ) == {"A": -0.5}
+    assert exp._parse_endpoint_sample_payload([]) == {
+        "text": "",
+        "token_logprobs": [],
+        "top_logprobs": [],
+    }
+
+    native = exp._parse_endpoint_sample_payload(
+        {
+            "content": "native",
+            "completion_probabilities": [
+                "bad",
+                {"logprob": "-0.1", "top_logprobs": [{"token": "native", "logprob": -0.1}]}
+            ],
+        }
+    )
+    choices = exp._parse_endpoint_sample_payload(
+        {
+            "choices": [
+                {
+                    "text": "choice",
+                    "logprobs": {
+                        "content": [
+                            "bad",
+                            {
+                                "token": "choice",
+                                "logprob": -0.2,
+                                "top_logprobs": [{"token": "choice", "logprob": -0.2}],
+                            },
+                        ],
+                        "token_logprobs": ["-0.3"],
+                        "top_logprobs": [{"choice": -0.2, "other": -1.4}],
+                    },
+                }
+            ]
+        }
+    )
+    assert native["text"] == "native"
+    assert native["token_logprobs"] == [-0.1]
+    assert choices["text"] == "choice"
+    assert choices["token_logprobs"] == [-0.2, -0.3]
+    assert choices["top_logprobs"] == [{"choice": -0.2}, {"choice": -0.2, "other": -1.4}]
+
+    def ok_post(url: str, payload: dict[str, Any], timeout_s: float) -> tuple[int, dict[str, Any]]:
+        assert url.endswith("/completion")
+        assert payload["n_probs"] == exp.LOGPROBS_REQUESTED
+        assert timeout_s == pytest.approx(2.0)
+        return (
+            200,
+            {
+                "content": "sample",
+                "completion_probabilities": [
+                    {"logprob": -0.4, "top_logprobs": [{"token": "sample", "logprob": -0.4}]}
+                ],
+            },
+        )
+
+    monkeypatch.setattr(exp, "_http_post_json", ok_post)
+    sample = exp._sample_endpoint_telemetry("http://127.0.0.1:45555", 2.0)
+    assert sample["ready"] is True
+    assert sample["evidence"]["token_logprob_count"] == 1
+
+    monkeypatch.setattr(exp, "_http_post_json", lambda *_args, **_kwargs: (200, {"content": ""}))
+    empty = exp._sample_endpoint_telemetry("http://127.0.0.1:45555", 2.0)
+    assert empty["ready"] is False
+    assert "empty_or_unrecognized_completion" in empty["error"]
+
+    monkeypatch.setattr(exp, "_http_post_json", lambda *_args, **_kwargs: (_ for _ in ()).throw(URLError("down")))
+    failed = exp._sample_endpoint_telemetry("http://127.0.0.1:45555", 2.0)
+    assert failed["ready"] is False
+    assert "URLError" in failed["error"]
+    assert exp._tail_file(None) == ""
+    assert exp._tail_file(tmp_path / "missing.log") == ""
+
+    log_path = tmp_path / "started.log"
+    proc = exp._start_llama_server_process(
+        [exp.sys.executable, "-c", "print('hello')"],
+        {},
+        log_path,
+    )
+    proc.wait(timeout=5)
+    already_done = exp._cleanup_llama_server_process(proc)
+    assert already_done["already_exited"] is True
+    assert "hello" in log_path.read_text(encoding="utf-8")
+
+    class FakeRunningProcess:
+        pid = 999
+
+        def __init__(self) -> None:
+            self.terminated = False
+            self._carnot_log_handle = (tmp_path / "cleanup.log").open("w", encoding="utf-8")
+
+        def poll(self) -> int | None:
+            return 0 if self.terminated else None
+
+        def terminate(self) -> None:
+            self.terminated = True
+
+        def wait(self, timeout: int) -> None:
+            assert timeout == 10
+
+    cleanup = exp._cleanup_llama_server_process(FakeRunningProcess())
+    assert cleanup["terminated"] is True
+
+    class TimeoutProcess:
+        def __init__(self) -> None:
+            self.killed = False
+            self.wait_count = 0
+            self._carnot_log_handle = (tmp_path / "timeout.log").open("w", encoding="utf-8")
+
+        def poll(self) -> None:
+            return None
+
+        def terminate(self) -> None:
+            return None
+
+        def wait(self, timeout: int) -> None:
+            self.wait_count += 1
+            if self.wait_count == 1:
+                raise exp.subprocess.TimeoutExpired("cmd", timeout)
+
+        def kill(self) -> None:
+            self.killed = True
+
+    timeout_cleanup = exp._cleanup_llama_server_process(TimeoutProcess())
+    assert timeout_cleanup["terminated"] is True
+
+    annotated = exp._annotate_model_specs_for_bringup(
+        {"resolved_models": {"bad": "not-a-dict"}},
+        None,
+        {},
+    )
+    assert annotated == {"resolved_models": {"bad": "not-a-dict"}}
+    assert exp._honest_verdict(headline_ready=False, logprob_ready=False).startswith("blocked_")
+    assert exp._honest_verdict(headline_ready=True, logprob_ready=True).startswith("complete_")
+    assert exp._honest_verdict(headline_ready=True, logprob_ready=False).endswith("partial_ready")
+    assert exp._runtime_honest_verdict(
+        sota_models_ready=True,
+        completion_endpoint_ready=True,
+        top_logprob_or_confidence_ready=False,
+        tool_first_verifier_ready=True,
+    ).endswith("no_logprob_telemetry")
+    assert exp._runtime_honest_verdict(
+        sota_models_ready=True,
+        completion_endpoint_ready=False,
+        top_logprob_or_confidence_ready=False,
+        tool_first_verifier_ready=True,
+        blocker_root_cause={"kind": "no_usable_sota_model"},
+    ).endswith("no_usable_sota_model")
+    assert "tool_first_verifier_unavailable" in exp._runtime_skip_reasons(
+        sota_models_ready=True,
+        completion_endpoint_ready=True,
+        logprob_endpoint_ready=True,
+        top_logprob_or_confidence_ready=True,
+        tool_first_verifier_ready=False,
+        live_completion_invoked=True,
+    )
+
+
+def test_scenario_021_005_bringup_blocker_edges(tmp_path: Path) -> None:
+    """SCENARIO-INFER-SOTA-021-005: bring-up blocker branches preserve evidence."""
+    usable = [{"role": "middle_moe", "hf_id": GEMMA26, "model_path": "/models/gemma26.gguf"}]
+    checksums = {GEMMA26: {"size_bytes": 10}}
+    unavailable_port = {
+        "available": False,
+        "host": "127.0.0.1",
+        "port": None,
+        "endpoint_url": None,
+        "error": "bind failed",
+    }
+    server = _server_available(tmp_path / "llama-server")
+
+    no_port = exp._attempt_llama_server_bringup(
+        project_root=tmp_path,
+        env={},
+        usable_sota_models=usable,
+        model_checksums=checksums,
+        endpoint_probe_fn=lambda endpoints, timeout_s: pytest.fail("probe should not run"),
+        endpoint_sample_fn=lambda endpoint, timeout_s: pytest.fail("sample should not run"),
+        endpoint_timeout_s=2.0,
+        server_finder_fn=lambda env: server,
+        free_port_fn=lambda host: unavailable_port,
+        server_start_fn=lambda command, env, log_path: pytest.fail("server should not start"),
+        server_cleanup_fn=lambda process: pytest.fail("cleanup should not run"),
+        sleep_fn=lambda seconds: pytest.fail("sleep should not run"),
+        start_timeout_s=0.0,
+    )
+    assert no_port["blocker_root_cause"]["kind"] == "free_port_unavailable"
+
+    start_failed = exp._attempt_llama_server_bringup(
+        project_root=tmp_path,
+        env={},
+        usable_sota_models=usable,
+        model_checksums=checksums,
+        endpoint_probe_fn=lambda endpoints, timeout_s: {"completion_ready": False},
+        endpoint_sample_fn=lambda endpoint, timeout_s: pytest.fail("sample should not run"),
+        endpoint_timeout_s=2.0,
+        server_finder_fn=lambda env: server,
+        free_port_fn=lambda host: _free_port(45679),
+        server_start_fn=lambda command, env, log_path: (_ for _ in ()).throw(RuntimeError("boom")),
+        server_cleanup_fn=lambda process: pytest.fail("cleanup should not run"),
+        sleep_fn=lambda seconds: None,
+        start_timeout_s=0.0,
+    )
+    assert start_failed["blocker_root_cause"]["kind"] == "server_start_failed"
+
+    class FakeProcess:
+        pid = 101
+
+        def poll(self) -> None:
+            return None
+
+    cleanup_calls: list[Any] = []
+    not_ready = exp._attempt_llama_server_bringup(
+        project_root=tmp_path,
+        env={},
+        usable_sota_models=usable,
+        model_checksums=checksums,
+        endpoint_probe_fn=lambda endpoints, timeout_s: {"completion_ready": False},
+        endpoint_sample_fn=lambda endpoint, timeout_s: pytest.fail("sample should not run"),
+        endpoint_timeout_s=2.0,
+        server_finder_fn=lambda env: server,
+        free_port_fn=lambda host: _free_port(45680),
+        server_start_fn=lambda command, env, log_path: FakeProcess(),
+        server_cleanup_fn=lambda process: cleanup_calls.append(process) or {"terminated": True},
+        sleep_fn=lambda seconds: None,
+        start_timeout_s=0.0,
+    )
+    assert not_ready["server_pid"] == 101
+    assert not_ready["blocker_root_cause"]["kind"] == "server_started_but_endpoint_not_ready"
+    assert cleanup_calls and cleanup_calls[0].pid == 101
+
+    class ExitedProcess:
+        pid = 202
+
+        def poll(self) -> int:
+            return 1
+
+    exited = exp._attempt_llama_server_bringup(
+        project_root=tmp_path,
+        env={},
+        usable_sota_models=usable,
+        model_checksums=checksums,
+        endpoint_probe_fn=lambda endpoints, timeout_s: {"completion_ready": False},
+        endpoint_sample_fn=lambda endpoint, timeout_s: pytest.fail("sample should not run"),
+        endpoint_timeout_s=2.0,
+        server_finder_fn=lambda env: server,
+        free_port_fn=lambda host: _free_port(45681),
+        server_start_fn=lambda command, env, log_path: ExitedProcess(),
+        server_cleanup_fn=lambda process: {"terminated": False, "returncode": process.poll()},
+        sleep_fn=lambda seconds: pytest.fail("sleep should not run"),
+        start_timeout_s=1.0,
+    )
+    assert exited["server_pid"] == 202
+    assert exited["blocker_root_cause"]["kind"] == "server_started_but_endpoint_not_ready"
+
+    monotonic_values = iter([0.0, 0.0, 0.5, 2.0])
+    sleep_calls: list[float] = []
+    original_monotonic = exp.time.monotonic
+    exp.time.monotonic = lambda: next(monotonic_values)
+    try:
+        waited = exp._attempt_llama_server_bringup(
+            project_root=tmp_path,
+            env={},
+            usable_sota_models=usable,
+            model_checksums=checksums,
+            endpoint_probe_fn=lambda endpoints, timeout_s: {"completion_ready": False},
+            endpoint_sample_fn=lambda endpoint, timeout_s: pytest.fail("sample should not run"),
+            endpoint_timeout_s=2.0,
+            server_finder_fn=lambda env: server,
+            free_port_fn=lambda host: _free_port(45682),
+            server_start_fn=lambda command, env, log_path: FakeProcess(),
+            server_cleanup_fn=lambda process: {"terminated": True},
+            sleep_fn=lambda seconds: sleep_calls.append(seconds),
+            start_timeout_s=1.0,
+        )
+    finally:
+        exp.time.monotonic = original_monotonic
+    assert waited["blocker_root_cause"]["kind"] == "server_started_but_endpoint_not_ready"
+    assert sleep_calls == [0.5]
+
+
+def test_scenario_021_005_final_artifact_blocker_edges(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-INFER-SOTA-021-005: final artifact blocker branches are explicit."""
+    no_cache = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env={
+            "HUGGINGFACE_HUB_CACHE": str(tmp_path / "empty-hf"),
+            "CARNOT_LLAMA_SERVER_START_TIMEOUT_S": "not-a-number",
+        },
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0],
+            "completion_ready": True,
+            "top_logprob_ready": True,
+            "confidence_ready": False,
+            "telemetry_signal": "top_logprobs",
+            "duration_s": timeout_s,
+            "probes": [],
+        },
+        endpoint_sample_fn=_sample_with_topk,
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: None,
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
+        monotonic=iter([1.0, 66.0]).__next__,
+    )
+    assert no_cache["blocker_root_cause"]["kind"] == "no_usable_sota_model"
+    assert no_cache["honest_verdict"].endswith("no_usable_sota_model")
+
+    env_for_sample_fail = _write_all_cached_models(tmp_path / "sample-fail")
+    sample_failed = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env_for_sample_fail,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0],
+            "completion_ready": True,
+            "top_logprob_ready": True,
+            "confidence_ready": False,
+            "telemetry_signal": "top_logprobs",
+            "duration_s": timeout_s,
+            "probes": [],
+        },
+        endpoint_sample_fn=lambda endpoint, timeout_s: exp._bringup_blocked_sample("sample failed"),
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
+        monotonic=iter([1.0, 2.0]).__next__,
+    )
+    assert sample_failed["blocker_root_cause"]["kind"] == "endpoint_sample_failed"
+
+    env_for_completion_fail = _write_all_cached_models(tmp_path / "completion-fail")
+    monkeypatch.setattr(
+        exp,
+        "_attempt_llama_server_bringup",
+        lambda **kwargs: {
+            "selected_model": None,
+            "server_command": None,
+            "server_pid": None,
+            "endpoint_url": "http://127.0.0.1:45555",
+            "sample": exp._bringup_blocked_sample("no completion"),
+            "server_logs": {"path": None, "tail": "", "exists": False},
+            "cleanup_behavior": {"started_by_preflight": False, "terminated": False},
+            "blocker_root_cause": None,
+            "endpoint_summary": {"completion_ready": False},
+        },
+    )
+    completion_failed = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env_for_completion_fail,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": None,
+            "completion_ready": False,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
+        monotonic=iter([1.0, 2.0]).__next__,
+    )
+    assert completion_failed["blocker_root_cause"]["kind"] == "completion_endpoint_unavailable"
+
+    text_no_probs = {
+        "ready": True,
+        "route": "http://127.0.0.1:8080/completion",
+        "status": 200,
+        "completion_text": "text",
+        "logprob_ready": False,
+        "top_logprob_ready": False,
+        "confidence_ready": False,
+        "telemetry_signal": None,
+        "evidence": {
+            "token_logprob_count": 0,
+            "top_logprob_row_count": 0,
+            "token_logprobs": [],
+            "top_logprobs": [],
+        },
+        "error": None,
+    }
+    env = _write_all_cached_models(tmp_path / "telemetry")
+    no_telemetry = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0],
+            "completion_ready": True,
+            "top_logprob_ready": False,
+            "confidence_ready": False,
+            "telemetry_signal": None,
+            "duration_s": timeout_s,
+            "probes": [],
+        },
+        endpoint_sample_fn=lambda endpoint, timeout_s: text_no_probs,
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
+        monotonic=iter([1.0, 66.0]).__next__,
+    )
+    assert no_telemetry["blocker_root_cause"]["kind"] == "logprob_telemetry_unavailable"
+    assert no_telemetry["honest_verdict"].endswith("no_logprob_telemetry")
+
+    flagged = exp.build_preflight_artifact(
+        project_root=tmp_path,
+        selected_python=SELECTED_PYTHON,
+        env=env,
+        command_runner=_runner(),
+        endpoint_probe_fn=lambda endpoints, timeout_s: {
+            "candidate_endpoints": list(endpoints),
+            "selected_endpoint": endpoints[0],
+            "completion_ready": True,
+            "top_logprob_ready": True,
+            "confidence_ready": False,
+            "telemetry_signal": "top_logprobs",
+            "duration_s": timeout_s,
+            "probes": [],
+        },
+        endpoint_sample_fn=_sample_with_topk,
+        prompt_runner_fn=lambda model, **_: pytest.fail(f"unexpected prompt: {model}"),
+        cached_pair_fn=lambda *, gpu_indices, preferred_quant: [{"hf_id": QWEN}],
+        llama_server_finder_fn=_server_unavailable,
+        free_port_fn=lambda host: _free_port(),
+        monotonic=iter([1.0, 2.0]).__next__,
+    )
+    assert flagged["flagged_adversarial"] is True
+    assert flagged["corrigendum_pending"][0]["kind"] == "DURATION_TOO_SHORT"

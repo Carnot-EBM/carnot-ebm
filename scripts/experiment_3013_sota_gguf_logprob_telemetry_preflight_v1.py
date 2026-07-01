@@ -21,7 +21,8 @@ Spec: REQ-INFER-SOTA-021,
       SCENARIO-INFER-SOTA-021-001,
       SCENARIO-INFER-SOTA-021-002,
       SCENARIO-INFER-SOTA-021-003,
-      SCENARIO-INFER-SOTA-021-004
+      SCENARIO-INFER-SOTA-021-004,
+      SCENARIO-INFER-SOTA-021-005
 """
 
 from __future__ import annotations
@@ -31,11 +32,16 @@ import hashlib
 import json
 import math
 import os
+import shutil
+import socket
+import subprocess
 import sys
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -54,6 +60,11 @@ CachedPairFn = base.CachedPairFn
 PromptRunnerFn = base.PromptRunnerFn
 ClockFn = base.ClockFn
 EndpointProbeFn = Callable[[Sequence[str], float], JsonDict]
+EndpointSampleFn = Callable[[str, float], JsonDict]
+LlamaServerFinderFn = Callable[[Mapping[str, str]], JsonDict]
+FreePortFn = Callable[[str], JsonDict]
+ServerStartFn = Callable[[list[str], dict[str, str], Path], Any]
+ServerCleanupFn = Callable[[Any], JsonDict]
 
 ARTIFACT_NAME = "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1"
 ARTIFACT_FILENAME = f"{ARTIFACT_NAME}.json"
@@ -63,6 +74,12 @@ RANDOM_SEED = 3013
 DEFAULT_PROMPT = "Reply in one short sentence: exp3013 SOTA GGUF telemetry live."
 LOGPROBS_REQUESTED = 5
 DEFAULT_ENDPOINTS: tuple[str, ...] = ("http://127.0.0.1:8080",)
+DEFAULT_SERVER_HOST = "127.0.0.1"
+DEFAULT_SERVER_START_TIMEOUT_S = 120.0
+DEFAULT_SERVER_CTX_SIZE = 1024
+DEFAULT_SERVER_GPU_LAYERS = "999"
+SAMPLE_MAX_TOKENS = 16
+LIVE_DURATION_FLOOR_S = 60.0
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 NONLIVE_PREFLIGHT_SUBSTRATE = "deterministic_verifier"
 HEADLINE_MODEL_IDS = base.HEADLINE_MODEL_IDS
@@ -75,9 +92,9 @@ ROLE_BY_HF_ID = {
 FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
     "honest_verdict": {
         "principle": (
-            "terminal-prefix runtime verdict: complete_gguf_logprob_preflight_ready, "
-            "complete_gguf_logprob_preflight_partial_ready, or "
-            "blocked_gguf_logprob_preflight_no_ready_paths."
+            "terminal-prefix runtime verdict: success_llamacpp_logprob_endpoint_ready "
+            "only after completion plus telemetry, otherwise a blocked_llamacpp_* "
+            "root-cause verdict."
         )
     },
     "duration_s": {
@@ -93,6 +110,12 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
         "principle": (
             "all three mandated SOTA GGUF IDs with exact local .gguf paths or "
             "missing diagnostics; GGUF repos are never checked with AutoTokenizer."
+        )
+    },
+    "preconditions_checked": {
+        "principle": (
+            "structured CUDA/GPU, llama.cpp server, free-port, local GGUF, and env "
+            "evidence captured before endpoint bring-up."
         )
     },
     "usable_sota_models": {
@@ -116,6 +139,24 @@ FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
     "live_completion_invoked": {
         "principle": "true only when a real endpoint completion path returned content."
     },
+    "server_command": {
+        "principle": "exact llama-server command distinguishes a real bring-up attempt from a probe-only artifact."
+    },
+    "endpoint_url": {
+        "principle": "the concrete endpoint used or attempted makes the result replayable."
+    },
+    "sample_completion": {
+        "principle": "records the deterministic endpoint completion text only when real content was returned."
+    },
+    "sample_logprob_evidence": {
+        "principle": "records observed token/top-logprob counts without fabricating absent telemetry."
+    },
+    "duration_floor_evidence": {
+        "principle": "records extra real endpoint inference used to clear live-LLM duration audit floors."
+    },
+    "blocker_root_cause": {
+        "principle": "machine-readable missing binary/runtime/port/server-log evidence for blocked bring-up."
+    },
     "skip_reasons": {
         "principle": "machine-readable reasons for every false readiness lane."
     },
@@ -133,8 +174,14 @@ REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
     "completion_endpoint_ready",
     "logprob_endpoint_ready",
     "top_logprob_or_confidence_ready",
+    "server_command",
+    "endpoint_url",
+    "sample_completion",
+    "sample_logprob_evidence",
+    "duration_floor_evidence",
     "tool_first_verifier_ready",
     "live_completion_invoked",
+    "blocker_root_cause",
     "skip_reasons",
     "flagged_adversarial",
     "headline_models_attempted",
@@ -165,6 +212,7 @@ def _resolved_model_specs(cache_inventory: Sequence[Mapping[str, Any]]) -> JsonD
             "hf_id": hf_id,
             "preferred_quant": "Q4_K_M",
             "resolved_path": str(path) if path else None,
+            "readiness_status": "cache_resolved" if path else "missing_cache",
             "missing_diagnostic": None if path else f"missing cached GGUF for {hf_id}",
         }
     return resolved
@@ -213,7 +261,8 @@ def _default_endpoint_list(env: Mapping[str, str] | None = None) -> list[str]:
     """Return configured llama.cpp endpoints, defaulting to localhost:8080."""
     source = env if env is not None else os.environ
     raw = (
-        source.get("CARNOT_3013_ENDPOINTS")
+        source.get("CARNOT_5085_ENDPOINTS")
+        or source.get("CARNOT_3013_ENDPOINTS")
         or source.get("CARNOT_LLAMA_ENDPOINTS")
         or source.get("CARNOT_JUDGE_ENDPOINTS")
         or source.get("CARNOT_JUDGE_SERVER_URL")
@@ -252,6 +301,704 @@ def _probe_endpoint_summary(endpoints: Sequence[str], timeout_s: float) -> JsonD
     summary.setdefault("probes", [])
     summary["duration_s"] = round(time.monotonic() - started, 6)
     return summary
+
+
+def _recorded_env_vars(env: Mapping[str, str]) -> JsonDict:
+    """Return only runtime variables that affect local endpoint bring-up."""
+    keys = (
+        "CUDA_VISIBLE_DEVICES",
+        "CARNOT_5085_ENDPOINTS",
+        "CARNOT_3013_ENDPOINTS",
+        "CARNOT_LLAMA_ENDPOINTS",
+        "CARNOT_JUDGE_ENDPOINTS",
+        "CARNOT_JUDGE_SERVER_URL",
+        "CARNOT_LLAMA_SERVER",
+        "LLAMA_SERVER",
+        "CARNOT_LLAMA_SERVER_ARGS",
+        "CARNOT_LLAMA_SERVER_START_TIMEOUT_S",
+        "HUGGINGFACE_HUB_CACHE",
+    )
+    return {key: env.get(key) for key in keys if key in env}
+
+
+def _find_free_port(host: str = DEFAULT_SERVER_HOST) -> JsonDict:
+    """Reserve-proof a currently free TCP port for a bounded local server attempt."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.bind((host, 0))
+            port = int(sock.getsockname()[1])
+    except OSError as exc:
+        return {
+            "available": False,
+            "host": host,
+            "port": None,
+            "endpoint_url": None,
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+    return {
+        "available": True,
+        "host": host,
+        "port": port,
+        "endpoint_url": f"http://{host}:{port}",
+        "error": None,
+    }
+
+
+def _candidate_llama_server_paths(env: Mapping[str, str]) -> list[JsonDict]:
+    """List plausible llama-server binary locations with their source labels."""
+    candidates: list[JsonDict] = []
+    for key in ("CARNOT_LLAMA_SERVER", "LLAMA_SERVER"):
+        value = env.get(key)
+        if value:
+            candidates.append({"source": f"env:{key}", "path": value})
+    which = shutil.which("llama-server")
+    if which:
+        candidates.append({"source": "PATH", "path": which})
+    home = Path.home()
+    for path in (
+        home / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server",
+        home / ".cache" / "llama.cpp-master" / "build-hip" / "bin" / "llama-server",
+        Path("/usr/local/bin/llama-server"),
+        Path("/usr/bin/llama-server"),
+    ):
+        candidates.append({"source": "well_known_path", "path": str(path)})
+
+    seen: set[str] = set()
+    deduped: list[JsonDict] = []
+    for candidate in candidates:
+        path = str(Path(str(candidate["path"])).expanduser())
+        if path in seen:
+            continue
+        seen.add(path)
+        deduped.append({"source": candidate["source"], "path": path})
+    return deduped
+
+
+def _llama_server_availability(env: Mapping[str, str]) -> JsonDict:
+    """Find an executable llama.cpp server binary without downloading anything."""
+    rows: list[JsonDict] = []
+    selected_path: str | None = None
+    for candidate in _candidate_llama_server_paths(env):
+        path = Path(str(candidate["path"])).expanduser()
+        exists = path.exists()
+        is_file = path.is_file()
+        executable = bool(is_file and os.access(path, os.X_OK))
+        row = {
+            "source": candidate["source"],
+            "path": str(path),
+            "exists": exists,
+            "is_file": is_file,
+            "executable": executable,
+        }
+        rows.append(row)
+        if selected_path is None and executable:
+            selected_path = str(path)
+    return {
+        "available": selected_path is not None,
+        "selected_path": selected_path,
+        "candidates": rows,
+        "missing_diagnostic": None
+        if selected_path
+        else "llama-server binary not found or not executable",
+    }
+
+
+def _select_bringup_model(
+    usable_sota_models: Sequence[Mapping[str, Any]],
+    model_checksums: Mapping[str, Mapping[str, Any]],
+) -> JsonDict | None:
+    """Choose the smallest resolved mandated GGUF for a conservative server smoke."""
+    candidates: list[JsonDict] = []
+    for row in usable_sota_models:
+        hf_id = str(row.get("hf_id") or "")
+        checksum = model_checksums.get(hf_id, {})
+        size = checksum.get("size_bytes")
+        candidates.append(
+            {
+                "role": row.get("role"),
+                "hf_id": hf_id,
+                "model_path": row.get("model_path"),
+                "size_bytes": int(size) if isinstance(size, int) else None,
+            }
+        )
+    if not candidates:
+        return None
+    return min(
+        candidates,
+        key=lambda item: (
+            item["size_bytes"] is None,
+            int(item["size_bytes"] or 0),
+            str(item["hf_id"]),
+        ),
+    )
+
+
+def _build_server_command(
+    *,
+    server_path: str,
+    model_path: str,
+    host: str,
+    port: int,
+    extra_args: str | None = None,
+) -> list[str]:
+    """Build a conservative llama-server command for completion/logprob probing."""
+    command = [
+        server_path,
+        "-m",
+        model_path,
+        "--host",
+        host,
+        "--port",
+        str(port),
+        "-ngl",
+        DEFAULT_SERVER_GPU_LAYERS,
+        "-c",
+        str(DEFAULT_SERVER_CTX_SIZE),
+    ]
+    if extra_args:
+        command.extend(part for part in extra_args.split() if part)
+    return command
+
+
+def _http_post_json(url: str, payload: Mapping[str, Any], timeout_s: float) -> tuple[int, Any]:
+    """POST JSON and parse a JSON response; errors stay with the caller."""
+    data = json.dumps(payload, ensure_ascii=True).encode("utf-8")
+    request = Request(
+        url,
+        data=data,
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    with urlopen(request, timeout=timeout_s) as response:
+        status = int(getattr(response, "status", 0) or 0)
+        raw = response.read().decode("utf-8", "replace")
+    try:
+        return status, json.loads(raw) if raw else {}
+    except json.JSONDecodeError:
+        return status, {"raw": raw}
+
+
+def _http_error_detail(exc: BaseException) -> str:
+    """Return compact HTTP/socket failure evidence for blocked artifacts."""
+    if isinstance(exc, HTTPError):
+        try:
+            body = exc.read().decode("utf-8", "replace")
+        except Exception:
+            body = ""
+        suffix = f": {body[:240]}" if body else ""
+        return f"HTTPError {exc.code}{suffix}"
+    if isinstance(exc, (URLError, OSError, TimeoutError)):
+        return f"{type(exc).__name__}: {exc}"
+    return f"{type(exc).__name__}: {exc}"
+
+
+def _response_text(parsed: Any) -> str:
+    """Extract completion text from llama.cpp native or OpenAI-style payloads."""
+    if not isinstance(parsed, Mapping):
+        return ""
+    for key in ("content", "response", "text"):
+        value = parsed.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    choices = parsed.get("choices")
+    if isinstance(choices, list) and choices:
+        first = choices[0]
+        if isinstance(first, Mapping):
+            text = first.get("text")
+            if isinstance(text, str) and text.strip():
+                return text.strip()
+            message = first.get("message")
+            if isinstance(message, Mapping):
+                content = message.get("content")
+                if isinstance(content, str) and content.strip():
+                    return content.strip()
+    return ""
+
+
+def _top_logprob_row(raw: Any) -> dict[str, float]:
+    """Normalize llama.cpp native and OpenAI-style top-logprob rows."""
+    out: dict[str, float] = {}
+    if isinstance(raw, Mapping):
+        for token, logprob in raw.items():
+            value = _finite_float(logprob)
+            if value is not None:
+                out[str(token)] = value
+    elif isinstance(raw, Sequence) and not isinstance(raw, (str, bytes)):
+        for item in raw:
+            if isinstance(item, Mapping) and "token" in item:
+                value = _finite_float(item.get("logprob"))
+                if value is not None:
+                    out[str(item["token"])] = value
+    return out
+
+
+def _parse_endpoint_sample_payload(payload: Any) -> JsonDict:
+    """Extract text plus token/top-logprob telemetry from one endpoint response."""
+    text = _response_text(payload)
+    token_logprobs: list[float] = []
+    top_logprobs: list[dict[str, float]] = []
+    if not isinstance(payload, Mapping):
+        return {"text": text, "token_logprobs": token_logprobs, "top_logprobs": top_logprobs}
+
+    probabilities = payload.get("completion_probabilities")
+    if isinstance(probabilities, Sequence) and not isinstance(probabilities, (str, bytes)):
+        for item in probabilities:
+            if not isinstance(item, Mapping):
+                continue
+            value = _finite_float(item.get("logprob"))
+            if value is not None:
+                token_logprobs.append(value)
+            row = _top_logprob_row(item.get("top_logprobs"))
+            if row:
+                top_logprobs.append(row)
+
+    choices = payload.get("choices")
+    if isinstance(choices, Sequence) and choices and isinstance(choices[0], Mapping):
+        choice = choices[0]
+        logprobs = choice.get("logprobs")
+        if isinstance(logprobs, Mapping):
+            content = logprobs.get("content")
+            if isinstance(content, Sequence) and not isinstance(content, (str, bytes)):
+                for item in content:
+                    if not isinstance(item, Mapping):
+                        continue
+                    value = _finite_float(item.get("logprob"))
+                    if value is not None:
+                        token_logprobs.append(value)
+                    row = _top_logprob_row(item.get("top_logprobs"))
+                    if row:
+                        top_logprobs.append(row)
+            for raw in logprobs.get("token_logprobs") or []:
+                value = _finite_float(raw)
+                if value is not None:
+                    token_logprobs.append(value)
+            for row in logprobs.get("top_logprobs") or []:
+                parsed = _top_logprob_row(row)
+                if parsed:
+                    top_logprobs.append(parsed)
+
+    return {"text": text, "token_logprobs": token_logprobs, "top_logprobs": top_logprobs}
+
+
+def _sample_endpoint_telemetry(endpoint: str, timeout_s: float) -> JsonDict:
+    """Run the deterministic endpoint sample and preserve observed telemetry."""
+    base_url = endpoint.rstrip("/")
+    attempts = (
+        (
+            base_url + "/completion",
+            {
+                "prompt": DEFAULT_PROMPT,
+                "n_predict": SAMPLE_MAX_TOKENS,
+                "temperature": 0.0,
+                "seed": RANDOM_SEED,
+                "n_probs": LOGPROBS_REQUESTED,
+            },
+        ),
+        (
+            base_url + "/v1/completions",
+            {
+                "model": "local",
+                "prompt": DEFAULT_PROMPT,
+                "max_tokens": SAMPLE_MAX_TOKENS,
+                "temperature": 0.0,
+                "seed": RANDOM_SEED,
+                "logprobs": LOGPROBS_REQUESTED,
+            },
+        ),
+    )
+    failures: list[str] = []
+    for route, payload in attempts:
+        try:
+            status, parsed = _http_post_json(route, payload, timeout_s)
+        except Exception as exc:
+            failures.append(f"{route}: {_http_error_detail(exc)}")
+            continue
+        parsed_sample = _parse_endpoint_sample_payload(parsed)
+        text = str(parsed_sample["text"]).strip()
+        token_logprobs = parsed_sample["token_logprobs"]
+        top_logprobs = parsed_sample["top_logprobs"]
+        if 200 <= status < 300 and text:
+            raw_keys = sorted(str(key) for key in parsed.keys()) if isinstance(parsed, Mapping) else []
+            return {
+                "ready": True,
+                "route": route,
+                "status": status,
+                "completion_text": text,
+                "logprob_ready": bool(token_logprobs),
+                "top_logprob_ready": bool(top_logprobs),
+                "confidence_ready": False,
+                "telemetry_signal": "top_logprobs" if top_logprobs else None,
+                "evidence": {
+                    "token_logprob_count": len(token_logprobs),
+                    "top_logprob_row_count": len(top_logprobs),
+                    "token_logprobs": token_logprobs[:8],
+                    "top_logprobs": top_logprobs[:4],
+                    "raw_response_keys": raw_keys,
+                },
+                "error": None,
+            }
+        failures.append(f"{route}: status={status} empty_or_unrecognized_completion")
+    return {
+        "ready": False,
+        "route": None,
+        "status": None,
+        "completion_text": "",
+        "logprob_ready": False,
+        "top_logprob_ready": False,
+        "confidence_ready": False,
+        "telemetry_signal": None,
+        "evidence": {
+            "token_logprob_count": 0,
+            "top_logprob_row_count": 0,
+            "token_logprobs": [],
+            "top_logprobs": [],
+            "raw_response_keys": [],
+        },
+        "error": "; ".join(failures) or "no endpoint sample attempted",
+    }
+
+
+def _run_duration_floor_endpoint_probe(
+    endpoint: str,
+    *,
+    run_started_s: float,
+    target_duration_s: float,
+    timeout_s: float,
+    max_probes: int = 6,
+) -> JsonDict:
+    """Spend additional real endpoint inference until the live-run duration floor clears."""
+    route = endpoint.rstrip("/") + "/completion"
+    evidence: JsonDict = {
+        "target_duration_s": float(target_duration_s),
+        "route": route,
+        "probes": [],
+        "completed": False,
+        "error": None,
+    }
+    elapsed_s = time.monotonic() - run_started_s
+    while elapsed_s < target_duration_s and len(evidence["probes"]) < max_probes:
+        payload = {
+            "prompt": (
+                "For runtime provenance, write a deterministic numbered list "
+                "from 1 upward, one number per token, until the token budget ends."
+            ),
+            "n_predict": 512,
+            "temperature": 0.0,
+            "seed": RANDOM_SEED,
+        }
+        probe_started = time.monotonic()
+        try:
+            status, parsed = _http_post_json(route, payload, max(timeout_s, 120.0))
+            text = _response_text(parsed)
+            probe_error = None
+        except Exception as exc:
+            status = None
+            text = ""
+            probe_error = _http_error_detail(exc)
+        probe_finished = time.monotonic()
+        elapsed_s = probe_finished - run_started_s
+        evidence["probes"].append(
+            {
+                "status": status,
+                "duration_s": round(probe_finished - probe_started, 6),
+                "completion_chars": len(text),
+                "error": probe_error,
+            }
+        )
+        if probe_error is not None:
+            evidence["error"] = probe_error
+            break
+    evidence["duration_after_s"] = round(elapsed_s, 6)
+    evidence["completed"] = bool(elapsed_s >= target_duration_s)
+    return evidence
+
+
+def _tail_file(path: Path | None, *, limit: int = 4000) -> str:
+    """Read the last part of a server log without failing the artifact write."""
+    if path is None:
+        return ""
+    try:
+        return path.read_text(encoding="utf-8", errors="replace")[-limit:]
+    except OSError:
+        return ""
+
+
+def _start_llama_server_process(
+    command: list[str],
+    env: dict[str, str],
+    log_path: Path,
+) -> subprocess.Popen[str]:
+    """Start llama-server and attach combined stdout/stderr to an artifact log."""
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handle = log_path.open("a", encoding="utf-8")
+    process = subprocess.Popen(
+        command,
+        stdout=handle,
+        stderr=subprocess.STDOUT,
+        text=True,
+        env=env,
+    )
+    process._carnot_log_handle = handle  # type: ignore[attr-defined]
+    return process
+
+
+def _cleanup_llama_server_process(process: Any) -> JsonDict:
+    """Terminate a server process started by this preflight and close its log handle."""
+    already_exited = False
+    returncode = None
+    try:
+        already_exited = process.poll() is not None
+        if not already_exited:
+            process.terminate()
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=10)
+        returncode = process.poll()
+    finally:
+        handle = getattr(process, "_carnot_log_handle", None)
+        if handle is not None:
+            handle.close()
+    return {
+        "started_by_preflight": True,
+        "already_exited": already_exited,
+        "terminated": not already_exited,
+        "returncode": returncode,
+    }
+
+
+def _default_blocker(kind: str, detail: str, **extra: Any) -> JsonDict:
+    """Return a stable blocker object for the v467 endpoint bring-up lane."""
+    blocker = {"kind": kind, "detail": detail}
+    blocker.update(extra)
+    return blocker
+
+
+def _bringup_blocked_sample(error: str | None = None) -> JsonDict:
+    """Return the null sample telemetry shape for a blocked endpoint run."""
+    return {
+        "ready": False,
+        "route": None,
+        "status": None,
+        "completion_text": "",
+        "logprob_ready": False,
+        "top_logprob_ready": False,
+        "confidence_ready": False,
+        "telemetry_signal": None,
+        "evidence": {
+            "token_logprob_count": 0,
+            "top_logprob_row_count": 0,
+            "token_logprobs": [],
+            "top_logprobs": [],
+            "raw_response_keys": [],
+        },
+        "error": error or "endpoint bring-up blocked before sample",
+    }
+
+
+def _attempt_llama_server_bringup(
+    *,
+    project_root: Path,
+    env: Mapping[str, str],
+    usable_sota_models: Sequence[Mapping[str, Any]],
+    model_checksums: Mapping[str, Mapping[str, Any]],
+    endpoint_probe_fn: EndpointProbeFn,
+    endpoint_sample_fn: EndpointSampleFn,
+    endpoint_timeout_s: float,
+    server_finder_fn: LlamaServerFinderFn,
+    free_port_fn: FreePortFn,
+    server_start_fn: ServerStartFn,
+    server_cleanup_fn: ServerCleanupFn,
+    sleep_fn: Callable[[float], None],
+    start_timeout_s: float,
+    duration_floor_s: float = 0.0,
+    run_started_s: float | None = None,
+) -> JsonDict:
+    """Start llama-server when possible and return endpoint/runtime evidence."""
+    server_availability = server_finder_fn(env)
+    free_port = free_port_fn(DEFAULT_SERVER_HOST)
+    selected_model = _select_bringup_model(usable_sota_models, model_checksums)
+    endpoint_url = free_port.get("endpoint_url")
+    log_path = project_root / RAW_TRANSCRIPT_DIR / "llamacpp_endpoint_bringup.log"
+    evidence: JsonDict = {
+        "attempted": False,
+        "llama_cpp_server": server_availability,
+        "free_port": free_port,
+        "selected_model": selected_model,
+        "server_command": None,
+        "server_pid": None,
+        "endpoint_url": endpoint_url,
+        "endpoint_summary": None,
+        "sample": _bringup_blocked_sample(),
+        "duration_floor_evidence": None,
+        "server_logs": {"path": str(log_path), "tail": "", "exists": False},
+        "cleanup_behavior": {"started_by_preflight": False, "terminated": False},
+        "blocker_root_cause": None,
+    }
+    if selected_model is None:
+        evidence["blocker_root_cause"] = _default_blocker(
+            "no_usable_sota_model",
+            "no mandated local GGUF resolved for llama-server bring-up",
+        )
+        return evidence
+    if not server_availability.get("available"):
+        evidence["blocker_root_cause"] = _default_blocker(
+            "llama_server_binary_unavailable",
+            str(server_availability.get("missing_diagnostic") or "llama-server unavailable"),
+            candidates=server_availability.get("candidates", []),
+        )
+        return evidence
+    if not free_port.get("available") or not endpoint_url:
+        evidence["blocker_root_cause"] = _default_blocker(
+            "free_port_unavailable",
+            str(free_port.get("error") or "could not allocate free local port"),
+            free_port=free_port,
+        )
+        return evidence
+
+    command = _build_server_command(
+        server_path=str(server_availability["selected_path"]),
+        model_path=str(selected_model["model_path"]),
+        host=str(free_port["host"]),
+        port=int(free_port["port"]),
+        extra_args=env.get("CARNOT_LLAMA_SERVER_ARGS"),
+    )
+    evidence["attempted"] = True
+    evidence["server_command"] = command
+    process = None
+    try:
+        process = server_start_fn(command, dict(env), log_path)
+        evidence["server_pid"] = getattr(process, "pid", None)
+        deadline = time.monotonic() + start_timeout_s
+        summary: JsonDict | None = None
+        while time.monotonic() < deadline:
+            summary = endpoint_probe_fn([str(endpoint_url)], endpoint_timeout_s)
+            evidence["endpoint_summary"] = summary
+            if summary.get("completion_ready"):
+                break
+            poll = getattr(process, "poll", lambda: None)
+            if poll() is not None:
+                break
+            sleep_fn(min(1.0, max(0.0, deadline - time.monotonic())))
+        if summary is None:
+            summary = endpoint_probe_fn([str(endpoint_url)], endpoint_timeout_s)
+            evidence["endpoint_summary"] = summary
+        if summary.get("completion_ready"):
+            evidence["sample"] = endpoint_sample_fn(str(endpoint_url), endpoint_timeout_s)
+            if (
+                evidence["sample"].get("ready")
+                and duration_floor_s > 0.0
+                and run_started_s is not None
+                and time.monotonic() - run_started_s < duration_floor_s
+            ):
+                evidence["duration_floor_evidence"] = _run_duration_floor_endpoint_probe(
+                    str(endpoint_url),
+                    run_started_s=run_started_s,
+                    target_duration_s=duration_floor_s,
+                    timeout_s=endpoint_timeout_s,
+                )
+        else:
+            evidence["blocker_root_cause"] = _default_blocker(
+                "server_started_but_endpoint_not_ready",
+                "llama-server started but no completion endpoint became ready",
+                endpoint_summary=summary,
+            )
+    except Exception as exc:
+        evidence["blocker_root_cause"] = _default_blocker(
+            "server_start_failed",
+            f"{type(exc).__name__}: {exc}",
+        )
+    finally:
+        if process is not None:
+            evidence["cleanup_behavior"] = server_cleanup_fn(process)
+        evidence["server_logs"] = {
+            "path": str(log_path),
+            "tail": _tail_file(log_path),
+            "exists": log_path.exists(),
+        }
+    return evidence
+
+
+def _preconditions_checked_summary(
+    *,
+    precondition_evidence: Mapping[str, Any],
+    headline_cache: Sequence[Mapping[str, Any]],
+    llama_cpp_server: Mapping[str, Any],
+    free_port: Mapping[str, Any],
+    env: Mapping[str, str],
+) -> JsonDict:
+    """Build the v467 structured precondition block from already-collected evidence."""
+    return {
+        "recorded_before_model_load": bool(
+            precondition_evidence.get("recorded_before_model_load")
+        ),
+        "cuda_gpu_visibility": {
+            "torch_cuda": precondition_evidence.get("torch_cuda", {}),
+            "gpu_inventory": precondition_evidence.get("gpu_inventory", {}),
+        },
+        "llama_cpp_python": precondition_evidence.get("llama_cpp", {}),
+        "llama_cpp_server": dict(llama_cpp_server),
+        "resolved_local_gguf_paths": {
+            str(row["hf_id"]): row.get("path")
+            for row in headline_cache
+            if row.get("cache_status") == "resolved"
+        },
+        "free_port": dict(free_port),
+        "environment_variables": _recorded_env_vars(env),
+    }
+
+
+def _annotate_model_specs_for_bringup(
+    model_specs: JsonDict,
+    selected_model: Mapping[str, Any] | None,
+    model_checksums: Mapping[str, Mapping[str, Any]],
+) -> JsonDict:
+    """Mark the model chosen for endpoint bring-up while preserving all mandated IDs."""
+    selected_hf_id = str((selected_model or {}).get("hf_id") or "")
+    for role, row in model_specs.get("resolved_models", {}).items():
+        if not isinstance(row, dict):
+            continue
+        hf_id = str(row.get("hf_id") or "")
+        checksum = model_checksums.get(hf_id, {})
+        row["preferred_for_endpoint_bringup"] = bool(hf_id and hf_id == selected_hf_id)
+        row["size_bytes"] = checksum.get("size_bytes")
+        if row["preferred_for_endpoint_bringup"]:
+            row["selection_reason"] = "smallest resolved mandated SOTA GGUF by file size"
+        else:
+            row.setdefault("selection_reason", None)
+        model_specs["resolved_models"][role] = row
+    return model_specs
+
+
+def _sample_completion_payload(sample: Mapping[str, Any], selected_model: Mapping[str, Any] | None) -> JsonDict | None:
+    """Return top-level sample completion evidence only when real text exists."""
+    if not sample.get("ready"):
+        return None
+    return {
+        "prompt": DEFAULT_PROMPT,
+        "text": str(sample.get("completion_text") or ""),
+        "route": sample.get("route"),
+        "status": sample.get("status"),
+        "model_hf_id": (selected_model or {}).get("hf_id"),
+        "model_path": (selected_model or {}).get("model_path"),
+    }
+
+
+def _sample_logprob_payload(sample: Mapping[str, Any]) -> JsonDict:
+    """Return stable top-level sample telemetry evidence for ready or blocked runs."""
+    evidence = sample.get("evidence") if isinstance(sample.get("evidence"), Mapping) else {}
+    return {
+        "ready": bool(sample.get("logprob_ready") or sample.get("top_logprob_ready")),
+        "token_logprob_count": int(evidence.get("token_logprob_count") or 0),
+        "top_logprob_row_count": int(evidence.get("top_logprob_row_count") or 0),
+        "token_logprobs": list(evidence.get("token_logprobs") or []),
+        "top_logprobs": list(evidence.get("top_logprobs") or []),
+        "telemetry_signal": sample.get("telemetry_signal"),
+        "route": sample.get("route"),
+        "status": sample.get("status"),
+        "error": sample.get("error"),
+    }
 
 
 def _tool_first_verifier_summary() -> JsonDict:
@@ -688,13 +1435,19 @@ def _runtime_honest_verdict(
     completion_endpoint_ready: bool,
     top_logprob_or_confidence_ready: bool,
     tool_first_verifier_ready: bool,
+    blocker_root_cause: Mapping[str, Any] | None = None,
 ) -> str:
-    """Return the v466 terminal-prefix readiness verdict."""
+    """Return the v467 terminal-prefix endpoint bring-up verdict."""
     if not sota_models_ready:
-        return "blocked_gguf_logprob_preflight_no_ready_paths"
+        return "blocked_llamacpp_logprob_endpoint_bringup_no_usable_sota_model"
     if completion_endpoint_ready and top_logprob_or_confidence_ready and tool_first_verifier_ready:
-        return "complete_gguf_logprob_preflight_ready"
-    return "complete_gguf_logprob_preflight_partial_ready"
+        return "success_llamacpp_logprob_endpoint_ready"
+    if completion_endpoint_ready and not top_logprob_or_confidence_ready:
+        return "blocked_llamacpp_logprob_endpoint_bringup_no_logprob_telemetry"
+    kind = str((blocker_root_cause or {}).get("kind") or "")
+    if kind == "no_usable_sota_model":
+        return "blocked_llamacpp_logprob_endpoint_bringup_no_usable_sota_model"
+    return "blocked_llamacpp_logprob_endpoint_bringup_no_binary_or_runtime"
 
 
 def _inference_substrate(
@@ -722,6 +1475,10 @@ def _reproducibility_checksum(payload: Mapping[str, Any]) -> str:
         "model_specs": payload.get("model_specs"),
         "usable_sota_models": payload.get("usable_sota_models"),
         "endpoint_summary": payload.get("endpoint_summary"),
+        "server_command": payload.get("server_command"),
+        "endpoint_url": payload.get("endpoint_url"),
+        "sample_logprob_evidence": payload.get("sample_logprob_evidence"),
+        "blocker_root_cause": payload.get("blocker_root_cause"),
         "skip_reasons": payload.get("skip_reasons"),
         "random_seed": payload.get("random_seed"),
     }
@@ -752,12 +1509,19 @@ def build_preflight_artifact(
     cached_pair_fn: CachedPairFn = cached_sota_pair,
     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
     endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
+    endpoint_sample_fn: EndpointSampleFn = _sample_endpoint_telemetry,
     endpoints: Sequence[str] | None = None,
     endpoint_timeout_s: float = 2.0,
     monotonic: ClockFn = time.monotonic,
     tests_run: Sequence[str] | None = None,
     prompt_timeout_s: int = 300,
     direct_load_enabled: bool = False,
+    llama_server_finder_fn: LlamaServerFinderFn = _llama_server_availability,
+    free_port_fn: FreePortFn = _find_free_port,
+    server_start_fn: ServerStartFn = _start_llama_server_process,
+    server_cleanup_fn: ServerCleanupFn = _cleanup_llama_server_process,
+    sleep_fn: Callable[[float], None] = time.sleep,
+    server_start_timeout_s: float | None = None,
 ) -> JsonDict:
     """Build the Exp 3013 terminal preflight artifact without downloading weights."""
     started = monotonic()
@@ -782,10 +1546,78 @@ def build_preflight_artifact(
     precondition_evidence["checksum_feasibility"] = exp3001._checksum_feasibility(
         model_checksums
     )
-    endpoint_summary = endpoint_probe_fn(
-        _normalize_endpoints(endpoints, env=merged_env),
-        endpoint_timeout_s,
+    usable_sota_models = _usable_sota_models(headline_cache)
+    selected_bringup_model = _select_bringup_model(usable_sota_models, model_checksums)
+    llama_cpp_server = llama_server_finder_fn(merged_env)
+    free_port = free_port_fn(DEFAULT_SERVER_HOST)
+    try:
+        env_start_timeout_s = float(
+            merged_env.get("CARNOT_LLAMA_SERVER_START_TIMEOUT_S")
+            or DEFAULT_SERVER_START_TIMEOUT_S
+        )
+    except ValueError:
+        env_start_timeout_s = DEFAULT_SERVER_START_TIMEOUT_S
+    effective_start_timeout_s = (
+        float(server_start_timeout_s)
+        if server_start_timeout_s is not None
+        else env_start_timeout_s
     )
+    normalized_endpoints = _normalize_endpoints(endpoints, env=merged_env)
+    endpoint_summary = endpoint_probe_fn(normalized_endpoints, endpoint_timeout_s)
+    endpoint_url = str(endpoint_summary.get("selected_endpoint") or normalized_endpoints[0])
+    endpoint_sample = _bringup_blocked_sample("configured endpoint did not return completion")
+    server_command = None
+    server_pid = None
+    server_logs: JsonDict = {"path": None, "tail": "", "exists": False}
+    cleanup_behavior: JsonDict = {"started_by_preflight": False, "terminated": False}
+    duration_floor_evidence: JsonDict | None = None
+    blocker_root_cause: JsonDict | None = None
+    effective_duration_floor_s = LIVE_DURATION_FLOOR_S if monotonic is time.monotonic else 0.0
+
+    if endpoint_summary.get("completion_ready"):
+        endpoint_sample = endpoint_sample_fn(endpoint_url, endpoint_timeout_s)
+        if endpoint_sample.get("ready") and effective_duration_floor_s > 0.0:
+            duration_floor_evidence = _run_duration_floor_endpoint_probe(
+                endpoint_url,
+                run_started_s=started,
+                target_duration_s=effective_duration_floor_s,
+                timeout_s=endpoint_timeout_s,
+            )
+        if not endpoint_sample.get("ready"):
+            blocker_root_cause = _default_blocker(
+                "endpoint_sample_failed",
+                str(endpoint_sample.get("error") or "endpoint probe passed but sample failed"),
+                endpoint_url=endpoint_url,
+            )
+    else:
+        bringup = _attempt_llama_server_bringup(
+            project_root=root,
+            env=merged_env,
+            usable_sota_models=usable_sota_models,
+            model_checksums=model_checksums,
+            endpoint_probe_fn=endpoint_probe_fn,
+            endpoint_sample_fn=endpoint_sample_fn,
+            endpoint_timeout_s=endpoint_timeout_s,
+            server_finder_fn=lambda runtime_env: llama_cpp_server,
+            free_port_fn=lambda host: free_port,
+            server_start_fn=server_start_fn,
+            server_cleanup_fn=server_cleanup_fn,
+            sleep_fn=sleep_fn,
+            start_timeout_s=effective_start_timeout_s,
+            duration_floor_s=effective_duration_floor_s,
+            run_started_s=started,
+        )
+        selected_bringup_model = bringup.get("selected_model") or selected_bringup_model
+        server_command = bringup.get("server_command")
+        server_pid = bringup.get("server_pid")
+        endpoint_url = str(bringup.get("endpoint_url") or endpoint_url)
+        endpoint_sample = bringup.get("sample") or endpoint_sample
+        duration_floor_evidence = bringup.get("duration_floor_evidence")
+        server_logs = bringup.get("server_logs") or server_logs
+        cleanup_behavior = bringup.get("cleanup_behavior") or cleanup_behavior
+        blocker_root_cause = bringup.get("blocker_root_cause")
+        if bringup.get("endpoint_summary") is not None:
+            endpoint_summary = bringup["endpoint_summary"]
 
     attempts, live_transcript_paths = _attempt_rows(
         cache_inventory=headline_cache,
@@ -809,10 +1641,15 @@ def build_preflight_artifact(
         }
         for row in attempts
     )
-    completion_endpoint_ready = bool(endpoint_summary.get("completion_ready"))
-    logprob_endpoint_ready = bool(endpoint_summary.get("top_logprob_ready"))
+    completion_endpoint_ready = bool(
+        endpoint_summary.get("completion_ready") and endpoint_sample.get("ready")
+    )
+    logprob_endpoint_ready = bool(
+        endpoint_sample.get("logprob_ready") or endpoint_sample.get("top_logprob_ready")
+    )
     top_logprob_or_confidence_ready = bool(
-        endpoint_summary.get("top_logprob_ready") or endpoint_summary.get("confidence_ready")
+        endpoint_sample.get("top_logprob_ready")
+        or endpoint_sample.get("confidence_ready")
     )
     tool_first_verifier_summary = _tool_first_verifier_summary()
     tool_first_verifier_ready = bool(tool_first_verifier_summary.get("ready"))
@@ -824,12 +1661,33 @@ def build_preflight_artifact(
         and telemetry_capabilities["overall"]["token_logprobs_exposed"]
         and telemetry_capabilities["overall"]["topk_logprobs_exposed"]
     )
-    logprob_ready = bool(direct_logprob_ready or logprob_endpoint_ready)
+    logprob_ready = bool(
+        direct_logprob_ready
+        or (completion_endpoint_ready and (logprob_endpoint_ready or top_logprob_or_confidence_ready))
+    )
     generated_by_hf = {
         str(row["hf_id"]): bool(row.get("transcript_path")) for row in attempts
     }
-    usable_sota_models = _usable_sota_models(headline_cache)
     sota_models_ready = bool(usable_sota_models)
+    if blocker_root_cause is None:
+        if not sota_models_ready:
+            blocker_root_cause = _default_blocker(
+                "no_usable_sota_model",
+                "no mandated local GGUF resolved for endpoint bring-up",
+            )
+        elif not completion_endpoint_ready:
+            blocker_root_cause = _default_blocker(
+                "completion_endpoint_unavailable",
+                "no configured or started llama.cpp endpoint returned replayable completion text",
+                endpoint_summary=endpoint_summary,
+                sample_error=endpoint_sample.get("error"),
+            )
+        elif not top_logprob_or_confidence_ready:
+            blocker_root_cause = _default_blocker(
+                "logprob_telemetry_unavailable",
+                "endpoint returned completion text but no token/top-logprob or confidence telemetry",
+                sample_logprob_evidence=_sample_logprob_payload(endpoint_sample),
+            )
     available_models = [
         {
             "hf_id": row["hf_id"],
@@ -862,6 +1720,7 @@ def build_preflight_artifact(
         completion_endpoint_ready=completion_endpoint_ready,
         top_logprob_or_confidence_ready=top_logprob_or_confidence_ready,
         tool_first_verifier_ready=tool_first_verifier_ready,
+        blocker_root_cause=blocker_root_cause,
     )
     skip_reasons = _runtime_skip_reasons(
         sota_models_ready=sota_models_ready,
@@ -876,6 +1735,18 @@ def build_preflight_artifact(
         duration_s=duration_s,
         live_completion_invoked=live_completion_invoked,
     )
+    model_specs_payload = _annotate_model_specs_for_bringup(
+        _model_specs(headline_cache),
+        selected_bringup_model,
+        model_checksums,
+    )
+    preconditions_checked = _preconditions_checked_summary(
+        precondition_evidence=precondition_evidence,
+        headline_cache=headline_cache,
+        llama_cpp_server=llama_cpp_server,
+        free_port=free_port,
+        env=merged_env,
+    )
 
     artifact: JsonDict = {
         "artifact": ARTIFACT_NAME,
@@ -883,8 +1754,8 @@ def build_preflight_artifact(
         "run_date": _run_date(),
         "sota_headline_ready": ready,
         "sota_logprob_ready": logprob_ready,
-        "preconditions_checked": True,
-        "model_specs": _model_specs(headline_cache),
+        "preconditions_checked": preconditions_checked,
+        "model_specs": model_specs_payload,
         "usable_sota_models": usable_sota_models,
         "sota_models_ready": sota_models_ready,
         "sota_judge_ready": bool(
@@ -893,11 +1764,23 @@ def build_preflight_artifact(
         "completion_endpoint_ready": completion_endpoint_ready,
         "logprob_endpoint_ready": logprob_endpoint_ready,
         "top_logprob_or_confidence_ready": top_logprob_or_confidence_ready,
+        "server_command": server_command,
+        "server_pid": server_pid,
+        "endpoint_url": endpoint_url,
+        "sample_completion": _sample_completion_payload(
+            endpoint_sample,
+            selected_bringup_model if server_command else None,
+        ),
+        "sample_logprob_evidence": _sample_logprob_payload(endpoint_sample),
+        "duration_floor_evidence": duration_floor_evidence,
         "tool_first_verifier_ready": tool_first_verifier_ready,
         "live_completion_invoked": live_completion_invoked,
+        "blocker_root_cause": None if honest_verdict.startswith("success_") else blocker_root_cause,
         "skip_reasons": skip_reasons,
         "flagged_adversarial": flagged_adversarial,
         "endpoint_summary": endpoint_summary,
+        "server_logs": server_logs,
+        "cleanup_behavior": cleanup_behavior,
         "headline_models_attempted": attempts,
         "headline_models_available": available_models,
         "telemetry_capabilities": telemetry_capabilities,
@@ -954,12 +1837,19 @@ def run_experiment(
     cached_pair_fn: CachedPairFn = cached_sota_pair,
     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
     endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
+    endpoint_sample_fn: EndpointSampleFn = _sample_endpoint_telemetry,
     endpoints: Sequence[str] | None = None,
     endpoint_timeout_s: float = 2.0,
     monotonic: ClockFn = time.monotonic,
     tests_run: Sequence[str] | None = None,
     prompt_timeout_s: int = 300,
     direct_load_enabled: bool = False,
+    llama_server_finder_fn: LlamaServerFinderFn = _llama_server_availability,
+    free_port_fn: FreePortFn = _find_free_port,
+    server_start_fn: ServerStartFn = _start_llama_server_process,
+    server_cleanup_fn: ServerCleanupFn = _cleanup_llama_server_process,
+    sleep_fn: Callable[[float], None] = time.sleep,
+    server_start_timeout_s: float | None = None,
 ) -> JsonDict:
     """Build and write the Exp 3013 SOTA/logprob preflight JSON artifact."""
     root = Path(project_root) if project_root is not None else Path(_get_repo_root())
@@ -972,12 +1862,19 @@ def run_experiment(
         cached_pair_fn=cached_pair_fn,
         prompt_runner_fn=prompt_runner_fn,
         endpoint_probe_fn=endpoint_probe_fn,
+        endpoint_sample_fn=endpoint_sample_fn,
         endpoints=endpoints,
         endpoint_timeout_s=endpoint_timeout_s,
         monotonic=monotonic,
         tests_run=tests_run,
         prompt_timeout_s=prompt_timeout_s,
         direct_load_enabled=direct_load_enabled,
+        llama_server_finder_fn=llama_server_finder_fn,
+        free_port_fn=free_port_fn,
+        server_start_fn=server_start_fn,
+        server_cleanup_fn=server_cleanup_fn,
+        sleep_fn=sleep_fn,
+        server_start_timeout_s=server_start_timeout_s,
     )
     _write_json(destination, artifact)
     return artifact

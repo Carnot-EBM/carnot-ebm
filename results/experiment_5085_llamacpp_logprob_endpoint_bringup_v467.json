@@ -1,0 +1,718 @@
+{
+  "artifact": "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1",
+  "blocker_root_cause": null,
+  "cache_paths": {
+    "headline_models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    "roots": {
+      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+      "huggingface_hub_cache_exists": true,
+      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+      "local_models_exists": true
+    },
+    "smoke_only_models": {
+      "Qwen/Qwen3.5-0.8B": null,
+      "unsloth/gemma-4-E4B-it-GGUF": null
+    }
+  },
+  "cleanup_behavior": {
+    "already_exited": false,
+    "returncode": 0,
+    "started_by_preflight": true,
+    "terminated": true
+  },
+  "completion_endpoint_ready": true,
+  "corrigendum_pending": [
+    {
+      "detail": "live_completion_invoked=true with live_llm_inference but duration_s=18.88467 < 60.0",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    }
+  ],
+  "duration_s": 18.88467,
+  "endpoint_summary": {
+    "candidate_endpoints": [
+      "http://127.0.0.1:46097"
+    ],
+    "completion_ready": true,
+    "confidence_ready": false,
+    "duration_s": 0.341394,
+    "probes": [
+      {
+        "completion_probe": {
+          "detail": "completion returned non-empty content (7 chars)",
+          "ready": true,
+          "route": "http://127.0.0.1:46097/completion",
+          "status": 200
+        },
+        "endpoint": "http://127.0.0.1:46097",
+        "telemetry_probe": {
+          "detail": "top-logprob telemetry present",
+          "ready": true,
+          "route": "http://127.0.0.1:46097/completion",
+          "signal": "top_logprobs",
+          "status": 200
+        }
+      }
+    ],
+    "selected_endpoint": "http://127.0.0.1:46097",
+    "telemetry_signal": "top_logprobs",
+    "top_logprob_ready": true
+  },
+  "endpoint_url": "http://127.0.0.1:46097",
+  "field_principles": {
+    "blocker_root_cause": {
+      "principle": "machine-readable missing binary/runtime/port/server-log evidence for blocked bring-up."
+    },
+    "completion_endpoint_ready": {
+      "principle": "true iff a llama.cpp-compatible endpoint returns non-empty completion text."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration separates live endpoint work from cache-only preflight."
+    },
+    "endpoint_url": {
+      "principle": "the concrete endpoint used or attempted makes the result replayable."
+    },
+    "flagged_adversarial": {
+      "principle": "true when the artifact itself detects a duration/substrate inconsistency."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefix runtime verdict: success_llamacpp_logprob_endpoint_ready only after completion plus telemetry, otherwise a blocked_llamacpp_* root-cause verdict."
+    },
+    "inference_substrate": {
+      "principle": "declares whether the run invoked a live LLM endpoint or only performed deterministic cache/endpoint checks."
+    },
+    "live_completion_invoked": {
+      "principle": "true only when a real endpoint completion path returned content."
+    },
+    "logprob_endpoint_ready": {
+      "principle": "true iff the endpoint exposes top-logprob telemetry, not just text."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF IDs with exact local .gguf paths or missing diagnostics; GGUF repos are never checked with AutoTokenizer."
+    },
+    "preconditions_checked": {
+      "principle": "structured CUDA/GPU, llama.cpp server, free-port, local GGUF, and env evidence captured before endpoint bring-up."
+    },
+    "sample_completion": {
+      "principle": "records the deterministic endpoint completion text only when real content was returned."
+    },
+    "sample_logprob_evidence": {
+      "principle": "records observed token/top-logprob counts without fabricating absent telemetry."
+    },
+    "server_command": {
+      "principle": "exact llama-server command distinguishes a real bring-up attempt from a probe-only artifact."
+    },
+    "skip_reasons": {
+      "principle": "machine-readable reasons for every false readiness lane."
+    },
+    "sota_models_ready": {
+      "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
+    },
+    "tool_first_verifier_ready": {
+      "principle": "true iff deterministic JSON, arithmetic, and evidence checks pass without LLM inference."
+    },
+    "top_logprob_or_confidence_ready": {
+      "principle": "true iff endpoint telemetry exposes top-logprobs or structured confidence."
+    },
+    "usable_sota_models": {
+      "principle": "subset of mandated SOTA GGUF roles that resolve to local .gguf files."
+    }
+  },
+  "flagged_adversarial": true,
+  "headline_models_attempted": [
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1780046332847654213,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 22134528992,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1780838958726406205,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 18323731456,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    },
+    {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "cache_status": "resolved",
+      "checksum_evidence": {
+        "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+        "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+        "mtime_ns": 1778129415691941084,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "sha256": null,
+        "size_bytes": 16947539744,
+        "status": "available"
+      },
+      "duration_s": 0.0,
+      "generation_status": "not_attempted",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "load_status": "not_attempted_direct_load_disabled",
+      "logits_exposed": false,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "telemetry_blockers": [
+        "direct_load_disabled"
+      ],
+      "telemetry_observation": {},
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false,
+      "transcript_path": null,
+      "transcript_sha256": null
+    }
+  ],
+  "headline_models_available": [
+    {
+      "generated": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    },
+    {
+      "generated": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    },
+    {
+      "generated": false,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "status": "cache_resolved"
+    }
+  ],
+  "honest_verdict": "success_llamacpp_logprob_endpoint_ready",
+  "inference_substrate": "live_llm_inference",
+  "legacy_smoke_context": {
+    "model_ids": [
+      "Qwen/Qwen3.5-0.8B",
+      "unsloth/gemma-4-E4B-it-GGUF"
+    ],
+    "smoke_only": false,
+    "used_for_headline_readiness": false
+  },
+  "legacy_smoke_only_used": false,
+  "live_completion_invoked": true,
+  "live_transcript_paths": [],
+  "logprob_endpoint_ready": true,
+  "model_checksums": {
+    "Qwen/Qwen3.5-0.8B": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    },
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "bounded_sha256": "e58ffd025b89e57573c166594da9977d675df2c42e2cf0b12dcc73c78c8fe100",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1780046332847654213,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 22134528992,
+      "status": "available"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 16947539744,
+      "status": "available"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "bounded_sha256": "3efb7b781f9fee3c4562e4bfba90f8da985e5d21cdfecda388e015bf50142810",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1780838958726406205,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 18323731456,
+      "status": "available"
+    },
+    "unsloth/gemma-4-E4B-it-GGUF": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    }
+  },
+  "model_specs": {
+    "experiment_id": 3013,
+    "headline_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "loader": "llama_cpp",
+    "preferred_quantization": "Q4_K_M",
+    "random_seed": 3013,
+    "resolved_models": {
+      "flagship_dense": {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_for_endpoint_bringup": false,
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "selection_reason": null,
+        "size_bytes": 18323731456
+      },
+      "flagship_moe": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_diagnostic": null,
+        "preferred_for_endpoint_bringup": false,
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "selection_reason": null,
+        "size_bytes": 22134528992
+      },
+      "middle_moe": {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_for_endpoint_bringup": true,
+        "preferred_quant": "Q4_K_M",
+        "readiness_status": "cache_resolved",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "selection_reason": "smallest resolved mandated SOTA GGUF by file size",
+        "size_bytes": 16947539744
+      }
+    },
+    "smoke_only_models": [
+      "Qwen/Qwen3.5-0.8B",
+      "unsloth/gemma-4-E4B-it-GGUF"
+    ],
+    "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1",
+    "telemetry_request": {
+      "logits_all": true,
+      "logprobs": 5,
+      "top_k_alternatives_required": true
+    }
+  },
+  "precondition_evidence": {
+    "cache_roots": {
+      "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+      "huggingface_hub_cache_exists": true,
+      "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+      "local_models_exists": true
+    },
+    "cached_sota_pair": {
+      "called": true,
+      "error": null,
+      "result": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "returned_two_loadable_specs": true
+    },
+    "checksum_feasibility": {
+      "available_model_count": 3,
+      "available_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "bounded_sha256_model_count": 3,
+      "feasible": true,
+      "full_sha256_model_count": 0,
+      "method": "sha256_full_for_small_files_or_bounded_head_tail_for_large_files",
+      "model_count": 5
+    },
+    "gpu_inventory": {
+      "available": true,
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+        "--format=csv,noheader,nounits"
+      ],
+      "free_vram_mib_total": 48240,
+      "gpus": [
+        {
+          "driver_version": "610.43.02",
+          "index": 0,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "610.43.02",
+          "index": 1,
+          "memory_free_mib": 24120,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n1, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n"
+    },
+    "llama_cpp": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False, 'llama_cpp_supports_gpu_offload': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "llama_cpp_import_ok": true,
+      "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "llama_cpp_supports_gpu_offload": false,
+      "llama_cpp_version": "0.3.29",
+      "returncode": 0,
+      "stderr_summary": ""
+    },
+    "python_environment": {
+      "current_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "current_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+      "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+      "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "venv_active": true,
+      "virtual_env": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv"
+    },
+    "recorded_before_model_load": true,
+    "repo_commit": {
+      "command": [
+        "git",
+        "-C",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "rev-parse",
+        "HEAD"
+      ],
+      "commit": "27e2e44c4106f406999681cea443deebd1b4179a",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "27e2e44c4106f406999681cea443deebd1b4179a\n"
+    },
+    "torch_cuda": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+      ],
+      "cuda_available": true,
+      "cuda_device_count": 2,
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "2.11.0+cu128 True 2\n",
+      "torch_version": "2.11.0+cu128"
+    }
+  },
+  "preconditions_checked": {
+    "cuda_gpu_visibility": {
+      "gpu_inventory": {
+        "available": true,
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+          "--format=csv,noheader,nounits"
+        ],
+        "free_vram_mib_total": 48240,
+        "gpus": [
+          {
+            "driver_version": "610.43.02",
+            "index": 0,
+            "memory_free_mib": 24120,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "driver_version": "610.43.02",
+            "index": 1,
+            "memory_free_mib": 24120,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 4,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n1, NVIDIA GeForce RTX 3090, 24576, 4, 24120, 610.43.02\n"
+      },
+      "torch_cuda": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+        ],
+        "cuda_available": true,
+        "cuda_device_count": 2,
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "2.11.0+cu128 True 2\n",
+        "torch_version": "2.11.0+cu128"
+      }
+    },
+    "environment_variables": {},
+    "free_port": {
+      "available": true,
+      "endpoint_url": "http://127.0.0.1:46097",
+      "error": null,
+      "host": "127.0.0.1",
+      "port": 46097
+    },
+    "llama_cpp_python": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False, 'llama_cpp_supports_gpu_offload': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "llama_cpp_import_ok": true,
+      "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "llama_cpp_supports_gpu_offload": false,
+      "llama_cpp_version": "0.3.29",
+      "returncode": 0,
+      "stderr_summary": ""
+    },
+    "llama_cpp_server": {
+      "available": true,
+      "candidates": [
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/local/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/bin/llama-server",
+          "source": "well_known_path"
+        }
+      ],
+      "missing_diagnostic": null,
+      "selected_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "recorded_before_model_load": true,
+    "resolved_local_gguf_paths": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    }
+  },
+  "random_seed": 3013,
+  "reproducibility_checksum": "9508f91252e58bc79243f66d2e2c75cd862db31b1b0044a7cd49ea1e62a87a15",
+  "run_date": "20260701",
+  "sample_completion": {
+    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "prompt": "Reply in one short sentence: exp3013 SOTA GGUF telemetry live.",
+    "route": "http://127.0.0.1:46097/completion",
+    "status": 200,
+    "text": "-exp3thought-thought\n<channel|>The SOTA GGUF telemetry for"
+  },
+  "sample_logprob_evidence": {
+    "error": null,
+    "ready": true,
+    "route": "http://127.0.0.1:46097/completion",
+    "status": 200,
+    "telemetry_signal": "top_logprobs",
+    "token_logprob_count": 16,
+    "token_logprobs": [
+      -0.004924421664327383,
+      -0.5301894545555115,
+      -7.40317118470557e-05,
+      -0.047572750598192215,
+      -0.20564070343971252,
+      -0.2285192459821701,
+      -0.4151991009712219,
+      -0.023150036111474037
+    ],
+    "top_logprob_row_count": 16,
+    "top_logprobs": [
+      {
+        " live": -13.797595024108887,
+        " s": -5.3176493644714355,
+        " telemetry": -12.884432792663574,
+        "-": -0.004924421664327383,
+        "_": -13.068307876586914
+      },
+      {
+        "\n": -4.899160385131836,
+        "\n\n": -2.1767287254333496,
+        " exp": -1.4007123708724976,
+        "S": -4.172017574310303,
+        "exp": -0.5301894545555115
+      },
+      {
+        " ": -11.122817039489746,
+        "-": -11.712287902832031,
+        "/": -11.450127601623535,
+        "3": -7.40317118470557e-05,
+        "thought": -11.096561431884766
+      },
+      {
+        "    ": -14.779784202575684,
+        "0": -3.070723056793213,
+        "1": -13.347036361694336,
+        "<|channel>": -9.587228775024414,
+        "thought": -0.047572750598192215
+      }
+    ]
+  },
+  "schema_version": 1,
+  "server_command": [
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "-m",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "46097",
+    "-ngl",
+    "999",
+    "-c",
+    "1024"
+  ],
+  "server_logs": {
+    "exists": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/llamacpp_endpoint_bringup.log",
+    "tail": "039c0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.16.164.716 I srv  get_availabl: prompt cache update took 3.03 ms\n0.16.164.751 I slot launch_slot_: id  3 | task 6 | processing task, is_child = 0\n0.16.164.752 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache\n0.16.164.753 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens\n0.16.164.758 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache\n0.16.164.758 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens\n0.16.164.761 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache\n0.16.164.761 I slot prompt_clear: id  2 | task -1 | clearing prompt with 0 tokens\n0.16.164.768 I slot update_slots: id  3 | task 6 | Checking checkpoint with [0, 0] against 0...\n0.16.165.922 W slot update_slots: id  3 | task 6 | restored context checkpoint (pos_min = 0, pos_max = 0, n_tokens = 1, n_past = 1, size = 0.196 MiB)\n0.16.279.861 I slot print_timing: id  3 | task 6 | prompt eval time =      89.48 ms /     5 tokens (   17.90 ms per token,    55.88 tokens per second)\n0.16.279.875 I slot print_timing: id  3 | task 6 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.16.279.876 I slot print_timing: id  3 | task 6 |       total time =      89.48 ms /     6 tokens\n0.16.279.877 I slot print_timing: id  3 | task 6 |    graphs reused =          3\n0.16.279.906 I slot      release: id  3 | task 6 | stop processing: n_tokens = 6, truncated = 0\n0.16.279.927 I srv  update_slots: all slots are idle\n0.16.282.775 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1\n0.16.282.777 I srv  get_availabl: updating prompt cache\n0.16.282.781 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.16.282.785 I srv        update:  - cache state: 1 prompts, 1.916 MiB (limits: 8192.000 MiB, 1024 tokens, 34212 est)\n0.16.282.786 I srv        update:    - prompt 0x560297c039c0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.16.282.788 I srv  get_availabl: prompt cache update took 0.01 ms\n0.16.282.810 I slot launch_slot_: id  2 | task 9 | processing task, is_child = 0\n0.16.282.811 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache\n0.16.282.812 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens\n0.16.282.820 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache\n0.16.282.821 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens\n0.16.282.822 I slot process_sing: id  3 | task -1 | saving idle slot to prompt cache\n0.16.282.842 W srv   prompt_save:  - saving prompt with length 6, total state size = 1.290 MiB (draft: 0.000 MiB)\n0.16.284.304 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)\n0.16.284.306 I srv        update:    - prompt 0x560297c039c0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.16.284.306 I srv        update:    - prompt 0x5602976d1bb0:       6 tokens, checkpoints:  1,     1.486 MiB\n0.16.284.307 I slot prompt_clear: id  3 | task -1 | clearing prompt with 6 tokens\n0.16.342.755 I slot create_check: id  2 | task 9 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 15, n_tokens = 16, size = 3.126 MiB)\n0.16.768.841 I slot print_timing: id  2 | task 9 | prompt eval time =      71.90 ms /    20 tokens (    3.59 ms per token,   278.17 tokens per second)\n0.16.768.845 I slot print_timing: id  2 | task 9 |        eval time =     395.77 ms /    16 tokens (   24.74 ms per token,    40.43 tokens per second)\n0.16.768.846 I slot print_timing: id  2 | task 9 |       total time =     467.67 ms /    36 tokens\n0.16.768.847 I slot print_timing: id  2 | task 9 |    graphs reused =         17\n0.16.768.868 I slot      release: id  2 | task 9 | stop processing: n_tokens = 35, truncated = 0\n0.16.768.873 I srv  update_slots: all slots are idle\n0.16.771.466 I srv    operator(): operator(): cleaning up before exit...\n"
+  },
+  "server_pid": 2597491,
+  "skip_reasons": [],
+  "sota_headline_ready": true,
+  "sota_judge_ready": true,
+  "sota_logprob_ready": true,
+  "sota_models_ready": true,
+  "telemetry_capabilities": {
+    "blockers": [
+      "no_live_headline_generation"
+    ],
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "generation_status": "not_attempted",
+        "load_status": "not_attempted_direct_load_disabled",
+        "logits_exposed": false,
+        "telemetry_blockers": [
+          "direct_load_disabled"
+        ],
+        "telemetry_observation": {},
+        "token_logprobs_exposed": false,
+        "topk_logprobs_exposed": false
+      }
+    },
+    "overall": {
+      "any_live_generation": false,
+      "cactus_acceptance_ready": false,
+      "logits_exposed": false,
+      "token_logprobs_exposed": false,
+      "topk_logprobs_exposed": false
+    },
+    "requested": {
+      "logprobs": 5,
+      "top_k_alternatives_required": true
+    }
+  },
+  "tests_run": [],
+  "tool_first_verifier_ready": true,
+  "top_logprob_or_confidence_ready": true,
+  "usable_sota_models": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ]
+}
