@@ -428,6 +428,45 @@ solver availability decision, the binary variable count for segment selection,
 the zero exact-PWA error bound with methodology note, and either a successful
 solver certificate or a blocked solver-dependency reason.
 
+## REQ-KAN-5091: Small Multi-Unit KAEM PWA/MILP Scale Telemetry
+
+The KAN verification tier SHALL extend the Exp 5080 KAEM/PWA/MILP bridge to a
+small two-input additive KAEM property without invoking an LLM. The experiment
+MUST build piecewise-affine abstractions from real `UnivariateKAEMLayer`
+control points, declare local and global abstraction error budgets, encode the
+property through a deterministic local MILP/Z3 solver path when available, and
+make solver complexity visible.
+
+The experiment MUST write
+`results/experiment_5091_kan_pwa_milp_scale_v467.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`abstraction_built`, `solver_available`, `property_statement`,
+`property_status`, `property_holds`, `binary_variable_count`,
+`constraint_count`, `pwa_piece_count`, `local_error_bound`,
+`global_error_bound`, `solve_time_s`, `scale_blocker`, and
+`flagged_adversarial`. The artifact MUST set
+`inference_substrate="deterministic_formal_solver"` and MUST use a terminal
+verdict such as `success_kan_pwa_milp_scale_property_verified_small` when the
+small scale-up is proved, or
+`complete_kan_pwa_milp_scale_blocked_by_solver_complexity` when solver
+complexity prevents the proof.
+
+The artifact MUST also report bound tightness and enough PWA/MILP structure to
+distinguish this from the one-variable Exp 5080 diagnostic. It MUST NOT claim a
+production KAN verifier, trained-network soundness, hardware execution, live
+LLM inference, or broad MILP scalability.
+
+### SCENARIO-KAN-5091: Two-Input KAEM Scale Property Reports Solver Counts
+
+Given a deterministic two-variable `UnivariateKAEMLayer` with monotone control
+points on `[-1, 1]^2`,
+When the Exp 5091 bridge builds exact PWA segment representations for both
+variables and checks the bound property for their additive KAEM energy,
+Then the artifact records local/global error budgets, a two-input property
+statement, PWA piece count, binary variable count, constraint count, solve time,
+bound tightness, solver availability, property status, and a success or blocked
+terminal verdict without any live LLM inference claim.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -460,6 +499,7 @@ solver certificate or a blocked solver-dependency reason.
 | REQ-KAN-2876 | Implemented | Exp 2876 corrigendum separates local/global bounds and reports the local Z3 solver path or blocked-solver fallback. |
 | REQ-KAN-2893 | Proposed | Exp 2893 target: no-hardware-claim RM/BOP/NABS accounting for the clean Exp 2876 tiny PWA/MILP fixture. |
 | REQ-KAN-5080 | Proposed | Exp 5080 target: tiny KAEM PWA/MILP bridge artifact with success-or-blocked solver boundary. |
+| REQ-KAN-5091 | Proposed | Exp 5091 target: two-input KAEM PWA/MILP scale telemetry with solver counts, error budgets, and bound tightness. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
