@@ -9760,3 +9760,4 @@ web search: |
 | 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 14:49 UTC | PHASE C1 continuous self-learning -- SEVerA-style  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 15:03 UTC | PHASE C2 hardware continuity -- KV260 safe transcr | OK | 88 passed, 1 warning in 7.08s |
+| 2026-07-01 15:23 UTC | PHASE Z capstone -- decide exact-verifier scale-up | OK | 85 passed, 1 warning in 10.59s |
