@@ -1,647 +1,923 @@
-milestone: "2026.07.468"
-milestone_title: "EXACT-VERIFIER SCALE-UP + EVIDENCE ENERGY + FORMAL FR-11"
+milestone: "2026.07.469"
+milestone_title: "FOVER IN-DOMAIN SELECTION + POST-WALL KAN ABSTRACTION + CONTINUITY REPAIR"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp5095-phase0-archive-467-activate-468
-    milestone: "2026.07.468"
-    title: "PHASE 0 transition -- archive .467 truth, activate .468, and preserve exact-verifier pivot state"
+  - id: exp5109-archive-468-activate-469
+    milestone: "2026.07.469"
+    title: "PHASE 0 transition -- archive .468 truth, include exp5108 KAN wall, and activate .469 without touching active roadmap"
     priority: critical
-    track: transition
-    deliverable: results/experiment_5095_archive_467_activate_468.json
+    track: planning
+    deliverable: results/experiment_5109_archive_468_activate_469.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
     estimated_wall_time_min: 25
+    operator_override: "2026-07-01 operator directive: routine milestone-transition continuation for the next milestone; records new .468 and exp5108 state, not a rerun of prior archive scope."
     prior_failures:
-      - experiment_id: exp5083-phase0-archive-466-activate-467
-        verdict: complete_466_archived_467_activated_endpoint_blockers_carried_forward
-        addressed_by: "Recurring transition scope is intentional; this attempt records .467's exact-verifier pivot, flagged runtime/static artifacts, and .468 activation state."
+      - experiment_id: exp5095-phase0-archive-467-activate-468
+        verdict: "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward"
+        addressed_by: "Routine transition advances from .468 to .469 and additionally records the post-milestone exp5108 KAN scale-wall artifact."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. Milestone 2026.07.467 has completed. Its capstone recorded an exact-verifier pivot: Exp5091 was the clean positive result, while Exp5085 runtime, Exp5088 process verification, and Exp5090 constrained generation were excluded or non-headline due blockers or adversarial flags.
+      You are archiving milestone 2026.07.468 and activating 2026.07.469. The user explicitly said all .468 tasks completed. Do not modify research-roadmap.yaml. The new milestone doc is openspec/change-proposals/research-roadmap-vNEXT.md and the next queue is research-roadmap-next.yaml. The .468 close-state includes exp5095-exp5107, and the post-milestone exp5108 KAN stress test measured the exact-MILP wall: N=10 solved in about 120.9s, N=20 timed out, realistic N=100 not reached.
 
       EXISTING CODE TO READ FIRST:
-      - CODEX.md
       - CLAUDE.md
-      - research-roadmap.yaml
-      - research-roadmap-next.yaml
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - ops/conductor-log.md
+      - CODEX.md
+      - research-program.md
+      - _bmad/prd.md
+      - _bmad/architecture.md
       - ops/status.md
       - ops/changelog.md
-      - results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json
-      - results/experiment_5086_uprm_logprob_cache_retry_v467.json
-      - results/experiment_5088_temporal_consistency_process_verifier_v467.json
-      - results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
-      - results/experiment_5090_static_csr_constrained_decoding_v467.json
-      - results/experiment_5091_kan_pwa_milp_scale_v467.json
-      - results/experiment_5092_fr11_budgeted_onpolicy_memory_v467.json
-      - results/experiment_5093_hardware_continuity_v467.json
-      - results/experiment_5094_capstone_v467.json
+      - ops/conductor-log.md
+      - research-complete.yaml
+      - research-roadmap.yaml
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - openspec/capabilities/research-reporting/spec.md
+      - openspec/capabilities/research-harnesses/spec.md
 
       TASK:
-      Write results/experiment_5095_archive_467_activate_468.json. Record the .467 close-state, the .468 milestone identity, and the exact blockers or positive paths that must not be laundered: clean KAN/PWA/MILP proof, flagged endpoint/live-runtime claim, blocked uPRM/logprob cache, non-winning process verifier, flagged STATIC CSR toy result, p-bit/CDCL no effort win, governed FR-11 no-promote, and hardware continuity without speedup.
+      Write an archive/activation artifact that truthfully captures the .468 close-state, the exp5108 follow-up, and the .469 research frame. This is a planning/aggregation task only. Do not edit scripts/research_conductor.py and do not modify research-roadmap.yaml.
 
       CONCRETE STEPS:
-      1. Parse the active and next roadmap YAMLs; fail closed if either is unreadable.
-      2. Load the .467 artifacts listed above when present and record missing/skipped artifacts explicitly.
-      3. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, milestone_from, milestone_to, source_artifacts, blocked_artifacts, flagged_artifacts, clean_positive_artifacts, close_state, blockers_carried_forward, exact_verifier_pivot, next_milestone_doc, docs_updated, flagged_adversarial.
-      4. Set inference_substrate to aggregation_from_upstream_artifacts; do not claim live_llm_inference.
-      5. Update only minimal ops/status.md and ops/changelog.md entries if needed to note that .468 planning is staged; do not modify research-roadmap.yaml.
-      6. Use a terminal-prefixed honest_verdict such as complete_467_archived_468_activated_exact_verifier_pivot_carried_forward.
-      Run command: .venv/bin/python scripts/conductor_pre_flight.py
+      1. Parse research-complete.yaml, ops/changelog.md, ops/conductor-log.md, and the result artifacts for exp5095-exp5108.
+      2. Summarize the clean positives, flagged diagnostics, blocked runtime substrate, FR-11 no-promote state, hardware continuity state, and KAN exact-MILP wall.
+      3. Confirm openspec/change-proposals/research-roadmap-vNEXT.md exists and names milestone 2026.07.469.
+      4. Confirm research-roadmap-next.yaml exists and names milestone 2026.07.469; if it does not, report blocked rather than modifying research-roadmap.yaml.
+      5. Write results/experiment_5109_archive_468_activate_469.json with the required artifact fields below.
+      6. Run adversarial verification or the repo's artifact summarizer on the deliverable and record the result.
+      7. Update ops/status.md and ops/changelog.md only if this task actually changes repository state beyond the result artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5109-archive-468-activate-469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "aggregation_from_upstream_artifacts" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - source_artifacts_read (principle: evidence provenance)
+      - exp5108_kan_wall_recorded (principle: no stale KAN scale premise)
+      - roadmap_next_present (principle: activation readiness)
+      - active_roadmap_modified: false (principle: operator instruction compliance)
+      - conductor_modified: false (principle: conductor immutability)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5109_archive_468_activate_469.py --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp5096-sota-ingestion-v468
-    milestone: "2026.07.468"
-    title: "PHASE R1 SOTA ingestion -- verify V468 exact-verifier, evidence-energy, hardware, and FR-11 source set"
+  - id: exp5110-source-freshness-sota-ingestion-v469
+    milestone: "2026.07.469"
+    title: "PHASE R1 SOTA ingestion -- verify V469 source set and map fresh papers to FoVer, KAN, HUBO, FR-11, runtime, and hardware tasks"
     priority: critical
-    track: literature
-    deliverable: results/experiment_5096_sota_ingestion_v468.json
+    track: research-planning
+    deliverable: results/experiment_5110_sota_ingestion_v469.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 45
     prior_failures:
-      - experiment_id: exp5084-sota-ingestion-v467
-        verdict: success_sota_ingestion_v467_references_verified
-        addressed_by: "Verifies the new V468 source set and maps BEAVER, SEVerA, graph evidence, TACO, p-spin, constrained decoding, and hardware sources to .468 tasks."
+      - experiment_id: exp5096-sota-ingestion-v468
+        verdict: "success_sota_ingestion_v468_references_verified"
+        addressed_by: "Routine SOTA ingestion advances to the V469 source set and includes the fresh FALCON, Verus-SpecGym, EBT, ARM-EBM, Kona, and TSU addendum."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. The planner appended a V468 source set to research-references.md before designing this milestone. This task verifies that literature/current-source ingestion is real and maps sources to experiments.
+      This task verifies that the research-reference updates feeding .469 are current and mapped to experiments. research-references.md already has a V469 planner section; check it against the current roadmap and add only small corrections if necessary. Do not use /deep-research. Do not modify research-roadmap.yaml.
 
       EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
       - research-program.md
       - research-references.md
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - ops/conductor-log.md
-      - results/experiment_5084_sota_ingestion_v467.json
+      - research-roadmap-next.yaml
+      - openspec/capabilities/research-reporting/spec.md
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/kan/spec.md
+      - openspec/capabilities/samplers/spec.md
+      - openspec/capabilities/self-learning/spec.md
+      - openspec/capabilities/llm-ebm-inference/spec.md
+      - openspec/capabilities/fpga/spec.md
 
       TASK:
-      Verify that research-references.md contains the V468 source set covering arXiv, OpenReview, Hugging Face Papers/GitHub, Extropic, Logical Intelligence, and Semantic Scholar citation-lineage findings. Add a missing high-value source only if it materially changes a .468 experiment. Then write results/experiment_5096_sota_ingestion_v468.json.
+      Produce a source-freshness artifact for .469. Verify that each V469 source has a real URL, is assigned to a concrete task or marked architecture/background-only, and does not imply an unplanned training-heavy or hardware-execution claim.
 
       CONCRETE STEPS:
-      1. Confirm that the V468 section includes BEAVER, graph-evidence grounding, SEVerA, TACO, PLANCK p-spin/HUBO, neuromorphic CSP hardware, CFG-constrained generation papers, Grammar-Aligned Decoding, CONSTRAINPROMPT, HALT, GenericAgent/ALMA, EBT/ARM citation-lineage candidates, llguidance, Extropic, and Logical Intelligence.
-      2. For each source, map it to a .468 task or mark it as background only.
-      3. If adding a missing source, append it inside the V468 section with URL, tracks, Carnot hook, and actionability.
-      4. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, sources_checked, references_section_found, references_added_count, semantic_scholar_status, task_mapping, planning_hooks, background_only_sources, flagged_adversarial.
-      5. Set inference_substrate to literature_review_and_repo_inspection; do not claim local model inference.
-      6. Use a terminal-prefixed honest_verdict such as success_sota_ingestion_v468_references_verified.
-      Run command: .venv/bin/python scripts/canonical_url_lint.py
+      1. Inspect research-references.md V469 section and the fresh sweep addendum.
+      2. Verify source coverage for FoVer, FormalRewardBench, self-verification cliff, KAN abstraction, p-bit 2D-PT, million p-bit residual telemetry, FALCON, Verus-SpecGym, EBT, ARM-EBM, Extropic, and Logical Intelligence.
+      3. Map every actionable source to one or more exp5111-exp5120 tasks.
+      4. Mark EBT/ARM-EBM/Kona/TSU as architecture pressure unless a local task can execute them truthfully.
+      5. Record whether references_section_found is true for the structured downstream gate.
+      6. Write the deliverable and include an explicit list of sources checked.
+      7. If any source is dead or stale, write a blocked/partial verdict and do not silently drop it.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5110-source-freshness-sota-ingestion-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "literature_review_and_repo_inspection" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - references_section_found (principle: downstream gate signal)
+      - sources_checked (principle: provenance)
+      - task_mapping (principle: actionability)
+      - background_only_sources (principle: no false execution claims)
+      - active_roadmap_modified: false (principle: operator instruction compliance)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5110_sota_ingestion_v469.py --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp5097-clean-sota-endpoint-logprob-cache-v468
-    milestone: "2026.07.468"
-    title: "PHASE A1 runtime provenance -- clean local SOTA endpoint and logprob-cache smoke without downstream process claims"
+  - id: exp5111-fover-in-domain-pool-v469
+    milestone: "2026.07.469"
+    title: "PHASE A1 FoVer pool -- build an in-domain n>=150 oracle-distinct candidate-selection pool with headroom and leakage controls"
     priority: critical
-    track: infrastructure
-    deliverable: results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json
+    track: verifiable-reasoning
+    deliverable: results/experiment_5111_fover_in_domain_pool_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp628-oracle-fover-v5
+        verdict: "oracle_corpus_ready"
+        addressed_by: "This task rebuilds the pool contract for in-domain selection headroom with checksums, baselines, and downstream gates rather than only declaring an oracle corpus ready."
+        retire_if_same_verdict: true
+      - experiment_id: exp1119-fover-sota-extension-v5
+        verdict: "corpus_extended_above_7000"
+        addressed_by: "This task requires model_specs when live LLMs are used, pool checksum provenance, parse/headroom metrics, and no headline if data preconditions are unavailable."
+        retire_if_same_verdict: true
+      - experiment_id: exp1169-fover-sota-expansion-v6
+        verdict: "corpus_expanded_labels_complete"
+        addressed_by: "The prior expansion was adversarially critical; this task adds duration/substrate/model provenance, anti-tautology controls, and explicit headroom gates."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp5110-source-freshness-sota-ingestion-v469
+        artifact_field: references_section_found
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT:
+      FoVer is the highest-value .469 verifier-moat substrate because it provides formal-tool step labels and candidate-selection headroom. This task only builds and validates the in-domain pool. It must not rerun the retired cross-domain verifier selection axis from exp4305/exp4314.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-program.md
+      - research-references.md
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/verification/spec.md
+      - openspec/capabilities/training-data/spec.md
+      - python/carnot/verify/
+      - python/carnot/pipeline/
+      - scripts/experiment_template.py
+
+      TASK:
+      Build or assemble an in-domain FoVer candidate-selection pool with at least 150 examples, multiple candidates per example, parsed final answers or proof states, formal step/support labels when available, and enough headroom to test selector value. If cached FoVer data is unavailable, write an honest blocked artifact with preconditions_checked rather than fabricating data.
+
+      CONCRETE STEPS:
+      1. Locate existing FoVer assets, cached candidate pools, or reproducible data-generation utilities in the repo.
+      2. If new local LLM candidates are generated, MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF via cached_sota_pair()/GGUF paths; never use AutoTokenizer on GGUF repo IDs. Legacy tiny models are smoke-only and cannot headline.
+      3. Produce n>=150 in-domain examples with K>=4 candidates per example when possible.
+      4. Compute vote@1, tuned self-consistency baseline, oracle@K, oracle@K - tuned_sc, parse rate, duplicate rate, and answer-key leakage indicators.
+      5. Require headroom_present only if oracle@K > tuned_sc by a positive margin and oracle@K < 1.0.
+      6. Persist the pool path, checksums, seeds, and generation/caching provenance.
+      7. Write the deliverable with pool_n, headroom_present, and verifier_is_oracle=false.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5111-fover-in-domain-pool-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: compute/data preflight accountability)
+      - pool_path (principle: deliverable reproducibility)
+      - pool_sha256 (principle: data integrity)
+      - pool_n (principle: downstream gate signal)
+      - candidates_per_item (principle: selection-headroom clarity)
+      - vote_at_1 (principle: baseline transparency)
+      - tuned_self_consistency (principle: fair baseline)
+      - oracle_at_k (principle: headroom measurement)
+      - headroom_present (principle: no no-headroom moat claims)
+      - verifier_is_oracle: false (principle: oracle-distinctness)
+      - model_specs (principle: SOTA model accountability when LLMs are used)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5111_fover_in_domain_pool_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5112-fover-in-domain-selector-v469
+    milestone: "2026.07.469"
+    title: "PHASE A2 FoVer selector -- in-domain verifier selection versus tuned self-consistency, not retired cross-domain selection"
+    priority: critical
+    track: verifiable-reasoning
+    deliverable: results/experiment_5112_fover_in_domain_selector_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 100
+    operator_override: "2026-07-01 operator directive: FoVer in-domain redirect is distinct from the retired cross-domain selection axis exp4305/exp4314; this task must not test held-out-domain generalization."
+    gated_on:
+      - upstream: exp5111-fover-in-domain-pool-v469
+        artifact_field: pool_n
+        op: ">="
+        value: 150
+      - upstream: exp5111-fover-in-domain-pool-v469
+        artifact_field: headroom_present
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp4305-cross-domain-selector-generalization
+        verdict: "complete: cross_domain_selection_collapses_domain_bound"
+        addressed_by: "This attempt changes scope to in-domain FoVer selection with a fixed-domain train/test split; it does not reopen held-out-domain selection."
+        retire_if_same_verdict: true
+      - experiment_id: exp4314-cross-domain-selector-ir3de-cascal
+        verdict: "complete: powered_collapse_cross_domain_domain_bound"
+        addressed_by: "The retired cross-domain axis is avoided; label-ablation remains as a leakage control for in-domain FoVer selection."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The retired exp4305/exp4314 result says cross-domain verifier selection is domain-bound. Do not re-propose cross-domain selection. This task tests the still-unanswered in-domain FoVer question: can a Carnot verifier/energy selector beat tuned self-consistency on an oracle-distinct pool with formal labels and positive headroom?
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-program.md
+      - research-references.md
+      - ops/exclusion_manifest.yaml
+      - results/experiment_4305_cross_domain_selector_generalization.json
+      - results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+      - results/experiment_5111_fover_in_domain_pool_v469.json
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/verification/spec.md
+      - python/carnot/verify/
+      - python/carnot/verifiers/
+
+      TASK:
+      Train or fit a lightweight in-domain FoVer selector over train examples and evaluate on held-out examples from the same FoVer domain. Compare against vote@1, tuned self-consistency, simple length/format heuristics, and shuffled-label controls. The headline gate is a clean selector win over tuned self-consistency with CI95 excluding 0 and label-ablation failing.
+
+      CONCRETE STEPS:
+      1. Load the exp5111 pool and verify pool_n>=150, headroom_present=true, verifier_is_oracle=false, and pool checksum.
+      2. Create train/test splits within the same FoVer domain. Do not hold out a different domain and do not claim cross-domain generalization.
+      3. Implement selector features that cannot directly read answer labels. Prefer formal step/support evidence, contradiction markers, graph support, and process features.
+      4. Fit a simple, auditable selector or energy scoring rule with deterministic seeds.
+      5. Evaluate selected-answer accuracy versus tuned self-consistency, vote@1, oracle@K, random, length/format, and shuffled-label controls.
+      6. Bootstrap CI95 for selector_delta_over_tuned_sc and emit selection_result_available=true.
+      7. Emit fover_in_domain_selector_holds only if delta>0, CI95 excludes 0, non-degenerate guards pass, and label-ablation/shuffled-label controls fail to reproduce the win.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5112-fover-in-domain-selector-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "verifier_ensemble_against_fover_cached_candidates" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: data preflight accountability)
+      - pool_path (principle: data provenance)
+      - train_n (principle: split accountability)
+      - test_n (principle: split accountability)
+      - tuned_self_consistency (principle: fair baseline)
+      - selector_accuracy (principle: result clarity)
+      - selector_delta_over_tuned_sc (principle: moat measurement)
+      - ci95 (principle: statistical uncertainty)
+      - label_ablation_robust (principle: leakage control)
+      - shuffled_label_delta (principle: leakage control)
+      - selection_result_available (principle: downstream gate signal)
+      - fover_in_domain_selector_holds (principle: decision bool)
+      - verifier_is_oracle: false (principle: oracle-distinctness)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5112_fover_in_domain_selector_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5113-fover-selector-adversarial-audit-v469
+    milestone: "2026.07.469"
+    title: "PHASE A3 FoVer selector audit -- independent leakage, baseline, CI, and adversarial edge-case review"
+    priority: high
+    track: verification-audit
+    deliverable: results/experiment_5113_fover_selector_adversarial_audit_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 75
+    operator_override: "2026-07-01 operator directive: audit is a guard on in-domain FoVer selection only; it must not reopen the retired cross-domain selection axis."
+    gated_on:
+      - upstream: exp5112-fover-in-domain-selector-v469
+        artifact_field: selection_result_available
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp4314-cross-domain-selector-ir3de-cascal
+        verdict: "complete: powered_collapse_cross_domain_domain_bound"
+        addressed_by: "Audit checks the new in-domain selector for leakage and degeneracy; it does not attempt cross-domain selection."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      A positive selector result is not credible until an independent audit checks leakage, degenerate controls, baseline tuning, CI logic, and adversarial edge cases. Use the Verus-SpecGym lesson: executable/adversarial tests are more reliable than trusting generated specs or labels as text.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - results/experiment_5111_fover_in_domain_pool_v469.json
+      - results/experiment_5112_fover_in_domain_selector_v469.json
+      - scripts/adversarial_verify.py
+      - scripts/summarize_artifact.py
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/verification/spec.md
+      - openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Independently audit the FoVer selector artifact. Confirm whether any headline should be allowed. If the selector result is null or blocked, still audit the methodology and record the blocking reason.
+
+      CONCRETE STEPS:
+      1. Load exp5111 and exp5112 artifacts and verify checksums, splits, and gates.
+      2. Recompute core metrics from the pool if possible: tuned self-consistency, selector accuracy, delta, CI95, oracle@K, and shuffled-label control.
+      3. Run scripts/adversarial_verify.py or equivalent checks on exp5112.
+      4. Add targeted audit checks for answer-key leakage, domain-label leakage, length-only selection, duplicate candidates, parse failures, and split contamination.
+      5. Build a small adversarial edge-case set by perturbing candidate ordering, adding obviously invalid candidates, and shuffling labels; verify the selector behaves non-degenerately.
+      6. Emit selector_audit_clean only if no critical flags and all required controls pass.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5113-fover-selector-adversarial-audit-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "independent_artifact_audit_and_recompute" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - selector_artifact_read (principle: provenance)
+      - recompute_successful (principle: audit strength)
+      - leakage_checks (principle: non-circularity)
+      - adversarial_edge_cases (principle: robustness)
+      - baseline_tuning_checked (principle: fair comparison)
+      - ci_recomputed (principle: statistical rigor)
+      - selector_audit_clean (principle: headline gate)
+      - headline_allowed (principle: publication hygiene)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5113_fover_selector_adversarial_audit_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5114-kan-abstraction-refinement-post-wall-v469
+    milestone: "2026.07.469"
+    title: "PHASE B1 KAN post-wall verification -- abstraction refinement or decomposition beyond exp5108 exact-MILP wall"
+    priority: critical
+    track: kan-verification
+    deliverable: results/experiment_5114_kan_abstraction_refinement_post_wall_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 110
+    prior_failures:
+      - experiment_id: exp5108-kan-pwa-milp-scale-stress-test
+        verdict: "complete_kan_pwa_milp_scale_stress_wall_found_at_n10_reason_timeout"
+        addressed_by: "Technique changes from full exact PWA/MILP scaling to abstraction-refinement, decomposition, and margin-abstention diagnostics against the measured wall."
+        retire_if_same_verdict: true
+      - experiment_id: exp5098-kan-pwa-milp-scale-v2
+        verdict: "success_kan_pwa_milp_scale_v2_property_suite_clean"
+        addressed_by: "This task keeps the clean property controls but stops treating tiny exact-MILP success as a scale result."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      exp5098 showed a clean tiny KAN/PWA/MILP property suite. exp5108 then measured the exact-MILP wall: N=10 took about 120.9s, N=20 timed out, N=100 is unrealistic. This task must not repeat the same scale sweep. Use arXiv:2602.06737 as the technique prompt: local/global error estimates, piece allocation, conservative certificates, and refinement.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - results/experiment_5098_kan_pwa_milp_scale_v2.json
+      - results/experiment_5108_kan_pwa_milp_scale_stress_test.json
+      - openspec/capabilities/kan/spec.md
+      - openspec/capabilities/symbolic-kan-pipeline/spec.md
+      - python/carnot/kan/
+      - python/carnot/verify/
+      - tests/python/
+
+      TASK:
+      Implement a post-wall KAN verification diagnostic that changes technique: abstraction refinement, decomposition, adaptive piece budgets, margin abstention, or a conservative certificate. Compare directly against the exp5108 wall and include false-property controls.
+
+      CONCRETE STEPS:
+      1. Inspect existing KAN/PWA/MILP code and tests.
+      2. Reuse exp5098 property controls and exp5108 wall data as baselines.
+      3. Implement one post-wall method: local/global abstraction error budgeting, layer/unit decomposition, adaptive piece allocation, or margin-abstaining certificate.
+      4. Test on at least three property classes: true safe property, false property with counterexample, and near-margin/abstain property.
+      5. Measure solved_n, attempted_n, certificate_soundness, false_property_detected, abstain_rate, piece_budget, binary_vars, constraints, and runtime.
+      6. Emit post_wall_progress only if the method proves or safely abstains at a larger or more realistic setting than exp5108 without unsound false positives.
+      7. Add focused tests for abstraction error bounds and false-property behavior.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5114-kan-abstraction-refinement-post-wall-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "kan_abstraction_refinement_cpu" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: solver preflight accountability)
+      - technique_changed_from_exp5108 (principle: no doomed rerun)
+      - exp5108_baseline_loaded (principle: comparison provenance)
+      - solved_n (principle: scale transparency)
+      - attempted_n (principle: scale transparency)
+      - certificate_soundness (principle: verification integrity)
+      - false_property_detected (principle: negative control)
+      - near_margin_abstained (principle: no unsound overclaim)
+      - abstraction_error_bounds (principle: conservative certification)
+      - post_wall_progress (principle: decision bool)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5114_kan_abstraction_refinement_post_wall_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5115-graph-evidence-fover-transfer-v469
+    milestone: "2026.07.469"
+    title: "PHASE B2 graph evidence transfer -- apply contradiction/unsupported/support energy to FoVer step traces"
+    priority: high
+    track: graph-verification
+    deliverable: results/experiment_5115_graph_evidence_fover_transfer_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 80
+    gated_on:
+      - upstream: exp5111-fover-in-domain-pool-v469
+        artifact_field: pool_n
+        op: ">="
+        value: 150
+    prior_failures:
+      - experiment_id: exp5101-incomplete-graph-evidence-energy-v468
+        verdict: "success_graph_evidence_energy_separates_contradiction_from_unsupported"
+        addressed_by: "This is a transfer test from synthetic graph labels to FoVer step/support traces rather than a repeat of the synthetic-only diagnostic."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      exp5101 cleanly separated supported, unsupported, and contradictory synthetic graph evidence. The next question is whether that energy transfers to FoVer step/support traces where labels are formal-tool backed and useful for selection.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - results/experiment_5101_incomplete_graph_evidence_energy_v468.json
+      - results/experiment_5111_fover_in_domain_pool_v469.json
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/verification/spec.md
+      - python/carnot/verify/
+      - python/carnot/verifiers/
+      - tests/python/
+
+      TASK:
+      Adapt the graph-evidence energy from exp5101 to FoVer candidate steps. The output should measure whether graph/support energy improves candidate ranking or error localization without using answer labels as features.
+
+      CONCRETE STEPS:
+      1. Load the exp5111 FoVer pool and identify step/support/contradiction signals.
+      2. Build a lightweight evidence graph representation for each candidate trace.
+      3. Score candidates with support, unsupported, and contradiction energies.
+      4. Evaluate ranking/localization against formal labels and compare to simple baselines.
+      5. Include controls where unsupported evidence is not treated as contradiction.
+      6. Emit graph_fover_transfer_positive only if graph energy improves rank/localization on held-out examples with non-degenerate controls.
+      7. Add tests for unsupported-vs-contradiction behavior.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5115-graph-evidence-fover-transfer-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "fover_graph_energy_cpu" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: data preflight accountability)
+      - pool_path (principle: provenance)
+      - examples_scored (principle: coverage)
+      - supported_accept_rate (principle: positive class behavior)
+      - contradiction_reject_rate (principle: negative class behavior)
+      - unsupported_retained_rate (principle: non-contradiction control)
+      - ranking_delta_over_baseline (principle: utility measurement)
+      - graph_fover_transfer_positive (principle: decision bool)
+      - verifier_is_oracle: false (principle: oracle-distinctness)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5115_graph_evidence_fover_transfer_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5116-hubo-2dpt-sampling-reference-v469
+    milestone: "2026.07.469"
+    title: "PHASE B3 HUBO/p-spin sampling -- CPU exact-checked 2D parallel tempering reference before any board claim"
+    priority: high
+    track: samplers
+    deliverable: results/experiment_5116_hubo_2dpt_sampling_reference_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp5089-pbit-guided-cdcl-bridge-v467
+        verdict: "complete_pbit_guided_cdcl_distribution_sensitive_no_win"
+        addressed_by: "This attempt changes from p-bit-guided CDCL to an exact-checked HUBO/p-spin 2D parallel-tempering CPU reference with tiny-instance enumeration."
+        retire_if_same_verdict: true
+      - experiment_id: exp5102-hubo-pspin-direct-energy-v468
+        verdict: "success_hubo_pspin_direct_encoding_reduces_gadget_blowup"
+        addressed_by: "This extends the direct high-order encoding to sampling/mixing diagnostics rather than remeasuring gadget blowup."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      exp5102 showed direct HUBO/p-spin encoding can avoid QUBO gadget blowup. arXiv:2601.09037 suggests two-dimensional parallel tempering over temperature and constraint strength as the next algorithmic reference before hardware claims.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
+      - results/experiment_5102_hubo_pspin_direct_energy_v468.json
+      - openspec/capabilities/samplers/spec.md
+      - openspec/capabilities/ising-backend/spec.md
+      - openspec/capabilities/potts-sampler/spec.md
+      - python/carnot/samplers/
+      - python/carnot/energy/
+      - tests/python/
+
+      TASK:
+      Build a CPU reference for HUBO/p-spin sampling with 2D parallel tempering. Validate tiny instances by exact enumeration and report mixing/energy metrics without any hardware speed claim.
+
+      CONCRETE STEPS:
+      1. Locate direct HUBO/p-spin encoding utilities from exp5102.
+      2. Implement or reuse a deterministic-seeded CPU sampler with replicas across beta and constraint penalty dimensions.
+      3. Add swap rules for beta and penalty axes and record acceptance rates.
+      4. Validate tiny instances by exact enumeration of optima and energy distribution.
+      5. Compare unguided Gibbs, 1D temperature PT, and 2D beta/penalty PT on at least two synthetic constraint families.
+      6. Emit hubo_2dpt_reference_ready only if exact tiny-instance checks pass and 2D-PT improves or honestly ties the reference without false optimum claims.
+      7. Add tests for exact enumeration agreement, swap bookkeeping, and seed reproducibility.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5116-hubo-2dpt-sampling-reference-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "cpu_hubo_2d_parallel_tempering_reference" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: sampler preflight accountability)
+      - exact_enumeration_checked (principle: correctness)
+      - instance_families (principle: distribution transparency)
+      - beta_grid (principle: algorithm provenance)
+      - penalty_grid (principle: algorithm provenance)
+      - swap_acceptance_rates (principle: mixing evidence)
+      - best_energy_delta_vs_baselines (principle: utility measurement)
+      - optimum_hit_rate (principle: exact-check utility)
+      - hubo_2dpt_reference_ready (principle: decision bool)
+      - hardware_speedup_claimed: false (principle: no false hardware claim)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5116_hubo_2dpt_sampling_reference_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5117-taco-harm-gated-scale-v469
+    milestone: "2026.07.469"
+    title: "PHASE B4 TACO scale -- adaptive CSP heuristic with harm gate and exact-solver fallback"
+    priority: high
+    track: solver-routing
+    deliverable: results/experiment_5117_taco_harm_gated_scale_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    prior_failures:
+      - experiment_id: exp5103-taco-adaptive-csp-heuristic-v468
+        verdict: "success_taco_adaptive_heuristic_reduces_exact_solver_effort"
+        addressed_by: "The prior average win hid harmful instances; this task adds a harm detector/gate and larger scale before claiming deployability."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      exp5103 showed a large average exact-solver effort reduction from a TACO-style adaptive CSP heuristic, but it recorded harmful instances. The next step is a harm-gated scale diagnostic, not an unguarded deployment claim.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - results/experiment_5103_taco_adaptive_csp_heuristic_v468.json
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/samplers/spec.md
+      - python/carnot/verify/
+      - python/carnot/samplers/
+      - tests/python/
+
+      TASK:
+      Scale the adaptive CSP heuristic across more instances and learn or implement a conservative harm gate that falls back to the exact solver when the heuristic is likely to hurt.
+
+      CONCRETE STEPS:
+      1. Reproduce the exp5103 baseline metrics from its artifact and code.
+      2. Generate or load a larger deterministic CSP suite with varied density, arity, and frustration.
+      3. Run baseline exact solver, unguarded adaptive heuristic, and harm-gated adaptive heuristic.
+      4. Define harm as increased effort, wrong label, timeout, or degraded certificate quality.
+      5. Implement a simple auditable harm predictor or rule using pre-solve features and early telemetry.
+      6. Emit taco_harm_gate_ready only if the gated policy preserves exact labels and reduces harmful instances while retaining useful average effort reduction.
+      7. Add tests for fallback correctness and no wrong-label regressions.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5117-taco-harm-gated-scale-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "exact_solver_with_harm_gated_adaptive_cpu_heuristic" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: solver preflight accountability)
+      - instance_count (principle: scale transparency)
+      - baseline_effort (principle: baseline transparency)
+      - unguarded_effort (principle: unguarded comparison)
+      - guarded_effort (principle: gated comparison)
+      - wrong_label_count (principle: correctness)
+      - harmful_instance_count_unguarded (principle: harm measurement)
+      - harmful_instance_count_guarded (principle: harm mitigation)
+      - taco_harm_gate_ready (principle: decision bool)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5117_taco_harm_gated_scale_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5118-fr11-fover-residual-memory-v469
+    milestone: "2026.07.469"
+    title: "PHASE C1 continuous self-learning -- FoVer residual memory/SOP promotion with held-out and non-forgetting guards"
+    priority: critical
+    track: self-learning
+    deliverable: results/experiment_5118_fr11_fover_residual_memory_v469.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 100
+    gated_on:
+      - upstream: exp5112-fover-in-domain-selector-v469
+        artifact_field: selection_result_available
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5077-fr11-group-sc-memory-v466
+        verdict: "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050"
+        addressed_by: "Uses formal FoVer selector residuals rather than group-SC memory and keeps rollback/non-forgetting guards."
+        retire_if_same_verdict: true
+      - experiment_id: exp5092-fr11-budgeted-onpolicy-memory-v467
+        verdict: "complete_fr11_budgeted_onpolicy_memory_guarded_no_promote_delta_plus_0p000"
+        addressed_by: "Changes the update source to FoVer residual families with formal labels and explicit SOP/memory contract tests."
+        retire_if_same_verdict: true
+      - experiment_id: exp5105-fr11-severa-guarded-memory-v468
+        verdict: "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000"
+        addressed_by: "Keeps SEVerA-style guards but targets FoVer selector residuals to create a denser, auditable update stream."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the mandatory continuous self-learning task for .469. Prior FR-11 attempts were safe but inert. Use FoVer selector residuals as an auditable update source: cases where oracle@K exposes a correct candidate but the selector or tuned self-consistency chooses incorrectly.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-program.md
+      - results/experiment_5077_fr11_group_sc_memory_v466.json
+      - results/experiment_5092_fr11_budgeted_onpolicy_memory_v467.json
+      - results/experiment_5105_fr11_severa_guarded_memory_v468.json
+      - results/experiment_5112_fover_in_domain_selector_v469.json
+      - openspec/capabilities/self-learning/spec.md
+      - openspec/capabilities/constraint-store/spec.md
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - python/carnot/pipeline/self_learning.py
+      - python/carnot/pipeline/
+
+      TASK:
+      Implement a governed FR-11 self-learning attempt using FoVer residuals. Candidate memory/SOP updates may be proposed, but promotion is allowed only if exact contracts, held-out utility, and non-forgetting gates pass. A no-promote result is valid if it is honest and explains the blocker.
+
+      CONCRETE STEPS:
+      1. Load exp5112 residuals and define residual families with formal-label provenance.
+      2. Propose bounded memory/SOP updates from residual families. If any LLM proposal or critique is used, MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF via cached_sota_pair()/GGUF paths; legacy tiny models are smoke-only.
+      3. Compile each candidate update into exact executable contracts or tests.
+      4. Evaluate before/after on train residuals, held-out FoVer examples, and a non-forgetting suite.
+      5. Promote only if heldout_delta>0, nonforgetting_delta>=0, contracts pass, and no adversarial critical flags.
+      6. Write promoted_updates, rollback_log, and continuous_self_learning_task=true.
+      7. Add focused tests for promotion gates and rollback behavior.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5118-fr11-fover-residual-memory-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: data/model preflight accountability)
+      - continuous_self_learning_task: true (principle: FR-11 mandate)
+      - residual_source_artifact (principle: provenance)
+      - residual_family_count (principle: update-source density)
+      - candidate_updates (principle: auditability)
+      - contracts_passed (principle: safety)
+      - heldout_delta (principle: utility)
+      - nonforgetting_delta (principle: no regression)
+      - promoted_update_count (principle: promotion transparency)
+      - rollback_log (principle: governance)
+      - model_specs (principle: SOTA model accountability when LLMs are used)
+      - seeds_or_checksums (principle: reproducibility)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5118_fr11_fover_residual_memory_v469.py --date {date}
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp5119-sota-endpoint-rootcause-v469
+    milestone: "2026.07.469"
+    title: "PHASE C2 runtime repair -- root-cause local SOTA GGUF completion/logprob endpoint and cache readiness"
+    priority: high
+    track: runtime
+    deliverable: results/experiment_5119_sota_endpoint_rootcause_v469.json
     agent_type: claude
     model: opus
     max_turns: 100
     estimated_wall_time_min: 120
     prior_failures:
       - experiment_id: exp5085-llamacpp-logprob-endpoint-bringup-v467
-        verdict: success_llamacpp_logprob_endpoint_ready
-        addressed_by: "Exp5085 was flagged for too-short live inference duration; this attempt requires server transcript, adversarial verification, cache-row proof, and a minimum-duration policy before declaring clean readiness."
+        verdict: "success_llamacpp_logprob_endpoint_ready"
+        addressed_by: "Prior readiness was adversarially flagged as too short; this task requires transcript-backed lifetime, completion, and logprob proof."
         retire_if_same_verdict: true
       - experiment_id: exp5086-uprm-logprob-cache-retry-v467
-        verdict: blocked_uprm_logprob_cache_retry_endpoint_failed
-        addressed_by: "Changes scope from uPRM retry to substrate cleanup and a small logprob-cache smoke artifact; no process-verifier claim is made."
+        verdict: "blocked_uprm_logprob_cache_retry_endpoint_failed"
+        addressed_by: "Runs a root-cause diagnostic instead of assuming the cache is ready."
         retire_if_same_verdict: true
-      - experiment_id: exp5071-gguf-logprob-preflight-v466
-        verdict: complete_gguf_logprob_preflight_partial_ready
-        addressed_by: "Changes scope from passive file/preflight readiness to active endpoint, completion, logprob/top-logprob, cache, and adversarial-review proof."
+      - experiment_id: exp5097-clean-sota-endpoint-logprob-cache-v468
+        verdict: "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs"
+        addressed_by: "Keeps the same blocker visible but requires a cause tree and minimal reproducible command/log transcript."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. Exp5085 reported local completion/logprob readiness but was flagged for too-short duration, and Exp5086 could not build the cache. This task repairs runtime provenance only; it must not claim uPRM, process-verifier, or hallucination-detection wins.
+      Local SOTA GGUF runtime remains blocked for live logprobs. exp5097 resolved model files but did not prove completion/logprob readiness. This task is root-cause repair/diagnostic, not a downstream benchmark. Do not claim live readiness without transcript-backed evidence lasting long enough for adversarial_verify.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
-      - CODEX.md
       - scripts/experiment_template.py
-      - scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py
       - python/carnot/inference/sota_models.py
+      - python/carnot/verify/gguf_inference.py
+      - python/carnot/pipeline/gguf_cache.py
       - results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json
       - results/experiment_5086_uprm_logprob_cache_retry_v467.json
-      - ops/conductor-log.md
-
-      TASK:
-      Produce a clean or honestly blocked local SOTA endpoint/cache artifact. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. If live local inference is invoked, record server command, logs, endpoint lifetime, completion proof, logprob/top-logprob proof, cache rows, and adversarial verification before declaring readiness.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with CUDA/GPU visibility, llama.cpp binary/server availability, resolved local .gguf paths, free port, cache path, free VRAM, and environment variables used.
-      1. Resolve the three mandated GGUFs via cached_sota_pair/local HF cache; never use AutoTokenizer on GGUF repo IDs.
-      2. Start or probe a local OpenAI-compatible/llama.cpp endpoint and capture server command, PID if any, endpoint URL, logs, start/end times, cleanup behavior, and failure modes.
-      3. Run a deterministic sample completion and a token/logprob or top-logprob probe if supported.
-      4. Write at least a 10-row cache smoke dataset only when logprob/top-logprob evidence is real; otherwise record cache_rows_written=0 and blocker_root_cause.
-      5. Run the repo adversarial verifier on the artifact or reproduce the relevant duration/provenance checks directly; do not accept a DURATION_TOO_SHORT or live-substrate mismatch.
-      6. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, model_specs, usable_sota_models, server_command, endpoint_url, endpoint_lifetime_s, completion_endpoint_ready, logprob_endpoint_ready, top_logprob_or_confidence_ready, sample_completion, sample_logprob_evidence, cache_rows_written, cache_path, logprob_endpoint_clean, live_llm_invoked, adversarial_verify_passed, blocker_root_cause, flagged_adversarial.
-      7. Use a terminal-prefixed honest_verdict such as success_clean_sota_endpoint_logprob_cache_ready or blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5098-kan-pwa-milp-scale-v2-v468
-    milestone: "2026.07.468"
-    title: "PHASE A2 exact verifier scale -- KAN/PWA/MILP multi-property proof suite with adversarial property controls"
-    priority: critical
-    track: kan-formal-verification
-    deliverable: results/experiment_5098_kan_pwa_milp_scale_v2.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 90
-    prior_failures:
-      - experiment_id: exp2033-kan-pwa-abstraction
-        verdict: blocked_gate_check_failed
-        addressed_by: "Builds on the clean Exp5091 proof and scopes scale to a bounded proof suite with explicit binary-count, constraint-count, solve-time, and approximation-error telemetry."
-        retire_if_same_verdict: true
-      - experiment_id: exp1372-optimal-kan-pwa-formal-verification
-        verdict: cpu_only_gskan_energy_bound_verified_no_hardware_claim
-        addressed_by: "Avoids broad hardware or optimality claims; reports only exact local MILP/PWA evidence, adversarial property controls, and scale blockers."
-        retire_if_same_verdict: true
-      - experiment_id: exp5091-kan-pwa-milp-scale-v467
-        verdict: success_kan_pwa_milp_property_holds_small_clean
-        addressed_by: "Changes scope from one small clean property to a multi-property scale suite with negative controls and error-budget sweeps."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. Exp5091 is the clean positive result from .467. The next question is whether the KAN/PWA/MILP bridge scales beyond a tiny property without losing exact solver authority.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_5091_kan_pwa_milp_scale_v467.json
-      - python/carnot/energy
-      - python/carnot/verification
-      - tests/python
-
-      TASK:
-      Build and run a bounded KAN/PWA/MILP proof suite with multiple properties, at least one adversarial false-property control, and explicit scaling telemetry. Do not make any hardware or global optimality claim.
-
-      CONCRETE STEPS:
-      1. Reproduce the Exp5091 property or load its fixture as a baseline.
-      2. Add at least three bounded properties across small KAN/KAEM units or compositions: one expected true, one expected false, and one approximation-error-sensitive.
-      3. Encode each property through the PWA/MILP bridge and record binary variables, constraints, solve time, solver status, objective/bound, and approximation error budget.
-      4. Confirm that false-property controls fail or produce counterexamples instead of being reported as proved.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, property_suite, properties_proved, false_property_controls_passed, solver_statuses, binary_variable_counts, constraint_counts, solve_times_s, approximation_error_budget, counterexamples, max_scale_reached, scale_blocker, flagged_adversarial.
-      6. Set inference_substrate to exact_milp_solver_cpu unless a different real substrate is used and proven.
-      7. Use a terminal-prefixed honest_verdict such as success_kan_pwa_milp_scale_v2_property_suite_clean or complete_kan_pwa_milp_scale_v2_blocked_by_solver_growth.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5098_kan_pwa_milp_scale_v2.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5099-beaver-prefix-bound-verifier-v468
-    milestone: "2026.07.468"
-    title: "PHASE A3 deterministic verification -- BEAVER-style prefix probability bounds for finite Carnot constraints"
-    priority: critical
-    track: exact-verification
-    deliverable: results/experiment_5099_beaver_prefix_bound_verifier_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 90
-    prior_failures:
-      - experiment_id: exp1142-beaver-lite-certificate-tier
-        verdict: sound_bound_mock_logprobs
-        addressed_by: "Changes from older BEAVER-lite certificate work to the new BEAVER source set and requires finite-schema exact enumeration with optional clean SOTA substrate only."
-        retire_if_same_verdict: true
-      - experiment_id: exp1158-beaver-lite-live-logprobs
-        verdict: sound_bound_zipf_mock
-        addressed_by: "Avoids laundering mock/live ambiguity by making toy_distribution an explicit backend and using local SOTA logprobs only if Exp5097 is clean."
-        retire_if_same_verdict: true
-      - experiment_id: exp1327-beaver-lite-cactus-safe-prefix-gated-on-validator-pass
-        verdict: blocked_gate_check_failed
-        addressed_by: "Does not depend on the retired Cactus safe-prefix validator gate; uses a finite Carnot schema and exact enumeration as the authority."
-        retire_if_same_verdict: true
-      - experiment_id: exp1482-beaver-lite-live-prefix-bound-calibration
-        verdict: sound_bound_live_exp1480_plus_exp1468_calibrated
-        addressed_by: "Recasts live prefix calibration as optional smoke only after Exp5097 substrate cleanup, with deterministic finite bounds still producing the deliverable."
-        retire_if_same_verdict: true
-      - experiment_id: exp1537-beaver-prefix-bound-contracts-v3
-        verdict: "complete: BEAVER-lite prefix-bound contract audit ready"
-        addressed_by: "Extends contract auditing into a runnable finite-schema verifier with lower/upper bounds, exact probability where enumerable, and monotonicity checks."
-        retire_if_same_verdict: true
-      - experiment_id: exp1879-beaver-lite-bounds
-        verdict: "complete: BEAVER-lite ROCE validator-tree bounds computed with executable validators retaining acceptance authority"
-        addressed_by: "Changes domain from validator-tree ROCE bounds to Carnot finite output schemas and reports backend/substrate explicitly."
-        retire_if_same_verdict: true
-      - experiment_id: exp3353-deterministic-prefix-closed-bounds
-        verdict: complete_deterministic_bounds_calculated
-        addressed_by: "Uses the prior deterministic-bound pilot as lineage but adds BEAVER source mapping, SOTA model-spec discipline, and exact finite-schema soundness checks."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp5096-sota-ingestion-v468
-        artifact_field: references_section_found
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. BEAVER suggests deterministic probability bounds for prefix-closed semantic constraints. Carnot should first reproduce the abstraction on a finite, auditable schema and only then connect it to live local GGUF logprobs if Exp5097 is clean.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
       - results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json
-      - python/carnot/decoding
-      - python/carnot/verification
-      - tests/python
+      - openspec/capabilities/llm-ebm-inference/spec.md
+      - openspec/capabilities/model-tiers/spec.md
+      - openspec/capabilities/training-inference/spec.md
 
       TASK:
-      Implement a BEAVER-style prefix-bound verifier for a finite Carnot output schema such as verifier verdict JSON, structured evidence labels, or bounded SAT assignment tokens. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF if live local LLM logprobs are invoked. The task must produce sound deterministic bounds even if it falls back to a toy finite distribution.
+      Produce a clean or honestly blocked local SOTA endpoint root-cause artifact. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Resolve GGUF files through cached_sota_pair()/resolve_cached_gguf; never use AutoTokenizer on GGUF repo IDs.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with selected finite schema, prefix-closed constraint definition, tokenization assumptions, and whether Exp5097 provides clean logprob substrate.
-      1. Define a prefix-closed semantic constraint and an exact finite distribution or live-logprob-backed frontier.
-      2. Implement prefix trie/frontier traversal that returns lower and upper probability bounds for satisfying the constraint.
-      3. Prove bounds by exact enumeration on the finite distribution and record monotonicity/bound-gap checks.
-      4. If Exp5097 is clean, optionally run a small local SOTA logprob-backed smoke test; otherwise set backend_used=toy_distribution and live_llm_invoked=false.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, model_specs, prefix_closed_constraint, backend_used, lower_bound, upper_bound, bound_gap, exact_probability_if_enumerable, monotonic_bounds, soundness_checks_passed, frontier_nodes, live_llm_invoked, flagged_adversarial.
-      6. Use a terminal-prefixed honest_verdict such as success_beaver_prefix_bounds_sound_on_finite_schema or complete_beaver_prefix_bounds_toy_only_runtime_not_clean.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5099_beaver_prefix_bound_verifier.py -q --no-cov
+      1. Check CUDA/GPU visibility, llama.cpp or llama-cpp-python availability, model cache paths, disk/RAM, and port availability.
+      2. Resolve all three mandated GGUFs and record exact paths or blockers.
+      3. Attempt a minimal completion smoke and a logprob/top-logprob smoke using the intended local backend.
+      4. If a server is launched, record command, PID, port, startup log, request/response transcript, lifetime_s, shutdown behavior, and any errors.
+      5. Populate a root_cause_tree that distinguishes missing binary, wrong model path, unsupported logprob API, CUDA failure, OOM, timeout, and cache schema mismatch.
+      6. Write cache rows only if live logprobs are actually observed; otherwise mark cache_ready=false.
+      7. Run adversarial verification and ensure any live_model artifact has duration_s consistent with the live-model floor.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5119-sota-endpoint-rootcause-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: compute preflight accountability)
+      - MODEL_SPECS (principle: mandated SOTA model accountability)
+      - cached_sota_pair_attempted (principle: model-resolution discipline)
+      - gguf_paths (principle: reproducibility)
+      - cuda_status (principle: hardware precondition)
+      - server_command (principle: transcript provenance)
+      - endpoint_lifetime_s (principle: live readiness)
+      - completion_proof (principle: live readiness)
+      - logprob_proof (principle: live readiness)
+      - cache_ready (principle: downstream gate)
+      - root_cause_tree (principle: actionable blocker)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: {project_root}/.venv/bin/python scripts/experiment_5119_sota_endpoint_rootcause_v469.py --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp5100-constrainprompt-code-assurance-v468
-    milestone: "2026.07.468"
-    title: "PHASE A4 prompt constraints -- code-based assurance for prompt-defined verifier schemas"
-    priority: high
-    track: exact-verification
-    deliverable: results/experiment_5100_constrainprompt_code_assurance_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 75
-    prior_failures:
-      - experiment_id: exp4294-verifier-efficiency-harden-strong-judge
-        verdict: OK (conductor)
-        addressed_by: "Changes from strong LLM judge hardening to executable prompt-constraint assurance where Python/Z3 tests own acceptance."
-        retire_if_same_verdict: true
-      - experiment_id: exp4305-cross-domain-selector-generalization
-        verdict: "complete: cross_domain_selection_collapses_domain_bound"
-        addressed_by: "Changes from selector generalization to prompt-defined constraint compilation with positive, negative, and adversarial/no-op fixtures."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. CONSTRAINPROMPT points to an exact-verifier bridge: prompt-defined constraints should become executable checks, not hidden judge preferences.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - python/carnot/verification
-      - python/carnot/decoding
-      - tests/python
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-
-      TASK:
-      Prototype code-based assurance for prompt-defined constraints over a small Carnot schema, such as verifier verdict JSON, tool-call arguments, or evidence-claim records. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF if any LLM extracts, rewrites, or proposes constraints. Constraint acceptance must be owned by executable tests or a solver.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with schema path, prompt constraints, parser/checker backend, and whether any LLM was invoked.
-      1. Select 5-10 prompt-level constraints for a finite verifier/tool schema.
-      2. Convert them into executable Python/Z3 checks or a logical evaluation tree.
-      3. Build positive, negative, and adversarial/no-op fixtures and prove the checker accepts/rejects as expected.
-      4. If using an LLM to propose checks, require all proposed code to pass tests before inclusion and record rejected proposals.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, model_specs, schema_name, constraints_total, executable_constraints_total, positive_tests_passed, negative_tests_passed, adversarial_tests_passed, rejected_constraints, llm_invoked, exact_checker_backend, flagged_adversarial.
-      6. Use a terminal-prefixed honest_verdict such as success_constrainprompt_code_assurance_exact_checks_passed or complete_constrainprompt_assurance_partial_constraints_only.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5100_constrainprompt_code_assurance.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5101-incomplete-graph-evidence-energy-v468
-    milestone: "2026.07.468"
-    title: "PHASE B1 evidence energy -- distinguish contradictions from unsupported claims under incomplete graph evidence"
-    priority: high
-    track: evidence-verification
-    deliverable: results/experiment_5101_incomplete_graph_evidence_energy_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 80
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. The graph-evidence paper argues that incomplete evidence should induce soft grounding, not overconfident rejection. Carnot needs this distinction for hallucination mitigation: contradiction, unsupported, and supported should not collapse into one score.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - python/carnot/verification
-      - python/carnot/energy
-      - tests/python
-
-      TASK:
-      Build a small evidence-relative graph energy verifier that scores supported, contradicted, and true-but-unobserved claims differently. The correctness authority should be the synthetic graph generator and exact labels, not an LLM judge.
-
-      CONCRETE STEPS:
-      1. Create or reuse a tiny typed knowledge graph with hidden edges, observed evidence, support paths, and contradiction cases.
-      2. Define entity-anchor, relation-residual, path-energy, and support-region features that produce an auditable energy score.
-      3. Evaluate supported, contradicted, unsupported-true, and unsupported-false claims across perturbations and hidden-edge rates.
-      4. Tune only on train/dev splits and report held-out contradiction rejection and unsupported retention separately.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, graph_fixture_hash, hidden_edge_rate, supported_accept_rate, contradiction_reject_rate, unsupported_retained_rate, unsupported_false_reject_rate, energy_thresholds, slack_sweep, stability_under_perturbation, flagged_adversarial.
-      6. Set inference_substrate to synthetic_graph_exact_labels unless a different real substrate is used and proven.
-      7. Use a terminal-prefixed honest_verdict such as success_graph_evidence_energy_separates_contradiction_from_unsupported or complete_graph_evidence_energy_no_heldout_win.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5101_incomplete_graph_evidence_energy.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5102-hubo-pspin-direct-energy-v468
-    milestone: "2026.07.468"
-    title: "PHASE B2 high-order energy -- direct HUBO/p-spin constraints versus QUBO gadget blowup"
-    priority: high
-    track: ising-ml
-    deliverable: results/experiment_5102_hubo_pspin_direct_energy_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 80
-    prior_failures:
-      - experiment_id: exp5089-pbit-guided-cdcl-bridge-v467
-        verdict: complete_pbit_guided_cdcl_distribution_sensitive_no_win
-        addressed_by: "Changes representation from pairwise p-bit guided CDCL assumptions to direct high-order HUBO/p-spin energy with exact enumeration and QUBO-gadget baseline."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. Exp5089 showed that pairwise p-bit guidance preserved correctness but did not reduce CDCL effort. PLANCK and sparse Potts work suggest testing native high-order constraints before forcing everything through QUBO gadgets.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
-      - python/carnot/ising
-      - python/carnot/verification
-      - tests/python
-
-      TASK:
-      Compare direct HUBO/p-spin encoding against QUBO quadratization on tiny exact high-order CSPs such as k-XORSAT, hypergraph MaxCut, or parity-verifier clauses. Correctness must be proven by exact enumeration or an exact solver.
-
-      CONCRETE STEPS:
-      1. Generate a small family of high-order Boolean constraint instances with known exact optima.
-      2. Encode each instance directly as HUBO/p-spin energy and as a QUBO gadget formulation.
-      3. Enumerate or exactly solve both forms and verify matching optima and assignments where projected.
-      4. Measure auxiliary variable count, coupling count, density, energy-scale distortion, and solve/enumeration time.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, instance_family, exact_optima_verified, hubo_variable_counts, qubo_variable_counts, auxiliary_variable_blowup, coupling_density_hubo, coupling_density_qubo, energy_scale_distortion, direct_hubo_advantage, hardware_mapping_notes, flagged_adversarial.
-      6. Set inference_substrate to exact_enumeration_cpu unless a different real substrate is used and proven.
-      7. Use a terminal-prefixed honest_verdict such as success_hubo_pspin_direct_encoding_reduces_gadget_blowup or complete_hubo_pspin_no_advantage_over_qubo_gadgets.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5102_hubo_pspin_direct_energy.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5103-taco-adaptive-csp-heuristic-v468
-    milestone: "2026.07.468"
-    title: "PHASE B3 adaptive solver help -- TACO-style test-time adaptation with exact-solver fallback"
-    priority: medium
-    track: constraint-solving
-    deliverable: results/experiment_5103_taco_adaptive_csp_heuristic_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 90
-    prior_failures:
-      - experiment_id: exp5089-pbit-guided-cdcl-bridge-v467
-        verdict: complete_pbit_guided_cdcl_distribution_sensitive_no_win
-        addressed_by: "Changes from static p-bit consensus assumptions to instance-wise adaptation and warm-start selection while preserving exact solver authority."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. TACO suggests that test-time adaptation can improve combinatorial optimization without supervised labels. Carnot should test this only as solver help: the exact solver remains the verifier.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - results/experiment_5089_pbit_guided_cdcl_bridge_v467.json
-      - python/carnot/verification
-      - python/carnot/energy
-      - tests/python
-
-      TASK:
-      Prototype a TACO-style adaptive heuristic for a small CSP family, then measure whether it improves exact-solver effort. Do not count heuristic-only answers as solved.
-
-      CONCRETE STEPS:
-      1. Select a bounded CSP family with an exact solver baseline, such as MaxClique, minimum vertex cover, small SAT, or graph coloring.
-      2. Implement a lightweight instance-wise adaptation or warm-start loop that proposes assumptions, variable order, partial assignments, or relaxation hints.
-      3. Compare exact solver effort with no help, static heuristic help, and adapted help across train/dev/held-out generated instances.
-      4. Report correctness from the exact solver only and include failure cases where adaptation harms effort.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, csp_family, exact_solver_backend, instances_total, baseline_effort, static_heuristic_effort, adapted_effort, delta_effort_vs_baseline, correctness_preserved, harmful_instance_count, adaptation_steps, flagged_adversarial.
-      6. Set inference_substrate to exact_solver_with_adaptive_cpu_heuristic unless a different real substrate is used and proven.
-      7. Use a terminal-prefixed honest_verdict such as success_taco_adaptive_heuristic_reduces_exact_solver_effort or complete_taco_adaptive_heuristic_no_effort_win.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5103_taco_adaptive_csp_heuristic.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5104-constrained-decoding-semantic-risk-audit-v468
-    milestone: "2026.07.468"
-    title: "PHASE B4 constrained decoding audit -- semantic-risk controls for STATIC/grammar masks"
-    priority: high
-    track: guided-decoding
-    deliverable: results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 90
-    gated_on:
-      - upstream: exp5096-sota-ingestion-v468
-        artifact_field: references_section_found
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp5090-static-csr-constrained-decoding-v467
-        verdict: success_static_csr_masks_speedup_and_validity_win
-        addressed_by: "Exp5090 was flagged as tautological and too short; this audit adds semantic/no-op controls, distribution-distortion checks, non-degenerate candidates, and external grammar baselines."
-        retire_if_same_verdict: true
-      - experiment_id: exp5075-dccd-guided-decoding-scale-v466
-        verdict: complete_dccd_guided_frontier_no_headline_underpowered
-        addressed_by: "Changes from DCCD/free-form guided decoding to structured-mask semantic-risk auditing with explicit no-headline rules for syntax-only wins."
-        retire_if_same_verdict: true
-      - experiment_id: exp1636-energy-guided-decoding
-        verdict: blocked_gate_check_failed
-        addressed_by: "Runs deterministic structured-output audits and avoids the retired blocked energy-guided decoding path."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. Exp5090 showed STATIC-style masks can be fast and valid on a finite toy schema, but adversarial review flagged it as tautological and too short. Recent constrained-decoding work also warns that grammar constraints can distort distributions.
-
-      EXISTING CODE TO READ FIRST:
-      - research-references.md
-      - results/experiment_5090_static_csr_constrained_decoding_v467.json
-      - results/experiment_5075_dccd_guided_decoding_scale_v466.json
-      - python/carnot/decoding
-      - python/carnot/verification
-      - tests/python
-
-      TASK:
-      Audit constrained decoding for semantic risk on a finite Carnot schema. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF if live local decoding is invoked. The task may report a diagnostic, but it must not headline a syntax-only validity win.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with selected schema, tokenizer assumptions, candidate-pool non-degeneracy, llguidance or grammar-engine availability, and Exp5097 endpoint cleanliness if live decoding is used.
-      1. Reproduce a STATIC/trie/CSR mask over a finite schema and add at least one external grammar baseline or clearly record why unavailable.
-      2. Build semantic controls: no-op valid outputs, tautological valid outputs, unsupported claims, contradicted claims, and distribution-sensitive alternatives.
-      3. Measure syntax validity, semantic validity, no-op acceptance, contradiction rejection, latency, mask memory, and distribution shift against unconstrained/rerank baselines.
-      4. If live local decoding is unavailable, run a deterministic distribution audit and set live_llm_invoked=false.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, model_specs, schema_name, candidate_pool_non_degenerate, grammar_baseline, syntax_validity_rate, semantic_validity_rate, noop_accept_rate, contradiction_reject_rate, distribution_shift_metric, latency_ms, syntax_only_headline_forbidden, live_llm_invoked, flagged_adversarial.
-      6. Use a terminal-prefixed honest_verdict such as complete_constrained_decoding_semantic_audit_no_syntax_only_headline or success_constrained_decoding_semantic_controls_clean.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5104_constrained_decoding_semantic_risk_audit.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5105-fr11-severa-guarded-memory-v468
-    milestone: "2026.07.468"
-    title: "PHASE C1 continuous self-learning -- SEVerA-style formal contracts for memory and skill promotion"
-    priority: critical
-    track: self-learning
-    deliverable: results/experiment_5105_fr11_severa_guarded_memory_v468.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 100
-    prior_failures:
-      - experiment_id: exp5092-fr11-budgeted-onpolicy-memory-v467
-        verdict: complete_fr11_budgeted_onpolicy_memory_guarded_no_promote_delta_plus_0p000
-        addressed_by: "Changes from passive budgeted memory/on-policy replay to formal Search-Verify-Learn contracts around memory/SOP updates."
-        retire_if_same_verdict: true
-      - experiment_id: exp5077-fr11-group-sc-memory-v466
-        verdict: complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050
-        addressed_by: "Adds formal update contracts, evidence snapshots, and exact non-regression checks before any promotion."
-        retire_if_same_verdict: true
-      - experiment_id: exp5064-audited-skillgraph-self-learning-v465
-        verdict: complete_guarded_no_promote_minus_0p050
-        addressed_by: "Uses SEVerA-style verify-before-learn gating instead of broad skillgraph promotion from dev improvements."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      You are in {project_root} on {date}. research-program.md requires continuous self-learning coverage. Prior FR-11 attempts correctly refused unsafe or non-improving memory promotion. SEVerA suggests a stricter mechanism: Search-Verify-Learn under formal guards.
-
-      EXISTING CODE TO READ FIRST:
-      - research-program.md
-      - research-references.md
-      - results/experiment_5092_fr11_budgeted_onpolicy_memory_v467.json
-      - results/experiment_5077_fr11_group_sc_memory_v466.json
-      - results/experiment_5064_audited_skillgraph_self_learning.json
-      - python/carnot/self_learning
-      - python/carnot/verification
-      - tests/python
-
-      TASK:
-      Run a governed FR-11 self-learning attempt where candidate memory or SOP updates must satisfy formal contracts before promotion. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF if LLM proposals, critiques, or replay generations are invoked. Promotion is forbidden unless held-out and non-forgetting gates pass.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with dataset split hashes, memory/SOP store path, candidate-generation provenance, exact verifier path, contamination guard, and rollback path.
-      1. Build candidate memory/SOP updates from current misses or verified traces without final-answer leakage.
-      2. Define formal contracts for provenance, schema validity, scope, evidence support, non-regression, TTL/staleness, and poison/injection resistance.
-      3. Run Search-Verify-Learn: generate candidates, verify contracts, evaluate held-out/non-forgetting, and promote only if all guards pass.
-      4. Compare baseline, prior budgeted memory, and contract-guarded memory/SOP updates.
-      5. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, model_specs, candidate_updates_total, contract_pass_count, promoted_count, heldout_delta, nonforgetting_delta, rollback_guard_passed, poison_guard_passed, contamination_guard_passed, formal_contracts, promotion_decision, llm_invoked, flagged_adversarial.
-      6. Set inference_substrate to exact_guarded_self_learning_eval unless live LLM proposals are truly invoked and recorded separately.
-      7. Use a terminal-prefixed honest_verdict such as success_fr11_severa_guarded_memory_promoted_under_contracts or complete_fr11_severa_guarded_memory_no_promote_contracts_working.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5105_fr11_severa_guarded_memory.py -q --no-cov
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp5106-hardware-partition-telemetry-v468
-    milestone: "2026.07.468"
-    title: "PHASE C2 hardware continuity -- KV260 safe transcript, GateMate triage, PolarFire precheck, and partition telemetry"
+  - id: exp5120-hardware-residual-telemetry-v469
+    milestone: "2026.07.469"
+    title: "PHASE C3 hardware continuity -- KV260 residual-energy methodology plus GateMate/PolarFire authenticated prechecks"
     priority: high
     track: hardware
-    deliverable: results/experiment_5106_hardware_partition_telemetry_v468.json
+    deliverable: results/experiment_5120_hardware_residual_telemetry_v469.json
     agent_type: claude
     model: opus
     max_turns: 100
-    estimated_wall_time_min: 100
+    estimated_wall_time_min: 110
     prior_failures:
       - experiment_id: exp5093-hardware-continuity-v467
-        verdict: complete_hardware_continuity_v467_partial_board_blockers
-        addressed_by: "Continues the required hardware slot from reachability/partial blockers to safe transcript collection and partition/update telemetry, still with no speedup claim."
+        verdict: "complete_hardware_continuity_v467_partial_board_blockers"
+        addressed_by: "Continues board visibility but changes metric toward residual-energy telemetry methodology and authenticated transcripts."
         retire_if_same_verdict: true
-      - experiment_id: exp5079-board-continuity-matrix-v466
-        verdict: success_board_continuity_matrix_written_no_speedup_claim
-        addressed_by: "Moves beyond board visibility into KV260 UIO-safe transcript if available, GateMate terminal-state triage, PolarFire precheck, and hardware-mapping telemetry."
+      - experiment_id: exp5106-hardware-partition-telemetry-v468
+        verdict: "complete_hardware_partition_telemetry_no_speedup_claim"
+        addressed_by: "Keeps the no-speedup discipline and adds residual-energy exponent methodology inspired by million-p-bit partition telemetry."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. CLAUDE.md requires hardware continuity while boards are attached. `.467` kept KV260 and PolarFire alive but did not prove board acceleration, and GateMate detection still failed.
+      Hardware is continuity, not acceleration, until authenticated board timing exists. KV260 is SSH-only; do not use host storage-device probes as a board precondition. arXiv:2606.25313 suggests residual-energy decay and communication/update ratios as better partition telemetry than raw static mappings.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-hardware-wishlist.md
-      - research-references.md
       - results/experiment_5093_hardware_continuity_v467.json
-      - results/experiment_5079_board_continuity_matrix_v466.json
-      - results/experiment_5065_kv260_testbench_timing_packet.json
-      - ops/known-issues.md
-      - ops/status.md
+      - results/experiment_5106_hardware_partition_telemetry_v468.json
+      - openspec/capabilities/fpga/spec.md
+      - openspec/capabilities/ising-backend/spec.md
+      - openspec/capabilities/samplers/spec.md
+      - hardware/
+      - scripts/
 
       TASK:
-      Produce a hardware continuity and partition-telemetry artifact covering KV260, GateMate A1/DirtyJTAG, PolarFire, and high-level TSU/neuromorphic mapping notes. This task must not claim speedup unless a real board command transcript proves timing. Use safe checks only.
+      Produce a hardware continuity artifact with authenticated prechecks and a residual-energy telemetry plan or smoke result. No board speedup claim is allowed without command transcripts, workload hashes, timing, and sample-quality evidence.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: record preconditions_checked with KV260 SSH command result, GateMate detect command availability, PolarFire SSH command result, destructive_actions_allowed=false, and any board-specific safety constraints.
-      1. KV260 check must use ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' and safe board-side commands only; use only the SSH path and do not inspect host block devices.
-      2. Verify or collect a KV260 UIO/register transcript only through an established safe repo script or safe SSH commands; otherwise record the exact blocker.
-      3. Run GateMate non-destructive detect/terminal-state triage and record USB/cable/toolchain evidence.
-      4. Run PolarFire SSH/hash-dispatch preconditions only unless a known safe dispatch path exists.
-      5. Add partition/update telemetry notes for p-spin/HUBO or CSP instances: coupling density, partition count, boundary exchange estimate, and expected bottleneck.
-      6. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, preconditions_checked, kv260_ssh_ready, kv260_uio_transcript_collected, kv260_blocker, gatemate_detected, gatemate_terminal_state, polarfire_ssh_ready, polarfire_dispatch_precheck, partition_telemetry, destructive_actions_allowed, speedup_claimed, flagged_adversarial.
-      7. Set inference_substrate to hardware_smoke_and_static_mapping unless real board execution with timing is proven.
-      8. Use a terminal-prefixed honest_verdict such as complete_hardware_partition_telemetry_no_speedup_claim or success_hardware_board_timing_transcript_collected_no_general_speedup_claim.
-      Run command: .venv/bin/python -m pytest tests/python/test_experiment_5106_hardware_partition_telemetry.py -q --no-cov
+      1. Check KV260 only through SSH commands such as ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'. Do not use host storage-device probes as a board precondition.
+      2. If KV260 UIO/register interaction is safely available, record exact command transcript and workload hash; otherwise record the blocker.
+      3. For any sample telemetry, compute residual_energy_by_sweep and fit a decay exponent only from real sample data.
+      4. Check GateMate USB/DirtyJTAG detection and PolarFire SSH/precheck status with authenticated command outputs.
+      5. Record CPU-only fallback methodology for residual-energy sweeps if boards are unavailable.
+      6. Emit hardware_residual_telemetry_ready only if at least one authenticated board or CPU-reference residual sweep is recorded; emit no_speedup_claim=true unless full evidence exists.
+      7. Do not modify scripts/research_conductor.py and do not claim Extropic/TSU execution.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5120-hardware-residual-telemetry-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "hardware_smoke_and_residual_telemetry_or_cpu_fallback" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - preconditions_checked (principle: hardware preflight accountability)
+      - kv260_ssh_checked (principle: board continuity)
+      - kv260_host_block_devices_touched: false (principle: safety)
+      - gatemate_checked (principle: board continuity)
+      - polarfire_checked (principle: board continuity)
+      - command_transcripts (principle: authenticated evidence)
+      - workload_hashes (principle: reproducibility)
+      - residual_energy_by_sweep (principle: sample-quality telemetry)
+      - decay_exponent (principle: partition telemetry)
+      - hardware_residual_telemetry_ready (principle: decision bool)
+      - no_speedup_claim: true (principle: no false acceleration)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5120_hardware_residual_telemetry_v469.py --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp5107-capstone-v468
-    milestone: "2026.07.468"
-    title: "PHASE Z capstone -- decide exact-verifier scale-up, runtime substrate readiness, FR-11 promotion, and hardware continuity"
+  - id: exp5121-capstone-v469
+    milestone: "2026.07.469"
+    title: "PHASE Z capstone -- aggregate .469 FoVer moat, KAN post-wall, solver, FR-11, runtime, and hardware decisions"
     priority: critical
     track: capstone
-    deliverable: results/experiment_5107_capstone_v468.json
+    deliverable: results/experiment_5121_capstone_v469.json
     agent_type: claude
     model: opus
     max_turns: 100
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 70
+    operator_override: "2026-07-01 operator directive: routine capstone continuation for new milestone .469; aggregate available artifacts and report gaps without hard-blocking all axes."
     prior_failures:
-      - experiment_id: exp257-predictive-verifier-hardware
-        verdict: OK (conductor)
-        addressed_by: "This capstone only aggregates .468 artifacts and does not rerun predictive-verifier hardware benchmarks."
-        retire_if_same_verdict: true
-      - experiment_id: exp2469-paperv6-capstone-v238
-        verdict: OK (conductor)
-        addressed_by: "Recurring capstone scope is intentional; this attempt records .468 exact-verifier scale, runtime, FR-11, and hardware decisions."
-        retire_if_same_verdict: true
-      - experiment_id: exp3190-capstone-v295
-        verdict: "complete: capstone_v295_ready=true; paper_ready=false; publication_blocker_count=80; blocker_delta_from_v28=7; missing_artifact_count=1; next_top_gap=full_local_sota_receipt_clean_rerun_allowed_repair_gate_unblock"
-        addressed_by: "Aggregates the current .468 artifact set and does not reuse the v295 paper-readiness decision surface."
-        retire_if_same_verdict: true
-      - experiment_id: exp3349-capstone-v309
-        verdict: "complete: capstone_v309_synthesis_ready=true"
-        addressed_by: "Recurring capstone lineage is declared; this task has a different milestone artifact set and decision questions."
+      - experiment_id: exp5107-capstone-v468
+        verdict: "complete_capstone_v468_exact_verifier_scale_decision_recorded"
+        addressed_by: "Routine capstone advances to .469 and aggregates a different experiment set over FoVer, post-wall KAN, FR-11, runtime, and hardware."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      You are in {project_root} on {date}. This capstone is ungated. It must run over all available .468 artifacts and record clean wins, blockers, missing artifacts, and adversarial flags without laundering failures.
+      This is the ungated .469 capstone. It must aggregate available artifacts and report missing ones as gaps rather than zeroing out unrelated axes. The core decision is whether .469 produced a clean FoVer verifier moat, a viable post-wall KAN path, solver/sampling progress, a productive FR-11 update, runtime readiness, and honest hardware telemetry.
 
       EXISTING CODE TO READ FIRST:
-      - CODEX.md
       - CLAUDE.md
       - research-program.md
-      - research-roadmap.yaml
-      - research-roadmap-next.yaml
+      - _bmad/prd.md
+      - _bmad/architecture.md
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - ops/conductor-log.md
-      - ops/status.md
+      - research-roadmap-next.yaml
       - ops/changelog.md
-      - _bmad/traceability.md
-      - results/experiment_5095_archive_467_activate_468.json
-      - results/experiment_5096_sota_ingestion_v468.json
-      - results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json
-      - results/experiment_5098_kan_pwa_milp_scale_v2.json
-      - results/experiment_5099_beaver_prefix_bound_verifier_v468.json
-      - results/experiment_5100_constrainprompt_code_assurance_v468.json
-      - results/experiment_5101_incomplete_graph_evidence_energy_v468.json
-      - results/experiment_5102_hubo_pspin_direct_energy_v468.json
-      - results/experiment_5103_taco_adaptive_csp_heuristic_v468.json
-      - results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json
-      - results/experiment_5105_fr11_severa_guarded_memory_v468.json
-      - results/experiment_5106_hardware_partition_telemetry_v468.json
+      - ops/status.md
+      - ops/conductor-log.md
+      - openspec/capabilities/capstone/spec.md
+      - openspec/capabilities/research-reporting/spec.md
+      - scripts/summarize_artifact.py
+      - scripts/adversarial_verify.py
 
       TASK:
-      Write results/experiment_5107_capstone_v468.json and reconcile docs. Decide whether .468 produced a clean exact-verifier scale-up, a clean runtime substrate, a safe FR-11 promotion, constrained-generation evidence worth keeping, and hardware progress. Missing artifacts must be listed, not inferred.
+      Aggregate exp5109-exp5120 into a final .469 decision artifact. Skip or quarantine adversarially flagged artifacts for headline purposes, but still report what they attempted and why they failed. The capstone is not gated.
 
       CONCRETE STEPS:
-      1. Load every available .468 artifact and classify each as clean_positive, clean_negative, blocked, missing, or adversarially_flagged.
-      2. Decide the milestone headline using only artifacts with flagged_adversarial=false and substrate/provenance fields consistent with their claims.
-      3. Summarize exact-verifier outcomes from KAN/MILP, BEAVER prefix bounds, code assurance, graph evidence, high-order energy, and adaptive solver tasks.
-      4. Summarize runtime substrate readiness from Exp5097 without letting it affect non-LLM exact-verifier claims.
-      5. Summarize FR-11 promotion/no-promote decision and hardware continuity/no-speedup state.
-      6. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md with the final .468 decision if needed; do not modify research-roadmap.yaml.
-      7. Emit required artifact fields, each with a principle annotation: honest_verdict, duration_s, inference_substrate, source_artifacts, missing_artifacts, clean_positive_artifacts, clean_negative_artifacts, blocked_artifacts, flagged_artifacts, milestone_decision, exact_verifier_decision, runtime_substrate_decision, fr11_decision, hardware_decision, docs_updated, next_research_questions, flagged_adversarial.
-      8. Set inference_substrate to aggregation_from_upstream_artifacts.
-      9. Use a terminal-prefixed honest_verdict such as complete_capstone_v468_exact_verifier_scale_decision_recorded.
-      Run command: .venv/bin/python scripts/conductor_pre_flight.py
+      1. Load all available exp5109-exp5120 artifacts and record missing artifacts as per-axis gaps.
+      2. Run or read adversarial verification status for each artifact.
+      3. Decide fover_moat_state using exp5111-exp5113: clean positive, clean negative, blocked, or flagged.
+      4. Decide kan_post_wall_state from exp5114 compared with exp5108.
+      5. Decide solver_sampling_state from exp5115-exp5117.
+      6. Decide fr11_state from exp5118, including whether continuous_self_learning_task=true and any promotion was safe.
+      7. Decide runtime_state from exp5119 and hardware_state from exp5120.
+      8. Write next_milestone_recommendations with 3-5 concrete priorities and retire any same-verdict doomed reruns.
+      9. Update ops/status.md and ops/changelog.md with concise .469 summary if this task runs at milestone close.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id: "exp5121-capstone-v469" (principle: traceability)
+      - milestone: "2026.07.469" (principle: milestone accountability)
+      - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+      - inference_substrate: "aggregation_from_upstream_artifacts" (principle: substrate honesty)
+      - duration_s (principle: timing accountability)
+      - artifacts_read (principle: provenance)
+      - missing_artifacts (principle: gap transparency)
+      - quarantined_artifacts (principle: adversarial hygiene)
+      - fover_moat_state (principle: PRD FR-12 decision)
+      - kan_post_wall_state (principle: exact-verifier scale decision)
+      - solver_sampling_state (principle: solver utility decision)
+      - fr11_state (principle: PRD FR-11 decision)
+      - runtime_state (principle: SOTA substrate decision)
+      - hardware_state (principle: hardware continuity decision)
+      - next_milestone_recommendations (principle: planning continuity)
+      - active_roadmap_modified: false (principle: operator instruction compliance)
+      - conductor_modified: false (principle: conductor immutability)
+      - flagged_adversarial (principle: adversarial-verification accountability)
+      - tests_run (principle: verification evidence)
+
+      Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5121_capstone_v469.py --date {date}
       Do NOT push. Do NOT modify scripts/research_conductor.py.
