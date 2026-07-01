@@ -1280,6 +1280,43 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### MMLU-PRO VERIFIER VS CHEAP BASELINE — HONEST NEGATIVE, UNDERPOWERED AT n=40 2026-07-01 (outer-loop, direct follow-up: "build a verifier and test whether it actually beats a cheap baseline on this corpus")
+
+**Real test, real negative.** `scripts/experiments/exp_mmlu_pro_verifier_vs_cheap_baseline.py` /
+`results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json` (adversarial_verify: 0 flagged).
+Regenerated the same 40-question MMLU-Pro corpus (the prior headroom-check script only persisted
+parsed letters, not full reasoning text, so no verifier could be trained on it) with FULL candidate
+text saved. Built a learned verifier (all-MiniLM-L6-v2 embedding of the full reasoning text +
+LogisticRegression) and a matched cheap baseline (8 non-learned text-statistical features +
+LogisticRegression), both scored via leave-one-QUESTION-out CV (no leakage) and used to SELECT the
+top-scored candidate among K=6 per question.
+
+**Result: `oracle_at_k_ceiling=0.300, sc_vote_accuracy=0.075, verifier_selection_accuracy=0.100,
+cheap_baseline_selection_accuracy=0.075`.** Verifier delta vs cheap baseline: `+0.025, CI95=[-0.100,
+0.150]` — includes 0, NOT significant. **The verifier does not beat the cheap baseline** (nor SC-vote,
+same CI-crosses-0 result). Neither selection method captures the real headroom that exists between
+the oracle ceiling (30%) and what any method achieves (~7.5-10%).
+
+**Honest reason, not a dismissal:** n_questions=40 is small, and only 20 of 240 candidate rows are
+labeled correct — severe class imbalance for a per-candidate classifier trained via 40-fold
+leave-one-question-out CV (many folds have very few positive training examples). This is a genuinely
+UNDERPOWERED test, not strong evidence that verifiers structurally cannot capture this headroom.
+Scaling the corpus (more questions -> more positive examples per fold) is the natural next step if
+this moat question is pursued further; this result rules out "trivially works at n=40," not the
+underlying hypothesis.
+
+**Infrastructure note (repeated 5x this run, all fixed via resumable checkpointing):**
+generation was interrupted mid-run multiple times by what appears to be a background-task lifecycle
+limit in this environment (server processes died seconds-to-minutes into serving, independent of
+script correctness — confirmed via server-side logs showing "Received second interrupt, terminating
+immediately" with no corresponding client-side error). Fixed by making `generate_pool()` resumable
+(flush-per-candidate to `results/experiment_mmlu_pro_verifier_candidate_pool.jsonl`, requiring FULL
+K_SAMPLES coverage before marking a question done — an earlier version of the resume check had a real
+bug where a question interrupted mid-K-loop would be wrongly marked complete and permanently
+under-sampled; caught and fixed before it affected the final result). Real total generation time
+across all resumed attempts: ~383s of actual LLM inference wall-clock for the final 12 questions,
+after ~950s+ across two earlier interrupted attempts covering the first 28.
+
 ### MMLU-PRO FRESH HEADROOM CHECK — FIRST GENUINE HEADROOM FOUND 2026-07-01 (outer-loop, item 2, "generate a small fresh corpus now")
 
 **After three consecutive dead ends this session on the oracle-distinct-headroom-present moat corpus
