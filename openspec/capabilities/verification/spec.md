@@ -23497,6 +23497,64 @@ whether the live smoke was actually invoked.
 |---|---|---|
 | REQ-VERIFY-5090 | Proposed (`python/carnot/experiment_5090_static_csr_constrained_decoding.py`, `results/experiment_5090_static_csr_constrained_decoding_v467.json`) | Proposed (`tests/python/test_experiment_5090_static_csr_constrained_decoding.py`) |
 
+### REQ-VERIFY-5104: Constrained Decoding Semantic Risk Audit
+
+The repository SHALL provide Exp 5104 at
+`python/carnot/experiment_5104_constrained_decoding_semantic_risk_audit.py` to
+audit STATIC/trie/CSR constrained decoding over a finite Carnot semantic-control
+schema and write
+`results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json`.
+
+The runner SHALL record preconditions before evaluation, including the selected
+finite schema, tokenizer assumptions, candidate-pool non-degeneracy,
+llguidance or grammar-engine availability, and Exp5097 endpoint cleanliness if
+live local decoding would be used. If live local decoding is unavailable, the
+runner SHALL perform a deterministic distribution audit, set
+`live_llm_invoked=false`, and MUST NOT claim `live_llm_inference`. If live
+local decoding is invoked, `model_specs` MUST include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The audit SHALL reproduce a STATIC-style trie and CSR mask over the finite
+schema, compare it with an external grammar baseline such as llguidance or
+llama.cpp GBNF when available, or clearly record why no external grammar
+baseline is available. It SHALL include semantic controls for no-op valid outputs,
+tautological valid outputs, unsupported claims, contradicted claims, and
+distribution-sensitive alternatives. It SHALL measure syntax validity, semantic
+validity, no-op acceptance, contradiction rejection, latency, mask memory, and
+distribution shift against unconstrained and rerank baselines.
+
+The terminal artifact SHALL include principle annotations for every required
+top-level field: `honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `schema_name`,
+`candidate_pool_non_degenerate`, `grammar_baseline`,
+`syntax_validity_rate`, `semantic_validity_rate`, `noop_accept_rate`,
+`contradiction_reject_rate`, `distribution_shift_metric`, `latency_ms`,
+`mask_memory`, `syntax_only_headline_forbidden`, `live_llm_invoked`, and
+`flagged_adversarial`. The `honest_verdict` SHALL begin with
+`success_constrained_decoding_semantic_controls_clean` only when semantic
+controls are clean, contradiction rejection is complete, no syntax-only
+headline is possible, and distribution shift is explicitly bounded; otherwise
+it SHALL begin with
+`complete_constrained_decoding_semantic_audit_no_syntax_only_headline`.
+
+### SCENARIO-VERIFY-5104: Static Masks Expose Semantic Risk Instead Of Syntax Wins
+
+Given the finite Carnot semantic-control schema, when Exp 5104 runs without a
+clean Exp5097 live local logprob endpoint, then it records preconditions,
+builds trie and CSR masks, checks mask equivalence, evaluates an external
+grammar-engine baseline or records unavailability, scores no-op, tautology,
+unsupported, contradicted, and distribution-sensitive candidates, compares
+STATIC-constrained selection with unconstrained and semantic rerank baselines,
+writes the required JSON artifact, sets `live_llm_invoked=false`, and emits a
+terminal verdict that does not headline syntax-only validity.
+
+## Implementation Status (REQ-VERIFY-5104)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5104 | Proposed (`python/carnot/experiment_5104_constrained_decoding_semantic_risk_audit.py`, `results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json`) | Proposed (`tests/python/test_experiment_5104_constrained_decoding_semantic_risk_audit.py`) |
+
 ### REQ-VERIFY-5099: BEAVER Prefix-Bound Verifier On Finite Schema
 
 The repository SHALL provide Exp 5099 at
