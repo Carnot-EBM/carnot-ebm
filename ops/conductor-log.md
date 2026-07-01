@@ -9705,3 +9705,4 @@ The contro |
 | 2026-07-01 05:37 UTC | Plan milestone 2026.07.466 | OK | 14 tasks proposed |
 | 2026-07-01 05:39 UTC | Milestone 2026.07.466 activated | OK | 14 tasks queued |
 | 2026-07-01 05:54 UTC | PHASE 0 transition -- archive .465 truth, activate | OK | 85 passed, 1 warning in 9.14s |
+| 2026-07-01 06:17 UTC | PHASE R1 SOTA backfill -- replace failed Exp5066 G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
