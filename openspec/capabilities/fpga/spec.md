@@ -13994,6 +13994,110 @@ are valid, and `local_claim_scope` limiting the result to local SSH evidence.
 
 ---
 
+### REQ-HW-5065
+
+**Title:** KV260 p-bit timing packet MUST add transcript-backed structured testbench evidence
+
+**Description:**
+Experiment 5065 MUST produce
+`results/experiment_5065_kv260_testbench_timing_packet.json` as a reproducible
+extension of the Exp 5052 KV260 p-bit timing-ratio packet. The only valid KV260
+preflight is SSH reachability:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true`
+
+Host SD-card device nodes MUST NOT be used. The experiment MUST record exact
+command stdout/stderr, exit codes, and wall-clock durations into a board
+transcript file and MUST include `board_transcript_path` plus
+`transcript_sha256` in the JSON artifact. If SSH is unreachable, the artifact
+MUST still be written with `honest_verdict=blocked_kv260_ssh_unreachable`,
+`kv260_ssh_reachable=false`, `timing_ratio_packet_built=false`, a local CPU
+reference when available, and the blocked SSH diagnostic in the transcript.
+
+When SSH is reachable, the experiment MUST query overlay state over SSH with
+`ssh kria 'xmutil listapps'`, MAY use `ssh kria 'sudo xmutil listapps'` only
+when the non-sudo command reports a root-privilege requirement, and MUST probe
+UIO visibility with `ssh kria 'ls /dev/uio*'`. The existing KV260 overlay path
+`carnot_ising_v2_n64` may be reused only when the board transcript confirms it
+is loaded. If the board does not confirm that overlay, the experiment MUST block
+honestly and MUST NOT run the board workload.
+
+When the expected overlay is confirmed, the experiment MUST run the bounded
+`bounded_sparse_pbit_parity_n64` testbench workload over SSH, compare the board
+result with the CPU reference, and emit `structured_testbench_evidence` that
+contains CPU reference parity, board result parity, timing-ratio data, mismatch
+diagnostics when present, and the transcript hash. The claim scope MUST remain
+local to this SSH-attached KV260 Python testbench on a confirmed overlay context;
+the artifact MUST NOT claim generalized FPGA speedup, GPU benchmark results, or
+external 2026 paper results.
+
+The artifact MUST include these bare required fields:
+
+- `honest_verdict`
+- `kv260_ssh_reachable`
+- `overlay_loaded`
+- `loaded_overlay`
+- `cpu_reference_ok`
+- `kv260_result_ok`
+- `timing_ratio_packet_built`
+- `board_transcript_path`
+- `transcript_sha256`
+- `structured_testbench_evidence`
+- `local_claim_scope`
+- `optional_board_prechecks`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_5065_kv260_testbench_timing_packet.py`
+  writes `results/experiment_5065_kv260_testbench_timing_packet.json` and the
+  transcript file named by `board_transcript_path`.
+- The artifact includes `schema`, `experiment=5065`, `spec_refs` containing
+  `REQ-HW-5065` and `SCENARIO-HW-5065`, `command_probes`,
+  `preconditions_checked`, `overlay_state`, `cpu_reference`, `kv260_workload`,
+  `timing_ratio_packet`, `duration_s`, and a stable
+  `reproducibility_checksum`.
+- `transcript_sha256` equals the SHA-256 digest of the transcript file bytes,
+  and the transcript preserves exact command stdout/stderr for the SSH
+  preflight, xmutil overlay probe, UIO probe, and board testbench command when
+  those commands are in scope.
+- `overlay_loaded=true` only when the transcript confirms
+  `carnot_ising_v2_n64` is loaded; otherwise `timing_ratio_packet_built=false`
+  and no board workload is run.
+- `cpu_reference_ok=true` only when the deterministic CPU reference has valid
+  workload name, variable count, iteration count, flip count, energy,
+  final-state checksum, and positive wall-clock duration.
+- `kv260_result_ok=true` only when SSH is reachable, the expected overlay is
+  loaded, the SSH testbench command exits zero, and the board output matches the
+  CPU reference energy, flip count, and final-state checksum.
+- `timing_ratio_packet_built=true` only when both CPU and KV260 results are
+  valid; the packet records CPU wall-clock seconds, KV260 command wall-clock
+  seconds, board-reported workload seconds, parity match, and timing ratios.
+- `optional_board_prechecks` may record GateMate or PolarFire reachability
+  prechecks only; it MUST NOT record flash operations or latency claims.
+
+**Implementation status:** Implemented (Exp 5065)
+
+---
+
+### SCENARIO-HW-5065
+
+**Scenario:** Exp 5065 writes a transcript-backed KV260 p-bit testbench timing packet.
+
+**Given:** Exp 5052 already produced a local KV260 p-bit timing-ratio packet,
+and Exp 5065 must add reproducible board transcript evidence without broadening
+the hardware claim.
+**When:** Experiment 5065 runs the CPU reference, checks `ssh kria`, records
+overlay/UIO probes into a transcript, confirms the existing
+`carnot_ising_v2_n64` overlay, and runs the bounded board testbench only after
+that confirmation.
+**Then:** It writes
+`results/experiment_5065_kv260_testbench_timing_packet.json` with the required
+schema fields, transcript hash, structured parity/timing/testbench evidence,
+and a local claim scope that excludes generalized FPGA speedup claims.
+
+**Implementation status:** Implemented (Exp 5065)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
