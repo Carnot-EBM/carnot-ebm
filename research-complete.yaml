@@ -54062,3 +54062,75 @@ milestones:
       and ARC continuity; write the .465 pointer.
     deliverable: results/experiment_5055_capstone_v464.json
     result: OK (conductor)
+- id: 2026.06.465
+  title: 'PHASE D EXECUTION REPAIR + AUDITED SELF-LEARNING: repair the blocked SOTA candidate/judge path, audit the D1 +8pp
+    MuSR signal and D4 ConstraintBench confirmation, rerun D6 as a tool-first cascade, measure guided decoding cost rather
+    than only final accuracy, and replace negative replay memory with audited FR-11 skill promotion.'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-07-01'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp5056-phase0
+    title: 'PHASE 0 transition -- archive .464, activate .465, and record the true close-state: all tasks completed but Phase
+      D remained execution-incomplete; D1 +8pp was blocked, D4 was promising but flagged, D6 was blocked, FR-11 replay was
+      negative, KV260 timing packet succeeded.'
+    deliverable: results/experiment_5056_archive_464_activate_465.json
+    result: OK (conductor)
+  - id: exp5057-gate-state-preflight
+    title: PHASE A1 preflight -- split SOTA model readiness, judge/confidence readiness, and tool-first verifier readiness
+      so downstream D1/D6 tasks skip cheaply instead of wasting a full synthesis call.
+    deliverable: results/experiment_5057_gate_state_preflight_v465.json
+    result: OK (conductor)
+  - id: exp5058-candidate-refresh
+    title: PHASE A2 SOTA candidate refresh -- use delayed constrained decoding / In-Writing to repair the D1 candidate refresh
+      blocker without requiring top-logprob telemetry.
+    deliverable: results/experiment_5058_sota_candidate_refresh_inwriting.json
+    result: OK (conductor)
+  - id: exp5059-d1-refresh-audit
+    title: PHASE D1 audit -- rerun the powered LoRA-EBM/EORM signal on refreshed SOTA candidates and decide whether the +8pp
+      MuSR margin survives a real candidate refresh.
+    deliverable: results/experiment_5059_d1_sota_refresh_audit.json
+    result: OK (conductor)
+  - id: exp5060-d4-second-corpus-audit
+    title: PHASE D4 audit -- independently validate the ConstraintBench second-corpus confirmation with no-oracle, no-leak,
+      duplicate, and provenance controls.
+    deliverable: results/experiment_5060_second_corpus_audit_v2.json
+    result: OK (conductor)
+  - id: exp5061-d6-tool-first-cascade
+    title: PHASE D6 tool-first cascade -- T1/SAFE deterministic and evidence-grounded checks before optional SOTA judge fallback;
+      no judge-only blocked rerun.
+    deliverable: results/experiment_5061_tool_first_cascade.json
+    result: OK (conductor)
+  - id: exp5062-guided-decoding-frontier
+    title: PHASE D7 guided decoding frontier -- Vegas / reward-guided decoding arm with differentiated controls and token/NFE
+      accounting, gated on refreshed candidates and an executable best arm.
+    deliverable: results/experiment_5062_guided_decoding_cost_frontier.json
+    result: OK (conductor)
+  - id: exp5063-moat-gate
+    title: PHASE D5 gate resolution -- aggregate .465 D1, D4, D6, and guided decoding into realized, MuSR-scoped, second-corpus-scoped,
+      bounded-retired, or execution-incomplete.
+    deliverable: results/experiment_5063_moat_gate_resolution_v465.json
+    result: OK (conductor)
+  - id: exp5064-fr11-audited-skillgraph
+    title: PHASE E1 continuous self-learning -- replace negative replay memory with SAVeR / audited skill-graph promotion,
+      self-audit, verifier-audit, nonforgetting, and no-promote guards.
+    deliverable: results/experiment_5064_audited_skillgraph_self_learning.json
+    result: OK (conductor)
+  - id: exp5065-kv260-testbench-timing
+    title: PHASE C hardware continuity -- extend the KV260 p-bit timing packet with board transcript and structured testbench
+      evidence; optional GateMate/PolarFire prechecks only.
+    deliverable: results/experiment_5065_kv260_testbench_timing_packet.json
+    result: OK (conductor)
+  - id: exp5066-sota-ingestion-v466
+    title: PHASE R1 reserved SOTA ingestion -- update research-references for .466 with nonduplicate actionable work only.
+    deliverable: results/experiment_5066_sota_ingestion_v466.json
+    result: OK (conductor)
+  - id: exp5067-arc-live-path
+    title: PHASE R2 ARC live-path self-discovery -- registry-precheck first, no duplicate solves, improve live discovery rather
+      than solving by outer-loop reverse engineering.
+    deliverable: results/experiment_5067_arc_live_path_self_discovery.json
+    result: OK (conductor)
+  - id: exp5068-capstone
+    title: PHASE Z capstone -- reconcile .465 moat, FR-11, hardware, SOTA, and ARC outcomes and choose the .466 route.
+    deliverable: results/experiment_5068_capstone_v465.json
+    result: OK (conductor)
