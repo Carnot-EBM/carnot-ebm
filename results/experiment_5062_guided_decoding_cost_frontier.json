@@ -1,0 +1,743 @@
+{
+  "arms_differentiated": true,
+  "candidate_difference_rate": 0.777778,
+  "correct_by_arm": {
+    "guided": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "rerank_only": [
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "unguided": [
+      0,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0
+    ]
+  },
+  "cost_accounting": {
+    "nfe_per_token_by_arm": {
+      "guided": 5.0,
+      "rerank_only": 8.0,
+      "unguided": 1.0
+    },
+    "token_nfe_cost": 1.0,
+    "unit": "token_forward_equivalent_nfe",
+    "verifier_nfe_cost": 1.0
+  },
+  "delta_guided_vs_unguided": 0.111112,
+  "duration_s": 0.278951,
+  "experiment": "experiment_5062_guided_decoding_cost_frontier",
+  "experiment_id": 5062,
+  "field_principles": {
+    "arms_differentiated": {
+      "principle": "true only when matched guided and unguided content hashes differ at nonzero rate."
+    },
+    "candidate_difference_rate": {
+      "principle": "fraction of matched prompts where guided and unguided generated-content hashes differ."
+    },
+    "delta_guided_vs_unguided": {
+      "principle": "guided_accuracy minus unguided_accuracy on the same matched prompt set."
+    },
+    "generated_tokens_by_arm": {
+      "principle": "generated answer-token count charged to each arm."
+    },
+    "guided_accuracy": {
+      "principle": "accuracy of the in-generation guided arm."
+    },
+    "guided_decoding_executed": {
+      "principle": "true only when the guided policy is applied before candidate fixation on matched prompt traces."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; blocked upstream gate, controls-not-differentiated, or complete guided cost frontier."
+    },
+    "latency_s_by_arm": {
+      "principle": "measured Python replay latency for each arm."
+    },
+    "legacy_models_smoke_only": {
+      "principle": "true; legacy small models are smoke-only and never headline guided/unguided provenance."
+    },
+    "model_specs": {
+      "principle": "mandated SOTA GGUF declarations plus Exp5058/Exp5059 provenance and headline replay model."
+    },
+    "nfe_by_arm": {
+      "principle": "token-forward-equivalent NFE plus charged verifier/energy evaluations by arm."
+    },
+    "rerank_only_accuracy": {
+      "principle": "post-generation Exp5059 best-arm selection accuracy; never counted as guided decoding."
+    },
+    "unguided_accuracy": {
+      "principle": "accuracy of the matched unguided arm."
+    },
+    "verifier_calls_by_arm": {
+      "principle": "charged oracle-distinct verifier or energy evaluations used by each arm."
+    }
+  },
+  "generated_tokens_by_arm": {
+    "guided": 9,
+    "rerank_only": 9,
+    "unguided": 9
+  },
+  "generation_source": "replayed_exp5058_sota_candidate_rows",
+  "guided_accuracy": 0.555556,
+  "guided_decoding_executed": true,
+  "guided_policy": {
+    "anti_collapse_penalty": "penalizes the unguided content hash only when another content hash exists",
+    "applied_before_candidate_fixation": true,
+    "name": "replay_energy_guided_branch_selection_v1",
+    "uses_gold": false
+  },
+  "honest_verdict": "complete_guided_decoding_cost_frontier_guided_gain_plus_0p111",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "judge_calls_by_arm": {
+    "guided": 0,
+    "rerank_only": 0,
+    "unguided": 0
+  },
+  "latency_s_by_arm": {
+    "guided": 0.00043,
+    "rerank_only": 5e-06,
+    "unguided": 6e-06
+  },
+  "legacy_models_smoke_only": true,
+  "live_llm_invoked": false,
+  "matched_prompt_count": 9,
+  "matched_rows": [
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:5e0a11a6f7067982f903e924b45692ab48c7224f794799148ed9bc3b6fc1e340",
+        "arm": "guided",
+        "candidate_hash": "sha256:3dde79e2ebf76079bb29339e06e179284ad33a1740d4f986383a01ea024da0c3",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": 0.811436291744,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "fabb8963dad88cd329670870e916103c91a468d268595b0214afd71b2419a6b8",
+        "seed": 20260701,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "fabb8963dad88cd329670870e916103c91a468d268595b0214afd71b2419a6b8",
+      "question_id": "MuSR/murder_mysteries:0",
+      "question_index": 0,
+      "rerank_only": {
+        "answer_hash": "sha256:5e0a11a6f7067982f903e924b45692ab48c7224f794799148ed9bc3b6fc1e340",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:3dde79e2ebf76079bb29339e06e179284ad33a1740d4f986383a01ea024da0c3",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "fabb8963dad88cd329670870e916103c91a468d268595b0214afd71b2419a6b8",
+        "seed": 20260701,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260701,
+      "unguided": {
+        "answer_hash": "sha256:dea210f058b407db5c1b5ea89b2e42a57221c003dba55e2f1776a75a3254d386",
+        "arm": "unguided",
+        "candidate_hash": "sha256:e4102b11bf8f88b11bae3c023a26de5542995ce8ff78e24834ea947b1545eace",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "fabb8963dad88cd329670870e916103c91a468d268595b0214afd71b2419a6b8",
+        "seed": 20260701,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:5e0a11a6f7067982f903e924b45692ab48c7224f794799148ed9bc3b6fc1e340",
+        "arm": "guided",
+        "candidate_hash": "sha256:7ae63b116475957267da25cd375c244706a0e464bf0e38617b880e01483b4954",
+        "candidate_index": 3,
+        "generated_tokens": 1,
+        "guidance_energy": 0.597234274095,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "d191a68a5cab8475900948fc172029a69b119f5a8f792a441aabf6315be74a0f",
+        "seed": 20260702,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "d191a68a5cab8475900948fc172029a69b119f5a8f792a441aabf6315be74a0f",
+      "question_id": "MuSR/murder_mysteries:1",
+      "question_index": 1,
+      "rerank_only": {
+        "answer_hash": "sha256:dea210f058b407db5c1b5ea89b2e42a57221c003dba55e2f1776a75a3254d386",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:c14b492bcc71c3405fbb459ff338b9d5c63d62673206ef6b47adaa038fa4d6f7",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "d191a68a5cab8475900948fc172029a69b119f5a8f792a441aabf6315be74a0f",
+        "seed": 20260702,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260702,
+      "unguided": {
+        "answer_hash": "sha256:dea210f058b407db5c1b5ea89b2e42a57221c003dba55e2f1776a75a3254d386",
+        "arm": "unguided",
+        "candidate_hash": "sha256:c14b492bcc71c3405fbb459ff338b9d5c63d62673206ef6b47adaa038fa4d6f7",
+        "candidate_index": 2,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "d191a68a5cab8475900948fc172029a69b119f5a8f792a441aabf6315be74a0f",
+        "seed": 20260702,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:8ad63f94b952e0f030da600e06dc148d79519051a7e7f012aa05f80c833d0955",
+        "arm": "guided",
+        "candidate_hash": "sha256:c2657827c5095972b7f3786113d76693cb1fb51f803ce8064a5d1057fa067055",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": 0.841598944679,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "00bfe54b1473f308a9466cd3d361a52ba581bfba1ff30439744576f201dfc910",
+        "seed": 20260703,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "00bfe54b1473f308a9466cd3d361a52ba581bfba1ff30439744576f201dfc910",
+      "question_id": "MuSR/murder_mysteries:2",
+      "question_index": 2,
+      "rerank_only": {
+        "answer_hash": "sha256:8ad63f94b952e0f030da600e06dc148d79519051a7e7f012aa05f80c833d0955",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:c2657827c5095972b7f3786113d76693cb1fb51f803ce8064a5d1057fa067055",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "00bfe54b1473f308a9466cd3d361a52ba581bfba1ff30439744576f201dfc910",
+        "seed": 20260703,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260703,
+      "unguided": {
+        "answer_hash": "sha256:a0fef9d66eaf1936fe23f42985d112491e98155b02071850720dc21e19546474",
+        "arm": "unguided",
+        "candidate_hash": "sha256:cc3713552f11b077e033133b1313c42c57891bc87da161edaa5303a4a74597e8",
+        "candidate_index": 3,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "00bfe54b1473f308a9466cd3d361a52ba581bfba1ff30439744576f201dfc910",
+        "seed": 20260703,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:a0fef9d66eaf1936fe23f42985d112491e98155b02071850720dc21e19546474",
+        "arm": "guided",
+        "candidate_hash": "sha256:e94d97853093808cf79312e44544cb8c415696f4dfff5f550109d1211fd578b3",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": 0.933227543902,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "5a32a496641a37c6a2d04c12853dad273439ceb947553c3194cc0fbfa62d3158",
+        "seed": 20260704,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "5a32a496641a37c6a2d04c12853dad273439ceb947553c3194cc0fbfa62d3158",
+      "question_id": "MuSR/murder_mysteries:3",
+      "question_index": 3,
+      "rerank_only": {
+        "answer_hash": "sha256:8ad63f94b952e0f030da600e06dc148d79519051a7e7f012aa05f80c833d0955",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:ae58e6f04786d9b9543db96bf6267c43caf121791cf69c917f529cc0dc97aa3a",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "5a32a496641a37c6a2d04c12853dad273439ceb947553c3194cc0fbfa62d3158",
+        "seed": 20260704,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260704,
+      "unguided": {
+        "answer_hash": "sha256:8ad63f94b952e0f030da600e06dc148d79519051a7e7f012aa05f80c833d0955",
+        "arm": "unguided",
+        "candidate_hash": "sha256:ae58e6f04786d9b9543db96bf6267c43caf121791cf69c917f529cc0dc97aa3a",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "5a32a496641a37c6a2d04c12853dad273439ceb947553c3194cc0fbfa62d3158",
+        "seed": 20260704,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:3ab854ae0a2473e6b5618cdc8f8bf271bb13c2cff9eae5eea4c63ec1cbe57325",
+        "arm": "guided",
+        "candidate_hash": "sha256:1ae667e377ea2972250151d1433b9c0146b186480c92e5157ecda8054549140f",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": 0.756400191198,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "d79609352ae68f6f6255f4ec0e0d0d402cf777e112fe20e90557be6b4a5a42e5",
+        "seed": 20260705,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "d79609352ae68f6f6255f4ec0e0d0d402cf777e112fe20e90557be6b4a5a42e5",
+      "question_id": "MuSR/murder_mysteries:4",
+      "question_index": 4,
+      "rerank_only": {
+        "answer_hash": "sha256:3ab854ae0a2473e6b5618cdc8f8bf271bb13c2cff9eae5eea4c63ec1cbe57325",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:1ae667e377ea2972250151d1433b9c0146b186480c92e5157ecda8054549140f",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "d79609352ae68f6f6255f4ec0e0d0d402cf777e112fe20e90557be6b4a5a42e5",
+        "seed": 20260705,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260705,
+      "unguided": {
+        "answer_hash": "sha256:d9dacb3ee168be4dbc39386975b6964d353c438d8f57a68914a3228b5385fe69",
+        "arm": "unguided",
+        "candidate_hash": "sha256:75c1bbafebe2768131ac78e9203574f93e57e41ea8866d9d29cd554db8a8cf73",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "d79609352ae68f6f6255f4ec0e0d0d402cf777e112fe20e90557be6b4a5a42e5",
+        "seed": 20260705,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:d9dacb3ee168be4dbc39386975b6964d353c438d8f57a68914a3228b5385fe69",
+        "arm": "guided",
+        "candidate_hash": "sha256:dd39bd43646ec4cdf93a8cfb1d4026406c760aa0b7a04b5b9e75c20d44d58b15",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": 0.562350085855,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "a064df3958f47557b3df654169f5c9963cf88bc9ba52a9302dd9f90270699326",
+        "seed": 20260706,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "a064df3958f47557b3df654169f5c9963cf88bc9ba52a9302dd9f90270699326",
+      "question_id": "MuSR/murder_mysteries:5",
+      "question_index": 5,
+      "rerank_only": {
+        "answer_hash": "sha256:d9dacb3ee168be4dbc39386975b6964d353c438d8f57a68914a3228b5385fe69",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:dd39bd43646ec4cdf93a8cfb1d4026406c760aa0b7a04b5b9e75c20d44d58b15",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "a064df3958f47557b3df654169f5c9963cf88bc9ba52a9302dd9f90270699326",
+        "seed": 20260706,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260706,
+      "unguided": {
+        "answer_hash": "sha256:3ab854ae0a2473e6b5618cdc8f8bf271bb13c2cff9eae5eea4c63ec1cbe57325",
+        "arm": "unguided",
+        "candidate_hash": "sha256:4825849fbc703bd07a20ed057bea2289fc6f5129c05e00ecc422ea294b9beec9",
+        "candidate_index": 2,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "a064df3958f47557b3df654169f5c9963cf88bc9ba52a9302dd9f90270699326",
+        "seed": 20260706,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "guided",
+        "candidate_hash": "sha256:f0fff3c58181b0760016c37abe07009fbf28d0ca5ad3598236afb375cf2d291a",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": 0.602028728493,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "02d2269d0502f98546bd2f431b9a270efbeb1a14108930e52b0c49ecf5d47c54",
+        "seed": 20260707,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": false,
+      "prompt_hash": "02d2269d0502f98546bd2f431b9a270efbeb1a14108930e52b0c49ecf5d47c54",
+      "question_id": "MuSR/murder_mysteries:6",
+      "question_index": 6,
+      "rerank_only": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:f0fff3c58181b0760016c37abe07009fbf28d0ca5ad3598236afb375cf2d291a",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "02d2269d0502f98546bd2f431b9a270efbeb1a14108930e52b0c49ecf5d47c54",
+        "seed": 20260707,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260707,
+      "unguided": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "unguided",
+        "candidate_hash": "sha256:f0fff3c58181b0760016c37abe07009fbf28d0ca5ad3598236afb375cf2d291a",
+        "candidate_index": 3,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "02d2269d0502f98546bd2f431b9a270efbeb1a14108930e52b0c49ecf5d47c54",
+        "seed": 20260707,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "guided",
+        "candidate_hash": "sha256:f3baff304a880fd74c52b3db36743a27ca98e14dd180d115bebea211771b33af",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": 0.053276421742,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "4d03c62309b4dc42fafbd5c02ca0dc209fe603bf83284d3a210ebcd120e25536",
+        "seed": 20260708,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": false,
+      "prompt_hash": "4d03c62309b4dc42fafbd5c02ca0dc209fe603bf83284d3a210ebcd120e25536",
+      "question_id": "MuSR/murder_mysteries:7",
+      "question_index": 7,
+      "rerank_only": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:f3baff304a880fd74c52b3db36743a27ca98e14dd180d115bebea211771b33af",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "4d03c62309b4dc42fafbd5c02ca0dc209fe603bf83284d3a210ebcd120e25536",
+        "seed": 20260708,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260708,
+      "unguided": {
+        "answer_hash": "sha256:818d0e5ffae3c30dfbe68dbb57896728bc1598d0094467bb378db4cb21a1774c",
+        "arm": "unguided",
+        "candidate_hash": "sha256:f3baff304a880fd74c52b3db36743a27ca98e14dd180d115bebea211771b33af",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "4d03c62309b4dc42fafbd5c02ca0dc209fe603bf83284d3a210ebcd120e25536",
+        "seed": 20260708,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    },
+    {
+      "candidate_pool_size": 4,
+      "gold_available": true,
+      "guided": {
+        "answer_hash": "sha256:88e27fb4b1703bb2671edab87148ee492d8294d99a32895d39ec79fb27967480",
+        "arm": "guided",
+        "candidate_hash": "sha256:ed73b23d5f84eb9f04652aad9aee9c6dbce2afa6c46f036dec6d339b4116171b",
+        "candidate_index": 3,
+        "generated_tokens": 1,
+        "guidance_energy": 0.611054391741,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 5.0,
+        "prompt_hash": "ff2895aa0e2a13061b96198cde534a3009b1eb272a344e9714ad917c43970f61",
+        "seed": 20260709,
+        "selection_stage": "in_generation_reward_energy_guidance",
+        "verifier_calls": 4
+      },
+      "guided_differs_from_unguided": true,
+      "prompt_hash": "ff2895aa0e2a13061b96198cde534a3009b1eb272a344e9714ad917c43970f61",
+      "question_id": "MuSR/murder_mysteries:8",
+      "question_index": 8,
+      "rerank_only": {
+        "answer_hash": "sha256:e89fe62ec86347c2b50f4a874bf6cc5e67b1cd579a9989a8bf7cb956045d40d7",
+        "arm": "rerank_only",
+        "candidate_hash": "sha256:e497d22495bcb7985c2dbe91cf822ee1f50f94dfe64432d51590fd7c8f0c453a",
+        "candidate_index": 0,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 8.0,
+        "prompt_hash": "ff2895aa0e2a13061b96198cde534a3009b1eb272a344e9714ad917c43970f61",
+        "seed": 20260709,
+        "selection_stage": "post_generation_rerank",
+        "verifier_calls": 4
+      },
+      "seed": 20260709,
+      "unguided": {
+        "answer_hash": "sha256:e89fe62ec86347c2b50f4a874bf6cc5e67b1cd579a9989a8bf7cb956045d40d7",
+        "arm": "unguided",
+        "candidate_hash": "sha256:e497d22495bcb7985c2dbe91cf822ee1f50f94dfe64432d51590fd7c8f0c453a",
+        "candidate_index": 1,
+        "generated_tokens": 1,
+        "guidance_energy": null,
+        "judge_calls": 0,
+        "model_family": "flagship_moe",
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "nfe": 1.0,
+        "prompt_hash": "ff2895aa0e2a13061b96198cde534a3009b1eb272a344e9714ad917c43970f61",
+        "seed": 20260709,
+        "selection_stage": "single_pass_generation",
+        "verifier_calls": 0
+      }
+    }
+  ],
+  "model_specs": {
+    "exp5058_model_specs": {
+      "flagship_dense": {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+      },
+      "flagship_moe": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+      },
+      "middle_moe": {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    },
+    "exp5059_model_specs": {
+      "exp5058_model_specs": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      },
+      "mandated_sota": {
+        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "powered_d1_scorer": {
+        "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
+        "scorer_trained": true,
+        "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
+      }
+    },
+    "headline_generation_model": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "live_llm_invoked": false,
+      "model_path": null,
+      "model_role": null,
+      "policy": "replayed mandated-SOTA candidate traces; no legacy small model headline provenance",
+      "prompt_trace_source": "results/experiment_5058_sota_candidate_refresh_inwriting.jsonl"
+    },
+    "mandated_sota": {
+      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    }
+  },
+  "nfe_by_arm": {
+    "guided": 45.0,
+    "rerank_only": 72.0,
+    "unguided": 9.0
+  },
+  "nfe_per_token_by_arm": {
+    "guided": 5.0,
+    "rerank_only": 8.0,
+    "unguided": 1.0
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:0dcd66fa9aedadaecbc09ce28dc1beb897ca7ac3f6586724384d196feb1b2fbf",
+  "rerank_only_accuracy": 0.666667,
+  "rerank_only_control": {
+    "not_counted_as_guided_decoding": true,
+    "selection_stage": "post_generation_rerank",
+    "source": "Exp5059 best-arm predictions projected onto the same unguided candidate pool"
+  },
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5062_guided_decoding_cost_frontier.json",
+  "schema": "carnot.experiment_5062_guided_decoding_cost_frontier.v1",
+  "source_artifacts": {
+    "exp5058": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.json",
+    "exp5059": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json",
+    "frozen_candidates": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5062",
+    "SCENARIO-VERIFY-5062"
+  ],
+  "unguided_accuracy": 0.444444,
+  "verifier_calls_by_arm": {
+    "guided": 36,
+    "rerank_only": 36,
+    "unguided": 0
+  }
+}

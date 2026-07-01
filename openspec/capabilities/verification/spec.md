@@ -22761,6 +22761,79 @@ calls and the judge-call fraction reflects only those fallback invocations.
 |---|---|---|
 | REQ-VERIFY-5061 | Proposed (`python/carnot/experiment_5061_tool_first_cascade.py`, `results/experiment_5061_tool_first_cascade.json`) | Proposed (`tests/python/test_experiment_5061_tool_first_cascade.py`) |
 
+### REQ-VERIFY-5062: Guided Decoding Cost Frontier With Differentiated Controls
+
+The repository SHALL provide Exp 5062 at
+`python/carnot/experiment_5062_guided_decoding_cost_frontier.py` to compare
+unguided generation, reward/energy-guided generation, and rerank-only controls,
+then write `results/experiment_5062_guided_decoding_cost_frontier.json`.
+
+The runner SHALL load
+`results/experiment_5058_sota_candidate_refresh_inwriting.json` and
+`results/experiment_5059_d1_sota_refresh_audit.json` before any arm execution.
+It SHALL fail fast with a blocked artifact if Exp 5058 does not report
+`candidate_refresh_ready=true` or if Exp 5059 does not report
+`best_arm_available=true`. The mandated SOTA GGUF model specs SHALL remain
+`flagship_moe=unsloth/Qwen3.6-35B-A3B-GGUF`,
+`flagship_dense=unsloth/gemma-4-31B-it-GGUF`, and
+`middle_moe=unsloth/gemma-4-26B-A4B-it-GGUF`; at least one mandated SOTA model
+family SHALL provide the headline guided and unguided candidate provenance.
+Legacy small models SHALL remain smoke-only and SHALL NOT provide headline
+guided/unguided provenance.
+
+The executed comparison SHALL use a small but nontrivial matched prompt set.
+For every prompt, the unguided and guided arms SHALL share the same prompt hash,
+random seed, and model family, while the guided arm applies a distinct
+in-generation reward/energy policy before the final candidate is fixed. The
+rerank-only control SHALL select from the same unguided candidate pool after
+generation and SHALL NOT be counted as guided decoding. The artifact SHALL
+record prompt hashes, random seeds, generated token counts, candidate hashes,
+per-arm verifier and judge calls, per-arm latency, per-arm NFE or
+token-normalized cost, and a nonzero candidate-difference rate proving the arms
+were differentiated.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`guided_decoding_executed`, `arms_differentiated`,
+`candidate_difference_rate`, `guided_accuracy`, `unguided_accuracy`,
+`rerank_only_accuracy`, `delta_guided_vs_unguided`,
+`generated_tokens_by_arm`, `nfe_by_arm`, `verifier_calls_by_arm`,
+`latency_s_by_arm`, and `legacy_models_smoke_only`. It SHOULD also include
+judge-call accounting, prompt and candidate hashes, selected row provenance,
+source artifact citations, duration, field principles, and a reproducibility
+checksum.
+
+`arms_differentiated` SHALL be true only when guided decoding executed, the
+matched prompt count is at least four, all matched rows carry prompt hashes,
+random seeds, token counts, and candidate hashes for guided and unguided arms,
+the guided and unguided arms use at least one mandated SOTA model family, and
+`candidate_difference_rate` is strictly positive. A positive guided frontier
+claim SHALL require guided accuracy to exceed unguided accuracy at finite
+reported cost; otherwise the artifact SHALL report a complete honest null or
+cost-only frontier without hiding the rerank-only control behind generation.
+
+### SCENARIO-VERIFY-5062: Guided Frontier Differentiates In-Generation From Rerank
+
+Given Exp 5058 reports `candidate_refresh_ready=true` with refreshed mandated
+SOTA candidate rows and Exp 5059 reports `best_arm_available=true`, when Exp
+5062 runs, then it executes matched guided and unguided arms on the same prompt
+hashes and random seeds, records candidate hashes and generated token counts,
+keeps rerank-only as a separate post-generation control, reports accuracy,
+verifier calls, judge calls, latency, and NFE/token-normalized cost by arm, sets
+`legacy_models_smoke_only=true`, and writes every required artifact field.
+
+If Exp 5058 is missing, malformed, or not ready, or Exp 5059 has no best arm,
+then Exp 5062 writes a blocked artifact that does not promote rerank-only or
+cached candidate selection as guided decoding. If the guided and unguided
+candidate hashes are identical for every matched prompt, then
+`arms_differentiated=false` and the verdict SHALL be a controls-not-
+differentiated result instead of a generation-frontier claim.
+
+## Implementation Status (REQ-VERIFY-5062)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5062 | Proposed (`python/carnot/experiment_5062_guided_decoding_cost_frontier.py`, `results/experiment_5062_guided_decoding_cost_frontier.json`) | Proposed (`tests/python/test_experiment_5062_guided_decoding_cost_frontier.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
