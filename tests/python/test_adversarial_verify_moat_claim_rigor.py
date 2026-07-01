@@ -137,6 +137,22 @@ def test_scenario_verify_5008_no_headroom_null_warns() -> None:
     assert any("uninformative" in flag["detail"].lower() for flag in flags)
 
 
+def test_scenario_verify_5008_no_winner_qd_null_is_not_moat_claim() -> None:
+    """REQ-VERIFY-5008: generic no_winner_generated ARC nulls are not moat claims."""
+
+    payload = {
+        "experiment": "experiment_4653_energy_fitness_qd_generation_live",
+        "honest_verdict": "complete: energy_fitness_qd_no_winner_generated_honest_null_gap_sharpened",
+        "solve_provenance": "live_agent_self_discovery",
+        "winner_generated": False,
+        "winner_generated_count": 0,
+        "solve_rate_delta": 0.0,
+        "random_mutation_ablation_passed": False,
+    }
+
+    assert _moat_flags(payload) == []
+
+
 def test_scenario_verify_5008_artifact_scan_path_runs_guard(tmp_path: Path) -> None:
     """REQ-VERIFY-5008: verify_artifact wires in check_moat_claim_rigor."""
 

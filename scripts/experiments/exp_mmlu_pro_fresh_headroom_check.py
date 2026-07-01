@@ -28,6 +28,8 @@ import time
 from collections import Counter
 from pathlib import Path
 
+import requests
+
 REPO = Path(__file__).resolve().parents[2]
 RESULT = REPO / "results" / "experiment_mmlu_pro_fresh_headroom_check.json"
 MODEL_PATH = str(
@@ -40,6 +42,8 @@ K_SAMPLES = 6
 TEMPERATURE = 0.8
 SEED = 20260701
 GPU_DEVICE = 1  # outer-loop's dedicated GPU per CLAUDE.md's GPU-allocation rule
+SERVER_URL = "http://127.0.0.1:8712/v1/chat/completions"
+MAX_TOKENS = 400  # generous budget: this model has a thinking phase (reasoning_content) before content
 
 
 def _log(m: str) -> None:
@@ -71,12 +75,29 @@ def parse_letter(text: str, n_options: int) -> str | None:
     return None
 
 
-def main() -> int:
-    import os
+def call_server(prompt: str, seed: int) -> str:
+    """Call the local CUDA llama-server (real GPU inference, NOT the CPU-only llama_cpp Python
+    bindings installed in the shared venv -- diagnosed 2026-07-01: llama_supports_gpu_offload()==False
+    there, silently running on CPU at ~340s/question. The staged Kaggle-submission CUDA 12.8 binary
+    (carnot_submission_staging/carnot-llamacpp-mtp-binary/llama-server) is reused here via its HTTP API
+    instead of touching the shared venv's package (the conductor may depend on it concurrently)."""
+    resp = requests.post(
+        SERVER_URL,
+        json={
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": MAX_TOKENS,
+            "temperature": TEMPERATURE,
+            "seed": seed,
+        },
+        timeout=120,
+    )
+    resp.raise_for_status()
+    msg = resp.json()["choices"][0]["message"]
+    return (msg.get("reasoning_content") or "") + "\n" + (msg.get("content") or "")
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(GPU_DEVICE)
+
+def main() -> int:
     from datasets import load_dataset
-    from llama_cpp import Llama
 
     _log(f"loading MMLU-Pro test split (sampling {N_QUESTIONS} questions, seed={SEED})")
     ds = load_dataset("TIGER-Lab/MMLU-Pro", split="test")
@@ -93,11 +114,8 @@ def main() -> int:
     ]
     _log(f"loaded {len(questions)} questions, categories: {sorted({q['category'] for q in questions})}")
 
-    _log(f"loading gemma-4-12B-it-GGUF from {MODEL_PATH} on GPU {GPU_DEVICE}")
-    t0 = time.time()
-    llm = Llama(model_path=MODEL_PATH, n_gpu_layers=-1, n_ctx=2048, verbose=False)
-    load_duration_s = time.time() - t0
-    _log(f"model loaded in {load_duration_s:.1f}s")
+    _log(f"generating via real CUDA llama-server at {SERVER_URL} (GPU {GPU_DEVICE})")
+    load_duration_s = 0.0  # server was already warm-started separately; no in-process load cost here
 
     rows = []
     t_gen_start = time.time()
@@ -105,16 +123,9 @@ def main() -> int:
         prompt = build_prompt(q["question"], q["options"])
         candidates = []
         for k in range(K_SAMPLES):
-            out = llm(
-                prompt,
-                max_tokens=200,
-                temperature=TEMPERATURE,
-                seed=SEED + 1000 * qi + k,
-                stop=["</s>", "<end_of_turn>"],
-            )
-            text = out["choices"][0]["text"]
+            text = call_server(prompt, seed=SEED + 1000 * qi + k)
             letter = parse_letter(text, len(q["options"]))
-            candidates.append({"k": k, "raw_text": text[-120:], "parsed_letter": letter})
+            candidates.append({"k": k, "raw_text": text[-160:], "parsed_letter": letter})
         n_parsed = sum(1 for c in candidates if c["parsed_letter"] is not None)
         rows.append({**q, "candidates": candidates, "n_parsed": n_parsed})
         if (qi + 1) % 5 == 0:
@@ -189,6 +200,15 @@ def main() -> int:
         "generation_duration_s": round(gen_duration_s, 2),
         "gpu_device": GPU_DEVICE,
         "inference_substrate": "live_llm_inference",
+        "inference_substrate_note": (
+            "Generation via a real CUDA llama-server (the Kaggle-submission CUDA 12.8 build, reused "
+            "here via HTTP) on GPU 1, NOT the shared venv's llama_cpp Python bindings -- diagnosed "
+            "mid-run: that package's llama_supports_gpu_offload()==False (CPU-only wheel), which had "
+            "silently run the first attempt at ~340s/question on CPU for 4+ hours before being killed "
+            "and restarted this way. load_duration_s=0 because the server was warm-started separately "
+            "(its own real load cost is not part of this script's measured wall-clock, but IS real -- "
+            "generation_duration_s is the load-bearing number here)."
+        ),
         "model_specs": {"model": "unsloth/gemma-4-12B-it-GGUF", "quantization": "Q4_K_M"},
         "target_model": "unsloth/gemma-4-12B-it-GGUF",
         "random_seed": SEED,

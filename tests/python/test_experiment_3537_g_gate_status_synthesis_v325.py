@@ -21,11 +21,9 @@ import pytest
 # ---------------------------------------------------------------------------
 # Load the module under test
 # ---------------------------------------------------------------------------
-_SCRIPT = (
-    Path(__file__).resolve().parent.parent.parent
-    / "scripts"
-    / "experiment_3537_g_gate_status_synthesis_v325.py"
-)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_SCRIPT = _PROJECT_ROOT / "scripts" / "experiment_3537_g_gate_status_synthesis_v325.py"
+_PUBLICATION_GATE_STATE = _PROJECT_ROOT / "ops" / "publication_gate_state.json"
 _spec = importlib.util.spec_from_file_location("exp3537", _SCRIPT)
 exp3537 = importlib.util.module_from_spec(_spec)  # type: ignore[arg-type]
 _spec.loader.exec_module(exp3537)  # type: ignore[union-attr]
@@ -293,12 +291,36 @@ def test_g2_package_status_not_missing() -> None:
     assert result["g2_package_status"] != "exp3534_missing"
 
 
-def test_g2_is_false_until_external_confirms() -> None:
-    """G2 is False until an external human confirms (not auto-flipped by package match)."""
+def test_g2_tracks_operator_publication_gate_state() -> None:
+    """G2 follows the external operator gate state, not a hard-coded test assumption."""
+    state = json.loads(_PUBLICATION_GATE_STATE.read_text())
     result = build_synthesis()
+    assert result["g2"] is bool(state.get("g2_independent_reproducer", False))
+
+
+def test_g2_not_auto_flipped_by_package_match() -> None:
+    """The exp3534 package can be present while the external G2 gate remains false."""
+
+    class FakePublicationGate:
+        @staticmethod
+        def evaluate() -> dict:
+            return {
+                "gates": {
+                    "G1": {"pass": True},
+                    "G2": {"pass": False},
+                    "G3": {"pass": True},
+                    "G4": {"pass": True},
+                },
+                "unmet_gates": ["G2"],
+            }
+
+    with patch.object(exp3537, "_load_publication_gate", return_value=FakePublicationGate):
+        result = build_synthesis()
+
+    assert result["g2_package_status"] != "exp3534_missing"
     assert result["g2"] is False, (
-        "G2 must remain False until ops/publication_gate_state.json is updated "
-        "by the operator (Operator-Only External Publication rule)"
+        "G2 must remain false until publication_gate.py reports the operator-updated "
+        "external reproducer state."
     )
 
 

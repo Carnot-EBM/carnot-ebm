@@ -9780,3 +9780,6 @@ web search: |
 | 2026-07-01 18:17 UTC | PHASE B3 HUBO/p-spin sampling -- CPU exact-checked | OK | 88 passed, 1 warning in 15.74s |
 | 2026-07-01 18:33 UTC | PHASE B4 TACO scale -- adaptive CSP heuristic with | OK | 88 passed, 1 warning in 14.15s |
 | 2026-07-01 18:35 UTC | PHASE C1 continuous self-learning -- FoVer residua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
+| 2026-07-01 19:34 UTC | PHASE C2 runtime repair -- root-cause local SOTA G | FAIL | Post-tests failed:  |
+| 2026-07-01 19:36 UTC | PHASE C1 continuous self-learning -- FoVer residua | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
+| 2026-07-01 19:36 UTC | PHASE C2 runtime repair -- root-cause local SOTA G | OK | Deliverable already exists in repo |
