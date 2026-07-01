@@ -90,7 +90,7 @@
       "kind": "ascii_byte_tokens_plus_eos"
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "frontier_depth": 72,
   "frontier_node_count": 18,
   "frontier_nodes": [
@@ -436,5 +436,17 @@
     "probability_per_terminal": "1/54",
     "terminal_count": 54
   },
-  "upper_bound": 0.222222222222
+  "upper_bound": 0.222222222222,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "bound_gap=0.222222222222 and upper_bound=0.222222222222 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.013342 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
