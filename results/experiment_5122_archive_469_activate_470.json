@@ -1,0 +1,444 @@
+{
+  "active_roadmap_check": {
+    "exists": true,
+    "milestone": "2026.07.470",
+    "missing_required_task_prefixes": [],
+    "parses": true,
+    "path": "research-roadmap.yaml",
+    "required_task_ids_present": true,
+    "task_ids": [
+      "exp5122-archive-469-activate-470",
+      "exp5123-v470-source-scope-audit",
+      "exp5124-clean-sota-runtime-provenance-v470",
+      "exp5125-structured-reasoning-pool-v470",
+      "exp5126-distributional-energy-ranker-v470",
+      "exp5127-structured-energy-adversarial-audit-v470",
+      "exp5128-kan-certificate-explanation-v470",
+      "exp5129-hubo-adaptive-2dpt-v470",
+      "exp5130-taco-sampler-heldout-scale-v470",
+      "exp5131-fr11-case-policy-self-learning-v470",
+      "exp5132-authenticated-board-timing-v470",
+      "exp5133-capstone-v470"
+    ]
+  },
+  "active_roadmap_fallback_used": true,
+  "active_roadmap_modified": false,
+  "adversarial_verification": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5122_archive_469_activate_470.json"
+    ],
+    "exit_code": 0,
+    "flagged_adversarial": false,
+    "flags": [],
+    "green": true,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "archived_milestone": "2026.07.469",
+  "capstone_summary": {
+    "experiment_id": "exp5121-capstone-v469",
+    "flagged_adversarial": false,
+    "honest_verdict": "complete_capstone_v469_kan_solver_progress_fover_blocked_runtime_flagged_fr11_gap_hardware_ready",
+    "referenced_payloads_loaded": [
+      5109,
+      5110,
+      5111,
+      5112,
+      5114,
+      5115,
+      5116,
+      5117,
+      5119,
+      5120
+    ]
+  },
+  "conductor_modified": false,
+  "duration_s": 0.00047,
+  "experiment": "experiment_5122_archive_469_activate_470",
+  "experiment_id": "exp5122-archive-469-activate-470",
+  "field_principles": {
+    "active_roadmap_modified": "operator instruction compliance",
+    "conductor_modified": "conductor immutability",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "fover_selector_retired_for_same_verdict": "no doomed rerun",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "roadmap_next_present": "activation readiness",
+    "source_artifacts_read": "evidence provenance",
+    "tests_run": "verification evidence"
+  },
+  "flagged_adversarial": false,
+  "fover_retirement": {
+    "audit_ran": false,
+    "corrected_result_summary": {
+      "beats_cheap_baseline": false,
+      "cheap_baseline_auroc": 0.9635,
+      "cheap_baseline_root_cause": "Incorrect steps average ~5x longer than correct steps in this corpus -- a strong surface-level confound that lets simple length-aware features nearly match a semantic embedding model's AUROC. This is a corpus-construction property, not evidence that semantic understanding never helps; it explains WHY the cheap baseline is so strong on THIS specific classification task.",
+      "delta_auroc": 0.0028,
+      "delta_auroc_ci95": [
+        -0.0244,
+        0.0347
+      ],
+      "framing_change_from_retracted_claim": "This is NOT a 'verifier beats self-consistency vote' test (FoVer has no natural multi-candidate structure to vote among -- 6544/6546 question_ids have exactly one row). This IS a well-posed 'does a learned discriminator beat a cheap non-learned one' test on the real classification task.",
+      "n_rows": 6548,
+      "verifier_auroc": 0.9663
+    },
+    "fover_residual_fr11_should_not_rerun": true,
+    "fr11_block_reason": "preemptive_skip_after_exp5112_retired",
+    "headroom_present": false,
+    "pool_n": 0,
+    "retirement_recommendation": {
+      "priority": "Retire same-verdict FoVer in-domain selector/audit/FR-11 reruns",
+      "rationale": "The FoVer pool retraction makes the current in-domain selector path a doomed rerun until a real multi-candidate corpus or different benchmark exists.",
+      "retire_same_verdict_doomed_rerun": true
+    },
+    "same_verdict_retired": true,
+    "selector_path_blocked": true,
+    "selector_ran": false
+  },
+  "fover_selector_retired_for_same_verdict": true,
+  "fr11_residual_rerun_policy": {
+    "fover_residual_fr11_should_not_rerun": true,
+    "replacement_scope_required": "different_auditable_stream_not_same_fover_selector_residuals"
+  },
+  "fr11_state": {
+    "artifact_missing": true,
+    "continuous_self_learning_task": false,
+    "expected_continuous_self_learning_task": true,
+    "gap_reason": "preemptive_skip_after_exp5112_retired",
+    "heldout_delta": null,
+    "nonforgetting_delta": null,
+    "promotion_attempted": false,
+    "promotion_safe": false,
+    "source_experiment_number": 5118,
+    "state": "blocked"
+  },
+  "hardware_state": {
+    "decay_exponent": 2.0,
+    "gatemate_checked": true,
+    "gatemate_detected": false,
+    "hardware_residual_telemetry_ready": true,
+    "kv260_host_block_devices_touched": false,
+    "kv260_ssh_checked": true,
+    "kv260_ssh_ready": true,
+    "no_speedup_claim": true,
+    "polarfire_checked": true,
+    "polarfire_ssh_ready": true,
+    "residual_source": "cpu_reference_residual_sweep",
+    "source_experiment_number": 5120,
+    "state": "clean_positive"
+  },
+  "honest_verdict": "complete_archive_469_closed_470_active_roadmap_ready_fover_retired",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_post_wall_state": {
+    "attempted_n": 100,
+    "certificate_soundness": true,
+    "exp5108_baseline_loaded": true,
+    "exp5108_largest_n_reached": 10,
+    "exp5108_timed_out_n": 20,
+    "false_property_detected": true,
+    "near_margin_abstained": true,
+    "post_wall_progress": true,
+    "solved_n": 100,
+    "source_experiment_number": 5114,
+    "state": "clean_positive",
+    "technique_changed_from_exp5108": true
+  },
+  "milestone": "2026.07.470",
+  "preconditions_checked": {
+    "active_roadmap": {
+      "exists": true,
+      "milestone": "2026.07.470",
+      "missing_required_task_prefixes": [],
+      "parses": true,
+      "path": "research-roadmap.yaml",
+      "required_task_ids_present": true,
+      "task_ids": [
+        "exp5122-archive-469-activate-470",
+        "exp5123-v470-source-scope-audit",
+        "exp5124-clean-sota-runtime-provenance-v470",
+        "exp5125-structured-reasoning-pool-v470",
+        "exp5126-distributional-energy-ranker-v470",
+        "exp5127-structured-energy-adversarial-audit-v470",
+        "exp5128-kan-certificate-explanation-v470",
+        "exp5129-hubo-adaptive-2dpt-v470",
+        "exp5130-taco-sampler-heldout-scale-v470",
+        "exp5131-fr11-case-policy-self-learning-v470",
+        "exp5132-authenticated-board-timing-v470",
+        "exp5133-capstone-v470"
+      ]
+    },
+    "active_roadmap_fallback_ready": true,
+    "capstone": {
+      "exists": true,
+      "loadable": true,
+      "path": "results/experiment_5121_capstone_v469.json",
+      "sha256": "sha256:35757abd431bf3cc2c97aef2b0c416119777cd16c038a4b790764cfd915359f8"
+    },
+    "research_roadmap_next": {
+      "exists": false,
+      "milestone": "missing",
+      "missing_required_task_prefixes": [
+        "exp5122",
+        "exp5123",
+        "exp5124",
+        "exp5125",
+        "exp5126",
+        "exp5127",
+        "exp5128",
+        "exp5129",
+        "exp5130",
+        "exp5131",
+        "exp5132",
+        "exp5133"
+      ],
+      "parses": false,
+      "path": "research-roadmap-next.yaml",
+      "required_task_ids_present": false,
+      "task_ids": []
+    },
+    "roadmap_next_ready": false,
+    "vnext_doc": {
+      "exists": true,
+      "names_milestone": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    }
+  },
+  "random_seed": 5122,
+  "reproducibility_checksum": "sha256:d3e12e601947d6726bcda59de03c307a8cd1dc69ed1fd48900cebf7ea3d41ec3",
+  "result_path": "results/experiment_5122_archive_469_activate_470.json",
+  "roadmap_next_check": {
+    "exists": false,
+    "milestone": "missing",
+    "missing_required_task_prefixes": [
+      "exp5122",
+      "exp5123",
+      "exp5124",
+      "exp5125",
+      "exp5126",
+      "exp5127",
+      "exp5128",
+      "exp5129",
+      "exp5130",
+      "exp5131",
+      "exp5132",
+      "exp5133"
+    ],
+    "parses": false,
+    "path": "research-roadmap-next.yaml",
+    "required_task_ids_present": false,
+    "task_ids": []
+  },
+  "roadmap_next_present": false,
+  "run_date": "20260701",
+  "runtime_state": {
+    "adversarial_verify_passed": false,
+    "attempted": "local SOTA GGUF endpoint and logprob-cache root-cause repair",
+    "cache_ready": false,
+    "completion_ready": true,
+    "failure_reason": "DURATION_TOO_SHORT live adversarial flag; preserve attempt but quarantine headline.",
+    "headline_eligible": false,
+    "logprob_ready": true,
+    "quarantined": true,
+    "root_cause_summary": "blocked_adversarial_verify",
+    "source_experiment_number": 5119,
+    "state": "flagged"
+  },
+  "schema": "carnot.experiment_5122_archive_469_activate_470.v1",
+  "solver_sampling_state": {
+    "blocked_experiment_numbers": [
+      5115
+    ],
+    "fover_transfer_gap_present": true,
+    "hubo_2dpt_reference_ready": true,
+    "hubo_exact_enumeration_checked": true,
+    "hubo_optimum_hit_rate": {
+      "beta_pt": 1.0,
+      "two_d_beta_penalty_pt": 1.0,
+      "unguided_gibbs": 0.5
+    },
+    "missing_experiment_numbers": [],
+    "quarantined_experiment_numbers": [],
+    "source_experiment_numbers": [
+      5115,
+      5116,
+      5117
+    ],
+    "state": "clean_positive",
+    "taco_effort_reduction_ratio": 0.963671,
+    "taco_harm_gate_ready": true,
+    "taco_wrong_label_count": 0
+  },
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "kind": "capstone",
+      "path": "results/experiment_5121_capstone_v469.json",
+      "sha256": "sha256:35757abd431bf3cc2c97aef2b0c416119777cd16c038a4b790764cfd915359f8",
+      "source_id": "exp5121-capstone-v469"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5109,
+      "kind": "referenced_result_artifact",
+      "label": "archive_468_activate_469",
+      "path": "results/experiment_5109_archive_468_activate_469.json",
+      "sha256": "sha256:d5e4da6999946b57119058e99665a9a5d9a2f415ec78ee2daca4084e3fc77e0a",
+      "source_id": "exp5109"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5110,
+      "kind": "referenced_result_artifact",
+      "label": "source_freshness_sota_ingestion",
+      "path": "results/experiment_5110_sota_ingestion_v469.json",
+      "sha256": "sha256:426c5f0595eb66da18f269c0c75a134e590d3758c234101ea545cad45023d5e3",
+      "source_id": "exp5110"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5111,
+      "kind": "referenced_result_artifact",
+      "label": "fover_in_domain_pool",
+      "path": "results/experiment_5111_fover_in_domain_pool_v469.json",
+      "sha256": "sha256:36e7024d2bdb0d0f5340757c30fb8a03a330fa3b4998078503e7a1216aa289a9",
+      "source_id": "exp5111"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5112,
+      "kind": "referenced_result_artifact",
+      "label": "fover_in_domain_selector",
+      "path": "results/experiment_5112_fover_in_domain_selector_v469.json",
+      "sha256": "sha256:ec1b1121d85e2ee17f715cf346ff2de71d1f739bd2c3e62cdd0893e6336c81a8",
+      "source_id": "exp5112"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5114,
+      "kind": "referenced_result_artifact",
+      "label": "kan_abstraction_refinement_post_wall",
+      "path": "results/experiment_5114_kan_abstraction_refinement_post_wall_v469.json",
+      "sha256": "sha256:59b5ddf76d017fd7192839484dba16ac426429524b54bb6aa671db7418b81d2a",
+      "source_id": "exp5114"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5115,
+      "kind": "referenced_result_artifact",
+      "label": "graph_evidence_fover_transfer",
+      "path": "results/experiment_5115_graph_evidence_fover_transfer_v469.json",
+      "sha256": "sha256:337309be1176beeff1c162ad4bfac10486171a2e935f1ab8613aa4defeb28cb3",
+      "source_id": "exp5115"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5116,
+      "kind": "referenced_result_artifact",
+      "label": "hubo_2dpt_sampling_reference",
+      "path": "results/experiment_5116_hubo_2dpt_sampling_reference_v469.json",
+      "sha256": "sha256:8f76d92630e92eff377696e96ac1b605e7757b36c11e9bcd84ff6f5392e45eb2",
+      "source_id": "exp5116"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5117,
+      "kind": "referenced_result_artifact",
+      "label": "taco_harm_gated_scale",
+      "path": "results/experiment_5117_taco_harm_gated_scale_v469.json",
+      "sha256": "sha256:e19d7c960d138aa938c0d39286327afbc0213fd407aba80f36819b73221846e7",
+      "source_id": "exp5117"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5119,
+      "kind": "referenced_result_artifact",
+      "label": "sota_endpoint_rootcause",
+      "path": "results/experiment_5119_sota_endpoint_rootcause_v469.json",
+      "sha256": "sha256:15575e9d3cc45e867b6e9e3415b556256099e38821e0c75f5aa821a25807a2c1",
+      "source_id": "exp5119"
+    },
+    {
+      "capstone_reference_status": "present",
+      "exists": true,
+      "experiment_number": 5120,
+      "kind": "referenced_result_artifact",
+      "label": "hardware_residual_telemetry",
+      "path": "results/experiment_5120_hardware_residual_telemetry_v469.json",
+      "sha256": "sha256:219ad205dd77f861b234bc16f9ed39f203df60bf6ab10c693c5a4c72ff4196c1",
+      "source_id": "exp5120"
+    },
+    {
+      "capstone_reference_status": "missing",
+      "exists": false,
+      "experiment_number": 5113,
+      "kind": "referenced_result_artifact",
+      "label": "fover_selector_adversarial_audit",
+      "path": "results/experiment_5113_fover_selector_adversarial_audit_v469.json",
+      "sha256": null,
+      "source_id": "exp5113"
+    },
+    {
+      "capstone_reference_status": "missing",
+      "exists": false,
+      "experiment_number": 5118,
+      "kind": "referenced_result_artifact",
+      "label": "fr11_fover_residual_memory",
+      "path": "results/experiment_5118_fr11_fover_residual_memory_v469.json",
+      "sha256": null,
+      "source_id": "exp5118"
+    },
+    {
+      "exists": true,
+      "kind": "roadmap_doc",
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:c7f4e6833b18d85c9bd8bcef6807501d3e77e4ebeb4940b6e17e0a399f26d5ed",
+      "source_id": "vnext_doc"
+    },
+    {
+      "exists": false,
+      "kind": "roadmap_yaml",
+      "path": "research-roadmap-next.yaml",
+      "sha256": null,
+      "source_id": "research_roadmap_next"
+    },
+    {
+      "exists": true,
+      "kind": "roadmap_yaml",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:d7792bc526f667f5e4c3f0763494e8c71e219ab5ccab33cb25eebeeea5e2a134",
+      "source_id": "active_research_roadmap"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5122",
+    "SCENARIO-REPORT-5122",
+    "SCENARIO-REPORT-5122-ACTIVE-FALLBACK"
+  ],
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5122_archive_469_activate_470.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5122_archive_469_activate_470.py -q -o addopts=''",
+    ".venv/bin/coverage run --include='python/carnot/experiment_5122_archive_469_activate_470.py' -m pytest tests/python/test_experiment_5122_archive_469_activate_470.py -q -o addopts=''",
+    ".venv/bin/coverage report --include='python/carnot/experiment_5122_archive_469_activate_470.py' --fail-under=100 -m",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
+  ],
+  "vnext_doc_check": {
+    "exists": true,
+    "names_milestone": true,
+    "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+  }
+}
