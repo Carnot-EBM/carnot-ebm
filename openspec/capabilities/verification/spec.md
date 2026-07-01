@@ -22297,6 +22297,83 @@ space, `logprob_cache_ready=false`, and `step_cache_ready=false`.
 |---|---|---|
 | REQ-VERIFY-5086 | Planned (`python/carnot/experiment_5086_uprm_logprob_cache_retry.py`, `results/experiment_5086_uprm_logprob_cache_retry_v467.json`) | Planned (`tests/python/test_experiment_5086_uprm_logprob_cache_retry.py`) |
 
+### REQ-VERIFY-5088: Temporal-Consistency Process-Verifier Diagnostic
+
+The repository SHALL provide Exp 5088 at
+`python/carnot/experiment_5088_temporal_consistency_prm.py` to run a small
+temporal-consistency process-verifier diagnostic over existing MuSR
+candidate/step traces and write
+`results/experiment_5088_temporal_consistency_prm_v467.json`. The runner SHALL
+prefer checked-in candidate/trace sources from Exp 5058, Exp 5029, Exp 5046,
+Exp 5086, and Exp 5087, and SHALL NOT regenerate candidates. If live LLM
+judgments or critiques are invoked, `model_specs` SHALL include all three
+mandated SOTA GGUF hub IDs: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If no live endpoint is ready, the runner
+SHALL still emit a useful deterministic/proxy result over the available
+candidate traces.
+
+Before scoring, the runner SHALL record `preconditions_checked` with trace
+source paths, label/proxy availability, and whether Exp 5085 live endpoint
+fields are usable. It SHALL build a one-pass verifier baseline over candidate
+traces, then apply a temporal-consistency refinement that records repeated
+judgment states, a convergence/stability score, and a final error/no-error
+decision. Candidate scoring SHALL be performed without reading answer-key
+fields or model-identity fields; gold labels and answer keys MAY be used only
+after prediction for evaluation.
+
+The diagnostic SHALL compare first-error/process classification and
+candidate-selection value against the one-pass verifier, tuned self-consistency,
+and available uPRM output when present. The terminal artifact SHALL include
+principle-annotated top-level fields `honest_verdict`, `duration_s`,
+`inference_substrate`, `preconditions_checked`, `model_specs`,
+`live_llm_invoked`, `n_examples`, `one_pass_accuracy`,
+`temporal_consistency_accuracy`, `delta_vs_one_pass`, `stability_score`,
+`leakage_audit`, `beats_one_pass`, and `flagged_adversarial`. It SHOULD also
+include comparator metrics, source-artifact summaries, sample temporal states,
+and a reproducibility checksum.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix; success_temporal_consistency_prm_improves_plus_X for a positive delta, otherwise complete_temporal_consistency_prm_no_win.`;
+`duration_s` = `wall-clock diagnostic duration over existing traces or live judgments.`;
+`inference_substrate` = `deterministic_proxy_over_cached_candidate_traces unless live LLM judgment rows are actually produced.`;
+`preconditions_checked` = `records trace source paths, label/proxy availability, and Exp5085 live endpoint usability before scoring.`;
+`model_specs` = `all three mandated SOTA GGUF IDs plus endpoint/model readiness provenance.`;
+`live_llm_invoked` = `true only when live judgment or critique calls were made.`;
+`n_examples` = `number of candidate-level examples used for first-error/process classification.`;
+`one_pass_accuracy` = `accuracy of the one-pass verifier baseline on the same examples.`;
+`temporal_consistency_accuracy` = `accuracy after repeated judgment states and convergence refinement.`;
+`delta_vs_one_pass` = `temporal_consistency_accuracy - one_pass_accuracy.`;
+`stability_score` = `mean repeated-state agreement/convergence score.`;
+`leakage_audit` = `model-identity and answer-key oracle leakage checks, both required to pass.`;
+`beats_one_pass` = `true iff the temporal-consistency accuracy exceeds the one-pass baseline.`;
+`flagged_adversarial` = `true if required schema fields, leakage checks, or source provenance fail.`
+
+### SCENARIO-VERIFY-5088: Logprob-Free Temporal Consistency Fallback
+
+Given Exp 5085 reports endpoint fields but Exp 5086/5087 do not provide usable
+live uPRM rows, and Exp 5058/5029 MuSR candidate traces are available, when
+Exp 5088 runs, then it records the failed/available preconditions, sets
+`live_llm_invoked=false`, uses
+`inference_substrate=deterministic_proxy_over_cached_candidate_traces`, builds
+a one-pass process classifier, refines it with repeated temporal judgment
+states and convergence, audits answer-key and model-identity leakage, compares
+against one-pass, tuned self-consistency, and available uPRM/process-reward
+outputs, and writes every required artifact field with a terminal
+`honest_verdict` beginning with either
+`success_temporal_consistency_prm_improves_plus_` or
+`complete_temporal_consistency_prm_no_win`.
+
+If any scoring path tries to read gold, answer-choice, answer-index, or
+model-identity fields before evaluation, the runner SHALL write a blocked or
+flagged artifact instead of reporting a clean diagnostic.
+
+## Implementation Status (REQ-VERIFY-5088)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5088 | Planned (`python/carnot/experiment_5088_temporal_consistency_prm.py`, `results/experiment_5088_temporal_consistency_prm_v467.json`) | Planned (`tests/python/test_experiment_5088_temporal_consistency_prm.py`) |
+
 ### REQ-VERIFY-5059: D1 SOTA Refresh Audit Separates Scorer And Candidate-Refresh Value
 
 The repository SHALL provide Exp 5059 at
