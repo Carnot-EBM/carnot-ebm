@@ -25780,4 +25780,27 @@ Planner date: 2026-07-01.
 - **Actionability:** Keep TSU work as simulation/roadmap context. For local work, spend the milestone on
   FoVer selection, post-wall KAN abstraction, CPU sampling references, and authenticated board telemetry.
 
+### V469 Fresh Sweep Addendum: Hard Feasibility, Spec Faithfulness, And EBM Lineage
+- **Sources:** FALCON arXiv:2602.01090 - https://arxiv.org/abs/2602.01090;
+  Verus-SpecGym / Verus-SpecBench - https://huggingface.co/papers/2605.26457;
+  EBT arXiv:2507.02092 - https://arxiv.org/abs/2507.02092 and code -
+  https://github.com/alexiglad/EBT; ARM-EBM arXiv:2512.15605 -
+  https://arxiv.org/abs/2512.15605; Logical Intelligence Kona -
+  https://logicalintelligence.com/kona-ebms-energy-based-models; Extropic zero-to-one update -
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+- **Tracks:** constrained generation, semantic repair, executable specification checks,
+  EBT/ARM-EBM theory, commercial EBM reasoning, TSU hardware status
+- **Carnot hook:** FALCON reinforces `.468`'s constrained-decoding result: syntax masks are only the
+  first layer; a meaningful feasibility claim needs semantic repair/checking and adaptive sampling.
+  Verus-SpecGym adds a concrete evaluation pattern for spec faithfulness: generated specs are executed
+  and tested against adversarial edge cases rather than trusted as text. The EBT/ARM-EBM sources and
+  Kona/Extropic updates strengthen the architecture rationale for verifier-first reasoning and
+  thermodynamic sampling, but they do not create a local training or hardware-execution obligation for
+  `.469`.
+- **Actionability:** Keep `.469` centered on FoVer in-domain selection and exact semantic checks. Use
+  adversarial edge-case audits in the FoVer selector review and FR-11 memory promotion contracts. Do
+  not schedule a syntax-only constrained-generation headline or an EBT training reproduction; record
+  EBT/ARM/Kona/TSU as architecture pressure and use the hardware task only for authenticated residual
+  telemetry or honest blockers.
+
 <!-- V469-PLANNER-REFERENCES-END -->
