@@ -1280,6 +1280,40 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NUDGE 2026-07-01 (operator-directed, TOP PRIORITY for `.468` — preempts further Phase D pivot-hunting): RUN the FoVer in-domain redirect NOW
+
+**Origin:** the "MOAT REDIRECT 2026-06-30" entry (below, unchanged) has sat pending across TWO milestones
+(`.466`, `.467`) with ZERO pickup. Instead, `.466`/`.467` spent their Phase D slots pivot-hunting across
+FOUR unrelated directions, all of which are now themselves evidenced closed or narrow:
+
+- **uPRM/process-verifier** (`.467`): BLOCKED — `runtime_state.runtime_ready=false`, logprob-cache
+  endpoint never became ready (`exp5086` retry also failed). Do not re-propose without a genuinely new
+  endpoint-readiness fix.
+- **p-bit/Ising-guided SAT/CDCL** (`.467`): tested, `reported_helps_declared_family: false` — does not
+  help; `pbit_cdcl.excluded_from_headline: true`. Closed, per Failed-Experiment Rerun Discipline (this is
+  the arXiv:2606.25313-adjacent hardware idea from 2026-06-30, tested on a different track than the KV260
+  residual-energy task below — confirmed NOT a live moat lever here).
+- **Constrained generation / static CSR** (`.467`): reports a 77x mask speedup, but `flagged`, EXCLUDED
+  from headline (`state: static_csr_reported_win_flagged_not_headlined`) — not a clean result yet.
+- **KAN-MILP formal verification** (`.467`, the ONE clean positive): real, but explicitly scoped
+  `"scale_boundary": "small_multi_unit_property_not_architecture_scale_claim"` — a 6-variable property
+  proof, not a moat claim. Fine as ongoing depth work, but it is NOT what "MOAT REDIRECT" asked for.
+- **`.466` capstone**: `blocked_gate_check_failed` on a missing upstream artifact — pure infra failure,
+  zero research content, real wall-time spent on nothing.
+
+**None of the above is the FoVer in-domain experiment.** The planner has demonstrated, twice, that
+without an explicit forcing directive it will keep pivot-hunting breadth (north-star §1's exact
+diminishing-returns churn pattern) instead of running the ONE identified decisive experiment.
+
+**The rule for `.468`:** allocate the Phase D primary-headline slot to the FoVer in-domain
+verifier-selection-vs-tuned-SC experiment specified in "MOAT REDIRECT 2026-06-30" below — build the
+n>=150 pool, run in-domain (not cross-domain), include the mandatory label-ablation control — BEFORE
+proposing any further uPRM retry, p-bit/Ising variant, constrained-generation iteration, or new exact-
+verifier pivot. This is a genuinely NEW experiment (never run in-domain), not a rerun of anything above,
+so no `prior_failures`/`operator_override` gymnastics are needed — it simply has not been tried.
+
+(the full "MOAT REDIRECT 2026-06-30" entry this NUDGE elevates is further below, unchanged.)
+
 ### ARC VALUE-HEAD ENERGY DISTILLATION 2026-06-30 (operator-directed investigation) — attack the CONFIRMED compute-cost bottleneck, not representation/distribution-shift/calibration (already ruled out)
 
 **Do NOT re-propose:** representation improvement (0.725 LOO-AUROC already achieved,
