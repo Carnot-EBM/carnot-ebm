@@ -22692,6 +22692,75 @@ best arm, Exp 5060 writes a blocked artifact with null second-corpus statistics.
 |---|---|---|
 | REQ-VERIFY-5060 | Proposed (`python/carnot/experiment_5060_second_corpus_audit_v2.py`, `results/experiment_5060_second_corpus_audit_v2.json`) | Proposed (`tests/python/test_experiment_5060_second_corpus_audit_v2.py`) |
 
+### REQ-VERIFY-5061: Tool-First D6 Cascade With Bounded Judge Fallback
+
+The repository SHALL provide Exp 5061 at
+`python/carnot/experiment_5061_tool_first_cascade.py` to rerun the blocked D6
+efficiency axis as a tool-first cascade, then write
+`results/experiment_5061_tool_first_cascade.json`.
+
+The runner SHALL load Exp 5057 and Exp 5059 before cascade execution. It SHALL
+fail fast only when Exp 5057 does not report `tool_first_verifier_ready=true`
+or Exp 5059 does not report `best_arm_available=true`; a missing local SOTA
+judge server alone SHALL NOT produce `blocked_judge_server` when the tool-first
+path and an available cached/tuned baseline can execute. The mandated SOTA GGUF
+model specs SHALL remain
+`flagship_moe=unsloth/Qwen3.6-35B-A3B-GGUF`,
+`flagship_dense=unsloth/gemma-4-31B-it-GGUF`, and
+`middle_moe=unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models SHALL remain
+smoke-only.
+
+The cascade order SHALL be deterministic constraint checks, SAFE-style evidence
+checks where checked-in evidence is available, cheap oracle-distinct
+verifier selection from Exp 5059, an abstain/uncertain route for malformed or
+missing cheap decisions, and an optional SOTA judge fallback only when a
+mandated SOTA judge is ready or cached judge decisions are available. This is
+the `SAFE-style evidence checks` stage in the artifact route ledger. When
+`sota_judge_ready=false`, the runner SHALL still execute a bounded tool-first
+cascade against the available cached judge or tuned self-consistency baseline.
+It SHALL charge every deterministic tool check, evidence tool check, cheap
+verifier call, fallback tool call, and judge call.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`cascade_executed`, `tool_first_path_used`, `sota_judge_used`,
+`cascade_accuracy`, `judge_only_accuracy`, `delta_vs_judge_only`,
+`paired_ci95`, `judge_call_fraction`, `tool_call_count`,
+`verifier_call_count`, `efficiency_win`, `verifier_is_oracle`, and
+`legacy_models_smoke_only`. It SHOULD also include the baseline source,
+judge-call reduction, explicit call-cost accounting, route counts, source
+artifact citations, duration, field principles, and a reproducibility checksum.
+
+`efficiency_win` SHALL be true only when the cascade executes, the verifier is
+oracle-distinct, the paired CI95 is compatible with parity against the selected
+judge-only/cached baseline, cascade accuracy is at least the baseline accuracy,
+and the charged judge-call fraction is below the judge-only baseline fraction.
+If the SOTA judge is unavailable but the tuned self-consistency baseline is the
+only available comparator, the artifact SHALL identify that comparator and keep
+`sota_judge_used=false`.
+
+### SCENARIO-VERIFY-5061: Missing Judge Server Does Not Block Tool-First Replay
+
+Given Exp 5057 reports `tool_first_verifier_ready=true` and
+`sota_judge_ready=false`, and Exp 5059 reports `best_arm_available=true` with
+paired verifier and tuned self-consistency correctness, when Exp 5061 runs,
+then it executes the deterministic/evidence/verifier cascade, charges tool and
+verifier calls, uses tuned self-consistency as the bounded available baseline,
+sets `sota_judge_used=false`, avoids `blocked_judge_server`, and writes every
+required artifact field.
+
+If Exp 5057 reports `tool_first_verifier_ready=false` or Exp 5059 reports
+`best_arm_available=false`, then Exp 5061 writes a blocked artifact for that
+failed tool-first precondition instead of pretending a judge-server outage was
+the only blocker. If cached SOTA judge correctness is available and the cheap
+verifier abstains on some rows, then those abstained rows are charged as judge
+calls and the judge-call fraction reflects only those fallback invocations.
+
+## Implementation Status (REQ-VERIFY-5061)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5061 | Proposed (`python/carnot/experiment_5061_tool_first_cascade.py`, `results/experiment_5061_tool_first_cascade.json`) | Proposed (`tests/python/test_experiment_5061_tool_first_cascade.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
