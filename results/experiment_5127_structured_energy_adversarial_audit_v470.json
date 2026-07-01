@@ -1,0 +1,24 @@
+{
+  "experiment": 5127,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-01",
+  "started_at": "2026-07-01T22:25:15.614528+00:00",
+  "finished_at": "2026-07-01T22:25:15.614528+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE A3 structured energy audit -- gated on positive Exp5126 delta and receipt-backed provenance",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470.distributional_energy_delta (actual=0.0 > expected=0.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5126-distributional-energy-ranker-v470",
+      "artifact_field": "distributional_energy_delta",
+      "op": ">",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 > expected=0.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
