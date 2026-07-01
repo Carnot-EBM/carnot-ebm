@@ -1314,6 +1314,82 @@ so no `prior_failures`/`operator_override` gymnastics are needed — it simply h
 
 (the full "MOAT REDIRECT 2026-06-30" entry this NUDGE elevates is further below, unchanged.)
 
+### KAN-MILP SCALE STRESS TEST 2026-07-01 (operator-directed investigation, "let's start digging into KAN-MILP") — answer the ONE question 6+ weeks of this lineage never tested
+
+**Context (outer-loop investigation of the `.467`/`.468` "exact_verifier_pivot" capstone claim).** The
+KAN-PWA/MILP lineage (`exp2051` .. `exp5098`, 2026-05-16 through `.468`, 15+ experiments) formally
+verifies exact energy bounds for Carnot's KAN ("Efficient" tier) model via a piecewise-affine -> MILP
+encoding solved with Z3 (the KAN-spline analog of Reluplex/MIPVerify-style neural-net verification).
+**This is a DIFFERENT claim than the verifier-moat question** (FoVer/self-consistency) — it's a formal
+correctness/safety-bound guarantee about Carnot's own model, not a selection-beats-baseline claim. Do not
+conflate the two when reading `.467`/`.468`'s "exact_verifier_pivot" framing.
+
+**The recent result (`exp5091`/`exp5098`) is genuinely well-controlled** — real adversarial rigor already
+built in: an engineered-FALSE property (`adversarial_false_tight_bound`, threshold 1.7 vs the true bound
+1.8) was correctly REJECTED with a counterexample (`violation_margin: 0.100...`), a margin-sensitive case
+was honestly left unproved rather than force-certified, and 2-unit -> 3-unit composition solved cleanly
+(Z3, both optimal, single-digit milliseconds). Not fabricated, not overclaimed by the artifacts themselves.
+
+**BUT: every single iteration in 6+ weeks has stayed at TOY SCALE** (2-3 units, 6-9 binary variables,
+43-64 constraints — trivial for any modern solver; `exp2871` even admits it fell back to brute-force
+ENUMERATION rather than real MILP solving, "no general MILP or network claim"). The caveat
+`"small_multi_unit_property_not_architecture_scale_claim"` has been repeated essentially unchanged across
+the entire lineage. **MILP verification is worst-case exponential in the number of piecewise-linear
+units — nobody has EVER pushed this toward a realistic KAN model size** (dozens-to-hundreds of spline
+units) to find out whether it scales or hits a wall. This is the actual decisive, unanswered question.
+
+**Task (precondition-gated, prototype-first, reusing existing infra — `python/carnot/models/kaem_energy.py
+::UnivariateKAEMLayer` + the `exp5080` PWA-export bridge + the `exp5091`/`exp5098` composition pattern,
+NOT a rewrite):**
+```
+PRECONDITIONS:
+  a. Confirm z3 (or the currently-used solver) is available and solver_status reports cleanly at the
+     exp5098 baseline (3-unit, sanity re-run) before scaling up -- do not scale from an unverified base.
+  b. Set an explicit WALL-CLOCK BUDGET per solve attempt (e.g. 300s) and a HARD STOP if reached -- MILP
+     worst-case blowup means an unbounded attempt could hang; report `solver_timeout: true` honestly
+     rather than let the task run indefinitely.
+CONCRETE STEPS:
+  1. Sweep unit count N = {5, 10, 20, 50, 100} (or as far as the wall-clock budget allows), composing the
+     additive KAEM energy across N units (same composition pattern as exp5091's 2-unit / exp5098's
+     3-unit case), and re-verify the SAME property class (an input-box energy upper bound) at each N.
+  2. AT EACH N, re-run the FULL adversarial-rigor suite already established in this lineage, not just the
+     positive case: (a) the true property, (b) an engineered-FALSE property (must be correctly REJECTED
+     with a counterexample -- a MILP solver returning "verified" on a property that should be false at
+     larger N, e.g. from numerical/encoding drift, would be a genuine correctness bug worth catching),
+     (c) a margin-sensitive case (must be honestly left unproved if the error budget consumes the margin).
+  3. Record solve_time_s AT EACH N and fit/characterize the growth curve (linear? polynomial? exponential?
+     — do not assume, measure). Report the LARGEST N reached within the wall-clock budget, and whether
+     that N is anywhere close to a realistic deployed KAN model's unit count. NOTE: there is no single
+     canonical "the KAN tier" file — `python/carnot/models/` has proliferated into many KAN variants
+     (`gskan.py`, `s2kan.py`, `cikan_energy.py`, `sos_kan.py`, `adaptive_kan.py`, `kan/`, `carnot_kan/`,
+     etc.). Identifying WHICH variant is actually deployed/production, and its real unit count, is itself
+     a precondition this task must resolve (do not assume a number) before claiming "close to realistic
+     scale" either way.
+  4. Report HONESTLY whichever outcome results: (a) scales gracefully to realistic size -> genuinely
+     valuable formal-verification capability, real news; (b) hits a hard wall well before realistic
+     size -> honest negative, this closes the "does formal MILP verification scale" question for KAN
+     energy models, redirect any further formal-verification effort toward sampling-based /
+     abstraction-refinement alternatives instead of more toy-scale MILP wins.
+REQUIRED ARTIFACT FIELDS:
+  unit_counts_tested: {value: list[int], principle: "the x-axis of the scaling curve; a single N=3 point,
+    as every prior iteration in this lineage has done, cannot answer a scaling question."}
+  solve_times_s_by_n: {value: "dict[int, float]", principle: "the actual measured growth; report EVERY N
+    attempted, including ones that hit the wall-clock budget, not just the ones that solved fast."}
+  solver_timeout_hit: {value: bool, principle: "true if any N hit the wall-clock budget without solving
+    -- this IS a real, reportable finding (the scale wall), not a failure to hide."}
+  largest_n_reached: {value: int, principle: "the honest ceiling this run found, for comparison against
+    realistic KAN model unit counts."}
+  realistic_kan_unit_count_reference: {value: int, principle: "the actual production KAN tier's unit
+    count, so largest_n_reached is judged against a real target, not an arbitrary toy number."}
+  adversarial_rigor_preserved_at_scale: {value: bool, principle: "true only if the false-property control
+    and margin abstention BOTH still pass at every tested N, not just at N=2/3 -- a solver behaving
+    correctly at toy scale and incorrectly at larger scale would be a real, serious finding."}
+```
+This is NEW work (scale was never tested), not a rerun of prior small-N results — no
+`prior_failures`/`operator_override` needed, it simply answers a question this lineage has avoided for
+6+ weeks. Cross-refs: `exp5080`/`exp5091`/`exp5098` (the reusable composition pattern),
+`exp2871` (the honest "no general MILP claim" precedent this task finally resolves either way).
+
 ### ARC VALUE-HEAD ENERGY DISTILLATION 2026-06-30 (operator-directed investigation) — attack the CONFIRMED compute-cost bottleneck, not representation/distribution-shift/calibration (already ruled out)
 
 **Do NOT re-propose:** representation improvement (0.725 LOO-AUROC already achieved,
