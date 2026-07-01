@@ -9793,3 +9793,4 @@ web search: |
 | 2026-07-01 21:40 UTC | PHASE A0 runtime gate -- clean local SOTA GGUF com | OK | 86 passed, 1 warning in 7.02s |
 | 2026-07-01 22:03 UTC | PHASE A1 structured pool -- non-FoVer exact-constr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 22:23 UTC | PHASE A2 structured energy -- Distributional-EBM r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-01 22:25 UTC | PHASE A3 structured energy audit -- gated on posit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5126-distributional-energy-ranker-v470. |
