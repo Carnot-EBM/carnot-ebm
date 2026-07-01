@@ -289,7 +289,7 @@
   ],
   "target_game": "tu93",
   "target_level": 6,
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "DURATION_TOO_SHORT",
@@ -306,5 +306,24 @@
       "severity": "warn",
       "detail": "lever-exercise-evidence-degenerate: artifact declares a generation/exploration lever, but its exercise evidence is degenerate: live_agent_attempts.[0].go_explore_archive.actions_injected=0; live_agent_attempts.[0].go_explore_archive.prefixes_injected=0"
     }
-  ]
+  ],
+  "linter_flag_corrigendum": {
+    "filed_at": "2026-06-30T",
+    "filed_by": "outer-loop (Claude Sonnet 5) per explicit operator directive 'unflag exp5054'",
+    "original_flags": [
+      "DURATION_TOO_SHORT",
+      "METHODOLOGY_MISSING",
+      "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
+    ],
+    "root_cause": "adversarial_verify.py had no recognized substrate for live ARC-agent environment-stepping without LLM invocation (this artifact's declared inference_substrate='offline_arcade_live_agent_runtime_self_discovery_no_llm' was not a recognized canonical value), so it fell through to a raw GGUF-marker substring scan that matched a NESTED, UNUSED model_specs field (live_agent_attempts[0].model_specs.fallback_reasoning_model, invoked=false) and applied the 60s live-model floor to a genuine 2.9s / 35-action offline run (~83ms/action, plausible for pure Python env-stepping, no GGUF/CUDA loaded).",
+    "fix": "Added a 5th canonical inference_substrate class to adversarial_verify.py (ARC_LIVE_AGENT_NO_LLM_SUBSTRATE), wired into duration_floor_for_artifact (10ms floor) and check_methodology_present (exempts model_specs/target_model, still requires random_seed + reproducibility_checksum, both already present on this artifact). CLAUDE.md 'Inference-Substrate Declaration Discipline' table updated with the new row. Committed 01d9e07e3.",
+    "fresh_recheck_result": {
+      "critical_flags": [],
+      "warn_flags": [
+        "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
+      ],
+      "note": "DURATION_TOO_SHORT and METHODOLOGY_MISSING were false positives; both clear. LEVER_EXERCISE_EVIDENCE_DEGENERATE is a REAL, CORRECT finding (NOT corrected -- left as an honest WARN, not quarantined): the go_explore_archive lever had only 1 stored_cell (cold-start; a single 36-action attempt cannot build meaningful archive coverage), so actions_injected=0/prefixes_injected=0 genuinely means the lever never contributed this run. See ops/known-issues.md 'go-explore archive cold-start' finding for the methodology implication."
+    },
+    "corrected_flagged_adversarial": false
+  }
 }
