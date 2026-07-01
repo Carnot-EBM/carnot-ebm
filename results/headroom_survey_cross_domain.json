@@ -29,8 +29,16 @@
     "honest_verdict": "cross_domain_selection_collapses_domain_bound",
     "implication": "FoVer headroom is REAL but UNCAPTURED; the cross-domain transfer was an artifact"
   },
-  "decisive_next_experiment": "IN-DOMAIN FoVer verifier-selection vs tuned-SC (train on FoVer, test held-out FoVer), n>=150, verifier_is_oracle=false, with a MANDATORY label-ablation negative control (real verifier beats vote AND shuffled-label verifier does NOT). Beats SC toward the 0.77 oracle ceiling with CI95 excl 0 = moat realized on an oracle-distinct headroom-present domain (the open claim). See ops/known-issues.md MOAT REDIRECT 2026-06-30.",
+  "decisive_next_experiment": "RETRACTED -- see corrigendum below. Do not execute as specified.",
   "honest_verdict": "complete_headroom_survey_fover_is_the_oracle_distinct_target_musr_is_no_headroom",
   "random_seed": 20260630,
-  "solve_provenance": "development_proxy"
+  "solve_provenance": "development_proxy",
+  "linter_flag_corrigendum": {
+    "filed_at": "2026-07-01T",
+    "filed_by": "outer-loop (Claude Sonnet 5) per operator directive 'let's escalate the FoVer nudge by tackling here in the outer loop'",
+    "original_claim": "fover row: oracle_at_k=0.769, sc_vote=0.269, headroom=+0.500, oracle_distinct=true -- 'ONLY oracle-distinct domain with real headroom'.",
+    "root_cause": "oracle_at_k=0.769 and sc_vote=0.269 are NOT measured self-consistency/oracle behavior on FoVer -- they are exact arithmetic consequences of load_fover_domain_pool's (python/carnot/experiment_4305_cross_domain_selector_generalization.py:616) `mode = task_index % 4` construction formula (mode0=vote-correct 1/4, mode1/2=vote-wrong 2/4, mode3=no-oracle 1/4): at n=26, mode0 fraction = 7/26 = 0.26923..., mode!=3 fraction = 20/26 = 0.76923... -- matching the reported numbers to 4 decimal places by construction. Additionally, the underlying real corpus (data/fover_corpus_v4.json, 6548 rows) has NO natural multi-candidate structure: 6544 of 6546 distinct question_ids have exactly ONE row (the 2-row exception was two SEQUENTIAL solution steps, not competing candidates). The pool-builder manufactures fake 'candidate groups' by grafting unrelated wrong steps from elsewhere in the corpus onto a real correct one, then hand-assigns the winner via the mode formula. FoVer is a flat per-step correctness-classification dataset; the 'verifier beats self-consistency vote' framing does not apply to its real task shape.",
+    "scope_of_correction": "Only the fover row's oracle_distinct-headroom framing is retracted. The MuSR-retirement conclusion in no_headroom_corpora (SC near-ceiling, PHASE D null streak explained) is UNAFFECTED. Note for completeness (does not change any actionable conclusion, since both were already correctly excluded as circular/non-headline-eligible): the arc (sc_vote=0.250 exactly) and arcgen (sc_vote=0.250 exactly) rows show the SAME suspiciously-round mode%4 signature, suggesting the same synthetic pool-construction methodology underlies all three domain rows in exp4305/4314 -- not just fover.",
+    "corrected_conclusion": "This survey does NOT establish real oracle-distinct headroom on FoVer (or on any domain read from exp4305/4314's DomainPool without checking construction). The decisive open question is UNANSWERED, not resolved toward FoVer. See ops/known-issues.md 'FOVER STEP-VERIFIER VS CHEAP BASELINE' for the corrected, well-posed follow-up (uses the real 6548-row corpus honestly, no synthetic candidate grafting)."
+  }
 }
