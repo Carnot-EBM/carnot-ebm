@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.469",
+  "generated_at": "2026-07-01T20:18:20Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No data available this milestone: the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, the GPU snapshot cannot support a milestone GPU-idle or DualGPURunner finding.",
+  "bottlenecks_identified": [
+    "No experiment timing entries were available for this milestone, so no slowest experiment or wall-time bottleneck can be identified.",
+    "No compute-bound tasks appear in the timing data; GPU idle is not flagged as a milestone bottleneck.",
+    "No multi-model compute-bound task appears in the timing data, so no DualGPURunner miss can be assessed."
+  ],
+  "improvements_suggested": [
+    "Add an explicit no-data milestone path that writes 'no data available this milestone' when the timing window is empty.",
+    "Gate GPU utilization alerts on compute_bound entries from timing data so synthesis-only or empty windows do not produce false bottlenecks.",
+    "Have the retro generator separate live GPU monitor observations from milestone-scoped timing evidence before making efficiency claims."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit empty-window timing status before analysis.",
+    "Require compute-bound evidence before GPU-idle findings.",
+    "Record whether any task loaded multiple models before evaluating DualGPURunner."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone has no experiment timing entries, so the retrospective stays bounded to absence of data rather than reconstructing work from other files. The GPU snapshot is useful context, but it is not enough to assign a compute-bound efficiency finding without timed compute-bound tasks."
+}
