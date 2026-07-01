@@ -9727,3 +9727,4 @@ The contro |
 | 2026-07-01 07:53 UTC | PHASE D1 decision gate -- aggregate uPRM/VPR/DCCD/ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5073-uprm-process-verifier-v466, exp5074- |
 | 2026-07-01 07:53 UTC | PHASE D2 capstone -- final .466 milestone synthesi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.de |
 | 2026-07-01 07:55 UTC | PHASE D1 decision gate -- aggregate uPRM/VPR/DCCD/ | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5073-uprm-process-verifier-v466, exp5074- |
+| 2026-07-01 07:55 UTC | PHASE D2 capstone -- final .466 milestone synthesi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5081-phase-d-fr11-decision-gate-v466.de |
