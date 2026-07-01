@@ -9769,3 +9769,5 @@ web search: |
 | 2026-07-01 17:32 UTC | PHASE A1 FoVer pool -- build an in-domain n>=150 o | OK | 113 passed, 1 warning in 8.80s |
 | 2026-07-01 17:34 UTC | PHASE A2 FoVer selector -- in-domain verifier sele | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
 | 2026-07-01 17:36 UTC | PHASE A2 FoVer selector -- in-domain verifier sele | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
+| 2026-07-01 17:38 UTC | PHASE A2 FoVer selector -- in-domain verifier sele | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
+| 2026-07-01 17:40 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
