@@ -1,0 +1,338 @@
+{
+  "approximation_error_budget": {
+    "adversarial_false_tight_bound": 0.0,
+    "approximation_budget_sensitive_margin": 0.02,
+    "exp5091_baseline_two_unit_true": 0.0,
+    "three_unit_composition_true": 0.0
+  },
+  "artifact": "experiment_5098_kan_pwa_milp_scale_v2",
+  "baseline_reproduced": true,
+  "binary_variable_counts": {
+    "adversarial_false_tight_bound": 6,
+    "approximation_budget_sensitive_margin": 6,
+    "exp5091_baseline_two_unit_true": 6,
+    "three_unit_composition_true": 9
+  },
+  "constraint_counts": {
+    "adversarial_false_tight_bound": 43,
+    "approximation_budget_sensitive_margin": 43,
+    "exp5091_baseline_two_unit_true": 43,
+    "three_unit_composition_true": 64
+  },
+  "counterexamples": {
+    "adversarial_false_tight_bound": {
+      "budgeted_upper_bound": 1.8000000119209287,
+      "certified_upper_bound": 1.8000000119209287,
+      "inputs": [
+        1.0,
+        1.0
+      ],
+      "property_id": "adversarial_false_tight_bound",
+      "selected_segments": [
+        2,
+        2
+      ],
+      "threshold": 1.7,
+      "violation_margin": 0.10000001192092878
+    }
+  },
+  "duration_s": 0.608137,
+  "experiment": 5098,
+  "false_property_controls_passed": true,
+  "field_principles": {
+    "approximation_error_budget": {
+      "principle": "Declares the certification budget applied above the PWA objective bound for each property."
+    },
+    "binary_variable_counts": {
+      "principle": "Reports one selector count per property, exposing integer-search growth across the suite."
+    },
+    "constraint_counts": {
+      "principle": "Reports generated linear-constraint counts per property, making scale telemetry explicit."
+    },
+    "counterexamples": {
+      "principle": "Stores solver witnesses for false properties so failures are auditable and not relabeled as proofs."
+    },
+    "duration_s": {
+      "principle": "Wall-clock duration covers local abstraction and exact CPU solver calls only."
+    },
+    "false_property_controls_passed": {
+      "principle": "True only when adversarial false properties are refuted or counterexampled instead of counted as proved."
+    },
+    "flagged_adversarial": {
+      "principle": "Remains false only when adversarial controls are handled honestly and no false property is proved."
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict reports whether the bounded suite passed cleanly or blocked on solver growth/dependency."
+    },
+    "inference_substrate": {
+      "principle": "Names the actual exact CPU mixed-integer solver path used for every checked property."
+    },
+    "max_scale_reached": {
+      "principle": "Summarizes the largest bounded property solved by selector and constraint count, without extrapolating."
+    },
+    "properties_proved": {
+      "principle": "Lists only properties whose solver-certified bound plus declared error budget is within threshold."
+    },
+    "property_suite": {
+      "principle": "Carries one row per bounded property so true, false-control, and approximation-sensitive outcomes stay separable."
+    },
+    "scale_blocker": {
+      "principle": "Names a solver dependency, solver status, or control failure when the suite cannot be called clean."
+    },
+    "solve_times_s": {
+      "principle": "Keeps per-property solver runtime separate from total artifact assembly time."
+    },
+    "solver_statuses": {
+      "principle": "Records the exact solver status for each property so blocked or non-optimal rows are visible."
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+  "inference_substrate": "exact_milp_solver_cpu",
+  "kan_component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+  "max_scale_reached": {
+    "binary_variable_count": 9,
+    "constraint_count": 64,
+    "input_dimension": 3,
+    "property_id": "three_unit_composition_true",
+    "pwa_piece_count": 9,
+    "solver_status": "optimal"
+  },
+  "methodology_note": "Exp 5098 submits small KAEM PWA abstractions to an exact CPU solver and reports only bounded property-suite outcomes. The near-margin row is intentionally left unproved when its declared error budget consumes the certification margin.",
+  "properties_proved": [
+    "exp5091_baseline_two_unit_true",
+    "three_unit_composition_true"
+  ],
+  "property_suite": [
+    {
+      "approximation_error_budget": 0.0,
+      "binary_variable_count": 6,
+      "budgeted_upper_bound": 1.8000000119209287,
+      "certificate": {
+        "approximation_error_budget": 0.0,
+        "budgeted_upper_bound": 1.8000000119209287,
+        "certified_upper_bound": 1.8000000119209287,
+        "kind": "certificate",
+        "method": "z3_mixed_integer_linear_pwa_property_suite",
+        "selected_segments": [
+          2,
+          2
+        ],
+        "threshold": 1.800000011920929,
+        "witness_maximizer_inputs": [
+          1.0,
+          1.0
+        ]
+      },
+      "certified_upper_bound": 1.8000000119209287,
+      "constraint_count": 43,
+      "counterexample": null,
+      "expected_outcome": "verified",
+      "input_dimension": 2,
+      "is_false_property_control": false,
+      "objective_bound": 1.8000000119209287,
+      "property_holds": true,
+      "property_id": "exp5091_baseline_two_unit_true",
+      "property_status": "verified",
+      "pwa_piece_count": 6,
+      "selected_segments": [
+        2,
+        2
+      ],
+      "solve_time_s": 0.007552,
+      "solver_available": true,
+      "solver_name": "z3",
+      "solver_status": "optimal",
+      "statement": "For all (x0, x1) in [-1, 1]^2, the additive KAEM PWA energy <= 1.800000011920929.",
+      "suite_role": "baseline_expected_true",
+      "threshold": 1.800000011920929,
+      "witness_inputs": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "approximation_error_budget": 0.0,
+      "binary_variable_count": 9,
+      "budgeted_upper_bound": 1.8000000417232516,
+      "certificate": {
+        "approximation_error_budget": 0.0,
+        "budgeted_upper_bound": 1.8000000417232516,
+        "certified_upper_bound": 1.8000000417232516,
+        "kind": "certificate",
+        "method": "z3_mixed_integer_linear_pwa_property_suite",
+        "selected_segments": [
+          2,
+          2,
+          2
+        ],
+        "threshold": 1.81,
+        "witness_maximizer_inputs": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "certified_upper_bound": 1.8000000417232516,
+      "constraint_count": 64,
+      "counterexample": null,
+      "expected_outcome": "verified",
+      "input_dimension": 3,
+      "is_false_property_control": false,
+      "objective_bound": 1.8000000417232516,
+      "property_holds": true,
+      "property_id": "three_unit_composition_true",
+      "property_status": "verified",
+      "pwa_piece_count": 9,
+      "selected_segments": [
+        2,
+        2,
+        2
+      ],
+      "solve_time_s": 0.017892,
+      "solver_available": true,
+      "solver_name": "z3",
+      "solver_status": "optimal",
+      "statement": "For all (x0, x1, x2) in [-1, 1]^3, the additive KAEM PWA energy <= 1.81.",
+      "suite_role": "scaled_expected_true",
+      "threshold": 1.81,
+      "witness_inputs": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "approximation_error_budget": 0.0,
+      "binary_variable_count": 6,
+      "budgeted_upper_bound": 1.8000000119209287,
+      "certificate": {
+        "counterexample": {
+          "budgeted_upper_bound": 1.8000000119209287,
+          "certified_upper_bound": 1.8000000119209287,
+          "inputs": [
+            1.0,
+            1.0
+          ],
+          "property_id": "adversarial_false_tight_bound",
+          "selected_segments": [
+            2,
+            2
+          ],
+          "threshold": 1.7,
+          "violation_margin": 0.10000001192092878
+        },
+        "kind": "counterexample",
+        "method": "z3_mixed_integer_linear_pwa_property_suite"
+      },
+      "certified_upper_bound": 1.8000000119209287,
+      "constraint_count": 43,
+      "counterexample": {
+        "budgeted_upper_bound": 1.8000000119209287,
+        "certified_upper_bound": 1.8000000119209287,
+        "inputs": [
+          1.0,
+          1.0
+        ],
+        "property_id": "adversarial_false_tight_bound",
+        "selected_segments": [
+          2,
+          2
+        ],
+        "threshold": 1.7,
+        "violation_margin": 0.10000001192092878
+      },
+      "expected_outcome": "counterexample",
+      "input_dimension": 2,
+      "is_false_property_control": true,
+      "objective_bound": 1.8000000119209287,
+      "property_holds": false,
+      "property_id": "adversarial_false_tight_bound",
+      "property_status": "counterexample",
+      "pwa_piece_count": 6,
+      "selected_segments": [
+        2,
+        2
+      ],
+      "solve_time_s": 0.006106,
+      "solver_available": true,
+      "solver_name": "z3",
+      "solver_status": "optimal",
+      "statement": "For all (x0, x1) in [-1, 1]^2, the additive KAEM PWA energy <= 1.7.",
+      "suite_role": "adversarial_false_property_control",
+      "threshold": 1.7,
+      "witness_inputs": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "approximation_error_budget": 0.02,
+      "binary_variable_count": 6,
+      "budgeted_upper_bound": 1.8200000119209288,
+      "certificate": {
+        "approximation_error_budget": 0.02,
+        "budgeted_upper_bound": 1.8200000119209288,
+        "certified_upper_bound": 1.8000000119209287,
+        "kind": "budget_sensitive_noncertificate",
+        "method": "z3_mixed_integer_linear_pwa_property_suite",
+        "reason": "declared approximation budget consumes the solver margin",
+        "threshold": 1.81
+      },
+      "certified_upper_bound": 1.8000000119209287,
+      "constraint_count": 43,
+      "counterexample": null,
+      "expected_outcome": "unproved_approximation_budget",
+      "input_dimension": 2,
+      "is_false_property_control": false,
+      "objective_bound": 1.8000000119209287,
+      "property_holds": null,
+      "property_id": "approximation_budget_sensitive_margin",
+      "property_status": "unproved_approximation_budget",
+      "pwa_piece_count": 6,
+      "selected_segments": [
+        2,
+        2
+      ],
+      "solve_time_s": 0.006667,
+      "solver_available": true,
+      "solver_name": "z3",
+      "solver_status": "optimal",
+      "statement": "For all (x0, x1) in [-1, 1]^2, the additive KAEM PWA energy <= 1.81.",
+      "suite_role": "approximation_error_sensitive",
+      "threshold": 1.81,
+      "witness_inputs": [
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "random_seed": 5098,
+  "reproducibility_checksum": "b907196b3f75e64b61d3ca9522a3bda9d7955b2f56e874e19513cb95d784a1d5",
+  "run_date": "20260701",
+  "scale_blocker": null,
+  "schema": "carnot.kan_pwa_milp_scale.v2",
+  "solve_times_s": {
+    "adversarial_false_tight_bound": 0.006106,
+    "approximation_budget_sensitive_margin": 0.006667,
+    "exp5091_baseline_two_unit_true": 0.007552,
+    "three_unit_composition_true": 0.017892
+  },
+  "solver_statuses": {
+    "adversarial_false_tight_bound": "optimal",
+    "approximation_budget_sensitive_margin": "optimal",
+    "exp5091_baseline_two_unit_true": "optimal",
+    "three_unit_composition_true": "optimal"
+  },
+  "source_artifacts": [
+    "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+    "results/experiment_5080_kan_pwa_milp_bridge_v466.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5098",
+    "SCENARIO-KAN-5098"
+  ],
+  "tests_run": [
+    ".venv/bin/python -m pytest tests/python/test_experiment_5098_kan_pwa_milp_scale_v2.py -q --no-cov"
+  ]
+}

@@ -467,6 +467,55 @@ statement, PWA piece count, binary variable count, constraint count, solve time,
 bound tightness, solver availability, property status, and a success or blocked
 terminal verdict without any live LLM inference claim.
 
+## REQ-KAN-5098: Bounded KAEM PWA/MILP Property Suite With False Controls
+
+The KAN verification tier SHALL extend the clean Exp 5091 KAEM/PWA/MILP path
+into a bounded multi-property proof suite without invoking an LLM or hardware.
+The suite MUST reproduce or load the Exp 5091 two-unit property as a baseline,
+include at least three bounded properties over small KAEM units or additive
+compositions, include at least one expected-true property, include at least one
+adversarial expected-false property, and include at least one property whose
+certification depends on the declared approximation-error budget.
+
+Every property MUST be encoded through the PWA/MILP bridge and report solver
+status, binary variable count, constraint count, solve time, certified objective
+bound, property threshold, approximation-error budget, and counterexample or
+certificate detail. Expected-false controls MUST fail or produce
+counterexamples; they MUST NOT be counted as proved. Approximation-sensitive
+properties MUST remain unproved when the solver-certified PWA bound is within
+the threshold but the declared error budget erases the certification margin.
+
+The experiment MUST write
+`results/experiment_5098_kan_pwa_milp_scale_v2.json` with these top-level
+fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`property_suite`, `properties_proved`, `false_property_controls_passed`,
+`solver_statuses`, `binary_variable_counts`, `constraint_counts`,
+`solve_times_s`, `approximation_error_budget`, `counterexamples`,
+`max_scale_reached`, `scale_blocker`, and `flagged_adversarial`. The artifact
+MUST set `inference_substrate="exact_milp_solver_cpu"` unless another substrate
+is actually used and proven. It MUST use a terminal verdict such as
+`success_kan_pwa_milp_scale_v2_property_suite_clean` when the bounded suite
+passes all honest controls or
+`complete_kan_pwa_milp_scale_v2_blocked_by_solver_growth` when solver
+dependency or growth prevents a clean suite.
+
+The artifact MUST include principle annotations for every required top-level
+field. It MUST NOT claim hardware execution, trained-network soundness, broad
+KAN verifier readiness, live LLM inference, or global optimality beyond the
+bounded PWA/MILP properties actually submitted to the exact CPU solver.
+
+### SCENARIO-KAN-5098: Property Suite Scales Without Proving False Controls
+
+Given the Exp 5091 two-unit baseline fixture and additional deterministic small
+KAEM additive compositions,
+When the Exp 5098 suite encodes expected-true, expected-false, and
+approximation-budget-sensitive properties through the exact CPU PWA/MILP solver,
+Then the artifact proves only the expected-true bounded properties, records a
+counterexample for the false-property control, leaves the approximation-sensitive
+case unproved when its error budget erases the margin, reports scaling telemetry
+for every property, sets `false_property_controls_passed=true`, and avoids any
+hardware, live-LLM, or broad global-optimality claim.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -500,6 +549,7 @@ terminal verdict without any live LLM inference claim.
 | REQ-KAN-2893 | Proposed | Exp 2893 target: no-hardware-claim RM/BOP/NABS accounting for the clean Exp 2876 tiny PWA/MILP fixture. |
 | REQ-KAN-5080 | Proposed | Exp 5080 target: tiny KAEM PWA/MILP bridge artifact with success-or-blocked solver boundary. |
 | REQ-KAN-5091 | Proposed | Exp 5091 target: two-input KAEM PWA/MILP scale telemetry with solver counts, error budgets, and bound tightness. |
+| REQ-KAN-5098 | Proposed | Exp 5098 target: bounded multi-property KAEM PWA/MILP suite with false controls and scale telemetry. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
