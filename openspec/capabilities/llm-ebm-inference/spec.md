@@ -1192,6 +1192,16 @@ substrate declaration, and SHALL use a terminal-prefix verdict such as
 `blocked_gguf_logprob_preflight_no_ready_paths`.  When a live endpoint
 completion is invoked, the artifact SHALL record endpoint timing and enough
 probe detail to distinguish a real endpoint call from a cache-only preflight.
+For the v467 endpoint bring-up repair, the artifact SHALL also record
+`server_command`, `endpoint_url`, `sample_completion`,
+`sample_logprob_evidence`, and `blocker_root_cause`; SHALL attempt to start a
+local llama.cpp-compatible `llama-server` on a free port when no configured
+endpoint is already usable; SHALL prefer the smallest locally available
+mandated GGUF for that bring-up while keeping all three mandated IDs in
+`model_specs`; and SHALL emit a terminal-prefix verdict such as
+`success_llamacpp_logprob_endpoint_ready` or
+`blocked_llamacpp_logprob_endpoint_bringup_no_binary_or_runtime` without
+claiming live inference when no completion was actually invoked.
 
 ### SCENARIO-INFER-SOTA-021-001: Live Transcript With Telemetry Opens Both Gates
 
@@ -1245,6 +1255,25 @@ top-logprob telemetry
 **And** `top_logprob_or_confidence_ready=true`
 **And** the artifact records endpoint timing and a terminal
 `complete_gguf_logprob_preflight_ready` verdict.
+
+### SCENARIO-INFER-SOTA-021-005: Llama.cpp Endpoint Bring-Up Emits Runtime Evidence
+
+**Given** all three mandated GGUFs resolve to local `.gguf` files
+**And** no configured llama.cpp-compatible endpoint returns a completion
+**When** Exp 3013 writes the v467 endpoint bring-up artifact
+**Then** it records CUDA/GPU visibility, llama.cpp Python and server-binary
+availability, local GGUF paths, a free-port probe, and relevant environment
+variables in `preconditions_checked`
+**And** it either starts `llama-server` with the smallest operational mandated
+GGUF and records `server_command`, PID, endpoint URL, server logs, cleanup
+behavior, sample completion, and token/top-logprob evidence
+**Or** it records `live_completion_invoked=false`, null sample telemetry, and
+`blocker_root_cause` with exact missing binary, runtime, port, or server-log
+evidence
+**And** the terminal verdict starts with
+`success_llamacpp_logprob_endpoint_ready` only when completion plus logprob or
+top-logprob telemetry were observed, otherwise with
+`blocked_llamacpp_logprob_endpoint_bringup_`.
 
 ### REQ-INFER-SOTA-022: Exp 3043 Transcript Fingerprint Replay Preflight
 
