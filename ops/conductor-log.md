@@ -9740,3 +9740,4 @@ The contro |
 | 2026-07-01 10:01 UTC | PHASE B1 logprob-free process verifier -- temporal | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, MOAT_CLAIM_RIGOR — result quara |
 | 2026-07-01 10:14 UTC | PHASE B2 exact-verifier pivot -- p-bit/Ising-guide | FLAGGED | adversarial_verify CRITICAL: MOAT_CLAIM_RIGOR — result quarantined, not a clean  |
 | 2026-07-01 10:28 UTC | PHASE B3 structured generation pivot -- STATIC-sty | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, DURATION_TOO_SHORT |
+| 2026-07-01 10:37 UTC | PHASE B4 KAN formal scale -- multi-unit PWA/MILP v | OK | 87 passed, 1 warning in 6.60s |
