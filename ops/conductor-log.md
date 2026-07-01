@@ -9751,3 +9751,4 @@ web search: |
 | 2026-07-01 12:38 UTC | PHASE 0 transition -- archive .467 truth, activate | OK | 85 passed, 1 warning in 9.06s |
 | 2026-07-01 12:51 UTC | PHASE R1 SOTA ingestion -- verify V468 exact-verif | OK | 93 passed, 1 warning in 9.79s |
 | 2026-07-01 13:07 UTC | PHASE A1 runtime provenance -- clean local SOTA en | OK | 85 passed, 1 warning in 7.28s |
+| 2026-07-01 13:19 UTC | PHASE A2 exact verifier scale -- KAN/PWA/MILP mult | OK | 89 passed, 1 warning in 7.23s |
