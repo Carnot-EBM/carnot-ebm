@@ -126,7 +126,7 @@
     "one_pass_first_error_accuracy": 0.115,
     "temporal_first_error_accuracy": 0.115
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "honest_verdict": "complete_temporal_consistency_prm_no_win",
   "inference_substrate": "deterministic_proxy_over_cached_candidate_traces",
   "leakage_audit": {
@@ -482,6 +482,28 @@
       ],
       "temporal_decision": "no_error",
       "temporal_stability": 1.0
+    }
+  ],
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "delta_vs_one_pass=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.102074 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "critical",
+      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+    },
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "warn",
+      "detail": "Null/moat-retirement claim is uninformative because headroom_present is not declared true. A no-headroom corpus cannot support 'does not beat SC' or 'moat retired' as a moat bound."
     }
   ]
 }
