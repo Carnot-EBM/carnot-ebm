@@ -1,0 +1,440 @@
+{
+  "backend_used": "toy_distribution",
+  "bound_gap": 0.222222222222,
+  "duration_s": 0.013342,
+  "exact_probability_fraction": "4/27",
+  "exact_probability_if_enumerable": 0.148148148148,
+  "experiment": "experiment_5099_beaver_prefix_bound_verifier",
+  "experiment_id": 5099,
+  "field_principles": {
+    "backend_used": {
+      "principle": "Names toy_distribution unless a clean Exp5097 substrate is explicitly used for live logprob bounds."
+    },
+    "bound_gap": {
+      "principle": "Upper minus lower; the gap shrinks monotonically as the frontier is refined."
+    },
+    "duration_s": {
+      "principle": "Wall-clock duration for deterministic schema enumeration, trie traversal, and artifact assembly."
+    },
+    "exact_probability_if_enumerable": {
+      "principle": "Exact satisfying probability from terminal enumeration of the finite toy distribution."
+    },
+    "flagged_adversarial": {
+      "principle": "True only when the artifact detects an internal contradiction such as live inference claimed without live invocation."
+    },
+    "frontier_nodes": {
+      "principle": "Auditable frontier node summaries showing mass, satisfying mass, and all/mixed/none classification."
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix states whether bounds are sound on the finite schema and whether the run stayed toy-only because Exp5097 was not clean."
+    },
+    "inference_substrate": {
+      "principle": "Declares deterministic_toy_finite_distribution unless a real live logprob frontier is actually invoked."
+    },
+    "live_llm_invoked": {
+      "principle": "True only if local GGUF logprobs were actually queried for this artifact."
+    },
+    "lower_bound": {
+      "principle": "Probability mass of frontier nodes whose every terminal continuation satisfies the constraint."
+    },
+    "model_specs": {
+      "principle": "Carries the three mandated GGUF IDs and any Exp5097 resolved paths without implying live use."
+    },
+    "monotonic_bounds": {
+      "principle": "Checks that refined frontiers never decrease lower bounds, never increase upper bounds, and always contain the exact probability."
+    },
+    "preconditions_checked": {
+      "principle": "Records finite schema, prefix-closed constraint, byte-token assumptions, and Exp5097 logprob cleanliness before bound computation."
+    },
+    "prefix_closed_constraint": {
+      "principle": "Defines the semantic terminal predicate and the admissible-prefix rule used for BEAVER-style bounds."
+    },
+    "soundness_checks_passed": {
+      "principle": "True only when lower <= exact <= upper, monotonic checks pass, and no live/toy provenance inconsistency is present."
+    },
+    "upper_bound": {
+      "principle": "Probability mass of frontier nodes with at least one satisfying terminal continuation."
+    }
+  },
+  "finite_schema": {
+    "canonicalization": "json.dumps(sort_keys=True,separators=(',',':'))",
+    "fields": {
+      "confidence": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "evidence_label": [
+        "schema_valid",
+        "schema_missing_field",
+        "solver_verified",
+        "solver_counterexample",
+        "arithmetic_mismatch",
+        "citation_gap"
+      ],
+      "schema": [
+        "verifier_verdict_schema_v1"
+      ],
+      "verdict": [
+        "accept",
+        "reject",
+        "abstain"
+      ]
+    },
+    "output_format": "canonical_ascii_json",
+    "schema_name": "verifier_verdict_schema_v1",
+    "tokenization": {
+      "bpe_tokenizer_used": false,
+      "byte_token_ids": "0..127",
+      "eos_token_id": 128,
+      "kind": "ascii_byte_tokens_plus_eos"
+    }
+  },
+  "flagged_adversarial": false,
+  "frontier_depth": 72,
+  "frontier_node_count": 18,
+  "frontier_nodes": [
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"arithmetic_mismatch\",\"schema\":\"ve",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 1144
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"citation_gap\",\"schema\":\"verifier_",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 1364
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"schema_missing_field\",\"schema\":\"v",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 471
+    },
+    {
+      "child_count": 1,
+      "classification": "mixed",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"schema_valid\",\"schema\":\"verifier_",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "1/27",
+      "satisfying_mass": 0.037037037037,
+      "state": 263
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"solver_counterexample\",\"schema\":\"",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 908
+    },
+    {
+      "child_count": 1,
+      "classification": "mixed",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"high\",\"evidence_label\":\"solver_verified\",\"schema\":\"verifi",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "1/27",
+      "satisfying_mass": 0.037037037037,
+      "state": 695
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"arithmetic_mismatch\",\"schema\":\"ver",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 989
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"citation_gap\",\"schema\":\"verifier_v",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 1223
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"schema_missing_field\",\"schema\":\"ve",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 328
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"schema_valid\",\"schema\":\"verifier_v",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 72
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"solver_counterexample\",\"schema\":\"v",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 763
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"low\",\"evidence_label\":\"solver_verified\",\"schema\":\"verifie",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 550
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"arithmetic_mismatch\",\"schema\":\"",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 1064
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"citation_gap\",\"schema\":\"verifie",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 1291
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"schema_missing_field\",\"schema\":",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 397
+    },
+    {
+      "child_count": 1,
+      "classification": "mixed",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"schema_valid\",\"schema\":\"verifie",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "1/27",
+      "satisfying_mass": 0.037037037037,
+      "state": 166
+    },
+    {
+      "child_count": 1,
+      "classification": "no_satisfying",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"solver_counterexample\",\"schema\"",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "0/1",
+      "satisfying_mass": 0.0,
+      "state": 833
+    },
+    {
+      "child_count": 1,
+      "classification": "mixed",
+      "depth": 72,
+      "prefix": "{\"confidence\":\"medium\",\"evidence_label\":\"solver_verified\",\"schema\":\"veri",
+      "probability_fraction": "1/18",
+      "probability_mass": 0.055555555556,
+      "satisfying_fraction": "1/27",
+      "satisfying_mass": 0.037037037037,
+      "state": 620
+    }
+  ],
+  "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean",
+  "inference_substrate": "deterministic_toy_finite_distribution",
+  "live_llm_invoked": false,
+  "lower_bound": 0.0,
+  "model_specs": [
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ],
+  "monotonic_bounds": {
+    "depths": [
+      0,
+      16,
+      40,
+      72,
+      96,
+      10000
+    ],
+    "exact_probability_between_all_depths": true,
+    "gap_non_increasing": true,
+    "lower_non_decreasing": true,
+    "passed": true,
+    "rows": [
+      {
+        "bound_gap": 1.0,
+        "depth": 0,
+        "frontier_node_count": 1,
+        "lower_bound": 0.0,
+        "upper_bound": 1.0
+      },
+      {
+        "bound_gap": 0.666666666667,
+        "depth": 16,
+        "frontier_node_count": 3,
+        "lower_bound": 0.0,
+        "upper_bound": 0.666666666667
+      },
+      {
+        "bound_gap": 0.555555555556,
+        "depth": 40,
+        "frontier_node_count": 8,
+        "lower_bound": 0.0,
+        "upper_bound": 0.555555555556
+      },
+      {
+        "bound_gap": 0.222222222222,
+        "depth": 72,
+        "frontier_node_count": 18,
+        "lower_bound": 0.0,
+        "upper_bound": 0.222222222222
+      },
+      {
+        "bound_gap": 0.222222222222,
+        "depth": 96,
+        "frontier_node_count": 18,
+        "lower_bound": 0.0,
+        "upper_bound": 0.222222222222
+      },
+      {
+        "bound_gap": 0.0,
+        "depth": 10000,
+        "frontier_node_count": 54,
+        "lower_bound": 0.148148148148,
+        "upper_bound": 0.148148148148
+      }
+    ],
+    "upper_non_increasing": true
+  },
+  "preconditions_checked": {
+    "exp5097_logprob_substrate": {
+      "artifact_path": "results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+      "artifact_sha256": "sha256:028c3eba7b176c5d10d9e16594913182afec17fc2828fe8283ee6d63d48fe952",
+      "clean": false,
+      "exists": true,
+      "flagged_adversarial": false,
+      "live_llm_invoked": false,
+      "logprob_endpoint_clean": false,
+      "unusable_reason": "exp5097_not_clean",
+      "usable_for_live_frontier": false
+    },
+    "prefix_closed_constraint_definition": "evidence_backed_non_abstain_medium_or_high_confidence",
+    "selected_finite_schema": "verifier_verdict_schema_v1",
+    "tokenization_assumptions": {
+      "bpe_tokenizer_used": false,
+      "byte_token_ids": "0..127",
+      "eos_token_id": 128,
+      "gguf_tokenizer_used": false,
+      "serialization": "canonical_ascii_json",
+      "tokenization": "one ASCII byte per token plus EOS"
+    }
+  },
+  "prefix_closed_constraint": {
+    "admissible_prefix_rule": "a prefix is admissible iff at least one satisfying canonical terminal output starts with it",
+    "constraint_name": "evidence_backed_non_abstain_medium_or_high_confidence",
+    "prefix_closed": true,
+    "satisfied_terminal_count": 8,
+    "terminal_predicate": "schema is verifier_verdict_schema_v1; verdict is accept or reject; evidence_label is schema_valid or solver_verified; confidence is medium or high",
+    "total_terminal_count": 54
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:67cb1cd53900d6f74c7b9c7d97c4139aa8bf941b2d6caf663beaac28738acd72",
+  "result_path": "results/experiment_5099_beaver_prefix_bound_verifier_v468.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5099_beaver_prefix_bound_verifier.v468",
+  "soundness_checks": {
+    "exact_le_upper": true,
+    "live_provenance_consistent": true,
+    "lower_le_exact": true,
+    "monotonic_bounds_passed": true,
+    "passed": true
+  },
+  "soundness_checks_passed": true,
+  "spec_refs": [
+    "REQ-VERIFY-5099",
+    "SCENARIO-VERIFY-5099"
+  ],
+  "toy_distribution": {
+    "checksum": "sha256:acb01c2a43ec46497fa3a73a941f29ba3c2ebcf6c7d98161b1d91f5875f1ed6f",
+    "kind": "uniform_over_finite_schema",
+    "probability_per_terminal": "1/54",
+    "terminal_count": 54
+  },
+  "upper_bound": 0.222222222222
+}
