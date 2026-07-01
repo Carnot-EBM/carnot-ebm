@@ -9693,3 +9693,4 @@ The contro |
 | 2026-07-01 01:41 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
 | 2026-07-01 01:49 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
 | 2026-07-01 02:04 UTC | PHASE D6 tool-first cascade -- T1/SAFE determinist | OK | 86 passed, 1 warning in 8.43s |
+| 2026-07-01 03:27 UTC | PHASE D7 guided decoding frontier -- Vegas / rewar | OK | 108 passed, 1 warning in 7.39s |
