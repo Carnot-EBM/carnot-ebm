@@ -1,0 +1,2848 @@
+{
+  "blocked_artifacts": [
+    {
+      "blocked": true,
+      "blocker_reason": "blocked_verdict_or_status",
+      "claim_consistent_with_substrate": true,
+      "classification": "blocked",
+      "classification_reason": "blocked_verdict_or_status",
+      "duration_s": 64.111333,
+      "exists": true,
+      "experiment_id": 5097,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "logprob_endpoint_clean",
+        "logprob_endpoint_ready",
+        "completion_endpoint_ready",
+        "live_llm_invoked",
+        "endpoint_url",
+        "model_specs"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": false,
+      "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+      "imported": {
+        "completion_endpoint_ready": false,
+        "endpoint_url": "http://127.0.0.1:58385",
+        "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+        "inference_substrate": "precondition_check_only",
+        "live_llm_invoked": false,
+        "logprob_endpoint_clean": false,
+        "logprob_endpoint_ready": false,
+        "model_specs": {
+          "cached_sota_pair": [
+            {
+              "gpu": 0,
+              "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "name": "Qwen3.6-35B-A3B"
+            },
+            {
+              "gpu": 1,
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "name": "Gemma4-26B-A4B-it"
+            }
+          ],
+          "gguf_tokenizer_rule": "embedded_gguf_tokenizer_only",
+          "loader": "llama.cpp",
+          "mandatory_models": [
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+                "size_bytes": 22134528992
+              },
+              "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "role": "flagship_moe"
+            },
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+                "size_bytes": 18323731456
+              },
+              "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "role": "flagship_dense"
+            },
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+                "size_bytes": 16947539744
+              },
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "role": "middle_moe"
+            }
+          ],
+          "preferred_quant": "Q4_K_M"
+        }
+      },
+      "inference_substrate": "precondition_check_only",
+      "label": "runtime_endpoint_logprob_cache",
+      "loadable": true,
+      "path": "results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+      "present": true,
+      "sha256": "sha256:028c3eba7b176c5d10d9e16594913182afec17fc2828fe8283ee6d63d48fe952"
+    }
+  ],
+  "clean_negative_artifacts": [
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_negative",
+      "classification_reason": "clean_hardware_continuity_no_speedup_claim",
+      "duration_s": 9.303181,
+      "exists": true,
+      "experiment_id": 5106,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "kv260_ssh_ready",
+        "kv260_uio_transcript_collected",
+        "kv260_blocker",
+        "gatemate_detected",
+        "gatemate_terminal_state",
+        "polarfire_ssh_ready",
+        "polarfire_dispatch_precheck",
+        "speedup_claimed",
+        "destructive_actions_taken",
+        "partition_telemetry"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "complete_hardware_partition_telemetry_no_speedup_claim",
+      "imported": {
+        "destructive_actions_taken": [],
+        "gatemate_detected": false,
+        "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+        "honest_verdict": "complete_hardware_partition_telemetry_no_speedup_claim",
+        "inference_substrate": "hardware_smoke_and_static_mapping",
+        "kv260_blocker": "no_safe_kv260_uio_register_transcript_collected",
+        "kv260_ssh_ready": true,
+        "kv260_uio_transcript_collected": false,
+        "partition_telemetry": [
+          {
+            "boundary_exchange_estimate": "roughly 12 cut hyperedges per global update, exchanged as partition-local field summaries",
+            "claim_scope": "static_mapping_only_no_speedup_claim",
+            "coupling_density": 0.1875,
+            "coupling_order": 3,
+            "expected_bottleneck": "high-order term fan-in and cut-hyperedge boundary exchange",
+            "instance_family": "PLANCK-style direct p-spin/HUBO static mapping",
+            "mapping_kind": "p_spin_hubo",
+            "partition_count": 4,
+            "principle": "direct p-spin notes avoid hiding high-order costs inside a QUBO gadget speedup story.",
+            "source_context": "arXiv:2602.16665 planning hook; no local p-spin hardware run",
+            "variables": 64
+          },
+          {
+            "boundary_exchange_estimate": "about 2 frontier variable states per partition step for a sparse clause/factor graph",
+            "claim_scope": "static_mapping_only_no_neuromorphic_speedup_claim",
+            "coupling_density": 0.083333,
+            "coupling_order": 2,
+            "expected_bottleneck": "synchronizing frontier assignments before local constraint relaxation",
+            "instance_family": "sparse CSP factor-graph partition for neuromorphic solvers",
+            "mapping_kind": "csp_neuromorphic",
+            "partition_count": 8,
+            "principle": "CSP partition telemetry states the synchronization cost that parallel solver claims must pay.",
+            "source_context": "arXiv:2603.01150 planning hook; no local neuromorphic hardware run",
+            "variables": 96
+          },
+          {
+            "boundary_exchange_estimate": "one halo-field vector per partition update, dominated by cross-partition couplings",
+            "claim_scope": "strategic_static_mapping_only_no_tsu_hardware_claim",
+            "coupling_density": 0.125,
+            "coupling_order": 2,
+            "expected_bottleneck": "host-device scheduling and boundary-field refresh without authenticated TSU telemetry",
+            "instance_family": "Extropic TSU-style EBM sampler mapping note",
+            "mapping_kind": "tsu_static_mapping",
+            "partition_count": 4,
+            "principle": "TSU notes stay architectural until authenticated hardware timing exists.",
+            "source_context": "Extropic/Logical Intelligence planning context only; no TSU access",
+            "variables": 128
+          }
+        ],
+        "polarfire_dispatch_precheck": {
+          "arch": "riscv64",
+          "blockers": [],
+          "dispatch_executed": false,
+          "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+          "known_safe_dispatch_path": "carnot.hardware.polarfire_dispatch_smoke.check_preconditions",
+          "mutating_dispatch_steps_skipped": true,
+          "python": "Python 3.12.12",
+          "ready": true,
+          "uptime": "15:02:36 up 18 days, 22:15,  0 user,  load average: 0.16, 0.03, 0.01"
+        },
+        "polarfire_ssh_ready": true,
+        "speedup_claimed": false
+      },
+      "inference_substrate": "hardware_smoke_and_static_mapping",
+      "label": "hardware_partition_telemetry",
+      "loadable": true,
+      "path": "results/experiment_5106_hardware_partition_telemetry_v468.json",
+      "present": true,
+      "sha256": "sha256:23b8709897b3ff400e3414f6716de5b7a6fbb8b3104ccfdc9d99231be4128516"
+    }
+  ],
+  "clean_positive_artifacts": [
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_transition_record",
+      "duration_s": 0.033921,
+      "exists": true,
+      "experiment_id": 5095,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "exact_verifier_pivot",
+        "docs_updated"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward",
+      "imported": {
+        "docs_updated": [],
+        "exact_verifier_pivot": {
+          "binary_variable_count": 6.0,
+          "carried_to_milestone": "2026.07.468",
+          "clean_positive": true,
+          "constraint_count": 43.0,
+          "driver_artifact": "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+          "driver_experiment_id": 5091,
+          "global_error_bound": 0.0,
+          "pivot_decision": "exact_verifier_pivot_positive",
+          "property_holds": true,
+          "property_status": "verified",
+          "pwa_piece_count": 6.0,
+          "scale_boundary": "small_multi_unit_property_not_architecture_scale_claim",
+          "solver_status": "optimal"
+        },
+        "honest_verdict": "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward",
+        "inference_substrate": "aggregation_from_upstream_artifacts"
+      },
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "label": "archive_467_activate_468",
+      "loadable": true,
+      "path": "results/experiment_5095_archive_467_activate_468.json",
+      "present": true,
+      "sha256": "sha256:2b8be581b9b3391ffed6eea5a60b62f8234bd16d0ea86e8f23f451719f02097d"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_source_ingestion",
+      "duration_s": 0.001,
+      "exists": true,
+      "experiment_id": 5096,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "sources_checked",
+        "task_mapping",
+        "planning_hooks"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_sota_ingestion_v468_references_verified",
+      "imported": {
+        "honest_verdict": "success_sota_ingestion_v468_references_verified",
+        "inference_substrate": "literature_review_and_repo_inspection",
+        "planning_hooks": [
+          {
+            "hook": "Prototype BEAVER-style deterministic prefix bounds over finite verifier schemas.",
+            "hook_id": "exp5099_beaver_prefix_bounds",
+            "source_ids": [
+              "beaver_prefix_bounds"
+            ]
+          },
+          {
+            "hook": "Translate prompt-defined constraints into executable checker code and tests.",
+            "hook_id": "exp5100_prompt_code_assurance",
+            "source_ids": [
+              "constrainprompt_code_assurance"
+            ]
+          },
+          {
+            "hook": "Separate contradiction rejection from unsupported-claim abstention on a graph.",
+            "hook_id": "exp5101_graph_evidence_energy",
+            "source_ids": [
+              "graph_evidence_grounding"
+            ]
+          },
+          {
+            "hook": "Compare direct HUBO/p-spin energy against QUBO gadgets by exact enumeration.",
+            "hook_id": "exp5102_hubo_pspin_direct_energy",
+            "source_ids": [
+              "hubo_pspin_planck"
+            ]
+          },
+          {
+            "hook": "Measure whether adaptation reduces exact-solver effort without owning correctness.",
+            "hook_id": "exp5103_taco_adaptive_csp",
+            "source_ids": [
+              "taco_adaptive_csp"
+            ]
+          },
+          {
+            "hook": "Audit constrained decoding with reachability, semantic controls, and llguidance.",
+            "hook_id": "exp5104_constrained_decoding_semantic_audit",
+            "source_ids": [
+              "cfg_constrained_diffusion",
+              "grammar_aligned_decoding",
+              "llguidance_baseline"
+            ]
+          },
+          {
+            "hook": "Gate FR-11 memory/SOP promotion through contracts, provenance, and non-regression.",
+            "hook_id": "exp5105_severa_fr11_memory",
+            "source_ids": [
+              "severa_self_evolving_agents",
+              "genericagent_alma_memory"
+            ]
+          },
+          {
+            "hook": "Report partition/update telemetry before any board or TSU acceleration claim.",
+            "hook_id": "exp5106_hardware_partition_telemetry",
+            "source_ids": [
+              "neuromorphic_csp_hardware",
+              "extropic_logical_updates"
+            ]
+          },
+          {
+            "hook": "Keep HALT and EBT/ARM lineage as deferred context for runtime and architecture work.",
+            "hook_id": "background_runtime_and_architecture_context",
+            "source_ids": [
+              "halt_logprob_timeseries",
+              "ebt_arm_citation_lineage"
+            ]
+          }
+        ],
+        "sources_checked": [
+          {
+            "channels": [
+              "arXiv",
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2512.05439",
+            "source_id": "beaver_prefix_bounds",
+            "status": "present_in_v468_section",
+            "title": "BEAVER: Efficient Deterministic LLM Verifier",
+            "urls": [
+              "https://arxiv.org/abs/2512.05439",
+              "https://github.com/uiuc-focal-lab/Beaver"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2606.30247",
+            "source_id": "graph_evidence_grounding",
+            "status": "present_in_v468_section",
+            "title": "Grounding LLM Reasoning Under Incomplete Graph Evidence",
+            "urls": [
+              "https://arxiv.org/abs/2606.30247"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2603.25111",
+            "source_id": "severa_self_evolving_agents",
+            "status": "present_in_v468_section",
+            "title": "SEVerA: Verified Synthesis of Self-Evolving Agents",
+            "urls": [
+              "https://arxiv.org/abs/2603.25111"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2601.21048",
+            "source_id": "taco_adaptive_csp",
+            "status": "present_in_v468_section",
+            "title": "Test-Time Adaptation for Unsupervised Combinatorial Optimization",
+            "urls": [
+              "https://arxiv.org/abs/2601.21048"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2602.16665",
+            "source_id": "hubo_pspin_planck",
+            "status": "present_in_v468_section",
+            "title": "PLANCK: p-Spin Optimization With Hypergraph Neural Networks And DRL",
+            "urls": [
+              "https://arxiv.org/abs/2602.16665"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2603.01150",
+            "source_id": "neuromorphic_csp_hardware",
+            "status": "present_in_v468_section",
+            "title": "Implicitly Parallel Neuromorphic Solver Design For CSPs",
+            "urls": [
+              "https://arxiv.org/abs/2603.01150"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv",
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2606.00722+arXiv:2602.00612+arXiv:2508.10111",
+            "source_id": "cfg_constrained_diffusion",
+            "status": "present_in_v468_section",
+            "title": "CFG-Constrained Diffusion Language Models",
+            "urls": [
+              "https://arxiv.org/abs/2606.00722",
+              "https://arxiv.org/abs/2602.00612",
+              "https://arxiv.org/abs/2508.10111",
+              "https://github.com/eth-sri/constrained-diffusion"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2405.21047",
+            "source_id": "grammar_aligned_decoding",
+            "status": "present_in_v468_section",
+            "title": "Grammar-Aligned Decoding And Distribution-Distortion Caveat",
+            "urls": [
+              "https://arxiv.org/abs/2405.21047"
+            ]
+          },
+          {
+            "channels": [
+              "OpenReview"
+            ],
+            "reference_found": true,
+            "required_token": "OpenReview O3Kg4dLdpg",
+            "source_id": "constrainprompt_code_assurance",
+            "status": "present_in_v468_section",
+            "title": "Code-Based Assurance Of Prompt-Defined Constraints",
+            "urls": [
+              "https://openreview.net/forum?id=O3Kg4dLdpg"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2602.02888",
+            "source_id": "halt_logprob_timeseries",
+            "status": "present_in_v468_section",
+            "title": "HALT: Hallucination Assessment Via Log-Probabilities As Time Series",
+            "urls": [
+              "https://arxiv.org/abs/2602.02888"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2604.17091+arXiv:2602.07755",
+            "source_id": "genericagent_alma_memory",
+            "status": "present_in_v468_section",
+            "title": "GenericAgent, ALMA, And Memory Design Search",
+            "urls": [
+              "https://arxiv.org/abs/2604.17091",
+              "https://arxiv.org/abs/2602.07755"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv",
+              "Semantic Scholar"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2511.00907+arXiv:2505.11081",
+            "source_id": "ebt_arm_citation_lineage",
+            "status": "present_in_v468_section",
+            "title": "EBT / ARM-EBM Citation-Lineage Candidates",
+            "urls": [
+              "https://arxiv.org/abs/2511.00907",
+              "https://arxiv.org/abs/2505.11081"
+            ]
+          },
+          {
+            "channels": [
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "guidance-ai/llguidance",
+            "source_id": "llguidance_baseline",
+            "status": "present_in_v468_section",
+            "title": "llguidance And Constraint-Decoding Engineering Baselines",
+            "urls": [
+              "https://github.com/guidance-ai/llguidance"
+            ]
+          },
+          {
+            "channels": [
+              "Extropic",
+              "Logical Intelligence"
+            ],
+            "reference_found": true,
+            "required_token": "Extropic XTR-0 / TSU And Logical Intelligence Kona/Aleph",
+            "source_id": "extropic_logical_updates",
+            "status": "present_in_v468_section",
+            "title": "Extropic XTR-0 / TSU And Logical Intelligence Kona/Aleph Updates",
+            "urls": [
+              "https://extropic.ai/writing/inside-x0-and-xtr-0",
+              "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
+              "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo",
+              "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation",
+              "https://logicalintelligence.com/blog/aleph-leading-benchmarks"
+            ]
+          },
+          {
+            "channels": [
+              "Hugging Face Papers"
+            ],
+            "reference_found": true,
+            "source_id": "huggingface_papers_coverage",
+            "status": "coverage_declared_in_v468_section_no_hf_only_source_added",
+            "title": "Hugging Face Papers query coverage",
+            "urls": [
+              "https://huggingface.co/papers"
+            ]
+          }
+        ],
+        "task_mapping": [
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "deterministic prefix probability bounds are Exp5099's exact-verifier surface.",
+            "source_id": "beaver_prefix_bounds",
+            "source_tokens": [
+              "arXiv:2512.05439",
+              "github.com/uiuc-focal-lab/Beaver"
+            ],
+            "task_id": "exp5099"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "incomplete graph support maps directly to the evidence-energy audit.",
+            "source_id": "graph_evidence_grounding",
+            "source_tokens": [
+              "arXiv:2606.30247"
+            ],
+            "task_id": "exp5101"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "Search-Verify-Learn guards define the FR-11 memory promotion contract.",
+            "source_id": "severa_self_evolving_agents",
+            "source_tokens": [
+              "arXiv:2603.25111"
+            ],
+            "task_id": "exp5105"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "instance adaptation becomes a solver-effort heuristic under exact checking.",
+            "source_id": "taco_adaptive_csp",
+            "source_tokens": [
+              "arXiv:2601.21048"
+            ],
+            "task_id": "exp5103"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "direct high-order energy tests whether HUBO avoids QUBO gadget blowup.",
+            "source_id": "hubo_pspin_planck",
+            "source_tokens": [
+              "arXiv:2602.16665"
+            ],
+            "task_id": "exp5102"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "partition/update telemetry constrains hardware-continuity claims.",
+            "source_id": "neuromorphic_csp_hardware",
+            "source_tokens": [
+              "arXiv:2603.01150"
+            ],
+            "task_id": "exp5106"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "prefix reachability and completion existence are constrained-decoding controls.",
+            "source_id": "cfg_constrained_diffusion",
+            "source_tokens": [
+              "arXiv:2606.00722",
+              "arXiv:2602.00612",
+              "arXiv:2508.10111"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "distribution-distortion controls prevent syntactic validity from becoming the claim.",
+            "source_id": "grammar_aligned_decoding",
+            "source_tokens": [
+              "arXiv:2405.21047"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "prompt-defined constraints are accepted only through executable code checks.",
+            "source_id": "constrainprompt_code_assurance",
+            "source_tokens": [
+              "openreview:O3Kg4dLdpg"
+            ],
+            "task_id": "exp5100"
+          },
+          {
+            "mapping_status": "background_only",
+            "rationale": "HALT needs clean logprob substrate, so it is deferred until after Exp5097.",
+            "source_id": "halt_logprob_timeseries",
+            "source_tokens": [
+              "arXiv:2602.02888"
+            ],
+            "task_id": "background_only"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "memory design ideas are used only under SEVerA-style exact promotion guards.",
+            "source_id": "genericagent_alma_memory",
+            "source_tokens": [
+              "arXiv:2604.17091",
+              "arXiv:2602.07755"
+            ],
+            "task_id": "exp5105"
+          },
+          {
+            "mapping_status": "background_only",
+            "rationale": "architecture pressure only; .468 avoids training-heavy EBT/ARM reproduction.",
+            "source_id": "ebt_arm_citation_lineage",
+            "source_tokens": [
+              "arXiv:2511.00907",
+              "arXiv:2505.11081"
+            ],
+            "task_id": "background_only"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "real grammar-engine baselines bound toy constrained-decoding claims.",
+            "source_id": "llguidance_baseline",
+            "source_tokens": [
+              "github.com/guidance-ai/llguidance"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "TSU/Kona context informs hardware telemetry and exact-verifier product framing.",
+            "source_id": "extropic_logical_updates",
+            "source_tokens": [
+              "Extropic XTR-0",
+              "Logical Intelligence Kona",
+              "Logical Intelligence Aleph"
+            ],
+            "task_id": "exp5106"
+          }
+        ]
+      },
+      "inference_substrate": "literature_review_and_repo_inspection",
+      "label": "sota_ingestion",
+      "loadable": true,
+      "path": "results/experiment_5096_sota_ingestion_v468.json",
+      "present": true,
+      "sha256": "sha256:3a2605ff359c8a0465d85eaf90133ec39985d834ab33edef15944b2cfac0da1f"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_kan_milp_property_suite",
+      "duration_s": 0.608137,
+      "exists": true,
+      "experiment_id": 5098,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "properties_proved",
+        "false_property_controls_passed",
+        "max_scale_reached",
+        "scale_blocker"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+      "imported": {
+        "false_property_controls_passed": true,
+        "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+        "inference_substrate": "exact_milp_solver_cpu",
+        "max_scale_reached": {
+          "binary_variable_count": 9,
+          "constraint_count": 64,
+          "input_dimension": 3,
+          "property_id": "three_unit_composition_true",
+          "pwa_piece_count": 9,
+          "solver_status": "optimal"
+        },
+        "properties_proved": [
+          "exp5091_baseline_two_unit_true",
+          "three_unit_composition_true"
+        ],
+        "scale_blocker": null
+      },
+      "inference_substrate": "exact_milp_solver_cpu",
+      "label": "kan_pwa_milp_scale_v2",
+      "loadable": true,
+      "path": "results/experiment_5098_kan_pwa_milp_scale_v2.json",
+      "present": true,
+      "sha256": "sha256:3e59867be459f493b99020442f29d09b22225b1e1788e1d5eb23807a5e56e86f"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_graph_evidence_energy",
+      "duration_s": 0.013533,
+      "exists": true,
+      "experiment_id": 5101,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "contradiction_reject_rate",
+        "unsupported_retained_rate",
+        "supported_accept_rate",
+        "stability_under_perturbation"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_graph_evidence_energy_separates_contradiction_from_unsupported",
+      "imported": {
+        "contradiction_reject_rate": 1.0,
+        "honest_verdict": "success_graph_evidence_energy_separates_contradiction_from_unsupported",
+        "inference_substrate": "synthetic_graph_exact_labels",
+        "stability_under_perturbation": {
+          "conditions": [
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.25,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.25,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.4,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.4,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.55,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.55,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            }
+          ],
+          "max_objective_drop": 0.0,
+          "min_heldout_objective": 1.0,
+          "passed": true
+        },
+        "supported_accept_rate": 1.0,
+        "unsupported_retained_rate": 1.0
+      },
+      "inference_substrate": "synthetic_graph_exact_labels",
+      "label": "graph_evidence_energy",
+      "loadable": true,
+      "path": "results/experiment_5101_incomplete_graph_evidence_energy_v468.json",
+      "present": true,
+      "sha256": "sha256:be720dc2bc2f6114393559eae0c9fb20685af243bae3ef73842545a0fa42244a"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_hubo_pspin_exact_enumeration",
+      "duration_s": 0.882755,
+      "exists": true,
+      "experiment_id": 5102,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "direct_hubo_advantage",
+        "exact_optima_verified",
+        "auxiliary_variable_blowup",
+        "energy_scale_distortion"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+      "imported": {
+        "auxiliary_variable_blowup": {
+          "auxiliary_variables_by_instance": {
+            "xor3_chain_sat": 3,
+            "xor3_xor4_frustrated": 2,
+            "xor4_planted_overlap": 8
+          },
+          "mean_auxiliary_variables": 4.333333,
+          "mean_qubo_to_hubo_variable_ratio": 1.95,
+          "qubo_to_hubo_variable_ratio_by_instance": {
+            "xor3_chain_sat": 1.75,
+            "xor3_xor4_frustrated": 1.5,
+            "xor4_planted_overlap": 2.6
+          },
+          "total_auxiliary_variables": 13
+        },
+        "direct_hubo_advantage": true,
+        "energy_scale_distortion": {
+          "by_instance": {
+            "xor3_chain_sat": 168.0,
+            "xor3_xor4_frustrated": 180.0,
+            "xor4_planted_overlap": 474.0
+          },
+          "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
+          "max_qubo_to_hubo_coefficient_ratio": 474.0,
+          "mean_qubo_to_hubo_coefficient_ratio": 274.0
+        },
+        "exact_optima_verified": true,
+        "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+        "inference_substrate": "exact_enumeration_cpu"
+      },
+      "inference_substrate": "exact_enumeration_cpu",
+      "label": "hubo_pspin_direct_energy",
+      "loadable": true,
+      "path": "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
+      "present": true,
+      "sha256": "sha256:8d2dbc73f45aa93358cf22d9312f8a00008966472d3ed7de399bd5ff58526fec"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_adaptive_solver_effort_reduction",
+      "duration_s": 0.01178,
+      "exists": true,
+      "experiment_id": 5103,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "correctness_preserved",
+        "delta_effort_vs_baseline",
+        "baseline_effort",
+        "adapted_effort",
+        "harmful_instance_count",
+        "instances_total"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+      "imported": {
+        "adapted_effort": {
+          "backtracks": 134,
+          "constraint_checks": 1195,
+          "duration_s": 0.000111,
+          "instances": 8,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 161,
+          "total_effort_score": 1356
+        },
+        "baseline_effort": {
+          "backtracks": 14936,
+          "constraint_checks": 93247,
+          "duration_s": 0.009848,
+          "instances": 8,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 14963,
+          "total_effort_score": 108210
+        },
+        "correctness_preserved": true,
+        "delta_effort_vs_baseline": {
+          "adapted": -106854,
+          "adapted_vs_static": -280,
+          "static_heuristic": -106574
+        },
+        "harmful_instance_count": 2,
+        "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+        "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic",
+        "instances_total": 8
+      },
+      "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic",
+      "label": "taco_adaptive_csp_heuristic",
+      "loadable": true,
+      "path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
+      "present": true,
+      "sha256": "sha256:5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570"
+    }
+  ],
+  "constrained_generation_decision": {
+    "clean_evidence_worth_keeping": false,
+    "decision": "no_clean_constrained_generation_headline_flagged_audit_only",
+    "distribution_shift_metric": 0.563636,
+    "excluded_from_headline": true,
+    "flagged_adversarial": true,
+    "live_llm_invoked": false,
+    "semantic_validity_rate": 0.436364,
+    "source_experiment_id": 5104,
+    "syntax_only_headline_forbidden": true,
+    "syntax_validity_rate": 1.0
+  },
+  "docs_updated": [],
+  "duration_s": 0.0001,
+  "exact_verifier_decision": {
+    "adaptive_solver": {
+      "adapted_effort": {
+        "backtracks": 134,
+        "constraint_checks": 1195,
+        "duration_s": 0.000111,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 161,
+        "total_effort_score": 1356
+      },
+      "baseline_effort": {
+        "backtracks": 14936,
+        "constraint_checks": 93247,
+        "duration_s": 0.009848,
+        "instances": 8,
+        "metric": "search_nodes_plus_constraint_checks",
+        "search_nodes": 14963,
+        "total_effort_score": 108210
+      },
+      "clean_positive": true,
+      "correctness_preserved": true,
+      "delta_effort_vs_baseline": {
+        "adapted": -106854,
+        "adapted_vs_static": -280,
+        "static_heuristic": -106574
+      },
+      "harmful_instance_count": 2.0,
+      "instances_total": 8.0,
+      "source_experiment_id": 5103
+    },
+    "beaver_prefix_bounds": {
+      "backend_used": "toy_distribution",
+      "bound_gap": 0.222222222222,
+      "excluded_from_headline": true,
+      "flagged_adversarial": true,
+      "live_llm_invoked": false,
+      "lower_bound": 0.0,
+      "soundness_checks_passed": true,
+      "source_experiment_id": 5099,
+      "upper_bound": 0.222222222222
+    },
+    "bounded_not_architecture_scale": true,
+    "clean_scale_up": true,
+    "clean_source_experiment_ids": [
+      5098,
+      5101,
+      5102,
+      5103
+    ],
+    "code_assurance": {
+      "adversarial_tests_passed": true,
+      "constraints_total": 9.0,
+      "exact_checker_backend": "python_json_logical_tree",
+      "excluded_from_headline": true,
+      "executable_constraints_total": 9.0,
+      "flagged_adversarial": true,
+      "negative_tests_passed": true,
+      "positive_tests_passed": true,
+      "source_experiment_id": 5100
+    },
+    "decision": "clean_bounded_exact_verifier_scale_up_with_flagged_exclusions",
+    "flagged_exact_verifier_experiment_ids": [
+      5099,
+      5100
+    ],
+    "graph_evidence": {
+      "clean_positive": true,
+      "contradiction_reject_rate": 1.0,
+      "source_experiment_id": 5101,
+      "stability_under_perturbation": {
+        "conditions": [
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.25,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.0
+          },
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.25,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.1
+          },
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.4,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.0
+          },
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.4,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.1
+          },
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.55,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.0
+          },
+          {
+            "heldout_objective": 1.0,
+            "hidden_edge_rate": 0.55,
+            "metrics": {
+              "contradicted": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "supported": {
+                "accept_rate": 1.0,
+                "count": 2
+              },
+              "unsupported_false": {
+                "count": 2,
+                "reject_rate": 1.0
+              },
+              "unsupported_true": {
+                "count": 2,
+                "retain_rate": 1.0
+              }
+            },
+            "perturbation": 0.1
+          }
+        ],
+        "max_objective_drop": 0.0,
+        "min_heldout_objective": 1.0,
+        "passed": true
+      },
+      "supported_accept_rate": 1.0,
+      "unsupported_retained_rate": 1.0
+    },
+    "hubo_pspin": {
+      "auxiliary_variable_blowup": {
+        "auxiliary_variables_by_instance": {
+          "xor3_chain_sat": 3,
+          "xor3_xor4_frustrated": 2,
+          "xor4_planted_overlap": 8
+        },
+        "mean_auxiliary_variables": 4.333333,
+        "mean_qubo_to_hubo_variable_ratio": 1.95,
+        "qubo_to_hubo_variable_ratio_by_instance": {
+          "xor3_chain_sat": 1.75,
+          "xor3_xor4_frustrated": 1.5,
+          "xor4_planted_overlap": 2.6
+        },
+        "total_auxiliary_variables": 13
+      },
+      "clean_positive": true,
+      "direct_hubo_advantage": true,
+      "energy_scale_distortion": {
+        "by_instance": {
+          "xor3_chain_sat": 168.0,
+          "xor3_xor4_frustrated": 180.0,
+          "xor4_planted_overlap": 474.0
+        },
+        "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
+        "max_qubo_to_hubo_coefficient_ratio": 474.0,
+        "mean_qubo_to_hubo_coefficient_ratio": 274.0
+      },
+      "exact_optima_verified": true,
+      "source_experiment_id": 5102
+    },
+    "kan_milp": {
+      "clean_positive": true,
+      "false_property_controls_passed": true,
+      "max_scale_reached": {
+        "binary_variable_count": 9,
+        "constraint_count": 64,
+        "input_dimension": 3,
+        "property_id": "three_unit_composition_true",
+        "pwa_piece_count": 9,
+        "solver_status": "optimal"
+      },
+      "properties_proved": [
+        "exp5091_baseline_two_unit_true",
+        "three_unit_composition_true"
+      ],
+      "scale_blocker": null,
+      "source_experiment_id": 5098
+    },
+    "non_llm_exact_claims_not_blocked_by_exp5097": true
+  },
+  "experiment": "experiment_5107_capstone_v468",
+  "experiment_id": 5107,
+  "field_principles": {
+    "blocked_artifacts": {
+      "principle": "non-flagged upstreams with blocked verdict/status, recorded as blockers rather than missing or successful."
+    },
+    "clean_negative_artifacts": {
+      "principle": "non-flagged, non-blocked upstreams that validly report a null, no-speedup, or bounded negative."
+    },
+    "clean_positive_artifacts": {
+      "principle": "non-flagged, non-blocked upstreams whose claim is positive and substrate-consistent."
+    },
+    "constrained_generation_decision": {
+      "principle": "constrained-generation evidence is preserved only as clean headline evidence when the semantic audit is non-flagged."
+    },
+    "docs_updated": {
+      "principle": "empty when the conductor stop rule delegates ops/status/changelog/traceability reconciliation."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration for the aggregation run; it must stay compatible with aggregation_from_upstream_artifacts and not imply live inference."
+    },
+    "exact_verifier_decision": {
+      "principle": "KAN/MILP, graph-evidence, HUBO/p-spin, and adaptive exact-solver positives summarized separately from flagged BEAVER/code-assurance rows."
+    },
+    "flagged_adversarial": {
+      "principle": "false for the capstone itself when it transparently records flagged upstreams."
+    },
+    "flagged_artifacts": {
+      "principle": "flagged .468 upstreams preserved with excluded-from-headline status so their numbers are not promoted."
+    },
+    "fr11_decision": {
+      "principle": "FR-11 promotion/no-promote state with flagged promotion evidence excluded from clean promotion claims."
+    },
+    "hardware_decision": {
+      "principle": "KV260/GateMate/PolarFire continuity and partition telemetry with no acceleration claim unless authenticated timing exists."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; records the .468 capstone decision without headline claims from blocked, missing, or flagged upstream artifacts."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts -- loads upstream JSON only; the capstone must not claim a live model run."
+    },
+    "milestone_decision": {
+      "principle": "the overall .468 headline chosen only from clean non-flagged, substrate-consistent evidence."
+    },
+    "missing_artifacts": {
+      "principle": "expected .468 artifacts absent or unreadable; empty only when every prompt-listed source is loadable."
+    },
+    "next_research_questions": {
+      "principle": "bounded next actions derived from clean positives, blockers, and flagged rows rather than a new headline claim."
+    },
+    "runtime_substrate_decision": {
+      "principle": "Exp5097 readiness summarized without allowing blocked runtime to invalidate non-LLM exact-verifier claims."
+    },
+    "source_artifacts": {
+      "principle": "every expected .468 upstream artifact that is present, with sha256, imported fields, classification, and headline eligibility."
+    }
+  },
+  "flagged_adversarial": false,
+  "flagged_artifacts": [
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.013342,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5099,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "backend_used",
+        "soundness_checks_passed",
+        "lower_bound",
+        "upper_bound",
+        "bound_gap",
+        "live_llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean",
+      "imported": {
+        "backend_used": "toy_distribution",
+        "bound_gap": 0.222222222222,
+        "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean",
+        "inference_substrate": "deterministic_toy_finite_distribution",
+        "live_llm_invoked": false,
+        "lower_bound": 0.0,
+        "soundness_checks_passed": true,
+        "upper_bound": 0.222222222222
+      },
+      "inference_substrate": "deterministic_toy_finite_distribution",
+      "label": "beaver_prefix_bounds",
+      "loadable": true,
+      "path": "results/experiment_5099_beaver_prefix_bound_verifier_v468.json",
+      "present": true,
+      "sha256": "sha256:d50730b952e7de050a2e767864c29600eccc407d017427b41ffb5e020bd1bdd3"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.000157,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5100,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "exact_checker_backend",
+        "constraints_total",
+        "executable_constraints_total",
+        "positive_tests_passed",
+        "negative_tests_passed",
+        "adversarial_tests_passed",
+        "llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
+      "imported": {
+        "adversarial_tests_passed": true,
+        "constraints_total": 9,
+        "exact_checker_backend": "python_json_logical_tree",
+        "executable_constraints_total": 9,
+        "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
+        "inference_substrate": "deterministic_python_json_logical_tree",
+        "llm_invoked": false,
+        "negative_tests_passed": true,
+        "positive_tests_passed": true
+      },
+      "inference_substrate": "deterministic_python_json_logical_tree",
+      "label": "constrainprompt_code_assurance",
+      "loadable": true,
+      "path": "results/experiment_5100_constrainprompt_code_assurance_v468.json",
+      "present": true,
+      "sha256": "sha256:9f8f3a956cd1774fb23d65cb02d040c7d4408d9c06c9be7373d30494f1d5789b"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 54.29845,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5104,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "syntax_only_headline_forbidden",
+        "syntax_validity_rate",
+        "semantic_validity_rate",
+        "distribution_shift_metric",
+        "live_llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline",
+      "imported": {
+        "distribution_shift_metric": 0.563636,
+        "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline",
+        "inference_substrate": "deterministic_static_csr_semantic_distribution_audit",
+        "live_llm_invoked": false,
+        "semantic_validity_rate": 0.436364,
+        "syntax_only_headline_forbidden": true,
+        "syntax_validity_rate": 1.0
+      },
+      "inference_substrate": "deterministic_static_csr_semantic_distribution_audit",
+      "label": "constrained_decoding_semantic_risk_audit",
+      "loadable": true,
+      "path": "results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json",
+      "present": true,
+      "sha256": "sha256:3f8c70916f2dd0a6be1e5514695c230b8dde59c3287cf4e87e7b0ee679111b17"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.00143,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5105,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "heldout_delta",
+        "nonforgetting_delta",
+        "promoted_count",
+        "contract_pass_count",
+        "poison_guard_passed",
+        "contamination_guard_passed",
+        "rollback_guard_passed",
+        "promotion_decision"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000",
+      "imported": {
+        "contamination_guard_passed": true,
+        "contract_pass_count": 3,
+        "heldout_delta": 0.0,
+        "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000",
+        "inference_substrate": "exact_guarded_self_learning_eval",
+        "nonforgetting_delta": 0.0,
+        "poison_guard_passed": true,
+        "promoted_count": 0,
+        "promotion_decision": {
+          "gate_conditions": {
+            "contamination_guard_passed": true,
+            "contract_pass_count": 3,
+            "heldout_delta_gt_zero": false,
+            "nonforgetting_delta_gte_zero": true,
+            "poison_guard_passed": true,
+            "rollback_guard_passed": true
+          },
+          "no_promote_reason": "positive_utility_not_observed",
+          "promoted": false
+        },
+        "rollback_guard_passed": true
+      },
+      "inference_substrate": "exact_guarded_self_learning_eval",
+      "label": "fr11_severa_guarded_memory",
+      "loadable": true,
+      "path": "results/experiment_5105_fr11_severa_guarded_memory_v468.json",
+      "present": true,
+      "sha256": "sha256:8f0c1105e9ea75fbeaef2d235d59f1f5df64d67d7c9dc3ecddf5dd02a9e8e882"
+    }
+  ],
+  "fr11_decision": {
+    "contamination_guard_passed": true,
+    "contract_pass_count": 3.0,
+    "decision": "no_clean_fr11_promotion_flagged_artifact_requires_rerun",
+    "flagged_adversarial": true,
+    "heldout_delta": 0.0,
+    "no_promote_reason": "positive_utility_not_observed",
+    "nonforgetting_delta": 0.0,
+    "poison_guard_passed": true,
+    "promotion_allowed_from_clean_evidence": false,
+    "rollback_guard_passed": true,
+    "source_experiment_id": 5105,
+    "source_promoted": false,
+    "upstream_excluded_from_headline": true
+  },
+  "hardware_decision": {
+    "continuity_progress": true,
+    "decision": "hardware_continuity_progress_no_speedup",
+    "destructive_actions_taken": [],
+    "gatemate_detected": false,
+    "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+    "kv260_blocker": "no_safe_kv260_uio_register_transcript_collected",
+    "kv260_ssh_ready": true,
+    "kv260_uio_transcript_collected": false,
+    "partition_telemetry_count": 3,
+    "polarfire_dispatch_precheck": {
+      "arch": "riscv64",
+      "blockers": [],
+      "dispatch_executed": false,
+      "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+      "known_safe_dispatch_path": "carnot.hardware.polarfire_dispatch_smoke.check_preconditions",
+      "mutating_dispatch_steps_skipped": true,
+      "python": "Python 3.12.12",
+      "ready": true,
+      "uptime": "15:02:36 up 18 days, 22:15,  0 user,  load average: 0.16, 0.03, 0.01"
+    },
+    "polarfire_ssh_ready": true,
+    "source_experiment_id": 5106,
+    "speedup_claimed": false
+  },
+  "honest_verdict": "complete_capstone_v468_exact_verifier_scale_decision_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_decision": {
+    "blocked_artifact_count": 1,
+    "clean_exact_verifier_scale_up": true,
+    "clean_runtime_substrate": false,
+    "constrained_generation_evidence_worth_keeping": false,
+    "decision": "bounded_exact_verifier_scale_up_clean_runtime_blocked_fr11_no_clean_promotion_hardware_continuity_no_speedup",
+    "flagged_artifact_count": 4,
+    "hardware_progress": "continuity_progress_no_speedup",
+    "headline_evidence_policy": "only_flagged_false_and_substrate_consistent_rows",
+    "missing_artifact_count": 0,
+    "safe_fr11_promotion": false
+  },
+  "missing_artifacts": [],
+  "next_research_questions": [
+    {
+      "question": "Can the bounded exact-verifier positives scale beyond toy/synthetic families while retaining false controls and exact authority?",
+      "source": "Exp5098/5101/5102/5103",
+      "trigger": "clean_bounded_exact_verifier_scale_up_with_flagged_exclusions"
+    },
+    {
+      "question": "Repair live local GGUF logprob cache before using LLM-backed verifier claims.",
+      "source": "Exp5097",
+      "trigger": "blocked_no_clean_live_logprob_substrate"
+    },
+    {
+      "question": "Rerun constrained-generation semantic audit without adversarial flags before keeping it as evidence.",
+      "source": "Exp5104",
+      "trigger": "no_clean_constrained_generation_headline_flagged_audit_only"
+    },
+    {
+      "question": "Rerun FR-11 contract-guarded promotion with nonzero held-out utility and no adversarial flag.",
+      "source": "Exp5105",
+      "trigger": "no_clean_fr11_promotion_flagged_artifact_requires_rerun"
+    },
+    {
+      "question": "Collect safe UIO/register transcript or authenticated timing before any hardware speedup claim.",
+      "source": "Exp5106",
+      "trigger": "hardware_continuity_progress_no_speedup"
+    }
+  ],
+  "preconditions_checked": {
+    "expected_artifacts": 12,
+    "leaderboard_submission": false,
+    "missing_or_unloadable_artifacts": 0,
+    "operator_reconciliation_delegated": true,
+    "present_artifacts": 12,
+    "research_conductor_modified": false,
+    "research_roadmap_yaml_modified": false
+  },
+  "random_seed": 5107,
+  "reproducibility_checksum": "sha256:e503c07e55b7c7ac26fae45145666211b236697999c204bf0d3c55bb839cdb23",
+  "result_path": "results/experiment_5107_capstone_v468.json",
+  "runtime_substrate_decision": {
+    "blocked": true,
+    "completion_endpoint_ready": false,
+    "decision": "blocked_no_clean_live_logprob_substrate",
+    "does_not_gate_non_llm_exact_verifiers": true,
+    "endpoint_url": "http://127.0.0.1:58385",
+    "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+    "live_llm_invoked": false,
+    "logprob_endpoint_clean": false,
+    "logprob_endpoint_ready": false,
+    "model_specs_present": true,
+    "runtime_substrate_clean": false,
+    "source_experiment_id": 5097
+  },
+  "schema": "carnot.experiment_5107_capstone_v468.v1",
+  "source_artifacts": [
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_transition_record",
+      "duration_s": 0.033921,
+      "exists": true,
+      "experiment_id": 5095,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "exact_verifier_pivot",
+        "docs_updated"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward",
+      "imported": {
+        "docs_updated": [],
+        "exact_verifier_pivot": {
+          "binary_variable_count": 6.0,
+          "carried_to_milestone": "2026.07.468",
+          "clean_positive": true,
+          "constraint_count": 43.0,
+          "driver_artifact": "results/experiment_5091_kan_pwa_milp_scale_v467.json",
+          "driver_experiment_id": 5091,
+          "global_error_bound": 0.0,
+          "pivot_decision": "exact_verifier_pivot_positive",
+          "property_holds": true,
+          "property_status": "verified",
+          "pwa_piece_count": 6.0,
+          "scale_boundary": "small_multi_unit_property_not_architecture_scale_claim",
+          "solver_status": "optimal"
+        },
+        "honest_verdict": "complete_467_archived_468_activated_exact_verifier_pivot_carried_forward",
+        "inference_substrate": "aggregation_from_upstream_artifacts"
+      },
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "label": "archive_467_activate_468",
+      "loadable": true,
+      "path": "results/experiment_5095_archive_467_activate_468.json",
+      "present": true,
+      "sha256": "sha256:2b8be581b9b3391ffed6eea5a60b62f8234bd16d0ea86e8f23f451719f02097d"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_source_ingestion",
+      "duration_s": 0.001,
+      "exists": true,
+      "experiment_id": 5096,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "sources_checked",
+        "task_mapping",
+        "planning_hooks"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_sota_ingestion_v468_references_verified",
+      "imported": {
+        "honest_verdict": "success_sota_ingestion_v468_references_verified",
+        "inference_substrate": "literature_review_and_repo_inspection",
+        "planning_hooks": [
+          {
+            "hook": "Prototype BEAVER-style deterministic prefix bounds over finite verifier schemas.",
+            "hook_id": "exp5099_beaver_prefix_bounds",
+            "source_ids": [
+              "beaver_prefix_bounds"
+            ]
+          },
+          {
+            "hook": "Translate prompt-defined constraints into executable checker code and tests.",
+            "hook_id": "exp5100_prompt_code_assurance",
+            "source_ids": [
+              "constrainprompt_code_assurance"
+            ]
+          },
+          {
+            "hook": "Separate contradiction rejection from unsupported-claim abstention on a graph.",
+            "hook_id": "exp5101_graph_evidence_energy",
+            "source_ids": [
+              "graph_evidence_grounding"
+            ]
+          },
+          {
+            "hook": "Compare direct HUBO/p-spin energy against QUBO gadgets by exact enumeration.",
+            "hook_id": "exp5102_hubo_pspin_direct_energy",
+            "source_ids": [
+              "hubo_pspin_planck"
+            ]
+          },
+          {
+            "hook": "Measure whether adaptation reduces exact-solver effort without owning correctness.",
+            "hook_id": "exp5103_taco_adaptive_csp",
+            "source_ids": [
+              "taco_adaptive_csp"
+            ]
+          },
+          {
+            "hook": "Audit constrained decoding with reachability, semantic controls, and llguidance.",
+            "hook_id": "exp5104_constrained_decoding_semantic_audit",
+            "source_ids": [
+              "cfg_constrained_diffusion",
+              "grammar_aligned_decoding",
+              "llguidance_baseline"
+            ]
+          },
+          {
+            "hook": "Gate FR-11 memory/SOP promotion through contracts, provenance, and non-regression.",
+            "hook_id": "exp5105_severa_fr11_memory",
+            "source_ids": [
+              "severa_self_evolving_agents",
+              "genericagent_alma_memory"
+            ]
+          },
+          {
+            "hook": "Report partition/update telemetry before any board or TSU acceleration claim.",
+            "hook_id": "exp5106_hardware_partition_telemetry",
+            "source_ids": [
+              "neuromorphic_csp_hardware",
+              "extropic_logical_updates"
+            ]
+          },
+          {
+            "hook": "Keep HALT and EBT/ARM lineage as deferred context for runtime and architecture work.",
+            "hook_id": "background_runtime_and_architecture_context",
+            "source_ids": [
+              "halt_logprob_timeseries",
+              "ebt_arm_citation_lineage"
+            ]
+          }
+        ],
+        "sources_checked": [
+          {
+            "channels": [
+              "arXiv",
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2512.05439",
+            "source_id": "beaver_prefix_bounds",
+            "status": "present_in_v468_section",
+            "title": "BEAVER: Efficient Deterministic LLM Verifier",
+            "urls": [
+              "https://arxiv.org/abs/2512.05439",
+              "https://github.com/uiuc-focal-lab/Beaver"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2606.30247",
+            "source_id": "graph_evidence_grounding",
+            "status": "present_in_v468_section",
+            "title": "Grounding LLM Reasoning Under Incomplete Graph Evidence",
+            "urls": [
+              "https://arxiv.org/abs/2606.30247"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2603.25111",
+            "source_id": "severa_self_evolving_agents",
+            "status": "present_in_v468_section",
+            "title": "SEVerA: Verified Synthesis of Self-Evolving Agents",
+            "urls": [
+              "https://arxiv.org/abs/2603.25111"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2601.21048",
+            "source_id": "taco_adaptive_csp",
+            "status": "present_in_v468_section",
+            "title": "Test-Time Adaptation for Unsupervised Combinatorial Optimization",
+            "urls": [
+              "https://arxiv.org/abs/2601.21048"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2602.16665",
+            "source_id": "hubo_pspin_planck",
+            "status": "present_in_v468_section",
+            "title": "PLANCK: p-Spin Optimization With Hypergraph Neural Networks And DRL",
+            "urls": [
+              "https://arxiv.org/abs/2602.16665"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2603.01150",
+            "source_id": "neuromorphic_csp_hardware",
+            "status": "present_in_v468_section",
+            "title": "Implicitly Parallel Neuromorphic Solver Design For CSPs",
+            "urls": [
+              "https://arxiv.org/abs/2603.01150"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv",
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2606.00722+arXiv:2602.00612+arXiv:2508.10111",
+            "source_id": "cfg_constrained_diffusion",
+            "status": "present_in_v468_section",
+            "title": "CFG-Constrained Diffusion Language Models",
+            "urls": [
+              "https://arxiv.org/abs/2606.00722",
+              "https://arxiv.org/abs/2602.00612",
+              "https://arxiv.org/abs/2508.10111",
+              "https://github.com/eth-sri/constrained-diffusion"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2405.21047",
+            "source_id": "grammar_aligned_decoding",
+            "status": "present_in_v468_section",
+            "title": "Grammar-Aligned Decoding And Distribution-Distortion Caveat",
+            "urls": [
+              "https://arxiv.org/abs/2405.21047"
+            ]
+          },
+          {
+            "channels": [
+              "OpenReview"
+            ],
+            "reference_found": true,
+            "required_token": "OpenReview O3Kg4dLdpg",
+            "source_id": "constrainprompt_code_assurance",
+            "status": "present_in_v468_section",
+            "title": "Code-Based Assurance Of Prompt-Defined Constraints",
+            "urls": [
+              "https://openreview.net/forum?id=O3Kg4dLdpg"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2602.02888",
+            "source_id": "halt_logprob_timeseries",
+            "status": "present_in_v468_section",
+            "title": "HALT: Hallucination Assessment Via Log-Probabilities As Time Series",
+            "urls": [
+              "https://arxiv.org/abs/2602.02888"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2604.17091+arXiv:2602.07755",
+            "source_id": "genericagent_alma_memory",
+            "status": "present_in_v468_section",
+            "title": "GenericAgent, ALMA, And Memory Design Search",
+            "urls": [
+              "https://arxiv.org/abs/2604.17091",
+              "https://arxiv.org/abs/2602.07755"
+            ]
+          },
+          {
+            "channels": [
+              "arXiv",
+              "Semantic Scholar"
+            ],
+            "reference_found": true,
+            "required_token": "arXiv:2511.00907+arXiv:2505.11081",
+            "source_id": "ebt_arm_citation_lineage",
+            "status": "present_in_v468_section",
+            "title": "EBT / ARM-EBM Citation-Lineage Candidates",
+            "urls": [
+              "https://arxiv.org/abs/2511.00907",
+              "https://arxiv.org/abs/2505.11081"
+            ]
+          },
+          {
+            "channels": [
+              "GitHub"
+            ],
+            "reference_found": true,
+            "required_token": "guidance-ai/llguidance",
+            "source_id": "llguidance_baseline",
+            "status": "present_in_v468_section",
+            "title": "llguidance And Constraint-Decoding Engineering Baselines",
+            "urls": [
+              "https://github.com/guidance-ai/llguidance"
+            ]
+          },
+          {
+            "channels": [
+              "Extropic",
+              "Logical Intelligence"
+            ],
+            "reference_found": true,
+            "required_token": "Extropic XTR-0 / TSU And Logical Intelligence Kona/Aleph",
+            "source_id": "extropic_logical_updates",
+            "status": "present_in_v468_section",
+            "title": "Extropic XTR-0 / TSU And Logical Intelligence Kona/Aleph Updates",
+            "urls": [
+              "https://extropic.ai/writing/inside-x0-and-xtr-0",
+              "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
+              "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo",
+              "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation",
+              "https://logicalintelligence.com/blog/aleph-leading-benchmarks"
+            ]
+          },
+          {
+            "channels": [
+              "Hugging Face Papers"
+            ],
+            "reference_found": true,
+            "source_id": "huggingface_papers_coverage",
+            "status": "coverage_declared_in_v468_section_no_hf_only_source_added",
+            "title": "Hugging Face Papers query coverage",
+            "urls": [
+              "https://huggingface.co/papers"
+            ]
+          }
+        ],
+        "task_mapping": [
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "deterministic prefix probability bounds are Exp5099's exact-verifier surface.",
+            "source_id": "beaver_prefix_bounds",
+            "source_tokens": [
+              "arXiv:2512.05439",
+              "github.com/uiuc-focal-lab/Beaver"
+            ],
+            "task_id": "exp5099"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "incomplete graph support maps directly to the evidence-energy audit.",
+            "source_id": "graph_evidence_grounding",
+            "source_tokens": [
+              "arXiv:2606.30247"
+            ],
+            "task_id": "exp5101"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "Search-Verify-Learn guards define the FR-11 memory promotion contract.",
+            "source_id": "severa_self_evolving_agents",
+            "source_tokens": [
+              "arXiv:2603.25111"
+            ],
+            "task_id": "exp5105"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "instance adaptation becomes a solver-effort heuristic under exact checking.",
+            "source_id": "taco_adaptive_csp",
+            "source_tokens": [
+              "arXiv:2601.21048"
+            ],
+            "task_id": "exp5103"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "direct high-order energy tests whether HUBO avoids QUBO gadget blowup.",
+            "source_id": "hubo_pspin_planck",
+            "source_tokens": [
+              "arXiv:2602.16665"
+            ],
+            "task_id": "exp5102"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "partition/update telemetry constrains hardware-continuity claims.",
+            "source_id": "neuromorphic_csp_hardware",
+            "source_tokens": [
+              "arXiv:2603.01150"
+            ],
+            "task_id": "exp5106"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "prefix reachability and completion existence are constrained-decoding controls.",
+            "source_id": "cfg_constrained_diffusion",
+            "source_tokens": [
+              "arXiv:2606.00722",
+              "arXiv:2602.00612",
+              "arXiv:2508.10111"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "distribution-distortion controls prevent syntactic validity from becoming the claim.",
+            "source_id": "grammar_aligned_decoding",
+            "source_tokens": [
+              "arXiv:2405.21047"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "prompt-defined constraints are accepted only through executable code checks.",
+            "source_id": "constrainprompt_code_assurance",
+            "source_tokens": [
+              "openreview:O3Kg4dLdpg"
+            ],
+            "task_id": "exp5100"
+          },
+          {
+            "mapping_status": "background_only",
+            "rationale": "HALT needs clean logprob substrate, so it is deferred until after Exp5097.",
+            "source_id": "halt_logprob_timeseries",
+            "source_tokens": [
+              "arXiv:2602.02888"
+            ],
+            "task_id": "background_only"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "memory design ideas are used only under SEVerA-style exact promotion guards.",
+            "source_id": "genericagent_alma_memory",
+            "source_tokens": [
+              "arXiv:2604.17091",
+              "arXiv:2602.07755"
+            ],
+            "task_id": "exp5105"
+          },
+          {
+            "mapping_status": "background_only",
+            "rationale": "architecture pressure only; .468 avoids training-heavy EBT/ARM reproduction.",
+            "source_id": "ebt_arm_citation_lineage",
+            "source_tokens": [
+              "arXiv:2511.00907",
+              "arXiv:2505.11081"
+            ],
+            "task_id": "background_only"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "real grammar-engine baselines bound toy constrained-decoding claims.",
+            "source_id": "llguidance_baseline",
+            "source_tokens": [
+              "github.com/guidance-ai/llguidance"
+            ],
+            "task_id": "exp5104"
+          },
+          {
+            "mapping_status": "mapped_to_task",
+            "rationale": "TSU/Kona context informs hardware telemetry and exact-verifier product framing.",
+            "source_id": "extropic_logical_updates",
+            "source_tokens": [
+              "Extropic XTR-0",
+              "Logical Intelligence Kona",
+              "Logical Intelligence Aleph"
+            ],
+            "task_id": "exp5106"
+          }
+        ]
+      },
+      "inference_substrate": "literature_review_and_repo_inspection",
+      "label": "sota_ingestion",
+      "loadable": true,
+      "path": "results/experiment_5096_sota_ingestion_v468.json",
+      "present": true,
+      "sha256": "sha256:3a2605ff359c8a0465d85eaf90133ec39985d834ab33edef15944b2cfac0da1f"
+    },
+    {
+      "blocked": true,
+      "blocker_reason": "blocked_verdict_or_status",
+      "claim_consistent_with_substrate": true,
+      "classification": "blocked",
+      "classification_reason": "blocked_verdict_or_status",
+      "duration_s": 64.111333,
+      "exists": true,
+      "experiment_id": 5097,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "logprob_endpoint_clean",
+        "logprob_endpoint_ready",
+        "completion_endpoint_ready",
+        "live_llm_invoked",
+        "endpoint_url",
+        "model_specs"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": false,
+      "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+      "imported": {
+        "completion_endpoint_ready": false,
+        "endpoint_url": "http://127.0.0.1:58385",
+        "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+        "inference_substrate": "precondition_check_only",
+        "live_llm_invoked": false,
+        "logprob_endpoint_clean": false,
+        "logprob_endpoint_ready": false,
+        "model_specs": {
+          "cached_sota_pair": [
+            {
+              "gpu": 0,
+              "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "name": "Qwen3.6-35B-A3B"
+            },
+            {
+              "gpu": 1,
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "name": "Gemma4-26B-A4B-it"
+            }
+          ],
+          "gguf_tokenizer_rule": "embedded_gguf_tokenizer_only",
+          "loader": "llama.cpp",
+          "mandatory_models": [
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+                "size_bytes": 22134528992
+              },
+              "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+              "role": "flagship_moe"
+            },
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+                "size_bytes": 18323731456
+              },
+              "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "role": "flagship_dense"
+            },
+            {
+              "cache_status": "resolved",
+              "file_evidence": {
+                "exists": true,
+                "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+                "size_bytes": 16947539744
+              },
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "missing_diagnostic": null,
+              "preferred_quant": "Q4_K_M",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "role": "middle_moe"
+            }
+          ],
+          "preferred_quant": "Q4_K_M"
+        }
+      },
+      "inference_substrate": "precondition_check_only",
+      "label": "runtime_endpoint_logprob_cache",
+      "loadable": true,
+      "path": "results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+      "present": true,
+      "sha256": "sha256:028c3eba7b176c5d10d9e16594913182afec17fc2828fe8283ee6d63d48fe952"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_kan_milp_property_suite",
+      "duration_s": 0.608137,
+      "exists": true,
+      "experiment_id": 5098,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "properties_proved",
+        "false_property_controls_passed",
+        "max_scale_reached",
+        "scale_blocker"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+      "imported": {
+        "false_property_controls_passed": true,
+        "honest_verdict": "success_kan_pwa_milp_scale_v2_property_suite_clean",
+        "inference_substrate": "exact_milp_solver_cpu",
+        "max_scale_reached": {
+          "binary_variable_count": 9,
+          "constraint_count": 64,
+          "input_dimension": 3,
+          "property_id": "three_unit_composition_true",
+          "pwa_piece_count": 9,
+          "solver_status": "optimal"
+        },
+        "properties_proved": [
+          "exp5091_baseline_two_unit_true",
+          "three_unit_composition_true"
+        ],
+        "scale_blocker": null
+      },
+      "inference_substrate": "exact_milp_solver_cpu",
+      "label": "kan_pwa_milp_scale_v2",
+      "loadable": true,
+      "path": "results/experiment_5098_kan_pwa_milp_scale_v2.json",
+      "present": true,
+      "sha256": "sha256:3e59867be459f493b99020442f29d09b22225b1e1788e1d5eb23807a5e56e86f"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.013342,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5099,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "backend_used",
+        "soundness_checks_passed",
+        "lower_bound",
+        "upper_bound",
+        "bound_gap",
+        "live_llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean",
+      "imported": {
+        "backend_used": "toy_distribution",
+        "bound_gap": 0.222222222222,
+        "honest_verdict": "complete_beaver_prefix_bounds_toy_only_runtime_not_clean",
+        "inference_substrate": "deterministic_toy_finite_distribution",
+        "live_llm_invoked": false,
+        "lower_bound": 0.0,
+        "soundness_checks_passed": true,
+        "upper_bound": 0.222222222222
+      },
+      "inference_substrate": "deterministic_toy_finite_distribution",
+      "label": "beaver_prefix_bounds",
+      "loadable": true,
+      "path": "results/experiment_5099_beaver_prefix_bound_verifier_v468.json",
+      "present": true,
+      "sha256": "sha256:d50730b952e7de050a2e767864c29600eccc407d017427b41ffb5e020bd1bdd3"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.000157,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5100,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "exact_checker_backend",
+        "constraints_total",
+        "executable_constraints_total",
+        "positive_tests_passed",
+        "negative_tests_passed",
+        "adversarial_tests_passed",
+        "llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
+      "imported": {
+        "adversarial_tests_passed": true,
+        "constraints_total": 9,
+        "exact_checker_backend": "python_json_logical_tree",
+        "executable_constraints_total": 9,
+        "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
+        "inference_substrate": "deterministic_python_json_logical_tree",
+        "llm_invoked": false,
+        "negative_tests_passed": true,
+        "positive_tests_passed": true
+      },
+      "inference_substrate": "deterministic_python_json_logical_tree",
+      "label": "constrainprompt_code_assurance",
+      "loadable": true,
+      "path": "results/experiment_5100_constrainprompt_code_assurance_v468.json",
+      "present": true,
+      "sha256": "sha256:9f8f3a956cd1774fb23d65cb02d040c7d4408d9c06c9be7373d30494f1d5789b"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_graph_evidence_energy",
+      "duration_s": 0.013533,
+      "exists": true,
+      "experiment_id": 5101,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "contradiction_reject_rate",
+        "unsupported_retained_rate",
+        "supported_accept_rate",
+        "stability_under_perturbation"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_graph_evidence_energy_separates_contradiction_from_unsupported",
+      "imported": {
+        "contradiction_reject_rate": 1.0,
+        "honest_verdict": "success_graph_evidence_energy_separates_contradiction_from_unsupported",
+        "inference_substrate": "synthetic_graph_exact_labels",
+        "stability_under_perturbation": {
+          "conditions": [
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.25,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.25,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.4,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.4,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.55,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.0
+            },
+            {
+              "heldout_objective": 1.0,
+              "hidden_edge_rate": 0.55,
+              "metrics": {
+                "contradicted": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "supported": {
+                  "accept_rate": 1.0,
+                  "count": 2
+                },
+                "unsupported_false": {
+                  "count": 2,
+                  "reject_rate": 1.0
+                },
+                "unsupported_true": {
+                  "count": 2,
+                  "retain_rate": 1.0
+                }
+              },
+              "perturbation": 0.1
+            }
+          ],
+          "max_objective_drop": 0.0,
+          "min_heldout_objective": 1.0,
+          "passed": true
+        },
+        "supported_accept_rate": 1.0,
+        "unsupported_retained_rate": 1.0
+      },
+      "inference_substrate": "synthetic_graph_exact_labels",
+      "label": "graph_evidence_energy",
+      "loadable": true,
+      "path": "results/experiment_5101_incomplete_graph_evidence_energy_v468.json",
+      "present": true,
+      "sha256": "sha256:be720dc2bc2f6114393559eae0c9fb20685af243bae3ef73842545a0fa42244a"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_hubo_pspin_exact_enumeration",
+      "duration_s": 0.882755,
+      "exists": true,
+      "experiment_id": 5102,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "direct_hubo_advantage",
+        "exact_optima_verified",
+        "auxiliary_variable_blowup",
+        "energy_scale_distortion"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+      "imported": {
+        "auxiliary_variable_blowup": {
+          "auxiliary_variables_by_instance": {
+            "xor3_chain_sat": 3,
+            "xor3_xor4_frustrated": 2,
+            "xor4_planted_overlap": 8
+          },
+          "mean_auxiliary_variables": 4.333333,
+          "mean_qubo_to_hubo_variable_ratio": 1.95,
+          "qubo_to_hubo_variable_ratio_by_instance": {
+            "xor3_chain_sat": 1.75,
+            "xor3_xor4_frustrated": 1.5,
+            "xor4_planted_overlap": 2.6
+          },
+          "total_auxiliary_variables": 13
+        },
+        "direct_hubo_advantage": true,
+        "energy_scale_distortion": {
+          "by_instance": {
+            "xor3_chain_sat": 168.0,
+            "xor3_xor4_frustrated": 180.0,
+            "xor4_planted_overlap": 474.0
+          },
+          "definition": "max_abs_qubo_coefficient_after_gadgets / max_abs_direct_hubo_p_spin_coefficient",
+          "max_qubo_to_hubo_coefficient_ratio": 474.0,
+          "mean_qubo_to_hubo_coefficient_ratio": 274.0
+        },
+        "exact_optima_verified": true,
+        "honest_verdict": "success_hubo_pspin_direct_encoding_reduces_gadget_blowup",
+        "inference_substrate": "exact_enumeration_cpu"
+      },
+      "inference_substrate": "exact_enumeration_cpu",
+      "label": "hubo_pspin_direct_energy",
+      "loadable": true,
+      "path": "results/experiment_5102_hubo_pspin_direct_energy_v468.json",
+      "present": true,
+      "sha256": "sha256:8d2dbc73f45aa93358cf22d9312f8a00008966472d3ed7de399bd5ff58526fec"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_positive",
+      "classification_reason": "clean_adaptive_solver_effort_reduction",
+      "duration_s": 0.01178,
+      "exists": true,
+      "experiment_id": 5103,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "correctness_preserved",
+        "delta_effort_vs_baseline",
+        "baseline_effort",
+        "adapted_effort",
+        "harmful_instance_count",
+        "instances_total"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+      "imported": {
+        "adapted_effort": {
+          "backtracks": 134,
+          "constraint_checks": 1195,
+          "duration_s": 0.000111,
+          "instances": 8,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 161,
+          "total_effort_score": 1356
+        },
+        "baseline_effort": {
+          "backtracks": 14936,
+          "constraint_checks": 93247,
+          "duration_s": 0.009848,
+          "instances": 8,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 14963,
+          "total_effort_score": 108210
+        },
+        "correctness_preserved": true,
+        "delta_effort_vs_baseline": {
+          "adapted": -106854,
+          "adapted_vs_static": -280,
+          "static_heuristic": -106574
+        },
+        "harmful_instance_count": 2,
+        "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+        "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic",
+        "instances_total": 8
+      },
+      "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic",
+      "label": "taco_adaptive_csp_heuristic",
+      "loadable": true,
+      "path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
+      "present": true,
+      "sha256": "sha256:5581a2591d4c58e9e1d04aa5ee0da19ff531b8118b54fd6006b472379e93c570"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 54.29845,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5104,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "syntax_only_headline_forbidden",
+        "syntax_validity_rate",
+        "semantic_validity_rate",
+        "distribution_shift_metric",
+        "live_llm_invoked"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline",
+      "imported": {
+        "distribution_shift_metric": 0.563636,
+        "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline",
+        "inference_substrate": "deterministic_static_csr_semantic_distribution_audit",
+        "live_llm_invoked": false,
+        "semantic_validity_rate": 0.436364,
+        "syntax_only_headline_forbidden": true,
+        "syntax_validity_rate": 1.0
+      },
+      "inference_substrate": "deterministic_static_csr_semantic_distribution_audit",
+      "label": "constrained_decoding_semantic_risk_audit",
+      "loadable": true,
+      "path": "results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json",
+      "present": true,
+      "sha256": "sha256:3f8c70916f2dd0a6be1e5514695c230b8dde59c3287cf4e87e7b0ee679111b17"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "adversarially_flagged",
+      "classification_reason": "upstream_flagged_adversarial_excluded_from_headline",
+      "duration_s": 0.00143,
+      "excluded_from_headline": true,
+      "exists": true,
+      "experiment_id": 5105,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "heldout_delta",
+        "nonforgetting_delta",
+        "promoted_count",
+        "contract_pass_count",
+        "poison_guard_passed",
+        "contamination_guard_passed",
+        "rollback_guard_passed",
+        "promotion_decision"
+      ],
+      "flagged_adversarial": true,
+      "headline_eligible": false,
+      "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000",
+      "imported": {
+        "contamination_guard_passed": true,
+        "contract_pass_count": 3,
+        "heldout_delta": 0.0,
+        "honest_verdict": "complete_fr11_severa_guarded_memory_no_promote_contracts_working_delta_plus_0p000",
+        "inference_substrate": "exact_guarded_self_learning_eval",
+        "nonforgetting_delta": 0.0,
+        "poison_guard_passed": true,
+        "promoted_count": 0,
+        "promotion_decision": {
+          "gate_conditions": {
+            "contamination_guard_passed": true,
+            "contract_pass_count": 3,
+            "heldout_delta_gt_zero": false,
+            "nonforgetting_delta_gte_zero": true,
+            "poison_guard_passed": true,
+            "rollback_guard_passed": true
+          },
+          "no_promote_reason": "positive_utility_not_observed",
+          "promoted": false
+        },
+        "rollback_guard_passed": true
+      },
+      "inference_substrate": "exact_guarded_self_learning_eval",
+      "label": "fr11_severa_guarded_memory",
+      "loadable": true,
+      "path": "results/experiment_5105_fr11_severa_guarded_memory_v468.json",
+      "present": true,
+      "sha256": "sha256:8f0c1105e9ea75fbeaef2d235d59f1f5df64d67d7c9dc3ecddf5dd02a9e8e882"
+    },
+    {
+      "blocked": false,
+      "claim_consistent_with_substrate": true,
+      "classification": "clean_negative",
+      "classification_reason": "clean_hardware_continuity_no_speedup_claim",
+      "duration_s": 9.303181,
+      "exists": true,
+      "experiment_id": 5106,
+      "fields_imported": [
+        "honest_verdict",
+        "inference_substrate",
+        "kv260_ssh_ready",
+        "kv260_uio_transcript_collected",
+        "kv260_blocker",
+        "gatemate_detected",
+        "gatemate_terminal_state",
+        "polarfire_ssh_ready",
+        "polarfire_dispatch_precheck",
+        "speedup_claimed",
+        "destructive_actions_taken",
+        "partition_telemetry"
+      ],
+      "flagged_adversarial": false,
+      "headline_eligible": true,
+      "honest_verdict": "complete_hardware_partition_telemetry_no_speedup_claim",
+      "imported": {
+        "destructive_actions_taken": [],
+        "gatemate_detected": false,
+        "gatemate_terminal_state": "blocked_gatemate_dirtyjtag_cable_seen_no_gatemate_idcode_terminal",
+        "honest_verdict": "complete_hardware_partition_telemetry_no_speedup_claim",
+        "inference_substrate": "hardware_smoke_and_static_mapping",
+        "kv260_blocker": "no_safe_kv260_uio_register_transcript_collected",
+        "kv260_ssh_ready": true,
+        "kv260_uio_transcript_collected": false,
+        "partition_telemetry": [
+          {
+            "boundary_exchange_estimate": "roughly 12 cut hyperedges per global update, exchanged as partition-local field summaries",
+            "claim_scope": "static_mapping_only_no_speedup_claim",
+            "coupling_density": 0.1875,
+            "coupling_order": 3,
+            "expected_bottleneck": "high-order term fan-in and cut-hyperedge boundary exchange",
+            "instance_family": "PLANCK-style direct p-spin/HUBO static mapping",
+            "mapping_kind": "p_spin_hubo",
+            "partition_count": 4,
+            "principle": "direct p-spin notes avoid hiding high-order costs inside a QUBO gadget speedup story.",
+            "source_context": "arXiv:2602.16665 planning hook; no local p-spin hardware run",
+            "variables": 64
+          },
+          {
+            "boundary_exchange_estimate": "about 2 frontier variable states per partition step for a sparse clause/factor graph",
+            "claim_scope": "static_mapping_only_no_neuromorphic_speedup_claim",
+            "coupling_density": 0.083333,
+            "coupling_order": 2,
+            "expected_bottleneck": "synchronizing frontier assignments before local constraint relaxation",
+            "instance_family": "sparse CSP factor-graph partition for neuromorphic solvers",
+            "mapping_kind": "csp_neuromorphic",
+            "partition_count": 8,
+            "principle": "CSP partition telemetry states the synchronization cost that parallel solver claims must pay.",
+            "source_context": "arXiv:2603.01150 planning hook; no local neuromorphic hardware run",
+            "variables": 96
+          },
+          {
+            "boundary_exchange_estimate": "one halo-field vector per partition update, dominated by cross-partition couplings",
+            "claim_scope": "strategic_static_mapping_only_no_tsu_hardware_claim",
+            "coupling_density": 0.125,
+            "coupling_order": 2,
+            "expected_bottleneck": "host-device scheduling and boundary-field refresh without authenticated TSU telemetry",
+            "instance_family": "Extropic TSU-style EBM sampler mapping note",
+            "mapping_kind": "tsu_static_mapping",
+            "partition_count": 4,
+            "principle": "TSU notes stay architectural until authenticated hardware timing exists.",
+            "source_context": "Extropic/Logical Intelligence planning context only; no TSU access",
+            "variables": 128
+          }
+        ],
+        "polarfire_dispatch_precheck": {
+          "arch": "riscv64",
+          "blockers": [],
+          "dispatch_executed": false,
+          "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+          "known_safe_dispatch_path": "carnot.hardware.polarfire_dispatch_smoke.check_preconditions",
+          "mutating_dispatch_steps_skipped": true,
+          "python": "Python 3.12.12",
+          "ready": true,
+          "uptime": "15:02:36 up 18 days, 22:15,  0 user,  load average: 0.16, 0.03, 0.01"
+        },
+        "polarfire_ssh_ready": true,
+        "speedup_claimed": false
+      },
+      "inference_substrate": "hardware_smoke_and_static_mapping",
+      "label": "hardware_partition_telemetry",
+      "loadable": true,
+      "path": "results/experiment_5106_hardware_partition_telemetry_v468.json",
+      "present": true,
+      "sha256": "sha256:23b8709897b3ff400e3414f6716de5b7a6fbb8b3104ccfdc9d99231be4128516"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5107",
+    "SCENARIO-CAPSTONE-5107",
+    "SCENARIO-CAPSTONE-5107-FIELD-PRINCIPLES"
+  ]
+}
