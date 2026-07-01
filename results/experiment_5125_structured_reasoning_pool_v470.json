@@ -1,0 +1,126 @@
+{
+  "MODEL_SPECS": [
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "candidates_per_item": 4,
+  "cheap_baseline_at_1": 0.291667,
+  "conductor_modified": false,
+  "copy_rate": 0.015625,
+  "duplicate_rate": 0.033854,
+  "duration_s": 0.01706488407216966,
+  "exact_validators_used": [
+    "code_property",
+    "graph_coloring",
+    "knights_knaves",
+    "travel_budget"
+  ],
+  "experiment_id": "exp5125-structured-reasoning-pool-v470",
+  "field_principles": {
+    "MODEL_SPECS": "mandated local SOTA model provenance",
+    "candidates_per_item": "oracle headroom accountability",
+    "cheap_baseline_at_1": "baseline adequacy",
+    "conductor_modified": "conductor immutability",
+    "duplicate_rate": "leakage/no-degenerate pool",
+    "duration_s": "timing accountability",
+    "exact_validators_used": "deterministic ground truth",
+    "experiment_id": "traceability",
+    "fover_scope_used": "no doomed rerun",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "oracle_at_k": "headroom",
+    "parse_coverage": "candidate usability",
+    "pool_n": "sample-size accountability",
+    "pool_path": "data provenance",
+    "pool_sha256": "reproducibility",
+    "structured_pool_ready": "structured downstream gate",
+    "task_families": "benchmark diversity",
+    "tests_run": "verification evidence",
+    "verifier_is_oracle": "no oracle verifier headline"
+  },
+  "fover_scope_used": false,
+  "honest_verdict": "complete_structured_reasoning_pool_ready",
+  "inference_substrate": "local_sota_gguf_generation_with_exact_validators",
+  "milestone": "2026.07.470",
+  "oracle_at_k": 0.875,
+  "parse_coverage": 0.984375,
+  "pool_n": 96,
+  "pool_path": "results/experiment_5125_structured_reasoning_pool_v470.jsonl",
+  "pool_sha256": "sha256:306eefdbb3a08b046b04306c35889d412b354c9bceb71fa0e735a9562cf74022",
+  "preconditions_checked": {
+    "exp5124_sota_runtime_clean": true,
+    "fover_scope_used": false,
+    "llm_judge_used_as_ground_truth": false,
+    "mandated_model_path_count": 2,
+    "upstream_error": null,
+    "upstream_path": "results/experiment_5124_clean_sota_runtime_provenance_v470.json",
+    "upstream_read": true
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:86d20f45a412b0fc8b6eb3727ec203955becc7920c3aa6758bd6135e7c517f8c",
+  "run_date": "20260701",
+  "structured_pool_gates": {
+    "headroom_gate": 0.1,
+    "parse_coverage_gate": 0.9,
+    "pool_n_max": 150,
+    "pool_n_min": 80
+  },
+  "structured_pool_ready": true,
+  "task_families": {
+    "code_property": 24,
+    "graph_coloring": 24,
+    "knights_knaves": 24,
+    "travel_budget": 24
+  },
+  "task_family_headroom": {
+    "code_property": {
+      "cheap_baseline_at_1": 0.291667,
+      "headroom": 0.583333,
+      "n": 24,
+      "oracle_at_k": 0.875
+    },
+    "graph_coloring": {
+      "cheap_baseline_at_1": 0.291667,
+      "headroom": 0.583333,
+      "n": 24,
+      "oracle_at_k": 0.875
+    },
+    "knights_knaves": {
+      "cheap_baseline_at_1": 0.291667,
+      "headroom": 0.583333,
+      "n": 24,
+      "oracle_at_k": 0.875
+    },
+    "travel_budget": {
+      "cheap_baseline_at_1": 0.291667,
+      "headroom": 0.583333,
+      "n": 24,
+      "oracle_at_k": 0.875
+    }
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5125_structured_reasoning_pool_v470.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5125_structured_reasoning_pool_v470.py -q -o addopts=\"\"",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5125_structured_reasoning_pool_v470.py' -m pytest tests/python/test_experiment_5125_structured_reasoning_pool_v470.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5125_structured_reasoning_pool_v470.py' --fail-under=100 -m",
+    ".venv/bin/ruff check python/carnot/experiment_5125_structured_reasoning_pool_v470.py scripts/experiment_5125_structured_reasoning_pool_v470.py tests/python/test_experiment_5125_structured_reasoning_pool_v470.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5125_structured_reasoning_pool_v470.py scripts/experiment_5125_structured_reasoning_pool_v470.py tests/python/test_experiment_5125_structured_reasoning_pool_v470.py",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5125_structured_reasoning_pool_v470.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "verifier_is_oracle": false
+}

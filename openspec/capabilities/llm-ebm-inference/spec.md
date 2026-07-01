@@ -1864,6 +1864,67 @@ missing or failed
 **And** the verdict begins with `blocked_`
 **And** downstream verifier experiments are not run by this task.
 
+### REQ-INFER-SOTA-030: Exp 5125 Structured Reasoning Candidate Pool
+
+The system SHALL provide an Exp 5125 non-FoVer structured-reasoning candidate
+pool at `results/experiment_5125_structured_reasoning_pool_v470.json` with pool
+rows written to `results/experiment_5125_structured_reasoning_pool_v470.jsonl`.
+Exp 5125 SHALL load
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` and SHALL
+hard-block when `sota_runtime_clean` is not true.  When the gate is open, the
+experiment SHALL build 80-150 exact-checkable tasks across at least three
+families, such as small constraint-satisfaction tasks, Knights-and-Knaves logic,
+travel/budget constraints, and code/property checks.
+
+Exp 5125 SHALL define `MODEL_SPECS` through `cached_sota_pair()` when possible,
+SHALL include at least one mandated local GGUF model path, and SHALL record
+`model_path` provenance for any candidate generation attributed to an LLM.  It
+SHALL NOT use FoVer data or a FoVer selector scope.  Candidate ground truth SHALL
+come only from deterministic validators; no LLM judge SHALL be treated as the
+oracle.  The experiment SHALL compute `oracle_at_k`, `cheap_baseline_at_1`,
+per-family headroom, `parse_coverage`, `duplicate_rate`, and copy-rate evidence.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`task_families`, `pool_path`, `pool_sha256`, `pool_n`, `candidates_per_item`,
+`exact_validators_used`, `oracle_at_k`, `cheap_baseline_at_1`,
+`parse_coverage`, `duplicate_rate`, `structured_pool_ready`,
+`verifier_is_oracle`, `fover_scope_used`, `conductor_modified`, and
+`tests_run`.  `experiment_id` SHALL equal
+`exp5125-structured-reasoning-pool-v470`, `milestone` SHALL equal
+`2026.07.470`, `inference_substrate` SHALL equal
+`local_sota_gguf_generation_with_exact_validators`, `verifier_is_oracle` SHALL
+be false, `fover_scope_used` SHALL be false, and `conductor_modified` SHALL be
+false.
+
+`structured_pool_ready` SHALL be true only when `pool_n` is between 80 and 150,
+`parse_coverage` clears the declared usability gate, and
+`oracle_at_k - cheap_baseline_at_1` clears the declared headroom gate.  If the
+Exp 5124 gate is closed or no mandated local GGUF path can be recorded, Exp 5125
+SHALL write a terminal blocked artifact with `structured_pool_ready=false` and
+SHALL NOT fabricate candidate rows.
+
+### SCENARIO-INFER-SOTA-030-POOL: Exact Validators Produce Headroom
+
+**Given** Exp 5124 reports `sota_runtime_clean=true`
+**And** at least one mandated local GGUF model path is resolved
+**When** Exp 5125 builds the structured reasoning pool
+**Then** the pool contains 80-150 non-FoVer tasks across at least three
+families
+**And** deterministic validators score every parseable candidate
+**And** `oracle_at_k` exceeds `cheap_baseline_at_1`
+**And** `structured_pool_ready=true` only when the pool-size, parse-coverage,
+and headroom gates all pass.
+
+### SCENARIO-INFER-SOTA-030-BLOCKED: Dirty Runtime Gate Blocks Candidate Rows
+
+**Given** Exp 5124 is missing or reports `sota_runtime_clean=false`
+**When** Exp 5125 runs
+**Then** it writes a terminal blocked artifact
+**And** `structured_pool_ready=false`
+**And** `pool_n=0`
+**And** no FoVer scope or LLM judge is used as ground truth.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1998,6 +2059,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
 | REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
+| REQ-INFER-SOTA-030 | Implemented (`python/carnot/experiment_5125_structured_reasoning_pool_v470.py`, `scripts/experiment_5125_structured_reasoning_pool_v470.py`, `results/experiment_5125_structured_reasoning_pool_v470.json`) | Implemented (`tests/python/test_experiment_5125_structured_reasoning_pool_v470.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
