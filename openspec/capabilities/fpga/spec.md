@@ -14389,6 +14389,111 @@ claim, and `inference_substrate=hardware_smoke_and_static_mapping`.
 
 ---
 
+### REQ-HW-5120
+
+**Title:** Hardware residual telemetry MUST authenticate board prechecks and gate speedup claims on full evidence
+
+**Description:**
+Experiment 5120 MUST produce
+`results/experiment_5120_hardware_residual_telemetry_v469.json` as a v469
+hardware-continuity artifact covering KV260, GateMate A1/DirtyJTAG, PolarFire,
+and a residual-energy telemetry plan or smoke result. The artifact MUST use
+`inference_substrate=hardware_smoke_and_residual_telemetry_or_cpu_fallback`.
+It MUST NOT claim board acceleration or speedup unless the same run records
+command transcripts, workload hashes, board timing, and sample-quality evidence.
+
+The KV260 precondition MUST be an SSH-only board command such as:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host block-device paths such as `/dev/mmcblk*` or `/dev/disk/*` MUST NOT be
+inspected or cited as a KV260 precondition. If safe KV260 UIO/register
+interaction is available, the experiment MUST record the exact command
+transcript and workload hash. If it is not safely available, the artifact MUST
+record the blocker instead.
+
+GateMate triage MUST be non-destructive and use USB/DirtyJTAG evidence such as
+`openFPGALoader -c dirtyJtag --detect` when the tool exists. PolarFire triage
+MUST use authenticated SSH/precheck command outputs only. Neither board may be
+flashed, programmed, or used for a speedup claim in this experiment.
+
+Residual telemetry MUST compute `residual_energy_by_sweep` and fit
+`decay_exponent` only from real sample data produced by the current run. If no
+board workload can safely run, the experiment MUST execute a CPU-only reference
+residual sweep and record that fallback methodology. The residual telemetry
+SHOULD prioritize residual-energy decay and communication/update ratios over
+raw static partition mappings, matching the arXiv:2606.25313 planning signal.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `experiment_id`
+- `milestone`
+- `honest_verdict`
+- `inference_substrate`
+- `duration_s`
+- `preconditions_checked`
+- `kv260_ssh_checked`
+- `kv260_host_block_devices_touched`
+- `gatemate_checked`
+- `polarfire_checked`
+- `command_transcripts`
+- `workload_hashes`
+- `residual_energy_by_sweep`
+- `decay_exponent`
+- `hardware_residual_telemetry_ready`
+- `no_speedup_claim`
+- `flagged_adversarial`
+- `tests_run`
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5120_hardware_residual_telemetry_v469.py --date 20260701`
+  writes `results/experiment_5120_hardware_residual_telemetry_v469.json`.
+- The artifact includes `schema`, `experiment_id="exp5120-hardware-residual-telemetry-v469"`,
+  `milestone="2026.07.469"`, `spec_refs` containing `REQ-HW-5120` and
+  `SCENARIO-HW-5120`, `field_principles`, `preconditions_checked`,
+  `command_transcripts`, `workload_hashes`, and a stable
+  `reproducibility_checksum`.
+- `honest_verdict` starts with `complete_` or `success_`; blocked board access
+  may still be terminal when a CPU-reference residual sweep is recorded.
+- `preconditions_checked` records the KV260 SSH command, GateMate
+  USB/DirtyJTAG detection status, PolarFire SSH status, and the explicit
+  no-host-block-device policy.
+- The artifact contains no host-storage marker such as `/dev/mmcblk` or
+  `/dev/disk`.
+- `residual_energy_by_sweep` is non-empty when
+  `hardware_residual_telemetry_ready=true`; `decay_exponent` is finite and is
+  fit from those residual samples, not from a static mapping table.
+- `hardware_residual_telemetry_ready=true` only when at least one authenticated
+  board precheck or CPU-reference residual sweep is recorded.
+- `no_speedup_claim=true`, `flagged_adversarial=false`, and no Extropic/TSU
+  execution claim appears.
+
+**Implementation status:** Pending (Exp 5120)
+
+---
+
+### SCENARIO-HW-5120
+
+**Scenario:** Exp 5120 writes authenticated board prechecks plus residual-energy telemetry or CPU fallback.
+
+**Given:** KV260 must be checked through SSH-only reachability, GateMate may only
+run non-destructive USB/DirtyJTAG detection, PolarFire may only run SSH/precheck
+commands, and board acceleration cannot be claimed without full transcripts,
+timing, workload hashes, and sample-quality evidence.
+**When:** Experiment 5120 runs the exact board prechecks, records safe
+UIO/register access or blockers, and computes residual-energy decay from either
+safe board sample data or a CPU-reference residual sweep.
+**Then:** It writes
+`results/experiment_5120_hardware_residual_telemetry_v469.json` with the
+required fields, principle annotations, authenticated command transcripts,
+workload hashes, residual-energy-by-sweep data, a fitted decay exponent,
+`hardware_residual_telemetry_ready=true`, and `no_speedup_claim=true`.
+
+**Implementation status:** Pending (Exp 5120)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.

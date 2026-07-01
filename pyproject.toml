@@ -62,6 +62,10 @@ dependencies = [
     # working venv (which happened to have sklearn installed). Declaring it
     # here is the load-bearing fix that lets a fresh clone reproduce G2.
     "scikit-learn>=1.4",
+    # python-sat — required by InterwhenTokenMonitor's CNF satisfiability
+    # checks. Keep this in core deps because carnot.pipeline imports the
+    # monitor in normal package use and tests exercise the live PySAT path.
+    "python-sat>=1.8.dev0",
     # MCP is part of the Phase-1 software ship surface. `python -m carnot.mcp`
     # must speak real stdio JSON-RPC after a plain package install, not only
     # after an optional extra.

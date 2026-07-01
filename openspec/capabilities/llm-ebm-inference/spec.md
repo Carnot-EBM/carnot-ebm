@@ -1737,6 +1737,68 @@ telemetry evidence
 **And** the artifact does not claim uPRM, process-verifier, or hallucination
 detection wins.
 
+### REQ-INFER-SOTA-028: Exp 5119 SOTA Endpoint Root-Cause Artifact
+
+The system SHALL provide an Exp 5119 local SOTA endpoint root-cause artifact at
+`results/experiment_5119_sota_endpoint_rootcause_v469.json`.  The artifact SHALL
+diagnose local GGUF completion/logprob readiness before any downstream
+benchmark, and SHALL use only `cached_sota_pair()` / `resolve_cached_gguf()` for
+`*-GGUF` model resolution.  It SHALL NOT call `AutoTokenizer` on a GGUF
+repository ID.
+
+Exp 5119 SHALL name the three mandated `MODEL_SPECS` entries
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, recording exact local `.gguf` paths or
+machine-readable blockers.  Before endpoint inference or server launch, it
+SHALL record CUDA/GPU visibility, llama.cpp / llama-cpp-python availability,
+disk/RAM, model cache evidence, and port availability.
+
+If a local server is launched, Exp 5119 SHALL record the command, PID, port,
+startup log, request/response transcript, endpoint lifetime, shutdown behavior,
+and errors.  It SHALL attempt a minimal completion smoke and a logprob or
+top-logprob smoke through the intended local backend.  Cache readiness SHALL be
+true only when real token logprob or top-logprob evidence is observed; otherwise
+`cache_ready=false` and no cache rows are promoted.
+
+The artifact SHALL include at least these fields: `experiment_id`,
+`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+`preconditions_checked`, `MODEL_SPECS`, `cached_sota_pair_attempted`,
+`gguf_paths`, `cuda_status`, `server_command`, `endpoint_lifetime_s`,
+`completion_proof`, `logprob_proof`, `cache_ready`, `root_cause_tree`,
+`flagged_adversarial`, and `tests_run`.  `experiment_id` SHALL equal
+`exp5119-sota-endpoint-rootcause-v469`, and `milestone` SHALL equal
+`2026.07.469`.
+
+The `root_cause_tree` SHALL distinguish exact blocker keys
+`missing_binary`, `wrong_model_path`, `unsupported_logprob_api`,
+`cuda_failure`, `oom`, `timeout`, and `cache_schema_mismatch`.
+The artifact SHALL run repository adversarial verification after writing its
+JSON and SHALL mark `flagged_adversarial=true` if a critical verifier finding or
+too-short live-model claim is detected.
+
+### SCENARIO-INFER-SOTA-028-SUCCESS: Live Completion And Logprobs Prove Readiness
+
+**Given** at least one mandated GGUF resolves to a local `.gguf` file
+**And** the intended local backend returns deterministic completion text plus
+token logprob or top-logprob evidence
+**When** Exp 5119 clears adversarial verification and the live-model duration
+floor
+**Then** `cache_ready=true`
+**And** `completion_proof.ready=true`
+**And** `logprob_proof.ready=true`
+**And** `flagged_adversarial=false`
+**And** the verdict begins with `success_` or `complete_`.
+
+### SCENARIO-INFER-SOTA-028-BLOCKED: Missing Live Logprobs Produces Root Cause
+
+**Given** the mandated GGUF cache and compute preconditions are recorded
+**But** no local backend returns real token logprob or top-logprob evidence
+**When** Exp 5119 completes
+**Then** `cache_ready=false`
+**And** `inference_substrate` does not claim clean live logprob readiness
+**And** `root_cause_tree` records the applicable blocker class
+**And** the verdict begins with `blocked_`.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1869,6 +1931,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
+| REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

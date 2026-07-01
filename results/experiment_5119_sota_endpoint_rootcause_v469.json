@@ -1,0 +1,608 @@
+{
+  "MODEL_SPECS": [
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "size_bytes": 22134528992
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "size_bytes": 16947539744
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ],
+  "adversarial_verify_passed": false,
+  "adversarial_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5119_sota_endpoint_rootcause_v469.json",
+    "exp_id": "experiment_5119_sota_endpoint_rootcause",
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "duration_s=30.54427 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "honest_verdict": "blocked_sota_endpoint_rootcause_adversarial_flag",
+    "loaded": true,
+    "max_severity": 2,
+    "title": ""
+  },
+  "cache_ready": false,
+  "cache_rows_written": 0,
+  "cached_sota_pair_attempted": true,
+  "cached_sota_pair_result": {
+    "attempted": true,
+    "error": null,
+    "preferred_quant": "Q4_K_M",
+    "rows": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ]
+  },
+  "completion_proof": {
+    "error": null,
+    "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "prompt": "Reply in one short sentence: exp3013 SOTA GGUF telemetry live.",
+    "ready": true,
+    "route": "http://127.0.0.1:42493/completion",
+    "status": 200,
+    "text": "-exp3thought-thought\n<channel|>The SOTA GGUF telemetry for"
+  },
+  "cuda_status": {
+    "cuda_available": true,
+    "gpu_count": 2,
+    "gpus": [
+      {
+        "free_vram_mb": 24120,
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_vram_mb": 24576,
+        "used_vram_mb": 4
+      },
+      {
+        "free_vram_mb": 24120,
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 3090",
+        "total_vram_mb": 24576,
+        "used_vram_mb": 4
+      }
+    ],
+    "nvidia_smi": {
+      "available": true,
+      "stderr": ""
+    }
+  },
+  "duration_floor_evidence": {
+    "completed": false,
+    "duration_after_s": 30.544206,
+    "error": "URLError: <urlopen error [Errno 111] Connection refused>",
+    "probes": [
+      {
+        "completion_chars": 0,
+        "duration_s": 0.00118,
+        "error": "URLError: <urlopen error [Errno 111] Connection refused>",
+        "status": null
+      }
+    ],
+    "route": "http://127.0.0.1:42493/completion",
+    "target_duration_s": 60.0
+  },
+  "duration_s": 30.54427,
+  "endpoint_lifetime_s": 27.241444,
+  "endpoint_summary": {
+    "candidate_endpoints": [
+      "http://127.0.0.1:42493"
+    ],
+    "completion_ready": true,
+    "confidence_ready": false,
+    "duration_s": 0.391216,
+    "probes": [
+      {
+        "completion_probe": {
+          "detail": "completion returned non-empty content (7 chars)",
+          "ready": true,
+          "route": "http://127.0.0.1:42493/completion",
+          "status": 200
+        },
+        "endpoint": "http://127.0.0.1:42493",
+        "telemetry_probe": {
+          "detail": "top-logprob telemetry present",
+          "ready": true,
+          "route": "http://127.0.0.1:42493/completion",
+          "signal": "top_logprobs",
+          "status": 200
+        }
+      }
+    ],
+    "selected_endpoint": "http://127.0.0.1:42493",
+    "telemetry_signal": "top_logprobs",
+    "top_logprob_ready": true
+  },
+  "endpoint_url": "http://127.0.0.1:42493",
+  "experiment": "experiment_5119_sota_endpoint_rootcause",
+  "experiment_id": "exp5119-sota-endpoint-rootcause-v469",
+  "experiment_numeric_id": 5119,
+  "field_principles": {
+    "MODEL_SPECS": {
+      "principle": "mandated SOTA model accountability"
+    },
+    "cache_ready": {
+      "principle": "downstream gate"
+    },
+    "cached_sota_pair_attempted": {
+      "principle": "model-resolution discipline"
+    },
+    "completion_proof": {
+      "principle": "live readiness"
+    },
+    "cuda_status": {
+      "principle": "hardware precondition"
+    },
+    "duration_s": {
+      "principle": "timing accountability"
+    },
+    "endpoint_lifetime_s": {
+      "principle": "live readiness"
+    },
+    "experiment_id": {
+      "principle": "traceability"
+    },
+    "flagged_adversarial": {
+      "principle": "adversarial-verification accountability"
+    },
+    "gguf_paths": {
+      "principle": "reproducibility"
+    },
+    "honest_verdict": {
+      "principle": "terminal verdict with complete_/success_/blocked_ prefix"
+    },
+    "inference_substrate": {
+      "principle": "substrate honesty"
+    },
+    "logprob_proof": {
+      "principle": "live readiness"
+    },
+    "milestone": {
+      "principle": "milestone accountability"
+    },
+    "preconditions_checked": {
+      "principle": "compute preflight accountability"
+    },
+    "root_cause_tree": {
+      "principle": "actionable blocker"
+    },
+    "server_command": {
+      "principle": "transcript provenance"
+    },
+    "tests_run": {
+      "principle": "verification evidence"
+    }
+  },
+  "finished_at": "2026-07-01T18:51:48Z",
+  "flagged_adversarial": true,
+  "gguf_paths": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+  },
+  "honest_verdict": "blocked_sota_endpoint_rootcause_adversarial_flag",
+  "inference_substrate": "live_llm_inference",
+  "logprob_proof": {
+    "error": null,
+    "raw_response_keys": [
+      "completion_probabilities",
+      "content",
+      "generation_settings",
+      "has_new_line",
+      "id_slot",
+      "index",
+      "model",
+      "prompt",
+      "stop",
+      "stop_type",
+      "stopping_word",
+      "timings",
+      "tokens",
+      "tokens_cached",
+      "tokens_evaluated",
+      "tokens_predicted",
+      "truncated"
+    ],
+    "ready": true,
+    "route": "http://127.0.0.1:42493/completion",
+    "status": 200,
+    "telemetry_signal": "top_logprobs",
+    "token_logprob_count": 16,
+    "token_logprobs": [
+      -0.004924421664327383,
+      -0.5301894545555115,
+      -7.40317118470557e-05,
+      -0.047572750598192215,
+      -0.20564070343971252,
+      -0.2285192459821701,
+      -0.4151991009712219,
+      -0.023150036111474037
+    ],
+    "top_logprob_row_count": 16,
+    "top_logprobs": [
+      {
+        " live": -13.797595024108887,
+        " s": -5.3176493644714355,
+        " telemetry": -12.884432792663574,
+        "-": -0.004924421664327383,
+        "_": -13.068307876586914
+      },
+      {
+        "\n": -4.899160385131836,
+        "\n\n": -2.1767287254333496,
+        " exp": -1.4007123708724976,
+        "S": -4.172017574310303,
+        "exp": -0.5301894545555115
+      },
+      {
+        " ": -11.122817039489746,
+        "-": -11.712287902832031,
+        "/": -11.450127601623535,
+        "3": -7.40317118470557e-05,
+        "thought": -11.096561431884766
+      },
+      {
+        "    ": -14.779784202575684,
+        "0": -3.070723056793213,
+        "1": -13.347036361694336,
+        "<|channel>": -9.587228775024414,
+        "thought": -0.047572750598192215
+      }
+    ]
+  },
+  "milestone": "2026.07.469",
+  "model_specs": [
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "size_bytes": 22134528992
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "cache_status": "resolved",
+      "file_evidence": {
+        "exists": true,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "size_bytes": 16947539744
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "missing_diagnostic": null,
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ],
+  "preconditions_checked": {
+    "cuda_status": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "gpus": [
+        {
+          "free_vram_mb": 24120,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_vram_mb": 24576,
+          "used_vram_mb": 4
+        },
+        {
+          "free_vram_mb": 24120,
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_vram_mb": 24576,
+          "used_vram_mb": 4
+        }
+      ],
+      "nvidia_smi": {
+        "available": true,
+        "stderr": ""
+      }
+    },
+    "disk_ram": {
+      "disk_free_bytes": 1489597493248,
+      "disk_free_gib": 1387.296,
+      "ram_available_gib": 19.518
+    },
+    "environment_variables": {},
+    "free_port": {
+      "available": true,
+      "endpoint_url": "http://127.0.0.1:42493",
+      "error": null,
+      "host": "127.0.0.1",
+      "port": 42493
+    },
+    "llama_cpp_python": {
+      "available": true,
+      "detail": "llama_cpp import ok",
+      "version": "0.3.29"
+    },
+    "llama_cpp_server": {
+      "available": true,
+      "candidates": [
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/local/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/bin/llama-server",
+          "source": "well_known_path"
+        }
+      ],
+      "missing_diagnostic": null,
+      "selected_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "recorded_before_live_inference": true,
+    "server_attempted": true
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:11f6548096bc814786b462c253a3951de0209334a800bad8077bbada9f3ab9ef",
+  "request_response_transcript": {
+    "completion_request": {
+      "endpoint": "http://127.0.0.1:42493/completion",
+      "logprobs_requested": 5,
+      "max_tokens": 16,
+      "prompt": "Reply in one short sentence: exp3013 SOTA GGUF telemetry live."
+    },
+    "completion_response": {
+      "error": null,
+      "status": 200,
+      "text": "-exp3thought-thought\n<channel|>The SOTA GGUF telemetry for"
+    },
+    "logprob_response": {
+      "error": null,
+      "raw_response_keys": [
+        "completion_probabilities",
+        "content",
+        "generation_settings",
+        "has_new_line",
+        "id_slot",
+        "index",
+        "model",
+        "prompt",
+        "stop",
+        "stop_type",
+        "stopping_word",
+        "timings",
+        "tokens",
+        "tokens_cached",
+        "tokens_evaluated",
+        "tokens_predicted",
+        "truncated"
+      ],
+      "ready": true,
+      "route": "http://127.0.0.1:42493/completion",
+      "status": 200,
+      "telemetry_signal": "top_logprobs",
+      "token_logprob_count": 16,
+      "token_logprobs": [
+        -0.004924421664327383,
+        -0.5301894545555115,
+        -7.40317118470557e-05,
+        -0.047572750598192215,
+        -0.20564070343971252,
+        -0.2285192459821701,
+        -0.4151991009712219,
+        -0.023150036111474037
+      ],
+      "top_logprob_row_count": 16,
+      "top_logprobs": [
+        {
+          " live": -13.797595024108887,
+          " s": -5.3176493644714355,
+          " telemetry": -12.884432792663574,
+          "-": -0.004924421664327383,
+          "_": -13.068307876586914
+        },
+        {
+          "\n": -4.899160385131836,
+          "\n\n": -2.1767287254333496,
+          " exp": -1.4007123708724976,
+          "S": -4.172017574310303,
+          "exp": -0.5301894545555115
+        },
+        {
+          " ": -11.122817039489746,
+          "-": -11.712287902832031,
+          "/": -11.450127601623535,
+          "3": -7.40317118470557e-05,
+          "thought": -11.096561431884766
+        },
+        {
+          "    ": -14.779784202575684,
+          "0": -3.070723056793213,
+          "1": -13.347036361694336,
+          "<|channel>": -9.587228775024414,
+          "thought": -0.047572750598192215
+        }
+      ]
+    }
+  },
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5119_sota_endpoint_rootcause_v469.json",
+  "root_cause_tree": {
+    "adversarial_verify": {
+      "critical_flags": [
+        {
+          "detail": "duration_s=30.54427 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "present": true
+    },
+    "cache_schema_mismatch": {
+      "detail": null,
+      "present": false
+    },
+    "cuda_failure": {
+      "detail": null,
+      "present": false
+    },
+    "missing_binary": {
+      "detail": null,
+      "present": false
+    },
+    "oom": {
+      "detail": null,
+      "present": false
+    },
+    "summary": "blocked_adversarial_verify",
+    "timeout": {
+      "detail": null,
+      "present": false
+    },
+    "unsupported_logprob_api": {
+      "detail": null,
+      "present": false
+    },
+    "wrong_model_path": {
+      "affected_hf_ids": [],
+      "present": false
+    }
+  },
+  "schema": "carnot.experiment_5119_sota_endpoint_rootcause.v1",
+  "server_command": [
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "-m",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "42493",
+    "-ngl",
+    "999",
+    "-c",
+    "1024"
+  ],
+  "server_errors": [],
+  "server_pid": 2903904,
+  "server_port": 42493,
+  "shutdown_behavior": {
+    "already_exited": false,
+    "returncode": 0,
+    "started_by_preflight": true,
+    "terminated": true
+  },
+  "spec_refs": [
+    "REQ-INFER-SOTA-028",
+    "SCENARIO-INFER-SOTA-028-SUCCESS",
+    "SCENARIO-INFER-SOTA-028-BLOCKED"
+  ],
+  "started_at": "2026-07-01T18:51:18Z",
+  "startup_log": {
+    "exists": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_5119_sota_endpoint_rootcause/llamacpp_server.log",
+    "tail": "7c4b0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.25.253.142 I srv  get_availabl: prompt cache update took 3.87 ms\n0.25.253.211 I slot launch_slot_: id  3 | task 6 | processing task, is_child = 0\n0.25.253.214 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache\n0.25.253.215 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens\n0.25.253.222 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache\n0.25.253.223 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens\n0.25.253.225 I slot process_sing: id  2 | task -1 | saving idle slot to prompt cache\n0.25.253.226 I slot prompt_clear: id  2 | task -1 | clearing prompt with 0 tokens\n0.25.253.243 I slot update_slots: id  3 | task 6 | Checking checkpoint with [0, 0] against 0...\n0.25.255.135 W slot update_slots: id  3 | task 6 | restored context checkpoint (pos_min = 0, pos_max = 0, n_tokens = 1, n_past = 1, size = 0.196 MiB)\n0.25.384.924 I slot print_timing: id  3 | task 6 | prompt eval time =      95.13 ms /     5 tokens (   19.03 ms per token,    52.56 tokens per second)\n0.25.384.935 I slot print_timing: id  3 | task 6 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.25.384.937 I slot print_timing: id  3 | task 6 |       total time =      95.13 ms /     6 tokens\n0.25.384.939 I slot print_timing: id  3 | task 6 |    graphs reused =          3\n0.25.384.967 I slot      release: id  3 | task 6 | stop processing: n_tokens = 6, truncated = 0\n0.25.385.002 I srv  update_slots: all slots are idle\n0.25.388.136 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1\n0.25.388.138 I srv  get_availabl: updating prompt cache\n0.25.388.144 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.25.388.149 I srv        update:  - cache state: 1 prompts, 1.916 MiB (limits: 8192.000 MiB, 1024 tokens, 34212 est)\n0.25.388.151 I srv        update:    - prompt 0x561d4127c4b0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.25.388.152 I srv  get_availabl: prompt cache update took 0.01 ms\n0.25.388.175 I slot launch_slot_: id  2 | task 9 | processing task, is_child = 0\n0.25.388.177 I slot process_sing: id  0 | task -1 | saving idle slot to prompt cache\n0.25.388.178 I slot prompt_clear: id  0 | task -1 | clearing prompt with 0 tokens\n0.25.388.186 I slot process_sing: id  1 | task -1 | saving idle slot to prompt cache\n0.25.388.186 I slot prompt_clear: id  1 | task -1 | clearing prompt with 0 tokens\n0.25.388.188 I slot process_sing: id  3 | task -1 | saving idle slot to prompt cache\n0.25.388.206 W srv   prompt_save:  - saving prompt with length 6, total state size = 1.290 MiB (draft: 0.000 MiB)\n0.25.390.948 I srv        update:  - cache state: 2 prompts, 3.401 MiB (limits: 8192.000 MiB, 1024 tokens, 33717 est)\n0.25.390.954 I srv        update:    - prompt 0x561d4127c4b0:       8 tokens, checkpoints:  1,     1.916 MiB\n0.25.390.955 I srv        update:    - prompt 0x561d4127b250:       6 tokens, checkpoints:  1,     1.486 MiB\n0.25.390.956 I slot prompt_clear: id  3 | task -1 | clearing prompt with 6 tokens\n0.25.516.898 I slot create_check: id  2 | task 9 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 15, n_tokens = 16, size = 3.126 MiB)\n0.26.418.498 I slot print_timing: id  2 | task 9 | prompt eval time =     151.09 ms /    20 tokens (    7.55 ms per token,   132.37 tokens per second)\n0.26.418.524 I slot print_timing: id  2 | task 9 |        eval time =     841.11 ms /    16 tokens (   52.57 ms per token,    19.02 tokens per second)\n0.26.418.525 I slot print_timing: id  2 | task 9 |       total time =     992.19 ms /    36 tokens\n0.26.418.528 I slot print_timing: id  2 | task 9 |    graphs reused =         17\n0.26.418.595 I slot      release: id  2 | task 9 | stop processing: n_tokens = 35, truncated = 0\n0.26.418.622 I srv  update_slots: all slots are idle\n0.26.421.696 I srv    operator(): operator(): cleaning up before exit...\n"
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5119_sota_endpoint_rootcause.py -q",
+      "status": "expected_or_completed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5119_sota_endpoint_rootcause.py --cov=python/carnot/experiment_5119_sota_endpoint_rootcause.py --cov-report=term-missing --cov-fail-under=100 -q",
+      "status": "expected_or_completed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "pytest_cache_lastfailed_count": 682,
+      "status": "expected_or_completed"
+    }
+  ]
+}

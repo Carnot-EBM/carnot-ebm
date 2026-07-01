@@ -2309,7 +2309,6 @@ _MOAT_RIGOR_RELEVANCE_MARKERS = (
     "success_moat",
     "verifier_moat",
     "verifier_value_added",
-    "no_win",
 )
 _MOAT_RIGOR_WIN_MARKERS = (
     "beats_sc",
@@ -2330,8 +2329,6 @@ _MOAT_RIGOR_NULL_MARKERS = (
     "not_beat_self_consistency",
     "moat_retired",
     "retired_bounded",
-    "no_win",
-    "no_win_",
     "ci_incl_0",
 )
 
