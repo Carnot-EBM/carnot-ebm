@@ -23650,3 +23650,69 @@ suite before inclusion; rejected proposals remain listed in
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5100 | Proposed (`python/carnot/experiment_5100_constrainprompt_code_assurance.py`, `results/experiment_5100_constrainprompt_code_assurance_v468.json`) | Proposed (`tests/python/test_experiment_5100_constrainprompt_code_assurance.py`) |
+
+### REQ-VERIFY-5101: Incomplete Graph Evidence Energy Separation
+
+The repository SHALL provide Exp 5101 at
+`python/carnot/experiment_5101_incomplete_graph_evidence_energy.py` to build a
+small evidence-relative graph energy verifier over a synthetic typed knowledge
+graph and write
+`results/experiment_5101_incomplete_graph_evidence_energy_v468.json`.
+
+The runner SHALL create or reuse a deterministic typed knowledge graph with
+exact truth edges, hidden edges, observed evidence edges, relation schemas,
+support-path rules, and contradiction cases. The correctness authority SHALL be
+the synthetic graph generator and exact labels, not an LLM judge, and
+`inference_substrate` MUST equal `synthetic_graph_exact_labels` unless a
+different real substrate is explicitly proven.
+
+For every claim the verifier SHALL emit auditable feature values for
+`entity_anchor`, `relation_residual`, `path_energy`, and `support_region`, and
+combine them into an evidence-relative scalar energy. The verifier SHALL keep
+the labels `supported`, `contradicted`, `unsupported_true`, and
+`unsupported_false` separate, so incomplete evidence can induce a soft retained
+region rather than collapsing unsupported true claims into contradiction
+rejection.
+
+The runner SHALL evaluate supported, contradicted, unsupported-true, and
+unsupported-false claims across at least two hidden-edge rates and at least two
+evidence perturbation settings. It SHALL tune energy thresholds only on
+train/dev splits and SHALL report held-out supported acceptance, contradiction
+rejection, unsupported-true retention, and unsupported-false rejection
+separately.
+
+The terminal artifact SHALL include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`, `graph_fixture_hash`,
+`hidden_edge_rate`, `supported_accept_rate`, `contradiction_reject_rate`,
+`unsupported_retained_rate`, `unsupported_false_reject_rate`,
+`energy_thresholds`, `slack_sweep`, `stability_under_perturbation`, and
+`flagged_adversarial`. It SHOULD also include hidden-edge rates evaluated,
+claim-level feature rows, held-out metrics by label, threshold tuning telemetry,
+support-path examples, contradiction examples, exact label counts, and a stable
+reproducibility checksum.
+
+`honest_verdict` SHALL begin with
+`success_graph_evidence_energy_separates_contradiction_from_unsupported` when
+the held-out contradiction rejection and unsupported-true retention rates are
+reported separately and both clear the declared success floor while adversarial
+flags remain false. Otherwise it SHALL begin with
+`complete_graph_evidence_energy_no_heldout_win`. The artifact MUST NOT claim
+live LLM inference or LLM-judge authority.
+
+### SCENARIO-VERIFY-5101: Hidden True Edges Are Retained While Contradictions Reject
+
+Given the Exp 5101 synthetic typed graph generator, when the diagnostic runs,
+then it hides a deterministic subset of truth edges, preserves observed
+evidence and support paths, generates exact-label claims for supported,
+contradicted, unsupported-true, and unsupported-false cases, scores every claim
+with the entity-anchor, relation-residual, path-energy, and support-region
+features, tunes accept/reject thresholds on train/dev splits only, evaluates
+held-out claims across hidden-edge rates and perturbations, writes the required
+JSON artifact, sets `inference_substrate=synthetic_graph_exact_labels`, and
+emits a terminal verdict without modifying `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5101)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5101 | Proposed (`python/carnot/experiment_5101_incomplete_graph_evidence_energy.py`, `results/experiment_5101_incomplete_graph_evidence_energy_v468.json`) | Proposed (`tests/python/test_experiment_5101_incomplete_graph_evidence_energy.py`) |
