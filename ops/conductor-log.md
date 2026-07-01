@@ -9712,3 +9712,6 @@ The contro |
 | 2026-07-01 06:38 UTC | PHASE A2 uPRM substrate -- build token/step SOTA G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logpro |
 | 2026-07-01 06:40 UTC | PHASE B1 uPRM verifier -- test first-error process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
 | 2026-07-01 06:40 UTC | PHASE B2 VPR diagnostic -- dense objective process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
+| 2026-07-01 06:51 UTC | PHASE B3 DCCD/guided decoding scale -- powered con | OK | 87 passed, 1 warning in 6.68s |
+| 2026-07-01 06:53 UTC | PHASE B1 uPRM verifier -- test first-error process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
+| 2026-07-01 06:53 UTC | PHASE B2 VPR diagnostic -- dense objective process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
