@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.466",
+  "generated_at": "2026-07-01T08:00:22Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "summary": "No data available this milestone: the timing block for 2026.07.466 contains no experiment commits, so total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. The GPU snapshot shows both RTX 3090s idle, but with no compute-bound timing entries, gpu_idle_on_compute_bound_tasks remains null and no GPU bottleneck is reportable.",
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone; no per-experiment wall-time bottleneck can be identified from the supplied timing block",
+    "No compute-bound GPU bottleneck is identifiable because the timing block contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit no-data timing status when milestone-scoped experiment commits are absent, including whether the empty window is expected.",
+    "Keep GPU-idle checks gated on compute_bound_experiments_count so empty or non-compute-bound retros do not report false accelerator bottlenecks.",
+    "Auto-fill the slowest-experiment, GPU-efficiency, and DualGPURunner sections with no-data answers when experiments_completed=0."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a first-class empty-window path to the operational retro generator.",
+    "Preserve compute-bound gating for GPU-idle and DualGPURunner findings.",
+    "Make the retro template refuse to rank experiments when slowest_experiments is empty."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective intentionally does not reconstruct experiment IDs, durations, or metrics outside the supplied timing block. With 0 completed experiments and 0 measured wall-time minutes, the honest time-savings estimate is 0."
+}
