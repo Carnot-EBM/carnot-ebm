@@ -22966,6 +22966,80 @@ verdict that includes exact counts instead of fabricating live inference.
 |---|---|---|
 | REQ-VERIFY-5075 | Proposed (`python/carnot/experiment_5075_dccd_guided_decoding_scale.py`, `results/experiment_5075_dccd_guided_decoding_scale_v466.json`) | Proposed (`tests/python/test_experiment_5075_dccd_guided_decoding_scale.py`) |
 
+### REQ-VERIFY-5076: D6 Efficiency Replication On Powered Clean Sample
+
+The repository SHALL provide Exp 5076 at
+`python/carnot/experiment_5076_d6_efficiency_replication.py` to replicate the
+D6 tool-first cascade over a powered, row-clean MuSR question/candidate sample
+and write `results/experiment_5076_d6_efficiency_replication_v466.json`.
+
+The runner SHALL load Exp 5061, Exp 5071, Exp 5058, the Exp 5058 candidate
+JSONL cache, and Exp 5059 paired correctness evidence before producing a
+terminal artifact. It SHALL define judge-only, tool-first, and optional
+uncertainty-routed arms over the same question/candidate set. If no live or
+cached mandated SOTA judge is available, the runner MAY use the checked-in
+paired tuned self-consistency comparator as the bounded judge-only replay
+baseline, but it SHALL label that source explicitly and SHALL NOT claim live
+judge invocation.
+
+The selector SHALL preserve oracle-distinctness: final answer keys, gold labels,
+candidate correctness fields, and oracle-at-k fields SHALL NOT be visible to
+the selection route. Evaluation MAY read paired correctness vectors only after
+arm outputs are fixed. The artifact SHALL record `verifier_is_oracle=false`
+unless an explicitly diagnostic oracle is intentionally used, in which case the
+diagnostic SHALL NOT be headline-countable.
+
+The runner SHALL charge deterministic tools, cheap verifier calls, and judge
+calls separately for every arm. It SHALL compute accuracy, paired CI95 for
+cascade minus judge-only, McNemar exact p when paired vectors are available,
+judge-call fraction, deterministic tool-call count, latency, and a cost proxy.
+It SHALL make a D6 cost/Pareto claim only when the cascade is at least as
+accurate as the judge-only replay baseline, the paired CI is compatible with
+parity, judge-call fraction is below one, and total cost proxy is lower than
+the judge-only arm. It SHALL set `accuracy_headline_allowed=false` unless the
+accuracy delta is positive, CI95 excludes zero, and McNemar is significant.
+
+`MODEL_SPECS` SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` whenever any judge or generator LLM is
+invoked; Exp 5076 SHOULD include those declarations even for replay-only
+evidence to keep the methodology stamp aligned with the upstream preflight.
+
+The terminal artifact MUST include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`, `model_specs`,
+`verifier_is_oracle`, `n_questions`, `judge_only_accuracy`,
+`cascade_accuracy`, `delta_vs_judge_only`, `ci95_delta`,
+`judge_call_fraction`, `tool_call_count`, `latency`, `cost_proxy`,
+`efficiency_win`, `accuracy_headline_allowed`, and `flagged_adversarial`. It
+SHOULD also include McNemar p, arm-level metrics, source artifact paths,
+upstream adversarial flags, sample-cleanliness evidence, and a reproducibility
+checksum.
+
+### SCENARIO-VERIFY-5076: D6 Replay Allows Pareto But Not Accuracy Headline
+
+Given Exp 5058 provides row-clean mandated-SOTA candidate rows, Exp 5059
+provides oracle-distinct paired verifier and tuned self-consistency correctness
+on the same question set, Exp 5061 previously observed zero judge calls, and
+Exp 5071 reports no live completion/logprob endpoint, when Exp 5076 runs, then
+it writes every required artifact field, defines judge-only, tool-first, and
+optional uncertainty-routed arms over the same question IDs, records no live
+judge invocation, computes accuracy, CI95, McNemar, judge-call fraction,
+latency, and separated cost proxy accounting, keeps `verifier_is_oracle=false`,
+and emits `success_d6_efficiency_pareto_win_no_accuracy_headline` only when the
+cost and CI gates justify a Pareto win while the accuracy-headline gate remains
+closed.
+
+If the clean sample, paired correctness vectors, or required upstream artifacts
+are unavailable, Exp 5076 SHALL write a blocked or
+`complete_d6_replication_no_pareto_win` terminal artifact with null/zero
+metrics as appropriate rather than fabricating judge-only or cascade accuracy.
+
+## Implementation Status (REQ-VERIFY-5076)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5076 | Proposed (`python/carnot/experiment_5076_d6_efficiency_replication.py`, `results/experiment_5076_d6_efficiency_replication_v466.json`) | Proposed (`tests/python/test_experiment_5076_d6_efficiency_replication.py`) |
+
 ### REQ-VERIFY-5046: VPR/ProcessThinker Dense Process-Reward Repair On MuSR
 
 The repository SHALL provide Exp 5046 at
