@@ -171,10 +171,16 @@ def _grid2d(frame: Any) -> np.ndarray:
 
 def _component_stats_from_grid(g: np.ndarray) -> list[dict[str, float]]:
     """4-connectivity non-background components -> per-component stats (centroid / area / dominant color /
-    bbox). ``scipy.ndimage.label`` fast path (~34x faster than the pure-python flood fill it replaces);
-    falls back to the original flood fill when scipy is absent (the live Kaggle kernel may lack it). The
-    downstream features are order-invariant (min/mean/max/std + all-pairs), so only the SET of component
-    stats must match -- verified identical over 40 random grids (2026-06-23)."""
+    bbox). ``scipy.ndimage.label`` fast path; falls back to the original flood fill when scipy is absent.
+    CORRECTED 2026-06-30: the original "~34x faster" claim was never measured on real target hardware and
+    was wrong. Verified on the actual Kaggle sandbox (carnot-arc-scipy-diag kernel, scipy 1.16.3 confirmed
+    present): scipy path 663us/call vs pure-python fallback 936us/call -- a 1.41x difference, not 34x.
+    The fallback risk itself is CLOSED (scipy confirmed present on Kaggle; the slow path never triggers
+    live), but neither path is a large lever on its own -- see ops/known-issues.md "energy distillation"
+    task for where the real per-node cost is (the O(components^2) greedy frame-matching loop on top of
+    this, not the labeling step itself). The downstream features are order-invariant (min/mean/max/std +
+    all-pairs), so only the SET of component stats must match -- verified identical over 40 random grids
+    (2026-06-23)."""
     vals, counts = np.unique(g, return_counts=True)
     bg = float(vals[counts.argmax()]) if vals.size else 0.0
     mask = g != bg
