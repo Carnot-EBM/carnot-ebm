@@ -1,0 +1,212 @@
+{
+  "MODEL_SPECS": [
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "baseline_metrics": {
+    "constraint_count_only": {
+      "abstention_rate": 0.0,
+      "accuracy_at_1": 0.5,
+      "violation_rate": 0.5
+    },
+    "length_features": {
+      "abstention_rate": 0.0,
+      "accuracy_at_1": 0.041667,
+      "violation_rate": 0.958333
+    },
+    "parse_validity": {
+      "abstention_rate": 0.0,
+      "accuracy_at_1": 0.166667,
+      "violation_rate": 0.833333
+    },
+    "random_parse_valid": {
+      "abstention_rate": 0.0,
+      "accuracy_at_1": 0.208333,
+      "violation_rate": 0.791667
+    }
+  },
+  "conductor_modified": false,
+  "delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "deterministic_constraint_penalties": {
+    "code_property": "symmetric-difference count against the executable property solution plus out-of-domain answers; zero iff the exact code-property validator accepts.",
+    "graph_coloring": "length mismatch, out-of-range colors, and equal-color edge conflicts; zero iff the exact graph-coloring validator accepts.",
+    "knights_knaves": "missing/invalid A/B/C roles plus speaker truth-table violations; zero iff the exact Knights-and-Knaves validator accepts.",
+    "parse": "100-point hard penalty when candidate JSON cannot expose an answer key.",
+    "travel_budget": "unknown or duplicate activities, budget/hour overages, and optimal-value shortfall; zero iff the exact travel validator accepts."
+  },
+  "distributional_energy_delta": 0.0,
+  "duplicate_control_result": {
+    "accuracy_delta_after_dedup": 0.0,
+    "deduped_accuracy_at_1": 0.5,
+    "passed": true,
+    "task_id_leakage": false
+  },
+  "duration_s": 0.20110498601570725,
+  "experiment_id": "exp5126-distributional-energy-ranker-v470",
+  "family_holdout_results": {
+    "code_property": {
+      "abstention_rate": 0.416667,
+      "accuracy_at_1": 0.583333,
+      "delta": -0.291667,
+      "n": 24,
+      "strongest_cheap_baseline": {
+        "accuracy_at_1": 0.875,
+        "name": "constraint_count_only",
+        "violation_rate": 0.125
+      }
+    },
+    "graph_coloring": {
+      "abstention_rate": 0.125,
+      "accuracy_at_1": 0.875,
+      "delta": 0.0,
+      "n": 24,
+      "strongest_cheap_baseline": {
+        "accuracy_at_1": 0.875,
+        "name": "constraint_count_only",
+        "violation_rate": 0.125
+      }
+    },
+    "knights_knaves": {
+      "abstention_rate": 0.125,
+      "accuracy_at_1": 0.875,
+      "delta": 0.0,
+      "n": 24,
+      "strongest_cheap_baseline": {
+        "accuracy_at_1": 0.875,
+        "name": "constraint_count_only",
+        "violation_rate": 0.125
+      }
+    },
+    "travel_budget": {
+      "abstention_rate": 0.125,
+      "accuracy_at_1": 0.875,
+      "delta": 0.0,
+      "n": 24,
+      "strongest_cheap_baseline": {
+        "accuracy_at_1": 0.875,
+        "name": "constraint_count_only",
+        "violation_rate": 0.125
+      }
+    }
+  },
+  "field_principles": {
+    "MODEL_SPECS": "inherited local SOTA generation provenance",
+    "conductor_modified": "conductor immutability",
+    "delta_ci95": "sample-size rigor",
+    "deterministic_constraint_penalties": "exact ground truth",
+    "distributional_energy_delta": "structured gate",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "family_holdout_results": "generalization",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "label_shuffle_result": "leakage control",
+    "learned_quality_score_description": "method transparency",
+    "milestone": "milestone accountability",
+    "model_identity_shortcut_check": "shortcut control",
+    "ranker_ready_for_audit": "structured downstream gate",
+    "source_pool_path": "data provenance",
+    "strongest_cheap_baseline": "baseline adequacy",
+    "tests_run": "verification evidence",
+    "uncertainty_abstention_rule": "no forced overclaim",
+    "verifier_is_oracle": "no oracle verifier headline"
+  },
+  "honest_verdict": "complete_distributional_energy_ranker_evaluated_not_ready_for_audit",
+  "inference_substrate": "cpu_ranker_over_exact_validated_sota_candidates",
+  "label_shuffle_result": {
+    "passed": true,
+    "quality_only_auroc_after_shuffle": 0.654266,
+    "random_seed": 20260701
+  },
+  "learned_quality_score_description": "Family-wise answer-shape calibration fitted only on grouped train rows with deterministic validator labels: mean raw JSON length and mean answer cardinality of correct candidates. The ensemble scores length closeness, answer-size closeness, and a parse-shape blend. It excludes model_hf_id, model_path, candidate_id, FoVer data, and LLM judge labels.",
+  "milestone": "2026.07.470",
+  "model_identity_shortcut_check": {
+    "model_identity_only_accuracy_at_1": 0.333333,
+    "passed": true,
+    "selected_ids_unchanged_after_model_id_swap": true
+  },
+  "preconditions_checked": {
+    "fover_scope_used": false,
+    "llm_judge_used_as_ground_truth": false,
+    "source_artifact_path": "results/experiment_5125_structured_reasoning_pool_v470.json",
+    "source_artifact_read": true,
+    "source_error": null,
+    "split_item_leakage": false,
+    "structured_pool_ready": true
+  },
+  "random_seed": 20260701,
+  "ranker_metrics": {
+    "abstention_rate": 0.5,
+    "accepted_accuracy_at_1": 1.0,
+    "accuracy_at_1": 0.5,
+    "auroc": 1.0,
+    "mrr": 0.5,
+    "violation_rate": 0.0
+  },
+  "ranker_ready_for_audit": false,
+  "reproducibility_checksum": "sha256:21af7c417502ef013d05331f10e956b37f9322a06ea3a8424de8fd71cd6079ee",
+  "run_date": "20260701",
+  "source_pool_path": "results/experiment_5125_structured_reasoning_pool_v470.jsonl",
+  "split_summary": {
+    "calibration": {
+      "families": [
+        "code_property",
+        "graph_coloring",
+        "knights_knaves",
+        "travel_budget"
+      ],
+      "n": 24
+    },
+    "test": {
+      "families": [
+        "code_property",
+        "graph_coloring",
+        "knights_knaves",
+        "travel_budget"
+      ],
+      "n": 24
+    },
+    "train": {
+      "families": [
+        "code_property",
+        "graph_coloring",
+        "knights_knaves",
+        "travel_budget"
+      ],
+      "n": 48
+    }
+  },
+  "strongest_cheap_baseline": {
+    "accuracy_at_1": 0.5,
+    "name": "constraint_count_only",
+    "violation_rate": 0.5
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5126_distributional_energy_ranker_v470.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5126_distributional_energy_ranker_v470.py -q -o addopts=\"\"",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5126_distributional_energy_ranker_v470.py' -m pytest tests/python/test_experiment_5126_distributional_energy_ranker_v470.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5126_distributional_energy_ranker_v470.py' --fail-under=100 -m",
+    ".venv/bin/ruff check python/carnot/experiment_5126_distributional_energy_ranker_v470.py scripts/experiment_5126_distributional_energy_ranker_v470.py tests/python/test_experiment_5126_distributional_energy_ranker_v470.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5126_distributional_energy_ranker_v470.py scripts/experiment_5126_distributional_energy_ranker_v470.py tests/python/test_experiment_5126_distributional_energy_ranker_v470.py",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5126_distributional_energy_ranker_v470.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "uncertainty_abstention_rule": "Rank by mean decomposed energy over the shape-score ensemble. Abstain when the selected candidate has any deterministic constraint penalty or when ensemble spread exceeds the calibrated train-positive threshold; abstentions count as not-correct for accuracy@1.",
+  "verifier_is_oracle": false
+}

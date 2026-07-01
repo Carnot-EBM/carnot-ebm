@@ -1925,6 +1925,66 @@ and headroom gates all pass.
 **And** `pool_n=0`
 **And** no FoVer scope or LLM judge is used as ground truth.
 
+### REQ-INFER-SOTA-031: Exp 5126 Distributional Energy Ranker
+
+The system SHALL provide an Exp 5126 CPU ranker/abstainer over the Exp 5125
+structured-reasoning pool at
+`results/experiment_5126_distributional_energy_ranker_v470.json`.  Exp 5126
+SHALL load `results/experiment_5125_structured_reasoning_pool_v470.json`, SHALL
+hard-block when `structured_pool_ready` is not true, and SHALL use
+`results/experiment_5125_structured_reasoning_pool_v470.jsonl` as the only
+candidate pool.
+
+The ranker SHALL decompose energy into deterministic exact-checkable constraint
+penalties, a learned or calibrated quality score, and an ensemble uncertainty
+term used for abstention.  Deterministic validators SHALL remain the ground
+truth; FoVer data and LLM judges SHALL NOT be used as correctness oracles.  The
+train/calibration/test split SHALL keep all candidates for a task item in the
+same split and SHALL stratify by task family so duplicate item leakage cannot
+inflate headline metrics.
+
+Exp 5126 SHALL compare the distributional-energy ranker against cheap
+non-learned baselines, including length/features, parse validity,
+constraint-count-only, and seeded random among parse-valid candidates.  It SHALL
+report accuracy@1, violation rate, abstention rate, AUROC or ranking metrics
+where applicable, CI95 for the paired delta versus the strongest cheap baseline,
+family-holdout results, label-shuffle, duplicate, and model-identity shortcut
+controls.  `ranker_ready_for_audit` SHALL be true only when the headline CI95
+excludes zero and the controls pass.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `source_pool_path`,
+`MODEL_SPECS`, `deterministic_constraint_penalties`,
+`learned_quality_score_description`, `uncertainty_abstention_rule`,
+`strongest_cheap_baseline`, `distributional_energy_delta`, `delta_ci95`,
+`family_holdout_results`, `label_shuffle_result`,
+`model_identity_shortcut_check`, `ranker_ready_for_audit`,
+`verifier_is_oracle`, `conductor_modified`, and `tests_run`.
+`experiment_id` SHALL equal `exp5126-distributional-energy-ranker-v470`,
+`milestone` SHALL equal `2026.07.470`, `inference_substrate` SHALL equal
+`cpu_ranker_over_exact_validated_sota_candidates`, `verifier_is_oracle` SHALL be
+false, and `conductor_modified` SHALL be false.
+
+### SCENARIO-INFER-SOTA-031-RANKER: Decomposed Ranker Reports Honest Gate
+
+**Given** Exp 5125 reports `structured_pool_ready=true`
+**And** the structured pool JSONL is loadable
+**When** Exp 5126 fits and evaluates the CPU distributional-energy ranker
+**Then** every split is grouped by task item and stratified by family
+**And** deterministic constraint penalties, learned quality scoring, and
+uncertainty abstention are reported separately
+**And** the headline delta is computed against the strongest cheap baseline
+**And** `ranker_ready_for_audit=true` only if CI95 excludes zero and leakage
+controls pass.
+
+### SCENARIO-INFER-SOTA-031-BLOCKED: Closed Structured Pool Gate Blocks Ranker
+
+**Given** Exp 5125 is missing or reports `structured_pool_ready=false`
+**When** Exp 5126 runs
+**Then** it writes a terminal blocked artifact
+**And** `ranker_ready_for_audit=false`
+**And** no learned or baseline metric is fabricated from candidate rows.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -2060,6 +2120,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
 | REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
 | REQ-INFER-SOTA-030 | Implemented (`python/carnot/experiment_5125_structured_reasoning_pool_v470.py`, `scripts/experiment_5125_structured_reasoning_pool_v470.py`, `results/experiment_5125_structured_reasoning_pool_v470.json`) | Implemented (`tests/python/test_experiment_5125_structured_reasoning_pool_v470.py`) |
+| REQ-INFER-SOTA-031 | Implemented (`python/carnot/experiment_5126_distributional_energy_ranker_v470.py`, `scripts/experiment_5126_distributional_energy_ranker_v470.py`, `results/experiment_5126_distributional_energy_ranker_v470.json`) | Implemented (`tests/python/test_experiment_5126_distributional_energy_ranker_v470.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
