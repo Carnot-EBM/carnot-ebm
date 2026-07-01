@@ -395,9 +395,7 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                 replacement,
                 claude_md_section,
             ) in _WRONG_MECHANISM_PATTERNS:
-                board_hit = board_pat.search(prompt_text) or board_pat.search(
-                    task_title
-                )
+                board_hit = board_pat.search(prompt_text) or board_pat.search(task_title)
                 path_hit = retired_path_pat.search(prompt_text)
                 if board_hit and path_hit:
                     risks.append(
@@ -453,8 +451,7 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                                 severity="WARNING" if override else "HARD",
                                 detail=check.reason[:200],
                                 matched_priors=[
-                                    str(p.experiment_id)
-                                    for p in check.matched_priors[:5]
+                                    str(p.experiment_id) for p in check.matched_priors[:5]
                                 ],
                             )
                         )
@@ -472,18 +469,14 @@ def _format_risks(risks: list[ExclusionRisk]) -> str:
     if hard:
         lines.append(f"HARD violations ({len(hard)}):")
         for r in hard:
-            lines.append(
-                f"  [{r.violation_class}] {r.task_id} ({r.task_title[:60]})"
-            )
+            lines.append(f"  [{r.violation_class}] {r.task_id} ({r.task_title[:60]})")
             lines.append(f"    detail: {r.detail[:200]}")
             if r.matched_priors:
                 lines.append(f"    matched priors: {', '.join(r.matched_priors)}")
     if warn:
         lines.append(f"WARNING violations ({len(warn)}, override present):")
         for r in warn:
-            lines.append(
-                f"  [{r.violation_class}] {r.task_id} ({r.task_title[:60]})"
-            )
+            lines.append(f"  [{r.violation_class}] {r.task_id} ({r.task_title[:60]})")
             lines.append(f"    detail: {r.detail[:200]}")
     return "\n".join(lines)
 

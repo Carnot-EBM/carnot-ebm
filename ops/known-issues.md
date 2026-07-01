@@ -1280,6 +1280,43 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### MECHANICAL FIX 2026-07-01 (outer-loop, "fix #1 mechanically, not as a standing outer-loop power") — retracted premises are now load-bearing at activation, not just in prose
+
+**Origin.** `.469`'s planner ran 8 minutes AFTER a same-session known-issues.md retraction landed
+(the FoVer in-domain candidate-selection-pool premise — see the retracted "NUDGE"/"MOAT REDIRECT"
+entries below) but still emitted 3 tasks (exp5111/5112/5113) asserting the retracted premise as fact.
+An outer-loop session had to hand-patch the live `research-roadmap.yaml` after the fact to stop them.
+The operator asked for the general case to be fixed mechanically rather than relying on the outer loop
+noticing and patching in time again.
+
+**Root cause, not just symptom.** Investigated `scripts/exclusion_manifest_lint.py` (already wired
+into `research_conductor.py:_activate_next_roadmap()`, already HARD-blocks activation on a violation)
+and found it has 4 violation classes, NONE of which would have caught this: `EXP_ID_RETIRED` only
+matches a task id that REUSES a retired id (exp5111/5112/5113 were brand-new ids);
+`SCOPE_MATCHED_PRIOR_FAILURE` uses `FailureLedger`, which only matches a task's scope-signature
+against PAST ARTIFACTS' verdicts (these ids had no prior artifact to match against at planning time).
+Separately discovered that `ops/exclusion_manifest.yaml`'s `retired_extras[].blocked_patterns` field
+— free-text scope descriptions curated at past retirements, e.g. `"cross-domain verifier selection"`
+— was **pure documentation**: nothing in the live activation path ever read it.
+
+**Fix (`scripts/exclusion_manifest_lint.py`, `ops/exclusion_manifest.yaml`,
+`tests/python/test_exclusion_manifest_lint.py`).** Added a 5th violation class,
+`BLOCKED_PATTERN_MATCHED`: every draft task's title+prompt is checked (case-insensitive substring)
+against every `blocked_patterns` entry across the manifest, REGARDLESS of the task's own id or
+scope-signature history. This makes `blocked_patterns` load-bearing for the first time. Same override
+semantics as `SCOPE_MATCHED_PRIOR_FAILURE` (a valid `prior_failures:` block clears the check entirely;
+`operator_override:` downgrades HARD to WARNING). Added a proper `retired_extras` entry for the FoVer
+in-domain retraction itself (`fover_in_domain_pool_retired_v469`) so the specific incident is now also
+mechanically covered going forward. Verified end-to-end: a synthetic task whose id/title look
+unrelated but whose prompt embeds a blocked phrase is HARD-blocked; the same task with a valid
+`operator_override:` or `prior_failures:` passes with only a WARNING or cleanly; an unrelated task
+passes clean; the currently-active `research-roadmap.yaml` lints clean (no regression). 6 new tests,
+all passing.
+
+**Explicitly NOT the fix chosen:** standing outer-loop authority to edit the conductor's live task
+queue. The operator's own framing: fix the class of problem in the conductor's own mechanical gates,
+not by granting an outer-loop session a parallel control path over the running system.
+
 ### MMLU-PRO VERIFIER VS CHEAP BASELINE — HONEST NEGATIVE, UNDERPOWERED AT n=40 2026-07-01 (outer-loop, direct follow-up: "build a verifier and test whether it actually beats a cheap baseline on this corpus")
 
 **Real test, real negative.** `scripts/experiments/exp_mmlu_pro_verifier_vs_cheap_baseline.py` /

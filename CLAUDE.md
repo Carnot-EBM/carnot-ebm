@@ -934,15 +934,27 @@ genuine reruns that address a root cause.) This was discovered when the
 `DOOMED_RERUN_BLOCK`-skipped at launch; the doomed-rerun guard was
 extended to honor `operator_override:` so the two guards are consistent.
 
-**Mechanical enforcement (lives in `scripts/research_conductor.py`).**
-The conductor's `_ensure_exclusion_manifest_loaded` check already
-GATE_BLOCKs retired experiment_ids at activation time. A future
-activation-guard extension SHOULD scan the planner-emitted YAML
-*before* the conductor begins activating tasks — refusing the whole
-milestone if any draft task scope-matches a retired id without
-`operator_override:`. Until that ships, this rule is enforced by
-honest discipline at the planner layer alone, with the manifest
-gate as the structural backstop that prevents wall-time burn.
+**Mechanical enforcement (lives in `scripts/research_conductor.py` +
+`scripts/exclusion_manifest_lint.py`).**
+The conductor's `_ensure_exclusion_manifest_loaded` check GATE_BLOCKs
+retired experiment_ids at activation time. `scripts/exclusion_manifest_lint.py`
+(Layer 2, wired into `_activate_next_roadmap()`) scans the whole
+planner-emitted YAML *before* activation and HARD-refuses the milestone
+on any of 5 violation classes: `EXP_ID_RETIRED` (task id reuses a
+retired id), `SCOPE_MATCHED_PRIOR_FAILURE` (scope-signature matches a
+PAST ARTIFACT's failed verdict), `REQUIRES_RETIRED_EXP` (requires-chain
+references a retired id), `WRONG_MECHANISM_PRECONDITION` (a
+CLAUDE.md-retired precondition pattern), and
+`BLOCKED_PATTERN_MATCHED` (2026-07-01: task title/prompt matches a
+free-text `blocked_patterns:` string on a `retired_extras` entry,
+regardless of the task's own id or artifact history — added after the
+`.469 FoVer-in-domain incident, where a same-session retraction landed
+in known-issues.md 8 minutes before the planner ran and still got
+ignored, because neither of the first two classes could catch a
+brand-new task id with no prior artifact). A task with an `operator_override:`
+or a valid `prior_failures:` block clears the applicable classes; see
+`ops/known-issues.md` "MECHANICAL FIX 2026-07-01" for the incident and
+fix detail.
 
 **Why this is in CLAUDE.md, not just in `ops/exclusion_manifest.yaml`.**
 The manifest is the mechanical enforcement target; the planner
