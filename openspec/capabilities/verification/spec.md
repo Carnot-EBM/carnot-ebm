@@ -22504,6 +22504,76 @@ self-learning from final-answer labels alone.
 |---|---|---|
 | REQ-VERIFY-5051 | Proposed (`python/carnot/experiment_5051_verifier_trace_self_learning.py`, `results/experiment_5051_verifier_trace_self_learning.json`) | Proposed (`tests/python/test_experiment_5051_verifier_trace_self_learning.py`) |
 
+### REQ-VERIFY-5064: Audited Skill-Graph Self-Learning Refuses Harmful Promotion
+
+The repository SHALL provide Exp 5064 at
+`python/carnot/experiment_5064_audited_skillgraph_self_learning.py` to run an
+FR-11 audited self-learning loop over Exp 5051 and Exp 5059 evidence, writing
+`results/experiment_5064_audited_skillgraph_self_learning.json` plus a
+skill-graph artifact referenced by `skill_graph_path`.
+
+The runner SHALL freeze immutable held-out IDs before any skill or memory-entry
+proposal, mine near misses only from train-split rows in the Exp 5051 verifier
+trace memory and Exp 5059 refreshed D1 paired-correct evidence, and preserve
+explicit source trace/provenance IDs for every candidate skill. Held-out labels
+SHALL be used only after candidate generation, self-audit, and external
+verifier-audit receipts are complete.
+
+Candidate skills or memory entries SHALL include source traces, a self-audit
+verdict, and an external verifier-audit receipt. A candidate SHALL be eligible
+for held-out evaluation only when the self-audit does not report final-answer
+leakage, the external receipt confirms the source trace exists, and the
+contamination guard confirms no held-out ID appears in trace inputs, candidate
+skills, or promoted memory entries. The skill graph MAY record frozen held-out
+IDs as split metadata so that the evaluation boundary remains auditable.
+
+The runner SHALL evaluate pre-update, proposed-update, and no-promote fallback
+behavior on held-out data, and SHALL include a nonforgetting slice built from
+examples the pre-update verifier previously answered correctly. Promotion SHALL
+be allowed only when `heldout_delta > 0`, `contamination_guard_passed=true`, and
+`nonforgetting_delta >= 0`. If any gate fails, the terminal artifact SHALL set
+`promoted=false`, write a concrete `no_promote_reason`, and keep the fallback as
+no-promotion rather than silently applying the proposed memory entry.
+
+The terminal artifact SHALL include `honest_verdict`,
+`continuous_self_learning_task`, `model_specs`,
+`self_learning_loop_executed`, `near_miss_count`, `candidate_skill_count`,
+`verified_skill_count`, `promoted`, `no_promote_reason`,
+`pre_update_accuracy`, `post_update_accuracy`, `heldout_delta`,
+`nonforgetting_delta`, `contamination_guard_passed`, `skill_graph_path`, and
+`legacy_models_smoke_only`. It SHALL also include the frozen split, source
+artifact provenance, held-out proposed/no-promote evaluation details, external
+verifier receipts, `inference_substrate`, `random_seed`, `spec_refs`,
+`duration_s`, field principles, and a reproducibility checksum. Model specs
+SHALL include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; legacy small models SHALL remain
+smoke-only.
+
+### SCENARIO-VERIFY-5064: Negative Utility Skill-Graph Is Audited And Not Promoted
+
+Given Exp 5051 reports a replay-memory held-out delta of `-0.050` and Exp 5059
+contains refreshed D1 paired-correct evidence over the same 200 MuSR question
+IDs, when Exp 5064 runs, then it freezes the Exp 5051 held-out IDs before
+proposal, mines train-split near misses from both source artifacts, builds a
+candidate skill graph with self-audit verdicts and external verifier receipts,
+evaluates the proposed update on held-out IDs, evaluates the no-promote
+fallback, computes a nonforgetting delta over previously correct held-out rows,
+and writes every required artifact field with
+`continuous_self_learning_task=true`.
+
+If the proposed update has non-positive held-out delta, fails contamination
+guard, or regresses the nonforgetting slice, then Exp 5064 SHALL write a
+guarded negative artifact with `promoted=false`, a non-empty
+`no_promote_reason`, and no promoted skill IDs. It SHALL NOT reinterpret a
+negative replay-memory result as an FR-11 improvement.
+
+## Implementation Status (REQ-VERIFY-5064)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5064 | Proposed (`python/carnot/experiment_5064_audited_skillgraph_self_learning.py`, `results/experiment_5064_audited_skillgraph_self_learning.json`) | Proposed (`tests/python/test_experiment_5064_audited_skillgraph_self_learning.py`) |
+
 ### REQ-VERIFY-5047: KAN/PURM Energy Calibration Over Powered D1 Margins
 
 The repository SHALL provide Exp 5047 at
