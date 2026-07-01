@@ -15914,3 +15914,62 @@ fabricated checkpoint refresh.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5039 | Planned (`python/carnot/experiment_5039_self_play_verifier_checkpoint.py`) | Planned (`tests/python/test_experiment_5039_self_play_verifier_checkpoint.py`) |
+
+---
+
+## REQ-LEARN-5077: FR-11 Guarded Group-Self-Consistency Memory Evolution
+
+Experiment 5077 SHALL run a guarded FR-11 memory evolution attempt using a
+small train/dev/held-out split built from verifier near misses or constraint
+tasks. The split SHALL freeze held-out IDs before proposal generation, and the
+contamination guard SHALL fail if held-out IDs appear in train IDs, dev IDs,
+proposal source rows, consensus candidate rows, or promoted memory entries.
+
+The experiment SHALL generate multiple memory, retrieval, or skill-policy
+proposals, group proposals by self-consistent policy signature, and evaluate
+only consensus candidates whose group size meets the threshold. Non-consensus
+proposals SHALL be quarantined and SHALL NOT be included in memory-enabled
+evaluation.
+
+The experiment SHALL run baseline, memory-enabled, and rollback/no-promote
+ablations on the same held-out IDs. Promotion SHALL be forbidden unless
+`heldout_delta >= 0`, `nonforgetting_delta >= 0`,
+`contamination_guard_passed=true`, and `rollback_guard_passed=true`.
+If a held-out or nonforgetting regression is observed, rollback SHALL leave the
+active no-promote arm equal to the baseline arm and `promoted_count` SHALL be
+zero.
+
+The result artifact SHALL be written to
+`results/experiment_5077_fr11_group_sc_memory_v466.json` by
+`python/carnot/experiment_5077_fr11_group_sc_memory.py` and SHALL include
+principle annotations for `honest_verdict`, `duration_s`,
+`inference_substrate`, `model_specs`, `fr11_attempt_completed`,
+`heldout_delta`, `nonforgetting_delta`, `contamination_guard_passed`,
+`rollback_guard_passed`, `promoted_count`, `quarantined_count`,
+`memory_policy`, `group_self_consistency_summary`, and
+`flagged_adversarial`. The `model_specs` field SHALL include
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` whenever proposals or critiques are
+generated or replayed. The terminal verdict SHALL start with either
+`success_fr11_group_sc_memory_promoted_plus_` or
+`complete_fr11_group_sc_memory_guarded_no_promote_delta_`.
+
+### SCENARIO-LEARN-5077-GROUP-SC-NO-PROMOTE
+
+**Given** train-only verifier near misses and multiple generated memory-policy
+proposals
+**When** Experiment 5077 groups proposals by policy signature
+**Then** only consensus candidates are evaluated
+**And** non-consensus proposals are quarantined.
+
+**Given** the consensus memory policy improves some held-out errors but
+regresses previously correct held-out rows
+**When** the promotion gate evaluates held-out and nonforgetting deltas
+**Then** `promoted_count=0`, `rollback_guard_passed=true`,
+`quarantined_count > 0`, and the no-promote arm remains equal to the baseline.
+
+## Implementation Status (Exp 5077)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5077 | Planned (`python/carnot/experiment_5077_fr11_group_sc_memory.py`) | Planned (`tests/python/test_experiment_5077_fr11_group_sc_memory.py`) |

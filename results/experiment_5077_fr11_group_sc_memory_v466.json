@@ -1,0 +1,966 @@
+{
+  "ablations": {
+    "baseline": {
+      "accuracy": 0.7,
+      "correct": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ]
+    },
+    "memory_enabled": {
+      "accuracy": 0.65,
+      "correct": [
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    "rollback_no_promote": {
+      "accuracy": 0.7,
+      "correct": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "rollback_applied": true
+    }
+  },
+  "consensus_candidates": [
+    {
+      "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
+      "candidate_id": "candidate_5077_disagreement_fallback",
+      "consensus_support": 3,
+      "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+      "source_row_ids": [
+        "q0000",
+        "q0002",
+        "q0003",
+        "q0004",
+        "q0008",
+        "q0013",
+        "q0014",
+        "q0018"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003",
+        "5051:5031:q0004",
+        "5051:5031:q0008",
+        "5051:5031:q0013",
+        "5051:5031:q0014",
+        "5051:5031:q0018",
+        "5051:5033:q0000",
+        "5051:5033:q0003",
+        "5051:5033:q0004",
+        "5051:5033:q0008",
+        "5051:5033:q0013",
+        "5051:5033:q0014",
+        "5051:5033:q0018",
+        "5051:5045:q0000",
+        "5051:5045:q0003",
+        "5051:5045:q0004",
+        "5051:5045:q0008",
+        "5051:5045:q0013",
+        "5051:5045:q0014",
+        "5051:5045:q0018"
+      ],
+      "support_proposal_ids": [
+        "proposal_5077_gemma_dense_disagreement_fallback",
+        "proposal_5077_gemma_moe_disagreement_fallback",
+        "proposal_5077_qwen_disagreement_fallback"
+      ],
+      "trigger": "verifier_sc_disagreement"
+    }
+  ],
+  "contamination_guard": {
+    "passed": true,
+    "violations": []
+  },
+  "contamination_guard_passed": true,
+  "dev_evaluation": {
+    "baseline_accuracy": 0.125,
+    "baseline_correct": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "delta": 0.375,
+    "improved_previously_wrong_ids": [
+      "q0049",
+      "q0058",
+      "q0062"
+    ],
+    "memory_accuracy": 0.5,
+    "memory_correct": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1
+    ],
+    "n_rows": 8,
+    "nonforgetting_delta": 0.0,
+    "nonforgetting_retention": 1.0,
+    "nonforgetting_slice_n": 1,
+    "per_row": [
+      {
+        "baseline_correct": 0,
+        "memory_correct": 1,
+        "row_id": "q0049",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0052",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0053",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0056",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 1,
+        "row_id": "q0058",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0059",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0061",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 1,
+        "row_id": "q0062",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": true
+      }
+    ],
+    "regressed_previously_correct_ids": [],
+    "row_ids": [
+      "q0049",
+      "q0052",
+      "q0053",
+      "q0056",
+      "q0058",
+      "q0059",
+      "q0061",
+      "q0062"
+    ]
+  },
+  "duration_s": 0.005109,
+  "experiment": "experiment_5077_fr11_group_sc_memory",
+  "experiment_id": 5077,
+  "field_principles": {
+    "contamination_guard_passed": {
+      "principle": "true only when held-out IDs are absent from train/dev proposal and promotion payloads."
+    },
+    "duration_s": {
+      "principle": "measured wall-clock time for deterministic replay and guard checks."
+    },
+    "flagged_adversarial": {
+      "principle": "false only when artifact schema, oracle separation, contamination, and rollback accounting are internally consistent."
+    },
+    "fr11_attempt_completed": {
+      "principle": "true only after split freeze, proposal grouping, consensus evaluation, rollback, and artifact emission."
+    },
+    "group_self_consistency_summary": {
+      "principle": "proposal groups, consensus threshold, tested candidates, and quarantined non-consensus proposals."
+    },
+    "heldout_delta": {
+      "principle": "memory-enabled held-out accuracy minus baseline accuracy before rollback."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for promoted or guarded no-promote FR-11 group-SC memory outcomes."
+    },
+    "inference_substrate": {
+      "principle": "declares deterministic replay over checked-in artifacts; no live LLM inference is hidden."
+    },
+    "memory_policy": {
+      "principle": "the consensus memory/retrieval policy evaluated on dev and held-out rows."
+    },
+    "model_specs": {
+      "principle": "mandated SOTA GGUF IDs plus proposal provenance; live proposal calls are explicitly false."
+    },
+    "nonforgetting_delta": {
+      "principle": "retention delta on held-out rows the baseline answered correctly before rollback."
+    },
+    "promoted_count": {
+      "principle": "number of consensus memory candidates promoted after all utility and rollback gates."
+    },
+    "quarantined_count": {
+      "principle": "number of non-consensus proposals plus tested consensus candidates that were not promoted."
+    },
+    "rollback_guard_passed": {
+      "principle": "true when regression leaves the active no-promote arm equal to baseline, or no rollback is needed."
+    }
+  },
+  "flagged_adversarial": false,
+  "fr11_attempt_completed": true,
+  "group_self_consistency_summary": {
+    "consensus_threshold": 2,
+    "groups": [
+      {
+        "consensus": true,
+        "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+        "proposal_count": 3,
+        "proposal_ids": [
+          "proposal_5077_gemma_dense_disagreement_fallback",
+          "proposal_5077_gemma_moe_disagreement_fallback",
+          "proposal_5077_qwen_disagreement_fallback"
+        ]
+      },
+      {
+        "consensus": false,
+        "policy_signature": "promote_all_verified_trace_memory",
+        "proposal_count": 1,
+        "proposal_ids": [
+          "proposal_5077_promote_all_verified_trace_memory"
+        ]
+      },
+      {
+        "consensus": false,
+        "policy_signature": "retrieve_on_energy_abstention_only",
+        "proposal_count": 1,
+        "proposal_ids": [
+          "proposal_5077_abstention_trace_memory"
+        ]
+      }
+    ],
+    "quarantined_nonconsensus_proposal_ids": [
+      "proposal_5077_abstention_trace_memory",
+      "proposal_5077_promote_all_verified_trace_memory"
+    ],
+    "tested_consensus_candidate_ids": [
+      "candidate_5077_disagreement_fallback"
+    ],
+    "total_proposals": 5
+  },
+  "heldout_delta": -0.05,
+  "heldout_evaluation": {
+    "baseline_accuracy": 0.7,
+    "baseline_correct": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    "delta": -0.05,
+    "improved_previously_wrong_ids": [
+      "q0181"
+    ],
+    "memory_accuracy": 0.65,
+    "memory_correct": [
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1
+    ],
+    "n_rows": 20,
+    "nonforgetting_delta": -0.142857,
+    "nonforgetting_retention": 0.857143,
+    "nonforgetting_slice_n": 14,
+    "per_row": [
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0180",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 1,
+        "row_id": "q0181",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 0,
+        "row_id": "q0182",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0183",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0184",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0185",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0186",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0187",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0188",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0189",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0190",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0191",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0192",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0193",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0194",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0195",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0196",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 0,
+        "memory_correct": 0,
+        "row_id": "q0197",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 1,
+        "verifier_sc_disagreement": false
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 0,
+        "row_id": "q0198",
+        "selector": "tuned_self_consistency",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": true
+      },
+      {
+        "baseline_correct": 1,
+        "memory_correct": 1,
+        "row_id": "q0199",
+        "selector": "baseline_verifier",
+        "tuned_self_consistency_correct": 0,
+        "verifier_sc_disagreement": false
+      }
+    ],
+    "regressed_previously_correct_ids": [
+      "q0182",
+      "q0198"
+    ],
+    "row_ids": [
+      "q0180",
+      "q0181",
+      "q0182",
+      "q0183",
+      "q0184",
+      "q0185",
+      "q0186",
+      "q0187",
+      "q0188",
+      "q0189",
+      "q0190",
+      "q0191",
+      "q0192",
+      "q0193",
+      "q0194",
+      "q0195",
+      "q0196",
+      "q0197",
+      "q0198",
+      "q0199"
+    ]
+  },
+  "honest_verdict": "complete_fr11_group_sc_memory_guarded_no_promote_delta_minus_0p050",
+  "inference_substrate": "deterministic_group_sc_memory_replay_no_live_llm",
+  "memory_policy": {
+    "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
+    "candidate_id": "candidate_5077_disagreement_fallback",
+    "consensus_support": 3,
+    "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+    "source_row_ids": [
+      "q0000",
+      "q0002",
+      "q0003",
+      "q0004",
+      "q0008",
+      "q0013",
+      "q0014",
+      "q0018"
+    ],
+    "source_trace_ids": [
+      "5051:5031:q0000",
+      "5051:5031:q0003",
+      "5051:5031:q0004",
+      "5051:5031:q0008",
+      "5051:5031:q0013",
+      "5051:5031:q0014",
+      "5051:5031:q0018",
+      "5051:5033:q0000",
+      "5051:5033:q0003",
+      "5051:5033:q0004",
+      "5051:5033:q0008",
+      "5051:5033:q0013",
+      "5051:5033:q0014",
+      "5051:5033:q0018",
+      "5051:5045:q0000",
+      "5051:5045:q0003",
+      "5051:5045:q0004",
+      "5051:5045:q0008",
+      "5051:5045:q0013",
+      "5051:5045:q0014",
+      "5051:5045:q0018"
+    ],
+    "support_proposal_ids": [
+      "proposal_5077_gemma_dense_disagreement_fallback",
+      "proposal_5077_gemma_moe_disagreement_fallback",
+      "proposal_5077_qwen_disagreement_fallback"
+    ],
+    "trigger": "verifier_sc_disagreement"
+  },
+  "model_specs": {
+    "exp5059_model_specs": {
+      "exp5058_model_specs": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      },
+      "mandated_sota": {
+        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "powered_d1_scorer": {
+        "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
+        "scorer_trained": true,
+        "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
+      }
+    },
+    "llm_critiques_generated": false,
+    "llm_proposals_generated": false,
+    "mandated_sota": {
+      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "proposal_mode": "deterministic_group_self_consistency_from_checked_in_exp5051_exp5064_evidence"
+  },
+  "nonforgetting_delta": -0.142857,
+  "promoted_count": 0,
+  "promotion_decision": {
+    "gate_conditions": {
+      "contamination_guard_passed": true,
+      "heldout_delta_gte_zero": false,
+      "nonforgetting_delta_gte_zero": false,
+      "rollback_guard_passed": true
+    },
+    "no_promote_reason": "heldout_delta_negative;nonforgetting_regressed",
+    "promoted": false
+  },
+  "proposals": [
+    {
+      "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
+      "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+      "proposal_id": "proposal_5077_qwen_disagreement_fallback",
+      "proposal_provenance": "deterministic_replay_from_exp5051_exp5064_negatives",
+      "proposal_type": "memory_retrieval_policy",
+      "proposer_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "proposer_role": "flagship_moe_replay",
+      "source_row_ids": [
+        "q0000",
+        "q0002",
+        "q0003",
+        "q0004",
+        "q0008",
+        "q0013",
+        "q0014",
+        "q0018"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003",
+        "5051:5031:q0004",
+        "5051:5031:q0008",
+        "5051:5031:q0013",
+        "5051:5031:q0014",
+        "5051:5031:q0018",
+        "5051:5033:q0000",
+        "5051:5033:q0003",
+        "5051:5033:q0004",
+        "5051:5033:q0008",
+        "5051:5033:q0013",
+        "5051:5033:q0014",
+        "5051:5033:q0018",
+        "5051:5045:q0000",
+        "5051:5045:q0003",
+        "5051:5045:q0004",
+        "5051:5045:q0008",
+        "5051:5045:q0013",
+        "5051:5045:q0014",
+        "5051:5045:q0018"
+      ],
+      "trigger": "verifier_sc_disagreement"
+    },
+    {
+      "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
+      "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+      "proposal_id": "proposal_5077_gemma_dense_disagreement_fallback",
+      "proposal_provenance": "deterministic_replay_from_exp5051_exp5064_negatives",
+      "proposal_type": "memory_retrieval_policy",
+      "proposer_model": "unsloth/gemma-4-31B-it-GGUF",
+      "proposer_role": "flagship_dense_replay",
+      "source_row_ids": [
+        "q0000",
+        "q0002",
+        "q0003",
+        "q0004",
+        "q0008",
+        "q0013",
+        "q0014",
+        "q0018"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003",
+        "5051:5031:q0004",
+        "5051:5031:q0008",
+        "5051:5031:q0013",
+        "5051:5031:q0014",
+        "5051:5031:q0018",
+        "5051:5033:q0000",
+        "5051:5033:q0003",
+        "5051:5033:q0004",
+        "5051:5033:q0008",
+        "5051:5033:q0013",
+        "5051:5033:q0014",
+        "5051:5033:q0018",
+        "5051:5045:q0000",
+        "5051:5045:q0003",
+        "5051:5045:q0004",
+        "5051:5045:q0008",
+        "5051:5045:q0013",
+        "5051:5045:q0014",
+        "5051:5045:q0018"
+      ],
+      "trigger": "verifier_sc_disagreement"
+    },
+    {
+      "action": "retrieve_verified_trace_then_fallback_to_tuned_self_consistency",
+      "policy_signature": "fallback_to_tuned_on_verifier_sc_disagreement",
+      "proposal_id": "proposal_5077_gemma_moe_disagreement_fallback",
+      "proposal_provenance": "deterministic_replay_from_exp5051_exp5064_negatives",
+      "proposal_type": "memory_retrieval_policy",
+      "proposer_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "proposer_role": "middle_moe_replay",
+      "source_row_ids": [
+        "q0000",
+        "q0002",
+        "q0003",
+        "q0004",
+        "q0008",
+        "q0013",
+        "q0014",
+        "q0018"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003",
+        "5051:5031:q0004",
+        "5051:5031:q0008",
+        "5051:5031:q0013",
+        "5051:5031:q0014",
+        "5051:5031:q0018",
+        "5051:5033:q0000",
+        "5051:5033:q0003",
+        "5051:5033:q0004",
+        "5051:5033:q0008",
+        "5051:5033:q0013",
+        "5051:5033:q0014",
+        "5051:5033:q0018",
+        "5051:5045:q0000",
+        "5051:5045:q0003",
+        "5051:5045:q0004",
+        "5051:5045:q0008",
+        "5051:5045:q0013",
+        "5051:5045:q0014",
+        "5051:5045:q0018"
+      ],
+      "trigger": "verifier_sc_disagreement"
+    },
+    {
+      "action": "retrieve_trace_without_answer_fallback",
+      "policy_signature": "retrieve_on_energy_abstention_only",
+      "proposal_id": "proposal_5077_abstention_trace_memory",
+      "proposal_provenance": "deterministic_singleton_control",
+      "proposal_type": "retrieval_memory_policy",
+      "proposer_model": "unsloth/gemma-4-31B-it-GGUF",
+      "proposer_role": "singleton_control",
+      "source_row_ids": [
+        "q0000",
+        "q0002"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003"
+      ],
+      "trigger": "energy_abstained"
+    },
+    {
+      "action": "promote_without_dev_or_heldout_gate",
+      "policy_signature": "promote_all_verified_trace_memory",
+      "proposal_id": "proposal_5077_promote_all_verified_trace_memory",
+      "proposal_provenance": "deterministic_negative_control",
+      "proposal_type": "skill_policy",
+      "proposer_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "proposer_role": "unsafe_policy_control",
+      "source_row_ids": [
+        "q0000",
+        "q0002",
+        "q0003",
+        "q0004",
+        "q0008",
+        "q0013",
+        "q0014",
+        "q0018"
+      ],
+      "source_trace_ids": [
+        "5051:5031:q0000",
+        "5051:5031:q0003",
+        "5051:5031:q0004",
+        "5051:5031:q0008",
+        "5051:5031:q0013",
+        "5051:5031:q0014",
+        "5051:5031:q0018",
+        "5051:5033:q0000",
+        "5051:5033:q0003",
+        "5051:5033:q0004",
+        "5051:5033:q0008",
+        "5051:5033:q0013",
+        "5051:5033:q0014",
+        "5051:5033:q0018",
+        "5051:5045:q0000",
+        "5051:5045:q0003",
+        "5051:5045:q0004",
+        "5051:5045:q0008",
+        "5051:5045:q0013",
+        "5051:5045:q0014",
+        "5051:5045:q0018"
+      ],
+      "trigger": "any_verified_trace"
+    }
+  ],
+  "quarantined_count": 3,
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:963e223a9604c0063fd3dc3cbcdd5afbeee952f1751dd01ee62a0065545a10a7",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5077_fr11_group_sc_memory_v466.json",
+  "rollback_guard_passed": true,
+  "schema": "carnot.experiment_5077_fr11_group_sc_memory.v466",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "present": true,
+      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a"
+    },
+    {
+      "path": "results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
+      "present": true,
+      "sha256": "sha256:7dec07d84c2e5d16c84be8fe96e37af9f3cfa9d6e0bc322bbcc8e78e4c201fa3"
+    },
+    {
+      "path": "results/experiment_5059_d1_sota_refresh_audit.json",
+      "present": true,
+      "sha256": "sha256:f265773022d3937df3bcde2b516f650bf0868c36bfdc766ada278dc4c3e44fa9"
+    },
+    {
+      "path": "results/experiment_5064_audited_skillgraph_self_learning.json",
+      "present": true,
+      "sha256": "sha256:c2a192be047f45a6231086e0f4f13acfcd0670dd0d6febfd48028424b20895eb"
+    }
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5077",
+    "SCENARIO-LEARN-5077-GROUP-SC-NO-PROMOTE"
+  ],
+  "split": {
+    "dev_ids": [
+      "q0049",
+      "q0052",
+      "q0053",
+      "q0056",
+      "q0058",
+      "q0059",
+      "q0061",
+      "q0062"
+    ],
+    "heldout_frozen_before_proposal": true,
+    "heldout_ids": [
+      "q0180",
+      "q0181",
+      "q0182",
+      "q0183",
+      "q0184",
+      "q0185",
+      "q0186",
+      "q0187",
+      "q0188",
+      "q0189",
+      "q0190",
+      "q0191",
+      "q0192",
+      "q0193",
+      "q0194",
+      "q0195",
+      "q0196",
+      "q0197",
+      "q0198",
+      "q0199"
+    ],
+    "split_source": "exp5051_frozen_near_misses_with_tail_heldout",
+    "train_ids": [
+      "q0000",
+      "q0002",
+      "q0003",
+      "q0004",
+      "q0008",
+      "q0013",
+      "q0014",
+      "q0018",
+      "q0019",
+      "q0020",
+      "q0021",
+      "q0024",
+      "q0025",
+      "q0026",
+      "q0027",
+      "q0028",
+      "q0030",
+      "q0033",
+      "q0035",
+      "q0037",
+      "q0040",
+      "q0041",
+      "q0042",
+      "q0043"
+    ]
+  },
+  "upstream_flagged_adversarial_sources": [
+    "results/experiment_5059_d1_sota_refresh_audit.json"
+  ]
+}
