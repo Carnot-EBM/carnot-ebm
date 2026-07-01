@@ -516,6 +516,50 @@ case unproved when its error budget erases the margin, reports scaling telemetry
 for every property, sets `false_property_controls_passed=true`, and avoids any
 hardware, live-LLM, or broad global-optimality claim.
 
+## REQ-KAN-5108: KAEM PWA/MILP Scale Stress Test With Honest Wall-Clock Ceiling
+
+The KAN verification tier SHALL determine, empirically, whether the Exp
+5091/5098 KAEM/PWA/MILP exact-verification approach scales toward the
+production KAEM cutover (`n_vars<=100`, `carnot.pipeline.verify_repair`
+`_build_kan_fast_path_model`, REQ-SAMPLE-029) or hits a wall well before it —
+a question no prior KAN-PWA/MILP experiment (Exp 2051 through Exp 5098) ever
+tested empirically at more than 2-3 units.
+
+The experiment MUST sweep additive KEAM unit count N across an ascending
+sequence including at least one value at or beyond the production reference
+(100), bound EVERY solve attempt with an explicit wall-clock solver timeout
+(not an unbounded call), and STOP the sweep at the first timeout rather than
+continuing to larger N. At every N that solves to optimal status, the suite
+MUST re-verify BOTH an adversarial expected-false property (must be
+counterexampled) and an approximation-budget-sensitive property (must remain
+honestly unproved) — not just at the smallest N — so a solver that behaves
+correctly at toy scale and incorrectly at larger scale is caught, not assumed
+away.
+
+The experiment MUST write
+`results/experiment_5108_kan_pwa_milp_scale_stress_test.json` with these
+top-level fields: `honest_verdict`, `duration_s`, `inference_substrate`,
+`unit_counts_tested`, `solve_times_s_by_n`, `solver_timeout_hit`,
+`largest_n_reached`, `realistic_kan_unit_count_reference`,
+`adversarial_rigor_preserved_at_scale`, `per_n_results`, `random_seed`,
+`reproducibility_checksum`, and `flagged_adversarial`. It MUST NOT claim to
+have reached the production reference unless `largest_n_reached` actually
+meets or exceeds it, and MUST NOT silently omit an N that timed out from the
+reported sweep.
+
+### SCENARIO-KAN-5108: Scale Sweep Finds Or Clears The Production Reference
+
+Given the Exp 5091/5098 additive KEAM PWA/MILP encoding and a wall-clock
+solver timeout,
+When the suite sweeps unit count N upward from a small baseline toward the
+production reference (100),
+Then the artifact reports solve time and solver status at every N attempted,
+stops the sweep at the first timeout, re-verifies the false-property control
+and approximation-budget abstention at every N that solved, and honestly
+reports either `largest_n_reached >= 100` (scales to production) or the exact
+N at which the wall-clock budget was exceeded (does not scale) — without
+extrapolating beyond what was actually measured.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -550,6 +594,7 @@ hardware, live-LLM, or broad global-optimality claim.
 | REQ-KAN-5080 | Proposed | Exp 5080 target: tiny KAEM PWA/MILP bridge artifact with success-or-blocked solver boundary. |
 | REQ-KAN-5091 | Proposed | Exp 5091 target: two-input KAEM PWA/MILP scale telemetry with solver counts, error budgets, and bound tightness. |
 | REQ-KAN-5098 | Proposed | Exp 5098 target: bounded multi-property KAEM PWA/MILP suite with false controls and scale telemetry. |
+| REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

@@ -68,7 +68,11 @@ REALISTIC_KAN_UNIT_COUNT_SOURCE = (
     "carnot.pipeline.verify_repair.VerifyRepairPipeline._build_kan_fast_path_model "
     "(REQ-SAMPLE-029): 'low-rank for n_vars <= 100' is the documented deployed cutover."
 )
-DEFAULT_SOLVER_TIMEOUT_MS = 120_000  # 120s/solve; honest timeout, not an infinite hang.
+DEFAULT_SOLVER_TIMEOUT_MS = 300_000  # 300s/solve (the ops/known-issues.md drafted budget);
+# empirically justified: a first probe at 120s timed out at N=10, but N=10 solved cleanly at
+# 132s with more headroom (0.137s at N=5 -> 132s at N=10 is already a ~960x jump for 2x the
+# units -- the honest timeout is set generously enough to not mistake "explosive but bounded"
+# for "infinite hang" at the smaller N values, while still being a real, reportable cap.
 N_KNOTS = 4  # matches exp5091/exp5098 -> 3 segments/unit -> binary_variable_count == 3*N
 MARGIN_EPSILON = 0.05
 BUDGET_MARGIN_EPSILON = 0.001
@@ -193,7 +197,9 @@ def _real(z3: Any, value: float) -> Any:
     return z3.RealVal(repr(float(value)))
 
 
-def maximize_with_z3_bounded(abstraction: MultiUnitPWAAbstraction, timeout_ms: int) -> dict[str, Any]:
+def maximize_with_z3_bounded(
+    abstraction: MultiUnitPWAAbstraction, timeout_ms: int
+) -> dict[str, Any]:
     """Maximize an additive PWA abstraction with Z3, bounded by a wall-clock solver timeout.
 
     Mirrors exp5098's `_maximize_with_z3` MILP encoding exactly (segment-selector integer
@@ -219,10 +225,14 @@ def maximize_with_z3_bounded(abstraction: MultiUnitPWAAbstraction, timeout_ms: i
     for unit_index, unit in enumerate(abstraction.units):
         x = xs[unit_index]
         y = ys[unit_index]
-        flags = [z3.Int(f"unit_{unit_index}_pwa_segment_{segment.index}") for segment in unit.segments]
+        flags = [
+            z3.Int(f"unit_{unit_index}_pwa_segment_{segment.index}") for segment in unit.segments
+        ]
         selected_flag_groups.append(flags)
 
-        add_constraints(x >= _real(z3, unit.segments[0].x_min), x <= _real(z3, unit.segments[-1].x_max))
+        add_constraints(
+            x >= _real(z3, unit.segments[0].x_min), x <= _real(z3, unit.segments[-1].x_max)
+        )
         add_constraints(z3.Sum(flags) == 1)
 
         for flag, segment in zip(flags, unit.segments):
@@ -315,7 +325,9 @@ class NResult:
             "timed_out": self.timed_out,
             "solve_time_s": self.solve_time_s,
             "certified_upper_bound": self.certified_upper_bound,
-            "witness_inputs": list(self.witness_inputs) if self.witness_inputs is not None else None,
+            "witness_inputs": list(self.witness_inputs)
+            if self.witness_inputs is not None
+            else None,
             "true_property_status": self.true_property_status,
             "false_control_counterexampled": self.false_control_counterexampled,
             "false_control_counterexample": self.false_control_counterexample,
@@ -407,7 +419,8 @@ def _adversarial_rigor_preserved(results: Sequence[NResult]) -> bool:
     if not solved:
         return False
     return all(
-        r.false_control_counterexampled is True and r.margin_property_status == "unproved_approximation_budget"
+        r.false_control_counterexampled is True
+        and r.margin_property_status == "unproved_approximation_budget"
         for r in solved
     )
 
@@ -451,7 +464,11 @@ def build_artifact(
             f"max_solve_s_{max((r.solve_time_s for r in solved), default=0.0):.3f}"
         )
     else:
-        blocker = "timeout" if timeout_hit else ("control_failure" if not rigor_preserved else "incomplete")
+        blocker = (
+            "timeout"
+            if timeout_hit
+            else ("control_failure" if not rigor_preserved else "incomplete")
+        )
         honest_verdict = f"{WALL_FOUND_VERDICT_PREFIX}_at_n{largest_n_reached}_reason_{blocker}"
 
     artifact: dict[str, Any] = {
@@ -515,7 +532,9 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
         isinstance(verdict, str) and verdict.startswith(TERMINAL_PREFIXES),
         "honest_verdict must use a terminal prefix",
     )
-    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "must declare exact_milp_solver_cpu")
+    _require(
+        artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "must declare exact_milp_solver_cpu"
+    )
     _require("live_llm" not in artifact["inference_substrate"], "must not claim live LLM inference")
     _require(isinstance(artifact["duration_s"], float), "duration_s must be a float")
     _require(artifact["duration_s"] >= 0.0, "duration_s cannot be negative")
