@@ -23435,3 +23435,64 @@ verdict without invoking an LLM or promoting an unverified stochastic sample.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5089 | Proposed (`python/carnot/verify/pbit_cdcl_bridge.py`, `results/experiment_5089_pbit_guided_cdcl_bridge_v467.json`) | Proposed (`tests/python/test_experiment_5089_pbit_guided_cdcl_bridge.py`) |
+
+### REQ-VERIFY-5090: STATIC CSR Constrained Decoding Diagnostic
+
+The repository SHALL provide Exp 5090 at
+`python/carnot/experiment_5090_static_csr_constrained_decoding.py` to evaluate
+a STATIC-style CSR constrained-decoding mask extractor over a finite Carnot
+verifier verdict output space and write
+`results/experiment_5090_static_csr_constrained_decoding_v467.json`.
+
+The runner SHALL declare the selected finite schema, canonical ASCII JSON
+serialization, byte-token vocabulary assumptions, and Exp5085 live endpoint
+usability before benchmarking. It SHALL build a trie over the finite output
+set, flatten that trie into CSR-like `row_offsets`, `labels`, and `targets`
+transition arrays, and expose a vectorized mask lookup that is checked against
+the CPU trie mask lookup for every measured prefix. If live LLM decoding is
+invoked, `model_specs` MUST include `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; when the Exp5085 endpoint fields are absent,
+stale, or adversarially flagged, the runner MUST perform only deterministic
+mask extraction and set `live_llm_invoked=false`.
+
+The diagnostic SHALL compare CPU trie mask lookup against CSR/vectorized mask
+lookup on latency, memory, and validity. It SHALL compare the constrained mask
+path against a rerank-only candidate control where candidate batches exist,
+reporting both schema validity and relative cost. The terminal artifact SHALL
+include principle annotations and top-level fields `honest_verdict`,
+`duration_s`, `inference_substrate`, `preconditions_checked`, `model_specs`,
+`finite_schema`, `n_allowed_outputs`, `trie_latency_ms`, `csr_latency_ms`,
+`mask_speedup`, `validity_rate`, `rerank_only_validity_rate`,
+`live_llm_invoked`, `beats_cpu_trie`,
+`beats_rerank_only_on_validity_or_cost`, and `flagged_adversarial`.
+It SHOULD also include trie/CSR memory estimates, CSR state and transition
+counts, mask-equivalence diagnostics, rerank cost units, source artifact paths,
+and a reproducibility checksum.
+
+`honest_verdict` SHALL begin with
+`success_static_csr_masks_speedup_and_validity_win` only when CSR mask lookup is
+faster than trie lookup, constrained outputs are schema-valid, and the
+constrained path beats rerank-only on validity or cost. Otherwise it SHALL
+begin with `complete_static_csr_masks_diagnostic_no_headline`. The artifact
+MUST NOT claim `live_llm_inference` when `live_llm_invoked=false`.
+
+### SCENARIO-VERIFY-5090: Deterministic CSR Masks Match The Finite Verdict Schema
+
+Given the finite verifier verdict output set, when Exp 5090 runs without a
+usable Exp5085 live endpoint, then it records the preconditions, builds the
+trie, flattens CSR transitions, checks every finite-output prefix against the
+CPU trie mask, benchmarks trie and CSR mask lookup, compares rerank-only
+candidate validity and cost, writes the required JSON artifact, and emits a
+terminal verdict without invoking live LLM decoding.
+
+If a usable live endpoint is explicitly available, the same runner may execute
+a bounded schema-constrained generation smoke test, but every terminal artifact
+must still record the model specs, endpoint provenance, mask validity, and
+whether the live smoke was actually invoked.
+
+## Implementation Status (REQ-VERIFY-5090)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5090 | Proposed (`python/carnot/experiment_5090_static_csr_constrained_decoding.py`, `results/experiment_5090_static_csr_constrained_decoding_v467.json`) | Proposed (`tests/python/test_experiment_5090_static_csr_constrained_decoding.py`) |

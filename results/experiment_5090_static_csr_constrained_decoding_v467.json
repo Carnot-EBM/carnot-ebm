@@ -1,0 +1,137 @@
+{
+  "beats_cpu_trie": true,
+  "beats_rerank_only_on_validity_or_cost": true,
+  "constrained_mask_cost_units": 692,
+  "csr_latency_ms": 0.000134,
+  "csr_memory_bytes": 265664,
+  "csr_state_count": 1691,
+  "csr_transition_count": 1690,
+  "duration_s": 35.628679,
+  "experiment": "experiment_5090_static_csr_constrained_decoding",
+  "experiment_id": 5090,
+  "field_principles": {
+    "beats_cpu_trie": "True only when CSR is faster while preserving exact mask validity.",
+    "beats_rerank_only_on_validity_or_cost": "True when constrained masks beat rerank-only on validity or equal-validity cost.",
+    "csr_latency_ms": "Mean CSR/vectorized mask lookup latency per prefix in milliseconds.",
+    "duration_s": "Wall-clock runtime for deterministic mask extraction and artifact assembly.",
+    "finite_schema": "The bounded verifier verdict schema and canonical JSON/token rules.",
+    "flagged_adversarial": "True only for self-detected artifact inconsistency.",
+    "honest_verdict": "Terminal prefix: success only for CSR speedup plus validity/cost win; otherwise complete no-headline diagnostic.",
+    "inference_substrate": "Declares deterministic_static_csr_mask_benchmark unless a real live smoke is invoked.",
+    "live_llm_invoked": "True only when a live endpoint smoke actually ran.",
+    "mask_speedup": "Trie latency divided by CSR latency; above one means CSR is faster.",
+    "model_specs": "The three mandated GGUF model IDs plus any resolved Exp5085 paths.",
+    "n_allowed_outputs": "Number of exact canonical outputs in the finite language.",
+    "preconditions_checked": "Records selected schema, byte-token assumptions, and Exp5085 endpoint usability.",
+    "rerank_only_validity_rate": "Post-generation rerank-only validity on candidate batches.",
+    "trie_latency_ms": "Mean CPU trie mask lookup latency per prefix in milliseconds.",
+    "validity_rate": "Fraction of constrained finite outputs accepted by the masks."
+  },
+  "finite_outputs_sha256": "sha256:acb01c2a43ec46497fa3a73a941f29ba3c2ebcf6c7d98161b1d91f5875f1ed6f",
+  "finite_schema": {
+    "canonicalization": "json.dumps(sort_keys=True,separators=(',',':'))",
+    "fields": {
+      "confidence": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "evidence_label": [
+        "schema_valid",
+        "schema_missing_field",
+        "solver_verified",
+        "solver_counterexample",
+        "arithmetic_mismatch",
+        "citation_gap"
+      ],
+      "schema": [
+        "verifier_verdict_schema_v1"
+      ],
+      "verdict": [
+        "accept",
+        "reject",
+        "abstain"
+      ]
+    },
+    "output_format": "canonical_ascii_json",
+    "schema_name": "verifier_verdict_schema_v1",
+    "vocabulary": {
+      "byte_token_ids": "0..127",
+      "eos_token_id": 128,
+      "kind": "ascii_byte_tokens_plus_eos",
+      "vocab_size": 129
+    }
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "success_static_csr_masks_speedup_and_validity_win",
+  "inference_substrate": "deterministic_static_csr_mask_benchmark",
+  "live_llm_invoked": false,
+  "live_smoke": {
+    "invoked": false,
+    "reason": "exp5085_flagged_adversarial"
+  },
+  "mask_equivalence_rate": 1.0,
+  "mask_speedup": 77.420013,
+  "mismatched_prefix_count": 0,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ],
+  "n_allowed_outputs": 54,
+  "preconditions_checked": {
+    "live_endpoint_fields": {
+      "artifact_path": "results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json",
+      "artifact_sha256": "sha256:8f0ae4812df8d9108c09d34017f6c8fa09db1f059319d03b2757d8ad641a086f",
+      "completion_endpoint_ready": true,
+      "endpoint_url": "http://127.0.0.1:46097",
+      "exists": true,
+      "flagged_adversarial": true,
+      "logprob_endpoint_ready": true,
+      "unusable_reason": "exp5085_flagged_adversarial",
+      "usable_for_live_smoke": false
+    },
+    "selected_finite_schema": "verifier_verdict_schema_v1",
+    "vocabulary_tokenization_assumptions": {
+      "bpe_tokenizer_used": false,
+      "byte_token_ids": "0..127",
+      "eos_token_id": 128,
+      "tokenization": "canonical ASCII JSON uses one byte as one token",
+      "why": "finite mask extraction must be deterministic across GGUF tokenizers"
+    }
+  },
+  "prefix_count": 1691,
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:e614f43c6626a5872a74d0983ed2934e9f990ec1ada288c1e7ffdd3b6bed0d66",
+  "rerank_only_cost_units": 12,
+  "rerank_only_validity_rate": 0.666667,
+  "result_path": "results/experiment_5090_static_csr_constrained_decoding_v467.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5090_static_csr_constrained_decoding.v467",
+  "spec_refs": [
+    "REQ-VERIFY-5090",
+    "SCENARIO-VERIFY-5090"
+  ],
+  "trie_latency_ms": 0.010393,
+  "trie_memory_bytes": 482128,
+  "trie_state_count": 1691,
+  "validity_rate": 1.0
+}
