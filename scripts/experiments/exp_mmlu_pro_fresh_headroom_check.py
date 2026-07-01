@@ -62,12 +62,16 @@ def build_prompt(question: str, options: list[str]) -> str:
 
 def parse_letter(text: str, n_options: int) -> str | None:
     valid = {chr(ord("A") + i) for i in range(n_options)}
-    # look for the LAST "ANSWER: X" occurrence (in case the model repeats the prompt format while reasoning)
+    # look for the LAST "ANSWER:" occurrence, then scan AFTER it (NOT including the literal string
+    # itself -- "ANSWER:" contains the letter 'A', which would false-match as the parsed answer
+    # before ever reaching the real letter after the colon; caught by a smoke test where the model's
+    # real answer was B but this returned A).
     idx = text.rfind("ANSWER:")
-    tail = text[idx:] if idx >= 0 else text
-    for ch in tail:
-        if ch in valid:
-            return ch
+    if idx >= 0:
+        tail = text[idx + len("ANSWER:") :]
+        for ch in tail:
+            if ch in valid:
+                return ch
     # fallback: scan the whole text for the last standalone valid letter
     for ch in reversed(text):
         if ch in valid:
