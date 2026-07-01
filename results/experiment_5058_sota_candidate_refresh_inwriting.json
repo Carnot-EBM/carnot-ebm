@@ -1,0 +1,113 @@
+{
+  "answer_diversity": {
+    "mean_unique_answers_per_question": 1.815,
+    "unique_answer_rate": 0.105574,
+    "unique_answers": 161
+  },
+  "candidate_cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.jsonl",
+  "candidate_cache_schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.row.v1",
+  "candidate_refresh_ready": true,
+  "d1_d6_readiness": {
+    "complete_row_count": 1525,
+    "d1_ready": true,
+    "d6_ready": true,
+    "ready": true,
+    "reason": "cache_parse_complete_with_mandated_sota_model"
+  },
+  "delayed_constraints_used": true,
+  "duplicate_rate": 1.0,
+  "duration_s": 0.775857,
+  "experiment": "experiment_5058_sota_candidate_refresh_inwriting",
+  "experiment_id": 5058,
+  "field_principles": {
+    "answer_diversity": {
+      "principle": "unique-answer counts and rates over refreshed parsed answers."
+    },
+    "candidate_cache_path": {
+      "principle": "path to the resumable MuSR SOTA candidate refresh JSONL cache."
+    },
+    "candidate_refresh_ready": {
+      "principle": "true only when mandated SOTA readiness, nonempty cache rows, full parse rate, and smoke-only legacy policy all hold."
+    },
+    "delayed_constraints_used": {
+      "principle": "true when draft answers are parsed after generation through the explicit answer/constraint schema."
+    },
+    "duplicate_rate": {
+      "principle": "fraction of refreshed parsed answers duplicated by frozen .464 answers for the same question."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for delayed-constraint SOTA MuSR refresh readiness or blocker."
+    },
+    "legacy_models_smoke_only": {
+      "principle": "true; legacy small models are smoke-only and never headline candidate provenance."
+    },
+    "model_specs": {
+      "principle": "all three mandated SOTA GGUF specs copied from the Exp5057 gate artifact."
+    },
+    "n_candidates": {
+      "principle": "number of refreshed candidate rows in the JSONL cache."
+    },
+    "n_questions": {
+      "principle": "number of MuSR questions represented by refreshed candidates."
+    },
+    "parse_rate": {
+      "principle": "fraction of refreshed candidate rows parsed through the delayed answer schema."
+    },
+    "used_top_logprobs": {
+      "principle": "false when Exp5057 lacks top-logprob or confidence telemetry."
+    }
+  },
+  "frozen_candidate_cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl",
+  "gate_diagnostics": {
+    "preflight_honest_verdict": "complete_gate_state_preflight_partial_ready",
+    "sota_judge_ready": false,
+    "sota_models_ready": true,
+    "top_logprob_or_confidence_ready": false
+  },
+  "gate_state_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5057_gate_state_preflight_v465.json",
+  "headline_model": {
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "role": "flagship_moe"
+  },
+  "honest_verdict": "complete_sota_candidate_refresh_ready_d1_d6",
+  "legacy_models_smoke_only": true,
+  "model_specs": {
+    "flagship_dense": {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "missing_diagnostic": null,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    },
+    "flagship_moe": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "missing_diagnostic": null,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+    },
+    "middle_moe": {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "missing_diagnostic": null,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    }
+  },
+  "n_candidates": 1525,
+  "n_questions": 200,
+  "parse_rate": 1.0,
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:52aec590c069242cf2780bb49fcfc614c669825311d4feea7617baa40cf3773d",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5058_sota_candidate_refresh_inwriting.json",
+  "resume_summary": {
+    "appended_rows": 1525,
+    "existing_complete_rows": 0,
+    "skipped_existing_rows": 0,
+    "target_rows": 1525
+  },
+  "schema": "carnot.experiment_5058_sota_candidate_refresh_inwriting.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5058",
+    "SCENARIO-VERIFY-5058"
+  ],
+  "used_top_logprobs": false
+}

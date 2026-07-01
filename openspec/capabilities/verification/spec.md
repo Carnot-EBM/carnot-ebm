@@ -22120,6 +22120,91 @@ collapsing the artifact into an unusable blocked judge gate.
 |---|---|---|
 | REQ-VERIFY-5057 | Proposed (`python/carnot/experiment_5057_gate_state_preflight_v465.py`, `results/experiment_5057_gate_state_preflight_v465.json`) | Proposed (`tests/python/test_experiment_5057_gate_state_preflight_v465.py`) |
 
+### REQ-VERIFY-5058: SOTA MuSR Candidate Refresh With Delayed Constraints
+
+The repository SHALL provide Exp 5058 at
+`python/carnot/experiment_5058_sota_candidate_refresh_inwriting.py` to build a
+reusable MuSR candidate-refresh cache at
+`results/experiment_5058_sota_candidate_refresh_inwriting.jsonl` and a terminal
+artifact at `results/experiment_5058_sota_candidate_refresh_inwriting.json` for
+downstream D1/D6 work.
+
+The runner SHALL load
+`results/experiment_5057_gate_state_preflight_v465.json` before any cache
+write. If `sota_models_ready` is not true or the usable model subset is empty,
+it SHALL fail fast with `honest_verdict=blocked_sota_models_unavailable` and
+`candidate_refresh_ready=false`. When at least one mandated SOTA GGUF is ready,
+the runner SHALL use one of the mandated model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` as the headline candidate provenance and
+record all three model specs from the gate artifact. Legacy small models SHALL
+remain smoke-only and SHALL NOT appear as headline candidate models.
+
+The candidate cache SHALL be resumable JSONL. Each complete candidate row SHALL
+include a stable row id, MuSR question id/index, prompt hash, model id, model
+role/path, decoding parameters, raw answer text, parsed answer, structured
+constraint fields, parse status, and source provenance. Complete existing rows
+SHALL be reused on rerun and missing rows SHALL be appended without erasing
+already-flushed rows.
+
+If top-logprob telemetry is unavailable, the runner SHALL NOT mark candidate
+refresh blocked for that reason alone. Instead it SHALL use delayed constrained
+decoding discipline: preserve the draft answer text, then parse or coerce it
+through an explicit answer/constraint schema with allowed choices, evidence
+fields, and validation status. The artifact SHALL set
+`used_top_logprobs=false` and `delayed_constraints_used=true` on that path.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`candidate_refresh_ready`, `candidate_cache_path`, `n_questions`,
+`n_candidates`, `parse_rate`, `duplicate_rate`, `answer_diversity`,
+`used_top_logprobs`, `delayed_constraints_used`, and
+`legacy_models_smoke_only`. It SHALL compare refreshed candidates against the
+frozen .464 MuSR candidate cache and report duplicate rate, parse rate, and
+answer diversity. It SHOULD also include schema metadata, `spec_refs`,
+`result_path`, resume accounting, D1/D6 readiness details, frozen-cache
+provenance, duration, field principles, and a reproducibility checksum.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix for delayed-constraint SOTA MuSR refresh readiness or blocker.`;
+`model_specs` = `all three mandated SOTA GGUF specs copied from the Exp5057 gate artifact.`;
+`candidate_refresh_ready` = `true only when mandated SOTA readiness, nonempty cache rows, full parse rate, and smoke-only legacy policy all hold.`;
+`candidate_cache_path` = `path to the resumable MuSR SOTA candidate refresh JSONL cache.`;
+`n_questions` = `number of MuSR questions represented by refreshed candidates.`;
+`n_candidates` = `number of refreshed candidate rows in the JSONL cache.`;
+`parse_rate` = `fraction of refreshed candidate rows parsed through the delayed answer schema.`;
+`duplicate_rate` = `fraction of refreshed parsed answers duplicated by frozen .464 answers for the same question.`;
+`answer_diversity` = `unique-answer counts and rates over refreshed parsed answers.`;
+`used_top_logprobs` = `false when Exp5057 lacks top-logprob or confidence telemetry.`;
+`delayed_constraints_used` = `true when draft answers are parsed after generation through the explicit answer/constraint schema.`;
+`legacy_models_smoke_only` = `true; legacy small models are smoke-only and never headline candidate provenance.`
+
+`candidate_refresh_ready` SHALL be true only when at least one mandated SOTA
+GGUF is ready, the cache contains one or more complete MuSR candidate rows over
+one or more questions, all complete rows parse through the delayed-constraint
+schema, and legacy models are not used as headline provenance.
+
+### SCENARIO-VERIFY-5058: Top-Logprob Absence Uses Delayed Constraints
+
+Given Exp 5057 reports `sota_models_ready=true` for at least one mandated SOTA
+GGUF but `top_logprob_or_confidence_ready=false`, and frozen .464 MuSR
+candidates are available, when Exp 5058 runs, then it writes or resumes the
+candidate JSONL cache, records every required artifact field, sets
+`used_top_logprobs=false`, sets `delayed_constraints_used=true`, computes
+parse/duplicate/diversity metrics against the frozen .464 rows, keeps
+`legacy_models_smoke_only=true`, and does not use top-logprob absence as a
+candidate-refresh blocker.
+
+If Exp 5057 reports no usable mandated SOTA model, then Exp 5058 writes the
+terminal blocked artifact with
+`honest_verdict=blocked_sota_models_unavailable`, no headline candidate rows,
+and explicit gate diagnostics.
+
+## Implementation Status (REQ-VERIFY-5058)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5058 | Proposed (`python/carnot/experiment_5058_sota_candidate_refresh_inwriting.py`, `results/experiment_5058_sota_candidate_refresh_inwriting.json`) | Proposed (`tests/python/test_experiment_5058_sota_candidate_refresh_inwriting.py`) |
+
 ### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
 
 The repository SHALL provide Exp 5044 at
