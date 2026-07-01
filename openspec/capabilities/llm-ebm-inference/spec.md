@@ -1799,6 +1799,71 @@ floor
 **And** `root_cause_tree` records the applicable blocker class
 **And** the verdict begins with `blocked_`.
 
+### REQ-INFER-SOTA-029: Exp 5124 Clean SOTA Runtime Provenance Gate
+
+The system SHALL provide an Exp 5124 runtime-provenance artifact at
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` that proves
+or blocks the local endpoint/cache/logprob substrate before downstream LLM
+experiments run.  Exp 5124 SHALL resolve `MODEL_SPECS` by calling
+`cached_sota_pair()` first, SHALL record the exact `model_path` values returned
+for the mandated local GGUFs, and SHALL use only llama.cpp / GGUF paths for
+runtime checks.  It SHALL NOT call `AutoTokenizer` on `*-GGUF` repositories.
+
+Exp 5124 SHALL attempt a real nontrivial local completion through an
+already-running llama.cpp-compatible endpoint or by starting a bounded local
+`llama-server` for one resolved mandated GGUF.  The artifact SHALL record
+`completion_proof`, `logprob_proof`, `endpoint_lifetime_s`,
+`request_response_transcript`, `cache_receipts`, and cache write/read evidence.
+It SHALL record real wall-clock `duration_s`; it SHALL NOT mock or pad timing.
+For clean live claims it SHALL include `duration_floor_evidence` explaining why
+repository adversarial verification should not raise `DURATION_TOO_SHORT`.
+
+The artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`cached_sota_pair_attempted`, `gguf_paths`, `completion_proof`,
+`logprob_proof`, `cache_ready`, `cache_receipts`, `endpoint_lifetime_s`,
+`request_response_transcript`, `duration_floor_evidence`,
+`adversarial_verify_passed`, `sota_runtime_clean`, `conductor_modified`, and
+`tests_run`.  `experiment_id` SHALL equal
+`exp5124-clean-sota-runtime-provenance-v470`, `milestone` SHALL equal
+`2026.07.470`, `inference_substrate` SHALL equal
+`local_sota_gguf_llamacpp_runtime_or_blocked`, and `conductor_modified` SHALL
+be false.
+
+`sota_runtime_clean` SHALL be true only when completion evidence, logprob
+evidence, cache write/read evidence, and adversarial verification all pass.  If
+any precondition fails, Exp 5124 SHALL write a terminal blocked artifact with
+`sota_runtime_clean=false`, `cache_ready=false`, an honest `blocked_` verdict,
+and a machine-readable `root_cause_tree`.
+
+### SCENARIO-INFER-SOTA-029-CLEAN: Live Completion Logprobs Cache And Verifier Pass
+
+**Given** `cached_sota_pair()` returns two mandated local GGUF model specs with
+`model_path` values
+**And** the intended local llama.cpp-compatible backend returns non-empty
+completion text plus token logprob or top-logprob evidence
+**And** the smoke cache writes and reads back at least one row
+**When** Exp 5124 records real wall-clock duration and adversarial verification
+returns no critical flags
+**Then** `completion_proof.ready=true`
+**And** `logprob_proof.ready=true`
+**And** `cache_ready=true`
+**And** `adversarial_verify_passed=true`
+**And** `sota_runtime_clean=true`
+**And** the verdict begins with `success_` or `complete_`.
+
+### SCENARIO-INFER-SOTA-029-BLOCKED: Missing Runtime Evidence Blocks Downstream Gate
+
+**Given** the mandated GGUF cache resolution attempt is recorded
+**But** completion, logprob, cache, or adversarial verification evidence is
+missing or failed
+**When** Exp 5124 completes
+**Then** `sota_runtime_clean=false`
+**And** `cache_ready=false`
+**And** `root_cause_tree` records the failed precondition
+**And** the verdict begins with `blocked_`
+**And** downstream verifier experiments are not run by this task.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1932,6 +1997,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
+| REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
