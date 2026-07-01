@@ -5611,5 +5611,5 @@ The critical path for milestone .250:
 ### Milestone 2026.07.467
 - exp_range: no data available this milestone
 - theme: empty-window operational retrospective with GPU claims suppressed
-- key result: no data available this milestone; the locked artifact records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries, so the idle GPU snapshot is informational rather than evidence of wasted compute
+- key result: no data available this milestone; the supplied timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries, so the idle GPU snapshot is informational rather than evidence of wasted compute
 - acceptance: 0/0 criteria met -- the supplied timing data contains no experiment entries to evaluate
