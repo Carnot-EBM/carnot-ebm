@@ -1280,6 +1280,73 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### ARC VALUE-HEAD ENERGY DISTILLATION 2026-06-30 (operator-directed investigation) — attack the CONFIRMED compute-cost bottleneck, not representation/distribution-shift/calibration (already ruled out)
+
+**Do NOT re-propose:** representation improvement (0.725 LOO-AUROC already achieved,
+`docs/research-notes/arc-representation-not-the-bottleneck-2026-06-23.md`), distribution-shift correction
+(exp4665 DAgger fix drove the shift metric to ~0, `first_win_rate_delta` still 0.0), calibration
+(exp4616: rank-to-cost monotonicity 1.0, recalibration doesn't change routing), or call-frequency
+reduction (exp4652 lazy top-k: `delta 0.0`). All FOUR are tested and closed on this exact value-head.
+
+**What's confirmed and still open:** exp4616's disambiguation is clean — `compute_cost_evidence.binds:
+true` (value-guided search wins at equal NODES, 7.6x expansion speedup, but LOSES at equal WALL-CLOCK:
+bare BFS solves 8/N vs value-head 6/N in the same time budget). The one compute-cost fix already tried
+(exp4652, reducing HOW OFTEN the value head is called) nulled. **Reducing HOW EXPENSIVE each call is —
+via distillation/compression into a cheap closed-form energy — is untested and structurally different.**
+
+**Real baseline (measured 2026-06-30, `carnot-arc-scipy-diag` Kaggle kernel, actual sandbox CPU, not a
+dev-box estimate):** `_component_stats_from_grid` (one sub-step of `cross_game_features_v3`, called at
+least twice per node — current + previous frame) costs **663us/call** via the scipy path (confirmed
+present, scipy 1.16.3 — the "may lack it" fallback risk is CLOSED, not live). That's ONE sub-step; the
+full `cross_game_features_v3` also does an O(components^2) greedy frame-matching loop
+(`_object_relational_features`) and pairwise-distance calc NOT yet measured end-to-end. (Also corrected
+in the same investigation: `arc_value_learner.py`'s docstring claimed the scipy path is "~34x faster"
+than the fallback — measured on real hardware it's 1.41x. Stale claim fixed in commit alongside this.)
+
+**Task (precondition-gated, prototype-first per CLAUDE.md "Phase Prototype + Validation" discipline):**
+```
+PRECONDITIONS:
+  a. Measure the FULL cross_game_features_v3 per-call latency end-to-end on the real Kaggle sandbox
+     (not just _component_stats_from_grid) -- extend the carnot-arc-scipy-diag kernel pattern. This is
+     the true "must beat this" baseline the distilled energy needs to undercut.
+  b. Confirm (from exp4616/live search logs) an estimate of nodes-evaluated-per-episode under the
+     wall-clock budget, so the aggregate overhead (per-call cost x nodes) is quantified, not assumed.
+CONCRETE STEPS:
+  1. OFFLINE ONLY first: distill the existing (0.725 LOO-AUROC) value function into a cheap closed-form
+     energy -- e.g. a small linear/quadratic function over a compact, CHEAP-TO-COMPUTE feature subset
+     (avoid recomputing the O(components^2) greedy match every node; consider incremental/cached updates
+     between adjacent search states instead of from-scratch recomputation). Train via knowledge
+     distillation FROM the existing value head's own predictions on held-out states (oracle-distinct:
+     no ground-truth answer-key dependency, no induced-engine leakage -- verifier_is_oracle=false).
+  2. Measure the distilled energy's (a) per-call latency vs the step-0(a) baseline, (b) ranking-quality
+     retention (correlation/AUROC vs the original value head, NOT vs ground truth -- distillation
+     fidelity, not a new discrimination claim).
+  3. ONLY if (a) shows a large, real speedup (order-of-magnitude, not marginal -- the exp4652 lazy-top-k
+     null shows a small win doesn't move live outcomes) AND (b) retains most ranking quality: re-run the
+     exp4616-style equal-wall-clock A/B (distilled-energy-guided search vs bare BFS) to test whether
+     compute-cost reduction alone unlocks the live lift, or whether a 5th cause is hiding beneath these
+     four. Report HONESTLY either way -- a null here, after this much has already nulled, is a real and
+     valuable result (closes the value-head/selection axis entirely, redirects effort fully to the
+     generation axis).
+REQUIRED ARTIFACT FIELDS:
+  baseline_full_feature_latency_us: {value: float, principle: "the true must-beat-this number (step 0a);
+    citing only the component-stats sub-step (663us) would understate the real per-node cost."}
+  distilled_latency_us: {value: float, principle: "the distilled energy's measured per-call cost on the
+    SAME real hardware as the baseline -- a dev-box number would not be comparable."}
+  speedup_factor: {value: float, principle: "distilled vs baseline_full_feature_latency_us; must be
+    large (order-of-magnitude) to plausibly move a wall-clock-bounded search, per exp4616's evidence."}
+  ranking_fidelity: {value: float, principle: "correlation/AUROC of distilled energy vs the ORIGINAL
+    value head's own predictions (distillation fidelity) -- not a new ground-truth discrimination claim."}
+  verifier_is_oracle: {value: false, principle: "distilled FROM the existing learned value head's own
+    predictions, not from ground-truth answer keys or induced-engine leakage -- oracle-distinct."}
+  live_equal_wallclock_delta: {value: "float or null", principle: "only populate if steps 1-2 clear the
+    speedup+fidelity bar; a null distillation result should NOT proceed to a live A/B and fabricate one."}
+```
+`track: hardware` does NOT apply here (this is pure software/CPU, not a board task) — use the normal
+ARC-solving reserved slot per the Incremental-Progress Scoping discipline; this is a SELECTION-axis
+efficiency task, distinct from the currently-active GENERATION-axis (L1-first-contact) work — both may
+run in the same milestone without conflict.
+
 ### KV260 FOLLOW-UP 2026-06-30 (operator "a + b" on arXiv:2606.25313) — measure our sampler's residual-energy decay exponent
 
 **Literature basis:** "Programmable Probabilistic Computer with 1,000,000 p-bits" (Aadit/Camsari group,
