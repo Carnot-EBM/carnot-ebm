@@ -16,33 +16,31 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: **0/23 are `SELF_DISCOVERY_ADVANCE`**. Nothing is `OFF_PATH`. I’d count **21 as `DUPLICATE`**, **1 as `UNCLEAR` but non-countable (`dc22`)**, and **1 as `OUTER_LOOP_RE` (`lp85` L6 capture)**.
+TL;DR: **0 clear SELF_DISCOVERY_ADVANCE.** The 20 `arc_loop_solve_*.json` artifacts are **UNCLEAR**, not creditable as live self-discovery from this evidence. `experiment_headway_lp85_capture.json` is **OUTER_LOOP_RE** because it declares `used_env_source`.
 
-| Artifact | Verdict | Evidence | Recommended Action |
+| Artifact | Verdict | Evidence | Recommended action |
 |---|---:|---|---|
-| `arc_loop_solve_lp85.json` L3 | `DUPLICATE` | `development_proxy`; registry already beyond it at lp85 L5 | Do not count as progress |
-| `arc_loop_solve_r11l.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Keep only as replay proof |
-| `arc_loop_solve_ls20.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Keep only as replay proof |
-| `arc_loop_solve_tu93.json` L4 | `DUPLICATE` | `development_proxy`; registry already beyond it at L5 | Do not count |
-| `arc_loop_solve_tr87.json` L6 | `DUPLICATE` | `development_proxy`; registry already records L6 | Do not count |
-| `arc_loop_solve_dc22.json` L3 | `UNCLEAR` | Artifact now claims L3, but visible registry/4894 reconciliation still treats dc22 as prior/duplicate-depth; also `development_proxy`, not live self-discovery | Reconcile registry/artifact; do not count until provenance proves live-agent own attempts |
-| `arc_loop_solve_vc33.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_g50t.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_s5i5.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_cd82.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_sp80.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_su15.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_sk48.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_ft09.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
-| `arc_loop_solve_ar25.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
-| `arc_loop_solve_m0r0.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_cn04.json` L3 | `DUPLICATE` | `development_proxy`; registry already records L3 | Do not count |
-| `arc_loop_solve_lf52.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_bp35.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_re86.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `arc_loop_solve_ka59.json` L1 | `DUPLICATE` | `development_proxy`; registry already records L1 | Do not count |
-| `arc_loop_solve_sb26.json` L2 | `DUPLICATE` | `development_proxy`; registry already records L2 | Do not count |
-| `experiment_headway_lp85_capture.json` L6 | `OUTER_LOOP_RE` | Declares `used_env_source`; self-flagged `flagged_adversarial`; corrigendum says `ARC_OUTER_LOOP_SOLVE` | Restamp `outer_loop_re`, quarantine, exclude from totals |
+| `results/arc_loop_solve_lp85.json` | UNCLEAR | Reachable path, but `development_proxy`, empty `honest_verdict`, no proof of runtime discovery. | Do not count until artifact records attempt trace, observations, learned model, and no outer-loop inputs. |
+| `results/arc_loop_solve_r11l.json` | UNCLEAR | Same: reachable, but only `development_proxy` / offline mode. | Same. |
+| `results/arc_loop_solve_ls20.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_tu93.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_dc22.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_vc33.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_g50t.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_s5i5.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sp80.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_su15.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sk48.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ft09.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ar25.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_m0r0.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_cn04.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_lf52.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_bp35.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_re86.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ka59.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sb26.json` | UNCLEAR | Same. | Same. |
+| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | `outer_loop_inputs_declared: ["used_env_source"]`; explicit source-derived trajectory capture. | Quarantine from live capability metrics; keep only as a labeled dev artifact, not a solve advance. |
 
-Pattern watch: the drift is **reproduction churn plus one outer-loop rescue attempt**. `development_proxy` standing-loop artifacts are reachable, but they are not evidence that the live hidden-game agent discovered anything from its own attempts. The lp85 L6 capture is the real danger signal: env-source-assisted deepening trying to patch a flat live-progress curve.
+Pattern watch: reachability is clean, but provenance is weak. `development_proxy` plus empty `honest_verdict` is not enough to claim live hidden-game discovery. The dangerous drift is laundering offline/dev-proxy artifacts into capability progress without a runtime evidence trail.
 

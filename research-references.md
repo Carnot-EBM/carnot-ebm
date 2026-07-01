@@ -1,3 +1,50 @@
+## 2026-06-30 -- .465 planner synthesis -- repair Phase D execution with tool-first verification, delayed constrained decoding, and audited self-learning
+
+Added by the `.465` planning sweep (Codex GPT-5, 2026-06-30) after reading the completed `.464`
+artifacts and re-checking arXiv, OpenReview-style queries, Hugging Face Papers, GitHub discovery,
+Extropic writing, Semantic Scholar-style EBT/ARM-EBM citation trails, and Logical Intelligence public
+updates. `.464` ended with a real but still non-headline D1 signal (`0.665` vs tuned-SC `0.585` on
+MuSR, `delta=+0.080`, CI touches zero), a second-corpus confirmation artifact, a negative process
+reward repair, a negative KAN/PURM calibration increment, a blocked SOTA/judge preflight, a blocked
+D6 cascade, a negative FR-11 replay-memory update (`heldout_delta=-0.050`), and a successful KV260
+timing-ratio packet. The next milestone should therefore execute the missing axes and audit the positive
+signals, not launch another broad verifier-moat variant sweep.
+
+Actionable .465 hooks:
+
+- **Tool-first verification before expensive judge fallback:** T1 (`arXiv:2504.04718`) and SAFE
+  (`arXiv:2604.01993`) are the cleanest way to unblock D6 without depending on a fragile judge server:
+  run structured tool/evidence checks first, charge tool calls separately, then use a SOTA local GGUF
+  judge only when the cheap verifier abstains.
+- **Delayed constrained decoding for SOTA candidate refresh:** In-Writing / Thinking Before Constraining
+  (`arXiv:2601.07525`) gives a practical path for generating structured answer candidates when the
+  top-logprob endpoint is unavailable. Use it to rebuild the D1 candidate cache with explicit constraint
+  fields and no small-model headline claims.
+- **Guided decoding cost frontier:** Vegas (`arXiv:2602.07223`) and reward-guided decoding
+  (`arXiv:2605.28020`) justify a decoding-time arm that reports accuracy per generated token / verifier
+  call, not just final accuracy. The control must prove the guided and unguided candidates differ and
+  must include NFE/token accounting to avoid the old in-generation-tautology failure mode.
+- **Audited continuous self-learning:** SAVeR / self-auditing reasoning (`arXiv:2604.08401`), Audited
+  Skill-Graph Self-Improvement (`arXiv:2512.23760`), and constraint-guided reasoning (`arXiv:2606.26108`)
+  point away from raw replay-memory insertion. `.465` should only promote traces into memory/skills when
+  they pass self-audit plus external constraint checks, and it should automatically refuse promotion when
+  held-out delta is non-positive.
+- **Hardware verification discipline:** Structured Testbench Generation (`arXiv:2606.12983`) and the
+  prior p-bit / programmable probabilistic computer reference keep the hardware slot focused on reproducible
+  board transcripts, timing-ratio parity, and generated testbench evidence. Extropic TSU and Logical
+  Intelligence Kona remain strategic references only; local hardware claims still require KV260/GateMate/
+  PolarFire artifacts.
+- **EBT / ARM-EBM citation trails:** the fresh check did not introduce a new local dependency beyond the
+  already-ingested EBT (`arXiv:2507.02092`), EBT-Policy (`arXiv:2510.27545`), and ARM-EBM
+  (`arXiv:2512.15605`) notes. Treat them as architecture context rather than a .465 execution blocker.
+
+Concrete `.465` experiment implications: (1) write a gate-state preflight artifact that distinguishes
+`sota_models_ready`, `sota_judge_ready`, and `tool_first_verifier_ready`; (2) rebuild D1 candidate refresh
+through delayed constrained decoding and then re-audit the +8pp signal; (3) independently audit the
+ConstraintBench second-corpus confirmation; (4) rerun D6 as a tool-first cascade that can execute even
+when judge confidence telemetry is unavailable; (5) replace negative FR-11 replay memory with an audited
+skill graph / no-promote learning loop; (6) keep the SOTA-ingestion and hardware-reserved slots alive.
+
 ## 2026-06-30 — .464 planning sweep — POWER the positive LoRA-EBM margin, repair the blocked confirmation axes, and add verifier-driven self-learning + constraint-puzzle benchmarks
 
 Added by the `.464` planning sweep (Codex GPT-5, 2026-06-30). This sweep read the `.463` artifacts before searching:
