@@ -1,0 +1,370 @@
+{
+  "adversarial_verify_passed": true,
+  "adversarial_verify_report": {
+    "flags": []
+  },
+  "blocker_root_cause": {
+    "detail": "llama-server started but no completion endpoint became ready",
+    "endpoint_summary": {
+      "candidate_endpoints": [
+        "http://127.0.0.1:58385"
+      ],
+      "completion_ready": false,
+      "confidence_ready": false,
+      "duration_s": 0.000174,
+      "probes": [
+        {
+          "completion_probe": {
+            "detail": "http://127.0.0.1:58385/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:58385/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
+            "ready": false,
+            "status": null
+          },
+          "endpoint": "http://127.0.0.1:58385",
+          "telemetry_probe": {
+            "detail": "skipped: completion probe failed",
+            "ready": false,
+            "status": null
+          }
+        }
+      ],
+      "selected_endpoint": null,
+      "telemetry_signal": null,
+      "top_logprob_ready": false
+    },
+    "kind": "server_started_but_endpoint_not_ready"
+  },
+  "cache_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.jsonl",
+  "cache_rows_written": 0,
+  "claimed_capability_scope": "runtime_provenance_only",
+  "cleanup_behavior": {
+    "already_exited": false,
+    "returncode": -15,
+    "started_by_preflight": true,
+    "terminated": true
+  },
+  "completion_endpoint_ready": false,
+  "duration_s": 64.111333,
+  "endpoint_lifetime_s": 0.0,
+  "endpoint_summary": {
+    "candidate_endpoints": [
+      "http://127.0.0.1:58385"
+    ],
+    "completion_ready": false,
+    "confidence_ready": false,
+    "duration_s": 0.000174,
+    "probes": [
+      {
+        "completion_probe": {
+          "detail": "http://127.0.0.1:58385/completion: URLError: <urlopen error [Errno 111] Connection refused>; http://127.0.0.1:58385/v1/completions: URLError: <urlopen error [Errno 111] Connection refused>",
+          "ready": false,
+          "status": null
+        },
+        "endpoint": "http://127.0.0.1:58385",
+        "telemetry_probe": {
+          "detail": "skipped: completion probe failed",
+          "ready": false,
+          "status": null
+        }
+      }
+    ],
+    "selected_endpoint": null,
+    "telemetry_signal": null,
+    "top_logprob_ready": false
+  },
+  "endpoint_url": "http://127.0.0.1:58385",
+  "excluded_claims": [
+    "uPRM",
+    "process_verifier",
+    "hallucination_detection"
+  ],
+  "experiment": "experiment_5097_clean_sota_endpoint_logprob_cache",
+  "experiment_id": 5097,
+  "field_principles": {
+    "adversarial_verify_passed": {
+      "principle": "records the repository adversarial verifier outcome before readiness is declared."
+    },
+    "blocker_root_cause": {
+      "principle": "machine-readable missing endpoint, server, runtime, cache, or telemetry evidence for blocked runs."
+    },
+    "cache_path": {
+      "principle": "stable JSONL path for the smoke cache or blocked no-row evidence."
+    },
+    "cache_rows_written": {
+      "principle": "cache rows are counted only when real endpoint telemetry backs them."
+    },
+    "completion_endpoint_ready": {
+      "principle": "true only when a local endpoint returned non-empty deterministic completion text."
+    },
+    "duration_s": {
+      "principle": "wall-clock duration catches live-substrate claims that are too short to be credible."
+    },
+    "endpoint_lifetime_s": {
+      "principle": "measured endpoint lifetime prevents a too-short live-substrate readiness claim."
+    },
+    "endpoint_url": {
+      "principle": "concrete endpoint URL makes the completion/logprob proof replayable."
+    },
+    "flagged_adversarial": {
+      "principle": "true if the artifact's own provenance or adversarial verifier detects an inconsistent claim."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefix verdict separates a clean endpoint/cache result from an honest blocked runtime-precondition result."
+    },
+    "inference_substrate": {
+      "principle": "declares live_llm_inference only when a local endpoint actually returned completion/logprob evidence."
+    },
+    "live_llm_invoked": {
+      "principle": "true only when the local LLM endpoint returned completion/logprob evidence during this run."
+    },
+    "logprob_endpoint_clean": {
+      "principle": "true only after endpoint, cache, and adversarial provenance checks all pass."
+    },
+    "logprob_endpoint_ready": {
+      "principle": "true only when real token logprob or top-logprob evidence was observed."
+    },
+    "model_specs": {
+      "principle": "names all three mandated SOTA GGUF IDs with resolved local .gguf paths or missing diagnostics."
+    },
+    "preconditions_checked": {
+      "principle": "records CUDA/GPU, VRAM, llama.cpp, GGUF cache, free-port, cache-path, disk, and env evidence before inference."
+    },
+    "sample_completion": {
+      "principle": "stores the deterministic completion proof used for readiness."
+    },
+    "sample_logprob_evidence": {
+      "principle": "stores observed token/top-logprob counts and examples without fabricating absent telemetry."
+    },
+    "server_command": {
+      "principle": "exact command proves whether a local server was started instead of silently assuming one existed."
+    },
+    "top_logprob_or_confidence_ready": {
+      "principle": "true only when top-logprob alternatives or structured confidence evidence are present."
+    },
+    "usable_sota_models": {
+      "principle": "the exact mandated local GGUF files that can be handed to llama.cpp."
+    }
+  },
+  "finished_at": "2026-07-01T13:05:10Z",
+  "flagged_adversarial": false,
+  "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+  "inference_substrate": "precondition_check_only",
+  "live_llm_invoked": false,
+  "logprob_endpoint_clean": false,
+  "logprob_endpoint_ready": false,
+  "model_specs": {
+    "cached_sota_pair": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ],
+    "gguf_tokenizer_rule": "embedded_gguf_tokenizer_only",
+    "loader": "llama.cpp",
+    "mandatory_models": [
+      {
+        "cache_status": "resolved",
+        "file_evidence": {
+          "exists": true,
+          "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "flagship_moe"
+      },
+      {
+        "cache_status": "resolved",
+        "file_evidence": {
+          "exists": true,
+          "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "role": "flagship_dense"
+      },
+      {
+        "cache_status": "resolved",
+        "file_evidence": {
+          "exists": true,
+          "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "role": "middle_moe"
+      }
+    ],
+    "preferred_quant": "Q4_K_M"
+  },
+  "preconditions_checked": {
+    "cache_path": {
+      "parent_exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.jsonl",
+      "will_write_only_with_real_logprobs": true
+    },
+    "cuda_gpu_visibility": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "gpus": [
+        {
+          "free_vram_mb": 24120,
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_vram_mb": 24576,
+          "used_vram_mb": 4
+        },
+        {
+          "free_vram_mb": 24120,
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "total_vram_mb": 24576,
+          "used_vram_mb": 4
+        }
+      ],
+      "nvidia_smi": {
+        "available": true,
+        "stderr": ""
+      }
+    },
+    "disk_space": {
+      "available": true,
+      "free_bytes": 1490044051456,
+      "free_gib": 1387.712
+    },
+    "environment_variables": {},
+    "free_port": {
+      "available": true,
+      "endpoint_url": "http://127.0.0.1:58385",
+      "error": null,
+      "host": "127.0.0.1",
+      "port": 58385
+    },
+    "free_vram": {
+      "available": true,
+      "total_free_vram_mb": 48240
+    },
+    "llama_cpp_python": {
+      "available": true,
+      "detail": "llama_cpp import ok",
+      "version": "0.3.29"
+    },
+    "llama_cpp_server": {
+      "available": true,
+      "candidates": [
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": true,
+          "exists": true,
+          "is_file": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build-hip/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/local/bin/llama-server",
+          "source": "well_known_path"
+        },
+        {
+          "executable": false,
+          "exists": false,
+          "is_file": false,
+          "path": "/usr/bin/llama-server",
+          "source": "well_known_path"
+        }
+      ],
+      "missing_diagnostic": null,
+      "selected_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    "recorded_before_live_inference": true,
+    "resolved_local_gguf_paths": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+    }
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:da43796c126248e5a433a97ec22396f54bdcb34d945c76c2ecaf3fc1b1cbb693",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+  "sample_completion": null,
+  "sample_logprob_evidence": {
+    "error": "server bring-up not attempted",
+    "ready": false,
+    "route": null,
+    "status": null,
+    "telemetry_signal": null,
+    "token_logprob_count": 0,
+    "token_logprobs": [],
+    "top_logprob_row_count": 0,
+    "top_logprobs": []
+  },
+  "schema": "carnot.experiment_5097_clean_sota_endpoint_logprob_cache.v1",
+  "server_command": [
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "-m",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "58385",
+    "-ngl",
+    "999",
+    "-c",
+    "1024"
+  ],
+  "server_logs": {
+    "exists": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_5097_clean_sota_endpoint_logprob_cache/llamacpp_server.log",
+    "tail": ""
+  },
+  "server_pid": 2718493,
+  "spec_refs": [
+    "REQ-INFER-SOTA-027",
+    "SCENARIO-INFER-SOTA-027-SUCCESS",
+    "SCENARIO-INFER-SOTA-027-BLOCKED"
+  ],
+  "started_at": "2026-07-01T13:04:06Z",
+  "top_logprob_or_confidence_ready": false,
+  "usable_sota_models": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe",
+      "size_bytes": 22134528992
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense",
+      "size_bytes": 18323731456
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe",
+      "size_bytes": 16947539744
+    }
+  ]
+}

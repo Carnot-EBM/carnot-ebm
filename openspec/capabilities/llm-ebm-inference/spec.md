@@ -1644,6 +1644,99 @@ or CMake CUDA build variables
 `cuda_receipt_ready_candidate=true`
 **And** the artifact never claims SOTA model receipt.
 
+### REQ-INFER-SOTA-027: Exp 5097 Clean SOTA Endpoint Logprob Cache Runtime Provenance
+
+The system SHALL provide an Exp 5097 runtime-provenance repair artifact at
+`results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json` and, only
+when real token logprob or top-logprob evidence is observed from a local
+llama.cpp/OpenAI-compatible endpoint, a smoke cache at
+`results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.jsonl`.
+
+Exp 5097 SHALL inspect the three mandated GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared local GGUF resolver /
+`cached_sota_pair()` pattern and SHALL NOT call `AutoTokenizer` on a `*-GGUF`
+repository ID.  Before endpoint inference or server bring-up, the artifact
+SHALL record `preconditions_checked` with CUDA/GPU visibility, free VRAM when
+available, llama.cpp Python/server availability, resolved local `.gguf` paths,
+a free-port probe, cache path/disk-space evidence, and the runtime environment
+variables used.
+
+The artifact SHALL either probe an already-running endpoint or start a bounded
+local `llama-server` process for one resolved mandated GGUF.  It SHALL record
+server command/PID when a process is started, endpoint URL, start/end timing,
+endpoint lifetime, server logs, cleanup behavior, deterministic completion
+proof, token logprob or top-logprob proof, cache row count/path, and an
+adversarial verification result before declaring readiness.  Exp 5097 SHALL
+write at least ten smoke cache rows only when real token logprob or top-logprob
+evidence is present; otherwise it SHALL set `cache_rows_written=0` and record
+`blocker_root_cause`.
+
+The artifact SHALL expose these required fields with matching entries in
+`field_principles`: `honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `usable_sota_models`, `server_command`,
+`endpoint_url`, `endpoint_lifetime_s`, `completion_endpoint_ready`,
+`logprob_endpoint_ready`, `top_logprob_or_confidence_ready`,
+`sample_completion`, `sample_logprob_evidence`, `cache_rows_written`,
+`cache_path`, `logprob_endpoint_clean`, `live_llm_invoked`,
+`adversarial_verify_passed`, `blocker_root_cause`, and
+`flagged_adversarial`.  `honest_verdict` SHALL use an honest terminal-prefix
+form such as `success_clean_sota_endpoint_logprob_cache_ready` for a clean
+endpoint/cache artifact or
+`blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs` when local
+logprob evidence is unavailable.
+
+The required `field_principles` SHALL include these principle texts:
+`terminal-prefix verdict separates a clean endpoint/cache result from an honest blocked runtime-precondition result.`;
+`wall-clock duration catches live-substrate claims that are too short to be credible.`;
+`declares live_llm_inference only when a local endpoint actually returned completion/logprob evidence.`;
+`records CUDA/GPU, VRAM, llama.cpp, GGUF cache, free-port, cache-path, disk, and env evidence before inference.`;
+`names all three mandated SOTA GGUF IDs with resolved local .gguf paths or missing diagnostics.`;
+`the exact mandated local GGUF files that can be handed to llama.cpp.`;
+`exact command proves whether a local server was started instead of silently assuming one existed.`;
+`concrete endpoint URL makes the completion/logprob proof replayable.`;
+`measured endpoint lifetime prevents a too-short live-substrate readiness claim.`;
+`true only when a local endpoint returned non-empty deterministic completion text.`;
+`true only when real token logprob or top-logprob evidence was observed.`;
+`true only when top-logprob alternatives or structured confidence evidence are present.`;
+`stores the deterministic completion proof used for readiness.`;
+`stores observed token/top-logprob counts and examples without fabricating absent telemetry.`;
+`cache rows are counted only when real endpoint telemetry backs them.`;
+`stable JSONL path for the smoke cache or blocked no-row evidence.`;
+`true only after endpoint, cache, and adversarial provenance checks all pass.`;
+`true only when the local LLM endpoint returned completion/logprob evidence during this run.`;
+`records the repository adversarial verifier outcome before readiness is declared.`;
+`machine-readable missing endpoint, server, runtime, cache, or telemetry evidence for blocked runs.`;
+and `true if the artifact's own provenance or adversarial verifier detects an inconsistent claim.`
+
+### SCENARIO-INFER-SOTA-027-SUCCESS: Live Logprobs Produce Clean Cache
+
+**Given** at least one mandated GGUF resolves to a local `.gguf` file
+**And** a local endpoint returns deterministic completion text plus token
+logprob or top-logprob evidence
+**When** Exp 5097 clears the live-substrate duration/provenance checks
+**Then** `completion_endpoint_ready=true`
+**And** `logprob_endpoint_ready=true`
+**And** `top_logprob_or_confidence_ready=true`
+**And** `cache_rows_written>=10`
+**And** `adversarial_verify_passed=true`
+**And** `flagged_adversarial=false`
+**And** the verdict is
+`success_clean_sota_endpoint_logprob_cache_ready`.
+
+### SCENARIO-INFER-SOTA-027-BLOCKED: Missing Live Logprobs Writes Clean Blocked Artifact
+
+**Given** the mandated GGUF cache and endpoint preconditions are recorded
+**But** no local endpoint returns real token logprob or top-logprob evidence
+**When** Exp 5097 completes
+**Then** `live_llm_invoked=false`
+**And** `cache_rows_written=0`
+**And** `inference_substrate=precondition_check_only`
+**And** `blocker_root_cause` names the missing endpoint, server, runtime, or
+telemetry evidence
+**And** the artifact does not claim uPRM, process-verifier, or hallucination
+detection wins.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1775,6 +1868,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
+| REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
