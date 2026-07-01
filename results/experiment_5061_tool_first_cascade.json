@@ -1,0 +1,200 @@
+{
+  "baseline_source": "tuned_self_consistency",
+  "cascade_accuracy": 0.665,
+  "cascade_executed": true,
+  "cascade_order": [
+    "deterministic_constraint_checks",
+    "safe_style_evidence_checks_when_available",
+    "cheap_oracle_distinct_verifier_selection",
+    "abstain_uncertain_route",
+    "optional_sota_judge_fallback"
+  ],
+  "cheap_verifier_accuracy": 0.665,
+  "cost_accounting": {
+    "cascade_total_cost_units": 2.4,
+    "cost_ratio_vs_judge_only": 0.012,
+    "judge_call_cost_units": 1.0,
+    "judge_cost_units": 0.0,
+    "judge_only_cost_units": 200.0,
+    "tool_call_cost_units": 0.001,
+    "tool_cost_units": 0.4,
+    "unit": "nominal_relative_call_cost",
+    "verifier_call_cost_units": 0.01,
+    "verifier_cost_units": 2.0
+  },
+  "delta_vs_judge_only": 0.08,
+  "duration_s": 0.000292,
+  "efficiency_win": true,
+  "evidence_tool_checks_available": true,
+  "experiment": "experiment_5061_tool_first_cascade",
+  "experiment_id": 5061,
+  "field_principles": {
+    "cascade_accuracy": {
+      "principle": "accuracy of the selected tool-first cascade over the paired replay rows."
+    },
+    "cascade_executed": {
+      "principle": "true only after the Exp5057 tool-first and Exp5059 best-arm gates pass."
+    },
+    "delta_vs_judge_only": {
+      "principle": "cascade_accuracy - judge_only_accuracy."
+    },
+    "efficiency_win": {
+      "principle": "true iff parity holds at lower charged judge-call and nominal total cost."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix; blocked tool/best-arm precondition, success parity at lower judge-call fraction, or complete no-efficiency-win."
+    },
+    "judge_call_fraction": {
+      "principle": "charged cascade judge fallback calls divided by judge-only baseline calls."
+    },
+    "judge_only_accuracy": {
+      "principle": "accuracy of the selected full baseline: cached SOTA judge when available, else tuned-SC."
+    },
+    "legacy_models_smoke_only": {
+      "principle": "true; legacy small models are smoke-only and never headline provenance."
+    },
+    "model_specs": {
+      "principle": "mandated SOTA GGUF declarations plus Exp5057 and Exp5059 provenance."
+    },
+    "paired_ci95": {
+      "principle": "paired bootstrap CI95 for cascade correctness minus judge-only baseline."
+    },
+    "sota_judge_used": {
+      "principle": "true only when abstained rows are routed to a cached or ready SOTA judge."
+    },
+    "tool_call_count": {
+      "principle": "charged deterministic, evidence, and non-judge fallback tool calls."
+    },
+    "tool_first_path_used": {
+      "principle": "true when deterministic/evidence/tool checks are the first cascade stages."
+    },
+    "verifier_call_count": {
+      "principle": "charged cheap oracle-distinct verifier calls, including abstentions."
+    },
+    "verifier_is_oracle": {
+      "principle": "false; Exp5059's selected cheap verifier is oracle-distinct."
+    }
+  },
+  "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "judge_call_count": 0,
+  "judge_call_fraction": 0.0,
+  "judge_call_reduction": 1.0,
+  "judge_only_accuracy": 0.585,
+  "judge_only_call_count": 200,
+  "legacy_models_smoke_only": true,
+  "model_specs": {
+    "exp5057_model_specs": {
+      "flagship_dense": {
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+      },
+      "flagship_moe": {
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+      },
+      "middle_moe": {
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "missing_diagnostic": null,
+        "preferred_quant": "Q4_K_M",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    },
+    "exp5059_model_specs": {
+      "exp5058_model_specs": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      },
+      "mandated_sota": {
+        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "powered_d1_scorer": {
+        "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
+        "scorer_trained": true,
+        "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
+      }
+    },
+    "mandated_sota": {
+      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "strong_judge_fallback": {
+      "policy": "optional fallback only; no legacy small model headline evidence",
+      "ready": false,
+      "usable_sota_models": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "role": "flagship_moe"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "role": "flagship_dense"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "role": "middle_moe"
+        }
+      ],
+      "used": false
+    }
+  },
+  "paired_ci95": [
+    0.0,
+    0.165
+  ],
+  "paired_correct_counts": {
+    "cascade_correct": 133,
+    "judge_only_correct": 117,
+    "n_rows": 200
+  },
+  "random_seed": 20260630,
+  "reproducibility_checksum": "sha256:7ddfbbd0a5456341e5aef76c0333ec571641df790bffa2c3ff1bfb0eab707386",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5061_tool_first_cascade.json",
+  "route_counts": {
+    "abstain_uncertain": 0,
+    "cheap_verifier": 200,
+    "sota_judge_fallback": 0,
+    "tuned_sc_fallback": 0
+  },
+  "schema": "carnot.experiment_5061_tool_first_cascade.v1",
+  "sota_judge_used": false,
+  "source_artifacts": {
+    "exp5057": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5057_gate_state_preflight_v465.json",
+    "exp5059": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5061",
+    "SCENARIO-VERIFY-5061"
+  ],
+  "tool_call_count": 400,
+  "tool_first_path_used": true,
+  "tuned_self_consistency_accuracy": 0.585,
+  "verifier_call_count": 200,
+  "verifier_is_oracle": false
+}
