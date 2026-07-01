@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.467",
+  "generated_at": "2026-07-01T11:25:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No data available this milestone: the authoritative timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound timing entries, the idle GPU snapshot is informational rather than a reportable utilization failure.",
+  "bottlenecks_identified": [
+    "no data available this milestone for timing-derived bottlenecks",
+    "No compute-bound timing entries were present, so GPU idle and DualGPURunner engagement cannot be assessed as failures."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit empty-window timing status when activation has no experiment commits.",
+    "Gate GPU-utilization alerts on the presence of compute-bound timing rows before adding operational bottlenecks.",
+    "Surface the empty timing-window reason in operator summaries so reviewers do not infer throughput from unrelated GPU snapshots."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a first-class no-data retrospective path that fills slowest-experiment sections with an explicit no-data marker.",
+    "Keep GPU-idle claims mechanically gated by compute-bound timing evidence.",
+    "Include the activation-window timing status in changelog and research-log templates."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally sparse because the only scoped timing evidence says no experiment commits were found. The GPU state shows idle devices, but without compute-bound timing rows that is a state observation rather than an efficiency finding."
+}
