@@ -1,0 +1,476 @@
+{
+  "correctness_preserved": true,
+  "delta_effort_vs_pure": {
+    "pbit_guided": 0,
+    "random_assumption": 3
+  },
+  "duration_s": 0.056744,
+  "exact_solver_used": "z3",
+  "fallback_rate": 0.0,
+  "fallback_rates_by_arm": {
+    "pbit_guided": 0.0,
+    "random_assumption": 0.75
+  },
+  "field_principles": {
+    "correctness_preserved": "True only when exact labels and all claimed solutions verify.",
+    "delta_effort_vs_pure": "Signed arm effort minus pure effort; negative means less effort than pure.",
+    "duration_s": "Measured local CPU diagnostic runtime in seconds.",
+    "exact_solver_used": "Exact authority used for labels and model verification.",
+    "fallback_rate": "P-bit-guided fraction requiring pure exact fallback.",
+    "flagged_adversarial": "True when labels or claimed models fail exact verification.",
+    "helps_declared_family": "True only when verified p-bit effort is below pure effort on this family.",
+    "honest_verdict": "Terminal prefix: success only for verified effort reduction, otherwise complete no-win.",
+    "inference_substrate": "Must be deterministic_solver_plus_stochastic_sampler, not live_llm_inference.",
+    "instance_family": "Declared deterministic small SAT/CNF family.",
+    "n_instances": "Number of declared CNF instances evaluated.",
+    "pbit_guided_effort": "Exact solver effort after p-bit consensus assumptions plus fallback.",
+    "pure_solver_effort": "Exact solver effort with no temporary assumptions.",
+    "random_assumption_effort": "Exact solver effort after random temporary assumptions plus fallback."
+  },
+  "flagged_adversarial": false,
+  "helps_declared_family": false,
+  "honest_verdict": "complete_pbit_guided_cdcl_distribution_sensitive_no_win",
+  "inference_substrate": "deterministic_solver_plus_stochastic_sampler",
+  "instance_family": "planted_consensus_3sat_v1",
+  "n_instances": 4,
+  "pbit_guided_effort": {
+    "conflicts": null,
+    "decisions": null,
+    "duration_s": 0.000602,
+    "fallbacks": 0,
+    "instances": 4,
+    "metric": "probe_count_proxy",
+    "probe_count": 4,
+    "propagations": null,
+    "total_effort_score": 4
+  },
+  "per_instance_results": [
+    {
+      "exact_status": true,
+      "instance_id": "planted_consensus_3sat_v1_01",
+      "known_satisfiable": true,
+      "n_clauses": 15,
+      "n_vars": 8,
+      "pbit_guided": {
+        "assignment": [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "assumptions": [
+          -8,
+          1,
+          4,
+          -5
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000167,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "pure_solver": {
+        "assignment": [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "assumptions": [],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000173,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "random_assumption": {
+        "assignment": [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        "assumptions": [
+          -6,
+          -4,
+          3,
+          7
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000415,
+          "fallback_used": true,
+          "metric": "probe_count_proxy",
+          "probe_count": 2,
+          "propagations": null,
+          "total_effort_score": 2
+        },
+        "fallback_used": true,
+        "primary_status": "unsat",
+        "solution_verified": true,
+        "status": "sat"
+      }
+    },
+    {
+      "exact_status": true,
+      "instance_id": "planted_consensus_3sat_v1_02",
+      "known_satisfiable": true,
+      "n_clauses": 15,
+      "n_vars": 8,
+      "pbit_guided": {
+        "assignment": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
+        "assumptions": [
+          8,
+          -4,
+          5,
+          3
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000142,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "pure_solver": {
+        "assignment": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
+        "assumptions": [],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000143,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "random_assumption": {
+        "assignment": [
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
+        "assumptions": [
+          8,
+          2,
+          -1,
+          7
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000144,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      }
+    },
+    {
+      "exact_status": true,
+      "instance_id": "planted_consensus_3sat_v1_03",
+      "known_satisfiable": true,
+      "n_clauses": 15,
+      "n_vars": 8,
+      "pbit_guided": {
+        "assignment": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+        ],
+        "assumptions": [
+          -4,
+          -8,
+          6,
+          2
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000152,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "pure_solver": {
+        "assignment": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+        ],
+        "assumptions": [],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000143,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "random_assumption": {
+        "assignment": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false
+        ],
+        "assumptions": [
+          2,
+          -1,
+          8,
+          -4
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.00031,
+          "fallback_used": true,
+          "metric": "probe_count_proxy",
+          "probe_count": 2,
+          "propagations": null,
+          "total_effort_score": 2
+        },
+        "fallback_used": true,
+        "primary_status": "unsat",
+        "solution_verified": true,
+        "status": "sat"
+      }
+    },
+    {
+      "exact_status": true,
+      "instance_id": "planted_consensus_3sat_v1_04",
+      "known_satisfiable": true,
+      "n_clauses": 15,
+      "n_vars": 8,
+      "pbit_guided": {
+        "assignment": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "assumptions": [
+          5,
+          4,
+          -1,
+          3
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000141,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "pure_solver": {
+        "assignment": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "assumptions": [],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000148,
+          "fallback_used": false,
+          "metric": "probe_count_proxy",
+          "probe_count": 1,
+          "propagations": null,
+          "total_effort_score": 1
+        },
+        "fallback_used": false,
+        "primary_status": "sat",
+        "solution_verified": true,
+        "status": "sat"
+      },
+      "random_assumption": {
+        "assignment": [
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "assumptions": [
+          -3,
+          -5,
+          7,
+          8
+        ],
+        "effort": {
+          "conflicts": null,
+          "decisions": null,
+          "duration_s": 0.000308,
+          "fallback_used": true,
+          "metric": "probe_count_proxy",
+          "probe_count": 2,
+          "propagations": null,
+          "total_effort_score": 2
+        },
+        "fallback_used": true,
+        "primary_status": "unsat",
+        "solution_verified": true,
+        "status": "sat"
+      }
+    }
+  ],
+  "pure_solver_effort": {
+    "conflicts": null,
+    "decisions": null,
+    "duration_s": 0.000607,
+    "fallbacks": 0,
+    "instances": 4,
+    "metric": "probe_count_proxy",
+    "probe_count": 4,
+    "propagations": null,
+    "total_effort_score": 4
+  },
+  "random_assumption_effort": {
+    "conflicts": null,
+    "decisions": null,
+    "duration_s": 0.001177,
+    "fallbacks": 3,
+    "instances": 4,
+    "metric": "probe_count_proxy",
+    "probe_count": 7,
+    "propagations": null,
+    "total_effort_score": 7
+  },
+  "sampler_config": {
+    "beta": 2.5,
+    "burn_in": 24,
+    "consensus_threshold": 0.7,
+    "kind": "local_boolean_gibbs_pbit_consensus",
+    "max_assumptions": 4,
+    "n_samples": 96,
+    "seed": 5089
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5089",
+    "SCENARIO-VERIFY-5089"
+  ]
+}

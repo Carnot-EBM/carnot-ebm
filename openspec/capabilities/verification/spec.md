@@ -23386,3 +23386,52 @@ an attempted headroom-present second-corpus check, it SHALL start with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5035 | Proposed (`python/carnot/experiment_5035_moat_second_corpus_v3.py`, `results/experiment_5035_moat_second_corpus_v3.json`) | Proposed (`tests/python/test_experiment_5035_moat_second_corpus_v3.py`) |
+
+### REQ-VERIFY-5089: p-bit Guided CDCL Assumption Bridge
+
+The repository SHALL provide a CPU-only Exp 5089 diagnostic that evaluates a
+correctness-preserving bridge between stochastic Ising/p-bit samples and an
+exact SAT authority on a small declared CNF family. The stochastic sampler MAY
+propose temporary literal assumptions, but every satisfiability label and every
+claimed satisfying assignment MUST be accepted only after an exact SAT/Z3
+solver verifies it.
+
+The runner SHALL generate or load a deterministic family of small CNF
+instances, determine known satisfiability with the exact solver, run pure
+solver, random-assumption, and p-bit-guided-assumption arms, and record solver
+effort using conflicts/propagations when exposed by the solver or deterministic
+probe-count/wall-time proxies otherwise. Any arm whose assumptions are
+rejected, unsatisfiable, unavailable, or fail model verification SHALL fall back
+to the pure exact solver path and count that fallback.
+
+The terminal artifact SHALL be written to
+`results/experiment_5089_pbit_guided_cdcl_bridge_v467.json` and include
+`honest_verdict`, `duration_s`, `inference_substrate`,
+`n_instances`, `instance_family`, `exact_solver_used`,
+`correctness_preserved`, `pure_solver_effort`,
+`random_assumption_effort`, `pbit_guided_effort`,
+`delta_effort_vs_pure`, `fallback_rate`, `helps_declared_family`,
+`flagged_adversarial`, and principle annotations for those fields.
+
+`inference_substrate` MUST equal
+`deterministic_solver_plus_stochastic_sampler` and MUST NOT claim
+`live_llm_inference`. `honest_verdict` SHALL begin with
+`success_pbit_guided_cdcl_effort_reduction_` only when the p-bit-guided effort
+is strictly below pure solver effort on the declared family while preserving
+correctness; otherwise it SHALL begin with
+`complete_pbit_guided_cdcl_distribution_sensitive_no_win`.
+
+### SCENARIO-VERIFY-5089: Stochastic Assumptions Are Advisory Only
+
+Given the Exp 5089 runner and its deterministic CNF family, when the diagnostic
+runs, then it solves each instance with the exact authority, runs the random
+and p-bit assumption arms using only temporary assumptions, verifies every
+claimed solution with the exact solver, records fallback rate and effort for
+all three arms, writes the required JSON artifact, and reports a terminal
+verdict without invoking an LLM or promoting an unverified stochastic sample.
+
+## Implementation Status (REQ-VERIFY-5089)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5089 | Proposed (`python/carnot/verify/pbit_cdcl_bridge.py`, `results/experiment_5089_pbit_guided_cdcl_bridge_v467.json`) | Proposed (`tests/python/test_experiment_5089_pbit_guided_cdcl_bridge.py`) |
