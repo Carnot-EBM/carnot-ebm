@@ -1280,7 +1280,73 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NUDGE 2026-07-01 (operator-directed, TOP PRIORITY for `.468` — preempts further Phase D pivot-hunting): RUN the FoVer in-domain redirect NOW
+### FOVER STEP-VERIFIER VS CHEAP BASELINE — RESOLVED 2026-07-01 (outer-loop, same session as the NUDGE retraction above)
+
+**The corrected, well-posed FoVer follow-up — actually run, not just drafted.** Replaces the retracted
+"verifier beats self-consistency" framing (FoVer has no natural multi-candidate structure to vote among)
+with the question its real task shape actually supports: does a LEARNED step-verifier discriminate
+correct-vs-incorrect reasoning steps better than a CHEAP, non-learned text-statistical baseline, on the
+real 6,548-row `data/fover_corpus_v4.json` corpus?
+
+`scripts/experiments/exp_fover_stepverifier_vs_cheap_baseline.py` /
+`results/experiment_fover_stepverifier_vs_cheap_baseline.json` (adversarial_verify: 0 flagged, real
+compute — GPU embedding pass, 3.9s, reproducible across 3 runs with identical numbers):
+
+| | AUROC | Average Precision |
+|---|---|---|
+| Learned verifier (all-MiniLM-L6-v2 + LogisticRegression) | 0.9663 | 0.9993 |
+| Cheap baseline (8 text-statistical features, no embeddings) | 0.9635 | 0.9984 |
+| Delta | +0.0028 | +0.0009 |
+| CI95 (2000-resample paired bootstrap) | [-0.0244, 0.0347] — **includes 0** | — |
+
+**HONEST RESULT: the learned verifier does NOT beat the cheap baseline (CI95 crosses 0).** Root cause
+traced, not just observed: incorrect steps average **~5x longer** than correct steps in this corpus
+(447.6 vs 84.8 chars) — a strong surface-level confound baked into how the corpus was constructed, which
+lets simple length-aware features nearly match a semantic embedding model. This is a genuine, informative
+finding about the corpus (a "shortcut" a cheap heuristic can exploit almost as well as semantic
+understanding), not evidence that Carnot's verifier stack is broken — the existing FoVer headline
+(0.9131 AUROC, the corrected production number per the Paper-v6 Narrowing Discipline) measures
+DISCRIMINATION on a different, harder-negative-mined task construction; this result is specifically about
+whether a *cheap* baseline can nearly match a semantic model on THIS raw corpus's natural class split.
+
+**Bottom line for the moat program:** FoVer does not currently supply a clean "verifier beats a cheap
+baseline" moat win either — a second consecutive honest negative on this corpus (after the retracted
+headroom claim), for a different, more fundamental reason (a surface-level confound the cheap baseline
+already exploits, not a lack of headroom). The decisive oracle-distinct-headroom-present moat question
+from the original MOAT REDIRECT remains genuinely OPEN — neither MuSR (no headroom, SC near-ceiling) nor
+FoVer (no verifier value over a cheap baseline on the real task) has produced a clean win. Do not
+re-propose either corpus for this specific claim without a materially different construction or
+technique. The search for an oracle-distinct, headroom-present, verifier-beats-cheap-baseline corpus
+continues.
+
+### NUDGE 2026-07-01 — RETRACTED 2026-07-01 (same-day, outer-loop): the premise below was a construction artifact, not a measurement. DO NOT execute the FoVer in-domain task as specified.
+
+> **RETRACTION.** Both this NUDGE and the "MOAT REDIRECT 2026-06-30" entry below rest on a headroom
+> claim ("FoVer oracle@K=0.769, SC=0.269, +0.500 headroom") that turns out to be a **construction
+> artifact** of `load_fover_domain_pool` (`python/carnot/experiment_4305_cross_domain_selector_
+> generalization.py:616`), NOT a real measurement of self-consistency behavior on FoVer. Traced and
+> confirmed 2026-07-01 (operator: "let's escalate the FoVer nudge by tackling here in the outer
+> loop"):
+>
+> - `oracle@K=0.769` and `SC=0.269` are EXACT ARITHMETIC CONSEQUENCES of the pool-builder's
+>   `mode = task_index % 4` formula (`mode0`=vote-correct, `mode1/2`=vote-wrong, `mode3`=no-oracle),
+>   not observed behavior: `mode0 fraction = 7/26 = 0.26923...`, `mode!=3 fraction = 20/26 =
+>   0.76923...` -- matching the reported numbers to 4 decimal places by construction, independent of
+>   any real verifier/vote signal.
+> - The underlying real corpus (`data/fover_corpus_v4.json`, 6,548 rows) does NOT have a natural
+>   multi-candidate structure to vote among: **6,544 of 6,546 distinct `question_id`s have exactly
+>   ONE row.** The pool-builder manufactures fake "candidate groups" by grafting UNRELATED wrong
+>   steps from elsewhere in the corpus onto a real correct one, then hand-assigns which one "wins
+>   the vote" via the mode formula. FoVer is a flat per-step correctness-classification dataset, not
+>   a K-candidates-compete-for-one-answer dataset -- the "verifier beats self-consistency" framing
+>   does not apply to its actual task shape.
+>
+> **DO NOT re-propose the FoVer in-domain verifier-selection-vs-tuned-SC experiment as specified
+> below** -- it would reproduce a construction artifact on different arbitrary parameters, not
+> answer anything real. The corrected, well-posed follow-up (a learned step-verifier vs a cheap
+> baseline on the REAL 6,548-row corpus, no synthetic candidate grafting) is tracked separately --
+> see "FOVER STEP-VERIFIER VS CHEAP BASELINE" below. `results/headroom_survey_cross_domain.json`'s
+> `fover` row is similarly retracted (see its own corrigendum).
 
 **Origin:** the "MOAT REDIRECT 2026-06-30" entry (below, unchanged) has sat pending across TWO milestones
 (`.466`, `.467`) with ZERO pickup. Instead, `.466`/`.467` spent their Phase D slots pivot-hunting across
@@ -1565,7 +1631,17 @@ can be corrected. Full test suite (18 `test_adversarial_verify_*` files, 219/221
 failures in `test_adversarial_verify_hardening_4659.py` reproduce identically with this change stashed out
 — unrelated, not a regression).
 
-### MOAT REDIRECT 2026-06-30 (operator "try that next") — STOP testing the moat on MuSR; test IN-DOMAIN FoVer selection
+### MOAT REDIRECT 2026-06-30 — RETRACTED 2026-07-01: STOP testing the moat on MuSR; test IN-DOMAIN FoVer selection
+
+> **RETRACTION (2026-07-01).** The "FoVer is the only oracle-distinct domain with real headroom
+> (+0.500)" finding below is a **construction artifact**, not a real measurement — see the full
+> retraction in the "NUDGE 2026-07-01" entry above for the traced root cause
+> (`load_fover_domain_pool`'s `mode = task_index % 4` formula manufactures the exact 0.269/0.769
+> split independent of any real vote/verifier signal; the real corpus has no natural multi-candidate
+> structure to vote among — 6,544/6,546 `question_id`s have exactly one row). The MuSR-retirement
+> conclusion (no headroom, SC near-ceiling) is UNAFFECTED and still stands — only the "redirect to
+> FoVer in-domain selection" half of this entry is retracted. Do not execute step 1-4 below as
+> specified. Preserved verbatim per never-prune; read as historical context, not active guidance.
 
 **Finding (outer-loop headroom survey on cached cross-domain pools exp4305/exp4314, zero generation):**
 the entire PHASE D null streak (uPRM −0.110, LoRA-EBM/EBRM +0.080 CI-incl-0, process-reward −0.030,

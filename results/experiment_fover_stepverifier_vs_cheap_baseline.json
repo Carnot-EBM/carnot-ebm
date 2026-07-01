@@ -1,0 +1,48 @@
+{
+  "experiment": "fover_stepverifier_vs_cheap_baseline",
+  "n_rows": 6548,
+  "n_correct": 6434,
+  "n_incorrect": 114,
+  "majority_class_fraction": 0.9826,
+  "verifier_auroc": 0.9663,
+  "cheap_baseline_auroc": 0.9635,
+  "delta_auroc": 0.0028,
+  "delta_auroc_ci95": [
+    -0.0244,
+    0.0347
+  ],
+  "verifier_average_precision": 0.9993,
+  "cheap_baseline_average_precision": 0.9984,
+  "delta_average_precision": 0.0009,
+  "delta_average_precision_ci95": [
+    -0.0004,
+    0.0029
+  ],
+  "beats_cheap_baseline": false,
+  "verifier_is_oracle": false,
+  "cheap_baseline_description": "8 non-learned text-statistical features (length, word count, digit count, line count, has-fraction, has-equals, math-op count, digit density) scored via LogisticRegression -- NOT a trained embedding model, genuinely cheap.",
+  "verifier_description": "sentence-transformers/all-MiniLM-L6-v2 mean-pooled embeddings + LogisticRegression (class_weight=balanced), same k-fold protocol as the baseline for a matched comparison.",
+  "cross_validation": "5-fold stratified (every fold contains some of the 114 rare positives)",
+  "class_imbalance_note": "98.3% majority class -- accuracy would be vacuous (predict-always-correct scores 98.3%); AUROC/AP used instead, both insensitive to this in the way raw accuracy is not.",
+  "length_confound": {
+    "correct_mean_len": 84.8,
+    "incorrect_mean_len": 447.6,
+    "length_ratio": 5.28,
+    "interpretation": "Incorrect steps average ~5x longer than correct steps in this corpus -- a strong surface-level confound that lets simple length-aware features nearly match a semantic embedding model's AUROC. This is a corpus-construction property, not evidence that semantic understanding never helps; it explains WHY the cheap baseline is so strong on THIS specific classification task."
+  },
+  "corrects_retraction_of": "results/headroom_survey_cross_domain.json fover row + MOAT REDIRECT 2026-06-30",
+  "framing_change_from_retracted_claim": "This is NOT a 'verifier beats self-consistency vote' test (FoVer has no natural multi-candidate structure to vote among -- 6544/6546 question_ids have exactly one row). This IS a well-posed 'does a learned discriminator beat a cheap non-learned one' test on the real classification task.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_note": "Scores a learned classifier (embedding + LogisticRegression) against the pre-existing, statically-cached FoVer corpus -- matches exp_phase_d_musr_verifier_train.py's substrate declaration precedent for the same all-MiniLM-L6-v2 embedding pattern. The embedding model IS a real transformer forward pass (not vestigial), but it is the verifier's feature extractor, not a generative LLM being invoked for inference.",
+  "model_specs": {
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "cheap_baseline_model": "sklearn.linear_model.LogisticRegression (8 hand-engineered text-statistical features, no learned embeddings)"
+  },
+  "target_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embed_duration_s": 3.92,
+  "embed_device": "cuda",
+  "random_seed": 20260701,
+  "honest_verdict": "complete_fover_stepverifier_does_not_beat_cheap_baseline_v0.966_cheap0.964_delta+0.003_ci-0.0244_0.0347",
+  "methodology_note": "AUROC and PR-AUC computed on the SAME held-out CV predictions for both arms (matched comparison, no train/test leakage). Delta CI95 via 2000-resample paired bootstrap. A delta with CI95 excluding 0 in favor of the verifier is a real, well-posed value-add finding on FoVer's real task shape -- a weaker claim than 'beats self-consistency' (which does not apply here) but an honest one.",
+  "reproducibility_checksum": "sha256:203f3d8d2969126a1c9e9aa366d3251fb7aae0f19d1f2df3472bd1506e4dc7aa"
+}
