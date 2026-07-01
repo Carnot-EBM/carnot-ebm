@@ -5607,3 +5607,9 @@ The critical path for milestone .250:
 - theme: operational retro for a milestone with no experiment commits in the supplied timing block
 - key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no slowest experiment, compute-bound GPU-idle finding, or DualGPURunner finding can be derived
 - acceptance: 0/0 criteria met -- no experiment criteria were present in the supplied timing data
+
+### Milestone 2026.07.467
+- exp_range: no data available this milestone
+- theme: empty-window operational retrospective with GPU claims suppressed
+- key result: no data available this milestone; the locked artifact records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries, so the idle GPU snapshot is informational rather than evidence of wasted compute
+- acceptance: 0/0 criteria met -- the supplied timing data contains no experiment entries to evaluate
