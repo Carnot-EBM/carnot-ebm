@@ -9691,3 +9691,4 @@ The contro |
 | 2026-07-01 01:11 UTC | PHASE D1 audit -- rerun the powered LoRA-EBM/EORM  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-07-01 01:33 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
 | 2026-07-01 01:41 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
+| 2026-07-01 01:49 UTC | PHASE D4 audit -- independently validate the Const | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5060_second_ |
