@@ -809,6 +809,89 @@ artifact.
 |---|---|---|
 | REQ-REPORT-5084 | Proposed (`python/carnot/experiment_5084_sota_ingestion_v467.py`) | Proposed (`tests/python/test_experiment_5084_sota_ingestion_v467.py`) |
 
+### REQ-REPORT-5096: V468 SOTA Ingestion Reference Audit
+
+The Exp 5096 workflow SHALL verify the already-written V468 planner source set
+in `research-references.md`, map every checked source to a runnable `.468`
+experiment task or mark it `background_only`, and write
+`results/experiment_5096_sota_ingestion_v468.json`. It SHALL NOT run local
+model inference, SHALL NOT claim `live_llm_inference`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave ops/status/changelog and
+traceability reconciliation to the conductor reconciler.
+
+The workflow SHALL verify that the V468 managed section exists and covers
+arXiv, OpenReview, Hugging Face Papers/GitHub, Extropic, Logical Intelligence,
+and Semantic Scholar citation-lineage findings. It SHALL confirm the following
+V468 sources are present with public URLs, tracks, Carnot hooks, and
+actionability notes: BEAVER `arXiv:2512.05439` plus
+`uiuc-focal-lab/Beaver`, graph-evidence grounding `arXiv:2606.30247`,
+SEVerA `arXiv:2603.25111`, TACO `arXiv:2601.21048`, PLANCK p-spin/HUBO
+`arXiv:2602.16665`, neuromorphic CSP hardware `arXiv:2603.01150`,
+CFG-constrained generation papers EPIC `arXiv:2606.00722`, LAVE
+`arXiv:2602.00612`, Constrained Diffusion `arXiv:2508.10111` plus
+`eth-sri/constrained-diffusion`, Grammar-Aligned Decoding `arXiv:2405.21047`,
+CONSTRAINPROMPT OpenReview `O3Kg4dLdpg`, HALT `arXiv:2602.02888`,
+GenericAgent `arXiv:2604.17091`, ALMA `arXiv:2602.07755`, EBT/ARM citation
+lineage candidates `arXiv:2511.00907` and `arXiv:2505.11081`, llguidance,
+Extropic XTR-0/TSU pages, and Logical Intelligence Kona/Aleph/formal
+verification updates.
+
+The complete artifact SHALL include top-level fields `honest_verdict`,
+`duration_s`, `inference_substrate`, `sources_checked`,
+`references_section_found`, `references_added_count`,
+`semantic_scholar_status`, `task_mapping`, `planning_hooks`,
+`background_only_sources`, `flagged_adversarial`, `field_principles`, and
+`spec_refs`. `honest_verdict` SHALL equal
+`success_sota_ingestion_v468_references_verified`. `inference_substrate` SHALL
+equal `literature_review_and_repo_inspection`. `references_added_count` SHALL
+be zero unless one clearly stronger missing source is appended inside the V468
+section with URL, tracks, Carnot hook, and actionability.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success only when the V468 source set is verified."
+- `duration_s`: principle "bounded repo/literature inspection duration; not a model-inference runtime claim."
+- `inference_substrate`: principle "literature_review_and_repo_inspection; no local model inference or live LLM claim."
+- `sources_checked`: principle "per-source evidence for arXiv, OpenReview, Hugging Face Papers/GitHub, Extropic, Semantic Scholar citation-lineage, and Logical Intelligence coverage."
+- `references_section_found`: principle "true only when V468 planner markers bracket the checked research-references.md section."
+- `references_added_count`: principle "zero when the V468 section already contains the required high-value sources; otherwise equals appended references."
+- `semantic_scholar_status`: principle "records the V468 section's Semantic Scholar EBT/ARM citation-lineage status without implying a fresh local API call."
+- `task_mapping`: principle "maps each verified V468 source to one .468 task or background_only."
+- `planning_hooks`: principle "groups verified sources into concrete .468 execution hooks."
+- `background_only_sources`: principle "names verified V468 sources intentionally kept as context rather than scheduled experiments."
+- `flagged_adversarial`: principle "true if required sources are missing, fabricated, or claim local model inference."
+
+#### SCENARIO-REPORT-5096: V468 References Are Verified And Mapped
+
+Given the V468 planner section in `research-references.md` contains the
+required source IDs, public URLs, code links, OpenReview links, Semantic
+Scholar citation-lineage note, tracks, Carnot hooks, and actionability notes
+When the Exp 5096 workflow runs
+Then it writes the JSON artifact with the success verdict, sets
+`inference_substrate` to `literature_review_and_repo_inspection`, reports all
+source channels in `sources_checked`, records `references_added_count=0`, keeps
+`flagged_adversarial=false`, records the Semantic Scholar EBT/ARM citation
+lineage status, and maps sources to `.468` tasks including Exp5099 BEAVER
+prefix bounds, Exp5100 CONSTRAINPROMPT code assurance, Exp5101 graph evidence
+energy, Exp5102 HUBO/p-spin direct energy, Exp5103 TACO adaptive CSP,
+Exp5104 constrained decoding semantic audit, Exp5105 SEVerA guarded memory,
+Exp5106 hardware partition telemetry, or `background_only`.
+
+#### SCENARIO-REPORT-5096-MISSING-REFERENCE: Missing V468 Source Fails Closed
+
+Given the V468 planner section is absent or one required source ID, URL, code
+link, OpenReview link, Semantic Scholar status note, track, Carnot hook, or
+actionability note is missing
+When validation is applied
+Then the workflow raises a schema error and refuses to write a successful
+artifact.
+
+## Implementation Status (REQ-REPORT-5096)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5096 | Proposed (`python/carnot/experiment_5096_sota_ingestion_v468.py`) | Proposed (`tests/python/test_experiment_5096_sota_ingestion_v468.py`) |
+
 ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
 
 The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt
