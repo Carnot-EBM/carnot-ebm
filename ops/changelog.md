@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-07-01 (Operational retrospective .467 -- empty timing window, GPU idle not a bottleneck -- codex)
+
+- Wrote `results/operational_retro_2026_07_467.json` for milestone `2026.07.467`.
+  The supplied timing data reports 0 completed experiments, 0 wall-time minutes, and
+  0 compute-bound experiments; no slowest experiment or compute-bound duration can be
+  derived.
+- Interpreted the GPU state under the milestone rule: both RTX 3090s were idle, but
+  with 0 compute-bound tasks in the timing data, `gpu_idle_on_compute_bound_tasks`
+  remains `null` and GPU idle is not reported as a bottleneck.
+- Highest-leverage follow-up: add an early no-experiment-commits watchdog and keep
+  DualGPURunner recommendations gated on timing data that actually declares 2+ parallel
+  compute-bound model tasks.
+
 ## 2026-07-01 (Milestone 2026.07.466 research roadmap staged — codex)
 
 - Appended the `.466` planner source set to `research-references.md`, covering uPRM, VPR, DCCD,

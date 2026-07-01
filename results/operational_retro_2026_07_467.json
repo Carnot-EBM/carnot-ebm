@@ -8,21 +8,20 @@
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "No data available this milestone: the authoritative timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound timing entries, the idle GPU snapshot is informational rather than a reportable utilization failure.",
+  "summary": "No data available this milestone for experiment timings: the milestone-scoped timing data reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries present, the idle GPU snapshot is not evidence of wasted compute-bound execution.",
   "bottlenecks_identified": [
-    "no data available this milestone for timing-derived bottlenecks",
-    "No compute-bound timing entries were present, so GPU idle and DualGPURunner engagement cannot be assessed as failures."
+    "No experiment commits were found since activation, so there is no slowest experiment or execution bottleneck to rank from the supplied timing data."
   ],
   "improvements_suggested": [
-    "Emit an explicit empty-window timing status when activation has no experiment commits.",
-    "Gate GPU-utilization alerts on the presence of compute-bound timing rows before adding operational bottlenecks.",
-    "Surface the empty timing-window reason in operator summaries so reviewers do not infer throughput from unrelated GPU snapshots."
+    "Add an early milestone dispatch watchdog that alerts when an activated milestone has no experiment commits before retrospective time.",
+    "Have the retrospective input explicitly distinguish an intentionally empty window from a missed launch so operators do not have to infer it from absent timing rows.",
+    "Gate any DualGPURunner recommendation on timing data that declares two or more parallel compute-bound model tasks."
   ],
   "top_3_highest_leverage_actions": [
-    "Add a first-class no-data retrospective path that fills slowest-experiment sections with an explicit no-data marker.",
-    "Keep GPU-idle claims mechanically gated by compute-bound timing evidence.",
-    "Include the activation-window timing status in changelog and research-log templates."
+    "Surface a no-experiment-commits warning immediately after activation if no artifact lands in the expected launch window.",
+    "Record an explicit empty-window reason in the retrospective input when a milestone closes with 0 completed experiments.",
+    "Keep GPU-idle checks conditional on compute-bound timing entries so synthesis-only or empty milestones do not create false bottlenecks."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "This retrospective is intentionally sparse because the only scoped timing evidence says no experiment commits were found. The GPU state shows idle devices, but without compute-bound timing rows that is a state observation rather than an efficiency finding."
+  "meta_reflection": "This retrospective is intentionally bounded to the supplied TIMING DATA and GPU STATE blocks. Because the timing data contains no experiment entries, every compute-bound, duration, and DualGPURunner question resolves to no data available this milestone rather than an inferred operational failure."
 }
