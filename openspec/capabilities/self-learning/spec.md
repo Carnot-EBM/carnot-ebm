@@ -15973,3 +15973,56 @@ regresses previously correct held-out rows
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5077 | Planned (`python/carnot/experiment_5077_fr11_group_sc_memory.py`) | Planned (`tests/python/test_experiment_5077_fr11_group_sc_memory.py`) |
+
+---
+
+## REQ-LEARN-5078: FR-11 Memory-Gap Blocker Ledger
+
+Experiment 5078 SHALL aggregate the recent FR-11 self-learning attempts from
+`results/experiment_5051_verifier_trace_self_learning.json`,
+`results/experiment_5064_audited_skillgraph_self_learning.json`, and
+`results/experiment_5077_fr11_group_sc_memory_v466.json` into a
+machine-readable blocker ledger. It SHALL NOT run a new promotion or mutate
+the upstream memory, skill graph, or conductor.
+
+The ledger SHALL classify the observed failures into the controlled vocabulary:
+`data_contamination`, `irrelevant_replay`, `retrieval_mismatch`,
+`overfitting`, `nonforgetting_regression`, `verifier_shortcut`, and
+`insufficient_evaluation_power`. Each classification SHALL record the affected
+experiment IDs, direct upstream evidence, and the guard or blocker that kept
+the attempt from being promoted when applicable.
+
+The result artifact SHALL be written to
+`results/experiment_5078_fr11_memory_gap_ledger_v466.json` by
+`python/carnot/experiment_5078_fr11_memory_gap_ledger.py`. It SHALL include
+principle annotations for `honest_verdict`, `duration_s`,
+`inference_substrate`, `fr11_attempts_summarized`,
+`recurring_failure_modes`, `safe_next_mechanisms`, `retired_mechanisms`,
+`promotion_blockers`, `docs_update_recommendations`, and
+`flagged_adversarial`. The artifact SHALL set
+`inference_substrate=aggregation_from_upstream_artifacts` and SHALL use a
+terminal `honest_verdict` beginning with
+`complete_fr11_memory_gap_ledger_written_no_promotion`.
+
+### SCENARIO-LEARN-5078-MEMORY-GAP-LEDGER
+
+**Given** the Exp5051, Exp5064, and Exp5077 upstream artifacts exist
+**When** Experiment 5078 builds its ledger
+**Then** the artifact summarizes all three attempts without promotion,
+records the aggregation substrate, preserves upstream adversarial flags, and
+lists no promoted memory or skill updates.
+
+**Given** upstream held-out or nonforgetting regressions, dev-only gains,
+quarantined replay candidates, contamination guard results, or insufficient
+sample power are present
+**When** failures are classified
+**Then** the ledger records the matching controlled-vocabulary failure modes
+and maps them to safe next mechanisms: retrieval-config evolution, skill
+lifecycle governance, process-verifier replay, or bounded FR-11 retirement for
+this domain.
+
+## Implementation Status (Exp 5078)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5078 | Planned (`python/carnot/experiment_5078_fr11_memory_gap_ledger.py`) | Planned (`tests/python/test_experiment_5078_fr11_memory_gap_ledger.py`) |
