@@ -22205,6 +22205,76 @@ and explicit gate diagnostics.
 |---|---|---|
 | REQ-VERIFY-5058 | Proposed (`python/carnot/experiment_5058_sota_candidate_refresh_inwriting.py`, `results/experiment_5058_sota_candidate_refresh_inwriting.json`) | Proposed (`tests/python/test_experiment_5058_sota_candidate_refresh_inwriting.py`) |
 
+### REQ-VERIFY-5059: D1 SOTA Refresh Audit Separates Scorer And Candidate-Refresh Value
+
+The repository SHALL provide Exp 5059 at
+`python/carnot/experiment_5059_d1_sota_refresh_audit.py` to audit the D1
+powered LoRA-EBM/EORM MuSR evidence after Exp 5058 writes the mandated SOTA
+candidate-refresh cache, producing
+`results/experiment_5059_d1_sota_refresh_audit.json`.
+
+The runner SHALL load
+`results/experiment_5058_sota_candidate_refresh_inwriting.json` first. If
+`candidate_refresh_ready` is not true, it SHALL fail fast with
+`honest_verdict=blocked_candidate_refresh_unavailable`, SHALL NOT promote the
+frozen `.464` D1 result as refreshed headline evidence, and SHALL still write
+the required terminal fields with blocked/null metrics.
+
+When the candidate refresh is ready, the runner SHALL load the refreshed
+candidate JSONL cache and compare it against the frozen `.464` candidate cache
+on the same MuSR questions. It SHALL score refreshed candidates through the
+existing powered LoRA-EBM/EORM path when candidate-level scores are available,
+or through a documented cached scorer fallback that projects the Exp 5045
+powered D1 selections onto identical refreshed candidate rows. A missing
+trained scorer, null train loss, zero pair count, oracle scorer, or skeleton
+artifact SHALL block the audit instead of producing a complete/null headline.
+
+The artifact SHALL report tuned self-consistency accuracy, verifier-selected
+accuracy, `oracle@K` headroom, paired bootstrap CI95, McNemar exact p, and
+candidate-diversity sensitivity. It SHALL also include an apples-to-apples
+frozen-candidate comparison so `frozen_candidate_delta` isolates scorer value
+from candidate-refresh value. A proper MuSR win SHALL require refreshed
+candidate use, `verifier_is_oracle=false`, headroom present, positive
+`delta_vs_tuned_sc`, paired CI95 excluding zero, and `mcnemar_p<0.05`.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`best_arm_available`, `accuracy`, `tuned_sc_accuracy`, `delta_vs_tuned_sc`,
+`paired_ci95`, `mcnemar_p`, `n_questions`, `headroom_present`,
+`candidate_refresh_used`, `frozen_candidate_delta`, `verifier_is_oracle`,
+`proper_musr_win`, and `legacy_models_smoke_only`. It SHOULD also include
+`oracle_at_k`, `oracle_k`, `candidate_refresh_value_delta`,
+`candidate_diversity_sensitivity`, scorer-source diagnostics, upstream
+artifact citations, field principles, and a reproducibility checksum.
+
+### SCENARIO-VERIFY-5059: Candidate Refresh Gate Blocks Before Scoring
+
+Given Exp 5058 is absent, malformed, or has `candidate_refresh_ready=false`,
+when Exp 5059 runs, then it writes
+`honest_verdict=blocked_candidate_refresh_unavailable`, sets
+`candidate_refresh_used=false`, sets `best_arm_available=false`, keeps
+`proper_musr_win=false`, and does not promote frozen `.464` evidence as a
+refreshed candidate result.
+
+### SCENARIO-VERIFY-5059: Refreshed Audit Reports Frozen Comparison And No Skeleton Headline
+
+Given Exp 5058 has a ready mandated-SOTA candidate cache, Exp 5045 has a
+trained powered D1 scorer artifact with non-null train loss and oracle-distinct
+selections, and the frozen `.464` candidate cache is available, when Exp 5059
+runs, then it writes every required field, reports refreshed tuned-SC,
+verifier-selected accuracy, `oracle@K`, paired CI95, McNemar p, and
+candidate-diversity sensitivity, includes a frozen-candidate apples-to-apples
+delta, sets `legacy_models_smoke_only=true`, and sets `proper_musr_win=true`
+only if the strict CI and McNemar gates pass. If the Exp 5045 scorer artifact is
+skeleton-like (`scorer_trained=false`, null `train_loss`, zero `n_pairs`, or
+oracle), Exp 5059 writes a blocked scorer artifact instead of a complete/null
+headline.
+
+## Implementation Status (REQ-VERIFY-5059)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5059 | Proposed (`python/carnot/experiment_5059_d1_sota_refresh_audit.py`, `results/experiment_5059_d1_sota_refresh_audit.json`) | Proposed (`tests/python/test_experiment_5059_d1_sota_refresh_audit.py`) |
+
 ### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
 
 The repository SHALL provide Exp 5044 at
