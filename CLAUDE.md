@@ -1817,6 +1817,7 @@ though the experiments didn't invoke it.
 | `verifier_ensemble_against_cached_candidates` | Scores the verifier ensemble against pre-existing (input, candidate, label) triples; does NOT load the LLM. | 1s |
 | `aggregation_from_upstream_artifacts` | Reads upstream JSON, computes deltas / formats tables / builds manifests. Capstones, archive/activate, paper-table builders. | 0.0001s |
 | `hardware_smoke` | SSH-attached board test, FPGA bring-up, etc. | (per-board, see Pre-Launch Preconditions table) |
+| `offline_arcade_live_agent_runtime_self_discovery_no_llm` | The live ARC agent takes real actions against the offline arcade / a live ARC env WITHOUT invoking an LLM (pure Python env-stepping, world-model/verifier scoring, go-explore archive bookkeeping — no GGUF load, no CUDA). GGUF strings that appear elsewhere in the artifact (e.g. naming the generator that WOULD fire if the LLM tier were used, `invoked: false`) are vestigial, not a live-inference claim; `model_specs`/`target_model` is NOT required for this substrate (there is no model to name), but `random_seed` + `reproducibility_checksum` still are. | 0.01s (10ms) |
 
 The `adversarial_verify.py` linter recognizes each value and applies
 the matching duration floor. The legacy schema-prefix recognition

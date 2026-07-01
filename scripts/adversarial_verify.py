@@ -225,6 +225,21 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 
+# ARC live-agent runtime self-discovery artifacts: the live agent takes real
+# actions against the offline arcade / a live ARC env WITHOUT invoking an LLM
+# (pure Python env-stepping, world-model/verifier scoring, go-explore archive
+# bookkeeping -- no GGUF load, no CUDA). Their model_specs often name the
+# generator that WOULD be used if the LLM tier fired (invoked=false) purely
+# for template/provenance completeness; those GGUF strings are vestigial, not
+# a claim of invocation. Discovered 2026-06-30 (exp5054 tu93 go-explore
+# attempt, 35 actions / 2.9s ~= 83ms/action -- plausible for pure Python env
+# stepping, wrongly floored at 60s because the substrate wasn't recognized
+# and fell through to the generic GGUF-marker scan). Per CLAUDE.md
+# "Inference-Substrate Declaration Discipline" -- the forward-only 5th legal
+# value.
+ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = 0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
+
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
 # learned-verifier checkpoint. Treat those fields as the methodology descriptor
@@ -1782,6 +1797,16 @@ def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
     return any(tok in sub for tok in ("replay", "reconciliation"))
 
 
+def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
+    """True when the artifact declares live ARC-agent environment-stepping with NO LLM call.
+
+    Recognition is the canonical `inference_substrate` sentinel only (forward-only, no legacy
+    schema-prefix fallback -- this class was introduced 2026-06-30, so there is no pre-discipline
+    history to backfill). See ARC_LIVE_AGENT_NO_LLM_SUBSTRATE for the exemplar incident (exp5054).
+    """
+    return _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -1866,6 +1891,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": _inference_substrate_text(d) or "deterministic_verifier",
             "min_duration_s": DETERMINISTIC_VERIFIER_MIN_DURATION_S,
             "reason": "deterministic_verifier",
+        }
+    if _is_arc_live_agent_no_llm(d):
+        return {
+            "substrate": ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+            "min_duration_s": ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S,
+            "reason": "arc_live_agent_no_llm",
         }
     if _is_live_llm_inference(d):
         return {
@@ -1970,6 +2001,27 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                 )
             )
         return
+    # ARC live-agent runtime self-discovery (no LLM invoked). Real per-action
+    # offline-env-stepping compute, no GPU/model load. GGUF strings in a
+    # nested model_specs (naming the generator that WOULD fire if the LLM
+    # tier were used) are vestigial, not a live-inference claim.
+    if floor["reason"] == "arc_live_agent_no_llm":
+        min_duration = float(floor["min_duration_s"])
+        if float(duration) < min_duration:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"ARC live-agent no-LLM substrate. Even a single "
+                        f"real environment action takes non-zero time; a "
+                        f"value below {min_duration}s suggests "
+                        f"the duration was not measured at all."
+                    ),
+                )
+            )
+        return
     min_duration = float(floor["min_duration_s"])
     if float(duration) < min_duration:
         flags.append(
@@ -2066,7 +2118,15 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # check would be a category error.
     if _is_aggregation_only(d):
         return
-    has_model_spec = d.get("model_specs") or d.get("target_model") or d.get("models_tested")
+    # ARC live-agent no-LLM artifacts genuinely have no model to name (no LLM
+    # was invoked) -- requiring model_specs/target_model here would be a
+    # category error identical to the aggregation case. random_seed and
+    # reproducibility_checksum are STILL required (this substrate is a real
+    # measurement, just not a model-inference one).
+    no_model_spec_required = _is_arc_live_agent_no_llm(d)
+    has_model_spec = no_model_spec_required or (
+        d.get("model_specs") or d.get("target_model") or d.get("models_tested")
+    )
     # Recognize singular (`random_seed`, `seed`) and plural
     # (`random_seeds_used`, `seeds`) forms. Multi-seed experiments
     # legitimately use the plural list-of-seeds form.
