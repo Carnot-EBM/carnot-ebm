@@ -1,0 +1,232 @@
+{
+  "best_arm": "D6",
+  "best_arm_ci": [
+    0.0,
+    0.165
+  ],
+  "best_arm_delta": 0.08,
+  "blocked_upstream_artifacts": [],
+  "bounded_retirement_ok": false,
+  "cascade_efficiency_win": true,
+  "clean_upstream_artifacts": [
+    {
+      "arm": "d4_second_corpus_audit",
+      "artifact_id": "D4",
+      "honest_verdict": "retired_d4_second_corpus_audit_failed_constraintbench_exact_v1_plus_0p370",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5060_second_corpus_audit_v2.json",
+      "status": "clean"
+    },
+    {
+      "arm": "d6_tool_first_cascade",
+      "artifact_id": "D6",
+      "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5061_tool_first_cascade.json",
+      "status": "clean"
+    },
+    {
+      "arm": "guided_decoding_cost_frontier",
+      "artifact_id": "G1",
+      "honest_verdict": "complete_guided_decoding_cost_frontier_guided_gain_plus_0p111",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5062_guided_decoding_cost_frontier.json",
+      "status": "clean"
+    }
+  ],
+  "duration_s": 0.000694,
+  "execution_incomplete_reasons": [
+    "D1 flagged: complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
+    "D4 audit not clean: second_corpus_audit_clean=false",
+    "D6 efficiency observed but accuracy CI does not exclude zero"
+  ],
+  "experiment": "experiment_5063_moat_gate_resolution_v465",
+  "experiment_id": 5063,
+  "field_principles": {
+    "best_arm": {
+      "principle": "strongest clean countable evidence; D4 is eligible only when its audit is clean."
+    },
+    "best_arm_ci": {
+      "principle": "paired CI95 for best_arm when the upstream artifact reports one."
+    },
+    "best_arm_delta": {
+      "principle": "signed delta for best_arm on its own gate metric, or null when no clean countable evidence exists."
+    },
+    "bounded_retirement_ok": {
+      "principle": "true only when D1, D4, and D6 all execute cleanly and null/regress without a proper win."
+    },
+    "cascade_efficiency_win": {
+      "principle": "true only when D6 is clean, non-oracle, and reports efficiency_win=true."
+    },
+    "execution_incomplete_reasons": {
+      "principle": "concrete missing, blocked, malformed, flagged, or unclean evidence preventing a headline conclusion."
+    },
+    "guided_decoding_frontier_state": {
+      "principle": "status of the clean guided-decoding cost-frontier evidence, never a substitute for D1/D4/D6 moat proof."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for the .465 moat gate without counting blocked, flagged, or unclean evidence as nulls."
+    },
+    "moat_state": {
+      "principle": "one of moat_realized, musr_scoped_positive, second_corpus_scoped_positive, retired_bounded, execution_incomplete."
+    },
+    "next_actions": {
+      "principle": "state-conditioned follow-up actions for the next conductor step."
+    },
+    "per_arm_table": {
+      "principle": "one row per upstream .465 artifact with status and gate-relevant fields."
+    },
+    "second_corpus_audit_clean": {
+      "principle": "true only when the D4 artifact is clean and reports second_corpus_audit_clean=true."
+    },
+    "second_corpus_confirmed": {
+      "principle": "true only when D4 is clean, audit-clean, non-oracle, positive, and confirmed."
+    }
+  },
+  "flagged_upstream_artifacts": [
+    {
+      "arm": "d1_sota_refresh_audit",
+      "artifact_id": "D1",
+      "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json",
+      "status": "flagged"
+    }
+  ],
+  "guided_decoding_frontier_state": "guided_gain_observed_plus_0p111",
+  "honest_verdict": "complete_moat_execution_incomplete_v465_blocked_flagged_or_unclean",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "malformed_upstream_artifacts": [],
+  "missing_upstream_artifacts": [],
+  "moat_state": "execution_incomplete",
+  "next_actions": [
+    "Repair or rerun blocked, malformed, flagged, or unclean upstream artifacts before claiming realization or retirement.",
+    "Rerun Exp 5059 without adversarial flags and with paired statistics that satisfy the D1 gate.",
+    "Rerun Exp 5060 until duplicate/leak/oracle audits are clean before counting second-corpus evidence.",
+    "Rerun Exp 5061 or report it as efficiency-only if the accuracy CI still includes zero."
+  ],
+  "per_arm_table": [
+    {
+      "accuracy": 0.665,
+      "arm": "d1_sota_refresh_audit",
+      "artifact_id": "D1",
+      "best_arm_available": true,
+      "ci95": [
+        0.0,
+        0.165
+      ],
+      "delta": 0.08,
+      "experiment_id": 5059,
+      "flags": [
+        {
+          "detail": "delta_vs_tuned_sc=0.08 and frozen_candidate_delta=0.08 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "candidate_refresh_value_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "duration_s=0.419143 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "headroom_present": true,
+      "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
+      "mcnemar_p": 0.076369,
+      "n_questions": 200,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5059_d1_sota_refresh_audit.json",
+      "proper_musr_win": false,
+      "sha256": "sha256:f265773022d3937df3bcde2b516f650bf0868c36bfdc766ada278dc4c3e44fa9",
+      "status": "flagged",
+      "tuned_sc_accuracy": 0.585,
+      "verifier_is_oracle": false
+    },
+    {
+      "arm": "d4_second_corpus_audit",
+      "artifact_id": "D4",
+      "ci95": [
+        0.28,
+        0.47
+      ],
+      "d4_verdict_class": "retired",
+      "delta": 0.37,
+      "duplicate_audit_passed": false,
+      "experiment_id": 5060,
+      "flags": [],
+      "headroom_present": true,
+      "honest_verdict": "retired_d4_second_corpus_audit_failed_constraintbench_exact_v1_plus_0p370",
+      "leak_audit_passed": true,
+      "mcnemar_p": 0.0,
+      "oracle_provenance_passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5060_second_corpus_audit_v2.json",
+      "second_corpus_audit_clean": false,
+      "second_corpus_confirmed": false,
+      "sha256": "sha256:e5b7998c02c272da6abbb9ce19a8b15c293869bcb4c0c086458ec9625cd2cc69",
+      "status": "clean",
+      "train_test_overlap_passed": true,
+      "verifier_is_oracle": false
+    },
+    {
+      "arm": "d6_tool_first_cascade",
+      "artifact_id": "D6",
+      "cascade_accuracy": 0.665,
+      "cascade_executed": true,
+      "ci95": [
+        0.0,
+        0.165
+      ],
+      "delta": 0.08,
+      "efficiency_win": true,
+      "experiment_id": 5061,
+      "flags": [],
+      "honest_verdict": "success_tool_first_cascade_parity_at_0pct_judge_calls",
+      "judge_call_fraction": 0.0,
+      "judge_only_accuracy": 0.585,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5061_tool_first_cascade.json",
+      "sha256": "sha256:00dc9ce15db8e385f3e3cfd5ea6bda06d797555564e9a508c59947616f237f8d",
+      "status": "clean",
+      "verifier_is_oracle": false
+    },
+    {
+      "arm": "guided_decoding_cost_frontier",
+      "arms_differentiated": true,
+      "artifact_id": "G1",
+      "delta": 0.111112,
+      "experiment_id": 5062,
+      "flags": [],
+      "guided_accuracy": 0.555556,
+      "guided_decoding_executed": true,
+      "honest_verdict": "complete_guided_decoding_cost_frontier_guided_gain_plus_0p111",
+      "nfe_by_arm": {
+        "guided": 45.0,
+        "rerank_only": 72.0,
+        "unguided": 9.0
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5062_guided_decoding_cost_frontier.json",
+      "sha256": "sha256:d43c63b7907c135faa32cac70676bc1f8f0c23f9c574ba4c2a31a673643e96b9",
+      "status": "clean",
+      "unguided_accuracy": 0.444444,
+      "verifier_is_oracle": false
+    }
+  ],
+  "reproducibility_checksum": "sha256:0ecd03a41612b7bcd9bc740e849ac945ce0c0c0323e1696001f6c09748f71f5c",
+  "result_path": "results/experiment_5063_moat_gate_resolution_v465.json",
+  "schema": "carnot.experiment_5063_moat_gate_resolution_v465.v1",
+  "second_corpus_audit_clean": false,
+  "second_corpus_confirmed": false,
+  "source_artifacts": {
+    "D1": "results/experiment_5059_d1_sota_refresh_audit.json",
+    "D4": "results/experiment_5060_second_corpus_audit_v2.json",
+    "D6": "results/experiment_5061_tool_first_cascade.json",
+    "G1": "results/experiment_5062_guided_decoding_cost_frontier.json"
+  },
+  "spec_refs": [
+    "REQ-REPORT-5063",
+    "SCENARIO-REPORT-5063"
+  ]
+}

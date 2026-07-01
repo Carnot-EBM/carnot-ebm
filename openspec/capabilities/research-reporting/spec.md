@@ -434,6 +434,73 @@ otherwise unexecuted
 |---|---|---|
 | REQ-REPORT-5050 | Planned (`python/carnot/experiment_5050_moat_gate_resolution_v464.py`) | Planned (`tests/python/test_experiment_5050_moat_gate_resolution_v464.py`) |
 
+### REQ-REPORT-5063: Phase D .465 Verifier-Moat Gate Resolution
+
+The Exp 5063 workflow SHALL aggregate the .465 moat artifacts from Exp 5059
+D1 SOTA refresh audit, Exp 5060 D4 audited second-corpus confirmation, Exp
+5061 D6 tool-first cascade, and Exp 5062 guided decoding cost frontier. It
+SHALL write `results/experiment_5063_moat_gate_resolution_v465.json`, SHALL
+NOT run live LLM inference, SHALL NOT modify `scripts/research_conductor.py`,
+and SHALL record missing, blocked, malformed, flagged, and clean upstream
+artifact status separately. Blocked, malformed, or flagged artifacts SHALL NOT
+count as scientific nulls or as bounded-retirement evidence.
+
+The artifact SHALL classify the gate into exactly one `moat_state`:
+`moat_realized`, `musr_scoped_positive`, `second_corpus_scoped_positive`,
+`retired_bounded`, or `execution_incomplete`. `moat_realized` SHALL require a
+clean, oracle-distinct MuSR-positive arm with CI excluding zero and either a
+clean D4 second-corpus confirmation or a clean D6 cost/accuracy efficiency win.
+`musr_scoped_positive` SHALL be used only for a clean MuSR-positive arm whose
+D4/D6 confirmation is absent, negative, blocked, flagged, malformed, or
+inconclusive. `second_corpus_scoped_positive` SHALL be used only when D4 remains
+positive after its leak/no-oracle audit, while MuSR/D6 do not execute cleanly
+enough to realize the moat. D4 SHALL NOT be headlined unless
+`second_corpus_audit_clean=true`. `retired_bounded` SHALL require clean
+executed D1, D4, and D6 evidence that all null, regress, or fail the efficiency
+frontier. Otherwise the gate SHALL write `execution_incomplete`.
+
+The artifact SHALL include top-level fields `honest_verdict`, `moat_state`,
+`best_arm`, `best_arm_delta`, `best_arm_ci`, `second_corpus_confirmed`,
+`second_corpus_audit_clean`, `cascade_efficiency_win`,
+`guided_decoding_frontier_state`, `bounded_retirement_ok`,
+`execution_incomplete_reasons`, `per_arm_table`, and `next_actions`. It SHALL
+also include `missing_upstream_artifacts`, `blocked_upstream_artifacts`,
+`malformed_upstream_artifacts`, `flagged_upstream_artifacts`,
+`clean_upstream_artifacts`, `spec_refs`,
+`inference_substrate=aggregation_from_upstream_artifacts`, duration, and a
+reproducibility checksum.
+
+#### SCENARIO-REPORT-5063-INCOMPLETE: Flagged Or Unclean Evidence Is Not Counted
+
+**Given** Exp 5059 is blocked or adversarial-flagged, or Exp 5060 reports a
+positive D4 delta with `second_corpus_audit_clean=false`
+**When** Exp 5063 resolves the .465 gate
+**Then** it writes `moat_state=execution_incomplete`, records concrete
+`execution_incomplete_reasons`, keeps `bounded_retirement_ok=false`, and does
+not headline D4 as confirmed evidence.
+
+#### SCENARIO-REPORT-5063-REALIZED: Clean MuSR Evidence With Confirmation Or Efficiency Realizes
+
+**Given** a clean oracle-distinct MuSR arm is positive with CI excluding zero
+and either D4 is clean-confirmed or D6 has a clean efficiency win
+**When** Exp 5063 resolves the .465 gate
+**Then** it writes `moat_state=moat_realized`, sets the matching top-level
+confirmation or cascade flag, and emits a success-prefixed `honest_verdict`.
+
+#### SCENARIO-REPORT-5063-RETIRE: Clean Nulls Bound Retirement
+
+**Given** Exp 5059, Exp 5060, and Exp 5061 all execute cleanly and report no
+proper MuSR win, no clean D4 confirmation, and no cascade efficiency win
+**When** Exp 5063 resolves the .465 gate
+**Then** it writes `moat_state=retired_bounded`,
+`bounded_retirement_ok=true`, and leaves execution-incomplete reasons empty.
+
+## Implementation Status (REQ-REPORT-5063)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5063 | Proposed (`python/carnot/experiment_5063_moat_gate_resolution_v465.py`) | Proposed (`tests/python/test_experiment_5063_moat_gate_resolution_v465.py`) |
+
 ### REQ-REPORT-5038: Phase E1 Verifier-Moat SOTA Ingestion For .464
 
 The Exp 5038 workflow SHALL run the reliable SOTA-ingestion channel reserved
