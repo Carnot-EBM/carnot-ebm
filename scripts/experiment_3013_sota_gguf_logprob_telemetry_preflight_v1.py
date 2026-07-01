@@ -20,7 +20,8 @@
 Spec: REQ-INFER-SOTA-021,
       SCENARIO-INFER-SOTA-021-001,
       SCENARIO-INFER-SOTA-021-002,
-      SCENARIO-INFER-SOTA-021-003
+      SCENARIO-INFER-SOTA-021-003,
+      SCENARIO-INFER-SOTA-021-004
 """
 
 from __future__ import annotations
@@ -32,13 +33,16 @@ import math
 import os
 import sys
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from carnot.inference.sota_models import cached_sota_pair
+from carnot.experiment_5043_sota_gguf_judge_preflight import (
+    probe_endpoints as _probe_llama_cpp_endpoints,
+)
 from scripts import experiment_2989_sota_gguf_cache_provenance_preflight_v1 as base
 from scripts import experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1 as exp3001
 from scripts.experiment_template import _get_repo_root, _run_date
@@ -49,6 +53,7 @@ CommandRunner = base.CommandRunner
 CachedPairFn = base.CachedPairFn
 PromptRunnerFn = base.PromptRunnerFn
 ClockFn = base.ClockFn
+EndpointProbeFn = Callable[[Sequence[str], float], JsonDict]
 
 ARTIFACT_NAME = "experiment_3013_sota_gguf_logprob_telemetry_preflight_v1"
 ARTIFACT_FILENAME = f"{ARTIFACT_NAME}.json"
@@ -57,16 +62,85 @@ RAW_TRANSCRIPT_DIR = Path("results") / "raw" / ARTIFACT_NAME
 RANDOM_SEED = 3013
 DEFAULT_PROMPT = "Reply in one short sentence: exp3013 SOTA GGUF telemetry live."
 LOGPROBS_REQUESTED = 5
+DEFAULT_ENDPOINTS: tuple[str, ...] = ("http://127.0.0.1:8080",)
+LIVE_LLM_SUBSTRATE = "live_llm_inference"
+NONLIVE_PREFLIGHT_SUBSTRATE = "deterministic_verifier"
 HEADLINE_MODEL_IDS = base.HEADLINE_MODEL_IDS
 SMOKE_ONLY_MODEL_IDS = base.SMOKE_ONLY_MODEL_IDS
+ROLE_BY_HF_ID = {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": "flagship_moe",
+    "unsloth/gemma-4-31B-it-GGUF": "flagship_dense",
+    "unsloth/gemma-4-26B-A4B-it-GGUF": "middle_moe",
+}
+FIELD_PRINCIPLES: dict[str, dict[str, str]] = {
+    "honest_verdict": {
+        "principle": (
+            "terminal-prefix runtime verdict: complete_gguf_logprob_preflight_ready, "
+            "complete_gguf_logprob_preflight_partial_ready, or "
+            "blocked_gguf_logprob_preflight_no_ready_paths."
+        )
+    },
+    "duration_s": {
+        "principle": "wall-clock duration separates live endpoint work from cache-only preflight."
+    },
+    "inference_substrate": {
+        "principle": (
+            "declares whether the run invoked a live LLM endpoint or only performed "
+            "deterministic cache/endpoint checks."
+        )
+    },
+    "model_specs": {
+        "principle": (
+            "all three mandated SOTA GGUF IDs with exact local .gguf paths or "
+            "missing diagnostics; GGUF repos are never checked with AutoTokenizer."
+        )
+    },
+    "usable_sota_models": {
+        "principle": "subset of mandated SOTA GGUF roles that resolve to local .gguf files."
+    },
+    "sota_models_ready": {
+        "principle": "true iff at least one mandated SOTA GGUF path resolves locally."
+    },
+    "completion_endpoint_ready": {
+        "principle": "true iff a llama.cpp-compatible endpoint returns non-empty completion text."
+    },
+    "logprob_endpoint_ready": {
+        "principle": "true iff the endpoint exposes top-logprob telemetry, not just text."
+    },
+    "top_logprob_or_confidence_ready": {
+        "principle": "true iff endpoint telemetry exposes top-logprobs or structured confidence."
+    },
+    "tool_first_verifier_ready": {
+        "principle": "true iff deterministic JSON, arithmetic, and evidence checks pass without LLM inference."
+    },
+    "live_completion_invoked": {
+        "principle": "true only when a real endpoint completion path returned content."
+    },
+    "skip_reasons": {
+        "principle": "machine-readable reasons for every false readiness lane."
+    },
+    "flagged_adversarial": {
+        "principle": "true when the artifact itself detects a duration/substrate inconsistency."
+    },
+}
 REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
     "sota_headline_ready",
     "sota_logprob_ready",
     "preconditions_checked",
     "model_specs",
+    "usable_sota_models",
+    "sota_models_ready",
+    "completion_endpoint_ready",
+    "logprob_endpoint_ready",
+    "top_logprob_or_confidence_ready",
+    "tool_first_verifier_ready",
+    "live_completion_invoked",
+    "skip_reasons",
+    "flagged_adversarial",
     "headline_models_attempted",
     "headline_models_available",
     "telemetry_capabilities",
+    "endpoint_summary",
     "cache_paths",
     "model_checksums",
     "live_transcript_paths",
@@ -74,12 +148,31 @@ REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
     "inference_substrate",
     "duration_s",
     "honest_verdict",
+    "random_seed",
+    "reproducibility_checksum",
 )
 
 
-def _model_specs() -> JsonDict:
-    """Return the mandated model identities and telemetry request parameters."""
-    return {
+def _resolved_model_specs(cache_inventory: Sequence[Mapping[str, Any]]) -> JsonDict:
+    """Return role-keyed local path evidence for the mandated GGUFs."""
+    by_hf = {str(row["hf_id"]): row for row in cache_inventory}
+    resolved: JsonDict = {}
+    for hf_id in HEADLINE_MODEL_IDS:
+        role = ROLE_BY_HF_ID[hf_id]
+        row = by_hf.get(hf_id, {})
+        path = row.get("path") or row.get("resolved_path")
+        resolved[role] = {
+            "hf_id": hf_id,
+            "preferred_quant": "Q4_K_M",
+            "resolved_path": str(path) if path else None,
+            "missing_diagnostic": None if path else f"missing cached GGUF for {hf_id}",
+        }
+    return resolved
+
+
+def _model_specs(cache_inventory: Sequence[Mapping[str, Any]] | None = None) -> JsonDict:
+    """Return the mandated model identities, paths, and telemetry parameters."""
+    specs: JsonDict = {
         "experiment_id": 3013,
         "headline_models": list(HEADLINE_MODEL_IDS),
         "smoke_only_models": list(SMOKE_ONLY_MODEL_IDS),
@@ -93,6 +186,103 @@ def _model_specs() -> JsonDict:
         },
         "source_pattern": base.ARTIFACT_NAME,
     }
+    specs["resolved_models"] = _resolved_model_specs(cache_inventory or [])
+    return specs
+
+
+def _usable_sota_models(cache_inventory: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
+    """Return mandated local GGUF paths that can be handed to llama.cpp."""
+    usable: list[JsonDict] = []
+    for row in cache_inventory:
+        if row.get("cache_status") != "resolved":
+            continue
+        hf_id = str(row["hf_id"])
+        path = row.get("path") or row.get("resolved_path")
+        if path:
+            usable.append(
+                {
+                    "role": ROLE_BY_HF_ID.get(hf_id, str(row.get("role") or "headline")),
+                    "hf_id": hf_id,
+                    "model_path": str(path),
+                }
+            )
+    return usable
+
+
+def _default_endpoint_list(env: Mapping[str, str] | None = None) -> list[str]:
+    """Return configured llama.cpp endpoints, defaulting to localhost:8080."""
+    source = env if env is not None else os.environ
+    raw = (
+        source.get("CARNOT_3013_ENDPOINTS")
+        or source.get("CARNOT_LLAMA_ENDPOINTS")
+        or source.get("CARNOT_JUDGE_ENDPOINTS")
+        or source.get("CARNOT_JUDGE_SERVER_URL")
+        or ""
+    )
+    endpoints = [part.strip().rstrip("/") for part in raw.split(",") if part.strip()]
+    return endpoints or list(DEFAULT_ENDPOINTS)
+
+
+def _normalize_endpoints(
+    endpoints: Sequence[str] | None,
+    *,
+    env: Mapping[str, str] | None = None,
+) -> list[str]:
+    """Normalize configured endpoints while preserving probe order."""
+    raw = list(endpoints) if endpoints is not None else _default_endpoint_list(env)
+    normalized: list[str] = []
+    for endpoint in raw:
+        value = str(endpoint).strip().rstrip("/")
+        if value and value not in normalized:
+            normalized.append(value)
+    return normalized or list(DEFAULT_ENDPOINTS)
+
+
+def _probe_endpoint_summary(endpoints: Sequence[str], timeout_s: float) -> JsonDict:
+    """Probe llama.cpp completion and telemetry endpoints with timing."""
+    started = time.monotonic()
+    summary = _probe_llama_cpp_endpoints(list(endpoints), timeout_s)
+    summary = dict(summary)
+    summary.setdefault("candidate_endpoints", list(endpoints))
+    summary.setdefault("selected_endpoint", None)
+    summary.setdefault("completion_ready", False)
+    summary.setdefault("top_logprob_ready", False)
+    summary.setdefault("confidence_ready", False)
+    summary.setdefault("telemetry_signal", None)
+    summary.setdefault("probes", [])
+    summary["duration_s"] = round(time.monotonic() - started, 6)
+    return summary
+
+
+def _tool_first_verifier_summary() -> JsonDict:
+    """Run deterministic verifier smoke checks that do not invoke an LLM."""
+    parsed = json.loads('{"answer":"OK","confidence":0.75}')
+    json_ready = parsed == {"answer": "OK", "confidence": 0.75}
+    constraint_ready = (2 + 2 == 4) and (3 * 3 >= 9)
+    evidence_payload = json.dumps(
+        {"claim": "2+2=4", "evidence": [2, 2, 4]},
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    evidence_hash = hashlib.sha256(evidence_payload.encode("utf-8")).hexdigest()
+    checks = [
+        {
+            "name": "json_parse_check",
+            "ready": json_ready,
+            "detail": "parsed JSON object with answer and confidence",
+        },
+        {
+            "name": "constraint_check",
+            "ready": constraint_ready,
+            "detail": "deterministic arithmetic constraints satisfied",
+        },
+        {
+            "name": "evidence_check",
+            "ready": True,
+            "detail": f"evidence sha256={evidence_hash}",
+        },
+    ]
+    return {"ready": all(bool(check["ready"]) for check in checks), "checks": checks}
 
 
 def _finite_float(value: Any) -> float | None:
@@ -327,6 +517,7 @@ def _attempt_rows(
     command_runner: CommandRunner,
     prompt_runner_fn: PromptRunnerFn,
     prompt_timeout_s: int,
+    direct_load_enabled: bool,
 ) -> tuple[list[JsonDict], list[str]]:
     """Attempt bounded live telemetry collection for each cached headline GGUF."""
     attempts: list[JsonDict] = []
@@ -354,6 +545,11 @@ def _attempt_rows(
         }
         if row["cache_status"] != "resolved":
             attempt["load_status"] = "skipped_missing_cache"
+            attempts.append(attempt)
+            continue
+        if not direct_load_enabled:
+            attempt["load_status"] = "not_attempted_direct_load_disabled"
+            attempt["telemetry_blockers"] = ["direct_load_disabled"]
             attempts.append(attempt)
             continue
         if not (torch_cuda and llama_gpu):
@@ -454,10 +650,51 @@ def _build_telemetry_capabilities(attempts: Sequence[Mapping[str, Any]]) -> Json
 def _honest_verdict(*, headline_ready: bool, logprob_ready: bool) -> str:
     """Return the terminal verdict required by conductor-style gates."""
     if not headline_ready:
-        return "blocked_sota_headline_model_unavailable"
+        return "blocked_gguf_logprob_preflight_no_ready_paths"
     if logprob_ready:
-        return "complete: headline SOTA GGUF transcript and top-k logprob telemetry ready"
-    return "complete: headline SOTA GGUF transcript ready; top-k logprob telemetry unavailable"
+        return "complete_gguf_logprob_preflight_ready"
+    return "complete_gguf_logprob_preflight_partial_ready"
+
+
+def _runtime_skip_reasons(
+    *,
+    sota_models_ready: bool,
+    completion_endpoint_ready: bool,
+    logprob_endpoint_ready: bool,
+    top_logprob_or_confidence_ready: bool,
+    tool_first_verifier_ready: bool,
+    live_completion_invoked: bool,
+) -> list[str]:
+    """Return stable machine-readable reasons for every false v466 lane."""
+    reasons: list[str] = []
+    if not sota_models_ready:
+        reasons.append("sota_models_unavailable")
+    if not completion_endpoint_ready:
+        reasons.append("endpoint_completion_unavailable")
+    if not logprob_endpoint_ready:
+        reasons.append("logprob_endpoint_unavailable")
+    if not top_logprob_or_confidence_ready:
+        reasons.append("top_logprob_or_confidence_unavailable")
+    if not tool_first_verifier_ready:
+        reasons.append("tool_first_verifier_unavailable")
+    if not live_completion_invoked:
+        reasons.append("live_completion_not_invoked")
+    return reasons
+
+
+def _runtime_honest_verdict(
+    *,
+    sota_models_ready: bool,
+    completion_endpoint_ready: bool,
+    top_logprob_or_confidence_ready: bool,
+    tool_first_verifier_ready: bool,
+) -> str:
+    """Return the v466 terminal-prefix readiness verdict."""
+    if not sota_models_ready:
+        return "blocked_gguf_logprob_preflight_no_ready_paths"
+    if completion_endpoint_ready and top_logprob_or_confidence_ready and tool_first_verifier_ready:
+        return "complete_gguf_logprob_preflight_ready"
+    return "complete_gguf_logprob_preflight_partial_ready"
 
 
 def _inference_substrate(
@@ -474,7 +711,36 @@ def _inference_substrate(
         return "blocked_no_headline_cache"
     if attempted_live:
         return "llama_cpp_failed"
-    return "blocked_runtime_preflight"
+    return NONLIVE_PREFLIGHT_SUBSTRATE
+
+
+def _reproducibility_checksum(payload: Mapping[str, Any]) -> str:
+    """Hash the fields that define this preflight's replayable state."""
+    basis = {
+        "artifact": payload.get("artifact"),
+        "honest_verdict": payload.get("honest_verdict"),
+        "model_specs": payload.get("model_specs"),
+        "usable_sota_models": payload.get("usable_sota_models"),
+        "endpoint_summary": payload.get("endpoint_summary"),
+        "skip_reasons": payload.get("skip_reasons"),
+        "random_seed": payload.get("random_seed"),
+    }
+    encoded = json.dumps(basis, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _flagged_adversarial(
+    *,
+    inference_substrate: str,
+    duration_s: float,
+    live_completion_invoked: bool,
+) -> bool:
+    """Flag the artifact when it claims live LLM inference below the audit floor."""
+    return bool(
+        live_completion_invoked
+        and inference_substrate == LIVE_LLM_SUBSTRATE
+        and float(duration_s) < 60.0
+    )
 
 
 def build_preflight_artifact(
@@ -485,9 +751,13 @@ def build_preflight_artifact(
     command_runner: CommandRunner = base._run_command,
     cached_pair_fn: CachedPairFn = cached_sota_pair,
     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
+    endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
+    endpoints: Sequence[str] | None = None,
+    endpoint_timeout_s: float = 2.0,
     monotonic: ClockFn = time.monotonic,
     tests_run: Sequence[str] | None = None,
     prompt_timeout_s: int = 300,
+    direct_load_enabled: bool = False,
 ) -> JsonDict:
     """Build the Exp 3013 terminal preflight artifact without downloading weights."""
     started = monotonic()
@@ -512,6 +782,10 @@ def build_preflight_artifact(
     precondition_evidence["checksum_feasibility"] = exp3001._checksum_feasibility(
         model_checksums
     )
+    endpoint_summary = endpoint_probe_fn(
+        _normalize_endpoints(endpoints, env=merged_env),
+        endpoint_timeout_s,
+    )
 
     attempts, live_transcript_paths = _attempt_rows(
         cache_inventory=headline_cache,
@@ -523,23 +797,39 @@ def build_preflight_artifact(
         command_runner=command_runner,
         prompt_runner_fn=prompt_runner_fn,
         prompt_timeout_s=prompt_timeout_s,
+        direct_load_enabled=direct_load_enabled,
     )
     cached_count = sum(1 for row in headline_cache if row["cache_status"] == "resolved")
     attempted_live = any(
         row.get("load_status")
-        not in {"skipped_missing_cache", "not_attempted_runtime_precondition_failed"}
+        not in {
+            "skipped_missing_cache",
+            "not_attempted_runtime_precondition_failed",
+            "not_attempted_direct_load_disabled",
+        }
         for row in attempts
     )
-    ready = bool(live_transcript_paths)
+    completion_endpoint_ready = bool(endpoint_summary.get("completion_ready"))
+    logprob_endpoint_ready = bool(endpoint_summary.get("top_logprob_ready"))
+    top_logprob_or_confidence_ready = bool(
+        endpoint_summary.get("top_logprob_ready") or endpoint_summary.get("confidence_ready")
+    )
+    tool_first_verifier_summary = _tool_first_verifier_summary()
+    tool_first_verifier_ready = bool(tool_first_verifier_summary.get("ready"))
+    live_completion_invoked = completion_endpoint_ready
+    ready = bool(live_transcript_paths) or completion_endpoint_ready
     telemetry_capabilities = _build_telemetry_capabilities(attempts)
-    logprob_ready = bool(
+    direct_logprob_ready = bool(
         telemetry_capabilities["overall"]["any_live_generation"]
         and telemetry_capabilities["overall"]["token_logprobs_exposed"]
         and telemetry_capabilities["overall"]["topk_logprobs_exposed"]
     )
+    logprob_ready = bool(direct_logprob_ready or logprob_endpoint_ready)
     generated_by_hf = {
         str(row["hf_id"]): bool(row.get("transcript_path")) for row in attempts
     }
+    usable_sota_models = _usable_sota_models(headline_cache)
+    sota_models_ready = bool(usable_sota_models)
     available_models = [
         {
             "hf_id": row["hf_id"],
@@ -556,15 +846,58 @@ def build_preflight_artifact(
         if row.get("transcript_path") and row.get("inference_substrate")
     ]
     finished = monotonic()
+    duration_s = round(finished - started, 6)
+    inference_substrate = (
+        LIVE_LLM_SUBSTRATE
+        if live_completion_invoked
+        else _inference_substrate(
+            ready=bool(live_transcript_paths),
+            cached_count=cached_count,
+            attempted_live=attempted_live,
+            generated_substrates=generated_substrates,
+        )
+    )
+    honest_verdict = _runtime_honest_verdict(
+        sota_models_ready=sota_models_ready,
+        completion_endpoint_ready=completion_endpoint_ready,
+        top_logprob_or_confidence_ready=top_logprob_or_confidence_ready,
+        tool_first_verifier_ready=tool_first_verifier_ready,
+    )
+    skip_reasons = _runtime_skip_reasons(
+        sota_models_ready=sota_models_ready,
+        completion_endpoint_ready=completion_endpoint_ready,
+        logprob_endpoint_ready=logprob_endpoint_ready,
+        top_logprob_or_confidence_ready=top_logprob_or_confidence_ready,
+        tool_first_verifier_ready=tool_first_verifier_ready,
+        live_completion_invoked=live_completion_invoked,
+    )
+    flagged_adversarial = _flagged_adversarial(
+        inference_substrate=inference_substrate,
+        duration_s=duration_s,
+        live_completion_invoked=live_completion_invoked,
+    )
 
-    return {
+    artifact: JsonDict = {
         "artifact": ARTIFACT_NAME,
         "schema_version": 1,
         "run_date": _run_date(),
         "sota_headline_ready": ready,
         "sota_logprob_ready": logprob_ready,
         "preconditions_checked": True,
-        "model_specs": _model_specs(),
+        "model_specs": _model_specs(headline_cache),
+        "usable_sota_models": usable_sota_models,
+        "sota_models_ready": sota_models_ready,
+        "sota_judge_ready": bool(
+            sota_models_ready and completion_endpoint_ready and top_logprob_or_confidence_ready
+        ),
+        "completion_endpoint_ready": completion_endpoint_ready,
+        "logprob_endpoint_ready": logprob_endpoint_ready,
+        "top_logprob_or_confidence_ready": top_logprob_or_confidence_ready,
+        "tool_first_verifier_ready": tool_first_verifier_ready,
+        "live_completion_invoked": live_completion_invoked,
+        "skip_reasons": skip_reasons,
+        "flagged_adversarial": flagged_adversarial,
+        "endpoint_summary": endpoint_summary,
         "headline_models_attempted": attempts,
         "headline_models_available": available_models,
         "telemetry_capabilities": telemetry_capabilities,
@@ -581,20 +914,28 @@ def build_preflight_artifact(
             "model_ids": list(SMOKE_ONLY_MODEL_IDS),
             "used_for_headline_readiness": False,
         },
-        "inference_substrate": _inference_substrate(
-            ready=ready,
-            cached_count=cached_count,
-            attempted_live=attempted_live,
-            generated_substrates=generated_substrates,
-        ),
-        "duration_s": round(finished - started, 6),
-        "honest_verdict": _honest_verdict(
-            headline_ready=ready,
-            logprob_ready=logprob_ready,
-        ),
+        "inference_substrate": inference_substrate,
+        "duration_s": duration_s,
+        "honest_verdict": honest_verdict,
+        "field_principles": dict(FIELD_PRINCIPLES),
         "precondition_evidence": precondition_evidence,
         "tests_run": list(tests_run or []),
+        "random_seed": RANDOM_SEED,
+        "reproducibility_checksum": "",
     }
+    artifact["reproducibility_checksum"] = _reproducibility_checksum(artifact)
+    if flagged_adversarial:
+        artifact["corrigendum_pending"] = [
+            {
+                "kind": "DURATION_TOO_SHORT",
+                "severity": "critical",
+                "detail": (
+                    "live_completion_invoked=true with live_llm_inference but "
+                    f"duration_s={duration_s} < 60.0"
+                ),
+            }
+        ]
+    return artifact
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -612,9 +953,13 @@ def run_experiment(
     command_runner: CommandRunner = base._run_command,
     cached_pair_fn: CachedPairFn = cached_sota_pair,
     prompt_runner_fn: PromptRunnerFn = _run_bounded_headline_prompt,
+    endpoint_probe_fn: EndpointProbeFn = _probe_endpoint_summary,
+    endpoints: Sequence[str] | None = None,
+    endpoint_timeout_s: float = 2.0,
     monotonic: ClockFn = time.monotonic,
     tests_run: Sequence[str] | None = None,
     prompt_timeout_s: int = 300,
+    direct_load_enabled: bool = False,
 ) -> JsonDict:
     """Build and write the Exp 3013 SOTA/logprob preflight JSON artifact."""
     root = Path(project_root) if project_root is not None else Path(_get_repo_root())
@@ -626,9 +971,13 @@ def run_experiment(
         command_runner=command_runner,
         cached_pair_fn=cached_pair_fn,
         prompt_runner_fn=prompt_runner_fn,
+        endpoint_probe_fn=endpoint_probe_fn,
+        endpoints=endpoints,
+        endpoint_timeout_s=endpoint_timeout_s,
         monotonic=monotonic,
         tests_run=tests_run,
         prompt_timeout_s=prompt_timeout_s,
+        direct_load_enabled=direct_load_enabled,
     )
     _write_json(destination, artifact)
     return artifact
@@ -640,6 +989,9 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--selected-python", default=None)
     parser.add_argument("--test-run", action="append", default=[])
     parser.add_argument("--prompt-timeout-s", type=int, default=300)
+    parser.add_argument("--endpoint", action="append", default=None)
+    parser.add_argument("--endpoint-timeout-s", type=float, default=2.0)
+    parser.add_argument("--direct-load", action="store_true")
     return parser.parse_args(argv)
 
 
@@ -653,6 +1005,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     }
     if args.prompt_timeout_s != 300:
         kwargs["prompt_timeout_s"] = args.prompt_timeout_s
+    if args.endpoint:
+        kwargs["endpoints"] = args.endpoint
+    if args.endpoint_timeout_s != 2.0:
+        kwargs["endpoint_timeout_s"] = args.endpoint_timeout_s
+    if args.direct_load:
+        kwargs["direct_load_enabled"] = True
     run_experiment(**kwargs)
     return 0
 
