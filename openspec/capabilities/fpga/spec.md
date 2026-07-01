@@ -14098,6 +14098,98 @@ and a local claim scope that excludes generalized FPGA speedup claims.
 
 ---
 
+### REQ-HW-5079
+
+**Title:** Board continuity matrix MUST preserve KV260, GateMate, and PolarFire visibility without speedup claims
+
+**Description:**
+Experiment 5079 MUST produce
+`results/experiment_5079_board_continuity_matrix_v466.json` as an audit-only
+hardware continuity matrix for the active KV260, GateMate A1, and PolarFire
+tracks. The KV260 precondition MUST be exactly:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+Host SD-card device nodes MUST NOT be inspected for KV260. The experiment MUST
+audit the existing Exp 5065 KV260 artifact and transcript at
+`results/experiment_5065_kv260_testbench_timing_packet.json` and
+`results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl` rather
+than rerunning the KV260 board workload. The KV260 row MUST summarize the prior
+CPU/board parity result, timing-ratio packet, transcript hash verification,
+loaded overlay evidence, and limitations. `kv260_speedup_claim_allowed` MUST be
+false because the evidence is SSH reachability plus an upstream Python
+testbench parity packet, not a generalized FPGA latency or speedup benchmark.
+
+GateMate and PolarFire checks MUST be non-destructive. GateMate detection uses
+`openFPGALoader -c dirtyJtag --detect` and accepts the board only when the
+transcript identifies GateMate/GM1Ax or an IDCODE such as `0x20000001`.
+PolarFire detection uses
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` and MAY record a
+non-mutating uptime transcript with `ssh polarfire uptime` when SSH is reachable.
+The experiment MUST NOT flash GateMate, program bitstreams, run PolarFire
+dispatch, or claim sampler latency unless a known-good Carnot dispatch path is
+explicitly available to this experiment.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `honest_verdict`
+- `duration_s`
+- `inference_substrate`
+- `kv260_ssh_ready`
+- `kv260_prior_transcript_verified`
+- `kv260_speedup_claim_allowed`
+- `gatemate_detected`
+- `gatemate_terminal_state`
+- `polarfire_detected`
+- `polarfire_terminal_state`
+- `destructive_actions_taken`
+- `board_matrix`
+- `flagged_adversarial`
+
+**Acceptance criteria:**
+- `.venv/bin/python python/carnot/experiment_5079_board_continuity_matrix.py`
+  writes `results/experiment_5079_board_continuity_matrix_v466.json`.
+- The artifact includes `schema`, `experiment_id=5079`, `spec_refs`
+  containing `REQ-HW-5079` and `SCENARIO-HW-5079`, `random_seed=5079`,
+  `field_principles`, `preconditions_checked`, `command_probes`,
+  `kv260_prior_artifact`, `kv260_prior_summary`, `board_matrix`, and a stable
+  `reproducibility_checksum`.
+- `inference_substrate` is
+  `hardware_precheck_and_upstream_artifact_audit`.
+- `honest_verdict` starts with a terminal prefix such as
+  `success_board_continuity_matrix_written_no_speedup_claim`.
+- `preconditions_checked` records the exact KV260 SSH BatchMode command, the
+  GateMate DirtyJTAG detect command, and the PolarFire SSH BatchMode command.
+- The artifact contains no `/dev/mmcblk` or `/dev/disk` host-storage marker.
+- `destructive_actions_taken=[]`, `kv260_speedup_claim_allowed=false`, and
+  `flagged_adversarial=false`.
+
+**Implementation status:** Pending (Exp 5079)
+
+---
+
+### SCENARIO-HW-5079
+
+**Scenario:** Exp 5079 writes a non-destructive three-board continuity matrix.
+
+**Given:** KV260 has an existing Exp 5065 SSH/transcript timing-packet artifact,
+GateMate A1 has only non-destructive DirtyJTAG detection available, and
+PolarFire has SSH reachability but no current Carnot dispatch path for this
+experiment.
+**When:** Experiment 5079 runs the exact KV260 SSH precondition, verifies the
+Exp 5065 artifact plus transcript hash, detects GateMate with
+`openFPGALoader -c dirtyJtag --detect`, and detects PolarFire with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+**Then:** It writes
+`results/experiment_5079_board_continuity_matrix_v466.json` with a KV260,
+GateMate, and PolarFire `board_matrix`, terminal per-board states, no destructive
+actions, and no speedup claim.
+
+**Implementation status:** Pending (Exp 5079)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.

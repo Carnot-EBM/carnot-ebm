@@ -1,0 +1,284 @@
+{
+  "board_matrix": {
+    "gatemate": {
+      "action_scope": "detect_only_no_flash_no_program_no_latency_claim",
+      "board": "gatemate_a1",
+      "destructive_actions_taken": [],
+      "detected": false,
+      "evidence": {
+        "detect_observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+        "detected_idcode": null
+      },
+      "limitations": [
+        "no_carnot_tile_flashed_or_timed_by_this_experiment",
+        "no_host_visible_sampler_output_verified_by_this_experiment"
+      ],
+      "next_safe_step": "Use a separate established GateMate Carnot tile flash/timing script only after a known-good bitstream and host-visible output path are in scope.",
+      "precondition": {
+        "available": false,
+        "command": "openFPGALoader -c dirtyJtag --detect",
+        "discipline": "detect_only_no_flash_no_program",
+        "duration_s": 0.036244,
+        "exit_code": 0,
+        "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+        "resource": "gatemate_dirtyjtag_detect"
+      },
+      "precondition_resource": "gatemate_dirtyjtag_detect",
+      "speedup_claim_allowed": false,
+      "terminal_state": "blocked_gatemate_usb_undetected"
+    },
+    "kv260": {
+      "board": "kv260",
+      "destructive_actions_taken": [],
+      "evidence": {
+        "cpu_board_parity": "match",
+        "loaded_overlay": "carnot_ising_v2_n64",
+        "prior_artifact_path": "results/experiment_5065_kv260_testbench_timing_packet.json",
+        "prior_honest_verdict": "success_kv260_testbench_timing_packet_built",
+        "prior_transcript_path": "results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl",
+        "prior_transcript_verified": true,
+        "timing_packet_present": true,
+        "timing_ratio_packet": {
+          "cpu_wall_clock_s": 0.001893861219,
+          "iterations": 128,
+          "kv260_board_reported_workload_s": 0.057338259008,
+          "kv260_command_wall_clock_s": 0.661238221917,
+          "n_variables": 64,
+          "parity_match": true,
+          "ratio_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+          "workload_name": "bounded_sparse_pbit_parity_n64"
+        },
+        "transcript_sha256_verified": true,
+        "uio_devices": [
+          "/dev/uio0",
+          "/dev/uio1",
+          "/dev/uio2",
+          "/dev/uio3",
+          "/dev/uio4"
+        ]
+      },
+      "limitations": [
+        "prior_exp5065_is_ssh_attached_python_testbench_evidence_not_fabric_latency",
+        "no_general_fpga_speedup_claim",
+        "timing_ratio_includes_cpu_reference_and_ssh_command_context_not_a_board_speedup"
+      ],
+      "next_safe_step": "Only a separate board-command transcript using /dev/uio register access may support a future KV260 speedup or latency claim.",
+      "precondition": {
+        "available": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "discipline": "ssh_only_no_host_sd_card",
+        "duration_s": 4.598324,
+        "exit_code": 0,
+        "observed": "returncode=0",
+        "resource": "kv260_ssh"
+      },
+      "precondition_resource": "kv260_ssh",
+      "speedup_claim_allowed": false,
+      "ssh_ready": true,
+      "terminal_state": "kv260_ssh_ready_prior_transcript_verified_no_speedup_claim"
+    },
+    "polarfire": {
+      "action_scope": "ssh_precheck_and_optional_uptime_only_no_dispatch",
+      "board": "polarfire_soc",
+      "destructive_actions_taken": [],
+      "detected": true,
+      "limitations": [
+        "no_carnot_dispatch_executed_by_this_experiment",
+        "no_hash_verified_workload_completion_recorded_by_this_experiment"
+      ],
+      "next_safe_step": "Run a separate hash-verified Carnot dispatch only when that path is the explicit task scope.",
+      "precondition": {
+        "available": true,
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "discipline": "ssh_reachability_only_no_dispatch",
+        "duration_s": 0.908234,
+        "exit_code": 0,
+        "observed": "returncode=0",
+        "resource": "polarfire_ssh"
+      },
+      "precondition_resource": "polarfire_ssh",
+      "speedup_claim_allowed": false,
+      "state_probe": {
+        "captured": true,
+        "command": "ssh polarfire uptime",
+        "duration_s": 0.779678,
+        "exit_code": 0,
+        "observed": "07:39:48 up 18 days, 14:52,  0 user,  load average: 0.00, 0.00, 0.00",
+        "state_type": "uptime",
+        "succeeded": true
+      },
+      "terminal_state": "polarfire_ssh_attached_no_carnot_dispatch_executed"
+    }
+  },
+  "command_probes": {
+    "gatemate_dirtyjtag_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.036244,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.598324,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.908234,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_uptime": {
+      "combined_output": " 07:39:48 up 18 days, 14:52,  0 user,  load average: 0.00, 0.00, 0.00\n",
+      "command": "ssh polarfire uptime",
+      "duration_s": 0.779678,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": " 07:39:48 up 18 days, 14:52,  0 user,  load average: 0.00, 0.00, 0.00\n"
+    }
+  },
+  "destructive_actions_taken": [],
+  "duration_s": 6.323637,
+  "experiment": "experiment_5079_board_continuity_matrix",
+  "experiment_id": 5079,
+  "field_principles": {
+    "board_matrix": {
+      "principle": "one machine-readable row per active board preserving reachability, evidence, limitations, and safe next step."
+    },
+    "destructive_actions_taken": {
+      "principle": "must be an empty list; this matrix is detection and audit only."
+    },
+    "duration_s": {
+      "principle": "measured wall-clock time for live prechecks plus upstream artifact audit."
+    },
+    "flagged_adversarial": {
+      "principle": "false only when schema checks pass and the matrix preserves no-speedup/no-destructive-action boundaries."
+    },
+    "gatemate_detected": {
+      "principle": "true only from non-destructive DirtyJTAG/openFPGALoader detection with GateMate/GM1Ax/IDCODE evidence."
+    },
+    "gatemate_terminal_state": {
+      "principle": "names the current GateMate state without flashing, timing, or claiming a Carnot tile is deployed."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefixed verdict for a written board matrix with no speedup claim."
+    },
+    "inference_substrate": {
+      "principle": "declares hardware_precheck_and_upstream_artifact_audit because this mixes live reachability with checked-in evidence."
+    },
+    "kv260_prior_transcript_verified": {
+      "principle": "true only when Exp 5065 artifact validation and transcript SHA-256 verification both pass."
+    },
+    "kv260_speedup_claim_allowed": {
+      "principle": "must remain false because the KV260 evidence is SSH reachability plus an upstream Python testbench packet."
+    },
+    "kv260_ssh_ready": {
+      "principle": "true only when the exact BatchMode SSH precondition to kria exits zero; never a host block-device check."
+    },
+    "polarfire_detected": {
+      "principle": "true only from non-destructive PolarFire BatchMode SSH reachability."
+    },
+    "polarfire_terminal_state": {
+      "principle": "names the current PolarFire SSH state without running Carnot dispatch."
+    }
+  },
+  "flagged_adversarial": false,
+  "gatemate_detected": false,
+  "gatemate_terminal_state": "blocked_gatemate_usb_undetected",
+  "honest_verdict": "success_board_continuity_matrix_written_no_speedup_claim",
+  "inference_substrate": "hardware_precheck_and_upstream_artifact_audit",
+  "kv260_prior_artifact": {
+    "artifact_path": "results/experiment_5065_kv260_testbench_timing_packet.json",
+    "artifact_present": true,
+    "artifact_sha256": "a70dacc40e9a16eb1764f3e0a76a265258f0aa99c074100d881f54bd024b6f9c",
+    "claimed_transcript_sha256": "0400a1f87e3feb949c08d3d65c6d58d4f5e2018df40cdb385c5c4dfbb43f2956",
+    "transcript_path": "results/experiment_5065_kv260_testbench_timing_packet.transcript.jsonl",
+    "transcript_present": true,
+    "transcript_sha256": "0400a1f87e3feb949c08d3d65c6d58d4f5e2018df40cdb385c5c4dfbb43f2956",
+    "transcript_sha256_verified": true
+  },
+  "kv260_prior_summary": {
+    "cpu_board_parity": "match",
+    "cpu_reference_ok": true,
+    "errors": [],
+    "kv260_result_ok": true,
+    "limitations": [
+      "prior_exp5065_is_ssh_attached_python_testbench_evidence_not_fabric_latency",
+      "no_general_fpga_speedup_claim",
+      "timing_ratio_includes_cpu_reference_and_ssh_command_context_not_a_board_speedup"
+    ],
+    "loaded_overlay": "carnot_ising_v2_n64",
+    "local_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+    "overlay_loaded": true,
+    "prior_honest_verdict": "success_kv260_testbench_timing_packet_built",
+    "prior_inference_substrate": "hardware_smoke",
+    "timing_packet_present": true,
+    "timing_ratio_packet": {
+      "cpu_wall_clock_s": 0.001893861219,
+      "iterations": 128,
+      "kv260_board_reported_workload_s": 0.057338259008,
+      "kv260_command_wall_clock_s": 0.661238221917,
+      "n_variables": 64,
+      "parity_match": true,
+      "ratio_claim_scope": "local_ssh_attached_kv260_python_testbench_on_confirmed_carnot_overlay_only_no_general_fpga_speedup_claim_no_gpu_benchmark_claim_no_external_2026_paper_claim",
+      "workload_name": "bounded_sparse_pbit_parity_n64"
+    },
+    "transcript_sha256_verified": true,
+    "uio_devices": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "verified": true
+  },
+  "kv260_prior_transcript_verified": true,
+  "kv260_speedup_claim_allowed": false,
+  "kv260_ssh_ready": true,
+  "polarfire_detected": true,
+  "polarfire_terminal_state": "polarfire_ssh_attached_no_carnot_dispatch_executed",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_sd_card",
+      "duration_s": 4.598324,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "discipline": "detect_only_no_flash_no_program",
+      "duration_s": 0.036244,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_dirtyjtag_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_reachability_only_no_dispatch",
+      "duration_s": 0.908234,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 5079,
+  "reproducibility_checksum": "af4b5a65d501e7019fc635bf5727bddd718342c035af9d27de3c6795e221e488",
+  "schema": "carnot.experiment_5079_board_continuity_matrix.v466",
+  "spec_refs": [
+    "REQ-HW-5079",
+    "SCENARIO-HW-5079"
+  ]
+}
