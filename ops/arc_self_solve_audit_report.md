@@ -16,30 +16,30 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: **0 SELF_DISCOVERY_ADVANCE. 18 DUPLICATE, 1 UNCLEAR, 1 OUTER_LOOP_RE.** Reachability is clean, but it does not prove autonomous hidden-game self-discovery.
+TL;DR: **0 SELF_DISCOVERY_ADVANCE. 18 DUPLICATE, 1 UNCLEAR, 1 OUTER_LOOP_RE, 0 OFF_PATH.** Reachability is clean, but these are not new live-agent discovery wins.
 
 | Artifact | Verdict | Evidence | Recommended action |
 |---|---|---|---|
-| `results/arc_loop_solve_lp85.json` | DUPLICATE | Reaches L3; registry already records lp85 L5. `development_proxy`. | Do not count. |
-| `results/arc_loop_solve_r11l.json` | DUPLICATE | Reaches L2; registry already records L2. `development_proxy`. | Do not count. |
-| `results/arc_loop_solve_ls20.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_dc22.json` | UNCLEAR | Claims/reproduces L3 while registry records L2, but provenance is only `development_proxy`, offline no-quota, no self-discovery proof. | Quarantine until live attempt trace + runtime RE transcript exists. |
-| `results/arc_loop_solve_vc33.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_g50t.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_s5i5.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_sp80.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_su15.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_sk48.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_ft09.json` | DUPLICATE | Reaches L3; registry already records L3. | Do not count. |
-| `results/arc_loop_solve_ar25.json` | DUPLICATE | Reaches L3; registry already records L3. | Do not count. |
-| `results/arc_loop_solve_m0r0.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_cn04.json` | DUPLICATE | Reaches L3; registry already records L3. | Do not count. |
-| `results/arc_loop_solve_lf52.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_bp35.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_re86.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/arc_loop_solve_ka59.json` | DUPLICATE | Reaches L1; registry already records L1. | Do not count. |
-| `results/arc_loop_solve_sb26.json` | DUPLICATE | Reaches L2; registry already records L2. | Do not count. |
-| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Explicit `used_env_source`; “bank trajectory captured” via development proxy, not autonomous hidden-game discovery. | Quarantine as dev evidence only. Never count as solve progress. |
+| `arc_loop_solve_lp85.json` | DUPLICATE | L3, but registry already has lp85 beyond that; `development_proxy`. | Do not count. |
+| `arc_loop_solve_r11l.json` | DUPLICATE | L2 already registered; `development_proxy`. | Do not count. |
+| `arc_loop_solve_ls20.json` | DUPLICATE | L2 already registered; offline no-quota proxy. | Do not count. |
+| `arc_loop_solve_dc22.json` | UNCLEAR | Claims L3 while registry records L2; only `development_proxy` / offline reproduction, no live self-discovery trace. | Quarantine until live attempt trace + runtime RE transcript exists. |
+| `arc_loop_solve_vc33.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_g50t.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_s5i5.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_sp80.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_su15.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_sk48.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_ft09.json` | DUPLICATE | L3 already registered. | Do not count. |
+| `arc_loop_solve_ar25.json` | DUPLICATE | L3 already registered. | Do not count. |
+| `arc_loop_solve_m0r0.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_cn04.json` | DUPLICATE | L3 already registered. | Do not count. |
+| `arc_loop_solve_lf52.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_bp35.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_re86.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `arc_loop_solve_ka59.json` | DUPLICATE | L1 already registered. | Do not count. |
+| `arc_loop_solve_sb26.json` | DUPLICATE | L2 already registered. | Do not count. |
+| `experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Explicit `used_env_source`; L6 “bank trajectory captured” under `development_proxy`, not hidden-game autonomous discovery. | Quarantine as dev evidence only; never count as solve progress. |
 
-**Pattern Watch:** the drift is `development_proxy` + offline reproduction gate being treated like live-agent discovery. That is exactly the anti-pattern: banked replay / per-game development artifacts accumulating near the live path until they look like capability. Require every new credit claim to show live entrypoint command, clean attempt trace, observations, inferred rules, and no source/BFS/per-game adapter leakage.
+**Pattern Watch:** the drift is treating `development_proxy` + offline reproduction gates as live discovery. That is the failure mode: banked replay and per-game development artifacts accumulate near the live path and start looking like capability. New credit should require the live entrypoint command, clean attempt trace, observations, inferred rules, and no source/BFS/per-game leakage.
 
