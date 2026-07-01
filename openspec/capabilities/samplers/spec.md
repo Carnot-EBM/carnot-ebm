@@ -968,3 +968,52 @@ telemetry are recorded
 **And** `results/experiment_5129_hubo_adaptive_2dpt_v470.json` is written with
 `hardware_speedup_claimed=false`, `conductor_modified=false`, and a terminal
 honest verdict.
+
+### REQ-SAMPLE-5130: TACO Sampler Held-Out CSP Trace Suite
+
+Carnot MUST scale the TACO-style adaptive CSP solver-help path to held-out
+exact-checkable CSP families while preserving complete exact-solver or exact
+enumerator correctness authority for every reported label.
+
+Sub-requirements:
+- REQ-SAMPLE-5130-1: Exp 5130 SHALL hard-block when
+  `results/experiment_5129_hubo_adaptive_2dpt_v470.json` does not report
+  `adaptive_2dpt_ready=true`.
+- REQ-SAMPLE-5130-2: Exp 5130 SHALL build a deterministic held-out CSP suite
+  disjoint from any Exp 5117 tuning instance and SHALL record a stable SHA-256
+  hash for every held-out instance.
+- REQ-SAMPLE-5130-3: Exp 5130 SHALL compare the baseline exact solver,
+  unguarded adaptive heuristic, harm-gated adaptive heuristic, and an
+  adaptive-sampler feature variant on the same held-out instances.
+- REQ-SAMPLE-5130-4: A heuristic answer SHALL NOT be counted correct unless
+  the complete exact solver or exact enumerator agrees with the reported label.
+- REQ-SAMPLE-5130-5: The terminal artifact with
+  `inference_substrate="cpu_exact_solver_with_adaptive_heuristic"`
+  `results/experiment_5130_taco_sampler_heldout_scale_v470.json` SHALL include
+  `experiment_id` with value `exp5130-taco-sampler-heldout-scale-v470`,
+  `milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+  `exp5117_baseline_loaded`,
+  `exp5129_sampler_features_loaded`, `exact_solver_backend`,
+  `heldout_instance_hashes`, `instance_count`,
+  `average_effort_reduction_ratio_guarded`,
+  `harmful_instance_count_guarded`, `harmful_instance_count_unguarded`,
+  `wrong_label_count`, `timeout_rate`, `per_family_results`,
+  `heldout_csp_trace_suite_ready`, `flagged_adversarial`,
+  `conductor_modified`, and `tests_run`.
+- REQ-SAMPLE-5130-6: `heldout_csp_trace_suite_ready` SHALL be true only when
+  Exp 5117 and Exp 5129 dependencies load, all held-out labels are exact
+  checked, no heuristic-only answer is counted correct, and per-family traces
+  are sufficient for the FR-11 case-policy task.
+
+### SCENARIO-SAMPLE-5130: Held-Out CSP Trace Artifact
+
+**Given** Exp 5117 exact-label TACO harm-gate evidence and Exp 5129 adaptive
+sampler telemetry with `adaptive_2dpt_ready=true`
+**When** Exp 5130 runs on CPU against disjoint held-out CSP families
+**Then** every baseline, unguarded, guarded, and sampler-feature label agrees
+with exact authority
+**And** effort reduction, harmful-instance counts, wrong-label count, timeout
+rate, held-out hashes, and per-family results are recorded
+**And** `results/experiment_5130_taco_sampler_heldout_scale_v470.json` is
+written with `conductor_modified=false`, `flagged_adversarial=false`, and a
+terminal honest verdict.
