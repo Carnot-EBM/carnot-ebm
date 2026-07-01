@@ -1,0 +1,1436 @@
+{
+  "adaptation_steps": 256,
+  "adapted_effort": {
+    "backtracks": 134,
+    "constraint_checks": 1195,
+    "duration_s": 0.000111,
+    "instances": 8,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 161,
+    "total_effort_score": 1356
+  },
+  "baseline_effort": {
+    "backtracks": 14936,
+    "constraint_checks": 93247,
+    "duration_s": 0.009848,
+    "instances": 8,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 14963,
+    "total_effort_score": 108210
+  },
+  "correctness_preserved": true,
+  "csp_family": "bounded_graph_coloring_taco_v1",
+  "delta_effort_vs_baseline": {
+    "adapted": -106854,
+    "adapted_vs_static": -280,
+    "static_heuristic": -106574
+  },
+  "duration_s": 0.01178,
+  "exact_solver_backend": "deterministic_backtracking_graph_coloring_cpu",
+  "experiment_id": 5103,
+  "field_principles": {
+    "adaptation_steps": "Total bounded CPU relaxation steps used to produce advisory variable orders.",
+    "adapted_effort": "Exact-solver search effort after adapted instance-wise variable-order help.",
+    "baseline_effort": "Exact-solver search effort with natural variable order and no heuristic help.",
+    "correctness_preserved": "True only when all arm labels agree with the exact authority and all colorings verify.",
+    "csp_family": "Declared deterministic bounded graph-coloring CSP family.",
+    "delta_effort_vs_baseline": "Signed effort minus no-help baseline; negative means less exact-solver effort.",
+    "duration_s": "Measured local CPU time for graph generation, heuristic adaptation, exact search, and JSON assembly.",
+    "exact_solver_backend": "The complete CPU backtracking solver that owns all labels and returned colorings.",
+    "flagged_adversarial": "False only when substrate, schema, exact labels, and no-heuristic-solve checks pass.",
+    "harmful_instance_count": "Count of instances where adapted help costs more exact-solver effort than no help.",
+    "honest_verdict": "Terminal prefix; success only when adapted exact-solver effort is below the no-help exact baseline with correctness preserved.",
+    "inference_substrate": "Must be exact_solver_with_adaptive_cpu_heuristic, never live_llm_inference.",
+    "instances_total": "Number of train, dev, and held-out generated CSP instances evaluated.",
+    "static_heuristic_effort": "Exact-solver search effort after static degree-order variable help."
+  },
+  "flagged_adversarial": false,
+  "harmful_instance_count": 2,
+  "harmful_instances": [
+    "dev_wheel6_even_sat",
+    "heldout_wheel8_even_sat"
+  ],
+  "honest_verdict": "success_taco_adaptive_heuristic_reduces_exact_solver_effort",
+  "inference_substrate": "exact_solver_with_adaptive_cpu_heuristic",
+  "instances_total": 8,
+  "methodology_note": "The adaptive loop proposes only variable-order help from CPU conflict relaxation. All labels, solved/unsolved statuses, and accepted colorings come from complete exact search.",
+  "per_instance_results": [
+    {
+      "adaptation": {
+        "conflict_counts": [
+          8,
+          3,
+          0,
+          19,
+          23,
+          19
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          5
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          114.0,
+          109.0,
+          106.0,
+          125.0,
+          129.0,
+          279.0
+        ],
+        "order": [
+          5,
+          4,
+          3,
+          0,
+          1,
+          2
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          2,
+          1,
+          0,
+          1
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          5
+        ]
+      },
+      "adapted": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 28,
+          "constraint_checks": 216,
+          "duration_s": 2.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 28,
+          "total_effort_score": 244
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          5,
+          4,
+          3,
+          0,
+          1,
+          2
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 76,
+          "constraint_checks": 504,
+          "duration_s": 5.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 76,
+          "total_effort_score": 580
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "description": "5-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "train_wheel5_odd_unsat",
+      "n_colors": 3,
+      "n_edges": 10,
+      "n_nodes": 6,
+      "split": "train",
+      "static_heuristic": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 28,
+          "constraint_checks": 204,
+          "duration_s": 2.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 28,
+          "total_effort_score": 232
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          5,
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          5,
+          0,
+          3,
+          6,
+          0,
+          25,
+          17,
+          14
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          7.0,
+          2.0,
+          5.0,
+          8.0,
+          2.0,
+          83.0,
+          75.0,
+          70.0
+        ],
+        "order": [
+          5,
+          6,
+          7,
+          3,
+          0,
+          2,
+          1,
+          4
+        ],
+        "relaxed_coloring": [
+          1,
+          1,
+          2,
+          1,
+          1,
+          2,
+          0,
+          1
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ]
+      },
+      "adapted": {
+        "assignment": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          2
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 4e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 35
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          5,
+          6,
+          7,
+          3,
+          0,
+          2,
+          1,
+          4
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          2,
+          0
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 33,
+          "constraint_checks": 235,
+          "duration_s": 2.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 42,
+          "total_effort_score": 277
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "description": "A satisfiable triangle appears after low-degree prefix nodes.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "train_late_triangle_sat",
+      "n_colors": 3,
+      "n_edges": 8,
+      "n_nodes": 8,
+      "split": "train",
+      "static_heuristic": {
+        "assignment": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          2
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 26,
+          "duration_s": 4e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 9,
+          "total_effort_score": 35
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          15,
+          5,
+          1,
+          6,
+          3,
+          18,
+          23,
+          25,
+          26
+        ],
+        "degree_counts": [
+          4,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          23.0,
+          7.0,
+          3.0,
+          8.0,
+          5.0,
+          174.0,
+          179.0,
+          181.0,
+          182.0
+        ],
+        "order": [
+          8,
+          7,
+          6,
+          5,
+          0,
+          3,
+          1,
+          4,
+          2
+        ],
+        "relaxed_coloring": [
+          2,
+          1,
+          1,
+          0,
+          1,
+          2,
+          1,
+          1,
+          0
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "adapted": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 120,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 136
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          8,
+          7,
+          6,
+          5,
+          0,
+          3,
+          1,
+          4,
+          2
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 814,
+          "constraint_checks": 5043,
+          "duration_s": 0.000527,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 814,
+          "total_effort_score": 5857
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "description": "A high-degree star hub distracts static degree ordering from a late K4 obstruction.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "train_hub_distractor_k4_4",
+      "n_colors": 3,
+      "n_edges": 10,
+      "n_nodes": 9,
+      "split": "train",
+      "static_heuristic": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 49,
+          "constraint_checks": 318,
+          "duration_s": 3.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 49,
+          "total_effort_score": 367
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          5,
+          6,
+          7,
+          8,
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          11,
+          4,
+          0,
+          0,
+          0,
+          0,
+          4,
+          3,
+          0,
+          18,
+          15,
+          14,
+          19
+        ],
+        "degree_counts": [
+          8,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          3,
+          3,
+          3
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          27.0,
+          6.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          6.0,
+          5.0,
+          2.0,
+          174.0,
+          171.0,
+          170.0,
+          175.0
+        ],
+        "order": [
+          12,
+          9,
+          10,
+          11,
+          0,
+          1,
+          6,
+          7,
+          2,
+          3,
+          4,
+          5,
+          8
+        ],
+        "relaxed_coloring": [
+          0,
+          1,
+          2,
+          2,
+          2,
+          2,
+          1,
+          1,
+          2,
+          1,
+          2,
+          0,
+          1
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "adapted": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 114,
+          "duration_s": 1.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 130
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          12,
+          9,
+          10,
+          11,
+          0,
+          1,
+          6,
+          7,
+          2,
+          3,
+          4,
+          5,
+          8
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 13054,
+          "constraint_checks": 80655,
+          "duration_s": 0.008584,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 13054,
+          "total_effort_score": 93709
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
+      },
+      "description": "A high-degree star hub distracts static degree ordering from a late K4 obstruction.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "dev_hub_distractor_k4_8",
+      "n_colors": 3,
+      "n_edges": 14,
+      "n_nodes": 13,
+      "split": "dev",
+      "static_heuristic": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 49,
+          "constraint_checks": 330,
+          "duration_s": 3.1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 49,
+          "total_effort_score": 379
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          9,
+          10,
+          11,
+          12,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          17,
+          9,
+          15,
+          10,
+          15,
+          5,
+          47
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          6
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          123.0,
+          115.0,
+          121.0,
+          116.0,
+          121.0,
+          111.0,
+          359.0
+        ],
+        "order": [
+          6,
+          0,
+          2,
+          4,
+          3,
+          1,
+          5
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          2,
+          0,
+          2,
+          0,
+          1
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          6
+        ]
+      },
+      "adapted": {
+        "assignment": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          0
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 45,
+          "duration_s": 5e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 53
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          6,
+          0,
+          2,
+          4,
+          3,
+          1,
+          5
+        ]
+      },
+      "adapted_harmful_vs_baseline": true,
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 30,
+          "duration_s": 4e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 38
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "description": "6-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "dev_wheel6_even_sat",
+      "n_colors": 3,
+      "n_edges": 12,
+      "n_nodes": 7,
+      "split": "dev",
+      "static_heuristic": {
+        "assignment": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          0
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 45,
+          "duration_s": 5e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 8,
+          "total_effort_score": 53
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          6,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          0,
+          2,
+          0,
+          0,
+          17,
+          33,
+          3,
+          19
+        ],
+        "degree_counts": [
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          4,
+          4
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          2.0,
+          4.0,
+          2.0,
+          2.0,
+          175.0,
+          191.0,
+          161.0,
+          177.0
+        ],
+        "order": [
+          5,
+          7,
+          4,
+          6,
+          1,
+          0,
+          2,
+          3
+        ],
+        "relaxed_coloring": [
+          2,
+          2,
+          0,
+          1,
+          1,
+          1,
+          2,
+          0
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "adapted": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 159,
+          "duration_s": 1.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 175
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          5,
+          7,
+          4,
+          6,
+          1,
+          0,
+          2,
+          3
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 643,
+          "constraint_checks": 4611,
+          "duration_s": 0.000447,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 643,
+          "total_effort_score": 5254
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "description": "A held-out K4 obstruction appears after four low-degree prefix nodes.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "heldout_late_k4_unsat",
+      "n_colors": 3,
+      "n_edges": 10,
+      "n_nodes": 8,
+      "split": "heldout",
+      "static_heuristic": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 16,
+          "constraint_checks": 150,
+          "duration_s": 1.2e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 166
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          4,
+          5,
+          6,
+          7,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          37,
+          1,
+          10,
+          28,
+          5,
+          35,
+          39,
+          65
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          7
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          143.0,
+          107.0,
+          116.0,
+          134.0,
+          111.0,
+          141.0,
+          145.0,
+          429.0
+        ],
+        "order": [
+          7,
+          6,
+          0,
+          5,
+          3,
+          2,
+          4,
+          1
+        ],
+        "relaxed_coloring": [
+          0,
+          1,
+          2,
+          0,
+          1,
+          1,
+          2,
+          0
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          7
+        ]
+      },
+      "adapted": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 52,
+          "constraint_checks": 408,
+          "duration_s": 3.7e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 52,
+          "total_effort_score": 460
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          7,
+          6,
+          0,
+          5,
+          3,
+          2,
+          4,
+          1
+        ]
+      },
+      "adapted_harmful_vs_baseline": false,
+      "baseline": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 316,
+          "constraint_checks": 2130,
+          "duration_s": 0.000202,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 316,
+          "total_effort_score": 2446
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "description": "7-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": false,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "uncolorable"
+      },
+      "expected_colorable": false,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "heldout_wheel7_odd_unsat",
+      "n_colors": 3,
+      "n_edges": 14,
+      "n_nodes": 8,
+      "split": "heldout",
+      "static_heuristic": {
+        "assignment": null,
+        "colorable": false,
+        "effort": {
+          "backtracks": 40,
+          "constraint_checks": 294,
+          "duration_s": 2.6e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 40,
+          "total_effort_score": 334
+        },
+        "solution_verified": true,
+        "status": "uncolorable",
+        "variable_order": [
+          7,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "adaptation": {
+        "conflict_counts": [
+          13,
+          12,
+          14,
+          17,
+          4,
+          1,
+          16,
+          6,
+          47
+        ],
+        "degree_counts": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          8
+        ],
+        "heuristic_only_solution_counted": false,
+        "heuristic_scores": [
+          119.0,
+          118.0,
+          120.0,
+          123.0,
+          110.0,
+          107.0,
+          122.0,
+          112.0,
+          463.0
+        ],
+        "order": [
+          8,
+          3,
+          6,
+          2,
+          0,
+          1,
+          7,
+          4,
+          5
+        ],
+        "relaxed_coloring": [
+          2,
+          0,
+          2,
+          0,
+          2,
+          0,
+          2,
+          0,
+          1
+        ],
+        "steps": 32,
+        "triangle_counts": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          8
+        ]
+      },
+      "adapted": {
+        "assignment": [
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          0
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 6,
+          "constraint_checks": 107,
+          "duration_s": 1e-05,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 16,
+          "total_effort_score": 123
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          8,
+          3,
+          6,
+          2,
+          0,
+          1,
+          7,
+          4,
+          5
+        ]
+      },
+      "adapted_harmful_vs_baseline": true,
+      "baseline": {
+        "assignment": [
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 39,
+          "duration_s": 5e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 49
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "description": "8-rim wheel graph under 3-coloring.",
+      "exact_label": {
+        "colorable": true,
+        "source": "deterministic_backtracking_graph_coloring_cpu",
+        "status": "colorable"
+      },
+      "expected_colorable": true,
+      "heuristic_only_solution_counted": false,
+      "instance_id": "heldout_wheel8_even_sat",
+      "n_colors": 3,
+      "n_edges": 16,
+      "n_nodes": 9,
+      "split": "heldout",
+      "static_heuristic": {
+        "assignment": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          0
+        ],
+        "colorable": true,
+        "effort": {
+          "backtracks": 0,
+          "constraint_checks": 60,
+          "duration_s": 6e-06,
+          "metric": "search_nodes_plus_constraint_checks",
+          "search_nodes": 10,
+          "total_effort_score": 70
+        },
+        "solution_verified": true,
+        "status": "colorable",
+        "variable_order": [
+          8,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    }
+  ],
+  "random_seed": 5103,
+  "reproducibility_checksum": "8ff124b528c8a21d1dd0552de159016fe0ca76c3f2eeeb8d98422eacb278a176",
+  "result_path": "results/experiment_5103_taco_adaptive_csp_heuristic_v468.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5103_taco_adaptive_csp_heuristic.v468",
+  "spec_refs": [
+    "REQ-VERIFY-5103",
+    "SCENARIO-VERIFY-5103"
+  ],
+  "split_summaries": {
+    "dev": {
+      "adapted_effort": 183,
+      "baseline_effort": 93747,
+      "delta_adapted_vs_baseline": -93564,
+      "harmful_instance_count": 1,
+      "instances": 2,
+      "static_heuristic_effort": 432
+    },
+    "heldout": {
+      "adapted_effort": 758,
+      "baseline_effort": 7749,
+      "delta_adapted_vs_baseline": -6991,
+      "harmful_instance_count": 1,
+      "instances": 3,
+      "static_heuristic_effort": 570
+    },
+    "train": {
+      "adapted_effort": 415,
+      "baseline_effort": 6714,
+      "delta_adapted_vs_baseline": -6299,
+      "harmful_instance_count": 0,
+      "instances": 3,
+      "static_heuristic_effort": 634
+    }
+  },
+  "static_heuristic_effort": {
+    "backtracks": 182,
+    "constraint_checks": 1427,
+    "duration_s": 0.000137,
+    "instances": 8,
+    "metric": "search_nodes_plus_constraint_checks",
+    "search_nodes": 209,
+    "total_effort_score": 1636
+  }
+}
