@@ -62,7 +62,7 @@
       "vocab_size": 129
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "honest_verdict": "success_static_csr_masks_speedup_and_validity_win",
   "inference_substrate": "deterministic_static_csr_mask_benchmark",
   "live_llm_invoked": false,
@@ -133,5 +133,27 @@
   "trie_latency_ms": 0.010393,
   "trie_memory_bytes": 482128,
   "trie_state_count": 1691,
-  "validity_rate": 1.0
+  "validity_rate": 1.0,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "csr_state_count=1691.0 and prefix_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "csr_state_count=1691.0 and trie_state_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "prefix_count=1691.0 and trie_state_count=1691.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=35.628679 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
