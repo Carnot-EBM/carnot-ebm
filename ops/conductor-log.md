@@ -9765,3 +9765,4 @@ web search: |
 | 2026-07-01 16:42 UTC | Plan milestone 2026.07.469 | OK | 13 tasks proposed |
 | 2026-07-01 16:44 UTC | Milestone 2026.07.469 activated | OK | 13 tasks queued |
 | 2026-07-01 16:57 UTC | PHASE 0 transition -- archive .468 truth, include  | OK | 91 passed, 1 warning in 7.16s |
+| 2026-07-01 17:16 UTC | PHASE R1 SOTA ingestion -- verify V469 source set  | OK | 110 passed, 1 warning in 8.12s |
