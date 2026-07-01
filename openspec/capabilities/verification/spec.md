@@ -22045,6 +22045,81 @@ then the artifact verdict starts with `complete_sota_gguf_judge_preflight_ready`
 |---|---|---|
 | REQ-VERIFY-5043 | Proposed (`python/carnot/experiment_5043_sota_gguf_judge_preflight.py`, `results/experiment_5043_sota_gguf_judge_preflight.json`) | Proposed (`tests/python/test_experiment_5043_sota_gguf_judge_preflight.py`) |
 
+### REQ-VERIFY-5057: Split Gate-State Preflight For Downstream SOTA Work
+
+The repository SHALL provide Exp 5057 at
+`python/carnot/experiment_5057_gate_state_preflight_v465.py` to write a
+reusable gate-state artifact at
+`results/experiment_5057_gate_state_preflight_v465.json` for downstream D1/D6
+tasks that need separate readiness fields rather than a single brittle judge
+gate.
+
+The runner SHALL resolve all mandated local SOTA GGUF model specs exactly:
+`flagship_moe=unsloth/Qwen3.6-35B-A3B-GGUF`,
+`flagship_dense=unsloth/gemma-4-31B-it-GGUF`, and
+`middle_moe=unsloth/gemma-4-26B-A4B-it-GGUF`. Resolution SHALL use the cached
+SOTA GGUF path pattern from `scripts/experiment_template.py` /
+`python/carnot/inference/sota_models.py`, SHALL NOT call
+`AutoTokenizer.from_pretrained` on a GGUF repo, and SHALL record either the
+exact resolved `.gguf` path or a missing diagnostic for every mandated role.
+
+The runner SHALL probe local llama.cpp-compatible completion endpoints only
+when reachable, SHALL record completion and confidence/top-logprob telemetry
+readiness separately, and SHALL NOT fabricate a server result when no endpoint
+is live. It SHALL also run a deterministic tool-first verifier smoke path for
+JSON parse, constraint, and evidence checks without depending on live LLM
+inference.
+
+The terminal artifact MUST include `honest_verdict`, `model_specs`,
+`usable_sota_models`, `sota_models_ready`, `sota_judge_ready`,
+`top_logprob_or_confidence_ready`, `tool_first_verifier_ready`,
+`endpoint_summary`, `skip_reasons`, and `legacy_models_smoke_only`. It SHOULD
+also include schema metadata, `spec_refs`, `result_path`, `duration_s`,
+`field_principles`, `tool_first_verifier_summary`, and a reproducibility
+checksum. `sota_models_ready` SHALL be true iff at least one mandated SOTA
+GGUF path resolves locally. `sota_judge_ready` SHALL be true iff at least one
+mandated SOTA GGUF is locally usable and a live endpoint completes with
+top-logprob or confidence telemetry. `top_logprob_or_confidence_ready` SHALL
+represent telemetry readiness independently of model-cache readiness.
+`tool_first_verifier_ready` SHALL be true only when deterministic JSON,
+constraint, and evidence smoke checks pass. `legacy_models_smoke_only` SHALL
+always be true because legacy small models are never headline evidence.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix for the split readiness report: complete_gate_state_preflight_all_ready, complete_gate_state_preflight_partial_ready, or blocked_gate_state_preflight_no_ready_paths.`;
+`model_specs` = `all three mandated SOTA GGUF hub IDs with exact resolved .gguf paths or missing diagnostics.`;
+`usable_sota_models` = `the subset of mandated SOTA GGUF roles resolved to local .gguf paths.`;
+`sota_models_ready` = `true iff at least one mandated SOTA GGUF path resolves locally.`;
+`sota_judge_ready` = `true iff a mandated SOTA GGUF is usable and a local endpoint completes with top-logprob or confidence telemetry.`;
+`top_logprob_or_confidence_ready` = `true iff the endpoint telemetry probe exposes top-logprob or confidence telemetry, independent of model cache readiness.`;
+`tool_first_verifier_ready` = `true iff deterministic JSON, constraint, and evidence smoke checks pass without live LLM inference.`;
+`endpoint_summary` = `machine-readable completion and telemetry diagnostics for each probed llama.cpp-compatible endpoint.`;
+`skip_reasons` = `machine-readable reasons for every false readiness lane.`;
+`legacy_models_smoke_only` = `true; legacy small models are smoke-only and never headline evidence.`
+
+### SCENARIO-VERIFY-5057: Models, Judge Telemetry, And Tool Verifier Are Split
+
+Given the three mandated local SOTA GGUF repositories may or may not be cached
+and the local judge endpoint may or may not be live, when Exp 5057 runs, then
+it writes a stable JSON artifact that lists exact paths or missing diagnostics
+for all three model roles, records the usable SOTA subset, separately records
+completion readiness, confidence/top-logprob readiness, SOTA judge readiness,
+and deterministic tool-first verifier readiness, and emits skip reasons for
+every false readiness field without treating a missing endpoint as fabricated
+success.
+
+If at least one mandated SOTA GGUF is cached but no endpoint is live, then
+`sota_models_ready=true`, `sota_judge_ready=false`,
+`top_logprob_or_confidence_ready=false`, `tool_first_verifier_ready=true`, and
+`skip_reasons` SHALL name the absent endpoint or telemetry rather than
+collapsing the artifact into an unusable blocked judge gate.
+
+## Implementation Status (REQ-VERIFY-5057)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5057 | Proposed (`python/carnot/experiment_5057_gate_state_preflight_v465.py`, `results/experiment_5057_gate_state_preflight_v465.json`) | Proposed (`tests/python/test_experiment_5057_gate_state_preflight_v465.py`) |
+
 ### REQ-VERIFY-5044: Second-Corpus Candidate Cache Data Product
 
 The repository SHALL provide Exp 5044 at
