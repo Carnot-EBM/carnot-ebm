@@ -726,6 +726,89 @@ artifact.
 |---|---|---|
 | REQ-REPORT-5070 | Implemented (`python/carnot/experiment_5070_sota_ingestion_backfill_v466.py`) | Implemented (`tests/python/test_experiment_5070_sota_ingestion_backfill_v466.py`) |
 
+### REQ-REPORT-5084: V467 SOTA Ingestion Reference Audit
+
+The Exp 5084 workflow SHALL verify the already-written V467 planner source set
+in `research-references.md`, map every checked source to a runnable `.467`
+experiment task or mark it `background_only`, and write
+`results/experiment_5084_sota_ingestion_v467.json`. It SHALL NOT run local
+model inference, SHALL NOT claim `live_llm_inference`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave ops/status/changelog and
+traceability reconciliation to the conductor reconciler.
+
+The workflow SHALL verify that the V467 managed section exists and covers
+recent arXiv, OpenReview, Hugging Face Papers/GitHub, Extropic, Logical
+Intelligence, and Semantic Scholar citation-lineage findings. It SHALL confirm
+the following V467 sources are present with public URLs, tracks, Carnot hooks,
+and actionability notes: `arXiv:2606.25313` p-bit million-scale hardware,
+`arXiv:2605.04033` p-bit guided CDCL, `arXiv:2602.22647` STATIC CSR
+constrained decoding plus `github.com/youtube/static-constraint-decoding`,
+`arXiv:2503.14495` temporal consistency PRM plus OpenReview `sM5QDzIg3j`,
+`arXiv:2505.19706` PathFinder-PRM plus `declare-lab/PathFinder-PRM`,
+`arXiv:2512.22322` SmartSnap, `arXiv:2506.11442` ReVeal plus OpenReview
+`q56ZI1Co43`, `arXiv:2606.25115` budget-curated memory,
+`arXiv:2605.29495` on-policy replay plus `Yancey2024/OnPolicyReplay`,
+`arXiv:2510.17281` and `arXiv:2512.18950` MemoryBench/procedural memory,
+`arXiv:2606.18206`, `arXiv:2605.11011`, and `arXiv:2603.12248` EBT/ARM
+citation-lineage pressure, `arXiv:2605.09186` and `arXiv:2602.06737` MIP/KAN
+verification, `arXiv:2602.04200` sparse Potts constraints,
+`arXiv:2601.17094` Boltzmann-GPT, Extropic XTR-0/TSU, and Logical
+Intelligence Kona/Aleph/formal-verification updates.
+
+The complete artifact SHALL include top-level fields `honest_verdict`,
+`duration_s`, `inference_substrate`, `sources_checked`,
+`references_section_found`, `references_added_count`,
+`semantic_scholar_status`, `task_mapping`, `planning_hooks`,
+`flagged_adversarial`, `field_principles`, and `spec_refs`. `honest_verdict`
+SHALL equal `success_sota_ingestion_v467_references_verified`.
+`inference_substrate` SHALL equal `literature_review_and_repo_inspection`.
+`references_added_count` SHALL be zero unless one clearly stronger missing
+source is appended inside the V467 section with URL, tracks, Carnot hook, and
+actionability.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "terminal prefix; success only when the V467 source set is verified."
+- `duration_s`: principle "bounded repo/literature inspection duration; not a model-inference runtime claim."
+- `inference_substrate`: principle "literature_review_and_repo_inspection; no local model inference or live LLM claim."
+- `sources_checked`: principle "per-source evidence for recent arXiv, OpenReview, Hugging Face Papers/GitHub, Extropic, Semantic Scholar citation-lineage, and Logical Intelligence coverage."
+- `references_section_found`: principle "true only when V467 planner markers bracket the checked research-references.md section."
+- `references_added_count`: principle "zero when the V467 section already contains the required high-value sources; otherwise equals appended references."
+- `semantic_scholar_status`: principle "records the V467 section's Semantic Scholar EBT/ARM citation-lineage metadata without implying a fresh local API call."
+- `task_mapping`: principle "maps each verified V467 source to one .467 task or background_only."
+- `planning_hooks`: principle "groups verified sources into concrete .467 execution hooks."
+- `flagged_adversarial`: principle "true if required sources are missing, fabricated, or claim local model inference."
+
+#### SCENARIO-REPORT-5084: V467 References Are Verified And Mapped
+
+Given the V467 planner section in `research-references.md` contains the
+required source IDs, public URLs, code links, OpenReview links, Semantic
+Scholar citation-lineage note, tracks, Carnot hooks, and actionability notes
+When the Exp 5084 workflow runs
+Then it writes the JSON artifact with the success verdict, sets
+`inference_substrate` to `literature_review_and_repo_inspection`, reports all
+source channels in `sources_checked`, records `references_added_count=0`, keeps
+`flagged_adversarial=false`, records the Semantic Scholar EBT/ARM citation
+lineage status, and maps sources to `.467` tasks including Exp5088 temporal
+consistency, Exp5089 p-bit CDCL, Exp5090 STATIC CSR masks, Exp5091 KAN/MILP,
+Exp5092 governed FR-11 memory, Exp5093 hardware continuity, or
+`background_only`.
+
+#### SCENARIO-REPORT-5084-MISSING-REFERENCE: Missing V467 Source Fails Closed
+
+Given the V467 planner section is absent or one required source ID, URL, code
+link, OpenReview link, Semantic Scholar status note, track, Carnot hook, or
+actionability note is missing
+When validation is applied
+Then the workflow raises a schema error and refuses to write a successful
+artifact.
+
+## Implementation Status (REQ-REPORT-5084)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5084 | Proposed (`python/carnot/experiment_5084_sota_ingestion_v467.py`) | Proposed (`tests/python/test_experiment_5084_sota_ingestion_v467.py`) |
+
 ### REQ-REPORT-4873: Rotated ARC Level-Up Attempt Banks Only New Offline-Reproduced Depth
 
 The Exp 4873 workflow SHALL select a rotated ARC target for a deepening attempt
