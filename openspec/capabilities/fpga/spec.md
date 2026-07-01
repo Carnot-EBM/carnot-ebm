@@ -14284,6 +14284,111 @@ actions, no speedup claim, and
 
 ---
 
+### REQ-HW-5106
+
+**Title:** Hardware partition telemetry MUST combine safe continuity checks with no-speedup static mapping
+
+**Description:**
+Experiment 5106 MUST produce
+`results/experiment_5106_hardware_partition_telemetry_v468.json` as a v468
+hardware continuity and partition-telemetry artifact covering KV260,
+GateMate A1/DirtyJTAG, PolarFire, and high-level TSU/neuromorphic mapping
+notes. The artifact MUST use
+`inference_substrate=hardware_smoke_and_static_mapping` unless a real board
+execution transcript with timing is collected. Safe continuity checks alone
+MUST NOT claim board acceleration or speedup.
+
+The KV260 precondition MUST be exactly:
+
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+
+KV260 checks MUST use only the SSH path and safe board-side commands. Host
+block-device paths such as `/dev/mmcblk*` or `/dev/disk/*` MUST NOT be
+inspected or cited. If a safe repo script or existing safe transcript can prove
+KV260 UIO/register access without destructive writes, the artifact MUST record
+`kv260_uio_transcript_collected=true`; otherwise it MUST record the exact
+`kv260_blocker` and keep `speedup_claimed=false`.
+
+GateMate triage MUST be non-destructive. The artifact MUST record detect-command
+availability, USB/cable/toolchain evidence, and
+`gatemate_terminal_state` from safe terminal-state triage. It MUST NOT flash or
+program the GateMate board.
+
+PolarFire triage MUST run SSH/hash-dispatch preconditions only unless a known
+safe dispatch path is explicitly in scope. It MUST record
+`polarfire_ssh_ready` and a machine-readable `polarfire_dispatch_precheck`
+without SCP, flashing, or workload dispatch.
+
+The partition telemetry MUST cover at least one p-spin/HUBO instance and one
+CSP/neuromorphic mapping note. Each row MUST record `coupling_density`,
+`partition_count`, `boundary_exchange_estimate`, and `expected_bottleneck`.
+TSU and neuromorphic notes are strategic static mappings only unless a live
+hardware transcript exists.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `honest_verdict`
+- `duration_s`
+- `inference_substrate`
+- `preconditions_checked`
+- `kv260_ssh_ready`
+- `kv260_uio_transcript_collected`
+- `kv260_blocker`
+- `gatemate_detected`
+- `gatemate_terminal_state`
+- `polarfire_ssh_ready`
+- `polarfire_dispatch_precheck`
+- `partition_telemetry`
+- `destructive_actions_allowed`
+- `speedup_claimed`
+- `flagged_adversarial`
+
+**Acceptance criteria:**
+- `.venv/bin/python -m pytest tests/python/test_experiment_5106_hardware_partition_telemetry.py -q --no-cov`
+  passes.
+- `.venv/bin/python -m carnot.experiment_5106_hardware_partition_telemetry`
+  writes `results/experiment_5106_hardware_partition_telemetry_v468.json`.
+- The artifact includes `schema`, `experiment_id=5106`, `spec_refs`
+  containing `REQ-HW-5106` and `SCENARIO-HW-5106`, `random_seed=5106`,
+  `field_principles`, `preconditions_checked`, `command_probes`,
+  `partition_telemetry`, and a stable `reproducibility_checksum`.
+- `honest_verdict` starts with a terminal prefix such as
+  `complete_hardware_partition_telemetry_no_speedup_claim` or
+  `success_hardware_board_timing_transcript_collected_no_general_speedup_claim`.
+- `preconditions_checked` records the exact KV260 SSH command result, GateMate
+  detect-command availability, the PolarFire SSH command result,
+  `destructive_actions_allowed=false`, and board-specific safety constraints.
+- The artifact contains no host-storage marker such as `/dev/mmcblk` or
+  `/dev/disk`.
+- `destructive_actions_allowed=false`, `speedup_claimed=false` unless real board
+  timing is proven, and `flagged_adversarial=false`.
+
+**Implementation status:** Pending (Exp 5106)
+
+---
+
+### SCENARIO-HW-5106
+
+**Scenario:** Exp 5106 writes safe hardware continuity and static partition telemetry.
+
+**Given:** KV260 must be checked through SSH-only reachability, GateMate may only
+run DirtyJTAG/toolchain/USB triage, PolarFire may only run SSH/hash-dispatch
+preconditions, and TSU/neuromorphic mapping notes have no local hardware
+execution transcript.
+**When:** Experiment 5106 runs the exact KV260 SSH precondition, records or
+blocks on safe KV260 UIO/register transcript collection, performs GateMate
+non-destructive detection triage, performs PolarFire SSH/hash-dispatch
+prechecks, and builds p-spin/HUBO plus CSP partition telemetry rows.
+**Then:** It writes
+`results/experiment_5106_hardware_partition_telemetry_v468.json` with the
+required fields, principle annotations, no destructive actions, no speedup
+claim, and `inference_substrate=hardware_smoke_and_static_mapping`.
+
+**Implementation status:** Pending (Exp 5106)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
