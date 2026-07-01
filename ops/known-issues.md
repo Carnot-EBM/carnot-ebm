@@ -1280,6 +1280,62 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### KV260 FOLLOW-UP 2026-06-30 (operator "a + b" on arXiv:2606.25313) — measure our sampler's residual-energy decay exponent
+
+**Literature basis:** "Programmable Probabilistic Computer with 1,000,000 p-bits" (Aadit/Camsari group,
+arXiv:2606.25313, 2026-06; full notes: `reference_pbit_million_scale_fpga` memory,
+`docs/fpga-ising-design.md` Literature section). Their headline eta=f_comm/f_p-bit threshold result is
+about MULTI-DEVICE PARTITIONED sampling and does NOT directly apply to our single-board n=64 KV260
+sampler (no boundary exchange between chips). **The portable piece is the METHODOLOGY, not the eta
+result**: characterizing sampler convergence via a power-law residual-energy-decay EXPONENT fit
+(their GPU reference: kappa_f ~ 0.27-0.28 for 3D spin-glass lattices at their scale/topology — NOT a
+number we can honestly compare against directly, different hardware/scale/problem).
+
+**Why this matters:** CLAUDE.md's Paper-v6 Narrowing Discipline retracted "KV260 samples reach Boltzmann
+thermalization," replaced with the vague "fixed-compute heuristic budget." This task upgrades that vague
+label into a real, quantitative, honestly-scoped characterization of OUR OWN sampler.
+
+**Task (falsifiable, precondition-gated per CLAUDE.md "Pre-Launch Preconditions Discipline"):**
+```
+PRECONDITIONS (check BEFORE any measurement):
+  a. ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' — board reachable (SSH, never host SD card).
+  b. Does the current carnot_ising_v2_n64 overlay expose a RUNTIME-configurable sweep/iteration count
+     (a register write, not a re-synthesis) so residual energy can be sampled at MULTIPLE sweep budgets
+     within one problem instance? Check python/carnot/samplers/fpga_ising.py's register map +
+     hardware/kv260/README.md.
+  If (a) fails: blocked_kv260_ssh_unreachable. If (b) is false (the known v1 RTL limitation --
+  "N_STEPS is synthesis-time constant; runtime control planned for v2" per docs/fpga-ising-design.md --
+  may or may not still hold for v2_n64): blocked_kv260_no_runtime_sweep_control, and instead validate the
+  METHODOLOGY on a bounded local CPU Gibbs-sampler reference at matching n=64 (same problem instance,
+  software substrate) so the fitting/reporting code is ready for whenever runtime sweep control ships.
+CONCRETE STEPS (if preconditions pass):
+  1. Run the n=64 problem instance at a swept set of sweep-count budgets (e.g. 2^k for k=2..12,
+     resource-budget permitting).
+  2. At each budget, read out the spin state, compute residual energy vs the best-known/computed
+     reference for that instance (brute-force or long-run CPU anneal as ground truth for n=64 --
+     tractable at this size).
+  3. Fit a power-law exponent kappa to residual-energy vs sweep-count on a log-log scale (the paper's
+     exact methodology, cf. their Fig. on kappa_f).
+  4. Report kappa HONESTLY as a Carnot-KV260-specific, n=64-specific number. Do NOT claim comparability
+     to the paper's kappa_f (different scale/topology/hardware) -- cite it only as the METHODOLOGY
+     source, not a baseline to beat.
+REQUIRED ARTIFACT FIELDS:
+  kappa_fit: {value: float, principle: "the measured residual-energy power-law decay exponent for our
+    KV260 n=64 sampler; replaces the vague 'fixed-compute heuristic budget' label with a real number."}
+  sweep_budgets_tested: {value: list[int], principle: "the x-axis of the power-law fit; too few points
+    makes the fit unreliable -- CLAUDE.md sample-size rigor applies to curve-fitting too."}
+  fit_r_squared: {value: float, principle: "goodness-of-fit; a poor fit means kappa is not meaningful,
+    report honestly rather than force a number."}
+  inference_substrate: {value: "hardware_smoke", principle: "SSH-attached KV260 board measurement (or,
+    if preconditions block hardware, note the CPU-reference leg explicitly and do not silently substitute
+    it for a hardware claim)."}
+  paper_comparability_disclaimer: {value: str, principle: "explicit note that kappa is NOT directly
+    comparable to arXiv:2606.25313's kappa_f -- different hardware/scale/topology; the paper is cited for
+    METHODOLOGY only."}
+```
+`track: hardware` — reserves the KV260 hardware-continuity slot per CLAUDE.md's Hardware-Task Continuity
+Discipline. Terminal state unchanged (this is a characterization step, not the board's terminal state).
+
 ### FINDING 2026-06-30 (outer-loop investigation of E3/exp5054) — go-explore archive lever cannot be exercised in a single-attempt task
 
 **Root cause investigation of a LEVER_EXERCISE_EVIDENCE_DEGENERATE flag on exp5054 (tu93 live-path
@@ -9721,6 +9777,10 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
