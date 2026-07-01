@@ -1,0 +1,709 @@
+{
+  "candidate_skill_count": 2,
+  "contamination_guard_passed": true,
+  "continuous_self_learning_task": true,
+  "duration_s": 0.006432,
+  "experiment": "experiment_5064_audited_skillgraph_self_learning",
+  "experiment_id": 5064,
+  "external_verifier_audit_receipts": [
+    {
+      "failed_checks": [],
+      "passed": true,
+      "verifier": "deterministic_external_skill_audit_v1"
+    },
+    {
+      "failed_checks": [],
+      "passed": true,
+      "verifier": "deterministic_external_skill_audit_v1"
+    }
+  ],
+  "field_principles": {
+    "candidate_skill_count": {
+      "principle": "number of proposed skill or memory entries derived from train-only evidence."
+    },
+    "contamination_guard_passed": {
+      "principle": "true only when held-out IDs are absent from trace inputs, candidate skills, and promoted memory entries."
+    },
+    "continuous_self_learning_task": {
+      "principle": "true because this is the FR-11 continuous self-learning loop for the milestone."
+    },
+    "heldout_delta": {
+      "principle": "post_update_accuracy minus pre_update_accuracy on frozen held-out IDs."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix for audited positive promotion or guarded no-promotion."
+    },
+    "legacy_models_smoke_only": {
+      "principle": "true; legacy small models are not used for headline trace or skill proposal provenance."
+    },
+    "model_specs": {
+      "principle": "mandated SOTA GGUF ids are recorded; this run derives skills from checked-in evidence and does not invoke legacy small models."
+    },
+    "near_miss_count": {
+      "principle": "number of train-split near misses mined from Exp5051 and Exp5059 before held-out evaluation."
+    },
+    "no_promote_reason": {
+      "principle": "empty only for promotion; otherwise semicolon-separated gate failures."
+    },
+    "nonforgetting_delta": {
+      "principle": "retention change on held-out examples that the pre-update verifier answered correctly."
+    },
+    "post_update_accuracy": {
+      "principle": "held-out accuracy after applying the proposed update under evaluation."
+    },
+    "pre_update_accuracy": {
+      "principle": "held-out accuracy before applying the proposed skill graph update."
+    },
+    "promoted": {
+      "principle": "true only when held-out delta is positive, contamination guard passes, and nonforgetting does not regress."
+    },
+    "self_learning_loop_executed": {
+      "principle": "true only after split freeze, near-miss mining, skill proposal, self-audit, external audit, held-out evaluation, and promotion gating."
+    },
+    "skill_graph_path": {
+      "principle": "path to the audited skill graph containing candidate skills, receipts, and promotion decision."
+    },
+    "verified_skill_count": {
+      "principle": "number of candidates that pass self-audit and deterministic external verifier receipts."
+    }
+  },
+  "heldout_delta": -0.05,
+  "heldout_evaluation": {
+    "heldout_delta": -0.05,
+    "heldout_ids": [
+      "q0160",
+      "q0161",
+      "q0162",
+      "q0163",
+      "q0164",
+      "q0165",
+      "q0166",
+      "q0167",
+      "q0168",
+      "q0169",
+      "q0170",
+      "q0171",
+      "q0172",
+      "q0173",
+      "q0174",
+      "q0175",
+      "q0176",
+      "q0177",
+      "q0178",
+      "q0179",
+      "q0180",
+      "q0181",
+      "q0182",
+      "q0183",
+      "q0184",
+      "q0185",
+      "q0186",
+      "q0187",
+      "q0188",
+      "q0189",
+      "q0190",
+      "q0191",
+      "q0192",
+      "q0193",
+      "q0194",
+      "q0195",
+      "q0196",
+      "q0197",
+      "q0198",
+      "q0199"
+    ],
+    "heldout_n": 40,
+    "improved_previously_wrong_ids": [
+      "q0166",
+      "q0181"
+    ],
+    "no_promote_fallback_accuracy": 0.7,
+    "nonforgetting_delta": -0.142857,
+    "nonforgetting_retention": 0.857143,
+    "nonforgetting_slice_n": 28,
+    "per_row": [
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0160",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0161",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0162",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0163",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0164",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0165",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 1,
+        "row_id": "q0166",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 0,
+        "row_id": "q0167",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0168",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0169",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0170",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0171",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0172",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0173",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0174",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0175",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 0,
+        "row_id": "q0176",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0177",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0178",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0179",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0180",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 1,
+        "row_id": "q0181",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 0,
+        "row_id": "q0182",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0183",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0184",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0185",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0186",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0187",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0188",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0189",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0190",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0191",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0192",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0193",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0194",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0195",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0196",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 0,
+        "pre_correct": 0,
+        "proposed_correct": 0,
+        "row_id": "q0197",
+        "selector": "pre_update_verifier"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 0,
+        "row_id": "q0198",
+        "selector": "tuned_self_consistency"
+      },
+      {
+        "no_promote_correct": 1,
+        "pre_correct": 1,
+        "proposed_correct": 1,
+        "row_id": "q0199",
+        "selector": "pre_update_verifier"
+      }
+    ],
+    "post_update_accuracy": 0.65,
+    "pre_update_accuracy": 0.7,
+    "proposed_update_accuracy": 0.65,
+    "regressed_previously_correct_ids": [
+      "q0167",
+      "q0176",
+      "q0182",
+      "q0198"
+    ]
+  },
+  "honest_verdict": "complete_guarded_no_promote_minus_0p050",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "legacy_models_smoke_only": true,
+  "model_specs": {
+    "exp5059_model_specs": {
+      "exp5058_model_specs": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "missing_diagnostic": null,
+          "preferred_quant": "Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        }
+      },
+      "mandated_sota": {
+        "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+        "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "powered_d1_scorer": {
+        "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_5031_lora_ebm_scorer_musr_v3/epoch_1",
+        "scorer_trained": true,
+        "source": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
+      }
+    },
+    "legacy_models_smoke_only": true,
+    "llm_traces_generated": false,
+    "mandated_sota": {
+      "flagship_dense": "unsloth/gemma-4-31B-it-GGUF",
+      "flagship_moe": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "middle_moe": "unsloth/gemma-4-26B-A4B-it-GGUF"
+    },
+    "trace_proposal_mode": "derived_from_checked_in_exp5051_exp5059_evidence"
+  },
+  "near_miss_count": 262,
+  "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
+  "nonforgetting_delta": -0.142857,
+  "positive_control": {
+    "headroom_present": true,
+    "oracle_at_k": 0.865,
+    "source": "results/experiment_5059_d1_sota_refresh_audit.json"
+  },
+  "post_update_accuracy": 0.65,
+  "pre_update_accuracy": 0.7,
+  "promoted": false,
+  "promoted_skill_ids": [],
+  "promotion_decision": {
+    "no_promote_reason": "heldout_delta_nonpositive;nonforgetting_regressed",
+    "promoted": false
+  },
+  "random_seed": 5064,
+  "reproducibility_checksum": "sha256:a58faa41056dd49a3e7071ae6027a3096f6a304e68d7a727849e38e6e38cf0e6",
+  "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5064_audited_skillgraph_self_learning.json",
+  "schema": "carnot.experiment_5064_audited_skillgraph_self_learning.v1",
+  "self_learning_loop_executed": true,
+  "skill_graph_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5064_audited_skillgraph_self_learning_skill_graph.json",
+  "skill_graph_sha256": "sha256:18973184f0a3d08d78fd4d81117cd9df81b24ff012250d94392e3fafe057067e",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_5051_verifier_trace_self_learning.json",
+      "sha256": "sha256:c4337ccdf401318008c707d0d57f8849335faad39ebefb2aa42774d2154bd28a"
+    },
+    {
+      "path": "results/replay_memory/experiment_5051_verifier_trace_self_learning_memory.json",
+      "sha256": "sha256:7dec07d84c2e5d16c84be8fe96e37af9f3cfa9d6e0bc322bbcc8e78e4c201fa3"
+    },
+    {
+      "path": "results/experiment_5059_d1_sota_refresh_audit.json",
+      "sha256": "sha256:f265773022d3937df3bcde2b516f650bf0868c36bfdc766ada278dc4c3e44fa9"
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5064",
+    "SCENARIO-VERIFY-5064"
+  ],
+  "split_ids": {
+    "heldout_ids": [
+      "q0160",
+      "q0161",
+      "q0162",
+      "q0163",
+      "q0164",
+      "q0165",
+      "q0166",
+      "q0167",
+      "q0168",
+      "q0169",
+      "q0170",
+      "q0171",
+      "q0172",
+      "q0173",
+      "q0174",
+      "q0175",
+      "q0176",
+      "q0177",
+      "q0178",
+      "q0179",
+      "q0180",
+      "q0181",
+      "q0182",
+      "q0183",
+      "q0184",
+      "q0185",
+      "q0186",
+      "q0187",
+      "q0188",
+      "q0189",
+      "q0190",
+      "q0191",
+      "q0192",
+      "q0193",
+      "q0194",
+      "q0195",
+      "q0196",
+      "q0197",
+      "q0198",
+      "q0199"
+    ],
+    "train_ids": [
+      "q0000",
+      "q0001",
+      "q0002",
+      "q0003",
+      "q0004",
+      "q0005",
+      "q0006",
+      "q0007",
+      "q0008",
+      "q0009",
+      "q0010",
+      "q0011",
+      "q0012",
+      "q0013",
+      "q0014",
+      "q0015",
+      "q0016",
+      "q0017",
+      "q0018",
+      "q0019",
+      "q0020",
+      "q0021",
+      "q0022",
+      "q0023",
+      "q0024",
+      "q0025",
+      "q0026",
+      "q0027",
+      "q0028",
+      "q0029",
+      "q0030",
+      "q0031",
+      "q0032",
+      "q0033",
+      "q0034",
+      "q0035",
+      "q0036",
+      "q0037",
+      "q0038",
+      "q0039",
+      "q0040",
+      "q0041",
+      "q0042",
+      "q0043",
+      "q0044",
+      "q0045",
+      "q0046",
+      "q0047",
+      "q0048",
+      "q0049",
+      "q0050",
+      "q0051",
+      "q0052",
+      "q0053",
+      "q0054",
+      "q0055",
+      "q0056",
+      "q0057",
+      "q0058",
+      "q0059",
+      "q0060",
+      "q0061",
+      "q0062",
+      "q0063",
+      "q0064",
+      "q0065",
+      "q0066",
+      "q0067",
+      "q0068",
+      "q0069",
+      "q0070",
+      "q0071",
+      "q0072",
+      "q0073",
+      "q0074",
+      "q0075",
+      "q0076",
+      "q0077",
+      "q0078",
+      "q0079",
+      "q0080",
+      "q0081",
+      "q0082",
+      "q0083",
+      "q0084",
+      "q0085",
+      "q0086",
+      "q0087",
+      "q0088",
+      "q0089",
+      "q0090",
+      "q0091",
+      "q0092",
+      "q0093",
+      "q0094",
+      "q0095",
+      "q0096",
+      "q0097",
+      "q0098",
+      "q0099",
+      "q0100",
+      "q0101",
+      "q0102",
+      "q0103",
+      "q0104",
+      "q0105",
+      "q0106",
+      "q0107",
+      "q0108",
+      "q0109",
+      "q0110",
+      "q0111",
+      "q0112",
+      "q0113",
+      "q0114",
+      "q0115",
+      "q0116",
+      "q0117",
+      "q0118",
+      "q0119",
+      "q0120",
+      "q0121",
+      "q0122",
+      "q0123",
+      "q0124",
+      "q0125",
+      "q0126",
+      "q0127",
+      "q0128",
+      "q0129",
+      "q0130",
+      "q0131",
+      "q0132",
+      "q0133",
+      "q0134",
+      "q0135",
+      "q0136",
+      "q0137",
+      "q0138",
+      "q0139",
+      "q0140",
+      "q0141",
+      "q0142",
+      "q0143",
+      "q0144",
+      "q0145",
+      "q0146",
+      "q0147",
+      "q0148",
+      "q0149",
+      "q0150",
+      "q0151",
+      "q0152",
+      "q0153",
+      "q0154",
+      "q0155",
+      "q0156",
+      "q0157",
+      "q0158",
+      "q0159"
+    ]
+  },
+  "verified_skill_count": 2
+}
