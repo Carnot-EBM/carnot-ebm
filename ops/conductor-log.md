@@ -9700,3 +9700,4 @@ The contro |
 | 2026-07-01 04:19 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-07-01 04:21 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-07-01 04:23 UTC | PHASE R1 reserved SOTA ingestion -- update researc | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+| 2026-07-01 04:42 UTC | PHASE R2 ARC live-path self-discovery -- registry- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

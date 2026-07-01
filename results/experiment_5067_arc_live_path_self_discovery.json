@@ -380,5 +380,13 @@
     "SCENARIO-ARC-WMTE-5067-STABLE-ARTIFACT"
   ],
   "target_game": "re86",
-  "target_level": 3
+  "target_level": 3,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.9214331139810383 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
