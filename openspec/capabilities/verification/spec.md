@@ -23716,3 +23716,63 @@ emits a terminal verdict without modifying `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5101 | Proposed (`python/carnot/experiment_5101_incomplete_graph_evidence_energy.py`, `results/experiment_5101_incomplete_graph_evidence_energy_v468.json`) | Proposed (`tests/python/test_experiment_5101_incomplete_graph_evidence_energy.py`) |
+
+### REQ-VERIFY-5102: Direct HUBO/p-Spin Energy Versus QUBO Gadgets
+
+The repository SHALL provide Exp 5102 at
+`python/carnot/experiment_5102_hubo_pspin_direct_energy.py` to compare direct
+high-order HUBO/p-spin parity energies against QUBO quadratization gadgets on
+tiny exact Boolean CSP instances and write
+`results/experiment_5102_hubo_pspin_direct_energy_v468.json`.
+
+The runner SHALL generate a deterministic family of small high-order Boolean
+constraint instances, including k-XORSAT or parity-verifier clauses with
+clause degree at least three. The correctness authority SHALL be exact
+enumeration on CPU unless a different exact substrate is explicitly proven;
+therefore `inference_substrate` MUST equal `exact_enumeration_cpu` in the
+default artifact and MUST NOT claim live LLM inference or hardware execution.
+
+For every instance, the runner SHALL encode the constraints directly as
+HUBO/p-spin parity energy and as a QUBO gadget formulation with auxiliary
+binary variables. It SHALL enumerate the direct formulation over original
+variables, enumerate the QUBO formulation over original plus auxiliary
+variables, and verify that exact optimum energies match and that the projected
+QUBO optimum assignments match the direct optimum assignments.
+
+The comparison SHALL report auxiliary variable count, total QUBO variable
+count, direct HUBO variable count, coupling counts, coupling density for direct
+HUBO hyperedges and QUBO pairwise edges, penalty/energy coefficient-scale
+distortion introduced by quadratization, exact enumeration time, and whether
+direct HUBO reduces gadget blowup on the declared family.
+
+The terminal artifact SHALL include principle annotations and top-level fields
+`honest_verdict`, `duration_s`, `inference_substrate`, `instance_family`,
+`exact_optima_verified`, `hubo_variable_counts`, `qubo_variable_counts`,
+`auxiliary_variable_blowup`, `coupling_density_hubo`,
+`coupling_density_qubo`, `energy_scale_distortion`,
+`direct_hubo_advantage`, `hardware_mapping_notes`, and
+`flagged_adversarial`. It SHOULD also include per-instance optimum rows,
+coupling counts, exact-enumeration timings, quadratization penalty strengths,
+assignment projections, and a reproducibility checksum.
+
+`honest_verdict` SHALL begin with
+`success_hubo_pspin_direct_encoding_reduces_gadget_blowup` only when exact
+optima and projected assignments match for every instance and direct HUBO uses
+fewer total variables than QUBO on the family. Otherwise it SHALL begin with
+`complete_hubo_pspin_no_advantage_over_qubo_gadgets`.
+
+### SCENARIO-VERIFY-5102: Exact Enumeration Proves HUBO/QUBO Optimum Equivalence
+
+Given the Exp 5102 tiny high-order CSP family, when the diagnostic runs, then
+it builds direct HUBO/p-spin and QUBO-gadget encodings for each instance,
+enumerates both formulations exactly on CPU, verifies equal optimum energies
+and equal projected optimum assignments, measures auxiliary blowup, coupling
+density, coefficient-scale distortion, and enumeration time, writes the
+required JSON artifact, sets `inference_substrate=exact_enumeration_cpu`, and
+emits a terminal verdict without modifying `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5102)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5102 | Proposed (`python/carnot/experiment_5102_hubo_pspin_direct_energy.py`, `results/experiment_5102_hubo_pspin_direct_energy_v468.json`) | Proposed (`tests/python/test_experiment_5102_hubo_pspin_direct_energy.py`) |
