@@ -33,8 +33,7 @@ import requests
 REPO = Path(__file__).resolve().parents[2]
 RESULT = REPO / "results" / "experiment_mmlu_pro_fresh_headroom_check.json"
 MODEL_PATH = str(
-    Path.home()
-    / ".cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/"
+    Path.home() / ".cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/"
     "3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf"
 )
 N_QUESTIONS = 40
@@ -43,7 +42,9 @@ TEMPERATURE = 0.8
 SEED = 20260701
 GPU_DEVICE = 1  # outer-loop's dedicated GPU per CLAUDE.md's GPU-allocation rule
 SERVER_URL = "http://127.0.0.1:8712/v1/chat/completions"
-MAX_TOKENS = 400  # generous budget: this model has a thinking phase (reasoning_content) before content
+MAX_TOKENS = (
+    400  # generous budget: this model has a thinking phase (reasoning_content) before content
+)
 
 
 def _log(m: str) -> None:
@@ -116,10 +117,14 @@ def main() -> int:
         }
         for row in ds
     ]
-    _log(f"loaded {len(questions)} questions, categories: {sorted({q['category'] for q in questions})}")
+    _log(
+        f"loaded {len(questions)} questions, categories: {sorted({q['category'] for q in questions})}"
+    )
 
     _log(f"generating via real CUDA llama-server at {SERVER_URL} (GPU {GPU_DEVICE})")
-    load_duration_s = 0.0  # server was already warm-started separately; no in-process load cost here
+    load_duration_s = (
+        0.0  # server was already warm-started separately; no in-process load cost here
+    )
 
     rows = []
     t_gen_start = time.time()
@@ -238,9 +243,10 @@ def main() -> int:
     artifact["honest_verdict"] = verdict
 
     checksum_payload = {k: v for k, v in artifact.items() if k not in ("duration_s",)}
-    artifact["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(checksum_payload, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    artifact["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(checksum_payload, sort_keys=True).encode("utf-8")).hexdigest()
+    )
 
     RESULT.write_text(json.dumps(artifact, indent=2))
     print(
