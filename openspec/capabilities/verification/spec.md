@@ -22205,6 +22205,98 @@ and explicit gate diagnostics.
 |---|---|---|
 | REQ-VERIFY-5058 | Proposed (`python/carnot/experiment_5058_sota_candidate_refresh_inwriting.py`, `results/experiment_5058_sota_candidate_refresh_inwriting.json`) | Proposed (`tests/python/test_experiment_5058_sota_candidate_refresh_inwriting.py`) |
 
+### REQ-VERIFY-5086: uPRM Logprob Cache Retry From Exp5085 Endpoint
+
+The repository SHALL provide Exp 5086 at
+`python/carnot/experiment_5086_uprm_logprob_cache_retry.py` to build a
+resumable token/step logprob cache for existing MuSR candidate trajectories
+and write `results/experiment_5086_uprm_logprob_cache_retry_v467.json`.
+It SHALL NOT regenerate MuSR candidates when existing candidate strings are
+available from Exp 5058, Exp 5029, or other phase-D candidate artifacts.
+
+Before scoring any row, the runner SHALL manually validate the structured
+Exp 5085 gate artifact at
+`results/experiment_5085_llamacpp_logprob_endpoint_bringup_v467.json`. The
+precondition record SHALL include the Exp5085 artifact SHA-256, endpoint URL,
+selected model path, selected model hub ID, cache input path, and available
+disk space. If Exp 5085 does not report `logprob_endpoint_ready=true`, or the
+endpoint cannot be probed for top-logprob telemetry at run time, the runner
+SHALL write a terminal `blocked_uprm_logprob_cache_retry_*` artifact rather
+than fabricating telemetry.
+
+When the endpoint preconditions hold, the runner SHALL prefer candidate rows
+from `results/experiment_5058_sota_candidate_refresh_inwriting.jsonl` and may
+enrich them with question/context fields from
+`results/experiment_5029_shared_logprob_candidate_cache_v2_musr.jsonl`. If the
+Exp 5058 cache is unavailable, it SHALL fall back to the Exp 5029 cache. The
+runner SHALL append one JSONL row per scored candidate to
+`results/experiment_5086_uprm_logprob_cache_retry_v467.jsonl`, flush each row
+immediately, and resume by skipping already complete row IDs.
+
+Each complete row SHALL include row-level provenance fields `question_id`,
+`candidate_id`, `model_hf_id`, `gguf_path`, `prompt_hash`, `response_hash`,
+`step_boundaries`, `token_count`, and `top_logprobs_available`. Row telemetry
+SHALL include chosen-token logprobs, top-logprob rows when returned by the
+endpoint, a candidate-token span, and per-step token/logprob summaries derived
+from deterministic candidate text segmentation.
+
+The terminal artifact SHALL include principle-annotated fields
+`honest_verdict`, `duration_s`, `inference_substrate`,
+`preconditions_checked`, `model_specs`, `logprob_cache_ready`,
+`step_cache_ready`, `cache_path`, `n_questions`, `n_candidates`,
+`n_rows_complete`, `parse_rate`, `top_logprob_coverage`, `endpoint_used`, and
+`flagged_adversarial`. `model_specs` SHALL include all three mandated SOTA
+GGUF hub IDs: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. A complete run SHALL use a terminal
+`honest_verdict` beginning with
+`success_uprm_logprob_cache_retry_ready_n`; an endpoint failure SHALL use a
+terminal `honest_verdict` beginning with
+`blocked_uprm_logprob_cache_retry_endpoint_failed`.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `terminal prefix distinguishes ready cache from endpoint/input blockers; no 0-row success is allowed.`;
+`duration_s` = `wall-clock duration records whether this was live endpoint scoring or a blocked precondition pass.`;
+`inference_substrate` = `live_llm_inference only when rows were scored through the Exp5085 endpoint; otherwise precondition_check_only.`;
+`preconditions_checked` = `records Exp5085 artifact hash, endpoint URL, selected model path, cache input path, disk space, and live endpoint probe evidence before scoring.`;
+`model_specs` = `all three mandated SOTA GGUF IDs plus resolved paths and the selected Exp5085 endpoint model.`;
+`logprob_cache_ready` = `true only when every target candidate row has token logprobs from the endpoint.`;
+`step_cache_ready` = `true only when every complete row has deterministic step boundaries with token spans.`;
+`cache_path` = `resumable JSONL cache path consumed by downstream uPRM scoring.`;
+`n_questions` = `number of MuSR questions represented by complete scored rows.`;
+`n_candidates` = `number of target existing candidate strings selected for scoring.`;
+`n_rows_complete` = `number of valid row-level token/step telemetry rows flushed to disk.`;
+`parse_rate` = `complete valid rows divided by target candidates; catches partial runs honestly.`;
+`top_logprob_coverage` = `fraction of complete rows whose endpoint response exposed top-logprob alternatives.`;
+`endpoint_used` = `concrete Exp5085 endpoint route used for scoring or attempted during the blocker.`;
+`flagged_adversarial` = `false for honest blocked/ready artifacts unless the runner itself detects inconsistent provenance.`
+
+### SCENARIO-VERIFY-5086: Endpoint-Backed Rows Flush And Resume
+
+Given Exp 5085 reports `logprob_endpoint_ready=true`, the recorded endpoint
+responds with token logprobs and top-logprob rows, and at least 200 MuSR
+questions are represented by existing candidate strings, when Exp 5086 runs,
+then it writes or resumes the JSONL cache, records one complete row per
+candidate, preserves question/candidate/model/hash/step provenance, sets
+`logprob_cache_ready=true`, sets `step_cache_ready=true`, and writes
+`honest_verdict=success_uprm_logprob_cache_retry_ready_n<N>`.
+
+Given some complete Exp 5086 rows already exist, when the runner resumes, then
+it skips those row IDs, appends only missing rows, and does not erase or
+duplicate previously flushed telemetry.
+
+If the Exp5085 gate is ready but the endpoint no longer responds with
+top-logprob telemetry, then Exp 5086 writes a terminal
+`blocked_uprm_logprob_cache_retry_endpoint_failed` artifact with the Exp5085
+hash, endpoint URL, selected model path, cache input path, available disk
+space, `logprob_cache_ready=false`, and `step_cache_ready=false`.
+
+## Implementation Status (REQ-VERIFY-5086)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5086 | Planned (`python/carnot/experiment_5086_uprm_logprob_cache_retry.py`, `results/experiment_5086_uprm_logprob_cache_retry_v467.json`) | Planned (`tests/python/test_experiment_5086_uprm_logprob_cache_retry.py`) |
+
 ### REQ-VERIFY-5059: D1 SOTA Refresh Audit Separates Scorer And Candidate-Refresh Value
 
 The repository SHALL provide Exp 5059 at
