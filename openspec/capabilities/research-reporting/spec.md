@@ -179,6 +179,91 @@ keeps `conductor_modified=false`, and does not recreate
 |---|---|---|
 | REQ-REPORT-5122 | Planned (`python/carnot/experiment_5122_archive_469_activate_470.py`, `scripts/experiment_5122_archive_469_activate_470.py`) | Planned (`tests/python/test_experiment_5122_archive_469_activate_470.py`) |
 
+### REQ-REPORT-5123: V470 Source/Scope Audit Before Implementation-Heavy Tasks
+
+The Exp 5123 workflow SHALL inspect the `V470-PLANNER-REFERENCES` block in
+`research-references.md`, the `.470` vNEXT roadmap document, the active or
+pre-staged `.470` roadmap YAML, `results/experiment_5121_capstone_v469.json`,
+and `ops/exclusion_manifest.yaml`. It SHALL identify the run as
+`exp5123-v470-source-scope-audit`, SHALL write
+`results/experiment_5123_v470_source_scope_audit.json`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="metadata_and_source_audit"`.
+
+The workflow SHALL map every `2026.07.470` roadmap task to either a fresh V470
+source from the reference block or a local continuation artifact from the
+completed `.469` state. It SHALL record whether `research-roadmap-next.yaml` is
+present or whether the already-activated `research-roadmap.yaml` fallback was
+used, but it SHALL NOT repair either roadmap.
+
+The workflow SHALL verify SOTA model discipline for every task that requires
+LLM inference. Such tasks SHALL declare `MODEL_SPECS` in their required artifact
+fields and SHALL name at least one mandated local GGUF:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If a task is merely inheriting candidate
+provenance from an upstream LLM-backed artifact, the audit SHALL record that
+inheritance explicitly.
+
+The workflow SHALL verify that `.470` does not re-propose the retired same-scope
+FoVer selector, FoVer selector audit, or FoVer residual FR-11 route from `.469`.
+Non-FoVer structured pools, non-FoVer rankers, and exact-solver FR-11 case
+policies MAY be accepted only when the task records the prior FoVer failure and
+the replacement scope. The workflow SHALL also inspect
+`ops/exclusion_manifest.yaml` for retired experiment IDs, blocked patterns, or
+retired scopes that would hard-block `.470`, and SHALL preserve any conflicts in
+the artifact rather than silently dropping them.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `v470_reference_block_found`, `task_source_map`,
+`fover_same_scope_rerun_found`, `sota_model_discipline_ok`,
+`exclusion_manifest_conflicts`, `conductor_modified`, and `tests_run`. It SHOULD
+also include field principles, roadmap parse evidence, source-block bounds,
+SOTA discipline details, FoVer rerun findings, exclusion-manifest scan details,
+repo inputs read, and the run date.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `v470_reference_block_found`: principle "source freshness"
+- `task_source_map`: principle "source-to-experiment traceability"
+- `fover_same_scope_rerun_found`: principle "no doomed rerun"
+- `sota_model_discipline_ok`: principle "local-first model accountability"
+- `exclusion_manifest_conflicts`: principle "retired-scope accountability"
+- `conductor_modified`: principle "conductor immutability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5123: V470 Sources, Tasks, And SOTA Discipline Are Audited
+
+**Given** `research-references.md` contains the V470 planner references block
+**And** the `.470` roadmap names tasks `exp5122` through `exp5133`
+**When** the Exp 5123 source/scope audit runs
+**Then** it writes the required JSON artifact, sets
+`v470_reference_block_found=true`, maps every `.470` task to a fresh source or
+local continuation artifact, verifies LLM-backed `MODEL_SPECS` and mandated
+GGUF coverage, sets `fover_same_scope_rerun_found=false`, records any exclusion
+manifest conflicts, and keeps `conductor_modified=false`.
+
+#### SCENARIO-REPORT-5123-BLOCKED-SCOPE: Missing Sources Or Doomed Reruns Fail Closed
+
+**Given** the V470 reference block is missing, a `.470` task has no source or
+local continuation, an LLM-backed task omits mandated GGUF provenance, or the
+roadmap re-proposes a same-scope FoVer selector/audit/residual-memory rerun
+**When** the Exp 5123 source/scope audit runs
+**Then** it writes a terminal `blocked_*` artifact that preserves the failed
+check, records `sota_model_discipline_ok` or `fover_same_scope_rerun_found`
+truthfully, and does not modify `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5123)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5123 | Implemented (`python/carnot/experiment_5123_v470_source_scope_audit.py`, `scripts/experiment_5123_v470_source_scope_audit.py`) | Implemented (`tests/python/test_experiment_5123_v470_source_scope_audit.py`) |
+
 ### REQ-REPORT-5110: V469 Source Freshness And Task-Mapping Gate
 
 The Exp 5110 workflow SHALL inspect `research-references.md` between
