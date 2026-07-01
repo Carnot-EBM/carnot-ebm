@@ -9718,3 +9718,4 @@ The contro |
 | 2026-07-01 07:05 UTC | PHASE B4 D6 replication -- tool-first cascade as c | OK | 87 passed, 1 warning in 6.69s |
 | 2026-07-01 07:07 UTC | PHASE B1 uPRM verifier -- test first-error process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
 | 2026-07-01 07:07 UTC | PHASE B2 VPR diagnostic -- dense objective process | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5072-uprm-logprob-cache-v466) |
+| 2026-07-01 07:18 UTC | PHASE C1 continuous self-learning -- group self-co | OK | 86 passed, 1 warning in 6.58s |
