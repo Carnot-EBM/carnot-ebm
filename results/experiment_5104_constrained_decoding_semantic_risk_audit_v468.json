@@ -81,7 +81,7 @@
       "why": "the audit must be independent of GGUF tokenizer merges"
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "grammar_baseline": {
     "available": true,
     "backend": "llama_cpp_gbnf",
@@ -311,5 +311,12 @@
     "invalid_syntax_mass": 0.083333,
     "semantic_validity_rate": 0.4,
     "syntax_validity_rate": 0.916667
-  }
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=54.29845 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

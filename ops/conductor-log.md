@@ -9757,3 +9757,4 @@ web search: |
 | 2026-07-01 13:57 UTC | PHASE B1 evidence energy -- distinguish contradict | OK | 102 passed, 1 warning in 7.47s |
 | 2026-07-01 14:09 UTC | PHASE B2 high-order energy -- direct HUBO/p-spin c | OK | 99 passed, 1 warning in 33.91s |
 | 2026-07-01 14:22 UTC | PHASE B3 adaptive solver help -- TACO-style test-t | OK | 101 passed, 1 warning in 6.90s |
+| 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
