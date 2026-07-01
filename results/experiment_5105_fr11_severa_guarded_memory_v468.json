@@ -401,7 +401,7 @@
       "principle": "true when the no-promote rollback arm exactly preserves baseline behavior if any gate blocks promotion."
     }
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "flagged_adversarial_candidate_ids": [
     "candidate_5105_0003_memory_5092_0003_q0056"
   ],
@@ -844,5 +844,22 @@
     ]
   },
   "store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/replay_memory/experiment_5105_severa_guarded_memory_sop_store_v468.json",
-  "store_sha256": "sha256:b0ebfcb3f52d58a0c3567db1f3dfe9f92b9adea46afaf7966cb6b745ddeb1e7b"
+  "store_sha256": "sha256:b0ebfcb3f52d58a0c3567db1f3dfe9f92b9adea46afaf7966cb6b745ddeb1e7b",
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "heldout_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "nonforgetting_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.00143 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

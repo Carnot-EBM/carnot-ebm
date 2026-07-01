@@ -9758,3 +9758,4 @@ web search: |
 | 2026-07-01 14:09 UTC | PHASE B2 high-order energy -- direct HUBO/p-spin c | OK | 99 passed, 1 warning in 33.91s |
 | 2026-07-01 14:22 UTC | PHASE B3 adaptive solver help -- TACO-style test-t | OK | 101 passed, 1 warning in 6.90s |
 | 2026-07-01 14:37 UTC | PHASE B4 constrained decoding audit -- semantic-ri | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-01 14:49 UTC | PHASE C1 continuous self-learning -- SEVerA-style  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
