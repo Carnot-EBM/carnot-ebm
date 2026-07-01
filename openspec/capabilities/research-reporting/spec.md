@@ -191,6 +191,93 @@ condition, and does not silently drop the source from `task_mapping` or
 |---|---|---|
 | REQ-REPORT-5110 | Implemented (`python/carnot/experiment_5110_sota_ingestion_v469.py`, `scripts/experiment_5110_sota_ingestion_v469.py`) | Implemented (`tests/python/test_experiment_5110_sota_ingestion_v469.py`) |
 
+### REQ-REPORT-5111: FoVer In-Domain Pool Retraction Gate
+
+The Exp 5111 workflow SHALL NOT construct, synthesize, or report an in-domain
+FoVer candidate-selection pool when the active operator correction identifies
+the original pool premise as retracted. It SHALL identify the run as
+`exp5111-fover-in-domain-pool-v469`, SHALL write
+`results/experiment_5111_fover_in_domain_pool_v469.json`, SHALL read
+`results/experiment_fover_stepverifier_vs_cheap_baseline.json` as the terminal
+answer to the FoVer verifier-value question for milestone `2026.07.469`, and
+SHALL preserve the retraction provenance from `ops/known-issues.md`.
+
+The workflow SHALL emit a terminal `blocked_fover_indomain_pool_retracted_see_*`
+`honest_verdict`, SHALL set `headroom_present=false`, SHALL set
+`verifier_is_oracle=false`, SHALL set `pool_path=null`, `pool_sha256=null`,
+`pool_n=0`, and `candidates_per_item=0`, and SHALL leave vote/self-consistency
+candidate-selection metrics null rather than fabricating a pool. It SHALL record
+that the corrected FoVer result found learned-verifier AUROC `0.9663`, cheap
+baseline AUROC `0.9635`, delta AUROC `0.0028`, CI95 `[-0.0244, 0.0347]`, and
+`beats_cheap_baseline=false`.
+
+The artifact SHALL record learned-verifier AUROC `0.9663`, cheap baseline AUROC `0.9635`, delta AUROC `0.0028`, CI95 `[-0.0244, 0.0347]`, and `beats_cheap_baseline=false` as the corrected terminal FoVer evidence.
+
+The artifact SHALL include principle-annotated top-level fields `experiment_id`,
+`milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+`preconditions_checked`, `pool_path`, `pool_sha256`, `pool_n`,
+`candidates_per_item`, `vote_at_1`, `tuned_self_consistency`, `oracle_at_k`,
+`headroom_present`, `verifier_is_oracle`, `model_specs`, `seeds_or_checksums`,
+`flagged_adversarial`, and `tests_run`. It SHOULD also include
+`field_principles`, `corrected_result_path`, `corrected_result_sha256`,
+`corrected_result_summary`, `retraction_sources`, and `retracted_claims` so the
+blocked verdict is auditable.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `preconditions_checked`: principle "compute/data preflight accountability"
+- `pool_path`: principle "deliverable reproducibility"
+- `pool_sha256`: principle "data integrity"
+- `pool_n`: principle "downstream gate signal"
+- `candidates_per_item`: principle "selection-headroom clarity"
+- `vote_at_1`: principle "baseline transparency"
+- `tuned_self_consistency`: principle "fair baseline"
+- `oracle_at_k`: principle "headroom measurement"
+- `headroom_present`: principle "no no-headroom moat claims"
+- `verifier_is_oracle`: principle "oracle-distinctness"
+- `model_specs`: principle "SOTA model accountability when LLMs are used"
+- `seeds_or_checksums`: principle "reproducibility"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+- `field_principles`: principle "principle annotations for every top-level artifact field"
+- `corrected_result_path`: principle "terminal FoVer verifier-value evidence"
+- `corrected_result_sha256`: principle "corrected-result data integrity"
+- `corrected_result_summary`: principle "no stale headroom premise"
+- `retraction_sources`: principle "retraction provenance"
+- `retracted_claims`: principle "no fabricated candidate-selection claim"
+
+#### SCENARIO-REPORT-5111: Retracted FoVer Pool Writes Blocked Artifact
+
+**Given** the corrected FoVer step-verifier versus cheap-baseline artifact exists
+and `ops/known-issues.md` records the FoVer candidate-selection headroom
+retraction
+**When** the Exp 5111 workflow runs
+**Then** it writes the required JSON artifact, preserves the corrected AUROC and
+CI evidence, sets a `blocked_fover_indomain_pool_retracted_see_*` verdict, sets
+all pool/headroom metrics to blocked-safe values, does not generate local LLM
+candidates, does not claim self-consistency headroom, and records
+`verifier_is_oracle=false`.
+
+#### SCENARIO-REPORT-5111-BLOCKED-MISSING-CORRECTION: Missing Corrected Result Fails Closed
+
+**Given** the corrected FoVer step-verifier versus cheap-baseline artifact is
+missing or malformed
+**When** the Exp 5111 workflow runs
+**Then** it still writes a terminal blocked artifact, records the failed
+precondition in `preconditions_checked`, leaves all pool metrics blocked-safe,
+and does not construct or synthesize a candidate-selection pool.
+
+## Implementation Status (REQ-REPORT-5111)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5111 | Implemented (`python/carnot/experiment_5111_fover_in_domain_pool_v469.py`, `scripts/experiment_5111_fover_in_domain_pool_v469.py`) | Implemented (`tests/python/test_experiment_5111_fover_in_domain_pool_v469.py`) |
+
 ### REQ-REPORT-5010: Verifier-Moat Literature Ingestion Maps New SOTA Onto Phase D
 
 The Exp 5010 workflow SHALL run the reliable SOTA-ingestion channel for the

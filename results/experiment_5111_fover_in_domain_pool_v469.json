@@ -1,0 +1,102 @@
+{
+  "candidates_per_item": 0,
+  "corrected_result_path": "results/experiment_fover_stepverifier_vs_cheap_baseline.json",
+  "corrected_result_sha256": "sha256:0e29373e28d34edfa7cd91f2d9ebb967eafa6d8363bcfe3b42395064a9053ec6",
+  "corrected_result_summary": {
+    "beats_cheap_baseline": false,
+    "cheap_baseline_auroc": 0.9635,
+    "cheap_baseline_root_cause": "Incorrect steps average ~5x longer than correct steps in this corpus -- a strong surface-level confound that lets simple length-aware features nearly match a semantic embedding model's AUROC. This is a corpus-construction property, not evidence that semantic understanding never helps; it explains WHY the cheap baseline is so strong on THIS specific classification task.",
+    "delta_auroc": 0.0028,
+    "delta_auroc_ci95": [
+      -0.0244,
+      0.0347
+    ],
+    "framing_change_from_retracted_claim": "This is NOT a 'verifier beats self-consistency vote' test (FoVer has no natural multi-candidate structure to vote among -- 6544/6546 question_ids have exactly one row). This IS a well-posed 'does a learned discriminator beat a cheap non-learned one' test on the real classification task.",
+    "n_rows": 6548,
+    "verifier_auroc": 0.9663
+  },
+  "duration_s": 2.698507159948349e-07,
+  "experiment_id": "exp5111-fover-in-domain-pool-v469",
+  "field_principles": {
+    "candidates_per_item": "selection-headroom clarity",
+    "corrected_result_path": "terminal FoVer verifier-value evidence",
+    "corrected_result_sha256": "corrected-result data integrity",
+    "corrected_result_summary": "no stale headroom premise",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "field_principles": "principle annotations for every top-level artifact field",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "headroom_present": "no no-headroom moat claims",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "model_specs": "SOTA model accountability when LLMs are used",
+    "oracle_at_k": "headroom measurement",
+    "pool_n": "downstream gate signal",
+    "pool_path": "deliverable reproducibility",
+    "pool_sha256": "data integrity",
+    "preconditions_checked": "compute/data preflight accountability",
+    "retracted_claims": "no fabricated candidate-selection claim",
+    "retraction_sources": "retraction provenance",
+    "seeds_or_checksums": "reproducibility",
+    "tests_run": "verification evidence",
+    "tuned_self_consistency": "fair baseline",
+    "verifier_is_oracle": "oracle-distinctness",
+    "vote_at_1": "baseline transparency"
+  },
+  "flagged_adversarial": false,
+  "headroom_present": false,
+  "honest_verdict": "blocked_fover_indomain_pool_retracted_see_experiment_fover_stepverifier_vs_cheap_baseline",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.469",
+  "model_specs": {
+    "corrected_result_cheap_baseline_model": "sklearn.linear_model.LogisticRegression (8 hand-engineered text-statistical features, no learned embeddings)",
+    "corrected_result_embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "generative_llms_used": []
+  },
+  "oracle_at_k": null,
+  "pool_n": 0,
+  "pool_path": null,
+  "pool_sha256": null,
+  "preconditions_checked": {
+    "candidate_pool_generation_attempted": false,
+    "corrected_result_parse_error": null,
+    "corrected_result_path": "results/experiment_fover_stepverifier_vs_cheap_baseline.json",
+    "corrected_result_read": true,
+    "known_issues_path": "ops/known-issues.md",
+    "known_issues_retraction_found": true,
+    "local_llm_generation_attempted": false,
+    "pool_fabrication_blocked": true
+  },
+  "retracted_claims": {
+    "candidate_selection_headroom_claim_retracted": true,
+    "load_fover_domain_pool_mode_formula_artifact": true,
+    "real_corpus_has_no_natural_multi_candidate_structure": true,
+    "real_corpus_question_id_multiplicity": "6544/6546 question_ids have exactly one row",
+    "real_task_shape": "flat per-step correctness classification",
+    "synthetic_pool_must_not_be_built": true
+  },
+  "retraction_sources": [
+    "ops/known-issues.md#NUDGE-2026-07-01-RETRACTED",
+    "ops/known-issues.md#MOAT-REDIRECT-2026-06-30-RETRACTED"
+  ],
+  "run_date": "20260701",
+  "seeds_or_checksums": {
+    "corrected_result_random_seed": 20260701,
+    "corrected_result_reproducibility_checksum": "sha256:203f3d8d2969126a1c9e9aa366d3251fb7aae0f19d1f2df3472bd1506e4dc7aa",
+    "corrected_result_sha256": "sha256:0e29373e28d34edfa7cd91f2d9ebb967eafa6d8363bcfe3b42395064a9053ec6"
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5111_fover_in_domain_pool_v469.py --date 20260701",
+    ".venv/bin/pytest tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts=\"\"",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5111_fover_in_domain_pool_v469.py' -m pytest tests/python/test_experiment_5111_fover_in_domain_pool_v469.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5111_fover_in_domain_pool_v469.py' --fail-under=100 -m",
+    ".venv/bin/ruff check python/carnot/experiment_5111_fover_in_domain_pool_v469.py scripts/experiment_5111_fover_in_domain_pool_v469.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5111_fover_in_domain_pool_v469.py scripts/experiment_5111_fover_in_domain_pool_v469.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5111_fover_in_domain_pool_v469.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5111_fover_in_domain_pool_v469.json",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "tuned_self_consistency": null,
+  "verifier_is_oracle": false,
+  "vote_at_1": null
+}
