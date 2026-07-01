@@ -73,7 +73,13 @@ Added to `research-references.md` before this plan under `V469-PLANNER-REFERENCE
   abstraction-budgeting.
 - `arXiv:2601.09037` - FPGA p-bit methods with sparsification and two-dimensional parallel tempering.
 - `arXiv:2606.25313` - million p-bit probabilistic computer with residual-energy and partition telemetry.
+- `arXiv:2602.01090` FALCON - hard feasibility for LLM-based combinatorial optimization through
+  grammar-constrained decoding plus semantic repair and adaptive Best-of-N sampling.
+- Verus-SpecGym / Verus-SpecBench - executable specification faithfulness checks using adversarial
+  edge cases rather than LLM-judge-only evaluation.
 - `arXiv:2512.16762` and `arXiv:2604.00555` - EBT/ARM-EBM citation-lineage architecture signals.
+- `arXiv:2507.02092` and `arXiv:2512.15605` - primary EBT and ARM-as-EBM sources; architecture
+  pressure only, not a `.469` training reproduction.
 - Extropic XTR-0/TSU and Logical Intelligence Kona/Aleph updates - architecture context, not local
   execution claims.
 
@@ -155,7 +161,8 @@ Experiments: `exp5111`, `exp5112`, `exp5113`
 Build the n>=150 FoVer candidate-selection pool, then run in-domain train/test verifier selection versus
 tuned self-consistency. The selector must be oracle-distinct, must not use answer-key leakage, and must
 survive the mandatory shuffled-label ablation. The audit is separate so a positive selector result cannot
-headline until leakage, label ablation, vote tuning, and CI handling are checked independently.
+headline until leakage, label ablation, vote tuning, CI handling, and Verus-SpecGym-style adversarial
+edge-case controls are checked independently.
 
 ### Phase 2: Exact-Verifier Alternatives And Solver Help
 
@@ -165,7 +172,8 @@ Move beyond the measured exact-MILP wall. `exp5114` tests KAN abstraction-refine
 against `exp5108` with false-property and margin controls. `exp5115` transfers graph-evidence energy to
 FoVer step/support traces. `exp5116` builds a CPU exact-checked HUBO/p-spin two-dimensional
 parallel-tempering reference before any board claim. `exp5117` scales TACO-style exact-solver help and
-learns a harm gate so `.468`'s helpful average does not hide harmful instances.
+learns a harm gate so `.468`'s helpful average does not hide harmful instances. FALCON is treated as a
+constraint-generation lesson for semantic repair and adaptive sampling, not as a syntax-only headline.
 
 ### Phase 3: Continuous Self-Learning, Runtime Repair, And Hardware Continuity
 
