@@ -1,0 +1,232 @@
+{
+  "abstraction_built": true,
+  "artifact": "experiment_5091_kan_pwa_milp_scale_v467",
+  "binary_variable_count": 6,
+  "bound_tightness": 2.220446049250313e-16,
+  "certified_upper_bound": 1.8000000119209287,
+  "constraint_count": 43,
+  "counterexample_or_certificate": {
+    "certified_upper_bound": 1.8000000119209287,
+    "global_error_bound": 0.0,
+    "kind": "certificate",
+    "local_error_bound": 0.0,
+    "method": "z3_mixed_integer_linear_pwa_scale_bound",
+    "property": "For all (x0, x1) in [-1, 1]^2, the two-unit additive KAEM energy energy(x0, x1) <= 1.800000011920929.",
+    "property_threshold": 1.800000011920929,
+    "selected_segments": [
+      2,
+      2
+    ],
+    "witness_maximizer_inputs": [
+      1.0,
+      1.0
+    ]
+  },
+  "duration_s": 0.368275,
+  "experiment": 5091,
+  "field_principles": {
+    "abstraction_built": {
+      "principle": "Separates a real KAEM knot-to-PWA export from an artifact-only placeholder."
+    },
+    "binary_variable_count": {
+      "principle": "Counts one selector per PWA piece, exposing the integer-search growth from Exp 5080."
+    },
+    "constraint_count": {
+      "principle": "Reports the generated linear constraint count so solver complexity is visible."
+    },
+    "duration_s": {
+      "principle": "Wall-clock duration covers deterministic abstraction and solver work, not LLM inference."
+    },
+    "flagged_adversarial": {
+      "principle": "Remains false only when the artifact is honest about solver use, scale, and substrate."
+    },
+    "global_error_bound": {
+      "principle": "Declares the propagated output gap after summing the two local KAEM abstractions."
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict says whether this small scale-up was proved or blocked."
+    },
+    "inference_substrate": {
+      "principle": "The substrate is the actual local formal solver path and must not imply live LLM execution."
+    },
+    "local_error_bound": {
+      "principle": "Declares the per-unit abstraction gap; zero is valid only because KAEM uses linear interpolation."
+    },
+    "property_holds": {
+      "principle": "Records the formal conclusion only after the solver returns an optimal certificate."
+    },
+    "property_statement": {
+      "principle": "States the exact universally quantified two-input KAEM bound being checked."
+    },
+    "property_status": {
+      "principle": "Distinguishes verified, refuted, and blocked states without overclaiming scalability."
+    },
+    "pwa_piece_count": {
+      "principle": "Reports total affine pieces across both KAEM variables."
+    },
+    "scale_blocker": {
+      "principle": "Names the dependency or complexity condition when the small proof cannot complete."
+    },
+    "solve_time_s": {
+      "principle": "Keeps solver runtime visible separately from artifact assembly time."
+    },
+    "solver_available": {
+      "principle": "Makes the proof dependency explicit before any property-holds claim is accepted."
+    }
+  },
+  "flagged_adversarial": false,
+  "global_error_bound": 0.0,
+  "honest_verdict": "success_kan_pwa_milp_scale_property_verified_small",
+  "inference_substrate": "deterministic_formal_solver",
+  "kan_component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+  "local_error_bound": 0.0,
+  "methodology_note": "Exp 5091 reuses the Exp 5080 exact KAEM knot-to-PWA export for two additive variables, then submits the bound to a deterministic_formal_solver path. local_error_bound and global_error_bound are zero because the KAEM layer itself is linear interpolation, not because an approximation gap was hidden.",
+  "property_holds": true,
+  "property_statement": "For all (x0, x1) in [-1, 1]^2, the two-unit additive KAEM energy energy(x0, x1) <= 1.800000011920929.",
+  "property_status": "verified",
+  "pwa_abstraction": {
+    "binary_variable_count": 6,
+    "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+    "declared_error_budgets": {
+      "global_error_budget": 0.0,
+      "local_error_budget": 0.0,
+      "per_unit_error_bounds": [
+        0.0,
+        0.0
+      ]
+    },
+    "global_error_bound": 0.0,
+    "input_dimension": 2,
+    "local_error_bound": 0.0,
+    "pwa_piece_count": 6,
+    "scale_up_note": "two-variable additive KAEM property; Exp 5080 had one variable",
+    "units": [
+      {
+        "binary_variable_count": 3,
+        "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+        "control_points": [
+          0.0,
+          0.25,
+          0.75,
+          1.0
+        ],
+        "error_bound": 0.0,
+        "exact_for_linear_kaem_spline": true,
+        "knots": [
+          -1.0,
+          -0.333333283662796,
+          0.3333333730697632,
+          1.0
+        ],
+        "n_segments": 3,
+        "segments": [
+          {
+            "index": 0,
+            "intercept": 0.3749999720603248,
+            "slope": 0.3749999720603248,
+            "x_max": -0.333333283662796,
+            "x_min": -1.0,
+            "y_max": 0.25,
+            "y_min": 0.0
+          },
+          {
+            "index": 1,
+            "intercept": 0.49999996647238687,
+            "slope": 0.7500000111758711,
+            "x_max": 0.3333333730697632,
+            "x_min": -0.333333283662796,
+            "y_max": 0.75,
+            "y_min": 0.25
+          },
+          {
+            "index": 2,
+            "intercept": 0.6249999776482569,
+            "slope": 0.3750000223517431,
+            "x_max": 1.0,
+            "x_min": 0.3333333730697632,
+            "y_max": 1.0,
+            "y_min": 0.75
+          }
+        ],
+        "variable_index": 0
+      },
+      {
+        "binary_variable_count": 3,
+        "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+        "control_points": [
+          0.10000000149011612,
+          0.20000000298023224,
+          0.4000000059604645,
+          0.800000011920929
+        ],
+        "error_bound": 0.0,
+        "exact_for_linear_kaem_spline": true,
+        "knots": [
+          -1.0,
+          -0.333333283662796,
+          0.3333333730697632,
+          1.0
+        ],
+        "n_segments": 3,
+        "segments": [
+          {
+            "index": 0,
+            "intercept": 0.24999999254942007,
+            "slope": 0.14999999105930395,
+            "x_max": -0.333333283662796,
+            "x_min": -1.0,
+            "y_max": 0.20000000298023224,
+            "y_min": 0.10000000149011612
+          },
+          {
+            "index": 1,
+            "intercept": 0.29999999105930286,
+            "slope": 0.30000000894069684,
+            "x_max": 0.3333333730697632,
+            "x_min": -0.333333283662796,
+            "y_max": 0.4000000059604645,
+            "y_min": 0.20000000298023224
+          },
+          {
+            "index": 2,
+            "intercept": 0.1999999672174427,
+            "slope": 0.6000000447034862,
+            "x_max": 1.0,
+            "x_min": 0.3333333730697632,
+            "y_max": 0.800000011920929,
+            "y_min": 0.4000000059604645
+          }
+        ],
+        "variable_index": 1
+      }
+    ]
+  },
+  "pwa_piece_count": 6,
+  "random_seed": 5091,
+  "reproducibility_checksum": "981d6928077741076d1051c2a968bcbe7cc182ea129637b6ef7d47294fe2609b",
+  "run_date": "20260701",
+  "scale_blocker": null,
+  "schema": "carnot.kan_pwa_milp_scale.v467",
+  "selected_segments": [
+    2,
+    2
+  ],
+  "solve_time_s": 0.008194,
+  "solver_available": true,
+  "solver_name": "z3",
+  "solver_status": "optimal",
+  "source_artifacts": [
+    "results/experiment_5080_kan_pwa_milp_bridge_v466.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5091",
+    "SCENARIO-KAN-5091"
+  ],
+  "tests_run": [
+    ".venv/bin/python -m pytest tests/python/test_experiment_5091_kan_pwa_milp_scale.py -q --no-cov"
+  ],
+  "witness_inputs": [
+    1.0,
+    1.0
+  ]
+}
