@@ -9708,3 +9708,4 @@ The contro |
 | 2026-07-01 06:17 UTC | PHASE R1 SOTA backfill -- replace failed Exp5066 G | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-01 06:32 UTC | PHASE A1 GGUF/logprob preflight -- prove model cac | OK | 89 passed, 1 warning in 5.96s |
 | 2026-07-01 06:34 UTC | PHASE A2 uPRM substrate -- build token/step SOTA G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logpro |
+| 2026-07-01 06:36 UTC | PHASE A2 uPRM substrate -- build token/step SOTA G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5071-gguf-logprob-preflight-v466.logpro |
