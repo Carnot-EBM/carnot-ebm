@@ -9738,3 +9738,4 @@ The contro |
 | 2026-07-01 09:47 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
 | 2026-07-01 09:49 UTC | PHASE A3 uPRM process verifier retry -- gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5086-uprm-logprob-cache-retry-v467.logp |
 | 2026-07-01 10:01 UTC | PHASE B1 logprob-free process verifier -- temporal | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, MOAT_CLAIM_RIGOR — result quara |
+| 2026-07-01 10:14 UTC | PHASE B2 exact-verifier pivot -- p-bit/Ising-guide | FLAGGED | adversarial_verify CRITICAL: MOAT_CLAIM_RIGOR — result quarantined, not a clean  |

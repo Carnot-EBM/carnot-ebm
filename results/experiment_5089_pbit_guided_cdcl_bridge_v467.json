@@ -27,7 +27,7 @@
     "pure_solver_effort": "Exact solver effort with no temporary assumptions.",
     "random_assumption_effort": "Exact solver effort after random temporary assumptions plus fallback."
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "helps_declared_family": false,
   "honest_verdict": "complete_pbit_guided_cdcl_distribution_sensitive_no_win",
   "inference_substrate": "deterministic_solver_plus_stochastic_sampler",
@@ -472,5 +472,17 @@
   "spec_refs": [
     "REQ-VERIFY-5089",
     "SCENARIO-VERIFY-5089"
+  ],
+  "corrigendum_pending": [
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "critical",
+      "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+    },
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "warn",
+      "detail": "Null/moat-retirement claim is uninformative because headroom_present is not declared true. A no-headroom corpus cannot support 'does not beat SC' or 'moat retired' as a moat bound."
+    }
   ]
 }
