@@ -325,7 +325,7 @@
     "positive_count": 2,
     "positive_tests_passed": true
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "honest_verdict": "success_constrainprompt_code_assurance_exact_checks_passed",
   "inference_substrate": "deterministic_python_json_logical_tree",
   "llm_invoked": false,
@@ -535,5 +535,17 @@
       }
     },
     "schema_name": "verifier_verdict_schema_v1"
-  }
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.000157 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
