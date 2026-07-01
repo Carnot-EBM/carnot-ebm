@@ -1,0 +1,315 @@
+{
+  "candidate_pool_non_degenerate": true,
+  "contradiction_reject_rate": 0.0,
+  "distribution_shift_metric": 0.563636,
+  "duration_s": 54.29845,
+  "experiment": "experiment_5104_constrained_decoding_semantic_risk_audit",
+  "experiment_id": 5104,
+  "field_principles": {
+    "candidate_pool_non_degenerate": {
+      "principle": "true only when all semantic-risk control families are present."
+    },
+    "contradiction_reject_rate": {
+      "principle": "fraction of contradicted schema-valid rows rejected by the audited path."
+    },
+    "distribution_shift_metric": {
+      "principle": "total variation distance between static masking and semantic rerank."
+    },
+    "duration_s": {
+      "principle": "wall-clock runtime for the deterministic audit and artifact write."
+    },
+    "flagged_adversarial": {
+      "principle": "true only when the artifact detects its own inconsistent claim."
+    },
+    "grammar_baseline": {
+      "principle": "external grammar-engine availability or a precise unavailable reason."
+    },
+    "honest_verdict": {
+      "principle": "terminal prefix cannot promote syntax validity unless semantic controls, contradiction rejection, and distribution-shift checks are clean."
+    },
+    "inference_substrate": {
+      "principle": "declares deterministic audit unless live local decoding actually ran."
+    },
+    "latency_ms": {
+      "principle": "trie, CSR, and optional grammar-baseline latency measurements."
+    },
+    "live_llm_invoked": {
+      "principle": "true only when local LLM decoding was actually invoked."
+    },
+    "mask_memory": {
+      "principle": "trie and CSR state, transition, and byte-memory estimates."
+    },
+    "model_specs": {
+      "principle": "names every mandated GGUF model and any resolved local path evidence."
+    },
+    "noop_accept_rate": {
+      "principle": "mass accepted by syntax masks for no-op valid but uninformative rows."
+    },
+    "preconditions_checked": {
+      "principle": "records schema, tokenizer assumptions, candidate-pool checks, grammar baseline availability, and Exp5097 endpoint cleanliness."
+    },
+    "schema_name": {
+      "principle": "the finite Carnot semantic-control schema selected for the audit."
+    },
+    "semantic_validity_rate": {
+      "principle": "non-vacuous semantic support rate under the STATIC syntax mask."
+    },
+    "syntax_only_headline_forbidden": {
+      "principle": "must remain true so syntax-only validity cannot be headlined."
+    },
+    "syntax_validity_rate": {
+      "principle": "schema-language validity from STATIC masks, not semantic quality."
+    }
+  },
+  "finite_outputs_sha256": "sha256:10c62295a9e32e52cacc04eb230c08f681536b629bfc0c03ee61c756fbe2acb7",
+  "finite_schema": {
+    "canonicalization": "json.dumps(sort_keys=True,separators=(',',':'))",
+    "control_types": [
+      "contradicted_claim",
+      "distribution_sensitive_alternative",
+      "grounded_supported",
+      "noop_valid",
+      "tautology_valid",
+      "unsupported_claim"
+    ],
+    "output_format": "canonical_ascii_json",
+    "schema_name": "finite_carnot_semantic_control_schema_v1",
+    "tokenizer_assumption": {
+      "bpe_tokenizer_used": false,
+      "byte_token_ids": "0..127",
+      "kind": "ascii_byte_tokens_plus_eos",
+      "why": "the audit must be independent of GGUF tokenizer merges"
+    }
+  },
+  "flagged_adversarial": false,
+  "grammar_baseline": {
+    "available": true,
+    "backend": "llama_cpp_gbnf",
+    "compile_error": null,
+    "grammar_compiled": true,
+    "latency_ms": 0.0,
+    "reason": null,
+    "syntax_validity_rate": 1.0
+  },
+  "honest_verdict": "complete_constrained_decoding_semantic_audit_no_syntax_only_headline",
+  "inference_substrate": "deterministic_static_csr_semantic_distribution_audit",
+  "latency_ms": {
+    "csr": 0.000187,
+    "grammar_baseline": 0.0,
+    "lookup_count": 3232000,
+    "trie": 0.016578
+  },
+  "live_llm_invoked": false,
+  "mask_equivalence": {
+    "invalid_prefix_mask_zero": true,
+    "mask_equivalence_rate": 1.0,
+    "mismatched_prefix_count": 0,
+    "mismatches": [],
+    "prefix_count": 1616,
+    "validity_rate": 1.0
+  },
+  "mask_memory": {
+    "csr_bytes": 251088,
+    "state_count": 1616,
+    "transition_count": 1615,
+    "trie_bytes": 465192
+  },
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "role": "flagship_moe"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "role": "flagship_dense"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_llm_invoked": false,
+      "preferred_quant": "Q4_K_M",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "middle_moe"
+    }
+  ],
+  "noop_accept_rate": 0.181818,
+  "preconditions_checked": {
+    "candidate_pool_non_degenerate": {
+      "control_counts": {
+        "contradicted_claim": 1,
+        "distribution_sensitive_alternative": 2,
+        "grounded_supported": 2,
+        "noop_valid": 1,
+        "tautology_valid": 1,
+        "unsupported_claim": 1
+      },
+      "missing_control_types": [],
+      "n_candidates": 8,
+      "ok": true
+    },
+    "exp5097_endpoint_cleanliness": {
+      "artifact_path": "results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json",
+      "artifact_sha256": "sha256:028c3eba7b176c5d10d9e16594913182afec17fc2828fe8283ee6d63d48fe952",
+      "clean_for_live_decoding": false,
+      "endpoint_url": "http://127.0.0.1:58385",
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_clean_sota_endpoint_logprob_cache_no_live_logprobs",
+      "live_llm_invoked": false,
+      "logprob_endpoint_clean": false,
+      "logprob_endpoint_ready": false,
+      "unusable_reason": "exp5097_not_clean_for_live_decoding"
+    },
+    "grammar_engine_availability": {
+      "available": true,
+      "backend": "llama_cpp_gbnf",
+      "grammar_compiled": true,
+      "reason": null
+    },
+    "selected_schema": "finite_carnot_semantic_control_schema_v1",
+    "tokenizer_assumptions": {
+      "bpe_tokenizer_used": false,
+      "byte_token_ids": "0..127",
+      "kind": "ascii_byte_tokens_plus_eos",
+      "why": "the audit must be independent of GGUF tokenizer merges"
+    }
+  },
+  "random_seed": 20260701,
+  "reproducibility_checksum": "sha256:7c34cfe4c26fc23b9efa3666609f6845c2acca3ed9bc1d4d74e9b844c2d87db0",
+  "result_path": "results/experiment_5104_constrained_decoding_semantic_risk_audit_v468.json",
+  "run_date": "20260701",
+  "schema": "carnot.experiment_5104_constrained_decoding_semantic_risk_audit.v468",
+  "schema_name": "finite_carnot_semantic_control_schema_v1",
+  "semantic_controls": {
+    "candidate_summaries": [
+      {
+        "base_probability": 0.14,
+        "candidate_id": "supported-accept",
+        "contradicted": false,
+        "control_type": "grounded_supported",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": false
+      },
+      {
+        "base_probability": 0.12,
+        "candidate_id": "distribution-alt-a",
+        "contradicted": false,
+        "control_type": "distribution_sensitive_alternative",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": false
+      },
+      {
+        "base_probability": 0.1,
+        "candidate_id": "distribution-alt-b",
+        "contradicted": false,
+        "control_type": "distribution_sensitive_alternative",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": false
+      },
+      {
+        "base_probability": 0.2,
+        "candidate_id": "noop-valid",
+        "contradicted": false,
+        "control_type": "noop_valid",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": true
+      },
+      {
+        "base_probability": 0.18,
+        "candidate_id": "tautology-valid",
+        "contradicted": false,
+        "control_type": "tautology_valid",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": true
+      },
+      {
+        "base_probability": 0.13,
+        "candidate_id": "unsupported-claim",
+        "contradicted": false,
+        "control_type": "unsupported_claim",
+        "semantic_valid": false,
+        "unsupported": true,
+        "vacuous": false
+      },
+      {
+        "base_probability": 0.11,
+        "candidate_id": "contradicted-claim",
+        "contradicted": true,
+        "control_type": "contradicted_claim",
+        "semantic_valid": false,
+        "unsupported": false,
+        "vacuous": false
+      },
+      {
+        "base_probability": 0.12,
+        "candidate_id": "supported-reject",
+        "contradicted": false,
+        "control_type": "grounded_supported",
+        "semantic_valid": true,
+        "unsupported": false,
+        "vacuous": false
+      }
+    ],
+    "control_types": [
+      "contradicted_claim",
+      "distribution_sensitive_alternative",
+      "grounded_supported",
+      "noop_valid",
+      "tautology_valid",
+      "unsupported_claim"
+    ],
+    "distribution_shift_basis": "TV(static_mask_distribution,semantic_rerank_distribution)",
+    "distribution_shift_metric": 0.563636,
+    "semantic_rerank": {
+      "contradiction_reject_rate": 1.0,
+      "noop_accept_rate": 0.0,
+      "semantic_validity_rate": 1.0,
+      "syntax_validity_rate": 1.0,
+      "tautology_accept_rate": 0.0,
+      "unsupported_reject_rate": 1.0
+    },
+    "static_mask": {
+      "contradiction_reject_rate": 0.0,
+      "noop_accept_rate": 0.181818,
+      "semantic_validity_rate": 0.436364,
+      "syntax_validity_rate": 1.0,
+      "tautology_accept_rate": 0.163636,
+      "unsupported_reject_rate": 0.0
+    },
+    "unconstrained": {
+      "invalid_syntax_mass": 0.083333,
+      "semantic_validity_rate": 0.4,
+      "syntax_validity_rate": 0.916667
+    }
+  },
+  "semantic_rerank_baseline": {
+    "contradiction_reject_rate": 1.0,
+    "noop_accept_rate": 0.0,
+    "semantic_validity_rate": 1.0,
+    "syntax_validity_rate": 1.0,
+    "tautology_accept_rate": 0.0,
+    "unsupported_reject_rate": 1.0
+  },
+  "semantic_validity_rate": 0.436364,
+  "spec_refs": [
+    "REQ-VERIFY-5104",
+    "SCENARIO-VERIFY-5104"
+  ],
+  "syntax_only_headline_forbidden": true,
+  "syntax_validity_rate": 1.0,
+  "unconstrained_baseline": {
+    "invalid_syntax_mass": 0.083333,
+    "semantic_validity_rate": 0.4,
+    "syntax_validity_rate": 0.916667
+  }
+}
