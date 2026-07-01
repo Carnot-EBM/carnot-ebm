@@ -9773,3 +9773,5 @@ web search: |
 | 2026-07-01 17:40 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
 | 2026-07-01 17:56 UTC | PHASE B1 KAN post-wall verification -- abstraction | OK | 87 passed, 1 warning in 24.29s |
 | 2026-07-01 17:58 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
+| 2026-07-01 17:58 UTC | PHASE B2 graph evidence transfer -- apply contradi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5111-fover-in-domain-pool-v469.pool_n ( |
+| 2026-07-01 18:00 UTC | PHASE A3 FoVer selector audit -- independent leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5112-fover-in-domain-selector-v469) |
