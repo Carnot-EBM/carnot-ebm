@@ -16,31 +16,32 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: **0/21 are clean SELF_DISCOVERY_ADVANCE.** I count **19 DUPLICATE**, **2 OUTER_LOOP_RE**, **0 OFF_PATH**. Reachability is necessary, not sufficient; `development_proxy` + `standing_arc_loop_offline_no_quota` is not hidden-game live self-discovery.
+TL;DR: **19/20 are UNCLEAR, not creditable live advances; 1/20 is OUTER_LOOP_RE.** Reachability is clean, but provenance is not. `development_proxy` + empty `honest_verdict` is not evidence of autonomous hidden-game self-discovery.
 
 | Artifact | Verdict | Evidence | Recommended Action |
 |---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` | DUPLICATE | Claims L3; registry already records lp85 L5. | Do not count. Keep only as replay/regression evidence. |
-| `results/arc_loop_solve_r11l.json` | DUPLICATE | Claims L2; registry already records r11l L2. | Do not count. |
-| `results/arc_loop_solve_ls20.json` | DUPLICATE | Claims L2; registry already records ls20 L2. | Do not count. |
-| `results/arc_loop_solve_tu93.json` | DUPLICATE | Claims L4; registry already records tu93 L5. | Do not count. |
-| `results/arc_loop_solve_dc22.json` | OUTER_LOOP_RE | Claims new L3 over registry L2, but provenance is `development_proxy`, mode is offline/no-quota, and the dc22 adapter is explicitly “RE’d ... frame + internal-state” in [arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:1911). | Quarantine/relabel outer-loop. Do not bank unless reproduced by the live agent without hand-built per-game/internal-state adapter evidence. |
-| `results/arc_loop_solve_vc33.json` | DUPLICATE | Claims L2; registry already records vc33 L2. | Do not count. |
-| `results/arc_loop_solve_g50t.json` | DUPLICATE | Claims L2; registry already records g50t L2. | Do not count. |
-| `results/arc_loop_solve_s5i5.json` | DUPLICATE | Claims L2; registry already records s5i5 L2. | Do not count. |
-| `results/arc_loop_solve_sp80.json` | DUPLICATE | Claims L2; registry already records sp80 L2. | Do not count. |
-| `results/arc_loop_solve_su15.json` | DUPLICATE | Claims L2; registry already records su15 L2. | Do not count. |
-| `results/arc_loop_solve_sk48.json` | DUPLICATE | Claims L2; registry already records sk48 L2. | Do not count. |
-| `results/arc_loop_solve_ft09.json` | DUPLICATE | Claims L3; registry already records ft09 L3. | Do not count. |
-| `results/arc_loop_solve_ar25.json` | DUPLICATE | Claims L3; registry already records ar25 L3. | Do not count. |
-| `results/arc_loop_solve_m0r0.json` | DUPLICATE | Claims L2; registry already records m0r0 L2. | Do not count. |
-| `results/arc_loop_solve_cn04.json` | DUPLICATE | Claims L3; registry already records cn04 L3. | Do not count. |
-| `results/arc_loop_solve_lf52.json` | DUPLICATE | Claims L2; registry already records lf52 L2. | Do not count. |
-| `results/arc_loop_solve_bp35.json` | DUPLICATE | Claims L2; registry already records bp35 L2. | Do not count. |
-| `results/arc_loop_solve_re86.json` | DUPLICATE | Claims L2; registry already records re86 L2. | Do not count. |
-| `results/arc_loop_solve_ka59.json` | DUPLICATE | Claims L1; registry already records ka59 L1. | Do not count. |
-| `results/arc_loop_solve_sb26.json` | DUPLICATE | Claims L2; registry already records sb26 L2. | Do not count. |
-| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Claims lp85 L6 bank, but declares `used_env_source=true`, `flagged_adversarial=true`, and its own note says outer-loop-only inputs conflict with `development_proxy`. | Retract from headline/live progress. Keep as adversarial audit artifact until a clean live self-discovery rerun exists. |
+| `results/arc_loop_solve_lp85.json` | UNCLEAR | Reachable path, but `solve_provenance=development_proxy`, empty `honest_verdict`, no runtime self-discovery proof. | Do not count. Require attempt trace, observations, inferred model, and live entrypoint command. |
+| `results/arc_loop_solve_r11l.json` | UNCLEAR | Same: reachable, but proxy provenance only. | Same. |
+| `results/arc_loop_solve_ls20.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_dc22.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_vc33.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_g50t.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_s5i5.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sp80.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_su15.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sk48.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ft09.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ar25.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_m0r0.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_cn04.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_lf52.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_bp35.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_re86.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ka59.json` | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sb26.json` | UNCLEAR | Same. | Same. |
+| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Explicitly declares `used_env_source`; `honest_verdict` says captured bank trajectory, not autonomous discovery. | Quarantine as development evidence only. Never count as ARC solve progress. |
 
-**Pattern Watch:** The drift is obvious: reachable modules and offline reproduction gates are being treated like live hidden-game progress. They are not. Hand-built per-game adapters, internal-state RE, cached candidate/verifier reruns, and `development_proxy` artifacts must be barred from “agent discovered hidden solve” claims unless the artifact includes live-entrypoint provenance showing the agent learned it from its own attempts at runtime.
+**Pattern Watch**
+
+The drift is obvious: `development_proxy` artifacts are being presented near solve artifacts without carrying the burden of proof. That is how outer-loop work gets normalized. A solve artifact should be considered non-credit by default unless it proves the live agent, through `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`, reached the solve using only its own runtime attempts, observations, and inferred rules.
 

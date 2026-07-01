@@ -1,253 +1,250 @@
-# Research Roadmap vNEXT: 2026.07.466
+# Research Roadmap vNEXT: 2026.07.467
 
 ## Milestone Title
 
-PHASE D FINAL PROCESS-VERIFIER CHECK + GUARDED FR-11 MEMORY EVOLUTION
+LOCAL SOTA RUNTIME REPAIR + EXACT-VERIFIER PIVOT + GOVERNED FR-11
 
 ## Why This Milestone Exists
 
-Milestone `2026.06.465` did not produce a defensible positive claim. Its capstone verdict was
-`complete_capstone_v465_execution_incomplete_fr11_no_credible_positive_evidence_missing_sota`.
+Milestone `2026.07.466` completed its conductor pass, but it did not deliver the intended process-
+verifier decision. The central blocker was operational, not theoretical: the mandated SOTA GGUF model
+files were cached, but no live completion/logprob endpoint was reachable. That gate-blocked uPRM and
+VPR, then cascaded into a skipped decision gate and capstone.
 
-What it did prove:
+What `.466` proved:
 
-1. **D1 is bounded, not open-ended.** The trained/SOTA MuSR verifier signal reached `+0.080`, but the
-   paired CI touched zero and the result was flagged. The later outer-loop GPU-1 decisive D1 test in
-   `ops/known-issues.md` tightened this further: `+0.015`, CI95 `[-0.060, +0.085]`, McNemar `p=0.78`,
-   despite oracle@K headroom. Do not spend `.466` re-skeletoning D1.
-2. **D4's old second-corpus evidence is retired.** `results/experiment_5060_second_corpus_audit_v2.json`
-   reported `retired_d4_second_corpus_audit_failed_constraintbench_exact_v1_plus_0p370`; the apparent
-   off-MuSR win came from a duplicate/unclean corpus path.
-3. **D6 is an efficiency lead, not an accuracy moat yet.** Tool-first cascade parity at zero judge calls
-   is valuable, but the accuracy CI still touches zero; it should be framed as Pareto/cost evidence.
-4. **Guided decoding has a real but tiny signal.** `.465` found differentiated arms and a guided
-   `+0.111` point estimate, but the sample was too small for a headline. The rerank-only arm was stronger
-   than guided, so `.466` must scale the frontier rather than assume decoding-time guidance wins.
-5. **FR-11 self-learning remains negative.** Skillgraph self-learning was correctly guarded and produced
-   `complete_guarded_no_promote_minus_0p050`; the learning loop needs retrieval/memory governance and
-   rollback, not another blind replay promotion attempt.
-6. **SOTA hygiene regressed operationally.** The reserved SOTA ingestion slot failed because the task was
-   routed to unavailable `gemini-3.1-pro-preview`. Some `.465` artifacts were also too fast for their
-   claimed compute path. `.466` must repair agent routing and substrate truth before new claims.
-7. **Hardware continuity improved but remains non-headline.** KV260 SSH overlay execution produced a
-   parity/timing packet, but no speedup or scale claim is justified. GateMate and PolarFire remain visible
-   targets needing precheck/terminal-state clarity.
+1. **SOTA files are present, but the endpoint is not.** `exp5071` found the three required GGUF model
+   files locally, but `completion_endpoint_ready`, `logprob_endpoint_ready`, and
+   `top_logprob_or_confidence_ready` were all false. More uPRM planning is wasteful until this is fixed.
+2. **Replay-only guided decoding is not enough.** `exp5075` found DCCD equal to unguided and worse than
+   rerank-only (`delta_dccd_vs_rerank = -0.150`). The next constrained-generation experiment must change
+   mechanism, not resample the same DCCD surface.
+3. **The tool-first cascade is a cost lead, not a headline win.** `exp5076` had an accuracy point
+   estimate over judge-only, but the confidence interval touched zero and the artifact correctly refused
+   a Pareto headline.
+4. **FR-11 memory remains unsafe without governance.** `exp5077` improved dev but lost held-out
+   (`heldout_delta = -0.050`) and rolled back. `exp5078` retired blind replay and promote-on-dev memory.
+5. **Hardware continuity is real but still non-headline.** `exp5079` kept KV260 and PolarFire reachable;
+   GateMate remained undetected; no speedup claim is justified.
+6. **KAN formalization has a live foothold.** `exp5080` verified a tiny PWA/MILP property for a KAEM/KAN
+   unit. This should scale with binary-count/error-budget telemetry before any architectural claim.
+7. **The capstone path itself needs repair.** `exp5081`/`exp5082` were skipped by dead gate structure.
+   The next capstone must run over available artifacts and record blockers rather than disappearing.
 
-The next milestone therefore has one scientific purpose: **decide whether the last distinct
-process-verifier lever (uPRM/VPR with real SOTA GGUF telemetry) can produce a proper win, while moving
-FR-11 from harmful replay toward guarded memory evolution.**
+The purpose of `.467` is therefore: **repair local SOTA runtime truth, run a final gated uPRM retry only
+if live logprobs are real, and shift the primary verifier-moat research toward exact solvers, structured
+constraint masks, KAN/MILP verification, and governed continuous self-learning.**
 
 ## Three Biggest Gaps Versus The PRD
 
-### Gap 1: Verifier Moat Is Still Not Realized
+### Gap 1: Runtime Provenance Blocks PRD-Grade Verifier Claims
 
-PRD FR-12 requires verifiable reasoning that improves reliability. D1 and D4 are no longer credible
-headline candidates. The only remaining distinct verifier-moat path is process-level supervision from
-token logprobs or objective intermediate checks:
+PRD FR-12 requires verifiable reasoning with auditable provenance. `.466` had cached GGUFs but no live
+logprob endpoint, so the most important process-verifier tasks never executed. `.467` must treat the
+llama.cpp/GGUF endpoint as a first-class experiment with transcript, model path, endpoint health,
+completion, logprob/top-logprob telemetry, and duration/provenance fields.
 
-- uPRM (`arXiv:2605.10158`) over a real SOTA GGUF logprob cache.
-- VPR (`arXiv:2605.10325`) only where intermediate verification is auditable and oracle boundaries are
-  explicit.
-- D6/tool-first cascade as an efficiency axis, not a hidden judge.
-- DCCD/guided decoding as generation-time constraint control, measured against rerank-only.
+### Gap 2: Free-Form Verifier Moat Has Hit Diminishing Returns
 
-### Gap 2: Runtime Provenance Is Not Reliable Enough For Claims
+MuSR-style scalar verifier work is bounded, DCCD lost to rerank-only, and process rewards are blocked
+until telemetry is repaired. The PRD vision points to verifiable reasoning, not judge imitation. Fresh
+research reinforces the pivot: p-bit guided CDCL keeps SAT correctness in CDCL/Z3, STATIC makes finite
+constraint masks hardware-friendly, and Logical Intelligence's Kona/Aleph framing puts formal checkers
+at the center of correctness-critical systems.
 
-PRD-grade evidence needs live/cached provenance that survives adversarial review. `.465` exposed three
-operational gaps: missing SOTA ingestion, DURATION_TOO_SHORT flags, and unavailable top-logprob/confidence
-telemetry despite cached SOTA models. `.466` must stage model/cache/endpoint readiness before compute-bound
-experiments and must avoid claiming `live_llm_inference` unless a real inference path ran.
+### Gap 3: Continuous Self-Learning Has No Safe Memory Lifecycle Yet
 
-### Gap 3: Continuous Self-Learning Is Not Yet Helpful
-
-PRD FR-11 calls for an autonomous self-learning loop. The last two attempts produced negative held-out
-deltas (`exp5051`, `exp5064`). Recent work (LifelongAgentBench, EvolveMem, MUSE-Autoskill) suggests the
-natural next step: guarded group self-consistency, retrieval-config evolution, explicit rollback, and
-non-forgetting. `.466` should produce either a small guarded positive or a concrete memory-gap ledger that
-explains why promotion remains unsafe.
+PRD FR-11 requires autonomous self-learning. Carnot has repeatedly shown that blind memory/replay can
+harm held-out performance. The next FR-11 work must use budgeted memory, provenance, poisoning/staleness
+guards, on-policy replay from the current system, and rollback. A small positive is acceptable; an honest
+no-promote ledger is also useful if it narrows the mechanism.
 
 ## Fresh Research Folded In
 
-Added to `research-references.md` before this plan:
+Added to `research-references.md` before this plan under `V467-PLANNER-REFERENCES`:
 
-- `arXiv:2605.10158` - Unsupervised Process Reward Models.
-- `arXiv:2605.10325` - Verifiable Process Rewards for Agentic Reasoning.
-- `arXiv:2603.03305` plus `github.com/avinashreddydev/dccd` - Draft-Conditioned Constrained Decoding.
-- `arXiv:2602.06737` - Optimal Abstractions for Verifying KANs.
-- `arXiv:2505.11942` - LifelongAgentBench.
-- Hugging Face Papers `2605.13941` / `github.com/aiming-lab/SimpleMem` - EvolveMem.
-- Hugging Face Papers `2605.27366` - MUSE-Autoskill.
-- `arXiv:2602.15985` - FPGA decomposition for large Ising problems.
-- Extropic XTR-0/TSU public updates and Logical Intelligence Kona/Aleph public positioning.
+- `arXiv:2606.25313` - Programmable Probabilistic Computer with 1,000,000 p-bits.
+- `arXiv:2605.04033` - p-bit guided CDCL using Ising consensus assumptions.
+- `arXiv:2602.22647` and `github.com/youtube/static-constraint-decoding` - STATIC CSR constrained
+  decoding.
+- `arXiv:2503.14495` / OpenReview `sM5QDzIg3j` - temporal consistency for process error detection.
+- `arXiv:2505.19706` / `declare-lab/PathFinder-PRM` - hierarchical error-aware PRMs.
+- `arXiv:2512.22322` - SmartSnap proactive evidence seeking.
+- `arXiv:2506.11442` / OpenReview `q56ZI1Co43` - ReVeal self-verifying code agents.
+- `arXiv:2606.25115` - budget-curated memory for on-device agents.
+- `arXiv:2605.29495` - on-policy replay for continual SFT.
+- `arXiv:2510.17281` and `arXiv:2512.18950` - MemoryBench and hierarchical procedural memory.
+- `arXiv:2606.18206`, `arXiv:2605.11011`, and `arXiv:2603.12248` - EBT/ARM citation-lineage pressure:
+  fixed-point/looped reasoning and energy-based fine-tuning.
+- `arXiv:2605.09186` and `arXiv:2602.06737` - solver-aware MIP agents and KAN PWA/MILP verification.
+- `arXiv:2602.04200` and `arXiv:2601.17094` - sparse Potts constraints and EBM world-model separation.
+- Extropic XTR-0/TSU and Logical Intelligence Kona/Aleph updates.
 
-Semantic Scholar citation checks for EBT/ARM were attempted, but the public API returned HTTP 429, so no
-new citation-count claim is included.
-
-## Architecture For .466
+## Architecture For .467
 
 ```text
                          research-references.md
                                   |
                                   v
-                   +-------------------------------+
-                   | Exp5069 archive/activate truth |
-                   +-------------------------------+
+                +-----------------------------------+
+                | Exp5083 archive .466 truth        |
+                +-----------------------------------+
                                   |
                                   v
-      +-------------------+   +-----------------------------+
-      | Exp5070 SOTA refs |-->| Exp5071 GGUF/logprob preflight |
-      +-------------------+   +-----------------------------+
-                                           |
-                                           v
-                         +-------------------------------+
-                         | Exp5072 token logprob cache   |
-                         +-------------------------------+
-                                  |                 |
-                                  v                 v
-                  +------------------------+   +--------------------------+
-                  | Exp5073 uPRM selector |   | Exp5074 VPR diagnostic  |
-                  +------------------------+   +--------------------------+
-                                  |                 |
-                                  +--------+--------+
-                                           |
-                                           v
-        +---------------------------+  +------------------------------+
-        | Exp5075 DCCD/guided scale |  | Exp5076 D6 efficiency replay |
-        +---------------------------+  +------------------------------+
-                         |                         |
-                         +-----------+-------------+
-                                     |
-                                     v
-    +-------------------------------+     +------------------------------+
-    | Exp5077 guarded FR-11 memory  |     | Exp5078 memory-gap ledger    |
-    +-------------------------------+     +------------------------------+
-                         |                         |
-                         +-----------+-------------+
-                                     |
-                                     v
-    +-------------------------------+     +------------------------------+
-    | Exp5079 board continuity      |     | Exp5080 KAN PWA/MILP bridge |
-    +-------------------------------+     +------------------------------+
-                         |                         |
-                         +-----------+-------------+
-                                     |
-                                     v
-                     +--------------------------------+
-                     | Exp5081 moat/FR-11 decision   |
-                     +--------------------------------+
-                                     |
-                                     v
-                     +--------------------------------+
-                     | Exp5082 capstone              |
-                     +--------------------------------+
+                +-----------------------------------+
+                | Exp5084 SOTA/current refs audit   |
+                +-----------------------------------+
+                                  |
+                                  v
+                +-----------------------------------+
+                | Exp5085 llama.cpp GGUF endpoint   |
+                +-----------------------------------+
+                         |                    |
+             logprobs?   |                    | endpoint optional
+                         v                    v
+        +-----------------------------+   +------------------------------+
+        | Exp5086 uPRM logprob cache  |   | Exp5088 temporal consistency |
+        +-----------------------------+   +------------------------------+
+                         |
+                         v
+        +-----------------------------+
+        | Exp5087 uPRM process retry  |
+        +-----------------------------+
+
+        +-----------------------------+   +------------------------------+
+        | Exp5089 p-bit CDCL bridge   |   | Exp5090 STATIC CSR masks     |
+        +-----------------------------+   +------------------------------+
+                         |                    |
+                         v                    v
+        +-----------------------------+   +------------------------------+
+        | Exp5091 KAN PWA/MILP scale  |   | Exp5092 governed FR-11       |
+        +-----------------------------+   +------------------------------+
+
+        +-----------------------------+
+        | Exp5093 hardware continuity |
+        +-----------------------------+
+                         |
+                         v
+        +--------------------------------------------------------------+
+        | Exp5094 ungated capstone over all available artifacts         |
+        +--------------------------------------------------------------+
 ```
 
 ## Phases
 
-### Phase 0: Transition And Runtime Hygiene
+### Phase 0: Transition, SOTA Ingestion, And Runtime Repair
 
-Experiments: `exp5069`, `exp5070`, `exp5071`
+Experiments: `exp5083`, `exp5084`, `exp5085`
 
-Archive `.465` without inventing missing success, backfill the failed SOTA ingestion slot using Codex
-routing, and produce a concrete SOTA GGUF/top-logprob readiness artifact. This phase must explicitly
-distinguish cached-model readiness from endpoint/logprob readiness.
+Archive `.466` honestly, append/verify the current source set, and bring up a local llama.cpp/GGUF
+endpoint for at least one mandated SOTA model. `exp5085` is the load-bearing experiment: it must either
+produce live completion and logprob/top-logprob telemetry or emit an actionable blocker with exact binary,
+port, model, CUDA, and server-log evidence.
 
-### Phase 1: Final Process-Verifier And Decoding Checks
+### Phase 1: Process-Verifier Recovery Without Dead Gates
 
-Experiments: `exp5072`, `exp5073`, `exp5074`, `exp5075`, `exp5076`
+Experiments: `exp5086`, `exp5087`, `exp5088`
 
-Build the real token/step logprob substrate, test uPRM as the final D2 lever, test VPR only with
-objective intermediate checks, scale DCCD/guided decoding, and replicate D6 as a cost/Pareto result.
-The phase win condition is not "any positive point estimate." It is a proper paired win over tuned
-self-consistency or a bounded-retirement result that says the moat is not currently there.
+Run uPRM only behind structured runtime gates:
 
-### Phase 2: FR-11, Formal KAN Bridge, And Hardware Continuity
+- `exp5086` runs only if `exp5085.logprob_endpoint_ready == true`.
+- `exp5087` runs only if `exp5086.logprob_cache_ready == true`.
 
-Experiments: `exp5077`, `exp5078`, `exp5079`, `exp5080`
+In parallel, `exp5088` tests temporal-consistency process verification as a logprob-free fallback. It
+may use live local SOTA completions if `exp5085` made them available, but it must still emit a useful
+diagnostic without pretending blocked logprobs exist.
 
-Run one guarded continuous self-learning attempt using group self-consistency/memory rollback; then write
-a memory-gap ledger if promotion remains unsafe. Maintain hardware visibility across KV260, GateMate,
-and PolarFire without claiming speedup. Add a small KAN/PWA/MILP verifier bridge so the KAN fast path has
-a formal verification direction rather than only empirical calibration.
+### Phase 2: Exact Verifiers And Structured Constraints
 
-### Phase 3: Decision And Capstone
+Experiments: `exp5089`, `exp5090`, `exp5091`
 
-Experiments: `exp5081`, `exp5082`
+Shift the main verifier-moat surface to domains with objective checkers:
 
-Aggregate the verifier, decoding, self-learning, hardware, and KAN results. The milestone should end in
-one of four states:
+- `exp5089` prototypes p-bit/Ising-guided CDCL where SAT/Z3 owns correctness.
+- `exp5090` replaces DCCD with STATIC-style CSR masks for finite verifier schemas and structured output.
+- `exp5091` scales the KAN PWA/MILP bridge from a tiny property to small multi-unit properties with
+  binary-count, error-budget, and solver-time telemetry.
 
-- `realized_process_verifier_moat`
-- `efficiency_only_no_accuracy_moat`
-- `bounded_retired_verifier_moat`
-- `execution_incomplete`
+### Phase 3: Governed Self-Learning, Hardware Continuity, And Capstone
 
-No capstone may headline D1 or D4 as positive unless the artifact explicitly explains why the known
-bounded/null and duplicate-failed evidence no longer applies.
+Experiments: `exp5092`, `exp5093`, `exp5094`
+
+`exp5092` is the required continuous self-learning experiment: budget-curated memory plus on-policy
+replay under rollback, poisoning, non-forgetting, and held-out guards. `exp5093` preserves hardware
+continuity across KV260, GateMate, and PolarFire without speedup claims. `exp5094` is deliberately
+ungated so the milestone always ends with a reconciled decision artifact over whatever ran.
 
 ## Dependency Graph
 
 ```text
-exp5069
-  -> exp5070
-  -> exp5071
-       -> exp5072
-            -> exp5073
-            -> exp5074
-       -> exp5075
-       -> exp5076
-  -> exp5077
-       -> exp5078
-  -> exp5079
-  -> exp5080
+exp5083
+  -> exp5084
+      -> exp5085
+          -> exp5086
+              -> exp5087
+          -> exp5088
+      -> exp5089
+      -> exp5090
+      -> exp5091
+      -> exp5092
+      -> exp5093
 
-exp5073, exp5074, exp5075, exp5076, exp5077, exp5078, exp5079, exp5080
-  -> exp5081
-       -> exp5082
+exp5083, exp5084, exp5085, exp5086, exp5087, exp5088,
+exp5089, exp5090, exp5091, exp5092, exp5093
+  -> exp5094
 ```
 
-Structured `gated_on` entries are used for runtime skips where an upstream field is required:
+Structured `gated_on` entries are used only where the conductor can skip wasted calls safely:
 
-- `exp5072` waits for `exp5071.logprob_endpoint_ready == true`.
-- `exp5073` waits for `exp5072.logprob_cache_ready == true`.
-- `exp5074` waits for `exp5072.step_cache_ready == true`.
-- `exp5081` waits for the core phase artifacts to exist.
-- `exp5082` waits for `exp5081.decision_ready == true`.
+- `exp5086` waits for `exp5085.logprob_endpoint_ready == true`.
+- `exp5087` waits for `exp5086.logprob_cache_ready == true`.
+
+The capstone has no structured gate. It must run and record blocked/missing upstream artifacts rather
+than reproducing the `.466` decision-gate cascade.
 
 ## Hardware Requirements
 
-- **Dual RTX 3090:** required for GGUF SOTA inference and logprob cache construction. Use
-  `cached_sota_pair()` / local `.gguf` paths; do not use `AutoTokenizer` on GGUF repo IDs.
+- **Dual RTX 3090 / CUDA host:** required for llama.cpp GGUF endpoint bring-up and any live local SOTA
+  inference. Use `scripts/experiment_template.py::cached_sota_pair()` patterns and resolved local `.gguf`
+  files; never call `AutoTokenizer.from_pretrained()` on `-GGUF` repos.
 - **Mandated local GGUFs for any LLM task:**
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
-- **KV260:** use `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` and the existing overlay path.
-  Do not use retired host block-device preconditions.
-- **GateMate A1 / PolarFire:** run detect/precheck/terminal-state tasks only unless a known-good bitstream
-  dispatch path exists. Do not flash or claim timing without transcript-backed evidence.
-- **Extropic/TSU:** simulation and architecture only; no local TSU hardware target exists.
+- **KV260:** SSH-only checks via `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; no host
+  `/dev/mmcblk*` preconditions. UIO/register reads must be safe and transcript-backed.
+- **GateMate A1 / DirtyJTAG:** detect/terminal-state triage only unless IDCODE and bitstream path are
+  proven in the artifact.
+- **PolarFire:** SSH reachability and hash-verified dispatch/precheck; no flash/timing claim without
+  transcript.
+- **Extropic/TSU:** architecture/simulation reference only; no local TSU hardware target exists.
 
 ## Falsifiable Gates
 
-1. uPRM is positive only if it beats genuine tuned self-consistency with paired statistics and clean
-   token-logprob provenance.
-2. VPR is positive only if intermediate rewards are objective and `verifier_is_oracle` is declared.
-3. Guided/DCCD decoding is positive only if it beats both unguided and rerank-only at comparable or
-   charged token/NFE budget.
-4. D6 is an efficiency win only if accuracy parity holds within CI and judge/tool costs are charged.
-5. FR-11 is positive only if held-out delta is non-negative, non-forgetting passes, contamination guard
-   passes, and rollback prevents harmful promotion.
-6. Hardware results may claim only the board/transport/timing evidence actually recorded in transcripts.
-7. The capstone must prefer bounded retirement over a weak positive if every clean verifier arm ties or
-   loses to tuned self-consistency.
+1. A runtime result is positive only if it records the concrete local model path, binary/server command,
+   endpoint URL, sample prompt, completion, logprob/top-logprob evidence, and duration/provenance.
+2. uPRM is positive only if it uses real SOTA GGUF logprob telemetry and beats tuned self-consistency with
+   paired statistics; otherwise it is bounded or blocked.
+3. Temporal-consistency PRM is positive only if first-error/process classification improves over one-pass
+   verifier and self-consistency baselines without model-identity leakage.
+4. p-bit CDCL is positive only if solver correctness remains exact and CDCL conflict/propagation effort
+   improves on a declared instance family; distribution-sensitive nulls are acceptable.
+5. STATIC CSR decoding is positive only if it improves schema validity or latency against CPU trie and
+   rerank-only baselines without hurting accuracy.
+6. KAN PWA/MILP scale is positive only if solver size, error budgets, and property status are all reported;
+   a tiny-only proof is not a scale claim.
+7. FR-11 is positive only if held-out delta is non-negative, non-forgetting passes, poisoning/provenance
+   guards pass, and rollback prevents harmful promotion.
+8. Hardware artifacts may claim only the reachability, register, dispatch, and timing evidence actually
+   captured in transcripts.
 
 ## Expected Deliverables
 
-- `research-roadmap-next.yaml` with 14 conductor tasks in execution order.
-- `research-references.md` updated with `.466` source set.
-- `results/experiment_5069_archive_465_activate_466.json` through
-  `results/experiment_5082_capstone_v466.json` when the conductor runs.
-- Updated ops docs after execution, including architecture freshness if capability work changes the
-  architecture. `_bmad/architecture.md` is older than 30 days as of 2026-07-01 and should be reconciled
-  by the next implementation-heavy milestone.
+- `research-roadmap-next.yaml` with 12 conductor tasks in execution order.
+- `research-references.md` updated with the `.467` source set before experiment design.
+- `results/experiment_5083_archive_466_activate_467.json` through
+  `results/experiment_5094_capstone_v467.json` when the conductor runs.
+- Capstone reconciliation should update `ops/status.md`, `ops/changelog.md`,
+  `_bmad/traceability.md`, and any affected OpenSpec capability docs after execution.
+- `_bmad/architecture.md` is stale relative to July hardware/runtime reality; if `.467` changes runtime
+  or solver architecture, reconcile it during or immediately after the capstone.
