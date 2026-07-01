@@ -9696,3 +9696,4 @@ The contro |
 | 2026-07-01 03:27 UTC | PHASE D7 guided decoding frontier -- Vegas / rewar | OK | 108 passed, 1 warning in 7.39s |
 | 2026-07-01 03:44 UTC | PHASE D5 gate resolution -- aggregate .465 D1, D4, | OK | 87 passed, 1 warning in 8.80s |
 | 2026-07-01 04:01 UTC | PHASE E1 continuous self-learning -- replace negat | OK | 86 passed, 1 warning in 8.53s |
+| 2026-07-01 04:16 UTC | PHASE C hardware continuity -- extend the KV260 p- | OK | 87 passed, 1 warning in 8.78s |
