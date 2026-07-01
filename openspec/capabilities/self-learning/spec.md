@@ -16172,3 +16172,88 @@ the held-out slice over baseline
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5105 | Planned (`python/carnot/experiment_5105_fr11_severa_guarded_memory.py`) | Planned (`tests/python/test_experiment_5105_fr11_severa_guarded_memory.py`) |
+
+---
+
+## REQ-LEARN-5131: FR-11 No-Weight Case Policy Over Exact-Solver Traces
+
+Experiment 5131 SHALL run a CASCADE/JitRL-style continuous self-learning
+attempt over the exact-solver CSP traces from Exp 5130. It SHALL hard-block
+before learning if `results/experiment_5130_taco_sampler_heldout_scale_v470.json`
+does not set `heldout_csp_trace_suite_ready=true`. The learner SHALL use only
+case metadata, policy hints, case weights, TTL/decay, and action/heuristic
+advantage estimates; it SHALL NOT update model weights, modify
+`scripts/research_conductor.py`, or treat a retrieved case or heuristic hint as
+the correctness authority.
+
+The experiment SHALL split exact-solver traces by deterministic instance-family
+partition into learning, validation, and held-out sets, with no instance ID
+overlap across splits. It SHALL compare no-learning, naive retrieval, case-policy, and case-policy-with-harm-gate
+arms. Every arm SHALL route through the exact solver traces for correctness and
+SHALL report held-out utility,
+nonforgetting, harmful promotion count, regret/coverage telemetry, exact-solver
+correctness preservation, promotion decision, and rollback receipt.
+
+Promotion SHALL be limited to policy metadata or case weights and SHALL be
+allowed only when held-out utility and nonforgetting are safe, harmful
+promotions are zero, exact-solver correctness is preserved, and the harm gate
+passes. If any gate fails, the result artifact SHALL be a complete no-promote
+artifact with root cause and a rollback receipt preserving the baseline arm.
+
+The result artifact SHALL be written to
+`results/experiment_5131_fr11_case_policy_self_learning_v470.json` by
+`python/carnot/experiment_5131_fr11_case_policy_self_learning_v470.py`. It
+SHALL include principle annotations for `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `source_trace_artifacts`,
+`trace_split_manifest`, `policy_description`, `heldout_delta`,
+`nonforgetting_delta`, `harmful_promotion_count`, `regret_telemetry`,
+`exact_solver_correctness_preserved`, `promotion_attempted`,
+`promotion_safe`, `rollback_receipt`, `no_weight_update`,
+`flagged_adversarial`, `conductor_modified`, and `tests_run`. The artifact
+SHALL set `experiment_id="exp5131-fr11-case-policy-self-learning-v470"`,
+`milestone="2026.07.470"`, and
+`inference_substrate="cpu_no_weight_case_policy_over_exact_solver_traces"`.
+The terminal verdict SHALL begin with either
+`success_fr11_case_policy_promoted_` or
+`complete_fr11_case_policy_no_promote_`; blocked preconditions SHALL begin
+with `blocked_exp5130_heldout_csp_trace_suite_not_ready`.
+
+### SCENARIO-LEARN-5131-CASE-POLICY-NO-PROMOTE
+
+**Given** Exp 5130 has produced exact-solver CSP traces with
+`heldout_csp_trace_suite_ready=true`
+**When** Experiment 5131 builds the case-policy learning corpus
+**Then** train, validation, and held-out partitions are disjoint by instance ID
+and record deterministic split hashes and family assignments.
+
+**Given** learning traces contain reusable exact-solver arms with effort
+differences
+**When** the no-weight case policy is fitted
+**Then** it estimates action/heuristic advantages with TTL/decay, emits guarded
+policy hints only, compares no-learning, naive retrieval, case-policy, and
+case-policy-with-harm-gate arms, and preserves exact-solver correctness for
+every evaluated held-out row.
+
+**Given** the guarded policy does not strictly improve held-out utility or any
+promotion gate fails
+**When** the promotion decision is evaluated
+**Then** `promotion_attempted=true`, `promotion_safe=false`,
+`harmful_promotion_count` is reported, the rollback receipt records no promoted
+metadata, `no_weight_update=true`, and the terminal verdict begins with
+`complete_fr11_case_policy_no_promote_`.
+
+### SCENARIO-LEARN-5131-BLOCKED-PRECONDITION
+
+**Given** Exp 5130 is missing or has `heldout_csp_trace_suite_ready` not equal
+to true
+**When** Experiment 5131 starts
+**Then** it writes a blocked artifact, reports the failing source trace
+precondition, leaves policy promotion unattempted, and preserves
+`no_weight_update=true`.
+
+## Implementation Status (Exp 5131)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5131 | Planned (`python/carnot/experiment_5131_fr11_case_policy_self_learning_v470.py`) | Planned (`tests/python/test_experiment_5131_fr11_case_policy_self_learning_v470.py`) |

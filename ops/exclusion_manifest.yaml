@@ -591,3 +591,32 @@ retired_extras:
   - cross-game value transfer
   - cross_game_state_reduction rerun
   - action-role cross-game encoder rerun
+- id: fover_in_domain_pool_retired_v469
+  experiment_scope: FoVer in-domain candidate-selection pool build / verifier-vs-tuned-self-consistency
+    selection / selector adversarial audit, based on the retracted "FoVer provides
+    candidate-selection headroom" premise
+  reason: 'retire_if_same_verdict: the premise this scope was based on is a construction
+    artifact, not a measurement -- load_fover_domain_pool''s mode=task_index%4 formula
+    (python/carnot/experiment_4305_cross_domain_selector_generalization.py:616)
+    exactly reproduces the previously-reported oracle@K=0.769/SC=0.269 numbers by
+    arithmetic construction, and the real corpus (data/fover_corpus_v4.json, 6548
+    rows) has no natural multi-candidate structure to select among (6544/6546 question_ids
+    have exactly one row). See ops/known-issues.md "NUDGE 2026-07-01 -- RETRACTED"
+    and "MOAT REDIRECT 2026-06-30 -- RETRACTED" for the full corrigendum. The corrected,
+    well-posed follow-up (does a learned verifier beat a cheap baseline on the real
+    corpus) already ran and is a separate, non-retired scope --
+    results/experiment_fover_stepverifier_vs_cheap_baseline.json.'
+  experiment_ids:
+  - exp5111
+  - exp5112
+  - exp5113
+  retired_milestone: 2026.07.469
+  retired_by_artifact: results/headroom_survey_cross_domain.json
+  recorded_by_artifact: results/experiment_fover_stepverifier_vs_cheap_baseline.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - fover in-domain candidate-selection pool
+  - fover in-domain pool
+  - in-domain verifier selection versus tuned self-consistency
+  - fover selector adversarial audit

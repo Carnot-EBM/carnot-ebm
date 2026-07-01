@@ -36,11 +36,24 @@ Two violation classes (both hard-block by default):
    for this class (the precondition produces a meaningless artifact
    regardless of intent).
 
+5. BLOCKED_PATTERN_MATCHED — task title/prompt contains a
+   `blocked_patterns:` string from an `ops/exclusion_manifest.yaml`
+   `retired_extras` entry. First wired 2026-07-01 after `.469`'s planner
+   emitted 3 tasks asserting a same-session-retracted premise as fact —
+   neither EXP_ID_RETIRED (brand new task ids) nor
+   SCOPE_MATCHED_PRIOR_FAILURE (FailureLedger only matches PAST ARTIFACT
+   scope-signatures; these ids had none) would have caught it. Until
+   this fix, `blocked_patterns:` entries were pure documentation — this
+   is what makes them load-bearing. Same override semantics as
+   SCOPE_MATCHED_PRIOR_FAILURE (a valid `prior_failures:` block or
+   `operator_override:` downgrades HARD -> WARNING).
+
 Operator-override bypass: a task with `operator_override:` (non-empty
-string citing the directive source) downgrades EXP_ID_RETIRED and
-SCOPE_MATCHED_PRIOR_FAILURE from HARD to WARNING. REQUIRES_RETIRED_EXP
-and WRONG_MECHANISM_PRECONDITION have no override path (structurally
-dead / produces meaningless artifact regardless).
+string citing the directive source) downgrades EXP_ID_RETIRED,
+SCOPE_MATCHED_PRIOR_FAILURE, and BLOCKED_PATTERN_MATCHED from HARD to
+WARNING. REQUIRES_RETIRED_EXP and WRONG_MECHANISM_PRECONDITION have no
+override path (structurally dead / produces meaningless artifact
+regardless).
 
 Usage (CLI):
 
@@ -139,6 +152,47 @@ def _load_manifest_exp_ids() -> dict[int, str]:
     return out
 
 
+def _load_blocked_patterns() -> list[tuple[str, str, str]]:
+    """Load (pattern, source_id, reason) triples from
+    ops/exclusion_manifest.yaml's ``retired_extras`` entries.
+
+    Origin: 2026-07-01 outer-loop incident. `.469`'s planner ran 8 minutes
+    AFTER a same-session retraction landed in known-issues.md (the FoVer
+    in-domain candidate-selection-pool premise, proven a construction
+    artifact) but still emitted 3 tasks asserting the retracted premise as
+    fact. Neither EXP_ID_RETIRED (task ids were brand new, never
+    previously retired) nor SCOPE_MATCHED_PRIOR_FAILURE (FailureLedger only
+    matches PAST ARTIFACT scope-signatures; these task ids had no prior
+    artifact) would have caught it — an outer-loop session had to
+    hand-patch the live roadmap after the fact.
+
+    `retired_extras` entries already carry a `blocked_patterns:` field
+    (written by past retirement-reporting scripts) that was, until this
+    fix, pure documentation — nothing in the live activation path read it.
+    This function is what makes it load-bearing: free-text scope
+    descriptions curated by a human/AI at retirement time, checked
+    against every future draft task's title+prompt regardless of whether
+    that task's id or scope-signature was ever seen before.
+    """
+    yaml_path = PROJECT_ROOT / "ops" / "exclusion_manifest.yaml"
+    out: list[tuple[str, str, str]] = []
+    if not yaml_path.exists():
+        return out
+    try:
+        with open(yaml_path) as f:
+            data = yaml.safe_load(f) or {}
+    except Exception:
+        return out
+    for entry in data.get("retired_extras", []) or []:
+        source_id = str(entry.get("id", "<unnamed>"))
+        reason = str(entry.get("reason", ""))[:200]
+        for pattern in entry.get("blocked_patterns", []) or []:
+            pattern_str = str(pattern).strip()
+            if pattern_str:
+                out.append((pattern_str, source_id, reason))
+    return out
+
+
 def _extract_exp_id(task_id_or_str: str) -> int | None:
     """Parse `exp<N>-...` -> N. Returns None on no match."""
     if not task_id_or_str:
@@ -222,7 +276,8 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
         return []
 
     manifest = _load_manifest_exp_ids()
-    if not manifest:
+    blocked_patterns = _load_blocked_patterns()
+    if not manifest and not blocked_patterns:
         return []
 
     risks: list[ExclusionRisk] = []
@@ -278,6 +333,49 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                             f"requires: references retired exp_id {req_id}; "
                             f"chain is structurally dead because conductor "
                             f"will GATE_BLOCK exp{req_id} at activation"
+                        ),
+                    )
+                )
+
+        # CLASS 5: task title/prompt matches a retired_extras blocked_pattern
+        # (2026-07-01). Complements CLASS 2 (SCOPE_MATCHED_PRIOR_FAILURE,
+        # which only fires when a PAST ARTIFACT's scope-signature matches —
+        # useless for a brand-new task id with no prior artifact, which is
+        # exactly what let the `.469` FoVer-in-domain incident through).
+        # Same override semantics as CLASS 2: a valid prior_failures: block
+        # or operator_override: downgrades HARD -> WARNING.
+        haystack = f"{task_title} {task.get('prompt', '')}".lower()
+        matched: list[tuple[str, str, str]] = [
+            (pattern_str, source_id, reason)
+            for pattern_str, source_id, reason in blocked_patterns
+            if pattern_str.lower() in haystack
+        ]
+        if matched:
+            valid_priors = False
+            if validate_prior_failures is not None:
+                try:
+                    vr = validate_prior_failures(task)
+                    valid_priors = vr.valid
+                except Exception:
+                    valid_priors = False
+            if not valid_priors:
+                risks.append(
+                    ExclusionRisk(
+                        task_id=task_id,
+                        task_title=task_title,
+                        violation_class="BLOCKED_PATTERN_MATCHED",
+                        retired_exp_id=None,
+                        retirement_reason="; ".join(
+                            dict.fromkeys(reason for _, _, reason in matched)
+                        )[:200],
+                        has_operator_override=override,
+                        severity="WARNING" if override else "HARD",
+                        detail=(
+                            f"task title/prompt matches retired_extras blocked_pattern(s): "
+                            + ", ".join(
+                                f"{source_id}:{pattern_str!r}"
+                                for pattern_str, source_id, _ in matched[:5]
+                            )
                         ),
                     )
                 )
