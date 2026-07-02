@@ -9887,3 +9887,4 @@ web search: |
 | 2026-07-02 05:01 UTC | PHASE A2 solver-verified formulation selector -- O | OK | 103 passed, 1 warning in 11.03s |
 | 2026-07-02 05:15 UTC | PHASE A3 energy-guided decoding -- exact-validator | OK | 103 passed, 1 warning in 11.16s |
 | 2026-07-02 06:01 UTC | PHASE A4 verification traces -- structured self-ch | OK | 86 passed, 1 warning in 7.11s |
+| 2026-07-02 06:14 UTC | PHASE B1 symbolic KAN certificates -- distill resi | OK | 87 passed, 1 warning in 8.24s |
