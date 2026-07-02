@@ -10042,3 +10042,4 @@ web search: |
 | 2026-07-02 20:37 UTC | Activation REFUSED: milestone 2026.07.474 | BLOCK | exclusion-manifest: 7 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-02 20:40 UTC | Milestone 2026.07.474 activated | OK | 13 tasks queued |
 | 2026-07-02 20:56 UTC | PHASE 0 transition -- archive .473 truth (one real | OK | 86 passed, 1 warning in 10.00s |
+| 2026-07-02 21:50 UTC | PHASE 0 infrastructure -- fix adversarial_verify.p | OK | 109 passed, 1 warning in 9.77s |
