@@ -1,0 +1,674 @@
+{
+  "claim_router_dsl_unimported": {
+    "current_state": "stale: arc_strategy_router and arc_world_model_dsl are imported and used by E3AgentPolicy on the submitted cascade path.",
+    "evidence": "python/carnot/agentic/arc_competition_agent.py:30 import carnot.agentic.arc_strategy_router as arc_strategy_router; python/carnot/agentic/arc_competition_agent.py:51 from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel; python/carnot/agentic/arc_competition_agent.py:2157 self.strategy_route = dict(; python/carnot/agentic/arc_competition_agent.py:2164 self.dsl_model = ObjectDeltaModel(self.short)",
+    "value": false
+  },
+  "claim_target_levels_1": {
+    "current_state": "stale: the submitted config is wired through SUBMITTED_TARGET_LEVELS and the current constant is 3.",
+    "current_submitted_target_levels": 3,
+    "evidence": "python/carnot/agentic/arc_competition_agent.py:88 SUBMITTED_TARGET_LEVELS = 3; python/carnot/agentic/arc_competition_agent.py:3132 \"target_levels\": SUBMITTED_TARGET_LEVELS,",
+    "value": false
+  },
+  "claim_value_weight_0": {
+    "current_submitted_value_weight": 1e-12,
+    "evidence": "python/carnot/agentic/arc_competition_agent.py:83 SUBMITTED_VALUE_WEIGHT = 1e-12; python/carnot/agentic/arc_competition_agent.py:3131 \"value_weight\": SUBMITTED_VALUE_WEIGHT,; python/carnot/agentic/arc_competition_agent.py:3230 \"value_weight\": 0.0,",
+    "meaningful_distinction": "tried_nonzero_no_lift: the current submitted value_weight is nonzero; the 0.0 value still appears only in the bare-control/matched-baseline config, and Exp4652 tested a cost-fixed nonzero value head but found an honest zero-lift null attributed to distribution_shift_or_calibration.",
+    "value": false
+  },
+  "duration_s": 0.5341805210337043,
+  "evidence_files_read": [
+    "ops/verifier_gaps.md",
+    "python/carnot/agentic/arc_competition_agent.py",
+    "ops/arc_solve_registry.yaml",
+    "scripts/arc_orphan_solver_lint.py",
+    "CLAUDE.md"
+  ],
+  "experiment": "experiment_5174_gap_live_integration_reconciliation_v474",
+  "experiment_id": "5174",
+  "field_principles": {
+    "claim_router_dsl_unimported": {
+      "principle": "true/false with current file:line evidence for the strategy-router and world-model-DSL imports and use sites."
+    },
+    "claim_target_levels_1": {
+      "principle": "true/false with current file:line evidence for `SUBMITTED_TARGET_LEVELS` and `SUBMITTED_AGENT_CONFIG.target_levels`."
+    },
+    "claim_value_weight_0": {
+      "principle": "true/false with the distinction between current submitted config, matched zero baseline, and Exp4652 tried-nonzero honest null explicitly resolved."
+    },
+    "gap_status_recommendation": {
+      "principle": "closed, downgraded, or re-scoped with exact residual scope."
+    },
+    "honest_verdict": {
+      "principle": "terminal-prefix verdict stating whether the original three claims were stale and what the solve-provenance audit found."
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts"
+    },
+    "orphan_lint_result": {
+      "principle": "mechanical pass/fail and output summary from `scripts/arc_orphan_solver_lint.py`."
+    },
+    "solve_provenance_audit": {
+      "principle": "counts and per-game basis for banked registry depth provenance; this is the load-bearing mirage-vs-real live-path question."
+    },
+    "verifier_gaps_md_updated": {
+      "principle": "true only when GAP-LIVE-INTEGRATION has a dated correction preserving old stale text and recording the new scope."
+    }
+  },
+  "gap_status_recommendation": {
+    "new_scope": "banked ARC registry provenance remains the residual live-integration issue: 4/24 declared games are current-depth live_agent_self_discovery and 20/24 are development_proxy by banking artifact or mechanism; do not rebuild router/DSL wiring.",
+    "value": "re-scoped"
+  },
+  "honest_verdict": "complete: original three GAP-LIVE-INTEGRATION claims were stale; current code imports router/DSL, ships target_levels=3, and uses a nonzero submitted value_weight while Exp4652 records a tried-nonzero honest null; provenance audit finds 4/24 declared registry games live-self-discovery vs 20/24 development-proxy.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "orphan_lint_result": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n",
+    "value": "pass: OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure)."
+  },
+  "preconditions_checked": {
+    "agent_rebuild_performed": false,
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "leaderboard_submission": false,
+    "ok": true,
+    "required_paths_present": {
+      "openspec/capabilities/capstone/spec.md": true,
+      "ops/arc_solve_registry.yaml": true,
+      "ops/verifier_gaps.md": true,
+      "python/carnot/agentic/arc_competition_agent.py": true,
+      "results/experiment_4605_live_integration_scored_agent.json": true,
+      "results/experiment_4652_value_routing_cost_fix_live.json": true,
+      "scripts/arc_orphan_solver_lint.py": true
+    },
+    "research_conductor_modified": false,
+    "spec_has_req_5174": true
+  },
+  "random_seed": 5174,
+  "reproducibility_checksum": "sha256:57aea8050254f79e4d172cf48f6c43a294191a763657be3dae9c20a2053170f0",
+  "result_path": "results/experiment_5174_gap_live_integration_reconciliation_v474.json",
+  "schema": "carnot.exp5174.gap_live_integration_reconciliation.v1",
+  "solve_provenance_audit": {
+    "declared_total_games_mismatch": true,
+    "development_proxy_count": 20,
+    "excluded_from_declared_24_view": [
+      "wa30"
+    ],
+    "live_agent_self_discovery_count": 4,
+    "out_of_registry_declared_games": 24,
+    "per_game_basis": {
+      "ar25": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4728_levelup_selfplay.json",
+            "honest_verdict": "success: ar25_L3_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_ar25.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 3
+      },
+      "bp35": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4714_levelup_selfplay.json",
+            "honest_verdict": "success: bp35_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_bp35.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "cd82": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4525_levelup_attempt.json",
+            "honest_verdict": "success: cd82_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 1,
+            "solve_provenance": null
+          },
+          {
+            "artifact": "results/arc_loop_solve_cd82.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "cn04": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4915_levelup_attempt.json",
+            "honest_verdict": "success_cn04_levelup_banked",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 3,
+            "solve_provenance": "live_agent_self_discovery"
+          },
+          {
+            "artifact": "results/arc_loop_solve_cn04.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "live_agent_self_discovery",
+        "levels_reproduced": 3
+      },
+      "dc22": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4666_levelup_selfplay.json",
+            "honest_verdict": "success: dc22_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_dc22.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "ft09": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4642_levelup_selfplay.json",
+            "honest_verdict": "success: ft09_L3_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_ft09.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 3
+      },
+      "g50t": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4884_levelup_attempt.json",
+            "honest_verdict": "success_g50t_levelup_banked",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 2,
+            "solve_provenance": "live_agent_self_discovery"
+          },
+          {
+            "artifact": "results/arc_loop_solve_g50t.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "live_agent_self_discovery",
+        "levels_reproduced": 2
+      },
+      "ka59": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
+            "honest_verdict": "success_e3_ka59_L1_reproduced",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 1,
+            "solve_provenance": null
+          }
+        ],
+        "classification_reason": "legacy_or_registry_mechanism_inferred",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 1
+      },
+      "lf52": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4690_levelup_selfplay.json",
+            "honest_verdict": "success: lf52_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_lf52.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "lp85": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/arc_loop_solve_lp85.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 3,
+            "reproduced_levels": 3,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 5
+      },
+      "ls20": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4630_levelup_selfplay.json",
+            "honest_verdict": "success: ls20_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_ls20.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "m0r0": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4515_deepen_graph_explore_l2.json",
+            "honest_verdict": "success: m0r0_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 2,
+            "solve_provenance": null
+          }
+        ],
+        "classification_reason": "legacy_or_registry_mechanism_inferred",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "r11l": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4862_levelup_attempt.json",
+            "honest_verdict": "success_r11l_levelup_banked",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 2,
+            "solve_provenance": "live_agent_self_discovery"
+          },
+          {
+            "artifact": "results/arc_loop_solve_r11l.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "live_agent_self_discovery",
+        "levels_reproduced": 2
+      },
+      "re86": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4702_levelup_selfplay.json",
+            "honest_verdict": "success: re86_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_re86.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "s5i5": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4873_levelup_attempt.json",
+            "honest_verdict": "success_s5i5_levelup_banked",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 2,
+            "solve_provenance": "live_agent_self_discovery"
+          },
+          {
+            "artifact": "results/arc_loop_solve_s5i5.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "live_agent_self_discovery",
+        "levels_reproduced": 2
+      },
+      "sb26": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4678_levelup_selfplay.json",
+            "honest_verdict": "success: sb26_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_sb26.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "sc25": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
+            "honest_verdict": "success: sc25_L5_offline_reproduced_banked_4_new_levels",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 4,
+            "solve_provenance": null
+          }
+        ],
+        "classification_reason": "legacy_or_registry_mechanism_inferred",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 5
+      },
+      "sk48": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4751_levelup_selfplay.json",
+            "honest_verdict": "success: sk48_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_sk48.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "sp80": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4535_levelup_attempt.json",
+            "honest_verdict": "success: sp80_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 1,
+            "solve_provenance": null
+          },
+          {
+            "artifact": "results/arc_loop_solve_sp80.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "su15": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4546_levelup_attempt.json",
+            "honest_verdict": "success: su15_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 1,
+            "solve_provenance": null
+          },
+          {
+            "artifact": "results/arc_loop_solve_su15.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "tn36": {
+        "artifact_evidence": [],
+        "classification_reason": "legacy_or_registry_mechanism_inferred",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 7
+      },
+      "tr87": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/arc_loop_solve_tr87.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 6,
+            "reproduced_levels": 6,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 6
+      },
+      "tu93": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4361_e3_deeper_high_headroom_games.json",
+            "honest_verdict": "success_e3_deeper_tu93_reproduced",
+            "offline_reproduced": null,
+            "reached_level": null,
+            "reproduced_levels": null,
+            "solve_provenance": null
+          },
+          {
+            "artifact": "results/experiment_4436_deepen_plus_primitive_consolidation.json",
+            "honest_verdict": "success: tu93_L5_deepened_primitives_consolidated",
+            "offline_reproduced": true,
+            "reached_level": null,
+            "reproduced_levels": 5,
+            "solve_provenance": null
+          },
+          {
+            "artifact": "results/arc_loop_solve_tu93.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 4,
+            "reproduced_levels": 4,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 5
+      },
+      "vc33": {
+        "artifact_evidence": [
+          {
+            "artifact": "results/experiment_4654_levelup_selfplay.json",
+            "honest_verdict": "success: vc33_L2_offline_reproduced",
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 1,
+            "solve_provenance": "development_proxy"
+          },
+          {
+            "artifact": "results/arc_loop_solve_vc33.json",
+            "honest_verdict": null,
+            "offline_reproduced": true,
+            "reached_level": 2,
+            "reproduced_levels": 2,
+            "solve_provenance": "development_proxy"
+          }
+        ],
+        "classification_reason": "explicit_banking_artifact",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 2
+      },
+      "wa30": {
+        "artifact_evidence": [],
+        "classification_reason": "legacy_or_registry_mechanism_inferred",
+        "classified_provenance": "development_proxy",
+        "levels_reproduced": 1
+      }
+    },
+    "principle": "This is the real, load-bearing question GAP-LIVE-INTEGRATION gestures at -- how much of the registry's progress is genuinely reproducible by the live agent's own self-discovery versus an outer-loop-built proxy.",
+    "registry_rows_with_reproducible_levels": 25,
+    "row_level_counts": {
+      "development_proxy": 21,
+      "live_agent_self_discovery": 4
+    }
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-5174",
+    "SCENARIO-CAPSTONE-5174",
+    "SCENARIO-CAPSTONE-5174-FIELD-PRINCIPLES"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5174_gap_live_integration_reconciliation.py -q --no-cov"
+  ],
+  "upstream_artifacts": {
+    "experiment_4605": {
+      "experiment": "experiment_4605_live_integration_scored_agent",
+      "first_win_delta": 0.0,
+      "honest_verdict": "complete: live_integration_no_value_honest_null_gap_sharpened",
+      "multi_level_solve_rate": 0.0,
+      "null_delta_methodology_note": "first_win_delta is zero after running the matched bare control on the same variants; this is an honest no-value null for first-win-rate, not a measurement bug.",
+      "path": "results/experiment_4605_live_integration_scored_agent.json",
+      "solve_provenance": "live_agent_self_discovery",
+      "submitted_agent_config": {
+        "router_wired": true,
+        "strategy_router_enabled": true,
+        "target_levels": 3,
+        "value_weight": 1e-12,
+        "world_model_dsl_wired": true
+      },
+      "value_weight_used": 1e-12
+    },
+    "experiment_4652": {
+      "experiment": "experiment_4652_value_routing_cost_fix_live",
+      "first_win_rate_delta": 0.0,
+      "honest_verdict": "complete: value_routing_cost_fixed_no_live_lift_residual_dist_shift_or_calibration.",
+      "live_baseline_value_weight_zero": {
+        "first_win_rate": 0.04,
+        "solve_rate": 0.0,
+        "value_weight": 0.0
+      },
+      "live_first_win_rate_value_routed": 0.04,
+      "live_path_reachable": true,
+      "live_solve_rate_value_routed": 0.0,
+      "null_delta_methodology_note": "A zero live-lift delta is from matched value_weight>0 and value_weight=0 runs on the same variants with the cost-fixed value head under the timeout threshold; it is an honest no-value null, not a measurement bug.",
+      "orphan_lint": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+        "passed": true,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (32 modules in the live closure).\n"
+      },
+      "path": "results/experiment_4652_value_routing_cost_fix_live.json",
+      "residual_cause_hypothesis": "distribution_shift_or_calibration",
+      "solve_provenance": "live_agent_self_discovery",
+      "solve_rate_delta": 0.0,
+      "value_weight_set": 1e-12
+    }
+  },
+  "verifier_gaps_md_updated": true
+}
