@@ -1,0 +1,203 @@
+{
+  "d1_claim": {
+    "baseline": "matched self-consistency over the same candidate set",
+    "claim_tested": "MuSR reasoning-text embedding-verifier-vs-SC",
+    "delta_ci95": [
+      -0.06,
+      0.085
+    ],
+    "delta_vs_sc": 0.015,
+    "domain": "MuSR reasoning questions over generated text traces",
+    "honest_verdict": "complete_phase_d_trained_verifier_does_not_beat_sc_v0.570_sc0.555_delta+0.015_ci-0.06_0.085_moat_bounded_null",
+    "moat_realized": false,
+    "n_questions": 200,
+    "path": "results/experiment_phase_d_musr_trained_verifier.json",
+    "sc_accuracy_matched": 0.555,
+    "trained_verifier_accuracy": 0.57,
+    "verifier": "all-MiniLM embeddings plus LogisticRegression over question+reasoning",
+    "verifier_is_oracle": false
+  },
+  "d1_claim_vs_exp4245_claim_same_hypothesis": {
+    "not_same_claim": "D1 is MuSR text reasoning over question+reasoning embeddings vs SC; Exp 4245 is ARC candidate-pool grid reranking vs vote. The broad thesis overlaps, but the domain-specific gate evidence is not interchangeable.",
+    "principle": "The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.",
+    "same_underlying_hypothesis": "Both ask whether an oracle-distinct learned verifier can add selection value over a non-oracle baseline.",
+    "value": true
+  },
+  "diffusiongemma_artifacts": {
+    "cached_ready_summary": "DiffusionGemma artifacts are observed as cached JSON/runtime/module records; Exp 5152 does not execute or scale DiffusionGemma.",
+    "json_result_count": 14,
+    "json_results": [
+      {
+        "experiment": "arc3_layerb_diffusiongemma_test",
+        "honest_verdict": "complete_diffusiongemma_layerb_grounded_0",
+        "path": "results/arc3_layerb_diffusiongemma_test.json",
+        "status": null
+      },
+      {
+        "experiment": "diffusiongemma_energy_prior_extract",
+        "honest_verdict": "complete: energy_prior_score_extracted_from_frozen_diffusiongemma",
+        "path": "results/diffusiongemma_energy_prior_extracted.json",
+        "status": null
+      },
+      {
+        "experiment": "diffusiongemma_energy_prior_gguf",
+        "honest_verdict": "blocked_gguf_load_failed",
+        "path": "results/diffusiongemma_energy_prior_gguf.json",
+        "status": null
+      },
+      {
+        "experiment": "diffusiongemma_energy_prior_probe",
+        "honest_verdict": "complete: model_loaded_score_extraction_needs_diffusion_api",
+        "path": "results/diffusiongemma_energy_prior_probe.json",
+        "status": null
+      },
+      {
+        "experiment": "diffusiongemma_energy_prior_transformers",
+        "honest_verdict": "blocked_diffusiongemma_load_failed",
+        "path": "results/diffusiongemma_energy_prior_transformers.json",
+        "status": null
+      },
+      {
+        "experiment": "diffusiongemma_energy_prior_vllm",
+        "honest_verdict": "blocked_vllm_load_failed",
+        "path": "results/diffusiongemma_energy_prior_vllm.json",
+        "status": null
+      },
+      {
+        "experiment": null,
+        "honest_verdict": "blocked_diffusiongemma_not_cached",
+        "path": "results/experiment_4189_diffusiongemma_verifier_guided_decoding.json",
+        "status": null
+      },
+      {
+        "experiment": null,
+        "honest_verdict": "blocked_diffusiongemma_gguf_loader_failed",
+        "path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+        "status": null
+      },
+      {
+        "experiment": null,
+        "honest_verdict": "complete: diffusiongemma_loader_fix_preflight_go",
+        "path": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+        "status": null
+      },
+      {
+        "experiment": 4281,
+        "honest_verdict": "complete_diffusiongemma_learned_verifier_cannot_score_partial_states",
+        "path": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+        "status": null
+      },
+      {
+        "experiment": 4293,
+        "honest_verdict": "complete: diffusiongemma_guidance_moat_won",
+        "path": "results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json",
+        "status": null
+      },
+      {
+        "experiment": 4304,
+        "honest_verdict": "complete: diffusiongemma_guidance_bounded_null_vs_engaged_control",
+        "path": "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
+        "status": null
+      },
+      {
+        "experiment": 4315,
+        "honest_verdict": "complete: diffusiongemma_step_stitching_moat_won",
+        "path": "results/experiment_4315_diffusiongemma_reward_guided_stitching.json",
+        "status": null
+      },
+      {
+        "experiment": 4374,
+        "honest_verdict": "retired_in_generation_conversion_unmeasurable",
+        "path": "results/experiment_4374_diffusiongemma_scorer_repair_or_retire.json",
+        "status": null
+      }
+    ],
+    "python_module_count": 7,
+    "python_modules": [
+      "python/carnot/experiment_4260_diffusiongemma_energy_guided_preflight.py",
+      "python/carnot/experiment_4274_diffusiongemma_loader_fix_preflight.py",
+      "python/carnot/experiment_4281_diffusiongemma_energy_guided_full_run.py",
+      "python/carnot/experiment_4293_diffusiongemma_energy_guided_run_partial_state.py",
+      "python/carnot/experiment_4304_diffusiongemma_in_generation_engaged_controls.py",
+      "python/carnot/experiment_4315_diffusiongemma_reward_guided_stitching.py",
+      "python/carnot/experiment_4374_diffusiongemma_scorer_repair_or_retire.py"
+    ],
+    "runtime_logs_or_pids": [
+      "results/diffusiongemma_energy_prior_gguf.log",
+      "results/diffusiongemma_energy_prior_probe.log",
+      "results/diffusiongemma_energy_prior_transformers.log",
+      "results/diffusiongemma_energy_prior_vllm.log",
+      "results/diffusiongemma_gguf_download.log",
+      "results/diffusiongemma_energy_prior_gguf.pid",
+      "results/diffusiongemma_energy_prior_probe.pid",
+      "results/diffusiongemma_energy_prior_transformers.pid",
+      "results/diffusiongemma_energy_prior_vllm.pid",
+      "results/diffusiongemma_gguf_download.pid"
+    ],
+    "search_roots": [
+      "results",
+      "python/carnot"
+    ]
+  },
+  "domain_conflation_found": true,
+  "exp4245_claim": {
+    "baseline": "vote@1/self-consistency-style candidate majority",
+    "claim_tested": "ARC-1 Set-Encoder-vs-vote candidate reranking",
+    "domain": "ARC candidate pools generated before the reranker chooses a top candidate",
+    "held_out_task_n": 52,
+    "honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote",
+    "oracle_at_k": 0.8269230769,
+    "oracle_distinct_beats_vote": true,
+    "path": "results/experiment_4245_arc_set_encoder_beats_vote.json",
+    "set_encoder_minus_vote_ci95": [
+      0.3076923077,
+      0.5961538462
+    ],
+    "set_encoder_minus_vote_delta": 0.4423076923,
+    "verifier": "DeepSets-style Set-Encoder using candidate and cross-candidate features",
+    "verifier_is_oracle": false
+  },
+  "exp5151_status": {
+    "acceptance_gate": true,
+    "available": true,
+    "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
+    "cross_game_replication_delta": null,
+    "hardened_arc_domain_win": false,
+    "headline_outcome": "arc_set_encoder_win_not_hardened",
+    "honest_verdict": "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive hardening; unresolved_axes=cross_game",
+    "leak_audit_passed": true,
+    "multiseed_delta_ci95": [
+      0.4265639953,
+      0.4888206201
+    ],
+    "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json",
+    "reason": "not_fully_hardened_or_null",
+    "supports_ungating": false,
+    "verifier_is_oracle": false
+  },
+  "experiment": "experiment_5152_diffusiongemma_gate_reexamination_v472",
+  "field_principles": {
+    "d1_claim_vs_exp4245_claim_same_hypothesis": "The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "recommendation": "A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone."
+  },
+  "honest_verdict": "complete_diffusiongemma_gate_reexamined_keep_gated_corrected_arc_evidence",
+  "known_issues_corrigendum": {
+    "marker": "CORRIGENDUM 2026-07-02 (exp5152)",
+    "path": "ops/known-issues.md",
+    "text": "> **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence."
+  },
+  "recommendation": {
+    "principle": "A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone.",
+    "reason": "Exp 5151 is present but not fully hardened, so DiffusionGemma stays gated for missing decision-grade ARC-domain evidence rather than the MuSR D1 null.",
+    "value": "keep_gated"
+  },
+  "reproducibility_checksum": "sha256:fd7027667ffc06447c8296869088b1da66ff43bc7321907393bbf0169f1ee397",
+  "schema": "carnot.diffusiongemma_gate_reexamination_5152.v1",
+  "spec_refs": [
+    "REQ-VERIFY-5152",
+    "SCENARIO-VERIFY-5152",
+    "SCENARIO-VERIFY-5152-SUCCESS",
+    "SCENARIO-VERIFY-5152-MISSING-5151"
+  ]
+}

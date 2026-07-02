@@ -22,6 +22,9 @@
 > the only remaining moat-on-reasoning probe; **pending operator decision** (asked 2026-06-30) on whether to
 > run it vs. accept the bounded-null. EBRM (D3) is a 3rd construction but lower-priority than uPRM.
 
+> **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence.
+
+
 **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
 (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged
 (`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`) and its score is bounded ~0.08 by
