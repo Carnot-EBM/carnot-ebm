@@ -461,6 +461,112 @@ activation gate visibly dirty instead of silently proceeding as clean.
 |---|---|---|
 | REQ-REPORT-5150 | Planned (`python/carnot/experiment_5150_archive_471_activate_472.py`, `scripts/experiment_5150_archive_471_activate_472.py`) | Planned (`tests/python/test_experiment_5150_archive_471_activate_472.py`) |
 
+### REQ-REPORT-5156: Archive .472 Runtime Truth And Activate .473 Multi-Level ARC Closure
+
+The Exp 5156 workflow SHALL aggregate milestone `2026.07.472` from
+`results/experiment_5151_arc_oracle_distinct_hardening_v472.json`,
+`results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`,
+`results/experiment_5153_gap4_scaleup_v472.json`,
+`results/experiment_5154_energy_fitness_directed_exploration_v472.json`,
+`results/experiment_5155_multilevel_belief_state_scoping_v472.json`,
+`ops/known-issues.md`, and the active `.473` `research-roadmap.yaml`. It SHALL
+write `results/experiment_5156_archive_472_activate_473.json`, SHALL NOT
+modify `research-roadmap.yaml`, SHALL NOT modify
+`scripts/research_conductor.py`, SHALL NOT touch the currently running
+conductor process or active task, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the `.472` close-state truthfully and SHALL NOT
+classify any of the five `.472` tasks as a failure. Exp 5151 SHALL be archived
+as a partial hardening result where multiseed, leak audit, and exact test
+passed while cross-game/cross-corpus replication remained blocked by
+`blocked_arc_game_ids_unrecoverable`. Exp 5152 SHALL be archived as a
+DiffusionGemma gate correction that found the MuSR-vs-ARC domain conflation but
+recommended `keep_gated` because Exp 5151 was still not decision-grade
+ARC-domain evidence. Exp 5153 SHALL be archived as a GAP-4 protocol audit that
+confirmed the forward protocol was still open rather than executed at scale.
+Exp 5154 SHALL be archived as an honest energy-as-fitness null with
+`winning_trajectory_surfaced=false` and `reproducible_levels_delta=0`, not as a
+general ARC failure. Exp 5155 SHALL be archived as a code-verified
+belief-state reset scoping deliverable with ranked falsifiable follow-up
+experiments for `.473` Phase A.
+
+The workflow SHALL verify the `.472` handoff runtime before activation by
+recording whether there are any non-transition dirty git paths and whether any
+conductor-like runtime process is orphaned. Expected Exp 5156 deliverable files
+MAY be listed as transition-local dirty paths when the workflow runs after
+authoring the artifact, but unrelated dirty paths or orphaned conductor
+processes SHALL force `v472_runtime_clean=false`. The artifact SHALL emit
+`v472_runtime_clean` as a top-level boolean gate for downstream `.473` tasks.
+
+The workflow SHALL confirm `research-roadmap.yaml` names milestone
+`2026.07.473` and contains task ids `exp5156` through `exp5167`. It SHALL
+record that `.473` activates the top two Exp 5155 follow-up proposals in Phase
+A, closes the Exp 5151 cross-corpus hardening axis in Phase B, and executes the
+GAP-4 protocol pilot in Phase B.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `task_verdicts`,
+`milestone_archive_summary`, `v472_runtime_clean`, `runtime_clean_details`,
+`active_roadmap_ready`, `active_roadmap_modified`, `conductor_modified`,
+`phase_a_followups_from_5155`, `diffusiongemma_gate_recommendation`,
+`gap4_status_recommendation`, `generation_axis_retirement_signal`,
+`flagged_adversarial`, and `tests_run`.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix Discipline."
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `task_verdicts`: principle ".472 task truth without rounding partial results into dead ends"
+- `milestone_archive_summary`: principle "archive summary must preserve partial, blocked, null, and scoped results precisely"
+- `v472_runtime_clean`: principle "Downstream .473 tasks may gate on this; a dirty handoff should block, not silently proceed."
+- `runtime_clean_details`: principle "handoff diagnostics must explain the gate, not just emit a boolean"
+- `active_roadmap_ready`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `phase_a_followups_from_5155`: principle "Phase A inherits the top two falsifiable follow-ups from Exp 5155 rather than inventing a new agenda"
+- `diffusiongemma_gate_recommendation`: principle "Exp 5152 corrected the rationale but did not ungate scaling"
+- `gap4_status_recommendation`: principle "Exp 5153 keeps GAP-4 open until its forward protocol is actually executed"
+- `generation_axis_retirement_signal`: principle "Exp 5154 is the third generation-axis exploration-signal null and should steer allocation"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5156: Archive Artifact Records .472 Truth And .473 Activation
+
+**Given** the five `.472` result artifacts, `ops/known-issues.md` containing
+the 2026-07-02 energy-based ARC lineup, a clean handoff runtime snapshot, and
+`research-roadmap.yaml` naming `2026.07.473` with tasks `exp5156` through
+`exp5167`
+**When** the Exp 5156 workflow runs
+**Then** it writes the JSON artifact, records each `.472` result as partial,
+blocked, null, or scoped without calling any task a failure, emits
+`v472_runtime_clean=true`, declares
+`aggregation_from_upstream_artifacts`, keeps `active_roadmap_modified=false`
+and `conductor_modified=false`, and records the `.473` Phase A/B activation
+threads that close the `.472` open axes.
+
+#### SCENARIO-REPORT-5156-DIRTY-RUNTIME: Dirty Handoff Blocks Downstream Gates
+
+**Given** the `.472` sources are otherwise loadable
+**And** the runtime snapshot contains unrelated dirty git paths or an orphaned
+conductor-like process
+**When** the Exp 5156 workflow runs
+**Then** it still writes a terminal archive artifact, but records
+`v472_runtime_clean=false`, preserves the dirty-path or orphan diagnostics in
+`runtime_clean_details`, and uses a complete-prefixed verdict that makes the
+activation gate visibly dirty instead of silently proceeding as clean.
+
+## Implementation Status (REQ-REPORT-5156)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5156 | Planned (`python/carnot/experiment_5156_archive_472_activate_473.py`, `results/experiment_5156_archive_472_activate_473.json`) | Planned (`tests/python/test_experiment_5156_archive_472_activate_473.py`) |
+
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
 The Exp 5135 workflow SHALL inspect the `V471-PLANNER-REFERENCES` block in
