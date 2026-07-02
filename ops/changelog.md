@@ -1,5 +1,44 @@
 # Carnot — Changelog
 
+## 2026-07-02 (Operational retrospective .473, third pass -- gap still unwired, now also unlogged in known-issues.md -- claude)
+
+- Wrote `results/operational_retro_2026_07_473.json` for milestone `2026.07.473`
+  (third retro-generation pass for this milestone number). The supplied TIMING
+  DATA block again reported 0 completed experiments, 0 wall-time minutes, and 0
+  compute-bound experiments since activation, so the locked numeric fields
+  (`total_wall_time_minutes`, `experiments_completed`,
+  `compute_bound_experiments_count`, `slowest_experiments`,
+  `gpu_idle_on_compute_bound_tasks`) were left exactly as pre-filled per the
+  task's LOCKED FIELDS instruction.
+- Re-ran the same class of out-of-band sanity check as the prior pass (`git log`
+  against the `729cd473c` "Activate milestone 2026.07.473" commit; not part of
+  the authoritative TIMING DATA block, so no locked field was touched). Found 43
+  commits landed after activation, spanning PHASE A1-A3, B1-B2, C1, D1, E1-E2,
+  F1, and a Z capstone -- real substantive work, not an empty milestone.
+- Re-confirmed via `grep -rn "retro_timing_fallback" scripts/research_conductor.py`
+  that the disk-mtime fallback module built earlier this milestone
+  (`scripts/retro_timing_fallback.py`) still has zero references in the
+  conductor. Two prior retro passes for this same milestone (commits `7ec30aac9`
+  and `5ae90dd9e`) already flagged this exact gap; it remains unwired through a
+  third pass.
+- New finding this pass: `ops/known-issues.md` has **zero** hits for
+  `retro_timing_fallback` or any "FALSE-ZERO" phrasing (checked via grep). The
+  gap has been diagnosed twice in this changelog and once in `docs/research-log.md`
+  but was never escalated into the MANDATORY-NEXT-MILESTONE PRIORITIES list --
+  which means the project's own Overdue-Priority Forcing Function (mechanical
+  pickup after 3+ pending milestones) has had nothing to act on. That is now the
+  single highest-leverage process gap: not the missing wiring itself, but the
+  missing known-issues.md entry that would force a non-retro task to apply it.
+- Did not duplicate either existing `docs/research-log.md` entry for
+  `2026.07.473` (both are same-day, and per "Public Documentation Discipline"
+  research-log entries are immutable) -- appended a second same-day addendum
+  instead of a third identically-headed section.
+- This retro-generation task's own scope explicitly forbids editing
+  `scripts/research_conductor.py`, so the wiring fix -- however small and
+  well-documented -- cannot be applied from within a retro pass regardless of how
+  many times it is correctly diagnosed here. Closing it requires (a) a
+  known-issues.md entry and (b) a dedicated non-retro task to apply the change.
+
 ## 2026-07-02 (Operational retrospective .473 -- FALSE-ZERO confirmed by git-log, its own fix built-but-unwired -- claude)
 
 - Wrote `results/operational_retro_2026_07_473.json` for milestone `2026.07.473`.
