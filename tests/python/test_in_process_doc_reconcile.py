@@ -445,6 +445,52 @@ def test_added_win_tokens_now_classify_as_complete(verdict):
     assert map_status_label(verdict) == "✅ Complete"
 
 
+@pytest.mark.parametrize(
+    "verdict",
+    [
+        # exp1791 (2026-05): a clean, unambiguous win that fell all the way through
+        # to the ⚠️ Research Finding default because "success" was never in
+        # _WIN_TOKENS -- despite correctly following CLAUDE.md's Verdict
+        # Terminal-Prefix Discipline. This misclassification became a phantom
+        # "prior failure" in FailureLedger, HARD-blocking .471's exp5140
+        # (a legitimate continuation of a genuine v470 success) as a doomed rerun.
+        "success: RTL structural logic validated theoretically and mapped to Verilog/TCL specification for Symbolic-KAN.",
+        "success_verified_symbolic_gating",  # exp2071, same bug, underscore form
+        "shipped_minimal_repair_pipeline_v5",  # CLAUDE.md's own documented example verdict
+        "passed_qwen3.6_logprob_telemetry_topk_available",  # CLAUDE.md's own documented example verdict
+    ],
+)
+def test_terminal_prefix_win_tokens_now_classify_as_complete(verdict):
+    """2026-07-01: `success`, `succeeded`, `shipped`, `passed` were missing from
+    `_WIN_TOKENS` even though CLAUDE.md's Verdict Terminal-Prefix Discipline
+    mandates exactly these four prefix families (complete:/success:/passed:/
+    shipped:). Corpus-wide scan at fix time found 352 "success:"-prefixed and 13
+    "shipped:"-prefixed artifacts (of 4160 total) misclassified this way -- all
+    verified to have ZERO genuine blocked/failed/partial content (pure oversight,
+    not a real ambiguity). Verified additive-safe: 0 artifacts flipped AWAY from
+    Complete; the blocked/failed/partial checks still run before the win-token
+    check, so a genuinely mixed verdict like
+    "complete_..._weak_fit_..._hardware_leg_blocked_..." (a real Carnot artifact,
+    exp_kv260_residual_energy_decay_exponent.py) is correctly UNCHANGED by this
+    fix -- see test_mixed_terminal_verdict_still_not_complete below.
+    """
+    assert map_status_label(verdict) == "✅ Complete"
+
+
+def test_mixed_terminal_verdict_still_not_complete():
+    """Regression guard: a verdict with a correct terminal prefix but genuinely
+    mixed/negative content must NOT be promoted to Complete by the
+    success/shipped/passed addition -- blocked/failed/partial tokens in the
+    descriptive tail still win, exactly as before. Real Carnot verdict shape
+    (kv260_residual_energy_decay_exponent, a genuine weak-fit + hardware-blocked
+    result)."""
+    verdict = (
+        "complete_kv260_residual_energy_methodology_validated_cpu_weak_fit_r2_0.39_"
+        "hardware_leg_blocked_no_runtime_sweep_control"
+    )
+    assert map_status_label(verdict) == "⚠️ Blocked"
+
+
 def test_classify_artifact_promotes_on_retro_closed_field():
     """An artifact with retro_*_closed populated is promoted to ✅ Complete
     even when the verdict text alone wouldn't carry a win-token.

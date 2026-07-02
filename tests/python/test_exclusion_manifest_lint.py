@@ -274,3 +274,72 @@ class TestBlockedPatternMatched:
         )
         risks = _MOD.lint(roadmap)
         assert len([r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]) == 1
+
+
+class TestWrongMechanismNegationAware:
+    """2026-07-01: CLASS 4 (WRONG_MECHANISM_PRECONDITION) got the same class of false
+    positive as BLOCKED_PATTERN_MATCHED -- caught on `.471`'s exp5144, whose prompt says
+    "Do not touch host /dev/mmcblk* for KV260; use SSH to the board." (textbook-correct
+    per CLAUDE.md "KV260 SSH-Not-SD-Card Discipline") but got HARD-blocked anyway: the
+    joint board+path regex has no negation awareness. Fixed via _is_negated_context, a
+    tight character-window check for a negation marker just before the match."""
+
+    def test_correctly_negated_kv260_mmcblk_is_not_blocked(self, isolated_project: Path) -> None:
+        roadmap = _write_roadmap(
+            isolated_project,
+            [
+                {
+                    "id": "exp5144-authenticated-board-workload-v471",
+                    "title": "PHASE C2 hardware continuity",
+                    "prompt": (
+                        "CONTEXT: convert board reachability into authenticated workload "
+                        "transcripts. Do not touch host /dev/mmcblk* for KV260; use SSH "
+                        "to the board."
+                    ),
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert [r for r in risks if r.violation_class == "WRONG_MECHANISM_PRECONDITION"] == []
+
+    def test_actual_wrong_mechanism_usage_still_blocked(self, isolated_project: Path) -> None:
+        """Regression guard: a task that ACTUALLY instructs the agent to use the
+        retired /dev/mmcblk precondition (no negation) must still be caught."""
+        roadmap = _write_roadmap(
+            isolated_project,
+            [
+                {
+                    "id": "exp5199-genuinely-wrong-mechanism",
+                    "title": "PHASE Q KV260 precondition check",
+                    "prompt": "CONTEXT: check board readiness via ls /dev/mmcblk* on the host before proceeding.",
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert len([r for r in risks if r.violation_class == "WRONG_MECHANISM_PRECONDITION"]) == 1
+
+    def test_negation_far_from_match_does_not_suppress_violation(
+        self, isolated_project: Path
+    ) -> None:
+        """Regression guard: a negation word elsewhere in a LONG prompt, well outside
+        the tight character window before the match, must not suppress a genuine
+        violation -- the exemption is narrow by design."""
+        filler = "x" * 200
+        roadmap = _write_roadmap(
+            isolated_project,
+            [
+                {
+                    "id": "exp5198-unrelated-negation-far-away",
+                    "title": "PHASE Q KV260 precondition check",
+                    "prompt": (
+                        f"CONTEXT: do not skip any steps. {filler} "
+                        "Check board readiness via ls /dev/mmcblk* on the host."
+                    ),
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert len([r for r in risks if r.violation_class == "WRONG_MECHANISM_PRECONDITION"]) == 1

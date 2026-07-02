@@ -214,6 +214,39 @@ def _extract_exp_id(task_id_or_str: str) -> int | None:
     return None
 
 
+_NEGATION_WINDOW_CHARS = 80
+_NEGATION_MARKERS = (
+    "do not",
+    "don't",
+    "dont ",
+    "never ",
+    "avoid ",
+    "not touch",
+    "not use",
+    "without using",
+    "no longer",
+    "instead of",
+)
+
+
+def _is_negated_context(text: str, match_start: int) -> bool:
+    """True if a negation marker appears shortly before a matched retired-mechanism
+    string, i.e. the prompt is telling the agent NOT to use it (compliant), not
+    instructing it TO use it (the actual violation).
+
+    Origin: 2026-07-01, `.471`'s exp5144 -- its prompt says "Do not touch host
+    /dev/mmcblk* for KV260; use SSH to the board." (textbook-correct per CLAUDE.md
+    "KV260 SSH-Not-SD-Card Discipline") but got HARD-blocked anyway: the joint
+    board+path regex match has no negation awareness, identical in kind to the
+    BLOCKED_PATTERN_MATCHED false positive fixed the same day for scope-audit
+    tasks. A tight character window (not a whole-prompt scan) keeps this narrow --
+    an unrelated "not" elsewhere in a long prompt must not suppress a genuine
+    violation.
+    """
+    window = text[max(0, match_start - _NEGATION_WINDOW_CHARS) : match_start].lower()
+    return any(marker in window for marker in _NEGATION_MARKERS)
+
+
 def _has_operator_override(task: dict) -> bool:
     """A non-empty `operator_override:` field counts as override.
 
@@ -407,7 +440,9 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
         # KV260 + /dev/mmcblk (host SD card check is meaningless for the
         # board's state — use ssh-reachability instead). No override path:
         # the precondition produces a meaningless artifact regardless of
-        # intent.
+        # intent. Negation-aware since 2026-07-01 (see _is_negated_context):
+        # a prompt correctly INSTRUCTING the agent to avoid the retired
+        # mechanism must not be flagged as USING it.
         prompt_text = str(task.get("prompt", "") or "")
         if prompt_text:
             for (
@@ -418,7 +453,11 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
             ) in _WRONG_MECHANISM_PATTERNS:
                 board_hit = board_pat.search(prompt_text) or board_pat.search(task_title)
                 path_hit = retired_path_pat.search(prompt_text)
-                if board_hit and path_hit:
+                if (
+                    board_hit
+                    and path_hit
+                    and not _is_negated_context(prompt_text, path_hit.start())
+                ):
                     risks.append(
                         ExclusionRisk(
                             task_id=task_id,

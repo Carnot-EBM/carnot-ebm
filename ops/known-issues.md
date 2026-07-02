@@ -1902,6 +1902,50 @@ mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/
 and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
 "Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
 
+### SYSTEMIC BUG: map_status_label MISSING "success" FROM _WIN_TOKENS — FIXED 2026-07-01 (outer-loop, "look at the violations first")
+
+**Traced from `.471`'s stuck activation loop (43 refusals over 1.5+ hours) to a real,
+project-wide classifier bug**, not just 3 one-off task problems.
+
+`scripts/in_process_doc_reconcile.py:map_status_label` — the function `FailureLedger`
+(`scripts/failure_ledger.py`, the doomed-rerun scope-matcher) uses to decide whether a past
+artifact counts as a "prior failure" — had **zero terminal-prefix awareness**, unlike its sibling
+classifier `_verdict_is_untrustworthy` in `research_conductor.py`. `_WIN_TOKENS` never contained
+the word "success" (only "ships", not "shipped"; no "passed" at all) despite CLAUDE.md's Verdict
+Terminal-Prefix Discipline mandating exactly `complete:`/`success:`/`passed:`/`shipped:` as the
+four terminal-prefix families. A clean, unambiguous win like `"success: RTL structural logic
+validated theoretically..."` (exp1791) fell through every category to the `⚠️ Research Finding`
+default — silently counted as a FAILURE for future scope-matching.
+
+**Corpus-wide scan (4160 artifacts):** 352 `success:`-prefixed and 13 `shipped:`-prefixed
+artifacts were pure-oversight misclassifications (zero genuine blocked/failed/partial content —
+verified by checking each one for a real negative token). Fix: added `success`, `succeeded`,
+`shipped`, `passed` to `_WIN_TOKENS`. **Verified additive-safe**: 0 artifacts flipped AWAY from
+`✅ Complete` (impossible by construction — blocked/failed/partial tokens are still checked
+FIRST in the cascade, so a genuinely mixed verdict like this session's own
+`complete_..._weak_fit_..._hardware_leg_blocked_...` correctly stays non-Complete). 434 artifacts
+flipped TO `✅ Complete`; manually spot-checked a random sample — all genuine, unambiguous wins.
+5 new tests in `tests/python/test_in_process_doc_reconcile.py` (61 total, all passing except one
+confirmed pre-existing unrelated failure — same one identified earlier this session via git-stash
+isolation, `test_is_doomed_rerun_blocks_recurring_live_benchmark_chain`, data-dependent on stale
+artifacts, not caused by this fix).
+
+**Second, related false positive fixed the same day**: `WRONG_MECHANISM_PRECONDITION` (CLASS 4,
+the pre-existing KV260 `/dev/mmcblk` check) had no negation awareness — `.471`'s exp5144's prompt
+correctly says *"Do not touch host /dev/mmcblk\* for KV260; use SSH to the board"* (textbook
+CLAUDE.md-compliant) but got HARD-blocked for containing both the board reference and the literal
+retired path string. Added `_is_negated_context` (a tight character-window negation-marker check
+before the match) to `scripts/exclusion_manifest_lint.py`. 3 new tests confirming: negated case
+passes, genuine wrong-mechanism usage still blocked, and negation far outside the window doesn't
+suppress a real violation.
+
+**Net effect on `.471`'s stuck roadmap**: 4 HARD violations → 2. The 2 remaining
+(`exp5140-symbolic-kan-certificate-distillation-v471` matching 5 real priors —  3 cascade
+gate-blocks + 2 different-domain KAN-distillation lineages [prompt-injection, privacy-filter] —
+and `exp5141-hubo-partition-residual-exponent-v471` matching this session's own honest weak-fit
+KV260 result) are **genuine scope-matches**, not classifier bugs — see the next entry for
+disposition.
+
 ### REVERT REMINDER 2026-06-30 (~20:00Z) — REVERTED 2026-07-01 (outer-loop, "the claude quota reset today, we should move the conductor's planner etc back to claude")
 
 **Done.** Removed `50-claude-quota-conserve-20260630.conf`, `systemctl --user daemon-reload` +
