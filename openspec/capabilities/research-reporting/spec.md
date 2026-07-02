@@ -31986,3 +31986,71 @@ claim the milestone archived.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4098 | Implemented (`python/carnot/reporting/archive_v378_activate_v379_4098.py`, `scripts/experiments/exp4098_archive_v378_activate_v379.py`) | Implemented (`tests/python/test_experiment_4098_archive_v378_activate_v379.py`) |
+
+### REQ-REPORT-5161: GAP-4 Protocol Execution Pilot Artifact
+
+The Exp 5161 workflow SHALL write
+`results/experiment_5161_gap4_protocol_execution_pilot_v473.json` for the
+GAP-4 same-shape rule-application consistency pilot. The workflow SHALL reuse
+the hardened `scripts/experiments/arc3_gap4_rule_exec_verifier.py` sandbox
+contract, SHALL preserve checkpoint/resume semantics by flushing a per-task
+ledger after each attempted pilot task, and SHALL report a soft-budget partial
+honestly rather than backfilling to the target N.
+
+The artifact SHALL include the principle-annotated fields `pilot_n_target`,
+`pilot_n_achieved`, `checkpoint_resume_used`, `arc1_slice_result`,
+`arc2_heldout_slice_result`, `exact_test_discordant_wins`,
+`exact_test_passes_min6_rule`, `local_generator_arm_result`,
+`gap4_status_recommendation`, `solve_provenance`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, and `honest_verdict`. The artifact
+SHALL also record sandbox-smoke preconditions, local SOTA GGUF cache status,
+per-task pilot rows or their checkpoint ledger path, cluster-bootstrap
+confidence intervals, exact-test p-values, and whether the measured pilot
+replicates the 2026-06-09/10 direction without claiming GAP-4 `status: filled`
+from this pilot alone.
+
+Required field principles:
+
+- `pilot_n_target`: principle "The preregistered bounded pilot size is 60; changing it after seeing outcomes would move the goalpost."
+- `pilot_n_achieved`: principle "May be less than the target if the soft budget stops the run -- report honestly, do not backfill."
+- `checkpoint_resume_used`: principle "A capped run must preserve completed task work rather than losing all evidence at the hard wall-clock boundary."
+- `arc1_slice_result`: principle "Separates the fresh ARC-1 reconfirmation direction from the harder held-out slice."
+- `arc2_heldout_slice_result`: principle "Reports transfer pressure separately so ARC-1 contamination does not masquerade as held-out proof."
+- `exact_test_discordant_wins`: principle "The zero-loss sign-test floor is the load-bearing significance check for GAP-4."
+- `exact_test_passes_min6_rule`: principle "The documented two-sided-significance floor requires at least six discordant wins with no losses."
+- `local_generator_arm_result`: principle "The decentralization arm must be measured or explicitly blocked by missing local SOTA cache, never skipped silently."
+- `gap4_status_recommendation`: principle "Feeds directly into whether ops/verifier_gaps.md's GAP-4 status line gets updated."
+- `solve_provenance`: principle "development_proxy records that this pilot is protocol evidence, not a live hidden ARC solve."
+- `inference_substrate`: principle "Substrate honesty: this task invokes live Codex/LLM calls for the sandbox smoke."
+- `random_seed`: principle "Determinism is required for the bootstrap and pilot-row selection."
+- `reproducibility_checksum`: principle "Content-addressed hash catches silent artifact or pilot-row drift."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and report the actual N achieved and whether it replicated."
+
+#### SCENARIO-REPORT-5161: Pilot Artifact Reports The Actual N And Statistical Result
+
+**Given** the hardened GAP-4 sandbox smoke passes, ARC-1 and ARC-2 codex-first
+program/pool artifacts are available, and the pilot runner is invoked with a
+target of 60 total tasks
+**When** the Exp 5161 workflow runs
+**Then** it writes the terminal JSON artifact, records the actual
+`pilot_n_achieved`, computes ARC-1 and ARC-2 slice induction/precision/pass@2
+deltas, computes exact discordant wins/losses and the min-6 significance rule,
+computes a cluster bootstrap over the achieved pilot rows, reports the local
+generator arm as either measured or `blocked_local_model_not_cached`, declares
+the inference substrate honestly, and emits a `complete_` or `success_`
+verdict that states whether the pilot replicated the prior direction.
+
+#### SCENARIO-REPORT-5161-BLOCKED-SANDBOX: Failed Sandbox Smoke Blocks Without Fabrication
+
+**Given** the hardened sandbox smoke does not complete cleanly
+**When** the Exp 5161 workflow runs
+**Then** it writes a terminal `blocked_sandbox_smoke_failed` artifact, sets
+`pilot_n_achieved=0`, keeps `checkpoint_resume_used=true`, records the failing
+precondition, does not fabricate ARC slice statistics, and still writes a
+content-addressed `reproducibility_checksum`.
+
+## Implementation Status (REQ-REPORT-5161)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5161 | Planned (`python/carnot/experiment_5161_gap4_protocol_execution_pilot.py`) | Planned (`tests/python/test_experiment_5161_gap4_protocol_execution_pilot.py`) |

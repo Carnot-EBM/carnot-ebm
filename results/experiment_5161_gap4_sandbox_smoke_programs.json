@@ -1,0 +1,78 @@
+{
+  "experiment": "arc3_gap4_induced_programs",
+  "histories": [
+    {
+      "history": [
+        {
+          "code_len": 736,
+          "codex_s": 16.0,
+          "demo_fit": 0.0,
+          "iter": 0,
+          "status": "graded"
+        }
+      ],
+      "task": "50a16a69"
+    },
+    {
+      "history": [
+        {
+          "code_len": 348,
+          "codex_s": 8.5,
+          "demo_fit": 1.0,
+          "iter": 0,
+          "status": "graded"
+        }
+      ],
+      "task": "66e6c45b"
+    }
+  ],
+  "programs": [
+    {
+      "code": "def transform(grid):\n    bg = None\n    best = -1\n    for c in np.unique(grid):\n        score = 0\n        for row in grid:\n            if np.all(row == c):\n                score += grid.shape[1]\n        for col in grid.T:\n            if np.all(col == c):\n                score += grid.shape[0]\n        if score > best:\n            best = score\n            bg = c\n\n    mask = grid != bg\n    rows = np.where(mask.any(axis=1))[0]\n    cols = np.where(mask.any(axis=0))[0]\n    pattern = grid[rows.min():rows.max() + 1, cols.min():cols.max() + 1]\n\n    h, w = pattern.shape\n    out = np.empty_like(grid)\n    for r in range(grid.shape[0]):\n        for c in range(grid.shape[1]):\n            out[r, c] = pattern[r % h, (c + 1) % w]\n    return out",
+      "codex_seconds": 16.0,
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "entry_i": 0,
+      "n_calls": 1,
+      "pred_grid": null,
+      "pred_hash": null,
+      "task": "50a16a69"
+    },
+    {
+      "code": "def transform(grid):\n    out = np.zeros_like(grid)\n    rows, cols = np.nonzero(grid)\n\n    rmin, rmax = rows.min(), rows.max()\n    cmin, cmax = cols.min(), cols.max()\n    h, w = grid.shape\n\n    for r, c in zip(rows, cols):\n        nr = 0 if r == rmin else h - 1\n        nc = 0 if c == cmin else w - 1\n        out[nr, nc] = grid[r, c]\n\n    return out",
+      "codex_seconds": 8.5,
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "entry_i": 1,
+      "n_calls": 1,
+      "pred_grid": [
+        [
+          2,
+          0,
+          0,
+          3
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          0,
+          0,
+          9
+        ]
+      ],
+      "pred_hash": "26cec331746f9377ddb3ee883f20277a95b84e74",
+      "task": "66e6c45b"
+    }
+  ]
+}
