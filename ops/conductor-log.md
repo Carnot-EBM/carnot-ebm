@@ -9910,3 +9910,4 @@ web search: |
 | 2026-07-02 11:16 UTC | PHASE A3 multi-level deepening -- wire the winning | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5157-deepen-warmstart-replay-ablation-v |
 | 2026-07-02 11:41 UTC | PHASE B1 oracle-distinct hardening closure -- reso | OK | 88 passed, 1 warning in 11.00s |
 | 2026-07-02 12:01 UTC | PHASE B2 GAP-4 forward protocol -- real, bounded-s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-02 12:19 UTC | PHASE C1 SOTA ingestion -- hierarchical/multi-leve | OK | 100 passed, 1 warning in 9.91s |
