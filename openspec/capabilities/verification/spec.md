@@ -24257,6 +24257,119 @@ runs, then it writes `honest_verdict=blocked_upstream_artifact_missing`, keeps
 |---|---|---|
 | REQ-VERIFY-5160 | Implemented (`python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py`, `results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json`) | Implemented (`tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py`) |
 
+### REQ-VERIFY-5171: Harden Set-Encoder Cross-Corpus N30 V474
+
+The repository SHALL provide Exp 5171 at
+`python/carnot/reporting/harden_set_encoder_cross_corpus_n30_5171.py` and
+`results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.py` to harden
+Exp 5160's ARC Set-Encoder-vs-vote cross-corpus win by raising the held-out
+second-pool task count from 24 to at least 30 before the result can feed the
+DiffusionGemma pilot gate.
+
+The runner SHALL first load
+`results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json` and
+the exact path named by that artifact's `second_pool_source`. If either artifact
+is missing, unreadable, malformed, or if Exp 5160 did not declare
+`verifier_is_oracle=false`, it SHALL write
+`honest_verdict=blocked_upstream_artifact_missing`, keep
+`verifier_is_oracle=false`, set `held_out_task_n=0`, set
+`leak_audit_passed_on_expanded_set=false`, set `gate_passed=false`, and stop
+without fabricating n>=30 evidence.
+
+When Exp 5160's selected second-pool source loads, the runner SHALL assemble a
+same-source ARC-GEN extension with at least 30 usable held-out tasks or block
+honestly with `honest_verdict=blocked_insufficient_disjoint_pool_size`. The
+extension SHALL preserve Exp 5160's non-degenerate ARC-GEN source discipline:
+it SHALL use the checked-out ARC-GEN source that produced Exp 4291's selected
+pool, preserve the mixed vote-winning, wrong-majority, and no-oracle candidate
+construction, record the generator limit, tasks per generator, selected
+ARC-GEN task ids, source commit, and source checksum, and SHALL NOT pad with
+near-duplicate, leaked, or previously disqualified classic ARC-2 rows.
+
+The runner SHALL rerun the same Exp 5160 DeepSets pooled-context Set-Encoder
+vs vote protocol for at least five seeds on the expanded set. For every seed it
+SHALL vary task folds and model initialization, compute `set_encoder@1`,
+`vote@1`, `oracle@K`, AUROC, and `set_encoder@1 - vote@1`, and SHALL keep the
+inference-time Set-Encoder score oracle-distinct by not using candidate
+correctness as a ranking key. It SHALL expose per-seed results and the seed
+list used.
+
+The runner SHALL rerun the Exp 5160 leak-audit methodology on the expanded set
+it actually scores. The audit SHALL check task ids/raw ids, candidate ids,
+candidate grid/content hashes, gold-label surrogates, and out-of-fold training
+task exclusion after any adapter filtering. It SHALL set
+`leak_audit_passed_on_expanded_set=true` only when the expanded scored set has
+zero residual collisions and every scored row excludes its held-out task from
+training.
+
+The terminal artifact SHALL report `cross_corpus_delta_n30` and
+`cross_corpus_delta_ci95_n30` on the full expanded held-out set. The CI95 SHALL
+be a real task-level interval over the n>=30 paired deltas, not merely the
+degenerate all-seeds-identical interval observed in Exp 5160. The artifact
+SHALL set `variance_is_genuine=true` only when the task-level deltas have
+non-zero variance and the reported CI95 has non-zero width; it SHALL still
+report if per-seed aggregate deltas are identical.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`held_out_task_n`, bare float `cross_corpus_delta_n30`,
+`cross_corpus_delta_ci95_n30`, bare bool `variance_is_genuine`, bare bool
+`leak_audit_passed_on_expanded_set`, bare bool `gate_passed`,
+`verifier_is_oracle=false`, `solve_provenance=development_proxy`,
+`random_seeds_used`, `inference_substrate`, `reproducibility_checksum`,
+`field_principles`, `spec_refs`, and `honest_verdict`. Its field principles
+SHALL include:
+`held_out_task_n` = `Must be >=30 to satisfy CLAUDE.md's CLT floor for percentage-point delta claims -- the exact quantity this task exists to increase.`;
+`cross_corpus_delta_n30` = `set_encoder@1 - vote@1 on the expanded n>=30 second corpus.`;
+`cross_corpus_delta_ci95_n30` = `The decisive number: does the win survive at proper statistical power, CI95 excluding 0?`;
+`variance_is_genuine` = `exp5160's n=24 result was identical across all 5 seeds -- this field explicitly checks whether that is a real property of the domain or a too-small/too-easy-set artifact.`;
+`leak_audit_passed_on_expanded_set` = `A leak-audit that passed on the n=24 subset does not automatically cover newly-added items -- must be re-verified, not assumed.`;
+`gate_passed` = `n>=30 AND CI95 excludes 0 AND consistent direction/magnitude with exp5160 -- feeds exp5173's gated_on check directly. Do not redefine the threshold post hoc.`;
+`verifier_is_oracle` = `Must remain the bare bool false for the oracle-distinct ARC verifier claim.`;
+`solve_provenance` = `Offline scoring over a static candidate pool, not a live hidden-game solve.`;
+`random_seeds_used` = `The >=5 seeds used for the expanded n>=30 replication protocol.`;
+`inference_substrate` = `Declare accurately per the Inference-Substrate Declaration Discipline -- verifier_ensemble_against_cached_candidates if scoring an existing pool, live_llm_inference if new candidates had to be generated to reach n>=30.`;
+`reproducibility_checksum` = `Hash of the expanded ARC-GEN source description, leak audit, per-seed results, n>=30 CI, and gate decision.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_ AND state plainly whether the gate passed at n>=30 -- this directly determines whether exp5173 runs this milestone.`
+
+`gate_passed` SHALL be true only when `held_out_task_n>=30`, the reported
+`cross_corpus_delta_ci95_n30` excludes zero positively,
+`leak_audit_passed_on_expanded_set=true`, and the measured direction and
+magnitude remain consistent with Exp 5160's positive n=24 cross-corpus result.
+The artifact SHALL report a complete null rather than rounding up if the larger
+sample narrows, reverses, leaks, or yields a CI95 including zero.
+
+### SCENARIO-VERIFY-5171: Expanded ARC-GEN N30 Gate Passes Honestly
+
+Given Exp 5160 and its selected second-pool source load cleanly, and the
+checked-out ARC-GEN source can produce at least 30 usable same-source
+non-degenerate held-out tasks, when Exp 5171 runs with at least five seeds,
+then it reports the expanded source construction, reruns the Set-Encoder-vs-vote
+protocol, reruns the leak audit on the expanded scored set, computes
+`cross_corpus_delta_n30` and `cross_corpus_delta_ci95_n30`, records whether
+task-level variance is genuine, keeps `verifier_is_oracle=false`, and sets
+`gate_passed=true` only when the n>=30 statistical and leak-audit gates pass.
+
+### SCENARIO-VERIFY-5171-UPSTREAM-BLOCKED: Missing Exp5160 Stops Honestly
+
+Given Exp 5160 or its named second-pool source is absent or unreadable, when
+Exp 5171 runs, then it writes
+`honest_verdict=blocked_upstream_artifact_missing`, keeps
+`verifier_is_oracle=false`, records no n>=30 win, and sets `gate_passed=false`.
+
+### SCENARIO-VERIFY-5171-INSUFFICIENT-POOL: Fewer Than 30 Usable Tasks Blocks Honestly
+
+Given Exp 5160 loads but the same ARC-GEN source extension cannot assemble at
+least 30 usable disjoint held-out tasks after leak filtering, when Exp 5171
+runs, then it writes `honest_verdict=blocked_insufficient_disjoint_pool_size`,
+reports the available usable task count, keeps `gate_passed=false`, and does
+not pad with near-duplicate, leaked, or disqualified rows.
+
+## Implementation Status (REQ-VERIFY-5171)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5171 | Implemented (`python/carnot/reporting/harden_set_encoder_cross_corpus_n30_5171.py`, `results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json`) | Implemented (`tests/python/test_experiment_5171_harden_set_encoder_cross_corpus_n30_v474.py`) |
+
 ### REQ-VERIFY-5153: GAP-4 Scale-Up Protocol Ledger V472
 
 The repository SHALL provide Exp 5153 at
