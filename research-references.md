@@ -26050,3 +26050,111 @@ self-learning.
   KV260/GateMate/PolarFire transcripts or explicitly state blockers; no Extropic TSU execution claim.
 
 <!-- V471-PLANNER-REFERENCES-END -->
+
+## V473 Outer-Loop Planner References - 2026-07-02
+
+Added by the outer-loop planning session that designed milestone `2026.07.473`, in response to the
+operator's fresh 2026-07-02 directive ("we want to continue down this energy based models path for
+ARC-AGI-3, and tackle the multi-level capable live agent"). Focused search on the specific open problem
+diagnosed by `exp5155` (`.472`): the live agent's online world-model/belief-induction state resets at
+every ARC-AGI-3 level boundary instead of carrying forward level-N evidence into level-N+1 induction.
+Every citation below was independently verified (arXiv ID fetched, not recalled from training data).
+
+### DynaMITE-RL: Dynamic Model for Improved Temporal Meta-RL
+- **Source:** arXiv:2402.15957 - https://arxiv.org/abs/2402.15957
+- **Tracks:** meta-RL, episode sessions, latent-consistency-within-session, cross-session latent conditioning
+- **Carnot hook:** Treats each contiguous "session" (directly analogous to an ARC level) as sharing a
+  fixed latent task/dynamics variable, and conditions each NEW session's latent inference on the PRIOR
+  session's latent state rather than a fresh, uninformative prior. This is close to a direct blueprint for
+  modifying `arc_competition_agent.py:_begin_level_goal_episode` to seed level N+1's induction from level
+  N's terminal belief instead of resetting `_episode_transition_start`.
+- **Actionability:** exp5157/exp5158 (`.473`) test this directly as the WARM-START arm of an offline
+  replay ablation against the current cold-restart control.
+
+### BAM: Bayes with Adaptive Memory
+- **Source:** arXiv:2202.02405 - https://arxiv.org/abs/2202.02405
+- **Tracks:** online Bayesian learning under non-stationarity, selective evidence retention, change-point adaptation
+- **Carnot hook:** Instead of a binary reset-vs-keep-all choice at a level boundary, weights PRIOR evidence
+  by continued relevance. Maps onto replacing `_active_transitions()`'s hard post-boundary-suffix window
+  with an adaptively-weighted retention set keyed on whether the game's `mechanic_class` (per
+  `ops/arc_solve_registry.yaml`) recurs across the boundary.
+- **Actionability:** Candidate mechanism for exp5157 if the simpler ReDRAW-style residual (below)
+  underperforms; queue as a `.474` follow-up if so.
+
+### ReDRAW: Adapting World Models with Latent-State Dynamics Residuals
+- **Source:** arXiv:2504.02252 - https://arxiv.org/abs/2504.02252
+- **Tracks:** world-model transfer, residual dynamics correction, low-data adaptation, frozen base model
+- **Carnot hook:** THE most directly portable algorithm found this pass. Freezes a pretrained world model
+  from one environment variant, then adapts to a related target variant by learning only a small RESIDUAL
+  correction to latent dynamics -- avoiding full retraining and avoiding overfitting in the low-data regime
+  (exactly the handful-of-post-boundary-transitions regime a fresh ARC level starts in). Directly
+  actionable: freeze level N's fitted `LiveTTTWorldModel`/DSL as the base at level N+1, fit only a residual
+  from the new transitions, instead of calling `gated_engine_from_transitions` fresh.
+- **Actionability:** This is the primary WARM-START mechanism `exp5157` (`.473`) is instructed to
+  implement and test against the cold-restart control.
+
+### When and Where to Reset Matters for Long-Term Test-Time Adaptation (ASR)
+- **Source:** arXiv:2603.03796 - https://arxiv.org/abs/2603.03796
+- **Tracks:** test-time adaptation, adaptive/selective reset, drift-triggered vs. fixed-periodic reset
+- **Carnot hook:** Directly reframes the current cold-restart-every-level-up policy as a "fixed periodic
+  reset" and argues (for general TTA) that this is provably suboptimal versus a risk/drift-triggered reset.
+  Motivates a THIRD arm beyond always-reset/never-reset: reset only when level N's model's predictive
+  accuracy on level N+1's first few transitions falls below a threshold.
+- **Actionability:** Queue as a `.474` follow-up arm if exp5157's simple always-warm-start test shows
+  mixed per-game results (some games benefit, some regress) rather than a uniform win/null.
+
+### TheoryCoder: Synthesizing World Models for Bilevel Planning
+- **Source:** arXiv:2503.20124 - https://arxiv.org/abs/2503.20124
+- **Tracks:** LLM-synthesized executable world models, persistent reusable abstractions, bilevel planning
+- **Carnot hook:** Persistent, reusable "theories" (executable world models) get refined per-instance
+  rather than resynthesized from zero -- closely parallel to Carnot's own executable-world-model + DSL-fit
+  machinery. Suggests splitting the per-level `LiveTTTWorldModel` into a persistent `mechanic_class`-level
+  theory plus a small per-level grounding delta.
+- **Actionability:** Longer-horizon architecture candidate; not this milestone's scope (exp5157/5158 test
+  the simpler residual/conditioning mechanisms first).
+
+### Mixture-of-World-Models: Scaling Multi-Task RL with Modular Latent Dynamics
+- **Source:** arXiv:2602.01270 - https://arxiv.org/abs/2602.01270
+- **Tracks:** modular latent dynamics, task-conditioned experts, gradient-based task clustering
+- **Carnot hook:** A library of "mechanic-class experts" that levels route into (a level within a known
+  mechanic class warm-starts from its expert; a genuinely novel level spawns a new one) -- a natural
+  `.475+` scale-up of exp5157's per-game residual mechanism into a cross-game reusable library, IF the
+  within-game warm-start signal proves out first.
+- **Actionability:** Do not build this before exp5157/5158 land a result -- it is the multi-game
+  generalization of an as-yet-unvalidated single-game mechanism.
+
+### In-Place Test-Time Training (negative control on reset-at-boundary)
+- **Source:** arXiv:2604.06169 - https://arxiv.org/html/2604.06169v1
+- **Tracks:** fast-weights reset at sequence/document boundaries, context-leakage prevention
+- **Carnot hook:** Confirms the field treats "reset at boundary" as CORRECT specifically when segments are
+  INDEPENDENT. ARC's within-game level sequence is the opposite regime (related, not independent, levels
+  sharing a `mechanic_class`) -- this is a useful negative-control citation reinforcing why persistence,
+  not reset, is the hypothesis worth testing here.
+- **Actionability:** Cite in exp5157/5158's writeups as the theoretical boundary condition distinguishing
+  "levels within one game" (should NOT hard-reset) from "independent games" (SHOULD reset, per current
+  cross-game value-transfer retirement, `exp4342`).
+
+### Explore Before You Solve: Speed-Depth Trade-off for ARC-AGI-3 Agents
+- **Source:** arXiv:2605.25931 - https://arxiv.org/pdf/2605.25931
+- **Tracks:** ARC-AGI-3-specific, exploration-budget vs. reasoning-depth allocation per task
+- **Carnot hook:** Orthogonal to level-to-level carryover (confirmed by direct fetch -- it studies per-task
+  compute allocation, not sequential-level learning). Relevant to the live agent's broader exploration
+  budget tuning, not this milestone's scope.
+- **Actionability:** Background reading only; no `.473` task depends on it.
+
+### Hierarchical Planning with Latent World Models (HWM)
+- **Source:** arXiv:2604.03208 - https://arxiv.org/html/2604.03208
+- **Tracks:** multi-temporal-scale world models in a shared latent space
+- **Carnot hook:** Secondary architectural reference for a shared-latent-space alternative to per-level
+  model rebuilding; targets temporal hierarchy WITHIN one episode rather than across level-up boundaries,
+  so it is a weaker match than ReDRAW/DynaMITE-RL for this specific problem.
+- **Actionability:** Background reading only.
+
+**Bottom line applied to `.473`:** ReDRAW (residual warm-start, frozen base) is the primary mechanism
+`exp5157` implements and tests against the cold-restart control on registry games sharing a recurring
+`mechanic_class` across their own levels. DynaMITE-RL's cross-session latent conditioning is the
+complementary mechanism informing `exp5158`'s goal-energy-ranker carryover. BAM and ASR (adaptive/
+selective reset) are queued as `.474` follow-ups if `.473`'s simple always-warm-start test shows
+per-game-mixed rather than uniform results.
+
+<!-- V473-OUTER-LOOP-PLANNER-REFERENCES-END -->

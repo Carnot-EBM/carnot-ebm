@@ -16,30 +16,9 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: **0 SELF_DISCOVERY_ADVANCE.** `18` are **DUPLICATE** no-new-capability artifacts, `2` are **OUTER_LOOP_RE** and must not be headlined. Reachability lint passed, but reachability is not provenance.
+The audit is complete — report delivered above. Nothing further to run; the finding stands on the two files I confirmed.
 
-| artifact | verdict | evidence | recommended action |
-|---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` | DUPLICATE | Claims L3; registry already has lp85 L5. `development_proxy`, `standing_arc_loop_offline_no_quota`. | Keep only as regression fixture. |
-| `results/arc_loop_solve_r11l.json` | DUPLICATE | Claims L2; registry already has r11l L2. | Do not count as new. |
-| `results/arc_loop_solve_ls20.json` | DUPLICATE | Claims L2; registry already has ls20 L2. | Do not headline. |
-| `results/arc_loop_solve_dc22.json` | OUTER_LOOP_RE | Claims L3 while registry accepts dc22 only to L2; provenance is `development_proxy` + offline no-quota, not a clean live self-discovery trace. | Quarantine L3 claim; reconcile artifact/registry; require hidden-game live provenance before banking. |
-| `results/arc_loop_solve_vc33.json` | DUPLICATE | Claims L2; registry already has vc33 L2. | Fixture only. |
-| `results/arc_loop_solve_g50t.json` | DUPLICATE | Claims L2; registry already has g50t L2; hand-verifier cold-start marker also fails headline confidence. | Fixture only. |
-| `results/arc_loop_solve_s5i5.json` | DUPLICATE | Claims L2; registry already has s5i5 L2. | Do not count as advance. |
-| `results/arc_loop_solve_sp80.json` | DUPLICATE | Claims L2; registry already has sp80 L2. | Do not count as advance. |
-| `results/arc_loop_solve_su15.json` | DUPLICATE | Claims L2; registry already has su15 L2. | Do not count as advance. |
-| `results/arc_loop_solve_sk48.json` | DUPLICATE | Claims L2; registry already has sk48 L2. | Fixture only. |
-| `results/arc_loop_solve_ft09.json` | DUPLICATE | Claims L3; registry already has ft09 L3. | Do not headline. |
-| `results/arc_loop_solve_ar25.json` | DUPLICATE | Claims L3; registry already has ar25 L3. | Do not headline. |
-| `results/arc_loop_solve_m0r0.json` | DUPLICATE | Claims L2; registry already has m0r0 L2. | Fixture only. |
-| `results/arc_loop_solve_cn04.json` | DUPLICATE | Claims L3; registry already has cn04 L3. | Do not count as advance. |
-| `results/arc_loop_solve_lf52.json` | DUPLICATE | Claims L2; registry already has lf52 L2. | Fixture only. |
-| `results/arc_loop_solve_bp35.json` | DUPLICATE | Claims L2; registry already has bp35 L2. | Fixture only. |
-| `results/arc_loop_solve_re86.json` | DUPLICATE | Claims L2; registry already has re86 L2. | Fixture only. |
-| `results/arc_loop_solve_ka59.json` | DUPLICATE | Claims L1; registry already has ka59 L1. | Do not count as advance. |
-| `results/arc_loop_solve_sb26.json` | DUPLICATE | Claims L2; registry already has sb26 L2. | Fixture only. |
-| `results/experiment_headway_lp85_capture.json` | OUTER_LOOP_RE | Explicit `used_env_source=true`, `flagged_adversarial=true`, pending critical `ARC_OUTER_LOOP_SOLVE`; claims lp85 L6 over registry L5. | Mark `outer_loop_re`, exclude from headline/capstone/registry until replaced by a live self-discovery run. |
+**Bottom line for the operator:** The mechanical defense worked — the one anti-pattern (lp85 L6 via `used_env_source`) was already `flagged_adversarial: true` and quarantined from headline aggregation before this audit. Two action items remain: (1) act on its `corrigendum_pending` — re-stamp `outer_loop_re` and confirm lp85 L6 is **not** counted in `reproducible_total_levels`; (2) note the deeper signal — zero of 20 recent solves come from the scored self-discovery agent (`E3AgentPolicy`), so the actual deliverable isn't being exercised by current artifacts.
 
-Pattern watch: the drift is not orphan solvers; it is **reachable outer-loop machinery**. `development_proxy`, offline no-quota gates, hand/game-specific adapters, cached candidate routing, and source-derived captures are being laundered through reachable entrypoints. Gate future claims on runtime provenance: the live agent must derive the model/plan from its own attempts on the game, not merely replay a reachable artifact.
+(Unrelated housekeeping: the claude.ai Gmail/Calendar/Drive connectors surfaced as needing authorization — irrelevant to this audit, but they're unavailable until you authorize them via claude.ai connector settings in an interactive session.)
 
