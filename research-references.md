@@ -26191,3 +26191,168 @@ Added by Exp5162 after the `.473` A1-A3 outcomes were available. The V473 primar
 **Bottom line applied to `.474`:** For milestone .474, do not scale the simple ReDRAW residual warm-start as-is: Exp5157 was a zero-gain null, Exp5158 improved only 1/3 games, and Exp5159 was gate-blocked. Prioritize adaptive retention, selective reset, and a representation-level split between persistent mechanic abstractions and fast-reset level-local details.
 
 <!-- V474-PLANNER-REFERENCES-END -->
+
+## V474 Outer-Loop Planner References — Off-ARC Verifier-Moat Literature And Trajectory-Enumeration Wall - 2026-07-02
+
+Added by the outer-loop planning session that designed milestone `2026.07.474` (this session). Two
+independent verification passes: (1) the outer-loop session that drafted `research-roadmap-vNEXT.md`
+resolved every arXiv ID below via live WebFetch before citing it; (2) a dedicated planning-time research
+agent independently re-verified the same IDs plus ran fresh searches across five threads (cross-level
+warm-starting, ARC-AGI-3-specific, energy-based verifiers, program-synthesis world models, general
+sweep) via live WebSearch/WebFetch. No discrepancies found between the two passes. Full source list at
+the end of this section.
+
+### Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning
+- **Source:** arXiv:2605.18871 - https://arxiv.org/html/2605.18871
+- **Tracks:** energy-based verifiers, LoRA-adapter ensembles, uncertainty-aware regeneration/abstention
+- **Carnot hook:** Closest published analog to Carnot's own verifier-ensemble architecture (heterogeneous
+  LoRA-adapter ensemble on one frozen encoder; ensemble mean ranks candidates, ensemble std drives an
+  abstain/regenerate loop). Reports TACO pass@1 88.6% (+52.2pp over self-consistency), K&K 99.9%, but
+  ties self-consistency on GSM8K — i.e. it wins where SC is unsaturated and does NOT win where a cheap
+  oracle/SC already dominates, directly corroborating Carnot's own Circularity/Oracle-Distinctness
+  discipline. This is the design `exp4940` staged as an executable spec; Carnot's own MuSR replication
+  attempt (`results/distributional_energy_verifier_musr.json`) found SC=0.56 beats a cheap PROMPTED
+  proxy of this architecture — the paper's own real trained-LoRA construction has not yet been tested by
+  Carnot, only a cheap proxy.
+- **Actionability:** Retired as an external-TEXT-scorer construction class per `.474`'s Phase 0 (seven
+  milestones of null/marginal Carnot replications) UNLESS a genuinely different substrate is used
+  (hidden-state scoring, below) rather than a fourth external-text scorer attempt.
+
+### Unsupervised Process Reward Models (uPRM)
+- **Source:** arXiv:2605.10158 - https://arxiv.org/abs/2605.10158 (EPFL)
+- **Tracks:** process reward models, no human step-labels, next-token-probability scoring
+- **Carnot hook:** Derives step-error scoring purely from LLM next-token probabilities with no ground-
+  truth step labels; reports +15% absolute vs LLM-as-Judge for first-error localization and **+6.9% vs
+  majority voting** as a test-time verifier on ProcessBench. Oracle-distinct by construction (no unit
+  test / executable oracle involved) and the sharpest available published replication target for
+  Carnot's own process-verifier work.
+- **Actionability:** Same Phase 0 retirement class as the distributional EBM above (an external-text-
+  scorer construction) — Carnot's own uPRM-style replication on MuSR was part of the seven-milestone
+  null/marginal PHASE D trail. Whether MuSR is inside uPRM's own validated domain set should be checked
+  before treating a null there as "uPRM doesn't replicate" rather than "uPRM wasn't tested in-domain."
+
+### Energy-Based Reward Models (EBRM)
+- **Source:** arXiv:2504.13134 - https://arxiv.org/abs/2504.13134 (COLM 2025)
+- **Tracks:** post-hoc energy refinement, reward model wrapping, no base-model retraining
+- **Carnot hook:** A post-hoc energy refinement LAYER on top of a standard reward model (no retraining
+  of the base scorer); +5.97% on safety-critical alignment benchmarks. Cheap-to-test pattern for
+  wrapping Carnot's EXISTING verifiers, distinct from training a scorer from scratch.
+- **Actionability:** Also in the Phase 0 retirement class — Carnot's own EBRM construction attempts
+  landed at exactly `+0.0` in the cleanest run. Retired alongside the other two external-text-scorer
+  constructions.
+
+### TrajSelector: Enhancing Test-Time-Scaling for LLM Reasoning
+- **Source:** arXiv:2510.16449 (Yu et al.)
+- **Tracks:** hidden-state process verification, lightweight internal-representation scoring
+- **Carnot hook:** A GENUINELY DIFFERENT mechanism class from everything PHASE D tried: a lightweight
+  0.6B-parameter verifier reads the SAMPLER LLM's OWN hidden states for process-level candidate scoring
+  (end-to-end trained, no massive step-level annotation). Best-of-32 gives +4.61% over majority voting
+  and +4.31-12.21% over existing text-based PRMs, at lower inference cost than a generative judge. This
+  is architecturally closer to Carnot's verifier philosophy (scoring from INTERNAL representations, not
+  generated text) — the sanctioned exception to the Phase 0 PHASE D retirement.
+- **Actionability:** Design basis for `.474`'s `exp5178` (hidden-state verifier pilot). Explicitly NOT
+  scope-matched to the PHASE D retirement (internal-representation scoring vs. external-text scoring).
+
+### VerifySteer: Cheap Verification via Hidden-State Steering
+- **Source:** arXiv:2605.20745 (May 2026)
+- **Tracks:** hidden-state steering, no fine-tuning, cost-efficiency verification
+- **Carnot hook:** Even cheaper than TrajSelector — a hidden-state signal near verification-paragraph
+  boundaries encodes accept/reject strictness; STEERING it (no fine-tuning) is "competitive with self-
+  consistency while requiring 4-7x less inference compute." Targets `ops/north-star.md` section 5's
+  ALREADY-RELAXED win condition (efficiency-parity, not an accuracy edge) more directly than
+  TrajSelector's accuracy-lift framing.
+- **Actionability:** Documented fallback/secondary design for `exp5178` if hidden-state probe TRAINING
+  proves harder to stand up than a steering INTERVENTION within the task's time budget.
+
+### Discriminative Verification For LLM Reasoning &amp; Calibrated/Explanatory Verifiers
+- **Source:** arXiv:2510.14913 (Montgomery et al.), arXiv:2509.19681 (Garg et al.)
+- **Tracks:** small discriminative verifier paired with self-consistency, calibrated reasoning
+- **Carnot hook:** Both pair a cheap, SEPARATE-model verifier WITH self-consistency (not replacing it)
+  and report results on MMLU-Pro-class domains. The Discriminative Verification paper reports +15.3% on
+  AIME2025 vs. SOTA generative verification at much lower compute; the Explanatory Verifier is
+  specifically strong at catching "both candidates identically wrong" — a failure mode plain majority-
+  vote structurally cannot detect.
+- **Actionability:** Concrete precedent for how `exp5178`'s small discriminative verifier should be
+  trained and evaluated against a tuned-SC baseline (not a naive k=1 strawman, per the `.461` D3
+  degeneracy lesson).
+
+### Autoregressive LMs are Secretly Energy-Based Models
+- **Source:** arXiv:2512.15605 (revised May 2026)
+- **Tracks:** theory, ARM/EBM bijection, formal grounding
+- **Carnot hook:** Proves an explicit bijection between autoregressive models and EBMs in function space
+  — formal grounding for "energy VERIFIES / autoregressive GENERATES" as two views of the same optimum.
+  Strengthens the oracle-distinctness framing rather than changing any concrete `.474` task.
+- **Actionability:** Citation-only; informs paper-v6/positioning prose, not an experiment design.
+
+### MAP: Map-then-Act Paradigm for Long-Horizon Interactive Agent Reasoning — NEW, HIGH-PRIORITY
+- **Source:** arXiv:2605.13037 - https://arxiv.org/pdf/2605.13037 — independently verified via live
+  WebFetch by the planning-time research agent (not previously in Carnot's literature base).
+- **Tracks:** ARC-AGI-3 (direct benchmark), hierarchical/map-then-act agents, cognitive-map construction
+  before execution
+- **Carnot hook:** Directly on-domain and the strongest reported ARC-AGI-3 lift found in this sweep. A
+  3-stage framework (Global Exploration to Task-Specific Mapping to Knowledge-Augmented Execution) that
+  builds a structured "cognitive map" of an environment BEFORE acting, instead of reactive step-by-step
+  planning. Reports the approach **surpasses a near-zero baseline in 22 of 25 public ARC-AGI-3 games**,
+  and that training on map-then-act trajectories (a MAP-2K dataset) beats imitation of expert execution
+  traces. This maps directly onto `ops/verifier_gaps.md` GAP-4891's decisive UPDATE-3 finding (goal-
+  energy SEPARATES win from near-win but does not GUIDE the search — the winning trajectory is never
+  ENUMERATED into the frontier) and GAP-ARCH-NO-HIERARCHICAL-SEARCH (no subgoal/landmark/MCTS engine
+  wired). Building an explicit map/landmark structure BEFORE search, rather than pruning a flat frontier
+  (the `exp5175` relational-mask-pruner's approach), is a structurally distinct candidate for the same
+  wall. CAVEAT (do not over-claim from one paragraph): "surpasses near-zero baseline" is a low bar taken
+  at face value — the paper needs a full read (model size, exact metric, comparison baselines) before
+  any Carnot claim cites its magnitude. Treat as a strong LEAD, not a validated result, until read in full.
+- **Actionability:** Cited in `.474`'s `exp5172` (SOTA ingestion) as a priority deep-read target, and
+  flagged in `exp5175`/`exp5176`'s task context as the next candidate direction for `.475` if the
+  relational-mask-pruner A/B does not fully resolve the trajectory-enumeration wall. Not built into
+  `.474` directly — Phase B's already-built-and-unit-tested pruner deserves its first real test before
+  the roadmap pivots to a structurally new (map-building) mechanism.
+
+### Mind-Studio: Executable World Models From Trajectories
+- **Source:** arXiv:2606.16070 - https://arxiv.org/html/2606.16070 (June 2026)
+- **Tracks:** program-synthesis world models, executable environment models, entropy-selected traces
+- **Carnot hook:** Synthesizes executable pygame-style world models from trajectories plus entropy-
+  selected traces plus a "game skill file," improving chosen-action next-state-prediction from 0.3%
+  (PoE-World's own reported number) to 48.7% on Montezuma's Revenge — a large improvement over the exact
+  PoE-World baseline Carnot's own program-synthesis-filter attempts (`exp4689`, now retired) were built
+  against.
+- **Actionability:** Informational only for `.474` (PoE-World-adjacent work is not in this milestone's
+  scope). Worth reading before any FUTURE program-synthesis-world-model attempt cites PoE-World as the
+  state of the art — Mind-Studio already supersedes it on the comparable metric.
+
+### ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence (official technical report)
+- **Source:** arXiv:2603.24621 - https://arxiv.org/abs/2603.24621
+- **Tracks:** ARC-AGI-3 benchmark design, frontier-model baselines
+- **Carnot hook:** Confirms frontier AI scores ~0.51% vs. 100% human on the benchmark design's own terms
+  — corroborates the project's existing framing that ARC-AGI-3 is a genuinely hard, un-gamed test, not
+  evidence of a specific lever.
+- **Actionability:** Citation-only, background confirmation.
+
+### Programmable Probabilistic Computer with 1,000,000 p-bits
+- **Source:** arXiv:2606.25313 - https://arxiv.org/abs/2606.25313 (June 24, 2026, brand new)
+- **Tracks:** FPGA-networked Ising machines, boundary-state exchange, p-bit scaling
+- **Carnot hook:** Networks FPGAs into one large Ising machine via 1-bit boundary-state exchange,
+  &gt;1 trillion flips/sec, all couplings in on-chip memory. Directly relevant to Carnot's KV260 track —
+  the boundary-exchange-frequency-vs-local-update-frequency framing is a concrete correctness criterion
+  the KV260 sampler-parity work could adopt/cite in a future hardware milestone.
+- **Actionability:** Background reference for the KV260/FPGA hardware-continuity track; not an
+  `.474` task by itself (KV260 stays at reachability-smoke terminal state per `ops/north-star.md` section 3).
+
+**Bottom line for `.474`:** the off-ARC PHASE D external-text-scorer literature (distributional EBM,
+uPRM, EBRM) is well-replicated by Carnot's own seven-milestone trail and is retired as a construction
+CLASS in Phase 0 — not because the papers are wrong, but because their OWN failure mode ("struggles
+where a cheap oracle already exists") is exactly what Carnot's replications hit. The genuinely NEW
+mechanism class (hidden-state/internal-representation scoring: TrajSelector, VerifySteer) is the
+sanctioned exception and the design basis for `exp5178`. On the ARC side, MAP (arXiv:2605.13037) is the
+most important new finding this session — a verified, directly-on-benchmark, strong-sounding result
+that is architecturally complementary to (not a duplicate of) the already-built relational-mask-pruner,
+and should anchor `.475` planning if Phase B's first real test of the pruner does not fully close the
+trajectory-enumeration wall.
+
+**Sources (all independently verified via live WebSearch/WebFetch, 2026-07-02):** arXiv:2605.18871,
+arXiv:2605.10158, arXiv:2504.13134, arXiv:2510.16449, arXiv:2605.20745, arXiv:2510.14913,
+arXiv:2509.19681, arXiv:2512.15605, arXiv:2605.13037, arXiv:2606.16070, arXiv:2603.24621,
+arXiv:2606.25313, arXiv:2505.10819 (PoE-World, re-confirmed), arXiv:2605.25931 (Explore Before You
+Solve, re-confirmed — RHAE=0.2116 public/4-of-25 games, RHAE=0.30 on the private 55-game set).
+
+<!-- V474-OUTER-LOOP-VERIFIER-MOAT-REFERENCES-END -->

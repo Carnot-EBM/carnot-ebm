@@ -180,18 +180,41 @@ Full scan in the SOTA-ingestion task's citations; headline items surfaced this p
   paper was found using KAN specifically as a reasoning verifier/reward model — an open gap, not a search
   miss, noted for a future milestone if the KAN tier's role expands.
 - **"Explore Before You Solve"** (arXiv:2605.25931, ARC-AGI-3-specific) — proposes AERA
-  (explore/verify/plan), reports RHAE=0.30 on the private 55-game set with a 0.5B model, and finds "all 25
-  public ARC-AGI-3 games are solvable via non-intelligent strategies," a benchmark-validity point that
-  corroborates CLAUDE.md's existing framing (public-game replays are not the scored deliverable). Gives
-  Carnot a fresh external RHAE comparator (0.30 private) against Carnot's own ~0.05-0.08.
+  (explore/verify/plan), reports RHAE=0.2116 (4/25) on the public games with a 0.5B model and RHAE=0.30 on
+  the private 55-game set, and finds "all 25 public ARC-AGI-3 games are solvable via non-intelligent
+  strategies," a benchmark-validity point that corroborates CLAUDE.md's existing framing (public-game
+  replays are not the scored deliverable). Gives Carnot a fresh external RHAE comparator (0.30 private)
+  against Carnot's own ~0.05-0.08.
 - **Autoregressive LMs are Secretly EBMs** (arXiv:2512.15605, revised May 2026) — theory paper proving an
   explicit bijection between ARMs and EBMs in function space; provides formal grounding for "energy
   VERIFIES / autoregressive GENERATES" as two views of the same optimum, strengthening the
   oracle-distinctness framing rather than changing any concrete task.
+- **MAP: Map-then-Act Paradigm for Long-Horizon Interactive Agent Reasoning** (arXiv:2605.13037,
+  independently verified live 2026-07-02, NOT previously in Carnot's literature base) — the strongest
+  ARC-AGI-3-specific finding surfaced this planning session. A 3-stage framework (Global Exploration to
+  Task-Specific Mapping to Knowledge-Augmented Execution) builds a structured "cognitive map" of an
+  environment BEFORE acting, instead of reactive step-by-step planning; reports the approach surpasses a
+  near-zero baseline on **22 of 25 public ARC-AGI-3 games**. This maps directly onto `ops/verifier_gaps.md`
+  GAP-4891's decisive finding (goal-energy SEPARATES win from near-win but does not GUIDE the search — the
+  winning trajectory is never ENUMERATED) and GAP-ARCH-NO-HIERARCHICAL-SEARCH (no subgoal/landmark engine
+  wired): building an explicit map/landmark structure BEFORE search is architecturally distinct from
+  `exp5175`'s relational-mask-pruner (which prunes a flat frontier rather than pre-building a map).
+  CAVEAT: "surpasses near-zero baseline" is a low bar taken from an abstract-level read — this is a strong
+  LEAD, not a validated result, until read in full. NOT built into `.474` directly (the already-built,
+  unit-tested pruner deserves its first real test first); cited in `exp5172` as a priority deep-read and
+  flagged as the leading `.475` candidate if Phase B's pruner does not fully close the wall.
+- **Mind-Studio** (arXiv:2606.16070, June 2026) — synthesizes executable world models from trajectories,
+  improving chosen-action next-state-prediction from 0.3% (PoE-World's own number) to 48.7% on Montezuma's
+  Revenge — supersedes the PoE-World baseline Carnot's retired `exp4689` program-synthesis-filter attempt
+  was built against. Informational only for `.474`; relevant if program-synthesis world-model work is
+  ever reopened.
 
-Full per-paper detail (all requested source categories) appended to `research-references.md` by Phase A's
-SOTA-ingestion task (`exp5172`) and by this planning session directly under "V474 Outer-Loop Planner
-References — Off-ARC Verifier-Moat Literature."
+Full per-paper detail (all requested source categories, plus the MAP/Mind-Studio/ARC-tech-report/p-bit-
+computer findings above) already appended to `research-references.md` under "V474 Outer-Loop Planner
+References — Off-ARC Verifier-Moat Literature And Trajectory-Enumeration Wall - 2026-07-02" (this
+planning session, both citation passes cross-verified with zero discrepancies). `exp5172` (Phase A SOTA
+ingestion) runs a further INCREMENTAL sweep and a full deep-read of MAP specifically — it does not
+re-discover what is already logged here.
 
 ## Architecture
 
@@ -296,9 +319,11 @@ Reserved infrastructure slots (2, per CLAUDE.md) plus the mandatory milestone tr
   seed-identical) variance. Gates `exp5173`.
 - **`exp5172`** — SOTA-ingestion task (mandatory per CLAUDE.md's SOTA-Ingestion Cycle Discipline for a
   bleeding-edge headline track): energy-guided/verifier-guided diffusion decoding literature (feeds
-  `exp5173`'s design), hierarchical/subgoal search for interactive agents (feeds Phase B), and an
-  incremental sweep for anything published since this session's literature pass on hidden-state /
-  discriminative verifiers (feeds `exp5178`).
+  `exp5173`'s design), hierarchical/subgoal search for interactive agents (feeds Phase B, INCLUDING a full
+  deep-read of MAP, arXiv:2605.13037, beyond this planning session's abstract-level read — confirm or
+  refute the 22/25-games claim's magnitude and log a design note on map-then-act vs. frontier-pruning for
+  `.475`), and an incremental sweep for anything published since this session's literature pass on
+  hidden-state / discriminative verifiers (feeds `exp5178`).
 - **`exp5173`** — the DiffusionGemma Use-Case-1 pilot itself: energy-guided discrete diffusion on an
   executable domain (HumanEval/MBPP), composing DiffusionGemma's native per-step token distribution with
   Carnot's executable verifier ensemble during the 12-48 denoising steps, measured against an unguided
@@ -327,7 +352,11 @@ Reserved infrastructure slots (2, per CLAUDE.md) plus the mandatory milestone tr
   outcome, per the `exp5159` precedent (a gated attempt that reports `blocked_upstream_gate_not_passed`
   still counts structurally). This targets ALREADY-adaptered, already-deepened games — distinct from the
   retired first-contact generation-axis scope (`exp4688`/`exp4689`/`exp5154`), which targeted UNSOLVED
-  games.
+  games. If `exp5175`'s pruner A/B is a clean null too, `exp5176`'s own artifact should explicitly name
+  MAP (arXiv:2605.13037, map-then-act before search) as the recommended `.475` pivot direction rather than
+  a fourth flat-frontier pruning/ranking variant — the pruner and MAP attack the enumeration wall by
+  structurally different means (prune a flat frontier vs. pre-build a map/landmark structure), so a pruner
+  null does not predict a MAP null.
 
 ### Phase C: New Verifier Construction, Hardware, Capstone
 
