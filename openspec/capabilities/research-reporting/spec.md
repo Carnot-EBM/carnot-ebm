@@ -822,6 +822,92 @@ with the Exp 5170 retired-extras entry present
 the Exp 5170 artifact records
 `false_positive_check_against_exp5178=true`.
 
+### REQ-REPORT-5172: V474 SOTA Ingestion For Diffusion Guidance And Hierarchical Search
+
+The Exp 5172 workflow SHALL produce
+`results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json`
+for the reserved `.474` SOTA-ingestion slot. The workflow SHALL read the full
+`V474 Outer-Loop Planner References` section of `research-references.md`, SHALL
+read `ops/verifier_gaps.md` GAP-4891, SHALL read
+`python/carnot/agentic/arc_relational_mask_pruner.py`, and SHALL read
+`scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py` before writing the
+artifact. It SHALL spot-check two or more already-logged V474 arXiv citations
+against fetched arXiv abstract pages and record whether each title/topic
+resolves correctly.
+
+The workflow SHALL fetch and read the full MAP paper
+(`arXiv:2605.13037`, not only the abstract) and SHALL extract a falsifiable
+design note covering (1) the model/backbone or architecture size used by MAP,
+(2) the exact quantitative ARC-AGI-3 headline result with raw level and score
+numbers, (3) the structure of the cognitive-map data MAP constructs, and
+(4) a comparison against Exp 5175's relational-mask-pruner design. The
+comparison SHALL explicitly distinguish a pre-search map-then-act stage from a
+flat-frontier action-class pruner and SHALL state whether MAP should be
+prototyped in `.475` if the Phase B pruner does not fully close GAP-4891.
+
+The workflow SHALL run only the reliable low-concurrency discovery channel:
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, and bounded manual
+fetches of selected sources. It SHALL NOT invoke `/deep-research`, high
+fan-out research harnesses, live training, leaderboard submission, or
+`scripts/research_conductor.py`. The incremental sweep SHALL cover
+energy-guided or verifier-guided diffusion decoding, hierarchical/subgoal or
+map-based search for interactive grid-world agents, and hidden-state/internal
+representation verifiers. If no strictly post-2026-07-02 publication appears,
+the artifact SHALL say so honestly and may separately record citations surfaced
+by the July 2 sweep with their actual submitted dates.
+
+The workflow SHALL condition follow-up findings on the actual availability and
+outcomes of
+`results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json`,
+`results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`,
+and
+`results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json`. Missing
+upstream artifacts SHALL be recorded as absent rather than inferred. The
+workflow SHALL append, not rewrite, a `V475 Planner References` section to
+`research-references.md`, leading with the MAP deep-read.
+
+The artifact SHALL include top-level fields
+`v474_citations_spot_checked`, `map_paper_deep_read`,
+`incremental_findings`, `outcome_conditioned_findings`,
+`references_md_updated`, `bottom_line_recommendation_for_475`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also record
+`experiment_id`, `milestone`, `spec_refs`, `duration_s`, `search_window`,
+`upstream_outcome_summary`, `queries_run`, `sources_fetched`,
+`no_deep_research_used`, `conductor_modified`, and `tests_run`.
+
+Required field principles:
+
+- `v474_citations_spot_checked`: principle "Spot-checking the already-logged citations prevents a stale planning note from silently promoting a wrong or retitled source."
+- `map_paper_deep_read`: principle "The abstract-level 'surpasses near-zero baseline in 22/25 games' claim is a strong lead but not yet a validated, quotable result; this field upgrades it to a raw-number design note or narrows it honestly."
+- `incremental_findings`: principle "Fabricated citations would poison future planning; every entry must trace to a real fetched source, and zero strict post-cutoff findings is acceptable when stated plainly."
+- `outcome_conditioned_findings`: principle "Follow-up literature must react to the actual Exp5171/5173/5175 outcomes that exist, not to roadmap intent."
+- `references_md_updated`: principle "True only after the V475 section is appended to research-references.md without deleting prior history."
+- `bottom_line_recommendation_for_475`: principle "The next roadmap needs a falsifiable MAP/pruner decision, not a generic literature summary."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5172-MAP-DEEP-READ: MAP Is Converted Into A Falsifiable .475 Design Note
+
+**Given** the V474 references section, GAP-4891, the relational-mask pruner
+implementation, and the MAP full paper are readable
+**When** the Exp 5172 ingestion workflow runs
+**Then** it records the MAP model/backbone size, raw ARC-AGI-3 level and score
+table, cognitive-map contents, and comparison against the relational-mask
+pruner, and its bottom line explicitly says whether a MAP-style pre-stage
+should be prototyped in `.475` if Phase B does not close the wall.
+
+#### SCENARIO-REPORT-5172-OUTPUTS: V475 References And Terminal Artifact Are Stable
+
+**Given** the low-concurrency sweep helpers are readable and the Exp5171,
+Exp5173, and Exp5175 artifacts may or may not be present
+**When** the Exp 5172 workflow writes outputs
+**Then** it writes the terminal JSON artifact, records citation spot-checks,
+records verified incremental and outcome-conditioned findings, appends one
+`V475 Planner References` section headed by the MAP deep-read, declares
+`inference_substrate="aggregation_from_upstream_artifacts"`, records no
+`/deep-research` use, records that `scripts/research_conductor.py` was not
+modified, and preserves idempotence when re-run.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
@@ -845,6 +931,12 @@ the Exp 5170 artifact records
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5170 | Planned (`python/carnot/experiment_5170_retire_phase_d_external_text_scorer_v474.py`, `results/experiment_5170_retire_phase_d_external_text_scorer_v474.json`) | Planned (`tests/python/test_experiment_5170_retire_phase_d_external_text_scorer_v474.py`) |
+
+## Implementation Status (REQ-REPORT-5172)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5172 | Implemented (`python/carnot/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py`, `results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json`, `research-references.md`) | Implemented (`tests/python/test_experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 

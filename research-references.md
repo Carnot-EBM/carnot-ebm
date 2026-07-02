@@ -26356,3 +26356,63 @@ arXiv:2606.25313, arXiv:2505.10819 (PoE-World, re-confirmed), arXiv:2605.25931 (
 Solve, re-confirmed — RHAE=0.2116 public/4-of-25 games, RHAE=0.30 on the private 55-game set).
 
 <!-- V474-OUTER-LOOP-VERIFIER-MOAT-REFERENCES-END -->
+
+
+## V475 Planner References - 2026-07-02
+
+Added by Exp5172 after a bounded V474 follow-up sweep. Spot-checked V474 citations resolved correctly: 2605.18871, 2510.16449, 2605.20745. The strict post-2026-07-02 arXiv window did not produce a newly submitted qualifying paper, so the incremental rows below are marked as July 2 surfaced findings with their real arXiv dates.
+
+### MAP Deep-Read: Map-then-Act For ARC-AGI-3
+- **Source:** arXiv:2605.13037 - https://arxiv.org/abs/2605.13037
+- **Model / architecture:** MAP is a three-stage prompting/training framework, not a single new ARC model. For the ARC-AGI-3 headline it uses Claude 4.6 Opus as the backbone with MAP prompting and allocates 30 task-specific mapping steps before acting. The trainable internalization arm fine-tunes Qwen3-4B-Thinking into MAP-4B on the MAP-2K trajectory dataset using ms-swift, 8 NVIDIA H800 GPUs, and 3 epochs; long-horizon tables also evaluate Qwen3 4B/8B/32B, GPT-4o variants, Kimi, Minimax, Deepseek, and Doubao backbones.
+- **Quantitative ARC headline:** MAP improves 22/25 games; mean score 0.774 -> 4.3268 (delta 3.5528); mean level 0.28 -> 1.72 (delta 1.44). Non-improved games: BP35, TR87, SC25.
+- **Cognitive map structure:** MAP has two map layers. The persistent cross-task global knowledge stores action syntax, interaction rules, and recurring error patterns. The task-specific cognitive map stores spatial layouts, reachable regions, object locations and relationships, object-action affordances, action effects, task-relevant preconditions, and ARC-AGI-3 game rules. Construction is driven by knowledge increment and state-novelty convergence rather than by executing the target task. Representative ARC maps contain environment layout, action effects, and game rules for TU93, VC33, and SB26.
+- **Comparison vs relational-mask pruner:** The relational-mask pruner is an online flat frontier reducer: it watches applied actions, learns which action classes never touch an induced relational target region, and prunes those edges only after evidence accumulates. MAP is a pre-search map-then-act stage: it spends a bounded exploration budget before the solver search to build a structured topology/affordance/rule representation, then conditions execution on that map. They are complementary if the map supplies landmarks, action-effect edges, or subgoals that make the winning trajectory enter the frontier before the pruner narrows it. MAP would replace the pruner only if a map-conditioned solver reaches the target under the same expansion budget without needing action-class pruning. Falsifiable .475 gate: on CD82/SK48/SP80, run pruner-only, map-only, and map-plus-pruner under the same 4000-expansion and reproduction-gated protocol; promote MAP only if map-only or map-plus-pruner banks a new level that pruner-only does not.
+
+### Incremental Findings Surfaced By The July 2 Sweep
+### Theoria: Rewrite-Acceptability Verification over Informal Reasoning States
+- **Source:** arXiv:2607.01223 - https://arxiv.org/abs/2607.01223
+- **Tracks:** structured verification, informal reasoning states, auditable transitions
+- **Carnot hook:** Useful as a non-hidden-state control for exp5178: it tests whether explicit typed state deltas catch hidden premises that scalar text judges miss.
+- **Actionability:** Keep as a verifier-trace design candidate, not as a replacement for the MAP/pruner trajectory-enumeration lever.
+
+### AutoMem: Automated Learning of Memory as a Cognitive Skill
+- **Source:** arXiv:2607.01224 - https://arxiv.org/abs/2607.01224
+- **Tracks:** long-horizon agents, memory skill, procedurally generated games
+- **Carnot hook:** A practical companion to MAP: Carnot's map pre-stage needs an explicit memory schema for discovered grid rules, failed probes, and action effects rather than a raw trace log.
+- **Actionability:** If MAP is prototyped, use a fixed JSON/file memory schema for spatial facts, affordances, and failed probes so the pre-stage is testable without another LLM.
+
+### Unified Energy for Invariant and Independent Decoding in Diffusion Language Models
+- **Source:** arXiv:2606.09159 - https://arxiv.org/abs/2606.09159
+- **Tracks:** diffusion language models, energy-guided decoding, distribution shift
+- **Carnot hook:** Directly relevant if exp5173 resumes: the energy should be position/dependency aware rather than a single whole-canvas reward pasted onto every denoising step.
+- **Actionability:** Use as the analytic baseline for any DiffusionGemma energy hook: report whether the guidance touches dependency/invariance errors or only reranks complete samples.
+
+### Prism: Efficient Test-Time Scaling via Hierarchical Search and Self-Verification for Discrete Diffusion Language Models
+- **Source:** arXiv:2602.01842 - https://arxiv.org/abs/2602.01842
+- **Tracks:** diffusion language models, hierarchical search, self-verification
+- **Carnot hook:** Prism is the closest structural template for verifier-guided diffusion decoding: branch/remask uncertain spans, verify intermediate completions, and reallocate compute.
+- **Actionability:** Treat as a stronger exp5173 fallback than global energy reranking if DiffusionGemma exposes remaskable intermediate states.
+
+### CLUE: Non-parametric Verification from Experience via Hidden-State Clustering
+- **Source:** arXiv:2510.01591 - https://arxiv.org/abs/2510.01591
+- **Tracks:** hidden-state verifier, non-parametric clustering, best-of-N reranking
+- **Carnot hook:** A cheap exp5178 baseline: before training a 0.6B verifier, test whether hidden-state delta centroids already separate Carnot's pass/fail traces.
+- **Actionability:** Prototype as a no-training hidden-state baseline alongside TrajSelector and VerifySteer.
+
+### Neither Parallel Nor Sequential: How DiffusionGemma Actually Commits Tokens
+- **Source:** arXiv:2606.14620 - https://arxiv.org/abs/2606.14620
+- **Tracks:** DiffusionGemma, commit-order telemetry, confidence calibration
+- **Carnot hook:** Exp5173 should log commit positions/confidence by task type; energy guidance may help math/code positions where confidence is meaningful and fail on factual recall.
+- **Actionability:** Make commit telemetry a precondition before claiming any DiffusionGemma guidance win.
+
+### Outcome-Conditioned Findings
+### V1: Unifying Generation and Self-Verification for Parallel Reasoners
+- **Source:** arXiv:2603.04304 - https://arxiv.org/abs/2603.04304
+- **Tracks:** cross-candidate ranking, pairwise verification, test-time scaling
+- **Carnot hook:** Exp5171 proves cross-candidate context beats vote on ARC-GEN; V1 suggests the next variant should compare candidates pairwise or tournament-style, not only pool them through a DeepSets score.
+- **Actionability:** If .475 extends the set encoder, add a pairwise/tournament candidate-ranking arm against the existing set-encoder@1 and vote@1 baselines.
+
+**Bottom line for `.475`:** MAP should be prototyped next if Phase B's pruner does not fully close GAP-4891: a MAP-style pre-stage should be prototyped as a bounded map-scout that builds spatial/affordance/rule landmarks before graph search, then A/B tested against pruner-only and map-plus-pruner under the same reproduction gate.
+
+<!-- V475-PLANNER-REFERENCES-END -->

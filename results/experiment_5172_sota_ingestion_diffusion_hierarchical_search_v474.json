@@ -1,0 +1,476 @@
+{
+  "bottom_line_recommendation_for_475": {
+    "principle": "The next roadmap needs a falsifiable MAP/pruner decision, not a generic literature summary.",
+    "value": "MAP should be prototyped next if Phase B's pruner does not fully close GAP-4891: a MAP-style pre-stage should be prototyped as a bounded map-scout that builds spatial/affordance/rule landmarks before graph search, then A/B tested against pruner-only and map-plus-pruner under the same reproduction gate."
+  },
+  "conductor_modified": false,
+  "duration_s": 0.0,
+  "experiment_id": "experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474",
+  "field_principles": {
+    "bottom_line_recommendation_for_475": "The next roadmap needs a falsifiable MAP/pruner decision, not a generic literature summary.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "incremental_findings": "Fabricated citations would poison future planning; every entry must trace to a real fetched source, and zero strict post-cutoff findings is acceptable when stated plainly.",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "map_paper_deep_read": "The abstract-level 'surpasses near-zero baseline in 22/25 games' claim is a strong lead but not yet a validated, quotable result; this field upgrades it to a raw-number design note or narrows it honestly.",
+    "outcome_conditioned_findings": "Follow-up literature must react to the actual Exp5171/5173/5175 outcomes that exist, not to roadmap intent.",
+    "references_md_updated": "True only after the V475 section is appended to research-references.md without deleting prior history.",
+    "v474_citations_spot_checked": "Spot-checking the already-logged citations prevents a stale planning note from silently promoting a wrong or retitled source."
+  },
+  "honest_verdict": "complete: map_deep_read_recommends_map_pre_stage_if_phase_b_pruner_stalls",
+  "incremental_findings": {
+    "principle": "Fabricated citations would poison future planning; every entry must trace to a real fetched source, and zero strict post-cutoff findings is acceptable when stated plainly.",
+    "value": [
+      {
+        "actionability": "Keep as a verifier-trace design candidate, not as a replacement for the MAP/pruner trajectory-enumeration lever.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2607.01223",
+        "carnot_hook": "Useful as a non-hidden-state control for exp5178: it tests whether explicit typed state deltas catch hidden premises that scalar text judges miss.",
+        "summary": "Submitted 2026-07-01 and surfaced in the July 2 verifier sweep. Theoria rewrites candidate answers into typed state transitions with explicit justifications and checks completeness of change, reporting 91.4% strict precision on 185 HLE-Verified Gold text problems.",
+        "title": "Theoria: Rewrite-Acceptability Verification over Informal Reasoning States",
+        "tracks": "structured verification, informal reasoning states, auditable transitions"
+      },
+      {
+        "actionability": "If MAP is prototyped, use a fixed JSON/file memory schema for spatial facts, affordances, and failed probes so the pre-stage is testable without another LLM.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2607.01224",
+        "carnot_hook": "A practical companion to MAP: Carnot's map pre-stage needs an explicit memory schema for discovered grid rules, failed probes, and action effects rather than a raw trace log.",
+        "summary": "Submitted 2026-07-01 and surfaced in the July 2 map/search sweep. AutoMem promotes file-system memory operations to first-class agent actions and optimizes memory schemas plus model memory proficiency, reporting roughly 2x-4x performance gains on Crafter, MiniHack, and NetHack.",
+        "title": "AutoMem: Automated Learning of Memory as a Cognitive Skill",
+        "tracks": "long-horizon agents, memory skill, procedurally generated games"
+      },
+      {
+        "actionability": "Use as the analytic baseline for any DiffusionGemma energy hook: report whether the guidance touches dependency/invariance errors or only reranks complete samples.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2606.09159",
+        "carnot_hook": "Directly relevant if exp5173 resumes: the energy should be position/dependency aware rather than a single whole-canvas reward pasted onto every denoising step.",
+        "summary": "Surfaced by the diffusion-guidance query. Uni-E combines invariant and independent energy terms to address dependency and invariance distribution shift in DLM/DLLM decoding and is model agnostic.",
+        "title": "Unified Energy for Invariant and Independent Decoding in Diffusion Language Models",
+        "tracks": "diffusion language models, energy-guided decoding, distribution shift"
+      },
+      {
+        "actionability": "Treat as a stronger exp5173 fallback than global energy reranking if DiffusionGemma exposes remaskable intermediate states.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2602.01842",
+        "carnot_hook": "Prism is the closest structural template for verifier-guided diffusion decoding: branch/remask uncertain spans, verify intermediate completions, and reallocate compute.",
+        "summary": "Surfaced by the verifier-guided diffusion query. Prism adds hierarchical trajectory search, local remasking branches, and self-verified feedback for dLLMs, matching best-of-N with fewer function evaluations on math/code benchmarks.",
+        "title": "Prism: Efficient Test-Time Scaling via Hierarchical Search and Self-Verification for Discrete Diffusion Language Models",
+        "tracks": "diffusion language models, hierarchical search, self-verification"
+      },
+      {
+        "actionability": "Prototype as a no-training hidden-state baseline alongside TrajSelector and VerifySteer.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2510.01591",
+        "carnot_hook": "A cheap exp5178 baseline: before training a 0.6B verifier, test whether hidden-state delta centroids already separate Carnot's pass/fail traces.",
+        "summary": "Not newly submitted, but newly surfaced by the exact July 2 hidden-state query. CLUE uses hidden-state deltas and nearest-centroid success/failure clusters with no trainable parameters, reporting AIME24 56.7% majority@64 to 70.0% top-maj@16 with a 1.5B model.",
+        "title": "CLUE: Non-parametric Verification from Experience via Hidden-State Clustering",
+        "tracks": "hidden-state verifier, non-parametric clustering, best-of-N reranking"
+      },
+      {
+        "actionability": "Make commit telemetry a precondition before claiming any DiffusionGemma guidance win.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2606.14620",
+        "carnot_hook": "Exp5173 should log commit positions/confidence by task type; energy guidance may help math/code positions where confidence is meaningful and fail on factual recall.",
+        "summary": "Surfaced by the DiffusionGemma-specific query. The paper instruments google/diffusiongemma-26B-A4B-it and finds partial left-to-right commit bias, large simultaneous commit batches, regime-dependent behavior, and confidence that predicts math correctness but not factual recall.",
+        "title": "Neither Parallel Nor Sequential: How DiffusionGemma Actually Commits Tokens",
+        "tracks": "DiffusionGemma, commit-order telemetry, confidence calibration"
+      }
+    ]
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "map_paper_deep_read": {
+    "principle": "The abstract-level 'surpasses near-zero baseline in 22/25 games' claim is a strong lead but not yet a validated, quotable result; this field upgrades it to a raw-number design note or narrows it honestly.",
+    "value": {
+      "cognitive_map_structure": "MAP has two map layers. The persistent cross-task global knowledge stores action syntax, interaction rules, and recurring error patterns. The task-specific cognitive map stores spatial layouts, reachable regions, object locations and relationships, object-action affordances, action effects, task-relevant preconditions, and ARC-AGI-3 game rules. Construction is driven by knowledge increment and state-novelty convergence rather than by executing the target task. Representative ARC maps contain environment layout, action effects, and game rules for TU93, VC33, and SB26.",
+      "comparison_vs_relational_mask_pruner": "The relational-mask pruner is an online flat frontier reducer: it watches applied actions, learns which action classes never touch an induced relational target region, and prunes those edges only after evidence accumulates. MAP is a pre-search map-then-act stage: it spends a bounded exploration budget before the solver search to build a structured topology/affordance/rule representation, then conditions execution on that map. They are complementary if the map supplies landmarks, action-effect edges, or subgoals that make the winning trajectory enter the frontier before the pruner narrows it. MAP would replace the pruner only if a map-conditioned solver reaches the target under the same expansion budget without needing action-class pruning. Falsifiable .475 gate: on CD82/SK48/SP80, run pruner-only, map-only, and map-plus-pruner under the same 4000-expansion and reproduction-gated protocol; promote MAP only if map-only or map-plus-pruner banks a new level that pruner-only does not.",
+      "model_architecture": "MAP is a three-stage prompting/training framework, not a single new ARC model. For the ARC-AGI-3 headline it uses Claude 4.6 Opus as the backbone with MAP prompting and allocates 30 task-specific mapping steps before acting. The trainable internalization arm fine-tunes Qwen3-4B-Thinking into MAP-4B on the MAP-2K trajectory dataset using ms-swift, 8 NVIDIA H800 GPUs, and 3 epochs; long-horizon tables also evaluate Qwen3 4B/8B/32B, GPT-4o variants, Kimi, Minimax, Deepseek, and Doubao backbones.",
+      "quantitative_headline_result": {
+        "arc_agi3_full_table": {
+          "AR25": {
+            "map": {
+              "level": 3,
+              "score": 7.66
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "BP35": {
+            "map": {
+              "level": 0,
+              "score": 0.0
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "CD82": {
+            "map": {
+              "level": 2,
+              "score": 3.08
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "CN04": {
+            "map": {
+              "level": 1,
+              "score": 4.89
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "DC22": {
+            "map": {
+              "level": 2,
+              "score": 3.95
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "FT09": {
+            "map": {
+              "level": 2,
+              "score": 3.98
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "G50T": {
+            "map": {
+              "level": 1,
+              "score": 3.57
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "KA59": {
+            "map": {
+              "level": 1,
+              "score": 4.75
+            },
+            "react": {
+              "level": 1,
+              "score": 3.57
+            }
+          },
+          "LF52": {
+            "map": {
+              "level": 2,
+              "score": 6.19
+            },
+            "react": {
+              "level": 2,
+              "score": 5.09
+            }
+          },
+          "LP85": {
+            "map": {
+              "level": 2,
+              "score": 2.48
+            },
+            "react": {
+              "level": 1,
+              "score": 2.17
+            }
+          },
+          "LS20": {
+            "map": {
+              "level": 2,
+              "score": 3.5
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "M0R0": {
+            "map": {
+              "level": 2,
+              "score": 4.77
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "R11L": {
+            "map": {
+              "level": 1,
+              "score": 3.27
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "RE86": {
+            "map": {
+              "level": 3,
+              "score": 11.59
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "S5I5": {
+            "map": {
+              "level": 2,
+              "score": 7.83
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "SB26": {
+            "map": {
+              "level": 3,
+              "score": 7.59
+            },
+            "react": {
+              "level": 1,
+              "score": 0.19
+            }
+          },
+          "SC25": {
+            "map": {
+              "level": 0,
+              "score": 0.0
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "SK48": {
+            "map": {
+              "level": 1,
+              "score": 2.05
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "SP80": {
+            "map": {
+              "level": 2,
+              "score": 5.1
+            },
+            "react": {
+              "level": 1,
+              "score": 4.76
+            }
+          },
+          "SU15": {
+            "map": {
+              "level": 1,
+              "score": 3.22
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "TN36": {
+            "map": {
+              "level": 1,
+              "score": 4.57
+            },
+            "react": {
+              "level": 1,
+              "score": 3.57
+            }
+          },
+          "TR87": {
+            "map": {
+              "level": 0,
+              "score": 0.0
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "TU93": {
+            "map": {
+              "level": 4,
+              "score": 3.34
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "VC33": {
+            "map": {
+              "level": 3,
+              "score": 4.12
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          },
+          "WA30": {
+            "map": {
+              "level": 2,
+              "score": 6.67
+            },
+            "react": {
+              "level": 0,
+              "score": 0.0
+            }
+          }
+        },
+        "game_count": 25,
+        "improved_game_count": 22,
+        "mean_level_delta": 1.44,
+        "mean_map_level": 1.72,
+        "mean_map_score": 4.3268,
+        "mean_react_level": 0.28,
+        "mean_react_score": 0.774,
+        "mean_score_delta": 3.5528,
+        "metric_note": "Paper reports achieved level and ARC-AGI-3 success score/RHAE-style score for Claude 4.6 Opus under ReAct vs MAP.",
+        "non_improved_games": [
+          "BP35",
+          "TR87",
+          "SC25"
+        ],
+        "score_sum_map": 108.17,
+        "score_sum_react": 19.35
+      }
+    }
+  },
+  "milestone": "2026.07.474",
+  "no_deep_research_used": true,
+  "outcome_conditioned_findings": {
+    "principle": "Follow-up literature must react to the actual Exp5171/5173/5175 outcomes that exist, not to roadmap intent.",
+    "value": [
+      {
+        "actionability": "If .475 extends the set encoder, add a pairwise/tournament candidate-ranking arm against the existing set-encoder@1 and vote@1 baselines.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2603.04304",
+        "carnot_hook": "Exp5171 proves cross-candidate context beats vote on ARC-GEN; V1 suggests the next variant should compare candidates pairwise or tournament-style, not only pool them through a DeepSets score.",
+        "summary": "Conditioned on Exp5171's set-encoder gate passing at n=30. V1 argues pointwise candidate verification suffers calibration collapse and uses uncertainty-guided pairwise tournament ranking plus co-training of generator and verifier, improving Pass@1 by up to 10% over pointwise verification.",
+        "title": "V1: Unifying Generation and Self-Verification for Parallel Reasoners",
+        "tracks": "cross-candidate ranking, pairwise verification, test-time scaling"
+      }
+    ]
+  },
+  "queries_run": [
+    {
+      "channel": "sweep_clusters.py",
+      "query": "cluster 1 energy-based model / energy-guided decoding, max_results=8",
+      "result": "Top arXiv API hits were submitted 2026-07-01; Theoria/AutoMem surfaced."
+    },
+    {
+      "channel": "sweep_clusters.py",
+      "query": "cluster 6 neural-guided search / world model / goal induction, max_results=8",
+      "result": "No strict post-2026-07-02 arXiv hit; AutoMem and Theoria were relevant surfaced rows."
+    },
+    {
+      "channel": "sweep_clusters.py",
+      "query": "cluster 5 affordance/action-effect/exploration, max_results=8",
+      "result": "No new ARC-AGI-3 map paper beyond MAP in the strict cutoff window."
+    },
+    {
+      "channel": "sweep_semscholar.py",
+      "query": "energy-guided diffusion, map-based grid-world search, hidden-state verifier",
+      "result": "Semantic Scholar was rate-limited on three queries and returned MAP for the fourth."
+    },
+    {
+      "channel": "bounded WebSearch/WebFetch",
+      "query": "DiffusionGemma energy/verifier-guided decoding and hidden-state verifier exact queries",
+      "result": "Fetched Prism, Uni-E, DiffusionGemma commit telemetry, CLUE, and V1 arXiv pages."
+    }
+  ],
+  "references_md_updated": {
+    "principle": "True only after the V475 section is appended to research-references.md without deleting prior history.",
+    "value": true
+  },
+  "search_window": {
+    "run_date": "2026-07-02",
+    "strict_incremental_after": "2026-07-02",
+    "strict_post_cutoff_result": "No qualifying arXiv API hit submitted after 2026-07-02 appeared in the bounded cluster queries; included findings are verified citations surfaced by the July 2 follow-up sweep with their actual submitted dates."
+  },
+  "sources_fetched": [
+    "https://arxiv.org/html/2605.13037",
+    "https://arxiv.org/abs/2605.13037",
+    "https://arxiv.org/abs/2605.18871",
+    "https://arxiv.org/abs/2510.16449",
+    "https://arxiv.org/abs/2605.20745",
+    "https://arxiv.org/abs/2607.01223",
+    "https://arxiv.org/abs/2607.01224",
+    "https://arxiv.org/abs/2606.09159",
+    "https://arxiv.org/abs/2602.01842",
+    "https://arxiv.org/abs/2510.01591",
+    "https://arxiv.org/abs/2606.14620",
+    "https://arxiv.org/abs/2603.04304"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5172",
+    "SCENARIO-REPORT-5172-MAP-DEEP-READ",
+    "SCENARIO-REPORT-5172-OUTPUTS"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py -q -o addopts='' -> passed (26 passed)",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py' -m pytest tests/python/test_experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py -q --no-cov -o addopts='' -> passed (26 passed)",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py' --fail-under=100 -> passed (100% coverage on new module)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py -> passed",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted after existing broad-suite failures and a z3 segmentation fault; last observed summary before interrupt: 173 failed, 23957 passed, 97 skipped, 1 error in 1952.96s"
+  ],
+  "upstream_outcome_summary": {
+    "exp5171": {
+      "cross_corpus_delta_n30": 0.5,
+      "gate_passed": true,
+      "held_out_task_n": 30,
+      "honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
+      "present": true,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    },
+    "exp5173": {
+      "conditioning_note": "artifact absent at Exp5172 runtime",
+      "path": "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json",
+      "present": false
+    },
+    "exp5175": {
+      "conditioning_note": "artifact absent at Exp5172 runtime",
+      "path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "present": false
+    }
+  },
+  "v474_citations_spot_checked": {
+    "principle": "Spot-checking the already-logged citations prevents a stale planning note from silently promoting a wrong or retitled source.",
+    "value": [
+      {
+        "arxiv_id": "2605.18871",
+        "cited_topic_match": "distributional EBM verifier ensemble for structured LLM reasoning",
+        "resolved_correctly": true,
+        "resolved_title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+        "url": "https://arxiv.org/abs/2605.18871"
+      },
+      {
+        "arxiv_id": "2510.16449",
+        "cited_topic_match": "hidden-state process verification for best-of-N reasoning",
+        "resolved_correctly": true,
+        "resolved_title": "TrajSelector: Harnessing Latent Representations for Efficient and Effective Best-of-N in Large Reasoning Model",
+        "url": "https://arxiv.org/abs/2510.16449"
+      },
+      {
+        "arxiv_id": "2605.20745",
+        "cited_topic_match": "hidden-state steering for cheaper verification",
+        "resolved_correctly": true,
+        "resolved_title": "The Hidden Signal of Verifier Strictness: Controlling and Improving Step-Wise Verification via Selective Latent Steering",
+        "url": "https://arxiv.org/abs/2605.20745"
+      }
+    ]
+  }
+}
