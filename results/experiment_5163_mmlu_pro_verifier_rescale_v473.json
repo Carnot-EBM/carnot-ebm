@@ -1,0 +1,123 @@
+{
+  "bootstrap": {
+    "n_boot": 2000,
+    "seed": 20260701,
+    "unit": "question"
+  },
+  "candidate_generation_performed": {
+    "principle": "This task must never regenerate the candidate pool.",
+    "value": false
+  },
+  "cheap_baseline_selection_accuracy": 0.15,
+  "experiment": "experiment_5163_mmlu_pro_verifier_rescale_v473",
+  "fewshot_cheap_baseline_selection_accuracy": {
+    "principle": "Matched logistic-regression selector over non-learned text-statistical features, same folds and rows.",
+    "value": 0.15
+  },
+  "fewshot_oracle_at_k": {
+    "principle": "The selectable ceiling in the cached 5-shot pool; it is not verifier performance.",
+    "value": 0.5
+  },
+  "fewshot_sc_vote_accuracy": {
+    "principle": "The genuine self-consistency baseline on the same cached K=6 rows.",
+    "value": 0.125
+  },
+  "fewshot_verifier_selection_accuracy": {
+    "principle": "Top-candidate selection accuracy from MiniLM reasoning embeddings plus logistic regression, leave-one-question-out.",
+    "value": 0.175
+  },
+  "field_principles": {
+    "fewshot_cheap_baseline_selection_accuracy": "Matched logistic-regression selector over non-learned text-statistical features, same folds and rows.",
+    "fewshot_oracle_at_k": "The selectable ceiling in the cached 5-shot pool; it is not verifier performance.",
+    "fewshot_sc_vote_accuracy": "The genuine self-consistency baseline on the same cached K=6 rows.",
+    "fewshot_verifier_selection_accuracy": "Top-candidate selection accuracy from MiniLM reasoning embeddings plus logistic regression, leave-one-question-out.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ or blocked_, and must plainly state whether the CI excludes 0.",
+    "random_seed": "The deterministic seed shared by the pool sample, logistic regression, and bootstrap.",
+    "reproducibility_checksum": "Hash of the cached pool, zero-shot comparison artifact, scores, metrics, and verdict.",
+    "still_underpowered": "True when n=40 or the CI crosses zero/class imbalance remains too severe for a decisive claim.",
+    "verifier_is_oracle": "BARE bool=false -- the verifier sees candidate reasoning only; gold is used after selection for evaluation.",
+    "verifier_vs_cheap_delta": "The primary claim variable: learned verifier selection accuracy minus cheap-baseline selection accuracy.",
+    "verifier_vs_cheap_delta_ci95": "Bootstrap CI over questions for the primary delta; the verdict must state whether it excludes zero.",
+    "vs_zeroshot_pool_comparison": "Direct comparison to the saved zero-shot-pool verifier result, including point estimate and CI status."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ or blocked_, and must plainly state whether the CI excludes 0.",
+    "value": "complete_mmlu_pro_fewshot_verifier_vs_cheap_delta_+0.025_CI95_[-0.125,0.175]_CI_includes_0"
+  },
+  "model_specs": {
+    "cheap_baseline": "8 non-learned text-statistical features + LogisticRegression",
+    "generator_pool": "unsloth/gemma-4-12B-it-GGUF 5-shot CoT cached candidates",
+    "learned_verifier": "sentence-transformers/all-MiniLM-L6-v2 + LogisticRegression"
+  },
+  "n_candidates": 240,
+  "n_correct_candidates": 30,
+  "n_questions": 40,
+  "n_unparseable_candidates": 2,
+  "oracle_at_k_ceiling": 0.5,
+  "pool_path": "results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl",
+  "pool_precondition": {
+    "principle": "Records that the cached few-shot pool satisfied the no-regeneration precondition.",
+    "value": {
+      "complete": true,
+      "errors": []
+    }
+  },
+  "pool_reused": {
+    "principle": "True only when the complete cached pool is scored.",
+    "value": true
+  },
+  "pool_sha256": "sha256:c5c6193adf4987aa920712c222c8818a8a196599f60ebbdde223ca6cd20b7035",
+  "random_seed": {
+    "principle": "The deterministic seed shared by the pool sample, logistic regression, and bootstrap.",
+    "value": 20260701
+  },
+  "reproducibility_checksum": {
+    "principle": "Hash of the cached pool, zero-shot comparison artifact, scores, metrics, and verdict.",
+    "value": "sha256:ae8e5dc07ffe6213ed40e9f323673502321acf4ff71daa330f0218334d422ee3"
+  },
+  "result_path": "results/experiment_5163_mmlu_pro_verifier_rescale_v473.json",
+  "sc_vote_accuracy": 0.125,
+  "selection_protocol": "Leave-one-question-out CV; for each held-out question, select the highest-scored candidate among K=6 and evaluate that candidate against the MMLU-Pro gold letter.",
+  "spec_refs": [
+    "REQ-VERIFY-5163",
+    "SCENARIO-VERIFY-5163",
+    "SCENARIO-VERIFY-5163-BLOCKED-POOL"
+  ],
+  "still_underpowered": {
+    "principle": "True when n=40 or the CI crosses zero/class imbalance remains too severe for a decisive claim.",
+    "value": true
+  },
+  "verifier_is_oracle": {
+    "principle": "BARE bool=false -- the verifier sees candidate reasoning only; gold is used after selection for evaluation.",
+    "value": false
+  },
+  "verifier_selection_accuracy": 0.175,
+  "verifier_vs_cheap_delta": {
+    "principle": "The primary claim variable: learned verifier selection accuracy minus cheap-baseline selection accuracy.",
+    "value": 0.025
+  },
+  "verifier_vs_cheap_delta_ci95": {
+    "principle": "Bootstrap CI over questions for the primary delta; the verdict must state whether it excludes zero.",
+    "value": [
+      -0.125,
+      0.175
+    ]
+  },
+  "vs_zeroshot_pool_comparison": {
+    "principle": "Direct comparison to the saved zero-shot-pool verifier result, including point estimate and CI status.",
+    "value": "The saved zero-shot-pool verifier result reports delta +0.025 with CI95=[-0.100,0.150]; the 5-shot pool raises headroom to 0.375 versus 0.275 in the zero-shot headroom check. The 5-shot verifier-vs-cheap delta is +0.025 with CI95=[-0.125,0.175], so the point estimate is unchanged relative to zero-shot and the verifier-vs-cheap CI includes 0."
+  },
+  "zero_shot_pool_metrics": {
+    "cheap_baseline_selection_accuracy": 0.075,
+    "delta_verifier_vs_cheap_baseline": 0.025,
+    "delta_verifier_vs_cheap_baseline_ci95": [
+      -0.1,
+      0.15
+    ],
+    "oracle_at_k_ceiling": 0.3,
+    "sc_vote_accuracy": 0.075,
+    "verifier_selection_accuracy": 0.1
+  },
+  "zeroshot_result_path": "results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json",
+  "zeroshot_result_sha256": "sha256:5d209c2acf0325cbd1ac12314b2e9a251ecca14a38caf47ac06bc94ba9d428aa"
+}

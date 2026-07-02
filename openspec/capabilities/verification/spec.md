@@ -24324,3 +24324,84 @@ test satisfies the zero-loss min-6 rule.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5153 | Planned (`python/carnot/reporting/gap4_scaleup_v472_5153.py`, `results/experiment_5153_gap4_scaleup_v472.json`) | Planned (`tests/python/test_experiment_5153_gap4_scaleup_v472.py`) |
+
+### REQ-VERIFY-5163: MMLU-Pro Few-Shot Verifier Rescale V473
+
+The repository SHALL provide Exp 5163 at
+`python/carnot/experiment_5163_mmlu_pro_verifier_rescale_v473.py` to rerun the
+MMLU-Pro verifier-vs-cheap-baseline selection test against the already-generated
+5-shot candidate pool and write
+`results/experiment_5163_mmlu_pro_verifier_rescale_v473.json`.
+
+The runner SHALL first validate that
+`results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl` exists, contains 240
+candidate rows across 40 questions with exactly K=6 candidates per question, and
+preserves non-empty full reasoning text in `full_text` for every candidate. If
+this precondition fails, it SHALL write
+`honest_verdict=blocked_fewshot_pool_incomplete`, keep
+`verifier_is_oracle=false`, and stop without regenerating candidates.
+
+When the pool is complete, the runner SHALL reuse it without any fresh LLM
+generation. It SHALL compute the few-shot oracle@K ceiling and self-consistency
+vote accuracy from the cached candidate rows. It SHALL score every candidate via
+the same learned verifier used by
+`scripts/experiments/exp_mmlu_pro_verifier_vs_cheap_baseline.py`:
+`sentence-transformers/all-MiniLM-L6-v2` embeddings of full candidate reasoning
+text plus `sklearn.linear_model.LogisticRegression`, evaluated with
+leave-one-question-out cross-validation. It SHALL also score the matched cheap
+baseline from the same prior script: the 8 non-learned text-statistical features
+plus `LogisticRegression`, evaluated with the same leave-one-question-out
+protocol. Each scorer SHALL select the top-scored candidate among K=6 for each
+question, and selection accuracy SHALL be the fraction of questions where that
+selected candidate matches the MMLU-Pro gold letter.
+
+The result artifact SHALL compare the few-shot verifier-vs-cheap-baseline delta
+against `results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json`, including
+whether the few-shot CI95 excludes zero and whether the point-estimate direction
+is more favorable than the zero-shot-pool result. It SHALL report underpowered
+small-N/class-imbalance status honestly rather than turning a CI crossing zero
+into a verifier win.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`fewshot_oracle_at_k`, `fewshot_sc_vote_accuracy`,
+`fewshot_verifier_selection_accuracy`,
+`fewshot_cheap_baseline_selection_accuracy`, `verifier_vs_cheap_delta`,
+`verifier_vs_cheap_delta_ci95`, `vs_zeroshot_pool_comparison`,
+`still_underpowered`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, and `honest_verdict`. The required field principles
+SHALL include:
+`fewshot_oracle_at_k` = `The selectable ceiling in the cached 5-shot pool; it is not verifier performance.`;
+`fewshot_sc_vote_accuracy` = `The genuine self-consistency baseline on the same cached K=6 rows.`;
+`fewshot_verifier_selection_accuracy` = `Top-candidate selection accuracy from MiniLM reasoning embeddings plus logistic regression, leave-one-question-out.`;
+`fewshot_cheap_baseline_selection_accuracy` = `Matched logistic-regression selector over non-learned text-statistical features, same folds and rows.`;
+`verifier_vs_cheap_delta` = `The primary claim variable: learned verifier selection accuracy minus cheap-baseline selection accuracy.`;
+`verifier_vs_cheap_delta_ci95` = `Bootstrap CI over questions for the primary delta; the verdict must state whether it excludes zero.`;
+`vs_zeroshot_pool_comparison` = `Direct comparison to the saved zero-shot-pool verifier result, including point estimate and CI status.`;
+`still_underpowered` = `True when n=40 or the CI crosses zero/class imbalance remains too severe for a decisive claim.`;
+`verifier_is_oracle` = `BARE bool=false -- the verifier sees candidate reasoning only; gold is used after selection for evaluation.`;
+`random_seed` = `The deterministic seed shared by the pool sample, logistic regression, and bootstrap.`;
+`reproducibility_checksum` = `Hash of the cached pool, zero-shot comparison artifact, scores, metrics, and verdict.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_ or blocked_, and must plainly state whether the CI excludes 0.`
+
+### SCENARIO-VERIFY-5163: Few-Shot Pool Tests Verifier Rescale Honestly
+
+Given the complete cached 5-shot MMLU-Pro candidate pool and the saved
+zero-shot verifier-vs-cheap-baseline result, when Exp 5163 runs, then it
+performs no candidate generation, scores the learned verifier and cheap baseline
+with leave-one-question-out folds, writes every required principle-annotated
+field, keeps `verifier_is_oracle=false`, directly compares the few-shot delta to
+the zero-shot-pool delta, and states in `honest_verdict` whether the CI excludes
+zero.
+
+### SCENARIO-VERIFY-5163-BLOCKED-POOL: Incomplete Few-Shot Pool Stops
+
+Given the cached 5-shot pool is missing, has fewer than 240 rows, lacks K=6
+coverage for any question, or omits full reasoning text on any candidate, when
+Exp 5163 runs, then it writes `honest_verdict=blocked_fewshot_pool_incomplete`,
+keeps `verifier_is_oracle=false`, and does not regenerate candidates.
+
+## Implementation Status (REQ-VERIFY-5163)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5163 | Implemented (`python/carnot/experiment_5163_mmlu_pro_verifier_rescale_v473.py`, `results/experiment_5163_mmlu_pro_verifier_rescale_v473.json`) | Implemented (`tests/python/test_experiment_5163_mmlu_pro_verifier_rescale_v473.py`) |
