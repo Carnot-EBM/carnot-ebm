@@ -9884,3 +9884,4 @@ web search: |
 | 2026-07-02 04:12 UTC | PHASE 0A transition -- archive .470 truth, activat | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantine |
 | 2026-07-02 04:26 UTC | PHASE 0B source/scope audit -- verify V471 referen | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-02 04:45 UTC | PHASE A1 receipt-backed structured pool v2 -- clea | OK | 129 passed, 1 warning in 12.61s |
+| 2026-07-02 05:01 UTC | PHASE A2 solver-verified formulation selector -- O | OK | 103 passed, 1 warning in 11.03s |
