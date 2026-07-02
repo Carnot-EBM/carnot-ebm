@@ -2275,6 +2275,50 @@ def _flatten_metrics(d: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _normalize_principle_wrapped_fields(d: dict[str, Any]) -> dict[str, Any]:
+    """Unwrap top-level fields written as ``{"value": ..., "principle": "..."}``
+    (CLAUDE.md "Principle-Annotated Artifact Fields" discipline) to their bare
+    ``value`` so every downstream check sees the field the way it would if the
+    author had written it bare.
+
+    Origin: 2026-07-02, exp5161's GAP-4 pilot was HARD-flagged DURATION_TOO_SHORT
+    for a reason that had nothing to do with its actual duration: its
+    `inference_substrate` was `{"principle": "...", "value":
+    "verifier_ensemble_against_cached_candidates"}`, and `_inference_substrate_text()`
+    did `str(d.get("inference_substrate"))`, which stringifies a DICT to a Python
+    repr matching no canonical substrate string -- so the duration-floor check
+    fell through to the generic 60s compute-bound fallback regardless of what
+    substrate was actually declared. A corpus-wide scan found this is not a
+    one-off: 176 artifacts wrap `inference_substrate` this way, plus smaller
+    counts for `honest_verdict` (9), `duration_s` (12), `random_seed` (14), and
+    `reproducibility_checksum` (14) -- every one of those fields is read via a
+    bare `d.get(...)` somewhere in this file's checks, so all of them were
+    exposed to the same class of silent misbehavior (a verdict that never
+    matches its terminal-prefix, a duration check that silently no-ops, etc).
+
+    Fixing every individual read site is exactly the kind of whack-a-mole this
+    bug already demonstrates is unreliable (the ORIGINAL author of exp5161 did
+    write a `{principle, value}` dict following an established, documented
+    convention -- it just didn't occur to anyone that `_inference_substrate_text`
+    wouldn't understand it). Normalizing once, immediately after `_flatten_metrics`
+    and before any check runs, means every existing and future check
+    automatically sees the bare value with zero further changes required.
+
+    Deliberately conservative: only unwraps a dict that has BOTH `value` and
+    `principle` keys (not just `value` alone, which could coincidentally be
+    real domain data for some other field), and only at the top level (does not
+    recurse into nested structures like `model_specs`, `pilot_rows`, etc. --
+    those have their own, different internal shapes).
+    """
+    out: dict[str, Any] = {}
+    for k, v in d.items():
+        if isinstance(v, dict) and "value" in v and "principle" in v:
+            out[k] = v["value"]
+        else:
+            out[k] = v
+    return out
+
+
 _MOAT_HEADLINE_MARKERS = (
     "moat_won",
     "moat_proven",
@@ -5335,6 +5379,12 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     # `{"metrics": {"initial_energy": ..., "final_energy": ...}}`
     # instead of top-level fields.
     d = _flatten_metrics(d_raw)
+    # Unwrap {"value": ..., "principle": "..."} field annotations to their bare
+    # value so every check below sees the field consistently, regardless of
+    # whether the author wrote it bare or principle-annotated. See
+    # _normalize_principle_wrapped_fields's docstring for the exp5161 incident
+    # this fixes (176 artifacts affected corpus-wide, not a one-off).
+    d = _normalize_principle_wrapped_fields(d)
 
     check_tautology(d, flags)
     check_implausible_perfect(d, flags)
