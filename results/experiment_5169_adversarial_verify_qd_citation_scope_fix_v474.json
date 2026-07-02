@@ -1,0 +1,145 @@
+{
+  "backfill_dry_run_summary": {
+    "principle": "A fix that silently unflags genuine violations is worse than the false positive it fixes -- this field is the safety check.",
+    "value": {
+      "aggregation_citation_unflags": [
+        "experiment_4663_archive_429_activate_430.json",
+        "experiment_4736_archive_435_activate_436.json",
+        "experiment_4748_archive_436_activate_437.json",
+        "experiment_5156_archive_472_activate_473.json"
+      ],
+      "any_unexpected_unflag": false,
+      "artifacts_newly_flagged": [
+        "experiment_4738_energy_fitness_qd_generation_valid_test.json",
+        "experiment_5154_energy_fitness_directed_exploration_v472.json"
+      ],
+      "artifacts_newly_flagged_count": 2,
+      "artifacts_newly_unflagged": [
+        "experiment_4663_archive_429_activate_430.json",
+        "experiment_4736_archive_435_activate_436.json",
+        "experiment_4748_archive_436_activate_437.json",
+        "experiment_5156_archive_472_activate_473.json"
+      ],
+      "artifacts_newly_unflagged_count": 4,
+      "artifacts_still_flagged_count": 2,
+      "current_qd_flagged_count": 2,
+      "errors_count": 6,
+      "high_precision_backfill_dry_run": {
+        "qualifying_unstamped_critical_count": 7,
+        "scope": [
+          "DURATION_TOO_SHORT",
+          "GATE_PASSED_WITHOUT_DATA"
+        ],
+        "would_stamp": [
+          "experiment_2901_thrml_local_import_repair_v1.json",
+          "experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json",
+          "experiment_3734_fix_harness_and_bounded_train_chunk1.json",
+          "experiment_3735_bounded_train_chunk2_resume.json",
+          "experiment_3769_package_cli_mcp_e2e_smoke.json",
+          "experiment_3787_p1_discrete_search_adjudication_v3_retry.json",
+          "experiment_4252_verifier_registry_gaps_hygiene.json"
+        ]
+      },
+      "legacy_qd_flagged_count": 4,
+      "scanned_artifact_count": 4565
+    }
+  },
+  "duration_s": 41.86247466597706,
+  "exp5156_resolved": {
+    "principle": "The concrete, verifiable outcome -- does the fixed check clear the known live false-positive case?",
+    "value": true
+  },
+  "exp5156_verify_report": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5156_archive_472_activate_473.json",
+    "exp_id": "experiment_5156_archive_472_activate_473",
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete_archive_472_closed_473_active_runtime_clean",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "experiment": "experiment_5169_adversarial_verify_qd_citation_scope_fix_v474",
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ AND state plainly whether exp5156 resolves clean.",
+    "value": "complete: exp5156_resolves_clean_qd_citation_scope_fixed_warn_only_not_quarantine"
+  },
+  "inference_substrate": {
+    "principle": "This receipt aggregates checked-in artifacts and verifier output.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "known_issues_md_updated": {
+    "principle": "Documentation Update Rules: add the dated corrigendum, never delete.",
+    "value": true
+  },
+  "random_seed": {
+    "principle": "Deterministic receipt seed.",
+    "value": 5169
+  },
+  "reproducibility_checksum": {
+    "principle": "Content-addressed hash catches silent artifact drift.",
+    "value": "sha256:2eb620a4cc8b1d8ae6ac4e4edc98b12cd60182b9ffd428a34656aaec973b7093"
+  },
+  "result_path": "results/experiment_5169_adversarial_verify_qd_citation_scope_fix_v474.json",
+  "root_cause_confirmed": {
+    "principle": "The precise trigger condition this task exists to establish before fixing it.",
+    "value": "The old QD guard built claim scope from top-level claim text plus all nested non-metadata field names. For exp5156, experiment_5156_archive matched ARC via the substring 'arc' in 'archive', and generation_axis_retirement_signal.current_energy_fitness_result plus nested exp5154 archive-summary QD fields satisfied the QD generation claim predicate even though exp5156 only cited the prior null."
+  },
+  "schema": "carnot.exp5169.adversarial_verify_qd_citation_scope_fix.v1",
+  "severity_handling_audit": {
+    "clean": true,
+    "critical_payload": {
+      "command": [
+        "python",
+        "scripts/adversarial_verify.py"
+      ],
+      "exit_code": 1,
+      "flagged_adversarial": true,
+      "flags": [
+        {
+          "kind": "CRITICAL",
+          "severity": "critical"
+        }
+      ],
+      "green": false,
+      "max_severity": 2,
+      "stderr_tail": "",
+      "stdout_tail": "{\"reports\":[{\"flags\":[{\"severity\":\"critical\",\"kind\":\"CRITICAL\"}]}]}"
+    },
+    "warn_only_payload": {
+      "command": [
+        "python",
+        "scripts/adversarial_verify.py"
+      ],
+      "exit_code": 1,
+      "flagged_adversarial": false,
+      "flags": [
+        {
+          "kind": "WARN_ONLY",
+          "severity": "warn"
+        }
+      ],
+      "green": false,
+      "max_severity": 1,
+      "stderr_tail": "",
+      "stdout_tail": "{\"reports\":[{\"flags\":[{\"severity\":\"warn\",\"kind\":\"WARN_ONLY\"}]}]}"
+    }
+  },
+  "severity_handling_audit_result": {
+    "principle": "clean or bug_found_and_fixed, with detail on WARN-only quarantine behavior.",
+    "value": "bug_found_and_fixed: shared archive verification_payload now reports max_severity and sets flagged_adversarial only for CRITICAL parsed severity, while preserving green=false for WARN-only verifier exits."
+  },
+  "spec_refs": [
+    "REQ-ARC-WMTE-5169",
+    "SCENARIO-ARC-WMTE-5169-QD-CITATION-SCOPE",
+    "SCENARIO-ARC-WMTE-5169-WARN-SEVERITY-HANDLING"
+  ],
+  "tests_added": {
+    "principle": "Count of REQ/SCENARIO-anchored tests added or updated for this task.",
+    "value": 6
+  },
+  "tests_passing": {
+    "principle": "True only after the added tests pass under pytest.",
+    "value": true
+  }
+}

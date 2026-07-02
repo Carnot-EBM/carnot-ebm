@@ -696,11 +696,17 @@ def command_result_payload(result: CommandResult) -> JsonDict:
 
 def verification_payload(result: CommandResult) -> JsonDict:
     flags = _verification_flags(result)
-    critical = [flag for flag in flags if str(flag.get("severity", "")).lower() == "critical"]
+    severity_rank = {"info": 0, "warn": 1, "critical": 2}
+    max_severity = max(
+        (severity_rank.get(str(flag.get("severity", "")).lower(), -1) for flag in flags),
+        default=-1,
+    )
+    verifier_failed_without_parseable_flags = result.exit_code != 0 and not flags
     return {
         **command_result_payload(result),
         "flags": flags,
-        "flagged_adversarial": result.exit_code != 0 or bool(critical),
+        "max_severity": max_severity,
+        "flagged_adversarial": max_severity >= 2 or verifier_failed_without_parseable_flags,
     }
 
 

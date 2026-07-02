@@ -3350,6 +3350,18 @@ _QD_BASELINE_PAIRS = (
     ("first_win_rate_qd", "first_win_rate_search_baseline"),
     ("live_first_win_rate_qd", "live_first_win_rate_search_baseline"),
 )
+_QD_FIRST_PARTY_FIELD_MARKERS = (
+    "winner_generated",
+    "winning_trajectory_surfaced",
+    "qd_generation",
+    "qd_arm",
+    "qd_lift",
+    "energy_fitness_qd",
+    "energy_qd",
+    "live_solve_rate_qd",
+    "live_first_win_rate_qd",
+    "first_win_rate_qd",
+)
 _VALUE_ROUTING_CLAIM_TEXT_KEYS = _ARC_LIVE_CLAIM_TEXT_KEYS + (
     "experiment",
     "chosen_submitted_config",
@@ -4152,9 +4164,32 @@ def _has_positive_metric_pair(d: dict[str, Any], pairs: tuple[tuple[str, str], .
     return False
 
 
+def _top_level_field_name_text(d: dict[str, Any]) -> str:
+    return " ".join(
+        str(key).lower() for key in d if key not in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS
+    )
+
+
+def _has_first_party_qd_result_field(d: dict[str, Any]) -> bool:
+    for key in d:
+        if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
+            continue
+        kl = str(key).lower()
+        if any(marker in kl for marker in _QD_FIRST_PARTY_FIELD_MARKERS):
+            return True
+    return False
+
+
+def _qd_first_party_claim_text(d: dict[str, Any]) -> str:
+    return f"{_claim_text(d, _QD_CLAIM_TEXT_KEYS)} {_top_level_field_name_text(d)}"
+
+
 def _has_qd_context(d: dict[str, Any]) -> bool:
-    text = f"{_claim_text(d, _QD_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
-    return _is_arc_artifact(d) and (
+    if _is_aggregation_only(d):
+        return False
+    text = _qd_first_party_claim_text(d)
+    arc_context = _is_arc_artifact(d) or _has_first_party_qd_result_field(d)
+    return arc_context and (
         _has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",))
     )
 
@@ -4162,8 +4197,8 @@ def _has_qd_context(d: dict[str, Any]) -> bool:
 def _claims_qd_energy_fitness_claim(d: dict[str, Any]) -> bool:
     if not _has_qd_context(d):
         return False
-    text = f"{_claim_text(d, _QD_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
-    return _has_marker(text, _QD_GENERATION_MARKERS)
+    text = _qd_first_party_claim_text(d)
+    return _has_marker(text, _QD_GENERATION_MARKERS) or _has_first_party_qd_result_field(d)
 
 
 def _claims_qd_energy_fitness_generation_win(d: dict[str, Any]) -> bool:

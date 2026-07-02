@@ -539,6 +539,17 @@ def test_req_report_5150_helper_edges_and_script_entrypoint(
         )["flagged_adversarial"]
         is True
     )
+    warn_only = mod.verification_payload(
+        mod.CommandResult(
+            command=(),
+            exit_code=1,
+            stdout='{"reports":[{"flags":[{"severity":"warn","kind":"WARN_ONLY"}]}]}',
+            stderr="",
+        )
+    )
+    assert warn_only["green"] is False
+    assert warn_only["max_severity"] == 1
+    assert warn_only["flagged_adversarial"] is False
     assert mod._verification_flags(
         mod.CommandResult(
             command=(),

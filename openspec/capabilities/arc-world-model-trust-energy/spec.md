@@ -2768,6 +2768,55 @@ lift
 `per_node_feature_cost_ms` or `sim_timed_out=false`, WARN-flagged when either
 field is omitted, and not flagged when both controls are reported.
 
+### REQ-ARC-WMTE-5169: Adversarial Verify QD Citation Scope And WARN Severity Hygiene
+
+The `scripts/adversarial_verify.py` QD / energy-fitness ablation guard SHALL
+scope `qd-random-mutation-ablation-omitted` to artifacts making their own
+first-party QD live-generation claim. Archive, transition, capstone, and other
+aggregation artifacts that merely cite, summarize, or retire an upstream QD
+finding SHALL NOT be flagged solely because nested archive rows mention
+`energy_fitness_qd`, `winning_trajectory_surfaced`, or generation-axis summary
+fields.
+
+A first-party QD claim includes top-level claim text or top-level QD result
+fields such as `winner_generated`, `winner_generated_count`,
+`qd_arm_result`, `qd_generation_diagnostics`, or equivalent energy-QD result
+fields. If such an artifact omits `random_mutation_ablation_passed`, the reader
+SHALL still emit WARN `qd-random-mutation-ablation-omitted`, and if it claims a
+positive QD win without a passing ablation it SHALL still emit CRITICAL
+`qd-without-random-mutation-ablation`.
+
+Milestone archive / activation helpers that embed adversarial verification
+output SHALL derive `flagged_adversarial` from parsed CRITICAL severity, not from
+the verifier command's nonzero exit alone. A WARN-only verifier report may keep
+`green=false` and preserve the flags for audit, but SHALL NOT stamp the artifact
+as adversarial-quarantined.
+
+Experiment 5169 SHALL write
+`results/experiment_5169_adversarial_verify_qd_citation_scope_fix_v474.json`
+with principle-annotated top-level fields for `root_cause_confirmed`,
+`severity_handling_audit_result`, `exp5156_resolved`,
+`backfill_dry_run_summary`, `tests_added`, `tests_passing`,
+`known_issues_md_updated`, `inference_substrate`, `random_seed`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+#### SCENARIO-ARC-WMTE-5169-QD-CITATION-SCOPE
+
+**Given** an aggregation artifact cites Exp 5154's retired energy-fitness QD
+null in a milestone archive summary
+**When** `adversarial_verify.py` checks the aggregation artifact
+**Then** the artifact is not flagged with
+`qd-random-mutation-ablation-omitted`, while a first-party QD live-generation
+artifact that omits `random_mutation_ablation_passed` remains WARN-flagged.
+
+#### SCENARIO-ARC-WMTE-5169-WARN-SEVERITY-HANDLING
+
+**Given** a milestone archive helper receives a verifier JSON report containing
+only WARN or INFO flags and a nonzero verifier exit code
+**When** it builds the embedded adversarial-verification payload
+**Then** `flagged_adversarial=false`, the nonzero command result remains visible
+in `green=false`, and a CRITICAL flag still sets `flagged_adversarial=true`.
+
 ### REQ-ARC-WMTE-4656: Primitive Persist Transfer For .429 A1/A2
 
 Experiment 4656 SHALL read

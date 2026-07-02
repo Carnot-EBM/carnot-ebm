@@ -89,8 +89,10 @@ def test_req_arc_wmte_4659_spec_declares_qd_and_value_routing_guards() -> None:
     spec = SPEC_PATH.read_text(encoding="utf-8")
 
     assert "REQ-ARC-WMTE-4659" in spec
+    assert "REQ-ARC-WMTE-5169" in spec
     assert "SCENARIO-ARC-WMTE-4659-QD-RANDOM-MUTATION-ABLATION" in spec
     assert "SCENARIO-ARC-WMTE-4659-VALUE-ROUTING-COST-CONTROL" in spec
+    assert "SCENARIO-ARC-WMTE-5169-QD-CITATION-SCOPE" in spec
     assert mod.RESULT_RELATIVE_PATH in spec
     for field, principle in mod.FIELD_PRINCIPLES.items():
         assert field in spec
@@ -139,6 +141,80 @@ def test_scenario_arc_wmte_4659_qd_passed_ablation_not_false_flagged(
 
     assert _flag_kind(report, av.QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND) == []
     assert _flag_kind(report, av.QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND) == []
+
+
+def test_scenario_arc_wmte_5169_qd_archive_citation_not_false_flagged(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-5169-QD-CITATION-SCOPE: archive citations are not claims."""
+
+    report = _report_for_payload(
+        tmp_path,
+        {
+            "experiment": "experiment_5156_archive_472_activate_473",
+            "honest_verdict": "complete_archive_472_closed_473_active_runtime_clean",
+            "inference_substrate": av.AGGREGATION_SUBSTRATE,
+            "duration_s": 0.032874,
+            "milestone_archive_summary": [
+                {
+                    "experiment_id": "exp5154-energy-fitness-directed-exploration-v472",
+                    "honest_verdict": (
+                        "complete: "
+                        "energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0"
+                    ),
+                    "classification": "honest_null_generation_axis",
+                    "winning_trajectory_surfaced": False,
+                    "matched_control_winning_trajectory_surfaced": False,
+                    "reproducible_levels_delta": 0,
+                }
+            ],
+            "generation_axis_retirement_signal": {
+                "third_consecutive_generation_axis_null": True,
+                "current_energy_fitness_result": "honest_null",
+                "allocation_read": (
+                    "Generation-axis exploration-signal levers should not be re-run "
+                    "without a new mechanism."
+                ),
+            },
+            "a2_energy_qd_result": {
+                "energy_qd_first_win": 0.0,
+                "energy_qd_vs_naive_delta": 0.0,
+                "included_in_headline": True,
+                "reason": "energy_qd_real_non_degenerate_zero_lift_null",
+            },
+            "random_seed": 5169,
+            "reproducibility_checksum": "sha256:" + "c" * 64,
+        },
+    )
+
+    assert _flag_kind(report, av.QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND) == []
+    assert _flag_kind(report, av.QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND) == []
+
+
+def test_scenario_arc_wmte_5169_first_party_qd_claim_still_warns(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-5169-QD-CITATION-SCOPE: own QD claims still require ablation."""
+
+    report = _report_for_payload(
+        tmp_path,
+        {
+            "experiment": "experiment_5169_first_party_qd_fixture",
+            "game": "tn36",
+            "headline": "energy-fitness QD live generation measurement",
+            "honest_verdict": "complete: energy_fitness_qd_live_generation_measurement",
+            "inference_substrate": av.VERIFIER_SCORING_SUBSTRATE,
+            "solve_provenance": "live_agent_self_discovery",
+            "qd_arm_result": {"winning_trajectory_surfaced": False, "reached_level": 0},
+            "random_seed": 5169,
+            "reproducibility_checksum": "sha256:" + "d" * 64,
+        },
+    )
+    flags = _flag_kind(report, av.QD_RANDOM_MUTATION_ABLATION_OMITTED_KIND)
+
+    assert flags
+    assert flags[0]["severity"] == "warn"
+    assert _flag_kind(report, av.QD_WITHOUT_RANDOM_MUTATION_ABLATION_KIND) == []
 
 
 def test_scenario_arc_wmte_4659_value_routing_omitted_controls_warn_and_critical(
