@@ -1,345 +1,1172 @@
-milestone: 2026.07.472
+milestone: 2026.07.473
+milestone_title: MULTI-LEVEL DEEPENING -- BELIEF-STATE WARM-START, ORACLE-DISTINCT CLOSURE, GAP-4 EXECUTION
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-- id: exp5150-archive-471-activate-472
-  milestone: 2026.07.472
-  title: PHASE 0 transition -- archive .471 truth, note the ARC re-opening, activate .472 without touching
-    the running conductor
+- id: exp5156-archive-472-activate-473
+  milestone: 2026.07.473
+  title: PHASE 0 transition -- archive .472 truth (three partial ARC hardening results, not nulls), activate .473
   priority: critical
   track: planning
-  deliverable: results/experiment_5150_archive_471_activate_472.json
+  deliverable: results/experiment_5156_archive_472_activate_473.json
   operator_override: '2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive
-    scope-match vs prior archive-vN-activate-vN+1 tasks; this is the structurally-required .471->.472
+    scope-match vs prior archive-vN-activate-vN+1 tasks; this is the structurally-required .472->.473
     handoff, never a doomed rerun.'
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
   estimated_wall_time_min: 25
-  prompt: "CONTEXT:\nStandard milestone transition. .472 reverses the .471-era PHASE-D-majority ARC-off\
-    \ allocation:\noperator directive 2026-07-02, \"we want to continue down this energy based models\
-    \ path for\nARC-AGI-3, and tackle the multi-level capable live agent.\" reproducible_total_levels\
-    \ has been\nflat at 69 since 2026-06-30 (see ops/arc_solve_registry.yaml) -- no ARC work has landed\
-    \ since the\nPHASE D pivot. This transition task does NOT reverse the ARC-AGI-3 Submission Sprint\
-    \ Forcing\nFunction's RETIRED status in CLAUDE.md (that's an accurate historical record of the 6/30\
-    \ deadline\nand pivot) -- it's a fresh, separate operator directive re-opening ARC as this milestone's\n\
-    priority.\n\nEXISTING CODE TO READ FIRST:\n- CLAUDE.md (note: ARC-AGI-3 Submission Sprint Forcing\
-    \ Function section is RETIRED/historical;\n  this milestone's ARC priority comes from the fresh 2026-07-02\
-    \ operator directive, not that rule)\n- ops/known-issues.md (search for \"ENERGY-BASED ARC RESEARCH\
-    \ LINEUP 2026-07-02\" -- the outer-loop\n  entry documenting this pivot's rationale and the 5 research\
-    \ threads queued this milestone)\n- ops/arc_solve_registry.yaml\n- research-roadmap.yaml (the .471\
-    \ archive)\n\nCONCRETE STEPS:\n1. Follow the standard archive-vN-activate-vN+1 pattern: snapshot .471's\
-    \ final state (task\n   verdicts, capstone summary) into the milestone archive, matching prior transition\
-    \ tasks'\n   format.\n2. Verify .471's runtime is clean (no orphaned processes, no dirty git state)\
-    \ before activation.\n3. Do NOT touch the currently-running conductor process or its active task.\n\
-    4. Emit v471_runtime_clean: true/false as the gate field downstream .472 tasks may reference.\n\n\
-    REQUIRED ARTIFACT FIELDS:\n  v471_runtime_clean:\n    value: bool\n    principle: \"Downstream .472\
-    \ tasks may gate on this; a dirty handoff should block, not silently proceed.\"\n  honest_verdict:\n\
-    \    principle: \"Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix\
-    \ Discipline.\"\n"
-- id: exp5151-arc-oracle-distinct-hardening-v472
-  milestone: 2026.07.472
-  title: PHASE A1 ARC energy-verifier hardening -- multiseed, held-out, leak-audited re-confirmation of
-    the set-encoder-vs-vote win (exp4245)
+  prompt: |
+    CONTEXT:
+    Standard milestone transition. .472 executed the 5-task "ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02"
+    (ops/known-issues.md) re-opening ARC-AGI-3 work per the fresh operator directive "we want to continue
+    down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent."
+    None of the five .472 research tasks were clean wins or clean nulls -- all landed PARTIAL/BLOCKED on
+    one specific axis each, which is why .473 exists to close them out rather than re-litigate them:
+      - exp5151 (oracle-distinct hardening of exp4245's +44.2pp set-encoder-vs-vote ARC win): multiseed,
+        leak-audit, and exact-test all PASSED; cross-game/cross-corpus replication BLOCKED
+        (blocked_arc_game_ids_unrecoverable). honest_verdict: "arc_set_encoder_win_not_hardened".
+      - exp5152 (DiffusionGemma gate re-examination): found genuine domain conflation between the MuSR D1
+        null and the ARC exp4245 claim, but recommended KEEP GATED pending exp5151's still-incomplete
+        hardening.
+      - exp5153 (GAP-4 scale-up): an AUDIT that confirmed GAP-4's own documented forward protocol has
+        never actually been EXECUTED (1 of 7 protocol steps passed: only the pre-existing hardened
+        sandbox). gap4_status_recommendation: "still_open".
+      - exp5154 (energy-as-fitness directed exploration pilot on bp35): a clean, honest NULL --
+        winning_trajectory_surfaced=false, reproducible_levels_delta=0 for both the energy-QD arm and the
+        matched no-energy control. This is the THIRD consecutive null on the generation-axis
+        exploration-signal lever (after .432's exp4688 novelty-bonus and exp4689 program-synthesis-filter).
+      - exp5155 (multi-level belief-state scoping, NOT a full build): code-verified that the live agent's
+        active world-model/belief-induction state DOES reset at level boundaries
+        (arc_competition_agent.py:_begin_level_goal_episode resets _episode_transition_start; a fresh
+        LiveTTTWorldModel is built per induction attempt). Produced 3 ranked, falsifiable follow-up
+        proposals. Milestone .473's Phase A tasks execute the top 2 of these 3.
+
+    EXISTING CODE TO READ FIRST:
+    - ops/known-issues.md (search "ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02" for the .472 rationale)
+    - results/experiment_5151_arc_oracle_distinct_hardening_v472.json
+    - results/experiment_5152_diffusiongemma_gate_reexamination_v472.json
+    - results/experiment_5153_gap4_scaleup_v472.json
+    - results/experiment_5154_energy_fitness_directed_exploration_v472.json
+    - results/experiment_5155_multilevel_belief_state_scoping_v472.json
+    - research-roadmap.yaml (the .472 task definitions)
+
+    CONCRETE STEPS:
+    1. Follow the standard archive-vN-activate-vN+1 pattern: snapshot .472's final state (the five
+       partial/blocked-but-not-null verdicts above, in the same style as prior transition tasks' archive
+       summaries) into the milestone archive.
+    2. Verify .472's runtime is clean (no orphaned processes, no dirty git state) before activation.
+    3. Do NOT touch the currently-running conductor process or its active task.
+    4. Emit v472_runtime_clean: true/false as the gate field downstream .473 tasks may reference.
+    5. Do NOT characterize any of the five .472 tasks as a "failure" in the archive summary -- each landed
+       a genuine partial result (3-of-4 hardening axes passed, a protocol-non-execution finding, an honest
+       null, or a code-verified scoping deliverable). Precision here matters because .473's Phase A/B tasks
+       build directly on these partial results.
+
+    REQUIRED ARTIFACT FIELDS:
+      v472_runtime_clean:
+        value: bool
+        principle: "Downstream .473 tasks may gate on this; a dirty handoff should block, not silently proceed."
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix Discipline."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5157-deepen-warmstart-replay-ablation-v473
+  milestone: 2026.07.473
+  title: PHASE A1 multi-level deepening -- transition-slice warm-start replay ablation (exp5155 proposal #1, highest signal / lowest effort)
+  priority: critical
+  track: arc
+  deliverable: results/experiment_5157_deepen_warmstart_replay_ablation_v473.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    Executes exp5155's #1-ranked, highest-signal, lowest-effort falsifiable proposal (
+    results/experiment_5155_multilevel_belief_state_scoping_v472.json, field proposed_experiments[0]).
+    This is the operator's explicit fresh direction (2026-07-02): "we want to continue down this energy
+    based models path for ARC-AGI-3, and tackle the multi-level capable live agent." exp5155 code-verified
+    that the live agent's E3AgentPolicy cold-restarts its online world-model/belief induction at every
+    level boundary: arc_competition_agent.py's _begin_level_goal_episode() resets
+    _episode_transition_start = len(self.transitions), and _active_transitions()/_active_dsl_transitions()
+    return only the post-boundary suffix that feeds arc_live_ttt.py's gated_engine_from_transitions()
+    (which builds a FRESH LiveTTTWorldModel per induction attempt). 22 of 24 registry games are
+    "deepened_but_stuck" at levels_reproduced >= 2 (ops/arc_solve_registry.yaml) with a recurring
+    mechanic_class that persists across their own levels (e.g. ar25=reflection_mirror_object_alignment,
+    bp35=goal_directed_navigation_local_obstacle_clear, cd82=palette_region_fill) -- exactly the situation
+    where level-N's learned transition model plausibly still applies at level N+1.
+
+    HYPOTHESIS (verbatim from exp5155): "Warm-starting the N+1 online TTT/DSL induction with level-N
+    transition and energy statistics improves next-level held-out changed-cell value accuracy versus the
+    current cold post-boundary slice."
+
+    THIS IS AN OFFLINE REPLAY ABLATION, NOT a live solve attempt or full build -- exp5155 explicitly scoped
+    it as "small: offline replay ablation over existing registry trajectories." A live level-up attempt
+    based on this result is the SEPARATE, gated sibling task exp5159 (this milestone).
+
+    LITERATURE-GROUNDED MECHANISM (outer-loop SOTA ingestion, 2026-07-02, see research-references.md "V473
+    Outer-Loop Planner References" for full citations -- verified real arXiv IDs, do not re-search these):
+    implement the WARM-START arm using the ReDRAW pattern (arXiv:2504.02252, "Adapting World Models with
+    Latent-State Dynamics Residuals"): FREEZE level N's fitted LiveTTTWorldModel/DSL as a base model, and
+    fit only a SMALL RESIDUAL CORRECTION using level N+1's post-boundary transitions, instead of calling
+    gated_engine_from_transitions() fresh on the post-boundary suffix alone. This is specifically designed
+    for the low-data regime a fresh level starts in (a handful of transitions), which matches this
+    problem exactly. If time permits, also compare against the DynaMITE-RL pattern (arXiv:2402.15957):
+    condition level N+1's induction on level N's terminal latent/belief state as a Bayesian prior rather
+    than fitting a residual -- report which of the two warm-start designs (residual vs. conditioned-prior)
+    performs better if you implement both, or just the ReDRAW residual design if only one fits the budget.
+
+    EXISTING CODE TO READ FIRST:
+    - research-references.md "V473 Outer-Loop Planner References" section (ReDRAW/DynaMITE-RL/BAM/ASR
+      citations with Carnot-specific hooks -- read this before designing your carryover mechanism)
+    - results/experiment_5155_multilevel_belief_state_scoping_v472.json in full (per_game_characterization,
+      learning_gaps_verified_against_code, proposed_experiments[0])
+    - python/carnot/agentic/arc_competition_agent.py (_begin_level_goal_episode, _active_transitions,
+      _active_dsl_transitions, _induce_and_plan -- lines ~2244-2760)
+    - python/carnot/agentic/arc_live_ttt.py (LiveTTTWorldModel class, gated_engine_from_transitions())
+    - ops/arc_solve_registry.yaml (per-game `reproduce`/`solver` fields cite the artifacts holding recorded
+      transition traces for each banked level -- this is your source of "existing registry trajectories")
+    - python/carnot/agentic/arc_solver_kit.py (reproduce() -- reference for what a rigorous offline replay
+      harness looks like in this codebase)
+
+    PRECONDITIONS (check BEFORE any subsequent step):
+      a. Confirm at least 6 registry games with levels_reproduced >= 2 have recoverable per-level
+         transition traces (via their `reproduce`/`solver` registry fields or the cited experiment
+         artifacts). If fewer than 6 are recoverable, honest_verdict blocked_insufficient_transition_traces
+         and report which games WERE recoverable rather than fabricating a result on fewer than 6.
+
+    CONCRETE STEPS:
+    1. For each of >=6 registry games with levels_reproduced >= 2, extract the recorded transitions
+       spanning at least one within-game level boundary (level N -> level N+1) from the cited artifacts.
+    2. Build the CONTROL: replay level N+1's induction using ONLY the current cold _active_transitions()
+       post-boundary suffix (matches today's live behavior exactly).
+    3. Build the WARM-START arm: replay level N+1's induction with level N's transition and energy
+       statistics carried forward (concretely: seed gated_engine_from_transitions with the pre-boundary
+       transitions/DSL tuples as prior evidence, not just the post-boundary suffix -- design the exact
+       carryover mechanism yourself, but it must be a genuine extension of the existing induction call, not
+       a new parallel mechanism).
+    4. Score both arms on HELD-OUT changed-cell value accuracy for level N+1 (predict a held-out action's
+       resulting grid delta from the induced model; score against the real recorded outcome) and on
+       actions-to-replay-to-next-level where recoverable.
+    5. Apply exp5155's own falsifiable gate verbatim: warm-start beats cold-slice control by >=0.10 median
+       changed-cell value accuracy OR >=20% fewer replayed actions to the next level, across >=6
+       transitions; otherwise the gate FAILS and this is a genuine, valuable null.
+    6. Report the per-game, per-transition breakdown, not just the aggregate -- a gate that passes on
+       average but fails on most individual games is a different, weaker finding than a uniform win.
+    7. Report HONESTLY either way. A null here is real information: it would mean the deepen-wall is not
+       fixable by transition-model warm-starting alone, redirecting effort toward the register/hazard
+       carryover probe (exp5155 proposal #3, queued for a future milestone) or the representation-level
+       gaps named in project_arc_live_agent_learning_gaps.
+
+    REQUIRED ARTIFACT FIELDS:
+      games_tested:
+        value: "list of {game, n_level_transitions_tested}"
+        principle: "The gate requires >=6 transitions; this field lets a reviewer verify the sample size."
+      warmstart_vs_cold_delta_median:
+        value: float
+        principle: "The exact quantity exp5155's falsifiable_gate is defined over."
+      actions_saved_pct_median:
+        value: float
+      gate_passed:
+        value: bool
+        principle: "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
+      per_transition_breakdown:
+        value: "list of {game, level_from, level_to, cold_accuracy, warmstart_accuracy, actions_cold, actions_warmstart}"
+        principle: "An aggregate-only report can hide a result that only holds for one or two games."
+      solve_provenance:
+        value: development_proxy
+        principle: "This is offline replay over already-banked registry trajectories, not a live hidden-game solve."
+      offline_reproduced:
+        value: false
+        principle: "No new level is claimed by this task -- it is a mechanism ablation feeding exp5159's live attempt."
+      verifier_is_oracle:
+        value: false
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly whether the
+          gate passed or failed -- do not bury a null in qualifiers."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5158-deepen-goal-energy-ranker-replay-v473
+  milestone: 2026.07.473
+  title: PHASE A2 multi-level deepening -- cross-level goal-energy ranker replay (exp5155 proposal #2)
   priority: high
   track: arc
-  deliverable: results/experiment_5151_arc_oracle_distinct_hardening_v472.json
+  deliverable: results/experiment_5158_deepen_goal_energy_ranker_replay_v473.json
   prior_failures:
-  - experiment_id: exp4209-oracle-distinct-arc-verifier-build
-    verdict: blocked_arc_pool_no_candidate_labels
-    addressed_by: A precondition block (missing candidate labels in the ARC pool at that time), not a
-      methodology failure -- exp4245 later succeeded once a properly labeled pool (gap3_stage2, 28,443
-      candidates) existed. This task reuses that same already-working pool, so the original blocker does
-      not apply.
+  - experiment_id: exp509-ppsebm-energy-magnitude-replay
+    verdict: energy_magnitude_wins
+    addressed_by: exp509 is an unrelated FR-11 self-learning experiment (PPSEBM Energy-Magnitude Replay,
+      RETRO-050 fix replacing LLM-surprise with EBM energy priority in a general verify-repair replay-
+      memory context) -- it shares only the generic keywords "energy" and "replay" with this task's title.
+      This task is ARC-domain, within-game cross-LEVEL frontier ranking carryover, an entirely different
+      mechanism, corpus, and scope. Flagging honestly per the Exclusion-Manifest Cross-Check discipline
+      rather than assuming the scope-matcher's keyword overlap is a real prior failure.
     retire_if_same_verdict: false
-  - experiment_id: exp4210-oracle-distinct-arc-verifier-beats-vote
-    verdict: blocked_gate_check_failed
-    addressed_by: Same claim shape as exp4245 (which later succeeded, +44.2pp, CI excludes 0) -- exp4210
-      was an earlier attempt that hit a precondition gate-check block, not a real run of the methodology.
-      This task hardens exp4245's already-successful result, not a repeat of exp4210's blocked attempt.
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    Executes exp5155's #2-ranked falsifiable proposal (
+    results/experiment_5155_multilevel_belief_state_scoping_v472.json, field proposed_experiments[1]),
+    the sibling to exp5157 (this milestone) in the operator's fresh "tackle the multi-level capable live
+    agent" direction. Where exp5157 tests warm-starting the TRANSITION/DSL model, this task tests
+    warm-starting the GOAL-DIRECTED RANKING signal: does a per-game online energy model fit to level-N
+    win/near-win states rank level-N+1's frontier candidates closer to the eventual level-up than the
+    current cold Exp4020-goal-energy-only bias?
+
+    HYPOTHESIS (verbatim from exp5155): "A per-game online energy model fit to level-N win/near-win states
+    ranks level-N+1 frontier candidates closer to the eventual level-up than the cold Exp4020-only bias."
+
+    LITERATURE-GROUNDED MECHANISM (outer-loop SOTA ingestion, 2026-07-02, see research-references.md "V473
+    Outer-Loop Planner References" -- verified real arXiv IDs): use the DynaMITE-RL pattern
+    (arXiv:2402.15957, "Dynamic Model for Improved Temporal Meta-RL"): treat each level as a "session"
+    sharing a fixed latent task/dynamics variable, and condition level N+1's frontier-ranking prior on
+    level N's TERMINAL latent/energy state (a Bayesian carryover of the fitted energy model's parameters),
+    rather than re-initializing the goal-energy ranker fresh at each level. If BAM (arXiv:2202.02405,
+    "Bayes with Adaptive Memory") style adaptive evidence-weighting is easy to add on top (weight level-N
+    win/near-win states by whether the game's mechanic_class recurs at level N+1, rather than using them
+    uniformly), report that as a secondary ablation arm -- but the DynaMITE-RL conditioning is the primary,
+    required mechanism.
+
+    Distinct from exp5157: this is a RANKING/prioritization signal over the search frontier, not a
+    transition-model induction signal. Distinct from exp5154 (energy-as-fitness generation, .472): exp5154
+    tested first-CONTACT candidate generation on an unsolved game via QD exploration; this task tests
+    within-game level-N-to-level-N+1 RANKING carryover on ALREADY-adaptered, already-deepened games. Also
+    distinct from the retired selection/value-head axis (ops/known-issues.md "ARC VALUE-HEAD ENERGY
+    DISTILLATION -- RETRACTED/CLOSED 2026-07-01", 5 sub-hypotheses nulled): that axis tested a
+    cross-GAME learned value head for candidate SELECTION; this tests a per-GAME online energy model for
+    within-game cross-LEVEL frontier RANKING carryover -- a different signal, a different scope, and it
+    does not reuse arc_value_learner.py's cross-game value head.
+
+    THIS IS AN OFFLINE REPLAY ABLATION over the SAME 3 named games exp5155 specified (lp85, sc25, tr87 --
+    the three deepest-solved games, levels_reproduced 5/5/6, giving the most level-transition data to
+    replay over), NOT a live solve attempt.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5155_multilevel_belief_state_scoping_v472.json (proposed_experiments[1])
+    - python/carnot/experiment_4020_goal_induction_separation.py (the Exp4020 graded goal-satisfaction
+      energy already reused as the fitness signal in exp5154 -- results/experiment_4020_goal_induction_separation.json
+      documents the exact energy formula)
+    - python/carnot/agentic/arc_competition_agent.py (wherever the current goal bias / frontier ranking is
+      applied during search -- grep for "goal_bias", "dsl_energy", "frontier")
+    - ops/arc_solve_registry.yaml entries for lp85, sc25, tr87 (their `reproduce`/`solver` fields cite the
+      artifacts with recorded level-transition traces)
+    - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle must be declared false)
+
+    CONCRETE STEPS:
+    1. For lp85, sc25, and tr87, extract recorded level-N win/near-win states and level-N+1 frontier
+       candidates from their cited registry artifacts.
+    2. Build the CONTROL: rank level-N+1 frontier candidates using only the cold, current Exp4020 goal-bias
+       (no cross-level memory).
+    3. Build the WARM-START arm: fit a per-game online energy model to level-N's win/near-win states, and
+       use it (combined with or in place of the cold Exp4020 bias -- justify your combination choice) to
+       rank level-N+1's frontier candidates.
+    4. Score both arms via target-prefix reciprocal rank (how close to rank-1 does the eventual level-up
+       action sequence's prefix land) against the real recorded level-up trajectory for level N+1.
+    5. Apply exp5155's own falsifiable gate verbatim: target-prefix reciprocal rank improves on >=2/3 of
+       {lp85, sc25, tr87} with no regression in level reached; otherwise the gate FAILS and carryover
+       goal-energy value is rejected for this mechanism.
+    6. Report HONESTLY either way, with the same per-game precision exp5157 uses.
+
+    REQUIRED ARTIFACT FIELDS:
+      games_tested:
+        value: "list of {game, n_level_transitions_tested}, must include lp85, sc25, tr87"
+      reciprocal_rank_cold:
+        value: "dict of game -> float"
+      reciprocal_rank_warmstart:
+        value: "dict of game -> float"
+      games_improved_count:
+        value: int
+        principle: "The gate requires >=2/3 -- this field is the exact count the gate is evaluated against."
+      gate_passed:
+        value: bool
+        principle: "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
+      energy_signal_source:
+        value: "which specific energy computation was used (Exp4020 graded goal-satisfaction energy, extended how)"
+        principle: "Must be a genuine Carnot energy quantity, matching the ARC Live-Path Reachability
+          Discipline's provenance bar."
+      solve_provenance:
+        value: development_proxy
+        principle: "Offline replay over already-banked registry trajectories, not a live hidden-game solve."
+      verifier_is_oracle:
+        value: false
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly whether the
+          gate passed or failed."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5159-deepen-live-levelup-attempt-v473
+  milestone: 2026.07.473
+  title: PHASE A3 multi-level deepening -- wire the winning warm-start mechanism into the live path and attempt real level-ups
+  priority: high
+  track: arc
+  deliverable: results/experiment_5159_deepen_live_levelup_attempt_v473.json
+  gated_on:
+  - upstream: exp5157-deepen-warmstart-replay-ablation-v473
+    artifact_field: gate_passed
+    op: '=='
+    value: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 80
+  estimated_wall_time_min: 150
+  prompt: |
+    CONTEXT:
+    This task only proceeds if exp5157's (this milestone) offline warm-start replay ablation gate PASSED
+    -- the conductor's gated_on check enforces this. If exp5157 nulled, this task should not have been
+    launched by the conductor; if it somehow runs anyway, verify exp5157's gate_passed field yourself
+    first and STOP with honest_verdict blocked_upstream_gate_not_passed if it did not pass (do not attempt
+    a live wire-in of a mechanism that already failed its offline test).
+
+    If exp5157 passed: wire the validated warm-start mechanism into the LIVE E3AgentPolicy path (not a
+    standalone offline script -- per CLAUDE.md "ARC Live-Path Reachability Discipline", a mechanism the
+    live agent cannot reach produces no live capability) and attempt REAL level-up progress on 2-3
+    currently-stuck games. This is this milestone's ARC Level-Up Attempt Guarantee floor (>=1 task whose
+    acceptance gate requires actually banking a new reproducible level) AND is the direct, concrete
+    instantiation of the operator's "tackle the multi-level capable live agent" directive -- carrying
+    learned state across a level boundary and USING it to reach a level the agent was previously stuck at.
+
+    Also incorporate exp5158's (this milestone, sibling task) goal-energy-ranker result if it is available
+    and passed by the time this task runs -- combine both warm-start signals if both are validated; use
+    only exp5157's if exp5158 is unavailable or nulled.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5157_deepen_warmstart_replay_ablation_v473.json (the validated mechanism -- read
+      its exact carryover design, do not re-derive from scratch)
+    - results/experiment_5158_deepen_goal_energy_ranker_replay_v473.json IF PRESENT
+    - python/carnot/agentic/arc_competition_agent.py (_begin_level_goal_episode, _active_transitions,
+      _induce_and_plan -- this is where the wiring goes)
+    - python/carnot/agentic/arc_hazard_pruner.py (the precedent for a validated offline mechanism
+      correctly wired into the live search path as a reusable component -- follow this integration pattern)
+    - python/carnot/agentic/arc_solver_kit.py (reproduce() -- the reproduction gate any claimed new level
+      MUST pass)
+    - ops/arc_solve_registry.yaml (current per-game levels_reproduced -- confirm your targets' CURRENT
+      depth before attempting, so your delta is measured against a known baseline)
+    - scripts/arc_orphan_solver_lint.py (run before declaring done)
+
+    PRECONDITIONS (check BEFORE any subsequent step):
+      a. Re-verify exp5157's gate_passed == true from its artifact directly (do not trust a stale
+         assumption).
+      b. Registry-precheck each target game's CURRENT levels_reproduced via ops/arc_solve_registry.yaml
+         immediately before attempting -- per ARC Live-Path Reachability Discipline, do not re-attempt a
+         level the live mechanism already reaches.
+
+    CONCRETE STEPS:
+    1. Select 2-3 target games from the "deepened_but_stuck" set characterized in exp5155
+       (candidates: ar25 L3->L4, bp35 L2->L3, cd82 L2->L3, cn04 L3->L4, dc22 L2->L3, ft09 L3->L4 -- pick
+       based on which have the clearest per-game warm-start signal in exp5157/exp5158's per-game
+       breakdown, not arbitrarily).
+    2. Wire the validated warm-start mechanism into arc_competition_agent.py's level-boundary handling so
+       the LIVE E3AgentPolicy path carries level-N state forward into level-N+1 induction (a genuine code
+       change to the live path, not a copy into a new offline-only module).
+    3. Run the live agent (via the offline arcade / environment_files sim, per the standing
+       arc_loop_solve.py entrypoint pattern) on each target game and attempt to reach the next level.
+    4. Run scripts/arc_orphan_solver_lint.py -- any new solver-like module must be in the live agent's
+       import closure, not orphaned.
+    5. For any level genuinely reached, run it through arc_solver_kit.reproduce() before counting it --
+       this task's acceptance gate is real, per the ARC Level-Up Attempt Guarantee: a level counts ONLY
+       when offline_reproduced=true AND reproduced_levels>=1 (a genuine +1 deeper level on an
+       already-solved game). A live attempt that does not clear this gate is a null, not a partial credit.
+    6. Declare solve_provenance honestly: live_agent_self_discovery ONLY if the live E3AgentPolicy path
+       itself made the discovery at runtime using the wired-in mechanism (not an outer-loop hand-tuned
+       trajectory).
+    7. Report HONESTLY either way -- a null here (the offline ablation win does not transfer to a live
+       level-up) is still a valuable, real finding about the gap between offline replay signal and live
+       search behavior.
+
+    REQUIRED ARTIFACT FIELDS:
+      target_games:
+        value: "list of {game, level_before, level_attempted}"
+      levels_banked:
+        value: "list of {game, new_level, offline_reproduced: bool, reproducibility_checksum}"
+        principle: "Only reproduce()-confirmed levels count -- per ARC Solve Reproducibility + Solver-Reuse Discipline."
+      reproducible_levels_delta:
+        value: int
+        principle: "The load-bearing metric per CLAUDE.md's no-churn ethos and the ARC Level-Up Attempt
+          Guarantee -- must move reproducible_total_levels or honestly report zero."
+      live_path_reachable:
+        value: bool
+        principle: "Confirmed via arc_orphan_solver_lint.py -- a solver the live agent can't call produces
+          no live capability regardless of any offline result."
+      warmstart_mechanism_used:
+        value: "exp5157 / exp5158 / both"
+      solve_provenance:
+        principle: "live_agent_self_discovery only if the live E3AgentPolicy path made the discovery at runtime."
+      verifier_is_oracle:
+        value: false
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly how many
+          levels were banked, if any -- do not bury a null."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5160-oracle-distinct-cross-corpus-closure-v473
+  milestone: 2026.07.473
+  title: PHASE B1 oracle-distinct hardening closure -- resolve the game_id misnomer and complete cross-corpus replication
+  priority: high
+  track: arc
+  deliverable: results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json
+  prior_failures:
+  - experiment_id: exp2855-cross-corpus-matrix-v4
+    verdict: 'complete: cross-corpus matrix not built; clean_corpus_count=1; blocked_corpus_count=1;
+      flagged_corpus_count=0; missing_corpus_count=3'
+    addressed_by: exp2855 and its v5/v7/v8/v9 successors (exp2865/2894/2902/2921) are the Carnot VERIFIER's
+      cross-DOMAIN generalization matrix (does the verifier ensemble generalize across math/code/facts
+      corpora for the paper) -- an entirely different meaning of "cross-corpus" than this task's actual
+      scope, which is whether exp4245's ARC candidate-pool set-encoder-vs-vote reranking win replicates on
+      a SECOND, DISJOINT pool of classic ARC-1/ARC-2 static puzzles. Shares only the generic phrase
+      "cross-corpus" with this task's title; different mechanism, different domain, different pools.
+      Flagging honestly per the Exclusion-Manifest Cross-Check discipline rather than assuming the
+      scope-matcher's phrase overlap is a real prior failure.
     retire_if_same_verdict: false
-  - experiment_id: exp4246-code-oracle-distinct-replication
-    verdict: blocked_code_second_corpus_missing
-    addressed_by: Different domain (CODE oracle-distinct replication, missing a second code corpus) sharing
-      only the 'oracle-distinct...replication' phrase with this task's ARC-domain hardening scope.
-    retire_if_same_verdict: false
-  - experiment_id: exp4258-arc-oracle-distinct-cross-game-transfer
-    verdict: blocked_arc_game_ids_unrecoverable
-    addressed_by: IMPORTANT -- this is the exact cross-game-replication check this task's step 3 asks
-      for, and it hit a real precondition block (game ids could not be recovered from the candidate pool
-      to split by game). Step 0 of this task's own preconditions MUST re-check whether game-id recoverability
-      is fixed before attempting cross-game replication -- if the SAME blocker recurs, report it honestly
-      as blocked_arc_game_ids_unrecoverable again (do not fabricate a cross-game number) and complete
-      the multiseed + leak-audit steps (1-2) regardless, since those do not depend on game-id recovery.
+  - experiment_id: exp2921-cross-corpus-matrix-v9-paper-boundary-v1
+    verdict: 'complete: cross-corpus matrix v9 and paper-v6 claim boundary built; headline_eligible=6;
+      clean=10; flagged=4; blocked=1; pilot_only=3; diagnostic_only=2; missing=1'
+    addressed_by: Same false-positive class as exp2855 above (the verifier cross-domain generalization
+      matrix, not ARC candidate-pool cross-corpus replication) -- the most recent entry in that lineage,
+      cited to cover the full v4-v9 matched range the scope-matcher flagged.
     retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
   max_turns: 60
-  estimated_wall_time_min: 180
-  prompt: "CONTEXT:\nexp4245 (results/experiment_4245_arc_set_encoder_beats_vote.json) reported a genuine\
-    \ ARC\noracle-distinct win: a set-encoder verifier beats self-consistency vote by +44.2pp\n(set_encoder_at_1=0.6923\
-    \ vs vote_at_1=0.25, delta_ci95=[0.3077,0.5962] excluding 0) on a 52-task\nheld-out ARC-1 pool (28,443\
-    \ candidates, gap3_stage2 lineage). verifier_is_oracle=false. BUT this\nresult has never been hardened:\
-    \ it used a SINGLE seed (random_seed=4245, no multi-seed field),\nn=52 is small, and no explicit leak-audit\
-    \ was run to confirm the held-out split has zero overlap\nwith the candidate-pool-generation process.\
-    \ Before citing this as evidence for the Carnot\nverifier-moat thesis (or unlocking DiffusionGemma\
-    \ scaling on the strength of it -- see the sibling\n.472 task exp5152), it needs the same rigor GAP-4's\
-    \ own forward protocol demands for ARC\noracle-distinct claims.\n\nDistinct from (do NOT confuse with):\
-    \ (1) the retired GAP-3 trained-content-energy SELECTOR\nlineage (ops/exclusion_manifest.yaml id gap3_trained_content_energy_selector_retired_stage2v2_\n\
-    2026_06_09, AUROC ceiling 0.63-0.69, retired 2026-06-09) -- that's energy-as-RERANKER over a\nfixed\
-    \ pool, a genuinely different scope from this set-encoder's actual mechanism; (2) the D1\nMuSR-reasoning-embedding-verifier\
-    \ null (results/experiment_phase_d_musr_trained_verifier.json,\ndelta CI95 including 0) -- that's\
-    \ a DIFFERENT corpus/domain (MuSR text, not ARC), see exp5152.\n\nEXISTING CODE TO READ FIRST:\n-\
-    \ CLAUDE.md \"Adversarial Artifact Verification + Sample-Size Rigor\", \"Circularity/Oracle-\n  Distinctness\
-    \ Discipline\"\n- results/experiment_4245_arc_set_encoder_beats_vote.json + its .py companion\n- results/experiment_4243_arc_candidate_pool_grow_pool.json.gz\
-    \ (the candidate pool exp4245 scored)\n- ops/verifier_gaps.md GAP-4 entry's \"Forward protocol (before\
-    \ status: filled)\" -- reuse this\n  protocol shape (sandboxed no-filesystem-bypass, genuinely held-out\
-    \ tasks, cluster bootstrap +\n  exact tests requiring >=6 discordant wins for two-sided p<0.05, hardened\
-    \ exec sandbox with\n  timeout blocking np.load/np.save/np.fromfile/type) as the template for THIS\
-    \ hardening, adapted\n  to the set-encoder-vs-vote claim instead of GAP-4's same-shape-rule claim.\n\
-    - python/carnot/agentic/arc_solver_kit.py (reproduction gate conventions)\n\nPRECONDITIONS (check\
-    \ BEFORE any subsequent step):\n  a. exp4245's artifact and candidate pool exist and load cleanly\
-    \ -- if not, honest_verdict\n     blocked_upstream_artifact_missing, stop.\n  b. Confirm the held-out\
-    \ split's 52 tasks have zero row-level overlap with whatever process\n     built the 28,443-candidate\
-    \ pool (a genuine leak-audit, not an assumption).\n  c. Check whether the candidate pool's rows carry\
-    \ a recoverable ARC game_id (the exact blocker\n     that stopped exp4258's cross-game-transfer attempt,\
-    \ blocked_arc_game_ids_unrecoverable). If\n     still unrecoverable, skip step 3 (cross-game check)\
-    \ with that same honest blocked_* reason\n     for JUST that sub-claim, but still complete steps 1-2\
-    \ (multiseed, leak-audit) -- do not let\n     one unavailable precondition block the whole task.\n\
-    \nCONCRETE STEPS:\n1. Re-run the set-encoder-vs-vote comparison with >=5 independent seeds (varying\
-    \ model init /\n   data order, not re-deriving the candidate pool), report per-seed AUROC/delta and\
-    \ a pooled\n   CI95.\n2. Leak-audit: verify no held-out task's gold answer, candidate text, or task_id\
-    \ appears in the\n   set-encoder's training signal.\n3. Cross-game check: does the win replicate on\
-    \ a SECOND, disjoint ARC pool (not gap3_stage2)?\n4. Cluster-bootstrap + exact test per GAP-4's protocol\
-    \ shape (adapt the >=6-discordant-wins\n   two-sided test).\n5. Report HONESTLY either way -- if the\
-    \ win doesn't survive multiseed/leak-audit/cross-game, that\n   is the valuable, decisive finding\
-    \ this task exists to produce (closes exp5152's dependency\n   cleanly either way).\n\nREQUIRED ARTIFACT\
-    \ FIELDS:\n  multiseed_delta_ci95:\n    value: [float, float]\n    principle: \"A single-seed CI is\
-    \ not a real interval; multiseed pooling is the minimum bar\n      before this result can inform a\
-    \ scaling decision (DiffusionGemma, exp5152).\"\n  leak_audit_passed:\n    value: bool\n    principle:\
-    \ \"An unaudited held-out split cannot distinguish a real win from a leaked one.\"\n  cross_game_replication_delta:\n\
-    \    value: \"float or null\"\n    principle: \"A win on one pool that vanishes on a second is a corpus\
-    \ artifact, not a general finding.\"\n  verifier_is_oracle:\n    value: false\n    principle: \"Must\
-    \ stay oracle-distinct (per the Circularity Discipline) to count toward the moat thesis.\"\n  solve_provenance:\n\
-    \    value: development_proxy\n    principle: \"This is offline pool-scoring on already-generated\
-    \ candidates, not a live hidden-game solve.\"\n  inference_substrate:\n    principle: \"Declare accurately\
-    \ per the Inference-Substrate Declaration Discipline.\"\n  honest_verdict:\n    principle: \"Must\
-    \ start with complete:/complete_/success:/success_ AND state plainly whether\n      the +44pp win\
-    \ survives hardening or not -- do not bury a null in qualifiers.\"\n"
-- id: exp5152-diffusiongemma-gate-reexamination-v472
-  milestone: 2026.07.472
-  title: PHASE A2 DiffusionGemma gate re-examination -- does the MuSR D1 null actually settle the ARC
-    question?
-  priority: medium
-  track: arc
-  deliverable: results/experiment_5152_diffusiongemma_gate_reexamination_v472.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 45
-  prompt: "CONTEXT:\nops/known-issues.md (2026-06-30 entry) states \"DiffusionGemma stays gated\" based\
-    \ on the D1 test\nresult (results/experiment_phase_d_musr_trained_verifier.json): a trained oracle-distinct\n\
-    verifier (embedding+logistic head) does NOT beat self-consistency on 200 MuSR reasoning questions\n\
-    (delta=+0.015, CI95=[-0.06,0.085] including 0, moat_realized=false). BUT D1 tested MuSR TEXT\nreasoning\
-    \ traces -- a completely different corpus and claim from exp4245's ARC set-encoder-vs-vote\nresult\
-    \ (+44.2pp on ARC-1 candidate pools, see exp5151 for its hardening status). This task exists\nto answer\
-    \ a narrow, honest question: is DiffusionGemma's gating actually justified by evidence\nabout DiffusionGemma's\
-    \ own domain (ARC), or does it silently conflate a MuSR null with an\nunrelated ARC question -- the\
-    \ same class of premise-conflation error this project has caught\nbefore (the FoVer construction-artifact\
-    \ retraction, 2026-07-01).\n\nEXISTING CODE TO READ FIRST:\n- ops/known-issues.md's \"DiffusionGemma\
-    \ stays gated\" entry (2026-06-30) in full\n- results/experiment_phase_d_musr_trained_verifier.json\
-    \ (the D1 artifact)\n- results/experiment_5151_arc_oracle_distinct_hardening_v472.json IF IT EXISTS\
-    \ by the time you\n  run (same milestone, may or may not have landed first -- if present, cite its\
-    \ hardened verdict\n  directly; if absent, note that explicitly and base your recommendation on exp4245's\n\
-    \  as-yet-unhardened result with an appropriate caveat)\n- Whatever DiffusionGemma model/checkpoint\
-    \ artifacts exist (search for \"diffusiongemma\" in\n  results/ and python/carnot/ -- confirm what's\
-    \ actually cached/ready vs. just discussed)\n\nCONCRETE STEPS:\n1. State explicitly, in the artifact,\
-    \ what claim D1 tested (MuSR reasoning-text\n   embedding-verifier-vs-SC) versus what claim exp4245\
-    \ tested (ARC-1 set-encoder-vs-vote\n   candidate reranking) -- are these the same underlying hypothesis\
-    \ (oracle-distinct verifiers add\n   value) tested on different domains, or genuinely unrelated questions?\
-    \ Be precise, not rhetorical.\n2. If exp5151's hardened result is available: does it support unlocking\
-    \ DiffusionGemma scaling\n   (a real, hardened ARC-domain win) regardless of the MuSR null, since\
-    \ they're different domains?\n   If exp5151 is unavailable or itself nulled: DiffusionGemma should\
-    \ stay gated, but for the\n   CORRECT reason (no domain-relevant evidence either way, or a genuine\
-    \ ARC-domain null), not the\n   MuSR-conflation reason currently on record.\n3. Write a clear recommendation:\
-    \ KEEP GATED (with the corrected reasoning) or UNGATE (citing the\n   real ARC-domain evidence) --\
-    \ this task does not itself scale DiffusionGemma, only clarifies\n   whether the current gate is well-founded.\n\
-    4. Update ops/known-issues.md's \"DiffusionGemma stays gated\" entry with a dated correction if the\n\
-    \   original reasoning was found to conflate domains (never delete -- add a corrigendum per the\n\
-    \   Documentation Update Rules).\n\nREQUIRED ARTIFACT FIELDS:\n  d1_claim_vs_exp4245_claim_same_hypothesis:\n\
-    \    value: bool\n    principle: \"The precise question this task exists to answer -- conflating two\
-    \ different\n      domains under one gate is exactly the error class this project has been burned\
-    \ by before.\"\n  recommendation:\n    value: \"keep_gated or ungate_pending_exp5151 or ungate_now\"\
-    \n    principle: \"A clear, actionable recommendation, not just an analysis -- this feeds directly\n\
-    \      into whether DiffusionGemma scaling gets queued next milestone.\"\n  honest_verdict:\n    principle:\
-    \ \"Must start with complete:/complete_/success:/success_.\"\n"
-- id: exp5153-gap4-scaleup-v472
-  milestone: 2026.07.472
-  title: PHASE B1 GAP-4 scale-up -- execute the already-documented forward protocol before any 400-task
-    commitment
+  estimated_wall_time_min: 120
+  prompt: |
+    CONTEXT:
+    exp5151 (results/experiment_5151_arc_oracle_distinct_hardening_v472.json) hardened exp4245's
+    +44.2pp ARC set-encoder-vs-vote win on 3 of 4 axes (multiseed CI95 [0.427,0.489], leak-audit,
+    exact-test all passed) but the 4th axis, cross-game replication, is blocked_arc_game_ids_unrecoverable
+    -- the SAME precondition blocker that stopped exp4258 earlier. This task investigates WHY that blocker
+    recurs and completes the closure, one way or the other, so exp5152's DiffusionGemma gate decision can
+    finally be made on complete evidence instead of "keep gated, evidence incomplete" (its current
+    recommendation).
+
+    IMPORTANT -- LIKELY ROOT CAUSE, VERIFY BEFORE ASSUMING A FIX IS NEEDED: the candidate pool
+    (results/experiment_4243_arc_candidate_pool_grow_pool.json.gz) that exp4245/exp5151 score is built
+    from the `gap3_stage2` lineage, and its `tasks` field is keyed by `task_id` values that are 8-character
+    hex hashes (e.g. "50a16a69") -- these are classic ARC-AGI-1/2 EVALUATION-SET PUZZLE identifiers, NOT
+    ARC-AGI-3 interactive GAME identifiers (which look like "bp35", "tu93", "tn36"). There is no
+    "game" grouping concept in this pool's schema at all -- each task_id IS a standalone static puzzle, not
+    a level within an interactive game. The prior task prompts' use of "game_id" for this pool appears to
+    be a terminology carry-over from the ARC-AGI-3 live-game vocabulary being incorrectly applied to what
+    is actually a classic-ARC-1/2 static-puzzle-grid reranking task. If you confirm this (read the pool's
+    schema yourself -- do not assume), then "recover the game_id" is not a coherent fix; the RIGHT fix is
+    to re-scope the axis from "cross-game" to "cross-corpus": does the set-encoder-vs-vote win replicate on
+    a SECOND, DISJOINT pool of ARC-1/ARC-2 puzzles?
+
+    A plausible disjoint second pool already exists in this repo from the GAP-4 lineage:
+    results/arc3_gap4_arc2_eval_pool.json.gz (built for the ARC-2 transfer probe, ops/verifier_gaps.md
+    GAP-4 entry). Check whether it (or a similarly-shaped disjoint pool) is schema-compatible with the
+    set-encoder scorer, or can be made so with a light adapter -- prefer reusing/adapting an existing pool
+    over building a new one from scratch.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5151_arc_oracle_distinct_hardening_v472.json in full (in particular
+      cross_game_blocked_reason, leak_audit, model_specs)
+    - results/experiment_4245_arc_set_encoder_beats_vote.json + its companion .py script (the set-encoder
+      training/scoring code you will need to re-run on a second pool)
+    - results/experiment_4243_arc_candidate_pool_grow_pool.json.gz (inspect its schema directly: gunzip
+      and read a few `tasks` entries -- confirm the task_id format and whether ANY field carries a
+      recoverable game/domain/source grouping beyond task_id itself, e.g. `source_id`)
+    - results/arc3_gap4_arc2_eval_pool.json.gz (the candidate disjoint second pool)
+    - results/experiment_5152_diffusiongemma_gate_reexamination_v472.json (what this closure unblocks)
+    - CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor", "Circularity/Oracle-Distinctness Discipline"
+
+    PRECONDITIONS (check BEFORE any subsequent step):
+      a. exp5151's artifact and the exp4243 candidate pool exist and load cleanly -- if not, honest_verdict
+         blocked_upstream_artifact_missing, stop.
+      b. Directly inspect the exp4243 pool's task_id format and any grouping fields, to confirm or refute
+         the "no game_id concept exists in this schema" hypothesis above BEFORE deciding how to proceed.
+
+    CONCRETE STEPS:
+    1. Confirm or refute the game_id-misnomer hypothesis by direct inspection of the pool schema. Report
+       this finding explicitly and honestly, whichever way it goes -- this determines the rest of the task.
+    2. If confirmed (no natural game/domain grouping exists): re-scope the axis to cross-corpus
+       replication. Assemble or adapt a genuinely disjoint second candidate pool (prefer
+       results/arc3_gap4_arc2_eval_pool.json.gz if schema-compatible, or build a light adapter/converter if
+       not) with zero row-level overlap (task_id, candidate content, gold labels) against the original
+       exp4243 pool -- run the SAME leak-audit methodology exp5151 used.
+    3. If refuted (a genuine per-puzzle-source grouping IS recoverable after all): recover it and run the
+       cross-game replication check exp5151's original design called for.
+    4. Either way, re-run the set-encoder-vs-vote comparison on the second pool using the SAME
+       architecture/protocol as exp5151 (deepsets_pooled_context_set_encoder, >=5 seeds where the pool size
+       allows).
+    5. Report the delta and CI95 on the second pool. A win that replicates (CI95 excludes 0, same
+       direction) closes exp5151's remaining axis as PASSED. A win that vanishes (CI95 includes 0, or
+       flips sign) is a corpus artifact -- report this honestly; it is the valuable, decisive finding this
+       task exists to produce either way.
+    6. Update exp5152's recommendation logic: if this task's replication PASSES, the DiffusionGemma gate
+       recommendation should move from "keep_gated" to "ungate_now" (cite exp5151+this task's combined
+       evidence) -- but do NOT scale DiffusionGemma yourself in this task, only update the recommendation
+       and cite it clearly for a future task to act on. If this task's replication FAILS, the gate stays
+       closed but now for a fully-hardened, correctly-scoped reason (a genuine cross-corpus null, not an
+       unresolved precondition block).
+    7. Append a dated corrigendum to ops/known-issues.md's exp5152 corrigendum entry recording this
+       closure's outcome, per the Documentation Update Rules (never delete, only add).
+
+    REQUIRED ARTIFACT FIELDS:
+      game_id_misnomer_confirmed:
+        value: bool
+        principle: "The precise, code-verified fact this task exists to establish before choosing a fix path."
+      second_pool_source:
+        value: "path to the disjoint pool actually used"
+      second_pool_leak_audit_passed:
+        value: bool
+      cross_corpus_delta:
+        value: float
+      cross_corpus_delta_ci95:
+        value: [float, float]
+        principle: "The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?"
+      cross_corpus_replication_passed:
+        value: bool
+      diffusiongemma_gate_updated_recommendation:
+        value: "keep_gated or ungate_now"
+        principle: "Feeds directly into whether DiffusionGemma scaling is queued next milestone."
+      verifier_is_oracle:
+        value: false
+      solve_provenance:
+        value: development_proxy
+      random_seeds_used:
+        value: "list of int"
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly whether the
+          win survives cross-corpus replication."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5161-gap4-protocol-execution-pilot-v473
+  milestone: 2026.07.473
+  title: PHASE B2 GAP-4 forward protocol -- real, bounded-scale execution (not another audit)
   priority: high
   track: arc
-  deliverable: results/experiment_5153_gap4_scaleup_v472.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 60
-  estimated_wall_time_min: 180
-  prompt: "CONTEXT:\nGAP-4 (ops/verifier_gaps.md, \"same-shape rule-application consistency\") landed\
-    \ a first positive\n2026-06-09/10 (+4/-0 on ARC-1, generator-attributable) and was independently CALIBRATED\
-    \ by an\nARC-2 transfer probe showing the demo-overfit asymmetry expected of genuine induction, not\n\
-    memorization (induction 0.93->0.57, precision 0.90->0.47 -- precision dropping on transfer is the\n\
-    right signature). This is a real, uncontested positive result that simply never got scaled because\n\
-    the PHASE D pivot interrupted it (2026-06-30) -- it is NOT nulled, just dormant since 2026-06-10\n\
-    (ops/verifier_gaps.md mtime confirms no edits since). GAP-4's own \"Forward protocol (before\nstatus:\
-    \ filled)\" is already fully specified -- this task executes it, not redesigns it.\n\nEXISTING CODE\
-    \ TO READ FIRST:\n- ops/verifier_gaps.md GAP-4 entry in full (the exact forward protocol text)\n-\
-    \ Whatever exp landed the first positive (search results/ for \"gap4\"/\"gap-4\"/\"same_shape\" dated\n\
-    \  2026-06-09/10)\n- python/carnot/agentic/arc_solver_kit.py\n\nCONCRETE STEPS (per GAP-4's own documented\
-    \ forward protocol -- follow verbatim, do not re-derive):\n1. Sandboxed (no filesystem bypass) 400-task\
-    \ re-confirmation on a host without ARC solutions on\n   disk.\n2. Archive transcripts.\n3. Genuinely\
-    \ held-out tasks: ARC-AGI-2 eval set, ConceptARC holdout, or post-cutoff tasks.\n4. Codex-first arm\
-    \ (the generator ordering GAP-4's original calibration used).\n5. Cluster bootstrap + exact statistical\
-    \ tests (zero-loss design needs >=6 discordant wins for\n   two-sided p<0.05).\n6. Hardened exec sandbox:\
-    \ timeout enforced; block np.load/np.save/np.fromfile/type (the exact\n   sandbox-escape vectors GAP-4's\
-    \ protocol names).\n7. Local open-weight generator arm (Gemma-4/Qwen3.6) for the decentralization\
-    \ tier, per CLAUDE.md\n   Decentralization-Respecting Design Constraints rule 1.\n8. Only after ALL\
-    \ of the above passes does GAP-4's status move to \"filled\" -- report honestly if\n   any step fails\
-    \ or the scaled result doesn't replicate the 2026-06-10 calibration.\n\nREQUIRED ARTIFACT FIELDS:\n\
-    \  protocol_steps_completed:\n    value: \"list of the 6 protocol steps above with pass/fail per step\"\
-    \n    principle: \"GAP-4's own protocol is the acceptance bar; partial completion should be reported\n\
-    \      as partial, not rounded up to filled.\"\n  n_400_task_result:\n    value: \"float or null\"\
-    \n    principle: \"The actual scaled solve-rate/precision number, not just a pass/fail on the protocol\
-    \ steps.\"\n  gap4_status_recommendation:\n    value: \"filled or still_open or retired\"\n    principle:\
-    \ \"Feeds directly into whether ops/verifier_gaps.md's GAP-4 status line gets updated.\"\n  solve_provenance:\n\
-    \    value: development_proxy\n    principle: \"Offline scoring against held-out corpora, not a live\
-    \ hidden-game solve.\"\n  honest_verdict:\n    principle: \"Must start with complete:/complete_/success:/success_.\"\
-    \n"
-- id: exp5154-energy-fitness-directed-exploration-v472
-  milestone: 2026.07.472
-  title: PHASE C1 energy-as-fitness generation pilot -- Carnot energy landscape guides candidate exploration,
-    not post-hoc reranking
-  priority: high
-  track: arc
-  deliverable: results/experiment_5154_energy_fitness_directed_exploration_v472.json
+  deliverable: results/experiment_5161_gap4_protocol_execution_pilot_v473.json
   prior_failures:
-  - experiment_id: exp4688-controllable-novelty-proposal-policy-live
-    verdict: 'complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed'
-    addressed_by: exp4688 used a novelty/curiosity BONUS (NGU+RND-style intrinsic motivation) layered
-      on the existing explorer's proposal distribution -- the fitness signal was 'how novel is this state',
-      not any Carnot energy/verifier quantity. This task uses the ACTUAL Carnot energy function (the learned
-      or structural energy the verifier ensemble already computes) as the fitness landscape driving a
-      quality-diversity search over candidate action sequences -- a different signal source entirely,
-      not a re-run of novelty-bonus exploration under a new name.
-    retire_if_same_verdict: true
-  - experiment_id: exp4689-program-synthesis-action-effect-proposal-filter
-    verdict: coverage_delta=0.0, first_win_rate_delta=-0.04, heldout_programs_kept=0
-    addressed_by: exp4689 filtered candidate actions via program-synthesis action-effect matching (a symbolic
-      filter, no energy/fitness landscape at all). This task is a continuous energy-guided search (QD
-      evolution over an energy-shaped fitness landscape), not a discrete symbolic filter -- genuinely
-      different mechanism.
-    retire_if_same_verdict: true
+  - experiment_id: exp5153-gap4-scaleup-v472
+    verdict: 'complete: gap4_scaleup_protocol_partial_still_open'
+    addressed_by: exp5153 was an AUDIT that confirmed the forward protocol had never been executed (1 of
+      7 steps passed -- only the pre-existing hardened sandbox). It did not attempt execution. This task is
+      the first genuine EXECUTION attempt, deliberately scoped to a bounded pilot N instead of the full
+      400-task run (which is wall-clock infeasible in a single codex session -- see the checkpoint/resume
+      design below), so it can actually complete rather than repeat exp5153's non-execution outcome.
+    retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
   max_turns: 80
   estimated_wall_time_min: 240
-  prompt: "CONTEXT:\nPer CLAUDE.md \"ARC Live-Path Reachability Discipline\" and the \"ARC VALUE-HEAD\
-    \ ENERGY\nDISTILLATION\" retirement (ops/known-issues.md, 2026-07-01): the selection/value-head axis\
-    \ is\nFULLY EXHAUSTED (5 sub-hypotheses nulled) -- \"redirect all future ARC effort to the generation\n\
-    axis.\" Separately, the diagnosed wall is confirmed as L1-first-contact / candidate generation:\n\
-    the winning trajectory never enters the explored pool in the first place (generic first-win\n0.04=1/25\
-    \ games), so no amount of better SELECTION over that pool can help. Two prior\ngeneration-axis attempts\
-    \ (.432, see prior_failures above) nulled: novelty-bonus exploration and\nprogram-synthesis filtering.\
-    \ Neither used Carnot's actual energy/verifier machinery as the\nexploration signal -- this task tests\
-    \ the one generation-axis mechanism that's genuinely ON-THESIS\nfor an energy-based-models project\
-    \ and has not yet been tried: using the energy function itself as\na FITNESS landscape shaping a quality-diversity\
-    \ search over the hypothesis/action space, so states\nnear a low-energy (verifier-favored) region\
-    \ get explored preferentially, before any selection over\na fixed pool happens.\n\nPer CLAUDE.md \"\
-    ARC-AGI-3 IS a Live Hidden-Game Discovery Agent\": this MUST integrate into the live\nagent path (python/carnot/agentic/arc_competition_agent.py's\
-    \ E3AgentPolicy /\nStepwiseExplorer/plan_in_model), not a standalone offline script the live agent\
-    \ can never call --\nper \"ARC Live-Path Reachability Discipline\", run scripts/arc_orphan_solver_lint.py\
-    \ before claiming\ndone.\n\nEXISTING CODE TO READ FIRST:\n- CLAUDE.md \"ARC-AGI-3 IS a Live Hidden-Game\
-    \ Discovery Agent\", \"ARC Live-Path Reachability\n  Discipline\", \"ARC Solve Reproducibility + Solver-Reuse\
-    \ Discipline\", \"ARC-AGI-3 Incremental-\n  Progress Scoping\", \"ARC Level-Up Attempt Guarantee\"\
-    \n- results/experiment_4688_controllable_novelty_proposal_policy_live.json (prior null, full detail)\n\
-    - research-complete.yaml's .433 transition entry (the \"8th consecutive bridge_crossed_for_solve\n\
-    \  =FALSE\" close-state)\n- python/carnot/agentic/arc_competition_agent.py, arc_hazard_pruner.py (the\
-    \ precedent for a\n  search-time move-pruner reachable from the live path -- follow this integration\
-    \ pattern)\n- python/carnot/agentic/arc_solver_kit.py (reproduction gate)\n- ops/arc_solve_registry.yaml\
-    \ (current state: reproducible_total_levels=69, unchanged since 6/30\n  -- confirm this hasn't moved\
-    \ before you start, so your delta is measured against a known baseline)\n\nPRECONDITIONS:\n  a. Confirm\
-    \ python/carnot's existing energy/verifier scoring machinery (whatever WorldModelVerifier\n     or\
-    \ equivalent the live E3AgentPolicy already calls) can be queried as a scalar energy/fitness\n   \
-    \  value per candidate state/action -- if no such reusable scalar exists, block honestly\n     (blocked_no_reusable_energy_scalar)\
-    \ rather than building a new one from scratch inside this task.\n\nCONCRETE STEPS:\n1. Design a SMALL,\
-    \ falsifiable pilot: pick 1-2 currently-UNSOLVED public games (re86/sb26/bp35/\n   lf52 per the registry)\
-    \ or a shallow-solved one for +1-deeper, per ARC-AGI-3 Incremental-Progress\n   Scoping -- do not\
-    \ attempt a full-game solve in one task.\n2. Wire an energy-guided quality-diversity exploration policy\
-    \ into the LIVE explorer path: energy\n   scores candidate states/action-sequences; QD maintains a\
-    \ diverse archive of high-fitness\n   (low-energy) states rather than a single best-so-far, giving\
-    \ the winning trajectory more chances\n   to be discovered than greedy/novelty-only exploration.\n\
-    3. A/B against the SAME reachable-target control exp4688 used (matched no-energy-bonus ablation) so\n\
-    \   the comparison is apples-to-apples with the prior null.\n4. If a genuinely NEW level is reached:\
-    \ run it through arc_solver_kit.reproduce before counting it\n   -- this task's acceptance gate is\
-    \ real, per \"ARC Level-Up Attempt Guarantee\" (this milestone's\n   floor level-up attempt).\n5.\
-    \ Run scripts/arc_orphan_solver_lint.py before declaring done -- any new solver-like module must\n\
-    \   be in the live agent's import closure, not orphaned.\n6. Declare solve_provenance honestly (live_agent_self_discovery\
-    \ only if the LIVE E3AgentPolicy path\n   itself made the discovery at runtime, not an outer-loop\
-    \ hand-tuned energy function).\n7. Report HONESTLY either way -- a null here (energy-fitness exploration\
-    \ also fails to surface the\n   winning trajectory) is a real, valuable finding that would mean the\
-    \ generation wall is not\n   fixable by better exploration SIGNAL alone, redirecting effort toward\
-    \ representation/perception\n   fixes instead (per project_arc_live_agent_learning_gaps).\n\nREQUIRED\
-    \ ARTIFACT FIELDS:\n  energy_signal_source:\n    value: \"which specific Carnot energy/verifier computation\
-    \ was used as the fitness function\"\n    principle: \"Must be a genuine Carnot energy quantity, not\
-    \ a relabeled novelty/curiosity bonus --\n      the whole point of this pilot is testing the ENERGY\
-    \ signal specifically.\"\n  reproducible_levels_delta:\n    value: int\n    principle: \"The load-bearing\
-    \ metric per CLAUDE.md's no-churn ethos -- must move\n      reproducible_total_levels or honestly\
-    \ report zero.\"\n  offline_reproduced:\n    value: bool\n  live_path_reachable:\n    value: bool\n\
-    \    principle: \"Confirmed via arc_orphan_solver_lint.py -- a solver the live agent can't call\n\
-    \      produces no live capability regardless of any offline result.\"\n  solve_provenance:\n    principle:\
-    \ \"live_agent_self_discovery only if the live E3AgentPolicy path made the discovery.\"\n  verifier_is_oracle:\n\
-    \    value: false\n  honest_verdict:\n    principle: \"Must start with complete:/complete_/success:/success_\
-    \ AND state plainly whether\n      the winning trajectory was surfaced or not -- do not bury a null.\"\
-    \n"
-- id: exp5155-multilevel-belief-state-scoping-v472
-  milestone: 2026.07.472
-  title: PHASE C2 multi-level deepening scoping -- does an energy-based belief state carried across levels
-    beat cold-restart, and what's the smallest test?
+  prompt: |
+    CONTEXT:
+    GAP-4 (ops/verifier_gaps.md, "same-shape rule-application consistency") landed a first positive
+    2026-06-09/10 (+4/-0 recovered on ARC-1, pool-restricted pass@2 vote 0.4516 -> gated 0.5806) and was
+    independently calibrated by an ARC-2 transfer probe showing the demo-overfit-asymmetry signature of
+    genuine induction (induction 0.93->0.57, precision 0.90->0.47 on transfer -- precision DROPPING on
+    transfer is the right signature, memorization predicts the opposite). Its own documented "Forward
+    protocol (before status: filled)" has never been executed (exp5153 confirmed this by audit, .472).
+
+    WALL-CLOCK REALITY CHECK (why this task is scoped to a pilot N, not the full 400): the ARC-1 rate was
+    ~46s/task and the ARC-2 rate was ~251s/task (5.4x slower). A full 400-task run at the ARC-2 rate is
+    ~27.9 hours -- infeasible in one codex session (the demonstrated ~4800s hard wall-clock cap, per the
+    exp4729 precedent in ops/known-issues.md "2026-06-25 ... exp4729 ... DETERMINISTICALLY exceeds the
+    codex 4800s hard wall-clock cap"). exp4729's own fix (already proven in this repo) is
+    checkpoint/resume + a soft elapsed-time budget under the hard cap -- reuse that pattern here rather
+    than re-deriving it. Also reuse the "task-split, do not monolithically power a multi-call confirmation"
+    lesson named in ops/verifier_gaps.md's "GAP-4 Agreement Selector Closure" entry.
+
+    EXISTING CODE TO READ FIRST:
+    - ops/verifier_gaps.md GAP-4 entry in full (the exact forward protocol text, the ARC-2 transfer table)
+    - scripts/experiments/arc3_gap4_rule_exec_verifier.py (the existing hardened sandbox: subprocess
+      isolation with ThreadPoolExecutor timeout, blocked substrings including np.load/np.save/np.fromfile
+      -- REUSE this, do not rebuild it)
+    - results/arc3_gap4_induced_programs.json, results/arc3_gap4_arc2_induced_programs.json (existing
+      induced-program artifacts -- understand what "codex-first arm" and induction cost per task means
+      before designing the pilot)
+    - results/arc3_gap4_arc2_eval_pool.json.gz (existing ARC-2 held-out pool -- reuse for the held-out arm)
+    - results/experiment_5153_gap4_scaleup_v472.json (the audit that scoped what remains to be done --
+      protocol_steps_completed lists exactly which of the 7 steps are outstanding)
+    - results/experiment_4729_held_out_first_win_readiness.py-style checkpoint/resume pattern (grep
+      research-complete.yaml / ops/known-issues.md for "exp4729" and its successor exp4875-a4 fix for the
+      concrete soft-budget + resume implementation pattern to copy)
+
+    PRECONDITIONS (check BEFORE any subsequent step):
+      a. Confirm the hardened sandbox script (arc3_gap4_rule_exec_verifier.py) runs cleanly on a small
+         smoke batch (2-3 tasks) before committing to the full pilot -- if it does not, honest_verdict
+         blocked_sandbox_smoke_failed, stop.
+      b. Confirm gemma-4-12B-it-GGUF or another CLAUDE.md-mandated SOTA local model is cached, for the
+         local open-weight generator arm (step 6 below) -- if not cached, that ARM specifically reports
+         blocked_local_model_not_cached but the codex-generator arm proceeds regardless (do not let one
+         missing arm block the whole task).
+
+    CONCRETE STEPS (execute GAP-4's own documented forward protocol, scoped to a bounded pilot N):
+    1. Design the pilot at N=60 total tasks (well above the >=6-discordant-wins two-sided-significance
+       floor with margin), split across BOTH a fresh ARC-1 sandboxed re-confirmation slice and a
+       genuinely-held-out ARC-2/ConceptARC slice (reuse results/arc3_gap4_arc2_eval_pool.json.gz where
+       possible). Run on a host attested to have no ARC solutions on disk for this run.
+    2. Implement CHECKPOINT/RESUME: flush per-task results to disk immediately after each task completes;
+       track a soft elapsed-time budget (~3500-4200s, under the 4800s hard cap, per the exp4729 pattern)
+       so a capped run still yields a valid PARTIAL statistical result rather than nothing.
+    3. Archive full per-call transcripts (per GAP-4's protocol) for every task attempted.
+    4. Run the codex-first arm (the generator ordering GAP-4's original 2026-06-09/10 calibration used).
+    5. Compute cluster bootstrap + exact statistical tests on the actual N achieved (report N honestly if
+       the soft budget stops it before N=60 -- a partial N=40 result with a clear verdict is more valuable
+       than a fabricated N=60).
+    6. Attempt the local open-weight generator arm (Gemma-4/Qwen3.6 via llama.cpp, per CLAUDE.md SOTA
+       Local Models + Decentralization-Respecting Design Constraints rule 1) on a subset -- report honestly
+       if this arm is blocked by missing cache rather than skipping it silently.
+    7. Do NOT claim GAP-4's status moves to "filled" from this pilot alone -- report the pilot's own
+       result (does N=60 replicate the 2026-06-09/10 calibration's direction and effect size, at
+       statistical significance) and RECOMMEND whether scaling to the full N=400 is warranted, deferred to
+       a future milestone, or whether the pilot itself already found a null that retires the direction.
+
+    REQUIRED ARTIFACT FIELDS:
+      pilot_n_target:
+        value: 60
+      pilot_n_achieved:
+        value: int
+        principle: "May be less than the target if the soft budget stops the run -- report honestly, do not backfill."
+      checkpoint_resume_used:
+        value: bool
+      arc1_slice_result:
+        value: "dict with induction rate, precision, pass@2 delta vs vote"
+      arc2_heldout_slice_result:
+        value: "dict with induction rate, precision, pass@2 delta vs vote"
+      exact_test_discordant_wins:
+        value: int
+      exact_test_passes_min6_rule:
+        value: bool
+      local_generator_arm_result:
+        value: "dict or blocked_local_model_not_cached"
+      gap4_status_recommendation:
+        value: "filled or still_open or retired or scale_up_recommended"
+        principle: "Feeds directly into whether ops/verifier_gaps.md's GAP-4 status line gets updated."
+      solve_provenance:
+        value: development_proxy
+      inference_substrate:
+        principle: "Declare accurately per the Inference-Substrate Declaration Discipline -- this task DOES
+          invoke live codex/LLM calls (live_llm_inference), unlike exp5153's pure audit."
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND report the actual N achieved
+          and whether it replicated -- do not round a partial pilot up to a full confirmation."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5162-sota-ingestion-multilevel-v473
+  milestone: 2026.07.473
+  title: PHASE C1 SOTA ingestion -- hierarchical/multi-level world models and belief-state carryover for the deepen-wall program
   priority: medium
-  track: arc
-  deliverable: results/experiment_5155_multilevel_belief_state_scoping_v472.json
+  track: research
+  deliverable: results/experiment_5162_sota_ingestion_multilevel_v473.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Per CLAUDE.md "SOTA-Ingestion Cycle Discipline": this milestone's headline attacks a bleeding-edge open
+    problem (multi-level belief-state carryover for the live ARC-AGI-3 agent, Phase A of this roadmap), so
+    one reserved SOTA-ingestion task is mandatory.
+
+    IMPORTANT -- DO NOT RE-DO THE PRIMARY SWEEP: the outer-loop planning session that designed this
+    milestone (2026-07-02) already ran a focused literature scan on the exact primary problem (warm-start/
+    belief-state carryover across level boundaries) and wrote a "V473 Outer-Loop Planner References"
+    section to research-references.md with 11 verified findings (DynaMITE-RL arXiv:2402.15957, ReDRAW
+    arXiv:2504.02252, BAM arXiv:2202.02405, ASR arXiv:2603.03796, TheoryCoder arXiv:2503.20124,
+    Mixture-of-World-Models arXiv:2602.01270, and others). exp5157/exp5158 (this milestone) already build
+    on those findings directly. Re-running that same search would be pure duplication.
+
+    THIS TASK'S JOB instead: (a) read the V473 Outer-Loop section and CONFIRM none of its citations are
+    stale/wrong (spot-check 2-3 arXiv IDs resolve to the claimed papers); (b) run a genuinely INCREMENTAL
+    sweep for anything published or surfaced SINCE 2026-07-02 on the same primary topic, plus the light
+    general sweep on energy-based models/Ising-hardware/KANs/hallucination-detection (secondary priority,
+    for anything genuinely new since the 2026-07-01 V470/V471 sweep); (c) most valuably, once
+    exp5157/exp5158/exp5159's results exist (they should complete before this task if the conductor
+    processes tasks in roadmap order), search SPECIFICALLY for literature relevant to WHATEVER those tasks'
+    actual outcome was -- e.g. if ReDRAW's residual warm-start passed, search for scaling/generalizing it
+    (per the Mixture-of-World-Models direction already queued); if it nulled, search for why residual
+    corrections might fail in this setting and what the alternative (BAM-style adaptive retention, or a
+    representation-level fix) should look like.
+
+    Use the RELIABLE low-concurrency channel (scripts/sweep_clusters.py / scripts/sweep_semscholar.py for
+    arXiv/Semantic Scholar API discovery, plus low-concurrency WebSearch/WebFetch of the top 5-8 papers).
+    Do NOT invoke the /deep-research skill or any high-concurrency fan-out harness -- CLAUDE.md explicitly
+    bans that from the autonomous loop (it rate-limited and burned ~6M tokens for zero output on
+    2026-06-11).
+
+    EXISTING CODE TO READ FIRST:
+    - research-references.md "V473 Outer-Loop Planner References" section IN FULL (the already-ingested
+      findings -- do not re-search these topics, build on them)
+    - results/experiment_5157_deepen_warmstart_replay_ablation_v473.json and
+      results/experiment_5158_deepen_goal_energy_ranker_replay_v473.json IF PRESENT (condition your
+      incremental search on their actual outcome)
+    - scripts/sweep_clusters.py, scripts/sweep_semscholar.py (the reusable discovery scripts)
+
+    CONCRETE STEPS:
+    1. Spot-check 2-3 of the V473 Outer-Loop section's arXiv IDs resolve correctly (fetch the abstract
+       page, confirm title/topic match what's cited). Report any discrepancy found.
+    2. Run an INCREMENTAL search (published/surfaced since 2026-07-02) on the same primary topic: warm-
+       start/transfer RL across procedurally-related levels within one environment; belief-state carryover
+       in model-based RL; ARC-AGI-3 2026 writeups.
+    3. If exp5157/exp5158 artifacts are available, run a targeted follow-up search conditioned on their
+       actual result (see CONTEXT above) -- this is the most valuable part of this task.
+    4. Light secondary sweep (since 2026-07-01) for genuinely new items on: energy-based models for
+       verification/reasoning, hardware-accelerated Ising/thermodynamic sampling, Kolmogorov-Arnold
+       Networks, LLM hallucination detection.
+    5. For every finding, verify the citation is real (a genuine arXiv ID or URL you actually fetched/found
+       via search -- do not fabricate or recall an ID from training data without verification, per
+       CLAUDE.md's Literature Priority Discipline two-source rule).
+    6. Append a new "V474 Planner References" section to research-references.md (append, per the
+       Documentation Update Rules -- do not remove or rewrite any prior section), following the exact
+       format of the existing sections (Source, Tracks, Carnot hook, Actionability per finding). If zero
+       genuinely new findings exist beyond what's already ingested, it is fine and honest to report that
+       explicitly rather than padding with weak matches.
+    7. Synthesize a "bottom line for the roadmap" recommendation for milestone .474, specifically informed
+       by exp5157/exp5158/exp5159's actual outcomes.
+
+    REQUIRED ARTIFACT FIELDS:
+      v473_citations_spot_checked:
+        value: "list of {arxiv_id, resolved_correctly: bool}"
+      incremental_findings:
+        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}, each citation independently verified"
+        principle: "Fabricated citations would poison future planning -- every entry must trace to a real,
+          fetched source, per the Literature Priority Discipline."
+      outcome_conditioned_findings:
+        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}, searched specifically in light of
+          exp5157/exp5158's actual result"
+      secondary_findings:
+        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}"
+      references_md_updated:
+        value: bool
+      bottom_line_recommendation:
+        value: "1-2 sentence recommendation for milestone .474, conditioned on this milestone's A1-A3 outcomes"
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5163-mmlu-pro-verifier-rescale-v473
+  milestone: 2026.07.473
+  title: PHASE D1 off-ARC verifier-moat continuity -- rerun verifier-vs-cheap-baseline on the improved 5-shot MMLU-Pro pool
+  priority: medium
+  track: verifier
+  deliverable: results/experiment_5163_mmlu_pro_verifier_rescale_v473.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   estimated_wall_time_min: 90
-  prompt: "CONTEXT:\nThe L1-first-contact wall (candidate generation for a game's FIRST win) is a genuinely\
-    \ different\nproblem from the \"deepen\" wall (reaching additional levels WITHIN a game the agent\
-    \ has already\nstarted winning). Both have been flat: reproducible_total_levels stuck at 69 since\
-    \ 2026-06-30, and\nthe \"deepen well\" was independently noted as DRYING even before that (2+ flat\
-    \ milestones prior).\nRight now the live agent effectively cold-restarts its exploration at each new\
-    \ level within a game\n-- there is no mechanism carrying forward what it learned (state transitions,\
-    \ hazards, goal\nstructure) from level N to level N+1. This task is SCOPING, not a full build: characterize\
-    \ the\ncurrent deepen-wall with fresh data, and design 2-3 concrete, falsifiable next-step experiments\n\
-    for whether an energy-based belief state (a per-game online energy model, per\nproject_arc_energy_config_space)\
-    \ carried across levels would help -- distinct from and\ncomplementary to exp5154's first-contact\
-    \ generation work.\n\nEXISTING CODE TO READ FIRST:\n- ops/arc_solve_registry.yaml (current per-game\
-    \ level depths -- which games are shallow-solved and\n  stuck, vs. never-contacted)\n- python/carnot/agentic/arc_live_ttt.py\
-    \ / arc_agi3_world_model.py (whatever online world-model\n  induction the live agent currently does\
-    \ WITHIN a single level -- does state carry across a level\n  transition today, or reset?)\n- CLAUDE.md\
-    \ \"ARC Live-Path Reachability Discipline\", \"ARC-AGI-3 IS a Live Hidden-Game Discovery\n  Agent\"\
-    \n\nCONCRETE STEPS:\n1. For each game currently at level >=1 (shallow-solved), characterize: does\
-    \ the live agent's\n   world-model/belief state actually reset at the level boundary today (read the\
-    \ code, don't\n   assume), and if so, what specific information (hazard locations, goal structure,\
-    \ action\n   effects) is being thrown away that a NEXT level plausibly still needs?\n2. Propose 2-3\
-    \ concrete, SMALL, falsifiable experiments (not full builds) for carrying an\n   energy-based belief\
-    \ state forward -- e.g., does warm-starting the online world-model induction\n   at level N+1 with\
-    \ level N's learned transition model reduce actions-to-next-levelup on a\n   shallow-solved game,\
-    \ vs. a cold-restart control?\n3. Rank the 2-3 proposals by expected effort vs. signal, citing what's\
-    \ genuinely untested (per\n   project_arc_live_agent_learning_gaps memory: temporal credit-assignment,\
-    \ learned belief-state\n   identity, compounding TTT are named gaps -- verify these are STILL accurate\
-    \ against current\n   code, don't just cite the memory blindly).\n4. Do NOT attempt the full experiment\
-    \ in this task -- deliverable is a scoped, falsifiable proposal\n   ready for a follow-up milestone\
-    \ task, plus the current-state characterization.\n\nREQUIRED ARTIFACT FIELDS:\n  belief_state_resets_at_level_boundary:\n\
-    \    value: bool\n    principle: \"The precise, code-verified fact this scoping pass exists to establish\
-    \ -- do not\n      assume from memory or prior notes.\"\n  proposed_experiments:\n    value: \"list\
-    \ of 2-3 {{name, hypothesis, falsifiable_gate, estimated_effort}} objects\"\n    principle: \"Each must\
-    \ be small and falsifiable, not another open-ended generation-axis swing --\n      the L1 wall already\
-    \ taught us that costs milestones without them.\"\n  honest_verdict:\n    principle: \"Must start\
-    \ with complete:/complete_/success:/success_.\"\n"
+  prompt: |
+    CONTEXT:
+    This is the explicitly QUEUED next step from ops/known-issues.md's "MMLU-PRO FEW-SHOT GENERATOR
+    IMPROVEMENT 2026-07-01" entry: "rerun exp_mmlu_pro_verifier_vs_cheap_baseline.py-style verifier-vs-
+    cheap-baseline test against this improved 5-shot pool ... to see whether a learned verifier now
+    captures the larger, more defensible headroom." This milestone's majority is ARC-AGI-3 deepening (per
+    the operator's fresh 2026-07-02 directive), so this task keeps the off-ARC verifier-moat thread alive
+    without claiming milestone majority -- one task, not a program restart.
+
+    Prior results on this corpus (zero-shot, n=40): oracle_at_k=0.350, sc_vote=0.075, headroom=0.275,
+    CI95=[0.150,0.425] (the first statistically-significant, genuinely-real oracle-distinct headroom found
+    in the whole 2026-07-01 off-ARC search). The 5-shot CoT improvement (matching MMLU-Pro's own published
+    evaluation protocol) raised this further: oracle_at_k=0.500, sc_vote=0.125, headroom=0.375,
+    CI95=[0.225,0.525]. A verifier-vs-cheap-baseline test was run on the ZERO-SHOT pool only
+    (results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json: verifier delta +0.025, CI95=[-0.100,
+    0.150], not significant, n=40 underpowered) -- it has NOT been rerun on the stronger 5-shot pool.
+
+    EXISTING CODE TO READ FIRST:
+    - ops/known-issues.md "MMLU-PRO FEW-SHOT GENERATOR IMPROVEMENT 2026-07-01" and "MMLU-PRO VERIFIER VS
+      CHEAP BASELINE -- HONEST NEGATIVE, UNDERPOWERED AT n=40 2026-07-01" entries in full
+    - scripts/experiments/exp_mmlu_pro_verifier_vs_cheap_baseline.py (the script to adapt/rerun)
+    - scripts/experiments/exp_mmlu_pro_fewshot_headroom_check.py (the 5-shot pool generator)
+    - results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl (the 240 candidates with full reasoning
+      text already saved, per the prior entry -- reuse this, do not regenerate)
+    - results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json (the zero-shot-pool baseline result to
+      compare against)
+
+    PRECONDITIONS (check BEFORE any subsequent step):
+      a. Confirm results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl exists and has full reasoning
+         text (not just parsed letters) for all 240 rows -- if incomplete, honest_verdict
+         blocked_fewshot_pool_incomplete, stop rather than regenerating from scratch inside this task.
+
+    CONCRETE STEPS:
+    1. Reuse the existing 5-shot candidate pool (results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl)
+       -- do not regenerate.
+    2. Build the same learned verifier (all-MiniLM-L6-v2 embedding of full reasoning text + Logistic
+       Regression) and matched cheap baseline (8 non-learned text-statistical features + Logistic
+       Regression) exp_mmlu_pro_verifier_vs_cheap_baseline.py used, scored via leave-one-question-out CV,
+       used to select the top-scored candidate among K=6 per question.
+    3. Report oracle_at_k_ceiling, sc_vote_accuracy, verifier_selection_accuracy,
+       cheap_baseline_selection_accuracy, and the verifier-vs-cheap-baseline delta with CI95 -- on the
+       5-shot pool this time.
+    4. Directly compare against the zero-shot-pool result (results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json):
+       does the stronger, more defensible headroom (0.375 vs 0.275) translate into a verifier win the
+       weaker zero-shot pool could not show, or does the CI still include 0?
+    5. If still underpowered at n=40 (same class-imbalance issue the prior entry diagnosed: ~20/240 rows
+       correct), report this honestly rather than overclaiming significance -- but note whether the point
+       estimate direction is at least now more favorable than the zero-shot result, as a signal for whether
+       scaling the corpus (more questions) in a future milestone is worth the cost.
+
+    REQUIRED ARTIFACT FIELDS:
+      fewshot_oracle_at_k:
+        value: float
+      fewshot_sc_vote_accuracy:
+        value: float
+      fewshot_verifier_selection_accuracy:
+        value: float
+      fewshot_cheap_baseline_selection_accuracy:
+        value: float
+      verifier_vs_cheap_delta:
+        value: float
+      verifier_vs_cheap_delta_ci95:
+        value: [float, float]
+      vs_zeroshot_pool_comparison:
+        value: "1-2 sentence honest comparison against the zero-shot-pool result"
+      still_underpowered:
+        value: bool
+      verifier_is_oracle:
+        value: false
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly whether the CI
+          excludes 0 -- do not bury a null in qualifiers."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5164-retro-timing-falsezero-fix-v473
+  milestone: 2026.07.473
+  title: PHASE E1 infrastructure -- build a disk-mtime timing-reconstruction module to fix the 77-milestone FALSE-ZERO retro gap
+  priority: high
+  track: infrastructure
+  deliverable: results/experiment_5164_retro_timing_falsezero_fix_v473.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 80
+  estimated_wall_time_min: 120
+  prompt: |
+    CONTEXT:
+    Reserved infrastructure slot (CLAUDE.md "Overdue-Priority Forcing Function": every milestone with >=10
+    tasks reserves >=2 infra slots). The milestone .472 operational retrospective (again) flagged this as
+    "the single highest-leverage operational fix for the retro process itself" -- the same finding recorded
+    at .450, .467, .470, and now .472 (76 of 205 logged milestone retros, tracked since milestone .363, hit
+    this same FALSE-ZERO gap).
+
+    ROOT CAUSE (code-verified, 2026-07-02, exact location): scripts/research_conductor.py's
+    _run_operational_retrospective() (starting line ~2775) derives `experiment_times` ENTIRELY from
+    `git log --grep=\[conductor\]` commit messages, computing a "duration" as the time delta between
+    CONSECUTIVE commits whose message contains the literal substring "Exp " (capital E, space -- see
+    lines ~2851: `if prev_time and "Exp " in msg`). If a milestone's per-task conductor commits do not
+    happen to contain that literal substring in that exact casing/spacing (e.g. they say "exp5151" or
+    "PHASE A1" instead), ZERO entries are added and the whole TIMING DATA block reports
+    experiments_completed=0, total_wall_time_minutes=0, compute_bound_experiments_count=0,
+    gpu_idle_on_compute_bound_tasks=null -- even though real work happened (verifiable via
+    results/experiment_*.json mtimes and git commit timestamps on those files).
+
+    CANNOT FIX BY EDITING research_conductor.py DIRECTLY (forbidden for experiment tasks). Build a
+    STANDALONE, TESTED module instead that reconstructs accurate timing/compute-bound stats via a
+    disk-mtime fallback, ready for the operator to wire into the conductor's retro prompt-assembly call
+    site by hand later. This task's deliverable is the tested module + its validation against real
+    historical FALSE-ZERO milestones, NOT a research_conductor.py edit.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/research_conductor.py lines ~2775-3080 (_run_operational_retrospective, in full -- understand
+      exactly what shape of data the retro prompt currently expects: experiments_completed,
+      total_wall_time_minutes, compute_bound_experiments_count, slowest_experiments, gpu_idle_on_compute_bound_tasks)
+    - ops/changelog.md (search "FALSE-ZERO detector gap" for every occurrence -- .363, .450, .467, .470,
+      .472 -- and in particular the .450 entry, which has REAL known-good numbers to validate against:
+      "exp4881-exp4890 exist on disk, mtimes 2026-06-27 19:55:46Z -> 23:28:14Z (~212-min real window)...
+      Four arms are compute-bound (exp4882/4883/4885/4886)")
+    - research-roadmap.yaml / research-complete.yaml (how task deliverable paths map to task ids, and how
+      inference_substrate/duration_s fields are typically self-reported inside each results/experiment_*.json)
+
+    CONCRETE STEPS:
+    1. Write scripts/retro_timing_fallback.py exposing a function that, given a milestone id (and access to
+       the roadmap's task list with their deliverable paths), computes: experiments_completed,
+       total_wall_time_minutes, compute_bound_experiments_count, slowest_experiments (top 5),
+       gpu_idle_on_compute_bound_tasks -- via TWO fallback layers, tried in order:
+       (a) PRIMARY: read each deliverable's own results/experiment_*.json for self-reported `duration_s`
+           and `inference_substrate` fields (the "write-time stamping" already mandated by the
+           Inference-Substrate Declaration Discipline and Adversarial Artifact Verification rule -- most
+           artifacts already carry these; this is the MOST authoritative source when present).
+       (b) FALLBACK: for any deliverable lacking those fields, reconstruct via disk timestamps -- prefer
+           `git log -1 --format=%ai -- <deliverable>` (the commit that added the file) over raw
+           `os.path.getmtime` (which is not durable across a fresh checkout), ordered by roadmap task
+           sequence, bounded to the SAME "since the Activate milestone X commit" window the conductor's
+           existing git-log-grep approach already uses (reuse that bounding logic exactly -- do not
+           reinvent it).
+    2. Preserve the EXACT output shape the conductor's retro prompt currently expects (same field names) so
+       this is a drop-in data-source replacement, not a new schema.
+    3. Validate against >=3 real historical FALSE-ZERO milestones from the changelog list above (.450 is
+       the strongest validation case -- it has a documented real ~212-minute window and 4 known
+       compute-bound experiments). Your module must reconstruct a NON-ZERO, plausible duration and the
+       correct compute-bound count for .450 -- if it cannot, the fix does not work; report this honestly
+       rather than declaring success.
+    4. Write tests (tests/python/test_retro_timing_fallback.py) covering: the primary self-reported-field
+       path, the disk-mtime fallback path, the milestone-boundary bounding logic, and at least one
+       synthetic FALSE-ZERO scenario reconstructed correctly.
+    5. Do NOT modify scripts/research_conductor.py. Write a clear "HOW TO WIRE THIS IN" docstring at the
+       top of retro_timing_fallback.py (a 5-10 line comment naming the exact call site --
+       _run_operational_retrospective, replacing the git-log-grep block at approximately line ~2804-2864 --
+       and the two-line change needed) so the operator can apply it by hand in a future session.
+    6. Run pytest on the new test file with --no-cov (per the .456/.457/.469 lesson on transition-module
+       pretest gates -- avoid the coverage-instrumentation wall-clock trap for a fast, targeted test run).
+
+    REQUIRED ARTIFACT FIELDS:
+      module_path:
+        value: "scripts/retro_timing_fallback.py"
+      validated_milestones:
+        value: "list of {milestone, reconstructed_wall_time_minutes, reconstructed_compute_bound_count,
+          matches_known_good: bool}"
+        principle: "A fix that is not validated against a real known-good case is unproven; this field is
+          the evidence."
+      m450_reconstruction_correct:
+        value: bool
+        principle: "The single strongest available ground-truth case (documented ~212-min window, 4
+          compute-bound experiments) -- must be checked explicitly."
+      tests_added:
+        value: int
+      tests_passing:
+        value: bool
+      research_conductor_py_modified:
+        value: false
+        principle: "Hard constraint -- this task must not touch the forbidden file; verify your own diff
+          before declaring done."
+      wiring_instructions_present:
+        value: bool
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND state plainly whether the
+          module correctly reconstructs the .450 ground-truth case."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5165-generation-axis-retirement-hygiene-v473
+  milestone: 2026.07.473
+  title: PHASE E2 infrastructure -- retire the 3x-nulled generation-axis exploration-signal scope into the exclusion manifest
+  priority: medium
+  track: infrastructure
+  deliverable: results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 40
+  prompt: |
+    CONTEXT:
+    Reserved infrastructure slot #2. exp5154 (.472, results/experiment_5154_energy_fitness_directed_exploration_v472.json)
+    declared `prior_failures` against exp4688 (novelty-bonus exploration, .432) and exp4689 (program-
+    synthesis-action-effect filter, .432), BOTH with `retire_if_same_verdict: true`. exp5154's own outcome
+    -- winning_trajectory_surfaced=false, reproducible_levels_delta=0, honest_verdict "complete:
+    energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0" -- is the SAME CLASS of result
+    as both prior failures (a generation-axis exploration-SIGNAL tweak that fails to surface the winning
+    trajectory for first-contact candidate generation on an unsolved game). Per CLAUDE.md's
+    Failed-Experiment Rerun Discipline, this triggers the retirement mechanic: with THREE independent
+    exploration-signal mechanisms now nulled (novelty/curiosity bonus, program-synthesis symbolic filter,
+    and genuine Carnot energy-as-fitness QD search), the generation-axis-exploration-signal scope should be
+    added to ops/exclusion_manifest.yaml so a FOURTH doomed rerun cannot be proposed without an explicit
+    operator_override citing a genuinely new mechanism.
+
+    IMPORTANT -- SCOPE PRECISELY, do not over-retire: this retirement covers ONLY "better exploration
+    SIGNAL over the search/generation process for FIRST-CONTACT candidate generation on an unsolved game"
+    (the shared mechanism class of exp4688/exp4689/exp5154). It must NOT retire: (a) the deepen-wall
+    warm-start-across-levels work this milestone's Phase A tasks execute (exp5157/5158/5159) -- that is a
+    genuinely different scope (within-game cross-LEVEL state carryover on ALREADY-contacted games, not
+    first-contact exploration signal on unsolved games); (b) any future representation/perception-level fix
+    to first-contact generation (per project_arc_live_agent_learning_gaps memory, the binding constraint
+    may be perception -- frame-only order-1 features at LOO=chance -- not exploration signal; a
+    representation-level fix is a genuinely different mechanism, not covered by this retirement).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5154_energy_fitness_directed_exploration_v472.json (prior_failures block, its own outcome)
+    - results/experiment_4688_controllable_novelty_proposal_policy_live.json
+    - results/experiment_4689_program_synthesis_action_effect_proposal_filter.json (or equivalent filename
+      -- locate via research-complete.yaml if the exact path differs)
+    - ops/exclusion_manifest.yaml (the exact schema and the precedent entries, in particular
+      `cross_game_value_transfer_retired_exp4342_v401` -- follow its structure: id, experiment_scope,
+      reason, experiment_ids, retired_milestone, retired_by_artifact, recorded_by_artifact,
+      operator_reopen_required, retire_if_same_verdict, blocked_patterns)
+    - scripts/exclusion_manifest_lint.py (verify your new entry's blocked_patterns will actually fire the
+      BLOCKED_PATTERN_MATCHED check for future draft tasks, per the 2026-07-01 mechanical fix)
+
+    CONCRETE STEPS:
+    1. Add a new entry to ops/exclusion_manifest.yaml's `retired_extras` list (matching the precedent
+       entries' exact schema) with experiment_ids: [exp4688, exp4689, exp5154], retired_milestone:
+       2026.07.473, retire_if_same_verdict: true, operator_reopen_required: true, and blocked_patterns
+       covering the scope precisely (e.g. "generation-axis exploration-signal", "novelty-bonus first-
+       contact exploration", "energy-as-fitness first-contact generation" -- phrases specific enough to
+       catch a real rerun without false-positiving on the deepen-wall work).
+    2. Update ops/verifier_gaps.md or ops/known-issues.md (whichever already tracks this axis -- search for
+       "generation axis" / "L1-first-contact") with a dated retirement note, per the Documentation Update
+       Rules (add, never delete).
+    3. Run scripts/exclusion_manifest_lint.py against the current research-roadmap.yaml (this milestone's
+       own tasks, once exp5156-5167 exist) to confirm the new entry does NOT false-positive against
+       exp5157/exp5158/exp5159 (the deepen-wall tasks) -- if it does, narrow the blocked_patterns until it
+       doesn't, per the precise-scope requirement above.
+    4. Validate the retirement fires correctly against a synthetic draft task that DOES match the retired
+       scope (e.g. a hypothetical "curiosity-driven first-contact exploration v2" task title) -- confirm
+       BLOCKED_PATTERN_MATCHED triggers.
+
+    REQUIRED ARTIFACT FIELDS:
+      exclusion_manifest_entry_added:
+        value: bool
+      entry_id:
+        value: string
+      false_positive_check_against_this_milestone:
+        value: bool
+        principle: "Must confirm the new entry does not accidentally block this milestone's own
+          deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound."
+      synthetic_match_check_passed:
+        value: bool
+        principle: "Confirms the retirement is load-bearing, not just documentation -- per the 2026-07-01
+          BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
+      known_issues_or_gaps_md_updated:
+        value: bool
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5166-hardware-continuity-board-timing-v473
+  milestone: 2026.07.473
+  title: PHASE F1 hardware continuity -- authenticated KV260/GateMate/PolarFire board timing transcripts
+  priority: medium
+  track: hardware
+  deliverable: results/experiment_5166_hardware_continuity_board_timing_v473.json
+  operator_override: '2026-05-29 operator directive (standing): active hardware-continuity task
+    (KV260/GateMate/PolarFire) mandated by the Hardware-Task Continuity Discipline until each board
+    reaches its terminal state -- false-positive scope-match vs the 46 prior per-milestone hardware-
+    continuity tasks (e.g. exp3922/3931/3972/3983/3995); this is the same structurally-required
+    per-milestone board check, not a doomed rerun.'
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Per CLAUDE.md "Hardware-Task Continuity Discipline": every milestone reserves >=1 task per attached
+    board not yet at its terminal state. This milestone continues the combined-transcript pattern used in
+    .470 (exp5132) and .471 (exp5144) rather than three separate tasks. ops/north-star.md section 3
+    recommends KV260 as the sole board driven to terminal state, with GateMate and PolarFire staying
+    opportunistic -- but the mandate to keep them visible (not silently dropped) still applies until an
+    operator override says otherwise.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5144_authenticated_board_workload_v471.json (the immediately-prior board-timing
+      task -- match its transcript format and precondition structure)
+    - results/experiment_5132_authenticated_board_timing_v470.json
+    - ops/hardware-bringup-prep.md (current bring-up state for each board)
+    - research-hardware-wishlist.md (Active hardware tracks table -- KV260/GateMate/PolarFire current status)
+
+    PRECONDITIONS (check BEFORE any subsequent step, per CLAUDE.md's Pre-Launch Preconditions table):
+      a. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. NEVER check host
+         /dev/mmcblk* (per KV260 SSH-Not-SD-Card Discipline -- that precondition is permanently retired).
+      b. GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GateMate Series GM1Ax IDCODE.
+      c. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` returns 0.
+      For any board that fails its precondition, report `blocked_<board>_<resource>` for that board
+      specifically and continue with the remaining boards -- do not let one unreachable board block the
+      whole task.
+
+    CONCRETE STEPS:
+    1. For each reachable board, run a real, hash-verified workload (matching the shape of the .470/.471
+       precedent tasks) and record authenticated timing transcripts via the board's own command interface
+       (SSH for KV260/PolarFire, openFPGALoader for GateMate).
+    2. Do NOT claim any hardware speedup unless sample-quality evidence is also shown, per
+       ops/north-star.md section 3's narrowed honest hardware claim (KV260 is a POC functional simulator +
+       local edge deployability, NOT "hardware speedup" -- it is ~0.98x, slower than CPU, at d=128).
+    3. Record `inference_substrate: hardware_smoke` for any board-touching measurement.
+    4. Update research-hardware-wishlist.md's Active hardware tracks table with this milestone's dated
+       status line for each board, per the Documentation Update Rules (add, never delete/replace).
+
+    REQUIRED ARTIFACT FIELDS:
+      kv260_result:
+        value: "dict with reachable: bool, workload_hash, latency_transcript, or blocked_<reason>"
+      gatemate_result:
+        value: "dict with reachable: bool, workload_hash, latency_transcript, or blocked_<reason>"
+      polarfire_result:
+        value: "dict with reachable: bool, workload_hash, latency_transcript, or blocked_<reason>"
+      boards_reachable_count:
+        value: int
+      hardware_wishlist_updated:
+        value: bool
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ AND report per-board reachability
+          honestly -- a board unreachable this milestone is not a task failure, it is an honest data point."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+- id: exp5167-capstone-v473
+  milestone: 2026.07.473
+  title: PHASE Z capstone -- reconcile multi-level deepening, oracle-distinct closure, GAP-4 execution, and infra fixes
+  priority: critical
+  track: planning
+  deliverable: results/experiment_5167_capstone_v473.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Milestone-close capstone. Aggregate and honestly reconcile every .473 task's outcome -- do NOT
+    aggregate any artifact carrying `flagged_adversarial: true` into a headline claim, per CLAUDE.md's
+    Adversarial Artifact Verification fabrication gate. This capstone's job is reconciliation, not new
+    research.
+
+    EXISTING CODE TO READ FIRST:
+    - Every results/experiment_51{57,58,59,60,61,62,63,64,65,66}_*_v473.json artifact this milestone produced.
+    - ops/verifier_gaps.md GAP-4 entry (update its status line per exp5161's gap4_status_recommendation)
+    - ops/known-issues.md exp5152 corrigendum (update per exp5160's diffusiongemma_gate_updated_recommendation)
+    - ops/arc_solve_registry.yaml (update reproducible_total_levels/reproducible_total_games if exp5159
+      banked any new levels; append per-game entries for any new mechanic learned)
+    - CLAUDE.md "ARC Level-Up Attempt Guarantee" (confirm exp5159 satisfied the >=1 floor, or record
+      honestly that it did not)
+
+    CONCRETE STEPS:
+    1. Run `python3 scripts/adversarial_verify.py` (or the project's standard per-artifact check) against
+       every new .473 artifact; exclude any flagged_adversarial=true result from headline aggregation.
+    2. Reconcile ops/verifier_gaps.md's GAP-4 status line with exp5161's actual result (filled / still_open
+       / retired / scale_up_recommended) -- do not round a partial pilot up to "filled."
+    3. Reconcile the DiffusionGemma gate note in ops/known-issues.md with exp5160's actual cross-corpus
+       replication outcome.
+    4. Reconcile ops/arc_solve_registry.yaml's reproducible_total_levels with exp5159's actual banked
+       levels (zero is an honest, valid outcome -- do not inflate).
+    5. Run `python3 scripts/arc_levelup_guarantee_lint.py` against this milestone's research-roadmap.yaml
+       and report whether the >=1 level-up-attempt floor was structurally present (it was, via exp5159) AND
+       whether it was actually SATISFIED in outcome (a level was banked) -- these are different questions;
+       report both honestly.
+    6. Update ops/status.md and ops/changelog.md per the standard Documentation Update Rules (add, never
+       remove).
+    7. Confirm exp5164's research_conductor_py_modified field is false (the hard constraint on the
+       FALSE-ZERO fix task) before reporting this milestone's infra work as clean.
+    8. Write the single capstone honest_verdict summarizing the whole milestone in one line, following the
+       terminal-prefix convention.
+
+    REQUIRED ARTIFACT FIELDS:
+      per_task_summary:
+        value: "list of {task_id, honest_verdict, headline_outcome}"
+      gap4_status_reconciled:
+        value: string
+      diffusiongemma_gate_reconciled:
+        value: string
+      reproducible_total_levels_delta:
+        value: int
+      levelup_guarantee_structurally_satisfied:
+        value: bool
+      levelup_guarantee_outcome_satisfied:
+        value: bool
+        principle: "Distinct from structural satisfaction -- a gated task existing is not the same as a
+          level actually being banked."
+      flagged_adversarial_artifacts_excluded:
+        value: "list of task ids excluded from headline aggregation, if any"
+      research_conductor_py_untouched_confirmed:
+        value: bool
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and be a single, precise sentence
+          summarizing the whole milestone -- no vague celebratory language."
+
+    Do not push. Do not modify scripts/research_conductor.py.
