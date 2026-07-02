@@ -1,0 +1,699 @@
+{
+  "belief_state_resets_at_level_boundary": {
+    "evidence": [
+      "python/carnot/agentic/arc_competition_agent.py:_begin_level_goal_episode sets _episode_transition_start=len(self.transitions) and _episode_dsl_transition_start=len(self._dsl_transitions).",
+      "python/carnot/agentic/arc_competition_agent.py:_active_transitions and _active_dsl_transitions return only the post-boundary suffix.",
+      "python/carnot/agentic/arc_competition_agent.py:_induce_and_plan passes only active_transitions into gated_engine_from_transitions, trust-energy selection, and bounded LLM reinduction.",
+      "python/carnot/agentic/arc_live_ttt.py:gated_engine_from_transitions constructs a fresh LiveTTTWorldModel for each active transition slice.",
+      "python/carnot/agentic/arc_agi3_world_model.py defines persistent GameGraph, but E3AgentPolicy does not instantiate it as the active cross-level world model."
+    ],
+    "fact": "The active E3 world-model/belief induction state resets at level-up by advancing transition-slice offsets and rebuilding the TTT model from the post-boundary suffix; the explorer graph is preserved.",
+    "principle": "The precise, code-verified fact this scoping pass exists to establish -- do not assume from memory or prior notes.",
+    "value": true
+  },
+  "current_state_characterization": {
+    "belief_state_resets_at_level_boundary": true,
+    "code_evidence": [
+      "python/carnot/agentic/arc_competition_agent.py:_begin_level_goal_episode sets _episode_transition_start=len(self.transitions) and _episode_dsl_transition_start=len(self._dsl_transitions).",
+      "python/carnot/agentic/arc_competition_agent.py:_active_transitions and _active_dsl_transitions return only the post-boundary suffix.",
+      "python/carnot/agentic/arc_competition_agent.py:_induce_and_plan passes only active_transitions into gated_engine_from_transitions, trust-energy selection, and bounded LLM reinduction.",
+      "python/carnot/agentic/arc_live_ttt.py:gated_engine_from_transitions constructs a fresh LiveTTTWorldModel for each active transition slice.",
+      "python/carnot/agentic/arc_agi3_world_model.py defines persistent GameGraph, but E3AgentPolicy does not instantiate it as the active cross-level world model."
+    ],
+    "nuance": "StepwiseExplorer keeps its observed graph, adjacency, frontier, and navigation state across level-up; the reset is the active world-model/belief induction context used by TTT, DSL fitting, trust-energy candidate selection, and LLM reinduction.",
+    "preserved_state": "explorer_graph_and_navigation_edges",
+    "reset_scope": "active_world_model_induction_slice",
+    "specific_reset_effects": [
+      "pre-level-up transitions are excluded from _active_transitions()",
+      "pre-level-up DSL tuples are excluded from _active_dsl_transitions()",
+      "induced plan and world_model_trust_selection are cleared",
+      "dsl_energy and goal bias are cleared",
+      "the TTT prior path builds a fresh LiveTTTWorldModel from the suffix"
+    ]
+  },
+  "experiment": "experiment_5155_multilevel_belief_state_scoping_v472",
+  "field_principles": {
+    "belief_state_resets_at_level_boundary": {
+      "principle": "The precise, code-verified fact this scoping pass exists to establish -- do not assume from memory or prior notes."
+    },
+    "first_contact_vs_deepen_distinction": {
+      "principle": "states why Experiment 5155 is a deepen-wall scoping artifact distinct from Experiment 5154 first-contact generation."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with complete:/complete_/success:/success_; this is a scoped proposal, not a banked level."
+    },
+    "learning_gaps_verified_against_code": {
+      "principle": "temporal credit-assignment, learned belief-state identity, and compounding TTT are checked against current code instead of cited blindly."
+    },
+    "per_game_characterization": {
+      "principle": "Every game at levels_reproduced >= 1 is listed with its registry depth and plausible cross-level information loss."
+    },
+    "proposed_experiments": {
+      "principle": "Each must be small and falsifiable, not another open-ended generation-axis swing -- the L1 wall already taught us that costs milestones without them."
+    }
+  },
+  "first_contact_vs_deepen_distinction": {
+    "principle": "states why Experiment 5155 is a deepen-wall scoping artifact distinct from Experiment 5154 first-contact generation.",
+    "value": "Experiment 5154 targets first-contact candidate generation: making an initial winner appear. Experiment 5155 targets within-game deepening after first contact: whether per-game belief and energy state learned on level N should warm-start level N+1 instead of cold-starting the active induction slice."
+  },
+  "honest_verdict": "complete: deepen_belief_state_reset_scoped_3_falsifiable_experiments_no_full_build",
+  "learning_gaps_verified_against_code": {
+    "compounding_ttt": {
+      "code_verified_evidence": "gated_engine_from_transitions creates a fresh LiveTTTWorldModel per induction attempt; L0/L1/win-state knowledge is not serialized forward across levels.",
+      "still_open": true
+    },
+    "learned_belief_state_identity": {
+      "code_verified_evidence": "GameGraph has stable frame hashes, but the scored E3 path does not maintain a persistent per-game latent-mechanic identity that survives level-up.",
+      "still_open": true
+    },
+    "temporal_credit_assignment": {
+      "code_verified_evidence": "Transition objects carry level_after, but E3 next-level induction reads only the post-boundary active transition suffix, so previous-level evidence is not credited to the next-level model fit.",
+      "still_open": true
+    }
+  },
+  "per_game_characterization": [
+    {
+      "belief_state_reset_applies": true,
+      "game": "ar25",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 3,
+      "mechanic_class": "reflection_mirror_object_alignment",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "bp35",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "goal_directed_navigation_local_obstacle_clear",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "cd82",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "palette_region_fill",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "cn04",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 3,
+      "mechanic_class": "marker_pair_shape_alignment",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "dc22",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "config_toggle_navigation",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "ft09",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 3,
+      "mechanic_class": "local_constraint_color_cycle",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "g50t",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "config_toggle_target_offset",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "ka59",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 1,
+      "mechanic_class": "unspecified",
+      "status": "shallow_solved_l1",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "lf52",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "rail_carried_peg_jump",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "lp85",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 5,
+      "mechanic_class": "unspecified",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "ls20",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "clean_navigation_shape_color_rotation_step_counter",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "m0r0",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "graph_explore",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "r11l",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "click_template_handle_average",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "re86",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "pattern_match_sprite_resize",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "s5i5",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "config_toggle_marker_coverage",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "sb26",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "color_match_slot_sequence",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "sc25",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 5,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "sk48",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "chain_color_reorder",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "sp80",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "spill_splitter_placement",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "su15",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "drag_merge_fruit_target",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "tn36",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 7,
+      "mechanic_class": "program_editor",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "tr87",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 6,
+      "mechanic_class": "config_substitution",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "tu93",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": [
+          "register, counter, phase, path-dependent, or hidden-state disambiguation evidence"
+        ]
+      },
+      "levels_reproduced": 5,
+      "mechanic_class": "graph_explore",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "vc33",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input",
+          "object identity, palette, glyph/rule, marker, or shape constraints that often recur with level-specific parameters"
+        ],
+        "hazard_locations": [
+          "visible blockers, dead-end actions, or hazard-avoidance evidence learned before level-up"
+        ],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 2,
+      "mechanic_class": "config_support_clearance",
+      "status": "deepened_but_stuck",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    },
+    {
+      "belief_state_reset_applies": true,
+      "game": "wa30",
+      "information_thrown_away_by_active_reset": {
+        "action_effects": [
+          "observed action_key -> grid delta examples before level-up are excluded from the active TTT/DSL fit",
+          "control semantics and action-effect priors discovered during the previous level"
+        ],
+        "goal_structure": [
+          "prior level win predicate/operator family is excluded from next-level induction input"
+        ],
+        "hazard_locations": [],
+        "hidden_or_register_state": []
+      },
+      "levels_reproduced": 1,
+      "mechanic_class": "unspecified",
+      "status": "shallow_solved_l1",
+      "why_next_level_may_need_it": "The registry row shows a reusable mechanic family or path-conditioned level chain; the current induction slice forces the agent to rediscover that family from post-boundary transitions before planning the next level."
+    }
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md_live_framing_read": true,
+    "CODEX.md": true,
+    "arc_agi3_world_model.py_read": true,
+    "arc_competition_agent.py_read": true,
+    "arc_live_ttt.py_read": true,
+    "arc_solve_registry.yaml_read": true,
+    "spec_has_req_5155": true
+  },
+  "proposal_ranking": [
+    {
+      "estimated_effort": "small: offline replay ablation over existing registry trajectories",
+      "name": "transition_slice_warm_start_replay_ablation",
+      "rank": 1,
+      "reason": "Ranks first when it gives the cheapest direct signal on whether previous-level belief state helps the current cold-start deepen path.",
+      "signal": "high"
+    },
+    {
+      "estimated_effort": "small-medium: candidate-ranking replay, no live solve build",
+      "name": "cross_level_goal_energy_ranker_replay",
+      "rank": 2,
+      "reason": "Lower-ranked because it needs more machinery before the signal is clean.",
+      "signal": "medium"
+    },
+    {
+      "estimated_effort": "medium: requires compact belief serialization plus replay scorer",
+      "name": "hidden_register_hazard_belief_carryover_probe",
+      "rank": 3,
+      "reason": "Lower-ranked because it needs more machinery before the signal is clean.",
+      "signal": "medium-high"
+    }
+  ],
+  "proposed_experiments": {
+    "principle": "Each must be small and falsifiable, not another open-ended generation-axis swing -- the L1 wall already taught us that costs milestones without them.",
+    "value": [
+      {
+        "control": "current cold _active_transitions() suffix only",
+        "distinct_from_exp5154": true,
+        "effort_rank": 1,
+        "estimated_effort": "small: offline replay ablation over existing registry trajectories",
+        "falsifiable_gate": "On at least 6 registry level transitions, warm-start beats cold-slice control by >=0.10 median changed-cell value accuracy or >=20% fewer replayed actions to the next level; otherwise mark no value.",
+        "hypothesis": "Warm-starting the N+1 online TTT/DSL induction with level-N transition and energy statistics improves next-level held-out changed-cell value accuracy versus the current cold post-boundary slice.",
+        "name": "transition_slice_warm_start_replay_ablation",
+        "signal": "high",
+        "signal_rank": 1
+      },
+      {
+        "control": "cold Exp4020/current goal bias with no previous-level energy memory",
+        "distinct_from_exp5154": true,
+        "effort_rank": 2,
+        "estimated_effort": "small-medium: candidate-ranking replay, no live solve build",
+        "falsifiable_gate": "For lp85, sc25, and tr87 replay slices, target-prefix reciprocal rank improves on at least 2/3 games with no regression in level reached; otherwise reject carryover goal-energy value.",
+        "hypothesis": "A per-game online energy model fit to level-N win/near-win states ranks level-N+1 frontier candidates closer to the eventual level-up than the cold Exp4020-only bias.",
+        "name": "cross_level_goal_energy_ranker_replay",
+        "signal": "medium",
+        "signal_rank": 2
+      },
+      {
+        "control": "cold post-boundary transition slice with no register/hazard carryover",
+        "distinct_from_exp5154": true,
+        "effort_rank": 3,
+        "estimated_effort": "medium: requires compact belief serialization plus replay scorer",
+        "falsifiable_gate": "On ka59/ar25/ft09 transition traces, carryover reduces invalid candidate expansions or verifier-rejected branches by >=25% versus cold reset, while reproducing the same prior level depth; otherwise reject the register carryover probe.",
+        "hypothesis": "Carrying compact register/hazard belief features from level N reduces rediscovery cost on hidden-state-bound games where counters, phases, or hazard blockers recur.",
+        "name": "hidden_register_hazard_belief_carryover_probe",
+        "signal": "medium-high",
+        "signal_rank": 3
+      }
+    ]
+  },
+  "random_seed": 5155,
+  "registry_never_contacted_games": [],
+  "registry_solved_games": 25,
+  "registry_updated": "2026-06-30",
+  "reproducibility_checksum": "sha256:eef25934b7285f602afa2805712cc9a736e1979f0c6db8183a5519967a948064",
+  "reproducible_total_levels": 69,
+  "schema": "carnot.exp5155.multilevel_belief_state_scoping.v1",
+  "spec_refs": [
+    "REQ-ARC-WMTE-5155",
+    "SCENARIO-ARC-WMTE-5155-RESET-CHARACTERIZATION",
+    "SCENARIO-ARC-WMTE-5155-FALSIFIABLE-PROPOSALS"
+  ]
+}

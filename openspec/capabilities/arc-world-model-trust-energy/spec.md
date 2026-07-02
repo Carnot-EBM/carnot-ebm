@@ -7229,6 +7229,62 @@ Then the QD diagnostics expose
 reproduced new level or a complete null with `reproducible_levels_delta=0` and
 `winning_trajectory_surfaced=false`.
 
+### REQ-ARC-WMTE-5155: Multi-Level Belief-State Scoping
+
+Experiment 5155 SHALL scope, not build, the ARC deepen-wall belief-state
+hypothesis. The workflow SHALL read `ops/arc_solve_registry.yaml`,
+`python/carnot/agentic/arc_live_ttt.py`,
+`python/carnot/agentic/arc_agi3_world_model.py`,
+`python/carnot/agentic/arc_competition_agent.py`, and the mandatory CLAUDE.md
+live-agent framing before writing the artifact. It SHALL distinguish
+first-contact generation from within-game deepening, SHALL characterize every
+registry game with `levels_reproduced >= 1`, and SHALL code-verify whether the
+live agent resets its world-model/belief-state inputs at a level boundary.
+
+The scoping result SHALL not run a full level-up experiment. It SHALL propose
+2-3 small falsifiable follow-up experiments for carrying an online,
+energy-based per-game belief state across levels. Each proposal SHALL include
+`name`, `hypothesis`, `falsifiable_gate`, and `estimated_effort`, and SHALL rank
+effort versus signal. The proposals SHALL be distinct from Experiment 5154's
+first-contact candidate-generation pilot and SHALL identify which learning gaps
+remain untested against the current code, including temporal credit assignment,
+learned belief-state identity, and compounding TTT when still applicable.
+
+The terminal artifact
+`results/experiment_5155_multilevel_belief_state_scoping_v472.json` SHALL
+include top-level fields for `honest_verdict`,
+`belief_state_resets_at_level_boundary`, `proposed_experiments`,
+`per_game_characterization`, `current_state_characterization`,
+`learning_gaps_verified_against_code`, `proposal_ranking`,
+`first_contact_vs_deepen_distinction`, `preconditions_checked`,
+`field_principles`, `spec_refs`, and `reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "MUST start with complete:/complete_/success:/success_; this is a scoped proposal, not a banked level."
+- `belief_state_resets_at_level_boundary`: principle "The precise, code-verified fact this scoping pass exists to establish -- do not assume from memory or prior notes."
+- `proposed_experiments`: principle "Each must be small and falsifiable, not another open-ended generation-axis swing -- the L1 wall already taught us that costs milestones without them."
+- `per_game_characterization`: principle "Every game at levels_reproduced >= 1 is listed with its registry depth and plausible cross-level information loss."
+- `learning_gaps_verified_against_code`: principle "temporal credit-assignment, learned belief-state identity, and compounding TTT are checked against current code instead of cited blindly."
+- `first_contact_vs_deepen_distinction`: principle "states why Experiment 5155 is a deepen-wall scoping artifact distinct from Experiment 5154 first-contact generation."
+
+#### SCENARIO-ARC-WMTE-5155-RESET-CHARACTERIZATION
+
+Given the current live E3 path observes a level-up
+When Experiment 5155 analyzes the code
+Then it reports that the policy resets the active induction transition slice at
+the level boundary while preserving the explorer graph, and it lists the
+specific transition, hazard, goal, and action-effect information excluded from
+the next-level world-model induction.
+
+#### SCENARIO-ARC-WMTE-5155-FALSIFIABLE-PROPOSALS
+
+Given the deepen wall is flat at `reproducible_total_levels=69`
+When Experiment 5155 emits proposed experiments
+Then it emits exactly 2-3 small ranked proposals with falsifiable gates,
+expected effort, and a stated control condition comparing cross-level
+belief-state carryover against the current cold-start induction slice.
+
 ### REQ-ARC-WMTE-4741: Persist .436 Primitive And Leave-One-Game Transfer
 
 Experiment 4741 SHALL persist the strongest characterized `.436` A1/A2
