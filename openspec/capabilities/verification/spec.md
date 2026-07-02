@@ -24518,3 +24518,78 @@ keeps `verifier_is_oracle=false`, and does not regenerate candidates.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5163 | Implemented (`python/carnot/experiment_5163_mmlu_pro_verifier_rescale_v473.py`, `results/experiment_5163_mmlu_pro_verifier_rescale_v473.json`) | Implemented (`tests/python/test_experiment_5163_mmlu_pro_verifier_rescale_v473.py`) |
+
+### REQ-VERIFY-5173: DiffusionGemma Energy-Guided Diffusion Pilot V474
+
+The repository SHALL provide Exp 5173 at
+`python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`
+to write
+`results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL first read
+`results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json` and
+stop with `honest_verdict=blocked_upstream_gate_not_passed` unless
+`gate_passed=true`.
+
+When the upstream gate passes, the runner SHALL record that GPU-1 availability
+was checked and SHALL stop with `honest_verdict=blocked_gpu1_busy` rather than
+contending if GPU 1 has a conflicting workload. It SHALL also record the
+DiffusionGemma runtime smoke result from the confirmed 4-bit NF4
+`device_map="auto"` two-GPU load path against
+`google/diffusiongemma-26B-A4B-it`. If the known
+`Tensor.item() cannot be called on meta tensors` failure is not resolved, it
+SHALL stop with
+`honest_verdict=blocked_diffusiongemma_meta_tensor_bug_unresolved` and record
+what was tried in `meta_tensor_bug_resolution`.
+
+When the smoke is resolved, the pilot SHALL compare three arms on the same
+HumanEval/MBPP executable-code subset: unguided DiffusionGemma diffusion,
+energy-guided DiffusionGemma diffusion, and a best-of-N autoregressive control
+using `unsloth/gemma-4-26B-A4B-it-GGUF`. The guidance design SHALL document
+the exact in-denoising mechanism, including whether it uses logit reweighting,
+resample-on-energy-increase, or another reproducible rule. The executable
+verifier ensemble SHALL be declared as the oracle
+(`verifier_is_oracle=true`), because executable tests define correctness for
+this code-domain pilot.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`meta_tensor_bug_resolution`, `guidance_mechanism_design`,
+`pass_at_1_unguided`, `pass_at_1_guided`, `pass_at_1_ar_baseline`,
+`guided_vs_unguided_delta_ci95`, `guided_vs_ar_delta_ci95`,
+`compute_cost_per_arm`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, `gpu1_availability_checked`, and
+`honest_verdict`. The required field principles SHALL include:
+`meta_tensor_bug_resolution` = `Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.`;
+`guidance_mechanism_design` = `The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.`;
+`pass_at_1_unguided` = `Executable pass@1 for the unguided DiffusionGemma diffusion baseline.`;
+`pass_at_1_guided` = `Executable pass@1 for energy-guided DiffusionGemma diffusion.`;
+`pass_at_1_ar_baseline` = `Executable pass@1 for the best-of-N autoregressive Gemma control.`;
+`guided_vs_unguided_delta_ci95` = `Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.`;
+`guided_vs_ar_delta_ci95` = `Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.`;
+`compute_cost_per_arm` = `The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.`;
+`verifier_is_oracle` = `The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.`;
+`random_seed` = `Seed used for task ordering, sampling, and bootstrap.`;
+`reproducibility_checksum` = `Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.`;
+`gpu1_availability_checked` = `True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether energy guidance helped, hurt, or made no difference.`
+
+### SCENARIO-VERIFY-5173-GATED: Upstream Gate And GPU Preconditions Stop Honestly
+
+Given Exp 5171 is missing or has `gate_passed=false`, or GPU 1 is busy, when
+Exp 5173 runs, then it writes the terminal blocked verdict, preserves the
+required principle fields, records `gpu1_availability_checked` truthfully, and
+does not run the full pilot.
+
+### SCENARIO-VERIFY-5173-PILOT: Three-Arm Pilot Reports Accuracy And Cost
+
+Given Exp 5171 passed, GPU 1 is available, and the DiffusionGemma smoke is
+resolved, when Exp 5173 evaluates the executable-code subset, then it computes
+pass@1 for unguided, guided, and AR arms, computes both CI95 deltas over
+task-level outcomes, records per-arm wall-clock seconds and GPU counts, sets
+`verifier_is_oracle=true`, and frames the result as execution-grounded rather
+than oracle-distinct.
+
+## Implementation Status (REQ-VERIFY-5173)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5173 | Implemented (`python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`, `results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`) | Implemented (`tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`) |

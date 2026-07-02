@@ -1,0 +1,127 @@
+{
+  "arm_rows": [],
+  "compute_cost_per_arm": {
+    "principle": "The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.",
+    "value": {
+      "ar_best_of_n": {
+        "gpu_count": 1,
+        "wall_clock_s": 0.0
+      },
+      "guided_diffusion": {
+        "gpu_count": 2,
+        "wall_clock_s": 0.0
+      },
+      "unguided_diffusion": {
+        "gpu_count": 2,
+        "wall_clock_s": 0.0
+      }
+    }
+  },
+  "duration_s": 434.3,
+  "experiment": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474",
+  "experiment_id": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474",
+  "field_principles": {
+    "compute_cost_per_arm": "The north star's efficiency axis is co-equal with accuracy -- a guided win that costs 10x more compute is a different, weaker finding than a Pareto win.",
+    "gpu1_availability_checked": "True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.",
+    "guidance_mechanism_design": "The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.",
+    "guided_vs_ar_delta_ci95": "Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.",
+    "guided_vs_unguided_delta_ci95": "Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether energy guidance helped, hurt, or made no difference.",
+    "meta_tensor_bug_resolution": "Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.",
+    "pass_at_1_ar_baseline": "Executable pass@1 for the best-of-N autoregressive Gemma control.",
+    "pass_at_1_guided": "Executable pass@1 for energy-guided DiffusionGemma diffusion.",
+    "pass_at_1_unguided": "Executable pass@1 for the unguided DiffusionGemma diffusion baseline.",
+    "random_seed": "Seed used for task ordering, sampling, and bootstrap.",
+    "reproducibility_checksum": "Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.",
+    "verifier_is_oracle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven."
+  },
+  "gpu1_availability_checked": {
+    "principle": "True only after the runner explicitly checked GPU 1 before launching the two-GPU DiffusionGemma path.",
+    "value": true
+  },
+  "guidance_mechanism_design": {
+    "principle": "The exact mechanism (logit reweighting vs. resample-on-energy-increase vs. other) must be documented precisely enough for a third party to reproduce.",
+    "value": "Per denoising step, score the current token-candidate slate with the native DiffusionGemma logits and an executable-verifier energy. The composed score for token t at position i is logit_model(i,t) - lambda_energy * verifier_energy(partial_canvas with t inserted). Sampling/commit uses the same low-entropy DiffusionGemma commit order after this reweighting; no post-hoc reranking of completed samples is counted as guided diffusion."
+  },
+  "guided_vs_ar_delta_ci95": {
+    "principle": "Bootstrap CI95 over task-level guided-diffusion-minus-AR pass@1 deltas.",
+    "value": [
+      0.0,
+      0.0
+    ]
+  },
+  "guided_vs_unguided_delta_ci95": {
+    "principle": "Bootstrap CI95 over task-level guided-minus-unguided pass@1 deltas.",
+    "value": [
+      0.0,
+      0.0
+    ]
+  },
+  "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved",
+  "inference_substrate": "blocked_preflight",
+  "meta_tensor_bug_resolution": {
+    "principle": "Description of the fix applied, or blocked_diffusiongemma_meta_tensor_bug_unresolved with what was tried.",
+    "value": "blocked_diffusiongemma_meta_tensor_bug_unresolved: current transformers/bitsandbytes/accelerate stack does not reproduce the prior successful two-GPU load; corrected class attempts fail during device placement before the diffusion forward pass, so the prior Tensor.item() on meta tensors forward bug remains unresolved and the pilot was not launched: ValueError: Some modules are dispatched on the CPU or the disk before forward; prior forward_error remains RuntimeError(Tensor.item() cannot be called on meta tensors)."
+  },
+  "milestone": "2026.07.474",
+  "pass_at_1_ar_baseline": {
+    "principle": "Executable pass@1 for the best-of-N autoregressive Gemma control.",
+    "value": 0.0
+  },
+  "pass_at_1_guided": {
+    "principle": "Executable pass@1 for energy-guided DiffusionGemma diffusion.",
+    "value": 0.0
+  },
+  "pass_at_1_unguided": {
+    "principle": "Executable pass@1 for the unguided DiffusionGemma diffusion baseline.",
+    "value": 0.0
+  },
+  "preconditions": {
+    "exp5171_gate": {
+      "artifact_honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
+      "gate_passed": true
+    },
+    "gpu1": {
+      "checked": true,
+      "detail": "nvidia-smi on 2026-07-02 showed GPU 1 idle: 4 MiB / 24576 MiB used, pmon no process",
+      "gpu1_available": true
+    },
+    "smoke": {
+      "attempted": true,
+      "error": "ValueError: Some modules are dispatched on the CPU or the disk before forward; prior forward_error remains RuntimeError(Tensor.item() cannot be called on meta tensors).",
+      "load_mode": "4bit_nf4_devmap_auto_2gpu",
+      "model_class": "DiffusionGemmaModel/DiffusionGemmaForBlockDiffusion",
+      "resolution": "blocked_diffusiongemma_meta_tensor_bug_unresolved: current transformers/bitsandbytes/accelerate stack does not reproduce the prior successful two-GPU load; corrected class attempts fail during device placement before the diffusion forward pass, so the prior Tensor.item() on meta tensors forward bug remains unresolved and the pilot was not launched",
+      "success": false,
+      "tried": [
+        "Read results/diffusiongemma_energy_prior_probe.json: prior load_mode=4bit_nf4_devmap_auto_2gpu, model_loaded=true, forward_error=RuntimeError(Tensor.item() cannot be called on meta tensors).",
+        "AutoModelForCausalLM.from_pretrained rejected DiffusionGemmaConfig before loading; wrong auto class for this architecture.",
+        "DiffusionGemmaForBlockDiffusion.from_pretrained with 4bit NF4 and device_map=auto failed during accelerate placement after 148.1s: Some modules are dispatched on the CPU or the disk.",
+        "DiffusionGemmaModel.from_pretrained with 4bit NF4 and device_map=auto failed during accelerate placement after 141.2s: Some modules are dispatched on the CPU or the disk.",
+        "DiffusionGemmaModel.from_pretrained with 4bit NF4, device_map=auto, and max_memory={0:24GiB,1:24GiB} failed during accelerate placement after 145.0s with the same CPU/disk dispatch error."
+      ]
+    }
+  },
+  "random_seed": {
+    "principle": "Seed used for task ordering, sampling, and bootstrap.",
+    "value": 5173
+  },
+  "reproducibility_checksum": {
+    "principle": "Hash of the gate artifact, smoke outcome, arm rows, metrics, compute costs, and verdict.",
+    "value": "e7456f2ba694309ffdccc8b4f7d579d82d2d186dda30db8f9238f85d78c41b3c"
+  },
+  "result_path": "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json",
+  "schema": "experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v1",
+  "spec_refs": [
+    "REQ-VERIFY-5173",
+    "SCENARIO-VERIFY-5173-GATED",
+    "SCENARIO-VERIFY-5173-PILOT"
+  ],
+  "tests_run": [
+    "tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py"
+  ],
+  "verifier_is_oracle": {
+    "principle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.",
+    "value": true
+  }
+}
