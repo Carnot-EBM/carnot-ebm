@@ -123,5 +123,18 @@
   "verifier_is_oracle": {
     "principle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.",
     "value": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "CIRCULAR_MOAT_OVERCLAIM",
+      "severity": "critical",
+      "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True} (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
+    },
+    {
+      "kind": "MOAT_CLAIM_RIGOR",
+      "severity": "critical",
+      "detail": "Moat/verifier-value claim has verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True}. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+    }
+  ]
 }

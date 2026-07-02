@@ -10046,3 +10046,4 @@ web search: |
 | 2026-07-02 22:07 UTC | PHASE 0 infrastructure -- retire PHASE D external- | OK | 85 passed, 1 warning in 9.97s |
 | 2026-07-02 22:29 UTC | PHASE A1 cash in the ARC oracle-distinct win -- sc | OK | 87 passed, 1 warning in 11.48s |
 | 2026-07-02 23:21 UTC | PHASE A2 SOTA ingestion -- energy-guided diffusion | OK | 107 passed, 1 warning in 7.71s |
+| 2026-07-02 23:42 UTC | PHASE A3 the real experiment the verifier-moat arc | FLAGGED | adversarial_verify CRITICAL: CIRCULAR_MOAT_OVERCLAIM, MOAT_CLAIM_RIGOR — result  |
