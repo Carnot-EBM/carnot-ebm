@@ -7171,6 +7171,64 @@ offline reproduced L2, or emits a complete no-lift residual with
 `null_delta_methodology_note` and `positive_control_passed` when the matched
 first-win delta is flat.
 
+### REQ-ARC-WMTE-5154: Energy-Fitness Directed Exploration Pilot
+
+Experiment 5154 SHALL run a small falsifiable ARC live-path pilot that uses the
+existing Carnot goal/verifier energy as a fitness landscape for
+quality-diversity candidate generation. The energy signal SHALL be the live
+`exp4020_graded_goal_satisfaction_energy` loaded through
+`E3AgentPolicy`/`StepwiseExplorer` goal bias and consumed by
+`arc_energy_fitness_qd.EnergyFitnessQDGenerator`; it SHALL NOT be a novelty,
+curiosity, random-mutation, or hand-built oracle signal relabeled as energy.
+The QD generator SHALL remain reachable from the scored live path through
+`arc_competition_agent.StepwiseExplorer._candidates()` and
+`_qd_sequence_for_node()`, and SHALL leave primitive search candidates
+available as the matched no-energy-bonus control.
+
+Experiment 5154 SHALL compare the energy-fitness QD arm against the same
+reachable-target control class used by Experiment 4688, with `bp35` as the
+canonical small public-game target unless that registry baseline moves before
+the run. It SHALL also report a matched no-energy-bonus ablation and record
+whether the winning trajectory entered the explored pool. Any new level SHALL
+count only after `arc_solver_kit.reproduce`; otherwise the artifact SHALL report
+`reproducible_levels_delta=0`, `offline_reproduced=false`, and an honest null.
+The run SHALL pass `scripts/arc_orphan_solver_lint.py` before setting
+`live_path_reachable=true`.
+
+The terminal artifact
+`results/experiment_5154_energy_fitness_directed_exploration_v472.json` SHALL
+include top-level fields for `honest_verdict`, `energy_signal_source`,
+`reproducible_levels_delta`, `offline_reproduced`, `live_path_reachable`,
+`solve_provenance`, `verifier_is_oracle`, `target_games`,
+`baseline_reproducible_total_levels`, `generic_agent_reached_level`,
+`no_energy_ablation_reached_level`, `winning_trajectory_surfaced`,
+`qd_generation_diagnostics`, `matched_control`, `preconditions_checked`,
+`field_principles`, `spec_refs`, `random_seed`, and
+`reproducibility_checksum`.
+
+Required field principles SHALL include:
+
+- `honest_verdict`: principle "MUST start with complete:/complete_/success:/success_ and state plainly whether the winning trajectory was surfaced."
+- `energy_signal_source`: principle "the specific Carnot energy/verifier computation used as the fitness function; must be genuine Exp4020 graded goal energy, not novelty."
+- `reproducible_levels_delta`: principle "delta against `ops/arc_solve_registry.yaml` `reproducible_total_levels`; zero for a null."
+- `offline_reproduced`: principle "a new level counts only if reproduced by `arc_solver_kit.reproduce`."
+- `live_path_reachable`: principle "confirmed by `scripts/arc_orphan_solver_lint.py`; off-path solvers do not count."
+- `solve_provenance`: principle "`live_agent_self_discovery` only if the live E3 path made the discovery at runtime."
+- `verifier_is_oracle`: principle "MUST be false; energy fitness scores visible candidate states and does not call the win-check."
+
+#### SCENARIO-ARC-WMTE-5154-LIVE-ENERGY-QD
+
+Given `arc-world-model-trust-energy` declares `REQ-ARC-WMTE-5154`, the registry
+baseline is `reproducible_total_levels=69`, and the live QD generator is enabled
+with Exp4020 goal energy
+When Experiment 5154 constructs the `bp35` energy-fitness QD arm and matched
+no-energy-bonus ablation
+Then the QD diagnostics expose
+`energy_signal_source=exp4020_graded_goal_satisfaction_energy`, keep
+`verifier_is_oracle=false`, and the terminal artifact either reports a
+reproduced new level or a complete null with `reproducible_levels_delta=0` and
+`winning_trajectory_surfaced=false`.
+
 ### REQ-ARC-WMTE-4741: Persist .436 Primitive And Leave-One-Game Transfer
 
 Experiment 4741 SHALL persist the strongest characterized `.436` A1/A2
