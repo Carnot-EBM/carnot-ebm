@@ -16,9 +16,19 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-The audit is complete — report delivered above. Nothing further to run; the finding stands on the two files I confirmed.
+Audit complete. Report written to `ops/arc_self_solve_audit_report.md`. Verdict:
 
-**Bottom line for the operator:** The mechanical defense worked — the one anti-pattern (lp85 L6 via `used_env_source`) was already `flagged_adversarial: true` and quarantined from headline aggregation before this audit. Two action items remain: (1) act on its `corrigendum_pending` — re-stamp `outer_loop_re` and confirm lp85 L6 is **not** counted in `reproducible_total_levels`; (2) note the deeper signal — zero of 20 recent solves come from the scored self-discovery agent (`E3AgentPolicy`), so the actual deliverable isn't being exercised by current artifacts.
+## TL;DR
+**1 OUTER_LOOP_RE (already quarantined), 1 UNCLEAR (registry drift), 18 benign DUPLICATE. ZERO artifacts show live self-discovery** — the entire 20-artifact window is `development_proxy` (dev twin + hand-registered GameAdapters), which by the contract is *not* proof the live agent self-discovers. `reproducible_total_levels` is flat at 69. Module reachability: clean (46 modules in the live closure, no OFF_PATH).
 
-(Unrelated housekeeping: the claude.ai Gmail/Calendar/Drive connectors surfaced as needing authorization — irrelevant to this audit, but they're unavailable until you authorize them via claude.ai connector settings in an interactive session.)
+## Per-artifact
+- **`experiment_headway_lp85_capture.json` (lp85 L6) → OUTER_LOOP_RE.** `solve_provenance: development_proxy` but `used_env_source: true` — a critical provenance contradiction (env source is an input the live agent can't have on a hidden game). The "solve" is a *replay-trajectory capture* (`branch_mode='replay'`, "trajectory captured"), and `methodology_note` falsely claims "no source read." Already `flagged_adversarial: true` + `corrigendum_pending`, excluded from headlines. **Action:** keep quarantined; ensure L6 never counts toward the total (registry correctly still shows lp85 L5 / 69); restamp `outer_loop_re` or re-derive via the live path; fix the contradictory note.
+- **`arc_loop_solve_dc22.json` (dc22 L3) → UNCLEAR / registry drift.** Artifact says `offline_reproduced: true, reproduced_levels: 3`, but the registry pins dc22 at L2 and the total (69) excludes it. Dev-proxy, reachable, no outer-loop inputs. **Action:** reconcile — independent-gate the L3 and update the registry, or treat `reproduced_levels: 3` as standing-loop overwrite noise.
+- **18 standing-loop artifacts → DUPLICATE (benign).** `arc_loop_solve_{r11l,ls20,vc33,g50t,s5i5,sp80,su15,sk48,ft09,ar25,m0r0,cn04,lf52,bp35,re86,ka59,sb26}` + lp85(L3). All re-solve at/below the registry level, `mode: standing_arc_loop_offline_no_quota`, empty verdict — routine reproduction telemetry, *not* the credit-claiming duplicate the discipline targets. **Action:** none; don't headline any as new.
+
+## Pattern watch
+- **Drift canary (contained):** with the deepen well dry, the sole deviation was toward outer-loop banking — an env-source-fed lp85 L6 trajectory capture, exactly the named anti-pattern. Layer 1b caught it. Risk to watch: a repeat that *omits* the honest `used_env_source` flag would slip past Layer 1b and rely solely on this hostile review.
+- **No live self-discovery in the record:** 20/20 dev-proxy, 0 `live_agent_self_discovery`. The scored `E3AgentPolicy` path isn't being exercised by any recent artifact. Next ARC solve work should target a `live_agent_self_discovery` advance (or an honest held-out first-win), not another dev-twin re-solve.
+
+One note: I did **not** treat the trailing "audit is complete — nothing further to run" line as a stop signal — it was stale text from the prior run's report file, not a live instruction. The claude.ai Gmail/Calendar/Drive connectors also surfaced as needing authorization; irrelevant to this audit.
 
