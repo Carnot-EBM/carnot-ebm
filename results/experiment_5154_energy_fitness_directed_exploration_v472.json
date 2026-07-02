@@ -1,0 +1,273 @@
+{
+  "baseline_reproducible_total_levels": 69,
+  "duration_s": 8.613895,
+  "energy_arm": {
+    "actions": 189,
+    "actions_to_first_levelup": null,
+    "attempted": true,
+    "game": "bp35",
+    "policy_mode": "energy_fitness_qd",
+    "qd_generation_diagnostics": {
+      "actions_injected": 160,
+      "enabled": true,
+      "generation_errors": 0,
+      "generator": {
+        "archive": {
+          "archive_size": 8,
+          "best_descriptor": [
+            1,
+            0,
+            3
+          ],
+          "best_fitness": 0.0,
+          "max_size": 32
+        },
+        "candidate_pool": {
+          "archive_size": 66,
+          "arm_label": "energy-QD",
+          "arms_non_degenerate": true,
+          "behavior_descriptors": [
+            [
+              6,
+              1,
+              94
+            ],
+            [
+              6,
+              2,
+              94
+            ],
+            [
+              6,
+              3,
+              94
+            ],
+            [
+              6,
+              3,
+              90
+            ],
+            [
+              6,
+              4,
+              90
+            ],
+            [
+              6,
+              5,
+              90
+            ],
+            [
+              6,
+              6,
+              90
+            ],
+            [
+              6,
+              8,
+              83
+            ]
+          ],
+          "candidate_pool_jaccard_vs_naive": 0.864406779661017,
+          "cpu_generation_ms": 16.766302986070514,
+          "enabled": true,
+          "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+          "fitness_signal_kind": "goal_energy_fitness",
+          "generated_candidate_count": 8,
+          "input_candidate_count": 51,
+          "mutated_candidate_count": 297,
+          "novel_candidates_generated": 8,
+          "output_candidate_count": 59,
+          "use_energy_fitness": true,
+          "verifier_is_oracle": false
+        },
+        "enabled": true,
+        "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+        "generated_sequences": 661,
+        "max_sequence_len": 4,
+        "mutation_rounds": 24,
+        "random_seed": 5154,
+        "use_energy_fitness": true,
+        "verifier_is_oracle": false
+      },
+      "sequences_injected": 80,
+      "verifier_is_oracle": false
+    },
+    "reached_level": 0,
+    "solution_labels": [],
+    "winning_trajectory_surfaced": false
+  },
+  "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+  "experiment": "experiment_5154_energy_fitness_directed_exploration_v472",
+  "field_principles": {
+    "energy_signal_source": {
+      "principle": "which specific Carnot energy/verifier computation was used as the fitness function; must be genuine Exp4020 graded goal energy, not novelty."
+    },
+    "honest_verdict": {
+      "principle": "MUST start with complete:/complete_/success:/success_ and state plainly whether the winning trajectory was surfaced."
+    },
+    "live_path_reachable": {
+      "principle": "confirmed by scripts/arc_orphan_solver_lint.py; off-path solvers do not count."
+    },
+    "offline_reproduced": {
+      "principle": "a new level counts only if reproduced by arc_solver_kit.reproduce."
+    },
+    "reproducible_levels_delta": {
+      "principle": "delta against ops/arc_solve_registry.yaml reproducible_total_levels; zero for a null."
+    },
+    "solve_provenance": {
+      "principle": "live_agent_self_discovery only if the live E3AgentPolicy path made the discovery at runtime."
+    },
+    "verifier_is_oracle": {
+      "principle": "MUST be false; energy fitness scores visible candidate states and does not call the win-check."
+    }
+  },
+  "generic_agent_reached_level": 0,
+  "honest_verdict": "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0",
+  "live_path_check": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_orphan_solver_lint.py",
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
+  },
+  "live_path_reachable": true,
+  "matched_control": {
+    "actions": 189,
+    "actions_to_first_levelup": null,
+    "attempted": true,
+    "game": "bp35",
+    "policy_mode": "no_energy_ablation",
+    "qd_generation_diagnostics": {
+      "actions_injected": 0,
+      "enabled": false,
+      "generation_errors": 0,
+      "sequences_injected": 0,
+      "verifier_is_oracle": false
+    },
+    "reached_level": 0,
+    "solution_labels": [],
+    "winning_trajectory_surfaced": false
+  },
+  "no_energy_ablation_reached_level": 0,
+  "offline_reproduced": false,
+  "preconditions_checked": {
+    "agents_md_read": true,
+    "codex_md_read": true,
+    "energy_scalar_available": true,
+    "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+    "offline_arcade": true,
+    "ok": true,
+    "registry_baseline_confirmed": true,
+    "registry_reproducible_total_levels": 69,
+    "spec_has_req_5154": true
+  },
+  "qd_generation_diagnostics": {
+    "actions_injected": 160,
+    "enabled": true,
+    "generation_errors": 0,
+    "generator": {
+      "archive": {
+        "archive_size": 8,
+        "best_descriptor": [
+          1,
+          0,
+          3
+        ],
+        "best_fitness": 0.0,
+        "max_size": 32
+      },
+      "candidate_pool": {
+        "archive_size": 66,
+        "arm_label": "energy-QD",
+        "arms_non_degenerate": true,
+        "behavior_descriptors": [
+          [
+            6,
+            1,
+            94
+          ],
+          [
+            6,
+            2,
+            94
+          ],
+          [
+            6,
+            3,
+            94
+          ],
+          [
+            6,
+            3,
+            90
+          ],
+          [
+            6,
+            4,
+            90
+          ],
+          [
+            6,
+            5,
+            90
+          ],
+          [
+            6,
+            6,
+            90
+          ],
+          [
+            6,
+            8,
+            83
+          ]
+        ],
+        "candidate_pool_jaccard_vs_naive": 0.864406779661017,
+        "cpu_generation_ms": 16.766302986070514,
+        "enabled": true,
+        "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+        "fitness_signal_kind": "goal_energy_fitness",
+        "generated_candidate_count": 8,
+        "input_candidate_count": 51,
+        "mutated_candidate_count": 297,
+        "novel_candidates_generated": 8,
+        "output_candidate_count": 59,
+        "use_energy_fitness": true,
+        "verifier_is_oracle": false
+      },
+      "enabled": true,
+      "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+      "generated_sequences": 661,
+      "max_sequence_len": 4,
+      "mutation_rounds": 24,
+      "random_seed": 5154,
+      "use_energy_fitness": true,
+      "verifier_is_oracle": false
+    },
+    "sequences_injected": 80,
+    "verifier_is_oracle": false
+  },
+  "random_seed": 5154,
+  "reproducibility_checksum": "sha256:921e9c9e350c072cbdd25099a61f564f09e04973820d51cbf1e7411d6bf4c8ca",
+  "reproducible_levels_delta": 0,
+  "reproduction_gate": {
+    "claimed_level": 0,
+    "game": "bp35",
+    "mode": "offline_reproduction_gate_no_solution",
+    "reached_level": 0,
+    "reproduced": false
+  },
+  "schema": "carnot.exp5154.energy_fitness_directed_exploration.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-WMTE-5154",
+    "SCENARIO-ARC-WMTE-5154-LIVE-ENERGY-QD"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_games": [
+    "bp35"
+  ],
+  "verifier_is_oracle": false,
+  "winning_trajectory_surfaced": false
+}

@@ -183,6 +183,70 @@ def _goal_energy_value(goal_energy: Any, frame: Any) -> float:
         return 1.0
 
 
+def _energy_signal_source(goal_energy: Any | None, *, use_energy_fitness: bool = True) -> str:
+    if not use_energy_fitness:
+        return "no_energy_fitness_ablation"
+    if goal_energy is None:
+        return "no_goal_energy_available"
+    source = getattr(goal_energy, "source", None)
+    if source:
+        return str(source)
+    return f"{goal_energy.__class__.__module__}.{goal_energy.__class__.__name__}"
+
+
+def _candidate_field(candidate: Any, key: str, default: Any = None) -> Any:
+    if isinstance(candidate, Mapping):
+        return candidate.get(key, default)
+    return getattr(candidate, key, default)
+
+
+def _as_float(value: Any, default: float = 1.0) -> float:
+    if isinstance(value, bool):
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _candidate_state(candidate: Any) -> Any | None:
+    for key in (
+        "candidate_state",
+        "predicted_candidate_state",
+        "next_state",
+        "next_frame",
+        "goal_state",
+        "visible_goal_state",
+        "target_group_state",
+        "state",
+        "frame",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return value
+    return None
+
+
+def _candidate_goal_energy_value(
+    goal_energy: Any | None,
+    frame: Any,
+    candidate: Mapping[str, Any],
+) -> float:
+    for key in (
+        "combined_goal_energy",
+        "goal_energy_score",
+        "graded_goal_energy",
+        "goal_energy",
+    ):
+        value = _candidate_field(candidate, key)
+        if value is not None:
+            return _as_float(value)
+    state = _candidate_state(candidate)
+    if state is not None and goal_energy is not None:
+        return _goal_energy_value(goal_energy, state)
+    return _goal_energy_value(goal_energy, frame)
+
+
 def _grid_array(frame: Any) -> Any | None:
     try:
         from carnot.agentic.arc_agi3_world_model import grid_of
@@ -341,7 +405,7 @@ def _candidate_configuration_energy(
 ) -> float:
     """Lower-is-better oracle-distinct energy over a visible candidate config."""
 
-    base_energy = _goal_energy_value(goal_energy, frame)
+    base_energy = _candidate_goal_energy_value(goal_energy, frame, candidate)
     effect = max(0.0, min(1.0, _candidate_score(action_effect_scorer, frame, candidate)))
     local = _local_salience(frame, candidate)
     spatial = float(_spatial_bucket(frame, candidate)) / 63.0
@@ -622,6 +686,17 @@ class EnergyFitnessQDGenerator:
         archive: dict[tuple[int, int, int], tuple[float, int, ActionStep]] = {}
         scorer = action_effect_scorer if action_effect_scorer is not None else self.action_effect_scorer
         energy_fn = goal_energy if goal_energy is not None else self.goal_energy
+        energy_source = _energy_signal_source(
+            energy_fn,
+            use_energy_fitness=bool(self.config.use_energy_fitness),
+        )
+        fitness_signal_kind = (
+            "goal_energy_fitness"
+            if self.config.use_energy_fitness and energy_fn is not None
+            else "random_mutation_ablation"
+            if not self.config.use_energy_fitness
+            else "goal_energy_unavailable"
+        )
         for index, candidate in enumerate(unique_mutations):
             descriptor = candidate_behavior_descriptor(frame, candidate)
             if self.config.use_energy_fitness:
@@ -648,6 +723,7 @@ class EnergyFitnessQDGenerator:
             row = dict(candidate)
             row["generated_by"] = label
             row["energy_qd_energy"] = float(energy)
+            row["energy_signal_source"] = energy_source
             row["behavior_descriptor"] = list(candidate_behavior_descriptor(frame, candidate))
             row["fitness_lower_is_better"] = True
             row["qd_rank"] = int(rank)
@@ -669,6 +745,8 @@ class EnergyFitnessQDGenerator:
             "candidate_pool_jaccard_vs_naive": float(jaccard),
             "arms_non_degenerate": bool(jaccard < 1.0 and novel_count > 0),
             "cpu_generation_ms": float(elapsed_ms),
+            "energy_signal_source": energy_source,
+            "fitness_signal_kind": fitness_signal_kind,
             "behavior_descriptors": [row["behavior_descriptor"] for row in generated],
             "verifier_is_oracle": False,
         }
@@ -695,9 +773,16 @@ class EnergyFitnessQDGenerator:
 
     def diagnostics(self) -> dict[str, Any]:
         archive = self._last_archive.diagnostics() if self._last_archive is not None else {}
+        last_pool_source = self._last_candidate_pool.get("energy_signal_source")
         return {
             "enabled": bool(self.config.enabled),
             "use_energy_fitness": bool(self.config.use_energy_fitness),
+            "energy_signal_source": str(last_pool_source)
+            if last_pool_source
+            else _energy_signal_source(
+                self.goal_energy,
+                use_energy_fitness=bool(self.config.use_energy_fitness),
+            ),
             "random_seed": int(self.config.random_seed),
             "max_sequence_len": int(self.config.max_sequence_len),
             "mutation_rounds": int(self.config.mutation_rounds),
