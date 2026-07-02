@@ -16257,3 +16257,83 @@ precondition, leaves policy promotion unattempted, and preserves
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5131 | Planned (`python/carnot/experiment_5131_fr11_case_policy_self_learning_v470.py`) | Planned (`tests/python/test_experiment_5131_fr11_case_policy_self_learning_v470.py`) |
+
+---
+
+## REQ-LEARN-5143: OpenSkill/K2V No-Weight Verifier-Anchor Self-Learning
+
+Experiment 5143 SHALL run a no-weight continuous self-learning experiment that
+adapts the OpenSkill/K2V pattern to Carnot's exact-checkable CSP trace suite.
+It SHALL hard-block before anchor synthesis unless
+`results/experiment_5142_taco_harm_rootcause_scale_v471.json` sets
+`trace_suite_v2_ready=true`.  The experiment SHALL use only the mandated local
+GGUF model IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` in `MODEL_SPECS`, and those models SHALL be
+proposal provenance for anchors, hints, or virtual tasks only.  Exact solvers
+and exact validators SHALL remain the sole authority for satisfiable/
+unsatisfiable labels, assignment checks, rejection decisions, and promotion
+gates.
+
+The experiment SHALL synthesize a `verification_anchor_manifest` from trusted
+trace solver receipts, constraint templates, Exp 5142 failure clusters, and
+exact labels.  It SHALL synthesize a `virtual_task_manifest` containing
+self-generated practice tasks that can be solved or rejected by exact validators
+without reading hidden held-out labels.  The only mutable learned object SHALL be
+a no-weight policy, memory, routing table, or case selector; LLM weights SHALL
+not be updated.
+
+The evaluation SHALL compare learned verifier anchors against no-learning, the
+V470 case-policy baseline, random anchor selection, and an exact-constraint-only
+guard.  It SHALL report held-out utility, nonforgetting behavior,
+harmful-regime behavior, corrupted exact-label count, promotion decision, and a
+rollback receipt.  Promotion SHALL be safe only when `heldout_delta > 0`,
+nonforgetting holds, harmful-regime behavior does not regress, and
+`wrong_label_count == 0`.  A rollback receipt SHALL be written even on success
+and SHALL describe how to disable learned anchors without changing model
+weights.
+
+The result artifact SHALL be written to
+`results/experiment_5143_openskill_k2v_self_learning_v471.json` by
+`python/carnot/experiment_5143_openskill_k2v_self_learning_v471.py`.  It SHALL
+include principle annotations for `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`,
+`continuous_self_learning_task`, `MODEL_SPECS`, `source_trace_artifacts`,
+`verification_anchor_manifest`, `virtual_task_manifest`, `heldout_delta`,
+`nonforgetting_delta`, `harmful_regime_delta`, `wrong_label_count`,
+`promotion_safe`, `rollback_receipt`, `no_weight_update`,
+`conductor_modified`, and `tests_run`.  The artifact SHALL set
+`experiment_id="exp5143-openskill-k2v-self-learning-v471"`,
+`milestone="2026.07.471"`, and
+`inference_substrate="no_weight_self_learning_with_exact_verifier_anchors"`.
+Terminal verdicts SHALL begin with `success_`, `complete_`, or `blocked_`.
+
+### SCENARIO-LEARN-5143-PROMOTE-ANCHORS
+
+**Given** Exp 5142 has produced a ready exact-checkable trace suite
+**When** Experiment 5143 synthesizes verifier anchors and virtual tasks
+**Then** anchor-source, virtual-practice, held-out, and nonforgetting partitions
+are disjoint by instance ID and every virtual task records an exact-validator
+receipt.
+
+**Given** the no-weight anchor selector is evaluated on held-out traces
+**When** it is compared against no-learning, V470 case-policy baseline, random
+anchor selection, and exact-constraint-only guard arms
+**Then** `heldout_delta` is positive versus the exact-constraint-only guard,
+nonforgetting holds, harmful-regime behavior does not regress,
+`wrong_label_count == 0`, `promotion_safe=true`, and the rollback receipt shows
+the learned anchors can be disabled without mutating model weights.
+
+### SCENARIO-LEARN-5143-BLOCKED-PRECONDITION
+
+**Given** Exp 5142 is missing or has `trace_suite_v2_ready` not equal to true
+**When** Experiment 5143 starts
+**Then** it writes a blocked artifact, leaves promotion unsafe, records the
+failing source trace gate, preserves `no_weight_update=true`, and still writes a
+rollback receipt.
+
+## Implementation Status (Exp 5143)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5143 | Planned (`python/carnot/experiment_5143_openskill_k2v_self_learning_v471.py`) | Planned (`tests/python/test_experiment_5143_openskill_k2v_self_learning_v471.py`) |
