@@ -1071,3 +1071,50 @@ rate, held-out hashes, and per-family results are recorded
 **And** `results/experiment_5130_taco_sampler_heldout_scale_v470.json` is
 written with `conductor_modified=false`, `flagged_adversarial=false`, and a
 terminal honest verdict.
+
+### REQ-SAMPLE-5142: TACO Harm Root-Cause Scale Gate
+
+Carnot MUST scale the exact-checked TACO/CSP trace suite before self-learning
+uses sampler-feature traces, and MUST explain and gate harmful guarded regimes
+without changing any exact labels or treating sampler features as a correctness
+authority.
+
+Sub-requirements:
+- REQ-SAMPLE-5142-1: Exp 5142 SHALL load Exp 5130 evidence and reproduce its
+  baseline, guarded, and sampler-feature effort measurements before reporting a
+  scaled V471 trace suite.
+- REQ-SAMPLE-5142-2: Exp 5142 SHALL evaluate at least 80 held-out
+  exact-checkable CSP instances across multiple task families and difficulty
+  bands, measuring baseline effort, original guarded effort, sampler-feature
+  effort, repaired guarded effort, exact labels, and label disagreements.
+- REQ-SAMPLE-5142-3: Exp 5142 SHALL cluster harmful guarded instances by
+  auditable structural and sampler features including degree, constraint
+  density, near-tie score, sampler entropy, and branching factor.
+- REQ-SAMPLE-5142-4: Exp 5142 SHALL implement a conservative repaired harm gate
+  or abstention rule that rejects sampler-feature guidance in identified
+  harmful regimes while preserving exact-solver label authority.
+- REQ-SAMPLE-5142-5: The terminal artifact with
+  `inference_substrate="exact_checked_taco_csp_trace_suite"`
+  `results/experiment_5142_taco_harm_rootcause_scale_v471.json` SHALL include
+  `experiment_id` with value `exp5142-taco-harm-rootcause-scale-v471`,
+  `milestone`, `honest_verdict`, `inference_substrate`, `duration_s`,
+  `exp5130_baseline_loaded`, `instance_count`, `task_families`,
+  `harmful_instance_root_causes`,
+  `average_effort_reduction_ratio_guarded`,
+  `harmful_instance_count_guarded`, `wrong_label_count`,
+  `repaired_harm_gate`, `ablation_results`, `trace_suite_v2_ready`,
+  `conductor_modified`, and `tests_run`.
+- REQ-SAMPLE-5142-6: `trace_suite_v2_ready` SHALL be true only when Exp 5130
+  reproduction succeeds, `wrong_label_count` is zero, the repaired guard
+  reduces or eliminates harmful guarded cases, useful effort reduction remains,
+  and `conductor_modified=false`.
+
+### SCENARIO-SAMPLE-5142: Harm-Rooted Trace Suite V2 Artifact
+
+**Given** Exp 5130 exact-checked held-out TACO/CSP traces
+**When** Exp 5142 scales the suite and evaluates conservative repaired gating
+**Then** every reported label is backed by exact solver and enumerator authority
+**And** harmful guarded regimes are clustered by structural and sampler features
+**And** sampler-feature guidance is abstained in the identified harmful regimes
+**And** `results/experiment_5142_taco_harm_rootcause_scale_v471.json` is
+written with `conductor_modified=false` and a terminal honest verdict.
