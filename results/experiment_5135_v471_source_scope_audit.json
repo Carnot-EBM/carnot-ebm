@@ -1,0 +1,502 @@
+{
+  "capstone_aggregator_note": {
+    "pre_gate_expected": false,
+    "reason": "The capstone aggregates all upstream states and records missing/gated artifacts rather than blocking one upstream condition.",
+    "task_id": "exp5145"
+  },
+  "conductor_gate_support": {
+    "evaluate_gates_available": true,
+    "gate_required_keys": [
+      "upstream",
+      "artifact_field",
+      "op",
+      "value"
+    ],
+    "path": "scripts/conductor_gates.py",
+    "write_blocked_artifact_available": true
+  },
+  "conductor_modified": false,
+  "duration_s": 0.003305,
+  "exclusion_manifest_conflicts": [],
+  "exclusion_manifest_scan": {
+    "conflict_count": 0,
+    "path": "ops/exclusion_manifest.yaml"
+  },
+  "experiment_id": "exp5135-v471-source-scope-audit",
+  "field_principles": {
+    "conductor_modified": "conductor immutability",
+    "duration_s": "timing accountability",
+    "exclusion_manifest_conflicts": "retired-scope accountability",
+    "experiment_id": "traceability",
+    "fover_same_scope_rerun_found": "no doomed rerun",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "sota_model_discipline_ok": "local-first model accountability",
+    "structured_gates_ok": "conductor speedup accountability",
+    "task_source_map": "source-to-experiment traceability",
+    "tests_run": "verification evidence",
+    "v471_reference_block_found": "source freshness"
+  },
+  "fover_rerun_findings": [],
+  "fover_same_scope_rerun_found": false,
+  "honest_verdict": "complete_v471_source_scope_audit_clean",
+  "inference_substrate": "metadata_and_source_audit",
+  "milestone": "2026.07.471",
+  "repo_inputs_read": [
+    "AGENTS.md",
+    "CODEX.md",
+    "CLAUDE.md",
+    "research-program.md",
+    "research-references.md",
+    "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "research-roadmap-next.yaml",
+    "research-roadmap.yaml",
+    "results/experiment_5133_capstone_v470.json",
+    "ops/exclusion_manifest.yaml",
+    "scripts/conductor_gates.py",
+    "openspec/capabilities/research-reporting/spec.md",
+    "openspec/capabilities/research-harnesses/spec.md"
+  ],
+  "roadmap_parse_evidence": {
+    "active_roadmap": {
+      "exists": true,
+      "milestone": "2026.07.471",
+      "missing_required_task_ids": [],
+      "parses": true,
+      "path": "research-roadmap.yaml",
+      "task_ids": [
+        "exp5134",
+        "exp5135",
+        "exp5136",
+        "exp5137",
+        "exp5138",
+        "exp5139",
+        "exp5140",
+        "exp5141",
+        "exp5142",
+        "exp5143",
+        "exp5144",
+        "exp5145"
+      ]
+    },
+    "research_roadmap_next": {
+      "exists": false,
+      "milestone": "missing",
+      "missing_required_task_ids": [
+        "exp5134",
+        "exp5135",
+        "exp5136",
+        "exp5137",
+        "exp5138",
+        "exp5139",
+        "exp5140",
+        "exp5141",
+        "exp5142",
+        "exp5143",
+        "exp5144",
+        "exp5145"
+      ],
+      "parses": false,
+      "path": "research-roadmap-next.yaml",
+      "task_ids": []
+    },
+    "selected_roadmap": "research-roadmap.yaml"
+  },
+  "run_date": "20260702",
+  "sota_model_discipline_details": [
+    {
+      "mandated_ggufs": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model_specs_required_field_present": true,
+      "needs_llm_inference": true,
+      "ok": true,
+      "task_id": "exp5136",
+      "task_or_global_mandated_gguf_found": true
+    },
+    {
+      "mandated_ggufs": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model_specs_required_field_present": true,
+      "needs_llm_inference": true,
+      "ok": true,
+      "task_id": "exp5137",
+      "task_or_global_mandated_gguf_found": true
+    },
+    {
+      "mandated_ggufs": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model_specs_required_field_present": true,
+      "needs_llm_inference": true,
+      "ok": true,
+      "task_id": "exp5138",
+      "task_or_global_mandated_gguf_found": true
+    },
+    {
+      "mandated_ggufs": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model_specs_required_field_present": true,
+      "needs_llm_inference": true,
+      "ok": true,
+      "task_id": "exp5139",
+      "task_or_global_mandated_gguf_found": true
+    },
+    {
+      "mandated_ggufs": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF"
+      ],
+      "model_specs_required_field_present": true,
+      "needs_llm_inference": true,
+      "ok": true,
+      "task_id": "exp5143",
+      "task_or_global_mandated_gguf_found": true
+    }
+  ],
+  "sota_model_discipline_ok": true,
+  "source_block_bounds": {
+    "end_line": 26052,
+    "found": true,
+    "source_ids_found": [
+      "openskill_verifier_anchors",
+      "k2v_verifiable_data_synthesis",
+      "symbolic_kan_certificate_residuals",
+      "solver_verified_formulation_generation_selection",
+      "reward_guided_energy_based_decoding",
+      "verification_trace_abstention_structured_output",
+      "partitioned_probabilistic_computing_telemetry",
+      "extropic_tsu_kona_architecture_watch"
+    ],
+    "start_line": 25952
+  },
+  "source_catalog": {
+    "extropic_tsu_kona_architecture_watch": {
+      "title": "Extropic TSU And Kona Architecture Watch",
+      "urls": [
+        "https://extropic.ai/writing",
+        "https://logicalintelligence.com/"
+      ]
+    },
+    "k2v_verifiable_data_synthesis": {
+      "title": "K2V-Style Verifiable Data Synthesis",
+      "urls": [
+        "https://arxiv.org/abs/2605.18261"
+      ]
+    },
+    "openskill_verifier_anchors": {
+      "title": "OpenSkill-Style Self-Evolving Verification Anchors",
+      "urls": [
+        "https://arxiv.org/abs/2606.06741",
+        "https://github.com/OpenLAIR/OpenSkill"
+      ]
+    },
+    "partitioned_probabilistic_computing_telemetry": {
+      "title": "Partitioned Probabilistic Computing Telemetry",
+      "urls": [
+        "https://arxiv.org/abs/2606.25313",
+        "https://arxiv.org/abs/2601.09037",
+        "https://arxiv.org/abs/2601.13542"
+      ]
+    },
+    "reward_guided_energy_based_decoding": {
+      "title": "Reward-Guided Energy-Based Decoding",
+      "urls": [
+        "https://arxiv.org/abs/2605.28020"
+      ]
+    },
+    "solver_verified_formulation_generation_selection": {
+      "title": "Solver-Verified Formulation Generation And Selection",
+      "urls": [
+        "https://arxiv.org/abs/2606.29366"
+      ]
+    },
+    "symbolic_kan_certificate_residuals": {
+      "title": "Symbolic-KAN For Interpretable Certificate Residuals",
+      "urls": [
+        "https://arxiv.org/abs/2603.23854"
+      ]
+    },
+    "verification_trace_abstention_structured_output": {
+      "title": "Verification-Trace Abstention And Structured Output Controls",
+      "urls": [
+        "https://arxiv.org/abs/2602.02018",
+        "https://arxiv.org/abs/2505.04016"
+      ]
+    }
+  },
+  "structured_gate_details": [
+    {
+      "declared_gates": [
+        {
+          "artifact_field": "v470_runtime_clean",
+          "op": "==",
+          "upstream": "exp5134-archive-470-activate-471",
+          "value": true
+        }
+      ],
+      "expected_gate": {
+        "artifact_field": "v470_runtime_clean",
+        "op": "==",
+        "upstream": "exp5134-archive-470-activate-471",
+        "value": true
+      },
+      "gate_found": true,
+      "malformed_gate_count": 0,
+      "ok": true,
+      "task_id": "exp5136",
+      "task_present": true,
+      "task_title": "PHASE A1 receipt-backed structured pool v2 -- clean non-FoVer exact-constraint substrate"
+    },
+    {
+      "declared_gates": [
+        {
+          "artifact_field": "structured_pool_v2_clean",
+          "op": "==",
+          "upstream": "exp5136-receipt-structured-pool-v2-v471",
+          "value": true
+        }
+      ],
+      "expected_gate": {
+        "artifact_field": "structured_pool_v2_clean",
+        "op": "==",
+        "upstream": "exp5136-receipt-structured-pool-v2-v471",
+        "value": true
+      },
+      "gate_found": true,
+      "malformed_gate_count": 0,
+      "ok": true,
+      "task_id": "exp5137",
+      "task_present": true,
+      "task_title": "PHASE A2 solver-verified formulation selector -- ORLA-style generation against static baselines"
+    },
+    {
+      "declared_gates": [
+        {
+          "artifact_field": "structured_pool_v2_clean",
+          "op": "==",
+          "upstream": "exp5136-receipt-structured-pool-v2-v471",
+          "value": true
+        }
+      ],
+      "expected_gate": {
+        "artifact_field": "structured_pool_v2_clean",
+        "op": "==",
+        "upstream": "exp5136-receipt-structured-pool-v2-v471",
+        "value": true
+      },
+      "gate_found": true,
+      "malformed_gate_count": 0,
+      "ok": true,
+      "task_id": "exp5138",
+      "task_present": true,
+      "task_title": "PHASE A3 energy-guided decoding -- exact-validator reward with matched token and NFE controls"
+    },
+    {
+      "declared_gates": [
+        {
+          "artifact_field": "structured_pool_v2_clean",
+          "op": "==",
+          "upstream": "exp5136-receipt-structured-pool-v2-v471",
+          "value": true
+        }
+      ],
+      "expected_gate": {
+        "artifact_field": "structured_pool_v2_clean",
+        "op": "==",
+        "upstream": "exp5136-receipt-structured-pool-v2-v471",
+        "value": true
+      },
+      "gate_found": true,
+      "malformed_gate_count": 0,
+      "ok": true,
+      "task_id": "exp5139",
+      "task_present": true,
+      "task_title": "PHASE A4 verification traces -- structured self-check and abstention scored by exact validators"
+    },
+    {
+      "declared_gates": [
+        {
+          "artifact_field": "trace_suite_v2_ready",
+          "op": "==",
+          "upstream": "exp5142-taco-harm-rootcause-scale-v471",
+          "value": true
+        }
+      ],
+      "expected_gate": {
+        "artifact_field": "trace_suite_v2_ready",
+        "op": "==",
+        "upstream": "exp5142-taco-harm-rootcause-scale-v471",
+        "value": true
+      },
+      "gate_found": true,
+      "malformed_gate_count": 0,
+      "ok": true,
+      "task_id": "exp5143",
+      "task_present": true,
+      "task_title": "PHASE C1 continuous self-learning -- OpenSkill/K2V verifier anchors with no-weight promotion gate"
+    }
+  ],
+  "structured_gates_ok": true,
+  "task_source_map": {
+    "exp5134": {
+      "motivation_type": "capstone_aggregation",
+      "reason": "Archive .470 truth and activate the .471 frame.",
+      "sources_or_artifacts": [
+        "results/experiment_5133_capstone_v470.json",
+        "openspec/change-proposals/research-roadmap-vNEXT.md"
+      ],
+      "task_id": "exp5134-archive-470-activate-471",
+      "task_title": "PHASE 0A transition -- archive .470 truth, activate .471, and preserve no-FoVer retirement state"
+    },
+    "exp5135": {
+      "motivation_type": "fresh_source",
+      "reason": "Preflight V471 source freshness, task scope, SOTA discipline, and structured gates.",
+      "sources_or_artifacts": [
+        "research-references.md:V471-PLANNER-REFERENCES",
+        "ops/exclusion_manifest.yaml",
+        "scripts/conductor_gates.py"
+      ],
+      "task_id": "exp5135-v471-source-scope-audit",
+      "task_title": "PHASE 0B source/scope audit -- verify V471 references, SOTA model discipline, and retired-scope avoidance"
+    },
+    "exp5136": {
+      "motivation_type": "fresh_source",
+      "reason": "Repair V470 structured-pool provenance with receipt-backed exact-checkable tasks.",
+      "sources_or_artifacts": [
+        "verification_trace_abstention_structured_output",
+        "solver_verified_formulation_generation_selection",
+        "results/experiment_5124_clean_sota_runtime_provenance_v470.json",
+        "results/experiment_5125_structured_reasoning_pool_v470.json"
+      ],
+      "task_id": "exp5136-receipt-structured-pool-v2-v471",
+      "task_title": "PHASE A1 receipt-backed structured pool v2 -- clean non-FoVer exact-constraint substrate"
+    },
+    "exp5137": {
+      "motivation_type": "fresh_source",
+      "reason": "Change the deliverable from answer ranking to solver-verified formulation selection.",
+      "sources_or_artifacts": [
+        "solver_verified_formulation_generation_selection",
+        "results/experiment_5136_receipt_structured_pool_v2_v471.json",
+        "results/experiment_5126_distributional_energy_ranker_v470.json"
+      ],
+      "task_id": "exp5137-solver-verified-formulation-selector-v471",
+      "task_title": "PHASE A2 solver-verified formulation selector -- ORLA-style generation against static baselines"
+    },
+    "exp5138": {
+      "motivation_type": "fresh_source",
+      "reason": "Retry guided decoding only after clean receipts with matched token and validator controls.",
+      "sources_or_artifacts": [
+        "reward_guided_energy_based_decoding",
+        "results/experiment_5124_clean_sota_runtime_provenance_v470.json",
+        "results/experiment_5136_receipt_structured_pool_v2_v471.json"
+      ],
+      "task_id": "exp5138-ets-ebd-guided-decoding-v471",
+      "task_title": "PHASE A3 energy-guided decoding -- exact-validator reward with matched token and NFE controls"
+    },
+    "exp5139": {
+      "motivation_type": "fresh_source",
+      "reason": "Measure structured verification traces and abstention against exact validators.",
+      "sources_or_artifacts": [
+        "verification_trace_abstention_structured_output",
+        "results/experiment_5136_receipt_structured_pool_v2_v471.json"
+      ],
+      "task_id": "exp5139-abstention-and-verification-trace-v471",
+      "task_title": "PHASE A4 verification traces -- structured self-check and abstention scored by exact validators"
+    },
+    "exp5140": {
+      "motivation_type": "local_continuation",
+      "reason": "Continue clean KAN certificate explanation into symbolic primitive distillation.",
+      "sources_or_artifacts": [
+        "symbolic_kan_certificate_residuals",
+        "results/experiment_5128_kan_certificate_explanation_breadth_v470.json"
+      ],
+      "task_id": "exp5140-symbolic-kan-certificate-distillation-v471",
+      "task_title": "PHASE B1 symbolic KAN certificates -- distill residual rules and cycle-check explanations"
+    },
+    "exp5141": {
+      "motivation_type": "local_continuation",
+      "reason": "Map exact-checked sampler behavior to board-ready partition telemetry.",
+      "sources_or_artifacts": [
+        "partitioned_probabilistic_computing_telemetry",
+        "results/experiment_5129_hubo_adaptive_2dpt_cpu_v470.json"
+      ],
+      "task_id": "exp5141-hubo-partition-residual-exponent-v471",
+      "task_title": "PHASE B2 partition telemetry -- exact-checked HUBO residual exponents and boundary refresh ratios"
+    },
+    "exp5142": {
+      "motivation_type": "local_continuation",
+      "reason": "Scale TACO/CSP traces and diagnose remaining harmful guarded cases.",
+      "sources_or_artifacts": [
+        "partitioned_probabilistic_computing_telemetry",
+        "results/experiment_5130_taco_heldout_csp_trace_suite_v470.json"
+      ],
+      "task_id": "exp5142-taco-harm-rootcause-scale-v471",
+      "task_title": "PHASE B3 TACO scale -- diagnose guarded harmful instances and repair effort gates"
+    },
+    "exp5143": {
+      "motivation_type": "fresh_source",
+      "reason": "Replace zero-delta case-policy promotion with verifier anchors and virtual exact tasks.",
+      "sources_or_artifacts": [
+        "openskill_verifier_anchors",
+        "k2v_verifiable_data_synthesis",
+        "results/experiment_5131_fr11_case_policy_self_learning_v470.json",
+        "results/experiment_5142_taco_harm_rootcause_scale_v471.json"
+      ],
+      "task_id": "exp5143-openskill-k2v-self-learning-v471",
+      "task_title": "PHASE C1 continuous self-learning -- OpenSkill/K2V verifier anchors with no-weight promotion gate"
+    },
+    "exp5144": {
+      "motivation_type": "local_continuation",
+      "reason": "Convert board reachability into hash-matched local transcripts without speedup claims.",
+      "sources_or_artifacts": [
+        "partitioned_probabilistic_computing_telemetry",
+        "extropic_tsu_kona_architecture_watch",
+        "results/experiment_5132_authenticated_board_timing_v470.json"
+      ],
+      "task_id": "exp5144-authenticated-board-workload-v471",
+      "task_title": "PHASE C2 hardware continuity -- hash-matched KV260 GateMate PolarFire workload transcripts"
+    },
+    "exp5145": {
+      "motivation_type": "capstone_aggregation",
+      "reason": "Aggregate V471 artifacts without rerunning science.",
+      "sources_or_artifacts": [
+        "results/experiment_5134_archive_470_activate_471.json",
+        "results/experiment_5135_v471_source_scope_audit.json",
+        "results/experiment_5136_receipt_structured_pool_v2_v471.json",
+        "results/experiment_5137_solver_verified_formulation_selector_v471.json",
+        "results/experiment_5138_ets_ebd_guided_decoding_v471.json",
+        "results/experiment_5139_abstention_verification_trace_v471.json",
+        "results/experiment_5140_symbolic_kan_certificate_distillation_v471.json",
+        "results/experiment_5141_hubo_partition_residual_exponent_v471.json",
+        "results/experiment_5142_taco_harm_rootcause_scale_v471.json",
+        "results/experiment_5143_openskill_k2v_self_learning_v471.json",
+        "results/experiment_5144_authenticated_board_workload_v471.json"
+      ],
+      "task_id": "exp5145-capstone-v471",
+      "task_title": "PHASE C3 capstone -- reconcile receipt-backed generation, symbolic certificates, FR-11, and hardware evidence"
+    }
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5135_v471_source_scope_audit.py --date 20260702",
+    ".venv/bin/pytest tests/python/test_experiment_5135_v471_source_scope_audit.py -q -o addopts=''",
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5135_v471_source_scope_audit.py' -m pytest tests/python/test_experiment_5135_v471_source_scope_audit.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5135_v471_source_scope_audit.py' --fail-under=100",
+    ".venv/bin/python - <<'PY'\nimport yaml\nfrom pathlib import Path\nfor path in ['research-roadmap.yaml', 'ops/exclusion_manifest.yaml']:\n    yaml.safe_load(Path(path).read_text(encoding='utf-8'))\nPY",
+    ".venv/bin/python -m scripts.roadmap_schema research-roadmap.yaml",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
+  ],
+  "v471_reference_block_found": true
+}
