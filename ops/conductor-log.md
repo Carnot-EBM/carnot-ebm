@@ -9881,3 +9881,4 @@ web search: |
 | 2026-07-02 03:47 UTC | Activation REFUSED: milestone 2026.07.471 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: BLOCKED_PATTERN_MATCHED on exp51 |
 | 2026-07-02 03:50 UTC | Activation REFUSED: milestone 2026.07.471 | BLOCK | exclusion-manifest: 4 HARD violation(s); first: BLOCKED_PATTERN_MATCHED on exp51 |
 | 2026-07-02 03:52 UTC | Milestone 2026.07.471 activated | OK | 12 tasks queued |
+| 2026-07-02 04:12 UTC | PHASE 0A transition -- archive .470 truth, activat | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantine |
