@@ -14690,6 +14690,104 @@ touches, no Extropic/TSU execution claim, and `no_speedup_claim=true`.
 
 ---
 
+### REQ-HW-5166
+
+**Title:** Hardware continuity board timing MUST keep KV260, GateMate, and PolarFire visible with per-board authenticated evidence or blockers
+
+**Description:**
+Experiment 5166 MUST produce
+`results/experiment_5166_hardware_continuity_board_timing_v473.json` as a v473
+hardware-continuity artifact. The artifact MUST use
+`inference_substrate=hardware_smoke`, follow the combined-transcript pattern from
+Exp 5132 and Exp 5144, and report KV260, GateMate A1/DirtyJTAG, and PolarFire
+independently. One unreachable board is an honest per-board data point, not a
+task failure and not a reason to skip the other boards.
+
+KV260 MUST be checked over SSH only with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host block devices MUST
+NOT be inspected, mounted, or written as a KV260 precondition. If SSH is
+reachable, the experiment MUST run a real hash-verified workload through the
+board's SSH command interface, record the board transcript, timing output,
+workload hash, sample-quality or correctness evidence, and keep
+`no_speedup_claim=true`.
+
+GateMate MUST be checked with `openFPGALoader -c dirtyJtag --detect`, and the
+precondition is satisfied only when the transcript contains the GateMate Series
+GM1Ax IDCODE. If that exact board evidence is missing, the GateMate result MUST
+record `blocked_gatemate_dirtyjtag_idcode` and the experiment MUST continue with
+the other boards. If GateMate is reachable, any workload transcript MUST be
+hash-identified and must use the openFPGALoader command interface without
+claiming hardware speedup.
+
+PolarFire MUST be checked over SSH with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. If SSH is reachable,
+the experiment MUST run a real hash-verified workload through the board's SSH
+command interface, record the board transcript, timing output, workload hash,
+sample-quality or correctness evidence, and keep `no_speedup_claim=true`.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `kv260_result`
+- `gatemate_result`
+- `polarfire_result`
+- `boards_reachable_count`
+- `hardware_wishlist_updated`
+- `honest_verdict`
+- `inference_substrate`
+- `preconditions_checked`
+- `command_transcripts`
+- `sample_quality_evidence`
+- `no_speedup_claim`
+- `tests_run`
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5166_hardware_continuity_board_timing_v473.py --date 20260702`
+  writes `results/experiment_5166_hardware_continuity_board_timing_v473.json`.
+- The artifact includes
+  `experiment_id="exp5166-hardware-continuity-board-timing-v473"`,
+  `milestone="2026.07.473"`, `spec_refs` containing `REQ-HW-5166` and
+  `SCENARIO-HW-5166`, `field_principles`, per-board precondition transcripts,
+  workload hashes, timing transcripts or exact `blocked_<board>_<resource>`
+  reasons, and a stable `reproducibility_checksum`.
+- `honest_verdict` starts with `complete_` or `success_` and explicitly reports
+  per-board reachability; a board unreachable in this milestone is not a failed
+  task.
+- `kv260_host_block_devices_touched=false`, and no artifact field cites host
+  storage markers such as `/dev/mmcblk` or `/dev/disk`.
+- `boards_reachable_count` equals the number of board results whose
+  `reachable` field is true.
+- `hardware_wishlist_updated=true` only after `research-hardware-wishlist.md`
+  contains this milestone's dated status line for KV260, GateMate, and
+  PolarFire.
+- `no_speedup_claim=true`, `hardware_speedup_claimed=false`, and any
+  board-touching measurement uses `inference_substrate=hardware_smoke`.
+
+**Implementation status:** Pending (Exp 5166)
+
+---
+
+### SCENARIO-HW-5166
+
+**Scenario:** Exp 5166 writes combined per-board timing evidence with honest blocked-board continuity.
+
+**Given:** KV260 may only be checked over SSH, GateMate reachability requires a
+GM1Ax IDCODE from DirtyJTAG/openFPGALoader, PolarFire may only be checked over
+SSH, and no speedup may be claimed from smoke workloads.
+**When:** Experiment 5166 runs the three board preconditions and executes a
+hash-verified workload only for boards that pass their own precondition.
+**Then:** It writes
+`results/experiment_5166_hardware_continuity_board_timing_v473.json` with all
+required fields, principle annotations, combined transcripts, per-board
+`kv260_result`, `gatemate_result`, and `polarfire_result` dictionaries, exact
+blocked reasons for unreachable boards, `boards_reachable_count`,
+`hardware_wishlist_updated=true`, no host block-device touches,
+`inference_substrate=hardware_smoke`, and `no_speedup_claim=true`.
+
+**Implementation status:** Pending (Exp 5166)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
