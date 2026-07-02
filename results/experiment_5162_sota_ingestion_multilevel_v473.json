@@ -1,0 +1,144 @@
+{
+  "bottom_line_recommendation": {
+    "principle": "One to two roadmap sentences for .474, tied to the A1-A3 outcomes.",
+    "value": "For milestone .474, do not scale the simple ReDRAW residual warm-start as-is: Exp5157 was a zero-gain null, Exp5158 improved only 1/3 games, and Exp5159 was gate-blocked. Prioritize adaptive retention, selective reset, and a representation-level split between persistent mechanic abstractions and fast-reset level-local details."
+  },
+  "conductor_modified": false,
+  "duration_s": 0.0,
+  "experiment_id": "experiment_5162_sota_ingestion_multilevel_v473",
+  "field_principles": {
+    "bottom_line_recommendation": "One to two roadmap sentences for .474, tied to the A1-A3 outcomes.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and must not hide zero-new-findings or negative upstream outcomes.",
+    "incremental_findings": "Every entry must trace to a fetched real arXiv ID or URL; zero findings is valid when no post-V473 novelty is found.",
+    "outcome_conditioned_findings": "Search and recommendations are conditioned on the actual Exp5157/Exp5158/Exp5159 outcomes, not on the original plan.",
+    "references_md_updated": "True only after the V474 section is appended to research-references.md.",
+    "secondary_findings": "Secondary EBM/Ising/KAN/hallucination items are included only when genuinely new and verified.",
+    "v473_citations_spot_checked": "list of fetched arXiv IDs and whether each resolved to the cited title/topic."
+  },
+  "honest_verdict": "complete: zero new post-2026-07-02 primary findings; outcome-conditioned V474 references appended",
+  "incremental_findings": {
+    "principle": "Every entry must trace to a fetched real arXiv ID or URL; zero findings is valid when no post-V473 novelty is found.",
+    "value": []
+  },
+  "inference_substrate": "aggregation_from_verified_literature_and_upstream_artifacts",
+  "milestone": "2026.07.473",
+  "no_deep_research_used": true,
+  "outcome_conditioned_findings": {
+    "principle": "Search and recommendations are conditioned on the actual Exp5157/Exp5158/Exp5159 outcomes, not on the original plan.",
+    "value": [
+      {
+        "actionability": "Implement a bounded prototype-router arm over per-mechanic transition memories, with a cold suffix model and warm retained experts as candidates under the same replay budget.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2601.22647",
+        "carnot_hook": "Exp5157 showed a null for a single ReDRAW-style residual warm-start, so .474 should route among retained mechanic memories and newly fitted level deltas rather than forcing one inherited base model into every level transition.",
+        "summary": "TMoW updates a router over multiple world models at test time, using prototype-based routing, inference-time refinement, and few-shot model expansion instead of one global residual correction.",
+        "title": "Test-Time Mixture of World Models for Embodied Agents in Dynamic Environments",
+        "tracks": "test-time routing, modular world models, few-shot expansion, dynamic environments"
+      },
+      {
+        "actionability": "Add an adaptive-retention arm that keeps mechanic-class summaries across levels but decays cell-level and frontier-location evidence unless early level-N+1 transitions confirm it.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2607.00457",
+        "carnot_hook": "Exp5158 worsened some target-prefix ranks despite no level regression, which fits a mis-scaled retention problem: pixel/action details should reset faster than mechanic-class abstractions.",
+        "summary": "MuSix adds scale-aware routing and scale-dependent forgetting rates so low-level knowledge refreshes quickly while higher-level abstractions persist across changing situations.",
+        "title": "Multi-scale Mixture of World Models for Embodied Agents in Evolving Environments",
+        "tracks": "scale-aware routing, adaptive forgetting, inter-scale transfer, evolving environments"
+      }
+    ]
+  },
+  "queries_run": [
+    {
+      "channel": "arxiv_api_date_window",
+      "query": "warm-start/belief-state/world-model transfer AND submittedDate:[202607020000 TO 202607022359]",
+      "result": "0 primary entries"
+    },
+    {
+      "channel": "arxiv_api_date_window",
+      "query": "ARC-AGI-3 AND submittedDate:[202607020000 TO 202607022359]",
+      "result": "0 entries"
+    },
+    {
+      "channel": "sweep_clusters.py",
+      "query": "cluster 6 world-model/goal-induction, max_results=8",
+      "result": "freshest relevant candidate was 2607.00457 from 2026-07-01"
+    },
+    {
+      "channel": "sweep_clusters.py",
+      "query": "clusters 3, 1, and 4 for world-model, EBM, and hardware secondary checks",
+      "result": "no post-2026-07-01 EBM/KAN primary promotion; hardware candidate 2607.00170 outside strict window"
+    },
+    {
+      "channel": "sweep_semscholar.py",
+      "query": "focused primary and secondary queries, limit=8",
+      "result": "0 IDs returned; several requests hit HTTP 429 and were not retried with fan-out"
+    }
+  ],
+  "references_md_updated": {
+    "principle": "True only after the V474 section is appended to research-references.md.",
+    "value": true
+  },
+  "search_window": {
+    "primary_incremental_after": "2026-07-02",
+    "run_date": "2026-07-02",
+    "secondary_after": "2026-07-01"
+  },
+  "secondary_findings": {
+    "principle": "Secondary EBM/Ising/KAN/hallucination items are included only when genuinely new and verified.",
+    "value": [
+      {
+        "actionability": "Keep as a verifier-audit input for future artifact and tool-output hallucination checks; it does not change the .474 ARC warm-start roadmap.",
+        "arxiv_id_or_url": "https://arxiv.org/abs/2607.00895",
+        "carnot_hook": "This is secondary to the multi-level ARC problem, but it is directly useful for Carnot's artifact-verification discipline because it scores localized hallucinated spans over code and tool output instead of only document-grounded prose.",
+        "summary": "A span-level hallucination benchmark covers code, developer-tool output, structured documents, and natural-language RAG, with exact localized labels and a code-agent split.",
+        "title": "Beyond Document Grounding: Span-Level Hallucination Detection over Code, Tool Output, and Documents",
+        "tracks": "hallucination detection, code-agent evidence, span-level labels, tool-output grounding"
+      }
+    ]
+  },
+  "sources_fetched": [
+    "https://arxiv.org/abs/2402.15957",
+    "https://arxiv.org/abs/2504.02252",
+    "https://arxiv.org/abs/2202.02405",
+    "https://arxiv.org/abs/2601.22647",
+    "https://arxiv.org/abs/2607.00457",
+    "https://arxiv.org/abs/2607.00895"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5162_sota_ingestion_multilevel_v473.py -q -o addopts='' (passed)",
+    ".venv/bin/python -m coverage run --source=python/carnot -m pytest tests/python/test_experiment_5162_sota_ingestion_multilevel_v473.py -q -o addopts='' && .venv/bin/python -m coverage report --include='python/carnot/experiment_5162_sota_ingestion_multilevel_v473.py' --fail-under=100 --show-missing (passed, 100% new-module coverage)"
+  ],
+  "upstream_outcome_summary": {
+    "carryover_path_passed": false,
+    "exp5157_gate_passed": false,
+    "exp5157_warmstart_delta_median": 0.0,
+    "exp5158_games_improved_count": 1,
+    "exp5158_gate_passed": false,
+    "exp5159_honest_verdict": "blocked_gate_check_failed",
+    "exp5159_status": "blocked",
+    "recommended_mode": "adaptive_retention_selective_reset_representation_fix"
+  },
+  "v473_citations_spot_checked": {
+    "principle": "list of fetched arXiv IDs and whether each resolved to the cited title/topic.",
+    "value": [
+      {
+        "arxiv_id": "2402.15957",
+        "cited_topic_match": "session-level latent conditioning and prior latent carryover",
+        "resolved_correctly": true,
+        "resolved_title": "DynaMITE-RL: A Dynamic Model for Improved Temporal Meta-Reinforcement Learning",
+        "url": "https://arxiv.org/abs/2402.15957"
+      },
+      {
+        "arxiv_id": "2504.02252",
+        "cited_topic_match": "ReDRAW residual latent dynamics adaptation for world-model transfer",
+        "resolved_correctly": true,
+        "resolved_title": "Adapting World Models with Latent-State Dynamics Residuals",
+        "url": "https://arxiv.org/abs/2504.02252"
+      },
+      {
+        "arxiv_id": "2202.02405",
+        "cited_topic_match": "adaptive retention and forgetting for non-stationary online learning",
+        "resolved_correctly": true,
+        "resolved_title": "BAM: Bayes with Adaptive Memory",
+        "url": "https://arxiv.org/abs/2202.02405"
+      }
+    ]
+  }
+}

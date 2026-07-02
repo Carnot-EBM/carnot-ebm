@@ -26158,3 +26158,36 @@ selective reset) are queued as `.474` follow-ups if `.473`'s simple always-warm-
 per-game-mixed rather than uniform results.
 
 <!-- V473-OUTER-LOOP-PLANNER-REFERENCES-END -->
+
+
+## V474 Planner References - 2026-07-02
+
+Added by Exp5162 after the `.473` A1-A3 outcomes were available. The V473 primary citation spot-check resolved DynaMITE-RL, ReDRAW, and BAM correctly; no discrepancy was found.
+
+### Incremental Primary Sweep Since 2026-07-02
+- **Source:** arXiv API date-window queries and low-concurrency Semantic Scholar helper calls.
+- **Tracks:** warm-start transfer RL, belief-state carryover, ARC-AGI-3 writeups.
+- **Carnot hook:** No new post-V473 primary paper was found in the strict 2026-07-02 window, so the roadmap should not pretend a new same-day citation exists.
+- **Actionability:** Keep the V473 citations as the primary basis, then condition .474 on the actual negative A1/A2 results rather than padding with weak same-topic matches.
+
+### Test-Time Mixture of World Models for Embodied Agents in Dynamic Environments
+- **Source:** arXiv:2601.22647 - https://arxiv.org/abs/2601.22647
+- **Tracks:** test-time routing, modular world models, few-shot expansion, dynamic environments
+- **Carnot hook:** Exp5157 showed a null for a single ReDRAW-style residual warm-start, so .474 should route among retained mechanic memories and newly fitted level deltas rather than forcing one inherited base model into every level transition.
+- **Actionability:** Implement a bounded prototype-router arm over per-mechanic transition memories, with a cold suffix model and warm retained experts as candidates under the same replay budget.
+
+### Multi-scale Mixture of World Models for Embodied Agents in Evolving Environments
+- **Source:** arXiv:2607.00457 - https://arxiv.org/abs/2607.00457
+- **Tracks:** scale-aware routing, adaptive forgetting, inter-scale transfer, evolving environments
+- **Carnot hook:** Exp5158 worsened some target-prefix ranks despite no level regression, which fits a mis-scaled retention problem: pixel/action details should reset faster than mechanic-class abstractions.
+- **Actionability:** Add an adaptive-retention arm that keeps mechanic-class summaries across levels but decays cell-level and frontier-location evidence unless early level-N+1 transitions confirm it.
+
+### Beyond Document Grounding: Span-Level Hallucination Detection over Code, Tool Output, and Documents
+- **Source:** arXiv:2607.00895 - https://arxiv.org/abs/2607.00895
+- **Tracks:** hallucination detection, code-agent evidence, span-level labels, tool-output grounding
+- **Carnot hook:** This is secondary to the multi-level ARC problem, but it is directly useful for Carnot's artifact-verification discipline because it scores localized hallucinated spans over code and tool output instead of only document-grounded prose.
+- **Actionability:** Keep as a verifier-audit input for future artifact and tool-output hallucination checks; it does not change the .474 ARC warm-start roadmap.
+
+**Bottom line applied to `.474`:** For milestone .474, do not scale the simple ReDRAW residual warm-start as-is: Exp5157 was a zero-gain null, Exp5158 improved only 1/3 games, and Exp5159 was gate-blocked. Prioritize adaptive retention, selective reset, and a representation-level split between persistent mechanic abstractions and fast-reset level-local details.
+
+<!-- V474-PLANNER-REFERENCES-END -->
