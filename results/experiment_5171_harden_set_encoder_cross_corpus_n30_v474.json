@@ -1,0 +1,217 @@
+{
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "consistent_with_exp5160": true,
+  "cross_corpus_delta_ci95_n30": [
+    0.3333333333,
+    0.6666666667
+  ],
+  "cross_corpus_delta_n30": 0.5,
+  "duration_s": 12.010814,
+  "exp5160_reference": {
+    "artifact": "results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json",
+    "cross_corpus_delta": 0.5,
+    "cross_corpus_delta_ci95": [
+      0.5,
+      0.5
+    ],
+    "held_out_task_n": 24,
+    "second_pool_source": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
+    "verifier_is_oracle": false
+  },
+  "expanded_leak_audit": {
+    "adapter_dropped_too_small_task_n": 0,
+    "adapter_filtered_overlap_candidate_n": 4,
+    "adapter_filtered_overlap_task_n": 0,
+    "candidate_grid_hash_collision_count": 0,
+    "candidate_grid_hash_collisions_sample": [],
+    "candidate_id_collision_count": 0,
+    "candidate_id_collisions_sample": [],
+    "gold_grid_hash_collision_count": 0,
+    "gold_grid_hash_collisions_sample": [],
+    "heldout_training_task_collision_count": 0,
+    "heldout_training_task_collisions_sample": [],
+    "passed": true,
+    "raw_task_id_collision_count": 0,
+    "raw_task_id_collisions_sample": [],
+    "scored_oof_row_count": 1180,
+    "task_id_collision_count": 0,
+    "task_id_collisions_sample": [],
+    "training_signal_fields_audited": [
+      "train_task_ids",
+      "candidate_ids",
+      "candidate_grid_hashes",
+      "gold_grid_hashes"
+    ]
+  },
+  "expanded_pool": {
+    "arcgen_commit": "a15cbdb44c776610aeeb9f487a06af875d3d0878",
+    "arcgen_path": "/home/ianblenke/github.com/ianblenke/carnot/external/ARC-GEN",
+    "candidates_per_task": 8,
+    "construction_policy": "exp4291_mixed_vote_winning_wrong_majority_and_no_oracle_tasks",
+    "dropped_overlap_candidate_n": 4,
+    "dropped_overlap_task_n": 0,
+    "dropped_too_small_task_n": 0,
+    "expanded_pool_sha256": "1f7fa739a3a09173af4bdf0ada2b5f26ec39fdac83f23159d92a5c6a7299d0a4",
+    "generator_failures": [],
+    "generator_limit": 10,
+    "selected_arcgen_task_ids": [
+      "00576224",
+      "007bbfb7",
+      "00d62c1b",
+      "00dbd492",
+      "017c7c7b",
+      "025d127b",
+      "03560426",
+      "045e512c",
+      "0520fde7",
+      "05269061"
+    ],
+    "source_pool": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
+    "source_pool_sha256": "c4e3cb9064db166ee3792b39bd3397ec441dc19501dca780b2a048db29a2f92e",
+    "source_pool_task_n": 24,
+    "tasks_per_generator": 3,
+    "usable_candidate_n": 236,
+    "usable_task_n": 30
+  },
+  "experiment": "experiment_5171_harden_set_encoder_cross_corpus_n30_v474",
+  "field_principles": {
+    "cross_corpus_delta_ci95_n30": "The decisive number: does the win survive at proper statistical power, CI95 excluding 0?",
+    "cross_corpus_delta_n30": "set_encoder@1 - vote@1 on the expanded n>=30 second corpus.",
+    "gate_passed": "n>=30 AND CI95 excludes 0 AND consistent direction/magnitude with exp5160 -- feeds exp5173's gated_on check directly. Do not redefine the threshold post hoc.",
+    "held_out_task_n": "Must be >=30 to satisfy CLAUDE.md's CLT floor for percentage-point delta claims -- the exact quantity this task exists to increase.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ AND state plainly whether the gate passed at n>=30 -- this directly determines whether exp5173 runs this milestone.",
+    "inference_substrate": "Declare accurately per the Inference-Substrate Declaration Discipline -- verifier_ensemble_against_cached_candidates if scoring an existing pool, live_llm_inference if new candidates had to be generated to reach n>=30.",
+    "leak_audit_passed_on_expanded_set": "A leak-audit that passed on the n=24 subset does not automatically cover newly-added items -- must be re-verified, not assumed.",
+    "random_seeds_used": "The >=5 seeds used for the expanded n>=30 replication protocol.",
+    "reproducibility_checksum": "Hash of the expanded ARC-GEN source description, leak audit, per-seed results, n>=30 CI, and gate decision.",
+    "solve_provenance": "Offline scoring over a static candidate pool, not a live hidden-game solve.",
+    "variance_is_genuine": "exp5160's n=24 result was identical across all 5 seeds -- this field explicitly checks whether that is a real property of the domain or a too-small/too-easy-set artifact.",
+    "verifier_is_oracle": "Must remain the bare bool false for the oracle-distinct ARC verifier claim."
+  },
+  "gate_passed": true,
+  "headline_outcome": "arc_set_encoder_cross_corpus_gate_passed_n30",
+  "held_out_task_n": 30,
+  "honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
+  "inference_substrate": "procedural_arcgen_extension_cpu_set_encoder_cross_corpus",
+  "leak_audit_passed_on_expanded_set": true,
+  "model_specs": {
+    "hidden_dim": 32,
+    "n_folds": 5,
+    "protocol": "exp5160_deepsets_pooled_context_set_encoder_on_expanded_arcgen_second_pool",
+    "random_seeds": [
+      5171,
+      5172,
+      5173,
+      5174,
+      5175
+    ],
+    "set_encoder_architecture": "deepsets_pooled_context_set_encoder",
+    "source_extension": "exp4291_arcgen_non_degenerate_generator_limit_10_tasks_per_generator_3",
+    "status": "complete",
+    "training_epochs": 32
+  },
+  "pass_rates": {
+    "oracle_at_k": 0.7666666667,
+    "set_encoder_at_1": 0.7666666667,
+    "vote_at_1": 0.2666666667
+  },
+  "per_seed_delta_ci95": [
+    0.5,
+    0.5
+  ],
+  "per_seed_deltas": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "per_seed_results": [
+    {
+      "auroc": 0.9944886712,
+      "candidate_count": 236,
+      "delta": 0.5,
+      "held_out_task_n": 30,
+      "oracle_at_k": 0.7666666667,
+      "random_seed": 5171,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    },
+    {
+      "auroc": 0.9959175342,
+      "candidate_count": 236,
+      "delta": 0.5,
+      "held_out_task_n": 30,
+      "oracle_at_k": 0.7666666667,
+      "random_seed": 5172,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    },
+    {
+      "auroc": 0.9938763013,
+      "candidate_count": 236,
+      "delta": 0.5,
+      "held_out_task_n": 30,
+      "oracle_at_k": 0.7666666667,
+      "random_seed": 5173,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    },
+    {
+      "auroc": 0.9979587671,
+      "candidate_count": 236,
+      "delta": 0.5,
+      "held_out_task_n": 30,
+      "oracle_at_k": 0.7666666667,
+      "random_seed": 5174,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    },
+    {
+      "auroc": 0.9979587671,
+      "candidate_count": 236,
+      "delta": 0.5,
+      "held_out_task_n": 30,
+      "oracle_at_k": 0.7666666667,
+      "random_seed": 5175,
+      "set_encoder_at_1": 0.7666666667,
+      "vote_at_1": 0.2666666667
+    }
+  ],
+  "random_seed": 5171,
+  "random_seeds_used": [
+    5171,
+    5172,
+    5173,
+    5174,
+    5175
+  ],
+  "reproducibility_checksum": "sha256:95826a020e50680bbb5503cbfca2b05f1fb492beaeaa140df9d38049df81ca5c",
+  "schema": "carnot.harden_set_encoder_cross_corpus_n30_5171.v1",
+  "seed_delta_variance_is_zero": true,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-VERIFY-5171",
+    "SCENARIO-VERIFY-5171",
+    "SCENARIO-VERIFY-5171-UPSTREAM-BLOCKED",
+    "SCENARIO-VERIFY-5171-INSUFFICIENT-POOL"
+  ],
+  "status": "complete",
+  "task_delta_summary": {
+    "mean": 0.5,
+    "task_bootstrap_resamples": 2000,
+    "task_delta_n": 30,
+    "unique_values": [
+      0.0,
+      1.0
+    ]
+  },
+  "variance_is_genuine": true,
+  "verifier_is_oracle": false
+}
