@@ -4231,6 +4231,40 @@ It MUST be tested on a bounded dataset to evaluate the hallucination "Yes-ratio"
 **When** wrapped with EGD selection
 **Then** it evaluates hallucination Yes-ratio bias and produces `experiment_1670_egd.json`.
 
+### REQ-PIPELINE-5138: Exact-Validator Energy-Guided Decoding Gate
+
+The pipeline MUST provide the `exp5138-ets-ebd-guided-decoding-v471` runner that
+consumes the clean Exp 5136 structured pool, selects exact-validator task families, and writes
+`results/experiment_5138_ets_ebd_guided_decoding_v471.json`. The runner MUST
+hard-block unless `results/experiment_5136_receipt_structured_pool_v2_v471.json`
+reports `structured_pool_v2_clean=true`, MUST preserve the three mandated local
+GGUF `MODEL_SPECS`, and MUST distinguish true token-level guided decoding from
+best-of-N or fixed-token reranking under matched token and validator-call
+budgets.
+
+The artifact MUST set `inference_substrate` to
+`local_sota_gguf_energy_guided_decoding_or_blocked` and MUST include
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `MODEL_SPECS`, `upstream_pool_artifact`,
+`exact_validator_authority`, `controls_differentiated`,
+`rerank_only_control`, `token_nfe_accounting`, `guided_decoding_delta`,
+`delta_ci95`, `violation_rate_delta`, `logprob_or_blocker_evidence`,
+`guided_decoding_ready`, `conductor_modified`, and `tests_run`. If local
+stepwise logprob/top-token telemetry is unavailable, the runner MUST write a
+blocked artifact rather than relabeling reranked complete candidates as guided
+decoding evidence.
+
+### SCENARIO-PIPELINE-5138: Missing Stepwise Telemetry Blocks Guided Claim
+
+**Given** a clean Exp 5136 structured pool with exact-validator candidates
+**And** the local runtime cannot expose stepwise logprob or top-token telemetry
+needed to alter decoding during generation,
+**When** the Exp 5138 runner evaluates matched rerank-only controls,
+**Then** the terminal artifact records the strongest matched control,
+`controls_differentiated=false`, `guided_decoding_ready=false`, and an
+`honest_verdict` prefixed with `blocked_` instead of claiming true guided
+decoding.
+
 
 ### REQ-PIPELINE-1677: Energy-Driven Steering (EDS) Prototype
 
