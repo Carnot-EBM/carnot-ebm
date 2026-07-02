@@ -969,6 +969,60 @@ telemetry are recorded
 `hardware_speedup_claimed=false`, `conductor_modified=false`, and a terminal
 honest verdict.
 
+### REQ-SAMPLE-5141: Partitioned HUBO/Ising 2D PT Residual Telemetry
+
+Carnot MUST extend the exact-checked CPU HUBO/p-spin 2D PT reference toward
+hardware-compatible telemetry by measuring partitioned update schedules,
+boundary-refresh ratios, residual-energy decay exponents, and board-ready
+workload descriptors without executing hardware or claiming speedup.
+
+Sub-requirements:
+- REQ-SAMPLE-5141-1: Exp 5141 SHALL load the Exp 5129 adaptive HUBO/2D-PT
+  baseline when available and SHALL record whether the upstream baseline was
+  loaded before comparing partitioned CPU telemetry.
+- REQ-SAMPLE-5141-2: Exp 5141 SHALL generate tiny exact-enumerable HUBO and
+  Ising-compatible instances, run exact enumeration for every reported
+  instance, and preserve exact optimum labels before reporting sampler quality.
+- REQ-SAMPLE-5141-3: Exp 5141 SHALL compare unguided Gibbs, a monolithic CPU
+  2D-PT reference, and partitioned 2D-PT variants across declared partition
+  layouts, boundary-refresh ratios, inverse-temperature ladders, and
+  residual-energy measurement windows.
+- REQ-SAMPLE-5141-4: Exp 5141 SHALL verify detailed balance for variants whose
+  physical-state kernel can satisfy it, and SHALL record an exact blocker for
+  stale-boundary variants whose augmented boundary-cache state prevents a
+  physical-state-only detailed-balance proof.
+- REQ-SAMPLE-5141-5: Exp 5141 SHALL report optimum-hit rate, residual-energy
+  exponent, boundary mismatch rate, and effective sample quality relative to
+  the monolithic CPU reference and unguided baselines.
+- REQ-SAMPLE-5141-6: The terminal artifact
+  `results/experiment_5141_hubo_partition_residual_exponent_v471.json` SHALL
+  include `experiment_id`, `milestone`, `honest_verdict`,
+  `inference_substrate`, `duration_s`, `exp5129_baseline_loaded`,
+  `partition_configs`, `boundary_refresh_ratios`,
+  `residual_energy_exponents`, `exact_enumeration_checked`,
+  `detailed_balance_evidence`, `monolithic_reference`,
+  `board_ready_workload_descriptors`, `partition_telemetry_ready`,
+  `hardware_speedup_claimed`, `conductor_modified`, and `tests_run`.
+- REQ-SAMPLE-5141-7: `partition_telemetry_ready` SHALL be true only when exact
+  enumeration checks pass, all unblocked detailed-balance checks pass,
+  telemetry metrics are finite across the declared sweep, board descriptors are
+  hash-addressed, and no hardware speedup or conductor mutation is claimed.
+
+### SCENARIO-SAMPLE-5141: Partitioned Residual Telemetry Artifact
+
+**Given** tiny exact-checkable HUBO/p-spin and Ising-compatible instances
+**When** Exp 5141 runs CPU partitioned 2D PT telemetry sweeps
+**Then** exact enumeration verifies optima and energy distributions before
+sample-quality metrics are reported
+**And** monolithic and partitioned update variants are compared over declared
+partition layouts, boundary-refresh ratios, beta ladders, and residual windows
+**And** detailed-balance evidence or an exact blocker is recorded for every
+variant
+**And** board-ready KV260, GateMate, and PolarFire workload descriptors include
+stable hashes while `hardware_speedup_claimed=false`
+**And** `results/experiment_5141_hubo_partition_residual_exponent_v471.json` is
+written with `conductor_modified=false` and a terminal honest verdict.
+
 ### REQ-SAMPLE-5130: TACO Sampler Held-Out CSP Trace Suite
 
 Carnot MUST scale the TACO-style adaptive CSP solver-help path to held-out
