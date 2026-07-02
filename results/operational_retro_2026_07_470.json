@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.470",
+  "generated_at": "2026-07-02T00:35:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing source reports no experiment commits for 2026.07.470: 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot therefore cannot be used as evidence of inefficient compute-bound execution or a missed DualGPURunner opportunity.",
+  "bottlenecks_identified": [
+    "no data available this milestone for ranking slow experiments, because the timing source contains no experiment commits after activation.",
+    "no data available this milestone for compute-bound GPU efficiency, because the timing source contains 0 compute-bound experiments.",
+    "No two-or-more-model compute-bound task appears in the timing source, so no DualGPURunner miss can be identified."
+  ],
+  "improvements_suggested": [
+    "Add an activation-to-retro watchdog that records a structured empty-window reason when no experiment commit lands after milestone activation.",
+    "Keep GPU monitor suggestions separate from milestone bottleneck findings unless the timing data includes compute-bound entries.",
+    "Require an explicit two-or-more-model marker before evaluating whether DualGPURunner should have been engaged."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit an early warning for milestones with no post-activation experiment commits.",
+    "Preserve compute-bound gating for GPU-idle claims.",
+    "Stamp multi-model parallelism explicitly before making DualGPURunner recommendations."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "no data available this milestone for compute-bound duration analysis. The only defensible operational finding is that the timing input is empty; the GPU report is current-state context, not milestone execution evidence."
+}
