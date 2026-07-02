@@ -1280,6 +1280,41 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### MMLU-PRO FEW-SHOT GENERATOR IMPROVEMENT 2026-07-01 (outer-loop, "let's improve the generator first (few-shot prompting) to help SC-vote land somewhere meaningful")
+
+**Real improvement, but the confound is only partly resolved.**
+`scripts/experiments/exp_mmlu_pro_fewshot_headroom_check.py` /
+`results/experiment_mmlu_pro_fewshot_headroom_check.json` (adversarial_verify: 0 flagged). Same 40
+MMLU-Pro questions, same gemma-4-12B-it-GGUF model, same K=6, only the prompting changed: standard
+MMLU-Pro 5-shot chain-of-thought (the paper's own evaluation protocol — 5 real worked exemplars per
+category from the dataset's own `validation` split, disjoint from the sampled test questions).
+
+| | Zero-shot (prior) | 5-shot CoT (this) |
+|---|---|---|
+| oracle_at_k | 0.350 | **0.500** |
+| sc_vote | 0.075 | **0.125** |
+| headroom | 0.275 | 0.375 |
+| headroom CI95 | [0.150, 0.425] | [0.225, 0.525] |
+
+Few-shot prompting is a genuine, real improvement — oracle_at_k up 43% relative, sc_vote up 67%
+relative, CI tighter and higher. But `sc_vote=0.125` is still only marginally above the 10-way
+random-chance floor (0.10) in absolute terms — MMLU-Pro is genuinely hard for a Q4-quantized 12B
+model even with the standard few-shot protocol. **The generator-weakness confound from the zero-shot
+run is reduced, not eliminated.** If a future verifier test on this corpus shows a win, it is on
+firmer ground than the zero-shot version would have been, but a reviewer could still reasonably ask
+whether a stronger/larger model (e.g. the 31B dense or 35B MoE SOTA options already approved in
+CLAUDE.md) would close more of the gap without any verifier at all.
+
+**Not yet done (queued, not executed without checking in first):** rerun
+`exp_mmlu_pro_verifier_vs_cheap_baseline.py`-style verifier-vs-cheap-baseline test against this
+improved 5-shot pool (`results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl`, 240 candidates
+with full reasoning text already saved) to see whether a learned verifier now captures the larger,
+more defensible headroom.
+
+**Infrastructure note:** hit the same background-task interruption pattern documented in the prior
+MMLU-Pro entries (116/240 candidates saved before an interrupt; resumed cleanly via the same
+checkpoint mechanism, no data lost).
+
 ### MECHANICAL FIX 2026-07-01 (outer-loop, "fix #1 mechanically, not as a standing outer-loop power") — retracted premises are now load-bearing at activation, not just in prose
 
 **Origin.** `.469`'s planner ran 8 minutes AFTER a same-session known-issues.md retraction landed
