@@ -7285,6 +7285,87 @@ Then it emits exactly 2-3 small ranked proposals with falsifiable gates,
 expected effort, and a stated control condition comparing cross-level
 belief-state carryover against the current cold-start induction slice.
 
+### REQ-ARC-WMTE-5157: Deepen Warm-Start Replay Ablation
+
+Experiment 5157 SHALL execute Experiment 5155's first-ranked proposal,
+`transition_slice_warm_start_replay_ablation`, as an offline replay ablation
+over already-banked ARC registry trajectories. Before scoring, it SHALL confirm
+that at least six registry games with `levels_reproduced >= 2` have recoverable
+within-game level-boundary transition traces from their `reproduce` or `solver`
+artifacts, or it SHALL write a terminal
+`blocked_insufficient_transition_traces` artifact listing the recoverable games
+without fabricating a result.
+
+The control arm SHALL replay level `N+1` induction with only the post-boundary
+transition suffix that corresponds to the current live `_active_transitions()`
+behavior. The warm-start arm SHALL call the existing
+`gated_engine_from_transitions` induction surface with the same post-boundary
+target evidence plus level `N` pre-boundary transitions as prior evidence. The
+warm-start mechanism SHALL be ReDRAW-style residual adaptation: freeze the
+level-`N` fitted `LiveTTTWorldModel` as the base model and fit only a small
+level-`N+1` residual correction from post-boundary transitions. The ablation MAY
+also report a DynaMITE-style conditioned-prior arm, but the ReDRAW residual arm
+is required.
+
+For each tested boundary, the experiment SHALL score both arms on held-out
+changed-cell value accuracy for level `N+1`, using a recorded post-boundary
+transition withheld from both induction inputs. When actions-to-replay-to the
+next level is recoverable from the banked trajectory, the artifact SHALL report
+the matched cold and warm-start counts. The gate SHALL pass only when warm-start
+beats cold by at least `0.10` median changed-cell value accuracy or by at least
+`20%` fewer median replayed actions to the next level across at least six
+tested boundaries; otherwise it SHALL report an honest null.
+
+The terminal artifact
+`results/experiment_5157_deepen_warmstart_replay_ablation_v473.json` SHALL
+include top-level fields for `honest_verdict`, `games_tested`,
+`warmstart_vs_cold_delta_median`, `actions_saved_pct_median`, `gate_passed`,
+`per_transition_breakdown`, `solve_provenance`, `offline_reproduced`,
+`verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `field_principles`, and `spec_refs`.
+
+Required field principles SHALL include:
+
+- `games_tested`: principle "The gate requires >=6 transitions; this field lets a reviewer verify the sample size."
+- `warmstart_vs_cold_delta_median`: principle "The exact quantity exp5155's falsifiable_gate is defined over."
+- `actions_saved_pct_median`: principle "The matched replay action-count reduction; zero when no shorter replay is derived."
+- `gate_passed`: principle "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
+- `per_transition_breakdown`: principle "An aggregate-only report can hide a result that only holds for one or two games."
+- `solve_provenance`: principle "This is offline replay over already-banked registry trajectories, not a live hidden-game solve."
+- `offline_reproduced`: principle "No new level is claimed by this task -- it is a mechanism ablation feeding exp5159's live attempt."
+- `verifier_is_oracle`: principle "The held-out transition scorer is oracle-distinct from any live solve claim."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ AND state plainly whether the gate passed or failed -- do not bury a null in qualifiers."
+
+#### SCENARIO-ARC-WMTE-5157-TRACE-PRECONDITION
+
+Given the ARC solve registry cites standing-loop artifacts with banked
+`solution_labels`
+When Experiment 5157 checks preconditions
+Then it replays the labels through the offline environment, extracts level
+boundaries from observed `frame.levels_completed` changes, and proceeds only
+when at least six recoverable boundaries have pre-boundary evidence and a
+post-boundary changed-cell held-out transition.
+
+#### SCENARIO-ARC-WMTE-5157-REDRAW-WARM-START
+
+Given a level `N -> N+1` boundary with pre-boundary and post-boundary
+transitions
+When the warm-start arm induces its world model
+Then it invokes `gated_engine_from_transitions` with the post-boundary suffix
+and the pre-boundary transitions as prior evidence, records ReDRAW-style frozen
+base plus residual diagnostics, and compares against the cold arm that receives
+only the post-boundary suffix.
+
+#### SCENARIO-ARC-WMTE-5157-STABLE-ARTIFACT
+
+Given Experiment 5157 completes or blocks
+When it writes
+`results/experiment_5157_deepen_warmstart_replay_ablation_v473.json`
+Then the artifact includes per-game and per-boundary rows, applies the exact
+`>=0.10` accuracy or `>=20%` action-saving gate from Experiment 5155, keeps
+`solve_provenance=development_proxy`, keeps `offline_reproduced=false`, and
+sets a reproducibility checksum over the artifact content.
+
 ### REQ-ARC-WMTE-4741: Persist .436 Primitive And Leave-One-Game Transfer
 
 Experiment 4741 SHALL persist the strongest characterized `.436` A1/A2

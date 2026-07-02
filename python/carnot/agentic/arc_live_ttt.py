@@ -35,6 +35,7 @@ equivalent). It does NOT edit the conductor-active core; the conductor wires it 
 ``WorldModelVerifier(...).score(engine).accuracy >= 0.5`` trust check and the same ``plan_in_model`` BFS.
 Validate offline FIRST via ``scripts/arc_ttt_validate.py`` (the learning-curve dual-run gate).
 """
+
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -61,8 +62,16 @@ class CNNDynamics:
 
     _OBJ_CHANNELS = 4  # foreground mask + object-centroid-offset (dy, dx) + object-size
 
-    def __init__(self, game: str = "?", *, epochs: int = 400, lr: float = 5e-3, hidden: int = 48,
-                 change_weight: float = 40.0, object_features: bool = False) -> None:
+    def __init__(
+        self,
+        game: str = "?",
+        *,
+        epochs: int = 400,
+        lr: float = 5e-3,
+        hidden: int = 48,
+        change_weight: float = 40.0,
+        object_features: bool = False,
+    ) -> None:
         self.game = game
         self.epochs = int(epochs)
         self.lr = float(lr)
@@ -79,7 +88,9 @@ class CNNDynamics:
         self.change_weight = float(change_weight)
         self._net: Any = None
         self._shape: Optional[tuple] = None  # (H, W) the net was trained at
-        self._device = "cpu"  # set to cuda at fit time when available (matches the 16GB CUDA eval GPU)
+        self._device = (
+            "cpu"  # set to cuda at fit time when available (matches the 16GB CUDA eval GPU)
+        )
 
     @staticmethod
     def _click_xy(akey: tuple) -> Optional[tuple]:
@@ -90,6 +101,7 @@ class CNNDynamics:
         normalised) + log-size. Background = the most common colour; objects = connected components of the
         rest. Gives the CNN object-shape context its receptive field can't span."""
         from scipy import ndimage
+
         g = np.asarray(grid)
         h, w = g.shape
         vals, counts = np.unique(g, return_counts=True)
@@ -102,8 +114,8 @@ class CNNDynamics:
             ys, xs = np.mgrid[0:h, 0:w]
             for oid in range(1, n + 1):
                 m = labels == oid
-                out[1][m] = (ys[m] - ys[m].mean()) / max(1, h)   # centroid offset dy
-                out[2][m] = (xs[m] - xs[m].mean()) / max(1, w)   # centroid offset dx
+                out[1][m] = (ys[m] - ys[m].mean()) / max(1, h)  # centroid offset dy
+                out[2][m] = (xs[m] - xs[m].mean()) / max(1, w)  # centroid offset dx
                 out[3][m] = np.log1p(int(m.sum())) / np.log1p(h * w)  # log object size
         return out
 
@@ -118,10 +130,10 @@ class CNNDynamics:
         if xy is not None:
             x, y = xy
             if 0 <= y < h and 0 <= x < w:
-                chans[N_COLORS, y, x] = 1.0           # click-location mask
+                chans[N_COLORS, y, x] = 1.0  # click-location mask
         aid = int(akey[0])
         if 1 <= aid <= 7:
-            chans[N_COLORS + aid] = 1.0               # action one-hot broadcast (index N_COLORS+1 .. +7)
+            chans[N_COLORS + aid] = 1.0  # action one-hot broadcast (index N_COLORS+1 .. +7)
         if self.object_features:
             chans = torch.cat([chans, torch.from_numpy(self._object_channels(grid))], dim=0)
         return chans
@@ -135,19 +147,30 @@ class CNNDynamics:
         # capacity + the loss focus only on the sparse CHANGE. (Full-grid colour prediction read 0/5 because
         # exact-match over 4096 absolute colours is unwinnable -- it wasted capacity re-copying the bg.)
         return nn.Sequential(
-            nn.Conv2d(c_in, self.hidden, 3, padding=1), nn.ReLU(),
-            nn.Conv2d(self.hidden, self.hidden, 3, padding=1), nn.ReLU(),
-            nn.Conv2d(self.hidden, 1 + N_COLORS, 3, padding=1),  # -> per-cell {KEEP, set-colour-0..15}
+            nn.Conv2d(c_in, self.hidden, 3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(self.hidden, self.hidden, 3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(
+                self.hidden, 1 + N_COLORS, 3, padding=1
+            ),  # -> per-cell {KEEP, set-colour-0..15}
         )
 
     @staticmethod
     def _residual_target(s: np.ndarray, s2: np.ndarray):
         """Per-cell class: 0 = KEEP (next == input), else colour+1 (1..16). Defined vs the INPUT grid."""
-        s = np.asarray(s); s2 = np.clip(np.asarray(s2).astype(np.int64), 0, N_COLORS - 1)
+        s = np.asarray(s)
+        s2 = np.clip(np.asarray(s2).astype(np.int64), 0, N_COLORS - 1)
         return np.where(s2 == s, 0, s2 + 1)
 
-    def fit(self, transitions, *, epochs: Optional[int] = None, batch_size: int = 256,
-            warm_state: Any = None) -> "CNNDynamics":
+    def fit(
+        self,
+        transitions,
+        *,
+        epochs: Optional[int] = None,
+        batch_size: int = 256,
+        warm_state: Any = None,
+    ) -> "CNNDynamics":
         """transitions: iterable of (s_grid, akey, s2_grid). Mini-batched CPU training. If warm_state is a
         net state_dict (from a pretrained PRIOR), the net is initialised from it before fine-tuning -- the
         cross-game mechanic prior the per-game live learner adapts from (fewer real probes to converge)."""
@@ -159,6 +182,7 @@ class CNNDynamics:
             return self
         # all public ARC-AGI-3 grids are 64x64 -> a single net trains across games; keep the dominant shape
         from collections import Counter
+
         self._shape = Counter(t[0].shape for t in items).most_common(1)[0][0]
         items = [t for t in items if t[0].shape == self._shape]
         torch.manual_seed(0)
@@ -173,14 +197,17 @@ class CNNDynamics:
         for _ in range(int(epochs if epochs is not None else self.epochs)):
             perm = torch.randperm(n).tolist()
             for i in range(0, n, batch_size):
-                idx = perm[i:i + batch_size]
+                idx = perm[i : i + batch_size]
                 # encode PER BATCH (lazy) -- pre-stacking the whole corpus is ~5GB at 12k x 24x64x64.
-                xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx]).to(self._device)
-                yb = torch.stack([torch.from_numpy(self._residual_target(items[j][0], items[j][2]))
-                                  for j in idx]).to(self._device)  # residual/KEEP target (0=keep,1..16=set)
+                xb = torch.stack([self._encode(items[j][0], items[j][1], torch) for j in idx]).to(
+                    self._device
+                )
+                yb = torch.stack(
+                    [torch.from_numpy(self._residual_target(items[j][0], items[j][2])) for j in idx]
+                ).to(self._device)  # residual/KEEP target (0=keep,1..16=set)
                 opt.zero_grad()
-                ce = loss_fn(net(xb), yb)                                  # [B, H, W] per-cell loss
-                w = torch.where(yb > 0, self.change_weight, 1.0)           # upweight CHANGED cells
+                ce = loss_fn(net(xb), yb)  # [B, H, W] per-cell loss
+                w = torch.where(yb > 0, self.change_weight, 1.0)  # upweight CHANGED cells
                 loss = (ce * w).sum() / w.sum()
                 loss.backward()
                 opt.step()
@@ -190,17 +217,23 @@ class CNNDynamics:
 
     def get_state(self) -> Any:
         """The net's state_dict (for saving a pretrained prior), or None if untrained."""
-        return None if self._net is None else {k: v.detach().cpu().clone() for k, v in self._net.state_dict().items()}
+        return (
+            None
+            if self._net is None
+            else {k: v.detach().cpu().clone() for k, v in self._net.state_dict().items()}
+        )
 
     def predict(self, s_grid, akey: tuple) -> np.ndarray:
         if self._net is None or np.asarray(s_grid).shape != self._shape:
-            return np.asarray(s_grid)  # untrained / wrong shape -> identity (never crash the planner)
+            return np.asarray(
+                s_grid
+            )  # untrained / wrong shape -> identity (never crash the planner)
         import torch
 
         s = np.asarray(s_grid)
         with torch.no_grad():
             xb = self._encode(s, tuple(akey), torch).unsqueeze(0).to(self._device)
-            cls = self._net(xb).argmax(dim=1).squeeze(0).cpu().numpy()             # 0=KEEP, 1..16=set colour
+            cls = self._net(xb).argmax(dim=1).squeeze(0).cpu().numpy()  # 0=KEEP, 1..16=set colour
         # apply the residual: KEEP -> copy input; else -> colour (class-1). Unchanged cells are correct
         # by construction; only the cells the net flags as changed deviate from the input.
         return np.where(cls == 0, s, (cls - 1)).astype(s.dtype)
@@ -218,8 +251,16 @@ class LiveTTTWorldModel:
     """A per-game world model learned from played transitions, exposing the engine + win predicate the
     existing ``plan_in_model`` BFS and ``WorldModelVerifier`` consume."""
 
-    def __init__(self, game: str = "?", *, refit_every: int = 8, min_transitions: int = 16,
-                 dynamics_backend: str = "dsl", prior_state: Any = None, cnn_epochs: int = 40) -> None:
+    def __init__(
+        self,
+        game: str = "?",
+        *,
+        refit_every: int = 8,
+        min_transitions: int = 16,
+        dynamics_backend: str = "dsl",
+        prior_state: Any = None,
+        cnn_epochs: int = 40,
+    ) -> None:
         self.game = game
         self.refit_every = int(refit_every)
         self.min_transitions = int(min_transitions)
@@ -233,17 +274,22 @@ class LiveTTTWorldModel:
         # 'cnn' = CNNDynamics learned net (fits arbitrary local rules, the make-or-break test for games
         # the rule class can't express). Both expose .fit(transitions)/.predict(grid, akey).
         self.dynamics_backend = dynamics_backend
-        self._l0: dict[tuple, np.ndarray] = {}        # (grid.tobytes(), akey) -> next_grid (exact backbone)
-        self._dsl_transitions: list[tuple] = []       # (s, akey, s2) feed for the L1 learner
-        self._win_states: set[bytes] = set()          # next_grid bytes observed at a level-up
+        self._l0: dict[
+            tuple, np.ndarray
+        ] = {}  # (grid.tobytes(), akey) -> next_grid (exact backbone)
+        self._dsl_transitions: list[tuple] = []  # (s, akey, s2) feed for the L1 learner
+        self._win_states: set[bytes] = set()  # next_grid bytes observed at a level-up
         self._l1: Any = None
         self._last_refit = -1
         self._refits = 0
 
     def _new_l1(self) -> Any:
         if self.dynamics_backend in ("cnn", "cnn_obj"):
-            return CNNDynamics(self.game, epochs=self.cnn_epochs,
-                               object_features=(self.dynamics_backend == "cnn_obj"))
+            return CNNDynamics(
+                self.game,
+                epochs=self.cnn_epochs,
+                object_features=(self.dynamics_backend == "cnn_obj"),
+            )
         return ObjectDeltaModel(self.game)
 
     def _fit_l1(self, transitions):
@@ -253,8 +299,15 @@ class LiveTTTWorldModel:
         return l1.fit(transitions)
 
     # --- learning from play (FREE compute; NOT rate-limited) ----------------------------------------
-    def observe(self, grid: Any, action: int, data: Any, next_grid: Any,
-                level_before: int = 0, level_after: int = 0) -> None:
+    def observe(
+        self,
+        grid: Any,
+        action: int,
+        data: Any,
+        next_grid: Any,
+        level_before: int = 0,
+        level_after: int = 0,
+    ) -> None:
         """Record one played transition into L0 + the L1 fit buffer; mark a win-state on a level-up."""
         g = np.asarray(grid)
         ng = np.asarray(next_grid)
@@ -266,8 +319,14 @@ class LiveTTTWorldModel:
 
     def observe_transition(self, t: Any) -> None:
         """Convenience for the ``Transition`` dataclass (grid, action, data, next_grid, level_*)."""
-        self.observe(t.grid, t.action, t.data, t.next_grid,
-                     getattr(t, "level_before", 0), getattr(t, "level_after", 0))
+        self.observe(
+            t.grid,
+            t.action,
+            t.data,
+            t.next_grid,
+            getattr(t, "level_before", 0),
+            getattr(t, "level_after", 0),
+        )
 
     def maybe_refit(self, step_idx: int) -> bool:
         """Refit L1 if ``refit_every`` steps elapsed and enough transitions accumulated. FREE compute."""
@@ -319,6 +378,7 @@ class LiveTTTWorldModel:
         ``trust_cell_recall`` as the granularity-matched alternative; see ``gated_engine_from_transitions``
         ``trust_metric``."""
         from carnot.agentic.arc_executable_world_model import WorldModelVerifier
+
         if not held_out:
             return 0.0
         return float(WorldModelVerifier(held_out).score(self.engine).accuracy)
@@ -335,8 +395,9 @@ class LiveTTTWorldModel:
         plan BFS'd through it can diverge from reality -- the live agent's execute-and-halt-on-divergence
         loop (``plan_and_execute``) is the safety net, and whether plan-through-an-imperfect-model actually
         SOLVES is a separate, unproven question from whether the gate fires."""
-        chg = [t for t in held_out
-               if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))]
+        chg = [
+            t for t in held_out if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))
+        ]
         if not chg:
             return 0.0
         recalls = []
@@ -363,11 +424,83 @@ class LiveTTTWorldModel:
         }
 
 
+class _ResidualLiveTTTWorldModel:
+    """ReDRAW-style target residual over a frozen base ``LiveTTTWorldModel``.
+
+    The base model is fit on prior level-N transitions and then left untouched.
+    The residual model is fit only on level-N+1 target transitions. At prediction
+    time, exact target observations and non-identity residual predictions take
+    precedence; otherwise the frozen base supplies the dynamics.
+    """
+
+    def __init__(self, base: LiveTTTWorldModel, residual: LiveTTTWorldModel) -> None:
+        self.base = base
+        self.residual = residual
+
+    def engine(self, grid: np.ndarray, action: int, data: Optional[dict]) -> np.ndarray:
+        g = np.asarray(grid)
+        akey = action_key(action, data)
+        hit = self.residual._l0.get((g.tobytes(), akey))
+        if hit is not None:
+            return hit
+        if self.residual._l1 is not None:
+            pred = np.asarray(self.residual._l1.predict(g, akey))
+            if pred.shape == g.shape and not np.array_equal(pred, g):
+                return pred
+        return np.asarray(self.base.engine(g, action, data))
+
+    def is_level_complete(self, grid: np.ndarray) -> bool:
+        return self.residual.is_level_complete(grid)
+
+    def trust(self, held_out: list) -> float:
+        from carnot.agentic.arc_executable_world_model import WorldModelVerifier
+
+        if not held_out:
+            return 0.0
+        return float(WorldModelVerifier(held_out).score(self.engine).accuracy)
+
+    def trust_cell_recall(self, held_out: list) -> float:
+        chg = [
+            t for t in held_out if not np.array_equal(np.asarray(t.grid), np.asarray(t.next_grid))
+        ]
+        if not chg:
+            return 0.0
+        recalls = []
+        for t in chg:
+            s = np.asarray(t.grid)
+            s2 = np.asarray(t.next_grid)
+            pred = np.asarray(self.engine(s, t.action, t.data))
+            if pred.shape != s2.shape:
+                recalls.append(0.0)
+                continue
+            m = s != s2
+            recalls.append(float((pred[m] == s2[m]).mean()))
+        return float(np.mean(recalls)) if recalls else 0.0
+
+    def ttt_diagnostics(self) -> dict:
+        base = self.base.ttt_diagnostics()
+        residual = self.residual.ttt_diagnostics()
+        return {
+            "game": base.get("game"),
+            "l0_table_size": residual.get("l0_table_size", 0),
+            "n_transitions": residual.get("n_transitions", 0),
+            "base_transition_count": base.get("n_transitions", 0),
+            "base_l0_table_size": base.get("l0_table_size", 0),
+            "l1_refits": residual.get("l1_refits", 0),
+            "base_l1_refits": base.get("l1_refits", 0),
+            "n_win_states": residual.get("n_win_states", 0),
+            "verifier_is_oracle": False,
+            "warm_start": True,
+            "residual_adapter": "redraw_frozen_base_plus_target_residual",
+        }
+
+
 def _load_prior(prior_path: str) -> Any:
     """Load the pretrained cross-game CNN prior state_dict (models/arc_dynamics_prior.pt), or None."""
     try:
         import torch
         from pathlib import Path
+
         p = Path(prior_path)
         if not p.is_absolute():
             p = Path(__file__).resolve().parents[3] / prior_path
@@ -376,10 +509,17 @@ def _load_prior(prior_path: str) -> Any:
         return None
 
 
-def gated_engine_from_transitions(game: str, transitions: list, *,
-                                  prior_path: str = "models/arc_dynamics_prior.pt",
-                                  trust_threshold: float = 0.5, holdout_frac: float = 0.25,
-                                  dynamics_backend: str = "cnn", trust_metric: str = "cell_recall"):
+def gated_engine_from_transitions(
+    game: str,
+    transitions: list,
+    *,
+    prior_path: str = "models/arc_dynamics_prior.pt",
+    trust_threshold: float = 0.5,
+    holdout_frac: float = 0.25,
+    dynamics_backend: str = "cnn",
+    trust_metric: str = "cell_recall",
+    prior_transitions: Optional[list] = None,
+):
     """Build a per-game world-model engine LEARNED from the played transitions, WARM-STARTED from the
     cross-game prior (models/arc_dynamics_prior.pt, the one that transfers 5/5), and GATED by held-out
     trust. Returns ``(engine, is_level_complete, diag)``.
@@ -391,29 +531,81 @@ def gated_engine_from_transitions(game: str, transitions: list, *,
     still get the old bar. This is the execution-grounded, zero-LLM alternative to e3.load_engine: the
     conductor's live agent tries it FIRST and falls through to the LLM induction if the gate fails. diag
     carries the prior-loaded flag + both held-out metrics for telemetry. (Oracle-distinct learned dynamics;
-    verifier_is_oracle False.)"""
-    diag: dict = {"backend": dynamics_backend, "n_transitions": len(transitions)}
-    if len(transitions) < 8:
+    verifier_is_oracle False.)
+
+    ``prior_transitions`` is the Exp5157 cross-level extension: when provided,
+    fit a frozen level-N base model on that prior evidence and fit only a
+    level-N+1 residual model from ``transitions``. Existing callers do not pass
+    this argument, so the live cold-slice behavior remains unchanged.
+    """
+    target = list(transitions or [])
+    prior = list(prior_transitions or [])
+    warm_start = bool(prior)
+    diag: dict = {
+        "backend": dynamics_backend,
+        "n_transitions": len(target),
+        "warm_start": warm_start,
+        "prior_transition_count": len(prior),
+    }
+    if len(target) < 8 and not prior:
         diag["skip"] = "too_few_transitions"
         return None, None, diag
-    prior_state = _load_prior(prior_path)
+    if prior and len(target) + len(prior) < 8:
+        diag["skip"] = "too_few_transitions"
+        return None, None, diag
+    prior_state = _load_prior(prior_path) if dynamics_backend in ("cnn", "cnn_obj") else None
     diag["prior_loaded"] = prior_state is not None
-    ttt = LiveTTTWorldModel(game, dynamics_backend=dynamics_backend, prior_state=prior_state)
-    k = max(2, int(len(transitions) * holdout_frac))
-    train, held = transitions[:-k], transitions[-k:]
-    for t in train:
-        ttt.observe_transition(t)
-    ttt.fit_now()
-    acc = ttt.trust(held)                         # exact-full-grid match (the original, strict bar)
-    cell = ttt.trust_cell_recall(held)            # changed-cell recall (granularity-matched)
+    if float(holdout_frac) <= 0.0 or not target:
+        train, held = target, []
+    else:
+        k = max(2, int(len(target) * holdout_frac))
+        train, held = target[:-k], target[-k:]
+
+    if warm_start:
+        base = LiveTTTWorldModel(
+            game,
+            dynamics_backend=dynamics_backend,
+            prior_state=prior_state,
+        )
+        for t in prior:
+            base.observe_transition(t)
+        base.fit_now()
+        residual = LiveTTTWorldModel(game, dynamics_backend=dynamics_backend)
+        for t in train:
+            residual.observe_transition(t)
+        residual.fit_now()
+        ttt = _ResidualLiveTTTWorldModel(base, residual)
+        diag.update(ttt.ttt_diagnostics())
+    else:
+        ttt = LiveTTTWorldModel(
+            game,
+            dynamics_backend=dynamics_backend,
+            prior_state=prior_state,
+        )
+        for t in train:
+            ttt.observe_transition(t)
+        ttt.fit_now()
+    acc = ttt.trust(held) if held else 1.0  # exact-full-grid match (the original, strict bar)
+    cell = ttt.trust_cell_recall(held) if held else 1.0  # changed-cell recall (granularity-matched)
     gate_value = cell if trust_metric == "cell_recall" else acc
-    diag.update(heldout_accuracy=round(acc, 4), heldout_cell_recall=round(cell, 4),
-                trust_threshold=trust_threshold, trust_metric=trust_metric)
+    diag.update(
+        heldout_accuracy=round(acc, 4),
+        heldout_cell_recall=round(cell, 4),
+        trust_threshold=trust_threshold,
+        trust_metric=trust_metric,
+    )
     if gate_value < trust_threshold:
         diag["gate"] = "FAIL"
         return None, None, diag
     for t in held:  # gate passed -> refit on ALL transitions for the final engine
-        ttt.observe_transition(t)
-    ttt.fit_now()
+        if warm_start:
+            ttt.residual.observe_transition(t)
+        else:
+            ttt.observe_transition(t)
+    if warm_start:
+        ttt.residual.fit_now()
+        diag.update(ttt.ttt_diagnostics())
+    else:
+        ttt.fit_now()
     diag["gate"] = "PASS"
     return ttt.engine, ttt.is_level_complete, diag
