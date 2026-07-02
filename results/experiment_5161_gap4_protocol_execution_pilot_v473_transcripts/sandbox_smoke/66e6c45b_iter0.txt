@@ -1,0 +1,53 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (4x4):
+[[0, 0, 0, 0],
+ [0, 3, 4, 0],
+ [0, 7, 6, 0],
+ [0, 0, 0, 0]]
+Demo 1 OUTPUT (4x4):
+[[3, 0, 0, 4],
+ [0, 0, 0, 0],
+ [0, 0, 0, 0],
+ [7, 0, 0, 6]]
+
+Demo 2 INPUT (4x4):
+[[0, 0, 0, 0],
+ [0, 5, 6, 0],
+ [0, 8, 3, 0],
+ [0, 0, 0, 0]]
+Demo 2 OUTPUT (4x4):
+[[5, 0, 0, 6],
+ [0, 0, 0, 0],
+ [0, 0, 0, 0],
+ [8, 0, 0, 3]]
+
+TEST INPUT (4x4):
+[[0, 0, 0, 0],
+ [0, 2, 3, 0],
+ [0, 4, 9, 0],
+ [0, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = np.zeros_like(grid)
+    rows, cols = np.nonzero(grid)
+
+    rmin, rmax = rows.min(), rows.max()
+    cmin, cmax = cols.min(), cols.max()
+    h, w = grid.shape
+
+    for r, c in zip(rows, cols):
+        nr = 0 if r == rmin else h - 1
+        nc = 0 if c == cmin else w - 1
+        out[nr, nc] = grid[r, c]
+
+    return out
+```

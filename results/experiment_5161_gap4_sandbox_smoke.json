@@ -1,0 +1,106 @@
+{
+  "bootstrap": {
+    "B": 1000,
+    "gated_vs_union_pass2_ci95": [
+      0.0,
+      0.0
+    ],
+    "gated_vs_vote_pass2_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "decentralization_note": "Closed-weight generator (gpt-5.5) used as the escalation-tier inducer per the M2-v3 precedent; deployment tier targets a local open-weight inducer (Gemma-4/Qwen3.6 GGUF). The verifier side (demo-fit + execution + rerank) is fully local and model-free.",
+  "duration_s": 24.7,
+  "experiment": "experiment_5161_gap4_sandbox_smoke",
+  "gates": {
+    "coverage_demo_perfect": 0.5,
+    "headroom_capture_fraction": 0.0,
+    "headroom_recovered": 0,
+    "selection_beats_union": false,
+    "selection_beats_vote": false,
+    "vote_wins_lost": 0
+  },
+  "generator": {
+    "data_handling_class": "minimize (public ARC demo grids + test input only)",
+    "iters_per_task_max": 1,
+    "model": "gpt-5.5 via codex exec (reasoning_effort=medium)",
+    "total_codex_calls": 2,
+    "total_codex_seconds": 24.5
+  },
+  "headroom_recovered_tasks": [],
+  "honest_verdict": "complete: gap4_rule_exec_does_not_beat_vote_n2_vote_1.0_gated_1.0_recovered_0_lost_0_demoperfect_1of2",
+  "inference_substrate": "codex_program_induction_plus_offline_trm_candidate_rerank_no_oracle",
+  "n_oracle_hit": 2,
+  "n_tasks": 2,
+  "n_unique_tasks": 2,
+  "no_gpu_used": true,
+  "no_oracle_audit": "The codex prompt contains demo pairs + the test INPUT only \u2014 never the test gold and never the candidate pool. Programs are verified on demos (public context); the gated ranker overrides vote ONLY on demo_fit==1.0 AND exact candidate match of the executed output; otherwise it IS vote. 'correct' labels score rankings post-hoc.",
+  "oracle_pass2_ceiling": 1.0,
+  "per_task": [
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 0,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 1,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "codex_cli"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_ranker_pass2_baseline": 0.4,
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "GAP4_GATED": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "GAP4_GRADED": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "TRM_VOTE": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "UNION_plus_exec": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    }
+  },
+  "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
+  "vote_wins_lost_tasks": []
+}
