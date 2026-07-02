@@ -24070,3 +24070,85 @@ before claiming that the ARC Set-Encoder win survived hardening.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5151 | Implemented (`python/carnot/reporting/arc_oracle_distinct_hardening_5151.py`, `results/experiment_5151_arc_oracle_distinct_hardening_v472.json`) | Implemented (`tests/python/test_experiment_5151_arc_oracle_distinct_hardening_v472.py`) |
+
+### REQ-VERIFY-5152: DiffusionGemma Gate Reexamination V472
+
+The repository SHALL provide Exp 5152 at
+`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py` to
+reexamine whether the DiffusionGemma gate is justified by domain-relevant
+evidence and write
+`results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`.
+
+The runner SHALL load
+`results/experiment_phase_d_musr_trained_verifier.json`,
+`results/experiment_4245_arc_set_encoder_beats_vote.json`, and, if present,
+`results/experiment_5151_arc_oracle_distinct_hardening_v472.json`. It SHALL
+also inspect cached DiffusionGemma evidence under `results/` and
+`python/carnot/` so the artifact distinguishes ready/cached artifacts from
+historical discussion.
+
+The artifact SHALL state precisely that D1 tested a MuSR reasoning-text
+embedding-verifier-vs-self-consistency claim, while Exp 4245 tested an ARC-1
+candidate-pool Set-Encoder-vs-vote reranking claim. It SHALL set
+`d1_claim_vs_exp4245_claim_same_hypothesis.value=true` only in the narrow sense
+that both are oracle-distinct verifier-adds-value hypotheses, and SHALL also
+state that the corpora, inputs, baselines, and deployment claims are different
+enough that a MuSR null cannot by itself close the ARC DiffusionGemma gate.
+
+If Exp 5151 is available and reports a hardened ARC win whose `honest_verdict`
+starts with `success_`, the runner SHALL recommend `ungate_now`. If Exp 5151 is
+available but reports an incomplete, blocked, or nulled hardening result, the
+runner SHALL recommend `keep_gated`: the original MuSR-based gate rationale is
+corrected as domain-conflated, but DiffusionGemma scaling still lacks a fully
+hardened ARC-domain result. If Exp 5151 is absent, the runner SHALL recommend
+`keep_gated` with an explicit caveat that Exp 4245 remains
+single-seed/as-yet-unhardened evidence. The schema MAY accept
+`ungate_pending_exp5151` only as a non-scaling conditional state when an
+operator intentionally wants to record that the old MuSR rationale is invalid
+but Exp 5151 is still pending.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`d1_claim_vs_exp4245_claim_same_hypothesis`, `recommendation`,
+`honest_verdict`, `domain_conflation_found`, `d1_claim`,
+`exp4245_claim`, `exp5151_status`, `diffusiongemma_artifacts`,
+`known_issues_corrigendum`, `field_principles`, `spec_refs`, and
+`reproducibility_checksum`. `honest_verdict` SHALL begin with
+`complete:`, `complete_`, `success:`, or `success_`. The required field
+principles SHALL include:
+`d1_claim_vs_exp4245_claim_same_hypothesis` = `The precise question this task exists to answer -- conflating two different domains under one gate is exactly the error class this project has been burned by before.`;
+`recommendation` = `A clear, actionable recommendation, not just an analysis -- this feeds directly into whether DiffusionGemma scaling gets queued next milestone.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_.`
+
+The repository SHALL update the 2026-06-30 DiffusionGemma known-issues entry by
+adding a dated correction rather than deleting history. The corrigendum SHALL
+state whether domain conflation was found and SHALL align with the Exp 5152
+recommendation.
+
+### SCENARIO-VERIFY-5152: MuSR Null Does Not Close ARC Gate
+
+Given the D1 MuSR artifact, Exp 4245 ARC artifact, and an Exp 5151 artifact
+whose hardening is not fully successful, when Exp 5152 runs, then it writes the
+required artifact, reports that the two results share the broad
+oracle-distinct-verifier-adds-value hypothesis but test different domains and
+claims, sets `domain_conflation_found=true`, recommends
+`keep_gated`, and records an append-only known-issues correction.
+
+### SCENARIO-VERIFY-5152-SUCCESS: Hardened ARC Win Ungates Now
+
+Given the D1 MuSR artifact, Exp 4245 ARC artifact, and an Exp 5151 artifact
+whose `honest_verdict` starts with `success_`, when Exp 5152 runs, then it
+recommends `ungate_now` because the ARC-domain evidence, not the MuSR null,
+becomes the decision-grade gate input.
+
+### SCENARIO-VERIFY-5152-MISSING-5151: Missing Hardening Keeps Pending State
+
+Given the D1 MuSR artifact and Exp 4245 ARC artifact exist but Exp 5151 is
+absent, when Exp 5152 runs, then it still flags the MuSR-vs-ARC rationale as a
+domain-conflation correction, recommends `keep_gated`, and marks Exp 4245 as
+available but not fully hardened.
+
+## Implementation Status (REQ-VERIFY-5152)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5152 | Implemented (`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py`, `results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`) | Implemented (`tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py`) |
