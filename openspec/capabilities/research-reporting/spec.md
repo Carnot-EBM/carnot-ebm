@@ -357,6 +357,110 @@ keeps `conductor_modified=false`, and does not recreate
 |---|---|---|
 | REQ-REPORT-5134 | Planned (`python/carnot/experiment_5134_archive_470_activate_471.py`, `scripts/experiment_5134_archive_470_activate_471.py`) | Planned (`tests/python/test_experiment_5134_archive_470_activate_471.py`) |
 
+### REQ-REPORT-5150: Archive .471 Runtime Truth And Activate .472 ARC Priority
+
+The Exp 5150 workflow SHALL aggregate milestone `2026.07.471` from
+`results/experiment_5145_capstone_v471.json`, the `.471` task verdicts named by
+that capstone, `CLAUDE.md`, `ops/known-issues.md`,
+`ops/arc_solve_registry.yaml`, `research-complete.yaml`, and the `.472`
+roadmap state. It SHALL write
+`results/experiment_5150_archive_471_activate_472.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT touch the currently running conductor process or active task, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the `.471` close-state truthfully: source-scope
+and FR-11 promotion evidence that is adversarially quarantined remains
+quarantined; guided decoding remains blocked on missing stepwise logprob
+telemetry; solver formulation selection records no utility beyond the best
+static or cheap baseline; clean receipt-backed structured generation,
+symbolic-KAN, partition telemetry, abstention trace, and TACO harm-gate
+evidence are preserved as upstream facts; hardware remains blocked on the safe
+workload manifest with `no_speedup_claim` preserved; and the `.471` capstone
+recommendations are carried forward as archive evidence rather than silently
+rewritten.
+
+The workflow SHALL verify the `.471` handoff runtime before activation by
+recording whether there are any non-transition dirty git paths and whether any
+conductor-like runtime process is orphaned. It SHALL emit
+`v471_runtime_clean` as a top-level boolean gate for downstream `.472` tasks.
+Expected Exp 5150 deliverable files MAY be listed as transition-local dirty
+paths when the workflow runs after authoring the artifact, but unrelated dirty
+paths or orphaned conductor processes SHALL force `v471_runtime_clean=false`.
+
+The workflow SHALL confirm `research-roadmap.yaml` names milestone
+`2026.07.472` and contains task ids `exp5150` through `exp5155`. It SHALL
+record that `.472` re-opens ARC priority because of the fresh
+`ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02` operator directive in
+`ops/known-issues.md`, while preserving the
+`CLAUDE.md` ARC-AGI-3 Submission Sprint Forcing Function as retired historical
+context. It SHALL also record `reproducible_total_levels=69` from
+`ops/arc_solve_registry.yaml` when that registry value is present, because the
+flat ARC state is the premise for the new `.472` ARC allocation.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `task_verdicts`,
+`capstone_summary`, `v471_runtime_clean`, `runtime_clean_details`,
+`arc_reopened_by_operator_directive`, `sprint_forcing_function_retired_preserved`,
+`reproducible_total_levels`, `active_roadmap_ready`,
+`active_roadmap_modified`, `conductor_modified`, `flagged_adversarial`, and
+`tests_run`.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix Discipline."
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `task_verdicts`: principle "predecessor task truth"
+- `capstone_summary`: principle "predecessor milestone truth"
+- `v471_runtime_clean`: principle "Downstream .472 tasks may gate on this; a dirty handoff should block, not silently proceed."
+- `runtime_clean_details`: principle "handoff diagnostics must explain the gate, not just emit a boolean"
+- `arc_reopened_by_operator_directive`: principle "fresh ARC priority must come from the 2026-07-02 directive, not a retired deadline rule"
+- `sprint_forcing_function_retired_preserved`: principle "historical retired rules should not be rewritten to justify current priority"
+- `reproducible_total_levels`: principle "flat ARC progress is the measured premise for the .472 allocation"
+- `active_roadmap_ready`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5150: Archive Artifact Records .471 Truth And .472 Activation
+
+**Given** the `.471` capstone artifact, its referenced task verdicts,
+`ops/known-issues.md` containing the 2026-07-02 energy-based ARC lineup,
+`CLAUDE.md` preserving the retired ARC sprint forcing function, an ARC registry
+with `reproducible_total_levels: 69`, a clean handoff runtime snapshot, and
+`research-roadmap.yaml` naming `2026.07.472` with tasks `exp5150` through
+`exp5155`
+**When** the Exp 5150 workflow runs
+**Then** it writes the JSON artifact, records the `.471` capstone summary and
+task verdicts, emits `v471_runtime_clean=true`, records ARC priority as
+freshly re-opened by the 2026-07-02 directive, preserves the retired sprint
+forcing function as historical context, declares
+`aggregation_from_upstream_artifacts`, and keeps
+`active_roadmap_modified=false` and `conductor_modified=false`.
+
+#### SCENARIO-REPORT-5150-DIRTY-RUNTIME: Dirty Handoff Blocks Downstream Gates
+
+**Given** the `.471` sources are otherwise loadable
+**And** the runtime snapshot contains unrelated dirty git paths or an orphaned
+conductor-like process
+**When** the Exp 5150 workflow runs
+**Then** it still writes a terminal archive artifact, but records
+`v471_runtime_clean=false`, preserves the dirty-path or orphan diagnostics in
+`runtime_clean_details`, and uses a complete-prefixed verdict that makes the
+activation gate visibly dirty instead of silently proceeding as clean.
+
+## Implementation Status (REQ-REPORT-5150)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5150 | Planned (`python/carnot/experiment_5150_archive_471_activate_472.py`, `scripts/experiment_5150_archive_471_activate_472.py`) | Planned (`tests/python/test_experiment_5150_archive_471_activate_472.py`) |
+
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
 The Exp 5135 workflow SHALL inspect the `V471-PLANNER-REFERENCES` block in
