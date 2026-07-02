@@ -230,3 +230,47 @@ class TestBlockedPatternMatched:
         assert exit_code == 1
         out = capsys.readouterr().out
         assert "BLOCKED_PATTERN_MATCHED" in out
+
+    def test_source_scope_audit_task_is_exempt(self, isolated_project: Path) -> None:
+        """SCENARIO: a recurring per-milestone hygiene task whose job is to CHECK for
+        retired-scope reruns must not be blocked for MENTIONING a retired scope while
+        auditing for it -- caught as a real false positive on `.471`'s
+        exp5135-v471-source-scope-audit, whose prompt literally says 'verify... that no
+        task reruns retired FoVer or other exclusion-manifest scopes' and got
+        HARD-blocked for containing the word 'fover'. Confirmed recurring via
+        python/carnot/experiment_5123_v470_source_scope_audit.py (the .470 predecessor)."""
+        roadmap = _write_roadmap(
+            isolated_project,
+            [
+                {
+                    "id": "exp5135-v471-source-scope-audit",
+                    "title": "PHASE 0B source/scope audit",
+                    "prompt": (
+                        "CONTEXT: verify that no task reruns retired scopes. This "
+                        "exercises the synthetic blocked phrase here as an example of "
+                        "what to check for, not what to do."
+                    ),
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert [r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"] == []
+
+    def test_non_audit_task_with_same_phrase_still_blocked(self, isolated_project: Path) -> None:
+        """Regression guard: the scope-audit exemption must be narrow -- a task that is
+        NOT a source-scope-audit but happens to contain the same blocked phrase is still
+        caught."""
+        roadmap = _write_roadmap(
+            isolated_project,
+            [
+                {
+                    "id": "exp5136-totally-different-task",
+                    "title": "PHASE B1 something else entirely",
+                    "prompt": "CONTEXT: this task will exercise the synthetic blocked phrase here.",
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert len([r for r in risks if r.violation_class == "BLOCKED_PATTERN_MATCHED"]) == 1

@@ -1902,7 +1902,16 @@ mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/
 and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
 "Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
 
-### REVERT REMINDER 2026-06-30 (~20:00Z) — TEMPORARY Claude-quota-conserve: conductor on codex for EVERYTHING
+### REVERT REMINDER 2026-06-30 (~20:00Z) — REVERTED 2026-07-01 (outer-loop, "the claude quota reset today, we should move the conductor's planner etc back to claude")
+
+**Done.** Removed `50-claude-quota-conserve-20260630.conf`, `systemctl --user daemon-reload` +
+`restart carnot-conductor.service`. Verified via `systemctl --user show carnot-conductor.service -p
+Environment`: `AGENT_TYPE_PLANNER=claude`, `AGENT_MODEL_PLANNER=claude-opus-4-8`,
+`AGENT_TYPE_RETRO=claude`, `AGENT_MODEL_RETRO=claude-opus-4-8`, `AGENT_TYPE_AUDIT` unset (falls back
+to its own `"claude"` default per `research_conductor.py:107`). Standing experiment routing
+unaffected: `AGENT_TYPE=codex`, `AGENT_MODEL=gpt-5.5`, `CODEX_FORCE_EXPERIMENTS=1` all still present
+(from `30-codex-fallback-20260610.conf`, a separate, permanent drop-in). Prose below preserved per
+never-prune.
 
 Operator directive 2026-06-30: Claude quota at 8% until ~2026-07-01 noon. The conductor was switched to
 **codex/gpt-5.5 for planner, retro, AND the milestone-close adversarial audits** (in addition to experiments,
