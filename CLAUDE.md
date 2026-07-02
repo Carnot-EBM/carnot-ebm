@@ -1141,9 +1141,11 @@ operator directive + a fresh smoke verification.
 `agent_type: codex` and `model: gpt-5.5`**. Do NOT emit `agent_type: gemini`.
 The narrow exceptions are unchanged in structure from the prior defaults:
 
-1. **Planner / retro / adversarial audits** — stay on Claude Opus 4.8 via
-   `AGENT_TYPE_PLANNER` / `AGENT_TYPE_RETRO` env + explicit `--model claude`
-   audit invocations (operator directives 2026-05-30 and 2026-06-08).
+1. **Planner / retro / adversarial audits** — stay on Claude (Sonnet 5 as of
+   2026-07-02, `claude-sonnet-5`; was Claude Opus 4.8 2026-05-30 through
+   2026-07-02) via `AGENT_TYPE_PLANNER` / `AGENT_TYPE_RETRO` env + explicit
+   `--model claude` audit invocations (operator directives 2026-05-30,
+   2026-06-08, 2026-07-02).
 2. **Cross-file refactors with deep tool choreography** — `agent_type: claude`
    ONLY with the operator-only `requires_claude_verified: true` flag (the
    planner-emitted `requires_claude` is an ABUSED signal since `.322-`.325 and

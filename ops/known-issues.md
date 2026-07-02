@@ -1902,6 +1902,21 @@ mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/
 and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
 "Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
 
+### PLANNER/RETRO MODEL SWITCH: Opus 4.8 -> Sonnet 5 2026-07-02 (outer-loop, "switch from opus 4.8 to sonnet 5")
+
+Edited `~/.config/systemd/user/carnot-conductor.service.d/10-gemini-routing.conf`:
+`AGENT_MODEL_PLANNER`/`AGENT_MODEL_RETRO` changed from `claude-opus-4-8` to `claude-sonnet-5`.
+`AGENT_TYPE_PLANNER`/`AGENT_TYPE_RETRO` unchanged (`claude`). `daemon-reload` + `restart
+carnot-conductor.service`; verified via `systemctl --user show carnot-conductor.service -p
+Environment`. Updated the one ACTIVE CLAUDE.md reference (Codex-Default-v2 rule's planner/retro
+exception) to reflect the new model; left historical/retired-section references untouched per
+never-prune.
+
+**NOT changed (scoped to the explicit ask):** `AGENT_MODEL_AUDIT` still defaults to
+`claude-opus-4-8` (hardcoded in `research_conductor.py:108`, no env override currently set) --
+the milestone-close adversarial audits stay on Opus 4.8 unless/until a separate directive extends
+the switch there.
+
 ### SYSTEMIC BUG: map_status_label MISSING "success" FROM _WIN_TOKENS — FIXED 2026-07-01 (outer-loop, "look at the violations first")
 
 **Traced from `.471`'s stuck activation loop (43 refusals over 1.5+ hours) to a real,
