@@ -238,7 +238,9 @@ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 # "Inference-Substrate Declaration Discipline" -- the forward-only 5th legal
 # value.
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
-ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = 0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
+ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
+    0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
+)
 
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
@@ -1351,9 +1353,7 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             continue
         declared_null_delta = _declared_null_delta_descriptor(d, k1, k2)
         if declared_null_delta is None:
-            declared_null_delta = _declared_arc_nondegenerate_firstwin_null_descriptor(
-                d, k1, k2
-            )
+            declared_null_delta = _declared_arc_nondegenerate_firstwin_null_descriptor(d, k1, k2)
         # Skip DECLARED control-vs-treatment HONEST NULLS. When an ablation artifact's own
         # honest_verdict declares a no-value null (verifier_router_no_value_added,
         # no_lever_raises_a_metric, ...), a control==treatment equality where one side is an
@@ -2467,9 +2467,7 @@ def _moat_rigor_headroom_state(d: dict[str, Any]) -> tuple[bool, str]:
                 f"below {MOAT_HEADROOM_MIN_DELTA:.2f}",
             )
 
-    flip_values = [
-        value for path_text, value in numeric if "flip" in path_text and value >= 0.0
-    ]
+    flip_values = [value for path_text, value in numeric if "flip" in path_text and value >= 0.0]
     if flip_values and max(flip_values) <= 0.0:
         return False, "flips evidence is zero"
 
@@ -2873,28 +2871,16 @@ L2_GOAL_INDUCTION_WITHOUT_SATISFIABILITY_CHECK_KIND = (
     "l2-goal-induction-without-satisfiability-check"
 )
 L2_GOAL_SATISFIABILITY_CHECK_OMITTED_KIND = "l2-goal-satisfiability-check-omitted"
-MULTI_LEVEL_WITHOUT_NONDEGENERATE_METRIC_KIND = (
-    "multi-level-without-nondegenerate-metric"
-)
-MULTI_LEVEL_NONDEGENERATE_METRIC_OMITTED_KIND = (
-    "multi-level-nondegenerate-metric-omitted"
-)
-SUBGOAL_SEARCH_WITHOUT_DECOMPOSITION_EVIDENCE_KIND = (
-    "subgoal-search-without-decomposition-evidence"
-)
-SUBGOAL_DECOMPOSITION_EVIDENCE_OMITTED_KIND = (
-    "subgoal-decomposition-evidence-omitted"
-)
+MULTI_LEVEL_WITHOUT_NONDEGENERATE_METRIC_KIND = "multi-level-without-nondegenerate-metric"
+MULTI_LEVEL_NONDEGENERATE_METRIC_OMITTED_KIND = "multi-level-nondegenerate-metric-omitted"
+SUBGOAL_SEARCH_WITHOUT_DECOMPOSITION_EVIDENCE_KIND = "subgoal-search-without-decomposition-evidence"
+SUBGOAL_DECOMPOSITION_EVIDENCE_OMITTED_KIND = "subgoal-decomposition-evidence-omitted"
 GENERATION_COVERAGE_WITHOUT_BASELINE_KIND = "generation-coverage-without-baseline"
 GENERATION_COVERAGE_BASELINE_OMITTED_KIND = "generation-coverage-baseline-omitted"
 NOVELTY_PROPOSAL_WITHOUT_ABLATION_KIND = "novelty-proposal-without-ablation"
 NOVELTY_PROPOSAL_ABLATION_OMITTED_KIND = "novelty-proposal-ablation-omitted"
-PROPOSAL_FILTER_WITHOUT_HELDOUT_REJECTION_KIND = (
-    "proposal-filter-without-heldout-rejection"
-)
-PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = (
-    "proposal-filter-heldout-rejection-omitted"
-)
+PROPOSAL_FILTER_WITHOUT_HELDOUT_REJECTION_KIND = "proposal-filter-without-heldout-rejection"
+PROPOSAL_FILTER_HELDOUT_REJECTION_OMITTED_KIND = "proposal-filter-heldout-rejection-omitted"
 PERCEPTION_OVERCLAIM_KIND = "perception-overclaim"
 PERCEPTION_OVERCLAIM_OMITTED_KIND = "perception-overclaim-omitted"
 LEVER_EXERCISE_EVIDENCE_DEGENERATE_KIND = "LEVER_EXERCISE_EVIDENCE_DEGENERATE"
@@ -3104,7 +3090,9 @@ def _has_measured_arc_live_metric(d: dict[str, Any]) -> bool:
             continue
         if kl.startswith("offline_") or "_offline" in kl:
             continue
-        if kl.startswith("live_") and (_is_finite_number(value) or isinstance(value, (dict, list, bool))):
+        if kl.startswith("live_") and (
+            _is_finite_number(value) or isinstance(value, (dict, list, bool))
+        ):
             return True
         if any(marker in kl for marker in _ARC_LIVE_METRIC_KEY_MARKERS) and (
             _is_finite_number(value) or isinstance(value, (dict, list))
@@ -3235,12 +3223,18 @@ def _has_positive_goal_energy_baseline_win_evidence(d: dict[str, Any]) -> bool:
             continue
         kl = str(key).lower()
         if (
-            any(kl == wanted or kl.endswith(f"_{wanted}") for wanted in _GOAL_ENERGY_POSITIVE_DELTA_KEYS)
+            any(
+                kl == wanted or kl.endswith(f"_{wanted}")
+                for wanted in _GOAL_ENERGY_POSITIVE_DELTA_KEYS
+            )
             and _is_finite_number(value)
             and float(value) > 0.0
         ):
             return True
-        if any(marker in kl for marker in _GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS) and value is True:
+        if (
+            any(marker in kl for marker in _GOAL_ENERGY_BEATS_BASELINE_KEY_MARKERS)
+            and value is True
+        ):
             return True
     for goal_key, baseline_key in _GOAL_ENERGY_BASELINE_PAIRS:
         goal = _finite_float(d, goal_key)
@@ -3273,12 +3267,17 @@ def _has_uniform_energy_ablation_evidence(value: Any) -> bool:
             if key in OFFLINE_ARC_DESCRIPTOR_METADATA_KEYS:
                 continue
             kl = str(key).lower()
-            if any(marker in kl for marker in _GOAL_ENERGY_ABLATION_KEY_MARKERS) and nested is not None:
+            if (
+                any(marker in kl for marker in _GOAL_ENERGY_ABLATION_KEY_MARKERS)
+                and nested is not None
+            ):
                 return True
             if (
                 kl in _GOAL_ENERGY_ABLATION_ARM_NAME_KEYS
                 and isinstance(nested, str)
-                and any(marker in nested.lower() for marker in _GOAL_ENERGY_ABLATION_ARM_VALUE_MARKERS)
+                and any(
+                    marker in nested.lower() for marker in _GOAL_ENERGY_ABLATION_ARM_VALUE_MARKERS
+                )
             ):
                 return True
             if _has_uniform_energy_ablation_evidence(nested):
@@ -3992,7 +3991,9 @@ def _byte_identical_online_arm_reason(d: dict[str, Any]) -> str | None:
     if len(items) < 3 or not all(marker in labels for marker in _LEVER_ONLINE_ARM_MARKERS):
         return None
     first_value = items[0][1]
-    if not all(_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]):
+    if not all(
+        _significant_digits_match(first_value, value, TAUTOLOGY_DIGITS) for _, value in items[1:]
+    ):
         return None
     formatted = ", ".join(f"{label}={value:.6g}" for label, value in items)
     return f"byte-identical online-driver arms to >{TAUTOLOGY_DIGITS} sig figs ({formatted})"
@@ -4122,8 +4123,7 @@ def check_lever_exercise_evidence(d: dict[str, Any], flags: list[Flag]) -> None:
             severity=_lever_exercise_severity(d),
             detail=(
                 "lever-exercise-evidence-degenerate: artifact declares a generation/exploration "
-                "lever, but its exercise evidence is degenerate: "
-                + "; ".join(unique_reasons[:6])
+                "lever, but its exercise evidence is degenerate: " + "; ".join(unique_reasons[:6])
             ),
         )
     )
@@ -4174,14 +4174,12 @@ def _claims_qd_energy_fitness_generation_win(d: dict[str, Any]) -> bool:
     winner_count = _finite_float(d, "winner_generated_count")
     if winner_count is not None and winner_count > 0.0:
         return True
-    return _has_positive_top_level_metric(
-        d, _QD_POSITIVE_DELTA_KEYS
-    ) or _has_positive_metric_pair(d, _QD_BASELINE_PAIRS)
+    return _has_positive_top_level_metric(d, _QD_POSITIVE_DELTA_KEYS) or _has_positive_metric_pair(
+        d, _QD_BASELINE_PAIRS
+    )
 
 
-def check_qd_random_mutation_ablation_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_qd_random_mutation_ablation_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag QD generation wins that do not beat random-mutation ablation."""
     if not _claims_qd_energy_fitness_claim(d):
         return
@@ -4243,9 +4241,7 @@ def _claims_value_routing_live_win(d: dict[str, Any]) -> bool:
     ) or _has_positive_metric_pair(d, _VALUE_ROUTING_BASELINE_PAIRS)
 
 
-def check_value_routing_cost_control_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_value_routing_cost_control_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag value-routing wins that do not report feature cost and no-timeout."""
     if not _claims_value_routing_live_claim(d):
         return
@@ -4368,9 +4364,7 @@ def _claims_l2_goal_induction_win(d: dict[str, Any]) -> bool:
     return _has_marker(text, _L2_WIN_TEXT_MARKERS)
 
 
-def check_l2_goal_induction_satisfiability_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_l2_goal_induction_satisfiability_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag L2 induction wins missing satisfiable-goal and reachable-plan controls."""
     if not _claims_l2_goal_induction_win(d):
         return
@@ -4447,16 +4441,16 @@ def _has_fixed_multilevel_metric_harness(d: dict[str, Any]) -> bool:
     for value in candidates:
         target_levels = _harness_target_levels(value, d)
         break_values = _harness_break_at_first_win(value, d)
-        if target_levels is not None and target_levels >= 2.0 and any(
-            flag is False for flag in break_values
+        if (
+            target_levels is not None
+            and target_levels >= 2.0
+            and any(flag is False for flag in break_values)
         ):
             return True
     return False
 
 
-def check_multilevel_nondegenerate_metric_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_multilevel_nondegenerate_metric_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag positive multi-level solve-rate claims missing the fixed harness."""
     if not _is_arc_artifact(d):
         return
@@ -4514,11 +4508,7 @@ def _claims_subgoal_search_new_level_win(d: dict[str, Any]) -> bool:
     if reproduced is not None and reproduced >= 1.0:
         return True
     reached = _max_real_field_number(d, "generic_agent_reached_level")
-    return (
-        reached is not None
-        and reached > 0.0
-        and _has_marker(text, _SUBGOAL_SEARCH_WIN_MARKERS)
-    )
+    return reached is not None and reached > 0.0 and _has_marker(text, _SUBGOAL_SEARCH_WIN_MARKERS)
 
 
 def _nontrivial_subgoal_decomposition(value: Any) -> bool:
@@ -4550,9 +4540,7 @@ def _has_nontrivial_subgoal_decomposition(d: dict[str, Any]) -> bool:
 
 def _real_field_all_true(d: dict[str, Any], wanted_key: str) -> bool:
     leaves = [
-        leaf
-        for value in _real_field_values(d, wanted_key)
-        for leaf in _bool_leaf_values(value)
+        leaf for value in _real_field_values(d, wanted_key) for leaf in _bool_leaf_values(value)
     ]
     return bool(leaves) and all(leaf is True for leaf in leaves)
 
@@ -4570,16 +4558,12 @@ def _subgoal_ablations_strictly_lower(d: dict[str, Any]) -> bool:
     )
 
 
-def check_subgoal_search_decomposition_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_subgoal_search_decomposition_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag subgoal-search wins missing decomposition and ablation evidence."""
     if not _claims_subgoal_search_new_level_win(d):
         return
     omitted = [
-        key
-        for key in _SUBGOAL_SEARCH_REQUIRED_EVIDENCE_KEYS
-        if not _real_field_values(d, key)
+        key for key in _SUBGOAL_SEARCH_REQUIRED_EVIDENCE_KEYS if not _real_field_values(d, key)
     ]
     if omitted:
         flags.append(
@@ -4623,10 +4607,7 @@ def check_subgoal_search_decomposition_overclaim(
 
 
 def _generation_coverage_text(d: dict[str, Any]) -> str:
-    return (
-        f"{_claim_text(d, _GENERATION_COVERAGE_CLAIM_TEXT_KEYS)} "
-        f"{_field_name_text(d)}"
-    )
+    return f"{_claim_text(d, _GENERATION_COVERAGE_CLAIM_TEXT_KEYS)} {_field_name_text(d)}"
 
 
 def _has_generation_coverage_context(d: dict[str, Any]) -> bool:
@@ -4652,9 +4633,7 @@ def _claims_generation_coverage_up(d: dict[str, Any]) -> bool:
     )
 
 
-def check_generation_coverage_baseline_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_generation_coverage_baseline_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag coverage-up claims that do not report the flat-search baseline."""
     if not _claims_generation_coverage_up(d):
         return
@@ -4708,9 +4687,7 @@ def _claims_controllable_novelty_new_level_win(d: dict[str, Any]) -> bool:
         return True
     reached = _max_real_field_number(d, "generic_agent_reached_level")
     return (
-        reached is not None
-        and reached > 0.0
-        and _has_marker(text, _NOVELTY_PROPOSAL_WIN_MARKERS)
+        reached is not None and reached > 0.0 and _has_marker(text, _NOVELTY_PROPOSAL_WIN_MARKERS)
     )
 
 
@@ -4727,16 +4704,12 @@ def _novelty_ablations_strictly_lower(d: dict[str, Any]) -> bool:
     )
 
 
-def check_novelty_proposal_ablation_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_novelty_proposal_ablation_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag controllable-novelty wins missing lower novelty ablations."""
     if not _claims_controllable_novelty_new_level_win(d):
         return
     omitted = [
-        key
-        for key in _NOVELTY_PROPOSAL_REQUIRED_EVIDENCE_KEYS
-        if not _real_field_values(d, key)
+        key for key in _NOVELTY_PROPOSAL_REQUIRED_EVIDENCE_KEYS if not _real_field_values(d, key)
     ]
     if omitted:
         flags.append(
@@ -4752,9 +4725,7 @@ def check_novelty_proposal_ablation_overclaim(
                 ),
             )
         )
-    if _novelty_ablations_strictly_lower(d) and _real_field_has_true(
-        d, "offline_reproduced"
-    ):
+    if _novelty_ablations_strictly_lower(d) and _real_field_has_true(d, "offline_reproduced"):
         return
     flags.append(
         Flag(
@@ -4794,9 +4765,7 @@ def _claims_proposal_filter_coverage_up(d: dict[str, Any]) -> bool:
         if value is not None and value > 0.0:
             return True
     filter_coverage = _max_real_field_number(d, "candidate_generation_coverage_filter")
-    blind_baseline = _max_real_field_number(
-        d, "candidate_generation_coverage_blind_baseline"
-    )
+    blind_baseline = _max_real_field_number(d, "candidate_generation_coverage_blind_baseline")
     if (
         filter_coverage is not None
         and blind_baseline is not None
@@ -4814,16 +4783,12 @@ def _has_finite_real_field_number(d: dict[str, Any], wanted_key: str) -> bool:
     return _max_real_field_number(d, wanted_key) is not None
 
 
-def check_proposal_filter_heldout_rejection_overclaim(
-    d: dict[str, Any], flags: list[Flag]
-) -> None:
+def check_proposal_filter_heldout_rejection_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag program-synthesis coverage wins missing held-out rejection evidence."""
     if not _claims_proposal_filter_coverage_up(d):
         return
     omitted = [
-        key
-        for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS
-        if not _real_field_values(d, key)
+        key for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS if not _real_field_values(d, key)
     ]
     if omitted:
         flags.append(
@@ -4840,8 +4805,7 @@ def check_proposal_filter_heldout_rejection_overclaim(
             )
         )
     evidence_ok = all(
-        _has_finite_real_field_number(d, key)
-        for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS
+        _has_finite_real_field_number(d, key) for key in _PROPOSAL_FILTER_REQUIRED_EVIDENCE_KEYS
     )
     if evidence_ok:
         return
@@ -4885,13 +4849,11 @@ def _claims_perception_attributable_win(d: dict[str, Any]) -> bool:
     if reproduced is not None and reproduced >= 1.0:
         return True
     reached = _max_real_field_number(d, "generic_agent_reached_level")
-    if (
-        reached is not None
-        and reached > 0.0
-        and _has_marker(text, _PERCEPTION_WIN_MARKERS)
-    ):
+    if reached is not None and reached > 0.0 and _has_marker(text, _PERCEPTION_WIN_MARKERS):
         return True
-    return _has_marker(text, _PERCEPTION_WIN_MARKERS) and _has_positive_perception_firstwin_metric(d)
+    return _has_marker(text, _PERCEPTION_WIN_MARKERS) and _has_positive_perception_firstwin_metric(
+        d
+    )
 
 
 def _perception_order1_ablation_strictly_lower(d: dict[str, Any]) -> bool:
@@ -4904,11 +4866,7 @@ def check_perception_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Flag perception-attributable wins missing order-1 ablation evidence."""
     if not _claims_perception_attributable_win(d):
         return
-    omitted = [
-        key
-        for key in _PERCEPTION_REQUIRED_EVIDENCE_KEYS
-        if not _real_field_values(d, key)
-    ]
+    omitted = [key for key in _PERCEPTION_REQUIRED_EVIDENCE_KEYS if not _real_field_values(d, key)]
     if omitted:
         flags.append(
             Flag(
@@ -5015,15 +4973,25 @@ def _grid_changing_correct_evidence(value: Any) -> tuple[str, float] | None:
 _S2_SCHEMA_TOKENS = ("s2", "offpath", "off_path", "trust_gate", "engine_selection", "engine_select")
 _EFFECTIVE_SPREAD_EPS = 1e-3
 _NO_VALUE_VERDICT_TOKENS = (
-    "no_live_trust_value", "no_trust", "no_value", "bounded", "does_not_beat",
-    "below_control", "inconclusive", "negative_result", "ties_control", "no_delta", "null",
+    "no_live_trust_value",
+    "no_trust",
+    "no_value",
+    "bounded",
+    "does_not_beat",
+    "below_control",
+    "inconclusive",
+    "negative_result",
+    "ties_control",
+    "no_delta",
+    "null",
 )
 _PASS_VERDICT_TOKENS = ("authorizes_s3", "trust_gate", "_passes", "_pass_", "success_")
 
 
 def _has_s2_schema_signal(d: dict[str, Any]) -> bool:
     blob = " ".join(
-        str(d.get(k, "")) for k in ("experiment", "experiment_id", "schema", "honest_verdict", "title")
+        str(d.get(k, ""))
+        for k in ("experiment", "experiment_id", "schema", "honest_verdict", "title")
     ).lower()
     return any(t in blob for t in _S2_SCHEMA_TOKENS)
 
@@ -5052,9 +5020,7 @@ def _candidate_outcome_values(rows: list[Any]) -> list[float]:
     under a different valid field being mis-counted as degenerate)."""
     for field in ("heldout_cell_recall", "offpath_structural_energy", "heldout_accuracy"):
         vals = [
-            float(r[field])
-            for r in rows
-            if isinstance(r, dict) and _is_finite_number(r.get(field))
+            float(r[field]) for r in rows if isinstance(r, dict) and _is_finite_number(r.get(field))
         ]
         if len(vals) >= 2:
             return vals
@@ -5095,7 +5061,9 @@ def _draws_selection_conclusion(d: dict[str, Any]) -> bool:
         return True
     for k, v in d.items():
         kl = k.lower()
-        if ("delta" in kl or "margin" in kl) and ("energy" in kl or "select" in kl or "trust" in kl):
+        if ("delta" in kl or "margin" in kl) and (
+            "energy" in kl or "select" in kl or "trust" in kl
+        ):
             if _is_finite_number(v) and float(v) <= 1e-9:  # zero or negative = no value
                 return True
     return False
