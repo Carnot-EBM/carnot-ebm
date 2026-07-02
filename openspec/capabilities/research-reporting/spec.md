@@ -264,6 +264,99 @@ truthfully, and does not modify `scripts/research_conductor.py`.
 |---|---|---|
 | REQ-REPORT-5123 | Implemented (`python/carnot/experiment_5123_v470_source_scope_audit.py`, `scripts/experiment_5123_v470_source_scope_audit.py`) | Implemented (`tests/python/test_experiment_5123_v470_source_scope_audit.py`) |
 
+### REQ-REPORT-5134: Archive .470 Close-State And Activate .471
+
+The Exp 5134 workflow SHALL aggregate milestone `2026.07.470` from
+`results/experiment_5133_capstone_v470.json`, the `.470` result artifacts it
+references, `research-complete.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and the `.471` roadmap
+state. It SHALL write
+`results/experiment_5134_archive_470_activate_471.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the `.470` close-state truthfully: local SOTA
+runtime provenance is clean; structured-energy pool/ranker provenance is
+quarantined when adversarially flagged; distributional-ranker utility delta is
+recorded as `0.0`; KAN certificates are positive; HUBO/2D-PT and TACO sampling
+show bounded positive progress while preserving TACO harm cases; FR-11 correctly
+refused promotion; and hardware continuity remains a no-speedup state.
+
+The workflow SHALL confirm
+`openspec/change-proposals/research-roadmap-vNEXT.md` names milestone
+`2026.07.471`. It SHALL inspect `research-roadmap-next.yaml` for milestone
+`2026.07.471` and task ids `exp5134` through `exp5145`. If
+`research-roadmap-next.yaml` is absent because the roadmap has already been
+activated, the workflow SHALL record that fact honestly, SHALL inspect
+`research-roadmap.yaml` for the activated `.471` task set, and SHALL NOT repair
+the missing next-roadmap file by editing either roadmap. The workflow SHALL also
+record whether `research-complete.yaml` contains `.470` so ledger gaps or
+duplicate ledger state remain visible.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `v470_runtime_clean`,
+`v470_structured_energy_quarantined`, `v470_distributional_delta`,
+`v470_kan_positive`, `v470_sampler_positive`, `v470_fr11_no_promote`,
+`v470_hardware_no_speedup`, `research_complete_has_v470`,
+`roadmap_next_present`, `active_roadmap_modified`, `conductor_modified`,
+`flagged_adversarial`, and `tests_run`. It SHOULD also record derived sections
+for runtime, structured energy, KAN, sampler/TACO, FR-11, hardware, ledger,
+vNEXT readiness, next-roadmap readiness, and active-roadmap fallback.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "terminal verdict with complete_/success_/blocked_ prefix"
+- `inference_substrate`: principle "substrate honesty"
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `v470_runtime_clean`: principle "predecessor truth"
+- `v470_structured_energy_quarantined`: principle "no contaminated downstream premise"
+- `v470_distributional_delta`: principle "utility accounting"
+- `v470_kan_positive`: principle "predecessor truth"
+- `v470_sampler_positive`: principle "predecessor truth"
+- `v470_fr11_no_promote`: principle "self-learning safety"
+- `v470_hardware_no_speedup`: principle "hardware claim discipline"
+- `research_complete_has_v470`: principle "ledger gap visibility"
+- `roadmap_next_present`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5134: Archive Artifact Records .470 Truth And .471 Readiness
+
+**Given** the `.470` capstone artifact, the `.470` result artifacts it
+references, `research-roadmap-next.yaml` naming `2026.07.471` with tasks
+`exp5134` through `exp5145`, and
+`openspec/change-proposals/research-roadmap-vNEXT.md` naming `2026.07.471`
+**When** the Exp 5134 workflow runs
+**Then** it writes the JSON artifact, records the clean runtime, quarantined
+structured-energy provenance, zero distributional delta, positive KAN state,
+positive bounded sampler/TACO state with harm cases, FR-11 no-promote state,
+hardware no-speedup state, research-complete ledger visibility, declares
+`aggregation_from_upstream_artifacts`, records adversarial verification, and
+sets `active_roadmap_modified=false` and `conductor_modified=false`.
+
+#### SCENARIO-REPORT-5134-ACTIVE-FALLBACK: Already-Activated .471 Is Preserved Without Mutation
+
+**Given** `research-roadmap-next.yaml` is absent
+**And** `research-roadmap.yaml` already names milestone `2026.07.471` with
+tasks `exp5134` through `exp5145`
+**When** the Exp 5134 workflow runs
+**Then** it writes a terminal artifact that records `roadmap_next_present=false`,
+records the active-roadmap fallback, keeps `active_roadmap_modified=false`,
+keeps `conductor_modified=false`, and does not recreate
+`research-roadmap-next.yaml`.
+
+## Implementation Status (REQ-REPORT-5134)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5134 | Planned (`python/carnot/experiment_5134_archive_470_activate_471.py`, `scripts/experiment_5134_archive_470_activate_471.py`) | Planned (`tests/python/test_experiment_5134_archive_470_activate_471.py`) |
+
 ### REQ-REPORT-5110: V469 Source Freshness And Task-Mapping Gate
 
 The Exp 5110 workflow SHALL inspect `research-references.md` between
