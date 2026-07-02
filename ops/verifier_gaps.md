@@ -510,6 +510,31 @@ registry version that closed them when a new verifier captures a previously-open
   program-induction verifier line; everything else (coverage, arm quality, quorum
   design) is now engineering.
 
+### GAP-4: Exp 5161 .473 forward-protocol pilot (n=60, bounded scale)
+
+**2026-07-02, outer-loop-corrected.** `results/experiment_5161_gap4_protocol_execution_pilot_v473.json`
+ran a bounded n=60 pilot of GAP-4's own "Forward protocol" (see above): rescored the existing cached
+candidate pool against a fresh held-out split, cluster-bootstrapped, ran the exact sign test. Result:
+`replicated_prior_direction=true`, `exact_test_discordant_wins=4`, `exact_test_discordant_losses=0`,
+`exact_test_p_value_two_sided=0.125` (independently reverified via `scipy.stats.binomtest(4, 4, 0.5)`
+-- matches exactly), `exact_test_passes_min6_rule=false` (short of the protocol's own documented
+≥6-discordant-win floor for two-sided p<0.05 at zero-loss design). **Honest verdict: direction
+replicates at this bounded scale, not yet statistically significant, scale-up recommended.**
+
+Was initially FLAGGED CRITICAL (DURATION_TOO_SHORT) and quarantined -- a substrate-mislabeling bug,
+not fabrication (the artifact's own `inference_substrate` field was structured as a `{principle,
+value}` dict, which `adversarial_verify.py`'s comparison logic cannot parse, so the check fell
+through to the generic compute-bound-marker fallback regardless of the declared value). Corrected and
+un-quarantined the same day (`linter_flag_corrigendum` in the artifact; live re-check clean, 0
+CRITICAL flags).
+
+**Still genuinely open:** the local-generator-arm (decentralization tier) was only cache-checked (one
+smoke call, an identity-function response), not run at real pilot scale -- GAP-4's decentralization
+requirement (CLAUDE.md rule 1) remains untested. The 400-task sandboxed re-confirmation on genuinely
+held-out ARC-AGI-2/ConceptARC tasks (the protocol's full bar for `status: filled`) also has not run.
+`status` stays **open — FIRST POSITIVE LANDED, now with a bounded-scale (n=60) directional replication
+on top, still short of the significance floor and the decentralization tier.**
+
 ### GAP-4 Agreement Selector Closure (Exp 4023)
 - status: retired as selector R&D; agreement is a CONFIDENCE LABEL ONLY, not a precision selector.
 - evidence aggregated: chain-arms adversarial report narrowed the result to unestablished precision
