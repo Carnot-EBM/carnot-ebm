@@ -9892,3 +9892,5 @@ web search: |
 | 2026-07-02 06:50 UTC | PHASE B3 TACO scale -- diagnose guarded harmful in | OK | 89 passed, 1 warning in 26.48s |
 | 2026-07-02 07:05 UTC | PHASE C1 continuous self-learning -- OpenSkill/K2V | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-02 07:25 UTC | PHASE C2 hardware continuity -- hash-matched KV260 | OK | 89 passed, 1 warning in 8.61s |
+| 2026-07-02 07:42 UTC | PHASE C3 capstone -- reconcile receipt-backed gene | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-02 07:44 UTC | Milestone 2026.07.472 activated | OK | 6 tasks queued |
