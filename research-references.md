@@ -25948,3 +25948,105 @@ unknown in this block.
   certificate explanations, and hardware-compatible sampling telemetry.
 
 <!-- V470-PLANNER-REFERENCES-END -->
+
+## V471 Planner References - 2026-07-01
+
+These references were added during planning for milestone `2026.07.471`. They are scoped to
+locally executable Carnot work: receipt-backed structured generation, exact solver verification,
+symbolic certificate distillation, hardware-compatible sampling telemetry, and no-weight continuous
+self-learning.
+
+### OpenSkill-Style Self-Evolving Verification Anchors
+- **Source:** OpenSkill: Exploring Self-Evolving Agents for Open-Ended Skill Acquisition,
+  arXiv:2606.06741 - https://arxiv.org/abs/2606.06741; implementation:
+  https://github.com/OpenLAIR/OpenSkill
+- **Tracks:** open-ended skill acquisition, self-generated tasks, verification signals, autonomous
+  improvement without target-task supervision
+- **Carnot hook:** OpenSkill is a concrete external analogue for FR-11 that bootstraps practice tasks
+  and verification signals from open resources. Carnot should adapt the idea only where exact solvers
+  or executable validators can anchor the generated tasks.
+- **Actionability:** Add a no-weight self-learning experiment that builds verification anchors and
+  virtual tasks from exact CSP/solver traces, validates them against held-out instances, and promotes
+  only on positive held-out utility plus nonforgetting.
+
+### K2V-Style Verifiable Data Synthesis
+- **Source:** K2V: Reinforcing Knowledge-Rich Reasoning with Verifiable Data, arXiv:2605.18261 -
+  https://arxiv.org/abs/2605.18261
+- **Tracks:** RLVR, automated data synthesis, knowledge-intensive reasoning, process verification
+- **Carnot hook:** K2V supports Carnot's direction of generating training/evaluation cases from
+  verifiable resources, but Carnot must avoid graph-grounding verifier reruns retired by the exclusion
+  manifest. The transferable piece is the verifier-anchored data-generation loop, not its domain.
+- **Actionability:** Combine with OpenSkill for the V471 FR-11 task: synthesize virtual constraint
+  tasks from exact traces, attach solver receipts, and require rollback when validation does not improve.
+
+### Symbolic-KAN For Interpretable Certificate Residuals
+- **Source:** Symbolic-KAN: Interpretable Kolmogorov-Arnold Networks with Symbolic Structures,
+  arXiv:2603.23854 - https://arxiv.org/abs/2603.23854
+- **Tracks:** Kolmogorov-Arnold Networks, symbolic primitives, interpretable functions, discrete
+  structure discovery
+- **Carnot hook:** V470 produced sound KAN certificate explanations on a narrow family. Symbolic-KAN
+  offers a way to distill learned residual/certificate behavior into explicit primitives that can be
+  rechecked by exact code.
+- **Actionability:** Extend the certificate path with symbolic primitive distillation, cycle
+  reconstruction, false-property controls, and abstention near residual margins.
+
+### Solver-Verified Formulation Generation And Selection
+- **Source:** Solver-Verified Formulation Generation and Selection with Large Language Models,
+  arXiv:2606.29366 - https://arxiv.org/abs/2606.29366
+- **Tracks:** optimization modeling, formulation generation, problem-model-code triples, solver
+  feedback, feasibility restoration, formulation selection
+- **Carnot hook:** This is a non-FoVer structured-reasoning route that keeps a solver as the source of
+  truth. It directly addresses the V470 gap where answer rankers were not useful beyond cheap exact
+  baselines.
+- **Actionability:** Add a formulation-selector experiment on small exact-checkable OR/CSP tasks,
+  comparing solver-verified generated formulations against static hand formulations and cheap repair
+  baselines.
+
+### Reward-Guided Energy-Based Decoding
+- **Source:** Training-Free Reward-Guided Decoding with Energy-Based Models, arXiv:2605.28020 -
+  https://arxiv.org/abs/2605.28020
+- **Tracks:** energy-guided decoding, reward-guided generation, constrained generation, frozen LLMs,
+  prior anchoring
+- **Carnot hook:** V466 found guided decoding underpowered, but V470 repaired runtime provenance enough
+  to try a narrower exact-validator version. The key control is distinguishing true guided decoding
+  from best-of-N reranking under matched token and validator budgets.
+- **Actionability:** Run a gated V471 guided-decoding task only after receipt-backed structured pools are
+  clean, with fixed token/NFE accounting, rerank-only controls, and exact validator authority.
+
+### Verification-Trace Abstention And Structured Output Controls
+- **Sources:** VeriFY: Factual Self-Verification via Stage Loss Masking, arXiv:2602.02018 -
+  https://arxiv.org/abs/2602.02018; SLOT: Structuring the Output of Large Language Models,
+  arXiv:2505.04016 - https://arxiv.org/abs/2505.04016
+- **Tracks:** hallucination mitigation, self-verification traces, structured outputs, schema fidelity,
+  abstention
+- **Carnot hook:** Carnot's verifier should measure coverage-risk and harmful-answer reduction, not only
+  top-line accuracy. Structured outputs are useful when they expose validator-readable fields and
+  abstention decisions.
+- **Actionability:** Add a verification-trace experiment that records answer, structured evidence,
+  self-check, and abstention fields, then scores each field against exact validators.
+
+### Partitioned Probabilistic Computing Telemetry
+- **Sources:** Programmable Probabilistic Computer with 1 Million P-bits, arXiv:2606.25313 -
+  https://arxiv.org/abs/2606.25313; Probabilistic Computers for MIMO, arXiv:2601.09037 -
+  https://arxiv.org/abs/2601.09037; RXMC temperature optimization, arXiv:2601.13542 -
+  https://arxiv.org/abs/2601.13542
+- **Tracks:** p-bits, FPGA partitioning, residual energy exponents, replica exchange, boundary
+  synchronization, hardware-friendly sampling
+- **Carnot hook:** V470's exact-checked 2D-PT sampler is the right software reference. The next hardware
+  question is not speedup; it is whether partition telemetry, boundary refresh, and residual-energy
+  decay can be measured in a way that maps to KV260/GateMate/PolarFire workloads.
+- **Actionability:** Add a CPU exact-check partition study with boundary refresh ratios and residual
+  energy exponents, then use the authenticated board task only for hash-matched transcripts and timing
+  evidence with no speedup claim unless sample quality is also shown.
+
+### Extropic TSU And Kona Architecture Watch
+- **Sources:** Extropic TSU hardware overview - https://extropic.ai/writing; Logical Intelligence Kona -
+  https://logicalintelligence.com/
+- **Tracks:** thermodynamic sampling hardware, energy-based constraint layers, proof-guided AI systems
+- **Carnot hook:** Both sources validate Carnot's high-level thesis: energy/constraint layers should sit
+  under generative models and hardware samplers should eventually execute Boltzmann-like updates. Neither
+  source gives Carnot local TSU/Kona execution evidence.
+- **Actionability:** Keep these in architecture rationale only. V471 hardware tasks must report local
+  KV260/GateMate/PolarFire transcripts or explicitly state blockers; no Extropic TSU execution claim.
+
+<!-- V471-PLANNER-REFERENCES-END -->

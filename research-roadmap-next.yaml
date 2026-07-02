@@ -1,0 +1,876 @@
+milestone: 2026.07.471
+milestone_title: RECEIPT-BACKED STRUCTURED GENERATION + SYMBOLIC CERTIFICATES + FR-11 ANCHORS
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp5134-archive-470-activate-471
+  milestone: 2026.07.471
+  title: PHASE 0A transition -- archive .470 truth, activate .471, and preserve no-FoVer retirement state
+  priority: critical
+  track: planning
+  deliverable: results/experiment_5134_archive_470_activate_471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 25
+  operator_override: "2026-05-29 operator directive (standing): routine milestone-transition continuation -- false-positive scope-match vs prior archive tasks; advances .470 to .471 and records new close-state."
+  prior_failures:
+  - experiment_id: exp5109-archive-468-activate-469
+    verdict: blocked_research_roadmap_next_missing
+    addressed_by: "The .471 roadmap is pre-staged as research-roadmap-next.yaml before activation, and this archive records the completed .470 state rather than depending on a missing next-roadmap file."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    You are archiving milestone 2026.07.470 and activating 2026.07.471. All .470 tasks completed. The close-state is mixed: local SOTA runtime provenance is clean; structured pool provenance was adversarial-flagged; distributional ranker utility was zero and audit skipped; KAN certificates, HUBO/2D-PT, and TACO traces had clean progress; FR-11 correctly refused promotion; hardware continuity remained no-speedup. Do not modify research-roadmap.yaml.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - research-program.md
+    - _bmad/prd.md
+    - _bmad/architecture.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/conductor-log.md
+    - research-complete.yaml
+    - research-roadmap.yaml
+    - research-roadmap-next.yaml
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_5133_capstone_v470.json
+    - ops/exclusion_manifest.yaml
+    - openspec/capabilities/research-reporting/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Write an archive/activation artifact that truthfully captures the .470 close-state, confirms the .471 pre-staged roadmap is present, and records any ledger gap such as research-complete.yaml not yet containing .470.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5134_archive_470_activate_471.py following the local experiment template and no-root-scratch discipline.
+    2. Parse results/experiment_5133_capstone_v470.json and the .470 result artifacts it references.
+    3. Record V470 facts: runtime clean, structured-energy provenance quarantined, ranker zero-delta, KAN positive, sampler positive, TACO bounded positive with harm cases, FR-11 no-promote, and hardware no-speedup continuity.
+    4. Confirm openspec/change-proposals/research-roadmap-vNEXT.md names milestone 2026.07.471.
+    5. Confirm research-roadmap-next.yaml names milestone 2026.07.471 and includes exp5134-exp5145.
+    6. Confirm research-roadmap.yaml and scripts/research_conductor.py were not modified by this task.
+    7. Write results/experiment_5134_archive_470_activate_471.json with the required artifact fields below.
+    8. Run YAML parsing and any available artifact/adversarial verification that does not modify scripts/research_conductor.py.
+    9. Update ops/status.md and ops/changelog.md only if this task actually changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5134-archive-470-activate-471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "aggregation_from_upstream_artifacts" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - source_artifacts_read (principle: evidence provenance)
+    - v470_runtime_clean (principle: predecessor truth)
+    - v470_structured_energy_quarantined (principle: no contaminated downstream premise)
+    - v470_distributional_delta (principle: utility accounting)
+    - v470_kan_positive (principle: predecessor truth)
+    - v470_sampler_positive (principle: predecessor truth)
+    - v470_fr11_no_promote (principle: self-learning safety)
+    - v470_hardware_no_speedup (principle: hardware claim discipline)
+    - research_complete_has_v470 (principle: ledger gap visibility)
+    - roadmap_next_present (principle: activation readiness)
+    - active_roadmap_modified: false (principle: operator instruction compliance)
+    - conductor_modified: false (principle: conductor immutability)
+    - flagged_adversarial (principle: adversarial-verification accountability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5134_archive_470_activate_471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5135-v471-source-scope-audit
+  milestone: 2026.07.471
+  title: PHASE 0B source/scope audit -- verify V471 references, SOTA model discipline, and retired-scope avoidance
+  priority: critical
+  track: planning
+  deliverable: results/experiment_5135_v471_source_scope_audit.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  estimated_wall_time_min: 30
+  prompt: |
+    CONTEXT:
+    The V471 planner added fresh 2025-2026 references to research-references.md before designing the milestone. Before implementation-heavy work runs, verify that each task maps to a source or local continuation, that LLM tasks include mandated SOTA GGUF models, and that no task reruns retired FoVer or other exclusion-manifest scopes.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - research-program.md
+    - research-references.md
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - research-roadmap-next.yaml
+    - results/experiment_5133_capstone_v470.json
+    - ops/exclusion_manifest.yaml
+    - scripts/conductor_gates.py
+    - openspec/capabilities/research-reporting/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Produce a source/scope audit artifact for .471 that verifies source freshness, task mappings, SOTA GGUF requirements, structured gates, and no-doomed-rerun discipline.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5135_v471_source_scope_audit.py following the local experiment template.
+    2. Confirm research-references.md contains the V471 planner references block.
+    3. For each V471 task, map the motivating source or upstream local artifact.
+    4. Confirm every task that needs LLM inference requires MODEL_SPECS and at least one mandated GGUF: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or unsloth/gemma-4-26B-A4B-it-GGUF.
+    5. Confirm no task re-proposes the retired FoVer in-domain pool, selector, audit, or residual-memory FR-11 scope.
+    6. Check ops/exclusion_manifest.yaml for retired experiment IDs or scopes that would hard-block .471.
+    7. Confirm structured gated_on entries exist for every task that depends on a prior artifact condition.
+    8. Write results/experiment_5135_v471_source_scope_audit.json with the required artifact fields below.
+    9. Run YAML parsing and any available roadmap schema/preflight lint that does not modify scripts/research_conductor.py.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5135-v471-source-scope-audit" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "metadata_and_source_audit" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - v471_reference_block_found (principle: source freshness)
+    - task_source_map (principle: source-to-experiment traceability)
+    - sota_model_discipline_ok (principle: local-first model accountability)
+    - structured_gates_ok (principle: conductor speedup accountability)
+    - fover_same_scope_rerun_found: false (principle: no doomed rerun)
+    - exclusion_manifest_conflicts (principle: retired-scope accountability)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5135_v471_source_scope_audit.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5136-receipt-structured-pool-v2-v471
+  milestone: 2026.07.471
+  title: PHASE A1 receipt-backed structured pool v2 -- clean non-FoVer exact-constraint substrate
+  priority: high
+  track: verification
+  deliverable: results/experiment_5136_receipt_structured_pool_v2_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 150
+  gated_on:
+  - upstream: exp5134-archive-470-activate-471
+    artifact_field: v470_runtime_clean
+    op: "=="
+    value: true
+  prior_failures:
+  - experiment_id: exp5125-structured-reasoning-pool-v470
+    verdict: complete_structured_reasoning_pool_ready
+    addressed_by: "V470's pool was marked ready but adversarial-flagged for duration/provenance evidence; this attempt changes the acceptance evidence by requiring model/prompt/command/duration/validator receipts and a clean adversarial verification pass."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V470 generated a useful non-FoVer structured pool, but the artifact was adversarial-flagged for duration/provenance evidence. V471 must repair the substrate before any ranker, guided-decoding, or abstention result can be trusted. Use local mandated GGUF models through the cached SOTA path; legacy small models are smoke tests only.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_5124_clean_sota_runtime_provenance_v470.json
+    - results/experiment_5125_structured_reasoning_pool_v470.json
+    - research-references.md
+    - python/carnot/pipeline/
+    - python/carnot/verify/
+    - scripts/adversarial_verify.py
+    - openspec/capabilities/llm-ebm-inference/spec.md
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Build a receipt-backed structured reasoning pool v2 over exact-checkable non-FoVer tasks. The pool must include complete provenance for prompts, models, commands, wall-clock duration, generated candidates, validator outputs, and hashes.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5136_receipt_structured_pool_v2_v471.py following the local experiment template.
+    2. Load exp5124 and exp5125; hard-block if local SOTA runtime provenance is not clean or if any attempted path depends on FoVer.
+    3. Define 100-160 exact-checkable structured tasks across at least three families such as small TACO/CSP, OR allocation/formulation cases, Knights-and-Knaves, travel/budget constraints, and code/property checks.
+    4. Generate candidates with MODEL_SPECS that include all mandated local GGUFs: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF. Prefer cached_sota_pair() and record exact model paths.
+    5. For each generation batch, write receipt records with prompt hash, model spec, endpoint/command, wall-clock start/stop, raw response hash, parsed candidate hash, and validator output hash.
+    6. Score candidates with exact validators only; do not use an LLM judge as ground truth.
+    7. Compute oracle@K, cheap baseline@1, parse coverage, duplicate rate, family headroom, and duration-floor evidence.
+    8. Run adversarial verification on the artifact. Set structured_pool_v2_clean=true only if the pool passes size, coverage, headroom, provenance, duration, and adversarial checks.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5136-receipt-structured-pool-v2-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "local_sota_gguf_generation_with_receipts_and_exact_validators" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - MODEL_SPECS (principle: mandated local SOTA model provenance)
+    - preconditions_checked (principle: gate accountability)
+    - receipt_records (principle: evidence provenance)
+    - duration_floor_evidence (principle: adversarial verification readiness)
+    - task_families (principle: benchmark diversity)
+    - pool_path (principle: data provenance)
+    - pool_sha256 (principle: reproducibility)
+    - pool_n (principle: sample-size accountability)
+    - candidates_per_item (principle: oracle headroom accountability)
+    - exact_validators_used (principle: deterministic ground truth)
+    - oracle_at_k (principle: headroom)
+    - cheap_baseline_at_1 (principle: baseline adequacy)
+    - parse_coverage (principle: candidate usability)
+    - duplicate_rate (principle: leakage/no-degenerate pool)
+    - structured_pool_v2_clean (principle: structured downstream gate)
+    - adversarial_verify_passed (principle: no quarantined substrate headline)
+    - verifier_is_oracle: false (principle: no oracle verifier headline)
+    - fover_scope_used: false (principle: no doomed rerun)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5136_receipt_structured_pool_v2_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5137-solver-verified-formulation-selector-v471
+  milestone: 2026.07.471
+  title: PHASE A2 solver-verified formulation selector -- ORLA-style generation against static baselines
+  priority: high
+  track: verification
+  deliverable: results/experiment_5137_solver_verified_formulation_selector_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 120
+  gated_on:
+  - upstream: exp5136-receipt-structured-pool-v2-v471
+    artifact_field: structured_pool_v2_clean
+    op: "=="
+    value: true
+  prior_failures:
+  - experiment_id: exp5126-distributional-energy-ranker-v470
+    verdict: complete_distributional_energy_ranker_evaluated_not_ready_for_audit
+    addressed_by: "This task changes the deliverable from answer-candidate ranking to solver-verified formulation generation/selection with feasibility repair on a clean receipt-backed pool."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V470's distributional ranker did not beat the strongest cheap baseline. V471 tests a different non-FoVer structured-reasoning route inspired by solver-verified formulation generation: ask a local SOTA model for problem-model-code formulations, verify them with a solver, and select among formulations using exact feedback.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_5126_distributional_energy_ranker_v470.json
+    - results/experiment_5136_receipt_structured_pool_v2_v471.json
+    - research-references.md
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - openspec/capabilities/llm-ebm-inference/spec.md
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Evaluate whether solver-verified formulation generation and selection provides utility beyond static hand formulations and cheap feasibility-repair baselines on exact-checkable OR/CSP tasks.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5137_solver_verified_formulation_selector_v471.py following the local experiment template.
+    2. Load exp5136 and hard-block unless structured_pool_v2_clean is true.
+    3. Select or generate a subset of exact-checkable OR/CSP tasks where multiple formulations are plausible and small enough for exact or solver verification.
+    4. Use MODEL_SPECS with the mandated local GGUFs to generate formulation candidates as structured problem-model-code records: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF.
+    5. Verify each formulation with a solver backend and exact post-checks; record feasibility restoration separately from original model quality.
+    6. Compare the formulation selector against static hand formulation, random valid formulation, cheapest-feasible repair, and direct-answer baselines.
+    7. Report selector delta, CI95, feasibility rate, wrong-label count, solve effort, and family-holdout behavior.
+    8. Set formulation_selector_ready=true only if the selector improves over the strongest static/cheap baseline with no wrong labels and controls pass.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5137-solver-verified-formulation-selector-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "local_sota_gguf_formulation_generation_with_solver_verification" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - MODEL_SPECS (principle: mandated local SOTA model provenance)
+    - upstream_pool_artifact (principle: data provenance)
+    - formulation_families (principle: task diversity)
+    - pmc_records_path (principle: problem-model-code evidence)
+    - solver_backend (principle: verifier authority)
+    - feasibility_restoration_used (principle: repair transparency)
+    - selector_delta_vs_best_static (principle: utility beyond cheap baseline)
+    - delta_ci95 (principle: statistical caution)
+    - wrong_label_count (principle: exact correctness)
+    - solve_effort_delta (principle: solver utility)
+    - formulation_selector_ready (principle: downstream readiness)
+    - fover_scope_used: false (principle: no doomed rerun)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5137_solver_verified_formulation_selector_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5138-ets-ebd-guided-decoding-v471
+  milestone: 2026.07.471
+  title: PHASE A3 energy-guided decoding -- exact-validator reward with matched token and NFE controls
+  priority: high
+  track: decoding
+  deliverable: results/experiment_5138_ets_ebd_guided_decoding_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 150
+  gated_on:
+  - upstream: exp5136-receipt-structured-pool-v2-v471
+    artifact_field: structured_pool_v2_clean
+    op: "=="
+    value: true
+  prior_failures:
+  - experiment_id: exp5075-dccd-guided-decoding-scale-v466
+    verdict: complete_dccd_guided_frontier_no_headline_underpowered
+    addressed_by: "This attempt uses clean local SOTA provenance, a receipt-backed structured pool, exact-validator rewards, rerank-only controls, and matched token/NFE accounting instead of broad underpowered DCCD claims."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Prior guided-decoding work was underpowered and should not be headlined. V471 may retry a narrow energy-guided decoding question only because V470 repaired local SOTA runtime provenance and exp5136 is required to repair the structured pool. The result must distinguish actual guided decoding from best-of-N reranking under matched budgets.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_5075_dccd_guided_decoding_scale_v466.json
+    - results/experiment_5136_receipt_structured_pool_v2_v471.json
+    - research-references.md
+    - python/carnot/inference/
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - openspec/capabilities/llm-ebm-inference/spec.md
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Run a small exact-validator energy-guided decoding experiment with frozen local GGUF models, matched token/NFE budgets, and rerank-only controls.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5138_ets_ebd_guided_decoding_v471.py following the local experiment template.
+    2. Load exp5136 and hard-block unless structured_pool_v2_clean is true.
+    3. Select tasks where partial structured outputs can be scored by deterministic validators or constraint penalties during generation.
+    4. Use MODEL_SPECS with the mandated local GGUFs for all headline LLM runs: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF.
+    5. Implement or adapt a training-free energy/reward-guided decoding loop that records validator calls, token budgets, and energy updates. If local logprob telemetry is unavailable, block honestly rather than fabricating guided evidence.
+    6. Compare unguided generation, best-of-N reranking, fixed-token reranking, and guided decoding with matched token and validator-call budgets.
+    7. Report exact-validator success, violation rate, guided_decoding_delta versus the strongest matched control, CI95, token/NFE accounting, and runtime receipts.
+    8. Set guided_decoding_ready=true only when controls are differentiated, exact-validator authority is intact, and the strongest matched control is beaten.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5138-ets-ebd-guided-decoding-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "local_sota_gguf_energy_guided_decoding_or_blocked" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - MODEL_SPECS (principle: mandated local SOTA model provenance)
+    - upstream_pool_artifact (principle: data provenance)
+    - exact_validator_authority (principle: ground-truth accountability)
+    - controls_differentiated (principle: no rerank-only masquerade)
+    - rerank_only_control (principle: baseline adequacy)
+    - token_nfe_accounting (principle: cost fairness)
+    - guided_decoding_delta (principle: utility)
+    - delta_ci95 (principle: statistical caution)
+    - violation_rate_delta (principle: constraint quality)
+    - logprob_or_blocker_evidence (principle: process telemetry honesty)
+    - guided_decoding_ready (principle: downstream readiness)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5138_ets_ebd_guided_decoding_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5139-abstention-and-verification-trace-v471
+  milestone: 2026.07.471
+  title: PHASE A4 verification traces -- structured self-check and abstention scored by exact validators
+  priority: high
+  track: verification
+  deliverable: results/experiment_5139_abstention_verification_trace_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 120
+  gated_on:
+  - upstream: exp5136-receipt-structured-pool-v2-v471
+    artifact_field: structured_pool_v2_clean
+    op: "=="
+    value: true
+  prompt: |
+    CONTEXT:
+    Carnot's hallucination work needs coverage-risk and abstention telemetry, not only top-line accuracy. Recent self-verification and structured-output work suggests recording answer, evidence, self-check, and abstention fields, then judging them with exact validators rather than an LLM judge.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_5136_receipt_structured_pool_v2_v471.json
+    - research-references.md
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - openspec/capabilities/llm-ebm-inference/spec.md
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Evaluate structured self-verification traces and abstention decisions on the receipt-backed pool. The exact validator is the authority for correctness; model self-checks are features to evaluate, not ground truth.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5139_abstention_verification_trace_v471.py following the local experiment template.
+    2. Load exp5136 and hard-block unless structured_pool_v2_clean is true.
+    3. Define a JSON/SLOT-style output schema with answer, evidence fields, self-check result, uncertainty or abstention decision, and optional repair attempt.
+    4. Use MODEL_SPECS with the mandated local GGUFs for headline trace generation: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF.
+    5. Score answer correctness, evidence validity, self-check calibration, abstention correctness, and repair correctness using exact validators only.
+    6. Compare to non-abstaining direct answer, confidence threshold, and exact-constraint-only filter baselines.
+    7. Report coverage-risk curve, harmful-answer reduction, false-abstain rate, and abstention_delta against the strongest baseline.
+    8. Set verification_trace_ready=true only if harmful answers decrease without unacceptable coverage collapse and schema validity is high.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5139-abstention-and-verification-trace-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "local_sota_gguf_structured_verification_trace" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - MODEL_SPECS (principle: mandated local SOTA model provenance)
+    - upstream_pool_artifact (principle: data provenance)
+    - trace_schema (principle: structured-output accountability)
+    - schema_validity_rate (principle: parseability)
+    - exact_validator_authority (principle: ground-truth accountability)
+    - coverage_risk_curve (principle: abstention utility)
+    - abstention_delta (principle: utility beyond baseline)
+    - harmful_answer_reduction (principle: hallucination mitigation)
+    - false_abstain_rate (principle: coverage cost)
+    - strongest_baseline (principle: baseline adequacy)
+    - verification_trace_ready (principle: downstream readiness)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5139_abstention_verification_trace_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5140-symbolic-kan-certificate-distillation-v471
+  milestone: 2026.07.471
+  title: PHASE B1 symbolic KAN certificates -- distill residual rules and cycle-check explanations
+  priority: high
+  track: kan
+  deliverable: results/experiment_5140_symbolic_kan_certificate_distillation_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    V470 produced clean KAN certificate explanation breadth on a bounded family. V471 should extend that positive result by distilling certificate residual behavior into symbolic primitives and checking whether explanations reconstruct the original formal property and verdict.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - results/experiment_5128_kan_certificate_explanation_breadth_v470.json
+    - research-references.md
+    - python/carnot/models/
+    - python/carnot/verify/
+    - tests/python/
+    - openspec/capabilities/research-harnesses/spec.md
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Build a symbolic-KAN certificate distillation experiment that converts learned residual/certificate behavior into explicit primitive rules, then cycle-checks the explanation against exact property/verdict metadata.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py following the local experiment template.
+    2. Load exp5128 and its generated certificate/explanation artifacts; block honestly if the upstream data is unavailable.
+    3. Define a compact symbolic primitive set appropriate for the certificate families, such as monotone segments, threshold clauses, affine intervals, and bounded residual rules.
+    4. Fit or extract symbolic primitives from the KAN certificate residuals without using an LLM judge.
+    5. Cycle-check each symbolic explanation by reconstructing property metadata, verdict, margin, and abstention condition through exact code.
+    6. Include false-property, label-shuffle, near-margin, and family-holdout controls.
+    7. Report symbolic equivalence rate, certificate soundness, abstention rate, false-property detection, and complexity of distilled rules.
+    8. Set symbolic_kan_ready=true only when soundness is preserved and false-property controls pass.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5140-symbolic-kan-certificate-distillation-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "exact_checked_symbolic_kan_distillation" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - exp5128_loaded (principle: upstream evidence)
+    - symbolic_primitives (principle: interpretability)
+    - distilled_rules_path (principle: artifact provenance)
+    - symbolic_equivalence_rate (principle: explanation fidelity)
+    - certificate_soundness (principle: formal correctness)
+    - cycle_reconstruction_rate (principle: explanation cycle consistency)
+    - false_property_detected (principle: adversarial control)
+    - near_margin_abstention_rate (principle: uncertainty control)
+    - family_holdout_results (principle: generalization caution)
+    - symbolic_kan_ready (principle: downstream readiness)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5141-hubo-partition-residual-exponent-v471
+  milestone: 2026.07.471
+  title: PHASE B2 partition telemetry -- exact-checked HUBO residual exponents and boundary refresh ratios
+  priority: high
+  track: sampling
+  deliverable: results/experiment_5141_hubo_partition_residual_exponent_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 100
+  prompt: |
+    CONTEXT:
+    V470 built a clean exact-checked adaptive HUBO 2D-PT CPU reference. V471 should extend it toward hardware-compatible telemetry without claiming hardware speedup: partitioned sampling, boundary refresh ratios, residual-energy decay, and exact enumeration checks.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - results/experiment_5129_hubo_adaptive_2dpt_cpu_v470.json
+    - research-references.md
+    - python/carnot/sampling/
+    - python/carnot/models/
+    - tests/python/
+    - openspec/capabilities/research-harnesses/spec.md
+    - openspec/capabilities/hardware-samplers/spec.md
+
+    TASK:
+    Measure partitioned HUBO/2D-PT sampler telemetry on CPU with exact enumeration, using boundary refresh ratios and residual-energy exponents that can later map to KV260/GateMate/PolarFire workloads.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5141_hubo_partition_residual_exponent_v471.py following the local experiment template.
+    2. Load exp5129 and reuse its exact-checked HUBO/2D-PT reference when available.
+    3. Generate small exact-enumerable HUBO/Ising instances with monolithic and partitioned update variants.
+    4. Sweep partition layouts, boundary refresh ratios, temperature ladders, and residual-energy measurement windows.
+    5. Verify detailed balance or record the exact blocker for any variant that cannot satisfy it.
+    6. Compare optimum-hit rate, residual-energy exponent, boundary mismatch rate, and effective sample quality against monolithic CPU reference and unguided baselines.
+    7. Write board-ready workload descriptors with hashes, but do not execute hardware or claim speedup in this task.
+    8. Set partition_telemetry_ready=true only when exact enumeration checks pass and telemetry is stable enough for the hardware transcript task.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5141-hubo-partition-residual-exponent-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "cpu_exact_checked_partitioned_hubo_2dpt" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - exp5129_baseline_loaded (principle: upstream evidence)
+    - partition_configs (principle: reproducibility)
+    - boundary_refresh_ratios (principle: hardware-mapping telemetry)
+    - residual_energy_exponents (principle: sampler-quality telemetry)
+    - exact_enumeration_checked (principle: correctness)
+    - detailed_balance_evidence (principle: sampler validity)
+    - monolithic_reference (principle: baseline adequacy)
+    - board_ready_workload_descriptors (principle: hardware handoff)
+    - partition_telemetry_ready (principle: downstream readiness)
+    - hardware_speedup_claimed: false (principle: hardware claim discipline)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5141_hubo_partition_residual_exponent_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5142-taco-harm-rootcause-scale-v471
+  milestone: 2026.07.471
+  title: PHASE B3 TACO scale -- diagnose guarded harmful instances and repair effort gates
+  priority: high
+  track: solver
+  deliverable: results/experiment_5142_taco_harm_rootcause_scale_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    V470's TACO held-out CSP trace suite preserved exact labels and reduced guarded effort slightly, but harmful guarded instances remained. V471 should scale the suite and isolate why sampler features hurt some instances before self-learning uses the traces.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - scripts/experiment_template.py
+    - results/experiment_5130_taco_heldout_csp_trace_suite_v470.json
+    - python/carnot/verify/
+    - python/carnot/pipeline/
+    - tests/python/
+    - openspec/capabilities/research-harnesses/spec.md
+    - openspec/capabilities/pipeline/spec.md
+
+    TASK:
+    Expand the TACO/CSP trace suite, root-cause harmful guarded instances, and repair the effort gate without changing exact labels or promoting unsafe sampler features.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5142_taco_harm_rootcause_scale_v471.py following the local experiment template.
+    2. Load exp5130 and reproduce its baseline, guarded, and sampler-feature measurements.
+    3. Expand to at least 80 held-out exact-checkable CSP instances across multiple families or difficulty bands.
+    4. Measure baseline effort, guarded effort, sampler-feature effort, exact labels, and any label disagreements.
+    5. Cluster harmful guarded instances by features such as degree, constraint density, near-tie score, sampler entropy, and branching factor.
+    6. Implement a conservative harm gate or abstention rule that rejects sampler features on identified harmful regimes.
+    7. Report effort reduction, harmful-instance count, wrong-label count, root-cause clusters, and ablation results.
+    8. Set trace_suite_v2_ready=true only if wrong_label_count is zero and the repaired guard reduces or eliminates harmful guarded cases without erasing all useful effort reduction.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5142-taco-harm-rootcause-scale-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "exact_checked_taco_csp_trace_suite" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - exp5130_baseline_loaded (principle: upstream evidence)
+    - instance_count (principle: sample-size accountability)
+    - task_families (principle: coverage)
+    - harmful_instance_root_causes (principle: failure analysis)
+    - average_effort_reduction_ratio_guarded (principle: utility)
+    - harmful_instance_count_guarded (principle: safety)
+    - wrong_label_count (principle: exact correctness)
+    - repaired_harm_gate (principle: safety mechanism)
+    - ablation_results (principle: causal caution)
+    - trace_suite_v2_ready (principle: downstream readiness)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5142_taco_harm_rootcause_scale_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5143-openskill-k2v-self-learning-v471
+  milestone: 2026.07.471
+  title: PHASE C1 continuous self-learning -- OpenSkill/K2V verifier anchors with no-weight promotion gate
+  priority: critical
+  track: self-learning
+  deliverable: results/experiment_5143_openskill_k2v_self_learning_v471.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 120
+  gated_on:
+  - upstream: exp5142-taco-harm-rootcause-scale-v471
+    artifact_field: trace_suite_v2_ready
+    op: "=="
+    value: true
+  prior_failures:
+  - experiment_id: exp5131-fr11-case-policy-self-learning-v470
+    verdict: complete_fr11_case_policy_no_promote_validation_harm_gate_closed
+    addressed_by: "This attempt changes the self-learning mechanism from replay/case policy only to verifier-anchor and virtual-task synthesis inspired by OpenSkill/K2V, while preserving no-weight updates and rollback."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    FR-11 requires continuous self-learning, but V470 correctly refused promotion at zero held-out delta. V471 tests a different no-weight route inspired by OpenSkill and K2V: synthesize verifier anchors and virtual exact-checkable tasks from trusted traces, then promote only if held-out utility improves and nonforgetting holds.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - research-program.md
+    - _bmad/prd.md
+    - scripts/experiment_template.py
+    - python/carnot/inference/sota_models.py
+    - results/experiment_5131_fr11_case_policy_self_learning_v470.json
+    - results/experiment_5142_taco_harm_rootcause_scale_v471.json
+    - research-references.md
+    - python/carnot/pipeline/
+    - python/carnot/verify/
+    - openspec/capabilities/pipeline/spec.md
+    - openspec/capabilities/llm-ebm-inference/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Build a no-weight continuous self-learning experiment that creates verifier anchors and virtual exact-checkable tasks, evaluates them on held-out CSP/structured traces, and promotes only under strict held-out and nonforgetting gates.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5143_openskill_k2v_self_learning_v471.py following the local experiment template.
+    2. Load exp5142 and hard-block unless trace_suite_v2_ready is true.
+    3. Use MODEL_SPECS with the mandated local GGUFs only to propose candidate anchors, hints, or virtual tasks; exact solvers and validators remain the authority. The mandated local GGUFs are unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and unsloth/gemma-4-26B-A4B-it-GGUF.
+    4. Build a verification_anchor_manifest from solver receipts, constraint templates, failure clusters, and exact labels.
+    5. Generate a virtual_task_manifest with tasks that can be solved or rejected by exact validators without reading hidden test labels.
+    6. Train or update only a no-weight policy, memory, routing table, or case selector. Do not update LLM weights.
+    7. Compare against no-learning, V470 case-policy baseline, random anchor selection, and exact-constraint-only guard.
+    8. Evaluate heldout_delta, nonforgetting_delta, harmful-regime behavior, and rollback. Set promotion_safe=true only when heldout_delta > 0, nonforgetting holds, and no exact labels are corrupted.
+    9. Always write rollback_receipt, even on success, showing how to disable the learned anchors.
+    10. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5143-openskill-k2v-self-learning-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "no_weight_self_learning_with_exact_verifier_anchors" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - continuous_self_learning_task: true (principle: research-program coverage)
+    - MODEL_SPECS (principle: mandated local SOTA model provenance)
+    - source_trace_artifacts (principle: evidence provenance)
+    - verification_anchor_manifest (principle: verifier-anchored learning)
+    - virtual_task_manifest (principle: self-generated practice traceability)
+    - heldout_delta (principle: promotion utility)
+    - nonforgetting_delta (principle: regression safety)
+    - harmful_regime_delta (principle: safety)
+    - wrong_label_count (principle: exact correctness)
+    - promotion_safe (principle: FR-11 safety gate)
+    - rollback_receipt (principle: reversibility)
+    - no_weight_update: true (principle: local safe adaptation)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5143_openskill_k2v_self_learning_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5144-authenticated-board-workload-v471
+  milestone: 2026.07.471
+  title: PHASE C2 hardware continuity -- hash-matched KV260 GateMate PolarFire workload transcripts
+  priority: high
+  track: hardware
+  deliverable: results/experiment_5144_authenticated_board_workload_v471.json
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  estimated_wall_time_min: 120
+  operator_override: "2026-05-29 operator directive (standing): hardware-continuity tasks may look like prior hardware attempts but are required while boards remain attached; this scope requires new hash-matched workload transcripts and no speedup claim."
+  prior_failures:
+  - experiment_id: exp5132-authenticated-board-timing-v470
+    verdict: complete_authenticated_board_blockers_cpu_residual_no_speedup_claim
+    addressed_by: "This attempt changes the acceptance evidence by requiring a checked-in safe workload manifest, workload hashes, and authenticated board transcripts; if the safe workload is still missing, it records a terminal blocker and retires same-scope timing claims."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V470 confirmed KV260 and PolarFire reachability but did not have a safe checked-in KV260 UIO workload with hash-matched timing/sample-quality evidence. V471 should convert board reachability into authenticated workload transcripts where possible, while preserving no-speedup discipline. Do not touch host /dev/mmcblk* for KV260; use SSH to the board.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - research-hardware-wishlist.md
+    - results/experiment_5132_authenticated_board_timing_v470.json
+    - results/experiment_5141_hubo_partition_residual_exponent_v471.json
+    - ops/hardware/
+    - scripts/
+    - openspec/capabilities/hardware-samplers/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Produce authenticated local board workload transcripts for KV260, GateMate, and PolarFire where available. If a board or safe workload is unavailable, write an honest blocked/no-speedup artifact with precise blockers. No Extropic TSU execution claim is allowed.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5144_authenticated_board_workload_v471.py following the local experiment template.
+    2. Check preconditions without destructive commands: KV260 via ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'; PolarFire via ssh; GateMate via openFPGALoader DirtyJTAG detection if available.
+    3. Never inspect, mount, or write host /dev/mmcblk* devices for KV260.
+    4. Load exp5141 board-ready workload descriptors if present. If no safe checked-in workload manifest exists, record the blocker and keep no_speedup_claim=true.
+    5. For each reachable board and safe workload, record command transcript, workload hash, bitstream or executable hash, timing measurements, and sample-quality or correctness evidence.
+    6. For GateMate, use the known DirtyJTAG/openFPGALoader path and do not depend on nonexistent nextpnr-gatemate commands.
+    7. For PolarFire, record SSH dispatch transcript and hashes only; do not infer speedup from reachability.
+    8. Set hardware_workload_transcripts_ready=true only if at least one local board has hash-matched timing and sample-quality/correctness evidence. Otherwise write a blocked artifact with exact blockers.
+    9. Update ops/status.md and ops/changelog.md only if this task changes repository state beyond the result artifact.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5144-authenticated-board-workload-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "local_board_transcripts_or_blocked" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - preconditions_checked (principle: hardware safety)
+    - kv260_ssh_checked (principle: board reachability)
+    - kv260_host_block_devices_touched: false (principle: hardware safety)
+    - safe_workload_manifest (principle: workload provenance)
+    - workload_hashes (principle: reproducibility)
+    - kv260_timing_transcript (principle: board evidence)
+    - gatemate_transcript (principle: board evidence)
+    - polarfire_transcript (principle: board evidence)
+    - timing_measurements (principle: measured evidence)
+    - sample_quality_evidence (principle: no empty speed claim)
+    - hardware_workload_transcripts_ready (principle: downstream readiness)
+    - no_speedup_claim (principle: hardware claim discipline)
+    - extropic_tsu_execution_claimed: false (principle: substrate honesty)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5144_authenticated_board_workload_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp5145-capstone-v471
+  milestone: 2026.07.471
+  title: PHASE C3 capstone -- reconcile receipt-backed generation, symbolic certificates, FR-11, and hardware evidence
+  priority: critical
+  track: capstone
+  deliverable: results/experiment_5145_capstone_v471.json
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  estimated_wall_time_min: 60
+  operator_override: "2026-05-29 operator directive (standing): routine capstone continuation -- false-positive scope-match vs prior capstone tasks; aggregates .471 artifacts and does not rerun science."
+  prior_failures:
+  - experiment_id: exp5133-capstone-v470
+    verdict: complete_capstone_v470_runtime_clean_exact_solver_progress_structured_energy_quarantined_fr11_no_promote_hardware_continuity
+    addressed_by: "This is a routine next-milestone capstone over new .471 artifacts; it must aggregate rather than rerun and must retire or quarantine any same-verdict failures produced by .471."
+    retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V471 tested receipt-backed structured generation, solver-verified formulation selection, energy-guided decoding, abstention traces, symbolic KAN certificates, partitioned sampler telemetry, TACO harm gates, OpenSkill/K2V-style self-learning anchors, and authenticated board transcripts. The capstone must reconcile the evidence without overstating any blocked or quarantined result.
+
+    EXISTING CODE TO READ FIRST:
+    - CLAUDE.md
+    - CODEX.md
+    - research-program.md
+    - _bmad/prd.md
+    - _bmad/architecture.md
+    - ops/status.md
+    - ops/changelog.md
+    - ops/conductor-log.md
+    - research-complete.yaml
+    - research-roadmap.yaml
+    - research-roadmap-next.yaml
+    - openspec/change-proposals/research-roadmap-vNEXT.md
+    - results/experiment_5134_archive_470_activate_471.json
+    - results/experiment_5135_v471_source_scope_audit.json
+    - results/experiment_5136_receipt_structured_pool_v2_v471.json
+    - results/experiment_5137_solver_verified_formulation_selector_v471.json
+    - results/experiment_5138_ets_ebd_guided_decoding_v471.json
+    - results/experiment_5139_abstention_verification_trace_v471.json
+    - results/experiment_5140_symbolic_kan_certificate_distillation_v471.json
+    - results/experiment_5141_hubo_partition_residual_exponent_v471.json
+    - results/experiment_5142_taco_harm_rootcause_scale_v471.json
+    - results/experiment_5143_openskill_k2v_self_learning_v471.json
+    - results/experiment_5144_authenticated_board_workload_v471.json
+    - openspec/capabilities/research-reporting/spec.md
+    - openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Write the V471 capstone artifact. Aggregate upstream artifacts, classify each result as clean, blocked, quarantined, no-promote, or retired, and propose V472 recommendations grounded in the evidence.
+
+    CONCRETE STEPS:
+    1. Create scripts/experiment_5145_capstone_v471.py following the local experiment template.
+    2. Load every upstream V471 artifact that exists. If a task was gated/skipped, record the gate condition and do not fabricate missing evidence.
+    3. Summarize whether exp5136 repaired the structured-pool provenance problem and whether downstream tasks should be trusted.
+    4. Summarize solver-formulation, guided-decoding, and abstention results against strongest baselines.
+    5. Summarize symbolic-KAN, partition telemetry, and TACO harm-rootcause results as clean progress, blocked, or insufficient.
+    6. Summarize FR-11 self-learning outcome as safe promotion, rollback/no-promote, or blocked, with held-out and nonforgetting evidence.
+    7. Summarize hardware as transcript-ready or blocked, with no speedup claim unless sample-quality evidence justifies otherwise.
+    8. Recommend V472 tasks and retire same-scope reruns that produced the same blocked/no-utility verdict.
+    9. Write results/experiment_5145_capstone_v471.json with the required artifact fields below.
+    10. Update ops/status.md, ops/changelog.md, and research-complete.yaml only according to existing repository practice and only after the artifact is written.
+
+    REQUIRED ARTIFACT FIELDS:
+    - experiment_id: "exp5145-capstone-v471" (principle: traceability)
+    - milestone: "2026.07.471" (principle: milestone accountability)
+    - honest_verdict (principle: terminal verdict with complete_/success_/blocked_ prefix)
+    - inference_substrate: "aggregation_from_v471_artifacts" (principle: substrate honesty)
+    - duration_s (principle: timing accountability)
+    - upstream_artifacts_read (principle: evidence provenance)
+    - source_scope_audit_state (principle: source discipline)
+    - structured_generation_state (principle: substrate accountability)
+    - solver_formulation_state (principle: utility accounting)
+    - guided_decoding_state (principle: decoding accountability)
+    - abstention_trace_state (principle: hallucination mitigation accounting)
+    - kan_symbolic_state (principle: certificate accountability)
+    - sampling_partition_state (principle: sampler telemetry)
+    - taco_harm_state (principle: solver safety)
+    - fr11_state (principle: continuous self-learning accountability)
+    - hardware_state (principle: board evidence accountability)
+    - no_speedup_claim_preserved (principle: hardware claim discipline)
+    - retire_or_quarantine_recommendations (principle: no doomed rerun)
+    - next_milestone_recommendations (principle: roadmap continuity)
+    - conductor_modified: false (principle: conductor immutability)
+    - tests_run (principle: verification evidence)
+
+    Run command: JAX_PLATFORMS=cpu {project_root}/.venv/bin/python scripts/experiment_5145_capstone_v471.py --date {date}
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
