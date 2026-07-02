@@ -9890,3 +9890,4 @@ web search: |
 | 2026-07-02 06:14 UTC | PHASE B1 symbolic KAN certificates -- distill resi | OK | 87 passed, 1 warning in 8.24s |
 | 2026-07-02 06:30 UTC | PHASE B2 partition telemetry -- exact-checked HUBO | OK | 89 passed, 1 warning in 30.02s |
 | 2026-07-02 06:50 UTC | PHASE B3 TACO scale -- diagnose guarded harmful in | OK | 89 passed, 1 warning in 26.48s |
+| 2026-07-02 07:05 UTC | PHASE C1 continuous self-learning -- OpenSkill/K2V | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
