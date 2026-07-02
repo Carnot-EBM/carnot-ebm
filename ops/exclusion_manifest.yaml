@@ -620,3 +620,27 @@ retired_extras:
   - fover in-domain pool
   - in-domain verifier selection versus tuned self-consistency
   - fover selector adversarial audit
+- id: generation_axis_exploration_signal_retired_exp5154_v473
+  experiment_scope: ARC first-contact candidate-generation exploration-signal tweaks
+    on unsolved games after novelty, program-synthesis filter, and energy-as-fitness
+    QD nulls
+  reason: 'retire_if_same_verdict: Exp 5154 is the third independent null on better
+    exploration signals for first-contact candidate generation after Exp 4688 and
+    Exp 4689. Future reruns need an operator_override citing a genuinely new mechanism;
+    deepen-wall cross-level warm-starts and representation/perception fixes are outside
+    this retired scope.'
+  experiment_ids:
+  - exp4688
+  - exp4689
+  - exp5154
+  retired_milestone: 2026.07.473
+  retired_by_artifact: results/experiment_5154_energy_fitness_directed_exploration_v472.json
+  recorded_by_artifact: results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - first-contact candidate-generation rerun
+  - first contact exploration signal rerun
+  - novelty-bonus first-contact rerun
+  - program-synthesis first-contact rerun
+  - energy-as-fitness first-contact rerun

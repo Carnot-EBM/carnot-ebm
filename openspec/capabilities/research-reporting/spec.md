@@ -561,11 +561,83 @@ conductor-like process
 `runtime_clean_details`, and uses a complete-prefixed verdict that makes the
 activation gate visibly dirty instead of silently proceeding as clean.
 
+### REQ-REPORT-5165: Exp 5165 Generation-Axis Exploration-Signal Retirement Hygiene
+
+The Exp 5165 workflow SHALL retire only the three-times-nulled ARC
+generation-axis exploration-signal scope for first-contact candidate generation
+on unsolved games. It SHALL read
+`results/experiment_4688_controllable_novelty_proposal_policy_live.json`,
+`results/experiment_4689_program_synthesis_action_effect_proposal_filter.json`,
+`results/experiment_5154_energy_fitness_directed_exploration_v472.json`,
+`ops/exclusion_manifest.yaml`, `ops/known-issues.md`, `research-roadmap.yaml`,
+and `scripts/exclusion_manifest_lint.py`. It SHALL write
+`results/experiment_5165_generation_axis_retirement_hygiene_v473.json`, SHALL
+NOT modify `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="metadata_and_source_audit"`.
+
+The workflow SHALL require `ops/exclusion_manifest.yaml` to contain a
+`retired_extras` entry with id
+`generation_axis_exploration_signal_retired_exp5154_v473`, experiment ids
+`exp4688`, `exp4689`, and `exp5154`, `retired_milestone=2026.07.473`,
+`operator_reopen_required=true`, `retire_if_same_verdict=true`, and
+`blocked_patterns` that are load-bearing through
+`scripts/exclusion_manifest_lint.py`'s `BLOCKED_PATTERN_MATCHED` check.
+
+The workflow SHALL scope the retirement narrowly. It SHALL block future reruns
+that propose another better exploration signal over the search/generation
+process for first-contact candidate generation on an unsolved game. It SHALL
+NOT block the `.473` deepen-wall warm-start/cross-level state-carryover tasks
+`exp5157`, `exp5158`, or `exp5159`, and SHALL NOT retire future
+representation/perception-level first-contact fixes.
+
+The artifact SHALL include top-level fields
+`exclusion_manifest_entry_added`, `entry_id`,
+`false_positive_check_against_this_milestone`, `synthetic_match_check_passed`,
+`known_issues_or_gaps_md_updated`, and `honest_verdict`. It SHOULD also record
+the manifest-entry audit, current-roadmap lint findings, synthetic-match lint
+findings, source-artifact summaries, source inputs read, and tests run.
+
+Required field principles:
+
+- `exclusion_manifest_entry_added`: principle "manifest retirement must be present and schema-compatible"
+- `entry_id`: principle "traceability to the retired_extras entry"
+- `false_positive_check_against_this_milestone`: principle "Must confirm the new entry does not accidentally block this milestone's own deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound."
+- `synthetic_match_check_passed`: principle "Confirms the retirement is load-bearing, not just documentation -- per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
+- `known_issues_or_gaps_md_updated`: principle "dated retirement note preserves the allocation decision without deleting prior gap history"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5165-LINT: Retirement Blocks Matching Future Reruns
+
+**Given** the manifest contains the Exp 5165 retired-extras entry
+**When** a synthetic draft roadmap task proposes a curiosity driven first
+contact exploration signal rerun without `operator_override`
+**Then** `scripts/exclusion_manifest_lint.py` reports
+`BLOCKED_PATTERN_MATCHED` for
+`generation_axis_exploration_signal_retired_exp5154_v473` with HARD severity,
+and the Exp 5165 artifact records `synthetic_match_check_passed=true`.
+
+#### SCENARIO-REPORT-5165-NARROW-SCOPE: Deepen-Wall Tasks Remain Unblocked
+
+**Given** the active `.473` roadmap contains `exp5157`, `exp5158`, and
+`exp5159` deepen-wall warm-start/cross-level carryover tasks
+**When** `scripts/exclusion_manifest_lint.py` scans `research-roadmap.yaml`
+with the Exp 5165 retired-extras entry present
+**Then** no `BLOCKED_PATTERN_MATCHED` risk from
+`generation_axis_exploration_signal_retired_exp5154_v473` is emitted for those
+task ids, and the Exp 5165 artifact records
+`false_positive_check_against_this_milestone=true`.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5156 | Planned (`python/carnot/experiment_5156_archive_472_activate_473.py`, `results/experiment_5156_archive_472_activate_473.json`) | Planned (`tests/python/test_experiment_5156_archive_472_activate_473.py`) |
+
+## Implementation Status (REQ-REPORT-5165)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5165 | Planned (`python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py`, `results/experiment_5165_generation_axis_retirement_hygiene_v473.json`) | Planned (`tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 

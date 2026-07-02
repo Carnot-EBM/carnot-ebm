@@ -1,0 +1,200 @@
+{
+  "adversarial_verification": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "results/experiment_5165_generation_axis_retirement_hygiene_v473.json"
+    ],
+    "exit_code": 0,
+    "flagged_adversarial": false,
+    "flags": [],
+    "green": true,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"results/experiment_5165_generation_axis_retirement_hygiene_v473.json\",\n      \"loaded\": true,\n      \"exp_id\": \"experiment_5165_generation_axis_retirement_hygiene_v473\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: generation_axis_exploration_signal_scope_retired_and_lint_load_bearing\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "current_roadmap_lint": {
+    "all_risks": [
+      {
+        "detail": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "retirement_reason": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "severity": "WARNING",
+        "task_id": "exp5156-archive-472-activate-473",
+        "task_title": "PHASE 0 transition -- archive .472 truth (three partial ARC hardening results, not nulls), activate .473",
+        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
+      },
+      {
+        "detail": "46 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "retirement_reason": "46 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "severity": "WARNING",
+        "task_id": "exp5166-hardware-continuity-board-timing-v473",
+        "task_title": "PHASE F1 hardware continuity -- authenticated KV260/GateMate/PolarFire board timing transcripts",
+        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
+      }
+    ],
+    "deepen_wall_entry_risks": [],
+    "deepen_wall_task_ids": [
+      "exp5157-deepen-warmstart-replay-ablation-v473",
+      "exp5158-deepen-goal-energy-ranker-replay-v473",
+      "exp5159-deepen-live-levelup-attempt-v473"
+    ],
+    "entry_blocked_pattern_risks": [],
+    "entry_blocked_pattern_task_ids": [],
+    "passed": true,
+    "roadmap_path": "research-roadmap.yaml"
+  },
+  "duration_s": 0.0001,
+  "entry_id": "generation_axis_exploration_signal_retired_exp5154_v473",
+  "exclusion_manifest_entry_added": true,
+  "experiment": "experiment_5165_generation_axis_retirement_hygiene_v473",
+  "experiment_id": "exp5165-generation-axis-retirement-hygiene-v473",
+  "false_positive_check_against_this_milestone": true,
+  "field_principles": {
+    "entry_id": "traceability to the retired_extras entry",
+    "exclusion_manifest_entry_added": "manifest retirement must be present and schema-compatible",
+    "false_positive_check_against_this_milestone": "Must confirm the new entry does not accidentally block this milestone's own deepen-wall tasks -- an over-broad retirement would be a self-inflicted wound.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "known_issues_or_gaps_md_updated": "dated retirement note preserves the allocation decision without deleting prior gap history",
+    "synthetic_match_check_passed": "Confirms the retirement is load-bearing, not just documentation -- per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent."
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "complete: generation_axis_exploration_signal_scope_retired_and_lint_load_bearing",
+  "inference_substrate": "metadata_and_source_audit",
+  "known_issues_or_gaps_doc": {
+    "exists": true,
+    "marker": "2026-07-02 (RETIREMENT): generation-axis exploration-signal first-contact reruns closed after exp5154",
+    "path": "ops/known-issues.md",
+    "updated": true
+  },
+  "known_issues_or_gaps_md_updated": true,
+  "manifest_entry_audit": {
+    "blocked_patterns": [
+      "first-contact candidate-generation rerun",
+      "first contact exploration signal rerun",
+      "novelty-bonus first-contact rerun",
+      "program-synthesis first-contact rerun",
+      "energy-as-fitness first-contact rerun"
+    ],
+    "entry_id": "generation_axis_exploration_signal_retired_exp5154_v473",
+    "errors": [],
+    "found": true
+  },
+  "milestone": "2026.07.473",
+  "random_seed": 5165,
+  "reproducibility_checksum": "sha256:2cbb3585c911ef474651c9a30ec993d7b790b8aaab54e245a455a6c1dd4b67db",
+  "result_path": "results/experiment_5165_generation_axis_retirement_hygiene_v473.json",
+  "run_date": "20260702",
+  "schema": "carnot.experiment_5165_generation_axis_retirement_hygiene.v1",
+  "source_artifact_summary": {
+    "exp4688": {
+      "generic_agent_reached_level": 0,
+      "honest_verdict": "complete: controllable_novelty_no_new_level_residual_winning_prefix_still_not_proposed",
+      "loadable": true,
+      "offline_reproduced": false,
+      "path": "results/experiment_4688_controllable_novelty_proposal_policy_live.json"
+    },
+    "exp4689": {
+      "candidate_generation_coverage_filter": 0.0,
+      "coverage_delta": 0.0,
+      "honest_verdict": "complete: program_synthesis_filter_no_coverage_gain_residual_logged",
+      "loadable": true,
+      "path": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json"
+    },
+    "exp5154": {
+      "honest_verdict": "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0",
+      "loadable": true,
+      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+      "reproducible_levels_delta": 0,
+      "winning_trajectory_surfaced": false
+    }
+  },
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_4688_controllable_novelty_proposal_policy_live.json",
+      "sha256": "sha256:48927da3f9d483f4936d56a1e572e9eb1d0f937ca0cc4c532781c5254c62013f",
+      "source_id": "exp4688"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_4689_program_synthesis_action_effect_proposal_filter.json",
+      "sha256": "sha256:bf6220a9da8c56c8e357b17bb8e12067f42f0a0c67d5534393fb07a8c799a184",
+      "source_id": "exp4689"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+      "sha256": "sha256:c40e1ebd194672c757b4f0e26b61f4458905dbbf0806ea77d0d71c0bb78a3f53",
+      "source_id": "exp5154"
+    },
+    {
+      "exists": true,
+      "kind": "ops_yaml",
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:b995835876f79f5d36f61139ffd1b81417e93f7cbc9ba4abc65cc762443b0e2b",
+      "source_id": "exclusion_manifest"
+    },
+    {
+      "exists": true,
+      "kind": "ops_doc",
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:95b6654ba5a1ae413c46df345613301126e4c58cac72f1ffcf720e537e51eb57",
+      "source_id": "known_issues"
+    },
+    {
+      "exists": true,
+      "kind": "roadmap_yaml",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:a03fa410e75238d6c8124fd6237307a750eecdfb3a47f823c06b0b299dbaed25",
+      "source_id": "active_roadmap"
+    },
+    {
+      "exists": true,
+      "kind": "script",
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:26d6e4e5cfb28adca06e6818259a592e8ebbb7eaa5e39534a403a51907f96191",
+      "source_id": "exclusion_manifest_lint"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5165",
+    "SCENARIO-REPORT-5165-LINT",
+    "SCENARIO-REPORT-5165-NARROW-SCOPE"
+  ],
+  "synthetic_match_check_passed": true,
+  "synthetic_match_lint": {
+    "all_risks": [
+      {
+        "detail": "task title/prompt matches retired_extras blocked_pattern(s): generation_axis_exploration_signal_retired_exp5154_v473:'first contact exploration signal rerun'",
+        "retirement_reason": "retire_if_same_verdict: Exp 5154 is the third independent null on better exploration signals for first-contact candidate generation after Exp 4688 and Exp 4689. Future reruns need an operator_override",
+        "severity": "HARD",
+        "task_id": "exp9999-curiosity-driven-first-contact-exploration-signal-rerun",
+        "task_title": "curiosity driven first contact exploration signal rerun",
+        "violation_class": "BLOCKED_PATTERN_MATCHED"
+      }
+    ],
+    "matched_risks": [
+      {
+        "detail": "task title/prompt matches retired_extras blocked_pattern(s): generation_axis_exploration_signal_retired_exp5154_v473:'first contact exploration signal rerun'",
+        "retirement_reason": "retire_if_same_verdict: Exp 5154 is the third independent null on better exploration signals for first-contact candidate generation after Exp 4688 and Exp 4689. Future reruns need an operator_override",
+        "severity": "HARD",
+        "task_id": "exp9999-curiosity-driven-first-contact-exploration-signal-rerun",
+        "task_title": "curiosity driven first contact exploration signal rerun",
+        "violation_class": "BLOCKED_PATTERN_MATCHED"
+      }
+    ],
+    "passed": true,
+    "synthetic_title": "curiosity driven first contact exploration signal rerun"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q -o addopts=''",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' -m pytest tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5165_generation_axis_retirement_hygiene_v473.py' --fail-under=100",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
