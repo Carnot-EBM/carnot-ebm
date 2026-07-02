@@ -32054,3 +32054,67 @@ content-addressed `reproducibility_checksum`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5161 | Planned (`python/carnot/experiment_5161_gap4_protocol_execution_pilot.py`) | Planned (`tests/python/test_experiment_5161_gap4_protocol_execution_pilot.py`) |
+
+### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
+
+The Exp 5162 workflow SHALL produce
+`results/experiment_5162_sota_ingestion_multilevel_v473.json` for the
+reserved `.473` SOTA-ingestion slot. The workflow SHALL read the full
+`V473 Outer-Loop Planner References` section of `research-references.md`,
+SHALL spot-check two or more cited arXiv IDs against fetched arXiv abstract
+pages, SHALL run only the low-concurrency reliable discovery channel
+(`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, and bounded manual
+fetches of selected sources), and SHALL NOT invoke `/deep-research`, high
+fan-out harnesses, live training, leaderboard submission, or
+`scripts/research_conductor.py`.
+
+The workflow SHALL treat Exp5157, Exp5158, and Exp5159 as conditioning inputs
+when their result artifacts are present. If the simple ReDRAW/DynaMITE
+carryover arms fail or are gate-blocked, outcome-conditioned recommendations
+SHALL emphasize adaptive retention, selective reset, and representation-level
+fixes rather than scaling a successful residual warm-start. If the carryover
+arms pass, recommendations SHALL emphasize scalable modular world-model
+libraries. The workflow SHALL append, not rewrite, a `V474 Planner References`
+section to `research-references.md`; if no genuinely new incremental findings
+exist after the V473 sweep, the appended section SHALL say so honestly rather
+than padding weak matches.
+
+The artifact SHALL include principle-annotated top-level fields
+`v473_citations_spot_checked`, `incremental_findings`,
+`outcome_conditioned_findings`, `secondary_findings`,
+`references_md_updated`, `bottom_line_recommendation`, and `honest_verdict`.
+It SHOULD also include `experiment_id`, `milestone`, `inference_substrate`,
+`search_window`, `upstream_outcome_summary`, `queries_run`, `sources_fetched`,
+`no_deep_research_used`, `conductor_modified`, and `tests_run` so later
+roadmap planning can audit what was actually searched and verified.
+
+Required field principles:
+
+- `v473_citations_spot_checked`: principle "list of fetched arXiv IDs and whether each resolved to the cited title/topic."
+- `incremental_findings`: principle "Every entry must trace to a fetched real arXiv ID or URL; zero findings is valid when no post-V473 novelty is found."
+- `outcome_conditioned_findings`: principle "Search and recommendations are conditioned on the actual Exp5157/Exp5158/Exp5159 outcomes, not on the original plan."
+- `secondary_findings`: principle "Secondary EBM/Ising/KAN/hallucination items are included only when genuinely new and verified."
+- `references_md_updated`: principle "True only after the V474 section is appended to research-references.md."
+- `bottom_line_recommendation`: principle "One to two roadmap sentences for .474, tied to the A1-A3 outcomes."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must not hide zero-new-findings or negative upstream outcomes."
+
+#### SCENARIO-REPORT-5162: V474 References Are Appended From Verified Incremental Sweep
+
+**Given** `research-references.md` contains the V473 outer-loop planner
+references section
+**And** the Exp5157, Exp5158, and Exp5159 artifacts are readable when present
+**And** the low-concurrency sweep helper scripts are readable
+**When** the Exp5162 ingestion workflow runs
+**Then** it writes the terminal JSON artifact, records the V473 citation
+spot-checks, records incremental primary findings or an honest zero-new result,
+records outcome-conditioned findings based on the actual upstream outcomes,
+records secondary findings only when verified, appends a `V474 Planner
+References` section without deleting prior content, declares
+`aggregation_from_verified_literature_and_upstream_artifacts`, and records that
+`scripts/research_conductor.py` was not modified.
+
+## Implementation Status (REQ-REPORT-5162)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5162 | Implemented (`python/carnot/experiment_5162_sota_ingestion_multilevel_v473.py`) | Implemented (`tests/python/test_experiment_5162_sota_ingestion_multilevel_v473.py`) |
