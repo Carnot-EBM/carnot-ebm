@@ -1952,6 +1952,44 @@ tests (`tests/python/test_adversarial_verify_principle_wrapped_fields.py`); full
 suite green; corpus-wide `--backfill --high-precision-only` dry-run (4564 artifacts) found only 5
 previously-unstamped qualifying artifacts, confirming no flood of new false positives.
 
+### exp5156 QD CITATION-SCOPE FALSE POSITIVE RESOLVED 2026-07-02 (outer-loop, "qd-random-mutation-ablation-omitted should distinguish citation from claim")
+
+`results/experiment_5156_archive_472_activate_473.json` was still stamped
+`flagged_adversarial=true` from a WARN-only `qd-random-mutation-ablation-omitted` report even after
+the exp5161 principle-wrapped-field fix above. This was a different bug class: the QD guard built its
+claim scope from top-level claim text plus all nested non-metadata field names. For exp5156,
+`experiment_5156_archive_472_activate_473` matched ARC through the substring `arc` in `archive`, then
+`generation_axis_retirement_signal.current_energy_fitness_result` plus the nested exp5154 archive
+summary (`energy_fitness_qd`, `winning_trajectory_surfaced`) satisfied the QD generation-claim
+predicate. exp5156 was not making a first-party QD claim; it was citing the retired exp5154 null while
+closing .472.
+
+**Fix:** `scripts/adversarial_verify.py` now scopes QD context to first-party top-level claim text and
+top-level QD result fields, and skips aggregation-only artifacts (`inference_substrate=
+aggregation_from_upstream_artifacts` / archive-capstone schemas) for the QD ablation guard. Genuine
+first-party QD artifacts with top-level `winner_generated`, `qd_arm_result`,
+`qd_generation_diagnostics`, or equivalent energy-QD result fields still require
+`random_mutation_ablation_passed`; the new scenario test keeps that WARN path live.
+
+**Severity-handling audit:** the archive/activate shared `verification_payload()` helper was also
+buggy: it stamped `flagged_adversarial` from `exit_code != 0`, so WARN-only verifier output looked
+like CRITICAL quarantine downstream. It now records `max_severity` and stamps
+`flagged_adversarial=true` only for parsed CRITICAL severity, while preserving `green=false` for a
+WARN-only verifier command exit. Unparseable nonzero verifier failures still fail closed.
+
+**Verification:** live re-check of exp5156 is clean (`flag_count=0`, `max_severity=-1`). QD corpus
+dry-run over 4565 result artifacts: 4 legacy QD citation false positives newly unflagged
+(`experiment_4663_archive_429_activate_430.json`,
+`experiment_4736_archive_435_activate_436.json`,
+`experiment_4748_archive_436_activate_437.json`,
+`experiment_5156_archive_472_activate_473.json`), all aggregation-citation artifacts; two first-party
+QD artifacts remain/currently become WARN-scoped for missing random-mutation ablation
+(`experiment_4738_energy_fitness_qd_generation_valid_test.json`,
+`experiment_5154_energy_fitness_directed_exploration_v472.json`). `any_unexpected_unflag=false`.
+The high-precision `--backfill --high-precision-only` dry-run remains at 5 qualifying unstamped
+critical artifacts (same class as the 2026-07-02 dry-run above), so this QD citation-scope fix did not
+hide a critical backfill class.
+
 ### ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02 (outer-loop, "we want to continue down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent" -- "pre-stage the roadmap for all 5")
 
 **Reverses the `.471`-era PHASE-D-majority allocation back toward ARC.** `reproducible_total_levels`
@@ -9735,10 +9773,6 @@ Regex-based tests parsing documentation for experiment counts (like the `test_do
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
 ## RESEARCH-STUDYING CANDIDATES
 - arXiv:2601.17223 (Score 400) - Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
 
@@ -10436,6 +10470,10 @@ the 2026-06-20 revert of SUBMITTED_VALUE_WEIGHT 5.0->0.0; the live config is alr
 action needed). The capstone (E) should NOT discard the keep-value_weight=0 conclusion despite the
 quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the path to a future
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
