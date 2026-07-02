@@ -1925,6 +1925,72 @@ and headroom gates all pass.
 **And** `pool_n=0`
 **And** no FoVer scope or LLM judge is used as ground truth.
 
+### REQ-INFER-SOTA-032: Exp 5136 Receipt-Backed Structured Reasoning Pool V2
+
+The system SHALL provide an Exp 5136 receipt-backed non-FoVer
+structured-reasoning pool v2 at
+`results/experiment_5136_receipt_structured_pool_v2_v471.json` with pool rows
+written to `results/experiment_5136_receipt_structured_pool_v2_v471.jsonl`.
+Exp 5136 SHALL load both
+`results/experiment_5124_clean_sota_runtime_provenance_v470.json` and
+`results/experiment_5125_structured_reasoning_pool_v470.json`, SHALL
+hard-block when Exp 5124 does not report clean local SOTA runtime provenance,
+and SHALL hard-block any attempted path that depends on FoVer data, FoVer
+selector scope, or an LLM judge as ground truth.
+
+When the gates are open, Exp 5136 SHALL build 100-160 exact-checkable
+structured tasks across at least three non-FoVer families, SHALL define
+`MODEL_SPECS` with all three mandated local GGUF model IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and SHALL prefer `cached_sota_pair()` while
+recording exact model paths for all three mandated models. Candidate correctness
+SHALL be scored only by deterministic exact validators.
+
+For every generated candidate batch, Exp 5136 SHALL emit a receipt record with
+the prompt hash, model specification, endpoint or command provenance,
+wall-clock start and stop timestamps, raw response hash, parsed candidate hash,
+validator output hash, and candidate correctness result. The terminal artifact
+SHALL expose these fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `MODEL_SPECS`, `preconditions_checked`,
+`receipt_records`, `duration_floor_evidence`, `task_families`, `pool_path`,
+`pool_sha256`, `pool_n`, `candidates_per_item`, `exact_validators_used`,
+`oracle_at_k`, `cheap_baseline_at_1`, `parse_coverage`, `duplicate_rate`,
+`family_headroom`, `structured_pool_v2_clean`, `adversarial_verify_passed`,
+`verifier_is_oracle`, `fover_scope_used`, `conductor_modified`, and
+`tests_run`. `experiment_id` SHALL equal
+`exp5136-receipt-structured-pool-v2-v471`, `milestone` SHALL equal
+`2026.07.471`, and `inference_substrate` SHALL equal
+`local_sota_gguf_generation_with_receipts_and_exact_validators`.
+
+`structured_pool_v2_clean` SHALL be true only when the pool size, parse
+coverage, oracle headroom, mandated-model provenance, receipt completeness,
+duration-floor evidence, and adversarial verification gates all pass.
+
+### SCENARIO-INFER-SOTA-032-POOL: Receipts Back Every Exact Candidate
+
+**Given** Exp 5124 reports clean local SOTA GGUF runtime provenance
+**And** no upstream or current path uses FoVer scope
+**When** Exp 5136 builds the structured pool v2
+**Then** the pool contains 100-160 exact-checkable tasks across at least three
+families
+**And** `MODEL_SPECS` records all three mandated local GGUF model IDs with
+model paths
+**And** every candidate has a matching receipt record containing prompt,
+response, parsed-candidate, validator-output, model, command or endpoint, and
+wall-clock provenance hashes
+**And** `oracle_at_k` exceeds `cheap_baseline_at_1`
+**And** deterministic exact validators are the only ground truth.
+
+### SCENARIO-INFER-SOTA-032-BLOCKED: Dirty Or FoVer Preconditions Fail Closed
+
+**Given** Exp 5124 is missing or not clean
+**Or** Exp 5125 or the current run declares FoVer scope
+**When** Exp 5136 runs
+**Then** it writes a terminal blocked artifact
+**And** `structured_pool_v2_clean=false`
+**And** `pool_n=0`
+**And** no candidate rows are fabricated.
+
 ### REQ-INFER-SOTA-031: Exp 5126 Distributional Energy Ranker
 
 The system SHALL provide an Exp 5126 CPU ranker/abstainer over the Exp 5125
@@ -2121,6 +2187,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-029 | Planned (`python/carnot/experiment_5124_clean_sota_runtime_provenance.py`, `scripts/experiment_5124_clean_sota_runtime_provenance_v470.py`, `results/experiment_5124_clean_sota_runtime_provenance_v470.json`) | Planned (`tests/python/test_experiment_5124_clean_sota_runtime_provenance.py`) |
 | REQ-INFER-SOTA-030 | Implemented (`python/carnot/experiment_5125_structured_reasoning_pool_v470.py`, `scripts/experiment_5125_structured_reasoning_pool_v470.py`, `results/experiment_5125_structured_reasoning_pool_v470.json`) | Implemented (`tests/python/test_experiment_5125_structured_reasoning_pool_v470.py`) |
 | REQ-INFER-SOTA-031 | Implemented (`python/carnot/experiment_5126_distributional_energy_ranker_v470.py`, `scripts/experiment_5126_distributional_energy_ranker_v470.py`, `results/experiment_5126_distributional_energy_ranker_v470.json`) | Implemented (`tests/python/test_experiment_5126_distributional_energy_ranker_v470.py`) |
+| REQ-INFER-SOTA-032 | Implemented (`python/carnot/experiment_5136_receipt_structured_pool_v2_v471.py`, `scripts/experiment_5136_receipt_structured_pool_v2_v471.py`, `results/experiment_5136_receipt_structured_pool_v2_v471.json`) | Implemented (`tests/python/test_experiment_5136_receipt_structured_pool_v2_v471.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
