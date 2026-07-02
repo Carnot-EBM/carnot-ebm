@@ -24152,3 +24152,71 @@ available but not fully hardened.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5152 | Implemented (`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py`, `results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`) | Implemented (`tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py`) |
+
+### REQ-VERIFY-5153: GAP-4 Scale-Up Protocol Ledger V472
+
+The repository SHALL provide Exp 5153 at
+`python/carnot/reporting/gap4_scaleup_v472_5153.py` to produce a
+protocol-bound GAP-4 scale-up ledger and write
+`results/experiment_5153_gap4_scaleup_v472.json`. The runner SHALL treat
+GAP-4's own forward protocol in `ops/verifier_gaps.md` as the acceptance bar:
+sandboxed 400-task reconfirmation on a host without ARC solutions on disk,
+archived transcripts, genuinely held-out tasks, the Codex-first arm, cluster
+bootstrap plus exact statistical tests, a hardened exec sandbox, and a local
+open-weight generator arm. It SHALL NOT mark GAP-4 filled unless every protocol
+step passes.
+
+The artifact SHALL include principle-annotated top-level fields
+`protocol_steps_completed`, `n_400_task_result`,
+`gap4_status_recommendation`, `solve_provenance`, `honest_verdict`,
+`cluster_bootstrap_delta_ci95`, `exact_test_discordant_wins`,
+`exact_test_discordant_losses`, `exact_test_p_value`, `field_principles`,
+`spec_refs`, and `reproducibility_checksum`. The required field principles
+SHALL include:
+`protocol_steps_completed` = `GAP-4's own protocol is the acceptance bar; partial completion should be reported as partial, not rounded up to filled.`;
+`n_400_task_result` = `The actual scaled solve-rate/precision number, not just a pass/fail on the protocol steps.`;
+`gap4_status_recommendation` = `Feeds directly into whether ops/verifier_gaps.md's GAP-4 status line gets updated.`;
+`solve_provenance` = `Offline scoring against held-out corpora, not a live hidden-game solve.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_.`
+
+`protocol_steps_completed` SHALL be a list of step records, each with a stable
+`step_id`, a bare boolean `passed`, and an evidence string. The canonical step
+ids SHALL include `sandboxed_400_task_reconfirmation`,
+`transcripts_archived`, `genuinely_heldout_tasks`, `codex_first_arm`,
+`statistical_tests`, `hardened_exec_sandbox`, and
+`local_open_weight_generator_arm`. If the 400-task run has not executed,
+`n_400_task_result` SHALL be `null`, `gap4_status_recommendation` SHALL be
+`still_open`, and `honest_verdict` SHALL begin with `complete:` or
+`complete_`, not `success_`.
+
+The exact statistical test SHALL implement the zero-loss min-6 rule from the
+GAP-4 protocol: for a two-sided exact sign/binomial test, six discordant wins
+and zero losses produce `p < 0.05`, while five wins and zero losses do not.
+The artifact SHALL expose the discordant win/loss counts and the p-value so
+reviewers can independently judge the threshold.
+
+### SCENARIO-VERIFY-5153: Incomplete Scale-Up Remains Still Open
+
+Given the prior GAP-4 ARC-1 positive and ARC-2 calibration artifacts are
+present but no new sandboxed 400-task held-out run with local open-weight arm is
+available, when Exp 5153 runs, then it writes the required artifact, records
+the prior positive as upstream context, sets `n_400_task_result=null`, marks
+the unmet protocol steps as failed, sets
+`gap4_status_recommendation=still_open`, keeps
+`solve_provenance=development_proxy`, and emits a terminal `complete:` honest
+verdict rather than a filled claim.
+
+### SCENARIO-VERIFY-5153-SUCCESS-GATE: Filled Requires Every Protocol Step
+
+Given a protocol evidence bundle where the sandboxed 400-task run, archived
+transcripts, genuine holdout corpus, Codex-first arm, statistical tests,
+hardened sandbox, and local open-weight generator arm all pass, when Exp 5153
+builds the artifact, then `gap4_status_recommendation` MAY equal `filled` only
+when `n_400_task_result` is a numeric solve-rate/precision value and the exact
+test satisfies the zero-loss min-6 rule.
+
+## Implementation Status (REQ-VERIFY-5153)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5153 | Planned (`python/carnot/reporting/gap4_scaleup_v472_5153.py`, `results/experiment_5153_gap4_scaleup_v472.json`) | Planned (`tests/python/test_experiment_5153_gap4_scaleup_v472.py`) |
