@@ -1,0 +1,401 @@
+{
+  "active_roadmap_check": {
+    "exists": true,
+    "milestone": "2026.07.473",
+    "missing_required_task_prefixes": [],
+    "parses": true,
+    "path": "research-roadmap.yaml",
+    "ready": true,
+    "required_task_ids_present": true,
+    "task_ids": [
+      "exp5156-archive-472-activate-473",
+      "exp5157-deepen-warmstart-replay-ablation-v473",
+      "exp5158-deepen-goal-energy-ranker-replay-v473",
+      "exp5159-deepen-live-levelup-attempt-v473",
+      "exp5160-oracle-distinct-cross-corpus-closure-v473",
+      "exp5161-gap4-protocol-execution-pilot-v473",
+      "exp5162-sota-ingestion-multilevel-v473",
+      "exp5163-mmlu-pro-verifier-rescale-v473",
+      "exp5164-retro-timing-falsezero-fix-v473",
+      "exp5165-generation-axis-retirement-hygiene-v473",
+      "exp5166-hardware-continuity-board-timing-v473",
+      "exp5167-capstone-v473"
+    ]
+  },
+  "active_roadmap_modified": false,
+  "active_roadmap_ready": true,
+  "adversarial_verification": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5156_archive_472_activate_473.json"
+    ],
+    "exit_code": 1,
+    "flagged_adversarial": true,
+    "flags": [
+      {
+        "detail": "qd-random-mutation-ablation-omitted: QD / energy-fitness generation claim omits random_mutation_ablation_passed. Report the random-mutation/no-energy-fitness ablation before attributing the lift to energy fitness.",
+        "kind": "qd-random-mutation-ablation-omitted",
+        "severity": "warn"
+      }
+    ],
+    "green": false,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5156_archive_472_activate_473.json\",\n      \"loaded\": true,\n      \"exp_id\": \"experiment_5156_archive_472_activate_473\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_archive_472_closed_473_active_runtime_clean\",\n      \"flag_count\": 1,\n      \"max_severity\": 1,\n      \"flags\": [\n        {\n          \"kind\": \"qd-random-mutation-ablation-omitted\",\n          \"severity\": \"warn\",\n          \"detail\": \"qd-random-mutation-ablation-omitted: QD / energy-fitness generation claim omits random_mutation_ablation_passed. Report the random-mutation/no-energy-fitness ablation before attributing the lift to energy fitness.\"\n        }\n      ]\n    }\n  ],\n  \"flagged_count\": 1\n}\n"
+  },
+  "archived_milestone": "2026.07.472",
+  "conductor_modified": false,
+  "diffusiongemma_gate_recommendation": "keep_gated",
+  "duration_s": 0.032874,
+  "experiment": "experiment_5156_archive_472_activate_473",
+  "experiment_id": "exp5156-archive-472-activate-473",
+  "field_principles": {
+    "active_roadmap_modified": "operator instruction compliance",
+    "active_roadmap_ready": "activation readiness",
+    "conductor_modified": "conductor immutability",
+    "diffusiongemma_gate_recommendation": "Exp 5152 corrected the rationale but did not ungate scaling",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "flagged_adversarial": "adversarial-verification accountability",
+    "gap4_status_recommendation": "Exp 5153 keeps GAP-4 open until its forward protocol is actually executed",
+    "generation_axis_retirement_signal": "Exp 5154 is the third generation-axis exploration-signal null and should steer allocation",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix Discipline.",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "milestone_archive_summary": "archive summary must preserve partial, blocked, null, and scoped results precisely",
+    "phase_a_followups_from_5155": "Phase A inherits the top two falsifiable follow-ups from Exp 5155 rather than inventing a new agenda",
+    "runtime_clean_details": "handoff diagnostics must explain the gate, not just emit a boolean",
+    "source_artifacts_read": "evidence provenance",
+    "task_verdicts": ".472 task truth without rounding partial results into dead ends",
+    "tests_run": "verification evidence",
+    "v472_runtime_clean": "Downstream .473 tasks may gate on this; a dirty handoff should block, not silently proceed."
+  },
+  "flagged_adversarial": true,
+  "gap4_status_recommendation": "still_open",
+  "generation_axis_retirement_signal": {
+    "allocation_read": "Generation-axis exploration-signal levers should not be re-run without a new mechanism.",
+    "current_energy_fitness_result": "honest_null",
+    "prior_generation_axis_nulls": [
+      "exp4688 novelty-bonus directed exploration",
+      "exp4689 program-synthesis-filter directed exploration"
+    ],
+    "third_consecutive_generation_axis_null": true
+  },
+  "honest_verdict": "complete_archive_472_closed_473_active_runtime_clean",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.473",
+  "milestone_archive_summary": [
+    {
+      "archive_read": "3-of-4 hardening axes passed; cross-game replication remains blocked.",
+      "axis": "oracle_distinct_arc_hardening",
+      "classification": "partial_hardening_cross_game_blocked",
+      "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
+      "exact_test_passes_min6_rule": true,
+      "experiment_id": "exp5151-arc-oracle-distinct-hardening-v472",
+      "headline_outcome": "arc_set_encoder_win_not_hardened",
+      "honest_verdict": "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive hardening; unresolved_axes=cross_game",
+      "label": "arc_oracle_distinct_hardening",
+      "leak_audit_passed": true,
+      "multiseed_delta_ci95": [
+        0.4265639953,
+        0.4888206201
+      ],
+      "open_axis": "cross_game",
+      "passed_hardening_axes": [
+        "exact_test",
+        "leak_audit",
+        "multiseed"
+      ],
+      "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json"
+    },
+    {
+      "archive_read": "MuSR-vs-ARC rationale was corrected, but DiffusionGemma scaling stays gated.",
+      "axis": "diffusiongemma_gate",
+      "classification": "partial_gate_corrected_keep_gated",
+      "domain_conflation_found": true,
+      "experiment_id": "exp5152-diffusiongemma-gate-reexamination-v472",
+      "honest_verdict": "complete_diffusiongemma_gate_reexamined_keep_gated_corrected_arc_evidence",
+      "label": "diffusiongemma_gate_reexamination",
+      "path": "results/experiment_5152_diffusiongemma_gate_reexamination_v472.json",
+      "recommendation": "keep_gated",
+      "supports_ungating": false
+    },
+    {
+      "archive_read": "GAP-4 forward protocol remains open because the scale-up run was not executed.",
+      "axis": "gap4_protocol",
+      "classification": "partial_protocol_audit_still_open",
+      "experiment_id": "exp5153-gap4-scaleup-v472",
+      "gap4_status_recommendation": "still_open",
+      "honest_verdict": "complete: gap4_scaleup_protocol_partial_still_open",
+      "label": "gap4_scaleup_protocol",
+      "n_400_task_result": null,
+      "passed_protocol_steps": 1,
+      "path": "results/experiment_5153_gap4_scaleup_v472.json",
+      "protocol_steps_passed": "1/7"
+    },
+    {
+      "archive_read": "Energy-QD and matched no-energy control both surfaced no winning trajectory.",
+      "axis": "energy_fitness_generation",
+      "classification": "honest_null_generation_axis",
+      "energy_signal_source": "exp4020_graded_goal_satisfaction_energy",
+      "experiment_id": "exp5154-energy-fitness-directed-exploration-v472",
+      "honest_verdict": "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0",
+      "label": "energy_fitness_directed_exploration",
+      "matched_control_winning_trajectory_surfaced": false,
+      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+      "reproducible_levels_delta": 0,
+      "winning_trajectory_surfaced": false
+    },
+    {
+      "archive_read": "Live active belief induction resets at level boundaries; follow-ups are scoped.",
+      "axis": "multilevel_belief_state",
+      "belief_state_resets_at_level_boundary": true,
+      "classification": "scoping_complete_code_verified_reset",
+      "experiment_id": "exp5155-multilevel-belief-state-scoping-v472",
+      "honest_verdict": "complete: deepen_belief_state_reset_scoped_3_falsifiable_experiments_no_full_build",
+      "label": "multilevel_belief_state_scoping",
+      "path": "results/experiment_5155_multilevel_belief_state_scoping_v472.json",
+      "ranked_followups": [
+        "transition_slice_warm_start_replay_ablation",
+        "cross_level_goal_energy_ranker_replay"
+      ]
+    }
+  ],
+  "phase_a_followups_from_5155": [
+    "transition_slice_warm_start_replay_ablation",
+    "cross_level_goal_energy_ranker_replay"
+  ],
+  "preconditions_checked": {
+    "active_roadmap": {
+      "exists": true,
+      "milestone": "2026.07.473",
+      "missing_required_task_prefixes": [],
+      "parses": true,
+      "path": "research-roadmap.yaml",
+      "ready": true,
+      "required_task_ids_present": true,
+      "task_ids": [
+        "exp5156-archive-472-activate-473",
+        "exp5157-deepen-warmstart-replay-ablation-v473",
+        "exp5158-deepen-goal-energy-ranker-replay-v473",
+        "exp5159-deepen-live-levelup-attempt-v473",
+        "exp5160-oracle-distinct-cross-corpus-closure-v473",
+        "exp5161-gap4-protocol-execution-pilot-v473",
+        "exp5162-sota-ingestion-multilevel-v473",
+        "exp5163-mmlu-pro-verifier-rescale-v473",
+        "exp5164-retro-timing-falsezero-fix-v473",
+        "exp5165-generation-axis-retirement-hygiene-v473",
+        "exp5166-hardware-continuity-board-timing-v473",
+        "exp5167-capstone-v473"
+      ]
+    },
+    "known_issues": {
+      "arc_reopened_by_operator_directive": true,
+      "exists": true,
+      "path": "ops/known-issues.md"
+    },
+    "v472_results": {
+      "exp5151-arc-oracle-distinct-hardening-v472": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json",
+        "sha256": "sha256:ba221295d14ab0c23e7ad3dab865024b08fc76941b7d9a256a889f0253708543"
+      },
+      "exp5152-diffusiongemma-gate-reexamination-v472": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5152_diffusiongemma_gate_reexamination_v472.json",
+        "sha256": "sha256:3573f9c02eddca946ea1daae2c471163c400ec4175c013a845e2fecbea9140c1"
+      },
+      "exp5153-gap4-scaleup-v472": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5153_gap4_scaleup_v472.json",
+        "sha256": "sha256:34b1a749fef00026565175592b244e5f34e73f015a81964d12cab2d4376d0df4"
+      },
+      "exp5154-energy-fitness-directed-exploration-v472": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+        "sha256": "sha256:c40e1ebd194672c757b4f0e26b61f4458905dbbf0806ea77d0d71c0bb78a3f53"
+      },
+      "exp5155-multilevel-belief-state-scoping-v472": {
+        "exists": true,
+        "loadable": true,
+        "path": "results/experiment_5155_multilevel_belief_state_scoping_v472.json",
+        "sha256": "sha256:2f987da1caaddfb52629a2a639e716d1922e317a443dea1531b8c335ab9715d6"
+      }
+    },
+    "v472_results_all_loadable": true
+  },
+  "random_seed": 5156,
+  "reproducibility_checksum": "sha256:884e7a13503a28b8f5cacd021ee904624f81621a52cb9faf498e5ec1a6851dde",
+  "result_path": "results/experiment_5156_archive_472_activate_473.json",
+  "run_date": "20260702",
+  "runtime_clean_details": {
+    "active_task_processes": [
+      {
+        "command": "codex exec --dangerously-bypass-approvals-and-sandbox --color never --model gpt-5.5 --cd /home/ianblenke/github.com/ianblenke/carnot --ephemeral -c agents.job_max_runtime_seconds=7200 -",
+        "elapsed": "09:05",
+        "pid": 3259305,
+        "ppid": 3124275,
+        "stat": "Ssl"
+      }
+    ],
+    "conductor_processes": [
+      {
+        "command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/research_conductor.py --loop --interval 2 --in-process-docs --async-doc-recon",
+        "elapsed": "06:35:04",
+        "pid": 3124275,
+        "ppid": 1942,
+        "stat": "Ssl"
+      }
+    ],
+    "dirty_paths": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "python/carnot/experiment_5156_archive_472_activate_473.py",
+      "results/experiment_5156_archive_472_activate_473.json",
+      "tests/python/test_experiment_5156_archive_472_activate_473.py"
+    ],
+    "expected_transition_dirty_paths": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "python/carnot/experiment_5156_archive_472_activate_473.py",
+      "results/experiment_5156_archive_472_activate_473.json",
+      "tests/python/test_experiment_5156_archive_472_activate_473.py"
+    ],
+    "git_status_porcelain": " M openspec/capabilities/research-reporting/spec.md\n?? python/carnot/experiment_5156_archive_472_activate_473.py\n?? results/experiment_5156_archive_472_activate_473.json\n?? tests/python/test_experiment_5156_archive_472_activate_473.py\n",
+    "ignored_transition_dirty_paths": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "python/carnot/experiment_5156_archive_472_activate_473.py",
+      "results/experiment_5156_archive_472_activate_473.json",
+      "tests/python/test_experiment_5156_archive_472_activate_473.py"
+    ],
+    "non_transition_dirty_paths": [],
+    "orphaned_conductor_processes": [],
+    "runtime_clean": true,
+    "touched_conductor_process": false
+  },
+  "schema": "carnot.experiment_5156_archive_472_activate_473.v1",
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "kind": "v472_result_artifact",
+      "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json",
+      "sha256": "sha256:ba221295d14ab0c23e7ad3dab865024b08fc76941b7d9a256a889f0253708543",
+      "source_id": "exp5151-arc-oracle-distinct-hardening-v472"
+    },
+    {
+      "exists": true,
+      "kind": "v472_result_artifact",
+      "path": "results/experiment_5152_diffusiongemma_gate_reexamination_v472.json",
+      "sha256": "sha256:3573f9c02eddca946ea1daae2c471163c400ec4175c013a845e2fecbea9140c1",
+      "source_id": "exp5152-diffusiongemma-gate-reexamination-v472"
+    },
+    {
+      "exists": true,
+      "kind": "v472_result_artifact",
+      "path": "results/experiment_5153_gap4_scaleup_v472.json",
+      "sha256": "sha256:34b1a749fef00026565175592b244e5f34e73f015a81964d12cab2d4376d0df4",
+      "source_id": "exp5153-gap4-scaleup-v472"
+    },
+    {
+      "exists": true,
+      "kind": "v472_result_artifact",
+      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+      "sha256": "sha256:c40e1ebd194672c757b4f0e26b61f4458905dbbf0806ea77d0d71c0bb78a3f53",
+      "source_id": "exp5154-energy-fitness-directed-exploration-v472"
+    },
+    {
+      "exists": true,
+      "kind": "v472_result_artifact",
+      "path": "results/experiment_5155_multilevel_belief_state_scoping_v472.json",
+      "sha256": "sha256:2f987da1caaddfb52629a2a639e716d1922e317a443dea1531b8c335ab9715d6",
+      "source_id": "exp5155-multilevel-belief-state-scoping-v472"
+    },
+    {
+      "exists": true,
+      "kind": "source_doc",
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:43101039a56752c0ea6d4fc8e0b35a9a1847d324b021fa08723d882775b073ed",
+      "source_id": "known_issues"
+    },
+    {
+      "exists": true,
+      "kind": "roadmap_yaml",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:f2cee44d79da18a54d6c0cc07da03c8e6471dcd3ddfc2b107c1f134c5d252c23",
+      "source_id": "active_research_roadmap"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5156",
+    "SCENARIO-REPORT-5156",
+    "SCENARIO-REPORT-5156-DIRTY-RUNTIME"
+  ],
+  "task_verdicts": [
+    {
+      "axis": "oracle_distinct_arc_hardening",
+      "exists": true,
+      "experiment_id": "exp5151-arc-oracle-distinct-hardening-v472",
+      "experiment_number": 5151,
+      "honest_verdict": "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive hardening; unresolved_axes=cross_game",
+      "label": "arc_oracle_distinct_hardening",
+      "loadable": true,
+      "path": "results/experiment_5151_arc_oracle_distinct_hardening_v472.json",
+      "reproducibility_checksum": "sha256:f5e08ff3fc82f7dc56f9969da515b5f975804011fd0a2219e0a9f81e7632cf56"
+    },
+    {
+      "axis": "diffusiongemma_gate",
+      "exists": true,
+      "experiment_id": "exp5152-diffusiongemma-gate-reexamination-v472",
+      "experiment_number": 5152,
+      "honest_verdict": "complete_diffusiongemma_gate_reexamined_keep_gated_corrected_arc_evidence",
+      "label": "diffusiongemma_gate_reexamination",
+      "loadable": true,
+      "path": "results/experiment_5152_diffusiongemma_gate_reexamination_v472.json",
+      "reproducibility_checksum": "sha256:fd7027667ffc06447c8296869088b1da66ff43bc7321907393bbf0169f1ee397"
+    },
+    {
+      "axis": "gap4_protocol",
+      "exists": true,
+      "experiment_id": "exp5153-gap4-scaleup-v472",
+      "experiment_number": 5153,
+      "honest_verdict": "complete: gap4_scaleup_protocol_partial_still_open",
+      "label": "gap4_scaleup_protocol",
+      "loadable": true,
+      "path": "results/experiment_5153_gap4_scaleup_v472.json",
+      "reproducibility_checksum": "sha256:e88d7c15a1f5399078a540124ebb27eef2ae5e3e68c87f4819ef8b32698f9775"
+    },
+    {
+      "axis": "energy_fitness_generation",
+      "exists": true,
+      "experiment_id": "exp5154-energy-fitness-directed-exploration-v472",
+      "experiment_number": 5154,
+      "honest_verdict": "complete: energy_fitness_qd_winning_trajectory_not_surfaced_reproducible_delta_0",
+      "label": "energy_fitness_directed_exploration",
+      "loadable": true,
+      "path": "results/experiment_5154_energy_fitness_directed_exploration_v472.json",
+      "reproducibility_checksum": "sha256:921e9c9e350c072cbdd25099a61f564f09e04973820d51cbf1e7411d6bf4c8ca"
+    },
+    {
+      "axis": "multilevel_belief_state",
+      "exists": true,
+      "experiment_id": "exp5155-multilevel-belief-state-scoping-v472",
+      "experiment_number": 5155,
+      "honest_verdict": "complete: deepen_belief_state_reset_scoped_3_falsifiable_experiments_no_full_build",
+      "label": "multilevel_belief_state_scoping",
+      "loadable": true,
+      "path": "results/experiment_5155_multilevel_belief_state_scoping_v472.json",
+      "reproducibility_checksum": "sha256:eef25934b7285f602afa2805712cc9a736e1979f0c6db8183a5519967a948064"
+    }
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5156_archive_472_activate_473.py -q -o addopts=''",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5156_archive_472_activate_473.py' -m pytest tests/python/test_experiment_5156_archive_472_activate_473.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5156_archive_472_activate_473.py' --fail-under=100",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5156_archive_472_activate_473.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "v472_runtime_clean": true
+}

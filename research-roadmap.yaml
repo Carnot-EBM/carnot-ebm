@@ -160,7 +160,7 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       games_tested:
-        value: "list of {game, n_level_transitions_tested}"
+        value: "list of {{game, n_level_transitions_tested}}"
         principle: "The gate requires >=6 transitions; this field lets a reviewer verify the sample size."
       warmstart_vs_cold_delta_median:
         value: float
@@ -171,7 +171,7 @@ tasks:
         value: bool
         principle: "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
       per_transition_breakdown:
-        value: "list of {game, level_from, level_to, cold_accuracy, warmstart_accuracy, actions_cold, actions_warmstart}"
+        value: "list of {{game, level_from, level_to, cold_accuracy, warmstart_accuracy, actions_cold, actions_warmstart}}"
         principle: "An aggregate-only report can hide a result that only holds for one or two games."
       solve_provenance:
         value: development_proxy
@@ -270,13 +270,13 @@ tasks:
     4. Score both arms via target-prefix reciprocal rank (how close to rank-1 does the eventual level-up
        action sequence's prefix land) against the real recorded level-up trajectory for level N+1.
     5. Apply exp5155's own falsifiable gate verbatim: target-prefix reciprocal rank improves on >=2/3 of
-       {lp85, sc25, tr87} with no regression in level reached; otherwise the gate FAILS and carryover
+       {{lp85, sc25, tr87}} with no regression in level reached; otherwise the gate FAILS and carryover
        goal-energy value is rejected for this mechanism.
     6. Report HONESTLY either way, with the same per-game precision exp5157 uses.
 
     REQUIRED ARTIFACT FIELDS:
       games_tested:
-        value: "list of {game, n_level_transitions_tested}, must include lp85, sc25, tr87"
+        value: "list of {{game, n_level_transitions_tested}}, must include lp85, sc25, tr87"
       reciprocal_rank_cold:
         value: "dict of game -> float"
       reciprocal_rank_warmstart:
@@ -386,9 +386,9 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       target_games:
-        value: "list of {game, level_before, level_attempted}"
+        value: "list of {{game, level_before, level_attempted}}"
       levels_banked:
-        value: "list of {game, new_level, offline_reproduced: bool, reproducibility_checksum}"
+        value: "list of {{game, new_level, offline_reproduced: bool, reproducibility_checksum}}"
         principle: "Only reproduce()-confirmed levels count -- per ARC Solve Reproducibility + Solver-Reuse Discipline."
       reproducible_levels_delta:
         value: int
@@ -734,16 +734,16 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       v473_citations_spot_checked:
-        value: "list of {arxiv_id, resolved_correctly: bool}"
+        value: "list of {{arxiv_id, resolved_correctly: bool}}"
       incremental_findings:
-        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}, each citation independently verified"
+        value: "list of {{title, arxiv_id_or_url, summary, carnot_hook}}, each citation independently verified"
         principle: "Fabricated citations would poison future planning -- every entry must trace to a real,
           fetched source, per the Literature Priority Discipline."
       outcome_conditioned_findings:
-        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}, searched specifically in light of
+        value: "list of {{title, arxiv_id_or_url, summary, carnot_hook}}, searched specifically in light of
           exp5157/exp5158's actual result"
       secondary_findings:
-        value: "list of {title, arxiv_id_or_url, summary, carnot_hook}"
+        value: "list of {{title, arxiv_id_or_url, summary, carnot_hook}}"
       references_md_updated:
         value: bool
       bottom_line_recommendation:
@@ -922,8 +922,8 @@ tasks:
       module_path:
         value: "scripts/retro_timing_fallback.py"
       validated_milestones:
-        value: "list of {milestone, reconstructed_wall_time_minutes, reconstructed_compute_bound_count,
-          matches_known_good: bool}"
+        value: "list of {{milestone, reconstructed_wall_time_minutes, reconstructed_compute_bound_count,
+          matches_known_good: bool}}"
         principle: "A fix that is not validated against a real known-good case is unproven; this field is
           the evidence."
       m450_reconstruction_correct:
@@ -1118,7 +1118,7 @@ tasks:
     research.
 
     EXISTING CODE TO READ FIRST:
-    - Every results/experiment_51{57,58,59,60,61,62,63,64,65,66}_*_v473.json artifact this milestone produced.
+    - Every results/experiment_51{{57,58,59,60,61,62,63,64,65,66}}_*_v473.json artifact this milestone produced.
     - ops/verifier_gaps.md GAP-4 entry (update its status line per exp5161's gap4_status_recommendation)
     - ops/known-issues.md exp5152 corrigendum (update per exp5160's diffusiongemma_gate_updated_recommendation)
     - ops/arc_solve_registry.yaml (update reproducible_total_levels/reproducible_total_games if exp5159
@@ -1148,7 +1148,7 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       per_task_summary:
-        value: "list of {task_id, honest_verdict, headline_outcome}"
+        value: "list of {{task_id, honest_verdict, headline_outcome}}"
       gap4_status_reconciled:
         value: string
       diffusiongemma_gate_reconciled:
