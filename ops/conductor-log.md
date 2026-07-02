@@ -9907,3 +9907,4 @@ web search: |
 | 2026-07-02 11:10 UTC | PHASE A2 multi-level deepening -- cross-level goal | OK | 88 passed, 1 warning in 10.49s |
 | 2026-07-02 11:12 UTC | PHASE A3 multi-level deepening -- wire the winning | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5157-deepen-warmstart-replay-ablation-v |
 | 2026-07-02 11:14 UTC | PHASE A3 multi-level deepening -- wire the winning | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5157-deepen-warmstart-replay-ablation-v |
+| 2026-07-02 11:16 UTC | PHASE A3 multi-level deepening -- wire the winning | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5157-deepen-warmstart-replay-ablation-v |
