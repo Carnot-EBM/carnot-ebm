@@ -653,6 +653,52 @@ symbolic checker, reports certificate breadth and cycle soundness, and sets
 `kan_certificate_breadth_ready=true` only when all controls and explanation
 cycles are sound.
 
+## REQ-KAN-5140: Symbolic-KAN Certificate Distillation Cycle Check
+
+The KAN verification tier SHALL provide an Exp 5140 CPU-only experiment that
+loads the Exp 5128 KAN certificate/explanation artifact and distills its
+residual/certificate behavior into an explicit finite primitive rule set. The
+primitive set MUST include monotone segments, threshold clauses, affine
+intervals, and bounded residual rules, and the experiment MUST use exact code
+checks rather than an LLM judge.
+
+The experiment MUST reconstruct each distilled explanation's property metadata,
+verdict, margin, and abstention condition from the symbolic rules and compare
+them with the original Exp 5128 certificate/explanation records. It MUST include
+false-property, label-shuffle, near-margin, and family-holdout controls. If the
+Exp 5128 upstream artifact or its certificate/explanation records are missing,
+the experiment MUST write a blocked terminal artifact rather than fabricating
+rules or metrics.
+
+The deliverable MUST be written to
+`results/experiment_5140_symbolic_kan_certificate_distillation_v471.json` with
+these top-level fields: `experiment_id`, `milestone`, `honest_verdict`,
+`inference_substrate`, `duration_s`, `exp5128_loaded`,
+`symbolic_primitives`, `distilled_rules_path`, `symbolic_equivalence_rate`,
+`certificate_soundness`, `cycle_reconstruction_rate`,
+`false_property_detected`, `near_margin_abstention_rate`,
+`family_holdout_results`, `symbolic_kan_ready`, `conductor_modified`, and
+`tests_run`.
+
+The artifact MUST set
+`experiment_id="exp5140-symbolic-kan-certificate-distillation-v471"`,
+`milestone="2026.07.471"`, and
+`inference_substrate="exact_checked_symbolic_kan_distillation"`.
+`symbolic_kan_ready` MUST be true only when certificate soundness is preserved,
+the cycle reconstruction is exact, the false-property and label-shuffle
+controls pass, and near-margin behavior abstains instead of overclaiming.
+
+### SCENARIO-KAN-5140: Symbolic Rules Reconstruct Certificate Verdicts
+
+Given the complete Exp 5128 KAN certificate/explanation artifact,
+When Exp 5140 distills certificate residual behavior into symbolic primitive
+rules,
+Then exact reconstruction of property metadata, verdict, margin, and
+abstention condition matches the original certificates, false-property and
+label-shuffle controls are detected, near-margin controls abstain, family
+holdout checks report their rates, and `symbolic_kan_ready=true` only when all
+soundness and control gates pass.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -690,6 +736,7 @@ cycles are sound.
 | REQ-KAN-5108 | Implemented | Exp 5108: swept N=5/10/20 (300s/solve budget). Wall found between N=10 (solved, 120.9s) and N=20 (timed out, 300s) -- an order of magnitude below the N=100 production reference. Solve time: 0.15s (N=5) -> 120.9s (N=10), a ~800x jump for 2x the units -- combinatorial, not polynomial. Adversarial rigor (false-control + margin-abstention) held at every solved N. Honest answer: this exact-MILP approach does NOT currently scale to the deployed KAEM cutover. |
 | REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
 | REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
+| REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

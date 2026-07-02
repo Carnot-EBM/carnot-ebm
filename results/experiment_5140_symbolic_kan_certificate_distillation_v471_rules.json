@@ -1,0 +1,420 @@
+{
+  "controls": {
+    "false_property_detected": true,
+    "family_holdout_results": [
+      {
+        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+        "certificate_soundness": true,
+        "cycle_reconstruction_rate": 1.0,
+        "heldout_family": "false_low_threshold_control",
+        "heldout_rule_count": 1,
+        "primitive_templates_seen": [
+          "affine_interval",
+          "bounded_residual_rule",
+          "monotone_segment",
+          "threshold_clause"
+        ],
+        "symbolic_equivalence_rate": 1.0,
+        "train_family_count": 3
+      },
+      {
+        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+        "certificate_soundness": true,
+        "cycle_reconstruction_rate": 1.0,
+        "heldout_family": "global_energy_upper_bound",
+        "heldout_rule_count": 1,
+        "primitive_templates_seen": [
+          "affine_interval",
+          "bounded_residual_rule",
+          "monotone_segment",
+          "threshold_clause"
+        ],
+        "symbolic_equivalence_rate": 1.0,
+        "train_family_count": 3
+      },
+      {
+        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+        "certificate_soundness": true,
+        "cycle_reconstruction_rate": 1.0,
+        "heldout_family": "near_margin_residual_gap",
+        "heldout_rule_count": 1,
+        "primitive_templates_seen": [
+          "affine_interval",
+          "bounded_residual_rule",
+          "monotone_segment",
+          "threshold_clause"
+        ],
+        "symbolic_equivalence_rate": 1.0,
+        "train_family_count": 3
+      },
+      {
+        "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+        "certificate_soundness": true,
+        "cycle_reconstruction_rate": 1.0,
+        "heldout_family": "refinement_error_budget",
+        "heldout_rule_count": 1,
+        "primitive_templates_seen": [
+          "affine_interval",
+          "bounded_residual_rule",
+          "monotone_segment",
+          "threshold_clause"
+        ],
+        "symbolic_equivalence_rate": 1.0,
+        "train_family_count": 3
+      }
+    ],
+    "label_shuffle_control": {
+      "detected": true,
+      "mismatch_count": 4,
+      "rules_checked": 4
+    },
+    "near_margin_abstention_rate": 1.0
+  },
+  "cycle_records": [
+    {
+      "equivalent": true,
+      "reconstructed": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "global_energy_upper_bound",
+        "margin": "1.13009413745",
+        "proof_status": "proved_by_conservative_bound",
+        "property_id": "kan_n100_global_energy_upper_bound",
+        "threshold": "83.5032414198",
+        "unit_count": "100",
+        "verdict": "verified"
+      },
+      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
+      "sound": true
+    },
+    {
+      "equivalent": true,
+      "reconstructed": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "refinement_error_budget",
+        "margin": "5.45688729633",
+        "proof_status": "proved_by_refinement_budget",
+        "property_id": "kan_n100_refinement_error_budget",
+        "threshold": "8.32679315888",
+        "unit_count": "100",
+        "verdict": "verified"
+      },
+      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
+      "sound": true
+    },
+    {
+      "equivalent": true,
+      "reconstructed": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "false_low_threshold_control",
+        "margin": "0.05",
+        "proof_status": "refuted_by_exact_witness",
+        "property_id": "kan_n100_false_low_threshold_control",
+        "threshold": "79.4532414198",
+        "unit_count": "100",
+        "verdict": "counterexample"
+      },
+      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
+      "sound": true
+    },
+    {
+      "equivalent": true,
+      "reconstructed": {
+        "abstention_condition": "exact_value <= threshold < certified_upper_bound",
+        "abstraction_error": "2.86990586255",
+        "family": "near_margin_residual_gap",
+        "margin": "2.86890586255",
+        "proof_status": "abstained_residual_gap",
+        "property_id": "kan_n100_near_margin_residual_gap",
+        "threshold": "79.5042414198",
+        "unit_count": "100",
+        "verdict": "abstained"
+      },
+      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
+      "sound": true
+    }
+  ],
+  "distilled_rules": [
+    {
+      "cycle_predicates": {
+        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
+        "counterexample_when": "exact_upper_bound > threshold",
+        "verified_when": "certified_upper_bound <= threshold"
+      },
+      "family": "global_energy_upper_bound",
+      "llm_judge_used": false,
+      "numeric": {
+        "abstraction_error": 2.8699058625510503,
+        "certified_upper_bound": 82.37314728234323,
+        "exact_upper_bound": 79.50324141979218,
+        "observed": 79.50324141979218,
+        "threshold": 83.50324141979218,
+        "unit_count": 100
+      },
+      "primitives": [
+        {
+          "direction": "nondecreasing_additive_bound",
+          "interval": [
+            0,
+            100
+          ],
+          "name": "monotone_segment",
+          "variable": "unit_index"
+        },
+        {
+          "left": "certified_or_exact_quantity",
+          "name": "threshold_clause",
+          "operator": "<=",
+          "threshold": 83.50324141979218
+        },
+        {
+          "intercept": 0.0,
+          "lower": 79.50324141979218,
+          "name": "affine_interval",
+          "slope": 1.0,
+          "upper": 82.37314728234323
+        },
+        {
+          "abstain_when": "exact_value <= threshold < certified_upper_bound",
+          "margin": 1.1300941374489497,
+          "name": "bounded_residual_rule",
+          "residual_bound": 2.8699058625510503
+        }
+      ],
+      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
+      "rule_kind": "threshold_bound",
+      "source_certificate_id": "kan_n100_global_energy_upper_bound",
+      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_global_energy_upper_bound|family=global_energy_upper_bound|verdict=verified|margin=1.13009413745|abstraction_error=2.86990586255|proof_status=proved_by_conservative_bound",
+      "source_metadata": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "global_energy_upper_bound",
+        "margin": "1.13009413745",
+        "proof_status": "proved_by_conservative_bound",
+        "property_id": "kan_n100_global_energy_upper_bound",
+        "threshold": "83.5032414198",
+        "unit_count": "100",
+        "verdict": "verified"
+      }
+    },
+    {
+      "cycle_predicates": {
+        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
+        "counterexample_when": "exact_upper_bound > threshold",
+        "verified_when": "certified_upper_bound <= threshold"
+      },
+      "family": "refinement_error_budget",
+      "llm_judge_used": false,
+      "numeric": {
+        "abstraction_error": 2.8699058625510503,
+        "certified_upper_bound": 2.8699058625510503,
+        "exact_upper_bound": 2.8699058625510503,
+        "observed": 2.8699058625510503,
+        "threshold": 8.326793158878274,
+        "unit_count": 100
+      },
+      "primitives": [
+        {
+          "direction": "nondecreasing_additive_bound",
+          "interval": [
+            0,
+            100
+          ],
+          "name": "monotone_segment",
+          "variable": "unit_index"
+        },
+        {
+          "left": "certified_or_exact_quantity",
+          "name": "threshold_clause",
+          "operator": "<=",
+          "threshold": 8.326793158878274
+        },
+        {
+          "intercept": 0.0,
+          "lower": 2.8699058625510503,
+          "name": "affine_interval",
+          "slope": 1.0,
+          "upper": 2.8699058625510503
+        },
+        {
+          "abstain_when": "exact_value <= threshold < certified_upper_bound",
+          "margin": 5.456887296327224,
+          "name": "bounded_residual_rule",
+          "residual_bound": 2.8699058625510503
+        }
+      ],
+      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
+      "rule_kind": "refinement_budget",
+      "source_certificate_id": "kan_n100_refinement_error_budget",
+      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_refinement_error_budget|family=refinement_error_budget|verdict=verified|margin=5.45688729633|abstraction_error=2.86990586255|proof_status=proved_by_refinement_budget",
+      "source_metadata": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "refinement_error_budget",
+        "margin": "5.45688729633",
+        "proof_status": "proved_by_refinement_budget",
+        "property_id": "kan_n100_refinement_error_budget",
+        "threshold": "8.32679315888",
+        "unit_count": "100",
+        "verdict": "verified"
+      }
+    },
+    {
+      "cycle_predicates": {
+        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
+        "counterexample_when": "exact_upper_bound > threshold",
+        "verified_when": "certified_upper_bound <= threshold"
+      },
+      "family": "false_low_threshold_control",
+      "llm_judge_used": false,
+      "numeric": {
+        "abstraction_error": 2.8699058625510503,
+        "certified_upper_bound": 82.37314728234323,
+        "exact_upper_bound": 79.50324141979218,
+        "observed": 79.50324141979218,
+        "threshold": 79.45324141979218,
+        "unit_count": 100
+      },
+      "primitives": [
+        {
+          "direction": "nondecreasing_additive_bound",
+          "interval": [
+            0,
+            100
+          ],
+          "name": "monotone_segment",
+          "variable": "unit_index"
+        },
+        {
+          "left": "certified_or_exact_quantity",
+          "name": "threshold_clause",
+          "operator": "<=",
+          "threshold": 79.45324141979218
+        },
+        {
+          "intercept": 0.0,
+          "lower": 79.50324141979218,
+          "name": "affine_interval",
+          "slope": 1.0,
+          "upper": 82.37314728234323
+        },
+        {
+          "abstain_when": "exact_value <= threshold < certified_upper_bound",
+          "margin": 0.04999999999999716,
+          "name": "bounded_residual_rule",
+          "residual_bound": 2.8699058625510503
+        }
+      ],
+      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
+      "rule_kind": "threshold_bound",
+      "source_certificate_id": "kan_n100_false_low_threshold_control",
+      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_false_low_threshold_control|family=false_low_threshold_control|verdict=counterexample|margin=0.05|abstraction_error=2.86990586255|proof_status=refuted_by_exact_witness",
+      "source_metadata": {
+        "abstention_condition": "not_applicable",
+        "abstraction_error": "2.86990586255",
+        "family": "false_low_threshold_control",
+        "margin": "0.05",
+        "proof_status": "refuted_by_exact_witness",
+        "property_id": "kan_n100_false_low_threshold_control",
+        "threshold": "79.4532414198",
+        "unit_count": "100",
+        "verdict": "counterexample"
+      }
+    },
+    {
+      "cycle_predicates": {
+        "abstain_when": "exact_upper_bound <= threshold < certified_upper_bound",
+        "counterexample_when": "exact_upper_bound > threshold",
+        "verified_when": "certified_upper_bound <= threshold"
+      },
+      "family": "near_margin_residual_gap",
+      "llm_judge_used": false,
+      "numeric": {
+        "abstraction_error": 2.8699058625510503,
+        "certified_upper_bound": 82.37314728234323,
+        "exact_upper_bound": 79.50324141979218,
+        "observed": 79.50324141979218,
+        "threshold": 79.50424141979218,
+        "unit_count": 100
+      },
+      "primitives": [
+        {
+          "direction": "nondecreasing_additive_bound",
+          "interval": [
+            0,
+            100
+          ],
+          "name": "monotone_segment",
+          "variable": "unit_index"
+        },
+        {
+          "left": "certified_or_exact_quantity",
+          "name": "threshold_clause",
+          "operator": "<=",
+          "threshold": 79.50424141979218
+        },
+        {
+          "intercept": 0.0,
+          "lower": 79.50324141979218,
+          "name": "affine_interval",
+          "slope": 1.0,
+          "upper": 82.37314728234323
+        },
+        {
+          "abstain_when": "exact_value <= threshold < certified_upper_bound",
+          "margin": 2.8689058625510455,
+          "name": "bounded_residual_rule",
+          "residual_bound": 2.8699058625510503
+        }
+      ],
+      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
+      "rule_kind": "threshold_bound",
+      "source_certificate_id": "kan_n100_near_margin_residual_gap",
+      "source_explanation": "KAN_CERT_EXPLANATION_V1|property_id=kan_n100_near_margin_residual_gap|family=near_margin_residual_gap|verdict=abstained|margin=2.86890586255|abstraction_error=2.86990586255|proof_status=abstained_residual_gap",
+      "source_metadata": {
+        "abstention_condition": "exact_value <= threshold < certified_upper_bound",
+        "abstraction_error": "2.86990586255",
+        "family": "near_margin_residual_gap",
+        "margin": "2.86890586255",
+        "proof_status": "abstained_residual_gap",
+        "property_id": "kan_n100_near_margin_residual_gap",
+        "threshold": "79.5042414198",
+        "unit_count": "100",
+        "verdict": "abstained"
+      }
+    }
+  ],
+  "experiment_id": "exp5140-symbolic-kan-certificate-distillation-v471",
+  "llm_judge_used": false,
+  "milestone": "2026.07.471",
+  "run_date": "20260702",
+  "schema": "carnot.symbolic_kan_certificate_distillation.rules.v471",
+  "source_artifact": {
+    "certificate_count": 4,
+    "explanation_count": 4,
+    "honest_verdict": "success_kan_certificate_explanation_cycle_sound_breadth_ready",
+    "loaded": true,
+    "path": "results/experiment_5128_kan_certificate_explanation_v470.json",
+    "sha256": "2f464f4ef9b6299afa57ff774ed0c07d7d286ff796d3fa2dc4bda06941582d13"
+  },
+  "symbolic_primitives": [
+    {
+      "meaning": "unit-index interval over which additive certificate bounds are monotone",
+      "name": "monotone_segment"
+    },
+    {
+      "meaning": "exact or certified quantity compared with the property threshold",
+      "name": "threshold_clause"
+    },
+    {
+      "meaning": "closed interval between exact, observed, and certified affine quantities",
+      "name": "affine_interval"
+    },
+    {
+      "meaning": "residual abstraction bound that can force abstention near a threshold",
+      "name": "bounded_residual_rule"
+    }
+  ]
+}
