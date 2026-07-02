@@ -1,0 +1,379 @@
+{
+  "board_blockers": {
+    "gatemate": [
+      "blocked_gatemate_dirtyjtag_not_detected"
+    ],
+    "kv260": [
+      "no_safe_kv260_workload_manifest"
+    ],
+    "polarfire": [
+      "no_safe_polarfire_workload_manifest"
+    ]
+  },
+  "command_transcripts": {
+    "gatemate_dirtyjtag_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.034294,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "gatemate_openfpgaloader": {
+      "combined_output": "/opt/oss-cad-suite/bin/openFPGALoader\n",
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "duration_s": 0.06804,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/opt/oss-cad-suite/bin/openFPGALoader\n"
+    },
+    "gatemate_workload": null,
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.671497,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_workload": null,
+    "polarfire_dispatch": null,
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.907341,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "conductor_modified": false,
+  "duration_s": 5.682463,
+  "experiment": "experiment_5144_authenticated_board_workload",
+  "experiment_id": "exp5144-authenticated-board-workload-v471",
+  "extropic_tsu_execution_claimed": false,
+  "field_principles": {
+    "board_blockers": "precise blocker accounting",
+    "command_transcripts": "authenticated command evidence",
+    "conductor_modified": "conductor immutability",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "extropic_tsu_execution_claimed": "substrate honesty",
+    "gatemate_transcript": "board evidence",
+    "hardware_workload_transcripts_ready": "downstream readiness",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "kv260_host_block_devices_touched": "hardware safety",
+    "kv260_ssh_checked": "board reachability",
+    "kv260_timing_transcript": "board evidence",
+    "milestone": "milestone accountability",
+    "no_speedup_claim": "hardware claim discipline",
+    "polarfire_transcript": "board evidence",
+    "preconditions_checked": "hardware safety",
+    "safe_workload_manifest": "workload provenance",
+    "sample_quality_evidence": "no empty speed claim",
+    "tests_run": "verification evidence",
+    "timing_measurements": "measured evidence",
+    "workload_hashes": "reproducibility"
+  },
+  "gatemate_transcript": {
+    "action_scope": "dirtyjtag_detect_then_manifest_gated_program_only",
+    "bitstream_hash": null,
+    "blockers": [
+      "blocked_gatemate_dirtyjtag_not_detected"
+    ],
+    "detected_idcode": null,
+    "dirtyjtag_detected": false,
+    "flash_attempted": false,
+    "hash_matched": false,
+    "openfpgaloader_available": true,
+    "openfpgaloader_checked": true,
+    "transcript": null,
+    "workload_attempted": false,
+    "workload_hash": null
+  },
+  "hardware_workload_transcripts_ready": false,
+  "honest_verdict": "blocked_no_safe_board_workload_manifest_no_speedup_claim",
+  "inference_substrate": "local_board_transcripts_or_blocked",
+  "kv260_host_block_devices_touched": false,
+  "kv260_ssh_checked": true,
+  "kv260_timing_transcript": {
+    "blockers": [
+      "no_safe_kv260_workload_manifest"
+    ],
+    "executable_hash": null,
+    "hash_matched": false,
+    "ssh_checked": true,
+    "ssh_ready": true,
+    "timing_output": {},
+    "transcript": null,
+    "workload_attempted": false,
+    "workload_hash": null
+  },
+  "milestone": "2026.07.471",
+  "no_speedup_claim": true,
+  "polarfire_transcript": {
+    "action_scope": "ssh_dispatch_hashes_only_no_speedup_inference",
+    "blockers": [
+      "no_safe_polarfire_workload_manifest"
+    ],
+    "dispatch_attempted": false,
+    "dispatch_output": {},
+    "executable_hash": null,
+    "hash_matched": false,
+    "ssh_checked": true,
+    "ssh_ready": true,
+    "transcript": null,
+    "workload_hash": null
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_block_device_probe",
+      "duration_s": 4.671497,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh",
+      "safety_constraints": [
+        "ssh_only",
+        "no_host_block_device_access",
+        "no_destructive_actions"
+      ]
+    },
+    {
+      "available": false,
+      "command": "policy",
+      "discipline": "explicit_no_host_block_device_precondition",
+      "duration_s": 0.0001,
+      "exit_code": 0,
+      "observed": "false",
+      "resource": "kv260_host_block_devices_touched",
+      "safety_constraints": [
+        "host_block_devices_touched_false"
+      ]
+    },
+    {
+      "available": true,
+      "command": "sh -lc 'command -v openFPGALoader'",
+      "discipline": "dirtyjtag_detect_no_nextpnr_gatemate",
+      "duration_s": 0.06804,
+      "exit_code": 0,
+      "observed": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "gatemate_openfpgaloader",
+      "safety_constraints": [
+        "detect_first",
+        "no_nextpnr_gatemate",
+        "no_flash_without_manifest"
+      ]
+    },
+    {
+      "available": false,
+      "command": "hardware/board_workloads/exp5144_safe_workload_manifest.json",
+      "discipline": "workload_execution_requires_checked_in_hash_matched_manifest",
+      "duration_s": 0.0001,
+      "exit_code": 1,
+      "observed": "no_checked_in_safe_workload_manifest",
+      "resource": "safe_workload_manifest",
+      "safety_constraints": [
+        "hash_matched",
+        "checked_in",
+        "no_speedup_from_reachability"
+      ]
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_dispatch_manifest_gated",
+      "duration_s": 0.907341,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh",
+      "safety_constraints": [
+        "ssh_only",
+        "hash_matched_dispatch",
+        "no_speedup_from_reachability"
+      ]
+    }
+  ],
+  "random_seed": 5144,
+  "reproducibility_checksum": "cdc4c78d54aa37012e49b899196f27ceb10f8404e36f15012c106766bcc47c73",
+  "run_date": "20260702",
+  "safe_workload_manifest": {
+    "blockers": [
+      "no_checked_in_safe_workload_manifest"
+    ],
+    "descriptor_counts": {
+      "gatemate": 18,
+      "kv260": 18,
+      "polarfire": 18
+    },
+    "descriptor_hashes": {
+      "gatemate": [
+        "9cef9ecb78badebcccb84b9a3256cf2e60724a6b4a5617c46903676cedcdd32b",
+        "57418c4a97c2c60174081835750b7218626d00d5bd76a150f2c20b9a7f6185aa",
+        "f388b123838ca7ded663315513fd731b89d28a0a3b2820a05002e8c60bf9adcb",
+        "321a1771db5240d7a82330bd2021934c0870bb320a0b9532115ef74311d7e070",
+        "d8387f562e80caf0327c5383bf1c4fb6300da0aef3c8ddef926f92ca8666796f",
+        "e9cec1265757751390d31d3bce42c4155480c8eeb599c299b2a409d8d19e19f9",
+        "bab3f04f599704da90300531d82fb8ab8e618eb4b446ebc74be14f4273a45ef0",
+        "a356a6f165dd32eff4140feb58c15fa7f58f66604927b910578ded5fb923d3dc",
+        "b77d560d9dff97a8d43c1a0e6f66d16ce78fecea79336b0a2d7dada18c20870f",
+        "322b6e04ab7ed8f6d8f61f22b2bb4b9217b534278da5f9444e270bf99b65e266",
+        "07bf10f0415bceb54438b4f0db0d28c9bcd6fc69b0d402e47495aef50dfadec9",
+        "ffe6b40e4a25e942e3fa9dbdcd45cea3143fbe9c1a5bf6e910636039af2094a2",
+        "1694b1dd46c9ee53c605c05a74eb25230cce2b5e2e0dbf9cbfdd8ea23c2733e7",
+        "7301cfa1e78880c9eae22604627e67dbba899d482d8a429809754e9e194f02aa",
+        "fd5390a7ae1893ef89811ee5fc18fc0bfd4fc7cb25a7b56cdd786221c5670f2b",
+        "d062ec8c7cac8528114a9222fc92e47601771b37e16424cfbbe790f8d9ca0b95",
+        "8adedee840452cac4cbf76fd391aa366257b31eb850681c43956e3d155272736",
+        "a66d3760c6a15c83a3ac46dc967c27402a8f7f2f8ee55d303899408f8d61fe9d"
+      ],
+      "kv260": [
+        "83c3a238cd0cab79e7562618427545b15c3e3aca785acb52c4ad0c628e1577a6",
+        "cffdc377af32f9010fe7b80f08ab24f6bf2408350c9635e01c1e478e57d27d11",
+        "7c344d0a28d2de217bad527e84d0eb4fddf6a2c1c21be89cd1adb86c2cb7cf91",
+        "43dfef148d672237078a8159536584de1961da1670c5774f03c9c29b086af59a",
+        "40c5bc1ee2f7bcd1f749d64e9d11c51a06c38a85be63a8a23a8ba7f0226ed5be",
+        "94a673567693ef9099125f89fd33f66f442a039127d20564f349e7080b511562",
+        "6588d24f84cca9e94e8e3a2e2c954a4b49d07604369969a50be9d4671fa3f4f4",
+        "d8e5ec13a43d5b9f35272b69ce6802cb7d048c0165e01cb5c6d8d71b7cdd7f2b",
+        "f370a33c1a09afdca10aa2f6362bc7624f98a3d33c05dd63dcaddff9baa0dab5",
+        "41ab0619b94a807f199c83fd638301e8ba402be52ed6954c0bd89f0ab209b369",
+        "3c8465956ce9165568d9c28fd9e4535bdb030e31efb15cf91a1e968bda06136f",
+        "7fe388ec92e2d9b27163c873b63d87bb7d8f574191aef85b73885d25b0aa9080",
+        "bece033813971afd365f044e6e7af373866353868782ed2f66b96be1df4a8166",
+        "6847beac82eeb5c3a50008f8125f4cd1df8ba125721a3e6549dbe2db7c30baea",
+        "b8e9d74e149f3648206d122d45a60147905c5fe43dac9a001c7978fdcc6dd7a8",
+        "323a718f6b8518d8abb71cf1df0267799f0927dc046ceb963688b4bd1e00ab2c",
+        "30062c2fc973d3793c14d6da12839470aa5562424e4c0baaf188a8faf1e092cb",
+        "dd4d4b004addd0a6cd210424fec6f7dc15e903655bcaf5a7910dca919e458b61"
+      ],
+      "polarfire": [
+        "e3e3a238d246f990b518ff9b8cbaf9a24e43c1f0148d34d6c6acb7478d648edd",
+        "37a1ecb19ce3a947db485245a866e3da9219b278f388216692c1fb89e2b7c1ef",
+        "e99e6698fe8cbb79b3766868874a19fffee5006f326153dc37f7491a06462e51",
+        "f48895acab77f5451783e9cdc34d56f4c92c88a09f4663e2c66dcd23b5e5310c",
+        "3e89ff128518b8b1b0d1671b843fd5a7d0ed798eccbf8e3061f019b02318babd",
+        "619e3301580fe36fbce0b18ce3ffc3cdd8810a3b6fe37b0ed0c644a49e8dca9d",
+        "c2c10851f55386d21c001371afa73bdb5f25512ab3f5566c39fa883db39fc6f6",
+        "94c04a3c94c951d4f93e42b6e6290ce034cb6ae21e1f45fb40700a5f4bf89bf6",
+        "1e0900977f6dad7145c5893b0b68699ab5bb223c7db7d165e2ea082a2c233ef1",
+        "cbea63f787a679d820f6cbc32b7fae9a686215c91541fcd949981bd7f52e9721",
+        "51164b772e2668b992d08357784266089640c1e4c79bf15fd405fecca9c54c2d",
+        "2673dc43715c8b5bd923c75a3b8a7bf49e11dbb13f06c291786a8b9d4c5377bc",
+        "cedf519c75ef82b8ed0d7bb6ec77364ecbe76d2127efe881680a2bc1733e21d7",
+        "c38433afe064f881de84667f0fc538c03a46d0fd5d7be8392a356ec17cc9af37",
+        "fbc4c761bead135bfbd253bad851fc6d5d555e7fd5597b5cca42ddb8db597b40",
+        "dadece6d75c2c9b0aa64691cfa62bda8705f2505d6f05c5de06e1573db7f3938",
+        "cd1fc7d4df4b48252d11576d3b7cc7a3917764d43c8a8da63734a174f8e90932",
+        "0cba3f9b08085ac55d0178f72e5bd3b698ce2021896631ee5f5f279ca24de256"
+      ]
+    },
+    "exp5141_descriptors_loaded": true,
+    "exp5141_result_path": "results/experiment_5141_hubo_partition_residual_exponent_v471.json",
+    "exp5141_result_sha256": "dafc1ef9db53fecd4e0599880d5e25ce86305b4f0d6dd8113972ade7185fa6e7",
+    "manifest_id": null,
+    "path": "hardware/board_workloads/exp5144_safe_workload_manifest.json",
+    "present": false,
+    "sha256": null,
+    "valid": false,
+    "workloads": {
+      "gatemate": {
+        "bitstream_hash": null,
+        "blocker": "no_safe_gatemate_workload_manifest",
+        "board": "gatemate",
+        "command_kind": null,
+        "enabled": false,
+        "executable_hash": null,
+        "path": null,
+        "present": false,
+        "safe": false,
+        "workload_hash": null
+      },
+      "kv260": {
+        "bitstream_hash": null,
+        "blocker": "no_safe_kv260_workload_manifest",
+        "board": "kv260",
+        "command_kind": null,
+        "enabled": false,
+        "executable_hash": null,
+        "path": null,
+        "present": false,
+        "safe": false,
+        "workload_hash": null
+      },
+      "polarfire": {
+        "bitstream_hash": null,
+        "blocker": "no_safe_polarfire_workload_manifest",
+        "board": "polarfire",
+        "command_kind": null,
+        "enabled": false,
+        "executable_hash": null,
+        "path": null,
+        "present": false,
+        "safe": false,
+        "workload_hash": null
+      }
+    }
+  },
+  "sample_quality_evidence": {
+    "gatemate": {
+      "blockers": [
+        "blocked_gatemate_dirtyjtag_not_detected"
+      ],
+      "correctness": null,
+      "hash_matched": false,
+      "sample_quality": null
+    },
+    "kv260": {
+      "blockers": [
+        "no_safe_kv260_workload_manifest"
+      ],
+      "correctness": null,
+      "hash_matched": false,
+      "sample_quality": null
+    },
+    "polarfire": {
+      "blockers": [
+        "no_safe_polarfire_workload_manifest"
+      ],
+      "correctness": null,
+      "hash_matched": false,
+      "sample_quality": null
+    },
+    "ready_evidence_boards": [],
+    "speedup_evidence_claimed": false
+  },
+  "schema": "carnot.experiment_5144_authenticated_board_workload.v471",
+  "spec_refs": [
+    "REQ-HW-5144",
+    "SCENARIO-HW-5144"
+  ],
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5144_authenticated_board_workload_v471.py --date 20260702",
+    ".venv/bin/pytest tests/python/test_experiment_5144_authenticated_board_workload.py -q",
+    ".venv/bin/coverage run --source=python/carnot/experiment_5144_authenticated_board_workload.py -m pytest tests/python/test_experiment_5144_authenticated_board_workload.py -q",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5144_authenticated_board_workload.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "timing_measurements": {
+    "gatemate_detect_s": 0.034294,
+    "gatemate_workload_s": null,
+    "hash_matched_evidence_count": 0,
+    "kv260_ssh_s": 4.671497,
+    "kv260_workload_s": null,
+    "polarfire_dispatch_s": null,
+    "polarfire_ssh_s": 0.907341
+  },
+  "workload_hashes": {
+    "exp5141_board_ready_descriptors": "dafc1ef9db53fecd4e0599880d5e25ce86305b4f0d6dd8113972ade7185fa6e7",
+    "gatemate_bitstream": null,
+    "gatemate_workload": null,
+    "kv260_executable": null,
+    "kv260_workload": null,
+    "polarfire_executable": null,
+    "polarfire_workload": null,
+    "safe_workload_manifest": null
+  }
+}
