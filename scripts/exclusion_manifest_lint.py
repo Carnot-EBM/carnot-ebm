@@ -95,6 +95,17 @@ _WRONG_MECHANISM_PATTERNS: list[tuple[re.Pattern[str], re.Pattern[str], str, str
     ),
 ]
 
+# CLASS 5 exemption (2026-07-01): a recurring per-milestone hygiene task whose JOB is to verify
+# that no OTHER task reruns a retired scope (e.g. exp5123-v470-source-scope-audit,
+# exp5135-v471-source-scope-audit -- confirmed recurring via
+# python/carnot/experiment_5123_v470_source_scope_audit.py) will legitimately MENTION retired
+# scope names in its own prompt while auditing for them. Caught as a real false positive on
+# `.471`'s exp5135: its prompt literally says "verify... that no task reruns retired FoVer or
+# other exclusion-manifest scopes" and got HARD-blocked for containing the word "fover". Simple
+# substring matching cannot distinguish "checking that nobody does X" from "doing X" -- exempt
+# this recurring, structurally-necessary task shape by id/title pattern instead.
+_SCOPE_AUDIT_TASK_RE = re.compile(r"(^|[-_])source[-_]?scope[-_]?audit($|[-_])", re.IGNORECASE)
+
 
 @dataclass
 class ExclusionRisk:
@@ -344,12 +355,22 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
         # exactly what let the `.469` FoVer-in-domain incident through).
         # Same override semantics as CLASS 2: a valid prior_failures: block
         # or operator_override: downgrades HARD -> WARNING.
+        # Exempt recurring source/scope-audit hygiene tasks (see
+        # _SCOPE_AUDIT_TASK_RE docstring above) -- their job is to CHECK for
+        # retired-scope reruns, so they legitimately name retired scopes.
+        is_scope_audit_task = bool(
+            _SCOPE_AUDIT_TASK_RE.search(task_id) or _SCOPE_AUDIT_TASK_RE.search(task_title)
+        )
         haystack = f"{task_title} {task.get('prompt', '')}".lower()
-        matched: list[tuple[str, str, str]] = [
-            (pattern_str, source_id, reason)
-            for pattern_str, source_id, reason in blocked_patterns
-            if pattern_str.lower() in haystack
-        ]
+        matched: list[tuple[str, str, str]] = (
+            []
+            if is_scope_audit_task
+            else [
+                (pattern_str, source_id, reason)
+                for pattern_str, source_id, reason in blocked_patterns
+                if pattern_str.lower() in haystack
+            ]
+        )
         if matched:
             valid_priors = False
             if validate_prior_failures is not None:
