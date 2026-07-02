@@ -126,6 +126,27 @@ _WIN_TOKENS = (
     "works",
     "deployed",
     "viable_tier",
+    # Added 2026-07-01 -- CLAUDE.md "Verdict Terminal-Prefix Discipline" mandates
+    # honest_verdict start with complete:/complete_/success:/success_/passed:/passed_/
+    # shipped:/shipped_. This list already had "complete" and "ships" (present tense)
+    # but never "success" or "shipped" (past tense) or "passed" themselves -- so a
+    # clean, unambiguous win like "success: RTL structural logic validated
+    # theoretically..." (exp1791) or "success_verified_symbolic_gating" (exp2071) fell
+    # through every category to the ⚠️ Research Finding default, DESPITE correctly
+    # following the terminal-prefix discipline. Traced live: this is what let a
+    # genuinely clean v470 success (exp5128 KAN certificates) get treated as a
+    # "prior failure" by FailureLedger, HARD-blocking .471's exp5140 as a doomed
+    # rerun it wasn't. Corpus-wide impact measured at fix time: 352 "success:"-
+    # prefixed and 13 "shipped:"-prefixed artifacts (of 4160 scanned) were pure
+    # oversight misclassifications (zero genuine blocked/failed/partial content) --
+    # fixed by this addition. Verdicts that ALSO contain a real negative token (e.g.
+    # "complete_..._weak_fit..._blocked_...") are UNAFFECTED: blocked/failed/partial
+    # are checked before win-tokens in the cascade above, so a genuinely mixed result
+    # correctly stays non-Complete either way -- this fix only rescues the CLEAN wins.
+    "success",
+    "succeeded",
+    "shipped",
+    "passed",
 )
 
 # Artifact fields that, if present, are pulled into the changelog line as
