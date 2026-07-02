@@ -14591,6 +14591,105 @@ measurements, residual-energy telemetry, no Extropic/TSU execution claim, and
 
 ---
 
+### REQ-HW-5144
+
+**Title:** Authenticated board workload transcripts MUST convert reachable boards into hash-matched evidence or precise blockers
+
+**Description:**
+Experiment 5144 MUST produce
+`results/experiment_5144_authenticated_board_workload_v471.json` as a v471
+hardware-continuity artifact. The artifact MUST use
+`inference_substrate=local_board_transcripts_or_blocked`, cite the Exp 5141
+board-ready workload descriptors when present, and cover KV260, GateMate
+A1/DirtyJTAG, and PolarFire without claiming hardware speedup from reachability
+alone.
+
+KV260 MUST be checked over SSH only with a command such as
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true`. Host block devices MUST
+NOT be inspected, mounted, or written as a KV260 precondition. KV260 workload
+execution is allowed only when a checked-in safe workload manifest names a
+read-only SSH/UIO workload whose content hash matches the manifest. Otherwise
+the artifact MUST record `no_safe_kv260_workload_manifest` or the exact
+hash/safety blocker and keep `no_speedup_claim=true`.
+
+GateMate MUST use the DirtyJTAG/openFPGALoader path for detection. It MUST NOT
+depend on a nonexistent `nextpnr-gatemate` command. GateMate workload execution
+or flashing is allowed only when a checked-in safe manifest names a hash-matched
+bitstream or executable plus a non-destructive transcript collection command;
+otherwise the artifact MUST record an exact blocker and MUST NOT program the
+board.
+
+PolarFire MUST record SSH reachability and any safe dispatch transcript with
+workload and executable hashes. PolarFire reachability by itself MUST NOT be
+reported as speedup evidence. Extropic/TSU context remains architecture-only:
+the artifact MUST set `extropic_tsu_execution_claimed=false` and MUST NOT claim
+TSU execution.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `experiment_id`
+- `milestone`
+- `honest_verdict`
+- `inference_substrate`
+- `duration_s`
+- `preconditions_checked`
+- `kv260_ssh_checked`
+- `kv260_host_block_devices_touched`
+- `safe_workload_manifest`
+- `workload_hashes`
+- `kv260_timing_transcript`
+- `gatemate_transcript`
+- `polarfire_transcript`
+- `timing_measurements`
+- `sample_quality_evidence`
+- `hardware_workload_transcripts_ready`
+- `no_speedup_claim`
+- `extropic_tsu_execution_claimed`
+- `conductor_modified`
+- `tests_run`
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5144_authenticated_board_workload_v471.py --date 20260702`
+  writes `results/experiment_5144_authenticated_board_workload_v471.json`.
+- The artifact includes
+  `experiment_id="exp5144-authenticated-board-workload-v471"`,
+  `milestone="2026.07.471"`, `spec_refs` containing `REQ-HW-5144` and
+  `SCENARIO-HW-5144`, `field_principles`, board command transcripts, workload
+  hashes, timing measurements, and a stable `reproducibility_checksum`.
+- `honest_verdict` starts with `complete_`, `success_`, or `blocked_`.
+- `kv260_host_block_devices_touched=false`, and no artifact field cites host
+  storage markers such as `/dev/mmcblk` or `/dev/disk`.
+- `hardware_workload_transcripts_ready=true` only when at least one local board
+  has same-run hash-matched timing and sample-quality or correctness evidence.
+- `no_speedup_claim=true`, `extropic_tsu_execution_claimed=false`, and
+  `conductor_modified=false` for this continuity artifact.
+
+**Implementation status:** Pending (Exp 5144)
+
+---
+
+### SCENARIO-HW-5144
+
+**Scenario:** Exp 5144 writes authenticated local board workload transcripts or honest blockers.
+
+**Given:** Exp 5141 may provide board-ready descriptor hashes, KV260 may only be
+checked over SSH, GateMate may only use DirtyJTAG/openFPGALoader detection unless
+a safe flash/workload manifest permits more, and PolarFire dispatch evidence
+must be hash-matched without speedup inference.
+**When:** Experiment 5144 runs the non-destructive prechecks and executes only
+safe manifest-backed workloads where available.
+**Then:** It writes
+`results/experiment_5144_authenticated_board_workload_v471.json` with all
+required fields, principle annotations, safe-workload manifest status, workload
+hashes, KV260/GateMate/PolarFire transcripts or exact blockers, timing
+measurements, sample-quality or correctness evidence, no host block-device
+touches, no Extropic/TSU execution claim, and `no_speedup_claim=true`.
+
+**Implementation status:** Pending (Exp 5144)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
