@@ -5637,3 +5637,9 @@ The critical path for milestone .250:
 - theme: operational retrospective where the empty timing window is the finding, traced to the project's named FALSE-ZERO detector gap
 - key result: honest negative -- the authoritative timing source shows 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks since activation; this matches the already-named FALSE-ZERO detector gap (tracked since milestone .363), now present in 76 of 205 logged milestone retros including the 8 immediately preceding this one, and the previously-diagnosed fix (detector wired into the conductor's retro prompt-assembly + disk-mtime fallback) still has not landed
 - acceptance: 0/0 criteria met -- the timing source supplied no experiment entries to evaluate, and closing the detector gap itself is the standing open item
+
+### Milestone 2026.07.473
+- exp_range: no data available this milestone
+- theme: operational retrospective for a milestone whose authoritative timing source again reports no post-activation experiment commits
+- key result: no data available this milestone; the supplied timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no slowest experiment, GPU-idle bottleneck, or DualGPURunner finding can be derived from authoritative data
+- acceptance: 0/0 criteria met -- no experiment criteria were present in the supplied timing data

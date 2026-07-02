@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.473",
+  "generated_at": "2026-07-02T13:44:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "TIMING DATA reports no experiment commits since the activation of milestone 2026.07.473, so no operational timing or GPU-utilization analysis can be performed from authoritative data this cycle. The live GPU snapshot shows both RTX 3090s idle (0% util, 4MB allocated) at 2026-07-02T13:44:29Z, but with zero compute-bound experiments recorded in-window this is uninformative rather than a bottleneck.",
+  "bottlenecks_identified": [
+    "No compute-bound experiments appear in the TIMING DATA block this milestone, so no experiment-level bottleneck (slow model load, serialized GPU usage, missing DualGPURunner) can be identified from authoritative data.",
+    "The idle-GPU snapshot (0% util on both GPUs) cannot be attributed to a bottleneck because gpu_idle_on_compute_bound_tasks is null -- there is no in-window compute-bound task to hold an idle GPU accountable for.",
+    "An empty milestone-scoped TIMING DATA block prevents any operational efficiency analysis from being performed this cycle, independent of whether research work actually occurred; this is itself worth flagging to whoever maintains the retro data-assembly path."
+  ],
+  "improvements_suggested": [
+    "Cross-check the retro TIMING DATA source's commit-scoping logic for milestone 2026.07.473 before treating an empty block as ground truth for 'no activity occurred'.",
+    "When TIMING DATA is empty, emit a lightweight secondary signal (e.g. commit count since activation) alongside the retro so operators can distinguish a genuinely idle milestone from a data-collection gap without manual investigation.",
+    "Continue gating GPU-idle bottleneck claims strictly on compute_bound task presence, as done here, to avoid false-positive flags on empty or synthesis-only milestones.",
+    "Keep DualGPURunner reserved for tasks that load 2+ models in parallel; not applicable this cycle since no compute-bound tasks are recorded."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Verify the timing-data collection path correctly scopes 'commits since activation' for 2026.07.473 before the next retro cycle runs.",
+    "If the milestone genuinely had no experiment activity, confirm the conductor/planner is not stalled and picks up the next roadmap normally.",
+    "Preserve the existing discipline of gating GPU-idle and DualGPURunner findings on compute-bound task presence so empty-data milestones don't produce false bottleneck claims."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retro reflects a data-availability gap, not a demonstrated research or operational failure -- with zero experiment commits in the authoritative timing window, the most honest output is to report that plainly rather than infer activity or bottlenecks that the given data cannot support."
+}
