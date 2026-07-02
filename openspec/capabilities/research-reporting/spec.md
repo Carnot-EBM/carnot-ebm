@@ -627,6 +627,119 @@ with the Exp 5165 retired-extras entry present
 task ids, and the Exp 5165 artifact records
 `false_positive_check_against_this_milestone=true`.
 
+### REQ-REPORT-5168: Archive .473 Corrected Truth And Activate .474
+
+The Exp 5168 workflow SHALL aggregate milestone `2026.07.473` from
+`results/experiment_5156_archive_472_activate_473.json` through
+`results/experiment_5167_capstone_v473.json`, the active `.474`
+`research-roadmap.yaml`, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/arc_solve_registry.yaml`, and `ops/verifier_gaps.md`. It SHALL write
+`results/experiment_5168_archive_473_activate_474.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT touch the currently running conductor process or active task, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL preserve the corrected `.473` close-state truthfully. It
+SHALL record Exp 5157 as an honest warm-start null with
+`gate_passed=false`, `warmstart_vs_cold_delta_median=0.0`, 32 transitions, and
+21 games. It SHALL record Exp 5158 as an honest goal-energy ranker null with
+`gate_passed=false` and only 1 of 3 target games improved. It SHALL record Exp
+5159 as `blocked_gate_check_failed` at `conductor_pre_gate` because Exp 5157's
+gate was false, with zero new levels banked. It SHALL record Exp 5160 as a
+real cross-corpus oracle-distinct win with `cross_corpus_delta=0.5`,
+`cross_corpus_delta_ci95=[0.5,0.5]`, leak audit passed, and
+`diffusiongemma_gate_updated_recommendation=ungate_now`, while also carrying
+the `held_out_task_n=24` caveat because CLAUDE.md requires `N >= 30` for
+percentage-point delta claims.
+
+The workflow SHALL explicitly correct the stale Exp 5167 capstone treatment of
+Exp 5161. If the live Exp 5161 artifact now has `flagged_adversarial=false`,
+the archive SHALL record `exp5161_unquarantine_noted=true`, SHALL state that
+the capstone's exclusion clause is stale, and SHALL preserve the actual pilot
+result: 4 discordant wins, 0 losses, exact-test p-value 0.125,
+`exact_test_passes_min6_rule=false`, and
+`gap4_status_recommendation=scale_up_recommended`. The workflow SHALL record
+Exp 5163 as underpowered and live-tautology-flagged rather than clean headline
+evidence, Exp 5164 as a tested retro-timing false-zero fix that left
+`scripts/research_conductor.py` untouched, Exp 5165 as load-bearing retirement
+hygiene, and Exp 5166 as hardware continuity with 2 of 3 boards reachable and
+GateMate blocked on DirtyJTAG IDCODE.
+
+The workflow SHALL verify the `.473` handoff runtime before activation by
+recording whether there are any non-transition dirty git paths and whether any
+conductor-like runtime process is orphaned. Expected Exp 5168 deliverable
+files MAY be listed as transition-local dirty paths when the workflow runs
+after authoring the artifact, but unrelated dirty paths or orphaned conductor
+processes SHALL force `v473_runtime_clean=false`. The artifact SHALL emit
+`v473_runtime_clean` as a top-level boolean gate for downstream `.474` tasks.
+
+The workflow SHALL confirm `research-roadmap.yaml` and
+`openspec/change-proposals/research-roadmap-vNEXT.md` name milestone
+`2026.07.474` and that the active roadmap contains task ids `exp5168` through
+`exp5180`. It SHALL confirm `ops/arc_solve_registry.yaml` reports
+`reproducible_total_levels=69` and `reproducible_total_games=24`, matching the
+Exp 5167 capstone registry reconciliation, and SHALL confirm the GAP-4 status
+line in `ops/verifier_gaps.md` remains open with bounded-scale directional
+replication rather than marked filled. Any drift SHALL be recorded explicitly.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `honest_verdict`, `inference_substrate`,
+`duration_s`, `source_artifacts_read`, `task_verdicts`,
+`milestone_archive_summary`, `v473_runtime_clean`, `runtime_clean_details`,
+`exp5161_unquarantine_noted`, `capstone_stale_exclusions_corrected`,
+`arc_registry_reconciliation`, `gap4_status_reconciliation`,
+`active_roadmap_ready`, `active_roadmap_modified`, `conductor_modified`,
+`flagged_adversarial`, and `tests_run`.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability"
+- `milestone`: principle "milestone accountability"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ per Verdict Terminal-Prefix Discipline."
+- `inference_substrate`: principle "This task reads/reconciles upstream JSON; it does not invoke an LLM or run new compute."
+- `duration_s`: principle "timing accountability"
+- `source_artifacts_read`: principle "evidence provenance"
+- `task_verdicts`: principle ".473 task truth without rounding nulls, blocked gates, or corrected flags"
+- `milestone_archive_summary`: principle "archive summary must preserve real wins, honest nulls, blocked gates, and stale capstone corrections precisely"
+- `v473_runtime_clean`: principle "Downstream .474 tasks may gate on this; a dirty handoff should block, not silently proceed."
+- `runtime_clean_details`: principle "handoff diagnostics must explain the gate, not just emit a boolean"
+- `exp5161_unquarantine_noted`: principle "The capstone's own summary is stale on this one point (recorded pre-fix); .474 must not inherit a fabrication exclusion that was already corrected same-day."
+- `capstone_stale_exclusions_corrected`: principle "capstone exclusions must be reconciled against live artifact state before .474 planning inherits them"
+- `arc_registry_reconciliation`: principle "ARC level totals must stay at the measured 69/24 unless a live level-up artifact proves otherwise"
+- `gap4_status_reconciliation`: principle "GAP-4 remains open until the significance and decentralization bars are actually met"
+- `active_roadmap_ready`: principle "activation readiness"
+- `active_roadmap_modified`: principle "operator instruction compliance"
+- `conductor_modified`: principle "conductor immutability"
+- `flagged_adversarial`: principle "adversarial-verification accountability"
+- `tests_run`: principle "verification evidence"
+
+#### SCENARIO-REPORT-5168: Archive Artifact Records Corrected .473 Truth And .474 Readiness
+
+**Given** the twelve `.473` result artifacts, a clean handoff runtime snapshot,
+`research-roadmap.yaml` naming `2026.07.474` with tasks `exp5168` through
+`exp5180`, `openspec/change-proposals/research-roadmap-vNEXT.md` naming
+`2026.07.474`, `ops/arc_solve_registry.yaml` reporting 69 levels and 24 games,
+and `ops/verifier_gaps.md` keeping GAP-4 open after the bounded Exp 5161 pilot
+**When** the Exp 5168 workflow runs
+**Then** it writes the JSON artifact, records the Exp 5160 cross-corpus win
+with its n=24 caveat, records Exp 5157/5158 as honest nulls, records Exp 5159
+as gate-blocked, records Exp 5161 as un-quarantined but not significant,
+records Exp 5163 as tautology-flagged and not headline-clean, emits
+`v473_runtime_clean=true`, declares `aggregation_from_upstream_artifacts`,
+keeps `active_roadmap_modified=false` and `conductor_modified=false`, and
+records `.474` readiness without mutating the roadmap.
+
+#### SCENARIO-REPORT-5168-DIRTY-RUNTIME: Dirty Handoff Blocks Downstream Gates
+
+**Given** the `.473` sources are otherwise loadable
+**And** the runtime snapshot contains unrelated dirty git paths or an orphaned
+conductor-like process
+**When** the Exp 5168 workflow runs
+**Then** it still writes a terminal archive artifact, but records
+`v473_runtime_clean=false`, preserves the dirty-path or orphan diagnostics in
+`runtime_clean_details`, and uses a complete-prefixed verdict that makes the
+activation gate visibly dirty instead of silently proceeding as clean.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
@@ -638,6 +751,12 @@ task ids, and the Exp 5165 artifact records
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5165 | Planned (`python/carnot/experiment_5165_generation_axis_retirement_hygiene_v473.py`, `results/experiment_5165_generation_axis_retirement_hygiene_v473.json`) | Planned (`tests/python/test_experiment_5165_generation_axis_retirement_hygiene.py`) |
+
+## Implementation Status (REQ-REPORT-5168)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5168 | Planned (`python/carnot/experiment_5168_archive_473_activate_474.py`, `results/experiment_5168_archive_473_activate_474.json`) | Planned (`tests/python/test_experiment_5168_archive_473_activate_474.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
