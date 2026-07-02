@@ -1,0 +1,197 @@
+{
+  "artifact": "experiment_5140_symbolic_kan_certificate_distillation_v471",
+  "certificate_soundness": true,
+  "conductor_modified": false,
+  "cycle_reconstruction_rate": 1.0,
+  "distilled_rule_summaries": [
+    {
+      "family": "global_energy_upper_bound",
+      "primitive_names": [
+        "monotone_segment",
+        "threshold_clause",
+        "affine_interval",
+        "bounded_residual_rule"
+      ],
+      "rule_id": "symbolic_rule::kan_n100_global_energy_upper_bound",
+      "source_certificate_id": "kan_n100_global_energy_upper_bound",
+      "verdict": "verified"
+    },
+    {
+      "family": "refinement_error_budget",
+      "primitive_names": [
+        "monotone_segment",
+        "threshold_clause",
+        "affine_interval",
+        "bounded_residual_rule"
+      ],
+      "rule_id": "symbolic_rule::kan_n100_refinement_error_budget",
+      "source_certificate_id": "kan_n100_refinement_error_budget",
+      "verdict": "verified"
+    },
+    {
+      "family": "false_low_threshold_control",
+      "primitive_names": [
+        "monotone_segment",
+        "threshold_clause",
+        "affine_interval",
+        "bounded_residual_rule"
+      ],
+      "rule_id": "symbolic_rule::kan_n100_false_low_threshold_control",
+      "source_certificate_id": "kan_n100_false_low_threshold_control",
+      "verdict": "counterexample"
+    },
+    {
+      "family": "near_margin_residual_gap",
+      "primitive_names": [
+        "monotone_segment",
+        "threshold_clause",
+        "affine_interval",
+        "bounded_residual_rule"
+      ],
+      "rule_id": "symbolic_rule::kan_n100_near_margin_residual_gap",
+      "source_certificate_id": "kan_n100_near_margin_residual_gap",
+      "verdict": "abstained"
+    }
+  ],
+  "distilled_rules_path": "results/experiment_5140_symbolic_kan_certificate_distillation_v471_rules.json",
+  "duration_s": 0.000437,
+  "exp5128_loaded": true,
+  "experiment": 5140,
+  "experiment_id": "exp5140-symbolic-kan-certificate-distillation-v471",
+  "false_property_detected": true,
+  "family_holdout_results": [
+    {
+      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+      "certificate_soundness": true,
+      "cycle_reconstruction_rate": 1.0,
+      "heldout_family": "false_low_threshold_control",
+      "heldout_rule_count": 1,
+      "primitive_templates_seen": [
+        "affine_interval",
+        "bounded_residual_rule",
+        "monotone_segment",
+        "threshold_clause"
+      ],
+      "symbolic_equivalence_rate": 1.0,
+      "train_family_count": 3
+    },
+    {
+      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+      "certificate_soundness": true,
+      "cycle_reconstruction_rate": 1.0,
+      "heldout_family": "global_energy_upper_bound",
+      "heldout_rule_count": 1,
+      "primitive_templates_seen": [
+        "affine_interval",
+        "bounded_residual_rule",
+        "monotone_segment",
+        "threshold_clause"
+      ],
+      "symbolic_equivalence_rate": 1.0,
+      "train_family_count": 3
+    },
+    {
+      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+      "certificate_soundness": true,
+      "cycle_reconstruction_rate": 1.0,
+      "heldout_family": "near_margin_residual_gap",
+      "heldout_rule_count": 1,
+      "primitive_templates_seen": [
+        "affine_interval",
+        "bounded_residual_rule",
+        "monotone_segment",
+        "threshold_clause"
+      ],
+      "symbolic_equivalence_rate": 1.0,
+      "train_family_count": 3
+    },
+    {
+      "caution": "leave-one-family exact reconstruction, not broad KAN generalization",
+      "certificate_soundness": true,
+      "cycle_reconstruction_rate": 1.0,
+      "heldout_family": "refinement_error_budget",
+      "heldout_rule_count": 1,
+      "primitive_templates_seen": [
+        "affine_interval",
+        "bounded_residual_rule",
+        "monotone_segment",
+        "threshold_clause"
+      ],
+      "symbolic_equivalence_rate": 1.0,
+      "train_family_count": 3
+    }
+  ],
+  "field_principles": {
+    "certificate_soundness": "formal correctness",
+    "conductor_modified": "conductor immutability",
+    "cycle_reconstruction_rate": "explanation cycle consistency",
+    "distilled_rules_path": "artifact provenance",
+    "duration_s": "timing accountability",
+    "exp5128_loaded": "upstream evidence",
+    "experiment_id": "traceability",
+    "false_property_detected": "adversarial control",
+    "family_holdout_results": "generalization caution",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "near_margin_abstention_rate": "uncertainty control",
+    "symbolic_equivalence_rate": "explanation fidelity",
+    "symbolic_kan_ready": "downstream readiness",
+    "symbolic_primitives": "interpretability",
+    "tests_run": "verification evidence"
+  },
+  "honest_verdict": "success_symbolic_kan_certificate_distillation_ready",
+  "inference_substrate": "exact_checked_symbolic_kan_distillation",
+  "label_shuffle_control": {
+    "detected": true,
+    "mismatch_count": 4,
+    "rules_checked": 4
+  },
+  "methodology_note": "Exp 5140 distills Exp 5128 certificate residual behavior into exact symbolic primitives and checks cycle reconstruction without an LLM judge.",
+  "milestone": "2026.07.471",
+  "near_margin_abstention_rate": 1.0,
+  "run_date": "20260702",
+  "schema": "carnot.symbolic_kan_certificate_distillation.v471",
+  "source_artifacts": [
+    "results/experiment_5128_kan_certificate_explanation_v470.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5140",
+    "SCENARIO-KAN-5140"
+  ],
+  "symbolic_equivalence_rate": 1.0,
+  "symbolic_kan_ready": true,
+  "symbolic_primitives": [
+    {
+      "meaning": "unit-index interval over which additive certificate bounds are monotone",
+      "name": "monotone_segment"
+    },
+    {
+      "meaning": "exact or certified quantity compared with the property threshold",
+      "name": "threshold_clause"
+    },
+    {
+      "meaning": "closed interval between exact, observed, and certified affine quantities",
+      "name": "affine_interval"
+    },
+    {
+      "meaning": "residual abstraction bound that can force abstention near a threshold",
+      "name": "bounded_residual_rule"
+    }
+  ],
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5140_symbolic_kan_certificate_distillation_v471.py --date 20260702",
+    ".venv/bin/pytest tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts=\"\"",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py' -m pytest tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5140_symbolic_kan_certificate_distillation_v471.py' --fail-under=100 -m",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5140_symbolic_kan_certificate_distillation_v471.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "upstream_status": {
+    "certificate_count": 4,
+    "explanation_count": 4,
+    "honest_verdict": "success_kan_certificate_explanation_cycle_sound_breadth_ready",
+    "loaded": true,
+    "path": "results/experiment_5128_kan_certificate_explanation_v470.json",
+    "sha256": "2f464f4ef9b6299afa57ff774ed0c07d7d286ff796d3fa2dc4bda06941582d13"
+  }
+}
