@@ -1,0 +1,176 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "exact_test_discordant_losses=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      }
+    ],
+    "returncode": 1,
+    "status": "flagged"
+  },
+  "cluster_bootstrap_delta_ci95": [
+    0.3076923077,
+    0.5769230769
+  ],
+  "cluster_bootstrap_resamples": 2000,
+  "cross_game_blocked_reason": "blocked_arc_game_ids_unrecoverable",
+  "cross_game_honest_read": "blocked",
+  "cross_game_replication_ci95": null,
+  "cross_game_replication_delta": null,
+  "duration_s": 355.753653,
+  "exact_test_discordant_losses": 0,
+  "exact_test_discordant_wins": 23,
+  "exact_test_p_value": 2.384e-07,
+  "exact_test_passes_min6_rule": true,
+  "experiment": "experiment_5151_arc_oracle_distinct_hardening_v472",
+  "field_principles": {
+    "cross_game_replication_delta": "A win on one pool that vanishes on a second is a corpus artifact, not a general finding.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ AND state plainly whether the +44pp win survives hardening or not -- do not bury a null in qualifiers.",
+    "inference_substrate": "Declare accurately per the Inference-Substrate Declaration Discipline.",
+    "leak_audit_passed": "An unaudited held-out split cannot distinguish a real win from a leaked one.",
+    "multiseed_delta_ci95": "A single-seed CI is not a real interval; multiseed pooling is the minimum bar before this result can inform a scaling decision (DiffusionGemma, exp5152).",
+    "reproducibility_checksum": "Hash of the fixed candidate pool, row-level leak audit, multiseed splits, exact test, and cross-game status so downstream scaling gates can detect drift.",
+    "solve_provenance": "This is offline pool-scoring on already-generated candidates, not a live hidden-game solve.",
+    "verifier_is_oracle": "Must stay oracle-distinct (per the Circularity Discipline) to count toward the moat thesis."
+  },
+  "hardening_axes": {
+    "cross_game": "blocked",
+    "exact_test": "passed",
+    "leak_audit": "passed",
+    "multiseed": "passed"
+  },
+  "headline_outcome": "arc_set_encoder_win_not_hardened",
+  "held_out_game_n": 0,
+  "honest_verdict": "complete_arc_set_encoder_win_not_hardened: +44pp win does not fully survive hardening; unresolved_axes=cross_game",
+  "inference_substrate": "cached_grown_arc_pool_cpu_multiseed_set_encoder_hardening",
+  "leak_audit": {
+    "candidate_signal_collision_count": 0,
+    "candidate_signal_collisions_sample": [],
+    "gold_signal_collision_count": 0,
+    "gold_signal_collisions_sample": [],
+    "held_out_task_n": 52,
+    "passed": true,
+    "scored_oof_row_count": 28443,
+    "task_excluded_row_count": 28443,
+    "task_id_collision_count": 0,
+    "task_id_collisions_sample": [],
+    "training_signal_fields_audited": [
+      "train_task_ids",
+      "train_candidate_ids",
+      "train_candidate_grid_hashes",
+      "train_gold_grid_hashes",
+      "training_signal"
+    ]
+  },
+  "leak_audit_passed": true,
+  "mean_delta": 0.4576923077,
+  "model_specs": {
+    "bootstrap_resamples": 2000,
+    "fixed_candidate_pool": "results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+    "hidden_dim": 32,
+    "n_folds": 5,
+    "oracle_distinct_inference": true,
+    "protocol": "exp4245_hardening_multiseed_leak_audit_exact_test_cross_game_check",
+    "random_seeds": [
+      5151,
+      5152,
+      5153,
+      5154,
+      5155
+    ],
+    "score_inputs": "candidate features and cross-candidate set context only; no gold labels at inference",
+    "set_encoder_architecture": "deepsets_pooled_context_set_encoder",
+    "status": "complete",
+    "training_epochs": 32
+  },
+  "multiseed_ci_method": "student_t_mean_ci_over_seed_deltas",
+  "multiseed_delta_ci95": [
+    0.4265639953,
+    0.4888206201
+  ],
+  "n_seeds": 5,
+  "original_exp4245_ci95": [
+    0.3076923077,
+    0.5961538462
+  ],
+  "original_exp4245_delta": 0.4423076923,
+  "per_seed_deltas": [
+    0.4423076923,
+    0.4615384615,
+    0.4423076923,
+    0.4423076923,
+    0.5
+  ],
+  "per_seed_results": [
+    {
+      "auroc": 0.9886240242,
+      "delta": 0.4423076923,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 5151,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9712119211,
+      "delta": 0.4615384615,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 5152,
+      "set_encoder_at_1": 0.7115384615,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9879618624,
+      "delta": 0.4423076923,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 5153,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9874192933,
+      "delta": 0.4423076923,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 5154,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9885367142,
+      "delta": 0.5,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 5155,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    }
+  ],
+  "random_seed": 5151,
+  "random_seeds_used": [
+    5151,
+    5152,
+    5153,
+    5154,
+    5155
+  ],
+  "reproducibility_checksum": "sha256:f5e08ff3fc82f7dc56f9969da515b5f975804011fd0a2219e0a9f81e7632cf56",
+  "schema": "carnot.arc_oracle_distinct_hardening_5151.v1",
+  "sign_flip_seeds": [],
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-VERIFY-5151",
+    "SCENARIO-VERIFY-5151",
+    "SCENARIO-VERIFY-5151-CROSS-GAME-BLOCKED",
+    "SCENARIO-VERIFY-5151-UPSTREAM-BLOCKED"
+  ],
+  "status": "complete",
+  "verifier_is_oracle": false
+}
