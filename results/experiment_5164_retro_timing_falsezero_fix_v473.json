@@ -1,0 +1,43 @@
+{
+  "schema": "carnot.experiment_5164_retro_timing_falsezero_fix.v1",
+  "experiment": "experiment_5164_retro_timing_falsezero_fix_v473",
+  "module_path": "scripts/retro_timing_fallback.py",
+  "validated_milestones": [
+    {
+      "milestone": "2026.06.450",
+      "reconstructed_wall_time_minutes": 214.6,
+      "reconstructed_compute_bound_count": 4,
+      "matches_known_good": true
+    },
+    {
+      "milestone": "2026.07.467",
+      "reconstructed_wall_time_minutes": 154.7,
+      "reconstructed_compute_bound_count": 5,
+      "matches_known_good": true
+    },
+    {
+      "milestone": "2026.07.470",
+      "reconstructed_wall_time_minutes": 203.8,
+      "reconstructed_compute_bound_count": 3,
+      "matches_known_good": true
+    },
+    {
+      "milestone": "2026.07.472",
+      "reconstructed_wall_time_minutes": 83.3,
+      "reconstructed_compute_bound_count": 0,
+      "matches_known_good": true
+    }
+  ],
+  "m450_reconstruction_correct": true,
+  "tests_added": 6,
+  "tests_passing": true,
+  "test_command": ".venv/bin/pytest tests/python/test_retro_timing_fallback.py -q --no-cov",
+  "research_conductor_py_modified": false,
+  "wiring_instructions_present": true,
+  "random_seed": 5164,
+  "reproducibility_checksum": "7342303839f340567c7a3380eeee84f29b013d61dc93d89b57a0c150b2845726",
+  "duration_s": 0.0001,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "compute_bound": false,
+  "honest_verdict": "complete: module correctly reconstructs the .450 ground-truth case (214.6 wall minutes, 4 compute-bound arms) and returns non-zero timing for .467, .470, and .472 without modifying scripts/research_conductor.py"
+}

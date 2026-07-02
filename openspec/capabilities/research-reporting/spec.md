@@ -22189,6 +22189,84 @@ count
 |---|---|---|
 | REQ-REPORT-4538 | Implemented (`python/carnot/reporting/retro_timing_detector_wire_4538.py`, `python/carnot/experiment_4538_retro_timing_detector_wire.py`) | Implemented (`tests/python/test_experiment_4538_retro_timing_detector_wire.py`) |
 
+### REQ-REPORT-5164: Standalone Retro Timing False-Zero Fallback
+
+The Exp 5164 workflow SHALL add a standalone module at
+`scripts/retro_timing_fallback.py` that reconstructs the operational
+retrospective timing fields without modifying `scripts/research_conductor.py`.
+The module SHALL expose an importable function that accepts a milestone id and
+optionally the milestone task list with deliverable paths, and returns the same
+field names consumed by
+`scripts/research_conductor.py::_run_operational_retrospective`:
+`experiments_completed`, `total_wall_time_minutes`,
+`compute_bound_experiments_count`, `slowest_experiments`, and
+`gpu_idle_on_compute_bound_tasks`.
+
+For each deliverable, the helper SHALL prefer self-reported artifact metadata
+from the deliverable JSON, including `duration_s`, `inference_substrate`, and
+explicit compute-bound markers. For deliverables missing those fields, it SHALL
+fall back to durable file timestamps, preferring
+`git log -1 --format=%ai -- <deliverable>` over raw `os.path.getmtime`. Fallback
+timestamps SHALL be filtered by the same activation-bound start used by the
+legacy conductor logic: the most recent
+`[conductor] Activate milestone <milestone>` commit, or the legacy 24-hour
+fallback when the activation commit is absent.
+
+The workflow SHALL validate the helper against at least three historical
+false-zero milestones and SHALL explicitly check milestone `2026.06.450`,
+whose known-good evidence is a non-zero approximately 212-minute artifact
+window and four compute-bound arms. The Exp 5164 artifact SHALL write
+`results/experiment_5164_retro_timing_falsezero_fix_v473.json` with
+`module_path`, `validated_milestones`, `m450_reconstruction_correct`,
+`tests_added`, `tests_passing`, `research_conductor_py_modified=false`,
+`wiring_instructions_present`, `random_seed`, `reproducibility_checksum`, and
+a terminal-prefix `honest_verdict`.
+
+#### SCENARIO-REPORT-5164-PRIMARY: Self-Reported Fields Drive Per-Artifact Timing
+
+**Given** milestone deliverables whose JSON artifacts contain `duration_s` and
+`inference_substrate`
+**When** the standalone Exp 5164 helper builds retro timing data
+**Then** it records the deliverables as completed experiments
+**And** it uses the self-reported durations for the slowest-experiment ranking
+**And** it classifies live inference or explicit compute markers as
+compute-bound.
+
+#### SCENARIO-REPORT-5164-MTIME: Git Timestamp Fallback Repairs Missing Fields
+
+**Given** a deliverable lacks self-reported timing metadata
+**And** `git log -1 --format=%ai -- <deliverable>` returns an activation-bounded
+timestamp
+**When** the standalone Exp 5164 helper builds retro timing data
+**Then** it keeps that deliverable in the completed count
+**And** it uses the git timestamp before raw filesystem mtime for the milestone
+wall-time window.
+
+#### SCENARIO-REPORT-5164-BOUNDARY: Activation Bound Excludes Earlier Artifacts
+
+**Given** one deliverable timestamp precedes the
+`[conductor] Activate milestone <milestone>` commit
+**When** the standalone Exp 5164 helper applies the fallback timestamp scan
+**Then** the pre-activation deliverable is excluded
+**And** only activation-bounded deliverables contribute to the reconstructed
+count and wall-time window.
+
+#### SCENARIO-REPORT-5164-FALSE-ZERO: Synthetic Legacy Predicate Miss Is Reconstructed
+
+**Given** a synthetic milestone has conductor commit subjects without literal
+`Exp `
+**And** the deliverable artifacts exist on disk with usable metadata or
+timestamps
+**When** the standalone Exp 5164 helper evaluates the milestone tasks
+**Then** it reconstructs non-zero experiments, non-zero wall time, and
+compute-bound count without relying on the legacy commit-subject predicate.
+
+## Implementation Status (REQ-REPORT-5164)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5164 | Implemented (`scripts/retro_timing_fallback.py`) | Implemented (`tests/python/test_retro_timing_fallback.py`) |
+
 ### REQ-REPORT-3986: Archive .368 And Activate .369 GAP-4 Follow-Up Milestone
 
 The Exp 3986 workflow SHALL archive milestone `2026.06.368`, confirm
