@@ -1,0 +1,35 @@
+{
+  "experiment": "mmlu_pro_fewshot_headroom_check",
+  "corpus": "TIGER-Lab/MMLU-Pro (same 40-question test-split sample as the zero-shot runs)",
+  "prompting": "5-shot chain-of-thought, MMLU-Pro's own standard evaluation protocol -- 5 exemplars per category drawn from the validation split (disjoint from the sampled test questions), each with real worked cot_content ending 'the answer is (X)'.",
+  "n_questions": 40,
+  "n_candidates": 240,
+  "n_correct_candidates": 30,
+  "n_unparseable_candidates": 2,
+  "oracle_at_k": 0.5,
+  "sc_vote": 0.125,
+  "headroom": 0.375,
+  "headroom_definition": "oracle_at_k - sc_vote = selectable headroom a verifier could capture",
+  "comparison_to_zero_shot": "Zero-shot (exp_mmlu_pro_fresh_headroom_check.py, 2nd run): oracle_at_k=0.350, sc_vote=0.075. This 5-shot CoT run is the SAME 40 questions, same model, same K, only the prompting changed.",
+  "generator_quality_verdict": "sc_vote is still close to the random-chance floor even with 5-shot CoT -- the generator-weakness confound from the zero-shot run is NOT resolved by prompting alone; a stronger/larger model would be the next lever, not more prompt engineering.",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "model": "unsloth/gemma-4-12B-it-GGUF",
+    "quantization": "Q4_K_M"
+  },
+  "target_model": "unsloth/gemma-4-12B-it-GGUF",
+  "gpu_device": 1,
+  "pool_reused": true,
+  "timing_note": "Total real generation time across the run that produced this pool: 855.63s for 240 real HTTP calls to the CUDA llama-server (across one interrupted+resumed attempt -- the first attempt covered 116 candidates before a background-task interruption, the resumed attempt covered the remaining 124). This final artifact-scoring pass reused the fully-generated pool (0 new calls) -- duration_s reflects the REAL historical generation cost, not this pass alone.",
+  "random_seed": 20260701,
+  "k_samples_per_question": 6,
+  "temperature": 0.8,
+  "duration_s": 855.63,
+  "honest_verdict": "complete_mmlu_pro_fewshot_headroom_present_oracle_0.500_sc_0.125_headroom_0.375",
+  "reproducibility_checksum": "sha256:90f7f17fd9dd2c4bf06df839c475600480dc4a29218284c795134cb908cb863f",
+  "headroom_ci95": [
+    0.225,
+    0.525
+  ],
+  "headroom_ci_method": "3000-resample percentile bootstrap over questions, seed=1"
+}

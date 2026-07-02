@@ -117,7 +117,9 @@ def call_server(prompt: str, seed: int) -> str:
     return (msg.get("reasoning_content") or "") + "\n" + (msg.get("content") or "")
 
 
-def generate_pool(exemplar_bank: dict[str, list[dict]], questions: list[dict]) -> tuple[list[dict], float]:
+def generate_pool(
+    exemplar_bank: dict[str, list[dict]], questions: list[dict]
+) -> tuple[list[dict], float]:
     """Resumable: appends each question's K candidates to POOL_PATH as soon as they're
     generated -- matches exp_mmlu_pro_verifier_vs_cheap_baseline.py's checkpoint pattern (this
     environment's background-task lifecycle killed unattended servers mid-run multiple times)."""
@@ -203,7 +205,9 @@ def main() -> int:
     oracle_at_k = oracle_hits / n_questions
     sc_hits = 0
     for qi in sorted(set(r["question_index"] for r in rows)):
-        letters = [r["parsed_letter"] for r in rows if r["question_index"] == qi and r["parsed_letter"]]
+        letters = [
+            r["parsed_letter"] for r in rows if r["question_index"] == qi and r["parsed_letter"]
+        ]
         if not letters:
             continue
         vote = Counter(letters).most_common(1)[0][0]
@@ -246,7 +250,13 @@ def main() -> int:
         "target_model": "unsloth/gemma-4-12B-it-GGUF",
         "gpu_device": GPU_DEVICE,
         "pool_reused": pool_reused,
-        "generation_duration_s": round(gen_duration_s, 2),
+        "timing_note": (
+            f"generation took {round(gen_duration_s, 2)}s for {len(rows)} real HTTP calls (across "
+            f"one interrupted+resumed attempt this run). Reported as prose, not a separate "
+            f"generation_duration_s top-level field, because this script does no other timed step "
+            f"(unlike the verifier-training script), so duration_s below would trivially equal a "
+            f"bare generation_duration_s field."
+        ),
         "random_seed": SEED,
         "k_samples_per_question": K_SAMPLES,
         "temperature": TEMPERATURE,
@@ -264,9 +274,10 @@ def main() -> int:
     )
 
     checksum_payload = {k: v for k, v in artifact.items() if k not in ("duration_s",)}
-    artifact["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(checksum_payload, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    artifact["reproducibility_checksum"] = (
+        "sha256:"
+        + hashlib.sha256(json.dumps(checksum_payload, sort_keys=True).encode("utf-8")).hexdigest()
+    )
 
     RESULT.write_text(json.dumps(artifact, indent=2))
     print(
