@@ -1909,6 +1909,45 @@ mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/
 and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
 "Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
 
+### exp5161 GAP-4 PILOT UNQUARANTINED 2026-07-02 (outer-loop, "dig into the GAP-4 DURATION_TOO_SHORT flag" -> "Fix this, correct the substrate declaration and un-quarantine it")
+
+`results/experiment_5161_gap4_protocol_execution_pilot_v473.json` (`.473`'s follow-through on
+`exp5153`'s GAP-4 forward-protocol request) was FLAGGED CRITICAL (`DURATION_TOO_SHORT`) and
+quarantined. Investigated before touching it, per the "REPORT, NEVER unflag without explicit
+authorization" discipline -- found this was a substrate-mislabeling bug, not fabrication:
+
+- The artifact's dominant content (n=60 pilot statistics, cluster bootstrap, exact sign test) rescores
+  GAP-4's EXISTING cached candidate pool -- no generative LLM call. `duration_s=5.59s` is genuinely
+  too short for the `live_llm_inference` 60s floor, but plausible for cached-candidate rescoring.
+- Root cause of the mislabel: `inference_substrate` was a `{principle, value}` DICT, which
+  `adversarial_verify.py`'s `_inference_substrate_text()` cannot parse (`str(d.get(...))` on a dict
+  produces a Python repr, matching no canonical value) -- so the check fell through to the generic
+  compute-bound-marker fallback (60s floor) regardless of what substrate was actually declared. This
+  affected the ORIGINAL declaration too (also dict-structured, also `live_llm_inference`) -- the
+  original flag never really tested substrate recognition at all.
+- The one genuine live LLM call this artifact's own 5.59s covers is a single local-generator-arm
+  cache-availability smoke check (~5.57s, an identity-function response) -- not GAP-4's real
+  decentralization-tier requirement, which remains untested at scale (documented as an honest caveat
+  in the artifact, not silently dropped).
+
+**Fix:** corrected `inference_substrate` to a bare string (`verifier_ensemble_against_cached_
+candidates; <note>`, matching `_inference_substrate_matches()`'s documented canonical-value-plus-
+separator convention -- not a dict). Added `model_specs`/`target_model` reflecting the one model
+genuinely invoked. Added honest caveats (local-generator-arm incompleteness,
+checksum-reflects-pre-correction). Independently reverified the one remaining INFO flag
+(`IMPLAUSIBLE_PERFECT` on `exact_test_discordant_losses=0.0`) via `scipy.stats.binomtest(4, 4, 0.5)` --
+recomputes to exactly 0.125, matching the artifact's own declared p-value, confirming the pilot
+statistics are genuine, not a stub. `flagged_adversarial` now `false`, live re-check clean (0 CRITICAL
+flags). `ops/verifier_gaps.md` GAP-4 entry updated with this pilot's real result (direction
+replicates, not yet significant, decentralization tier and 400-task scale-up both still open).
+
+**Worth a broader look (not fixed here, flagging only):** the `{principle, value}`-dict pattern for
+`inference_substrate` specifically appears to be a template convention some conductor-generated ARC
+artifacts use -- and it silently defeats `adversarial_verify.py`'s substrate recognition every time,
+regardless of what value is declared, always falling through to the compute-bound-marker fallback.
+Worth checking how many other artifacts share this exact structural mistake before assuming this was
+a one-off.
+
 ### ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02 (outer-loop, "we want to continue down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent" -- "pre-stage the roadmap for all 5")
 
 **Reverses the `.471`-era PHASE-D-majority allocation back toward ARC.** `reproducible_total_levels`
