@@ -24153,6 +24153,110 @@ available but not fully hardened.
 |---|---|---|
 | REQ-VERIFY-5152 | Implemented (`python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py`, `results/experiment_5152_diffusiongemma_gate_reexamination_v472.json`) | Implemented (`tests/python/test_experiment_5152_diffusiongemma_gate_reexamination_v472.py`) |
 
+### REQ-VERIFY-5160: Oracle-Distinct Cross-Corpus Closure V473
+
+The repository SHALL provide Exp 5160 at
+`python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py` and
+`results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.py` to close
+the Exp 5151 transfer blocker by first verifying whether `game_id` is a
+misapplied ARC-AGI-3 term for the Exp 4243 static ARC puzzle pool.
+
+The runner SHALL first load
+`results/experiment_5151_arc_oracle_distinct_hardening_v472.json` and
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`. If either
+artifact is missing or unreadable, it SHALL write
+`honest_verdict=blocked_upstream_artifact_missing`, keep
+`verifier_is_oracle=false`, set `game_id_misnomer_confirmed=false`, set
+`second_pool_leak_audit_passed=false`, set `cross_corpus_delta=0.0`, set
+`cross_corpus_delta_ci95=[0.0, 0.0]`, set
+`cross_corpus_replication_passed=false`, set
+`diffusiongemma_gate_updated_recommendation=keep_gated`, and stop without
+fabricating replication numbers.
+
+When the upstream artifacts load, the runner SHALL directly inspect the Exp
+4243 pool schema. It SHALL set `game_id_misnomer_confirmed=true` only when the
+pool has task-level static ARC puzzle identifiers, no recoverable `game_id` or
+level grouping field, and any remaining grouping field is a coarse source or
+corpus label rather than an ARC-AGI-3 interactive game id. The artifact SHALL
+record the observed task id/raw id format and grouping fields so the conclusion
+is auditably code-derived.
+
+If no natural game grouping exists, the runner SHALL re-scope the unresolved
+axis to cross-corpus replication. It SHALL inspect
+`results/arc3_gap4_arc2_eval_pool.json.gz` first because it is the preferred
+classic ARC-2 candidate second pool. If that pool has any raw-task, candidate
+content, candidate-id, or gold-label overlap with Exp 4243, it SHALL be
+disqualified as a second corpus and the artifact SHALL record the overlap
+counts. The runner MAY then use a similarly-shaped non-degenerate disjoint
+fallback pool, such as
+`results/experiment_4291_arcgen_cross_generator_pool.json.gz`, but it SHALL
+filter any candidate rows whose grid/content hashes overlap Exp 4243 and SHALL
+record that the fallback is ARC-GEN rather than a classic ARC-1/ARC-2 static
+puzzle pool. If no disjoint non-degenerate pool is available, it SHALL complete
+honestly with `cross_corpus_replication_passed=false` and keep DiffusionGemma
+gated.
+
+For the selected second pool, the runner SHALL adapt candidates into the Exp
+4244 Set-Encoder feature schema without using gold labels as inference rank
+keys. It SHALL run the same DeepSets pooled-context Set-Encoder protocol used
+by Exp 5151 for at least five seeds when the pool has enough tasks, varying
+task folds and initialization, and compute per-seed `set_encoder@1 - vote@1`
+against the same vote baseline, plus a cross-seed CI95. It SHALL also perform
+a row-level leak audit with zero overlap against Exp 4243 by task id/raw id,
+candidate id, candidate grid/content hash, and gold-label surrogate, and SHALL
+set `second_pool_leak_audit_passed=true` only when all audited collision counts
+are zero after any declared adapter filtering.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`game_id_misnomer_confirmed`, `second_pool_source`,
+`second_pool_leak_audit_passed`, `cross_corpus_delta`,
+`cross_corpus_delta_ci95`, `cross_corpus_replication_passed`,
+`diffusiongemma_gate_updated_recommendation`, `verifier_is_oracle`,
+`solve_provenance`, `random_seeds_used`, `reproducibility_checksum`,
+`field_principles`, `spec_refs`, and `acceptance_gate`. `verifier_is_oracle`
+SHALL be the bare bool `false`; `solve_provenance` SHALL equal
+`development_proxy`; and `diffusiongemma_gate_updated_recommendation` SHALL be
+`ungate_now` only when the cross-corpus delta is positive, its CI95 excludes
+zero, the second-pool leak audit passes, and the artifact is not blocked. Its
+field principles SHALL include:
+`game_id_misnomer_confirmed` = `The precise, code-verified fact this task exists to establish before choosing a fix path.`;
+`second_pool_source` = `The disjoint second-pool path actually used after disqualifying overlapping candidates.`;
+`second_pool_leak_audit_passed` = `A second-pool win is not evidence if task ids, candidate content, or gold-label surrogates overlap the original pool.`;
+`cross_corpus_delta` = `set_encoder@1 - vote@1 on the second corpus -- the corrected transfer axis after the game-id misnomer is verified.`;
+`cross_corpus_delta_ci95` = `The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?`;
+`cross_corpus_replication_passed` = `BARE bool: true iff the corrected cross-corpus delta is positive, CI95 excludes zero, and the leak audit passes.`;
+`diffusiongemma_gate_updated_recommendation` = `Feeds directly into whether DiffusionGemma scaling is queued next milestone.`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder, no demo execution; keeps the closure oracle-distinct.`;
+`solve_provenance` = `This is offline pool-scoring on cached candidate pools, not a live hidden-game solve.`;
+`random_seeds_used` = `The >=5 seeds used for the corrected replication protocol.`;
+`reproducibility_checksum` = `Hash of the schema inspection, selected-pool overlap audit, per-seed results, and recommendation.`;
+`honest_verdict` = `Must start with complete:/complete_/success:/success_ AND state plainly whether the win survives cross-corpus replication.`
+
+### SCENARIO-VERIFY-5160: Game-Id Misnomer Re-Scopes To Cross-Corpus
+
+Given Exp 5151 and the Exp 4243 pool load, and the Exp 4243 pool exposes
+static 8-hex ARC puzzle identifiers with no natural game grouping, when Exp
+5160 runs, then it sets `game_id_misnomer_confirmed=true`, disqualifies any
+overlapping preferred second pool, adapts a disjoint non-degenerate fallback
+pool when available, runs at least five Set-Encoder-vs-vote seeds, reports
+`cross_corpus_delta`, `cross_corpus_delta_ci95`, per-seed deltas and pass
+rates, records the row-level overlap/leak audit, keeps `verifier_is_oracle`
+false, and sets `diffusiongemma_gate_updated_recommendation` from the corrected
+cross-corpus result.
+
+### SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED: Missing Inputs Stop Honestly
+
+Given Exp 5151 or the Exp 4243 pool is absent or unreadable, when Exp 5160
+runs, then it writes `honest_verdict=blocked_upstream_artifact_missing`, keeps
+`verifier_is_oracle=false`, records no cross-corpus win, and recommends
+`keep_gated`.
+
+## Implementation Status (REQ-VERIFY-5160)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5160 | Implemented (`python/carnot/reporting/oracle_distinct_cross_corpus_closure_5160.py`, `results/experiment_5160_oracle_distinct_cross_corpus_closure_v473.json`) | Implemented (`tests/python/test_experiment_5160_oracle_distinct_cross_corpus_closure_v473.py`) |
+
 ### REQ-VERIFY-5153: GAP-4 Scale-Up Protocol Ledger V472
 
 The repository SHALL provide Exp 5153 at

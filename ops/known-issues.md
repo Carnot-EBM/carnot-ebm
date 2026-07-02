@@ -24,6 +24,8 @@
 
 > **CORRIGENDUM 2026-07-02 (exp5152):** The prior 'DiffusionGemma stays gated' action is reexamined as a domain-rationale issue. The MuSR D1 null conflated domains if used as the reason to close the ARC DiffusionGemma gate: D1 tested MuSR reasoning-text embedding-verifier-vs-SC, while Exp 4245/5151 concern ARC candidate-pool Set-Encoder-vs-vote reranking. Recommendation: KEEP GATED, because Exp 5151 is present but not fully hardened; the gate is still closed for missing decision-grade ARC-domain evidence.
 
+> **CORRIGENDUM 2026-07-02 (exp5160 closure):** The Exp 5151 cross-game blocker is resolved as a terminology error: Exp 4243 uses static ARC puzzle ids (`raw_task_id` 8-hex) with no recoverable ARC-AGI-3 `game_id` grouping. The preferred GAP-4 ARC-2 pool is disqualified as a second corpus because it overlaps Exp 4243; the disjoint ARC-GEN fallback (`results/experiment_4291_arcgen_cross_generator_pool.json.gz`) passes the row-level leak audit after filtering 4 overlapping candidate grids. Exp 5160 reports Set-Encoder-vs-vote cross-corpus delta +0.50 with CI95 [0.50, 0.50], `cross_corpus_replication_passed=true`, and updates the DiffusionGemma gate recommendation to UNGATE NOW for a future scaling task. No DiffusionGemma scaling was run here.
+
 
 **Origin:** 2026-06-30 operator directive. The ARC-AGI-3 Submission Sprint Forcing Function is RETIRED
 (deadline date reached + operator explicitly lifted it; CLAUDE.md). The CUDA submission is staged

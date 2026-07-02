@@ -1,0 +1,262 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "candidate_count": 188,
+  "cross_corpus_delta": 0.5,
+  "cross_corpus_delta_ci95": [
+    0.5,
+    0.5
+  ],
+  "cross_corpus_replication_passed": true,
+  "diffusiongemma_gate_updated_recommendation": "ungate_now",
+  "duration_s": 10.380997,
+  "experiment": "experiment_5160_oracle_distinct_cross_corpus_closure_v473",
+  "field_principles": {
+    "cross_corpus_delta": "set_encoder@1 - vote@1 on the second corpus -- the corrected transfer axis after the game-id misnomer is verified.",
+    "cross_corpus_delta_ci95": "The decisive number: does the +44pp win replicate off the original pool, CI95 excluding 0?",
+    "cross_corpus_replication_passed": "BARE bool: true iff the corrected cross-corpus delta is positive, CI95 excludes zero, and the leak audit passes.",
+    "diffusiongemma_gate_updated_recommendation": "Feeds directly into whether DiffusionGemma scaling is queued next milestone.",
+    "game_id_misnomer_confirmed": "The precise, code-verified fact this task exists to establish before choosing a fix path.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ AND state plainly whether the win survives cross-corpus replication.",
+    "random_seeds_used": "The >=5 seeds used for the corrected replication protocol.",
+    "reproducibility_checksum": "Hash of the schema inspection, selected-pool overlap audit, per-seed results, and recommendation.",
+    "second_pool_leak_audit_passed": "A second-pool win is not evidence if task ids, candidate content, or gold-label surrogates overlap the original pool.",
+    "second_pool_source": "The disjoint second-pool path actually used after disqualifying overlapping candidates.",
+    "solve_provenance": "This is offline pool-scoring on cached candidate pools, not a live hidden-game solve.",
+    "verifier_is_oracle": "BARE bool=false -- learned set-encoder, no demo execution; keeps the closure oracle-distinct."
+  },
+  "game_id_misnomer_confirmed": true,
+  "headline_outcome": "arc_set_encoder_win_survives_cross_corpus_replication",
+  "held_out_task_n": 24,
+  "honest_verdict": "success_arc_set_encoder_win_survives_cross_corpus_replication: set-encoder-vs-vote win survives corrected cross-corpus replication",
+  "inference_substrate": "cached_disjoint_candidate_pool_cpu_multiseed_set_encoder_cross_corpus",
+  "model_specs": {
+    "hidden_dim": 32,
+    "n_folds": 5,
+    "preferred_second_pool": "results/arc3_gap4_arc2_eval_pool.json.gz",
+    "protocol": "exp5151_deepsets_pooled_context_set_encoder_on_disjoint_second_pool",
+    "random_seeds": [
+      5160,
+      5161,
+      5162,
+      5163,
+      5164
+    ],
+    "selected_pool_note": "Preferred GAP-4 ARC-2 pool overlaps Exp 4243; selected fallback is disjoint ARC-GEN non-degenerate cross-generator pool.",
+    "selected_second_pool": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
+    "set_encoder_architecture": "deepsets_pooled_context_set_encoder",
+    "status": "complete",
+    "training_epochs": 32
+  },
+  "n_seeds": 5,
+  "pass_rates": {
+    "oracle_at_k": 0.75,
+    "set_encoder_at_1": 0.75,
+    "vote_at_1": 0.25
+  },
+  "per_seed_deltas": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "per_seed_results": [
+    {
+      "auroc": 0.9980392157,
+      "candidate_count": 188,
+      "delta": 0.5,
+      "held_out_task_n": 24,
+      "oracle_at_k": 0.75,
+      "random_seed": 5160,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9954248366,
+      "candidate_count": 188,
+      "delta": 0.5,
+      "held_out_task_n": 24,
+      "oracle_at_k": 0.75,
+      "random_seed": 5161,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9964052288,
+      "candidate_count": 188,
+      "delta": 0.5,
+      "held_out_task_n": 24,
+      "oracle_at_k": 0.75,
+      "random_seed": 5162,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9937908497,
+      "candidate_count": 188,
+      "delta": 0.5,
+      "held_out_task_n": 24,
+      "oracle_at_k": 0.75,
+      "random_seed": 5163,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    },
+    {
+      "auroc": 0.9964052288,
+      "candidate_count": 188,
+      "delta": 0.5,
+      "held_out_task_n": 24,
+      "oracle_at_k": 0.75,
+      "random_seed": 5164,
+      "set_encoder_at_1": 0.75,
+      "vote_at_1": 0.25
+    }
+  ],
+  "preferred_second_pool_audit": {
+    "candidate_grid_hash_collision_count": 20374,
+    "candidate_grid_hash_collisions_sample": [
+      "00003b45e7bec87d2df88f67b198bec8fa6b196f8f06b7cca3d9fca9199bb521",
+      "0003746fc6b5ddd885917d9016e3361b8b3b36647f9192abcfc038273680cf7f",
+      "0009aebfffd48b568870084528278e8ff63dd27d957cfce1a7c71b9b46a59fe7",
+      "000d0810f1d2aaaa200c934e551c1cd8d4d00f73a7e3b8a954c9dfc008c13e89",
+      "001038354d059b8f1eda4021fe270206eb621a1acd9c9d1dc49d0c35255971cd",
+      "0013307331d9abf2bde30a5272850ece8104bd526cb4dc2cb3e0d70cc68b32cc",
+      "0014cd5e47fda0c74a0c627e1b911762fcf9aa92dd7270cbbc29b57f636e2e9a",
+      "001ce2a8209b755ae980a3dddb138f6c9cf66b49326b43a297d2add1de232ab0",
+      "001dc8e150f7e4bfb70bca023deb6a4004ac758668874d3367e826fbe06b08d5",
+      "0029d6446a4da0e7d460fb9fb5b4bbf9045be246f42890ac612b93ee8666971a"
+    ],
+    "candidate_id_collision_count": 0,
+    "candidate_id_collisions_sample": [],
+    "disjoint": false,
+    "gold_grid_hash_collision_count": 4,
+    "gold_grid_hash_collisions_sample": [
+      "07126e1a403a036016b239f80659cf45bc12eb2a60ba9cebc0951d660427de7f",
+      "215411372f4e78b8eb531cc785ed4f48152b10c2461f8a503808cada37ed2993",
+      "8d89fdd666b4b24d476505905adca33a081135ee5620296641825d3df0429315",
+      "bb7df6b122934532be9c144030efd2fece79d584630d625ca15176c07f63a0d2"
+    ],
+    "raw_task_id_collision_count": 23,
+    "raw_task_id_collisions_sample": [
+      "13e47133",
+      "16b78196",
+      "21897d95",
+      "269e22fb",
+      "28a6681f",
+      "2b83f449",
+      "2c181942",
+      "2d0172a1",
+      "3a25b0d8",
+      "3dc255db"
+    ],
+    "task_id_collision_count": 0,
+    "task_id_collisions_sample": []
+  },
+  "random_seed": 5160,
+  "random_seeds_used": [
+    5160,
+    5161,
+    5162,
+    5163,
+    5164
+  ],
+  "reproducibility_checksum": "sha256:50ce6e997744712eb2ea2175e60efd45d3d2202dbca06226f290f8943a0a6b2f",
+  "schema": "carnot.oracle_distinct_cross_corpus_closure_5160.v1",
+  "schema_inspection": {
+    "game_id_fields_present": [],
+    "game_id_misnomer_confirmed": true,
+    "grouping_fields_present": [
+      "source_id"
+    ],
+    "interpretation": "static_arc_puzzle_pool_no_game_grouping",
+    "raw_task_id_examples": [
+      "50a16a69",
+      "66e6c45b",
+      "17cae0c1",
+      "fafd9572",
+      "a59b95c0",
+      "4e469f39",
+      "a57f2f04",
+      "96a8c0cd",
+      "8719f442",
+      "1a2e2828"
+    ],
+    "raw_task_id_format": "8_hex_static_arc_puzzle_id",
+    "source_id_histogram": {
+      "gap3_stage2": 29,
+      "gap4_arc2": 23
+    },
+    "task_id_examples": [
+      "gap3_stage2:50a16a69",
+      "gap3_stage2:66e6c45b",
+      "gap3_stage2:17cae0c1",
+      "gap3_stage2:fafd9572",
+      "gap3_stage2:a59b95c0",
+      "gap3_stage2:4e469f39",
+      "gap3_stage2:a57f2f04",
+      "gap3_stage2:96a8c0cd",
+      "gap3_stage2:8719f442",
+      "gap3_stage2:1a2e2828"
+    ],
+    "task_schema_keys": [
+      "candidate_count",
+      "candidates",
+      "oracle_present",
+      "raw_task_id",
+      "source_id",
+      "task_id",
+      "vote_top_candidate_id",
+      "wrong_majority"
+    ]
+  },
+  "second_pool_adapter": {
+    "adapter": "exp4244_feature_schema_from_task_candidate_pool",
+    "dropped_overlap_candidate_n": 4,
+    "dropped_overlap_task_n": 0,
+    "dropped_too_small_task_n": 0,
+    "positive_candidate_n": 18,
+    "selected_candidate_n": 188,
+    "selected_task_n": 24,
+    "source_kind": "arcgen_non_degenerate_cross_generator",
+    "wrong_majority_n": 12
+  },
+  "second_pool_classic_arc_static_puzzle": false,
+  "second_pool_leak_audit": {
+    "adapter_filtered_overlap_candidate_n": 4,
+    "candidate_grid_hash_collision_count": 0,
+    "candidate_id_collision_count": 0,
+    "candidate_id_collisions_sample": [],
+    "gold_grid_hash_collision_count": 0,
+    "heldout_training_task_collision_count": 0,
+    "heldout_training_task_collisions_sample": [],
+    "passed": true,
+    "scored_oof_row_count": 940,
+    "task_id_collision_count": 0,
+    "task_id_collisions_sample": [],
+    "training_signal_fields_audited": [
+      "train_task_ids",
+      "candidate_ids",
+      "candidate_grid_hashes",
+      "gold_grid_hashes"
+    ]
+  },
+  "second_pool_leak_audit_passed": true,
+  "second_pool_sha256": "c4e3cb9064db166ee3792b39bd3397ec441dc19501dca780b2a048db29a2f92e",
+  "second_pool_source": "results/experiment_4291_arcgen_cross_generator_pool.json.gz",
+  "second_pool_source_kind": "arcgen_non_degenerate_cross_generator",
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-VERIFY-5160",
+    "SCENARIO-VERIFY-5160",
+    "SCENARIO-VERIFY-5160-UPSTREAM-BLOCKED"
+  ],
+  "status": "complete",
+  "verifier_is_oracle": false
+}
