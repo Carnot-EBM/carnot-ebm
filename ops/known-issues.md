@@ -1941,12 +1941,16 @@ statistics are genuine, not a stub. `flagged_adversarial` now `false`, live re-c
 flags). `ops/verifier_gaps.md` GAP-4 entry updated with this pilot's real result (direction
 replicates, not yet significant, decentralization tier and 400-task scale-up both still open).
 
-**Worth a broader look (not fixed here, flagging only):** the `{principle, value}`-dict pattern for
-`inference_substrate` specifically appears to be a template convention some conductor-generated ARC
-artifacts use -- and it silently defeats `adversarial_verify.py`'s substrate recognition every time,
-regardless of what value is declared, always falling through to the compute-bound-marker fallback.
-Worth checking how many other artifacts share this exact structural mistake before assuming this was
-a one-off.
+**UPDATE 2026-07-02, same day (outer-loop, "Fix the linter to accept both forms"): FIXED.** The
+broader pattern was real and worse than `inference_substrate` alone -- corpus-wide it also affects
+`honest_verdict` (9), `duration_s` (12), `random_seed` (14), and `reproducibility_checksum` (14),
+every field read via a bare `d.get(...)` somewhere in `adversarial_verify.py`'s checks. Fixed at the
+root rather than patching individual read sites: added `_normalize_principle_wrapped_fields()`,
+wired into `verify_artifact()` immediately after `_flatten_metrics()`, unwrapping any top-level
+`{"value": ..., "principle": "..."}`-shaped field to its bare value before any check runs. 10 new
+tests (`tests/python/test_adversarial_verify_principle_wrapped_fields.py`); full existing 222-test
+suite green; corpus-wide `--backfill --high-precision-only` dry-run (4564 artifacts) found only 5
+previously-unstamped qualifying artifacts, confirming no flood of new false positives.
 
 ### ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02 (outer-loop, "we want to continue down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent" -- "pre-stage the roadmap for all 5")
 
