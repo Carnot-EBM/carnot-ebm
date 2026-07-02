@@ -1925,6 +1925,68 @@ and headroom gates all pass.
 **And** `pool_n=0`
 **And** no FoVer scope or LLM judge is used as ground truth.
 
+### REQ-INFER-SOTA-033: Exp 5137 Solver-Verified Formulation Selector
+
+The system SHALL provide an Exp 5137 non-FoVer solver-verified formulation
+generation and selection evaluation at
+`results/experiment_5137_solver_verified_formulation_selector_v471.json`, with
+problem-model-code records written to
+`results/experiment_5137_solver_verified_formulation_selector_v471_pmc.jsonl`.
+Exp 5137 SHALL load
+`results/experiment_5136_receipt_structured_pool_v2_v471.json`, SHALL hard-block
+unless `structured_pool_v2_clean=true`, and SHALL use the Exp 5136 pool rows
+only as non-FoVer exact-checkable OR/CSP task provenance.
+
+When the upstream gate is open, Exp 5137 SHALL evaluate a bounded subset of
+small exact-checkable OR/CSP tasks where multiple mathematical formulations are
+plausible. It SHALL generate structured problem-model-code records for the
+mandated local GGUF model IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; SHALL verify each formulation through a
+solver backend plus exact post-checks; and SHALL report feasibility restoration
+separately from original model formulation quality.
+
+Exp 5137 SHALL compare the exact-feedback formulation selector against static
+hand formulation, seeded random valid formulation, cheapest-feasible repair,
+and direct-answer baselines. It SHALL report selector delta versus the strongest
+static or cheap baseline, CI95, feasibility rate, wrong-label count, solve
+effort delta, and family-holdout behavior. `formulation_selector_ready` SHALL be
+true only when the selector improves over the strongest static or cheap baseline
+with zero wrong labels and passing controls.
+
+The terminal artifact SHALL expose these fields: `experiment_id`, `milestone`,
+`honest_verdict`, `inference_substrate`, `duration_s`, `MODEL_SPECS`,
+`upstream_pool_artifact`, `formulation_families`, `pmc_records_path`,
+`solver_backend`, `feasibility_restoration_used`,
+`selector_delta_vs_best_static`, `delta_ci95`, `wrong_label_count`,
+`solve_effort_delta`, `formulation_selector_ready`, `fover_scope_used`,
+`conductor_modified`, and `tests_run`. `experiment_id` SHALL equal
+`exp5137-solver-verified-formulation-selector-v471`, `milestone` SHALL equal
+`2026.07.471`, and `inference_substrate` SHALL equal
+`local_sota_gguf_formulation_generation_with_solver_verification`.
+
+### SCENARIO-INFER-SOTA-033-SELECTOR: Solver Feedback Selects Verified Formulations
+
+**Given** Exp 5136 reports `structured_pool_v2_clean=true`
+**And** the Exp 5136 pool JSONL is loadable
+**When** Exp 5137 evaluates solver-verified formulation records
+**Then** every selected formulation passes an exact post-check
+**And** feasibility restoration is reported separately from original
+formulation quality
+**And** selector utility is compared against static hand, random-valid,
+cheapest-feasible repair, and direct-answer baselines
+**And** `formulation_selector_ready=true` only if the selector beats the
+strongest static or cheap baseline with zero wrong labels and passing controls.
+
+### SCENARIO-INFER-SOTA-033-BLOCKED: Dirty Structured Pool Gate Fails Closed
+
+**Given** Exp 5136 is missing or reports `structured_pool_v2_clean=false`
+**When** Exp 5137 runs
+**Then** it writes a terminal blocked artifact
+**And** `formulation_selector_ready=false`
+**And** `pmc_records_path` is null
+**And** no solver-verified formulation records are fabricated.
+
 ### REQ-INFER-SOTA-032: Exp 5136 Receipt-Backed Structured Reasoning Pool V2
 
 The system SHALL provide an Exp 5136 receipt-backed non-FoVer
@@ -2188,6 +2250,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-030 | Implemented (`python/carnot/experiment_5125_structured_reasoning_pool_v470.py`, `scripts/experiment_5125_structured_reasoning_pool_v470.py`, `results/experiment_5125_structured_reasoning_pool_v470.json`) | Implemented (`tests/python/test_experiment_5125_structured_reasoning_pool_v470.py`) |
 | REQ-INFER-SOTA-031 | Implemented (`python/carnot/experiment_5126_distributional_energy_ranker_v470.py`, `scripts/experiment_5126_distributional_energy_ranker_v470.py`, `results/experiment_5126_distributional_energy_ranker_v470.json`) | Implemented (`tests/python/test_experiment_5126_distributional_energy_ranker_v470.py`) |
 | REQ-INFER-SOTA-032 | Implemented (`python/carnot/experiment_5136_receipt_structured_pool_v2_v471.py`, `scripts/experiment_5136_receipt_structured_pool_v2_v471.py`, `results/experiment_5136_receipt_structured_pool_v2_v471.json`) | Implemented (`tests/python/test_experiment_5136_receipt_structured_pool_v2_v471.py`) |
+| REQ-INFER-SOTA-033 | Implemented (`python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py`, `scripts/experiment_5137_solver_verified_formulation_selector_v471.py`, `results/experiment_5137_solver_verified_formulation_selector_v471.json`) | Implemented (`tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

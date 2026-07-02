@@ -1,0 +1,235 @@
+{
+  "MODEL_SPECS": [
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "cached_sota_pair"
+    },
+    {
+      "from_cached_sota_pair": false,
+      "gpu": null,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "resolve_cached_gguf"
+    },
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "cached_sota_pair"
+    }
+  ],
+  "baseline_metrics": {
+    "cheapest_feasible_repair": {
+      "accuracy_at_1": 1.0,
+      "effort_units": 1497
+    },
+    "direct_answer": {
+      "accuracy_at_1": 0.25,
+      "effort_units": 40
+    },
+    "random_valid_formulation": {
+      "accuracy_at_1": 1.0,
+      "effort_units": 18162
+    },
+    "static_hand_formulation": {
+      "accuracy_at_1": 1.0,
+      "effort_units": 2018
+    }
+  },
+  "conductor_modified": false,
+  "controls": {
+    "direct_answer_not_ground_truth": true,
+    "family_holdout_complete": true,
+    "strong_static_or_cheap_baseline_present": true,
+    "zero_wrong_labels": true
+  },
+  "delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "duration_s": 143.366125,
+  "exact_validators_used": [
+    "code_property",
+    "graph_coloring",
+    "knights_knaves",
+    "or_allocation",
+    "travel_budget"
+  ],
+  "experiment_id": "exp5137-solver-verified-formulation-selector-v471",
+  "family_holdout_behavior": {
+    "code_property": {
+      "best_static_or_cheap_accuracy_at_1": 1.0,
+      "delta": 0.0,
+      "n": 8,
+      "selector_accuracy_at_1": 1.0,
+      "wrong_label_count": 0
+    },
+    "graph_coloring": {
+      "best_static_or_cheap_accuracy_at_1": 1.0,
+      "delta": 0.0,
+      "n": 8,
+      "selector_accuracy_at_1": 1.0,
+      "wrong_label_count": 0
+    },
+    "knights_knaves": {
+      "best_static_or_cheap_accuracy_at_1": 1.0,
+      "delta": 0.0,
+      "n": 8,
+      "selector_accuracy_at_1": 1.0,
+      "wrong_label_count": 0
+    },
+    "or_allocation": {
+      "best_static_or_cheap_accuracy_at_1": 1.0,
+      "delta": 0.0,
+      "n": 8,
+      "selector_accuracy_at_1": 1.0,
+      "wrong_label_count": 0
+    },
+    "travel_budget": {
+      "best_static_or_cheap_accuracy_at_1": 1.0,
+      "delta": 0.0,
+      "n": 8,
+      "selector_accuracy_at_1": 1.0,
+      "wrong_label_count": 0
+    }
+  },
+  "feasibility_rate": 1.0,
+  "feasibility_restoration_summary": {
+    "original_infeasible_count": 174,
+    "restoration_rate": 0.483333,
+    "restored_count": 174
+  },
+  "feasibility_restoration_used": true,
+  "field_principles": {
+    "MODEL_SPECS": "mandated local SOTA model provenance",
+    "conductor_modified": "conductor immutability",
+    "delta_ci95": "statistical caution",
+    "duration_s": "timing accountability",
+    "experiment_id": "traceability",
+    "feasibility_restoration_used": "repair transparency",
+    "formulation_families": "task diversity",
+    "formulation_selector_ready": "downstream readiness",
+    "fover_scope_used": "no doomed rerun",
+    "honest_verdict": "terminal verdict with complete_/success_/blocked_ prefix",
+    "inference_substrate": "substrate honesty",
+    "milestone": "milestone accountability",
+    "pmc_records_path": "problem-model-code evidence",
+    "selector_delta_vs_best_static": "utility beyond cheap baseline",
+    "solve_effort_delta": "solver utility",
+    "solver_backend": "verifier authority",
+    "tests_run": "verification evidence",
+    "upstream_pool_artifact": "data provenance",
+    "wrong_label_count": "exact correctness"
+  },
+  "formulation_families": [
+    "direct_constraint_model",
+    "objective_augmented_model",
+    "repairable_slack_model"
+  ],
+  "formulation_selector_ready": false,
+  "formulation_task_count_by_family": {
+    "code_property": 8,
+    "graph_coloring": 8,
+    "knights_knaves": 8,
+    "or_allocation": 8,
+    "travel_budget": 8
+  },
+  "fover_scope_used": false,
+  "honest_verdict": "complete_formulation_selector_evaluated_no_utility_beyond_static",
+  "inference_substrate": "local_sota_gguf_formulation_generation_with_solver_verification",
+  "milestone": "2026.07.471",
+  "model_specs": [
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "cached_sota_pair"
+    },
+    {
+      "from_cached_sota_pair": false,
+      "gpu": null,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "resolve_cached_gguf"
+    },
+    {
+      "from_cached_sota_pair": true,
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama.cpp",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "provenance_source": "cached_sota_pair"
+    }
+  ],
+  "original_model_quality": {
+    "exact_correct_rate": 0.288889,
+    "feasible_rate": 0.516667,
+    "records_n": 360
+  },
+  "pmc_record_count": 360,
+  "pmc_records_path": "results/experiment_5137_solver_verified_formulation_selector_v471_pmc.jsonl",
+  "pmc_records_sha256": "sha256:465eee1c7cff799fcf94e51cef74ed107cb14e0606459a423a1d5923922d669d",
+  "preconditions_checked": {
+    "fover_scope_used": false,
+    "model_specs_complete": true,
+    "pool_rows_loaded": true,
+    "structured_pool_v2_clean": true,
+    "upstream_error": null,
+    "upstream_loaded": true
+  },
+  "random_seed": 20260702,
+  "reproducibility_checksum": "sha256:430ac1f323e79abc24967b0485ec2759322252c58f57ec81ca1ed79643c55216",
+  "run_date": "20260702",
+  "selected_task_count": 40,
+  "selector_delta_vs_best_static": 0.0,
+  "selector_metrics": {
+    "accuracy_at_1": 1.0,
+    "effort_units": 18162,
+    "selected_count": 40
+  },
+  "solve_effort_delta": {
+    "best_static_or_cheap_effort_units": 1497,
+    "delta_units": 16665,
+    "ratio": 12.132265,
+    "selector_effort_units": 18162
+  },
+  "solver_backend": "python_exhaustive_or_csp_solver_with_exact_post_checks",
+  "strongest_static_or_cheap_baseline": {
+    "accuracy_at_1": 1.0,
+    "effort_units": 1497,
+    "name": "cheapest_feasible_repair"
+  },
+  "tests_run": [
+    "JAX_PLATFORMS=cpu /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/experiment_5137_solver_verified_formulation_selector_v471.py --date 20260702",
+    ".venv/bin/pytest tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py -q -o addopts=\"\"",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py' -m pytest tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py -q -o addopts=\"\" && .venv/bin/coverage report --include='/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py' --fail-under=100 -m",
+    ".venv/bin/ruff check python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py scripts/experiment_5137_solver_verified_formulation_selector_v471.py tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_5137_solver_verified_formulation_selector_v471.py scripts/experiment_5137_solver_verified_formulation_selector_v471.py tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5137_solver_verified_formulation_selector_v471.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "upstream_pool_artifact": "results/experiment_5136_receipt_structured_pool_v2_v471.json",
+  "wrong_label_count": 0
+}
