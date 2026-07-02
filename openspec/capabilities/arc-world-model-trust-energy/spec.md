@@ -7366,6 +7366,85 @@ Then the artifact includes per-game and per-boundary rows, applies the exact
 `solve_provenance=development_proxy`, keeps `offline_reproduced=false`, and
 sets a reproducibility checksum over the artifact content.
 
+### REQ-ARC-WMTE-5158: Cross-Level Goal-Energy Ranker Replay
+
+Experiment 5158 SHALL execute Experiment 5155's second-ranked proposal,
+`cross_level_goal_energy_ranker_replay`, as an offline replay ablation over the
+already-banked `lp85`, `sc25`, and `tr87` registry trajectories. The workflow
+SHALL recover level `N` win/near-win states and level `N+1` frontier candidates
+from the registry-cited replay artifacts, or from deterministic replay of their
+banked action labels through the same offline adapter surfaces when the artifact
+stores labels rather than expanded traces. The workflow SHALL NOT run a live
+solve attempt, SHALL NOT use the eventual level-up prefix to fit the ranker, and
+SHALL keep `verifier_is_oracle=false`.
+
+The control arm SHALL rank each level `N+1` frontier candidate with the cold
+Exp4020 graded visible-state goal-satisfaction energy only, with no previous
+level memory. The warm-start arm SHALL fit a per-game online energy model from
+level `N` win/near-win states, using DynaMITE-style terminal carryover of the
+fitted level-`N` latent/energy parameters as the prior for level `N+1`
+frontier ranking. The warm-start ranking MAY also report a BAM-style adaptive
+evidence-weighting ablation when mechanic-class recurrence evidence is present,
+but the DynaMITE-style carryover arm is required.
+
+For each tested game, the experiment SHALL score both arms with target-prefix
+reciprocal rank: the reciprocal rank of the frontier candidate whose action
+matches the recorded eventual level-up trajectory prefix for the next level.
+The experiment SHALL aggregate per-game reciprocal rank over all recoverable
+level transitions for that game, report the exact number of improved games, and
+apply Experiment 5155's falsifiable gate verbatim: target-prefix reciprocal
+rank must improve on at least 2 of `{lp85, sc25, tr87}` with no regression in
+level reached. If the gate does not pass, the artifact SHALL reject carryover
+goal-energy value for this mechanism with an honest complete null.
+
+The terminal artifact
+`results/experiment_5158_deepen_goal_energy_ranker_replay_v473.json` SHALL
+include top-level fields for `honest_verdict`, `games_tested`,
+`reciprocal_rank_cold`, `reciprocal_rank_warmstart`,
+`games_improved_count`, `gate_passed`, `energy_signal_source`,
+`solve_provenance`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, `per_transition_breakdown`,
+`preconditions_checked`, `field_principles`, and `spec_refs`.
+
+Required field principles SHALL include:
+
+- `games_tested`: principle "list of {game, n_level_transitions_tested}, must include lp85, sc25, tr87."
+- `reciprocal_rank_cold`: principle "dict of game -> float for cold Exp4020-only target-prefix reciprocal rank."
+- `reciprocal_rank_warmstart`: principle "dict of game -> float for DynaMITE-style cross-level warm-start target-prefix reciprocal rank."
+- `games_improved_count`: principle "The gate requires >=2/3 -- this field is the exact count the gate is evaluated against."
+- `gate_passed`: principle "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
+- `energy_signal_source`: principle "Must be a genuine Carnot energy quantity, matching the ARC Live-Path Reachability Discipline's provenance bar."
+- `solve_provenance`: principle "Offline replay over already-banked registry trajectories, not a live hidden-game solve."
+- `verifier_is_oracle`: principle "false -- this is an oracle-distinct energy ranker, not the executable win-check."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ AND state plainly whether the gate passed or failed."
+
+#### SCENARIO-ARC-WMTE-5158-DYNAMITE-WARM-START
+
+Given level `N` win/near-win energy states and level `N+1` frontier candidates
+When Experiment 5158 fits the warm-start ranker
+Then it carries the fitted level-`N` energy parameters into level `N+1` as the
+DynaMITE-style conditioned prior, combines that prior with Exp4020's graded
+goal-satisfaction energy without fitting on the target prefix, and records the
+combination choice in `energy_signal_source`.
+
+#### SCENARIO-ARC-WMTE-5158-TARGET-PREFIX-RANK
+
+Given a recorded next-level trajectory prefix and a frontier candidate pool
+When Experiment 5158 ranks the pool
+Then it computes reciprocal rank from the first candidate matching the recorded
+target prefix action, reports the cold and warm-start values per game, and does
+not treat the replayed win-check as the verifier.
+
+#### SCENARIO-ARC-WMTE-5158-STABLE-ARTIFACT
+
+Given Experiment 5158 completes or blocks
+When it writes
+`results/experiment_5158_deepen_goal_energy_ranker_replay_v473.json`
+Then the artifact includes `lp85`, `sc25`, and `tr87`, applies the exact
+`>=2/3` game-improvement gate from Experiment 5155, keeps
+`solve_provenance=development_proxy`, sets `verifier_is_oracle=false`, and sets
+a reproducibility checksum over the artifact content.
+
 ### REQ-ARC-WMTE-4741: Persist .436 Primitive And Leave-One-Game Transfer
 
 Experiment 4741 SHALL persist the strongest characterized `.436` A1/A2
