@@ -9914,3 +9914,4 @@ web search: |
 | 2026-07-02 12:35 UTC | PHASE D1 off-ARC verifier-moat continuity -- rerun | OK | 92 passed, 1 warning in 9.03s |
 | 2026-07-02 12:51 UTC | PHASE E1 infrastructure -- build a disk-mtime timi | OK | 87 passed, 1 warning in 13.85s |
 | 2026-07-02 13:05 UTC | PHASE E2 infrastructure -- retire the 3x-nulled ge | OK | 85 passed, 1 warning in 7.15s |
+| 2026-07-02 13:22 UTC | PHASE F1 hardware continuity -- authenticated KV26 | OK | 87 passed, 1 warning in 10.29s |
