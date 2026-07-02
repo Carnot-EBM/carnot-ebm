@@ -1,0 +1,85 @@
+{
+  "cluster_bootstrap_delta_ci95": null,
+  "exact_test_discordant_losses": 0,
+  "exact_test_discordant_wins": 4,
+  "exact_test_p_value": 0.125,
+  "exact_test_passes_min6_rule": false,
+  "experiment": "experiment_5153_gap4_scaleup_v472",
+  "field_principles": {
+    "gap4_status_recommendation": "Feeds directly into whether ops/verifier_gaps.md's GAP-4 status line gets updated.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "n_400_task_result": "The actual scaled solve-rate/precision number, not just a pass/fail on the protocol steps.",
+    "protocol_steps_completed": "GAP-4's own protocol is the acceptance bar; partial completion should be reported as partial, not rounded up to filled.",
+    "solve_provenance": "Offline scoring against held-out corpora, not a live hidden-game solve."
+  },
+  "gap4_status_recommendation": "still_open",
+  "honest_verdict": "complete: gap4_scaleup_protocol_partial_still_open",
+  "n_400_task_result": null,
+  "prior_positive_context": {
+    "arc1_gated_pass2": 0.5806,
+    "arc1_headroom_recovered": 4,
+    "arc1_induced_programs_present": true,
+    "arc1_rule_exec_artifact_present": true,
+    "arc1_vote_pass2": 0.4516,
+    "arc1_vote_wins_lost": 0,
+    "arc2_induction_unique_tasks": [
+      0.93,
+      0.57
+    ],
+    "arc2_precision_given_demo_perfect": [
+      0.9,
+      0.47
+    ],
+    "arc2_transfer_artifact_present": true,
+    "calibration_read": "Real prior positive and ARC-2 calibration preserved as upstream context; not sufficient for GAP-4 filled status without the forward protocol.",
+    "gap_id": "GAP-4",
+    "gap_source": "ops/verifier_gaps.md",
+    "verifier_gaps_present": true
+  },
+  "protocol_acceptance_passed": false,
+  "protocol_steps_completed": [
+    {
+      "evidence": "No new sandboxed 400-task run on a host attested to have no ARC solutions on disk.",
+      "passed": false,
+      "step_id": "sandboxed_400_task_reconfirmation"
+    },
+    {
+      "evidence": "Prior GAP-4 transcripts exist, but no transcripts for the required 400-task scale-up.",
+      "passed": false,
+      "step_id": "transcripts_archived"
+    },
+    {
+      "evidence": "The ARC-2 transfer probe is reduced-exposure calibration; no ARC-AGI-2 eval scale-up, ConceptARC holdout, or post-cutoff run is archived here.",
+      "passed": false,
+      "step_id": "genuinely_heldout_tasks"
+    },
+    {
+      "evidence": "The 2026-06-09/10 calibration used Codex-first, but no Codex-first 400-task reconfirmation was run for Exp 5153.",
+      "passed": false,
+      "step_id": "codex_first_arm"
+    },
+    {
+      "evidence": "Prior +4/-0 evidence is below the two-sided min-6 exact-test rule and no 400-task cluster bootstrap exists.",
+      "passed": false,
+      "step_id": "statistical_tests"
+    },
+    {
+      "evidence": "Existing GAP-4 sandbox code/tests block timeout, np.load, np.save, np.fromfile, and type( vectors.",
+      "passed": true,
+      "step_id": "hardened_exec_sandbox"
+    },
+    {
+      "evidence": "Existing local-generator attempts did not establish the decentralization tier, and no Gemma-4/Qwen3.6 scale-up arm is archived for Exp 5153.",
+      "passed": false,
+      "step_id": "local_open_weight_generator_arm"
+    }
+  ],
+  "reproducibility_checksum": "sha256:e88d7c15a1f5399078a540124ebb27eef2ae5e3e68c87f4819ef8b32698f9775",
+  "schema": "carnot.gap4_scaleup_v472_5153.v1",
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-VERIFY-5153",
+    "SCENARIO-VERIFY-5153",
+    "SCENARIO-VERIFY-5153-SUCCESS-GATE"
+  ]
+}
