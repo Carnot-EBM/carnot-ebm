@@ -23957,3 +23957,116 @@ labels while reducing harmful instances relative to the unguarded policy.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5117 | Proposed (`python/carnot/experiment_5117_taco_harm_gated_scale_v469.py`, `results/experiment_5117_taco_harm_gated_scale_v469.json`) | Proposed (`tests/python/test_experiment_5117_taco_harm_gated_scale_v469.py`) |
+
+### REQ-VERIFY-5151: ARC Set-Encoder Oracle-Distinct Hardening V472
+
+The repository SHALL provide Exp 5151 at
+`python/carnot/reporting/arc_oracle_distinct_hardening_5151.py` to harden the
+Exp 4245 ARC Set-Encoder-vs-vote claim and write
+`results/experiment_5151_arc_oracle_distinct_hardening_v472.json`.
+
+The runner SHALL first check that
+`results/experiment_4245_arc_set_encoder_beats_vote.json` and
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz` exist and load
+as JSON objects. If either precondition fails, it SHALL write
+`honest_verdict=blocked_upstream_artifact_missing`, keep
+`verifier_is_oracle=false`, set `leak_audit_passed=false`, set
+`multiseed_delta_ci95=[0.0, 0.0]`, set `cross_game_replication_delta=null`,
+and stop without fabricating a hardening read.
+
+When the upstream artifacts load, the runner SHALL rerun the learned
+Set-Encoder comparison with at least five independent seeds that vary fold
+split, model initialization, and training order while reusing the fixed Exp
+4243 candidate pool. It SHALL report per-seed AUROC and
+`set_encoder@1 - vote@1` deltas, a pooled multiseed CI95, sign-flip seeds, and
+a top-level `multiseed_delta_ci95` field. A single-seed CI SHALL NOT be used as
+the hardening interval.
+
+The runner SHALL perform an explicit row-level leak audit over the persisted
+Exp 4244 out-of-fold rows and the Exp 4243 pool. For every scored held-out row,
+the row's task id MUST be absent from `train_task_ids`; no held-out task id,
+candidate id/text surrogate, or gold-answer surrogate SHALL appear in the
+score row's declared training signal. The artifact SHALL expose collision
+counts and SHALL set `leak_audit_passed=true` only when all collision counts
+are zero. The inference-time Set-Encoder score SHALL remain oracle-distinct and
+MUST NOT rank by gold/correct labels.
+
+The runner SHALL attempt the cross-game check only when the candidate pool
+contains recoverable ARC `game_id` values for at least two disjoint games. If
+game ids are still unrecoverable, it SHALL set
+`cross_game_blocked_reason=blocked_arc_game_ids_unrecoverable` and
+`cross_game_replication_delta=null` for that sub-claim while still completing
+the multiseed and leak-audit checks. If game ids are recoverable, it SHALL
+train held-out-game folds and report `cross_game_replication_delta` and its
+CI95.
+
+The runner SHALL include GAP-4-shaped task-level statistics: a cluster
+bootstrap over task deltas and an exact two-sided sign/binomial test over
+discordant Set-Encoder wins and vote wins. The artifact SHALL expose
+`exact_test_discordant_wins`, `exact_test_discordant_losses`,
+`exact_test_p_value`, and `exact_test_passes_min6_rule`, where the min-6 rule
+is true only when wins are at least 6, losses are zero, and the two-sided exact
+test is below 0.05.
+
+The terminal artifact SHALL include principle-annotated top-level fields
+`honest_verdict`, `multiseed_delta_ci95`, `leak_audit_passed`,
+`cross_game_replication_delta`, `verifier_is_oracle`, `solve_provenance`,
+`inference_substrate`, `honest_verdict`, `random_seeds_used`,
+`per_seed_results`, `cluster_bootstrap_delta_ci95`,
+`exact_test_discordant_wins`, `exact_test_discordant_losses`,
+`exact_test_p_value`, `cross_game_blocked_reason`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. `verifier_is_oracle` SHALL be the bare bool `false`;
+`solve_provenance` SHALL equal `development_proxy`; and
+`inference_substrate` SHALL accurately describe cached-pool CPU retraining, not
+live hidden-game solving. Its field principles SHALL include:
+`honest_verdict` = `Must start with complete:/complete_/success:/success_ AND state plainly whether the +44pp win survives hardening or not -- do not bury a null in qualifiers.`;
+`multiseed_delta_ci95` = `A single-seed CI is not a real interval; multiseed pooling is the minimum bar before this result can inform a scaling decision (DiffusionGemma, exp5152).`;
+`leak_audit_passed` = `An unaudited held-out split cannot distinguish a real win from a leaked one.`;
+`cross_game_replication_delta` = `A win on one pool that vanishes on a second is a corpus artifact, not a general finding.`;
+`verifier_is_oracle` = `Must stay oracle-distinct (per the Circularity Discipline) to count toward the moat thesis.`;
+`solve_provenance` = `This is offline pool-scoring on already-generated candidates, not a live hidden-game solve.`;
+`inference_substrate` = `Declare accurately per the Inference-Substrate Declaration Discipline.`;
+`reproducibility_checksum` = `Hash of the fixed candidate pool, row-level leak audit, multiseed splits, exact test, and cross-game status so downstream scaling gates can detect drift.`
+
+The `honest_verdict` SHALL begin with
+`success_arc_set_encoder_win_survives_hardening` only when multiseed CI95
+excludes zero positively, the row-level leak audit passes, the exact test
+passes the min-6 rule, and any available cross-game check is positive. It SHALL
+begin with `complete_arc_set_encoder_win_not_hardened` when the upstream
+artifacts load but the win fails or is blocked on one or more hardening axes.
+
+### SCENARIO-VERIFY-5151: Hardening Survives Multiseed And Leak Audit
+
+Given the Exp 4245 artifact, the Exp 4243 candidate pool, and the Exp 4244
+out-of-fold Set-Encoder rows load cleanly, when Exp 5151 runs with at least
+five seeds, then it retrains on the fixed pool, reports per-seed AUROC and
+deltas, computes `multiseed_delta_ci95`, verifies zero training-signal
+collisions for held-out task ids, candidate surrogates, and gold surrogates,
+reports exact discordant win/loss counts and p-value, keeps
+`verifier_is_oracle=false`, declares `solve_provenance=development_proxy`, and
+writes the required artifact fields and principles.
+
+### SCENARIO-VERIFY-5151-CROSS-GAME-BLOCKED: Missing ARC Game IDs Blocks Only Transfer
+
+Given the candidate pool rows do not contain recoverable ARC game ids, when Exp
+5151 runs, then it writes
+`cross_game_blocked_reason=blocked_arc_game_ids_unrecoverable`,
+`cross_game_replication_delta=null`, still completes the multiseed and
+leak-audit checks, and emits a terminal honest verdict for the overall
+hardening result.
+
+### SCENARIO-VERIFY-5151-UPSTREAM-BLOCKED: Missing Upstream Artifacts Stop Honestly
+
+Given the Exp 4245 artifact or Exp 4243 candidate pool is absent or unreadable,
+when Exp 5151 runs, then it writes
+`honest_verdict=blocked_upstream_artifact_missing`,
+`multiseed_delta_ci95=[0.0, 0.0]`, `leak_audit_passed=false`,
+`cross_game_replication_delta=null`, `verifier_is_oracle=false`, and stops
+before claiming that the ARC Set-Encoder win survived hardening.
+
+## Implementation Status (REQ-VERIFY-5151)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5151 | Implemented (`python/carnot/reporting/arc_oracle_distinct_hardening_5151.py`, `results/experiment_5151_arc_oracle_distinct_hardening_v472.json`) | Implemented (`tests/python/test_experiment_5151_arc_oracle_distinct_hardening_v472.py`) |
