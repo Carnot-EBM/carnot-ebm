@@ -1902,6 +1902,68 @@ mandate `inference_substrate` (`aggregation_from_upstream_artifacts` for memory/
 and must NOT mandate a vestigial GGUF `model_specs` the experiment never loads. Per CLAUDE.md
 "Inference-Substrate Declaration Discipline" (the exp2837/2842 precedent).
 
+### ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02 (outer-loop, "we want to continue down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent" -- "pre-stage the roadmap for all 5")
+
+**Reverses the `.471`-era PHASE-D-majority allocation back toward ARC.** `reproducible_total_levels`
+has been flat at 69 since the 2026-06-30 pivot (`ops/arc_solve_registry.yaml`, unchanged mtime) --
+this is a fresh, explicit operator directive re-opening ARC as milestone `.472`'s priority. It does
+**not** reverse the CLAUDE.md "ARC-AGI-3 Submission Sprint Forcing Function (RETIRED 2026-06-30)"
+marker, which stays as an accurate historical record (never-prune) of the deadline and the pivot
+that was correct at the time.
+
+**Investigation before drafting** (see `research-roadmap-next.yaml` milestone `2026.07.472`, 5
+research tasks + 1 transition task) found the selection/value-head axis genuinely IS exhausted (per
+the 2026-07-01 "ARC VALUE-HEAD ENERGY DISTILLATION" retirement, 5 sub-hypotheses nulled) -- but also
+found **two genuinely positive results that were never nulled, just abandoned mid-protocol** when
+the pivot hit:
+
+- **exp4245** (`results/experiment_4245_arc_set_encoder_beats_vote.json`): a real ARC oracle-distinct
+  win, +44.2pp set-encoder-vs-vote (CI95 excludes 0), but single-seed (n=52), never leak-audited or
+  cross-game-replicated.
+- **GAP-4** (`ops/verifier_gaps.md`): a calibrated first positive (2026-06-09/10, induction
+  0.93->0.57 on transfer -- the right signature of genuine induction, not memorization) with its own
+  fully-specified "Forward protocol" that simply never got executed.
+
+Also found: **DiffusionGemma's "stays gated" status (`ops/known-issues.md` 2026-06-30 entry) is
+based on a DIFFERENT domain's null** -- the D1 test (`results/experiment_phase_d_musr_trained_
+verifier.json`) is a MuSR reasoning-text embedding-verifier-vs-SC result, not a retest of exp4245's
+ARC-domain claim. The gate may be conflating two distinct questions -- exactly the class of error
+this project has been burned by before (the FoVer construction-artifact retraction, 2026-07-01).
+`.472`'s exp5152 task exists specifically to resolve this, not assume either way.
+
+**The 5 queued `.472` tasks** (all `agent_type: codex`, `track: arc`):
+
+1. `exp5151` -- harden exp4245 (multiseed, leak-audit, cross-game replication attempt) using GAP-4's
+   own forward-protocol shape as the template. Cites 4 prior precondition-BLOCKED attempts
+   (exp4209/4210/4246/4258) honestly as blocks, not methodology failures --
+   `retire_if_same_verdict: false` on all 4, since a precondition block being fixed and retried is
+   not a doomed rerun.
+2. `exp5152` -- resolve whether DiffusionGemma's gating is well-founded, given the domain-conflation
+   finding above. Recommends keep-gated (corrected reasoning) or ungate, does not itself scale
+   anything.
+3. `exp5153` -- execute GAP-4's own documented forward protocol (400-task sandboxed re-confirmation,
+   held-out ARC-AGI-2/ConceptARC, cluster bootstrap, hardened sandbox, local open-weight generator
+   arm) verbatim, no redesign needed.
+4. `exp5154` -- the novel piece: energy-as-fitness generation-time guidance (a quality-diversity
+   search over the hypothesis/action space using Carnot's actual energy/verifier machinery as the
+   fitness landscape), attacking the diagnosed GENERATION wall directly rather than re-litigating
+   selection. Cites `.432`'s two directed-exploration nulls (exp4688 novelty-bonus, exp4689
+   program-synthesis-filter) as `prior_failures`, with an explicit, honest distinction: neither prior
+   attempt used a genuine Carnot energy quantity as its guidance signal -- this is the first attempt
+   that does. Carries this milestone's ARC Level-Up Attempt Guarantee (targets one of
+   re86/sb26/bp35/lf52).
+5. `exp5155` -- scoping only (not a full build) for the SEPARATE "deepen"/multi-level wall: does the
+   live agent's belief state actually reset at level boundaries today (code-verified, not assumed),
+   and what are 2-3 small falsifiable next-step designs for carrying an energy-based belief state
+   forward across levels within a game.
+
+**Validated before committing:** YAML valid, `scripts/exclusion_manifest_lint.py` exit 0 (1 WARNING
+with a valid `operator_override` on the routine transition task, 0 HARD violations after adding
+honest `prior_failures` citations to exp5151), `scripts/arc_levelup_guarantee_lint.py` exit 0 (1
+level-up attempt, satisfies the >=1 floor), milestone field `2026.07.472` matches
+`_expected_next_milestone('2026.07.471')` exactly (so the Pre-Staged Roadmap Convention will
+preserve this file and skip the planner).
+
 ### PLANNER/RETRO MODEL SWITCH: Opus 4.8 -> Sonnet 5 2026-07-02 (outer-loop, "switch from opus 4.8 to sonnet 5")
 
 Edited `~/.config/systemd/user/carnot-conductor.service.d/10-gemini-routing.conf`:
