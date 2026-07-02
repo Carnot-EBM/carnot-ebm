@@ -119,5 +119,14 @@
     "verifier_selection_accuracy": 0.1
   },
   "zeroshot_result_path": "results/experiment_mmlu_pro_verifier_vs_cheap_baseline.json",
-  "zeroshot_result_sha256": "sha256:5d209c2acf0325cbd1ac12314b2e9a251ecca14a38caf47ac06bc94ba9d428aa"
+  "zeroshot_result_sha256": "sha256:5d209c2acf0325cbd1ac12314b2e9a251ecca14a38caf47ac06bc94ba9d428aa",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "fewshot_oracle_at_k=0.5 and oracle_at_k_ceiling=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
