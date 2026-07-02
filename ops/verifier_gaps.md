@@ -2484,18 +2484,33 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: medium
 
 ### GAP-LIVE-INTEGRATION: the SUBMITTED agent runs a weaker generic path than the repo's own research (HIGHEST score lever)
-- status: open
-- evidence: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer` is bare BFS (measured 8/32 in-distribution,
-  ~0 OOD — `results/arc_offline_to_live_bridge_v2.json:5,18`) + an LLM tier with 0/6 measured value-added
-  (:13); `target_levels=1` (stops at first level), `value_weight=0.0` (value head inert). The stronger
-  `arc_strategy_router.py` / `arc_world_model_dsl.py` are NOT imported by `arc_competition_agent.py` (grep
-  empty). The "45 reproduced levels" are mostly banked replays of KNOWN games (≈0 on the hidden eval) or
-  depend on `env._game` internal-state absent live.
+- status: re-scoped (2026-07-02; stale wiring/config evidence corrected, residual provenance-mirage audit remains)
+- evidence: Original 2026-06-19 evidence, now stale in part: `make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer`
+  was described as bare BFS (measured 8/32 in-distribution, ~0 OOD — `results/arc_offline_to_live_bridge_v2.json:5,18`)
+  + an LLM tier with 0/6 measured value-added (:13); `target_levels=1`; `value_weight=0.0`; and
+  `arc_strategy_router.py` / `arc_world_model_dsl.py` NOT imported by `arc_competition_agent.py`.
+  2026-07-02 correction: current source refutes the three narrow wiring claims. `arc_competition_agent.py:30`
+  imports `arc_strategy_router`, `:51` imports `ObjectDeltaModel`, `:2157-2164` uses both in `E3AgentPolicy`;
+  `SUBMITTED_TARGET_LEVELS = 3` at `:88` and `SUBMITTED_AGENT_CONFIG["target_levels"]` reads it at `:3132`;
+  `SUBMITTED_VALUE_WEIGHT = 1e-12` at `:83` and `SUBMITTED_AGENT_CONFIG["value_weight"]` reads it at `:3131`.
+  Exp4605 records the submitted config with `target_levels=3`, router/DSL wired, and `value_weight_used=1e-12`.
+  Exp4652 records a matched `value_weight=0.0` baseline plus a cost-fixed nonzero run (`value_weight_set=1e-12`)
+  with zero live lift and `residual_cause_hypothesis=distribution_shift_or_calibration`; this is "tried and did
+  not help", not "never wired". `scripts/arc_orphan_solver_lint.py` now passes (`OK: all solver-like ARC modules
+  are reachable from the live agent path (46 modules in the live closure).`). Residual 2026-07-02 audit of
+  `ops/arc_solve_registry.yaml`: registry declares `reproducible_total_games: 24` but 25 rows carry
+  `levels_reproduced>0`; using the declared-24 view, 4 current-depth banked games are
+  `live_agent_self_discovery` and 20 are `development_proxy` by banking artifact/mechanism (row-level view:
+  4 live, 21 development_proxy, with `wa30` the extra legacy L1 row).
 - failure mode: `reproducible_total_levels` (what the sprint optimizes) is largely a MIRAGE for the leaderboard;
   the score is driven by generic OOD solve-rate + action efficiency, which the submitted agent barely has.
-- missing discriminator: n/a — this is INTEGRATION, not modeling. Wire the router + world-model-DSL into the
-  submitted agent; raise target_levels; replace RESET-replay nav with forward-edge `_shortest_path`.
-- priority: high (the most direct move on 0.08)
+- missing discriminator: n/a — this remains INTEGRATION / provenance hygiene, not modeling. Do NOT re-propose
+  "wire the router/DSL" or "raise target_levels" as new work; those are already current-code facts. The real
+  residual scope for exp5176 or a future milestone is to reduce the registry's development-proxy/current-depth
+  ratio by making banked progress arise from the live agent's own runtime self-discovery path, and to keep
+  `reproducible_total_games` aligned with the per-game rows.
+- priority: medium (the stale highest-lever rebuild is closed; the provenance-mirage ratio is still operationally
+  important but is a narrower residual than the original wiring gap)
 
 ### GAP-ARCH-WORLD-MODEL-TRUST-ENERGY: learned oracle-distinct energy for hidden-state world-model trust
 - status: open
