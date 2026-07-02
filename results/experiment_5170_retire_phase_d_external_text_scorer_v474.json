@@ -1,0 +1,687 @@
+{
+  "adversarial_verification": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5170_retire_phase_d_external_text_scorer_v474.json"
+    ],
+    "exit_code": 0,
+    "flagged_adversarial": false,
+    "flags": [],
+    "green": true,
+    "max_severity": -1,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5170_retire_phase_d_external_text_scorer_v474.json\",\n      \"loaded\": true,\n      \"exp_id\": \"experiment_5170_retire_phase_d_external_text_scorer_v474\",\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "current_roadmap_lint": {
+    "all_risks": [
+      {
+        "detail": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "retirement_reason": "51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "severity": "WARNING",
+        "task_id": "exp5168-archive-473-activate-474",
+        "task_title": "PHASE 0 transition -- archive .473 truth (one real win, two hardened nulls, one blocked gate), activate .474",
+        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
+      },
+      {
+        "detail": "47 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "retirement_reason": "47 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "severity": "WARNING",
+        "task_id": "exp5179-hardware-continuity-board-timing-v474",
+        "task_title": "PHASE C3 hardware continuity -- KV260 + PolarFire smoke, and a fresh GateMate dirtyJTAG IDCODE diagnostic",
+        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
+      }
+    ],
+    "entry_blocked_pattern_risks": [],
+    "entry_blocked_pattern_task_ids": [],
+    "exp5178_entry_risks": [],
+    "exp5178_task_ids": [
+      "exp5178-hidden-state-verifier-pilot-v474"
+    ],
+    "passed": true,
+    "roadmap_path": "research-roadmap.yaml"
+  },
+  "duration_s": 0.0001,
+  "entry_id": "phase_d_external_text_scorer_retired_exp5163_v474",
+  "exclusion_manifest_entry_added": true,
+  "experiment": "experiment_5170_retire_phase_d_external_text_scorer_v474",
+  "experiment_id": "exp5170-retire-phase-d-external-text-scorer-v474",
+  "false_positive_check_against_exp5178": true,
+  "field_principles": {
+    "entry_id": "traceability to the retired_extras entry",
+    "exclusion_manifest_entry_added": "manifest retirement must be present and schema-compatible",
+    "false_positive_check_against_exp5178": "Must confirm the new entry does not accidentally block this milestone's own hidden-state verifier pilot -- an over-broad retirement would be a self-inflicted wound, per the literature's own distinction between external-text and internal-representation scoring.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "phase_d_artifacts_enumerated": "A retirement based on 4 examples out of ~20+ artifacts is under-evidenced; this field proves the consolidation is genuinely comprehensive.",
+    "sanctioned_exception_documented": "The retirement note must explicitly preserve the hidden-state verifier research direction as open, not accidentally chill it via ambiguous prose even where the mechanical blocked_patterns are correctly scoped.",
+    "synthetic_match_check_passed": "Confirms the retirement is load-bearing, not just documentation, per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent and the exp5165 self-test pattern."
+  },
+  "flagged_adversarial": false,
+  "honest_verdict": "complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_preserved",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "lineage_stage_summary": {
+    "cleanest_point_estimate": {
+      "ci95": [
+        0.0,
+        0.165
+      ],
+      "delta_vs_tuned_sc": 0.08,
+      "interpretation": "positive point estimate, but CI95 lower bound touches zero",
+      "source_id": "exp5031"
+    },
+    "decisive_live_musr_negative": {
+      "ci95": [
+        -0.105,
+        0.015
+      ],
+      "energy_minus_sc_delta": -0.045,
+      "source_id": "distributional_energy_verifier_musr"
+    },
+    "overall_verdict": "No Phase D external generated-text/logprob scorer produced a decision-grade win over genuine tuned self-consistency; the best point estimate touches zero.",
+    "sanctioned_exceptions": [
+      "hidden-state/internal-representation verifiers",
+      "ARC-domain oracle-distinct verifier work",
+      "FoVer production ensemble"
+    ],
+    "scope_retired": "external-TEXT-based energy/reward verifier scoring (LoRA-EBM holistic scorer / uPRM / EBRM style) vs. self-consistency on off-ARC reasoning corpora",
+    "stage_count": 7,
+    "terminal_continuation": {
+      "ci95": [
+        -0.125,
+        0.175
+      ],
+      "delta": 0.025,
+      "flagged_adversarial": true,
+      "source_id": "exp5163"
+    }
+  },
+  "manifest_entry_audit": {
+    "blocked_patterns": [
+      "train lora ebm scorer v2 on off-arc reasoning corpus",
+      "rerun uprm text scorer on off-arc reasoning corpus",
+      "rerun ebrm external text reward scorer on off-arc reasoning corpus",
+      "phase d external text scorer rerun"
+    ],
+    "entry_id": "phase_d_external_text_scorer_retired_exp5163_v474",
+    "errors": [],
+    "found": true
+  },
+  "milestone": "2026.07.474",
+  "phase_d_artifacts_enumerated": [
+    "exp4940",
+    "distributional_energy_verifier_musr",
+    "exp5003",
+    "exp5004",
+    "exp5005",
+    "exp5007",
+    "exp5015",
+    "exp5017",
+    "exp5018",
+    "exp5022",
+    "exp5029",
+    "exp5031",
+    "exp5032",
+    "exp5033",
+    "exp5036",
+    "exp5045",
+    "exp5046",
+    "exp5047",
+    "exp5050",
+    "exp5059",
+    "exp5060",
+    "exp5063",
+    "exp5072",
+    "exp5086",
+    "exp5087",
+    "exp5088",
+    "exp5126",
+    "exp5163"
+  ],
+  "random_seed": 5170,
+  "reproducibility_checksum": "sha256:e7d2525c84bf36cb0b4a0c12c972394794ab292a89306453cc9af12763f8303a",
+  "result_path": "results/experiment_5170_retire_phase_d_external_text_scorer_v474.json",
+  "run_date": "20260702",
+  "sanctioned_exception_doc": {
+    "marker": "2026-07-02 retirement note: Phase D external-text scorer moat closed, hidden-state verifiers remain open",
+    "matching_paths": [
+      "ops/verifier_gaps.md"
+    ],
+    "paths_checked": [
+      "ops/verifier_gaps.md",
+      "ops/known-issues.md"
+    ],
+    "updated": true
+  },
+  "sanctioned_exception_documented": true,
+  "schema": "carnot.experiment_5170_retire_phase_d_external_text_scorer.v1",
+  "source_artifact_summary": {
+    "distributional_energy_verifier_musr": {
+      "energy_minus_sc_ci95": [
+        -0.105,
+        0.015
+      ],
+      "energy_minus_sc_delta": -0.045,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.515_pure_0.535_vs_sc_0.56_delta_-0.045_ci_-0.105_0.015_puredelta_-0.025_ci_-0.095_0.045_sc_not_saturated_headroom_unrealized",
+      "loadable": true,
+      "path": "results/distributional_energy_verifier_musr.json",
+      "self_consistency_accuracy": 0.56
+    },
+    "exp4940": {
+      "flagged_adversarial": null,
+      "honest_verdict": "success_distributional_energy_verifier_pivot_executable_spec_ready",
+      "loadable": true,
+      "path": "results/experiment_4940_distributional_energy_verifier_executable_spec.json"
+    },
+    "exp5003": {
+      "delta_vs_tuned_sc": null,
+      "flagged_adversarial": true,
+      "honest_verdict": "running_lora_ebm_scorer_musr_pretrain_skeleton",
+      "loadable": true,
+      "paired_ci95": null,
+      "path": "results/experiment_5003_lora_ebm_scorer_musr.json"
+    },
+    "exp5004": {
+      "delta_vs_tuned_sc": null,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_uprm_logprob_candidate_cache",
+      "loadable": true,
+      "paired_ci95": null,
+      "path": "results/experiment_5004_uprm_replication.json"
+    },
+    "exp5005": {
+      "delta_vs_tuned_sc": 0.0,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p000_ci_incl_0",
+      "loadable": true,
+      "paired_ci95": [
+        -0.03,
+        0.025
+      ],
+      "path": "results/experiment_5005_ebrm_uncertainty_verifier.json"
+    },
+    "exp5007": {
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_moat_scoped_no_realized_no_bounded_retirement",
+      "loadable": true,
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "path": "results/experiment_5007_moat_gate_resolution.json"
+    },
+    "exp5015": {
+      "flagged_adversarial": null,
+      "honest_verdict": "success_genuine_sc_baseline_fixed_degeneracy_guard_shipped",
+      "loadable": true,
+      "path": "results/experiment_5015_genuine_sc_baseline_fix.json"
+    },
+    "exp5017": {
+      "delta_vs_tuned_sc": null,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_trainable_qwen_base",
+      "loadable": true,
+      "paired_ci95": null,
+      "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json"
+    },
+    "exp5018": {
+      "delta_vs_tuned_sc": null,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_b2_logprob_cache",
+      "loadable": true,
+      "paired_ci95": null,
+      "path": "results/experiment_5018_uprm_replication_v2.json"
+    },
+    "exp5022": {
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_moat_execution_incomplete_ebrm",
+      "loadable": true,
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "path": "results/experiment_5022_moat_gate_resolution_v2.json"
+    },
+    "exp5029": {
+      "flagged_adversarial": null,
+      "honest_verdict": "success_logprob_cache_rescored_musr_n200",
+      "loadable": true,
+      "path": "results/experiment_5029_shared_logprob_candidate_cache_v2.json"
+    },
+    "exp5031": {
+      "delta_vs_tuned_sc": 0.08,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_lora_ebm_no_win_musr_plus_0p080_ci_incl_0",
+      "loadable": true,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json"
+    },
+    "exp5032": {
+      "delta_vs_tuned_sc": -0.11,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_uprm_no_win_musr_minus_0p110_mcnemar_or_headroom_gate",
+      "loadable": true,
+      "paired_ci95": [
+        -0.195,
+        -0.03
+      ],
+      "path": "results/experiment_5032_uprm_replication_v3.json"
+    },
+    "exp5033": {
+      "delta_vs_tuned_sc": 0.08,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_ebrm_no_win_musr_plus_0p080_ci_incl_0",
+      "loadable": true,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json"
+    },
+    "exp5036": {
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_moat_execution_incomplete_cascade",
+      "loadable": true,
+      "moat_realized": false,
+      "moat_retired_bounded": false,
+      "path": "results/experiment_5036_moat_gate_resolution_v3.json"
+    },
+    "exp5045": {
+      "delta_vs_tuned_sc": 0.08,
+      "flagged_adversarial": null,
+      "honest_verdict": "blocked_sota_candidate_refresh_unavailable",
+      "loadable": true,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "path": "results/experiment_5045_powered_lora_ebm_eorm_musr.json"
+    },
+    "exp5046": {
+      "delta_vs_tuned_sc": -0.03,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_process_reward_no_win_musr_minus_0p030",
+      "loadable": true,
+      "paired_ci95": [
+        -0.095,
+        0.035
+      ],
+      "path": "results/experiment_5046_vpr_process_reward_repair.json"
+    },
+    "exp5047": {
+      "delta_vs_tuned_sc": 0.02,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_kan_purm_no_incremental_lift_over_powered_d1_minus_0p060_mcnemar_or_headroom_gate",
+      "loadable": true,
+      "paired_ci95": [
+        -0.105,
+        -0.015
+      ],
+      "path": "results/experiment_5047_kan_purm_energy_calibration.json"
+    },
+    "exp5050": {
+      "bounded_retirement_ok": false,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_moat_execution_incomplete_v464_blocked_or_missing_phase_d",
+      "loadable": true,
+      "path": "results/experiment_5050_moat_gate_resolution_v464.json"
+    },
+    "exp5059": {
+      "delta_vs_tuned_sc": 0.08,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_d1_sota_refresh_audit_no_proper_win_plus_0p080",
+      "loadable": true,
+      "paired_ci95": [
+        0.0,
+        0.165
+      ],
+      "path": "results/experiment_5059_d1_sota_refresh_audit.json"
+    },
+    "exp5060": {
+      "flagged_adversarial": null,
+      "honest_verdict": "retired_d4_second_corpus_audit_failed_constraintbench_exact_v1_plus_0p370",
+      "loadable": true,
+      "path": "results/experiment_5060_second_corpus_audit_v2.json"
+    },
+    "exp5063": {
+      "bounded_retirement_ok": false,
+      "flagged_adversarial": null,
+      "honest_verdict": "complete_moat_execution_incomplete_v465_blocked_flagged_or_unclean",
+      "loadable": true,
+      "path": "results/experiment_5063_moat_gate_resolution_v465.json"
+    },
+    "exp5072": {
+      "flagged_adversarial": null,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "path": "results/experiment_5072_uprm_logprob_cache_v466.json"
+    },
+    "exp5086": {
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_uprm_logprob_cache_retry_endpoint_failed",
+      "loadable": true,
+      "path": "results/experiment_5086_uprm_logprob_cache_retry_v467.json"
+    },
+    "exp5087": {
+      "flagged_adversarial": null,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "path": "results/experiment_5087_uprm_process_verifier_retry_v467.json"
+    },
+    "exp5088": {
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_temporal_consistency_prm_no_win",
+      "loadable": true,
+      "path": "results/experiment_5088_temporal_consistency_prm_v467.json"
+    },
+    "exp5126": {
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "distributional_energy_delta": 0.0,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_distributional_energy_ranker_evaluated_not_ready_for_audit",
+      "loadable": true,
+      "path": "results/experiment_5126_distributional_energy_ranker_v470.json"
+    },
+    "exp5163": {
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_mmlu_pro_fewshot_verifier_vs_cheap_delta_+0.025_CI95_[-0.125,0.175]_CI_includes_0",
+      "loadable": true,
+      "path": "results/experiment_5163_mmlu_pro_verifier_rescale_v473.json",
+      "verifier_vs_cheap_delta": 0.025,
+      "verifier_vs_cheap_delta_ci95": [
+        -0.125,
+        0.175
+      ]
+    }
+  },
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_4940_distributional_energy_verifier_executable_spec.json",
+      "sha256": "sha256:61f1f11e45c9ab6abdb4fc2a59ce55d96ddb8140f1e1e7ecfc7ba13832659cab",
+      "source_id": "exp4940"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/distributional_energy_verifier_musr.json",
+      "sha256": "sha256:d4d7196d9f7e29fece0b1dfc8007b3b3c82464211dc1a965fa118548fbdd85fb",
+      "source_id": "distributional_energy_verifier_musr"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5003_lora_ebm_scorer_musr.json",
+      "sha256": "sha256:2737af698768a25d516f5c28067047f18477acd13f0a3d00974608b8ea44a5af",
+      "source_id": "exp5003"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5004_uprm_replication.json",
+      "sha256": "sha256:df7f0b4ca5a4692ad3e3a3e8a66167c6f74ae95634c1c8c74efb393a9f12c79f",
+      "source_id": "exp5004"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5005_ebrm_uncertainty_verifier.json",
+      "sha256": "sha256:4d89e8df80f5961d0028187237066cb5af816a556f7d8aa8d1bb80f7bcad6dab",
+      "source_id": "exp5005"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5007_moat_gate_resolution.json",
+      "sha256": "sha256:fb0143fc5f0b9181735f7efcbcb1e9d12430b404977e26a6f508274f27818386",
+      "source_id": "exp5007"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5015_genuine_sc_baseline_fix.json",
+      "sha256": "sha256:78af64c821451edcf0a6b71f2e8b0cfbfd5c9d105ac5250c4c7a70bdf2bc7711",
+      "source_id": "exp5015"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5017_lora_ebm_scorer_musr_v2.json",
+      "sha256": "sha256:8ad95720951638b2408e99936236e63ad1b9d8316dc9d368aea295035bdb320e",
+      "source_id": "exp5017"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5018_uprm_replication_v2.json",
+      "sha256": "sha256:67ac465385ec774488fb6112441b08480117fca6393f291bbbeb75a69c2de4d9",
+      "source_id": "exp5018"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5022_moat_gate_resolution_v2.json",
+      "sha256": "sha256:124fa5ef3ab0d293324d1e5cfba9d1b305a6d7b8050a9e46724791bcfe511bef",
+      "source_id": "exp5022"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5029_shared_logprob_candidate_cache_v2.json",
+      "sha256": "sha256:1035a986efe65a1fd634146f1b1243384885e251cddd33144fc7bd18541d3366",
+      "source_id": "exp5029"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5031_lora_ebm_scorer_musr_v3.json",
+      "sha256": "sha256:e0bfafd135f76be515c6daa0ba7f0c00a07916f8bd3a6c81cb7e1278770b401e",
+      "source_id": "exp5031"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5032_uprm_replication_v3.json",
+      "sha256": "sha256:b07c49b48d35f952c2cac3a6d5514e3d669c0cecbc296f460b2a279827ca078e",
+      "source_id": "exp5032"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5033_ebrm_uncertainty_verifier_v3.json",
+      "sha256": "sha256:5c58af0c3b364cb8d3cc8cc7e23733ecea3a60b49072ec12c0480f0ed2a6e0b6",
+      "source_id": "exp5033"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5036_moat_gate_resolution_v3.json",
+      "sha256": "sha256:1f2cca42c83f426800ce0544b747b6211c455804b80598a4ee1243110bd43c25",
+      "source_id": "exp5036"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5045_powered_lora_ebm_eorm_musr.json",
+      "sha256": "sha256:46efb4450502088e94e53157bb9acba6c8a048e000e94f7210eac61a36f2ebff",
+      "source_id": "exp5045"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5046_vpr_process_reward_repair.json",
+      "sha256": "sha256:6edc002f070b5ac38c06195751904ef28e44fd2b2424cac3e3c26e0285db23ed",
+      "source_id": "exp5046"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5047_kan_purm_energy_calibration.json",
+      "sha256": "sha256:2afff65f124a76674ce1b4c6050a3f537411948a17ec1195cbd930af6b3fcf40",
+      "source_id": "exp5047"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5050_moat_gate_resolution_v464.json",
+      "sha256": "sha256:f6f8ec5513b719982e49ea10139f22a6c1f849305f41bf894df8ae619f578c5d",
+      "source_id": "exp5050"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5059_d1_sota_refresh_audit.json",
+      "sha256": "sha256:f265773022d3937df3bcde2b516f650bf0868c36bfdc766ada278dc4c3e44fa9",
+      "source_id": "exp5059"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5060_second_corpus_audit_v2.json",
+      "sha256": "sha256:e5b7998c02c272da6abbb9ce19a8b15c293869bcb4c0c086458ec9625cd2cc69",
+      "source_id": "exp5060"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5063_moat_gate_resolution_v465.json",
+      "sha256": "sha256:ef21e066b26198091e1f0665af467c75fba844f75855b1e5634b38e270f9bde2",
+      "source_id": "exp5063"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5072_uprm_logprob_cache_v466.json",
+      "sha256": "sha256:44e7b1706466fd944aca56e38ff7f226939899f00f4c70b9eb00c4c7ef82d5cb",
+      "source_id": "exp5072"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5086_uprm_logprob_cache_retry_v467.json",
+      "sha256": "sha256:da0adf6523965beb7603c6f1f7e2eb142d7831f2c7613b6c9f9b422ff5e60921",
+      "source_id": "exp5086"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5087_uprm_process_verifier_retry_v467.json",
+      "sha256": "sha256:a3c6fd125c83be7c3f77ad0497e9647df930d2d19cd326612cf74d6d38c9dba8",
+      "source_id": "exp5087"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5088_temporal_consistency_prm_v467.json",
+      "sha256": "sha256:d3b4fdf825642eeedfac47e5c673dc49662d6d5cc43e089673f2bf8ac42e8714",
+      "source_id": "exp5088"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5126_distributional_energy_ranker_v470.json",
+      "sha256": "sha256:a2887bd79d8ccac86c89028fad9d16fc3f5cdd93930ca0e1b443e143f1c863df",
+      "source_id": "exp5126"
+    },
+    {
+      "exists": true,
+      "kind": "prior_result",
+      "path": "results/experiment_5163_mmlu_pro_verifier_rescale_v473.json",
+      "sha256": "sha256:bb6ef9f5e7024fc388e7fd7787b9ede144b4ea1f1288fcc5edf115eebaa0e127",
+      "source_id": "exp5163"
+    },
+    {
+      "exists": true,
+      "kind": "ops_yaml",
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc",
+      "source_id": "exclusion_manifest"
+    },
+    {
+      "exists": true,
+      "kind": "ops_doc",
+      "path": "ops/verifier_gaps.md",
+      "sha256": "sha256:75e3cc5f244226018578e8e8f2b31b4f25734de40eeeca3dd34b822152794284",
+      "source_id": "verifier_gaps"
+    },
+    {
+      "exists": true,
+      "kind": "ops_doc",
+      "path": "ops/known-issues.md",
+      "sha256": "sha256:ab8ca335caf0c6cc06b66a7a045f940886cce777805db5f2b763e866d3a23bb8",
+      "source_id": "known_issues"
+    },
+    {
+      "exists": true,
+      "kind": "research_doc",
+      "path": "research-references.md",
+      "sha256": "sha256:208beb4ad689b838912f83eb011ec65492bc8a6530adb9d1ad0a388f357875a1",
+      "source_id": "research_references"
+    },
+    {
+      "exists": true,
+      "kind": "roadmap_yaml",
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:ee379e3a3acd8ff1a80bd1c1854afd341b3ced583c9525fac8a284cd64a23992",
+      "source_id": "active_roadmap"
+    },
+    {
+      "exists": true,
+      "kind": "script",
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:26d6e4e5cfb28adca06e6818259a592e8ebbb7eaa5e39534a403a51907f96191",
+      "source_id": "exclusion_manifest_lint"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5170",
+    "SCENARIO-REPORT-5170-LINT",
+    "SCENARIO-REPORT-5170-NARROW-SCOPE"
+  ],
+  "synthetic_match_check_passed": true,
+  "synthetic_match_lint": {
+    "all_risks": [
+      {
+        "detail": "task title/prompt matches retired_extras blocked_pattern(s): phase_d_external_text_scorer_retired_exp5163_v474:'train lora ebm scorer v2 on off-arc reasoning corpus'",
+        "retirement_reason": "retire_if_same_verdict: Exp 5163 is the terminal Phase D continuation after seven milestones of null or marginal external generated-text/logprob scorer evidence. LoRA-EBM, uPRM, EBRM, process-reward, ",
+        "severity": "HARD",
+        "task_id": "exp9999-lora-ebm-external-text-rerun",
+        "task_title": "train lora ebm scorer v2 on off-arc reasoning corpus",
+        "violation_class": "BLOCKED_PATTERN_MATCHED"
+      },
+      {
+        "detail": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "retirement_reason": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+        "severity": "HARD",
+        "task_id": "exp9999-lora-ebm-external-text-rerun",
+        "task_title": "train lora ebm scorer v2 on off-arc reasoning corpus",
+        "violation_class": "SCOPE_MATCHED_PRIOR_FAILURE"
+      }
+    ],
+    "matched_risks": [
+      {
+        "detail": "task title/prompt matches retired_extras blocked_pattern(s): phase_d_external_text_scorer_retired_exp5163_v474:'train lora ebm scorer v2 on off-arc reasoning corpus'",
+        "retirement_reason": "retire_if_same_verdict: Exp 5163 is the terminal Phase D continuation after seven milestones of null or marginal external generated-text/logprob scorer evidence. LoRA-EBM, uPRM, EBRM, process-reward, ",
+        "severity": "HARD",
+        "task_id": "exp9999-lora-ebm-external-text-rerun",
+        "task_title": "train lora ebm scorer v2 on off-arc reasoning corpus",
+        "violation_class": "BLOCKED_PATTERN_MATCHED"
+      }
+    ],
+    "passed": true,
+    "synthetic_title": "train lora ebm scorer v2 on off-arc reasoning corpus"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5170_retire_phase_d_external_text_scorer_v474.py -q -o addopts=''",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5170_retire_phase_d_external_text_scorer_v474.py' -m pytest tests/python/test_experiment_5170_retire_phase_d_external_text_scorer_v474.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5170_retire_phase_d_external_text_scorer_v474.py' --fail-under=100",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5170_retire_phase_d_external_text_scorer_v474.py",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

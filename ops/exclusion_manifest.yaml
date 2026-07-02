@@ -644,3 +644,53 @@ retired_extras:
   - novelty-bonus first-contact rerun
   - program-synthesis first-contact rerun
   - energy-as-fitness first-contact rerun
+- id: phase_d_external_text_scorer_retired_exp5163_v474
+  experiment_scope: external-TEXT-based energy/reward verifier scoring (LoRA-EBM
+    holistic scorer / uPRM / EBRM style) vs. self-consistency on off-ARC reasoning
+    corpora
+  reason: 'retire_if_same_verdict: Exp 5163 is the terminal Phase D continuation
+    after seven milestones of null or marginal external generated-text/logprob scorer
+    evidence. LoRA-EBM, uPRM, EBRM, process-reward, and distributional-energy ranker
+    attempts failed to produce a decision-grade win over genuine tuned self-consistency
+    on headroom-present off-ARC corpora. Future reruns need an operator_override
+    citing a genuinely different mechanism; hidden-state/internal-representation
+    verifiers, ARC oracle-distinct verifier work, and the FoVer production ensemble
+    are outside this retired scope.'
+  experiment_ids:
+  - exp4940
+  - exp5003
+  - exp5004
+  - exp5005
+  - exp5007
+  - exp5015
+  - exp5017
+  - exp5018
+  - exp5022
+  - exp5029
+  - exp5031
+  - exp5032
+  - exp5033
+  - exp5036
+  - exp5045
+  - exp5046
+  - exp5047
+  - exp5050
+  - exp5059
+  - exp5060
+  - exp5063
+  - exp5072
+  - exp5086
+  - exp5087
+  - exp5088
+  - exp5126
+  - exp5163
+  retired_milestone: 2026.07.474
+  retired_by_artifact: results/experiment_5163_mmlu_pro_verifier_rescale_v473.json
+  recorded_by_artifact: results/experiment_5170_retire_phase_d_external_text_scorer_v474.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - train lora ebm scorer v2 on off-arc reasoning corpus
+  - rerun uprm text scorer on off-arc reasoning corpus
+  - rerun ebrm external text reward scorer on off-arc reasoning corpus
+  - phase d external text scorer rerun

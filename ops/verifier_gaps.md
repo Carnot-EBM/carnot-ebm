@@ -30,6 +30,23 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
 
 ---
 
+## 2026-07-02 retirement note: Phase D external-text scorer moat closed, hidden-state verifiers remain open
+
+`results/experiment_5170_retire_phase_d_external_text_scorer_v474.json` retires only the
+external generated-text/logprob scorer construction class from Phase D: LoRA-EBM holistic
+scorers, uPRM-style text/logprob process rewards, EBRM-style post-hoc reward refinement, and
+closely equivalent distributional-energy rankers when they are evaluated against genuine tuned
+self-consistency on off-ARC reasoning corpora. The consolidation covers the Exp 4940 plus
+Exp 5001-5163 Phase D trail, including the live MuSR negative and the Exp 5163 MMLU-Pro
+continuation whose CI still includes zero and is adversarially tautology-flagged.
+
+This retirement does not close hidden-state/internal-representation verifier research. In
+particular, TrajSelector-style hidden-state scoring and VerifySteer-style hidden-state steering
+remain open, sanctioned mechanisms for `exp5178`, because they score the generator's own
+internal representations rather than reranking generated text or logprobs. The retirement also
+does not apply to future ARC-domain oracle-distinct verifier work or to Carnot's FoVer production
+ensemble.
+
 ## Exp 5007 off-ARC EBRM selection residual (2026-06-30)
 
 `results/experiment_5007_moat_gate_resolution.json` aggregated the D1-D4 off-ARC verifier-moat

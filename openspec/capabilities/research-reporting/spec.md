@@ -740,6 +740,88 @@ conductor-like process
 `runtime_clean_details`, and uses a complete-prefixed verdict that makes the
 activation gate visibly dirty instead of silently proceeding as clean.
 
+### REQ-REPORT-5170: Retire Phase D External-Text Energy/Reward Verifier Scorers
+
+The Exp 5170 workflow SHALL consolidate the Phase D off-ARC
+distributional-energy verifier-moat lineage, spanning Exp 4940 and the
+Exp 5001 through Exp 5163 result trail, into a single scoped retirement record.
+It SHALL read a representative Phase D artifact set that includes the
+distributional-EBM executable spec, live MuSR distributional-energy verifier
+negative, clean MuSR LoRA/uPRM/EBRM runs, powered and second-corpus
+continuations, later uPRM/logprob and ranker continuations, and Exp 5163's
+terminal MMLU-Pro continuation. It SHALL write
+`results/experiment_5170_retire_phase_d_external_text_scorer_v474.json`, SHALL
+NOT modify `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL add and validate an `ops/exclusion_manifest.yaml`
+`retired_extras` entry with id
+`phase_d_external_text_scorer_retired_exp5163_v474`. The entry SHALL scope only
+`external-TEXT-based energy/reward verifier scoring (LoRA-EBM holistic scorer /
+uPRM / EBRM style) vs. self-consistency on off-ARC reasoning corpora`, SHALL
+list the Phase D source experiments that support the consolidation, SHALL set
+`retired_milestone=2026.07.474`, SHALL set `operator_reopen_required=true`,
+SHALL set `retire_if_same_verdict=true`, and SHALL include narrow
+`blocked_patterns` that fire for a genuine future external-text-scorer rerun
+without matching hidden-state, TrajSelector-style, internal-representation,
+ARC-domain, or FoVer production verifier work.
+
+The workflow SHALL prove the manifest entry is load-bearing through
+`scripts/exclusion_manifest_lint.py`. It SHALL scan the active `.474` roadmap
+and confirm that `exp5178-hidden-state-verifier-pilot-v474` is not blocked by
+the new entry. It SHALL also lint a synthetic future task such as a fresh
+LoRA-EBM quality-scorer rerun and confirm a HARD
+`BLOCKED_PATTERN_MATCHED` risk is emitted from
+`phase_d_external_text_scorer_retired_exp5163_v474`.
+
+The workflow SHALL append a dated note to `ops/verifier_gaps.md` or
+`ops/known-issues.md` without deleting prior history. That note SHALL state
+that the retired scope is limited to external generated-text/logprob scorers
+and SHALL explicitly preserve hidden-state/internal-representation verifiers
+such as TrajSelector or VerifySteer as open research.
+
+The artifact SHALL include top-level fields
+`phase_d_artifacts_enumerated`, `exclusion_manifest_entry_added`, `entry_id`,
+`false_positive_check_against_exp5178`, `synthetic_match_check_passed`,
+`sanctioned_exception_documented`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also record source artifact summaries,
+lineage-stage summaries, manifest-entry audit, current-roadmap lint findings,
+synthetic-match lint findings, source inputs read, adversarial verification,
+and tests run.
+
+Required field principles:
+
+- `phase_d_artifacts_enumerated`: principle "A retirement based on 4 examples out of ~20+ artifacts is under-evidenced; this field proves the consolidation is genuinely comprehensive."
+- `exclusion_manifest_entry_added`: principle "manifest retirement must be present and schema-compatible"
+- `entry_id`: principle "traceability to the retired_extras entry"
+- `false_positive_check_against_exp5178`: principle "Must confirm the new entry does not accidentally block this milestone's own hidden-state verifier pilot -- an over-broad retirement would be a self-inflicted wound, per the literature's own distinction between external-text and internal-representation scoring."
+- `synthetic_match_check_passed`: principle "Confirms the retirement is load-bearing, not just documentation, per the 2026-07-01 BLOCKED_PATTERN_MATCHED mechanical-fix precedent and the exp5165 self-test pattern."
+- `sanctioned_exception_documented`: principle "The retirement note must explicitly preserve the hidden-state verifier research direction as open, not accidentally chill it via ambiguous prose even where the mechanical blocked_patterns are correctly scoped."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts"
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5170-LINT: External-Text Reruns Are Blocked
+
+**Given** the manifest contains the Exp 5170 retired-extras entry
+**When** a synthetic draft roadmap task proposes a fresh LoRA-EBM holistic
+quality scorer vs self-consistency rerun on an off-ARC reasoning corpus without
+`operator_override`
+**Then** `scripts/exclusion_manifest_lint.py` reports
+`BLOCKED_PATTERN_MATCHED` for
+`phase_d_external_text_scorer_retired_exp5163_v474` with HARD severity, and the
+Exp 5170 artifact records `synthetic_match_check_passed=true`.
+
+#### SCENARIO-REPORT-5170-NARROW-SCOPE: Hidden-State Verifier Pilot Remains Open
+
+**Given** the active `.474` roadmap contains
+`exp5178-hidden-state-verifier-pilot-v474`
+**When** `scripts/exclusion_manifest_lint.py` scans `research-roadmap.yaml`
+with the Exp 5170 retired-extras entry present
+**Then** no `BLOCKED_PATTERN_MATCHED` risk from
+`phase_d_external_text_scorer_retired_exp5163_v474` is emitted for Exp 5178, and
+the Exp 5170 artifact records
+`false_positive_check_against_exp5178=true`.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
@@ -757,6 +839,12 @@ activation gate visibly dirty instead of silently proceeding as clean.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5168 | Planned (`python/carnot/experiment_5168_archive_473_activate_474.py`, `results/experiment_5168_archive_473_activate_474.json`) | Planned (`tests/python/test_experiment_5168_archive_473_activate_474.py`) |
+
+## Implementation Status (REQ-REPORT-5170)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5170 | Planned (`python/carnot/experiment_5170_retire_phase_d_external_text_scorer_v474.py`, `results/experiment_5170_retire_phase_d_external_text_scorer_v474.json`) | Planned (`tests/python/test_experiment_5170_retire_phase_d_external_text_scorer_v474.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
