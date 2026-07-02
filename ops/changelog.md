@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-07-02 (Operational retrospective .472 -- empty timing window matches the named FALSE-ZERO detector gap -- claude)
+
+- Wrote `results/operational_retro_2026_07_472.json` for milestone `2026.07.472`. The
+  supplied TIMING DATA block reports 0 completed experiments, 0 wall-time minutes, and
+  0 compute-bound experiments since activation, so no slowest-experiment ranking or
+  compute-bound duration analysis is possible from the authoritative source.
+- Applied the GPU-idle gate: both RTX 3090s read 0% utilization in the monitor
+  snapshot, but with 0 compute-bound entries in scope `gpu_idle_on_compute_bound_tasks`
+  stays `null` and idle GPUs are correctly NOT reported as a bottleneck.
+- Cross-checked `docs/research-log.md`: 76 of the 205 logged milestone retro entries
+  (including the 8 immediately preceding `.472`) carry this same empty-window outcome,
+  matching the project's already-named "FALSE-ZERO detector gap" (tracked in this
+  changelog since milestone `.363`). The already-diagnosed fix -- wiring a disk-mtime
+  fallback plus write-time duration/inference-substrate stamping into the conductor's
+  retro TIMING-DATA prompt-assembly call site -- has still not been wired in; that
+  remains the single highest-leverage operational fix for the retro process itself.
+
 ## 2026-07-01 (Operational retrospective .470 -- no milestone-scoped experiment commits -- codex)
 
 - Wrote `results/operational_retro_2026_07_470.json` for milestone `2026.07.470`.

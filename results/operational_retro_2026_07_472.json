@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.472",
+  "generated_at": "2026-07-02T09:31:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The TIMING DATA block for 2026.07.472 reports zero experiment commits since activation: 0 experiments completed, 0 wall-time minutes, 0 compute-bound tasks, and an empty slowest-experiments list. Both RTX 3090s are idle at 0% utilization per the GPU monitor, but gpu_idle_on_compute_bound_tasks is correctly null since no compute-bound task is in scope, so that idle snapshot is not milestone-execution evidence.",
+  "bottlenecks_identified": [
+    "No per-experiment bottleneck is derivable this milestone: zero entries in the TIMING DATA block means there is nothing to rank by duration and no compute-bound task to check for GPU under-utilization.",
+    "The idle-GPU reading is a live snapshot only, not evidence of a compute-bound stall, since gpu_idle_on_compute_bound_tasks is null rather than true; per the stated interpretation rule this must not be flagged as a bottleneck.",
+    "The empty TIMING DATA block matches a pattern this project has already named the 'FALSE-ZERO detector gap' (tracked in ops/changelog.md since milestone .363, still visible in at least 76 of the 205 milestone entries logged in docs/research-log.md as of this session, including an 8-milestone unbroken run immediately preceding .472). Whether .472 is a genuinely idle window or another instance of that gap cannot be determined from the data this task is authorized to use -- that unresolved ambiguity is itself the standing operational bottleneck."
+  ],
+  "improvements_suggested": [
+    "Ship the fix repeatedly identified in prior retros: wire the timing detector into the conductor's retro TIMING-DATA prompt-assembly call site, add a disk-mtime fallback, and stamp duration_s/inference_substrate/compute_bound at experiment write-time -- this closes the FALSE-ZERO detector gap at its source instead of leaving each milestone's retro to report an ambiguous zero.",
+    "Until that fix lands, have the retro trigger emit a distinct 'empty-window-unverified' status instead of a plain zero, so downstream consumers can tell a genuinely idle milestone apart from a detector miss without re-deriving it by hand.",
+    "Keep the GPU-idle-on-compute-bound gating exactly as specified (null when no compute-bound task is present) -- that part of the interpretation rule worked correctly this milestone and should not be loosened just because the surrounding timing data is unreliable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the previously-diagnosed timing-detector fix (retro prompt-assembly call site + disk-mtime fallback + write-time stamping) into the conductor -- the single change that would let future retros report real numbers instead of an ambiguous zero.",
+    "Add a structured marker distinguishing 'genuinely no experiment activity' from 'detector could not see the activity' so retros stop conflating the two under the same all-zero shape.",
+    "Track the FALSE-ZERO detector gap's own age (spanning at least milestone .363 through .470 per docs/research-log.md) as a first-class known-issue so its resolution is measured directly rather than re-discovered informally in retro prose milestone after milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With no measured experiments in scope, the only defensible operational conclusion this milestone is about the retrospective mechanism itself: an empty TIMING DATA block is not new or surprising, it is the majority outcome across the logged retro history, and until the detector gap is fixed this process cannot reliably fulfill the meta-reflection goal of feeding real efficiency findings back into the loop."
+}
