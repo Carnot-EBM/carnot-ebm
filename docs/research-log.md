@@ -5643,3 +5643,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a milestone whose authoritative timing source again reports no post-activation experiment commits
 - key result: no data available this milestone; the supplied timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no slowest experiment, GPU-idle bottleneck, or DualGPURunner finding can be derived from authoritative data
 - acceptance: 0/0 criteria met -- no experiment criteria were present in the supplied timing data
+
+### Milestone 2026.07.473 (same-day addendum -- FALSE-ZERO confirmed, not genuinely empty)
+- exp_range: exp5156-exp5164 (per git history; not derivable from the supplied timing block)
+- theme: the entry above was generated from a detector that misses real post-activation work; a same-day second retro pass checked git history directly
+- key result: commits for exp5156 (archive .472 / activate .473), exp5161 (GAP-4 forward-protocol pilot), and exp5164 (a purpose-built disk-mtime timing-reconstruction fix for this exact gap) all landed after the 729cd473c activation commit and before the entry above was written -- this milestone's own exp5164 already built the fix (scripts/retro_timing_fallback.py, documented 2-line wiring change) but it is not yet called from research_conductor.py (zero references, confirmed via grep), so the detector is still reading zero
+- acceptance: fix built but not wired -- 0/1 (wiring not yet done); see ops/changelog.md 2026-07-02 entry for full evidence trail

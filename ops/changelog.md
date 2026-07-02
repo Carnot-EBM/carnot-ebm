@@ -1,5 +1,46 @@
 # Carnot — Changelog
 
+## 2026-07-02 (Operational retrospective .473 -- FALSE-ZERO confirmed by git-log, its own fix built-but-unwired -- claude)
+
+- Wrote `results/operational_retro_2026_07_473.json` for milestone `2026.07.473`.
+  The supplied TIMING DATA block again reported 0 completed experiments, 0
+  wall-time minutes, and 0 compute-bound experiments since activation, so the
+  locked numeric fields (`total_wall_time_minutes`, `experiments_completed`,
+  `compute_bound_experiments_count`, `slowest_experiments`,
+  `gpu_idle_on_compute_bound_tasks`) were left exactly as pre-filled per the
+  task's LOCKED FIELDS instruction.
+- This is the milestone's **second** retro-generation attempt: `docs/research-log.md`
+  already carries a `### Milestone 2026.07.473` entry from an earlier retro
+  (commit `7ec30aac9`) reporting the identical empty-window outcome.
+- Ran a cheap `git log`/`git show` check (outside the authoritative TIMING DATA
+  block, so it did not touch any locked field) and found this reading is very
+  likely false: commit `d34487bcb` (task `exp5161`, "PHASE B2 GAP-4 forward
+  protocol -- real, bounded-scale execution") and commit `750985738` (task
+  `exp5164`, "PHASE E1 infrastructure -- build a disk-mtime timing-reconstruction
+  module to fix the 77-milestone FALSE-ZERO retro gap") both landed after the
+  `729cd473c` "Activate milestone 2026.07.473" commit and before the first retro
+  even ran. A same-day `[outer-loop]` commit (`073a0e09c`) also un-quarantined
+  exp5161 after an adversarial-verify false-positive (root cause: `inference_substrate`
+  was written as a `{principle, value}` dict instead of a bare string, so the
+  linter's string parser couldn't recognize it -- the same *gated-fields-must-be-bare*
+  failure class as `feedback_gated_fields_must_be_bare.md`, just in a different
+  checker).
+- The irony: task `exp5164` (this same milestone) built exactly the fix for this
+  gap -- `scripts/retro_timing_fallback.py` (524 lines + 241 lines of tests),
+  whose own docstring documents a 2-line wiring change into
+  `research_conductor.py::_run_operational_retrospective`. Confirmed via
+  `grep -rn "retro_timing_fallback" scripts/research_conductor.py`: zero hits.
+  The fix shipped but was never connected to the call site it targets, so this
+  very retro is a live demonstration of the bug its own milestone already solved
+  in principle.
+- Did not duplicate the existing `docs/research-log.md` entry for `2026.07.473`
+  (per "Public Documentation Discipline," old research-log entries are
+  immutable) -- appended a same-day addendum instead of a second identically-headed
+  section.
+- Highest-leverage action for the next milestone: wire
+  `scripts/retro_timing_fallback.py` into the conductor's retro path per its own
+  documented instructions, then re-run this retrospective against real data.
+
 ## 2026-07-02 (Operational retrospective .472 -- empty timing window matches the named FALSE-ZERO detector gap -- claude)
 
 - Wrote `results/operational_retro_2026_07_472.json` for milestone `2026.07.472`. The

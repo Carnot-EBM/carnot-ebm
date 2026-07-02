@@ -1,30 +1,30 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.07.473",
-  "generated_at": "2026-07-02T13:44:29Z",
+  "generated_at": "2026-07-02T14:37:39Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "TIMING DATA reports no experiment commits since the activation of milestone 2026.07.473, so no operational timing or GPU-utilization analysis can be performed from authoritative data this cycle. The live GPU snapshot shows both RTX 3090s idle (0% util, 4MB allocated) at 2026-07-02T13:44:29Z, but with zero compute-bound experiments recorded in-window this is uninformative rather than a bottleneck.",
+  "summary": "The supplied TIMING DATA block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks since milestone activation, so no per-experiment duration or GPU-efficiency analysis is possible from that source alone. A cheap git-log check performed this turn (not part of the authoritative TIMING DATA block, so not reflected in the locked fields above) found this reading is very likely another instance of the project's named FALSE-ZERO detector gap: real post-activation experiment commits exist on disk for this milestone, and a fix module for this exact gap was itself built this milestone but is not yet wired into the conductor's retro prompt-assembly.",
   "bottlenecks_identified": [
-    "No compute-bound experiments appear in the TIMING DATA block this milestone, so no experiment-level bottleneck (slow model load, serialized GPU usage, missing DualGPURunner) can be identified from authoritative data.",
-    "The idle-GPU snapshot (0% util on both GPUs) cannot be attributed to a bottleneck because gpu_idle_on_compute_bound_tasks is null -- there is no in-window compute-bound task to hold an idle GPU accountable for.",
-    "An empty milestone-scoped TIMING DATA block prevents any operational efficiency analysis from being performed this cycle, independent of whether research work actually occurred; this is itself worth flagging to whoever maintains the retro data-assembly path."
+    "The bottleneck this turn is at the retro-generation layer, not the experiment layer: TIMING DATA read zero commits since activation even though git history shows real .473 experiment work landed before this retro was asked to run, so no genuine per-experiment duration/GPU analysis was possible from the authoritative source.",
+    "A fix for this detector gap (scripts/retro_timing_fallback.py, self-documented with a 'HOW TO WIRE THIS IN' two-line change) was built as an experiment this same milestone but has zero references anywhere in scripts/research_conductor.py (verified via grep) -- the fix shipped but was never connected to the code path it targets.",
+    "This is at least the second retro-generation attempt for milestone 2026.07.473 (docs/research-log.md already carries one prior entry for this milestone), which is itself wasted retro-generation effort against a known, already-diagnosed, already-coded-but-unwired bug rather than new analysis."
   ],
   "improvements_suggested": [
-    "Cross-check the retro TIMING DATA source's commit-scoping logic for milestone 2026.07.473 before treating an empty block as ground truth for 'no activity occurred'.",
-    "When TIMING DATA is empty, emit a lightweight secondary signal (e.g. commit count since activation) alongside the retro so operators can distinguish a genuinely idle milestone from a data-collection gap without manual investigation.",
-    "Continue gating GPU-idle bottleneck claims strictly on compute_bound task presence, as done here, to avoid false-positive flags on empty or synthesis-only milestones.",
-    "Keep DualGPURunner reserved for tasks that load 2+ models in parallel; not applicable this cycle since no compute-bound tasks are recorded."
+    "Wire scripts/retro_timing_fallback.py into scripts/research_conductor.py's operational-retrospective step per its own documented two-line change, so the next milestone's retro reads real disk-mtime-derived timing data instead of the currently-broken detection path.",
+    "Use the existing tests/python/test_retro_timing_fallback.py as a CI/pre-commit signal that a shipped fix-module for a named recurring gap must also be wired into its target call site before the task that built it is considered complete.",
+    "Once wired, re-run this retrospective against real timing data so the compute-bound, GPU-idle, and DualGPURunner questions can be answered for 2026.07.473 with genuine evidence rather than an empty placeholder.",
+    "Have the retro-generation step run a cheap git-log sanity check (commits since the activation marker touching results/experiment_*.json) before asserting zero commits, so a detector regression is caught at generation time instead of requiring manual git archaeology after the fact."
   ],
   "top_3_highest_leverage_actions": [
-    "Verify the timing-data collection path correctly scopes 'commits since activation' for 2026.07.473 before the next retro cycle runs.",
-    "If the milestone genuinely had no experiment activity, confirm the conductor/planner is not stalled and picks up the next roadmap normally.",
-    "Preserve the existing discipline of gating GPU-idle and DualGPURunner findings on compute-bound task presence so empty-data milestones don't produce false bottleneck claims."
+    "Wire the already-built scripts/retro_timing_fallback.py into research_conductor.py's retro prompt-assembly -- a two-line change per the module's own docstring -- to retire the FALSE-ZERO gap that produced this and at least one prior empty retro for the same milestone.",
+    "Re-generate this retrospective once wired, so slowest-experiments, compute-bound-count, and GPU-idle findings reflect the milestone's real experiment set instead of an all-zero placeholder.",
+    "Add a lightweight plausibility check to retro generation (does a trivial git-log query agree with the zero-commit claim?) so this class of detector regression is self-caught rather than requiring a manual second pass."
   ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "This retro reflects a data-availability gap, not a demonstrated research or operational failure -- with zero experiment commits in the authoritative timing window, the most honest output is to report that plainly rather than infer activity or bottlenecks that the given data cannot support."
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "This appears to be the second consecutive retro-generation attempt for milestone 2026.07.473 to receive an all-zero TIMING DATA block, despite this same milestone having landed a purpose-built fix module for the gap that most plausibly explains it -- the fix was simply never connected to its call site. The highest-leverage process improvement available right now is not a new experiment; it is finishing the two-line integration that already-shipped, already-tested code documents for itself."
 }
