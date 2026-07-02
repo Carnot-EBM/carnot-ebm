@@ -1,0 +1,516 @@
+{
+  "energy_signal_source": "Exp4020 graded goal-satisfaction energy (exp4020_graded_goal_satisfaction_energy) combined 0.5/0.5 with DynaMITE-style terminal carryover: a per-game centroid energy fitted only on level-N win/near-win visible-state latent features; BAM mechanic recurrence weighting reported only when present.",
+  "experiment": "experiment_5158_deepen_goal_energy_ranker_replay_v473",
+  "field_principles": {
+    "energy_signal_source": {
+      "principle": "Must be a genuine Carnot energy quantity, matching the ARC Live-Path Reachability Discipline's provenance bar."
+    },
+    "games_improved_count": {
+      "principle": "The gate requires >=2/3 -- this field is the exact count the gate is evaluated against."
+    },
+    "games_tested": {
+      "principle": "list of {game, n_level_transitions_tested}, must include lp85, sc25, tr87."
+    },
+    "gate_passed": {
+      "principle": "Apply exp5155's own falsifiable_gate verbatim -- do not redefine the threshold post hoc."
+    },
+    "honest_verdict": {
+      "principle": "Must start with complete:/complete_/success:/success_ AND state plainly whether the gate passed or failed."
+    },
+    "reciprocal_rank_cold": {
+      "principle": "dict of game -> float for cold Exp4020-only target-prefix reciprocal rank."
+    },
+    "reciprocal_rank_warmstart": {
+      "principle": "dict of game -> float for DynaMITE-style cross-level warm-start target-prefix reciprocal rank."
+    },
+    "solve_provenance": {
+      "principle": "Offline replay over already-banked registry trajectories, not a live hidden-game solve."
+    },
+    "verifier_is_oracle": {
+      "principle": "false -- this is an oracle-distinct energy ranker, not the executable win-check."
+    }
+  },
+  "games_improved_count": 1,
+  "games_tested": [
+    {
+      "game": "lp85",
+      "n_level_transitions_tested": 4
+    },
+    {
+      "game": "sc25",
+      "n_level_transitions_tested": 4
+    },
+    {
+      "game": "tr87",
+      "n_level_transitions_tested": 5
+    }
+  ],
+  "gate_passed": false,
+  "honest_verdict": "complete: goal_energy_ranker_warmstart_gate_failed_improved_1_of_3",
+  "no_level_regression": true,
+  "per_transition_breakdown": [
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"x\": 38, \"y\": 16}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 6,
+      "game": "lp85",
+      "level_from": 0,
+      "level_regressed": false,
+      "level_to": 1,
+      "mechanic_class": "",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.833333,
+      "reciprocal_rank_warmstart": 0.166667,
+      "source_artifact": "results/experiment_4372_e3_deeper_high_headroom_games.json",
+      "target_prefix_label": "{\"x\": 38, \"y\": 16}",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.857143,
+          1.0,
+          0.03125,
+          0.46875,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 6,
+      "warmstart_top_label": "{\"x\": 19, \"y\": 16}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"x\": 34, \"y\": 40}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "lp85",
+      "level_from": 1,
+      "level_regressed": false,
+      "level_to": 2,
+      "mechanic_class": "",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 1.0,
+      "source_artifact": "results/experiment_4372_e3_deeper_high_headroom_games.json",
+      "target_prefix_label": "{\"x\": 34, \"y\": 40}",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.864072,
+          1.0,
+          0.734375,
+          0.53125,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 1,
+      "warmstart_top_label": "{\"x\": 34, \"y\": 40}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"x\": 14, \"y\": 5}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 16,
+      "game": "lp85",
+      "level_from": 2,
+      "level_regressed": false,
+      "level_to": 3,
+      "mechanic_class": "",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.8,
+      "reciprocal_rank_warmstart": 0.2,
+      "source_artifact": "results/experiment_4372_e3_deeper_high_headroom_games.json",
+      "target_prefix_label": "{\"x\": 14, \"y\": 5}",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.878947,
+          1.0,
+          0.53125,
+          0.625,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 5,
+      "warmstart_top_label": "{\"x\": 5, \"y\": 14}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"x\": 35, \"y\": 35}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "lp85",
+      "level_from": 3,
+      "level_regressed": false,
+      "level_to": 4,
+      "mechanic_class": "",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.75,
+      "reciprocal_rank_warmstart": 0.25,
+      "source_artifact": "results/experiment_4372_e3_deeper_high_headroom_games.json",
+      "target_prefix_label": "{\"x\": 35, \"y\": 35}",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.855714,
+          1.0,
+          0.270833,
+          0.322917,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 4,
+      "warmstart_top_label": "{\"x\": 9, \"y\": 35}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 1,
+      "cold_top_label": "cell0,0",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 14,
+      "game": "sc25",
+      "level_from": 0,
+      "level_regressed": false,
+      "level_to": 1,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 1.0,
+      "source_artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "target_prefix_label": "cell0,0",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.738889,
+          0.5,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 1,
+      "warmstart_top_label": "cell0,0",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 14,
+      "cold_top_label": "cell0,0",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 14,
+      "game": "sc25",
+      "level_from": 1,
+      "level_regressed": false,
+      "level_to": 2,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "reciprocal_rank_cold": 0.071429,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 0.071429,
+      "source_artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "target_prefix_label": "move4",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.873677,
+          0.444444,
+          0.151042,
+          0.28125,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 14,
+      "warmstart_top_label": "cell0,0",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 7,
+      "cold_top_label": "cell0,0",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 14,
+      "game": "sc25",
+      "level_from": 2,
+      "level_regressed": false,
+      "level_to": 3,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "reciprocal_rank_cold": 0.142857,
+      "reciprocal_rank_delta": 0.02381,
+      "reciprocal_rank_warmstart": 0.166667,
+      "source_artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "target_prefix_label": "click1,1",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.830159,
+          0.444444,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 6,
+      "warmstart_top_label": "cell0,0",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 5,
+      "cold_target_rank": 7,
+      "cold_top_label": "cell0,0",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 14,
+      "game": "sc25",
+      "level_from": 3,
+      "level_regressed": false,
+      "level_to": 4,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "reciprocal_rank_cold": 0.142857,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 0.142857,
+      "source_artifact": "results/experiment_4468_bank_sc25_provisional_levels.json",
+      "target_prefix_label": "click1,1",
+      "warmstart_level_reached": 5,
+      "warmstart_model": {
+        "centroid": [
+          0.830159,
+          0.666667,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 7,
+      "warmstart_top_label": "cell0,0",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 6,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"action\": 2}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "tr87",
+      "level_from": 0,
+      "level_regressed": false,
+      "level_to": 1,
+      "mechanic_class": "config_substitution",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.5,
+      "reciprocal_rank_warmstart": 0.5,
+      "source_artifact": "results/arc_loop_solve_tr87.json",
+      "target_prefix_label": "{\"action\": 2}",
+      "warmstart_level_reached": 6,
+      "warmstart_model": {
+        "centroid": [
+          0.705556,
+          0.388889,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 2,
+      "warmstart_top_label": "{\"action\": 1}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 6,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"action\": 2}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "tr87",
+      "level_from": 1,
+      "level_regressed": false,
+      "level_to": 2,
+      "mechanic_class": "config_substitution",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.5,
+      "reciprocal_rank_warmstart": 0.5,
+      "source_artifact": "results/arc_loop_solve_tr87.json",
+      "target_prefix_label": "{\"action\": 2}",
+      "warmstart_level_reached": 6,
+      "warmstart_model": {
+        "centroid": [
+          0.701389,
+          0.388889,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 2,
+      "warmstart_top_label": "{\"action\": 1}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 6,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"action\": 1}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "tr87",
+      "level_from": 2,
+      "level_regressed": false,
+      "level_to": 3,
+      "mechanic_class": "config_substitution",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 1.0,
+      "source_artifact": "results/arc_loop_solve_tr87.json",
+      "target_prefix_label": "{\"action\": 1}",
+      "warmstart_level_reached": 6,
+      "warmstart_model": {
+        "centroid": [
+          0.701389,
+          0.388889,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 1,
+      "warmstart_top_label": "{\"action\": 1}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 6,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"action\": 3}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "tr87",
+      "level_from": 3,
+      "level_regressed": false,
+      "level_to": 4,
+      "mechanic_class": "config_substitution",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": -0.666667,
+      "reciprocal_rank_warmstart": 0.333333,
+      "source_artifact": "results/arc_loop_solve_tr87.json",
+      "target_prefix_label": "{\"action\": 3}",
+      "warmstart_level_reached": 6,
+      "warmstart_model": {
+        "centroid": [
+          0.680556,
+          0.166667,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 3,
+      "warmstart_top_label": "{\"action\": 1}",
+      "win_near_win_state_count": 3
+    },
+    {
+      "cold_level_reached": 6,
+      "cold_target_rank": 1,
+      "cold_top_label": "{\"action\": 1}",
+      "fit_uses_target_prefix": false,
+      "frontier_candidate_count": 4,
+      "game": "tr87",
+      "level_from": 4,
+      "level_regressed": false,
+      "level_to": 5,
+      "mechanic_class": "config_substitution",
+      "reciprocal_rank_cold": 1.0,
+      "reciprocal_rank_delta": 0.0,
+      "reciprocal_rank_warmstart": 1.0,
+      "source_artifact": "results/arc_loop_solve_tr87.json",
+      "target_prefix_label": "{\"action\": 1}",
+      "warmstart_level_reached": 6,
+      "warmstart_model": {
+        "centroid": [
+          0.651515,
+          0.333333,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evidence_count": 3,
+        "feature_count": 5,
+        "mechanism": "DynaMITE-style terminal carryover"
+      },
+      "warmstart_target_rank": 1,
+      "warmstart_top_label": "{\"action\": 1}",
+      "win_near_win_state_count": 3
+    }
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "CODEX.md": true,
+    "artifact_trace_extraction": "passed",
+    "experiment_5155_read": true,
+    "ranking_cases_recovered": 13,
+    "registry_entries_checked": [
+      "lp85",
+      "sc25",
+      "tr87"
+    ]
+  },
+  "random_seed": 5158,
+  "reciprocal_rank_cold": {
+    "lp85": 1.0,
+    "sc25": 0.339286,
+    "tr87": 1.0
+  },
+  "reciprocal_rank_warmstart": {
+    "lp85": 0.404167,
+    "sc25": 0.345238,
+    "tr87": 0.666667
+  },
+  "reproducibility_checksum": "sha256:af180eb63fd2f1c61a659a3dd714f9b6cf97aa94e8e7a5f6c84e9d7cef1035d6",
+  "schema": "carnot.exp5158.deepen_goal_energy_ranker_replay.v1",
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-ARC-WMTE-5158",
+    "SCENARIO-ARC-WMTE-5158-DYNAMITE-WARM-START",
+    "SCENARIO-ARC-WMTE-5158-TARGET-PREFIX-RANK",
+    "SCENARIO-ARC-WMTE-5158-STABLE-ARTIFACT"
+  ],
+  "verifier_is_oracle": false
+}
