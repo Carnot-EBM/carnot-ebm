@@ -32801,6 +32801,90 @@ or zero with an explicit blocker note, and includes
 |---|---|---|
 | REQ-REPORT-5178 | Planned (`python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py`) | Planned (`tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py`) |
 
+### REQ-REPORT-5181: Archive .474, Activate .475, And Preserve The Precise Handoff Truth
+
+The Exp 5181 workflow SHALL read every `.474` result artifact from
+`results/experiment_5168_archive_473_activate_474.json` through
+`results/experiment_5180_capstone_v474.json`, SHALL derive a one-paragraph
+`v474_summary` from the live artifact fields rather than the roadmap prompt,
+and SHALL write the terminal record-only artifact
+`results/experiment_5181_archive_474_activate_475.json`. It SHALL run no live
+model work and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The archive summary SHALL preserve the exact task verdicts and load-bearing
+numbers without rounding a null or partial result up to a win. In particular it
+SHALL record Exp 5171 as the genuine `.474` success
+(`gate_passed=true`, n=30, delta 0.5, CI95 excluding zero across five seeds),
+Exp 5170 as a scoped Phase D external-text-scorer retirement whose source
+artifact enumeration includes the non-`exp*`
+`distributional_energy_verifier_musr` artifact while the exclusion manifest
+contains 27 retired `exp*` IDs, Exp 5173 as blocked before any guided
+measurement with `arm_rows=[]`, Exp 5175/5176 as zero-level/null outcomes,
+Exp 5177 as n=62 of target 180 with 4 wins, 0 losses, p=0.125, and no on-disk
+checkpoint despite the declared path, Exp 5178 as a small negative hidden-state
+pilot (`hidden_state_verifier_accuracy=0.0` versus tuned SC `0.333333`), and
+Exp 5180 as no flagged headline artifacts with `reproducible_total_levels=69`
+and `reproducible_total_games=24`.
+
+The workflow SHALL confirm that
+`ops/exclusion_manifest.yaml:phase_d_external_text_scorer_retired_exp5163_v474`
+is present, scoped to external generated-text/logprob scorers, and explicitly
+preserves hidden-state/internal-representation verifiers, ARC oracle-distinct
+verifier work, and the FoVer production ensemble as outside the retired scope.
+After `.475` is active in `research-roadmap.yaml`, the workflow SHALL run
+`scripts/exclusion_manifest_lint.py research-roadmap.yaml` and record the
+result as clean only when the command exits zero and reports no hard risks
+against the `.475` hidden-state-verifier or ARC-deepening tasks.
+
+The artifact SHALL include the principle-annotated fields `v474_summary`,
+`exclusion_manifest_confirmed_clean`, `research_roadmap_yaml_activated`,
+`architecture_md_staleness_days`, `inference_substrate`, and `honest_verdict`.
+It SHOULD also include per-task archive rows, source artifact paths/checksums,
+the publication gate result, manifest-entry details, checkpoint-existence
+checks, whether `scripts/research_conductor.py` was modified, tests run, and a
+content-addressed `reproducibility_checksum`.
+
+Required field principles:
+
+- `v474_summary`: principle "An inaccurate handoff summary propagates errors into every downstream .475 task's CONTEXT section; precision here is load-bearing for the whole milestone."
+- `exclusion_manifest_confirmed_clean`: principle "The Phase D retirement must block only the retired external-text-scorer mechanism and must not false-positive against .475 hidden-state verifier or ARC-deepening tasks."
+- `research_roadmap_yaml_activated`: principle "Downstream conductor work depends on `research-roadmap.yaml` naming the `.475` milestone and containing the Exp 5181-5192 task set."
+- `architecture_md_staleness_days`: principle "Mechanical input to the Architecture Freshness Check; feeds exp5189's priority."
+- `inference_substrate`: principle "This archive reads upstream artifacts and lint outputs only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5181: The Archive Preserves The Precise .474 Outcomes
+
+**Given** all 13 `.474` artifacts are readable, `research-roadmap.yaml` is
+active for `2026.07.475`, the Phase D manifest entry is present and narrow, the
+publication gate reports `paper_ready=true` and `unmet_gates=[]`, and
+`_bmad/architecture.md` was last reconciled on 2026-05-16
+**When** the Exp 5181 workflow runs on 2026-07-03
+**Then** it writes
+`results/experiment_5181_archive_474_activate_475.json`, records the exact
+Exp 5168-5180 verdicts and key numbers, sets
+`exclusion_manifest_confirmed_clean=true`,
+`research_roadmap_yaml_activated=true`, `architecture_md_staleness_days=48`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-5181-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Without Fabrication
+
+**Given** a required `.474` artifact is missing, the active roadmap is not
+`.475`, the Phase D manifest entry is absent or over-broad, or the exclusion
+manifest lint reports a hard risk
+**When** the Exp 5181 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict` starts with a
+complete-path blocking phrase, records the failed precondition explicitly, and
+does not claim the handoff is clean.
+
+## Implementation Status (REQ-REPORT-5181)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5181 | Planned (`python/carnot/experiment_5181_archive_474_activate_475.py`) | Planned (`tests/python/test_experiment_5181_archive_474_activate_475.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
