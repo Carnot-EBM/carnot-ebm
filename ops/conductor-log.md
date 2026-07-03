@@ -10052,3 +10052,4 @@ web search: |
 | 2026-07-03 00:37 UTC | PHASE B3 attack the diagnosed enumeration wall --  | OK | 86 passed, 1 warning in 11.68s |
 | 2026-07-03 01:04 UTC | PHASE C1 GAP-4 forward-protocol scale-up toward st | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-03 01:22 UTC | PHASE C2 a genuinely different verifier mechanism  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-03 01:47 UTC | PHASE C3 hardware continuity -- KV260 + PolarFire  | OK | 87 passed, 1 warning in 10.15s |
