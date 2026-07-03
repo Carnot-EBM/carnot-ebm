@@ -1,5 +1,17 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-07-03 Exp 5197 GAP-4 real-checkpoint regression
+fix reconciled `REQ-REPORT-5197` by adding the exact field-principle contract
+to OpenSpec, marking the v476 implementation/tests implemented, and hardening
+`artifact_schema_errors()` to recompute exact-test truth from `scaleup_rows`.
+Focused tests:
+`tests/python/test_experiment_5197_gap4_scaleup_real_checkpoint_v476.py`
+(`9 passed`); scoped Coverage.py report for the Exp 5197 module is 100% (`303`
+statements, `0` missing); focused Ruff check/format passed. Repo-wide
+`scripts/check_spec_coverage.py` remains blocked by pre-existing unreferenced
+tests (`1237 test(s) missing spec traceability`). No changes were made to
+`scripts/research_conductor.py`.
+
 **Operational Note:** 2026-06-28 Exp 4939 held-out first-win final carry
 regression fix added `python/carnot/experiment_4939_held_out_first_win_readiness.py`
 under `REQ-CAPSTONE-4939`. The module validates the Exp 4928 clean full-25
@@ -64,7 +76,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-06-28 (Exp 4939 held-out first-win final carry regression fix; REQ-CAPSTONE-4939 implementation/test traceability reconciled)
+**Last Updated:** 2026-07-03 (Exp 5197 GAP-4 real-checkpoint regression fix; REQ-REPORT-5197 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
