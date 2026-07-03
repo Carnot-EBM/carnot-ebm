@@ -26416,3 +26416,59 @@ Added by Exp5172 after a bounded V474 follow-up sweep. Spot-checked V474 citatio
 **Bottom line for `.475`:** MAP should be prototyped next if Phase B's pruner does not fully close GAP-4891: a MAP-style pre-stage should be prototyped as a bounded map-scout that builds spatial/affordance/rule landmarks before graph search, then A/B tested against pruner-only and map-plus-pruner under the same reproduction gate.
 
 <!-- V475-PLANNER-REFERENCES-END -->
+
+
+## V475 Outer-Loop Planner References — Supplementary Sweep (KAN/EBM/Hardware/Kona) - 2026-07-03
+
+Added by the outer-loop planning session that designed milestone `2026.07.475`. This sweep deliberately
+did NOT re-search the ARC-AGI-3-specific / off-ARC-verifier-moat topics already covered in depth by the
+two sections directly above (`.474`'s Outer-Loop pass and `exp5172`'s `V475 Planner References`) — those
+already identified MAP (arXiv:2605.13037) as the leading lever and are not repeated here. Instead this is
+a supplementary check across topics research-program.md mandates (KAN, general EBM-for-verification,
+Ising/thermodynamic hardware, Kona, GitHub trending) that had not been recently swept. Every citation
+below was independently verified via live WebSearch/WebFetch this session.
+
+**Headline finding: mostly negative, and that is itself useful signal.** Three of the sweep's apparent
+"new" leads — EORM (arXiv:2505.14999), Spilled Energy (arXiv:2602.18671), and HWM (arXiv:2604.03208) —
+turned out to already be shipped or logged in Carnot: `EORMModel` exists at `python/carnot/models/eorm.py`
+(Exps 340/341/355/359, later superseded by VJEPA v2 then SC-Energy per `_bmad/architecture.md`'s tier
+table), `SpilledEnergyDetector` exists at `python/carnot/verify/spilled_energy.py` (Tier 0b, Exp 433), and
+HWM is already logged at `research-references.md:24094` (the `.473`-era Outer-Loop section). The project's
+existing literature-tracking discipline is comprehensive enough that a broad supplementary sweep mostly
+re-confirms coverage rather than surfacing gaps — a good sign, reported honestly rather than padded with
+false novelty.
+
+### KANX — production-grade KAN library (genuinely new, tooling not research)
+- **Source:** https://github.com/Mattral/KANX + Research Square preprint https://www.researchsquare.com/article/rs-9985765/v1
+- **Tracks:** Kolmogorov-Arnold Networks, production tooling, ONNX export
+- **Carnot hook:** TensorFlow+PyTorch+ONNX KAN library with a 113-test suite, Docker/K8s deployment, and
+  claimed 265x lower MSE than an MLP at 5x fewer params (T4 GPU, June 2026). Carnot's own KAN tier
+  (`KAEMEnergy`, `python/carnot/models/kaem_energy.py`) is a research implementation; KANX's ONNX-export
+  path is the one concretely useful angle — it is directly relevant to the NPU-deployment sovereignty
+  story (CLAUDE.md "Hardware Acceleration Portfolio" NPU track) if Carnot's KAN verifier tier is ever
+  pushed toward edge/NPU deployment.
+- **Actionability:** Low-priority, informational. Not an experiment for `.475`; worth a look if/when the
+  KAN tier's production-deployment story is prioritized.
+
+### No qualifying new finds (explicit, not padded)
+- **Ising/QUBO/thermodynamic hardware:** no new confirmed paper beyond what is already logged
+  (arXiv:2602.15985 "Decomposing Large-Scale Ising Problems on FPGAs" already cited 3x in this file).
+  Two unconfirmed leads (a networked-FPGA "Snowball" paper and further p-bit-scaling work) were found but
+  NOT independently fetch-verified this session — flagged as leads only, not citable findings.
+- **Extropic:** no new first-party writing at extropic.ai/writing beyond the already-known Oct 2025
+  "TSU 101" post. Third-party press claims of an "early 2026" Z1 launch could not be confirmed against
+  Extropic's own channel — treat as unconfirmed until Extropic itself publishes.
+- **Kona (logicalintelligence.com):** no new write-up beyond the already-known Feb 2026 Sudoku-benchmark
+  post (96.2% vs LLMs' ~2%, no code execution, latent-space energy refinement). Fetched directly this
+  session to correct a secondary-source over-claim: the post does not describe a "novel navigation
+  algorithm" — that phrasing came from a third-party summary, not Kona's own text.
+- **Continual/online learning for verifiers specifically** (as opposed to general continual learning):
+  nothing new and specifically on-topic found this sweep.
+- **GitHub trending:** nothing beyond KANX (above) qualified as a genuine new EBM/KAN/constraint-solving
+  repo in the last 1-2 months.
+
+**Bottom line for `.475` and beyond:** this sweep does not change `.475`'s task design (MAP prototyping,
+DiffusionGemma retry, hidden-state verifier scale-up, GAP-4 closure remain the right priorities per the
+two sections above). KANX is noted for a future NPU-deployment milestone; everything else is a
+confirmed-negative (nothing new) or already-covered, which is reported explicitly rather than manufacturing
+false leads to pad this section.
