@@ -441,6 +441,10 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
   fixed-output-dim tasks.
 - priority: high (transpose-class mis-votes are a large, currently-uncapturable slice).
 
+<!-- experiment_5205_autopyverifier_gap1_pilot_v476 start -->
+- experiment_5205 AutoPyVerifier-inspired deterministic set search (2026-07-03): best_subset=['border_ordered_profile', 'color_centroid_orientation', 'row_column_run_profile'], pass@2 baseline=0.087866, pass@2 best=0.221757, transpose captures=47 out of 239. Candidate singletons: directional_adjacency_refuted_20260609=helped, row_ordered_edge_profile=helped, column_ordered_edge_profile=helped, diagonal_adjacency_asymmetry=helped, corner_anchored_quadrant_histogram=helped, border_ordered_profile=helped, color_centroid_orientation=helped, row_column_run_profile=helped. Verdict: complete: set_search_beats_always_on_beats_single_refuted_baseline_0.0879_best_0.2218_single_refuted_0.1506_captured_47_of_239_gap1_candidate_positive
+<!-- experiment_5205_autopyverifier_gap1_pilot_v476 end -->
+
 ### GAP-2: content verification for VARIABLE-output-dim tasks
 - status: open
 - evidence: design survey (2026-06-09) — the positional/transformation families

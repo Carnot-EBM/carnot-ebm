@@ -1,0 +1,294 @@
+{
+  "best_subset_found": {
+    "principle": "The searched discriminator subset selected on grouped training rows before final evaluation.",
+    "value": [
+      "border_ordered_profile",
+      "color_centroid_orientation",
+      "row_column_run_profile"
+    ]
+  },
+  "candidate_discriminator_effects": [
+    {
+      "delta_vs_baseline": 0.062762,
+      "effect": "helped",
+      "name": "directional_adjacency_refuted_20260609",
+      "pass@2": 0.150628,
+      "transpose_captures": "21 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.075314,
+      "effect": "helped",
+      "name": "row_ordered_edge_profile",
+      "pass@2": 0.16318,
+      "transpose_captures": "34 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.100419,
+      "effect": "helped",
+      "name": "column_ordered_edge_profile",
+      "pass@2": 0.188285,
+      "transpose_captures": "39 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.07113,
+      "effect": "helped",
+      "name": "diagonal_adjacency_asymmetry",
+      "pass@2": 0.158996,
+      "transpose_captures": "15 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.054393,
+      "effect": "helped",
+      "name": "corner_anchored_quadrant_histogram",
+      "pass@2": 0.142259,
+      "transpose_captures": "17 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.025105,
+      "effect": "helped",
+      "name": "border_ordered_profile",
+      "pass@2": 0.112971,
+      "transpose_captures": "24 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.083682,
+      "effect": "helped",
+      "name": "color_centroid_orientation",
+      "pass@2": 0.171548,
+      "transpose_captures": "35 out of 239"
+    },
+    {
+      "delta_vs_baseline": 0.108787,
+      "effect": "helped",
+      "name": "row_column_run_profile",
+      "pass@2": 0.196653,
+      "transpose_captures": "30 out of 239"
+    }
+  ],
+  "candidate_discriminators_authored": {
+    "principle": "Names every hand-authored cheap spatial discriminator searched; this replaces LLM synthesis with deterministic candidate authoring.",
+    "value": [
+      {
+        "description": "Previously refuted H/V ordered color-adjacency signature against train outputs.",
+        "name": "directional_adjacency_refuted_20260609",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Horizontal edge color-pair distributions anchored to row bands.",
+        "name": "row_ordered_edge_profile",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Vertical edge color-pair distributions anchored to column bands.",
+        "name": "column_ordered_edge_profile",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Down-right versus down-left ordered diagonal adjacency distributions.",
+        "name": "diagonal_adjacency_asymmetry",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Color histogram anchored separately to top-left, top-right, bottom-left, and bottom-right.",
+        "name": "corner_anchored_quadrant_histogram",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Top, bottom, left, and right edge color distributions with positional bins.",
+        "name": "border_ordered_profile",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Per-color row and column centroid bands compared without transpose symmetrization.",
+        "name": "color_centroid_orientation",
+        "transpose_sensitive": true
+      },
+      {
+        "description": "Horizontal versus vertical color-run length profile.",
+        "name": "row_column_run_profile",
+        "transpose_sensitive": true
+      }
+    ]
+  },
+  "duration_s": 0.229,
+  "experiment": "experiment_5205_autopyverifier_gap1_pilot_v476",
+  "experiment_id": 5205,
+  "field_principles": {
+    "best_subset_found": "The searched discriminator subset selected on grouped training rows before final evaluation.",
+    "candidate_discriminators_authored": "Names every hand-authored cheap spatial discriminator searched; this replaces LLM synthesis with deterministic candidate authoring.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_, and must state plainly whether the set-search approach beats the always-on baseline and the already-refuted single-invariant approach, or whether GAP-1 remains open under this attempt too.",
+    "inference_substrate": "This pilot evaluates cheap discriminators against a cached distractor pool -- no LLM call is made, unlike AutoPyVerifier's own LLM-synthesis step, which this pilot deliberately substitutes with hand-authored candidates for cost/determinism.",
+    "pass_at_2_baseline_always_on_only": "Candidate-pool pass@2 using only object_count and palette_histogram_shape, the always-on transpose-invariant baseline.",
+    "pass_at_2_best_subset": "Candidate-pool pass@2 after adding the selected searched discriminator set.",
+    "random_seed": "Deterministic ARC distractor reconstruction, grouped split, subset tie-breaks, and checksum.",
+    "reproducibility_checksum": "SHA-256 checksum over the terminal artifact with this field blanked.",
+    "transpose_misvotes_captured": "Human-readable count of dimension-preserving transpose cases where the selected set strictly prefers gold over the transposed candidate.",
+    "verifier_is_oracle": "Gold labels are used only for offline subset evaluation, never inside candidate scoring."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_, and must state plainly whether the set-search approach beats the always-on baseline and the already-refuted single-invariant approach, or whether GAP-1 remains open under this attempt too.",
+    "value": "complete: set_search_beats_always_on_beats_single_refuted_baseline_0.0879_best_0.2218_single_refuted_0.1506_captured_47_of_239_gap1_candidate_positive"
+  },
+  "inference_substrate": {
+    "principle": "This pilot evaluates cheap discriminators against a cached distractor pool -- no LLM call is made, unlike AutoPyVerifier's own LLM-synthesis step, which this pilot deliberately substitutes with hand-authored candidates for cost/determinism.",
+    "value": "verifier_ensemble_against_cached_candidates"
+  },
+  "pass_at_2_baseline_always_on_only": {
+    "principle": "Candidate-pool pass@2 using only object_count and palette_histogram_shape, the always-on transpose-invariant baseline.",
+    "value": 0.087866
+  },
+  "pass_at_2_best_subset": {
+    "principle": "Candidate-pool pass@2 after adding the selected searched discriminator set.",
+    "value": 0.221757
+  },
+  "random_seed": {
+    "principle": "Deterministic ARC distractor reconstruction, grouped split, subset tie-breaks, and checksum.",
+    "value": 5205
+  },
+  "ranker_definition": "Candidate-pool pass@2 uses the same top-2 selection unit as the TRM HYBRID rerank analyses. The v2 distractor artifact has no TRM vote counts, so all cached candidates are equal-vote and the verifier score supplies the ranking key.",
+  "reproducibility_checksum": {
+    "principle": "SHA-256 checksum over the terminal artifact with this field blanked.",
+    "value": "sha256:c304e8098d3f1f65c5109cab8fcfe9ac9fd70944ff8772b7062f64ecbc231320"
+  },
+  "result_path": "results/experiment_5205_autopyverifier_gap1_pilot_v476.json",
+  "schema": "carnot.arc_gap1_autopyverifier_pilot_5205.v1",
+  "search_summary": {
+    "searched_subset_count": 256,
+    "selection_rule": "maximize train pass@2, then train transpose captures, then smaller subset",
+    "top_train_subsets": [
+      {
+        "subset": [
+          "border_ordered_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 3,
+        "train_pass@2": 0.21519,
+        "train_transpose_captures": 30
+      },
+      {
+        "subset": [
+          "corner_anchored_quadrant_histogram",
+          "border_ordered_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 4,
+        "train_pass@2": 0.21519,
+        "train_transpose_captures": 30
+      },
+      {
+        "subset": [
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 2,
+        "train_pass@2": 0.21519,
+        "train_transpose_captures": 28
+      },
+      {
+        "subset": [
+          "column_ordered_edge_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 3,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 34
+      },
+      {
+        "subset": [
+          "directional_adjacency_refuted_20260609",
+          "column_ordered_edge_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 4,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 34
+      },
+      {
+        "subset": [
+          "column_ordered_edge_profile",
+          "corner_anchored_quadrant_histogram",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 4,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 34
+      },
+      {
+        "subset": [
+          "directional_adjacency_refuted_20260609",
+          "column_ordered_edge_profile",
+          "corner_anchored_quadrant_histogram",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 5,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 34
+      },
+      {
+        "subset": [
+          "corner_anchored_quadrant_histogram",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 3,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 30
+      },
+      {
+        "subset": [
+          "row_ordered_edge_profile",
+          "column_ordered_edge_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 4,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 30
+      },
+      {
+        "subset": [
+          "directional_adjacency_refuted_20260609",
+          "row_ordered_edge_profile",
+          "column_ordered_edge_profile",
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "subset_size": 5,
+        "train_pass@2": 0.208861,
+        "train_transpose_captures": 30
+      }
+    ]
+  },
+  "single_refuted_directional_adjacency_pass@2": 0.150628,
+  "source_context": {
+    "source_artifact": "results/arc_grid_verifier_invariants_v2.json",
+    "source_artifact_exists": true,
+    "source_artifact_sha256": "sha256:679cb8254fbec85a08c000d4ac5de3b3a862fd7f645b2012c8cebbe28dd221f6",
+    "square_transpose_subset_n": 239
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5205",
+    "SCENARIO-VERIFY-5205"
+  ],
+  "split_summary": {
+    "baseline_heldout_pass@2": 0.111111,
+    "heldout_pass@2": 0.234568,
+    "heldout_task_count": 81,
+    "train_task_count": 158
+  },
+  "transpose_distractor_count": 239,
+  "transpose_misvotes_captured": {
+    "principle": "Human-readable count of dimension-preserving transpose cases where the selected set strictly prefers gold over the transposed candidate.",
+    "value": "47 out of 239"
+  },
+  "verifier_is_oracle": {
+    "principle": "Gold labels are used only for offline subset evaluation, never inside candidate scoring.",
+    "value": false
+  }
+}

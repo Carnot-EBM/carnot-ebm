@@ -7093,6 +7093,57 @@ the semantic false accept returns a `VerdictRecord` with `verdict="fail"` and
 and `results/experiment_1591_dccd_adapter.json` records complete metrics and
 backend diagnostics for the reusable adapter.
 
+### REQ-VERIFY-5205: AutoPyVerifier-Inspired GAP-1 Set Search Pilot
+
+The repository shall provide a deterministic ARC GAP-1 pilot that borrows
+AutoPyVerifier's set-search principle without using LLM synthesis: hand-author
+a compact library of cheap spatial/orientation discriminators, search a subset
+that jointly improves correctness prediction, and evaluate it against the same
+square transpose distractor subset reconstructed from
+`results/arc_grid_verifier_invariants_v2.json`.
+
+The pilot shall:
+
+- reconstruct the ARC training split rows whose transposed-gold distractor
+  preserves output dimensions, yielding the 239-row square-transpose subset used
+  by the prior GAP-1 invariant refutation;
+- include `object_count` and `palette_histogram_shape` as the always-on
+  baseline and preserve their transpose-invariant behavior;
+- hand-author 5 to 10 cheap spatial/orientation candidate discriminators,
+  including the previously refuted directional-adjacency candidate as one member
+  rather than the whole approach;
+- run deterministic grouped train/held-out subset search over candidate
+  discriminator sets, with no LLM calls and no test-gold access in the scoring
+  functions;
+- report pass@2 for the always-on baseline and the selected subset using the
+  same candidate-pool ranking unit as the TRM HYBRID rerank analyses;
+- report how many square-transpose baseline mis-votes the selected subset
+  captures by strictly preferring gold over the transposed candidate; and
+- write
+  `results/experiment_5205_autopyverifier_gap1_pilot_v476.json` with
+  principle-wrapped fields `candidate_discriminators_authored`,
+  `best_subset_found`, `pass_at_2_baseline_always_on_only`,
+  `pass_at_2_best_subset`, `transpose_misvotes_captured`,
+  `verifier_is_oracle`, `random_seed`, `reproducibility_checksum`,
+  `inference_substrate`, and `honest_verdict`.
+
+`verifier_is_oracle` MUST be false. `inference_substrate.value` MUST be
+`verifier_ensemble_against_cached_candidates`. `honest_verdict.value` MUST begin
+with `complete:`, `complete_`, `success:`, or `success_`, and MUST state
+plainly whether the searched set beats the always-on baseline and the already
+refuted single-invariant approach or leaves GAP-1 open.
+
+### SCENARIO-VERIFY-5205: GAP-1 Set Search Reports Honest Outcome
+
+Given a cached ARC square-transpose distractor pool and a deterministic library
+of hand-authored orientation discriminators,
+When Exp 5205 searches candidate discriminator subsets on grouped training rows
+and evaluates the chosen subset on held-out rows,
+Then the terminal artifact records the authored discriminators, the selected
+subset, baseline and selected pass@2, captured transpose mis-votes, a false
+oracle flag, deterministic seed/checksum fields, and an honest terminal verdict
+that reports either a non-degrading improvement or a precise null.
+
 ## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879/1880)
 
 | Requirement | Python | Tests |
@@ -7143,6 +7194,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1640 | Implemented (`scripts/experiment_1640_nsvif_dsl.py`) | Implemented (`tests/python/test_experiment_1640_nsvif_dsl.py`) |
 | REQ-VERIFY-1641 | Implemented (`python/carnot/pipeline/nsvif_sota.py`; legacy wrapper `scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_pipeline_nsvif_sota.py`, `tests/python/test_experiment_1641_nsvif_sota.py`) |
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
+| REQ-VERIFY-5205 | Implemented (`python/carnot/verify/arc_gap1_autopyverifier_pilot.py`) | Implemented (`tests/python/test_experiment_5205_autopyverifier_gap1_pilot_v476.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
