@@ -1,0 +1,35 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.475",
+  "generated_at": "2026-07-03T10:38:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "The authoritative TIMING DATA block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks since milestone 2026.07.475 activated, confirmed via both live git-log and disk-mtime reconstruction, so total_wall_time_minutes, experiments_completed, compute_bound_experiments_count, slowest_experiments, and gpu_idle_on_compute_bound_tasks all correctly stay at their pre-filled zero/empty/null values with no slowest-experiment, GPU-idle, or DualGPURunner finding derivable from that data.",
+  "bottlenecks_identified": [
+    "TIMING DATA scope only: zero committed experiments exist to analyze this pass; the locked fields are correctly zero and no compute-bound duration or GPU-idle claim is supported by that block alone.",
+    "Supplementary finding from ops/conductor-log.md (outside the TIMING DATA block, so not reflected in any locked numeric field): from milestone activation (2026-07-03 07:59 UTC) through at least 09:42 UTC, every queued phase (A1-A3, B1-B2, C1-C2, both reserved-infrastructure slots, the docs-sync task, and the PHASE Z capstone) hit the identical conductor pre-test gate failure 'self-heal failed: 1 failed, 116 passed, 15 warnings' on a ~2-3 minute retry cadence -- roughly an hour of continuous SKIPs with zero successful task launches.",
+    "A second, parallel stall mode: 3 attempts (PHASE A2 twice, PHASE B2 once) were GATE_BLOCK'd as 'pre-emptive skip: upstream retired' against exp5182/exp5185 -- this milestone's own in-flight tasks retiring each other before either produced a committed artifact.",
+    "The first task to clear the gate (2026-07-03 10:35 UTC) did so only via 'Deliverable already exists in repo', reusing an already-present but still-uncommitted result (results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json, confirmed staged-not-committed via git status) rather than a fresh self-heal-passing run -- so the underlying single failing test was never directly confirmed fixed, only bypassed.",
+    "That first success at 10:35 UTC lines up almost exactly with the conductor daemon's ActiveEnterTimestamp (2026-07-03 10:35:54 UTC per systemctl), strongly suggesting a daemon restart is what broke the hour-long cascade -- consistent with, and an apparent validation of, the prior milestone's (.474) retro recommendation to restart carnot-conductor.service, but not yet proven durable since no fresh (non-shortcut) self-heal pass has confirmed 0 failures since.",
+    "This session's own verification attempt (`pytest tests/python -q`) did not return within 2 minutes, unlike the conductor's own ~12s self-heal runs -- possibly resource contention with the live, actively-cycling conductor daemon rather than a slow test itself; unresolved and worth isolating."
+  ],
+  "improvements_suggested": [
+    "Run one fresh, non-shortcut self-heal pass (not a 'deliverable already exists' bypass) and confirm it reports 0 failed before treating the restart as having fixed the 1-hour pre-test cascade -- the current evidence is a strong timing correlation, not a direct confirmation.",
+    "Commit the in-progress work sitting uncommitted in the tree (exp5182's DiffusionGemma meta-tensor fix plus the accumulated ops/docs-state drift) rather than leaving it staged -- per CLAUDE.md 'Never Stash -- Always Commit-First', uncommitted transient state risks loss and starves the next retro pass of real timing data to analyze.",
+    "Add a conductor-side circuit breaker: when the identical self-heal failure signature repeats across N distinct task phases (observed here: ~8 phases, ~24 attempts, over an hour) instead of just N retries of the same task, escalate/alert rather than silently cycling every 2-3 minutes -- an hour-long full-roster stall should not require a human reading conductor-log.md by hand to notice.",
+    "Once a fresh clean self-heal pass is confirmed, verify the retro_timing_fallback wiring (confirmed present in scripts/research_conductor.py this pass) continues to independently corroborate git-log with disk-mtime reconstruction across the next 1-2 milestones before considering the multi-milestone FALSE-ZERO detector gap (tracked since .363, recurring at .469/.472/.473x3/.474x4) fully closed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Confirm the self-heal pre-test gate is genuinely clear with a fresh (non-'deliverable already exists') run, not just inferred from one coincidental restart-adjacent success.",
+    "Commit the uncommitted exp5182 fix and accumulated working-tree drift so real experiment timing exists for the next retro pass to analyze.",
+    "Add cascade-detection/alerting for repeated identical self-heal failures across many distinct phases so an hour-plus milestone-wide stall surfaces automatically instead of requiring manual conductor-log.md inspection."
+  ],
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "This is the sixth consecutive milestone-retro to report a TIMING-DATA zero, but the first where that zero is independently confirmed by both git-log and disk-mtime reconstruction rather than being the previously-diagnosed detector gap -- the real story, visible only by reading ops/conductor-log.md directly, is a milestone-wide self-heal pre-test cascade that silently blocked every queued phase for roughly an hour until the conductor daemon was restarted, which happens to validate the exact restart action the .474 retro recommended, though not yet proven durable since the one post-restart success reused an existing artifact rather than clearing a fresh check."
+}

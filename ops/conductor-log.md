@@ -10128,3 +10128,37 @@ web search: |
 | 2026-07-03 07:56 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-07-03 07:59 UTC | Milestone 2026.07.475 activated | OK | 12 tasks queued |
 | 2026-07-03 08:15 UTC | PHASE 0 transition -- archive .474 truth (hardened | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-03 08:39 UTC | PHASE A1 root-cause and fix the DiffusionGemma two | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-07-03 08:42 UTC | PHASE A1 root-cause and fix the DiffusionGemma two | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.58s |
+| 2026-07-03 08:44 UTC | PHASE A1 root-cause and fix the DiffusionGemma two | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.59s |
+| 2026-07-03 08:46 UTC | PHASE A2 the actual DiffusionGemma energy-guided-v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5182-diffusiongemma-meta-tensor-rootcause |
+| 2026-07-03 08:47 UTC | PHASE A3 continue the GAP-4 forward-protocol scale | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.94s |
+| 2026-07-03 08:49 UTC | PHASE A2 the actual DiffusionGemma energy-guided-v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5182-diffusiongemma-meta-tensor-rootcause |
+| 2026-07-03 08:49 UTC | PHASE A3 continue the GAP-4 forward-protocol scale | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.38s |
+| 2026-07-03 08:51 UTC | PHASE A2 the actual DiffusionGemma energy-guided-v | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5182-diffusiongemma-meta-tensor-rootcause |
+| 2026-07-03 08:51 UTC | PHASE A3 continue the GAP-4 forward-protocol scale | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.54s |
+| 2026-07-03 08:54 UTC | PHASE B1 attack the diagnosed ARC trajectory-enume | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.71s |
+| 2026-07-03 08:56 UTC | PHASE B1 attack the diagnosed ARC trajectory-enume | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.27s |
+| 2026-07-03 08:59 UTC | PHASE B1 attack the diagnosed ARC trajectory-enume | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.07s |
+| 2026-07-03 09:01 UTC | PHASE B2 live level-up attempt using the MAP lever | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5185-map-landmark-prestage-prototype-v475 |
+| 2026-07-03 09:01 UTC | PHASE C1 hidden-state verifier v2 -- PHSV-style tr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.66s |
+| 2026-07-03 09:03 UTC | PHASE B2 live level-up attempt using the MAP lever | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5185-map-landmark-prestage-prototype-v475 |
+| 2026-07-03 09:03 UTC | PHASE C1 hidden-state verifier v2 -- PHSV-style tr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.00s |
+| 2026-07-03 09:05 UTC | PHASE B2 live level-up attempt using the MAP lever | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5185-map-landmark-prestage-prototype-v475 |
+| 2026-07-03 09:06 UTC | PHASE C1 hidden-state verifier v2 -- PHSV-style tr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.48s |
+| 2026-07-03 09:08 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.50s |
+| 2026-07-03 09:11 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.11s |
+| 2026-07-03 09:13 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.52s |
+| 2026-07-03 09:15 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48-da | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.63s |
+| 2026-07-03 09:18 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48-da | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.56s |
+| 2026-07-03 09:20 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48-da | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.85s |
+| 2026-07-03 09:23 UTC | RESERVED INFRASTRUCTURE 2/2 -- MANDATORY overdue p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.71s |
+| 2026-07-03 09:25 UTC | RESERVED INFRASTRUCTURE 2/2 -- MANDATORY overdue p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.78s |
+| 2026-07-03 09:27 UTC | RESERVED INFRASTRUCTURE 2/2 -- MANDATORY overdue p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.79s |
+| 2026-07-03 09:30 UTC | DOCS numeric-only sync of docs/technical-report.md | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 13.00s |
+| 2026-07-03 09:32 UTC | DOCS numeric-only sync of docs/technical-report.md | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.24s |
+| 2026-07-03 09:35 UTC | DOCS numeric-only sync of docs/technical-report.md | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.50s |
+| 2026-07-03 09:37 UTC | PHASE Z capstone -- reconcile the DiffusionGemma u | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 12.94s |
+| 2026-07-03 09:39 UTC | PHASE Z capstone -- reconcile the DiffusionGemma u | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.64s |
+| 2026-07-03 09:42 UTC | PHASE Z capstone -- reconcile the DiffusionGemma u | SKIP | Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings in 11.58s |
+| 2026-07-03 10:35 UTC | PHASE A1 root-cause and fix the DiffusionGemma two | OK | Deliverable already exists in repo |
