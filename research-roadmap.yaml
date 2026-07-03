@@ -1,121 +1,115 @@
-milestone: 2026.07.475
-milestone_title: HIDDEN-STATE VERIFIER ON CONFIRMED HEADROOM -- MAP LANDMARK PRE-STAGE FOR THE ENUMERATION
-  WALL -- DIFFUSIONGEMMA UNBLOCK ATTEMPT
+milestone: 2026.07.476
+milestone_title: POISON-TEST HARDENING + RETRO-TIMING REAL FIX -- DIFFUSIONGEMMA VLLM-NATIVE RETRY -- MAP
+  LANDMARK RE-ATTEMPT -- HIDDEN-STATE VERIFIER V2 -- QA/VERIFIER-AUTHENTICITY FOLLOW-THROUGH
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp5181-archive-474-activate-475
-  milestone: 2026.07.475
-  title: PHASE 0 transition -- archive .474 truth (hardened oracle-distinct win, clean PHASE D retirement,
-    diagnosed-not-closed enumeration wall, blocked DiffusionGemma pilot), activate .475
+- id: exp5193-archive-475-activate-476
+  milestone: 2026.07.476
+  title: PHASE 0 transition -- archive .475 truth (poison-test-cascade near-total-loss milestone, exp5182
+    real DiffusionGemma root-cause result rescued outside the normal task path, retro-timing still
+    false-zero after the wiring landed), activate .476
   priority: critical
   track: planning
-  deliverable: results/experiment_5181_archive_474_activate_475.json
-  operator_override: '2026-05-29 operator directive (standing): routine milestone-transition task -- false-positive
-    scope-match vs prior archive-vN-activate-vN+1 tasks; this is the structurally-required .474->.475
-    handoff, never a doomed rerun.'
+  deliverable: results/experiment_5193_archive_475_activate_476.json
+  operator_override: '2026-05-29 operator directive (standing): routine milestone-transition task --
+    false-positive scope-match vs prior archive-vN-activate-vN+1 tasks; this is the structurally-required
+    .475->.476 handoff, never a doomed rerun.'
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
   estimated_wall_time_min: 25
   prompt: |
     CONTEXT:
-    Standard milestone transition at {project_root}, run on or after {date}. `.474` executed 13 tasks
-    (exp5168-exp5180). Get the characterization precise -- `.475`'s tasks build directly on this ground
-    truth, and a rounded-up or rounded-down summary has previously caused downstream confusion (per
-    `ops/known-issues.md`'s repeated false-zero and stale-status incidents).
+    Standard milestone transition at {project_root}, run on or after {date}. `.475` is an unusual
+    milestone to archive precisely: it queued 12 tasks (exp5181-exp5192) but only TWO produced real
+    artifacts. Get the characterization exact -- do not round this up to a normal milestone close.
 
-    `.474`'s actual outcomes (verify each against its own artifact before writing the archive summary --
-    do not trust this paraphrase alone):
-      - exp5168 (archive .473->.474): complete, clean handoff, exp5161 correctly unquarantined same-day.
-      - exp5169 (adversarial_verify.py QD-citation false-positive fix): complete, warn-only not quarantine.
-      - exp5170 (PHASE D external-text-scorer retirement): complete. Added
-        `ops/exclusion_manifest.yaml:phase_d_external_text_scorer_retired_exp5163_v474` covering 27 artifacts
-        (exp4940, exp5003-5163 range). Explicitly does NOT retire hidden-state/internal-representation
-        verifiers, ARC oracle-distinct verifier work, or the FoVer production ensemble.
-      - exp5171 (ARC Set-Encoder cross-corpus hardening n=24->n=30): SUCCESS. `gate_passed=true`,
-        delta=0.5, CI95=[0.333,0.667] (excludes 0), identical across 5 seeds. This is now a
-        statistically-defensible ARC oracle-distinct verifier win, CLT-floor compliant.
-      - exp5172 (SOTA ingestion -- diffusion decoding, hierarchical/map-then-act search, hidden-state
-        verifiers): complete. Deep-read MAP (arXiv:2605.13037) and specified a falsifiable `.475` gate:
-        on CD82/SK48/SP80, pruner-only vs map-only vs map-plus-pruner under the same 4000-expansion
-        reproduction-gated protocol.
-      - exp5173 (DiffusionGemma energy-guided diffusion pilot -- "the decisive verifier-moat pilot"):
-        BLOCKED before any measurement. `arm_rows=[]`. Root cause:
-        `ValueError: Some modules are dispatched on the CPU or the disk before forward`, underlying
-        `RuntimeError: Tensor.item() cannot be called on meta tensors`. 5 sub-attempts all failed
-        (wrong auto class; `device_map=auto` 2-GPU x2; `device_map=auto` + explicit `max_memory` dict).
-        NOTE: this artifact ALSO carries a live (non-quarantining, informational)
-        `corrigendum_pending` entry (CIRCULAR_MOAT_OVERCLAIM / MOAT_CLAIM_RIGOR) because it declared
-        `verifier_is_oracle=true` while a gate-flip framing was present in its schema -- it never actually
-        flipped any gate (the pilot never ran), so this is not a live blocker, but `.475`'s DiffusionGemma
-        tasks (exp5182/exp5183) MUST set `verifier_is_oracle` correctly to avoid repeating it.
-      - exp5174 (GAP-LIVE-INTEGRATION reconciliation): complete. Found the 3 original staleness claims
-        were themselves stale (router/DSL ARE imported, `target_levels=3`, `value_weight` IS nonzero).
-        Surfaced a new, load-bearing finding: of the 24 registry games, only **4** have levels flagged
-        `solve_provenance: live_agent_self_discovery`; **20** are `development_proxy`. Re-scoped
-        GAP-LIVE-INTEGRATION's residual to this provenance ratio.
-      - exp5175 (GAP-4891 relational-mask-pruner A/B): complete, decisive null. Pruner fires (pruned
-        358/22807/0/375 edges on cd82/sk48/sp80/cn04) but `states_expanded` is UNCHANGED on every game and
-        zero levels bank. Next lever named explicitly: a MAP-style map-then-act / hierarchical pre-search
-        stage that generates candidate subgoal trajectories before flat frontier enumeration.
-      - exp5176 (live level-up attempt): complete, honest null. No validated lever from B1/B2 to apply;
-        zero levels banked.
-      - exp5177 (GAP-4 scale-up + decentralization-tier local-generator test): complete, still short.
-        Reached n=62 of the n=180 significance-floor target (soft-budget stopped it). 4 discordant wins,
-        0 losses, p=0.125 -- below the >=6-discordant-win floor. The decentralization-tier local-generator
-        arm was only cache-checked (one smoke call), not run at real pilot scale. NOTE: despite a
-        `checkpoint_path` field being declared in the artifact, verify directly whether
-        `results/experiment_5177_gap4_scaleup_decentralization_tier_v474.checkpoint.json` actually exists
-        on disk -- as of `.474`'s close it did not, meaning `.475`'s continuation cannot assume a resumable
-        checkpoint exists and must build one from scratch if it wants incremental resumability.
-      - exp5178 (hidden-state verifier pilot -- TrajSelector-style, sanctioned PHASE D exception): complete,
-        honest negative at small scale. n=6 questions, 48 candidates, naive trained-centroid probe on
-        final-token embeddings only (`llama_cpp.Llama(embedding=True, pooling_type=LAST)` -- no per-layer
-        hidden states exposed by this extraction path). Lost to tuned self-consistency even on a
-        headroom-present slice (oracle=1.0 vs SC=0.333, delta=-0.333).
-      - exp5179 (hardware continuity): complete. KV260 reachable, PolarFire reachable, GateMate
-        `blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics` (DirtyJTAG enumerates the
-        programmer at USB level but cannot read the GM1Ax IDCODE `0x20000001` that worked in May 2026 --
-        an apparent regression, not the original May-era LUT-mapping issue).
-      - exp5180 (capstone): complete, no CRITICAL flagged_adversarial artifacts in `.474`'s own output.
-        `reproducible_total_levels=69/24` flat for the 4th+ consecutive milestone.
+    `.475`'s actual outcomes (verify each against its own artifact / `ops/conductor-log.md`'s 2026-07-03
+    03:15-11:43 UTC timeline before writing the archive summary -- do not trust this paraphrase alone):
+      - Activation itself was refused 51 times (03:15-05:25 UTC, SCOPE_MATCHED_PRIOR_FAILURE), then the
+        automated planner failed 3 times (a 50-turn cap, then two 1201s wall-clock+idle timeouts). The
+        milestone was hand-activated at 07:59 UTC with 12 tasks queued.
+      - exp5181 (archive .474->.475): ran, produced a real artifact, `flagged_adversarial: true`
+        (DURATION_TOO_SHORT) -- this planning pass's own research (see
+        `openspec/change-proposals/research-roadmap-vNEXT.md` "Provenance" section) found this is very
+        likely a false positive: the artifact correctly declares
+        `inference_substrate: {"principle": "...", "value": "aggregation_from_upstream_artifacts"}`
+        (2.49s is far above that substrate's 0.0001s floor), so the flag almost certainly fired on
+        GGUF/CUDA substring mentions inside CITED UPSTREAM fields, not a live-inference claim this
+        artifact itself makes. Confirm this reading and, if it holds, note it as a candidate
+        `adversarial_verify.py` false-positive-class fix for a future milestone (do not fix it in this
+        task -- out of scope, just document precisely).
+      - exp5182 (DiffusionGemma meta-tensor root-cause fix): the CONDUCTOR's own attempt hit a 1201s
+        wall-clock+idle timeout and never completed. An outer-loop session ran the script directly against
+        an idle GPU 0 afterward (630.334s real duration, genuinely GPU-bound), producing the actual
+        artifact this milestone's exp5196 reads. The conductor's own retry at 10:35 UTC found "Deliverable
+        already exists in repo" and marked it OK. exp5182's real result: all 4 mitigations
+        (single-GPU 4-bit NF4, auto-balance with corrected _no_split_modules, single-GPU
+        low_cpu_mem_usage=False, single-GPU int8) FAILED -- the single-GPU variants OOM'd (needing far more
+        than the model's nominal 12.864 GiB 4-bit footprint suggests -- peaking past 22.6 GiB of the 23.56
+        GiB budget, an unexplained ~10 GiB gap this milestone's exp5196 should investigate, not just
+        retry), and the auto-balance variant reproduced the original meta-tensor bug. Root cause is now
+        precise: DiffusionGemma's encoder is a weight-tied mirror of its decoder; `device_map="auto"`
+        splits them across GPUs and breaks the tie (meta-tensor failure), while single-GPU placement fixes
+        the tie but needs more memory than either 24GB card has alone. `honest_verdict:
+        blocked_diffusiongemma_meta_tensor_bug_unresolved_v475`.
+      - exp5183-exp5192 (10 tasks): NEVER EXECUTED. exp5182's conductor-side timeout left
+        `test_ondisk_deliverable_is_valid` red (a correct test whose one precondition -- the artifact --
+        did not exist yet at conductor-attempt time), which poisoned the SHARED pretest gate: every
+        subsequent task either SKIP'd 3x on that shared failure or GATE_BLOCK'd on an upstream the
+        conductor treated as retired. This is the 4th occurrence of the "agent-shipped-incomplete-artifact
+        poisons the pretest gate" incident class (prior: exp3521/.325, exp3544/.326, exp3612/.332) --
+        `.476`'s exp5194 builds the triage module this incident class has needed since the 1st occurrence.
+      - The `.475` operational retrospective (`results/operational_retro_2026_07_475.json`, commit
+        `958859613`) shows `experiments_completed=0`, `total_wall_time_minutes=0`,
+        `reconstructed_from_disk_mtime=False` -- generated AFTER `scripts/retro_timing_fallback.py` was
+        confirmed wired into `scripts/research_conductor.py` (verify: grep
+        `retro_timing_fallback` in `scripts/research_conductor.py` -- the import and call ARE present,
+        lines ~2874-2896). The false-zero recurred anyway; `.476`'s exp5195 re-opens this as a live,
+        deeper bug (the wiring landed but the fallback itself returned nothing for `.475` specifically),
+        not a re-diagnosis of the already-fixed wiring gap.
+      - A SEPARATE, unrelated bug: `ops/known-issues.md` (10,000+ lines) carries ~187 byte-identical
+        copies of a `### NEW Phase 4 Canonical Metric MANDATORY` section, concentrated in the file's final
+        ~450 lines, from `scripts/experiments/run_experiment_1911.py` appending the same fixed string with
+        no idempotency check. `.476`'s exp5195 fixes this too (bundled, since both are
+        known-issues.md/text-corruption-adjacent fixes of comparable small size).
 
     Also verify and carry forward: `scripts/publication_gate.py --json` reports `paper_ready: true`,
-    `unmet_gates: []` (unchanged, FoVer headline track, separate from the ARC/PHASE D program).
-    `_bmad/architecture.md`'s "Last Reconciled" date is 2026-05-16 -- more than 30 days stale as of
-    {date}; flag this explicitly per CLAUDE.md's Architecture Freshness Check (a dedicated task,
-    exp5189, addresses it this milestone).
+    `unmet_gates: []` (FoVer headline track, unaffected by any of the above). `_bmad/architecture.md`'s
+    "Last Reconciled" date is 2026-05-16 -- now 48+ days stale; `.476`'s exp5202 addresses it.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5168_archive_473_activate_474.json through
-      results/experiment_5180_capstone_v474.json (all 13 `.474` artifacts -- verify the paraphrase above
-      against the live files, do not just copy it forward).
-    - openspec/change-proposals/research-roadmap-vNEXT.md (the full `.475` design doc -- read it in full;
-      it explains why this milestone was hand-authored by an outer-loop session after the automated
-      planner stalled for ~2.5 hours on 2026-07-03 with repeated exclusion-manifest activation refusals).
-    - ops/exclusion_manifest.yaml (confirm the `phase_d_external_text_scorer_retired_exp5163_v474` entry
-      is present and correctly scoped before activating any `.475` task).
-    - ops/arc_solve_registry.yaml, ops/verifier_gaps.md (GAP-4891, GAP-4 sections).
+    - research-roadmap.yaml (the full `.475` plan, all 12 task prompts -- read in full before archiving).
+    - results/experiment_5181_archive_474_activate_475.json,
+      results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json (the only two real `.475`
+      artifacts -- read directly, do not paraphrase from this summary alone).
+    - ops/conductor-log.md (2026-07-03 03:15-11:43 UTC section -- the full `.475` timeline).
+    - openspec/change-proposals/research-roadmap-vNEXT.md (the `.476` design doc this milestone's
+      `research-roadmap.yaml` will become -- read the "Second verification pass" section at the top,
+      added by this planning invocation, for the 3 corrections to the original outer-loop draft).
+    - ops/exclusion_manifest.yaml (confirm no DiffusionGemma-scoped experiment id is retired -- verified
+      clean this planning pass; re-confirm before activating).
 
     CONCRETE STEPS:
-    1. Read every `.474` artifact listed above; write a precise, honest archive summary (do not round a
-       partial/null result up to a win, and do not bury the one genuine win -- exp5171's hardened
-       cross-corpus result).
-    2. Confirm `ops/exclusion_manifest.yaml`'s PHASE D entry is present, correctly scoped, and does not
-       false-positive against this milestone's hidden-state-verifier or ARC-deepening tasks. Run
-       `.venv/bin/python scripts/exclusion_manifest_lint.py` against `research-roadmap.yaml` once it is
-       activated (post-copy) to confirm.
-    3. Copy this file's contents (the `.475` plan) into `research-roadmap.yaml`, replacing the `.474`
-       content (which is what you are archiving in step 1).
+    1. Read every `.475` artifact and the conductor-log timeline; write a precise, honest archive summary.
+       Do not round the 2-of-12 real-artifact outcome up to a normal close, and do not bury the one
+       genuine (if blocked) result -- exp5182's precisely root-caused DiffusionGemma failure is real
+       diagnostic progress even though it did not unblock the pilot.
+    2. Confirm `ops/exclusion_manifest.yaml` has no false-positive against this milestone's tasks. Run
+       `.venv/bin/python scripts/exclusion_manifest_lint.py` against `research-roadmap.yaml` once this
+       milestone's plan is copied in (post-copy) to confirm clean activation.
+    3. Copy `research-roadmap-next.yaml`'s contents (this `.476` plan) into `research-roadmap.yaml`,
+       replacing the `.475` content you are archiving in step 1.
     4. Update `ops/status.md` and `ops/changelog.md` per the standard Documentation Update Rules (add,
        never remove; move completed items to "Completed" sections).
     5. Confirm no task in this transition modified `scripts/research_conductor.py`.
 
     REQUIRED ARTIFACT FIELDS:
-      v474_summary:
-        value: "one paragraph, precise, citing exact verdicts per task"
-        principle: "An inaccurate handoff summary propagates errors into every downstream .475 task's
+      v475_summary:
+        value: "one paragraph, precise, citing the 2-of-12 real-artifact outcome and the poison-test-cascade
+          root cause"
+        principle: "An inaccurate handoff summary propagates errors into every downstream .476 task's
           CONTEXT section; precision here is load-bearing for the whole milestone."
       exclusion_manifest_confirmed_clean:
         value: bool
@@ -123,7 +117,10 @@ tasks:
         value: bool
       architecture_md_staleness_days:
         value: int
-        principle: "Mechanical input to the Architecture Freshness Check; feeds exp5189's priority."
+      exp5181_duration_too_short_flag_assessment:
+        value: string
+        principle: "Documents whether the flag is confirmed a false positive, feeding a future
+          adversarial_verify.py fix without fixing it in this task."
       inference_substrate:
         value: aggregation_from_upstream_artifacts
       honest_verdict:
@@ -131,139 +128,353 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475
-  milestone: 2026.07.475
-  title: PHASE A1 root-cause and fix the DiffusionGemma two-GPU meta-tensor/device-placement bug with
-    genuinely new mitigations (not a repeat of .474's four device_map=auto variants)
+- id: exp5194-poison-test-cascade-triage-module-v476
+  milestone: 2026.07.476
+  title: PHASE INFRA-CRITICAL 1/2 -- build a standalone pretest-triage module that detects the
+    "agent-shipped-test-references-not-yet-produced-artifact" pattern (4th occurrence this milestone) and
+    prepares a scoped, auditable xfail remediation
+  priority: critical
+  track: infrastructure
+  deliverable: results/experiment_5194_poison_test_cascade_triage_module_v476.json
+  agent_type: claude
+  model: opus
+  requires_claude_verified: true
+  max_turns: 100
+  estimated_wall_time_min: 70
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. Four times now (exp3521/.325, exp3544/.326,
+    exp3612/.332, and exp5182/.475), a task's OWN test suite addition references a `results/*.json` path
+    that a SIBLING module in the SAME task's `main()` would produce -- but the task hits a wall-clock
+    timeout or otherwise fails BEFORE `main()` runs, leaving the test red with no deliverable to satisfy
+    it. Because the conductor's pretest gate is SHARED across all subsequent tasks in a milestone (not
+    scoped per-task), this single red test then SKIPs or GATE_BLOCKs every remaining task in the milestone
+    -- `.475` lost 10 of 12 tasks to exactly this pattern (see `ops/conductor-log.md` 2026-07-03 08:39-09:42
+    UTC: "Pre-tests failing, self-heal failed: 1 failed, 116 passed, 15 warnings" repeated ~19 times).
+
+    This is the SAME class of problem `scripts/retro_timing_fallback.py` was built to solve for a
+    different symptom (false-zero retro timing): a NEW STANDALONE MODULE the conductor's pretest step can
+    import, since no task -- including this one -- may edit `scripts/research_conductor.py` directly.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/retro_timing_fallback.py (the precedent pattern for a standalone module the conductor
+      imports without a direct research_conductor.py edit -- read its structure, its docstring's
+      "in research_conductor.py, replace X with Y" wiring-instructions convention, and its own test file).
+    - scripts/research_conductor.py's pretest-execution function (search for "self-heal" / "Pre-tests
+      failing" / wherever the conductor runs `pytest` before launching a task -- read the exact current
+      logic to know precisely what a triage module needs to hook into).
+    - ops/conductor-log.md 2026-07-03 08:39-09:42 UTC (the exact failure signature this milestone: which
+      test failed, what its assertion was, which sibling module's `main()` would have produced the missing
+      file).
+    - `incident_agent_shipped_test_cascade` (project memory) -- the 4-occurrence incident class this task
+      formally closes with tooling instead of manual triage each time.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: read the CURRENT pretest-execution code path in `scripts/research_conductor.py` in
+       full (line numbers may have drifted since any prior description) before designing the hook.
+    1. Design the detection signature precisely: a test failure whose assertion error message or traceback
+       references a `results/*.json` (or similar deliverable) path, cross-referenced against
+       `research-roadmap.yaml`'s current task list to find whether that EXACT path is a DECLARED
+       `deliverable` of a task that has not yet completed (vs. a genuinely broken, unrelated test -- do
+       not xfail everything red, only this specific, narrow signature).
+    2. Build the module (e.g. `scripts/pretest_triage.py`) with a function the conductor's pretest step can
+       call: given the pytest failure output + the current roadmap, return whether this specific signature
+       matches, and if so, which test(s) to scope an `xfail` marker to (never a blanket `skip` -- per
+       CLAUDE.md's Tests Must Run and Assert, every test must still run and assert; `xfail` runs the test
+       and records the expected failure, it does not silently vanish it).
+    3. The `xfail` remediation must be TIME-BOXED / self-expiring: attach a tracking note (e.g. a comment
+       referencing the specific task id whose artifact the test is waiting on) and a condition under which
+       it should be removed (the referenced deliverable now exists on disk -- at that point the test should
+       naturally pass and the xfail marker becomes a visible "unexpectedly passed" signal, which is itself
+       useful telemetry, not a silent no-op).
+    4. Write the documented wiring instructions in this module's own docstring, mirroring
+       `retro_timing_fallback.py`'s exact convention ("In `scripts/research_conductor.py`, at line X,
+       replace/wrap Y with Z").
+    5. Write a regression test suite for the triage module itself (this module's own logic needs tests,
+       matching the project's 100%-coverage requirement) using `.475`'s actual failure signature as the
+       primary test fixture (the exact test name + assertion that failed 19 times in `.475`, reconstructed
+       from `ops/conductor-log.md` and the pretest suite's current state).
+    6. Confirm this task itself did not modify `scripts/research_conductor.py`.
+
+    REQUIRED ARTIFACT FIELDS:
+      triage_module_path:
+        value: string
+      detection_signature_precision:
+        value: "description of what narrowly matches vs. what correctly does NOT match (a genuinely
+          broken unrelated test must not be auto-xfailed)"
+        principle: "An over-broad triage rule would silently mask real regressions -- exactly the failure
+          mode Tests-Must-Run-And-Assert exists to prevent. Precision here is the safety property."
+      historical_incidents_matched:
+        value: "list of {experiment_id, milestone} -- exp3521/.325, exp3544/.326, exp3612/.332,
+          exp5182/.475 -- confirm the detector would have caught all 4 retrospectively"
+      wiring_instructions_documented:
+        value: bool
+      regression_tests_added:
+        value: int
+      research_conductor_py_untouched_confirmed:
+        value: bool
+      inference_substrate:
+        value: aggregation_from_upstream_artifacts
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_. Must NOT claim the conductor's
+          pretest gate is actually patched -- only that a ready, tested triage module + wiring
+          instructions now exist, same limitation class as retro_timing_fallback.py's own patch-prep
+          precedent."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+
+- id: exp5195-retro-timing-real-fix-known-issues-dedup-v476
+  milestone: 2026.07.476
+  title: PHASE INFRA-CRITICAL 2/2 -- MANDATORY overdue priority (pending since .469, escalated across 5+
+    diagnosis events) -- the retro-timing wiring landed but the false-zero recurred anyway; find the
+    deeper cause. Also fix the unrelated known-issues.md 187-copy duplication bug.
+  priority: critical
+  track: infrastructure
+  deliverable: results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json
+  agent_type: claude
+  model: opus
+  requires_claude_verified: true
+  max_turns: 100
+  estimated_wall_time_min: 80
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. `scripts/retro_timing_fallback.py` (built in `.473`'s
+    exp5164) IS confirmed imported and called inside `scripts/research_conductor.py::_run_operational_
+    retrospective` -- verify directly: `grep -n retro_timing_fallback scripts/research_conductor.py`
+    shows the import at approximately line 2876, inside an `if not experiment_times:` block starting
+    around line 2874. This wiring is NOT missing. Yet `results/operational_retro_2026_07_475.json`
+    (generated by that same, already-patched code) shows `experiments_completed=0`,
+    `total_wall_time_minutes=0`, `reconstructed_from_disk_mtime=False` -- the exact false-zero pattern the
+    fix was supposed to eliminate. This is a DEEPER bug than "not wired," and this task's job is to find
+    it, not to re-wire something already wired.
+
+    THE PRECISE CODE PATH TO INSPECT (read `scripts/research_conductor.py` lines ~2768-2996 in full before
+    forming a theory): the primary git-log path fails BY DESIGN for `.475` (documented in the code's own
+    comment: current commit subjects use lowercase `expNNNN` phrasing, never matching the old `"Exp " in
+    msg` predicate) -- this is the ALREADY-DIAGNOSED, ALREADY-INTENDED-TO-BE-ROUTED-AROUND failure. The
+    call then falls to `build_retro_timing_fallback(current, repo_root=PROJECT_ROOT)` inside a bare
+    `except Exception: logger.warning(..., exc_info=True)` block. Given BOTH `reconstructed_from_disk_
+    mtime=False` AND `experiments_completed=0`, the most likely explanation is that `build_retro_timing_
+    fallback` itself either raised internally for `.475` specifically, or returned an empty
+    `experiment_times` list -- and `.475`'s own execution history is genuinely unusual (only 2 of 12 tasks
+    produced artifacts; one of those, exp5182, was produced by a direct outer-loop script invocation
+    OUTSIDE the conductor's normal task-commit flow, which may not match whatever commit-message or
+    activation-boundary pattern `scripts/retro_timing_fallback.py:_activation_bound()` expects when
+    resolving the milestone's activation commit).
+
+    CONCRETE STEPS (in this order -- the first two are fast, targeted tests of the leading hypothesis
+    before any broader investigation):
+    1. Call `scripts.retro_timing_fallback.build_retro_timing_fallback('2026.07.475', repo_root=<repo
+       root>)` directly in a throwaway script or REPL and record: does it raise? What does it return?
+       Cross-check against `_activation_bound()`'s logic specifically -- does it correctly resolve `.475`'s
+       activation point given the milestone was hand-activated via a "PHASE 0 transition" commit rather
+       than a generic "[conductor] Activate milestone 2026.07.475" commit? (Note: `git log --grep`
+       shows an EARLIER commit `1dbcc55e1 [conductor] Activate milestone 2026.07.475` that predates the
+       "PHASE 0 transition" commits -- confirm whether `_activation_bound` finds this earlier commit, and
+       whether that produces a time window that incorrectly excludes exp5181/exp5182's later, real work
+       via `excluded_pre_activation` filtering.)
+    2. Search `journalctl --user -u carnot-conductor --no-pager` (or the daemon's log file if not run via
+       systemd) around 2026-07-03 10:46 EDT (the `.475` retro's actual run time, per its artifact's
+       timestamp) for the swallowed-exception warning line ("retro_timing_fallback reconstruction also
+       failed for %s"). If present, this directly confirms an internal exception and gives you the
+       traceback to root-cause from.
+    3. Based on steps 1-2's findings, fix the actual root cause. This may be in
+       `scripts/retro_timing_fallback.py` itself (a module this task MAY edit, unlike
+       `research_conductor.py`) -- e.g. a fix to `_activation_bound()`'s commit-matching pattern to also
+       recognize non-generic activation commits, or a fix to whatever specific exception step 2 surfaces.
+       If the true fix requires an edit to `scripts/research_conductor.py`'s call site itself (e.g. the
+       bare `except Exception` swallowing needs a narrower catch + explicit surfacing), produce a
+       ready-to-apply patch file exactly as exp5190 (`.475`, never activated due to the poison-test
+       cascade but the underlying design is sound) specified -- verified via `git apply --check`, never
+       applied directly to the tracked file.
+    4. Add a regression test using `.475`'s ACTUAL conditions as the fixture (2 real artifacts, one
+       produced via an atypical commit path, `research-roadmap.yaml` reflecting the `.475` task set) that
+       currently reproduces the false-zero bug and is documented to pass once your fix (from step 3) is
+       applied.
+    5. Run `python3 scripts/retro_timing_fallback.py`'s existing test suite (6 tests per `.473`'s exp5164)
+       plus your new regression test; confirm both pass.
+    6. If the true root cause turns out to be the LLM retro-writing agent failing to transcribe correct
+       Python-side data into its final JSON (a genuinely different bug class from anything above), report
+       this honestly and narrow the finding precisely rather than declaring the wiring bug "fixed" when a
+       different bug was found -- this investigation has now survived one full "fix" cycle (the wiring
+       landed) without resolving the user-visible symptom, so precision in what is and is not actually
+       fixed this time is the load-bearing property of this task's artifact.
+    7. SEPARATELY (bundled, unrelated bug of comparable size): fix
+       `scripts/experiments/run_experiment_1911.py` lines ~62-68, which unconditionally
+       `open(path, "a").write(...)` the same fixed `### NEW Phase 4 Canonical Metric MANDATORY` string
+       into `ops/known-issues.md` with no idempotency check (187 duplicate copies confirmed on disk, in
+       the file's final ~450 lines). Add an idempotency guard (check if the exact section already exists
+       before appending), and deduplicate `ops/known-issues.md` down to ONE copy of that section --
+       content-preserving cleanup (keep the content, remove the 186 redundant repeats), consistent with
+       Documentation Update Rules ("never remove existing content" means substantive content, not
+       byte-identical duplicate spam from a bug).
+    8. Update `ops/known-issues.md` with a dated note on this task's actual finding (fixed / narrowed /
+       still open) for the retro-timing bug specifically.
+
+    REQUIRED ARTIFACT FIELDS:
+      retro_timing_root_cause_found:
+        value: string
+        principle: "State precisely what was actually wrong -- do not conflate 'the wiring exists' with
+          'the bug is fixed'; this task exists because those two things came apart once already."
+      build_retro_timing_fallback_direct_call_result:
+        value: "{raised: bool, exception_if_any: string, returned_experiment_times_count: int}"
+      journalctl_exception_found:
+        value: bool
+      fix_applied_to:
+        value: "retro_timing_fallback.py (directly editable) | patch file for research_conductor.py
+          (git apply --check verified, not applied) | neither (bug narrowed but not fixed this task)"
+      regression_test_reproduces_475_conditions:
+        value: bool
+      regression_test_passes_after_fix:
+        value: bool
+      known_issues_md_duplicate_count_before:
+        value: int
+      known_issues_md_duplicate_count_after:
+        value: int
+        principle: "Must be 1, not 0 -- this is content-preserving deduplication, not deletion of the
+          section itself."
+      run_experiment_1911_idempotency_guard_added:
+        value: bool
+      research_conductor_py_untouched_confirmed:
+        value: bool
+      inference_substrate:
+        value: aggregation_from_upstream_artifacts
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_, and must precisely distinguish
+          'root cause found and fixed' from 'root cause narrowed, not yet fully fixed' -- do not declare
+          victory on a partial diagnosis a second time."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+
+- id: exp5196-diffusiongemma-vllm-native-retry-v476
+  milestone: 2026.07.476
+  title: PHASE A1 DiffusionGemma unblock attempt 3 -- vLLM native-support retry (genuinely untried path),
+    then HF custom device_map + CPU-offload fallback, then retire the loading thread if both fail
   priority: critical
   track: verification
-  deliverable: results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json
+  deliverable: results/experiment_5196_diffusiongemma_vllm_native_retry_v476.json
   prior_failures:
-  - experiment_id: exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474
-    verdict: blocked_diffusiongemma_meta_tensor_bug_unresolved
-    addressed_by: "exp5173 tried 5 load-path variants, ALL using accelerate's device_map='auto' balancer
-      (with or without an explicit max_memory cap) across the DiffusionGemmaModel /
-      DiffusionGemmaForBlockDiffusion classes. This task tries structurally different mitigations that
-      were never attempted: (1) explicit single-GPU placement (device_map={'':0}, no auto-balancer at
-      all -- the model at 4-bit NF4 is small enough (~13-14GB) to plausibly fit on one 24GB RTX 3090,
-      which would sidestep the entire cross-device meta-tensor code path); (2) inspecting and, if needed,
-      correcting the model class's _no_split_modules / _no_split_classes declaration (the classic root
-      cause of accelerate auto-splitting a block-diffusion denoising module that must not be split);
-      (3) low_cpu_mem_usage=False (forces materialized weights instead of meta-device staging during
-      load); (4) int8 bitsandbytes quantization as an alternate quant path with a different accelerate
-      hook chain than 4-bit NF4."
+  - experiment_id: exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475
+    verdict: blocked_diffusiongemma_meta_tensor_bug_unresolved_v475
+    addressed_by: "exp5182 exhausted 4 device-placement variants within the HF transformers+accelerate
+      stack (single-GPU 4-bit NF4 OOM at ~22.6+ GiB despite a 12.864 GiB nominal footprint; auto-balance
+      with corrected _no_split_modules reproduced the meta-tensor bug; single-GPU low_cpu_mem_usage=False
+      OOM; single-GPU int8 OOM). This task tries two genuinely different, never-attempted paths: (1) vLLM,
+      which shipped NATIVE DiffusionGemma support the same day the model released (vllm.ai blog,
+      2026-06-10) via a new model-runner-v2 ModelState abstraction -- the project's own `.474` vLLM probe
+      (results/diffusiongemma_energy_prior_vllm.log) fell back to the generic Transformers backend inside
+      vLLM ('TransformersMultiModalMoEForCausalLM has no vLLM implementation, falling back to Transformers
+      implementation'), meaning the native path was never actually exercised; (2) if vLLM-native also
+      fails to fit the 2x24GB budget (plausible -- the vLLM blog only demonstrates H100/H200), the
+      huggingface/transformers#22018 pattern: a manually pre-configured device_map dict (not \"auto\")
+      that explicitly co-locates the tied encoder+decoder modules on GPU 0 while offloading other named,
+      non-tied modules to CPU with llm_int8_enable_fp32_cpu_offload=True -- qualitatively different from
+      all 4 of exp5182's mitigations, which were either fully-auto or fully-single-device with no partial
+      CPU-offload option."
     retire_if_same_verdict: true
   agent_type: claude
   model: opus
   requires_claude_verified: true
   max_turns: 100
-  estimated_wall_time_min: 75
+  estimated_wall_time_min: 90
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. DiffusionGemma is Carnot's energy-guided discrete
-    diffusion pilot target -- per `docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`,
-    it is "the decisive verifier-moat pilot" the `.379-.474` verifier-moat arc has been building toward.
-    `.474`'s exp5173 was gated on exp5171's cross-corpus hardening (which passed), so the pilot was cleared
-    to run -- but it never got past model loading. The exact failure, verbatim from
-    `results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`:
+    Repo at {project_root}, run on or after {date}. DiffusionGemma is "the decisive verifier-moat pilot"
+    the `.379-.475` verifier-moat arc has been building toward (per
+    docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md). Three attempts have now failed at
+    the LOADING stage (never reaching the actual guided-vs-unguided-vs-AR measurement): `.474`'s exp5173
+    (5 device_map="auto" variants) and `.475`'s exp5182 (4 more variants, all within the HF
+    transformers+accelerate stack). Root cause is now precisely diagnosed (exp5182): DiffusionGemma's
+    encoder is a weight-tied mirror of its decoder; multi-GPU auto-balancing breaks the tie (meta-tensor
+    failure at forward), while single-GPU placement fixes the tie but needs more memory than either 24GB
+    RTX 3090 has alone (OOM'd past 22.6 GiB despite a 12.864 GiB nominal 4-bit weight footprint -- this gap
+    is itself worth measuring precisely in this task, since it suggests activation/KV-buffer memory for a
+    block-diffusion denoising step may dominate over weight memory in a way autoregressive-generation
+    intuitions do not predict).
 
-    ```
-    ValueError: Some modules are dispatched on the CPU or the disk before forward
-    (underlying, from an earlier probe: RuntimeError: Tensor.item() cannot be called on meta tensors)
-    ```
-
-    All 5 of `.474`'s sub-attempts used `device_map="auto"` (accelerate's automatic layer-balancing
-    across GPUs), either alone, with `DiffusionGemmaForBlockDiffusion`, with `DiffusionGemmaModel`, or
-    with an explicit `max_memory={0:24GiB,1:24GiB}` cap -- all failed identically during accelerate's
-    device-placement phase, before the diffusion forward pass ever ran. This is a HARD requires_claude_verified
-    task (dual-GPU device-placement debugging on a non-standard "block diffusion" architecture that
-    accelerate's auto-balancer does not know how to split cleanly) -- exactly the class of problem the
-    Pre-emptive Opus Routing criteria (schema/preflight infra + hardware-adjacent debugging) name.
-
-    This task's SOLE job is to get the model loadable and runnable through at least one real forward
-    pass. It does NOT run the actual guided-vs-unguided-vs-AR benchmark (that is exp5183, gated on this
-    task's success) -- do not scope-creep into the full pilot.
+    This is a HARD requires_claude_verified task (dual-GPU / cross-serving-stack device-placement
+    debugging), same class as exp5182's own routing.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json (the exact failure
-      transcript, `preconditions.smoke.tried` lists all 5 prior sub-attempts verbatim -- do not repeat
-      any of them).
-    - results/diffusiongemma_energy_prior_probe.json, results/diffusiongemma_energy_prior_gguf.json,
-      results/diffusiongemma_energy_prior_transformers.json, results/diffusiongemma_energy_prior_vllm.json
-      (earlier loader-path probes; the GGUF and vLLM paths may have different device-placement behavior
-      worth comparing against the transformers/accelerate path if the mitigations below all fail).
-    - python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py (the exact
-      loading code that failed -- read this before writing any fix, not a rewrite from scratch).
-    - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (the model identity, expected
-      VRAM footprint, and prior successful-load precedent this bug regressed from).
-    - python/carnot/reporting/diffusiongemma_gate_reexamination_5152.py (context on the gate history).
+    - results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json (the full mitigation
+      ladder, exact error strings, exact library versions: transformers 5.12.0, accelerate 1.14.0,
+      bitsandbytes 0.49.2 -- confirm these are still current or note any drift).
+    - results/diffusiongemma_energy_prior_vllm.json and its `.log` file (the `.474` vLLM probe that fell
+      back to the Transformers backend -- read the exact invocation that triggered the fallback, so this
+      task's retry demonstrably differs).
+    - python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py and any
+      DiffusionGemma vLLM-invocation script from `.474` (extend, do not rewrite from scratch).
+    - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (model identity, expected
+      footprint).
 
     CONCRETE STEPS:
-    0. PRECONDITIONS (check BEFORE any subsequent step):
-       a. GPU 0 and GPU 1 both idle: `nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv`
-          -- both should show near-zero used memory. If either is busy with unrelated work, note it and
-          proceed only on the idle GPU(s); do not kill another process's job.
-       b. The DiffusionGemma weights are locally cached: check whatever path
-          `results/diffusiongemma_energy_prior_probe.json`'s `hidden_state_access_metadata`-equivalent
-          field (or the model download log) names, confirm the files exist on disk.
-       c. `python -c "import transformers, accelerate, bitsandbytes; print(transformers.__version__,
-          accelerate.__version__, bitsandbytes.__version__)"` succeeds -- record the exact versions (a
-          version-mismatch regression is a plausible root cause given this load path worked earlier in
-          the DiffusionGemma lineage, per the probe artifacts, and has since broken).
-       If any precondition fails, write honest_verdict `blocked_<resource>` and exit. Do NOT proceed to
-       loading attempts on a missing/busy resource.
-    1. Try mitigation 1 (cheapest, most likely): load with `device_map={"": 0}` (or the model's own
-       single-GPU pattern) -- NO auto-balancer at all. Compute the actual 4-bit NF4 memory footprint from
-       the model's declared parameter count first to confirm it should plausibly fit in 24GB before
-       attempting. If it OOMs, record the actual peak memory and move to mitigation 2.
-    2. Try mitigation 2: inspect the model class's `_no_split_modules` / `_no_split_classes` class
-       attribute (or lack thereof). A missing or incorrect declaration is the textbook root cause of
-       accelerate's auto-balancer splitting a module (e.g. a diffusion denoising block or attention layer)
-       that must stay whole across devices, leaving meta-tensor placeholders unresolved at forward time.
-       If missing, add a correct declaration (naming the actual block-diffusion module class) and retry
-       `device_map="auto"` across both GPUs with this fix.
-    3. Try mitigation 3: `low_cpu_mem_usage=False` on `from_pretrained` (forces materialized weights
-       instead of staged meta-device loading; costs more peak host RAM during load but sidesteps the
-       meta-tensor code path entirely). Combine with either mitigation 1 or 2's device placement.
-    4. Try mitigation 4 (only if 1-3 all fail): bitsandbytes int8 quantization instead of 4-bit NF4 --  a
-       different quantization/accelerate hook chain that may not trigger the same placement bug.
-    5. On ANY successful load, run one real forward pass (a single short diffusion denoising step on a
-       trivial input) to confirm the model is not just "loaded" but genuinely runnable -- `.474`'s prior
-       probe (`diffusiongemma_energy_prior_probe.json`) shows `model_loaded=true` can co-exist with a
-       forward-pass failure, so loaded-without-forward-pass-confirmed does NOT count as success here.
-    6. If ALL FOUR mitigations fail, write `honest_verdict: blocked_diffusiongemma_meta_tensor_bug_unresolved_v475`
-       with a precise record of what was tried and the exact error at each step -- do not fabricate a
-       partial success. This is an acceptable, honest outcome; per this task's `prior_failures` block,
-       `retire_if_same_verdict: true` means this specific mitigation-attempt scope ("try another
-       device_map variant") retires if this happens, and a future attempt needs either a genuinely
-       different root-cause theory or operator escalation.
+    0. PRECONDITIONS (check BEFORE any loading attempt):
+       a. GPU 0 and GPU 1 both idle: `nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv`.
+       b. `python -c "import vllm; print(vllm.__version__)"` -- record the exact version. Native
+          DiffusionGemma support requires a vLLM build that postdates 2026-06-10; if the installed version
+          predates it or the import fails, `pip install -U vllm` first and record the before/after version.
+       c. Confirm DiffusionGemma weights are locally cached (per exp5182's cache-path field).
+    1. PRIMARY ATTEMPT -- vLLM native: load DiffusionGemma via vLLM using the model-runner-v2 ModelState
+       path the 2026-06-10 vLLM blog post describes (fetch the blog + its linked "vLLM recipe for
+       deployment" page directly if not already saved locally, to get the exact invocation flags -- do not
+       guess the API). If this succeeds, run ONE real forward pass / denoising step to confirm genuine
+       execution, not just a load-without-error. Record peak VRAM used.
+    2. If step 1 OOMs or fails to fit 2x24GB: try vLLM's native path with explicit tensor-parallel /
+       quantization flags if the recipe supports them (check the blog + vLLM docs for a documented
+       low-VRAM configuration before assuming none exists).
+    3. If vLLM-native is fundamentally inapplicable to this VRAM budget: SECONDARY ATTEMPT -- HF
+       transformers+accelerate custom device_map per huggingface/transformers#22018's confirmed pattern:
+       build an explicit device_map dict that places the tied encoder+decoder layers together on GPU 0,
+       offloads other named (non-tied) modules to `"cpu"`, and sets `llm_int8_enable_fp32_cpu_offload=True`.
+       This directly exploits exp5182's own root-cause diagnosis (tied weights must co-locate; only
+       non-tied parts may safely offload) in a way none of exp5182's 4 attempts tried (all were fully-auto
+       or fully-single-device with no partial offload).
+    4. On ANY successful load (either path), run one real forward pass to confirm genuine execution
+       (loaded-without-forward-pass-confirmed does not count, per exp5182's own precedent finding that
+       `model_loaded=true` can co-exist with a forward-pass failure).
+    5. Investigate the ~10 GiB memory-arithmetic gap from exp5182 (12.864 GiB nominal 4-bit weights vs.
+       >22.6 GiB actual OOM threshold) enough to report WHERE the extra memory goes (activation buffers for
+       a multi-token diffusion denoising step, duplicate materialization of the tied weights before the
+       sharing is detected, KV-cache-equivalent state, or something else) -- this is diagnostic value even
+       if loading ultimately fails again.
+    6. If BOTH the vLLM-native and HF custom-device_map paths fail to produce a confirmed forward pass,
+       write `honest_verdict: blocked_diffusiongemma_loading_exhausted_v476` with a precise record of what
+       was tried at each step. Per this task's `prior_failures` block, `retire_if_same_verdict: true` means
+       the DiffusionGemma live-loading thread formally retires at that point -- six well-motivated
+       mitigations across two serving stacks (four in `.475`, two here) is a thorough, good-faith
+       exhaustion of currently-known approaches; do not propose a seventh generic mitigation-variant task
+       in `.477+` without either an upstream fix (e.g. GGUF support landing --
+       `ggml-org/llama.cpp#24427` was Draft/open as of 2026-07-03, check its status first) or direct
+       operator escalation with a genuinely new theory.
 
     REQUIRED ARTIFACT FIELDS:
       diffusiongemma_loadable:
         value: bool
-        principle: "The single gate field exp5183 reads via gated_on -- must be true ONLY if a real
-          forward pass was confirmed, never merely 'from_pretrained returned without raising'.
-          MECHANICAL CONSTRAINT (verified against scripts/conductor_gates.py before writing this task):
-          this field MUST be written as a BARE top-level boolean in the artifact JSON, e.g.
-          \"diffusiongemma_loadable\": true -- NOT wrapped as {\"value\": true, \"principle\": \"...\"}
-          the way most other principle-annotated fields in this project's artifacts are conventionally
-          written. conductor_gates.py's evaluate_gates() does `data.get('diffusiongemma_loadable')` and
-          compares it directly against `True`; a wrapped dict does not equal `True` and the gate would
-          silently and permanently block exp5183 (the exact failure class documented in the
-          feedback_gated_fields_must_be_bare project memory, the .330 cascade incident). Every OTHER
-          field in this artifact may use the normal {value, principle} convention; this one field must
-          not."
+        principle: "MECHANICAL CONSTRAINT: must be a BARE top-level boolean (e.g. \"diffusiongemma_loadable\":
+          true), NOT wrapped as {\"value\": true, \"principle\": ...} -- conductor_gates.py's
+          evaluate_gates() compares this field directly against Python True via a plain dict.get(); a
+          wrapped dict never equals True and would silently, permanently block any future gated task
+          reading it (the feedback_gated_fields_must_be_bare failure class, the .330 cascade incident).
+          Every OTHER field in this artifact may use the normal {value, principle} convention; this one
+          must not."
+      loading_path_used:
+        value: "vllm_native | hf_custom_device_map | both_failed"
+      vllm_version:
+        value: string
       forward_pass_confirmed:
         value: bool
+      peak_vram_gib_per_gpu:
+        value: "{gpu0: float, gpu1: float}"
+      memory_arithmetic_gap_investigated:
+        value: string
+        principle: "Reports where the ~10 GiB gap between nominal 4-bit footprint and actual OOM
+          threshold goes -- diagnostic value independent of whether loading ultimately succeeds."
       mitigations_tried:
         value: "ordered list of {mitigation, outcome, error_if_any, duration_s}"
-        principle: "Must show genuinely new attempts, not a re-run of .474's 5 device_map=auto variants
-          -- an adversarial reviewer should be able to diff this list against exp5173's tried[] and see
-          zero overlap."
-      transformers_accelerate_bitsandbytes_versions:
-        value: "exact version strings, to catch a version-regression root cause"
-      preconditions_checked:
-        value: "list of {resource, available}"
+        principle: "Must show genuinely new attempts vs. exp5182's 4 -- an adversarial reviewer should be
+          able to diff this list against exp5182's mitigations_tried and see zero overlap."
+      llama_cpp_pr_24427_status_checked:
+        value: "status string, e.g. draft_open_unmerged"
       random_seed:
         value: int
       reproducibility_checksum:
@@ -278,151 +489,26 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5183-diffusiongemma-energy-guided-pilot-v475
-  milestone: 2026.07.475
-  title: PHASE A2 the actual DiffusionGemma energy-guided-vs-unguided-vs-AR pilot, gated on exp5182 unblocking
-    the load
-  priority: critical
-  track: verification
-  deliverable: results/experiment_5183_diffusiongemma_energy_guided_pilot_v475.json
-  gated_on:
-  - upstream: exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475
-    artifact_field: diffusiongemma_loadable
-    op: '=='
-    value: true
-  prior_failures:
-  - experiment_id: exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474
-    verdict: blocked_diffusiongemma_meta_tensor_bug_unresolved
-    addressed_by: "exp5173 never reached the measurement phase (blocked at load). This task only runs at
-      all if exp5182 (this milestone) confirms a real forward pass; it then executes the exact 3-arm
-      design exp5173 already specified (AR best-of-N baseline, unguided diffusion, energy-guided
-      diffusion) using the same guidance-mechanism formula exp5173 documented
-      (logit_model(i,t) - lambda_energy * verifier_energy(partial_canvas_with_t)), so this is a genuine
-      continuation of gated-pending work, not a rerun of a failure."
-    retire_if_same_verdict: false
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 60
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. This task ONLY executes if exp5182 (this milestone)
-    set `diffusiongemma_loadable=true` with a confirmed forward pass -- the conductor's gated_on mechanism
-    skips this task entirely otherwise, so if you are reading this prompt, assume loading now works and
-    focus on the measurement.
-
-    Reuse exp5173's already-specified design exactly (it was carefully constructed and gated on exp5171's
-    now-hardened cross-corpus result -- do not redesign from scratch):
-    - THREE ARMS: (1) AR best-of-N autoregressive Gemma baseline, (2) unguided DiffusionGemma diffusion,
-      (3) energy-guided DiffusionGemma diffusion.
-    - GUIDANCE MECHANISM (verbatim from exp5173's `guidance_mechanism_design`): "Per denoising step, score
-      the current token-candidate slate with the native DiffusionGemma logits and an executable-verifier
-      energy. The composed score for token t at position i is
-      logit_model(i,t) - lambda_energy * verifier_energy(partial_canvas with t inserted). Sampling/commit
-      uses the same low-entropy DiffusionGemma commit order after this reweighting; no post-hoc reranking
-      of completed samples is counted as guided diffusion."
-    - A NEW mitigation to consider for the guidance itself (per exp5172's SOTA-ingestion literature find):
-      EDLM (arXiv:2410.21357, ICLR 2025) documents a concrete, ~1.3x-overhead (not Nx) energy-injection
-      recipe for discrete diffusion denoising -- read it if the exp5173 formula above needs a concrete
-      implementation reference for the resampling/reweighting step.
-    - CIRCULARITY CONTROL (per CLAUDE.md's Circularity/Oracle-Distinctness Discipline -- exp5173 got
-      flagged CIRCULAR_MOAT_OVERCLAIM/MOAT_CLAIM_RIGOR for setting verifier_is_oracle=true while framing
-      results as gate-eligible): if the `verifier_energy` term in the guidance formula is computed by an
-      EXECUTABLE test-suite oracle (the same oracle that defines task correctness), set
-      `verifier_is_oracle: true` explicitly and frame any positive result as "execution-grounded
-      verification helps diffusion decoding" -- NOT as a moat-proven claim, and do NOT flip the
-      DiffusionGemma gate on this alone. If instead you use an oracle-DISTINCT energy (a learned/probe
-      signal, not the test oracle itself), set `verifier_is_oracle: false` and this result IS
-      gate-eligible. Decide and declare this BEFORE running any arm, not after seeing results.
-    - CONTROL ARM for intrinsic confidence (per exp5172's citation): VFScale (arXiv:2502.01989) -- an
-      intrinsic-confidence-only signal with no external verifier, to separate "guidance helps because it's
-      a verifier" from "guidance helps because any confidence signal would."
-    - TELEMETRY precondition (per exp5172's citation): commit-position telemetry (arXiv:2606.14620) --
-      log which token positions get committed at each denoising step, to make any guidance-helped claim
-      independently auditable by a third party.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json (the full 3-arm
-      design, field_principles, and REQUIRED ARTIFACT FIELDS -- reuse this schema).
-    - results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json (this milestone's own
-      unblocking fix -- use the EXACT load path/mitigation it confirmed working).
-    - python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py (the pilot
-      harness code -- extend it with the confirmed load path, do not rewrite).
-    - ops/verifier_gaps.md / docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (task
-      corpus and what counts as pass@1).
-
-    CONCRETE STEPS:
-    1. PRECONDITIONS: re-confirm GPU availability (`nvidia-smi`) and re-load the model using exactly the
-       mitigation exp5182 confirmed working. If it fails to reproduce (environment drift since exp5182
-       ran), write `honest_verdict: blocked_diffusiongemma_load_regressed_since_exp5182` and stop.
-    2. Run the AR best-of-N baseline arm on the pilot task set.
-    3. Run the unguided DiffusionGemma diffusion arm.
-    4. Run the energy-guided DiffusionGemma diffusion arm with the guidance formula above, declaring
-       `verifier_is_oracle` correctly per the circularity control discussion.
-    5. Run the VFScale intrinsic-confidence-only control arm.
-    6. Compute pass@1 per arm, bootstrap CI95 for guided-vs-unguided and guided-vs-AR deltas, and
-       compute_cost_per_arm (GPU count, wall-clock) -- the north star's efficiency axis is co-equal with
-       accuracy, so a guided win that costs materially more compute is a different, weaker finding than a
-       Pareto win.
-    7. Update `ops/known-issues.md`'s DiffusionGemma gate note and `docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`
-       with the actual result -- do not inflate a marginal or null result.
-
-    REQUIRED ARTIFACT FIELDS:
-      pass_at_1_ar_baseline:
-        value: float
-      pass_at_1_unguided:
-        value: float
-      pass_at_1_guided:
-        value: float
-      pass_at_1_vfscale_control:
-        value: float
-      guided_vs_unguided_delta_ci95:
-        value: "[lo, hi]"
-      guided_vs_ar_delta_ci95:
-        value: "[lo, hi]"
-      compute_cost_per_arm:
-        value: "{arm: {gpu_count, wall_clock_s}}"
-      verifier_is_oracle:
-        value: bool
-        principle: "Must be declared BEFORE seeing results and match the actual energy-term construction;
-          this is exactly what exp5173's corrigendum flagged when violated."
-      headroom_present:
-        value: bool
-      commit_position_telemetry:
-        value: "per-step token-commit log, sampled"
-      random_seed:
-        value: int
-      reproducibility_checksum:
-        value: string
-      inference_substrate:
-        value: live_llm_inference
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ or blocked_, and state plainly
-          whether energy guidance helped, hurt, or made no difference -- and must NOT headline 'moat
-          proven' unless verifier_is_oracle=false and the delta CI95 excludes 0."
-
-    Do not push. Do not modify scripts/research_conductor.py.
-
-- id: exp5184-gap4-scaleup-continuation-v475
-  milestone: 2026.07.475
-  title: PHASE A3 continue the GAP-4 forward-protocol scale-up from n=62 toward the n~180 significance
-    floor, with real checkpoint/resume this time, plus the still-untested decentralization-tier local-generator
-    arm at real pilot scale
+- id: exp5197-gap4-scaleup-real-checkpoint-v476
+  milestone: 2026.07.476
+  title: PHASE A2 continue GAP-4 (same-shape rule-application-consistency) scale-up from n=62 toward the
+    n~180 significance floor, with genuine atomic checkpoint/resume this time, plus the decentralization-
+    tier local-generator arm at real pilot scale
   priority: high
   track: verification
-  deliverable: results/experiment_5184_gap4_scaleup_continuation_v475.json
+  deliverable: results/experiment_5197_gap4_scaleup_real_checkpoint_v476.json
   prior_failures:
   - experiment_id: exp5177-gap4-scaleup-decentralization-tier-v474
     verdict: complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended
-    addressed_by: "exp5177 is a clean, terminal-prefixed COMPLETE verdict (not a failure), but it fell
-      short of its own n=180 target because a soft wall-clock budget stopped it at n=62 with no actual
-      checkpoint file written to disk despite a checkpoint_path field being declared -- verify this
-      directly (`ls results/experiment_5177_gap4_scaleup_decentralization_tier_v474.checkpoint.json`)
-      before assuming any resumable state exists. This task builds genuine checkpoint/resume (atomic
-      writes after each row, skip-completed-rows-on-restart) per the established exp4729/exp5164 pattern,
-      so a future continuation does not repeat this exact shortfall a third time, and separately runs the
-      decentralization-tier local-generator arm at real pilot scale (exp5177 only cache-checked it with
-      one smoke call)."
+    addressed_by: "exp5177 is a clean, terminal-prefixed COMPLETE (not a failure) that fell short of its
+      own n=180 target because a soft wall-clock budget stopped it at n=62 with no checkpoint file
+      actually written to disk despite a checkpoint_path field being declared in the artifact -- verified
+      directly this planning pass: `ls results/experiment_5177_gap4_scaleup_decentralization_tier_v474.checkpoint.json`
+      returns 'No such file or directory'. `.475`'s exp5184 was scoped to continue this with real
+      checkpointing but never executed (poison-test cascade). This task builds genuine atomic
+      checkpoint/resume (write-after-every-row, skip-completed-on-restart, per the established
+      exp4729/exp5164 pattern) and separately runs the decentralization-tier local-generator arm at real
+      pilot scale (exp5177 only cache-checked it with one smoke call)."
     retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
@@ -430,54 +516,55 @@ tasks:
   estimated_wall_time_min: 70
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. GAP-4 (`ops/verifier_gaps.md`, the same-shape
-    rule-application-consistency energy discriminator) has a "first positive landed" forward-protocol
-    result (`exp5161`, n=60, 4 discordant wins / 0 losses, p=0.125) that `.474`'s exp5177 scaled to n=62
-    of a planned n=180 -- still short of the protocol's own documented >=6-discordant-win floor for
-    two-sided p<0.05 at zero-loss design. Two threads remain genuinely open: (1) reach enough scale to
-    cross the significance floor, and (2) actually run the decentralization-tier requirement (CLAUDE.md
-    rule 1: local-first using open models) at real pilot scale, not just a cache-existence check.
+    Repo at {project_root}, run on or after {date}. GAP-4 (`ops/verifier_gaps.md` -- the same-shape
+    rule-application-consistency discriminator, DISTINCT from GAP-4891 which is a different gap about
+    ARC trajectory-enumeration, addressed by this milestone's exp5198/exp5199) has a "first positive
+    landed" result: the rule-execution verifier (induce a Python `transform(grid)` from demo pairs alone,
+    require exact reproduction of ALL demos, execute on the test input, gate the rerank on exact match) lifted
+    pool-restricted pass@2 from vote 0.4516 to gated 0.5806 (+4 recovered / 0 lost). exp5161 (`.473`, n=60)
+    found 4 discordant wins / 0 losses (p=0.125, below the project's own documented >=6-discordant-win floor
+    for two-sided p<0.05 at zero-loss design). exp5177 (`.474`) scaled to n=62 of a planned n=180
+    (`target_n_rationale`: 4/60 observed win rate -> proportional n for 6 wins = 90 -> selected 180 with
+    margin) -- still short, and with NO resumable checkpoint despite a declared path.
 
     LESSON FROM THE EXP4729 INCIDENT (`ops/known-issues.md`, 2026-06-25/27): a powered multi-call
     experiment that spends its wall-clock authoring a large test suite BEFORE running the actual driver
-    can hit the codex hard wall-clock cap with NO rescuable deliverable. Scope this task
-    DELIVERABLE-FIRST: step 1 below MUST run the scoring driver and write a partial/checkpointed artifact
-    before any new test authoring; reuse exp5161's and exp5177's existing tests rather than writing a new
-    capstone-scale suite.
+    can hit the codex hard wall-clock cap with NO rescuable deliverable. Scope this DELIVERABLE-FIRST:
+    step 1 below MUST run the scoring driver and write a partial/checkpointed artifact before any new test
+    authoring; reuse exp5161's/exp5177's existing tests rather than writing a new capstone-scale suite.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5161_gap4_protocol_execution_pilot_v473.json (the original n=60 pilot; the exact
-      cluster-bootstrap + sign-test protocol).
-    - results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json (the n=62 continuation; read
-      its `field_principles` for the exact statistical methodology to keep using identically).
+    - results/experiment_5161_gap4_protocol_execution_pilot_v473.json (the exact cluster-bootstrap + sign
+      test protocol).
+    - results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json (the n=62 continuation --
+      read `field_principles` for the exact statistical methodology to keep using identically).
     - python/carnot/experiment_5161_gap4_protocol_execution_pilot_v473.py and
-      python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py (the scoring driver code --
+      python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py (the scoring driver --
       extend, do not rewrite).
-    - ops/verifier_gaps.md GAP-4 section (the exact significance-floor definition and the
+    - ops/verifier_gaps.md GAP-4 section (the exact significance-floor definition, the
       `exact_test_passes_min6_rule` gate).
 
     CONCRETE STEPS:
-    1. DELIVERABLE-FIRST: verify whether `results/experiment_5177_gap4_scaleup_decentralization_tier_v474.checkpoint.json`
-       exists. If not, this confirms no resumable state -- read exp5177's underlying cached candidate
-       pool + fresh held-out split directly, and immediately begin scoring NEW rows (do not re-score
-       exp5161's/exp5177's already-scored 62 rows). Write an atomic checkpoint file after every row scored
-       (a JSON list, flushed to disk, not held only in memory) so a wall-clock cutoff still leaves a
-       partial, honest, resumable artifact.
+    1. DELIVERABLE-FIRST: since no checkpoint file exists (confirmed), read exp5177's underlying cached
+       candidate pool + fresh held-out split directly, and immediately begin scoring NEW rows (do not
+       re-score exp5161's/exp5177's already-scored 62 rows). Write an atomic checkpoint file after every
+       row scored (a JSON list, flushed to disk after each write, not held only in memory) so a wall-clock
+       cutoff still leaves a partial, honest, resumable artifact.
     2. Continue scoring toward n=180 total (62 already done + up to 118 new), running the identical
        cluster-bootstrapped exact sign test (`scipy.stats.binomtest`) as exp5161/exp5177 at whatever n is
        reached when the wall-clock budget is exhausted -- report the ACTUAL n reached honestly, do not
        claim n=180 if the budget stops earlier.
-    3. Separately, run the decentralization-tier local-generator arm (CLAUDE.md rule 1) at REAL pilot
-       scale: at least 20-30 genuine local-GGUF-model calls (one of the mandated SOTA local models, per
-       CLAUDE.md's SOTA Local Models list), not a single cache-existence smoke call. Compare its
+    3. Separately, run the decentralization-tier local-generator arm (CLAUDE.md rule 1: local-first using
+       open models) at REAL pilot scale: at least 20-30 genuine local-GGUF-model calls (one of the
+       mandated SOTA local models -- unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, or
+       unsloth/gemma-4-26B-A4B-it-GGUF), not a single cache-existence smoke call. Compare its
        discordant-win rate against the closed-weight/cloud-generator arm if one exists in the prior
-       lineage, or report it standalone if this is the first real local-generator measurement.
+       lineage, or report standalone if this is the first real local-generator measurement at this scale.
     4. Recompute `exact_test_discordant_wins`, `exact_test_discordant_losses`,
        `exact_test_p_value_two_sided`, and `exact_test_passes_min6_rule` at the final n reached.
     5. Update `ops/verifier_gaps.md` GAP-4's status honestly: `filled` only if the >=6-discordant-win floor
-       is actually crossed; otherwise `scale_up_recommended` again with the new n and a note on how much
-       further scale-up is needed, or `checkpoint_progress_only` if the wall-clock budget was the binding
-       constraint this time too.
+       is actually crossed; otherwise `scale_up_recommended` again with the new n and how much further
+       scale-up is needed, or `checkpoint_progress_only` if wall-clock was the binding constraint again.
 
     REQUIRED ARTIFACT FIELDS:
       n_reached:
@@ -487,7 +574,7 @@ tasks:
       checkpoint_file_written:
         value: bool
         principle: "Proves genuine resumability exists for a FUTURE continuation, closing the gap exp5177
-          left (a declared-but-nonexistent checkpoint path)."
+          left (a declared-but-nonexistent checkpoint path, confirmed absent this planning pass)."
       exact_test_discordant_wins:
         value: int
       exact_test_discordant_losses:
@@ -512,35 +599,36 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5185-map-landmark-prestage-prototype-v475
-  milestone: 2026.07.475
-  title: PHASE B1 attack the diagnosed ARC trajectory-enumeration wall with a structurally different
-    mechanism -- prototype a MAP-style map-then-act landmark pre-stage and run the exact 3-arm falsifiable
-    gate exp5172 specified
+- id: exp5198-map-landmark-prestage-prototype-v476
+  milestone: 2026.07.476
+  title: PHASE B1 re-attempt (never ran in .475, poison-test cascade) -- attack the GAP-4891 ARC
+    trajectory-enumeration wall with a MAP-style map-then-act landmark pre-stage, 3-arm falsifiable gate
   priority: critical
   track: research
-  deliverable: results/experiment_5185_map_landmark_prestage_prototype_v475.json
+  deliverable: results/experiment_5198_map_landmark_prestage_prototype_v476.json
   prior_failures:
   - experiment_id: exp5175-gap4891-relational-mask-pruner-ab-v474
     verdict: complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged_no_level_bank_pruning_alone_does_not_close_enumeration_wall_MAP_map_then_act_next
-    addressed_by: "exp5175 is a decisive, terminal-prefixed COMPLETE null (not a failure of process, a
-      genuine negative finding): a POST-HOC frontier pruner (filters candidate actions after they enter
-      an already-fixed search frontier) does not help because the winning trajectory is never enumerated
-      into that frontier in the first place. This task uses a structurally DIFFERENT mechanism: a PRE-SEARCH
-      landmark-building stage (per MAP, arXiv:2605.13037) that spends a bounded exploration budget BEFORE
-      search to construct spatial/affordance/rule landmarks, then conditions what gets PROPOSED into the
-      frontier -- changing what enters the search space, not filtering what is already there. The
-      literature (exp5172's deep-read) explicitly frames these as complementary, not redundant attempts
-      at the same fix. exp5172's own bottom_line_recommendation_for_475 names this exact next step."
+    addressed_by: "exp5175 is a decisive, terminal-prefixed COMPLETE null: a POST-HOC frontier pruner
+      (filters candidate actions after they enter an already-fixed search frontier) does not help because
+      the winning trajectory is never enumerated into that frontier in the first place. This task uses a
+      structurally DIFFERENT mechanism: a PRE-SEARCH landmark-building stage (per MAP, arXiv:2605.13037)
+      that spends a bounded exploration budget BEFORE search to construct spatial/affordance/rule
+      landmarks, then conditions what gets PROPOSED into the frontier -- changing what enters the search
+      space, not filtering what is already there. exp5172's deep-read explicitly frames these as
+      complementary, not redundant, attempts. GAP-4891's own log (ops/verifier_gaps.md) names this exact
+      next step. This task IS `.475`'s exp5185, which was fully specified but never executed due to the
+      poison-test cascade -- re-attempted here with the identical design, not a redesign."
     retire_if_same_verdict: true
   - experiment_id: generation_axis_exploration_signal_retired_exp5154_v473
     verdict: 'retired: 3rd independent null on first-contact candidate-generation exploration-signal tweaks'
-    addressed_by: "This is explicitly a DIFFERENT scope from the retired one: the retired scope covers
+    addressed_by: "Explicitly a DIFFERENT scope from the retired one: the retired scope covers
       exploration-signal tweaks on UNSOLVED games' FIRST-CONTACT (L0->L1). This task targets WITHIN-GAME
       DEEPENING (Lk->Lk+1) on ALREADY-partially-solved games (CD82, SK48, SP80, each already reached L1+
       per the ARC registry). The mechanism (pre-search landmarks) and the target games are both distinct
-      from the retired exploration-signal-on-unsolved-games scope; the exclusion manifest's own
-      recorded_by_artifact note explicitly does not cover deepening-lever work."
+      from the retired exploration-signal-on-unsolved-games scope; the exclusion manifest's own recorded
+      note (confirmed this planning pass: `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473`)
+      does not cover deepening-lever work."
     retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
@@ -549,25 +637,27 @@ tasks:
   prompt: |
     CONTEXT:
     Repo at {project_root}, run on or after {date}. `ops/verifier_gaps.md` GAP-4891's ladder is fully
-    diagnosed as of `.474`: goal-detection is CLOSED (relational target-match energy separates win from
-    near-win on CD82/SK48/SP80), but neither energy-guided search NOR frontier pruning banks a new level
-    -- the winning trajectory is never enumerated into the search frontier at all, on any tested lever.
-    This is the SAME wall independently confirmed at first-contact (`.452` A1). exp5172's SOTA-ingestion
-    deep-read of MAP (arXiv:2605.13037, "MAP: A Map-then-Act Paradigm for Long-Horizon Interactive Agent
-    Reasoning") already specified the exact falsifiable gate for this task -- implement it precisely, do
-    not redesign it:
+    diagnosed: counts (GAP-4890) fail -> richer-scalar fail -> RELATIONAL target-match SEPARATES win from
+    near-win on CD82/SK48/SP80 (3/4) -> Stage-2 energy-guided search: neither energy-guided nor BFS banks
+    a new level (both stall at L1, 4000 expansions, traj_len=0) -> Stage-3 relational-mask pruner: fires
+    on candidate edges (358/22807/0/375 on cd82/sk48/sp80/cn04) but states_expanded is UNCHANGED and zero
+    levels bank. DECISIVE READ (verifier_gaps.md UPDATE-4, 2026-07-02): pruning alone does not close the
+    wall because the winning trajectory is never ENUMERATED into the search frontier in the first place --
+    the same wall independently confirmed at L1 first-contact (`.452` A1). The next lever, per
+    exp5172's SOTA-ingestion deep-read of MAP (arXiv:2605.13037, "MAP: A Map-then-Act Paradigm for
+    Long-Horizon Interactive Agent Reasoning"), is the falsifiable gate this task implements exactly:
 
     "On CD82/SK48/SP80, run pruner-only, map-only, and map-plus-pruner under the same 4000-expansion and
     reproduction-gated protocol; promote MAP only if map-only or map-plus-pruner banks a new level that
     pruner-only does not."
 
-    MAP's cognitive-map structure (per exp5172's deep-read, adapt at Carnot's scale -- do NOT attempt the
-    paper's full 8xH800 fine-tuning arm, this is a bounded prototype): a TASK-SPECIFIC map stores spatial
-    layout, reachable regions, object locations/relationships, object-action affordances, action effects,
-    and task-relevant preconditions, built during a BOUNDED exploration budget spent BEFORE the solver
-    search runs (driven by state-novelty convergence, not by executing toward the goal). The map's
-    action-effect edges and reachable-region landmarks then seed/condition what graph_explore_solve_v2
-    proposes into its search frontier.
+    MAP's cognitive-map structure (adapt at Carnot's scale -- do NOT attempt the paper's full 8xH800
+    fine-tuning arm, this is a bounded prototype): a TASK-SPECIFIC map stores spatial layout, reachable
+    regions, object locations/relationships, action affordances, action effects, and task-relevant
+    preconditions, built during a BOUNDED exploration budget spent BEFORE the solver search runs (driven
+    by state-novelty convergence, not goal-directed search). The map's action-effect edges and
+    reachable-region landmarks then seed/condition what `graph_explore_solve_v2` proposes into its search
+    frontier.
 
     ARC Live-Path Reachability Discipline applies: any new solver-like module MUST be reachable from the
     live agent path or explicitly allow-listed -- run `scripts/arc_orphan_solver_lint.py` before declaring
@@ -576,66 +666,58 @@ tasks:
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json (the full MAP
-      deep-read, including the `arc_agi3_full_table` per-game MAP-vs-ReAct numbers from the paper itself
-      -- note MAP's OWN published table shows BP35 at 0 for both arms, so do not expect BP35 to be a good
-      prototype target; CD82/SK48/SP80 are the specified targets for a reason).
-    - python/carnot/agentic/arc_relational_mask_pruner.py (the existing pruner -- the "pruner-only" and
-      "map-plus-pruner" arms reuse this unchanged; read its `RelationalMaskMovePruner` interface).
+      deep-read -- note MAP's own published table shows BP35 at 0 for both arms, so CD82/SK48/SP80 are
+      the specified targets for a reason).
+    - python/carnot/agentic/arc_relational_mask_pruner.py (`RelationalMaskMovePruner` -- the "pruner-only"
+      and "map-plus-pruner" arms reuse this unchanged).
     - python/carnot/agentic/arc_graph_explore.py (`graph_explore_solve_v2` -- the search engine both the
       pruner and the new map-conditioning must wire into).
     - scripts/experiments/arc_relational_goal_energy_stage2.py and
       python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py (the exact 4000-expansion,
-      reproduction-gated A/B protocol -- reuse its structure for the 3-arm comparison, add the map-only and
-      map-plus-pruner arms alongside the existing pruner-only arm).
-    - ops/arc_solve_registry.yaml (per-game gotchas for CD82, SK48, SP80 -- read before touching any
-      game-specific code; the registry's `general_gotchas` apply, especially
+      reproduction-gated A/B protocol -- reuse its structure, add the map-only and map-plus-pruner arms
+      alongside the existing pruner-only arm).
+    - ops/arc_solve_registry.yaml (per-game gotchas for CD82, SK48, SP80; `general_gotchas` including
       `discover_coords_never_hardcode` and `non_idempotent_reset`).
     - python/carnot/agentic/arc_solver_kit.py (the reproduction gate).
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: confirm `tests/python/test_arc_relational_mask_pruner.py` passes (baseline sanity)
-       and `scripts/arc_orphan_solver_lint.py` passes BEFORE adding new code, to establish a clean starting
-       point.
+    0. PRECONDITIONS: confirm `tests/python/test_arc_relational_mask_pruner.py` passes and
+       `scripts/arc_orphan_solver_lint.py` passes BEFORE adding new code.
     1. Implement a bounded map-building stage: given a game's offline arcade state, spend a fixed
-       exploration-step budget (propose: 500-1000 steps, well under the 4000-expansion search budget)
-       driven by state-novelty (visit states not yet seen) rather than goal-directed search, recording
-       reachable regions, per-action-class effect deltas, and any relational landmarks discovered.
+       exploration-step budget (500-1000 steps, well under the 4000-expansion search budget) driven by
+       state-novelty, recording reachable regions, per-action-class effect deltas, and relational
+       landmarks discovered.
     2. Wire the resulting map into `graph_explore_solve_v2` as frontier-seeding: candidate trajectories
-       that traverse map-identified landmarks/affordance edges toward the induced relational goal region
-       (from `.474`'s GAP-4891 Stage-2 energy) get proposed into the frontier preferentially, INSTEAD OF
+       traversing map-identified landmarks/affordance edges toward the induced relational goal region
+       (from GAP-4891's Stage-2 energy) get proposed into the frontier preferentially, INSTEAD OF
        (map-only) or IN ADDITION TO (map-plus-pruner) the existing pruner's edge-filtering.
-    3. Run all THREE arms (pruner-only [reuse exp5175's exact config as the baseline], map-only,
+    3. Run all THREE arms (pruner-only [reuse exp5175's exact config as baseline], map-only,
        map-plus-pruner) on CD82, SK48, SP80, each under the identical 4000-expansion budget and
-       reproduction gate exp5175 used -- this is the controlled comparison, keep everything else fixed.
-    4. Run the cn04 negative control (a game where the relational goal-energy does NOT separate, per
-       `.474`'s Stage-1 finding) to confirm the map stage does not spuriously "solve" a game it has no
-       genuine signal for.
+       reproduction gate exp5175 used.
+    4. Run the cn04 negative control (relational goal-energy does NOT separate, per Stage-1) to confirm
+       the map stage does not spuriously "solve" a game with no genuine signal.
     5. Record `states_expanded`, `levels_banked` (post-reproduction-gate only), and map-building overhead
        (steps spent, wall-clock) per arm per game.
-    6. Update `ops/verifier_gaps.md` GAP-4891 with an UPDATE-5 entry recording the decisive result --
-       whether map-only or map-plus-pruner banks any level pruner-only does not, per the falsifiable gate.
+    6. Update `ops/verifier_gaps.md` GAP-4891 with an UPDATE-5 entry recording the decisive result.
 
     REQUIRED ARTIFACT FIELDS:
       lever_validated:
         value: bool
-        principle: "The single gate field exp5186 reads via gated_on -- true ONLY if map-only or
-          map-plus-pruner banked a reproduction-gated level that pruner-only, under the identical budget,
-          did not. MECHANICAL CONSTRAINT (verified against scripts/conductor_gates.py before writing this
-          task): this field MUST be written as a BARE top-level boolean, e.g. \"lever_validated\": true --
-          NOT wrapped as {\"value\": true, \"principle\": \"...\"}. conductor_gates.py's evaluate_gates()
-          reads it via a direct dict .get() and compares against Python True; a wrapped dict never equals
-          True and would silently, permanently block exp5186 (the feedback_gated_fields_must_be_bare
-          failure class, the .330 cascade incident). Every OTHER field in this artifact may use the
-          normal {value, principle} convention; this one field must not."
+        principle: "MECHANICAL CONSTRAINT: must be a BARE top-level boolean, e.g. \"lever_validated\": true
+          -- NOT wrapped as {\"value\": true, \"principle\": ...}. conductor_gates.py reads it via a
+          direct dict .get() compared against Python True; a wrapped dict never equals True and would
+          silently, permanently block exp5199 (the feedback_gated_fields_must_be_bare failure class, the
+          .330 cascade incident). True ONLY if map-only or map-plus-pruner banked a reproduction-gated
+          level pruner-only, under the identical budget, did not."
       per_arm_results:
         value: "{game: {arm: {states_expanded, levels_banked, map_overhead_steps}}}"
       cn04_negative_control_stayed_clean:
         value: bool
       solve_provenance:
         value: development_proxy
-        principle: "This is offline dev-twin prototyping via arc_loop_solve/GameAdapter, not the scored
-          live agent -- honestly declare development_proxy, per the ARC Live-Path Reachability Discipline;
-          if this validates a lever, exp5186 is where the live-path integration question is addressed."
+        principle: "Offline dev-twin prototyping via arc_loop_solve/GameAdapter, not the scored live
+          agent -- honestly declare development_proxy per the ARC Live-Path Reachability Discipline; if
+          this validates a lever, exp5199 addresses live-path integration."
       orphan_lint_result:
         value: "pass/fail + output"
       reproduction_gate_results:
@@ -653,30 +735,29 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5186-map-gated-levelup-attempt-v475
-  milestone: 2026.07.475
-  title: PHASE B2 live level-up attempt using the MAP lever if exp5185 validated one -- ARC Level-Up
-    Attempt Guarantee, targeted at the scored live-agent path where the lever integration allows
+- id: exp5199-map-gated-levelup-attempt-v476
+  milestone: 2026.07.476
+  title: PHASE B2 live level-up attempt using the MAP lever if exp5198 validated one -- ARC Level-Up
+    Attempt Guarantee, targeted at the scored live-agent path where integration allows
   priority: high
   track: research
-  deliverable: results/experiment_5186_map_gated_levelup_attempt_v475.json
+  deliverable: results/experiment_5199_map_gated_levelup_attempt_v476.json
   gated_on:
-  - upstream: exp5185-map-landmark-prestage-prototype-v475
+  - upstream: exp5198-map-landmark-prestage-prototype-v476
     artifact_field: lever_validated
     op: '=='
     value: true
   prior_failures:
   - experiment_id: exp5176-deepen-live-levelup-attempt-v474
     verdict: complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked
-    addressed_by: "exp5176 had no validated lever to apply (both B1/exp5175's pruner and the underlying
-      goal-energy search nulled on banking). This task only runs if exp5185 (this milestone) validates a
-      genuinely new lever (the MAP pre-stage) -- gated_on ensures it is mechanically skipped otherwise, so
-      it never repeats the same no-lever-available null."
+    addressed_by: "exp5176 had no validated lever to apply. This task only runs if exp5198 (this
+      milestone) validates a genuinely new lever (the MAP pre-stage) -- gated_on ensures it is
+      mechanically skipped otherwise, so it never repeats the same no-lever-available null."
     retire_if_same_verdict: false
   - experiment_id: exp5159-live-levelup-attempt-v473
     verdict: blocked_gate_check_failed
-    addressed_by: "exp5159 never ran (upstream gate false). This task's own gate (exp5185.lever_validated)
-      is checked mechanically before launch, same pattern, now on a different upstream experiment."
+    addressed_by: "exp5159 never ran (upstream gate false). This task's own gate (exp5198.lever_validated)
+      is checked mechanically before launch, same pattern, on a different upstream experiment."
     retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
@@ -684,57 +765,47 @@ tasks:
   estimated_wall_time_min: 45
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. This task ONLY runs if exp5185 (this milestone)
-    validated the MAP landmark-pre-stage lever (banked a reproduction-gated level pruner-only did not).
-    If you are reading this prompt, that gate passed -- apply the validated lever to attempt a genuinely
-    NEW banked level, per CLAUDE.md's ARC Level-Up Attempt Guarantee (every ARC-sprint-descended roadmap
-    needs >=1 real level-up attempt, target-game-explicit).
+    Repo at {project_root}, run on or after {date}. This task ONLY runs if exp5198 (this milestone)
+    validated the MAP landmark-pre-stage lever. If you are reading this prompt, that gate passed --
+    apply the validated lever to attempt a genuinely NEW banked level, per CLAUDE.md's ARC Level-Up
+    Attempt Guarantee (every ARC-sprint-descended roadmap needs >=1 real level-up attempt).
 
     CRITICAL, per `.474`'s exp5174 finding: of the 24 registry games, only 4 have levels flagged
     `solve_provenance: live_agent_self_discovery` (the scored E3AgentPolicy cascade actually discovering
-    them at runtime); 20 are `development_proxy` (the offline dev-twin / hand-built GameAdapter). Per
-    CLAUDE.md's "ARC Live-Path Reachability Discipline," a solver mechanism the live agent cannot reach
-    produces no live capability. This task's FIRST preference is to wire the MAP lever into the SCORED
-    `E3AgentPolicy` cascade path (`python/carnot/agentic/arc_competition_agent.py`) and attempt the level
-    THROUGH that live path -- not just the offline `arc_loop_solve.py` dev twin. If genuine live-path
-    integration is not achievable within this task's scope (e.g. the map-building stage's exploration-step
-    budget does not fit the scored agent's per-action verifier-routed cascade cleanly), fall back to the
-    offline dev-twin path and declare `solve_provenance: development_proxy` honestly -- but attempt the
-    live path FIRST and document specifically why it was or was not feasible, rather than defaulting to
-    the dev-twin without trying.
+    them at runtime); 20 are `development_proxy`. Per the ARC Live-Path Reachability Discipline, this
+    task's FIRST preference is to wire the MAP lever into the SCORED `E3AgentPolicy` cascade
+    (`python/carnot/agentic/arc_competition_agent.py`) and attempt the level THROUGH that live path -- not
+    just the offline `arc_loop_solve.py` dev twin. If genuine live-path integration is not achievable
+    within scope, fall back to the offline dev-twin path and declare `solve_provenance: development_proxy`
+    honestly -- but attempt the live path FIRST and document specifically why it was or was not feasible.
 
-    TARGET GAMES (explicit, per the ARC Level-Up Attempt Guarantee's rotation requirement): CD82, SK48,
-    SP80 (the exp5185 validated-lever games), plus any UNSOLVED public game (RE86/SB26/BP35/LF52 per the
-    win-condition survey) as a first-contact attempt if map-building generalizes there too -- prioritize
-    the validated-lever games first since they carry a concrete, evidenced reason to expect success.
+    TARGET GAMES (per the ARC Level-Up Attempt Guarantee's rotation requirement): CD82, SK48, SP80 (the
+    exp5198 validated-lever games), plus any UNSOLVED public game (RE86/SB26/BP35/LF52 per the
+    win-condition survey) as a first-contact attempt IF map-building generalizes there too -- prioritize
+    the validated-lever games first since they carry concrete evidenced reason to expect success.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5185_map_landmark_prestage_prototype_v475.json (this milestone's own validated
-      lever -- read its `per_arm_results` to know exactly which game(s) and which arm (map-only vs
-      map-plus-pruner) validated).
+    - results/experiment_5198_map_landmark_prestage_prototype_v476.json (this milestone's validated lever
+      -- read `per_arm_results` to know exactly which game(s)/arm validated).
     - python/carnot/agentic/arc_competition_agent.py (`E3AgentPolicy`, `make_carnot_agent` -- the SCORED
       live path; read `SUBMITTED_TARGET_LEVELS`, the verifier-routed cascade structure).
-    - ops/arc_solve_registry.yaml (current `reproducible_total_levels`/`reproducible_total_games` --
-      confirm before and after this task to compute the honest delta).
+    - ops/arc_solve_registry.yaml (current `levels_reproduced` per game -- confirm before/after to compute
+      the honest delta).
     - scripts/arc_orphan_solver_lint.py, python/carnot/agentic/arc_solver_kit.py (reproduction gate).
 
     CONCRETE STEPS:
-    1. PRECONDITIONS: re-confirm exp5185's `lever_validated=true` and read exactly which game/arm
+    1. PRECONDITIONS: re-confirm exp5198's `lever_validated=true` and read exactly which game/arm
        validated before choosing a target.
     2. Attempt to wire the validated MAP lever into `E3AgentPolicy`'s live cascade (the scored path).
        Document the integration attempt precisely, whether it succeeds or not.
     3. Run the live-path attempt (if wired) or the offline dev-twin attempt (fallback) on the target
        game(s), through `arc_solver_kit.reproduce()` for gating.
     4. A level counts as banked ONLY if `offline_reproduced=true` AND `reproduced_levels>=1` via
-       `arc_solver_kit.reproduce()` -- this is the acceptance gate, not a step-completed claim. If a new
-       level banks under this gate, update `ops/arc_solve_registry.yaml` with the new level, its
-       `solve_provenance` (declared honestly per step 2's outcome), win condition, action model, and any
-       new gotchas learned.
-    5. If zero levels bank (`offline_reproduced=false` or `reproduced_levels=0`) despite the validated
-       lever (a legitimate possible outcome -- validation on 3 games under a controlled A/B does not
-       guarantee every live-path attempt succeeds, and a first-contact attempt on an unsolved game is
-       inherently uncertain), report the honest null and what differed between the exp5185 validation
-       context and this live-path attempt.
+       `arc_solver_kit.reproduce()`. If a new level banks, update `ops/arc_solve_registry.yaml` with the
+       new level, its `solve_provenance` (declared honestly), win condition, action model, and any new
+       gotchas learned.
+    5. If zero levels bank despite the validated lever (a legitimate possible outcome), report the honest
+       null and what differed between exp5198's validation context and this live-path attempt.
     6. Run `scripts/arc_orphan_solver_lint.py` and `scripts/arc_levelup_guarantee_lint.py` against
        `research-roadmap.yaml` to confirm this task structurally satisfies the level-up-attempt floor.
 
@@ -748,8 +819,6 @@ tasks:
           trying."
       live_path_integration_outcome:
         value: string
-        principle: "If not attempted or not feasible, state exactly why -- this is the load-bearing
-          honesty field for the mirage-vs-real live-path question."
       new_levels_banked:
         value: "list of {game, level, solve_provenance}"
       reproducible_total_levels_delta:
@@ -771,27 +840,31 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5187-hidden-state-verifier-v2-mmlu-pro-v475
-  milestone: 2026.07.475
-  title: PHASE C1 hidden-state verifier v2 -- PHSV-style trained probe on the confirmed-headroom MMLU-Pro
-    pool, with mandatory zero-training control arms, satisfying the continuous self-learning mandate
+- id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+  milestone: 2026.07.476
+  title: PHASE C1 re-attempt (never ran in .475, poison-test cascade) -- hidden-state verifier v2 on the
+    zero-shot MMLU-Pro headroom pool, PHSV-style trained probe vs THREE zero-training baselines including
+    Radial Consensus Score; this milestone's continuous self-learning experiment
   priority: high
   track: research
-  deliverable: results/experiment_5187_hidden_state_verifier_v2_mmlu_pro_v475.json
+  deliverable: results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
   prior_failures:
   - experiment_id: exp5178-hidden-state-verifier-pilot-v474
     verdict: complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333
     addressed_by: "exp5178's failure had two plausible causes conflated: (1) too small a sample (n=6
       questions, 48 candidates) to draw any conclusion, and (2) too weak a probe (a naive trained
       centroid on final-token-only embeddings, not a proper trained classifier). This task fixes BOTH:
-      uses the already-confirmed-headroom MMLU-Pro pool (240 candidate rows,
+      uses the already-confirmed-headroom, ZERO-SHOT MMLU-Pro pool (240 candidate rows,
       results/experiment_mmlu_pro_verifier_candidate_pool.jsonl, oracle_at_k=0.350 vs sc_vote=0.075,
-      CI95=[0.150,0.425] excluding 0 -- results/experiment_mmlu_pro_fresh_headroom_check.json) instead of
-      exp5178's near-ceiling MuSR slice, and implements PHSV's (arXiv:2504.05419) concrete recipe (small
-      trained MLP on chunk-boundary hidden states, not a centroid) instead of the naive probe. This is
-      PHASE D's sanctioned hidden-state-verifier exception, explicitly preserved by
-      ops/exclusion_manifest.yaml:phase_d_external_text_scorer_retired_exp5163_v474 -- this task's scope
-      is architecturally distinct (internal representations, not generated-text/logprob scoring)."
+      CI95=[0.150,0.425] excluding 0, per results/experiment_mmlu_pro_fresh_headroom_check.json --
+      NOTE: do not confuse this with exp5163's DIFFERENT 5-shot-rescaled MMLU-Pro numbers
+      (oracle_at_k=0.5, sc_vote=0.125) which is a different measurement of a different corpus
+      configuration; this task uses the zero-shot fresh_headroom_check pool specifically), and implements
+      PHSV's (arXiv:2504.05419) concrete recipe (small trained MLP on chunk-boundary hidden states, not a
+      centroid) instead of the naive probe. This is PHASE D's sanctioned hidden-state-verifier exception,
+      explicitly preserved by ops/exclusion_manifest.yaml:phase_d_external_text_scorer_retired_exp5163_v474
+      -- this task's scope is architecturally distinct (internal representations, not generated-text/
+      logprob scoring)."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
@@ -800,19 +873,21 @@ tasks:
   prompt: |
     CONTEXT:
     Repo at {project_root}, run on or after {date}. Hidden-state / internal-representation verifiers
-    (TrajSelector-style, arXiv:2510.16449) are the ONE sanctioned exception to `.474`'s PHASE D
-    external-text-scorer retirement -- an architecturally distinct mechanism class (scores the
-    generator's OWN hidden activations, not its generated text or logprobs). `.474`'s exp5178 pilot was
-    honest but underpowered and used a weak probe design. This task retries with the fixes exp5178's own
-    diagnosis implies are needed.
+    (TrajSelector-style, arXiv:2510.16449) are the ONE sanctioned exception to PHASE D's external-text-
+    scorer retirement (`ops/exclusion_manifest.yaml:phase_d_external_text_scorer_retired_exp5163_v474`) --
+    an architecturally distinct mechanism (scores the generator's OWN hidden activations, not its
+    generated text or logprobs). `.474`'s exp5178 pilot was honest but underpowered (n=6) and used a weak
+    probe design (a naive centroid, not a trained classifier). This task retries with both fixes.
 
     THE CORPUS: `results/experiment_mmlu_pro_verifier_candidate_pool.jsonl` (240 rows) is a REAL,
-    already-measured, headroom-CONFIRMED pool (`results/experiment_mmlu_pro_fresh_headroom_check.json`:
+    already-measured, headroom-CONFIRMED zero-shot pool (`results/experiment_mmlu_pro_fresh_headroom_check.json`:
     `oracle_at_k=0.350`, `sc_vote=0.075`, `headroom=0.275`, `headroom_ci95=[0.150,0.425]` -- clearly
-    excludes 0, adversarial_verify 0-flagged). Per arXiv:2512.02304's headroom-precondition formalism
-    (independently confirming PHASE D's own empirical lesson), a verifier can only conceivably beat
-    self-consistency where real headroom exists -- this corpus has it; exp5178's MuSR slice largely did
-    not (near-ceiling).
+    excludes 0, adversarial_verify 0-flagged). USE THIS FILE SPECIFICALLY -- do not substitute
+    `experiment_5163_mmlu_pro_verifier_rescale_v473.json`'s numbers (a DIFFERENT, 5-shot-rescaled
+    measurement of MMLU-Pro with oracle_at_k=0.5/sc_vote=0.125; citing those numbers for this task's
+    zero-shot corpus would be a methodology error). Per arXiv:2512.02304's headroom-precondition
+    formalism, a verifier can only conceivably beat self-consistency where real headroom exists -- this
+    corpus has it; exp5178's MuSR slice largely did not (near-ceiling).
 
     THE PROBE DESIGN (PHSV, arXiv:2504.05419 -- "Reasoning Models Know When They're Right: Probing Hidden
     States for Self-Verification"): chunk reasoning traces at natural boundary markers ("wait",
@@ -820,61 +895,61 @@ tasks:
     train a small 2-layer MLP classifier on (hidden_state, correctness_label) pairs, reported AUROC
     0.75-0.91 on comparable open-weight local models.
 
-    KNOWN EXTRACTION CONSTRAINT (do not silently ignore this): exp5178 found that
-    `llama_cpp.Llama(embedding=True, pooling_type=LAST).embed` -- the extraction path already validated in
-    this repo for `unsloth/gemma-4-26B-A4B-it-GGUF` -- exposes ONLY the final-token, final-layer embedding
-    vector; llama.cpp does not expose per-layer hidden states or steering hooks. PHSV's chunk-boundary
-    recipe is compatible with final-layer extraction (it also uses last-token/last-layer as its primary
-    recipe), but the FEPoID (arXiv:2605.26366) layer-sweep finding ("intermediate layers often beat
-    final-layer") is NOT achievable through this extraction path without a heavier `transformers`-library
-    load (`output_hidden_states=True`) of the same model. Treat the layer-sweep as OPTIONAL/stretch: if
-    the `transformers` load path is straightforward given exp5182's DiffusionGemma device-placement work
-    this same milestone, attempt it; if not, proceed with final-layer-only (matching exp5178's and PHSV's
-    primary recipe) and note the limitation explicitly rather than silently omitting the comparison.
+    KNOWN EXTRACTION CONSTRAINT: `llama_cpp.Llama(embedding=True, pooling_type=LAST).embed` -- the
+    extraction path already validated in this repo for `unsloth/gemma-4-26B-A4B-it-GGUF` -- exposes ONLY
+    the final-token, final-layer embedding vector; llama.cpp does not expose per-layer hidden states or
+    steering hooks. PHSV's chunk-boundary recipe is compatible with final-layer extraction (it also uses
+    last-token/last-layer as its primary recipe), but a layer-sweep (checking whether intermediate layers
+    beat final-layer, per FEPoID arXiv:2605.26366) is NOT achievable through this extraction path without
+    a heavier `transformers`-library load (`output_hidden_states=True`). Treat the layer-sweep as
+    OPTIONAL/stretch: attempt it if a `transformers` load path is straightforward given this milestone's
+    exp5196 DiffusionGemma device-placement work; otherwise proceed final-layer-only and note the
+    limitation explicitly.
 
-    MANDATORY CONTROL ARMS (so a trained probe's extraction overhead has to earn its keep against
-    zero-training alternatives):
-    - Self-certainty (arXiv:2502.18581): a zero-training baseline from logit-distribution divergence from
+    MANDATORY CONTROL ARMS (a trained probe's extraction overhead must earn its keep against FOUR
+    alternatives, not one):
+    - Self-certainty (arXiv:2502.18581): zero-training baseline from logit-distribution divergence from
       uniform -- no hidden-state extraction at all.
-    - CLUE (arXiv:2510.01591): non-parametric hidden-state clustering, training-free (uses the same
+    - CLUE (arXiv:2510.01591): non-parametric hidden-state clustering, training-free (reuses the same
       extracted vectors as the trained probe, but no MLP fit).
+    - Radial Consensus Score (arXiv:2604.12196, "Beyond Majority Voting: Efficient Best-Of-N with Radial
+      Consensus Score" -- WebFetch-verified real this planning session): a weighted Frechet mean
+      (semantic center) of answer embeddings, ranking candidates by radial distance to that center -- a
+      training-free, black-box, embedding-geometry replacement for majority voting.
     - Tuned self-consistency (the baseline every verifier-moat claim in this project must beat).
 
-    This task doubles as the milestone's continuous-self-learning experiment (research-program.md
-    requires at least one per milestone): the probe is trained on the model's own accumulated
-    correct/incorrect experience over the 240-row pool, and per CLAUDE.md's Missing-Verifier Gap Logging
-    discipline, any residual failure mode (a candidate class the probe cannot discriminate) should be
-    logged to `ops/verifier_gaps.md` as a new or updated gap entry.
+    This task doubles as the milestone's continuous-self-learning experiment (research-program.md requires
+    at least one per milestone): the probe is trained on the model's own accumulated correct/incorrect
+    experience over the 240-row pool. Per CLAUDE.md's Missing-Verifier Gap Logging discipline, log any
+    residual failure mode (a candidate class the probe cannot discriminate) to `ops/verifier_gaps.md`.
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_5178_hidden_state_verifier_pilot_v474.json (the prior pilot's exact extraction
-      path, `hidden_state_access_metadata`, and probe design -- read to avoid repeating the same
-      naive-centroid mistake).
+      path, `hidden_state_access_metadata`, and probe design -- avoid repeating the naive-centroid mistake).
     - results/experiment_mmlu_pro_fresh_headroom_check.json and
-      results/experiment_mmlu_pro_verifier_candidate_pool.jsonl (the target corpus).
+      results/experiment_mmlu_pro_verifier_candidate_pool.jsonl (the target corpus -- the ZERO-SHOT one).
     - python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py (the extraction harness -- extend
       with the chunk-boundary/MLP probe, do not rewrite the GGUF-loading plumbing).
-    - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (this MUST declare `verifier_is_oracle:
-      false` -- gold labels are for training/eval splits only, per exp5178's own correct precedent).
+    - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (must declare `verifier_is_oracle: false` --
+      gold labels are for training/eval splits only, per exp5178's own correct precedent).
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: confirm the GGUF model is cached (per exp5178's `hidden_state_access_metadata.gguf_path`)
-       and the candidate pool file exists and has 240 rows. If either is missing, `blocked_<resource>`.
-    1. Extract hidden-state vectors for every candidate in the pool via the validated llama.cpp embedding
-       path (reuse exp5178's exact extraction call).
+    0. PRECONDITIONS: confirm the GGUF model is cached and the candidate pool file exists with 240 rows.
+       If either is missing, `blocked_<resource>`.
+    1. Extract hidden-state vectors for every candidate via the validated llama.cpp embedding path (reuse
+       exp5178's exact extraction call).
     2. Split the pool into train/eval with NO leakage across the same question (k-fold or held-out by
-       question_id, matching the leakage-safe pattern the retired PHASE D program itself established for
-       D1's trained embedding verifier).
+       question_id).
     3. Train the PHSV-style 2-layer MLP probe on the training split.
-    4. Compute self-certainty and CLUE control-arm scores on the SAME eval split (no extra LLM calls
-       needed for self-certainty; CLUE reuses the already-extracted vectors).
-    5. Score all four methods (trained probe, self-certainty, CLUE, tuned self-consistency) on the eval
-       split's selection accuracy; compute paired bootstrap CI95 and McNemar p-value for probe-vs-SC and
-       probe-vs-each-control-arm.
-    6. If straightforward, attempt the FEPoID-style layer-sweep as a stretch goal via a `transformers`
-       library load; otherwise report final-layer-only and note the limitation.
-    7. Update `ops/verifier_gaps.md` with the residual failure-mode analysis (which candidate class, if
-       any, the probe cannot discriminate) per the Missing-Verifier Gap Logging discipline.
+    4. Compute self-certainty, CLUE, and Radial Consensus Score control-arm scores on the SAME eval split
+       (self-certainty needs no extra LLM calls; CLUE and RCS reuse the already-extracted vectors).
+    5. Score all FIVE methods (trained probe, self-certainty, CLUE, RCS, tuned self-consistency) on the
+       eval split's selection accuracy; compute paired bootstrap CI95 and McNemar p-value for
+       probe-vs-SC and probe-vs-each-of-the-other-three control arms.
+    6. If straightforward, attempt the FEPoID-style layer-sweep as a stretch goal; otherwise report
+       final-layer-only and note the limitation.
+    7. Update `ops/verifier_gaps.md` with the residual failure-mode analysis per Missing-Verifier Gap
+       Logging.
 
     REQUIRED ARTIFACT FIELDS:
       probe_accuracy:
@@ -883,16 +958,20 @@ tasks:
         value: float
       clue_accuracy:
         value: float
+      radial_consensus_score_accuracy:
+        value: float
       tuned_sc_accuracy:
         value: float
       probe_vs_sc_delta_ci95:
         value: "[lo, hi]"
       probe_vs_sc_mcnemar_p:
         value: float
+      probe_vs_rcs_delta_ci95:
+        value: "[lo, hi]"
       n_questions:
         value: int
-        principle: "Must be materially larger than exp5178's n=6 -- this is the direct fix for the prior
-          pilot's underpowered sample."
+        principle: "Must be materially larger than exp5178's n=6 -- direct fix for the prior pilot's
+          underpowered sample."
       layer_sweep_attempted:
         value: bool
       headroom_present:
@@ -913,21 +992,21 @@ tasks:
           candidate for embedding extraction, not full autoregressive generation; 2.0s floor applies."
       honest_verdict:
         principle: "Must start with complete:/complete_/success:/success_, and state plainly whether the
-          trained probe beats tuned SC AND beats both zero-training control arms -- beating SC alone is
-          insufficient if a zero-training baseline (self-certainty or CLUE) does equally well."
+          trained probe beats tuned SC AND beats all THREE zero-training control arms -- beating SC alone
+          is insufficient if any zero-training baseline (self-certainty, CLUE, or RCS) does equally well."
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5188-hardware-continuity-gatemate-diagnostic-v475
-  milestone: 2026.07.475
-  title: PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reachability smoke, and an actual
-    root-cause diagnostic (not a repeat --detect call) for GateMate's DirtyJTAG IDCODE regression
+- id: exp5201-hardware-continuity-gatemate-diagnostic-v476
+  milestone: 2026.07.476
+  title: PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reachability smoke, and a 3rd-consecutive-
+    milestone genuine root-cause diagnostic for GateMate's DirtyJTAG IDCODE regression
   priority: medium
   track: hardware
-  deliverable: results/experiment_5188_hardware_continuity_gatemate_diagnostic_v475.json
+  deliverable: results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json
   operator_override: '2026-05-18 operator directive (standing, Hardware-Task Continuity Discipline):
-    every milestone reserves >=1 task per attached board not yet at terminal state; this is that
-    reserved slot, routine by construction, never a doomed rerun.'
+    every milestone reserves >=1 task per attached board not yet at terminal state; this is that reserved
+    slot, routine by construction, never a doomed rerun.'
   agent_type: claude
   model: opus
   requires_claude_verified: true
@@ -936,60 +1015,51 @@ tasks:
   prompt: |
     CONTEXT:
     Repo at {project_root}, run on or after {date}. Three boards are attached: KV260 (near-terminal per
-    `ops/north-star.md` §3 -- reachable every continuity check, light-touch mandate only), PolarFire
-    (reachable, workload-validated terminal state not yet explicitly confirmed), and GateMate (NOT
-    terminal -- `.474`'s exp5179 reports `blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics`:
-    DirtyJTAG enumerates the USB programmer but cannot read the GM1Ax IDCODE `0x20000001` that worked
-    cleanly in May 2026, and this has now recurred across at least two consecutive milestones,
-    `.471`/`.473`/`.474`). This is a HARD requires_claude_verified task (hardware integration / dual-board
-    debugging, matching the pre-emptive Opus-routing criteria) because the GateMate regression needs
-    genuine root-cause diagnosis, not another `--detect` re-run.
+    `ops/north-star.md` §3 -- light-touch mandate only), PolarFire (reachable, terminal state not yet
+    explicitly confirmed), and GateMate (NOT terminal -- `.474`'s exp5179/`.475`'s hardware task both found
+    `blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics`: DirtyJTAG enumerates the USB
+    programmer but cannot read the GM1Ax IDCODE `0x20000001` that worked cleanly in May 2026. This is now
+    the 3rd+ consecutive milestone of the same regression). This is a HARD requires_claude_verified task
+    (hardware integration / dual-board debugging) because GateMate needs genuine root-cause diagnosis, not
+    another `--detect` re-run.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5179_hardware_continuity_board_timing_v474.json and
-      results/experiment_5166_hardware_continuity_v473.json (the exact diagnostic steps already tried for
-      GateMate -- do not repeat them verbatim).
-    - research-hardware-wishlist.md (the GateMate section: the May 2026 working baseline, toolchain
-      confirmation history).
+    - Every prior `.47x` hardware-continuity artifact (search `results/experiment_*hardware_continuity*.json`
+      for the exact diagnostic steps already tried for GateMate -- do not repeat them verbatim).
+    - research-hardware-wishlist.md (the GateMate section: May 2026 working baseline, toolchain history).
     - ops/hardware-bringup-prep.md (KV260 terminal-state record, PolarFire status).
     - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" (KV260 precondition MUST be SSH-reachability via the
-      board's network alias; a host-side removable-storage-device check is the permanently retired
-      wrong-mechanism precondition per that rule -- do not use one).
+      board's network alias, never a host-side removable-storage check).
 
     CONCRETE STEPS:
-    0. PRECONDITIONS (check BEFORE any subsequent step, per board):
-       a. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` — SSH-reachability ONLY, never a
-          host SD-card check.
+    0. PRECONDITIONS (per board):
+       a. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` -- SSH-reachability only.
        b. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
-       c. GateMate: `openFPGALoader -c dirtyJtag --detect` (the standard check) AND additionally
-          `lsusb -v -d 1209:c0ca` (or the board's actual VID:PID) for full USB descriptor detail.
-    1. KV260 (light-touch, terminal board): run the standard SSH-reachable workload smoke (hash-verified,
-       `inference_substrate: hardware_smoke`). No new investigation needed -- this board is near-terminal
-       per the north-star; keep this step brief.
-    2. PolarFire: run the SSH-reachable workload smoke. If a hash-verified dispatch run has not yet been
-       explicitly confirmed as meeting `polarfire_workload_validated: true` (the terminal-state bar), check
-       whether this run closes that bar and report explicitly either way.
-    3. GateMate ACTUAL DIAGNOSTIC (go beyond `--detect`, per the operator's own recommendation in prior
-       milestones): try, in order, and record each outcome:
-       a. `openFPGALoader --scan-usb` (full USB bus scan, not just the DirtyJTAG-specific `--detect`) to
-          confirm the device is enumerating at all at the USB level.
-       b. `dmesg | tail -50` immediately after a physical USB replug, to check for kernel-level
-          enumeration errors (e.g. a failing/degrading USB controller, power delivery issue, or driver
-          claim conflict) that would explain an IDCODE readback failure despite programmer enumeration.
-       c. Check udev rules / device permissions (`ls -la /dev/bus/usb/*/` for the DirtyJTAG device,
-          confirm the running user has access) -- a permissions regression could produce exactly this
-          "programmer visible, IDCODE unreadable" signature.
-       d. If `openFPGALoader` supports a `--freq` flag, try a slower JTAG clock rate (a marginal/degraded
-          connection can fail IDCODE readback at the default clock but succeed slower).
-       e. Physically power-cycle the board (document this as a manual step if it requires operator action
-          -- this task can recommend it even if it cannot execute it) and re-attempt `--detect`.
+       c. GateMate: `openFPGALoader -c dirtyJtag --detect` AND `lsusb -v -d 1209:c0ca` (or the board's
+          actual VID:PID) for full USB descriptor detail.
+    1. KV260 (light-touch, terminal board): run the standard SSH-reachable workload smoke
+       (`inference_substrate: hardware_smoke`). Keep this step brief.
+    2. PolarFire: run the SSH-reachable workload smoke; check whether this run closes the
+       `polarfire_workload_validated: true` terminal-state bar and report explicitly either way.
+    3. GateMate ACTUAL DIAGNOSTIC (go beyond `--detect` for the 3rd+ time -- try new angles this time):
+       a. `openFPGALoader --scan-usb` (full USB bus scan) to confirm device enumeration at the USB level.
+       b. `dmesg | tail -50` immediately after a physical USB replug, checking for kernel-level
+          enumeration errors.
+       c. Check udev rules / device permissions (`ls -la /dev/bus/usb/*/` for the DirtyJTAG device).
+       d. If `openFPGALoader` supports a `--freq` flag, try a slower JTAG clock rate.
+       e. Physically power-cycle the board (recommend as a manual step if it requires operator action;
+          document even if you cannot execute it) and re-attempt `--detect`.
        f. Compare the exact `openFPGALoader` / DirtyJTAG firmware version against the May 2026 working
-          baseline recorded in `research-hardware-wishlist.md` -- a toolchain or firmware update between
-          then and now is a plausible regression cause.
-    4. Write a precise diagnostic report even if the IDCODE issue remains unresolved -- narrowing the
-       failure mode (USB-level vs JTAG-protocol-level vs permissions vs clock-rate vs firmware-version) is
-       itself valuable progress even without a fix, and tells a future attempt (or the operator, for a
-       physical inspection) exactly where to look next.
+          baseline in `research-hardware-wishlist.md` -- a toolchain or firmware update is a plausible
+          regression cause.
+       g. NEW THIS MILESTONE (since a+b+c+d+e+f have now been tried across 2+ prior milestones without
+          resolution): check whether a DIFFERENT USB port or cable changes the result (a marginal/failing
+          USB-C cable or port is a mundane but previously-untested explanation for "enumerates but IDCODE
+          readback fails"); check `openFPGALoader`'s own GitHub issues for other reports of this exact
+          IDCODE-readback-fails-after-enumeration signature on GM1Ax boards.
+    4. Write a precise diagnostic report even if unresolved -- narrowing the failure mode (USB-level vs
+       JTAG-protocol-level vs permissions vs clock-rate vs firmware-version vs cable/port) is itself
+       valuable, and tells a future attempt (or the operator, for physical inspection) where to look next.
 
     REQUIRED ARTIFACT FIELDS:
       kv260_status:
@@ -997,12 +1067,16 @@ tasks:
       polarfire_status:
         value: "reachable/unreachable + workload hash; polarfire_workload_validated bool"
       gatemate_status:
-        value: "blocked_gatemate_dirtyjtag_idcode_unresolved_v475 (if still blocked) or resolved (with the
+        value: "blocked_gatemate_dirtyjtag_idcode_unresolved_v476 (if still blocked) or resolved (with the
           fix that worked)"
       gatemate_diagnostic_narrowed_to:
-        value: "usb_level | jtag_protocol_level | permissions | clock_rate | firmware_version | unknown"
+        value: "usb_level | jtag_protocol_level | permissions | clock_rate | firmware_version |
+          cable_or_port | unknown"
         principle: "Even an unresolved GateMate issue is progress if the failure mode is narrowed -- this
-          field is the load-bearing deliverable if the IDCODE issue is not actually fixed this milestone."
+          field is the load-bearing deliverable if IDCODE is not actually fixed this milestone."
+      new_diagnostic_angles_tried_this_milestone:
+        value: "list -- must show at least the cable/port swap and openFPGALoader-issues search, since
+          the first 6 diagnostic angles were already exhausted across prior milestones"
       boards_reachable_count:
         value: "int, out of 3"
       preconditions_checked:
@@ -1015,19 +1089,18 @@ tasks:
         value: hardware_smoke
       honest_verdict:
         principle: "Must start with complete:/complete_/success:/success_, and must not claim a hardware
-          speedup or latency win -- KV260/PolarFire/GateMate continuity smokes are reachability +
-          correctness checks, not performance claims, per CLAUDE.md's hardware precondition tables."
+          speedup or latency win -- these are reachability + correctness checks, not performance claims."
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5189-architecture-md-reconciliation-v475
-  milestone: 2026.07.475
-  title: RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48-day-stale _bmad/architecture.md with the
-    ARC-AGI-3 pivot, the PHASE D lifecycle (birth through retirement), the hidden-state-verifier program,
-    and current hardware/verifier-tier state
+- id: exp5202-architecture-md-reconciliation-v476
+  milestone: 2026.07.476
+  title: RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48+-day-stale _bmad/architecture.md with the
+    ARC-AGI-3 pivot, the PHASE D lifecycle (commissioned through retired), the hidden-state-verifier
+    program, and current hardware/verifier-tier state
   priority: high
   track: infrastructure
-  deliverable: results/experiment_5189_architecture_md_reconciliation_v475.json
+  deliverable: results/experiment_5202_architecture_md_reconciliation_v476.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
@@ -1035,48 +1108,38 @@ tasks:
   prompt: |
     CONTEXT:
     Repo at {project_root}, run on or after {date}. `_bmad/architecture.md`'s "Last Reconciled" date is
-    2026-05-16 -- more than 30 days stale as of {date}, which trips CLAUDE.md's Architecture Freshness
-    Check ("If `_bmad/architecture.md` 'Last Reconciled' date is >30 days old, flag to user before
-    starting new capability work"). The document predates the ENTIRE ARC-AGI-3 pivot (the project's
-    current north star per `ops/north-star.md` §0), the full PHASE D lifecycle (commissioned 2026-06-30,
-    retired 2026-07-03), the hidden-state-verifier sanctioned-exception program, and multiple verifier-tier
-    changes. This is a documentation-reconciliation task, NOT a code change -- follow the Documentation
-    Update Rules exactly (add, never remove; move completed items to appropriate sections; preserve
-    historical results).
+    2026-05-16 -- now 48+ days stale, which trips CLAUDE.md's Architecture Freshness Check. This is a
+    documentation-reconciliation task, NOT a code change -- follow the Documentation Update Rules exactly
+    (add, never remove; move completed items to appropriate sections; preserve historical results).
 
     EXISTING CODE TO READ FIRST:
-    - _bmad/architecture.md (the full current document -- read it end to end before editing).
+    - _bmad/architecture.md (the full current document -- read end to end before editing).
     - ops/north-star.md (the authoritative current strategic framing -- §0 ARC-AGI-3 north star, §3
       hardware focus, §5 the verifier-moat reframe).
     - ops/exclusion_manifest.yaml (the PHASE D retirement entry, for accurate lifecycle documentation).
     - ops/verifier_gaps.md (GAP-4891, GAP-4 -- the current open architectural gaps).
-    - ops/arc_solve_registry.yaml (current game/level state, general_gotchas -- the ARC harness
-      architecture summary).
-    - python/carnot/agentic/arc_competition_agent.py (the live E3AgentPolicy cascade -- the actual current
-      agentic architecture, to replace any stale description).
+    - ops/arc_solve_registry.yaml (current game/level state, general_gotchas).
+    - python/carnot/agentic/arc_competition_agent.py (the live E3AgentPolicy cascade).
 
     CONCRETE STEPS:
     1. Read the entire existing `_bmad/architecture.md` -- note every section, to ensure nothing is lost.
-    2. ADD a new section (do not replace existing content) documenting the ARC-AGI-3 harness architecture:
-       the offline `arc_loop_solve.py` dev-twin path vs the scored `E3AgentPolicy` live cascade, the
-       verifier-routed best-first search engine (`arc_graph_explore.py`), the reproduction gate
-       (`arc_solver_kit.py`), and the registry (`ops/arc_solve_registry.yaml`) as the knowledge-capture
-       mechanism.
-    3. ADD a section documenting PHASE D's full lifecycle as a case study in the project's own discipline:
-       commissioned 2026-06-30 (off-ARC distributional-energy verifier moat, LoRA-EBM/uPRM/EBRM), 7
-       milestones of null/marginal results, formally retired 2026-07-03 with hidden-state/internal-
-       representation verifiers explicitly carved out as an architecturally distinct, still-open
-       mechanism class.
+    2. ADD a section documenting the ARC-AGI-3 harness architecture: the offline `arc_loop_solve.py`
+       dev-twin path vs the scored `E3AgentPolicy` live cascade, the verifier-routed best-first search
+       engine (`arc_graph_explore.py`), the reproduction gate (`arc_solver_kit.py`), and the registry
+       (`ops/arc_solve_registry.yaml`) as the knowledge-capture mechanism.
+    3. ADD a section documenting PHASE D's full lifecycle: commissioned 2026-06-30 (off-ARC
+       distributional-energy verifier moat), 7 milestones of null/marginal results, formally retired
+       2026-07-02/03 with hidden-state/internal-representation verifiers explicitly carved out as an
+       architecturally distinct, still-open mechanism class.
     4. ADD a section on the hidden-state-verifier program (TrajSelector-class, PHSV-class probes) as the
        current live verifier-research frontier, cross-referencing `ops/verifier_gaps.md`.
     5. Update the Verification Pipeline Tiers table if any tier has changed since 2026-05-16 (check
-       `python/carnot/pipeline/verify_repair.py` and the verify/ directory against the documented tiers;
-       ADD new tiers, do not silently renumber existing ones without a changelog note).
-    6. Update the Hardware section to reflect KV260's terminal status, PolarFire's near-terminal status,
-       and GateMate's current blocker.
+       `python/carnot/pipeline/verify_repair.py` and the verify/ directory against the documented tiers).
+    6. Update the Hardware section to reflect KV260's near-terminal status, PolarFire's status, and
+       GateMate's current blocker (per this milestone's exp5201).
     7. Update the "Last Reconciled" date to {date}.
-    8. Cross-check `_bmad/traceability.md` for any FR whose implementation status has changed since the
-       last reconciliation and update it consistently (add, do not silently overwrite history).
+    8. Cross-check `_bmad/traceability.md` for any FR whose implementation status has changed and update
+       it consistently (add, do not silently overwrite history).
 
     REQUIRED ARTIFACT FIELDS:
       sections_added:
@@ -1094,168 +1157,85 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5190-retro-timing-fallback-wiring-patch-prep-v475
-  milestone: 2026.07.475
-  title: RESERVED INFRASTRUCTURE 2/2 -- MANDATORY overdue priority (pending since .469, escalated 5 times
-    through .474) -- produce a reviewed, tested, ready-to-apply patch wiring retro_timing_fallback.py into
-    the conductor's retro assembly, without editing scripts/research_conductor.py directly
-  priority: critical
+- id: exp5203-verifier-authenticity-remediation-options-v476
+  milestone: 2026.07.476
+  title: RESERVED INFRASTRUCTURE 2/2 -- prepare operator-facing remediation options for the two
+    DISHONEST_NAMING verifiers the 2026-07-01 authenticity audit flagged
+  priority: high
   track: infrastructure
-  deliverable: results/experiment_5190_retro_timing_fallback_wiring_patch_prep_v475.json
+  deliverable: results/experiment_5203_verifier_authenticity_remediation_options_v476.json
   agent_type: codex
   model: gpt-5.5
-  max_turns: 30
-  estimated_wall_time_min: 35
+  max_turns: 40
+  estimated_wall_time_min: 40
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. `ops/known-issues.md`'s single highest-confidence
-    MANDATORY-NEXT-MILESTONE priority (per the Overdue-Priority Forcing Function -- pending far more than
-    the 3-milestone threshold, independently diagnosed across retro passes for `.469`, `.473` (twice), and
-    `.474` (twice), five separate diagnosis events total, never wired): `scripts/retro_timing_fallback.py`
-    (built and tested in `.473`'s exp5164, 6 passing tests, validated against milestone `.450`'s
-    known-good ground truth) is a complete, correct fix for the recurring "0 experiments, 0 wall-time
-    minutes" false-zero condition that has affected a large fraction of recent operational retrospectives
-    -- but it has never been connected to the call site it targets. Every roadmap task, including this
-    one, ends with the standing instruction "do not modify scripts/research_conductor.py" -- so this task
-    CANNOT simply make the edit. Instead, produce the actual patch as a reviewed, tested, ready-to-apply
-    artifact, so the remaining work for an operator or a differently-scoped outer-loop session is a single
-    `git apply` plus a smoke test, not a re-diagnosis.
+    Repo at {project_root}, run on or after {date}. `ops/verifier_authenticity_audit_report.md`
+    (2026-07-01) flagged two verifiers `DISHONEST_NAMING`, never actioned:
 
-    THE EXACT WIRING (verbatim from `scripts/retro_timing_fallback.py`'s own docstring -- do not
-    reinterpret or redesign it, the module was purpose-built for this exact call site):
+    1. `and_composition_verifier.py` -- audit quote: "The file is mostly adapter plumbing. It imports
+       Carnot verifier/model classes, but the default `SOSKANEnergyV3Adapter` is untrained and returns a
+       hardcoded neutral `0.5`, which fails the `< 0.5` threshold for every input." Gaming patterns found:
+       score-capping (`return float(min(raw / 2.0, 1.0))`) and failure-masking (verifier exceptions are
+       swallowed and converted to `energy = 0.0`, meaning a broken verifier silently passes). Audit's own
+       recommendation: `REIMPLEMENT_PROPERLY`.
+    2. `claim_isolation_uncertainty_router.py` -- audit quote: "The code only reads JSON/JSONL artifacts,
+       copies manifest booleans, assigns fixed uncertainty scores, applies threshold routing, and writes
+       summary files. It imports no torch/transformers/jax/sklearn/llama_cpp/openai/Carnot model module
+       and performs no real model call or isolated-claim verification." Audit's own recommendation:
+       `RENAME_TO_REFLECT_REALITY`.
 
-    ```
-    In `scripts/research_conductor.py::_run_operational_retrospective`, replace the
-    git-log-grep `experiment_times` block around lines 2804-2864 with this helper.
-    Two-line conductor change:
-        from scripts.retro_timing_fallback import build_retro_timing_fallback
-        retro_timing = build_retro_timing_fallback(current); experiment_times = retro_timing["experiment_times"]
-    Then read `total_wall_time_minutes`, `experiments_completed`,
-    `compute_bound_experiments_count`, `slowest_experiments`, and
-    `gpu_idle_on_compute_bound_tasks` from `retro_timing` for the skeleton.
-    ```
+    Per CLAUDE.md's Verifier Authenticity Discipline, "the audit NEVER edits any verifier -- operator
+    decides what to act on." This task does NOT rename/retire/reimplement either verifier -- it makes the
+    operator's decision cheap by preparing all THREE remediation options (RENAME_TO_REFLECT_REALITY /
+    RETIRE / REIMPLEMENT_PROPERLY) for EACH verifier, with a recommendation and rationale, even though the
+    audit already suggested one option per verifier -- present the alternatives honestly too, since the
+    operator may weigh ensemble-composition impact differently than the audit did.
 
     EXISTING CODE TO READ FIRST:
-    - scripts/retro_timing_fallback.py (the full module -- read the docstring, the
-      `build_retro_timing_fallback` function signature, and its 6 existing tests in full).
-    - scripts/research_conductor.py lines ~2760-2920 (`_run_operational_retrospective` -- the exact
-      current git-log-grep block that needs replacing; read it precisely, this is where the two-line
-      change goes).
-    - results/operational_retro_2026_07_474.json (the most recent false-zero retro, whose own
-      `top_3_highest_leverage_actions` and `meta_reflection` fields diagnose this exact gap and
-      recommend a staleness self-check as a secondary improvement -- read these verbatim).
-    - ops/known-issues.md (the "WIRE retro_timing_fallback.py into conductor retro assembly" entry --
-      read the full escalation history to cite it precisely in this task's artifact).
+    - ops/verifier_authenticity_audit_report.md (the full 2026-07-01 audit -- read in full, not just the
+      two flagged entries, for context on the other 17 verifiers' clean verdicts).
+    - python/carnot/verify/and_composition_verifier.py and
+      python/carnot/verify/claim_isolation_uncertainty_router.py (read both files completely).
+    - Whatever ensemble/AND-composition config references `and_composition_verifier.py` (grep for its
+      import) to assess REIMPLEMENT_PROPERLY's blast radius if the default adapter's behavior changes.
+    - CLAUDE.md "Verifier Authenticity Discipline" (the 3-layer defense and "How to apply (operator)"
+      section this task's deliverable feeds directly).
 
     CONCRETE STEPS:
-    1. Read `scripts/research_conductor.py`'s current `_run_operational_retrospective` function in full,
-       to know EXACTLY what the git-log-grep block at the documented line range looks like on the CURRENT
-       HEAD (line numbers may have drifted since the module's docstring was written -- confirm the actual
-       current location before writing the patch).
-    2. Write the patch as a unified diff (`.patch` file) at
-       `patches/retro_timing_fallback_wiring_v475.patch`, implementing EXACTLY the two-line change the
-       module's docstring specifies (import + call + read the 5 named fields from the returned dict) --
-       do not add unrelated changes to the same patch.
-    3. Verify the patch applies cleanly WITHOUT actually applying it to the tracked file: run
-       `git apply --check patches/retro_timing_fallback_wiring_v475.patch` and record the result. This
-       confirms the patch is valid against current HEAD without violating the "do not modify
-       scripts/research_conductor.py" constraint.
-    4. Write a regression test (a NEW test file, not touching `research_conductor.py`) that: (a) currently
-       FAILS, demonstrating the gap (e.g. by asserting that `_run_operational_retrospective`'s source code
-       contains the `retro_timing_fallback` import -- a source-inspection test, not an execution test,
-       since executing the conductor's full retro path is out of scope here); (b) is documented to PASS
-       once the patch above is applied. Prove this by applying the patch to a SCRATCH COPY of
-       `research_conductor.py` (not the tracked file) in a temp directory, running the test against that
-       scratch copy, and confirming it passes there.
-    5. Per the `.474` retro's own secondary recommendation, ALSO draft (as a second, separate patch file)
-       the staleness self-check improvement: a comparison of the running conductor process's start time
-       (or module import mtime) against `scripts/research_conductor.py`'s on-disk mtime, surfaced as a
-       WARNING in the retro prompt if they diverge -- so a future stale-daemon-process condition (like the
-       one described in `.474`'s own retro `meta_reflection`) is visible without manual archaeology. This
-       is a smaller, independent patch -- keep it separate from the primary wiring patch.
-    6. Write a clear, prominent note in this task's artifact AND in `ops/known-issues.md` (add, do not
-       overwrite the existing entry -- append a dated resolution-in-progress note) that the actual `git
-       apply` + wiring step is the next required OPERATOR or outer-loop action, and that until it happens,
-       future retros will keep hitting the same false-zero condition.
+    1. Read both flagged verifiers completely; confirm the audit's findings are accurate against the
+       actual current source (do not just trust the audit's quotes -- verify them).
+    2. For `and_composition_verifier.py`: draft the three options precisely --
+       (a) RENAME_TO_REFLECT_REALITY: what an honest class name would be given what it actually computes;
+       (b) RETIRE: what breaks in the AND-composition ensemble if this adapter is removed, and whether a
+       remaining k-1 composition is still meaningful;
+       (c) REIMPLEMENT_PROPERLY: what a genuine trained SOSKANEnergyV3 implementation would require
+       (training data, compute, the actual energy-model substrate it currently only pretends to invoke).
+       State a recommendation with rationale.
+    3. For `claim_isolation_uncertainty_router.py`: draft the same three options -- what an honest name
+       would be, what breaks on retirement, and what a genuine isolated-claim-verification implementation
+       would require (an actual model call per claim). State a recommendation with rationale.
+    4. Do NOT rename, retire, or reimplement either verifier as part of this task -- produce the
+       decision-ready document only, per the discipline's operator-decides contract.
+    5. Write the remediation options to a clearly-named doc (e.g.
+       `ops/verifier_remediation_options_v476.md`) for operator review, cross-referenced from this task's
+       artifact.
 
     REQUIRED ARTIFACT FIELDS:
-      patch_file_path:
+      and_composition_verifier_options:
+        value: "{rename: str, retire: str, reimplement: str, recommendation: str}"
+      claim_isolation_uncertainty_router_options:
+        value: "{rename: str, retire: str, reimplement: str, recommendation: str}"
+      audit_findings_independently_reconfirmed:
+        value: bool
+        principle: "Confirms this task read the actual current source rather than trusting the audit
+          report's quotes alone -- audits can also be stale by the time they're acted on."
+      remediation_doc_path:
         value: string
-      patch_applies_cleanly:
+      no_verifier_modified_this_task:
         value: bool
-        principle: "Verified via git apply --check against current HEAD, without ever writing to the
-          tracked file -- proves the patch is ready, not just theoretically correct."
-      regression_test_fails_before_patch:
-        value: bool
-        principle: "Must be true -- proves the test genuinely detects the current gap, not a tautology."
-      regression_test_passes_after_patch_on_scratch_copy:
-        value: bool
-        principle: "Proves the patch, once applied, actually fixes what the test checks -- verified on an
-          isolated scratch copy, never on the tracked scripts/research_conductor.py."
-      staleness_check_patch_drafted:
-        value: bool
-      known_issues_md_updated_with_operator_action_note:
-        value: bool
-      research_conductor_py_untouched_confirmed:
-        value: bool
-      inference_substrate:
-        value: aggregation_from_upstream_artifacts
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_, and must NOT claim the
-          false-zero bug is fixed -- only that a ready-to-apply, tested patch now exists. The bug remains
-          live in production until the patch is actually applied by an operator/outer-loop action outside
-          this task's scope."
-
-    Do not push. Do not modify scripts/research_conductor.py.
-
-- id: exp5191-technical-report-numeric-sync-v475
-  milestone: 2026.07.475
-  title: DOCS numeric-only sync of docs/technical-report.md results tables (Set-Encoder n=30 hardening
-    and any other newly-hardened .475 numbers) -- prose stays operator-curated
-  priority: low
-  track: documentation
-  deliverable: results/experiment_5191_technical_report_numeric_sync_v475.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 20
-  estimated_wall_time_min: 15
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. Per CLAUDE.md's Public Documentation Discipline, the
-    autonomous loop may edit `docs/technical-report.md` ONLY to update results-table numerical cells --
-    prose (abstract, introduction, narrative) stays operator-curated. This task's ENTIRE scope is
-    numeric-only: no prose edits, no new claims, no new sections.
-
-    THE ONE CONFIRMED NEW NUMBER THIS MILESTONE: exp5171's ARC Set-Encoder cross-corpus hardening --
-    n=24 -> n=30, `gate_passed=true`, delta=0.5, CI95=[0.333,0.667] (previously CI95 was reported at n=24,
-    below the CLT floor). If the technical report has an existing row citing the n=24 figure, update it to
-    the n=30 figure with the corrected CI. If other `.475` tasks (exp5183 DiffusionGemma pilot, exp5184
-    GAP-4 scale-up, exp5187 hidden-state verifier v2) produced clean, adversarial-verify-unflagged numeric
-    results by the time this task runs, sync those numbers into any EXISTING corresponding table row too
-    -- but do NOT create new rows or new claims for results that have no existing table placeholder; that
-    is prose-adjacent editorial judgment reserved for the operator.
-
-    EXISTING CODE TO READ FIRST:
-    - docs/technical-report.md (the current results tables -- read in full before editing).
-    - results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json (the confirmed new number).
-    - ops/north-star.md §1-2 (the FoVer headline and publication gate -- confirm this task does not touch
-      those numbers, which are separately fixed and already correct per `scripts/publication_gate.py`).
-
-    CONCRETE STEPS:
-    1. Read every results table in `docs/technical-report.md`.
-    2. For each table row whose cited experiment has a newer, adversarial-verify-clean number available
-       (starting with exp5171's n=30 hardening), update ONLY the numeric cell(s) -- do not touch
-       surrounding prose, captions, or claims.
-    3. Do NOT flag or edit anything that requires prose judgment (e.g., a claim whose framing needs to
-       change, not just its number) -- leave a `flagged_for_operator` note in this task's artifact instead
-       of editing it.
-    4. Confirm no CRITICAL adversarial_verify flags on any artifact whose number is being synced.
-
-    REQUIRED ARTIFACT FIELDS:
-      table_rows_updated:
-        value: "list of {row_description, old_value, new_value, source_experiment_id}"
-      flagged_for_operator:
-        value: "list of prose-adjacent items NOT auto-edited, with reasons"
+        principle: "The audit-and-remediation-prep discipline is explicitly non-destructive; this field
+          is the honesty check that this task respected it."
       inference_substrate:
         value: aggregation_from_upstream_artifacts
       honest_verdict:
@@ -1263,70 +1243,297 @@ tasks:
 
     Do not push. Do not modify scripts/research_conductor.py.
 
-- id: exp5192-capstone-v475
-  milestone: 2026.07.475
-  title: PHASE Z capstone -- reconcile the DiffusionGemma unblock attempt, MAP landmark pre-stage result,
-    hidden-state verifier v2, GAP-4 scale-up progress, and hardware/infra state
-  priority: critical
-  track: planning
-  deliverable: results/experiment_5192_capstone_v475.json
+- id: exp5204-exclusion-manifest-lint-real-bug-fix-v476
+  milestone: 2026.07.476
+  title: fix scripts/exclusion_manifest_lint.py's documented REAL_BUG -- substring matching without word
+    boundaries, principle-wrapped-field blindness, and partial negation handling
+  priority: high
+  track: infrastructure
+  deliverable: results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json
+  prior_failures:
+  - experiment_id: exp589-exclusion-manifest-wire-in
+    verdict: wrapper_created_human_action_required
+    addressed_by: "exp589 was the ORIGINAL conductor wire-in of the exclusion-manifest mechanism itself
+      (RETRO-067, many months prior, before the manifest was even active at activation time). This task
+      fixes four SPECIFIC bugs (word-boundary matching, principle-wrapped-field unwrapping, general
+      negation handling, terminal-prefix recognition) in the already-wired, already-active Layer 2
+      scripts/exclusion_manifest_lint.py, per the 2026-07-02 QA-Layer Authenticity audit -- a narrower,
+      later-generation, structurally distinct scope from the original wire-in task. FailureLedger's
+      scope-matcher flags this as a token-overlap match ('exclusion'/'manifest') only; the substantive
+      work is unrelated."
+    retire_if_same_verdict: false
+  - experiment_id: exp601-exclusion-manifest-verification
+    verdict: precheck_created_sentinel_proven
+    addressed_by: "exp601 verified the original manifest precheck sentinel mechanism at wire-in time. This
+      task fixes a documented REAL_BUG (raw substring matching without word boundaries, causing a
+      negation-blind false positive on tasks that explicitly GUARD AGAINST a retired scope) found by the
+      2026-07-02 QA-Layer Authenticity audit -- unrelated to the original sentinel-verification scope."
+    retire_if_same_verdict: false
+  - experiment_id: exp614-exclusion-manifest-dualgpu
+    verdict: precheck_timed_dualgpu_blocked
+    addressed_by: "exp614 was a dual-GPU timing precheck blocked on hardware availability. This task is a
+      pure lint-logic bugfix (word boundaries, field unwrapping, negation, terminal-prefix recognition)
+      with no hardware dependency -- a different scope entirely, matched only by shared
+      'exclusion'/'manifest' tokens in FailureLedger's scope-signature overlap check."
+    retire_if_same_verdict: false
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 60
+  estimated_wall_time_min: 55
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. `ops/qa_layer_authenticity_audit_report.md`
+    (2026-07-02) found a `REAL_BUG` in `scripts/exclusion_manifest_lint.py` with a concrete
+    counterexample, per CLAUDE.md's QA-Layer Authenticity Discipline. Fix per the discipline's own
+    "How to apply (operator)" section: write the regression test reproducing the counterexample FIRST,
+    then fix, then run the full `adversarial_verify.py` test suite, then a corpus-wide `--backfill`
+    dry-run sanity check before committing.
+
+    THE EXACT COUNTEREXAMPLE (from the audit report):
+    ```yaml
+    tasks:
+      - id: exp9001-v472-fover-guard
+        title: Guard against FoVer premise reuse
+        prompt: "Do not reuse the FoVer in-domain candidate-selection-pool premise; verify all candidate-pool
+          analysis avoids it."
+    ```
+    This gets misclassified `BLOCKED_PATTERN_MATCHED` because a task that explicitly PREVENTS a retired
+    scope gets flagged the same as a task that RE-PROPOSES it -- the check has no negation awareness.
+
+    THE FOUR DOCUMENTED ISSUES (fix ALL FOUR, not just the one counterexample above):
+    1. `BLOCKED_PATTERN_MATCHED` uses raw substring matching (`pattern_str.lower() in haystack`) with no
+       word boundaries -- can match inside unrelated longer words.
+    2. Principle-wrapped fields are not unwrapped: `id`, `requires`, `operator_override`, `title`, and
+       `prompt` are treated as bare values, so `{principle: ..., value: "exp2091..."}` can evade
+       `EXP_ID_RETIRED` / `REQUIRES_RETIRED_EXP` or fail override recognition (per CLAUDE.md's
+       "Principle-Annotated Artifact Fields" convention -- ANY field may legally be written in this
+       wrapped form).
+    3. Negation handling is partial (only ONE existing check -- the retired host-storage-precondition
+       check documented in CLAUDE.md's KV260 SSH-Not-SD-Card Discipline section -- has negation awareness;
+       nothing else does).
+    4. Terminal verdict prefixes (complete:/success:/etc.) are not classified in this file at all.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/exclusion_manifest_lint.py (the full file -- read completely before editing).
+    - ops/qa_layer_authenticity_audit_report.md (the full audit finding, for any additional nuance beyond
+      the summary above).
+    - CLAUDE.md "QA-Layer Authenticity Discipline" "How to apply (operator)" section (the exact process:
+      regression test first, fix, full adversarial_verify.py suite, backfill dry-run, then commit).
+    - CLAUDE.md "Principle-Annotated Artifact Fields" (the wrapping convention this lint must unwrap
+      correctly -- check whether `adversarial_verify.py` already has a shared unwrap helper to reuse here
+      rather than duplicating the logic).
+    - tests/python/test_exclusion_manifest_lint.py (or wherever this linter's existing tests live -- read
+      before adding, to match the existing test style).
+
+    CONCRETE STEPS:
+    1. Write the regression test reproducing the exact counterexample above (a task whose prompt
+       explicitly NEGATES/prevents a blocked_pattern phrase gets misclassified BLOCKED_PATTERN_MATCHED).
+       Confirm it currently FAILS (proves the bug is real, not already fixed).
+    2. Fix issue 1 (word-boundary-aware matching): use a regex with `\b` boundaries (or equivalent
+       tokenization) instead of raw substring `in` checks for `BLOCKED_PATTERN_MATCHED`.
+    3. Fix issue 2 (principle-wrapped fields): check whether `adversarial_verify.py` has an existing
+       field-unwrap helper; if so, import and reuse it here rather than writing a second implementation.
+       If not, write one unwrap helper used consistently for `id`, `requires`, `operator_override`,
+       `title`, and `prompt`.
+    4. Fix issue 3 (negation handling): generalize the existing KV260-specific negation check into a
+       general negation-context detector (phrases like "do not", "avoid", "never", "guard against",
+       "prevent" appearing near the matched pattern) applied to ALL blocked_patterns checks, not just one.
+    5. Fix issue 4 (terminal verdict prefixes): add recognition of complete:/complete_/success:/success_/
+       passed:/passed_/shipped:/shipped_ prefixes where relevant to this linter's classification logic.
+    6. Confirm the regression test from step 1 now PASSES.
+    7. Run the FULL `adversarial_verify.py` test suite (not just this linter's own tests) to confirm no
+       regressions from the shared-helper reuse in step 3.
+    8. Run a corpus-wide `--backfill` dry-run sanity check (per the discipline's own specified process) to
+       confirm the fix does not introduce new false negatives across the historical artifact corpus.
+
+    REQUIRED ARTIFACT FIELDS:
+      counterexample_regression_test_fails_before_fix:
+        value: bool
+        principle: "Proves the bug is real and the test genuinely detects it, not a tautology."
+      counterexample_regression_test_passes_after_fix:
+        value: bool
+      four_issues_fixed:
+        value: "{word_boundary: bool, principle_unwrap: bool, general_negation: bool, terminal_prefix: bool}"
+      shared_unwrap_helper_reused_or_created:
+        value: string
+      full_adversarial_verify_test_suite_result:
+        value: "{passed: int, failed: int}"
+      backfill_dry_run_result:
+        value: "summary of the corpus-wide sanity check"
+      inference_substrate:
+        value: aggregation_from_upstream_artifacts
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_, and must confirm all FOUR
+          documented issues were addressed, not just the one counterexample."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+
+- id: exp5205-autopyverifier-gap1-pilot-v476
+  milestone: 2026.07.476
+  title: an AutoPyVerifier-inspired pilot targeting GAP-1 (transpose/orientation discrimination) -- search
+    a compact SET of cheap candidate discriminators instead of one hand-crafted invariant
+  priority: medium
+  track: research
+  deliverable: results/experiment_5205_autopyverifier_gap1_pilot_v476.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 55
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. `ops/verifier_gaps.md` GAP-1 (transpose/orientation
+    discrimination): the always-on content families (`object_count`, `palette_histogram_shape`) are
+    PROVABLY transpose-invariant (a grid and its transpose have identical object statistics and color
+    histograms), so they cannot distinguish a correct output from its transpose. A single hand-invariant
+    candidate (`arc_invariant_directional_adjacency_draft`) was TESTED AND REFUTED 2026-06-09: it degraded
+    TRM HYBRID rerank pass@2 0.452->0.419 and captured 0/2 transpose mis-votes. This task is a
+    structurally DIFFERENT approach, not a rerun: AutoPyVerifier (arXiv:2604.22937, "AutoPyVerifier:
+    Learning Compact Executable Verifiers for Large Language Model Outputs" -- WebFetch-verified real this
+    planning session) demonstrates the core method of searching a compact SET of cheap discriminators
+    (via LLM-synthesis + DAG search for joint satisfaction in the original paper) beats any single
+    hand-crafted invariant by up to +55 F1. This pilot borrows that CORE INSIGHT -- search a set, not one
+    invariant -- WITHOUT the LLM-synthesis step (kept cheap and deterministic): hand-author a small library
+    of candidate cheap discriminators, then combinatorially search which SUBSET jointly best predicts
+    correctness, exactly mirroring AutoPyVerifier's set-search idea at lower cost and with no LLM call.
+
+    EXISTING CODE TO READ FIRST:
+    - ops/verifier_gaps.md GAP-1 section (the exact refutation details -- 0.452->0.419 degradation,
+      0/2 transpose mis-votes captured).
+    - results/arc_grid_verifier_invariants_v2.json (the 239-task square-transpose distractor subset the
+      original refutation used -- evaluate against the SAME subset so this result is directly comparable).
+    - Whatever module implements `arc_invariant_directional_adjacency_draft` (grep for it) -- read its
+      exact formulation to avoid re-deriving the SAME refuted invariant as one of the candidate set
+      members (it may still be included as ONE candidate among several, but must not be presented as the
+      whole story again).
+    - python/carnot/verify/ (existing invariant-family implementations, e.g. `object_count`,
+      `palette_histogram_shape`, for the interface pattern new candidate discriminators should follow).
+
+    CONCRETE STEPS:
+    1. Hand-author a small library (5-10) of candidate cheap discriminators sensitive to SPATIAL
+       ARRANGEMENT / orientation that are NOT transpose-invariant -- e.g. row-ordered vs column-ordered
+       edge statistics, oriented content-overlap that does not symmetrize over the dihedral group,
+       diagonal-adjacency asymmetry, corner-anchored positional histograms, or similar. Include the
+       already-refuted directional-adjacency candidate as ONE member of the set (not the sole candidate).
+    2. Implement a combinatorial/greedy subset search (mirroring AutoPyVerifier's DAG-search intent at
+       small scale -- with only 5-10 candidates, an exhaustive or near-exhaustive subset search is
+       tractable) over which JOINT combination of discriminators best predicts correctness on a held-out
+       split of the 239-task distractor subset.
+    3. Evaluate the best-found subset against the SAME square-transpose distractor subset
+       (`results/arc_grid_verifier_invariants_v2.json`) the original refutation used, using the SAME
+       TRM HYBRID rerank pass@2 metric, so the result is directly comparable.
+    4. Report whether the best joint SET beats the always-on baseline (object_count + palette_histogram_shape
+       alone) and specifically whether it captures transpose mis-votes the always-on baseline structurally
+       cannot (per the provable transpose-invariance of those two families).
+    5. Update `ops/verifier_gaps.md` GAP-1 with the result -- `filled` only if a genuine, non-degrading
+       improvement is found; otherwise a precise honest null naming which candidate discriminators helped,
+       hurt, or were neutral.
+
+    REQUIRED ARTIFACT FIELDS:
+      candidate_discriminators_authored:
+        value: "list of {name, description, transpose_sensitive: bool}"
+      best_subset_found:
+        value: "list of discriminator names"
+      pass_at_2_baseline_always_on_only:
+        value: float
+      pass_at_2_best_subset:
+        value: float
+      transpose_misvotes_captured:
+        value: "int out of the known transpose-distractor count in the 239-task subset"
+      verifier_is_oracle:
+        value: false
+      random_seed:
+        value: int
+      reproducibility_checksum:
+        value: string
+      inference_substrate:
+        value: verifier_ensemble_against_cached_candidates
+        principle: "This pilot evaluates cheap discriminators against a cached distractor pool -- no LLM
+          call is made, unlike AutoPyVerifier's own LLM-synthesis step, which this pilot deliberately
+          substitutes with hand-authored candidates for cost/determinism."
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_, and must state plainly whether
+          the set-search approach beats the always-on baseline and the (already-refuted) single-invariant
+          approach, or whether GAP-1 remains open under this attempt too -- either is a legitimate,
+          reportable outcome."
+
+    Do not push. Do not modify scripts/research_conductor.py.
+
+- id: exp5206-capstone-v476
+  milestone: 2026.07.476
+  title: PHASE Z capstone -- reconcile the DiffusionGemma loading-thread outcome, MAP landmark re-attempt,
+    hidden-state verifier v2, GAP-4 scale-up, infra fixes (poison-test triage, retro-timing, known-issues
+    dedup), and QA/verifier-authenticity follow-through
+  priority: critical
+  track: planning
+  deliverable: results/experiment_5206_capstone_v476.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 65
   prompt: |
     CONTEXT:
     Repo at {project_root}, run on or after {date}. Milestone-close capstone. Aggregate and honestly
-    reconcile every `.475` task's outcome -- do NOT aggregate any artifact carrying `flagged_adversarial:
-    true` into a headline claim, per CLAUDE.md's Adversarial Artifact Verification fabrication gate. This
-    capstone's job is reconciliation, not new research. Note that several `.475` tasks are gated
-    (exp5183 on exp5182, exp5186 on exp5185) -- some may have been mechanically skipped if their upstream
-    gate did not pass; report this accurately, a mechanically-skipped gated task is not a failure.
+    reconcile every `.476` task's outcome -- do NOT aggregate any artifact carrying `flagged_adversarial:
+    true` into a headline claim. Several `.476` tasks are gated (exp5199 on exp5198) -- a mechanically
+    skipped gated task is not a failure; report it accurately.
+
+    LP85 REGISTRY NOTE (this planning pass's own correction, see
+    `openspec/change-proposals/research-roadmap-vNEXT.md`'s "Second verification pass" section): the ARC
+    self-solve audit report describes an lp85 registry inconsistency, but a direct read of
+    `ops/arc_solve_registry.yaml` (this planning session, {date}) shows `levels_reproduced: 5` for lp85 --
+    there is no "L3" value anywhere in the registry. The quarantined artifact's own "prior level 5, new
+    level 6" claim is actually CONSISTENT with the registry's real value (5); only its rejected "new level
+    6" is genuinely in tension. Confirm this reading is still accurate as of this capstone's run (the
+    registry may have changed since this planning pass if other `.476` tasks touched it), and correct any
+    OTHER document that still says lp85 is at "L3" if one is found -- do not presuppose a three-way
+    conflict the primary source does not show.
 
     EXISTING CODE TO READ FIRST:
-    - Every results/experiment_51{{81,82,83,84,85,86,87,88,89,90,91}}_*_v475.json artifact this milestone
-      produced (check which exist -- gated tasks may not have run).
-    - ops/verifier_gaps.md GAP-4891 and GAP-4 entries (update status per exp5185/exp5184's outcomes).
-    - ops/known-issues.md (update the DiffusionGemma gate note per exp5182/exp5183's actual result, and
-      confirm exp5190's patch-prep note was added correctly).
-    - ops/exclusion_manifest.yaml (confirm no new false-positive against this milestone's tasks).
-    - ops/arc_solve_registry.yaml (update reproducible_total_levels/reproducible_total_games if exp5186
-      banked any new levels; append per-game entries for any new mechanic learned).
+    - Every results/experiment_52{{02,03,04,05,06}}_*_v476.json plus exp5193-exp5201 artifacts this
+      milestone produced (check which exist -- gated tasks may not have run).
+    - ops/verifier_gaps.md GAP-4891 and GAP-4 entries (update status per exp5198/exp5197's outcomes).
+    - ops/known-issues.md (confirm exp5195's dedup fix landed -- should now show 1 copy, not 187, of the
+      Phase 4 Canonical Metric section; update the DiffusionGemma gate note per exp5196's actual result).
+    - ops/exclusion_manifest.yaml (confirm no new false-positive against this milestone's tasks; confirm
+      the DiffusionGemma retirement, IF exp5196 triggered `retire_if_same_verdict`, is correctly recorded).
+    - ops/arc_solve_registry.yaml (update `reproducible_total_levels` if exp5199 banked any new levels;
+      resolve the lp85 note per above).
     - openspec/change-proposals/research-roadmap-vNEXT.md "Risk notes" section (check each anticipated
       risk explicitly against what actually happened).
-    - CLAUDE.md "ARC Level-Up Attempt Guarantee" (confirm exp5186 satisfied the >=1 floor structurally via
-      `scripts/arc_levelup_guarantee_lint.py`, and report separately whether it was satisfied in OUTCOME).
+    - CLAUDE.md "ARC Level-Up Attempt Guarantee" (confirm exp5199 satisfied the >=1 floor structurally via
+      `scripts/arc_levelup_guarantee_lint.py`, and report separately whether satisfied in OUTCOME).
 
     CONCRETE STEPS:
     1. Run `python3 scripts/adversarial_verify.py` (or the project's standard per-artifact check) against
-       every new `.475` artifact; exclude any flagged_adversarial=true result from headline aggregation.
-    2. Reconcile `ops/verifier_gaps.md`'s GAP-4891 status with exp5185's actual result (map lever
-       validated / not validated) -- do not round a partial result up to "filled."
-    3. Reconcile `ops/verifier_gaps.md`'s GAP-4 status with exp5184's actual scale-up result -- did it
-       cross the >=6-discordant-win significance floor or not, and what n was actually reached.
-    4. Reconcile the DiffusionGemma gate / verifier-moat arc note in `ops/known-issues.md` with
-       exp5182/exp5183's actual results -- was the meta-tensor bug fixed, and if so did the guided-vs-
-       unguided-vs-AR pilot show a Pareto win, a circular-but-real execution-grounded result, or a null.
-       This is the decisive experiment the `.379-.475` arc has built toward; give it a precise,
-       non-inflated summary either way.
+       every new `.476` artifact; exclude any `flagged_adversarial: true` result from headline aggregation.
+    2. Reconcile `ops/verifier_gaps.md`'s GAP-4891 status with exp5198's actual result (map lever validated
+       or not) -- do not round a partial result up to "filled."
+    3. Reconcile `ops/verifier_gaps.md`'s GAP-4 status with exp5197's actual scale-up result -- did it
+       cross the >=6-discordant-win significance floor, and what n was actually reached.
+    4. Reconcile the DiffusionGemma gate / verifier-moat arc note in `ops/known-issues.md` with exp5196's
+       actual result -- was loading finally achieved, and if so did the guided-vs-unguided-vs-AR pilot
+       (still a FUTURE task, gated behind loading success) become newly unblocked, or did the loading
+       thread formally retire this milestone. Give this a precise, non-inflated summary either way.
     5. Confirm `ops/exclusion_manifest.yaml`'s PHASE D retirement entry remains correctly scoped and does
-       not false-positive against exp5187's hidden-state-verifier-v2 continuation.
-    6. Reconcile `ops/arc_solve_registry.yaml`'s `reproducible_total_levels` with exp5186's actual banked
-       levels (zero is an honest, valid outcome -- do not inflate), and specifically report the
-       live_agent_self_discovery vs development_proxy provenance split, updated from `.474`'s 4/24 vs
-       20/24 baseline.
+       not false-positive against exp5200's hidden-state-verifier-v2 continuation.
+    6. Reconcile `ops/arc_solve_registry.yaml`'s `reproducible_total_levels` with exp5199's actual banked
+       levels (zero is honest and valid), and report the live_agent_self_discovery vs development_proxy
+       provenance split, updated from `.474`'s 4/24 vs 20/24 baseline.
     7. Run `python3 scripts/arc_levelup_guarantee_lint.py` against this milestone's `research-roadmap.yaml`
-       and report whether the >=1 level-up-attempt floor was structurally present (via exp5186) AND
+       and report whether the >=1 level-up-attempt floor was structurally present (via exp5199) AND
        whether it was actually SATISFIED in outcome.
-    8. Confirm exp5190's patch-prep artifacts (the wiring patch + staleness-check patch) exist, apply
-       cleanly (`git apply --check`), and that `ops/known-issues.md` carries the operator-action note --
-       report whether the MANDATORY overdue priority is now "ready for operator action" vs still open.
-    9. Confirm `_bmad/architecture.md`'s "Last Reconciled" date was updated by exp5189.
-    10. Update `ops/status.md` and `ops/changelog.md` per the standard Documentation Update Rules (add,
+    8. Confirm exp5194's poison-test-cascade triage module and exp5195's retro-timing fix are both either
+       genuinely landed or precisely characterized as narrowed-but-not-fully-fixed -- do not round either
+       up to "resolved" if the artifacts themselves report a partial state.
+    9. Confirm `_bmad/architecture.md`'s "Last Reconciled" date was updated by exp5202.
+    10. Confirm exp5203's verifier-remediation-options doc and exp5204's exclusion_manifest_lint.py fix
+        (with its regression test + full adversarial_verify.py suite + backfill dry-run) are present and
+        as-reported.
+    11. Update `ops/status.md` and `ops/changelog.md` per the standard Documentation Update Rules (add,
         never remove).
-    11. Confirm no task this milestone modified `scripts/research_conductor.py` (the hard constraint)
-        before reporting this milestone's infra work as clean.
-    12. Write the single capstone honest_verdict summarizing the whole milestone in one line, following
+    12. Confirm no task this milestone modified `scripts/research_conductor.py` before reporting this
+        milestone's infra work as clean.
+    13. Write the single capstone honest_verdict summarizing the whole milestone in one line, following
         the terminal-prefix convention.
 
     REQUIRED ARTIFACT FIELDS:
@@ -1335,18 +1542,26 @@ tasks:
       diffusiongemma_arc_reconciled:
         value: string
         principle: "The decisive experiment the whole verifier-moat arc built toward -- summarize
-          precisely, neither inflating a marginal result nor burying a genuine win, and note explicitly
-          whether the meta-tensor bug was actually fixed this milestone."
+          precisely, neither inflating a marginal result nor burying a genuine diagnostic advance, and
+          state explicitly whether loading was achieved or the thread formally retired this milestone."
       gap4891_status_reconciled:
         value: string
       gap4_status_reconciled:
         value: string
       hidden_state_verifier_v2_reconciled:
         value: string
-      retro_timing_patch_ready_for_operator:
+      poison_test_triage_module_status:
+        value: string
+      retro_timing_fix_status:
+        value: string
+        principle: "Distinguishes 'genuinely fixed, regression-tested' from 'root cause narrowed but not
+          fully resolved' -- this bug has now survived at least one prior 'fix' cycle already."
+      known_issues_md_deduped_confirmed:
         value: bool
       architecture_md_reconciled:
         value: bool
+      lp85_registry_note_resolved:
+        value: string
       reproducible_total_levels_delta:
         value: int
       live_agent_self_discovery_ratio_updated:
