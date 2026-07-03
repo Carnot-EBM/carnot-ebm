@@ -3618,3 +3618,71 @@ If AR+SC32 > 0.75, it must ABORT as ceiling-polluted. If AR_greedy ~ 0.20 and AR
 **Given** a generator for grid tasks
 **When** the headroom gate is evaluated
 **Then** it outputs a valid json artifact with bare boolean headroom_confirmed, and principle-annotated values for ar_greedy_solve_rate, ar_sc32_solve_rate, oracle_solve_rate, headroom_margin, corpus_path, n_instances, difficulty_strata, preconditions_checked, inference_substrate, random_seed, reproducibility_checksum, and duration_s.
+
+
+### REQ-AUTO-5194: Standalone Poison-Test-Cascade Pretest-Triage Module
+
+The autoresearch system SHALL provide a standalone module
+`scripts/pretest_triage.py` that the conductor's smart-subset pretest gate can
+import to recognize the *poison-test-cascade* failure signature: a task's own
+`tests/python/test_experiment_*.py` (or `test_exp*.py`) that reads a
+`results/*.json` deliverable a SIBLING module's `main()` would produce, but the
+task failed (wall-clock timeout or otherwise) BEFORE `main()` wrote that file,
+leaving one red test whose `FileNotFoundError` (or `JSONDecodeError`) poisons the
+SHARED pretest gate and SKIP/GATE_BLOCK-cascades every remaining task in the
+milestone (milestone `2026.07.475` lost 10 of 12 tasks this way).
+
+The module SHALL expose a pure `detect_poison_cascade(pytest_output, repo_root)`
+function that returns which failing test node ids match this NARROW signature and
+which do not. A failure matches ONLY when ALL of: (1) the failing test file is an
+experiment-specific test (`test_experiment_*` / `test_exp*`, never a core/shared
+test); (2) its failure block references a `results/*.json` path P; (3) P is a
+declared `deliverable` of a task in the current `research-roadmap.yaml`; (4) P
+does NOT yet exist on disk (the producing task has not delivered); and (5) the
+failure block carries a file-absence marker (`FileNotFoundError`,
+`No such file or directory`, or `JSONDecodeError`). A failure that lacks any of
+these — an unrelated assertion, an import error, a stale/typo path not in the
+roadmap, a deliverable already present on disk, or a core test — MUST NOT match,
+so genuine regressions keep blocking the gate. The remediation the module
+recommends/applies SHALL be a per-node-id `xfail` (never a blanket `skip` and
+never file removal), gated on `condition=not os.path.exists(<deliverable>)` so it
+SELF-EXPIRES the moment the deliverable lands and the test runs live again. The
+module MUST NOT modify `scripts/research_conductor.py`; it carries documented
+wiring instructions in its own docstring, mirroring
+`scripts/retro_timing_fallback.py`.
+
+#### SCENARIO-AUTO-5194-PRIMARY: The .475 Signature Is Detected And Scoped To One Node
+
+**Given** the milestone `2026.07.475` pretest output where
+`test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py::test_ondisk_deliverable_is_valid`
+fails with `FileNotFoundError` on
+`results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`, a
+roadmap declaring that path as exp5182's deliverable, and a repo root where the
+deliverable does not exist
+**When** `detect_poison_cascade` evaluates the output
+**Then** it reports `matched=true` with exactly that one node id scoped for
+`xfail`, names exp5182 as the producing task, and renders a self-expiring
+`xfail` whose condition is the deliverable's on-disk absence.
+
+#### SCENARIO-AUTO-5194-PRECISION: Genuinely Broken Tests Are Not Masked
+
+**Given** pretest output containing an unrelated failing test (an assertion or
+import error with no `results/*.json` reference), a test referencing a
+`results/*.json` path that is not a roadmap deliverable, a test referencing a
+declared deliverable that already exists on disk, and a core test
+(`test_pipeline_extract.py`) referencing a pending deliverable
+**When** `detect_poison_cascade` evaluates the output
+**Then** none of those failures match the poison signature, they are reported as
+unmatched failures that still block the gate, and `all_failures_explained` is
+false whenever any real failure remains.
+
+#### SCENARIO-AUTO-5194-HISTORICAL: Retrospective Classification Is Honest
+
+**Given** the four cited incidents (exp3521/.325, exp3544/.326, exp3612/.332,
+exp5182/.475)
+**When** the module's historical validation runs
+**Then** it confirms exp5182/.475 matches the deliverable-read signature exactly,
+and honestly classifies exp3521/.325, exp3544/.326, exp3612/.332 as the sibling
+verdict-assertion poison sub-class (zero `results/*.json` references) covered by
+the pre-existing consecutive-fail auto-quarantine guard, rather than falsely
+claiming a 4/4 narrow-signature match.
