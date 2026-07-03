@@ -1,0 +1,130 @@
+{
+  "and_composition_verifier_options": {
+    "principle": "Decision-ready options for the flagged AND-composition verifier; each option must be actionable without implying the operator already chose it.",
+    "value": {
+      "recommendation": "REIMPLEMENT_PROPERLY. The repo already wires the ensemble into VerifyRepairPipeline as an advisory certificate, so retiring it would remove useful integration context, while a pure rename would leave an inert SOSKAN member in the default k=5 path. Until reimplementation is funded, quarantine headline claims and describe the current file as an advisory harness only.",
+      "reimplement": "REIMPLEMENT_PROPERLY: load or train a real trained SOSKANEnergyV3 checkpoint on a declared FoVer split, persist the feature normalization stats, calibrate raw energy instead of capping `raw / 2.0`, and remove exception-to-pass masking in favor of an explicit degraded or fail-closed certificate. This also requires recomputing pairwise correlations, thresholds, FoVer AUROC, and the default ensemble tests against the actual energy-model substrate the current adapter only pretends to provide by default.",
+      "rename": "RENAME_TO_REFLECT_REALITY: rename the public surface to `AdvisoryK5VerifierAdapterHarness` (or `advisory_k5_verifier_adapter_harness.py`). That name matches the current behavior: an advisory adapter/certificate harness over mixed heuristic and model-shaped members, not a production trained k=5 energy ensemble with guaranteed exponential null-space shrinkage.",
+      "retire": "RETIRE: remove the default AND-compose certificate from VerifyRepairPipeline and update tests/evals that import `build_default_verifier_ensemble()`. The final pipeline verdict should not change because the current certificate is advisory and explicitly does not short-circuit `result.verified`. What breaks is the `and_compose_k5` certificate, k=5 tests, and analysis scripts that partition SOSKAN/SemEnergy versus AST/Semantic/Z3. A remaining k-1 composition can be meaningful only if it is renamed as k=4/k-1 advisory composition and its correlations/thresholds are remeasured; it cannot inherit the current k=5 Exp 1108 claim."
+    }
+  },
+  "audit_context_summary": {
+    "and_composition_flagged": true,
+    "audit_path": "ops/verifier_authenticity_audit_report.md",
+    "authentic_count_11": true,
+    "claim_router_flagged": true,
+    "dishonest_naming_count_2": true,
+    "honest_heuristic_count_6": true,
+    "scanned_20_verifiers": true
+  },
+  "audit_findings_independently_reconfirmed": {
+    "principle": "Confirms this task read the actual current source rather than trusting the audit report's quotes alone -- audits can also be stale by the time they're acted on.",
+    "value": true
+  },
+  "claim_isolation_uncertainty_router_options": {
+    "principle": "Decision-ready options for the flagged claim-isolation router; each option must distinguish artifact routing from live isolated-claim verification.",
+    "value": {
+      "recommendation": "RENAME_TO_REFLECT_REALITY. The current module is useful artifact routing glue, and downstream Exp 1553-style scale work may still consume that ledger. Reimplementation would be a larger live-verifier project, while retirement would discard the routing lineage without improving verifier truthfulness as much as an honest name/docstring would.",
+      "reimplement": "REIMPLEMENT_PROPERLY: for every extracted claim selected by the router, perform an actual model call per claim or invoke a real isolated-claim verifier with the original answer hidden, record the prompt/model/cache provenance, compare full-context and isolated decisions on the same case, and keep deterministic SAT/product-line/runtime validators as false-accept authority. Fixed uncertainty constants and copied `claim_isolated_accept` booleans would have to be replaced by measured per-claim verifier outputs.",
+      "rename": "RENAME_TO_REFLECT_REALITY: rename the public surface to `ClaimIsolationArtifactRoutingLedger` (or `claim_isolation_artifact_routing_ledger.py`). That name states what the code does now: read JSON/JSONL artifacts, copy existing accept booleans, apply uncertainty/prefix-risk routing, and write a ledger.",
+      "retire": "RETIRE: remove Exp 1541's artifact generator and update downstream `claim_isolation_router_scale.py`, milestone-retro references, and tests that expect `results/experiment_1541_claim_isolation_uncertainty_router_v2.json`. Live verification should not lose a model call because this module currently performs none, but the larger claim-router cost/safety lineage would lose its bridge from Exp 1525/1537 artifacts into Exp 1553."
+    }
+  },
+  "duration_s": 3e-06,
+  "experiment": "experiment_5203_verifier_authenticity_remediation_options_v476",
+  "experiment_id": "exp5203-verifier-authenticity-remediation-options-v476",
+  "failed_preconditions": [],
+  "field_principles": {
+    "and_composition_verifier_options": "Decision-ready options for the flagged AND-composition verifier; each option must be actionable without implying the operator already chose it.",
+    "audit_findings_independently_reconfirmed": "Confirms this task read the actual current source rather than trusting the audit report's quotes alone -- audits can also be stale by the time they're acted on.",
+    "claim_isolation_uncertainty_router_options": "Decision-ready options for the flagged claim-isolation router; each option must distinguish artifact routing from live isolated-claim verification.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "inference_substrate": "This task aggregates current source, audit, and call-site artifacts only; it performs no live verifier inference and no model training.",
+    "no_verifier_modified_this_task": "The audit-and-remediation-prep discipline is explicitly non-destructive; this field is the honesty check that this task respected it.",
+    "remediation_doc_path": "Path to the operator-facing remediation options document written by this task."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_.",
+    "value": "complete: verifier_authenticity_remediation_options_v476_ready"
+  },
+  "inference_substrate": {
+    "principle": "This task aggregates current source, audit, and call-site artifacts only; it performs no live verifier inference and no model training.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": "2026.07.476",
+  "no_verifier_modified_this_task": {
+    "principle": "The audit-and-remediation-prep discipline is explicitly non-destructive; this field is the honesty check that this task respected it.",
+    "value": true
+  },
+  "random_seed": 5203,
+  "remediation_doc_path": {
+    "principle": "Path to the operator-facing remediation options document written by this task.",
+    "value": "ops/verifier_remediation_options_v476.md"
+  },
+  "remediation_doc_sha256": "24bdd763e31dc83bf93a8d68585b7a32e77154549e755df9fbdff73501755678",
+  "reproducibility_checksum": "948f228d6229b7b618c99b92ba6e2a599fe7d53a76ebb810f1ccea17a5f94131",
+  "result_path": "results/experiment_5203_verifier_authenticity_remediation_options_v476.json",
+  "retirement_blast_radius": {
+    "and_composition_verifier": [
+      "VerifyRepairPipeline construction of the default advisory `and_compose_k5` certificate",
+      "tests/python/test_and_compose_k5.py k=5 membership expectations",
+      "tests/python/test_exp1128_sos_kan_fix.py SOSKAN adapter coverage",
+      "FoVer ablation and verifier-gaming evals importing `build_default_verifier_ensemble()`"
+    ],
+    "claim_isolation_uncertainty_router": [
+      "results/experiment_1541_claim_isolation_uncertainty_router_v2.json lineage",
+      "tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py",
+      "python/carnot/verify/claim_isolation_router_scale.py downstream scale input",
+      "milestone activation and retro summaries that cite Exp 1541"
+    ]
+  },
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5203_verifier_authenticity_remediation_options.v476",
+  "source_artifacts_read": [
+    "ops/verifier_authenticity_audit_report.md",
+    "CLAUDE.md",
+    "python/carnot/verify/and_composition_verifier.py",
+    "python/carnot/verify/claim_isolation_uncertainty_router.py",
+    "python/carnot/pipeline/verify_repair.py",
+    "openspec/capabilities/verification/spec.md"
+  ],
+  "source_reconfirmation": {
+    "and_composition_verifier": {
+      "default_ensemble_exported": true,
+      "default_k5_includes_soskan": true,
+      "exceptions_masked_as_pass_energy": true,
+      "pipeline_records_advisory_certificate": true,
+      "pipeline_uses_default_ensemble": true,
+      "soskan_score_cap_present": true,
+      "untrained_soskan_returns_neutral_0_5": true
+    },
+    "claim_isolation_uncertainty_router": {
+      "artifact_only_json_inputs": true,
+      "claim_isolated_accept_copied_from_manifest_or_validator": true,
+      "fixed_uncertainty_scores": true,
+      "imported_modules": [
+        "__future__",
+        "collections",
+        "collections.abc",
+        "json",
+        "pathlib",
+        "typing"
+      ],
+      "model_substrate_imports": [],
+      "no_actual_claim_verifier_call": true,
+      "no_model_substrate_imported": true,
+      "routing_threshold_policy": true
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5203",
+    "SCENARIO-VERIFY-5203"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5203_verifier_authenticity_remediation_options_v476.py -q",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5203_verifier_authenticity_remediation_options_v476.py' -m pytest tests/python/test_experiment_5203_verifier_authenticity_remediation_options_v476.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5203_verifier_authenticity_remediation_options_v476.py' --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
