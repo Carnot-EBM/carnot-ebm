@@ -1,0 +1,520 @@
+{
+  "architecture_md_staleness_days": {
+    "principle": "Mechanical input to the Architecture Freshness Check; feeds exp5202's priority.",
+    "value": 48
+  },
+  "archived_milestone": "2026.07.475",
+  "clean_handoff": true,
+  "conductor_timeline": {
+    "activation_refusals_scope_prior_failure_0315_0525": 61,
+    "deliverable_exists_retry_at_1035": true,
+    "exp5181_duration_too_short_flagged": true,
+    "exp5182_conductor_timeout": true,
+    "final_planning_timeout_1143": true,
+    "gate_block_count": 6,
+    "hand_activation_0759": true,
+    "log_exists": true,
+    "path": "ops/conductor-log.md",
+    "planner_failures_before_hand_activation": 3,
+    "pretest_poison_skip_count": 26,
+    "scope_match_prior_failures_reported_by_lint": 51
+  },
+  "diffusiongemma_retirement_audit": {
+    "clean": true,
+    "errors": [],
+    "exists": true,
+    "matched_entries": [],
+    "parses": true,
+    "path": "ops/exclusion_manifest.yaml"
+  },
+  "duration_s": 2.4623082110192627,
+  "exclusion_manifest_confirmed_clean": {
+    "principle": "The .476 plan must not be blocked by stale retired-scope false positives, especially against DiffusionGemma follow-up work.",
+    "value": true
+  },
+  "exclusion_manifest_lint": {
+    "clean": true,
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/exclusion_manifest_lint.py",
+      "research-roadmap.yaml"
+    ],
+    "exit_code": 0,
+    "hard_lines": [],
+    "prior_failure_count_for_archive_scope": 51,
+    "stderr": "",
+    "stdout": "Exclusion-manifest lint found 2 violation(s) in research-roadmap.yaml:\nWARNING violations (2, override present):\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp5193-archive-475-activate-476 (PHASE 0 transition -- archive .475 truth (poison-test-cascad)\n    detail: 51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp5201-hardware-continuity-gatemate-diagnostic-v476 (PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reacha)\n    detail: 53 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n\nAll violations have operator_override \u2014 activation would proceed with warnings.\n"
+  },
+  "exp5181_duration_too_short_flag_assessment": {
+    "principle": "Documents whether the flag is confirmed a false positive, feeding a future adversarial_verify.py fix without fixing it in this task.",
+    "value": "Confirmed likely false positive: exp5181 is flagged DURATION_TOO_SHORT, but its declared inference_substrate is 'aggregation_from_upstream_artifacts' and duration_s=2.4946055188775063 is far above the 0.0001s floor for upstream-artifact aggregation. The most plausible trigger is GGUF/CUDA/live-model text inside cited upstream fields, not a live-inference claim made by exp5181 itself. Carry forward as a candidate adversarial_verify.py false-positive-class fix; no fix is attempted in this archive task."
+  },
+  "experiment": "experiment_5193_archive_475_activate_476",
+  "experiment_id": "exp5193-archive-475-activate-476",
+  "failed_preconditions": [],
+  "field_principles": {
+    "architecture_md_staleness_days": "Mechanical input to the Architecture Freshness Check; feeds exp5202's priority.",
+    "exclusion_manifest_confirmed_clean": "The .476 plan must not be blocked by stale retired-scope false positives, especially against DiffusionGemma follow-up work.",
+    "exp5181_duration_too_short_flag_assessment": "Documents whether the flag is confirmed a false positive, feeding a future adversarial_verify.py fix without fixing it in this task.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "inference_substrate": "This archive reads upstream artifacts and lint outputs only.",
+    "research_roadmap_yaml_activated": "Downstream conductor work depends on `research-roadmap.yaml` naming the `.476` milestone and containing the Exp 5193-5206 task set.",
+    "v475_summary": "An inaccurate handoff summary propagates errors into every downstream .476 task's CONTEXT section; precision here is load-bearing for the whole milestone."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_.",
+    "value": "complete_archive_475_closed_476_active_precise_handoff_clean"
+  },
+  "inference_substrate": {
+    "principle": "This archive reads upstream artifacts and lint outputs only.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": "2026.07.476",
+  "operational_retro_false_zero": {
+    "experiments_completed": 0,
+    "false_zero_recurred": true,
+    "loadable": true,
+    "path": "results/operational_retro_2026_07_475.json",
+    "reconstructed_from_disk_mtime": false,
+    "total_wall_time_minutes": 0
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 5193,
+  "reproducibility_checksum": "sha256:675011a69714d06badf74f3a665bb617bdebe51f2791ebe232465c41e06812d0",
+  "research_conductor_modified": false,
+  "research_roadmap_yaml_activated": {
+    "principle": "Downstream conductor work depends on `research-roadmap.yaml` naming the `.476` milestone and containing the Exp 5193-5206 task set.",
+    "value": true
+  },
+  "result_path": "results/experiment_5193_archive_475_activate_476.json",
+  "retro_timing_fallback_wiring": {
+    "call_present": true,
+    "exists": true,
+    "import_present": true,
+    "path": "scripts/research_conductor.py"
+  },
+  "roadmap_activation_check": {
+    "activated": true,
+    "activation_source": "research-roadmap.yaml_already_active",
+    "exists": true,
+    "milestone": "2026.07.476",
+    "missing_task_prefixes": [],
+    "parses": true,
+    "path": "research-roadmap.yaml",
+    "roadmap_next_present": false,
+    "task_ids": [
+      "exp5193-archive-475-activate-476",
+      "exp5194-poison-test-cascade-triage-module-v476",
+      "exp5195-retro-timing-real-fix-known-issues-dedup-v476",
+      "exp5196-diffusiongemma-vllm-native-retry-v476",
+      "exp5197-gap4-scaleup-real-checkpoint-v476",
+      "exp5198-map-landmark-prestage-prototype-v476",
+      "exp5199-map-gated-levelup-attempt-v476",
+      "exp5200-hidden-state-verifier-v2-mmlu-pro-v476",
+      "exp5201-hardware-continuity-gatemate-diagnostic-v476",
+      "exp5202-architecture-md-reconciliation-v476",
+      "exp5203-verifier-authenticity-remediation-options-v476",
+      "exp5204-exclusion-manifest-lint-real-bug-fix-v476",
+      "exp5205-autopyverifier-gap1-pilot-v476",
+      "exp5206-capstone-v476"
+    ]
+  },
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5193_archive_475_activate_476.v1",
+  "source_artifact_audit": {
+    "all_required_real_artifacts_present": true,
+    "missing_exp_ids": [
+      5183,
+      5184,
+      5185,
+      5186,
+      5187,
+      5188,
+      5189,
+      5190,
+      5191,
+      5192
+    ],
+    "real_artifact_count": 2,
+    "real_exp_ids": [
+      5181,
+      5182
+    ],
+    "rows": [
+      {
+        "exists": true,
+        "exp_id": 5181,
+        "loadable": true,
+        "path": "results/experiment_5181_archive_474_activate_475.json",
+        "sha256": "sha256:a5e25b770c7bee9bd9f927ec48fefad64760ae7398a1b0c031d80a3d8de6a4fd",
+        "task_id": "exp5181-archive-474-activate-475"
+      },
+      {
+        "exists": true,
+        "exp_id": 5182,
+        "loadable": true,
+        "path": "results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json",
+        "sha256": "sha256:5475ff6cd5ace86cb75e251c1eb402968f050b86d381a1bd6ff4736063787bfd",
+        "task_id": "exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5183,
+        "loadable": false,
+        "path": "results/experiment_5183_diffusiongemma_energy_guided_pilot_v475.json",
+        "sha256": null,
+        "task_id": "exp5183-diffusiongemma-energy-guided-pilot-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5184,
+        "loadable": false,
+        "path": "results/experiment_5184_gap4_scaleup_continuation_v475.json",
+        "sha256": null,
+        "task_id": "exp5184-gap4-scaleup-continuation-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5185,
+        "loadable": false,
+        "path": "results/experiment_5185_map_landmark_prestage_prototype_v475.json",
+        "sha256": null,
+        "task_id": "exp5185-map-landmark-prestage-prototype-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5186,
+        "loadable": false,
+        "path": "results/experiment_5186_map_gated_levelup_attempt_v475.json",
+        "sha256": null,
+        "task_id": "exp5186-map-gated-levelup-attempt-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5187,
+        "loadable": false,
+        "path": "results/experiment_5187_hidden_state_verifier_v2_mmlu_pro_v475.json",
+        "sha256": null,
+        "task_id": "exp5187-hidden-state-verifier-v2-mmlu-pro-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5188,
+        "loadable": false,
+        "path": "results/experiment_5188_hardware_continuity_gatemate_diagnostic_v475.json",
+        "sha256": null,
+        "task_id": "exp5188-hardware-continuity-gatemate-diagnostic-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5189,
+        "loadable": false,
+        "path": "results/experiment_5189_architecture_md_reconciliation_v475.json",
+        "sha256": null,
+        "task_id": "exp5189-architecture-md-reconciliation-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5190,
+        "loadable": false,
+        "path": "results/experiment_5190_retro_timing_fallback_wiring_patch_prep_v475.json",
+        "sha256": null,
+        "task_id": "exp5190-retro-timing-fallback-wiring-patch-prep-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5191,
+        "loadable": false,
+        "path": "results/experiment_5191_technical_report_numeric_sync_v475.json",
+        "sha256": null,
+        "task_id": "exp5191-technical-report-numeric-sync-v475"
+      },
+      {
+        "exists": false,
+        "exp_id": 5192,
+        "loadable": false,
+        "path": "results/experiment_5192_capstone_v475.json",
+        "sha256": null,
+        "task_id": "exp5192-capstone-v475"
+      }
+    ],
+    "unloadable_exp_ids": []
+  },
+  "source_artifacts_read": [
+    {
+      "exists": true,
+      "exp_id": 5181,
+      "loadable": true,
+      "path": "results/experiment_5181_archive_474_activate_475.json",
+      "sha256": "sha256:a5e25b770c7bee9bd9f927ec48fefad64760ae7398a1b0c031d80a3d8de6a4fd",
+      "task_id": "exp5181-archive-474-activate-475"
+    },
+    {
+      "exists": true,
+      "exp_id": 5182,
+      "loadable": true,
+      "path": "results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json",
+      "sha256": "sha256:5475ff6cd5ace86cb75e251c1eb402968f050b86d381a1bd6ff4736063787bfd",
+      "task_id": "exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5183,
+      "loadable": false,
+      "path": "results/experiment_5183_diffusiongemma_energy_guided_pilot_v475.json",
+      "sha256": null,
+      "task_id": "exp5183-diffusiongemma-energy-guided-pilot-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5184,
+      "loadable": false,
+      "path": "results/experiment_5184_gap4_scaleup_continuation_v475.json",
+      "sha256": null,
+      "task_id": "exp5184-gap4-scaleup-continuation-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5185,
+      "loadable": false,
+      "path": "results/experiment_5185_map_landmark_prestage_prototype_v475.json",
+      "sha256": null,
+      "task_id": "exp5185-map-landmark-prestage-prototype-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5186,
+      "loadable": false,
+      "path": "results/experiment_5186_map_gated_levelup_attempt_v475.json",
+      "sha256": null,
+      "task_id": "exp5186-map-gated-levelup-attempt-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5187,
+      "loadable": false,
+      "path": "results/experiment_5187_hidden_state_verifier_v2_mmlu_pro_v475.json",
+      "sha256": null,
+      "task_id": "exp5187-hidden-state-verifier-v2-mmlu-pro-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5188,
+      "loadable": false,
+      "path": "results/experiment_5188_hardware_continuity_gatemate_diagnostic_v475.json",
+      "sha256": null,
+      "task_id": "exp5188-hardware-continuity-gatemate-diagnostic-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5189,
+      "loadable": false,
+      "path": "results/experiment_5189_architecture_md_reconciliation_v475.json",
+      "sha256": null,
+      "task_id": "exp5189-architecture-md-reconciliation-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5190,
+      "loadable": false,
+      "path": "results/experiment_5190_retro_timing_fallback_wiring_patch_prep_v475.json",
+      "sha256": null,
+      "task_id": "exp5190-retro-timing-fallback-wiring-patch-prep-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5191,
+      "loadable": false,
+      "path": "results/experiment_5191_technical_report_numeric_sync_v475.json",
+      "sha256": null,
+      "task_id": "exp5191-technical-report-numeric-sync-v475"
+    },
+    {
+      "exists": false,
+      "exp_id": 5192,
+      "loadable": false,
+      "path": "results/experiment_5192_capstone_v475.json",
+      "sha256": null,
+      "task_id": "exp5192-capstone-v475"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5193",
+    "SCENARIO-REPORT-5193",
+    "SCENARIO-REPORT-5193-BLOCKED-PRECONDITION"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5193_archive_475_activate_476.py -q -o addopts=''",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5193_archive_475_activate_476.py' -m pytest tests/python/test_experiment_5193_archive_475_activate_476.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5193_archive_475_activate_476.py' --fail-under=100",
+    "python scripts/check_spec_coverage.py tests/python/test_experiment_5193_archive_475_activate_476.py",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/publication_gate.py --json",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "v475_summary": {
+    "principle": "An inaccurate handoff summary propagates errors into every downstream .476 task's CONTEXT section; precision here is load-bearing for the whole milestone.",
+    "value": ".475 was a near-total-loss milestone, not a normal close: 2 of 12 queued tasks produced real artifacts (exp5181 and exp5182), while exp5183-exp5192 never executed after exp5182's conductor-side 1201s timeout left test_ondisk_deliverable_is_valid red and poisoned the shared pretest gate into repeated SKIP/GATE_BLOCK outcomes. exp5181 archived .474->.475 but was flagged DURATION_TOO_SHORT after 2.4946055188775063s despite declaring aggregation_from_upstream_artifacts; that is documented as a likely false-positive class, not as live inference. exp5182 is real diagnostic progress even though its verdict stayed blocked: all 4 mitigations failed, the single-GPU variants OOMed at about 22.6 GiB against a nominal 12.864 GiB NF4 footprint, and the auto-balance variant reproduced the meta-tensor/CPU-disk-dispatch failure. The root cause is now precise: DiffusionGemma's encoder is a weight-tied mirror of its decoder; device_map='auto' splits the tie across GPUs, while single-device placement preserves it but needs more memory than one 24 GiB card. Conductor evidence: 61 raw scope-match activation-refusal log rows in the 03:15-05:25 UTC window (51 prior failures reported by the lint detail), three planner failures before hand activation at 07:59 UTC, exp5182 timeout at 08:39 UTC, and deliverable-exists retry at 10:35 UTC; missing task ids: [5183, 5184, 5185, 5186, 5187, 5188, 5189, 5190, 5191, 5192]."
+  },
+  "v475_task_rows": [
+    {
+      "artifact_status": "real_artifact_flagged",
+      "exp_id": 5181,
+      "honest_verdict": "complete_archive_474_closed_475_active_precise_handoff_clean",
+      "key_facts": {
+        "duration_s": 2.4946055188775063,
+        "flag_kinds": [
+          "DURATION_TOO_SHORT",
+          "METHODOLOGY_MISSING",
+          "value-routing-cost-control-omitted"
+        ],
+        "flagged_adversarial": true,
+        "inference_substrate": "aggregation_from_upstream_artifacts"
+      },
+      "path": "results/experiment_5181_archive_474_activate_475.json",
+      "task_id": "exp5181-archive-474-activate-475"
+    },
+    {
+      "artifact_status": "real_artifact_blocked",
+      "exp_id": 5182,
+      "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved_v475",
+      "key_facts": {
+        "auto_balance_reproduced_meta_tensor_bug": true,
+        "diffusiongemma_loadable": false,
+        "duration_s": 630.334,
+        "forward_pass_confirmed": false,
+        "mitigation_count": 4,
+        "nf4_footprint_gib": 12.864,
+        "root_cause": "DiffusionGemma's encoder is a weight-tied mirror of its decoder (DiffusionGemmaModel._tied_weights_keys ties encoder.language_model.layers...->decoder.layers... via regex). The checkpoint stores one physical copy (decoder's); the encoder shares that storage. device_map='auto' splits encoder and decoder across the two GPUs, breaking the shared-storage tie, so the encoder's tied weights are never materialized and stay on the meta device -> Tensor.item() fails at forward. accelerate also offloads whole _no_split_modules blocks to CPU/disk under the per-GPU budget, producing the 'dispatched on the CPU or the disk' variant. Single-device placement (device_map={'': 0}) co-locates the tied weights and resolves both.",
+        "single_gpu_oom_count": 3
+      },
+      "path": "results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json",
+      "task_id": "exp5182-diffusiongemma-meta-tensor-rootcause-fix-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5183,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5183_diffusiongemma_energy_guided_pilot_v475.json",
+      "task_id": "exp5183-diffusiongemma-energy-guided-pilot-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5184,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5184_gap4_scaleup_continuation_v475.json",
+      "task_id": "exp5184-gap4-scaleup-continuation-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5185,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5185_map_landmark_prestage_prototype_v475.json",
+      "task_id": "exp5185-map-landmark-prestage-prototype-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5186,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5186_map_gated_levelup_attempt_v475.json",
+      "task_id": "exp5186-map-gated-levelup-attempt-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5187,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5187_hidden_state_verifier_v2_mmlu_pro_v475.json",
+      "task_id": "exp5187-hidden-state-verifier-v2-mmlu-pro-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5188,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5188_hardware_continuity_gatemate_diagnostic_v475.json",
+      "task_id": "exp5188-hardware-continuity-gatemate-diagnostic-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5189,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5189_architecture_md_reconciliation_v475.json",
+      "task_id": "exp5189-architecture-md-reconciliation-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5190,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5190_retro_timing_fallback_wiring_patch_prep_v475.json",
+      "task_id": "exp5190-retro-timing-fallback-wiring-patch-prep-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5191,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5191_technical_report_numeric_sync_v475.json",
+      "task_id": "exp5191-technical-report-numeric-sync-v475"
+    },
+    {
+      "artifact_status": "never_executed_no_artifact",
+      "exp_id": 5192,
+      "honest_verdict": "never_executed_no_artifact",
+      "key_facts": {
+        "reason": "poison_test_cascade_or_gate_blocked_after_exp5182_timeout"
+      },
+      "path": "results/experiment_5192_capstone_v475.json",
+      "task_id": "exp5192-capstone-v475"
+    }
+  ]
+}

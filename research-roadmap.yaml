@@ -34,7 +34,7 @@ tasks:
         (DURATION_TOO_SHORT) -- this planning pass's own research (see
         `openspec/change-proposals/research-roadmap-vNEXT.md` "Provenance" section) found this is very
         likely a false positive: the artifact correctly declares
-        `inference_substrate: {"principle": "...", "value": "aggregation_from_upstream_artifacts"}`
+        `inference_substrate: {{"principle": "...", "value": "aggregation_from_upstream_artifacts"}}`
         (2.49s is far above that substrate's 0.0001s floor), so the flag almost certainly fired on
         GGUF/CUDA substring mentions inside CITED UPSTREAM fields, not a live-inference claim this
         artifact itself makes. Confirm this reading and, if it holds, note it as a candidate
@@ -205,7 +205,7 @@ tasks:
         principle: "An over-broad triage rule would silently mask real regressions -- exactly the failure
           mode Tests-Must-Run-And-Assert exists to prevent. Precision here is the safety property."
       historical_incidents_matched:
-        value: "list of {experiment_id, milestone} -- exp3521/.325, exp3544/.326, exp3612/.332,
+        value: "list of {{experiment_id, milestone}} -- exp3521/.325, exp3544/.326, exp3612/.332,
           exp5182/.475 -- confirm the detector would have caught all 4 retrospectively"
       wiring_instructions_documented:
         value: bool
@@ -317,7 +317,7 @@ tasks:
         principle: "State precisely what was actually wrong -- do not conflate 'the wiring exists' with
           'the bug is fixed'; this task exists because those two things came apart once already."
       build_retro_timing_fallback_direct_call_result:
-        value: "{raised: bool, exception_if_any: string, returned_experiment_times_count: int}"
+        value: "{{raised: bool, exception_if_any: string, returned_experiment_times_count: int}}"
       journalctl_exception_found:
         value: bool
       fix_applied_to:
@@ -451,11 +451,11 @@ tasks:
       diffusiongemma_loadable:
         value: bool
         principle: "MECHANICAL CONSTRAINT: must be a BARE top-level boolean (e.g. \"diffusiongemma_loadable\":
-          true), NOT wrapped as {\"value\": true, \"principle\": ...} -- conductor_gates.py's
+          true), NOT wrapped as {{\"value\": true, \"principle\": ...}} -- conductor_gates.py's
           evaluate_gates() compares this field directly against Python True via a plain dict.get(); a
           wrapped dict never equals True and would silently, permanently block any future gated task
           reading it (the feedback_gated_fields_must_be_bare failure class, the .330 cascade incident).
-          Every OTHER field in this artifact may use the normal {value, principle} convention; this one
+          Every OTHER field in this artifact may use the normal {{value, principle}} convention; this one
           must not."
       loading_path_used:
         value: "vllm_native | hf_custom_device_map | both_failed"
@@ -464,13 +464,13 @@ tasks:
       forward_pass_confirmed:
         value: bool
       peak_vram_gib_per_gpu:
-        value: "{gpu0: float, gpu1: float}"
+        value: "{{gpu0: float, gpu1: float}}"
       memory_arithmetic_gap_investigated:
         value: string
         principle: "Reports where the ~10 GiB gap between nominal 4-bit footprint and actual OOM
           threshold goes -- diagnostic value independent of whether loading ultimately succeeds."
       mitigations_tried:
-        value: "ordered list of {mitigation, outcome, error_if_any, duration_s}"
+        value: "ordered list of {{mitigation, outcome, error_if_any, duration_s}}"
         principle: "Must show genuinely new attempts vs. exp5182's 4 -- an adversarial reviewer should be
           able to diff this list against exp5182's mitigations_tried and see zero overlap."
       llama_cpp_pr_24427_status_checked:
@@ -584,7 +584,7 @@ tasks:
       exact_test_passes_min6_rule:
         value: bool
       decentralization_tier_local_generator_result:
-        value: "{n_calls, model_used, discordant_wins, discordant_losses}"
+        value: "{{n_calls, model_used, discordant_wins, discordant_losses}}"
         principle: "CLAUDE.md rule 1 requires every capability work end-to-end with locally-hosted
           open-weight models; a cache-existence check alone does not satisfy this."
       random_seed:
@@ -704,7 +704,7 @@ tasks:
       lever_validated:
         value: bool
         principle: "MECHANICAL CONSTRAINT: must be a BARE top-level boolean, e.g. \"lever_validated\": true
-          -- NOT wrapped as {\"value\": true, \"principle\": ...}. conductor_gates.py reads it via a
+          -- NOT wrapped as {{\"value\": true, \"principle\": ...}}. conductor_gates.py reads it via a
           direct dict .get() compared against Python True; a wrapped dict never equals True and would
           silently, permanently block exp5199 (the feedback_gated_fields_must_be_bare failure class, the
           .330 cascade incident). True ONLY if map-only or map-plus-pruner banked a reproduction-gated
@@ -820,7 +820,7 @@ tasks:
       live_path_integration_outcome:
         value: string
       new_levels_banked:
-        value: "list of {game, level, solve_provenance}"
+        value: "list of {{game, level, solve_provenance}}"
       reproducible_total_levels_delta:
         value: int
         principle: "Zero is a valid, honest outcome and must not be inflated."
@@ -1080,7 +1080,7 @@ tasks:
       boards_reachable_count:
         value: "int, out of 3"
       preconditions_checked:
-        value: "list of {board, resource, available}"
+        value: "list of {{board, resource, available}}"
       random_seed:
         value: int
       reproducibility_checksum:
@@ -1223,9 +1223,9 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       and_composition_verifier_options:
-        value: "{rename: str, retire: str, reimplement: str, recommendation: str}"
+        value: "{{rename: str, retire: str, reimplement: str, recommendation: str}}"
       claim_isolation_uncertainty_router_options:
-        value: "{rename: str, retire: str, reimplement: str, recommendation: str}"
+        value: "{{rename: str, retire: str, reimplement: str, recommendation: str}}"
       audit_findings_independently_reconfirmed:
         value: bool
         principle: "Confirms this task read the actual current source rather than trusting the audit
@@ -1304,7 +1304,7 @@ tasks:
     1. `BLOCKED_PATTERN_MATCHED` uses raw substring matching (`pattern_str.lower() in haystack`) with no
        word boundaries -- can match inside unrelated longer words.
     2. Principle-wrapped fields are not unwrapped: `id`, `requires`, `operator_override`, `title`, and
-       `prompt` are treated as bare values, so `{principle: ..., value: "exp2091..."}` can evade
+       `prompt` are treated as bare values, so `{{principle: ..., value: "exp2091..."}}` can evade
        `EXP_ID_RETIRED` / `REQUIRES_RETIRED_EXP` or fail override recognition (per CLAUDE.md's
        "Principle-Annotated Artifact Fields" convention -- ANY field may legally be written in this
        wrapped form).
@@ -1353,11 +1353,11 @@ tasks:
       counterexample_regression_test_passes_after_fix:
         value: bool
       four_issues_fixed:
-        value: "{word_boundary: bool, principle_unwrap: bool, general_negation: bool, terminal_prefix: bool}"
+        value: "{{word_boundary: bool, principle_unwrap: bool, general_negation: bool, terminal_prefix: bool}}"
       shared_unwrap_helper_reused_or_created:
         value: string
       full_adversarial_verify_test_suite_result:
-        value: "{passed: int, failed: int}"
+        value: "{{passed: int, failed: int}}"
       backfill_dry_run_result:
         value: "summary of the corpus-wide sanity check"
       inference_substrate:
@@ -1430,7 +1430,7 @@ tasks:
 
     REQUIRED ARTIFACT FIELDS:
       candidate_discriminators_authored:
-        value: "list of {name, description, transpose_sensitive: bool}"
+        value: "list of {{name, description, transpose_sensitive: bool}}"
       best_subset_found:
         value: "list of discriminator names"
       pass_at_2_baseline_always_on_only:
@@ -1565,7 +1565,7 @@ tasks:
       reproducible_total_levels_delta:
         value: int
       live_agent_self_discovery_ratio_updated:
-        value: "{live_agent_self_discovery: int, development_proxy: int, total: int}"
+        value: "{{live_agent_self_discovery: int, development_proxy: int, total: int}}"
       levelup_guarantee_structurally_satisfied:
         value: bool
       levelup_guarantee_outcome_satisfied:

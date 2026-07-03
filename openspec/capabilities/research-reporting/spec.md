@@ -32885,6 +32885,102 @@ does not claim the handoff is clean.
 |---|---|---|
 | REQ-REPORT-5181 | Planned (`python/carnot/experiment_5181_archive_474_activate_475.py`) | Planned (`tests/python/test_experiment_5181_archive_474_activate_475.py`) |
 
+### REQ-REPORT-5193: Archive .475, Confirm .476 Activation, And Preserve The Poison-Test-Cascade Truth
+
+The Exp 5193 workflow SHALL archive milestone `2026.07.475`, confirm milestone
+`2026.07.476` is active in `research-roadmap.yaml`, and write the terminal
+record-only artifact
+`results/experiment_5193_archive_475_activate_476.json`. It SHALL read
+`results/experiment_5181_archive_474_activate_475.json`,
+`results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`,
+`ops/conductor-log.md`'s 2026-07-03 `.475` timeline,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, the active roadmap, the
+exclusion manifest, the operational retrospective, and the publication gate
+output. It SHALL run no live model work and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The archive summary SHALL state that `.475` queued 12 tasks but only two
+produced real artifacts: Exp 5181 and Exp 5182. It SHALL record that Exp 5181
+was flagged `DURATION_TOO_SHORT` even though its declared substrate was
+`aggregation_from_upstream_artifacts`, making the flag a likely
+adversarial-verify false positive caused by cited upstream GGUF/CUDA text rather
+than by a live-inference claim. It SHALL record Exp 5182 as real diagnostic
+progress despite the blocked verdict: all four mitigation attempts failed, the
+single-GPU variants OOMed past the nominal 12.864 GiB NF4 footprint, the
+auto-balance variant reproduced the meta-tensor/CPU-disk dispatch failure, and
+the precise root cause is DiffusionGemma's tied encoder/decoder weights being
+split by `device_map="auto"` while single-device placement preserves the tie but
+does not fit on a 24 GiB card.
+
+The workflow SHALL also record the poison-test cascade: the conductor-side Exp
+5182 attempt timed out before writing its deliverable, leaving
+`test_ondisk_deliverable_is_valid` red; the shared pretest gate then skipped or
+gate-blocked Exp 5183 through Exp 5192. It SHALL confirm the `.476` roadmap task
+set is active in `research-roadmap.yaml`, SHALL run
+`scripts/exclusion_manifest_lint.py research-roadmap.yaml` post-activation and
+count the activation clean when the command exits zero and reports no hard
+risks, SHALL confirm no DiffusionGemma-scoped experiment id is retired in
+`ops/exclusion_manifest.yaml`, SHALL confirm `scripts/publication_gate.py --json`
+reports `paper_ready=true` and `unmet_gates=[]`, SHALL compute
+`_bmad/architecture.md` staleness from the 2026-05-16 Last Reconciled date, and
+SHALL confirm this transition did not modify `scripts/research_conductor.py`.
+
+The artifact SHALL include the principle-annotated fields `v475_summary`,
+`exclusion_manifest_confirmed_clean`, `research_roadmap_yaml_activated`,
+`architecture_md_staleness_days`,
+`exp5181_duration_too_short_flag_assessment`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include per-task archive rows, conductor
+timeline counts, source artifact paths/checksums, publication gate results,
+operational retro false-zero evidence, retro-timing fallback wiring evidence,
+whether the already-active-roadmap fallback was used because
+`research-roadmap-next.yaml` is absent, tests run, and a content-addressed
+`reproducibility_checksum`.
+
+Required field principles:
+
+- `v475_summary`: principle "An inaccurate handoff summary propagates errors into every downstream .476 task's CONTEXT section; precision here is load-bearing for the whole milestone."
+- `exclusion_manifest_confirmed_clean`: principle "The .476 plan must not be blocked by stale retired-scope false positives, especially against DiffusionGemma follow-up work."
+- `research_roadmap_yaml_activated`: principle "Downstream conductor work depends on `research-roadmap.yaml` naming the `.476` milestone and containing the Exp 5193-5206 task set."
+- `architecture_md_staleness_days`: principle "Mechanical input to the Architecture Freshness Check; feeds exp5202's priority."
+- `exp5181_duration_too_short_flag_assessment`: principle "Documents whether the flag is confirmed a false positive, feeding a future adversarial_verify.py fix without fixing it in this task."
+- `inference_substrate`: principle "This archive reads upstream artifacts and lint outputs only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5193: The Archive Preserves The Precise .475 Outcomes
+
+**Given** Exp 5181 and Exp 5182 artifacts are readable, no Exp 5183 through Exp
+5192 artifacts exist, `ops/conductor-log.md` records the 2026-07-03 `.475`
+activation refusals, planner failures, Exp 5182 timeout, poison-test cascade,
+and later deliverable-exists retry, `research-roadmap.yaml` is active for
+`2026.07.476`, the exclusion-manifest lint exits zero with no hard risks, the
+publication gate reports `paper_ready=true` and `unmet_gates=[]`, and
+`_bmad/architecture.md` was last reconciled on 2026-05-16
+**When** the Exp 5193 workflow runs on 2026-07-03
+**Then** it writes
+`results/experiment_5193_archive_475_activate_476.json`, records the exact
+2-of-12 real-artifact outcome, records Exp 5182's blocked-but-real root-cause
+diagnosis, records the Exp 5183-5192 poison-test cascade, sets
+`exclusion_manifest_confirmed_clean=true`,
+`research_roadmap_yaml_activated=true`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-5193-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Without Fabrication
+
+**Given** a required `.475` artifact is missing, the active roadmap is not
+`.476`, the exclusion-manifest lint reports a hard risk, the publication gate is
+not clean, or `scripts/research_conductor.py` has been modified
+**When** the Exp 5193 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict` starts with a
+complete-path blocking phrase, records the failed precondition explicitly, and
+does not claim the `.476` handoff is clean.
+
+## Implementation Status (REQ-REPORT-5193)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5193 | Planned (`python/carnot/experiment_5193_archive_475_activate_476.py`) | Planned (`tests/python/test_experiment_5193_archive_475_activate_476.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
