@@ -124,7 +124,7 @@
     "principle": "The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.",
     "value": true
   },
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "CIRCULAR_MOAT_OVERCLAIM",
@@ -136,5 +136,25 @@
       "severity": "critical",
       "detail": "Moat/verifier-value claim has verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True}. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
     }
-  ]
+  ],
+  "linter_flag_corrigendum": {
+    "filed_at": "2026-07-02T",
+    "filed_by": "outer-loop (Claude Sonnet 5), user asked to dig into the flag",
+    "original_flags": [
+      {
+        "kind": "CIRCULAR_MOAT_OVERCLAIM",
+        "severity": "critical",
+        "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True} (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
+      },
+      {
+        "kind": "MOAT_CLAIM_RIGOR",
+        "severity": "critical",
+        "detail": "Moat/verifier-value claim has verifier_is_oracle={'principle': 'The executable test suite IS the oracle here; per the Circularity/Oracle-Distinctness Discipline this is execution-grounded, not a fresh oracle-distinct claim -- must not be headlined as moat proven.', 'value': True}. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible."
+      }
+    ],
+    "root_cause": "_flips_gate() did a plain `'diffusiongemma_met' in honest_verdict.lower()` substring check. This artifact's honest_verdict, 'blocked_diffusiongemma_meta_tensor_bug_unresolved', contains 'diffusiongemma_meta_tensor' -- 'meta' starts with 'met', so the substring check matched purely by coincidence. The artifact never claimed a gate was met; it honestly reported the pilot was blocked before any arm ran (arm_rows=[], all pass_at_1_* fields are degenerate 0.0 placeholders, not real measurements).",
+    "fix": "scripts/adversarial_verify.py: _flips_gate() now uses word-boundary-aware regexes (_GATE_MET_RE, _DIFFUSIONGEMMA_MET_RE) requiring 'met' not be immediately followed by another lowercase letter/digit -- excludes meta/method/metric/metadata while still matching the genuine word 'met' at a token boundary. 11 new tests (tests/python/test_adversarial_verify_flips_gate_word_boundary.py), full 234-test suite green, live re-check on this exact artifact confirms 0 flags.",
+    "fresh_recheck_result": "0 flags (was 2 CRITICAL: CIRCULAR_MOAT_OVERCLAIM, MOAT_CLAIM_RIGOR).",
+    "underlying_finding_preserved": "This correction does not change the artifact's substance: honest_verdict stays blocked_diffusiongemma_meta_tensor_bug_unresolved. The June-14-vintage meta-tensor loading bug that blocks DiffusionGemma scoring is still unresolved and needs a real fix (the model's dedicated diffusion API, not the standard causal-LM forward interface) before any scaling pilot can actually run."
+  }
 }
