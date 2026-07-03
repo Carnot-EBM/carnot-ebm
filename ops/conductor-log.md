@@ -10053,3 +10053,4 @@ web search: |
 | 2026-07-03 01:04 UTC | PHASE C1 GAP-4 forward-protocol scale-up toward st | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-03 01:22 UTC | PHASE C2 a genuinely different verifier mechanism  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-03 01:47 UTC | PHASE C3 hardware continuity -- KV260 + PolarFire  | OK | 87 passed, 1 warning in 10.15s |
+| 2026-07-03 02:05 UTC | PHASE Z capstone -- reconcile the oracle-distinct  | OK | 93 passed, 1 warning in 11.41s |
