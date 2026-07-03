@@ -28,6 +28,7 @@ monkeypatching) so they don't churn as real retirement entries are added:
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -343,3 +344,131 @@ class TestWrongMechanismNegationAware:
         )
         risks = _MOD.lint(roadmap)
         assert len([r for r in risks if r.violation_class == "WRONG_MECHANISM_PRECONDITION"]) == 1
+
+
+class TestScopeMatchedPriorFailureProseAutoDowngrade:
+    """2026-07-03: `.474` REFUSED activation for ~45 minutes -- 7 tasks scope-matched
+    real prior artifacts but had no structured `prior_failures:` block, even though
+    EVERY task's own prompt already explained why it wasn't a doomed rerun (an
+    outer-loop session had to read each prompt and hand-add the structured field).
+    This is a mechanical safety net for that exact recurrence: when a task's prompt
+    names a matched prior's id verbatim with nearby differentiation language, CLASS 3
+    auto-downgrades HARD -> WARNING (never a full clear) instead of blocking activation
+    for a reasoning gap that was already visible in the prose."""
+
+    @pytest.fixture
+    def project_with_prior_failure(self, isolated_project: Path) -> tuple[Path, str]:
+        """Seeds results/ with one BLOCKED prior artifact whose scope
+        ("widget-repair-pipeline") will overlap a same-scope draft task."""
+        results_dir = isolated_project / "results"
+        artifact = {
+            "experiment": "experiment_9001_widget_repair_pipeline_v1",
+            "title": "Widget Repair Pipeline v1",
+            "honest_verdict": "blocked_widget_repair_pipeline_precondition_missing",
+        }
+        (results_dir / "experiment_9001_widget_repair_pipeline_v1.json").write_text(
+            json.dumps(artifact)
+        )
+        return isolated_project, "exp9001-widget-repair-pipeline-v1"
+
+    def test_no_prose_and_no_structured_block_is_still_hard_blocked(
+        self, project_with_prior_failure: tuple[Path, str]
+    ) -> None:
+        """Baseline: without the fix, this shape is exactly what makes `.474`
+        HARD-block -- scope-matched, no prior_failures:, prompt doesn't even
+        mention the prior. Confirms the fixture actually triggers CLASS 3."""
+        tmp_path, prior_id = project_with_prior_failure
+        roadmap = _write_roadmap(
+            tmp_path,
+            [
+                {
+                    "id": "exp9002-widget-repair-pipeline-v2",
+                    "title": "PHASE Q widget repair pipeline v2",
+                    "prompt": "CONTEXT: scale the widget repair pipeline to n=30.",
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        matched = [r for r in risks if r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"]
+        assert len(matched) == 1
+        assert matched[0].severity == "HARD"
+
+    def test_prose_naming_prior_with_differentiation_language_auto_downgrades(
+        self, project_with_prior_failure: tuple[Path, str]
+    ) -> None:
+        """The fix: prompt names the matched prior id verbatim with nearby
+        differentiation language ('hardens' / 'was blocked') -- downgrades to
+        WARNING, and the detail carries a visible AUTO-DOWNGRADED audit marker."""
+        tmp_path, prior_id = project_with_prior_failure
+        roadmap = _write_roadmap(
+            tmp_path,
+            [
+                {
+                    "id": "exp9002-widget-repair-pipeline-v2",
+                    "title": "PHASE Q widget repair pipeline v2",
+                    "prompt": (
+                        f"CONTEXT: {prior_id} was blocked on a missing precondition, not a "
+                        "methodology failure. This task hardens that same pipeline now that "
+                        "the precondition is fixed, scaling to n=30."
+                    ),
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        matched = [r for r in risks if r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"]
+        assert len(matched) == 1
+        assert matched[0].severity == "WARNING"
+        assert "AUTO-DOWNGRADED" in matched[0].detail
+
+    def test_prose_naming_prior_without_differentiation_language_stays_hard(
+        self, project_with_prior_failure: tuple[Path, str]
+    ) -> None:
+        """Regression guard: merely MENTIONING the prior id (e.g. citing it as
+        related background) without any differentiation language must NOT
+        auto-downgrade -- the marker phrase is load-bearing, not just the id."""
+        tmp_path, prior_id = project_with_prior_failure
+        roadmap = _write_roadmap(
+            tmp_path,
+            [
+                {
+                    "id": "exp9002-widget-repair-pipeline-v2",
+                    "title": "PHASE Q widget repair pipeline v2",
+                    "prompt": f"CONTEXT: see also {prior_id} for related background. Scale to n=30.",
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        matched = [r for r in risks if r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"]
+        assert len(matched) == 1
+        assert matched[0].severity == "HARD"
+
+    def test_valid_structured_prior_failures_block_still_takes_priority(
+        self, project_with_prior_failure: tuple[Path, str]
+    ) -> None:
+        """A genuine, valid structured prior_failures: block must still fully clear
+        the check as before -- the auto-downgrade is a fallback, not a replacement."""
+        tmp_path, prior_id = project_with_prior_failure
+        roadmap = _write_roadmap(
+            tmp_path,
+            [
+                {
+                    "id": "exp9002-widget-repair-pipeline-v2",
+                    "title": "PHASE Q widget repair pipeline v2",
+                    "prompt": "CONTEXT: scale the widget repair pipeline to n=30.",
+                    "prior_failures": [
+                        {
+                            "experiment_id": prior_id,
+                            "verdict": "blocked_widget_repair_pipeline_precondition_missing",
+                            "addressed_by": "Precondition fixed; this scales the same pipeline.",
+                            "retire_if_same_verdict": False,
+                        }
+                    ],
+                    "agent_type": "codex",
+                }
+            ],
+        )
+        risks = _MOD.lint(roadmap)
+        assert [r for r in risks if r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"] == []
