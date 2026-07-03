@@ -14788,6 +14788,117 @@ blocked reasons for unreachable boards, `boards_reachable_count`,
 
 ---
 
+### REQ-HW-5179
+
+**Title:** Hardware continuity board timing MUST diagnose GateMate IDCODE loss while preserving KV260 and PolarFire workloads
+
+**Description:**
+Experiment 5179 MUST produce
+`results/experiment_5179_hardware_continuity_board_timing_v474.json` as a v474
+hardware-continuity artifact. The artifact MUST continue the combined
+transcript pattern from Exp 5166, use `inference_substrate=hardware_smoke`, and
+report KV260, GateMate A1/DirtyJTAG, and PolarFire independently. One blocked
+board MUST remain a per-board blocker, not a reason to skip the other boards.
+
+KV260 MUST be checked over SSH only with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host block devices MUST
+NOT be inspected, mounted, or written as a KV260 precondition. If SSH is
+reachable, the experiment MUST run the same real hash-verified board-local
+workload pattern used by Exp 5166 and record the command transcript, workload
+hash, timing output, sample-quality or correctness evidence, and
+`no_speedup_claim=true`.
+
+GateMate MUST first run `openFPGALoader -c dirtyJtag --detect` and preserve the
+full raw transcript. If the GateMate Series GM1Ax IDCODE `0x20000001` is absent,
+the artifact MUST record `blocked_gatemate_dirtyjtag_idcode` and MUST add real
+differential diagnosis beyond a repeated identical detect. The required
+diagnostic evidence MUST include `openFPGALoader --scan-usb`, USB
+enumeration/permission evidence for the DirtyJTAG device, kernel-log evidence or
+an honest kernel-log access blocker, `openFPGALoader -V` compared with the
+2026-05-23 known-good v1.1.1 toolchain, a detect retry with changed parameters
+or verbosity, and an explicit outcome for board power-cycle/USB-port/reseat
+availability. A shell-only USB reset MAY be recorded, but it MUST NOT be
+presented as a physical port move unless an operator actually moved the cable.
+
+PolarFire MUST be checked over SSH with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. If SSH is reachable,
+the experiment MUST run the same real hash-verified board-local workload pattern
+used by Exp 5166 and record the command transcript, workload hash, timing
+output, sample-quality or correctness evidence, and `no_speedup_claim=true`.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations:
+
+- `kv260_result`
+- `gatemate_result`
+- `polarfire_result`
+- `gatemate_idcode_diagnostic_attempts`
+- `boards_reachable_count`
+- `hardware_wishlist_updated`
+- `honest_verdict`
+- `inference_substrate`
+- `preconditions_checked`
+- `command_transcripts`
+- `sample_quality_evidence`
+- `no_speedup_claim`
+- `tests_run`
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5179_hardware_continuity_board_timing_v474.py --date 20260702 --update-wishlist`
+  writes `results/experiment_5179_hardware_continuity_board_timing_v474.json`.
+- The artifact includes
+  `experiment_id="exp5179-hardware-continuity-board-timing-v474"`,
+  `milestone="2026.07.474"`, `spec_refs` containing `REQ-HW-5179` and
+  `SCENARIO-HW-5179`, `field_principles`, per-board precondition transcripts,
+  workload hashes, timing transcripts or exact `blocked_<board>_<resource>`
+  reasons, `gatemate_idcode_diagnostic_attempts`, and a stable
+  `reproducibility_checksum`.
+- `gatemate_idcode_diagnostic_attempts` is a list of dictionaries containing
+  `attempt`, `method`, and `outcome`; it MUST prove at least one diagnostic path
+  different from `openFPGALoader -c dirtyJtag --detect`.
+- `honest_verdict` starts with `complete_`, `complete:`, `success_`, or
+  `success:` and explicitly reports per-board reachability, including whether
+  the GateMate IDCODE issue was resolved, narrowed to a specific cause, or
+  remains unexplained after diagnostics.
+- `kv260_host_block_devices_touched=false`, and no artifact field cites host
+  storage markers such as `/dev/mmcblk` or `/dev/disk`.
+- `boards_reachable_count` equals the number of board results whose
+  `reachable` field is true.
+- `hardware_wishlist_updated=true` only after `research-hardware-wishlist.md`
+  contains this milestone's dated status line for KV260, GateMate, and
+  PolarFire.
+- `no_speedup_claim=true`, `hardware_speedup_claimed=false`, and any
+  board-touching measurement uses `inference_substrate=hardware_smoke`.
+
+**Implementation status:** Pending (Exp 5179)
+
+---
+
+### SCENARIO-HW-5179
+
+**Scenario:** Exp 5179 writes combined board timing evidence and a differential GateMate IDCODE diagnostic transcript.
+
+**Given:** KV260 may only be checked over SSH, GateMate reachability requires a
+GM1Ax IDCODE from DirtyJTAG/openFPGALoader, PolarFire may only be checked over
+SSH, and no speedup may be claimed from smoke workloads.
+**When:** Experiment 5179 runs all three board preconditions, executes
+hash-verified workloads only for SSH boards that pass their own precondition,
+and investigates any GateMate IDCODE miss with scan-usb, USB enumeration,
+kernel-log, tool-version, changed-detect, and reset or physical-access outcome
+attempts.
+**Then:** It writes
+`results/experiment_5179_hardware_continuity_board_timing_v474.json` with all
+required fields, principle annotations, combined transcripts, per-board
+`kv260_result`, `gatemate_result`, and `polarfire_result` dictionaries,
+`gatemate_idcode_diagnostic_attempts`, exact blocked reasons for unreachable
+boards, `boards_reachable_count`, `hardware_wishlist_updated=true`, no host
+block-device touches, `inference_substrate=hardware_smoke`, and
+`no_speedup_claim=true`.
+
+**Implementation status:** Pending (Exp 5179)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.

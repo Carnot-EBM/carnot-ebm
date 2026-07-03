@@ -1,0 +1,415 @@
+{
+  "boards_reachable_count": 2,
+  "command_transcripts": {
+    "gatemate_dmesg": {
+      "combined_output": "[Fri Jun 12 12:47:47 2026] usb 3-2.3: new full-speed USB device number 6 using xhci_hcd\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: New USB device found, idVendor=1209, idProduct=c0ca, bcdDevice= 1.11\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: New USB device strings: Mfr=1, Product=2, SerialNumber=3\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: Product: DirtyJTAG\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: Manufacturer: Jean THOMAS\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: SerialNumber: 1861832311111616\n[Fri Jun 12 12:48:21 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Fri Jun 12 12:48:21 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n[Fri Jun 12 12:48:21 2026] usbcore: registered new interface driver cdc_acm\n[Fri Jun 12 12:48:21 2026] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters\n[Thu Jul  2 21:30:37 2026] usb 3-2.3: reset full-speed USB device number 6 using xhci_hcd\n[Thu Jul  2 21:30:37 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Thu Jul  2 21:30:37 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n[Thu Jul  2 21:43:58 2026] usb 3-2.3: reset full-speed USB device number 6 using xhci_hcd\n[Thu Jul  2 21:43:58 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Thu Jul  2 21:43:58 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n",
+      "command": "sh -lc 'sudo -n dmesg --ctime | rg -i '\"'\"'3-2\\.3|dirtyjtag|1209|c0ca|jtag|cdc_acm|ttyACM'\"'\"' | tail -n 120'",
+      "duration_s": 0.088556,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "[Fri Jun 12 12:47:47 2026] usb 3-2.3: new full-speed USB device number 6 using xhci_hcd\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: New USB device found, idVendor=1209, idProduct=c0ca, bcdDevice= 1.11\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: New USB device strings: Mfr=1, Product=2, SerialNumber=3\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: Product: DirtyJTAG\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: Manufacturer: Jean THOMAS\n[Fri Jun 12 12:47:47 2026] usb 3-2.3: SerialNumber: 1861832311111616\n[Fri Jun 12 12:48:21 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Fri Jun 12 12:48:21 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n[Fri Jun 12 12:48:21 2026] usbcore: registered new interface driver cdc_acm\n[Fri Jun 12 12:48:21 2026] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters\n[Thu Jul  2 21:30:37 2026] usb 3-2.3: reset full-speed USB device number 6 using xhci_hcd\n[Thu Jul  2 21:30:37 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Thu Jul  2 21:30:37 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n[Thu Jul  2 21:43:58 2026] usb 3-2.3: reset full-speed USB device number 6 using xhci_hcd\n[Thu Jul  2 21:43:58 2026] cdc_acm 3-2.3:1.1: ttyACM0: USB ACM device\n[Thu Jul  2 21:43:58 2026] cdc_acm 3-2.3:1.3: ttyACM1: USB ACM device\n"
+    },
+    "gatemate_low_freq_detect": {
+      "combined_output": "Jtag frequency : requested 1000000 Hz -> real 1000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect --freq 1000000",
+      "duration_s": 0.015297,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 1000000 Hz -> real 1000000 Hz\n"
+    },
+    "gatemate_post_reset_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.016692,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "gatemate_post_reset_scan_usb": {
+      "combined_output": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n",
+      "command": "openFPGALoader --scan-usb",
+      "duration_s": 0.03406,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n"
+    },
+    "gatemate_power_port": {
+      "combined_output": "uhubctl not installed; physical port power-cycle not available from this shell\n",
+      "command": "sh -lc 'if command -v uhubctl >/dev/null 2>&1; then uhubctl; else echo '\"'\"'uhubctl not installed; physical port power-cycle not available from this shell'\"'\"'; exit 127; fi'",
+      "duration_s": 0.071133,
+      "exit_code": 127,
+      "stderr": "",
+      "stdout": "uhubctl not installed; physical port power-cycle not available from this shell\n"
+    },
+    "gatemate_precondition": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.022495,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "gatemate_scan_usb": {
+      "combined_output": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n",
+      "command": "openFPGALoader --scan-usb",
+      "duration_s": 0.034723,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n"
+    },
+    "gatemate_usb_enumeration": {
+      "combined_output": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n/dev/bus/usb/003/006 660 root:uucp\nDEVNAME=/dev/ttyACM0\nID_MODEL=DirtyJTAG\nID_MODEL_ID=c0ca\nID_SERIAL=Jean_THOMAS_DirtyJTAG_1861832311111616\nID_VENDOR_ID=1209\nID_USB_DRIVER=cdc_acm\nID_PATH=pci-0000:c3:00.0-usb-0:2.3:1.1\nDEVNAME=/dev/ttyACM1\nID_MODEL=DirtyJTAG\nID_MODEL_ID=c0ca\nID_SERIAL=Jean_THOMAS_DirtyJTAG_1861832311111616\nID_VENDOR_ID=1209\nID_USB_DRIVER=cdc_acm\nID_PATH=pci-0000:c3:00.0-usb-0:2.3:1.3\n",
+      "command": "sh -lc 'openFPGALoader --scan-usb; stat -c '\"'\"'%n %a %U:%G'\"'\"' /dev/bus/usb/003/006 2>/dev/null || true; for dev in /dev/ttyACM0 /dev/ttyACM1; do [ -e \"$dev\" ] && udevadm info -q property -n \"$dev\" | rg '\"'\"'^(DEVNAME|ID_MODEL|ID_VENDOR_ID|ID_MODEL_ID|ID_SERIAL|ID_USB_DRIVER|ID_PATH)='\"'\"'; done'",
+      "duration_s": 0.137078,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n/dev/bus/usb/003/006 660 root:uucp\nDEVNAME=/dev/ttyACM0\nID_MODEL=DirtyJTAG\nID_MODEL_ID=c0ca\nID_SERIAL=Jean_THOMAS_DirtyJTAG_1861832311111616\nID_VENDOR_ID=1209\nID_USB_DRIVER=cdc_acm\nID_PATH=pci-0000:c3:00.0-usb-0:2.3:1.1\nDEVNAME=/dev/ttyACM1\nID_MODEL=DirtyJTAG\nID_MODEL_ID=c0ca\nID_SERIAL=Jean_THOMAS_DirtyJTAG_1861832311111616\nID_VENDOR_ID=1209\nID_USB_DRIVER=cdc_acm\nID_PATH=pci-0000:c3:00.0-usb-0:2.3:1.3\n"
+    },
+    "gatemate_usb_reset": {
+      "combined_output": "Resetting DirtyJTAG ... ok\n",
+      "command": "sh -lc 'if command -v usbreset >/dev/null 2>&1; then sudo -n usbreset 1209:c0ca; else echo '\"'\"'usbreset not installed'\"'\"'; exit 127; fi'",
+      "duration_s": 0.380472,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Resetting DirtyJTAG ... ok\n"
+    },
+    "gatemate_verbose_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nfound 0 devices\n",
+      "command": "openFPGALoader -c dirtyJtag --detect -v",
+      "duration_s": 0.016178,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nfound 0 devices\n"
+    },
+    "gatemate_version": {
+      "combined_output": "openFPGALoader v1.1.1\n",
+      "command": "openFPGALoader -V",
+      "duration_s": 0.011209,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "openFPGALoader v1.1.1\n"
+    },
+    "gatemate_workload": null,
+    "kv260_precondition": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 2.617114,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "kv260_workload": {
+      "combined_output": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 4.556099884212017e-05, \"energy\": 0, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, math, time\npayload = '\"'\"'{\"board\": \"kv260\", \"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [5, 6, -1]], \"expected_energy\": 0, \"experiment_id\": \"exp5179-hardware-continuity-board-timing-v474\", \"spins\": [1, -1, 1, -1, 1, -1, 1, -1], \"workload\": \"exp5179_inline_ising_energy_smoke\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78'\"'\"',\n    '\"'\"'executable_sha256'\"'\"': '\"'\"'1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_smoke'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(spins), '\"'\"'finite_energy'\"'\"': math.isfinite(float(energy))},\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}, sort_keys=True))\nPY'",
+      "duration_s": 0.569162,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 4.556099884212017e-05, \"energy\": 0, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78\"}\n"
+    },
+    "polarfire_precondition": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.7832,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_workload": {
+      "combined_output": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 0.00017500179819762707, \"energy\": 2, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, math, time\npayload = '\"'\"'{\"board\": \"polarfire\", \"edges\": [[0, 1, 1], [1, 2, 1], [2, 3, -1], [3, 4, 1], [4, 5, -1], [6, 7, 1]], \"expected_energy\": 2, \"experiment_id\": \"exp5179-hardware-continuity-board-timing-v474\", \"spins\": [1, 1, -1, -1, 1, -1, 1, -1], \"workload\": \"exp5179_inline_ising_energy_smoke\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3'\"'\"',\n    '\"'\"'executable_sha256'\"'\"': '\"'\"'1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_smoke'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(spins), '\"'\"'finite_energy'\"'\"': math.isfinite(float(energy))},\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}, sort_keys=True))\nPY'",
+      "duration_s": 1.238464,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 0.00017500179819762707, \"energy\": 2, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3\"}\n"
+    }
+  },
+  "conductor_modified": false,
+  "duration_s": 6.036568,
+  "experiment": "experiment_5179_hardware_continuity_board_timing",
+  "experiment_id": "exp5179-hardware-continuity-board-timing-v474",
+  "field_principles": {
+    "boards_reachable_count": "reachability accounting; one blocked board is not a whole-task failure",
+    "command_transcripts": "authenticated command evidence",
+    "gatemate_idcode_diagnostic_attempts": "differential diagnosis beyond a repeated DirtyJTAG detect",
+    "gatemate_result": "per-board evidence; GateMate stays visible even when DirtyJTAG lacks an IDCODE",
+    "hardware_wishlist_updated": "ops continuity; the active hardware table must carry this milestone's dated board status",
+    "honest_verdict": "terminal verdict with complete_/success_ prefix plus honest per-board reachability",
+    "inference_substrate": "substrate honesty; board-touching measurements are hardware_smoke",
+    "kv260_result": "per-board evidence; KV260 SSH success or blocker must not be inferred from host storage",
+    "no_speedup_claim": "hardware claim discipline",
+    "polarfire_result": "per-board evidence; PolarFire SSH success or blocker is reported independently",
+    "preconditions_checked": "fabrication guard; every board resource is checked before workload execution",
+    "sample_quality_evidence": "no latency-only or speedup-only claim",
+    "tests_run": "verification evidence"
+  },
+  "gatemate_idcode_diagnostic_attempts": [
+    {
+      "attempt": 1,
+      "method": "detect",
+      "outcome": "no GateMate IDCODE; raw_output='Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\\n'"
+    },
+    {
+      "attempt": 2,
+      "method": "scan_usb",
+      "outcome": "DirtyJTAG enumerated through openFPGALoader --scan-usb"
+    },
+    {
+      "attempt": 3,
+      "method": "tool_version_compare",
+      "outcome": "openFPGALoader v1.1.1 matches known-good 2026-05-23 toolchain"
+    },
+    {
+      "attempt": 4,
+      "method": "usb_enumeration",
+      "outcome": "DirtyJTAG enumerated at USB/CDC layer with usable uucp/ACM evidence"
+    },
+    {
+      "attempt": 5,
+      "method": "kernel_log",
+      "outcome": "kernel log shows DirtyJTAG/USB activity without resolving target IDCODE"
+    },
+    {
+      "attempt": 6,
+      "method": "verbose_detect",
+      "outcome": "changed detect still did not expose IDCODE; raw_output='Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\\nfound 0 devices\\n'"
+    },
+    {
+      "attempt": 7,
+      "method": "low_frequency_detect",
+      "outcome": "changed detect still did not expose IDCODE; raw_output='Jtag frequency : requested 1000000 Hz -> real 1000000 Hz\\n'"
+    },
+    {
+      "attempt": 8,
+      "method": "physical_reseat_or_port_move",
+      "outcome": "not_performed: physical cable reseat or different USB port requires operator physical access; shell diagnostics used USB enumeration and usbreset instead"
+    },
+    {
+      "attempt": 9,
+      "method": "power_or_port_cycle",
+      "outcome": "host power/port cycle unavailable; raw_output='uhubctl not installed; physical port power-cycle not available from this shell\\n'"
+    },
+    {
+      "attempt": 10,
+      "method": "usb_reset",
+      "outcome": "USB reset completed; raw_output='Resetting DirtyJTAG ... ok\\n'"
+    },
+    {
+      "attempt": 11,
+      "method": "post_reset_scan_usb",
+      "outcome": "DirtyJTAG enumerated through openFPGALoader --scan-usb"
+    },
+    {
+      "attempt": 12,
+      "method": "post_reset_detect",
+      "outcome": "no GateMate IDCODE; raw_output='Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\\n'"
+    }
+  ],
+  "gatemate_result": {
+    "blocked_reason": "blocked_gatemate_dirtyjtag_idcode",
+    "correctness": null,
+    "executable_hash": null,
+    "hash_verified": false,
+    "inference_substrate": "hardware_smoke",
+    "latency_transcript": null,
+    "reachable": false,
+    "sample_quality": null,
+    "timing_output": {
+      "command_interface": "openFPGALoader",
+      "detected_idcode": null,
+      "diagnostic_summary": {
+        "expected_idcode": "0x20000001",
+        "post_reset_idcode": null,
+        "precondition_idcode": null,
+        "scan_usb_dirtyjtag_seen": true,
+        "tool_version_matches_known_good": true,
+        "usb_enumeration_seen": true
+      },
+      "expected_idcode": "0x20000001"
+    },
+    "workload_hash": null
+  },
+  "hardware_speedup_claimed": false,
+  "hardware_wishlist_updated": true,
+  "honest_verdict": "complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim",
+  "inference_substrate": "hardware_smoke",
+  "kv260_host_block_devices_touched": false,
+  "kv260_result": {
+    "blocked_reason": null,
+    "correctness": {
+      "energy_matches_expected": true
+    },
+    "executable_hash": "1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb",
+    "hash_verified": true,
+    "inference_substrate": "hardware_smoke",
+    "latency_transcript": {
+      "combined_output": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 4.556099884212017e-05, \"energy\": 0, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, math, time\npayload = '\"'\"'{\"board\": \"kv260\", \"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [5, 6, -1]], \"expected_energy\": 0, \"experiment_id\": \"exp5179-hardware-continuity-board-timing-v474\", \"spins\": [1, -1, 1, -1, 1, -1, 1, -1], \"workload\": \"exp5179_inline_ising_energy_smoke\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78'\"'\"',\n    '\"'\"'executable_sha256'\"'\"': '\"'\"'1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_smoke'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(spins), '\"'\"'finite_energy'\"'\"': math.isfinite(float(energy))},\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}, sort_keys=True))\nPY'",
+      "duration_s": 0.569162,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 4.556099884212017e-05, \"energy\": 0, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78\"}\n"
+    },
+    "reachable": true,
+    "sample_quality": {
+      "finite_energy": true,
+      "sample_count": 8
+    },
+    "timing_output": {
+      "correctness": {
+        "energy_matches_expected": true
+      },
+      "duration_s": 4.556099884212017e-05,
+      "energy": 0,
+      "executable_sha256": "1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb",
+      "inference_substrate": "hardware_smoke",
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 8
+      },
+      "workload_sha256": "6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78"
+    },
+    "workload_hash": "6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78"
+  },
+  "milestone": "2026.07.474",
+  "no_speedup_claim": true,
+  "polarfire_result": {
+    "blocked_reason": null,
+    "correctness": {
+      "energy_matches_expected": true
+    },
+    "executable_hash": "1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb",
+    "hash_verified": true,
+    "inference_substrate": "hardware_smoke",
+    "latency_transcript": {
+      "combined_output": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 0.00017500179819762707, \"energy\": 2, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, math, time\npayload = '\"'\"'{\"board\": \"polarfire\", \"edges\": [[0, 1, 1], [1, 2, 1], [2, 3, -1], [3, 4, 1], [4, 5, -1], [6, 7, 1]], \"expected_energy\": 2, \"experiment_id\": \"exp5179-hardware-continuity-board-timing-v474\", \"spins\": [1, 1, -1, -1, 1, -1, 1, -1], \"workload\": \"exp5179_inline_ising_energy_smoke\"}'\"'\"'\ndata = json.loads(payload)\nstarted = time.perf_counter()\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nduration_s = max(time.perf_counter() - started, 0.000001)\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3'\"'\"',\n    '\"'\"'executable_sha256'\"'\"': '\"'\"'1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_smoke'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'duration_s'\"'\"': duration_s,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(spins), '\"'\"'finite_energy'\"'\"': math.isfinite(float(energy))},\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}, sort_keys=True))\nPY'",
+      "duration_s": 1.238464,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"correctness\": {\"energy_matches_expected\": true}, \"duration_s\": 0.00017500179819762707, \"energy\": 2, \"executable_sha256\": \"1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb\", \"inference_substrate\": \"hardware_smoke\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3\"}\n"
+    },
+    "reachable": true,
+    "sample_quality": {
+      "finite_energy": true,
+      "sample_count": 8
+    },
+    "timing_output": {
+      "correctness": {
+        "energy_matches_expected": true
+      },
+      "duration_s": 0.00017500179819762707,
+      "energy": 2,
+      "executable_sha256": "1ba95a8cfd57227b8107533f953e2406932c61332d7d3e496f75df422b67c5eb",
+      "inference_substrate": "hardware_smoke",
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 8
+      },
+      "workload_sha256": "1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3"
+    },
+    "workload_hash": "1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only_no_host_block_device_probe",
+      "duration_s": 2.617114,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "kv260_ssh",
+      "safety_constraints": [
+        "no_destructive_actions",
+        "no_speedup_from_reachability"
+      ]
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "discipline": "dirtyjtag_detect_requires_gm1ax_idcode",
+      "duration_s": 0.022495,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "resource": "gatemate_dirtyjtag_idcode",
+      "safety_constraints": [
+        "no_destructive_actions",
+        "no_speedup_from_reachability"
+      ]
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_only_no_flash",
+      "duration_s": 0.7832,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "polarfire_ssh",
+      "safety_constraints": [
+        "no_destructive_actions",
+        "no_speedup_from_reachability"
+      ]
+    }
+  ],
+  "random_seed": 5179,
+  "reproducibility_checksum": "b576aa20b27fe222d85fbaf672311788d46f66d4aefe80e4304cea3e65bd84c1",
+  "run_date": "20260702",
+  "sample_quality_evidence": {
+    "gatemate": {
+      "blocked_reason": "blocked_gatemate_dirtyjtag_idcode",
+      "correctness": null,
+      "hash_verified": false,
+      "reachable": false,
+      "sample_quality": null
+    },
+    "hash_verified_boards": [
+      "kv260",
+      "polarfire"
+    ],
+    "kv260": {
+      "blocked_reason": null,
+      "correctness": {
+        "energy_matches_expected": true
+      },
+      "hash_verified": true,
+      "reachable": true,
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 8
+      }
+    },
+    "polarfire": {
+      "blocked_reason": null,
+      "correctness": {
+        "energy_matches_expected": true
+      },
+      "hash_verified": true,
+      "reachable": true,
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 8
+      }
+    },
+    "reachable_boards": [
+      "kv260",
+      "polarfire"
+    ],
+    "speedup_evidence_claimed": false
+  },
+  "schema": "carnot.experiment_5179_hardware_continuity_board_timing.v474",
+  "spec_refs": [
+    "REQ-HW-5179",
+    "SCENARIO-HW-5179"
+  ],
+  "tests_run": [
+    "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5179_hardware_continuity_board_timing_v474.py --date 20260702 --update-wishlist",
+    ".venv/bin/pytest tests/python/test_experiment_5179_hardware_continuity_board_timing.py -q",
+    ".venv/bin/coverage run --source=python/carnot/experiment_5179_hardware_continuity_board_timing.py -m pytest tests/python/test_experiment_5179_hardware_continuity_board_timing.py -q",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5179_hardware_continuity_board_timing.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "workload_hashes": {
+    "gatemate": "ba799fe12dce25087c7471976f053ccdd95c298a617e76defb9ad6316027e280",
+    "kv260": "6e2bc9a199d48695fa0a919a01a0db15927bc14ea8c15a214ccee68b41e95c78",
+    "polarfire": "1a2f17df3bd50d6c0351c385faeef684e80267fb13e23a87cc8f7555d78f69d3"
+  }
+}
