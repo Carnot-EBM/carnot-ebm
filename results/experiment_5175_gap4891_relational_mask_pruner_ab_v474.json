@@ -1,0 +1,438 @@
+{
+  "arc_orphan_solver_lint": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scripts/arc_orphan_solver_lint.py"
+    ],
+    "duration_s": 0.87,
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "OK: all solver-like ARC modules are reachable from the live agent path (46 modules in the live closure).\n"
+  },
+  "cn04_negative_control_clean": true,
+  "duration_s": 656.51,
+  "experiment": "experiment_5175_gap4891_relational_mask_pruner_ab_v474",
+  "games_tested": [
+    "cd82",
+    "sk48",
+    "sp80",
+    "cn04"
+  ],
+  "gap4891_status_recommendation": "building_with_new_lever_named",
+  "hand_calibrated_per_game": false,
+  "honest_verdict": "complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged_no_level_bank_pruning_alone_does_not_close_enumeration_wall_MAP_map_then_act_next",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "levels_banked": [],
+  "live_path_reachable": true,
+  "max_expansions": 4000,
+  "move_pruned_edges": {
+    "cd82": 358,
+    "cn04": 375,
+    "sk48": 22807,
+    "sp80": 0
+  },
+  "negative_control_game": "cn04",
+  "new_level_reached_pruned": {
+    "cd82": false,
+    "cn04": false,
+    "sk48": false,
+    "sp80": false
+  },
+  "new_level_reached_unpruned": {
+    "cd82": false,
+    "cn04": false,
+    "sk48": false,
+    "sp80": false
+  },
+  "next_specific_lever": "Prototype a MAP-style map-then-act / hierarchical pre-search stage that generates candidate subgoal trajectories before flat frontier enumeration.",
+  "offline_ground_truth_bfs": false,
+  "per_game": [
+    {
+      "game": "cd82",
+      "induce_fired": true,
+      "non_win_grids": 5,
+      "prefix_level": 1,
+      "pruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": {
+          "action_classes": 63,
+          "observed": 4000,
+          "pruned": 358,
+          "pruned_classes": 4,
+          "region_cells": 814,
+          "region_known": true,
+          "region_source": "seed",
+          "verifier_is_oracle": false
+        },
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 358,
+          "move_pruner_enabled": true,
+          "move_pruner_stats": {
+            "action_classes": 63,
+            "observed": 4000,
+            "pruned": 358,
+            "pruned_classes": 4,
+            "region_cells": 814,
+            "region_known": true,
+            "region_source": "seed",
+            "verifier_is_oracle": false
+          },
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 553
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "target_region_cells": 814,
+      "target_region_known": true,
+      "unpruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": null,
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 0,
+          "move_pruner_enabled": false,
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 489
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "win_grids": 1
+    },
+    {
+      "game": "sk48",
+      "induce_fired": true,
+      "non_win_grids": 14,
+      "prefix_level": 1,
+      "pruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": {
+          "action_classes": 336,
+          "observed": 4000,
+          "pruned": 22807,
+          "pruned_classes": 305,
+          "region_cells": 1840,
+          "region_known": true,
+          "region_source": "seed",
+          "verifier_is_oracle": false
+        },
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 22807,
+          "move_pruner_enabled": true,
+          "move_pruner_stats": {
+            "action_classes": 336,
+            "observed": 4000,
+            "pruned": 22807,
+            "pruned_classes": 305,
+            "region_cells": 1840,
+            "region_known": true,
+            "region_source": "seed",
+            "verifier_is_oracle": false
+          },
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 1103
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "target_region_cells": 1840,
+      "target_region_known": true,
+      "unpruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": null,
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 0,
+          "move_pruner_enabled": false,
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 176
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "win_grids": 1
+    },
+    {
+      "game": "sp80",
+      "induce_fired": true,
+      "non_win_grids": 4,
+      "prefix_level": 1,
+      "pruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": {
+          "action_classes": 77,
+          "observed": 4000,
+          "pruned": 0,
+          "pruned_classes": 0,
+          "region_cells": 764,
+          "region_known": true,
+          "region_source": "seed",
+          "verifier_is_oracle": false
+        },
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 0,
+          "move_pruner_enabled": true,
+          "move_pruner_stats": {
+            "action_classes": 77,
+            "observed": 4000,
+            "pruned": 0,
+            "pruned_classes": 0,
+            "region_cells": 764,
+            "region_known": true,
+            "region_source": "seed",
+            "verifier_is_oracle": false
+          },
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 911
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "target_region_cells": 764,
+      "target_region_known": true,
+      "unpruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": null,
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 0,
+          "move_pruner_enabled": false,
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 911
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "win_grids": 1
+    },
+    {
+      "game": "cn04",
+      "induce_fired": true,
+      "non_win_grids": 13,
+      "prefix_level": 1,
+      "pruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": {
+          "action_classes": 213,
+          "observed": 4000,
+          "pruned": 375,
+          "pruned_classes": 17,
+          "region_cells": 527,
+          "region_known": true,
+          "region_source": "seed",
+          "verifier_is_oracle": false
+        },
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 375,
+          "move_pruner_enabled": true,
+          "move_pruner_stats": {
+            "action_classes": 213,
+            "observed": 4000,
+            "pruned": 375,
+            "pruned_classes": 17,
+            "region_cells": 527,
+            "region_known": true,
+            "region_source": "seed",
+            "verifier_is_oracle": false
+          },
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 933
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "target_region_cells": 527,
+      "target_region_known": true,
+      "unpruned": {
+        "gate_reached": 1,
+        "offline_reproduced": false,
+        "pruner_stats": null,
+        "reached_level": 1,
+        "reproducibility_checksum": "",
+        "states_expanded": 4000,
+        "stats": {
+          "action_effect_expansion_prior_enabled": false,
+          "expansion_priority_enabled": false,
+          "expansions": 4000,
+          "goal_energy_alpha": 0.9,
+          "goal_energy_beta": 0.1,
+          "goal_energy_enabled": true,
+          "goal_predicate_gate_enabled": false,
+          "goal_predicate_plan_emitted": false,
+          "max_expansions": 4000,
+          "move_pruned": 0,
+          "move_pruner_enabled": false,
+          "proposal_prior_enabled": false,
+          "qd_actions_injected": 0,
+          "qd_generation_enabled": false,
+          "qd_sequences_injected": 0,
+          "states": 837
+        },
+        "traj_len": 0,
+        "trajectory_labels": []
+      },
+      "win_grids": 1
+    }
+  ],
+  "question": "Does adding the online RelationalMaskMovePruner to GAP-4891 Stage-2's relational goal-energy search enumerate a new reproduction-gated level?",
+  "random_seed": 20260628,
+  "read_game_source": false,
+  "relational_mask_unit_tests": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python/test_arc_relational_mask_pruner.py",
+      "-v",
+      "--no-cov"
+    ],
+    "duration_s": 5.07,
+    "passed": true,
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python\ncachedir: .pytest_cache\nhypothesis profile 'default'\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [8 items]\n\nscheduling tests via LoadScheduling\n\ntests/python/test_arc_relational_mask_pruner.py::test_online_region_induction_on_levelup \ntests/python/test_arc_relational_mask_pruner.py::test_does_not_prune_action_class_that_touches_region \ntests/python/test_arc_relational_mask_pruner.py::test_conservative_below_min_observations \ntests/python/test_arc_relational_mask_pruner.py::test_region_covers_canvas_and_target_and_is_none_without_translate \n[gw3] [ 12%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_online_region_induction_on_levelup \ntests/python/test_arc_relational_mask_pruner.py::test_click_classes_are_keyed_by_location \n[gw3] [ 25%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_click_classes_are_keyed_by_location \n[gw0] [ 37%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_does_not_prune_action_class_that_touches_region \ntests/python/test_arc_relational_mask_pruner.py::test_never_prunes_a_level_up_action_class \n[gw1] [ 50%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_conservative_below_min_observations \ntests/python/test_arc_relational_mask_pruner.py::test_no_region_no_prune_and_undecodable_label \n[gw1] [ 62%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_no_region_no_prune_and_undecodable_label \n[gw2] [ 75%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_region_covers_canvas_and_target_and_is_none_without_translate \ntests/python/test_arc_relational_mask_pruner.py::test_prunes_action_class_that_never_touches_region \n[gw0] [ 87%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_never_prunes_a_level_up_action_class \n[gw2] [100%] PASSED tests/python/test_arc_relational_mask_pruner.py::test_prunes_action_class_that_never_touches_region \n\n============================== 8 passed in 3.76s ===============================\n"
+  },
+  "reproducibility_checksum": "sha256:40a8f77f18de6ad2dd6989e2b3cafdaa264f8a1c28dfa3bee717e532cbff8a57",
+  "schema": "carnot.experiment_5175_gap4891_relational_mask_pruner_ab_v474.v1",
+  "scripts_research_conductor_modified": false,
+  "solve_provenance": "development_proxy",
+  "spec_refs": [
+    "REQ-REPORT-5175",
+    "SCENARIO-REPORT-5175-PRUNER-AB"
+  ],
+  "states_expanded_pruned": {
+    "cd82": 4000,
+    "cn04": 4000,
+    "sk48": 4000,
+    "sp80": 4000
+  },
+  "states_expanded_reduction_pct": {
+    "cd82": 0.0,
+    "cn04": 0.0,
+    "sk48": 0.0,
+    "sp80": 0.0
+  },
+  "states_expanded_unpruned": {
+    "cd82": 4000,
+    "cn04": 4000,
+    "sk48": 4000,
+    "sp80": 4000
+  },
+  "target_games": [
+    "cd82",
+    "sk48",
+    "sp80"
+  ],
+  "unit_tests_still_passing": true,
+  "used_env_source": false,
+  "verifier_is_oracle": false
+}

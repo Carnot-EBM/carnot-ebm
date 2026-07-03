@@ -351,6 +351,7 @@ def graph_explore_solve_v2(
     qd_generator: Any | bool | None = None,
     candidate_router=None,
     structural_energy_scorer=None,
+    move_pruner=None,
     stats: Optional[dict] = None,
 ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
@@ -443,6 +444,30 @@ def graph_explore_solve_v2(
     )
     qd_sequences_injected = 0
     qd_actions_injected = 0
+    move_pruned = 0
+
+    def _label(action_id, data):
+        return {"action": int(action_id), "data": data}
+
+    def _should_prune(frame, label) -> bool:
+        nonlocal move_pruned
+        if move_pruner is None:
+            return False
+        try:
+            pruned = bool(move_pruner.should_prune(frame, label))
+        except Exception:
+            return False
+        if pruned:
+            move_pruned += 1
+        return pruned
+
+    def _observe(frame_before, label, frame_after, leveled_up: bool) -> None:
+        if move_pruner is None or frame_after is None:
+            return
+        try:
+            move_pruner.observe(frame_before, label, frame_after, leveled_up)
+        except Exception:
+            pass
 
     def _ret(traj, lvl):
         # record search cost so an A/B can measure the heuristic's EFFICIENCY win
@@ -471,6 +496,13 @@ def graph_explore_solve_v2(
             stats["qd_generation_enabled"] = qd_search_generator is not None
             stats["qd_sequences_injected"] = int(qd_sequences_injected)
             stats["qd_actions_injected"] = int(qd_actions_injected)
+            stats["move_pruner_enabled"] = move_pruner is not None
+            stats["move_pruned"] = int(move_pruned)
+            if move_pruner is not None and hasattr(move_pruner, "stats"):
+                try:
+                    stats["move_pruner_stats"] = move_pruner.stats()
+                except Exception:
+                    stats["move_pruner_stats"] = None
             if qd_search_generator is not None and hasattr(qd_search_generator, "diagnostics"):
                 stats["qd_generation_diagnostics"] = qd_search_generator.diagnostics()
         return traj, lvl
@@ -591,6 +623,9 @@ def graph_explore_solve_v2(
                     break
                 continue
             sel = st["untested"].pop(0)
+            label = _label(sel.action_id, sel.data)
+            if _should_prune(f_here, label):
+                continue
             nf = env.step(
                 _game_action(GameAction, sel.action_id),
                 data=sel.data,
@@ -601,6 +636,7 @@ def graph_explore_solve_v2(
                 continue
             traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
             lvl = _levels_completed(nf)
+            _observe(f_here, label, nf, lvl > start_level)
             if lvl > start_level and _predicate_allows_emit(nf):
                 _mark_goal_plan_emitted()
                 return _ret(traj, lvl)
@@ -683,6 +719,9 @@ def graph_explore_solve_v2(
                     break
                 continue
             sel = st["untested"].pop(0)
+            label = _label(sel.action_id, sel.data)
+            if _should_prune(f_here, label):
+                continue
             nf = env.step(
                 _game_action(GameAction, sel.action_id),
                 data=sel.data,
@@ -692,6 +731,7 @@ def graph_explore_solve_v2(
             if nf is not None:
                 traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
                 lvl = _levels_completed(nf)
+                _observe(f_here, label, nf, lvl > start_level)
                 if lvl > start_level and _predicate_allows_emit(nf):
                     _mark_goal_plan_emitted()
                     return _ret(traj, lvl)

@@ -2599,9 +2599,27 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 
 ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
 - status: building (GOAL-DETECTION gap CLOSED for cd82/sk48/sp80 via RELATIONAL target-match; but STAGE-2
-  shows it does NOT unlock deepening -- the binding wall is trajectory ENUMERATION, not goal-detection.
-  Ladder: counts[GAP-4890]=fail -> richer-scalar=fail -> RELATIONAL target-match=SEPARATES 3/4 -> stage-2
-  guidance=NEITHER arm banks L3. See UPDATE-3 [decisive negative] then UPDATE-2.)
+  shows it does NOT unlock deepening, and Stage-3 relational-mask pruning still does NOT bank a level or
+  reduce applied states_expanded under the same 4000-expansion budget. Binding wall remains trajectory
+  ENUMERATION/generation, not goal-detection. NEXT specific lever: MAP-style map-then-act / hierarchical
+  pre-search that generates candidate subgoal trajectories before flat frontier enumeration. Ladder:
+  counts[GAP-4890]=fail -> richer-scalar=fail -> RELATIONAL target-match=SEPARATES 3/4 -> stage-2
+  guidance=NEITHER arm banks L3 -> stage-3 mask-pruner prunes edges but still NEITHER arm banks L3. See
+  UPDATE-4 then UPDATE-3 [decisive negative] then UPDATE-2.)
+- UPDATE-4 2026-07-02 (STAGE-3 decisive: relational-mask move-pruner is exercised but does NOT close the
+  enumeration wall): built python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py and
+  wired graph_explore_solve_v2 to accept a live-path move_pruner with the same should_prune/observe
+  lifecycle as OfflineSolver. Ran results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json on
+  cd82/sk48/sp80 plus cn04 negative control, each with the same 4000-expansion Stage-2 budget and the same
+  relational goal-energy control vs treatment+RelationalMaskMovePruner. Precondition passed
+  (tests/python/test_arc_relational_mask_pruner.py: 8 passed), and arc_orphan_solver_lint passed
+  (live_path_reachable=true). RESULT: no reproduction-gated new levels banked on any game; levels_banked=[];
+  states_expanded_pruned == states_expanded_unpruned == 4000 for cd82/sk48/sp80/cn04; cn04 negative control
+  stayed clean. The pruner did fire on candidate edges for cd82 (358), sk48 (22807), and cn04 (375), but
+  that did not reduce the applied expansion count or enumerate the winning trajectory. DECISIVE READ:
+  pruning alone does not close GAP-4891's enumeration wall; the next lever must generate/structure the
+  trajectory space before flat frontier search, specifically the MAP-style map-then-act / hierarchical
+  pre-search lane flagged by exp5172.
 - UPDATE-3 2026-06-28 (STAGE-2 decisive: relational energy SEPARATES but does NOT GUIDE the search ->
   enumeration wall): built scripts/experiments/arc_relational_goal_energy_stage2.py -- wires
   induce_goal_energy_relational into graph_explore_solve_v2's goal_energy hook (energy induced live by
