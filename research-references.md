@@ -26472,3 +26472,81 @@ DiffusionGemma retry, hidden-state verifier scale-up, GAP-4 closure remain the r
 two sections above). KANX is noted for a future NPU-deployment milestone; everything else is a
 confirmed-negative (nothing new) or already-covered, which is reported explicitly rather than manufacturing
 false leads to pad this section.
+
+## V475 Outer-Loop Planner References — Session 2 (hidden-state probe design, diffusion-guidance mechanism, headroom methodology) - 2026-07-03
+
+Independently re-swept by a second outer-loop planning pass (after the sections above were already
+committed) using three parallel research agents. Cross-check: this pass converged on the SAME leading
+levers already logged above (MAP for the enumeration wall, TrajSelector/VerifySteer/CLUE for the
+hidden-state verifier, DiffusionGemma energy-guided diffusion) without having read them first — treat
+that convergence as corroboration, not coincidence. Only genuinely additive findings are logged below;
+duplicates of the sections above are omitted.
+
+### PHSV: Probing Hidden States for Self-Verification (concrete probe recipe for exp5178's successor)
+- **Source:** arXiv:2504.05419 - https://arxiv.org/abs/2504.05419
+- **Carnot hook:** exp5178's pilot used a naive trained-centroid probe on n=6 questions and lost to tuned
+  self-consistency (delta=-0.333) even on a headroom-present slice (oracle=1.0 vs SC=0.333) — the probe
+  design, not the corpus, is the suspect. PHSV's recipe is concrete and reproducible on local open-weight
+  models (DeepSeek-R1-Distill, Qwen, QwQ, all tested): split reasoning into chunks at
+  "wait"/"double-check"/"alternatively" boundaries, take the **last-token, last-layer hidden state per
+  chunk**, train a small 2-layer MLP (weighted BCE) to predict chunk correctness. Reports AUROC 0.75-0.91.
+- **Actionability:** Use as the exp5187 probe architecture in place of exp5178's centroid approach.
+
+### SWIFT: Mining Intrinsic Rewards from Hidden States for Best-of-N
+- **Source:** arXiv:2505.12225 - https://arxiv.org/abs/2505.12225
+- **Carnot hook:** Learns a lightweight per-token linear reward from hidden states and reports it beating
+  EurusRM-7B (an external text reward model, i.e. exactly the class Carnot's PHASE D retired) by 12.7% on
+  MATH using <0.005% of the parameters. This is the closest published evidence that a hidden-state signal
+  can beat an external-text-scorer of the retired class, and is worth citing directly in exp5187's
+  rationale for why the mechanism-class switch (not just a bigger LoRA) is the principled next move.
+- **Actionability:** Design reference only (per-token linear gate + reward projection); not required to
+  reproduce exactly, since exp5187 targets answer-level (not per-token) verification on MMLU-Pro.
+
+### Self-certainty: zero-training, zero-extraction free baseline
+- **Source:** arXiv:2502.18581 - https://arxiv.org/abs/2502.18581
+- **Carnot hook:** Scores candidates by divergence of the output logit distribution from uniform — no
+  hidden-state extraction, no training, no extra forward pass beyond generation itself. If a trained
+  hidden-state probe cannot beat this free signal, the extraction overhead is not earning its keep.
+- **Actionability:** Mandatory control arm for exp5187 (self-certainty vs hidden-state-probe vs
+  self-consistency vs CLUE-style non-parametric clustering, all on the same MMLU-Pro headroom pool).
+
+### FEPoID: which layer to probe (training-free layer selection)
+- **Source:** arXiv:2605.26366 - https://arxiv.org/abs/2605.26366
+- **Carnot hook:** exp5178 used final-layer embeddings only (`llama_cpp.Llama(embedding=True,
+  pooling_type=LAST)`); FEPoID's finding is that intermediate layers often carry a stronger correctness
+  signal than the final layer. `llama_cpp` exposes intermediate hidden states via callbacks; a cheap
+  layer-sweep (rather than assuming last-layer is optimal) is a low-cost addition to exp5187.
+- **Actionability:** If the loader path supports it without excessive engineering cost, sweep 2-3 layers;
+  otherwise note the gap explicitly rather than silently skipping it.
+
+### EDLM: Energy-Based Diffusion Language Models (concrete recipe for exp5183)
+- **Source:** arXiv:2410.21357 (ICLR 2025) - https://arxiv.org/abs/2410.21357
+- **Carnot hook:** A full, published recipe for injecting an external energy into discrete-diffusion
+  denoising without full re-sampling every step: `p(x_{t-1}|x_t) ∝ p_diffusion(x_{t-1}|x_t) *
+  exp(-E(x_{t-1},x_t))`, applied via parallel importance sampling restricted to a bounded high-noise time
+  window (~1.3x overhead, not Nx). Directly composable with Carnot's own executable verifier ensemble as
+  `E`. This is the single most concrete, cost-bounded recipe found for exp5183 if/when exp5182 unblocks
+  loading.
+- **Actionability:** Primary recipe candidate for exp5183's guidance mechanism, with RFG (arXiv:2509.25604,
+  a lighter gradient/logit-steering alternative) as a same-milestone A/B if time budget allows, and VFScale
+  (arXiv:2502.01989, intrinsic-confidence-only) as the oracle-distinctness control arm the Circularity
+  Discipline requires.
+
+### When Does Verification Pay Off? (the headroom formalism, general methodology)
+- **Source:** arXiv:2512.02304 - https://arxiv.org/abs/2512.02304
+- **Carnot hook:** Independent theoretical confirmation of what `.474`'s own retrospective on PHASE D
+  concluded empirically: verifier reranking only beats self-consistency when the oracle-minus-SC headroom
+  gap is large; near-ceiling SC leaves no exploitable gap regardless of verifier quality. This formalizes
+  why testing hidden-state verifiers on a **headroom-confirmed** corpus (MMLU-Pro, oracle_at_k=0.350 vs
+  sc_vote=0.075-0.269 per the 2026-07-01 headroom check in `ops/known-issues.md`) rather than a
+  near-ceiling one (MuSR, exp5178's corpus) is not a preference but a precondition for the test to be
+  informative at all.
+- **Actionability:** Adopt as a standing pre-registration gate: before any future verifier-vs-SC experiment
+  (any mechanism class), require and report the oracle-minus-SC headroom on the target corpus BEFORE
+  training/running the verifier, not after.
+
+Everything else surfaced this pass (Executable World Models arXiv:2605.05138, Pass@k training
+arXiv:2508.10751/2602.21189, "Single Direction of Truth" arXiv:2507.23221, EBM-CoT arXiv:2511.07124,
+Koopman hallucination detection arXiv:2605.05134, MultiHaluDet arXiv:2605.24919) is logged for completeness
+but did not change `.475`'s task design; flagged as candidate reading for `.476+` rather than repeated here
+in full to avoid padding this file with content that does not feed a concrete next experiment.
