@@ -1,0 +1,502 @@
+{
+  "acceptance_criteria_checklist": {
+    "principle": "every criterion in research-roadmap-vNEXT.md's Acceptance Criteria section checked explicitly with evidence",
+    "value": [
+      {
+        "criterion": "exp5160 cross-corpus win survives at n>=30 or narrows honestly",
+        "evidence": "exp5171 held_out_task_n=30, gate_passed=True, delta=0.5, CI=[0.3333333333, 0.6666666667].",
+        "satisfied": true
+      },
+      {
+        "criterion": "relational-mask-pruner A/B produces clean answer and advances GAP-4891",
+        "evidence": "exp5175 tested ['cd82', 'sk48', 'sp80'] plus cn04 control, banked 0 levels, next lever=Prototype a MAP-style map-then-act / hierarchical pre-search stage that generates candidate subgoal trajectories before flat frontier enumeration..",
+        "satisfied": true
+      },
+      {
+        "criterion": "PHASE D retirement entry exists and does not false-positive against exp5178",
+        "evidence": "manifest entry phase_d_external_text_scorer_retired_exp5163_v474 present=True; exclusion lint exit=0; exp5178 exception checked.",
+        "satisfied": true
+      },
+      {
+        "criterion": "publication_gate.py --json reports paper_ready true",
+        "evidence": "paper_ready=true, unmet_gates=[].",
+        "satisfied": true
+      },
+      {
+        "criterion": "arc_levelup_guarantee_lint.py passes structurally via exp5176",
+        "evidence": "exp5176 structural attempt present; lint exit=0; output=milestone: 2026.07.474  tasks: 13  level-up attempts: 1\n  LEVEL-UP  exp5176-deepen-live-levelup-attempt-v474   targets=['ar25', 'bp35', 'cd82', 'cn04', 'dc22', 'ft09', 'sk48', 'sp80']\n\nOK: 1 >= 1. Games with a level-up attempt this roadmap: ['ar25', 'bp35', 'cd82', 'cn04', 'dc22', 'ft09', 'sk48', 'sp80']",
+        "satisfied": true
+      },
+      {
+        "criterion": "ARC registry totals grow or are honestly reported flat with reason",
+        "evidence": "registry flat at 69/24; exp5175/exp5176 banked delta=0 because no validated lever reached a new level.",
+        "satisfied": true
+      }
+    ]
+  },
+  "adversarial_verification": [
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5168_archive_473_activate_474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5168-archive-473-activate-474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5169_adversarial_verify_qd_citation_scope_fix_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5169-adversarial-verify-qd-citation-scope-fix-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5170_retire_phase_d_external_text_scorer_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5170-retire-phase-d-external-text-scorer-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5171-harden-set-encoder-cross-corpus-n30-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5172-sota-ingestion-diffusion-hierarchical-search-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5174_gap_live_integration_reconciliation_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5174-gap-live-integration-reconciliation-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5175-gap4891-relational-mask-pruner-ab-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 1,
+      "flags": [
+        {
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "max_severity": 0,
+      "relative_path": "results/experiment_5176_deepen_live_levelup_attempt_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5176-deepen-live-levelup-attempt-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 1,
+      "flags": [
+        {
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "max_severity": 0,
+      "relative_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5177-gap4-scaleup-decentralization-tier-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5178_hidden_state_verifier_pilot_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5178-hidden-state-verifier-pilot-v474"
+    },
+    {
+      "critical_adversarial_flag": false,
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "relative_path": "results/experiment_5179_hardware_continuity_board_timing_v474.json",
+      "stamped_flagged_adversarial": false,
+      "task_id": "exp5179-hardware-continuity-board-timing-v474"
+    }
+  ],
+  "diffusiongemma_pilot_reconciled": {
+    "principle": "The decisive verifier-moat pilot is summarized precisely: blocked preflight is neither a guided win nor a guided loss",
+    "value": "blocked_preflight_no_guided_measurement: exp5171 gate passed at n=30, but exp5173 stopped on the DiffusionGemma meta-tensor/device-placement preflight before guided, unguided, or AR arms ran."
+  },
+  "duration_s": 2.868591,
+  "exclusion_manifest_lint": {
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Exclusion-manifest lint found 2 violation(s) in /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml:\nWARNING violations (2, override present):\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp5168-archive-473-activate-474 (PHASE 0 transition -- archive .473 truth (one real win, two )\n    detail: 51 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n  [SCOPE_MATCHED_PRIOR_FAILURE] exp5179-hardware-continuity-board-timing-v474 (PHASE C3 hardware continuity -- KV260 + PolarFire smoke, and)\n    detail: 47 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task\n\nAll violations have operator_override \u2014 activation would proceed with warnings.\n"
+  },
+  "experiment": "experiment_5180_capstone_v474",
+  "experiment_id": "exp5180-capstone-v474",
+  "field_principles": {
+    "acceptance_criteria_checklist": "every criterion in research-roadmap-vNEXT.md's Acceptance Criteria section checked explicitly with evidence",
+    "diffusiongemma_pilot_reconciled": "The decisive verifier-moat pilot is summarized precisely: blocked preflight is neither a guided win nor a guided loss",
+    "flagged_adversarial_artifacts_excluded": "task ids skipped from headline aggregation because flagged_adversarial=true or live critical verification failed",
+    "gap4891_status_reconciled": "GAP-4891 status reconciled from Exp5175 without rounding a partial pruner null up to filled",
+    "gap4_status_reconciled": "GAP-4 status reconciled from Exp5177 without redefining the six-discordant-win floor",
+    "honest_verdict": "terminal-prefix single sentence summarizing the whole milestone without vague celebration",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "levelup_guarantee_outcome_satisfied": "true only if the level-up attempt actually banked a level",
+    "levelup_guarantee_structurally_satisfied": "roadmap lint found at least one level-up attempt",
+    "per_task_summary": "list of {task_id, honest_verdict, headline_outcome} read from every V474 artifact",
+    "phase_d_retirement_confirmed_clean": "true only when the Exp5170 exclusion-manifest retirement entry is present and lint does not block Exp5178's hidden-state exception",
+    "reproducible_total_levels_delta": "new banked ARC levels from Exp5175 and Exp5176; zero is valid and must not be inflated",
+    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched"
+  },
+  "flagged_adversarial": false,
+  "flagged_adversarial_artifacts_excluded": {
+    "principle": "task ids skipped from headline aggregation because flagged_adversarial=true or live critical verification failed",
+    "value": []
+  },
+  "gap4891_status_reconciled": {
+    "principle": "GAP-4891 status reconciled from Exp5175 without rounding a partial pruner null up to filled",
+    "value": "building_with_new_lever_named_not_filled: exp5175 pruned edges (cd82=358, sk48=22807, sp80=0, cn04=375) but banked 0 levels and states_expanded stayed 4000/4000; next lever Prototype a MAP-style map-then-act / hierarchical pre-search stage that generates candidate subgoal trajectories before flat frontier enumeration."
+  },
+  "gap4_status_reconciled": {
+    "principle": "GAP-4 status reconciled from Exp5177 without redefining the six-discordant-win floor",
+    "value": "scale_up_recommended_not_filled: exp5177 achieved 62/180 rows with 4 discordant wins, 0 losses, p=0.125, and exact_test_passes_min6_rule=false."
+  },
+  "headline_eligible_task_ids": [
+    "exp5168-archive-473-activate-474",
+    "exp5169-adversarial-verify-qd-citation-scope-fix-v474",
+    "exp5170-retire-phase-d-external-text-scorer-v474",
+    "exp5171-harden-set-encoder-cross-corpus-n30-v474",
+    "exp5172-sota-ingestion-diffusion-hierarchical-search-v474",
+    "exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474",
+    "exp5174-gap-live-integration-reconciliation-v474",
+    "exp5175-gap4891-relational-mask-pruner-ab-v474",
+    "exp5176-deepen-live-levelup-attempt-v474",
+    "exp5177-gap4-scaleup-decentralization-tier-v474",
+    "exp5178-hidden-state-verifier-pilot-v474",
+    "exp5179-hardware-continuity-board-timing-v474"
+  ],
+  "honest_verdict": "complete: v474 reconciled with no flagged headline artifacts after live verification, GAP-4891 and GAP-4 still open but sharpened, DiffusionGemma blocked before measurement, Phase D retirement clean, and zero new ARC levels banked.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "levelup_guarantee_outcome_satisfied": {
+    "principle": "true only if the level-up attempt actually banked a level",
+    "value": false
+  },
+  "levelup_guarantee_structurally_satisfied": {
+    "principle": "roadmap lint found at least one level-up attempt",
+    "value": true
+  },
+  "levelup_lint": {
+    "exit_code": 0,
+    "stdout": "milestone: 2026.07.474  tasks: 13  level-up attempts: 1\n  LEVEL-UP  exp5176-deepen-live-levelup-attempt-v474   targets=['ar25', 'bp35', 'cd82', 'cn04', 'dc22', 'ft09', 'sk48', 'sp80']\n\nOK: 1 >= 1. Games with a level-up attempt this roadmap: ['ar25', 'bp35', 'cd82', 'cn04', 'dc22', 'ft09', 'sk48', 'sp80']\n",
+    "structurally_satisfied": true
+  },
+  "milestone": "2026.07.474",
+  "missing_artifacts": [],
+  "per_task_summary": {
+    "principle": "list of {task_id, honest_verdict, headline_outcome} read from every V474 artifact",
+    "value": [
+      {
+        "headline_outcome": "archive_473_closed_474_active_runtime_clean_exp5161_unquarantined",
+        "honest_verdict": "complete_archive_473_closed_474_active_runtime_clean_exp5161_unquarantined",
+        "task_id": "exp5168-archive-473-activate-474"
+      },
+      {
+        "headline_outcome": "exp5156_resolves_clean_qd_citation_scope_fixed",
+        "honest_verdict": "complete: exp5156_resolves_clean_qd_citation_scope_fixed_warn_only_not_quarantine",
+        "task_id": "exp5169-adversarial-verify-qd-citation-scope-fix-v474"
+      },
+      {
+        "headline_outcome": "phase_d_external_text_scorer_retired_hidden_state_exception_preserved",
+        "honest_verdict": "complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_preserved",
+        "task_id": "exp5170-retire-phase-d-external-text-scorer-v474"
+      },
+      {
+        "headline_outcome": "arc_set_encoder_cross_corpus_gate_passed_n30",
+        "honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
+        "task_id": "exp5171-harden-set-encoder-cross-corpus-n30-v474"
+      },
+      {
+        "headline_outcome": "map_deep_read_recommends_map_pre_stage_if_pruner_stalls",
+        "honest_verdict": "complete: map_deep_read_recommends_map_pre_stage_if_phase_b_pruner_stalls",
+        "task_id": "exp5172-sota-ingestion-diffusion-hierarchical-search-v474"
+      },
+      {
+        "headline_outcome": "blocked_diffusiongemma_meta_tensor_bug_unresolved_no_guided_measurement",
+        "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved",
+        "task_id": "exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474"
+      },
+      {
+        "headline_outcome": "gap_live_integration_re_scoped_current_router_dsl_target_levels_not_stale",
+        "honest_verdict": "complete: original three GAP-LIVE-INTEGRATION claims were stale; current code imports router/DSL, ships target_levels=3, and uses a nonzero submitted value_weight while Exp4652 records a tried-nonzero honest null; provenance audit finds 4/24 declared registry games live-self-discovery vs 20/24 development-proxy.",
+        "task_id": "exp5174-gap-live-integration-reconciliation-v474"
+      },
+      {
+        "headline_outcome": "gap4891_building_with_new_lever_named_no_level_bank",
+        "honest_verdict": "complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged_no_level_bank_pruning_alone_does_not_close_enumeration_wall_MAP_map_then_act_next",
+        "task_id": "exp5175-gap4891-relational-mask-pruner-ab-v474"
+      },
+      {
+        "headline_outcome": "levelup_attempt_structural_present_zero_levels_banked",
+        "honest_verdict": "complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked",
+        "task_id": "exp5176-deepen-live-levelup-attempt-v474"
+      },
+      {
+        "headline_outcome": "gap4_scale_up_recommended_floor_not_crossed_4_wins_0_losses_p0.125",
+        "honest_verdict": "complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended",
+        "task_id": "exp5177-gap4-scaleup-decentralization-tier-v474"
+      },
+      {
+        "headline_outcome": "hidden_state_verifier_pilot_clean_but_loses_to_tuned_sc_accuracy_and_efficiency",
+        "honest_verdict": "complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333",
+        "task_id": "exp5178-hidden-state-verifier-pilot-v474"
+      },
+      {
+        "headline_outcome": "hardware_continuity_2_of_3_reachable_no_speedup_claim",
+        "honest_verdict": "complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim",
+        "task_id": "exp5179-hardware-continuity-board-timing-v474"
+      }
+    ]
+  },
+  "phase_d_retirement_confirmed_clean": {
+    "principle": "true only when the Exp5170 exclusion-manifest retirement entry is present and lint does not block Exp5178's hidden-state exception",
+    "value": true
+  },
+  "preconditions_checked": {
+    "adversarial_verify_ran_per_loadable_artifact": true,
+    "arc_levelup_lint_ran": true,
+    "exclusion_manifest_lint_ran": true,
+    "expected_artifacts": 12,
+    "loadable_artifacts": 12,
+    "publication_gate_ran": true,
+    "registry_read": true,
+    "research_conductor_py_untouched": true
+  },
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 5180,
+  "registry_reconciliation": {
+    "delta_from_exp5175_exp5176": 0,
+    "loadable": true,
+    "path": "ops/arc_solve_registry.yaml",
+    "reproducible_total_games": 24,
+    "reproducible_total_levels": 69
+  },
+  "reproducibility_checksum": "sha256:1dd2c0df5f5ae7b1692809037a0c839f57f62fd139336f13ff88a98a4e0096fc",
+  "reproducible_total_levels_delta": {
+    "principle": "new banked ARC levels from Exp5175 and Exp5176; zero is valid and must not be inflated",
+    "value": 0
+  },
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
+    "value": true
+  },
+  "result_path": "results/experiment_5180_capstone_v474.json",
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5180_capstone_v474.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5168,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_archive_473_closed_474_active_runtime_clean_exp5161_unquarantined",
+      "loadable": true,
+      "relative_path": "results/experiment_5168_archive_473_activate_474.json",
+      "sha256": "sha256:88a61f8b03f69f5ba8c8c16b37b243ab2c93ca8759e4ef5705319beb3b3dedea",
+      "task_id": "exp5168-archive-473-activate-474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5169,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: exp5156_resolves_clean_qd_citation_scope_fixed_warn_only_not_quarantine",
+      "loadable": true,
+      "relative_path": "results/experiment_5169_adversarial_verify_qd_citation_scope_fix_v474.json",
+      "sha256": "sha256:b8ee656b5634e648101f5c34ae2191b0679b93cc4dab13f72b2f5a7766b294bd",
+      "task_id": "exp5169-adversarial-verify-qd-citation-scope-fix-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5170,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_preserved",
+      "loadable": true,
+      "relative_path": "results/experiment_5170_retire_phase_d_external_text_scorer_v474.json",
+      "sha256": "sha256:1dfabb60a9946a9b76f57f37a3f5987971ae3c882f3809da6d3c9604aa8c17c7",
+      "task_id": "exp5170-retire-phase-d-external-text-scorer-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5171,
+      "flagged_adversarial": false,
+      "honest_verdict": "success_arc_set_encoder_cross_corpus_gate_passed_n30: gate passed at n>=30",
+      "loadable": true,
+      "relative_path": "results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json",
+      "sha256": "sha256:453feb6e7b6fb567d753335cbdb1ca776fa90458ded37e3e46e62086fa422c21",
+      "task_id": "exp5171-harden-set-encoder-cross-corpus-n30-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5172,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: map_deep_read_recommends_map_pre_stage_if_phase_b_pruner_stalls",
+      "loadable": true,
+      "relative_path": "results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json",
+      "sha256": "sha256:8261dd4e0e65f31e78fb58c1c79999d941fa357993c5e579da1a30eafe3b235c",
+      "task_id": "exp5172-sota-ingestion-diffusion-hierarchical-search-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5173,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_diffusiongemma_meta_tensor_bug_unresolved",
+      "loadable": true,
+      "relative_path": "results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json",
+      "sha256": "sha256:7854bbdb6a5a010945371f847bf25f52d3b5cdd5929ffb5f34d0edf1b045a9ac",
+      "task_id": "exp5173-diffusiongemma-energy-guided-diffusion-pilot-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5174,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: original three GAP-LIVE-INTEGRATION claims were stale; current code imports router/DSL, ships target_levels=3, and uses a nonzero submitted value_weight while Exp4652 records a tried-nonzero honest null; provenance audit finds 4/24 declared registry games live-self-discovery vs 20/24 development-proxy.",
+      "loadable": true,
+      "relative_path": "results/experiment_5174_gap_live_integration_reconciliation_v474.json",
+      "sha256": "sha256:6d1da83a2a75d4e875526d4a7db1f0d3252b895a1bcbb94eceb5214dace8e97d",
+      "task_id": "exp5174-gap-live-integration-reconciliation-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5175,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged_no_level_bank_pruning_alone_does_not_close_enumeration_wall_MAP_map_then_act_next",
+      "loadable": true,
+      "relative_path": "results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json",
+      "sha256": "sha256:5ca2c9df12ff9dd6c8cd0c75a571bc9c64361cdeb43f4c4a2dd5e40f2ed41da2",
+      "task_id": "exp5175-gap4891-relational-mask-pruner-ab-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5176,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked",
+      "loadable": true,
+      "relative_path": "results/experiment_5176_deepen_live_levelup_attempt_v474.json",
+      "sha256": "sha256:72af184b8b471ba88717790b1de76cc78adaa345281af2344f8e07de6715b027",
+      "task_id": "exp5176-deepen-live-levelup-attempt-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5177,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended",
+      "loadable": true,
+      "relative_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json",
+      "sha256": "sha256:85fbb7bd9c3650d64b40458ab2ee9ea5f716ee8e8caab022efcb9cd65d5026f6",
+      "task_id": "exp5177-gap4-scaleup-decentralization-tier-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5178,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333",
+      "loadable": true,
+      "relative_path": "results/experiment_5178_hidden_state_verifier_pilot_v474.json",
+      "sha256": "sha256:2f1ea5cb7c7054370d371fc7db36a16ee449f08856cda92b10453f54f78b0583",
+      "task_id": "exp5178-hidden-state-verifier-pilot-v474"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5179,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5179_hardware_continuity_board_timing_v474.json",
+      "sha256": "sha256:dbe0cf84749650cd35d959dfc76ead430fb16e56c1eb159ec929ac46e334570a",
+      "task_id": "exp5179-hardware-continuity-board-timing-v474"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5180",
+    "SCENARIO-CAPSTONE-5180",
+    "SCENARIO-CAPSTONE-5180-FIELD-PRINCIPLES"
+  ],
+  "tests_run": [
+    "python3 scripts/adversarial_verify.py results/experiment_5168_archive_473_activate_474.json results/experiment_5169_adversarial_verify_qd_citation_scope_fix_v474.json results/experiment_5170_retire_phase_d_external_text_scorer_v474.json results/experiment_5171_harden_set_encoder_cross_corpus_n30_v474.json results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json results/experiment_5174_gap_live_integration_reconciliation_v474.json results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json results/experiment_5176_deepen_live_levelup_attempt_v474.json results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json results/experiment_5178_hidden_state_verifier_pilot_v474.json results/experiment_5179_hardware_continuity_board_timing_v474.json",
+    "python3 scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    "python3 scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml",
+    "python3 scripts/publication_gate.py --json",
+    ".venv/bin/pytest tests/python/test_experiment_5180_capstone_v474.py -q -o addopts=''",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5180_capstone_v474.py' -m pytest tests/python/test_experiment_5180_capstone_v474.py -q --no-cov -o addopts=''",
+    ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5180_capstone_v474.py' --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
