@@ -10231,3 +10231,4 @@ web search: |
 | 2026-07-03 15:12 UTC | Activation REFUSED: milestone 2026.07.476 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-07-03 16:14 UTC | Plan milestone 2026.07.476 | OK | 14 tasks proposed |
 | 2026-07-03 16:16 UTC | Milestone 2026.07.476 activated | OK | 14 tasks queued |
+| 2026-07-03 16:31 UTC | PHASE 0 transition -- archive .475 truth (poison-t | OK | 85 passed, 1 warning in 10.77s |
