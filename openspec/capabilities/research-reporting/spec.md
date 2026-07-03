@@ -32632,6 +32632,83 @@ content-addressed `reproducibility_checksum`.
 |---|---|---|
 | REQ-REPORT-5161 | Planned (`python/carnot/experiment_5161_gap4_protocol_execution_pilot.py`) | Planned (`tests/python/test_experiment_5161_gap4_protocol_execution_pilot.py`) |
 
+### REQ-REPORT-5177: GAP-4 Scale-Up And Decentralization Tier V474
+
+The Exp 5177 workflow SHALL write
+`results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json` for the
+GAP-4 forward-protocol scale-up and first genuine local open-weight generator
+pilot. The workflow SHALL read the live Exp 5161 artifact before proceeding and
+SHALL stop with `honest_verdict=blocked_upstream_still_flagged` if Exp 5161
+still has `flagged_adversarial=true`. The workflow SHALL reuse the Exp 5161
+checkpoint/resume and soft-budget pattern instead of rebuilding the runner
+contract, SHALL reuse the hardened `arc3_gap4_rule_exec_verifier.py` sandbox and
+the checked-in GAP-4 ARC-1 / ARC-2 artifacts where available, and SHALL report
+the actual achieved N honestly when the target N cannot be reached.
+
+The codex-first scale-up artifact SHALL include principle-annotated top-level
+fields `target_n`, `achieved_n`, `checkpoint_resume_used`,
+`exact_test_discordant_wins`, `exact_test_passes_min6_rule`,
+`exact_test_p_value_two_sided`, `local_generator_arm_result`,
+`gap4_status_recommendation`, `solve_provenance`, `inference_substrate`,
+`random_seed`, `reproducibility_checksum`, and `honest_verdict`. The exact test
+SHALL preserve GAP-4's unmoved zero-loss min-6 rule: `filled` is permitted only
+when the actual achieved rows produce at least six discordant wins, zero
+discordant losses, and a clean two-sided exact sign/binomial test.
+
+The local generator arm SHALL target a locally cached SOTA GGUF model,
+preferably `unsloth/Qwen3.6-35B-A3B-GGUF` through llama.cpp. If no mandated
+local model is cached, `local_generator_arm_result.value` SHALL be the exact
+string `blocked_local_model_not_cached`, and the codex-first scale-up SHALL
+continue. If a model is cached and invoked, the local arm SHALL use real ARC
+demo/test induction prompts and shall score the generated program outputs
+against the candidate pool; an identity-function cache smoke response SHALL NOT
+count as a measured local-generator pilot.
+
+Required field principles:
+
+- `target_n`: principle "Target selected from Exp 5161's observed 4/60 discordant-win rate, rounded into the 150-200 scale-up range for margin."
+- `achieved_n`: principle "May be less than target if the soft budget stops the run -- report honestly."
+- `checkpoint_resume_used`: principle "Reuse Exp 5161's checkpoint/resume pattern so bounded runs preserve completed task evidence."
+- `exact_test_discordant_wins`: principle "The actual discordant wins from the achieved rows, not a projected count."
+- `exact_test_passes_min6_rule`: principle "The exact, unmoved significance floor from GAP-4's own protocol -- do not redefine it post hoc to declare success."
+- `exact_test_p_value_two_sided`: principle "Two-sided exact sign/binomial p-value over the achieved discordant pairs."
+- `local_generator_arm_result`: principle "This is the FIRST genuine-scale run of the decentralization tier -- distinguishing it from a cache-check stub is the whole point of this field."
+- `gap4_status_recommendation`: principle "filled / still_open / retired / scale_up_recommended, with filled allowed only when the min-6 floor is genuinely crossed."
+- `solve_provenance`: principle "development_proxy records protocol evidence rather than a live hidden ARC solve."
+- `inference_substrate`: principle "This task invokes live codex/LLM calls for real induction and scoring, unlike exp5153's pure audit."
+- `random_seed`: principle "Deterministic row selection, bootstrap, and checksum reproducibility."
+- `reproducibility_checksum`: principle "Content-addressed hash catches silent artifact or row drift."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ AND report the actual N achieved and whether the significance floor was crossed."
+
+#### SCENARIO-REPORT-5177: Scale-Up Reports Actual N And Keeps The Min-6 Floor
+
+**Given** Exp 5161 is unflagged, the hardened GAP-4 sandbox code exists, and
+the cached ARC-1 and ARC-2 GAP-4 artifacts expose fewer usable rows than the
+requested scale-up target
+**When** the Exp 5177 workflow runs
+**Then** it writes the terminal JSON artifact, records `target_n`, records the
+actual `achieved_n`, computes ARC-1 and ARC-2 slice metrics over achieved rows,
+computes exact discordant wins/losses and the two-sided p-value, keeps
+`exact_test_passes_min6_rule=false` unless the achieved rows cross the unmoved
+six-win zero-loss floor, and emits a terminal honest verdict that states the
+actual N and floor outcome.
+
+#### SCENARIO-REPORT-5177-LOCAL-GENERATOR: Local Arm Uses Real Induction Prompts
+
+**Given** `unsloth/Qwen3.6-35B-A3B-GGUF` is cached locally and llama.cpp can be
+invoked
+**When** the Exp 5177 local generator arm runs on its bounded subset
+**Then** it prompts the model with real ARC demo pairs and test inputs, archives
+one scored row per attempted task, reports achieved local N, demo-perfect count,
+induction rate, candidate-pool precision counts, and duration, and does not
+label an identity cache smoke as a successful local-generator measurement.
+
+## Implementation Status (REQ-REPORT-5177)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5177 | Planned (`python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) | Planned (`tests/python/test_experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce

@@ -1,0 +1,1144 @@
+{
+  "achieved_n": {
+    "principle": "May be less than target if the soft budget stops the run -- report honestly.",
+    "value": 62
+  },
+  "achieved_n_reason": "source_pool_exhausted_before_target",
+  "arc1_slice_result": {
+    "demo_perfect_count": 29,
+    "gated_pass2": 0.5806451613,
+    "induction_rate": 0.935484,
+    "n_entries": 31,
+    "pass2_delta_vs_vote": 0.1290322581,
+    "precision": 0.517241,
+    "precision_counts": {
+      "denominator": 29,
+      "numerator": 15
+    },
+    "precision_kind": "pool_precision_given_demo_perfect",
+    "vote_pass2": 0.4516129032
+  },
+  "arc2_heldout_slice_result": {
+    "demo_perfect_count": 16,
+    "gated_pass2": 0.064516129,
+    "induction_rate": 0.516129,
+    "n_entries": 31,
+    "pass2_delta_vs_vote": 0.0,
+    "precision": 0.0,
+    "precision_counts": {
+      "denominator": 16,
+      "numerator": 0
+    },
+    "precision_kind": "pool_precision_given_demo_perfect",
+    "vote_pass2": 0.064516129
+  },
+  "checkpoint_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.checkpoint.json",
+  "checkpoint_resume_used": {
+    "principle": "Reuse Exp 5161's checkpoint/resume pattern so bounded runs preserve completed task evidence.",
+    "value": true
+  },
+  "cluster_bootstrap_delta_ci95": [
+    0.015873,
+    0.131148
+  ],
+  "duration_s": 1.003452,
+  "exact_test_discordant_losses": 0,
+  "exact_test_discordant_wins": {
+    "principle": "The actual discordant wins from the achieved rows, not a projected count.",
+    "value": 4
+  },
+  "exact_test_p_value_two_sided": {
+    "principle": "Two-sided exact sign/binomial p-value over the achieved discordant pairs.",
+    "value": 0.125
+  },
+  "exact_test_passes_min6_rule": {
+    "principle": "The exact, unmoved significance floor from GAP-4's own protocol -- do not redefine it post hoc to declare success.",
+    "value": false
+  },
+  "experiment": "experiment_5177_gap4_scaleup_decentralization_tier_v474",
+  "experiment_id": 5177,
+  "field_principles": {
+    "achieved_n": {
+      "principle": "May be less than target if the soft budget stops the run -- report honestly."
+    },
+    "checkpoint_resume_used": {
+      "principle": "Reuse Exp 5161's checkpoint/resume pattern so bounded runs preserve completed task evidence."
+    },
+    "exact_test_discordant_wins": {
+      "principle": "The actual discordant wins from the achieved rows, not a projected count."
+    },
+    "exact_test_p_value_two_sided": {
+      "principle": "Two-sided exact sign/binomial p-value over the achieved discordant pairs."
+    },
+    "exact_test_passes_min6_rule": {
+      "principle": "The exact, unmoved significance floor from GAP-4's own protocol -- do not redefine it post hoc to declare success."
+    },
+    "gap4_status_recommendation": {
+      "principle": "filled / still_open / retired / scale_up_recommended, with filled allowed only when the min-6 floor is genuinely crossed."
+    },
+    "honest_verdict": {
+      "principle": "Must start with complete:/complete_/success:/success_ AND report the actual N achieved and whether the significance floor was crossed."
+    },
+    "inference_substrate": {
+      "principle": "This task invokes live codex/LLM calls for real induction and scoring, unlike exp5153's pure audit."
+    },
+    "local_generator_arm_result": {
+      "principle": "This is the FIRST genuine-scale run of the decentralization tier -- distinguishing it from a cache-check stub is the whole point of this field."
+    },
+    "random_seed": {
+      "principle": "Deterministic row selection, bootstrap, and checksum reproducibility."
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash catches silent artifact or row drift."
+    },
+    "solve_provenance": {
+      "principle": "development_proxy records protocol evidence rather than a live hidden ARC solve."
+    },
+    "target_n": {
+      "principle": "Target selected from Exp 5161's observed 4/60 discordant-win rate, rounded into the 150-200 scale-up range for margin."
+    }
+  },
+  "gap4_status_recommendation": {
+    "principle": "filled / still_open / retired / scale_up_recommended, with filled allowed only when the min-6 floor is genuinely crossed.",
+    "value": "scale_up_recommended"
+  },
+  "honest_verdict": "complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended",
+  "inference_substrate": {
+    "principle": "This task invokes live codex/LLM calls for real induction and scoring, unlike exp5153's pure audit.",
+    "value": "live_llm_inference"
+  },
+  "local_generator_arm_result": {
+    "principle": "This is the FIRST genuine-scale run of the decentralization tier -- distinguishing it from a cache-check stub is the whole point of this field.",
+    "value": {
+      "achieved_n": 5,
+      "checkpoint_resume_used": true,
+      "demo_perfect_count": 0,
+      "domains": {
+        "arc1": 5
+      },
+      "duration_s": 0.007847,
+      "identity_cache_smoke": false,
+      "induction_rate": 0.0,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "pool_correct_count": 0,
+      "precision": 0.0,
+      "precision_counts": {
+        "denominator": 0,
+        "numerator": 0
+      },
+      "pred_in_pool_count": 0,
+      "prompt_kind": "arc_transform_induction_from_demos",
+      "real_generation": true,
+      "scored_rows": [
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc1",
+          "local_key": "arc1:0:50a16a69",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle and provide a Python function `transform(grid)` that implements the observed transformation.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2",
+          "status": "no_code",
+          "task": "50a16a69"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc1",
+          "local_key": "arc1:1:66e6c45b",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle based on two examples and apply the rule to a test input.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[0, 0, 0, 0],\n [0, 3, 4, 0],\n [0, 7, 6, 0],\n [0, 0, 0, 0]]\n```\nOutput:\n```\n[[3, 0, 0, 4],\n [0, 0, 0, 0],\n [0, 0, 0, 0],\n [7, 0, 0, 6]]\n```\n\nLet's look at ",
+          "status": "no_code",
+          "task": "66e6c45b"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc1",
+          "local_key": "arc1:2:17cae0c1",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC (Abstraction and Reasoning Corpus) puzzle.\nI need to analyze the provided demos to infer the transformation rule and then apply it to the test input.\nFinally, I need to output a Python function `transform(grid)` that performs this transformation.\n\n**Analys",
+          "status": "no_code",
+          "task": "17cae0c1"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc1",
+          "local_key": "arc1:28:00576224",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the demos.\nDemo 1:\nInput:\n[[8, 6],\n [6, 4]]\nOutput:",
+          "status": "no_code",
+          "task": "00576224"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc1",
+          "local_key": "arc1:16:be03b35f",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the data.\nDemos:\nDemo 1:\nInput:\n[[1,1,0,1,1],\n [1,0",
+          "status": "no_code",
+          "task": "be03b35f"
+        }
+      ],
+      "scoring_kind": "candidate_pool_correct_given_demo_perfect",
+      "status": "completed_real_local_generator_subset",
+      "target_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "target_n": 5
+    }
+  },
+  "partial": false,
+  "preconditions": {
+    "exp5161": {
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_gap4_pilot_n60_direction_replicated_not_significant_scale_up_recommended",
+      "passed": true,
+      "path": "results/experiment_5161_gap4_protocol_execution_pilot_v473.json",
+      "present": true
+    },
+    "local_prompt_entries_available": 62,
+    "qwen36_cached": true
+  },
+  "random_seed": {
+    "principle": "Deterministic row selection, bootstrap, and checksum reproducibility.",
+    "value": 5177
+  },
+  "remaining_rows": [],
+  "reproducibility_checksum": {
+    "principle": "Content-addressed hash catches silent artifact or row drift.",
+    "value": "sha256:31e64bc95b84ea8de2fa19dd75c3e08e4058bba3d863de8d99c0cb06193f1466"
+  },
+  "result_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json",
+  "scaleup_rows": [
+    {
+      "cluster_id": "arc1:50a16a69",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 0,
+      "gated_top2": true,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pilot_key": "arc1:0:50a16a69",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:66e6c45b",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 1,
+      "gated_top2": true,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pilot_key": "arc1:1:66e6c45b",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:17cae0c1",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 2,
+      "gated_top2": true,
+      "n_cands": 599,
+      "oracle_hit": true,
+      "pilot_key": "arc1:2:17cae0c1",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "17cae0c1",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:fafd9572",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 3,
+      "gated_top2": false,
+      "n_cands": 656,
+      "oracle_hit": false,
+      "pilot_key": "arc1:3:fafd9572",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "fafd9572",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:a59b95c0",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 4,
+      "gated_top2": true,
+      "n_cands": 7,
+      "oracle_hit": true,
+      "pilot_key": "arc1:4:a59b95c0",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "a59b95c0",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:4e469f39",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 5,
+      "gated_top2": true,
+      "n_cands": 108,
+      "oracle_hit": true,
+      "pilot_key": "arc1:5:4e469f39",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "4e469f39",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:a57f2f04",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 6,
+      "gated_top2": false,
+      "n_cands": 605,
+      "oracle_hit": false,
+      "pilot_key": "arc1:6:a57f2f04",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "a57f2f04",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:96a8c0cd",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 7,
+      "gated_top2": false,
+      "n_cands": 633,
+      "oracle_hit": false,
+      "pilot_key": "arc1:7:96a8c0cd",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "96a8c0cd",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:8719f442",
+      "demo_perfect": false,
+      "domain": "arc1",
+      "entry_i": 8,
+      "gated_top2": true,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pilot_key": "arc1:8:8719f442",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "8719f442",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:1a2e2828",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 9,
+      "gated_top2": true,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pilot_key": "arc1:9:1a2e2828",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "1a2e2828",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:25094a63",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 10,
+      "gated_top2": true,
+      "n_cands": 11,
+      "oracle_hit": true,
+      "pilot_key": "arc1:10:25094a63",
+      "pred_in_pool": true,
+      "pred_is_gold": false,
+      "task": "25094a63",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:2f0c5170",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 11,
+      "gated_top2": false,
+      "n_cands": 361,
+      "oracle_hit": false,
+      "pilot_key": "arc1:11:2f0c5170",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2f0c5170",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:3ee1011a",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 12,
+      "gated_top2": false,
+      "n_cands": 213,
+      "oracle_hit": false,
+      "pilot_key": "arc1:12:3ee1011a",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3ee1011a",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:2072aba6",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 13,
+      "gated_top2": true,
+      "n_cands": 42,
+      "oracle_hit": true,
+      "pilot_key": "arc1:13:2072aba6",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "2072aba6",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:712bf12e",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 14,
+      "gated_top2": false,
+      "n_cands": 195,
+      "oracle_hit": false,
+      "pilot_key": "arc1:14:712bf12e",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "712bf12e",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:505fff84",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 15,
+      "gated_top2": false,
+      "n_cands": 577,
+      "oracle_hit": false,
+      "pilot_key": "arc1:15:505fff84",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "505fff84",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:be03b35f",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 16,
+      "gated_top2": true,
+      "n_cands": 8,
+      "oracle_hit": true,
+      "pilot_key": "arc1:16:be03b35f",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "be03b35f",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:c7d4e6ad",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 17,
+      "gated_top2": true,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pilot_key": "arc1:17:c7d4e6ad",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "c7d4e6ad",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:1a6449f1",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 18,
+      "gated_top2": false,
+      "n_cands": 942,
+      "oracle_hit": false,
+      "pilot_key": "arc1:18:1a6449f1",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "1a6449f1",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:f0df5ff0",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 19,
+      "gated_top2": true,
+      "n_cands": 212,
+      "oracle_hit": true,
+      "pilot_key": "arc1:19:f0df5ff0",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "f0df5ff0",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:81c0276b",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 20,
+      "gated_top2": false,
+      "n_cands": 305,
+      "oracle_hit": false,
+      "pilot_key": "arc1:20:81c0276b",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "81c0276b",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:692cd3b6",
+      "demo_perfect": false,
+      "domain": "arc1",
+      "entry_i": 21,
+      "gated_top2": true,
+      "n_cands": 56,
+      "oracle_hit": true,
+      "pilot_key": "arc1:21:692cd3b6",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "692cd3b6",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:c3202e5a",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 22,
+      "gated_top2": true,
+      "n_cands": 754,
+      "oracle_hit": true,
+      "pilot_key": "arc1:22:c3202e5a",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "c3202e5a",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:ac3e2b04",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 23,
+      "gated_top2": true,
+      "n_cands": 13,
+      "oracle_hit": true,
+      "pilot_key": "arc1:23:ac3e2b04",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "ac3e2b04",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:0b17323b",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 24,
+      "gated_top2": false,
+      "n_cands": 50,
+      "oracle_hit": false,
+      "pilot_key": "arc1:24:0b17323b",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "0b17323b",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:5833af48",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 25,
+      "gated_top2": false,
+      "n_cands": 995,
+      "oracle_hit": false,
+      "pilot_key": "arc1:25:5833af48",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "5833af48",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:79fb03f4",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 26,
+      "gated_top2": false,
+      "n_cands": 600,
+      "oracle_hit": false,
+      "pilot_key": "arc1:26:79fb03f4",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "79fb03f4",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:b9630600",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 27,
+      "gated_top2": true,
+      "n_cands": 24,
+      "oracle_hit": true,
+      "pilot_key": "arc1:27:b9630600",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "b9630600",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:00576224",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 28,
+      "gated_top2": true,
+      "n_cands": 1,
+      "oracle_hit": true,
+      "pilot_key": "arc1:28:00576224",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "00576224",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc1:f3e62deb",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 29,
+      "gated_top2": true,
+      "n_cands": 19,
+      "oracle_hit": true,
+      "pilot_key": "arc1:29:f3e62deb",
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "f3e62deb",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc1:f3e62deb",
+      "demo_perfect": true,
+      "domain": "arc1",
+      "entry_i": 30,
+      "gated_top2": false,
+      "n_cands": 32,
+      "oracle_hit": true,
+      "pilot_key": "arc1:30:f3e62deb",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:13e47133",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 0,
+      "gated_top2": false,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pilot_key": "arc2:0:13e47133",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "13e47133",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:13e47133",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 1,
+      "gated_top2": false,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pilot_key": "arc2:1:13e47133",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "13e47133",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:a6f40cea",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 2,
+      "gated_top2": false,
+      "n_cands": 999,
+      "oracle_hit": false,
+      "pilot_key": "arc2:2:a6f40cea",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "a6f40cea",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:aa4ec2a5",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 3,
+      "gated_top2": false,
+      "n_cands": 403,
+      "oracle_hit": false,
+      "pilot_key": "arc2:3:aa4ec2a5",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "aa4ec2a5",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:9aaea919",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 4,
+      "gated_top2": false,
+      "n_cands": 315,
+      "oracle_hit": false,
+      "pilot_key": "arc2:4:9aaea919",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "9aaea919",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:16b78196",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 5,
+      "gated_top2": false,
+      "n_cands": 1000,
+      "oracle_hit": false,
+      "pilot_key": "arc2:5:16b78196",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "16b78196",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:d8e07eb2",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 6,
+      "gated_top2": false,
+      "n_cands": 295,
+      "oracle_hit": false,
+      "pilot_key": "arc2:6:d8e07eb2",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "d8e07eb2",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:d8e07eb2",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 7,
+      "gated_top2": false,
+      "n_cands": 242,
+      "oracle_hit": false,
+      "pilot_key": "arc2:7:d8e07eb2",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "d8e07eb2",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:28a6681f",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 8,
+      "gated_top2": false,
+      "n_cands": 503,
+      "oracle_hit": true,
+      "pilot_key": "arc2:8:28a6681f",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "28a6681f",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:3dc255db",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 9,
+      "gated_top2": false,
+      "n_cands": 171,
+      "oracle_hit": false,
+      "pilot_key": "arc2:9:3dc255db",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3dc255db",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:2b83f449",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 10,
+      "gated_top2": false,
+      "n_cands": 642,
+      "oracle_hit": false,
+      "pilot_key": "arc2:10:2b83f449",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2b83f449",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:6ffbe589",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 11,
+      "gated_top2": false,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pilot_key": "arc2:11:6ffbe589",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "6ffbe589",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:7b80bb43",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 12,
+      "gated_top2": true,
+      "n_cands": 68,
+      "oracle_hit": true,
+      "pilot_key": "arc2:12:7b80bb43",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "7b80bb43",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc2:58490d8a",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 13,
+      "gated_top2": false,
+      "n_cands": 642,
+      "oracle_hit": false,
+      "pilot_key": "arc2:13:58490d8a",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "58490d8a",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:2d0172a1",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 14,
+      "gated_top2": false,
+      "n_cands": 776,
+      "oracle_hit": false,
+      "pilot_key": "arc2:14:2d0172a1",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2d0172a1",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:2d0172a1",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 15,
+      "gated_top2": false,
+      "n_cands": 524,
+      "oracle_hit": false,
+      "pilot_key": "arc2:15:2d0172a1",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2d0172a1",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:21897d95",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 16,
+      "gated_top2": false,
+      "n_cands": 957,
+      "oracle_hit": false,
+      "pilot_key": "arc2:16:21897d95",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "21897d95",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:21897d95",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 17,
+      "gated_top2": false,
+      "n_cands": 990,
+      "oracle_hit": false,
+      "pilot_key": "arc2:17:21897d95",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "21897d95",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:6e453dd6",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 18,
+      "gated_top2": false,
+      "n_cands": 851,
+      "oracle_hit": false,
+      "pilot_key": "arc2:18:6e453dd6",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "6e453dd6",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:b9e38dc0",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 19,
+      "gated_top2": false,
+      "n_cands": 333,
+      "oracle_hit": false,
+      "pilot_key": "arc2:19:b9e38dc0",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "b9e38dc0",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:58f5dbd5",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 20,
+      "gated_top2": false,
+      "n_cands": 876,
+      "oracle_hit": false,
+      "pilot_key": "arc2:20:58f5dbd5",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "58f5dbd5",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:b10624e5",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 21,
+      "gated_top2": false,
+      "n_cands": 953,
+      "oracle_hit": false,
+      "pilot_key": "arc2:21:b10624e5",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "b10624e5",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:446ef5d2",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 22,
+      "gated_top2": false,
+      "n_cands": 1000,
+      "oracle_hit": false,
+      "pilot_key": "arc2:22:446ef5d2",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "446ef5d2",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:446ef5d2",
+      "demo_perfect": true,
+      "domain": "arc2",
+      "entry_i": 23,
+      "gated_top2": false,
+      "n_cands": 988,
+      "oracle_hit": false,
+      "pilot_key": "arc2:23:446ef5d2",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "446ef5d2",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:269e22fb",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 24,
+      "gated_top2": true,
+      "n_cands": 328,
+      "oracle_hit": true,
+      "pilot_key": "arc2:24:269e22fb",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "269e22fb",
+      "vote_top2": true
+    },
+    {
+      "cluster_id": "arc2:269e22fb",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 25,
+      "gated_top2": false,
+      "n_cands": 518,
+      "oracle_hit": true,
+      "pilot_key": "arc2:25:269e22fb",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "269e22fb",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:2c181942",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 26,
+      "gated_top2": false,
+      "n_cands": 550,
+      "oracle_hit": false,
+      "pilot_key": "arc2:26:2c181942",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2c181942",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:dd6b8c4b",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 27,
+      "gated_top2": false,
+      "n_cands": 340,
+      "oracle_hit": false,
+      "pilot_key": "arc2:27:dd6b8c4b",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "dd6b8c4b",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:dd6b8c4b",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 28,
+      "gated_top2": false,
+      "n_cands": 428,
+      "oracle_hit": false,
+      "pilot_key": "arc2:28:dd6b8c4b",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "dd6b8c4b",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:3a25b0d8",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 29,
+      "gated_top2": false,
+      "n_cands": 839,
+      "oracle_hit": false,
+      "pilot_key": "arc2:29:3a25b0d8",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3a25b0d8",
+      "vote_top2": false
+    },
+    {
+      "cluster_id": "arc2:3a25b0d8",
+      "demo_perfect": false,
+      "domain": "arc2",
+      "entry_i": 30,
+      "gated_top2": false,
+      "n_cands": 845,
+      "oracle_hit": false,
+      "pilot_key": "arc2:30:3a25b0d8",
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3a25b0d8",
+      "vote_top2": false
+    }
+  ],
+  "schema": "carnot.gap4_scaleup_decentralization_tier_5177.v1",
+  "solve_provenance": {
+    "principle": "development_proxy records protocol evidence rather than a live hidden ARC solve.",
+    "value": "development_proxy"
+  },
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "results/experiment_5161_gap4_protocol_execution_pilot_v473.json",
+      "sha256": "sha256:fd52d338f0e01329caccefe046bcc3a502cefef69b960fe8c63b02d6e496a483"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap4_rule_exec_verifier.json",
+      "sha256": "sha256:92eabcfac7fd7aae3881153d80d800fc3ced67ab992252640b2064a1bae14dc9"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap4_arc2_rule_exec_verifier.json",
+      "sha256": "sha256:a46f88c3a276044b70ec0886a0929b14f7f1db50f5ed4d5b12c67f6a099646d5"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "sha256": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap4_arc2_eval_pool.json.gz",
+      "sha256": "sha256:1614ae42b23eee0d44e384b8a2507087d61748e294840f89b56ea4e1dd088750"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap4_induced_programs.json",
+      "sha256": "sha256:d1516bf795c46a9333c5dcc9d4e1fbddfc21c1a329ae11291eebcdb3a841d90c"
+    },
+    {
+      "exists": true,
+      "path": "results/arc3_gap4_arc2_induced_programs.json",
+      "sha256": "sha256:123a62ae0e17a94ca3d3ea21ea425775601d8440ca2d388e2e884855db5cb230"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5177",
+    "SCENARIO-REPORT-5177",
+    "SCENARIO-REPORT-5177-LOCAL-GENERATOR"
+  ],
+  "target_n": {
+    "principle": "Target selected from Exp 5161's observed 4/60 discordant-win rate, rounded into the 150-200 scale-up range for margin.",
+    "value": 180
+  },
+  "target_n_rationale": {
+    "exp5161_observed_discordant_wins": 4,
+    "exp5161_observed_n": 60,
+    "proportional_n_for_six_wins": 90,
+    "selected_with_margin": 180
+  }
+}
