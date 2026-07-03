@@ -10229,3 +10229,5 @@ web search: |
 | 2026-07-03 15:08 UTC | Activation REFUSED: milestone 2026.07.476 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-07-03 15:10 UTC | Activation REFUSED: milestone 2026.07.476 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-07-03 15:12 UTC | Activation REFUSED: milestone 2026.07.476 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
+| 2026-07-03 16:14 UTC | Plan milestone 2026.07.476 | OK | 14 tasks proposed |
+| 2026-07-03 16:16 UTC | Milestone 2026.07.476 activated | OK | 14 tasks queued |
