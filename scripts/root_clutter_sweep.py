@@ -72,6 +72,20 @@ ALLOWLIST = {
     # research project files (CLAUDE.md Key Paths)
     "research-complete.yaml",
     "research-roadmap.yaml",
+    # 2026-07-03: the conductor's in-progress next-milestone draft. UNTRACKED by
+    # nature while the planner is mid-draft / activation is stuck-and-retrying
+    # (it only becomes tracked once activation succeeds and it gets copied to
+    # research-roadmap.yaml) -- which is exactly the state this sweeper's own
+    # untracked-file criterion matches. Confirmed via /tmp/root-clutter-sweep.log
+    # ("mv research-roadmap-next.yaml") that this sweeper silently relocated a
+    # STUCK-BUT-FIXABLE roadmap draft mid-stall on at least two occasions (.475,
+    # .476), each time discarding up to 2 real hours of planner compute and
+    # forcing the conductor to fall back to "no research-roadmap-next.yaml --
+    # launching planning agent" instead of the stall getting diagnosed and fixed.
+    # This file is not scratch -- it is the SAME class of legitimate research
+    # artifact as its already-allowlisted siblings above, just transiently
+    # untracked. See CLAUDE.md "Pre-Staged Roadmap Convention".
+    "research-roadmap-next.yaml",
     "research-program.md",
     "research-studying.md",
     "research-references.md",
