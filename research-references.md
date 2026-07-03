@@ -26550,3 +26550,103 @@ arXiv:2508.10751/2602.21189, "Single Direction of Truth" arXiv:2507.23221, EBM-C
 Koopman hallucination detection arXiv:2605.05134, MultiHaluDet arXiv:2605.24919) is logged for completeness
 but did not change `.475`'s task design; flagged as candidate reading for `.476+` rather than repeated here
 in full to avoid padding this file with content that does not feed a concrete next experiment.
+
+## V476 Planner References - 2026-07-03
+
+Added by the `.476` planning session. This pass independently re-verified two citations the `.475`
+planning session's own draft had referenced without logging (Radial Consensus Score, AutoPyVerifier --
+both confirmed real via direct WebFetch below), and ran four bounded, targeted searches: DiffusionGemma
+serving-infra status (the decisive lead this milestone acts on), a documented HF/accelerate tied-weight
+mitigation, a fresh 48-hour sweep (honest negative), and an ARC Prize deadline sanity-check. Did not
+re-run the broad KAN/EBM/hardware/Kona sweep the `.475` supplementary pass already covered -- nothing in
+that space changed in two days.
+
+### vLLM ships native DiffusionGemma support (the decisive finding for `.476`'s `exp5196`)
+- **Source:** https://vllm.ai/blog/2026-06-10-diffusion-gemma -- fetched directly, confirmed real.
+- **Finding:** "DiffusionGemma: The First Diffusion LLM (dLLM) Natively Supported in vLLM," dated
+  2026-06-10 -- the same day DiffusionGemma itself released. Demonstrated on single H100/H200 via a new
+  "model runner v2 `ModelState` abstraction." Does not address multi-GPU or a <24GB VRAM budget directly.
+- **Carnot hook:** Our own `.474` vLLM probe (`results/diffusiongemma_energy_prior_vllm.log`, dated
+  2026-06-14, four days after this blog post) shows `"TransformersMultiModalMoEForCausalLM has no vLLM
+  implementation, falling back to Transformers implementation"` -- confirming that probe did NOT exercise
+  the native path and instead fell back to the same device-placement-fragile generic backend `exp5182`
+  (`.475`) separately exhausted via the HF `transformers`+`accelerate` stack. This is a genuinely
+  different, untried mitigation for the DiffusionGemma energy-guided-diffusion pilot, not a re-run.
+- **Actionability:** Primary attempt for `exp5196` -- re-test using the blog's exact recipe/version,
+  checking the installed vLLM version postdates 2026-06-10's native-support merge.
+
+### huggingface/transformers#22018 -- documented tied-weight + custom device_map + CPU-offload pattern
+- **Source:** https://github.com/huggingface/transformers/issues/22018 -- fetched directly.
+- **Finding:** Describes the exact interaction class our `exp5182` hit: `device_map="auto"` +
+  `llm_int8_enable_fp32_cpu_offload=True` failing because CPU-offloaded modules are excluded from the
+  quantization module list at the point `replace_8bit_linear` runs. Reporter's confirmed workaround: pass
+  a manually pre-configured `device_map` dict (not `"auto"`) rather than relying on auto-balancing.
+- **Carnot hook:** `exp5182` root-caused DiffusionGemma's failure to weight-tied encoder/decoder modules
+  that must co-locate on one device; `#22018`'s workaround pattern -- custom dict co-locating the tied pair
+  on GPU 0 while explicitly offloading other named non-tied modules to CPU with
+  `llm_int8_enable_fp32_cpu_offload=True` -- directly exploits that diagnosis and was not among `exp5182`'s
+  four attempted mitigations (which were either fully-`"auto"` or fully-single-device with no offload
+  option).
+- **Actionability:** Secondary attempt for `exp5196`, if the vLLM-native path above also fails to fit the
+  2x24GB budget.
+
+### ggml-org/llama.cpp#24427 and ollama/ollama#16664 -- GGUF path confirmed not-yet-ready
+- **Source:** https://github.com/ggml-org/llama.cpp/pull/24427 and
+  https://github.com/ollama/ollama/issues/16664 -- both fetched directly.
+- **Finding:** `#24427` ("Add diffusion-gemma block-diffusion support") is **Draft, open, not merged** as
+  of this check. `#16664` ("unknown model architecture: 'diffusion-gemma'") is open with no linked fix.
+- **Carnot hook:** Confirms our `.474` `blocked_gguf_load_failed` probe was correct and this is an upstream
+  gap, not a local bug. `exp5196` should not re-attempt GGUF; a future milestone should only retry once
+  `#24427` merges.
+- **Actionability:** None until upstream lands. Check `#24427`'s status before proposing any GGUF retry in
+  `.477+`.
+
+### Radial Consensus Score -- confirmed real, verified via direct WebFetch
+- **Source:** arXiv:2604.12196 - https://arxiv.org/abs/2604.12196 -- fetched directly.
+- **Real title:** "Beyond Majority Voting: Efficient Best-Of-N with Radial Consensus Score" (Nguyen,
+  Gupta, Le).
+- **Finding:** Computes a weighted Frechet mean (semantic center) of answer embeddings and ranks candidates
+  by radial distance to that center -- a training-free, black-box, embedding-geometry drop-in replacement
+  for majority voting, validated across 7 benchmarks.
+- **Carnot hook:** A third mandatory zero-training baseline for `exp5200` (hidden-state verifier v2),
+  alongside self-certainty and CLUE -- a trained probe must clear all three before any beats-SC claim is
+  credible.
+- **Actionability:** Wired directly into `exp5200`'s design.
+
+### AutoPyVerifier -- confirmed real, verified via direct WebFetch
+- **Source:** arXiv:2604.22937 - https://arxiv.org/abs/2604.22937 -- fetched directly.
+- **Real title:** "AutoPyVerifier: Learning Compact Executable Verifiers for Large Language Model Outputs"
+  (Pezeshkpour, Hruschka).
+- **Finding:** An LLM synthesizes candidate Python verifier functions; a DAG search identifies a compact/
+  minimal SET whose combined satisfaction best predicts correctness (up to +55 F1 over the initial set; up
+  to +17 points when exposing discovered verifiers as tools).
+- **Carnot hook:** The paper's core method -- search a compact SET of cheap discriminators via synthesis +
+  DAG search, not one hand-crafted invariant -- is precisely what distinguishes `exp5205`'s GAP-1
+  (transpose/orientation) pilot from the already-refuted single directional-adjacency hand-invariant
+  (2026-06-09, degraded HYBRID rerank pass@2 0.452->0.419, captured 0/2 transpose mis-votes).
+  Directly maps onto `ops/verifier_gaps.md`'s open GAP-1 entry.
+- **Actionability:** Wired directly into `exp5205`'s design.
+
+### Fresh 48-hour sweep (2026-07-01 through 2026-07-03): honest negative
+Direct fetch of arXiv's cs.LG recent listing plus targeted searches for energy-based verifiers/reward
+models, hidden-state/internal-representation LLM verification, and ARC-AGI-3 competition results found
+**nothing dated in this window**. Reported explicitly as a clean negative rather than padded with older
+papers restated as new.
+
+### ARC Prize deadline correction (governance-relevant, not an experiment input)
+- **Source:** arcprize.org -- fetched directly for the "Milestone #1" framing; the November 2, 2026
+  overall-competition end date is from a search snippet only, not independently WebFetched (lower
+  confidence, flagged as such).
+- **Finding:** The `2026-06-30` date this project has treated as the final ARC Prize deadline (the trigger
+  for retiring the ARC-AGI-3 Submission Sprint Forcing Function in CLAUDE.md) is actually "Milestone #1"
+  for early open-source prize eligibility; the overall 2026 competition may run through November 2, 2026.
+- **Carnot hook:** Does not change `.476`'s task allocation (the self-solve audit's zero-advance finding
+  and the standing "do not silently re-expand ARC's share" stance both still apply). Surfaced for the
+  operator's pending "post-PHASE-D strategic direction" decision -- see the `.476` roadmap doc's
+  "Recommended operator attention."
+- **Actionability:** None for this milestone's task design; operator-attention item only.
+
+**Bottom line for `.476`:** the DiffusionGemma thread gets a genuinely new primary lever (vLLM-native) plus
+a well-grounded secondary lever (custom device_map + CPU offload) before any retirement decision; GAP-1
+gets a structurally-different pilot design (AutoPyVerifier) instead of repeating the refuted hand-invariant
+approach; the hidden-state verifier v2 gets a third, newly-verified free baseline (RCS) to clear.
