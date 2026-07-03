@@ -1337,6 +1337,50 @@ should be filed as a new entry rather than reopening this one.
 
 deliverable: "results/experiment_<next>_retro_timing_fallback_wiring.json"
 
+### RESOLVED (root cause found + fix prepared) 2026-07-03 (exp5195): the .475 false-zero was a WIRING-SITE IMPORT BUG, not a missing wire
+
+**Status: root cause FOUND and FIXED (patch ready to apply). The module was never at fault.**
+
+The wiring above DID land (exp5164's `scripts/retro_timing_fallback.py` is imported and
+called in `scripts/research_conductor.py::_run_operational_retrospective`, ~line 2876 —
+`grep -n retro_timing_fallback scripts/research_conductor.py` now shows hits). Yet
+`results/operational_retro_2026_07_475.json` STILL reported `experiments_completed=0`,
+`total_wall_time_minutes=0`, `reconstructed_from_disk_mtime=false`,
+`timing_integrity_mismatch=true` — the exact false-zero the wiring was meant to kill. Per
+the falsifiable gate above ("a subsequent retro still reports a false zero ... is a distinct
+bug in the wiring itself"), this is filed as a new entry.
+
+**Actual root cause (journalctl-confirmed, not theorized):** the wiring used
+`from scripts.retro_timing_fallback import build_retro_timing_fallback`. The conductor is
+launched as `python scripts/research_conductor.py` (systemd `ExecStart`), so `sys.path[0]`
+is the `scripts/` directory, NOT the repo root — the same reason every OTHER sibling helper
+in that file is imported BARE (`from gpu_monitor import`, `from failure_ledger import`,
+`from in_process_doc_reconcile import`, `from adversarial_verify import`). Line 2876 was the
+only `from scripts.X import` in the whole file, so it raised
+`ModuleNotFoundError: No module named 'scripts.retro_timing_fallback'` on EVERY retro pass.
+`journalctl --user -u carnot-conductor` confirms it fired at 06:38:46, 07:48:05, and
+11:16:44 EDT on 2026-07-03 (the last matching the artifact's `generated_at` 15:16:44Z). The
+conductor's outer `except Exception` swallowed it (WARNING only), leaving `experiment_times`
+empty. The `experiments_completed`/`reconstructed_from_disk_mtime`/`timing_integrity_mismatch`
+fields are Python-prefilled + locked in the skeleton (research_conductor.py ~lines 3140/3151/
+3152), so this was NOT an LLM-transcription bug — the zeros are Python-computed from the empty
+list. Calling `build_retro_timing_fallback('2026.07.475', repo_root=<root>)` directly returns
+2 experiments / 147.9 wall-min with the repo root on `sys.path` — the module logic is correct.
+
+**Fix (prepared, not applied — the retro task must not edit research_conductor.py):**
+`results/experiment_5195_research_conductor_import_fix.patch` (verified with `git apply
+--check`) changes line 2876 to import the bare sibling first and fall back to the package
+form. The package form is deliberately retained so the existing wiring-assertion test stays
+green. Regression coverage: `tests/python/test_experiment_5195_retro_timing_real_fix.py`
+reproduces the exact `ModuleNotFoundError` under the conductor's `sys.path` and locks in the
+`.475`-shaped reconstruction. **Operator action:** apply the patch, then backfill corrected
+retros for `.469/.473/.474/.475`.
+
+Note (pre-existing, unrelated): `tests/python/test_retro_timing_fallback.py::
+test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero` currently fails on
+`.474 compute_bound_experiments_count == 3` (now reconstructs `2`) — a hardcoded-expectation
+drift in a test not touched here, independent of the import fix. Left as-is per task scope.
+
 **Scope boundary (why this couldn't be closed by any of the retro passes that found it):**
 operational-retrospective tasks are explicitly barred from editing `scripts/research_conductor.py`
 (per that task's own prompt), so no retro pass — including the ones that diagnosed this — can
@@ -6014,7 +6058,6 @@ together prevents conflicting fixes from drifting apart.
 correctly-formatted tasks.
 
 
-
 ### NEW 2026-05-09 (12:50Z): NLA-Class Probing as 16th Verifier (.124+ MANDATORY)
 
 **Origin.** 2026-05-09 ~12:50Z operator directive after reviewing
@@ -6189,7 +6232,6 @@ as MANDATORY ensures the planner doesn't skip it for research breadth.
   reduce null-space attack surface, doesn't eliminate it
 
 
-
 ### NEW 2026-05-09 (01:20Z): Gemini Verdict-Prefix Discipline Reinforcement (.122+ MANDATORY)
 
 **Origin.** 2026-05-09 01:04-01:17Z incident: exp1582 Phase-1 Software
@@ -6255,7 +6297,6 @@ prevention.
 needs explicit verdict-prefix instruction in-body. When inner loop
 switches back to codex (post-quota-reset), this reinforcement is still
 useful but slightly redundant.
-
 
 
 ### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track — Decoupled from Paper + Hardware (.121+ MANDATORY)
@@ -6913,7 +6954,6 @@ abstracts available via:
         addressed_by: "Direct application of Sullivan's verified
                        proof; one-line patch with negligible compute
                        overhead."
-
 
 
 - id: exp15YY-iclr26-ot-verification-framework-paper-v6
@@ -9935,199 +9975,9 @@ Fast-Slow Variant CONFIRMED (exp1811 + exp1909 replication pair) — paper-v6 §
 Regex-based tests parsing documentation for experiment counts (like the `test_docs.py` failure that caused the .193 SKIP cascade on exp1901-1908) should be robust to markdown formatting. The README's `**N,NNN**` bolding broke `\d+[+,]?\d*\+?\s*[Ee]xperiments?` before the ~01:30Z fix. Always strip markdown or use flexible matchers.
 
 
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
 ## RESEARCH-STUDYING CANDIDATES
 - arXiv:2601.17223 (Score 400) - Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
 
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 ### 2026-05-21 18:15 EDT: torch 2.12.0+cpu replaced GPU build in .venv
 
@@ -10147,13 +9997,6 @@ Result: `torch 2.11.0+cu128`, `cuda compiled: 12.8`, device count = 2.
 
 **Affected milestones:** `.268 (all 4 corpus tasks failed precondition before this fix; honest blocked_cuda artifacts in `results/experiment_2828-2831_*.json`). Next conductor iteration should re-attempt and produce real measurements.
 
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 ### 2026-05-21 23:50 EDT: HuggingFace `datasets` package missing from .venv
 
@@ -10189,425 +10032,6 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
 
 
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
 ### 2026-06-20 (MANDATORY-NEXT-MILESTONE .417, operator "start shaping .417"): ACTION EFFICIENCY is the bottleneck
 
 **Operator 2026-06-20.** Three independent measurements this session converge: the live agent's wall is
@@ -10637,125 +10061,3 @@ quarantine flag. Follow-up: the .416 B2 lazy/cheap value-eval prototype is the p
 value_weight>0 (the v3 head helps offline at LOO 0.674 but is too slow per-node to earn weight>0 live).
 
 
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
-
-
-### NEW Phase 4 Canonical Metric MANDATORY
-Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).

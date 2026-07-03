@@ -61,11 +61,25 @@ def run():
 
     # 4. Update ops/known-issues.md MANDATORY
     known_issues_path = "ops/known-issues.md"
+    known_issues_header = "### NEW Phase 4 Canonical Metric MANDATORY"
     conf_string = "<confirmed per exp1909>" if conf_status == "confirmed" else "<preliminary single-run evidence>"
-    known_issues_text = f"\n\n### NEW Phase 4 Canonical Metric MANDATORY\nPhase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: {conf_string}).\n"
-    
-    with open(known_issues_path, "a") as f:
-        f.write(known_issues_text)
+    known_issues_text = f"\n\n{known_issues_header}\nPhase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: {conf_string}).\n"
+
+    # Idempotency guard (2026-07-03, exp5195): this block previously appended
+    # the section UNCONDITIONALLY on every invocation. Because the conductor /
+    # outer loop re-ran this experiment many times, that produced 187 identical
+    # duplicate copies of the section in ops/known-issues.md (confirmed on
+    # disk). Only append when the section header is not already present, so a
+    # re-run is a no-op for this file. This mirrors the "never append
+    # duplicate spam" half of the Documentation Update Rules.
+    try:
+        with open(known_issues_path, encoding="utf-8") as f:
+            already_present = known_issues_header in f.read()
+    except OSError:
+        already_present = False
+    if not already_present:
+        with open(known_issues_path, "a") as f:
+            f.write(known_issues_text)
         
     with open("results/experiment_1911_phase4_canonical_decision.json", "w") as f:
         json.dump(artifact, f, indent=2)
