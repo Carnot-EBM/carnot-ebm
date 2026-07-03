@@ -10234,3 +10234,4 @@ web search: |
 | 2026-07-03 16:31 UTC | PHASE 0 transition -- archive .475 truth (poison-t | OK | 85 passed, 1 warning in 10.77s |
 | 2026-07-03 16:58 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-07-03 17:06 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | OK | cache hit: 113 passed, 1 warning in 7.57s |
+| 2026-07-03 17:39 UTC | PHASE INFRA-CRITICAL 2/2 -- MANDATORY overdue prio | OK | 84 passed, 1 warning in 7.60s |
