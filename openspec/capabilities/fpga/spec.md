@@ -14899,6 +14899,108 @@ block-device touches, `inference_substrate=hardware_smoke`, and
 
 ---
 
+### REQ-HW-5201
+
+**Title:** GateMate DirtyJTAG IDCODE diagnostic MUST narrow the failure layer with new angles while preserving KV260 and PolarFire smokes
+
+**Description:**
+Experiment 5201 MUST produce
+`results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json` as a
+v476 hardware-continuity artifact with `inference_substrate=hardware_smoke`. It
+continues the three-board rotation but focuses on the GateMate DirtyJTAG IDCODE
+regression that recurred across `.473`/`.474`/`.475` (DirtyJTAG enumerates over
+USB but `openFPGALoader -c dirtyJtag --detect` reads no GM1Ax IDCODE
+`0x20000001`). One blocked board MUST remain a per-board blocker, not a reason to
+skip the other boards.
+
+KV260 is a graduated/terminal board and MUST be checked over SSH only with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host block devices MUST
+NOT be inspected as a KV260 precondition. When SSH is reachable the experiment
+MUST run a light-touch hash-verified board-local Ising-energy smoke and record
+its workload hash and correctness, with `no_speedup_claim`.
+
+PolarFire MUST be checked over SSH with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. When reachable it
+MUST run the same hash-verified smoke and record its workload hash. The artifact
+MUST report `polarfire_workload_validated` and MUST NOT set it true from a smoke
+alone: the terminal bar is an end-to-end Carnot dispatch run, so a reachable
+hash-verified smoke reports `polarfire_workload_validated=false` with an explicit
+rationale.
+
+GateMate MUST run `openFPGALoader -c dirtyJtag --detect` and, on a missing
+IDCODE, MUST add diagnostic angles that PRIOR milestones did not run. The
+required NEW angles are: (a) a USB topology map (`lsusb -t`) that records whether
+the DirtyJTAG sits behind a shared hub and whether a direct-root-port move is
+untested; (b) a detect at the documented-working GM1Ax clock rate (15 MHz) in
+addition to the slower rates; (c) a recorded cable/port-swap operator angle
+(USB port/cable plus JTAG-ribbon reseat) with an explicit "requires physical
+access" outcome; and (d) an openFPGALoader-issues reference-search angle citing
+the exact "enumerates but reads 0 devices" GM1Ax signature. The artifact MUST
+compute `gatemate_diagnostic_narrowed_to` from evidence (one of `usb_level`,
+`jtag_protocol_level`, `permissions`, `clock_rate`, `firmware_version`,
+`cable_or_port`, `unknown`, or `resolved`), and record the mechanically
+eliminated causes plus the leading untested physical hypothesis.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations: `kv260_status`, `polarfire_status`, `gatemate_status`,
+`gatemate_diagnostic_narrowed_to`, `new_diagnostic_angles_tried_this_milestone`,
+`boards_reachable_count`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `inference_substrate`, and `honest_verdict`.
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.py --date 20260703`
+  writes `results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json`.
+- The artifact includes
+  `experiment_id="exp5201-hardware-continuity-gatemate-diagnostic-v476"`,
+  `milestone="2026.07.476"`, `spec_refs` containing `REQ-HW-5201` and
+  `SCENARIO-HW-5201`, `random_seed=5201`, `inference_substrate="hardware_smoke"`,
+  and a stable `reproducibility_checksum`.
+- `new_diagnostic_angles_tried_this_milestone` is a non-empty list of dicts and
+  MUST include at least a `cable_or_port` swap angle and an
+  `openfpgaloader_issue_search` angle.
+- `gatemate_diagnostic_narrowed_to` is one of the allowed narrowing values and,
+  when the DirtyJTAG probe enumerates but the scan chain is empty across the
+  clock sweep with permissions and tool version intact, equals
+  `jtag_protocol_level` with a `cable_or_port` leading untested hypothesis.
+- `boards_reachable_count` equals the number of boards whose status is reachable
+  (out of 3); `polarfire_workload_validated` is not set true from a smoke.
+- `honest_verdict` starts with `complete_`, `complete:`, `success_`, or
+  `success:`, reports per-board reachability, and claims no hardware speedup or
+  latency win.
+- No artifact field cites host storage markers such as `/dev/mmcblk` or
+  `/dev/disk`.
+
+**Implementation status:** Pending (Exp 5201)
+
+---
+
+### SCENARIO-HW-5201
+
+**Scenario:** Exp 5201 narrows the GateMate DirtyJTAG IDCODE failure to the JTAG-protocol layer with new angles while KV260 and PolarFire smokes stay green.
+
+**Given:** The DirtyJTAG probe enumerates over USB and openFPGALoader can talk to
+it, but the GM1Ax IDCODE has been unreadable for three consecutive milestones,
+KV260 is terminal and checked over SSH only, and PolarFire has no terminal-state
+mandate.
+**When:** Experiment 5201 runs all three board preconditions, executes the
+light-touch hash-verified smokes for the SSH boards, and — on the GateMate
+IDCODE miss — runs a USB topology map, a documented-working 15 MHz detect, and
+records a cable/port-swap operator angle and an openFPGALoader-issue reference
+search, then mechanically eliminates the USB, permission, clock-rate, and
+tool-firmware layers.
+**Then:** It writes
+`results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json` with
+`gatemate_diagnostic_narrowed_to=jtag_protocol_level`, a `cable_or_port` leading
+untested hypothesis, the eliminated causes, at least the cable/port-swap and
+issue-search new angles, `boards_reachable_count`, per-board statuses,
+`polarfire_workload_validated=false` with rationale, `inference_substrate=hardware_smoke`,
+no host block-device touches, and a `complete_`-prefixed honest verdict that
+claims no speedup.
+
+**Implementation status:** Pending (Exp 5201)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.

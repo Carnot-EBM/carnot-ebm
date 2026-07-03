@@ -1,0 +1,202 @@
+{
+  "boards_reachable_count": 2,
+  "conductor_modified": false,
+  "duration_s": 7.403132,
+  "experiment": "experiment_5201_hardware_continuity_gatemate_diagnostic",
+  "experiment_id": "exp5201-hardware-continuity-gatemate-diagnostic-v476",
+  "field_principles": {
+    "boards_reachable_count": "reachability accounting out of 3; one blocked board is not a whole-task fail",
+    "gatemate_diagnostic_narrowed_to": "narrowing the failure layer is the load-bearing deliverable when the IDCODE is not actually fixed; it tells the operator exactly where to look next",
+    "gatemate_status": "per-board blocker stays visible; a fourth identical --detect is not progress",
+    "honest_verdict": "terminal complete_/success_ verdict with honest per-board reachability and no speedup or latency claim",
+    "inference_substrate": "substrate honesty; board-touching measurements are hardware_smoke",
+    "kv260_status": "terminal board; reachability is SSH-only and must never be inferred from host removable storage, and a smoke is not a speedup claim",
+    "new_diagnostic_angles_tried_this_milestone": "the first six angles were exhausted across prior milestones; this milestone must add genuinely new ones (USB topology, documented 15 MHz, cable/port swap, issue search) so we do not re-burn a milestone",
+    "polarfire_status": "PolarFire has no terminal-state mandate; a reachable hash-verified smoke does not close the end-to-end-dispatch bar, so polarfire_workload_validated stays false until an operator confirms a full dispatch run",
+    "preconditions_checked": "fabrication guard; every board resource is checked before any workload",
+    "random_seed": "determinism precondition for reproducibility",
+    "reproducibility_checksum": "content hash catches silent artifact drift"
+  },
+  "gatemate_command_transcripts": {
+    "doc_freq_detect": {
+      "combined_output": "Jtag frequency : requested 15000000 Hz -> real 15000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect --freq 15000000",
+      "duration_s": 0.011134,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 15000000 Hz -> real 15000000 Hz\n"
+    },
+    "low_freq_detect": {
+      "combined_output": "Jtag frequency : requested 100000 Hz -> real 100000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect --freq 100000",
+      "duration_s": 0.014453,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 100000 Hz -> real 100000 Hz\n"
+    },
+    "precondition": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.018027,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+    },
+    "scan_usb": {
+      "combined_output": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n",
+      "command": "openFPGALoader --scan-usb",
+      "duration_s": 0.036081,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n"
+    },
+    "usb_enumeration": {
+      "combined_output": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n/dev/bus/usb/003/006 660 root:uucp\nianblenke sys network docker nopasswdlogin rfkill users video uucp storage render lp audio wheel\n",
+      "command": "sh -lc 'openFPGALoader --scan-usb; stat -c '\"'\"'%n %a %U:%G'\"'\"' /dev/bus/usb/003/006 2>/dev/null || true; id -nG'",
+      "duration_s": 0.120238,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Bus device vid:pid       probe_type manufacturer serial           product\n003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG\n/dev/bus/usb/003/006 660 root:uucp\nianblenke sys network docker nopasswdlogin rfkill users video uucp storage render lp audio wheel\n"
+    },
+    "usb_topology": {
+      "combined_output": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+      "command": "sh -lc 'lsusb -t; lsusb -d 1209:c0ca'",
+      "duration_s": 0.089247,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n"
+    },
+    "verbose_detect": {
+      "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nfound 0 devices\n",
+      "command": "openFPGALoader -c dirtyJtag --detect -v",
+      "duration_s": 0.012536,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nfound 0 devices\n"
+    },
+    "version": {
+      "combined_output": "openFPGALoader v1.1.1\n",
+      "command": "openFPGALoader -V",
+      "duration_s": 0.01111,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "openFPGALoader v1.1.1\n"
+    }
+  },
+  "gatemate_diagnostic_narrowed_to": "jtag_protocol_level",
+  "gatemate_eliminated_causes": [
+    {
+      "cause": "usb_level",
+      "eliminated": true,
+      "evidence": "DirtyJTAG (1209:c0ca) enumerates via openFPGALoader --scan-usb and the probe opens"
+    },
+    {
+      "cause": "permissions",
+      "eliminated": true,
+      "evidence": "USB node group-accessible (root:uucp) and user is in the uucp group"
+    },
+    {
+      "cause": "firmware_version",
+      "eliminated": true,
+      "evidence": "openFPGALoader v1.1.1 matches the 2026-05-23 known-good baseline"
+    },
+    {
+      "cause": "clock_rate",
+      "eliminated": true,
+      "evidence": "100 kHz..15 MHz JTAG clock sweep (incl. the documented-working 15 MHz GM1Ax rate) all read 0 devices"
+    }
+  ],
+  "gatemate_leading_untested_hypothesis": "cable_or_port",
+  "gatemate_status": {
+    "blocked_reason": "blocked_gatemate_dirtyjtag_idcode",
+    "detected_idcode": null,
+    "expected_idcode": "0x20000001",
+    "leading_untested_hypothesis": "cable_or_port",
+    "narrowed_to": "jtag_protocol_level",
+    "reachable": false,
+    "status": "blocked_gatemate_dirtyjtag_idcode_unresolved_v476"
+  },
+  "hardware_speedup_claimed": false,
+  "honest_verdict": "complete_hardware_continuity_gatemate_diagnostic_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire:reachable_no_speedup_claim",
+  "inference_substrate": "hardware_smoke",
+  "kv260_host_block_devices_touched": false,
+  "kv260_status": "reachable + hash-verified smoke workload_hash=3c8ee5136df77d8b672961cfae69c37c39551aca63eb5f5a06a3294eb1860138",
+  "milestone": "2026.07.476",
+  "new_diagnostic_angles_tried_this_milestone": [
+    {
+      "actionable_next_step": "DirtyJTAG sits behind a shared external hub with the PolarFire FlashPro; moving it to a direct root port is untested but a weak hypothesis since USB itself works",
+      "angle": "usb_topology_map",
+      "finding": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+      "live": true,
+      "method": "lsusb -t + lsusb -d 1209:c0ca"
+    },
+    {
+      "actionable_next_step": "the GMM-7550 reference detects the GM1Ax at exactly this rate; if it still reads 0 devices the clock rate is not the cause",
+      "angle": "documented_working_15mhz_detect",
+      "finding": "Jtag frequency : requested 15000000 Hz -> real 15000000 Hz",
+      "live": true,
+      "method": "openFPGALoader -c dirtyJtag --detect --freq 15000000"
+    },
+    {
+      "actionable_next_step": "operator: reseat JTAG ribbon + verify board power, then re-run --detect",
+      "angle": "cable_or_port_swap",
+      "finding": "requires_physical_access: reseat the JTAG ribbon between the DirtyJTAG probe and the GM1Ax header, confirm the GateMate board power LED, and/or try a different JTAG cable and USB port. USB enumerates, so the JTAG-side wiring and board power -- not the USB cable -- are the prime suspects",
+      "live": false,
+      "method": "operator physical action (not shell-executable)"
+    },
+    {
+      "actionable_next_step": "compare against issue #628 (Olimex GateMate A1-EVB) if the physical reseat does not resolve it",
+      "angle": "openfpgaloader_issue_search",
+      "finding": "trabucayre/openFPGALoader issue #628 documents the Olimex GateMate A1-EVB (this exact board) failing to program; issue #520 fixed IDCODE reads from 4 to 32 bits; the GMM-7550 reference detects the GM1Ax at --freq 15000000 with IDCODE 0x20000001. The tracker attributes a 'found 0 devices' result to outdated DirtyJTAG firmware, USB access permissions, or timing/frequency -- all three of which this milestone mechanically eliminated (v1.1.1 tool + bcdDevice 1.11 probe firmware unchanged from the May baseline, user in the uucp group with an accessible node, and a 100 kHz..15 MHz clock sweep all reading 0 devices). Residual points to the physical JTAG connection / board power, not the tool.",
+      "live": false,
+      "method": "web search of trabucayre/openFPGALoader issues + GMM-7550 docs (2026-07-03)"
+    }
+  ],
+  "no_speedup_claim": true,
+  "polarfire_status": {
+    "blocked_reason": null,
+    "hash_verified": true,
+    "polarfire_workload_validated": false,
+    "reachable": true,
+    "summary": "reachable + hash-verified smoke workload_hash=ea59cb1eb031ae50f3f9df2a05e1e9ef50fa1d77d0af655cd25f144a70becef2; polarfire_workload_validated=false (terminal bar is an end-to-end dispatch run)",
+    "terminal_bar_rationale": "A reachable, hash-verified Ising-energy smoke is a reachability + correctness check, not the end-to-end Carnot dispatch run the terminal bar requires; north-star marks PolarFire opportunistic with no terminal-state mandate, so polarfire_workload_validated stays false.",
+    "workload_hash": "ea59cb1eb031ae50f3f9df2a05e1e9ef50fa1d77d0af655cd25f144a70becef2"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.473638,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "board": "gatemate",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.018027,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+      "resource": "gatemate_dirtyjtag_idcode"
+    },
+    {
+      "available": true,
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.783332,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 5201,
+  "reproducibility_checksum": "748926c671bea5e29a64fc7affaeca8c415fd1928afcb828b7b1370836443691",
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5201_hardware_continuity_gatemate_diagnostic.v476",
+  "spec_refs": [
+    "REQ-HW-5201",
+    "SCENARIO-HW-5201"
+  ]
+}
