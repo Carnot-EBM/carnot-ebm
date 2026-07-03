@@ -24593,3 +24593,78 @@ than oracle-distinct.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5173 | Implemented (`python/carnot/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`, `results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`) | Implemented (`tests/python/test_experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.py`) |
+
+### REQ-VERIFY-5182: DiffusionGemma Meta-Tensor Root-Cause Fix V475
+
+The repository SHALL provide Exp 5182 at
+`python/carnot/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`
+to write
+`results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`
+without modifying `scripts/research_conductor.py`. The sole job of this runner
+is to make `google/diffusiongemma-26B-A4B-it` loadable AND runnable through at
+least one real forward pass; it SHALL NOT run the full guided-vs-unguided-vs-AR
+pilot (that is the downstream Exp 5183, gated on this task's success).
+
+The runner SHALL check preconditions before any load attempt: both discrete
+GPUs' free memory, the local presence of the DiffusionGemma weights, and the
+importable versions of `transformers`, `accelerate`, and `bitsandbytes`. If a
+required resource is missing or busy, it SHALL stop with a `blocked_<resource>`
+verdict rather than fabricate a load.
+
+The runner SHALL attempt an ordered ladder of mitigations, NONE of which is a
+bare `device_map="auto"` two-GPU load (the exact variants Exp 5173/.474 already
+proved fail): (1) single-device placement (`device_map={"": 0}`) with 4-bit NF4;
+(2) an explicit `_no_split_modules` correction retaining auto placement;
+(3) `low_cpu_mem_usage=False` materialized load; (4) bitsandbytes int8 instead
+of 4-bit NF4. The runner SHALL stop at the first mitigation that both loads the
+model AND confirms a real forward pass. A `from_pretrained` call that returns
+without raising SHALL NOT count as success unless a subsequent forward pass
+produces a non-meta output tensor (`Tensor.item()` succeeds).
+
+The terminal artifact SHALL include the BARE top-level Boolean field
+`diffusiongemma_loadable` — written as a literal JSON Boolean, NOT
+principle-wrapped as `{"value": ..., "principle": ...}` — because the downstream
+gate evaluator (`scripts/conductor_gates.py:evaluate_gates`) compares
+`data.get("diffusiongemma_loadable")` directly against `True`, and a wrapped
+dict silently and permanently blocks Exp 5183. The artifact SHALL set
+`diffusiongemma_loadable=true` ONLY when a real forward pass was confirmed. The
+artifact SHALL additionally include `forward_pass_confirmed` (bare Boolean),
+`mitigations_tried` (ordered list of `{mitigation, outcome, error_if_any,
+duration_s}` with zero overlap against Exp 5173's device_map=auto variants),
+`transformers_accelerate_bitsandbytes_versions`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, `inference_substrate`, and
+`honest_verdict`. The `honest_verdict` SHALL start with `complete:`/`complete_`/
+`success:`/`success_` or `blocked_`, and SHALL NOT claim
+`diffusiongemma_loadable=true` without a confirmed forward pass.
+
+### SCENARIO-VERIFY-5182-ROOTCAUSE: Single-Device Placement Resolves The Meta-Tensor Bug
+
+Given the DiffusionGemma weights are cached and at least one GPU is idle, when
+Exp 5182 loads the model with single-device placement so the encoder↔decoder
+tied weights stay co-located, then the load succeeds, a real forward pass
+produces a non-meta output tensor, the artifact sets
+`diffusiongemma_loadable=true` (bare Boolean) and `forward_pass_confirmed=true`,
+and `honest_verdict` starts with `complete:`.
+
+### SCENARIO-VERIFY-5182-BLOCKED: All Mitigations Failing Blocks Honestly
+
+Given every mitigation in the ladder fails to produce a confirmed forward pass,
+when Exp 5182 finishes, then the artifact sets `diffusiongemma_loadable=false`,
+`forward_pass_confirmed=false`, records each attempt with its error in
+`mitigations_tried`, and writes
+`honest_verdict=blocked_diffusiongemma_meta_tensor_bug_unresolved_v475` without
+fabricating a partial success.
+
+### SCENARIO-VERIFY-5182-BARE-GATE-FIELD: The Gate Field Is A Bare Boolean
+
+Given the terminal artifact, when the downstream gate evaluator reads
+`diffusiongemma_loadable`, then the value is a literal JSON Boolean (never a
+`{value, principle}` dict) so `data.get("diffusiongemma_loadable") == True`
+evaluates correctly, and validation rejects any principle-wrapped form of that
+one field.
+
+## Implementation Status (REQ-VERIFY-5182)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5182 | Implemented (`python/carnot/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`, `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`) | Implemented (`tests/python/test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`) |

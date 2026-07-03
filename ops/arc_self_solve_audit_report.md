@@ -16,30 +16,46 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-Confirmed the smoking gun directly — my critical finding is grounded in the artifact, not the pre-pass extraction.
+## TL;DR
+
+**0 SELF_DISCOVERY_ADVANCE · 1 OUTER_LOOP_RE · 19 DUPLICATE · 0 OFF_PATH.** The reachability pre-pass is clean (exit 0, no orphaned solvers), and the one genuine anti-pattern (`experiment_headway_lp85_capture` — a live-recorded L6 trajectory captured with `used_env_source: true`) was **already caught mechanically** (`flagged_adversarial: true` + critical `ARC_OUTER_LOOP_SOLVE` corrigendum, excluded from the counted total). The other 19 are honestly-labeled `development_proxy` re-reproductions of already-banked levels. **Net live capability advance this window: zero** — `reproducible_total_levels` is flat at 69, and the registry itself notes recent probes "reproduced only prior-or-lower registry depths."
 
 ---
 
-## ARC Self-Solve Provenance Audit — Layer 2 (hostile review)
+## Per-artifact verdicts
 
-**TL;DR: FAIL on self-discovery evidence. 0 of 20 recent solve artifacts show the LIVE agent self-discovering anything — all 20 are `development_proxy`. 19 are honest offline reproduction-gate runs (reachable, no outer-loop inputs, but NOT self-discovery and mostly banking no new level). 1 (`experiment_headway_lp85_capture.json`) is a CRITICAL provenance contradiction: it banks lp85 L6 using `used_env_source: true` — outer-loop RE the live agent cannot do on a hidden game — while stamped `development_proxy`. Layer 1b already caught and quarantined it; keep it out.**
+### The one to flag: `results/experiment_headway_lp85_capture.json` — **OUTER_LOOP_RE**
 
-Reachability pre-pass is clean (exit 0, 46 modules in live closure) — no OFF_PATH orphan modules. Good.
+- **Evidence:** `solve_provenance: development_proxy` **but** `used_env_source: true` — the exact contradiction the discipline names as CRITICAL (reading env source is RE the live agent *cannot* do on a hidden game). `honest_verdict: complete_confirmed_lp85_L6_bank_trajectory_captured` + `solution_labels` = 89 frozen pixel coords = a captured trajectory, not a from-scratch live derivation. Claims L6 over a clean registry ceiling of **L5** (registry line 858: `new_reproduced_level=5`).
+- **Already handled:** `flagged_adversarial: true`, `corrigendum_pending[ARC_OUTER_LOOP_SOLVE / critical]`, `corrigendum_note: Excluded from headline / capstone aggregation`. Cross-check confirms the taint did **not** leak into the count — grep for `lp85_l6`/`used_env_source` in the registry returns nothing; lp85 stands at L5 clean. **The defense worked.**
+- **Recommended action:** No new fix needed — leave quarantined. Either re-stamp `solve_provenance: outer_loop_re` for label-honesty, or delete the artifact. Do **not** count lp85 L6.
 
-### Per-artifact verdicts
+### The 19 standing-loop artifacts — **DUPLICATE** (benign regression-maintenance, not drift)
 
-**`experiment_headway_lp85_capture.json` (lp85 L6) — OUTER_LOOP_RE (CRITICAL)**
-- **Evidence:** `used_env_source: true` (deepcopy env-state injection — registry confirms `env._game=deepcopy(state)` for lp85), then an 11,069-node / 971.6s offline deepen L5→L6 (`deepen_log`). `banked: true`, `honest_verdict: complete_confirmed_lp85_L6_bank_trajectory_captured`, yet `solve_provenance: development_proxy`. That combination is the exact contradiction the discipline names CRITICAL. Registry records lp85 at `levels_reproduced: 5`, and the two grounded L6 attempts (Exp5026, Exp5040) BOTH failed to bank — the only "L6" exists via the env-injection route. A live agent under an action budget on a hidden game cannot deepcopy ground-truth state or run an 11k-node search.
-- **Already caught:** artifact carries `flagged_adversarial: true` + a `corrigendum_pending` saying precisely this, and "Excluded from headline / capstone aggregation." The mechanical net (Layer 1b) worked.
-- **Recommended action:** (1) Confirm quarantine holds — do NOT count lp85 L6 toward `reproducible_total_levels` (registry stays L5). (2) Relabel `solve_provenance: outer_loop_re` (or drop the env-source dependency and re-derive on the live path). (3) Never headline lp85 L6.
+All share: `mode: standing_arc_loop_offline_no_quota`, `solve_provenance: development_proxy`, empty `honest_verdict`, **no** outer-loop inputs declared (`used_env_source`/`offline_ground_truth_bfs`/`hand_calibrated_per_game` all absent or false), verifier-routed best-first search over the offline sim reusing the shared operator library + reproduction gate.
 
-**The 19 `arc_loop_solve_<game>.json` (lp85 L3, r11l L2, ls20 L2, dc22 L3, vc33 L2, g50t L2, s5i5 L2, sp80 L2, su15 L2, sk48 L2, ft09 L3, ar25 L3, m0r0 L2, cn04 L3, lf52 L2, bp35 L2, re86 L2, ka59 L1, sb26 L2) — DUPLICATE (development-proxy reproductions)**
-- **Evidence:** all `mode: standing_arc_loop_offline_no_quota`, `solve_provenance: development_proxy`, `outer_loop_inputs_declared: []`. Reachable via `arc_loop_solve.py` (a live entrypoint), honestly labeled, no source-reading. But the registry repeatedly records "no new level was banked, so `reproducible_total_levels` is unchanged" (~9 entries) — these are the reproduction gate re-verifying already-banked levels, not new live capability.
-- **Not a violation** — this is the required reproduction-gate behavior, cleanly labeled. **But not self-discovery either:** by the project's own taxonomy `development_proxy` is "allowed, NOT proof the live agent self-discovers." None are credit/headline-eligible.
-- **Recommended action:** No fix needed on these. Do not let any be cited as evidence the live agent self-discovers. If a specific game's loop run *did* increment the registry, it's still a proxy, not the deliverable.
+| game | reached L | game | reached L | game | reached L |
+|---|---|---|---|---|---|
+| lp85 | 3 | dc22 | 3 | ft09 | 3 |
+| r11l | 2 | vc33 | 2 | ar25 | 3 |
+| ls20 | 2 | g50t | 2 | m0r0 | 2 |
+| s5i5 | 2 | sp80 | 2 | cn04 | 3 |
+| su15 | 2 | sk48 | 2 | lf52 | 2 |
+| bp35 | 2 | re86 | 2 | ka59 | 1 |
+| sb26 | 2 | | | | |
 
-### Pattern watch — drift toward outer-loop solving
+- **Evidence:** These are the standing offline regression loop, not new-capability claims. `reproducible_total_levels` flat at 69; registry line 1620 states directly that lp85/tr87/tn36 "reproduced only prior-or-lower registry depths." Confirmed exemplar: `arc_loop_solve_lp85` reaches **L3**, below the banked **L5** → re-reproduction, no new capability.
+- **Not OUTER_LOOP_RE / not OFF_PATH:** honestly stamped, clean of source-read inputs, reachable from `arc_loop_solve.py`. They are the *allowed* dev-twin — but per the discipline, `development_proxy` is explicitly **not** proof the live agent self-discovers, so none earns SELF_DISCOVERY_ADVANCE.
+- **Caveat (honest):** per-game ceilings were individually verified only for lp85; the DUPLICATE call on the other 18 rests on the flat total + standing-regression mode + the registry's "prior-or-lower" note. Strong but circumstantial.
+- **Recommended action:** Keep as regression hygiene. **Do not let any capstone/headline count these as "levels solved this milestone" or as live progress** — that aggregation step is where a clean-labeled duplicate silently becomes an over-claim.
 
-1. **The recent record contains zero live self-discovery advances.** Every artifact in the 7-day window is `development_proxy`. Expected during `offline_no_quota`, but it means the core deliverable — the SCORED `arc_competition_agent` E3 path self-discovering a HIDDEN game from its own attempts — is currently **unvalidated by recent artifacts**. To close this, run the scored E3 cascade on a held-out first-contact lane (the `exp4605` held-out lane) and produce at least one `live_agent_self_discovery` artifact.
-2. **Source/env-state reading reappeared inside a bank claim.** lp85 L6 could not be banked by any grounded/live route (Exp5026, Exp5040 failed), and only "succeeded" via env-state injection. When the live path stalls on a deepen, the tempting shortcut is outer-loop RE dressed as `development_proxy`. Layer 1b caught this one — watch for recurrence where `used_env_source`/`offline_ground_truth_bfs` slips in under a `development_proxy` stamp on a *new*-level bank. The provenance stamp is a contract, not a guarantee; a new-level bank + any outer-loop input flag = treat as `outer_loop_re` regardless of the stamp.
+---
+
+## Pattern watch
+
+1. **Deepen well is dry, and the shortcut instinct showed.** A full 7-day window yielded zero live self-discovered advances — 19 re-reproductions plus one reach for `used_env_source` to force lp85 L6. That single env-source capture is the canary: when the honest search stalls, the tempting path is outer-loop RE dressed as `development_proxy`. It was caught this time; the guard is load-bearing, not decorative. Keep Layer 1b hot.
+
+2. **The residual risk is aggregation, not these artifacts.** The 19 are labeled correctly. The failure mode to watch is a downstream capstone summing `arc_loop_solve_*` "solves" into a milestone progress number — that would launder 19 duplicates + 1 quarantined solve into apparent forward motion against a total that has not moved off 69.
+
+3. **`development_proxy` is doing heavy lifting with no live-agent proof behind it.** Every solve this week routes through hand-registered `GameAdapter`s in the offline twin. None demonstrates the scored `E3AgentPolicy` advancing a game from its own runtime attempts. That is consistent with the sprint being over (deadline passed 2026-06-30) — but if ARC keeps claiming milestone slots, the planner should be pushed toward `live_agent_self_discovery` provenance or explicitly reclassified as maintenance, not progress.
 
