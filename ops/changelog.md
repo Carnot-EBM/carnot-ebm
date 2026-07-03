@@ -1,5 +1,46 @@
 # Carnot — Changelog
 
+## 2026-07-03 (Operational retrospective .474, second pass -- confirmed false-zero again, filed the missing known-issues.md escalation -- claude)
+
+- Wrote `results/operational_retro_2026_07_474.json` for milestone `2026.07.474`. The supplied
+  TIMING DATA block again reported "no experiment commits found since activation" (locked fields
+  `total_wall_time_minutes`/`experiments_completed`/`compute_bound_experiments_count` = 0,
+  `slowest_experiments` = `[]`, `gpu_idle_on_compute_bound_tasks` = `null`) -- left exactly as
+  pre-filled per the task's LOCKED FIELDS instruction. Only the interpretive fields (`summary`,
+  `bottlenecks_identified`, `improvements_suggested`, `top_3_highest_leverage_actions`,
+  `estimated_time_savings_pct`, `meta_reflection`) were written this pass.
+- Found this milestone already had a full prior retro committed at `25d53090e` (generated_at
+  `2026-07-03T02:11:15Z`) that had reached the identical false-zero diagnosis before the JSON was
+  reset back to skeleton state for this second pass -- so this pass re-verified the finding from
+  scratch rather than trusting the prior text, and it holds up: `git log cd06fc3f0..HEAD` (the
+  "Activate milestone 2026.07.474" commit) shows **43 real commits** spanning PHASE 0 through
+  PHASE Z (ARC oracle-distinct cross-corpus scale-up, DiffusionGemma pilot, KV260/PolarFire/
+  GateMate hardware continuity, the QA-Layer Authenticity Discipline) -- not an empty milestone.
+- Independently re-confirmed `scripts/retro_timing_fallback.py` (the disk-mtime reconstruction
+  fix built for exp5164 in `.473`) is still unwired: `grep -n retro_timing_fallback
+  scripts/research_conductor.py` returns zero hits. Also independently spot-checked
+  `results/operational_retro_2026_07_469.json` and `results/operational_retro_2026_07_473.json`
+  directly (not just trusted the prior narrative) -- both confirm
+  `experiments_completed=0`/`total_wall_time_minutes=0`, corroborating the recurring pattern
+  across `.469`, `.473` (three prior passes), and now `.474` (two passes).
+- **Closed the actual process gap this time instead of re-recommending it:** three prior retro
+  passes (two for `.473`, one for `.474`) all correctly recommended escalating this into
+  `ops/known-issues.md` MANDATORY-NEXT-MILESTONE PRIORITIES, and a grep confirmed that
+  recommendation was never acted on (zero hits for `retro_timing_fallback` or `FALSE-ZERO` in
+  `ops/known-issues.md` before this pass). Filed the entry directly this pass -- see
+  `ops/known-issues.md` "NEW 2026-07-03 ... WIRE scripts/retro_timing_fallback.py ..." -- with a
+  `deliverable:` slug so a dedicated non-retro task can pick it up, and so the Overdue-Priority
+  Forcing Function's mechanical pickup lint has something to act on if it is skipped 3+ more
+  milestones running.
+- This retro-generation task's own scope still forbids editing `scripts/research_conductor.py`,
+  so the wiring fix itself remains unshipped after this pass -- but the missing link (an actual
+  known-issues.md entry, not just a fourth changelog paragraph recommending one) is now closed.
+- Checked `docs/research-log.md` before writing and found it already had a `### Milestone
+  2026.07.474` entry (from the first `.474` retro pass, itself noting ".469, .472, .473 x3, now
+  .474" as the recurrence count) -- per "Public Documentation Discipline" research-log entries
+  are immutable, so appended a `(same-day addendum -- known-issues.md entry filed)` section
+  rather than editing or duplicating the existing one, mirroring the two `.473` addenda pattern.
+
 ## 2026-07-02 (Operational retrospective .473, third pass -- gap still unwired, now also unlogged in known-issues.md -- claude)
 
 - Wrote `results/operational_retro_2026_07_473.json` for milestone `2026.07.473`
