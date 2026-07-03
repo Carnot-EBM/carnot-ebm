@@ -1,31 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.07.474",
-  "generated_at": "2026-07-03T05:30:37Z",
+  "generated_at": "2026-07-03T06:19:27Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The authoritative TIMING DATA block reports zero experiment commits since 2026.07.474's activation (0 minutes, 0 experiments, 0 compute-bound tasks), so no compute-bound duration or GPU-utilization ranking can be produced from authoritative data this pass. Independent verification (git log cd06fc3f0..HEAD, the 'Activate milestone 2026.07.474' commit) found 43 real commits spanning PHASE 0 through PHASE Z plus a prior .474 retrospective already committed at 25d53090e -- confirming this is a false-zero TIMING DATA reading, not an empty milestone, and the fourth such retro-generation pass to hit this exact condition across three milestones (.469, .473 x3, .474 x2).",
+  "summary": "TIMING DATA for milestone 2026.07.474 reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks, so total_wall_time_minutes, experiments_completed, and compute_bound_experiments_count all stay locked at 0 with slowest_experiments empty and gpu_idle_on_compute_bound_tasks locked at null. No slowest-experiment, GPU-utilization, or DualGPURunner finding can be derived from authoritative data this pass.",
   "bottlenecks_identified": [
-    "No compute-bound experiment data is present in the supplied TIMING DATA block, so no duration or GPU-efficiency ranking can be produced this pass from authoritative data alone.",
-    "Confirmed recurring false-zero, not an isolated gap: results/operational_retro_2026_07_469.json and results/operational_retro_2026_07_473.json both show experiments_completed=0/total_wall_time_minutes=0 (checked directly this pass), and this is the second .474 retro pass to hit the same condition (the first, committed at 25d53090e, generated_at 2026-07-03T02:11:15Z, already diagnosed it). git log confirms 43 real commits landed between cd06fc3f0 ('Activate milestone 2026.07.474') and HEAD.",
-    "Root cause remains unwired: scripts/retro_timing_fallback.py (built 2026-07-02 for exp5164, validated against 4 known-good milestones -- .450, .467, .470, .472 -- with research_conductor_py_modified=false recorded in its own artifact) still has zero references in scripts/research_conductor.py per a fresh grep this pass.",
-    "The missing link was escalation, not diagnosis: the prior .474 pass and multiple .473 passes all correctly recommended filing this as an ops/known-issues.md MANDATORY-NEXT-MILESTONE priority, but a grep for 'retro_timing_fallback' and 'FALSE-ZERO' in ops/known-issues.md returned zero hits before this pass -- meaning the Overdue-Priority Forcing Function had nothing to mechanically pick up."
+    "The empty TIMING DATA block is itself the bottleneck this pass: this is at least the third retro-generation pass for milestone 2026.07.474 specifically (two prior passes are already recorded in docs/research-log.md and ops/changelog.md), part of a six-prior-pass pattern spanning .469/.473/.474 per the ops/known-issues.md 2026-07-03 MANDATORY entry.",
+    "Direct inspection of scripts/research_conductor.py (git diff --cached) shows the previously-escalated retro_timing_fallback wiring is now staged in the working tree -- it imports build_retro_timing_fallback, adds a retro_timing_integrity_mismatch regression check, and appends a '(checked both live git-log and disk-mtime reconstruction)' phrase to the honest-zero message -- but this pass's TIMING DATA text does not contain that phrase, so the staged fix has not yet taken effect for this generation, most plausibly because it is uncommitted.",
+    "Because the fix is uncommitted, this retro pass still cannot distinguish a genuinely idle milestone from the previously-diagnosed commit-message-convention miss (the old `\"Exp \" in msg` predicate no longer matches current lowercase expNNNN commit subjects)."
   ],
   "improvements_suggested": [
-    "Wire scripts/retro_timing_fallback.py into research_conductor.py's retro TIMING DATA assembly step. The fix already exists and is validated; this retro task's own scope forbids editing research_conductor.py, so it must land as a dedicated non-retro task.",
-    "This pass files the missing ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES entry directly (see the new 2026-07-03 entry in that file) instead of recommending the escalation a fifth time -- closing the specific process gap where diagnosis kept happening but never reached the mechanically-enforced priority list.",
-    "Add an automated cross-check in the retro-generation step that compares a proposed experiments_completed=0 against ops/changelog.md's commit count for that milestone prefix, and flags the mismatch before the retro is written rather than requiring a human or outer-loop session to notice via manual git log.",
-    "Once real timing data flows through, backfill corrected retros for .469, .473, and .474 so the historical efficiency record is not permanently stuck at false zeros for three milestones."
+    "Commit the already-staged scripts/research_conductor.py + tests/python/test_retro_timing_fallback.py changes (both show as modified in git status right now) so the fallback and integrity-mismatch check take effect on the next retro pass instead of sitting inert for a fourth consecutive .474 generation.",
+    "After committing, confirm the next retrospective artifact carries the new reconstructed_from_disk_mtime / timing_integrity_mismatch fields and a non-zero experiments_completed wherever ops/changelog.md records committed entries for that milestone.",
+    "Complete known-issues.md item 4 once real timing data is available: backfill corrected retros for .469, .473, and .474 so the historical efficiency record is not permanently stuck at false zeros."
   ],
   "top_3_highest_leverage_actions": [
-    "Wire the already-built, already-validated scripts/retro_timing_fallback.py into research_conductor.py's TIMING DATA assembly -- this single change fixes the false-zero for every future milestone at once and has been ready since .473 (exp5164).",
-    "Keep the newly-filed known-issues.md MANDATORY-NEXT-MILESTONE entry in place through the Overdue-Priority Forcing Function until the wiring lands -- three prior retro passes diagnosed this correctly but the recommendation evaporated each time because it was never logged where the mechanical pickup lint could act on it.",
-    "Add the changelog-vs-experiments_completed cross-check so a false-zero retro is caught at generation time instead of requiring manual git log verification every single pass."
+    "Commit the staged retro_timing_fallback wiring in scripts/research_conductor.py -- it already exists on disk uncommitted, so this is a near-zero-cost action with the highest payoff of anything identifiable this pass.",
+    "Land the accompanying tests/python/test_retro_timing_fallback.py update in the same commit so the fix is regression-covered, not just staged.",
+    "Once committed, re-derive .469/.473/.474 timing via the fallback and append corrected addenda so bottleneck/GPU-efficiency analysis has real historical data instead of four blank milestones."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "With authoritative TIMING DATA empty for a third distinct milestone in a row, this pass adds value not by inventing numbers but by finally closing a loop three prior passes opened and never finished: it independently re-verifies the false-zero (43 real commits since activation) and, instead of recommending escalation a fourth time, writes the ops/known-issues.md entry the Overdue-Priority Forcing Function needs to force a dedicated wiring task. No wall-clock efficiency conclusion about .474's actual execution can be drawn until that task lands and a corrected retro is regenerated -- estimated_time_savings_pct is left at 0 because there is no measurable inefficiency to quantify from an empty data block, only restored analytical visibility once fixed."
+  "meta_reflection": "The gap has moved from 'diagnosed' to 'escalated into known-issues.md' to 'implemented and staged in the working tree' across successive passes, but each stage change still required a full retro pass to notice -- the loop is spending turns re-confirming the same fix's progress rather than analyzing real bottlenecks. The highest-leverage next step is mechanical (commit the staged diff), not analytical."
 }

@@ -193,7 +193,11 @@ def test_scenario_report_5164_synthetic_false_zero_reconstructs_without_exp_subj
     mod = _load_module()
     tasks = [
         {"id": "exp1", "title": "PHASE A1 live", "deliverable": "results/experiment_30_live.json"},
-        {"id": "exp2", "title": "PHASE B1 audit", "deliverable": "results/experiment_31_audit.json"},
+        {
+            "id": "exp2",
+            "title": "PHASE B1 audit",
+            "deliverable": "results/experiment_31_audit.json",
+        },
     ]
     _write_json(
         tmp_path / "results/experiment_30_live.json",
@@ -239,3 +243,51 @@ def test_req_report_5164_real_m450_reconstructs_known_good() -> None:
     assert 200.0 <= summary["total_wall_time_minutes"] <= 225.0
     assert summary["compute_bound_experiments_count"] == 4
     assert summary["known_good_checks"]["m450_reconstruction_correct"] is True
+
+
+def test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero() -> None:
+    """Regression test for the 2026-07-03 conductor wiring fix.
+
+    ops/known-issues.md's "WIRE scripts/retro_timing_fallback.py INTO THE
+    CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY" MANDATORY entry named these three
+    milestones as false-zeroed by the live git-log path (the old literal
+    `"Exp " in msg` commit-subject predicate no longer matches current
+    lowercase `expNNNN` phrasing). scripts/research_conductor.py's
+    `_run_operational_retrospective` now falls back to this module's
+    disk-mtime reconstruction whenever the live path finds nothing. This test
+    locks in that the reconstruction itself produces real, non-zero data for
+    exactly the three milestones the mandate named, so a future change to
+    this module cannot silently reintroduce a false zero for these cases.
+    """
+
+    mod = _load_module()
+
+    m469 = mod.build_retro_timing_fallback("2026.07.469", repo_root=REPO_ROOT)
+    assert m469["experiments_completed"] == 11
+    assert 190.0 <= m469["total_wall_time_minutes"] <= 200.0
+    assert m469["compute_bound_experiments_count"] == 1
+
+    m473 = mod.build_retro_timing_fallback("2026.07.473", repo_root=REPO_ROOT)
+    assert m473["experiments_completed"] == 12
+    assert 420.0 <= m473["total_wall_time_minutes"] <= 430.0
+    assert m473["compute_bound_experiments_count"] == 2
+
+    m474 = mod.build_retro_timing_fallback("2026.07.474", repo_root=REPO_ROOT)
+    assert m474["experiments_completed"] == 13
+    assert 305.0 <= m474["total_wall_time_minutes"] <= 315.0
+    assert m474["compute_bound_experiments_count"] == 3
+
+
+def test_2026_07_03_conductor_imports_fallback_module_for_wiring() -> None:
+    """The conductor's retro function must import this module by its
+    documented module path (not a private copy), so a future refactor of
+    this file's public API surface is felt immediately by the conductor
+    wiring, per this module's own "HOW TO WIRE THIS IN" docstring contract.
+    """
+
+    conductor_source = (REPO_ROOT / "scripts" / "research_conductor.py").read_text(encoding="utf-8")
+    assert "from scripts.retro_timing_fallback import build_retro_timing_fallback" in (
+        conductor_source
+    )
+    assert "retro_timing_reconstructed_from_disk_mtime" in conductor_source
+    assert "timing_integrity_mismatch" in conductor_source

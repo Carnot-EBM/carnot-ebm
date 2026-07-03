@@ -10123,3 +10123,4 @@ web search: |
 | 2026-07-03 05:21 UTC | Activation REFUSED: milestone 2026.07.475 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-03 05:23 UTC | Activation REFUSED: milestone 2026.07.475 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-07-03 05:25 UTC | Activation REFUSED: milestone 2026.07.475 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-07-03 06:14 UTC | Plan next milestone | FAIL | Codex CLI error: Error: Reached max turns (50) |

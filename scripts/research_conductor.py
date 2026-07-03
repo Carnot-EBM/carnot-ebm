@@ -2856,6 +2856,70 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     except Exception:
         experiment_times = []
 
+    # MANDATORY fix, 2026-07-03 (ops/known-issues.md "WIRE
+    # scripts/retro_timing_fallback.py INTO THE CONDUCTOR'S RETRO
+    # TIMING-DATA ASSEMBLY", outer-loop escalation after the 4th
+    # recurrence: .469/.473/.474 all reported a false "no experiment
+    # commits" TIMING DATA block despite dozens of real commits each
+    # time). Root cause: the literal `"Exp " in msg` predicate above
+    # only matches an old commit-subject convention; current commit
+    # subjects use lowercase `expNNNN` task-id phrasing and never
+    # match, so `experiment_times` silently stays empty even when the
+    # milestone did substantial work. When the live git-log path finds
+    # nothing, reconstruct from disk mtimes instead of reporting a
+    # fabricated-looking zero — but always label which path produced
+    # the data, per the mandate's own wording ("never silently
+    # conflated with live-measured timing").
+    retro_timing_reconstructed_from_disk_mtime = False
+    if not experiment_times:
+        try:
+            from scripts.retro_timing_fallback import build_retro_timing_fallback
+
+            _fallback_timing = build_retro_timing_fallback(current, repo_root=PROJECT_ROOT)
+            if _fallback_timing.get("experiment_times"):
+                experiment_times = _fallback_timing["experiment_times"]
+                retro_timing_reconstructed_from_disk_mtime = True
+                logger.info(
+                    "Retro timing: live git-log path found 0 commits for "
+                    "%s; reconstructed %d experiments / %.1f wall-min from "
+                    "disk mtimes instead (retro_timing_fallback).",
+                    current,
+                    _fallback_timing["experiments_completed"],
+                    _fallback_timing["total_wall_time_minutes"],
+                )
+        except Exception:
+            logger.warning(
+                "retro_timing_fallback reconstruction also failed for %s; "
+                "experiment_times stays empty.",
+                current,
+                exc_info=True,
+            )
+
+    # Regression check (mandate item 3): a retro with 0 experiments
+    # while ops/changelog.md shows committed entries for this same
+    # milestone prefix is a DISTINCT bug from the one just fixed above
+    # (both the live path and the disk-mtime fallback found nothing) —
+    # fail loudly instead of silently emitting another false zero.
+    retro_timing_integrity_mismatch = False
+    if not experiment_times:
+        try:
+            changelog_text = (PROJECT_ROOT / "ops" / "changelog.md").read_text(encoding="utf-8")
+            milestone_marker = f"milestone {current}" if current else None
+            if milestone_marker and current in changelog_text:
+                retro_timing_integrity_mismatch = True
+                logger.error(
+                    "RETRO TIMING INTEGRITY MISMATCH: experiment_times is "
+                    "empty (both live git-log and disk-mtime reconstruction "
+                    "found nothing) for %s, but ops/changelog.md contains "
+                    "references to %s. This is a NEW timing-assembly bug, "
+                    "not the 2026-07-03 false-zero recurrence — investigate "
+                    "before trusting this retro's TIMING DATA.",
+                    current,
+                    current,
+                )
+        except Exception:
+            pass
+
     # Tag compute-bound experiments by scanning the milestone's roadmap
     # YAML for SOTA-GGUF model references / requires_gpu / cuda markers.
     compute_bound_titles: set[str] = set()
@@ -2884,7 +2948,17 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     except Exception:
         pass
     for _e in experiment_times:
-        _e["compute_bound"] = any(_ct in _e["experiment"] for _ct in compute_bound_titles)
+        # OR-merge, not overwrite: when experiment_times came from the
+        # disk-mtime fallback above, each row already carries a
+        # compute_bound determination grounded in the artifact's own
+        # inference_substrate/model_specs fields (more reliable than a
+        # title-substring match against the current ROADMAP_FILE, which
+        # this loop's `compute_bound_titles` scan reads). Keep both
+        # signals rather than letting the weaker title-match erase the
+        # artifact-grounded one.
+        _e["compute_bound"] = bool(_e.get("compute_bound")) or any(
+            _ct in _e["experiment"] for _ct in compute_bound_titles
+        )
 
     # Gather GPU utilization data
     gpu_report_text = ""
@@ -2905,8 +2979,13 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     if experiment_times:
         total_min = sum(e["duration_min"] for e in experiment_times)
         slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
+        _source_label = (
+            "disk-mtime reconstruction (retro_timing_fallback — live git-log path found 0 commits)"
+            if retro_timing_reconstructed_from_disk_mtime
+            else f"commits since activation of {current}"
+        )
         timing_summary = (
-            f"MILESTONE-SCOPED DATA (commits since activation of {current}):\n"
+            f"MILESTONE-SCOPED DATA ({_source_label}):\n"
             f"Total milestone wall time: {total_min:.0f} minutes "
             f"({total_min / 60:.1f} hours)\n"
             f"Experiments completed: {len(experiment_times)}\n"
@@ -2921,10 +3000,21 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         for e in slowest:
             cb_flag = "compute_bound" if e.get("compute_bound") else "synthesis_only"
             timing_summary += f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
+    elif retro_timing_integrity_mismatch:
+        timing_summary = (
+            "MILESTONE-SCOPED DATA: TIMING INTEGRITY MISMATCH — both the "
+            "live git-log path and the disk-mtime reconstruction found 0 "
+            f"experiment commits for {current}, but ops/changelog.md "
+            f"contains entries referencing {current}. This is a new "
+            "timing-assembly bug (not the 2026-07-03 false-zero "
+            "recurrence, which this fallback already fixes). Report this "
+            "mismatch explicitly rather than inferring numbers.\n"
+        )
     else:
         timing_summary = (
             "MILESTONE-SCOPED DATA: no experiment commits found since "
-            f"activation of {current}. The retrospective should report "
+            f"activation of {current} (checked both live git-log and "
+            "disk-mtime reconstruction). The retrospective should report "
             "this honestly rather than infer numbers from training "
             "distribution.\n"
         )
@@ -3058,6 +3148,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             for e in pre_slowest
         ],
         "gpu_idle_on_compute_bound_tasks": (None if compute_bound_count == 0 else False),
+        "reconstructed_from_disk_mtime": retro_timing_reconstructed_from_disk_mtime,
+        "timing_integrity_mismatch": retro_timing_integrity_mismatch,
         "summary": "",
         "bottlenecks_identified": [],
         "improvements_suggested": [],
@@ -3130,6 +3222,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             "slowest_experiments",
             "schema",
             "milestone",
+            "reconstructed_from_disk_mtime",
+            "timing_integrity_mismatch",
         )
         restored = 0
         for k in locked_keys:
