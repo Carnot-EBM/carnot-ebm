@@ -1,6 +1,22 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-01 (Milestone 2026.07.466 planning staged)
+**Last Updated:** 2026-07-03 (Exp 5197 GAP-4 real-checkpoint test fix)
+
+## Session 2026-07-03 — Exp 5197 GAP-4 Real-Checkpoint Test Fix
+
+Fixed the Exp 5197 v476 regression without reverting prior changes and without
+modifying `scripts/research_conductor.py`. OpenSpec now carries the exact
+field-principle contract exported by the module, and `artifact_schema_errors()`
+recomputes exact-test fields from `scaleup_rows` so malformed p-values or stale
+min-6 flags fail closed.
+
+Validation for this fix: Exp 5197 focused tests pass (`9 passed`), scoped
+Coverage.py report for the Exp 5197 module is 100% (`303` statements, `0`
+missing), and focused Ruff check/format pass. The E2E plan has no Exp
+5197-specific model-training or hardware check; this reporting/checkpoint
+regression is covered by focused artifact, schema, checkpoint, and run tests.
+Repo-wide `scripts/check_spec_coverage.py` remains blocked by pre-existing
+unreferenced tests (`1237 test(s) missing spec traceability`).
 
 ## Session 2026-07-01 — Milestone 2026.07.466 Planning Staged
 

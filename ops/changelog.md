@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-07-03 (Exp 5197 GAP-4 real-checkpoint regression fix -- codex)
+
+- Fixed the Exp 5197 v476 test failures without reverting prior work and without modifying
+  `scripts/research_conductor.py`.
+- Added the exact `REQ-REPORT-5197` field-principle contract to
+  `openspec/capabilities/research-reporting/spec.md` and marked the v476 implementation/tests
+  implemented.
+- Hardened `python/carnot/experiment_5197_gap4_scaleup_real_checkpoint_v476.py` schema validation
+  so exact-test wins/losses/p-values and `exact_test_passes_min6_rule` are checked against
+  recomputed `scaleup_rows` truth instead of only the artifact's self-reported fields.
+- Expanded `tests/python/test_experiment_5197_gap4_scaleup_real_checkpoint_v476.py` to cover
+  checkpoint resume/budget-stop, local-call sample-selection edge cases, missing prompt entries,
+  and defensive schema drift branches; scoped module coverage is now 100%.
+
 ## 2026-07-03 (Operational retrospective .474, second pass -- confirmed false-zero again, filed the missing known-issues.md escalation -- claude)
 
 - Wrote `results/operational_retro_2026_07_474.json` for milestone `2026.07.474`. The supplied

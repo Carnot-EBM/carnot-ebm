@@ -32709,6 +32709,81 @@ label an identity cache smoke as a successful local-generator measurement.
 |---|---|---|
 | REQ-REPORT-5177 | Planned (`python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) | Planned (`tests/python/test_experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) |
 
+### REQ-REPORT-5197: GAP-4 Scale-Up Real Checkpoint V476
+
+The Exp 5197 workflow SHALL write
+`results/experiment_5197_gap4_scaleup_real_checkpoint_v476.json` for the
+GAP-4 continuation that repairs Exp 5177's missing resumable checkpoint. The
+workflow SHALL import and extend the Exp 5177 row shape and statistics rather
+than rewriting the GAP-4 scorer. It SHALL read the already-scored Exp 5177 rows,
+load the same demo-bearing GAP-4 cached candidate rows directly, skip rows
+already scored, and write an atomic JSON-list checkpoint at
+`results/experiment_5197_gap4_scaleup_real_checkpoint_v476.checkpoint.json`.
+If the demo-bearing source pool is exhausted at the prior 62 rows, the workflow
+SHALL report `n_reached=62`, `new_rows_scored=0`, and
+`source_pool_exhausted_before_new_rows=true` rather than rounding up to the
+target n=180.
+
+The artifact SHALL include principle-annotated fields `n_reached`,
+`checkpoint_file_written`, `exact_test_discordant_wins`,
+`exact_test_discordant_losses`, `exact_test_p_value_two_sided`,
+`exact_test_passes_min6_rule`,
+`decentralization_tier_local_generator_result`, `random_seed`,
+`reproducibility_checksum`, `inference_substrate`, and `honest_verdict`. The
+exact test SHALL use the same zero-loss min-6 GAP-4 rule with
+`scipy.stats.binomtest`: `exact_test_passes_min6_rule` is true only when the
+actual reached rows produce at least six discordant wins, zero discordant
+losses, and two-sided `p < 0.05`. The artifact SHALL set
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+Required field principles:
+
+- `n_reached`: principle "The actual number of scored rows at whatever point this task stops -- never round up to the n=180 target."
+- `checkpoint_file_written`: principle "Proves genuine resumability exists for a FUTURE continuation, closing the gap exp5177 left (a declared-but-nonexistent checkpoint path, confirmed absent this planning pass)."
+- `exact_test_discordant_wins`: principle "Actual discordant wins from reached rows under the Exp 5177 row shape."
+- `exact_test_discordant_losses`: principle "Actual discordant losses from reached rows under the Exp 5177 row shape."
+- `exact_test_p_value_two_sided`: principle "Two-sided scipy.stats.binomtest p-value over discordant pairs."
+- `exact_test_passes_min6_rule`: principle "The GAP-4 significance floor: at least six discordant wins, zero losses, and two-sided exact p < 0.05."
+- `decentralization_tier_local_generator_result`: principle "CLAUDE.md rule 1 requires every capability work end-to-end with locally-hosted open-weight models; a cache-existence check alone does not satisfy this."
+- `random_seed`: principle "The Exp 5177 seed is reused so bootstrap and row ordering stay comparable."
+- `reproducibility_checksum`: principle "Content-addressed hash catches silent artifact or row drift."
+- `inference_substrate`: principle "Required substrate declaration for this replay/checkpoint scorer."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_, and must not claim the significance floor was crossed unless exact_test_passes_min6_rule is actually true."
+
+The decentralization-tier local-generator field SHALL be based on at least
+20-30 genuine cached local-GGUF calls from a mandated SOTA model
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`) when such a checkpoint exists. A cache
+existence check alone SHALL NOT satisfy the field; the result must include
+`n_calls`, `model_used`, `discordant_wins`, and `discordant_losses`.
+
+#### SCENARIO-REPORT-5197: Checkpointed Pool-Exhausted Continuation
+
+**Given** Exp 5177 already scored 62 GAP-4 rows and the currently checked-in
+demo-bearing GAP-4 source pool exposes no additional rows
+**When** the Exp 5197 workflow runs
+**Then** it writes the v476 artifact and checkpoint file, preserves
+`n_reached=62`, reports zero newly scored rows, recomputes the cluster bootstrap
+and `scipy.stats.binomtest` exact sign test, keeps
+`exact_test_passes_min6_rule=false`, and emits a terminal `complete_` honest
+verdict that does not claim n=180.
+
+#### SCENARIO-REPORT-5197-LOCAL-GENERATOR: Real Local Calls Summarized
+
+**Given** a cached Qwen3.6 local-GGUF checkpoint with at least 30 scored calls
+exists
+**When** the Exp 5197 workflow summarizes the decentralization tier
+**Then** it scores 30 genuine local-call rows against the ARC candidate pool,
+reports `n_calls=30`, `model_used=unsloth/Qwen3.6-35B-A3B-GGUF`, discordant
+win/loss counts, and does not substitute a single smoke response for the
+measurement.
+
+## Implementation Status (REQ-REPORT-5197)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5197 | Implemented (`python/carnot/experiment_5197_gap4_scaleup_real_checkpoint_v476.py`) | Implemented (`tests/python/test_experiment_5197_gap4_scaleup_real_checkpoint_v476.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write
