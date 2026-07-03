@@ -172,6 +172,11 @@ tests/python/test_conductor_supervisor.py
 # Conductor pre-test fingerprint cache — local-only, regenerated on first run
 ops/.pretest-cache.json
 
+# QA-layer authenticity audit rotation state — local-only, tracks which
+# adversarial_verify.py function-chunk the next milestone-close audit
+# starts from, regenerated on first run
+ops/.qa_layer_audit_rotation.json
+
 # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
 # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
 ebt_tmp/

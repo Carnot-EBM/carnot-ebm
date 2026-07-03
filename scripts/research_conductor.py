@@ -352,7 +352,7 @@ def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
     tail_marker = prompt[-200:] if prompt and len(prompt) >= 40 else prompt
     post = full_output
     if tail_marker and tail_marker in full_output:
-        post = full_output[full_output.rindex(tail_marker) + len(tail_marker):]
+        post = full_output[full_output.rindex(tail_marker) + len(tail_marker) :]
     post = post.strip()
     if not post:
         return (
@@ -656,16 +656,13 @@ def run_agent(
                         # stability.
                         bootstrap_only = False
                         try:
-                            with deliverable_file.open(
-                                "r", encoding="utf-8"
-                            ) as _fh:
+                            with deliverable_file.open("r", encoding="utf-8") as _fh:
                                 _payload = json.load(_fh)
                             if isinstance(_payload, dict):
                                 _st_field = _payload.get("status")
                                 if (
                                     isinstance(_st_field, str)
-                                    and _st_field.lower()
-                                    in _BOOTSTRAP_STATUSES
+                                    and _st_field.lower() in _BOOTSTRAP_STATUSES
                                 ):
                                     bootstrap_only = True
                         except (OSError, json.JSONDecodeError):
@@ -682,9 +679,7 @@ def run_agent(
                             # early-kill. JSON deliverables are unaffected.
                             if str(deliverable_file).endswith((".yaml", ".yml")):
                                 try:
-                                    with deliverable_file.open(
-                                        "r", encoding="utf-8"
-                                    ) as _yfh:
+                                    with deliverable_file.open("r", encoding="utf-8") as _yfh:
                                         _ydoc = yaml.safe_load(_yfh)
                                     if (
                                         isinstance(_ydoc, dict)
@@ -1423,10 +1418,8 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         # (contained, retried/self-healed) instead of poisoning the next task.
         try:
             _, wt_out, _ = run_cmd(["git", "diff", "--name-only", "HEAD"])
-            _, untracked_out, _ = run_cmd(
-                ["git", "ls-files", "--others", "--exclude-standard"]
-            )
-            for f in (wt_out.splitlines() + untracked_out.splitlines()):
+            _, untracked_out, _ = run_cmd(["git", "ls-files", "--others", "--exclude-standard"])
+            for f in wt_out.splitlines() + untracked_out.splitlines():
                 f = f.strip()
                 if (
                     f.startswith("tests/python/")
@@ -2891,9 +2884,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     except Exception:
         pass
     for _e in experiment_times:
-        _e["compute_bound"] = any(
-            _ct in _e["experiment"] for _ct in compute_bound_titles
-        )
+        _e["compute_bound"] = any(_ct in _e["experiment"] for _ct in compute_bound_titles)
 
     # Gather GPU utilization data
     gpu_report_text = ""
@@ -2910,9 +2901,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     # compute_bound_count is referenced by the prompt + pre-fill skeleton
     # below; define unconditionally at function scope so it's always
     # bound (even when experiment_times is empty).
-    compute_bound_count = sum(
-        1 for _e in experiment_times if _e.get("compute_bound")
-    )
+    compute_bound_count = sum(1 for _e in experiment_times if _e.get("compute_bound"))
     if experiment_times:
         total_min = sum(e["duration_min"] for e in experiment_times)
         slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
@@ -2930,12 +2919,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             f"Slowest experiments (compute_bound flag in [..]):\n"
         )
         for e in slowest:
-            cb_flag = (
-                "compute_bound" if e.get("compute_bound") else "synthesis_only"
-            )
-            timing_summary += (
-                f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
-            )
+            cb_flag = "compute_bound" if e.get("compute_bound") else "synthesis_only"
+            timing_summary += f"  - {e['duration_min']:.0f}min [{cb_flag}]: {e['experiment']}\n"
     else:
         timing_summary = (
             "MILESTONE-SCOPED DATA: no experiment commits found since "
@@ -2960,18 +2945,18 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         f"STEP 0 (MANDATORY, FIRST): Immediately write a SKELETON artifact JSON to\n"
         f"   results/operational_retro_{current.replace('.', '_')}.json with:\n"
         f"     {{\n"
-        f"       \"schema\": \"carnot.operational_retro.v64\",\n"
-        f"       \"milestone\": \"{current}\",\n"
-        f"       \"generated_at\": \"<current ISO-8601 UTC>\",\n"
-        f"       \"retro_type\": \"operational_in_progress\",\n"
-        f"       \"summary\": \"in progress — being filled in this turn\",\n"
-        f"       \"slowest_experiments\": [],\n"
-        f"       \"bottlenecks_identified\": [],\n"
-        f"       \"improvements_suggested\": [],\n"
-        f"       \"top_3_highest_leverage_actions\": [],\n"
-        f"       \"compute_bound_experiments_count\": 0,\n"
-        f"       \"gpu_idle_on_compute_bound_tasks\": null,\n"
-        f"       \"meta_reflection\": \"\"\n"
+        f'       "schema": "carnot.operational_retro.v64",\n'
+        f'       "milestone": "{current}",\n'
+        f'       "generated_at": "<current ISO-8601 UTC>",\n'
+        f'       "retro_type": "operational_in_progress",\n'
+        f'       "summary": "in progress — being filled in this turn",\n'
+        f'       "slowest_experiments": [],\n'
+        f'       "bottlenecks_identified": [],\n'
+        f'       "improvements_suggested": [],\n'
+        f'       "top_3_highest_leverage_actions": [],\n'
+        f'       "compute_bound_experiments_count": 0,\n'
+        f'       "gpu_idle_on_compute_bound_tasks": null,\n'
+        f'       "meta_reflection": ""\n'
         f"     }}\n"
         f"   This protects against turn-budget exhaustion: even if you run out\n"
         f"   of turns mid-analysis, the artifact exists at status='success'\n"
@@ -3010,7 +2995,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
         f"4. What tooling change would speed up the next milestone?\n\n"
         f"DELIVERABLES:\n"
         f"1. Write results/operational_retro_{current.replace('.', '_')}.json with:\n"
-        f"   - schema: \"carnot.operational_retro.v64\"\n"
+        f'   - schema: "carnot.operational_retro.v64"\n'
         f"   - total_wall_time_minutes (from TIMING DATA)\n"
         f"   - experiments_completed (from TIMING DATA)\n"
         f"   - compute_bound_experiments_count (from TIMING DATA)\n"
@@ -3054,12 +3039,8 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     retro_artifact_path = (
         PROJECT_ROOT / "results" / f"operational_retro_{current.replace('.', '_')}.json"
     )
-    pre_total_min = (
-        sum(e["duration_min"] for e in experiment_times) if experiment_times else 0
-    )
-    pre_slowest = sorted(
-        experiment_times, key=lambda x: x["duration_min"], reverse=True
-    )[:5]
+    pre_total_min = sum(e["duration_min"] for e in experiment_times) if experiment_times else 0
+    pre_slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
     skeleton: dict = {
         "schema": "carnot.operational_retro.v64",
         "milestone": current,
@@ -3076,9 +3057,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             }
             for e in pre_slowest
         ],
-        "gpu_idle_on_compute_bound_tasks": (
-            None if compute_bound_count == 0 else False
-        ),
+        "gpu_idle_on_compute_bound_tasks": (None if compute_bound_count == 0 else False),
         "summary": "",
         "bottlenecks_identified": [],
         "improvements_suggested": [],
@@ -3169,8 +3148,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
             with open(retro_artifact_path, "w") as _rf:
                 json.dump(agent_artifact, _rf, indent=2)
             logger.warning(
-                "Retro post-fix: restored %d locked fields the agent "
-                "modified despite instruction",
+                "Retro post-fix: restored %d locked fields the agent modified despite instruction",
                 restored,
             )
     except Exception as _e:
@@ -3633,8 +3611,7 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                 _flagged = {
                     r.task_id
                     for r in _pre_risks
-                    if r.severity == "HARD"
-                    and r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"
+                    if r.severity == "HARD" and r.violation_class == "SCOPE_MATCHED_PRIOR_FAILURE"
                 }
                 if _flagged:
                     _rdata = yaml.safe_load(NEXT_ROADMAP_FILE.read_text()) or {}
@@ -3646,13 +3623,9 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                         if _t is None:
                             continue
                         _is_transition = bool(
-                            _re_stamp.search(
-                                r"(archive-v\d|capstone-v\d|plan-milestone-)", _tid
-                            )
+                            _re_stamp.search(r"(archive-v\d|capstone-v\d|plan-milestone-)", _tid)
                         )
-                        _is_hw = (
-                            str(_t.get("track", "")).strip().lower() == "hardware"
-                        )
+                        _is_hw = str(_t.get("track", "")).strip().lower() == "hardware"
                         if not (_is_transition or _is_hw):
                             continue  # lineage/rerun → leave for judgment
                         _oo = _t.get("operator_override")
@@ -3685,17 +3658,14 @@ def _activate_next_roadmap(push: bool = True) -> bool:
                             _stamped,
                         )
             except Exception as _se:
-                logger.warning(
-                    "Structural override auto-stamp skipped (%s)", _se
-                )
+                logger.warning("Structural override auto-stamp skipped (%s)", _se)
 
             ex_risks = _exclusion_lint(NEXT_ROADMAP_FILE)
             hard = [r for r in ex_risks if r.severity == "HARD"]
             warn = [r for r in ex_risks if r.severity == "WARNING"]
             if warn:
                 logger.warning(
-                    "Exclusion-manifest linter: %d WARNING(s) with "
-                    "operator_override (proceeding):",
+                    "Exclusion-manifest linter: %d WARNING(s) with operator_override (proceeding):",
                     len(warn),
                 )
                 for r in warn[:10]:
@@ -3889,7 +3859,7 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"5-9 min Sonnet call entirely when the prerequisite verdict doesn't\n"
         f"satisfy the gate.\n\n"
         f"  prior_failures: [REQUIRED list when task scope matches a retired exp_id]\n"
-        f"    Per CLAUDE.md \"Failed-Experiment Rerun Discipline\" + Layer 2\n"
+        f'    Per CLAUDE.md "Failed-Experiment Rerun Discipline" + Layer 2\n'
         f"    exclusion-manifest pre-emit lint: if THIS task's scope matches\n"
         f"    a previously failed/retired experiment (same deliverable shape,\n"
         f"    same technique, same upstream chain), you MUST include a\n"
@@ -3900,9 +3870,9 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"        prior_failures:\n"
         f"          - experiment_id: expNNN-the-retired-task-id   # required\n"
         f"            verdict: <prior honest_verdict string>      # required\n"
-        f"            addressed_by: \"One-line explanation of what is\n"
+        f'            addressed_by: "One-line explanation of what is\n'
         f"                           DIFFERENT this attempt: technique\n"
-        f"                           changed, prerequisite shipped, etc.\"\n"
+        f'                           changed, prerequisite shipped, etc."\n'
         f"            retire_if_same_verdict: true                # required\n\n"
         f"    The `retire_if_same_verdict: true` field is LOAD-BEARING — it's\n"
         f"    the mechanical retirement signal: if this attempt produces the\n"
@@ -4432,7 +4402,10 @@ def research_step(
                             str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
                             # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
+                            "--model",
+                            AGENT_TYPE_AUDIT,
+                            "--model-name",
+                            AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=720,
@@ -4458,10 +4431,14 @@ def research_step(
                         [
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
-                            "--limit", "20",
+                            "--limit",
+                            "20",
                             # 2026-06-08: adversarial agent on Claude Opus 4.8 (was gemini); 2026-06-30:
                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
+                            "--model",
+                            AGENT_TYPE_AUDIT,
+                            "--model-name",
+                            AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=900,
@@ -4469,6 +4446,43 @@ def research_step(
                     )
                 except Exception as _e:
                     logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
+
+            # QA-layer authenticity audit (2026-07-03 operator question: "shouldn't
+            # the adversarial agent be catching these?" -- after a single outer-loop
+            # session found FOUR real bugs in scripts/adversarial_verify.py /
+            # exclusion_manifest_lint.py / in_process_doc_reconcile.py in one sitting,
+            # none caught by any existing audit because none of them are in scope --
+            # the verifier-authenticity audit above only covers python/carnot/verify/,
+            # the landing-page audit only covers docs/index.html). Sibling of the
+            # verifier authenticity audit: independent LLM invocation as HOSTILE
+            # SOFTWARE REVIEWER hunts the exact bug class already found (substring
+            # matching without word boundaries, field-shape assumptions that don't
+            # handle CLAUDE.md's principle-wrapped-field convention, negation/context
+            # blindness, off-by-one floors). Writes ops/qa_layer_authenticity_audit_
+            # report.md. Does NOT edit any file -- operator decides what to act on.
+            # Bounded with --limit + rotation state (adversarial_verify.py alone has
+            # 150+ risky-function chunks; rotation ensures successive runs advance
+            # through the whole corpus instead of always re-auditing the same head-slice).
+            if not dry_run:
+                try:
+                    logger.info("Running QA-layer authenticity audit...")
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "qa_layer_authenticity_audit.py"),
+                            "--limit",
+                            "20",
+                            "--model",
+                            AGENT_TYPE_AUDIT,
+                            "--model-name",
+                            AGENT_MODEL_AUDIT,
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=900,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("QA-layer authenticity audit failed (non-fatal): %s", _e)
 
             # ARC live-agent self-solve audit (2026-06-22 operator directive, 2nd
             # recurrence: "aggressively caught and stopped"). Hostile review that the
@@ -4487,10 +4501,14 @@ def research_step(
                         [
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "arc_self_solve_audit.py"),
-                            "--since-days", "7",
+                            "--since-days",
+                            "7",
                             # 2026-06-08: adversarial agent on Claude Opus 4.8; 2026-06-30:
                             # AGENT_TYPE_AUDIT/AGENT_MODEL_AUDIT env-routable for quota-conserve windows.
-                            "--model", AGENT_TYPE_AUDIT, "--model-name", AGENT_MODEL_AUDIT,
+                            "--model",
+                            AGENT_TYPE_AUDIT,
+                            "--model-name",
+                            AGENT_MODEL_AUDIT,
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=900,
@@ -4518,7 +4536,10 @@ def research_step(
                         [
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "adversarial_verify.py"),
-                            "--backfill", "--apply", "--since-hours", "24",
+                            "--backfill",
+                            "--apply",
+                            "--since-hours",
+                            "24",
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=300,
@@ -5149,7 +5170,9 @@ def research_step(
         and task_model != "opus"
         and (task_agent_type or AGENT_TYPE) == "claude"
         and "Reached max turns" in output
-        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
+        and task.get(
+            "escalate_on_max_turns", False
+        )  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
     ):
         logger.warning(
             "%s hit max-turns (%d); escalating to Opus 100 turns",
@@ -5183,7 +5206,9 @@ def research_step(
         and task_max_turns < 100
         and (task_agent_type or AGENT_TYPE) == "claude"
         and "Reached max turns" in output
-        and task.get("escalate_on_max_turns", False)  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
+        and task.get(
+            "escalate_on_max_turns", False
+        )  # Default flipped True→False 2026-05-03 ~14:55Z (quota emergency: 76% used, 3d to reset). Opus-100 retry burns $2-5/escalation × 5-7 escalations/milestone = $10-35 of claude quota that we can't afford this week. Tasks that would have escalated now just FAIL — they retire normally, get re-proposed in next milestone with better task definition. Set escalate_on_max_turns: true on individual high-leverage tasks (Phase-4 anchors, paper-v6 critical) if needed. Re-flip to True after Wednesday noon reset.
     ):
         logger.warning(
             "Opus hit max-turns (%d) on pre-routed task; retrying with 100 turns",
@@ -5502,8 +5527,7 @@ def _check_parity_tautology(task: dict) -> None:
         for k, v in d.items():
             full = f"{prefix}.{k}" if prefix else k
             if isinstance(v, (int, float)) and any(
-                tok in str(k).lower()
-                for tok in ("delta", "kl_divergence", "magnetization_delta")
+                tok in str(k).lower() for tok in ("delta", "kl_divergence", "magnetization_delta")
             ):
                 out.append((full, float(v)))
             elif isinstance(v, dict) and len(prefix) < 80:
@@ -5520,9 +5544,7 @@ def _check_parity_tautology(task: dict) -> None:
         out: list[tuple[str, list]] = []
         for k, v in d.items():
             full = f"{prefix}.{k}" if prefix else k
-            if isinstance(v, list) and len(v) >= 8 and all(
-                isinstance(x, (int, float)) for x in v
-            ):
+            if isinstance(v, list) and len(v) >= 8 and all(isinstance(x, (int, float)) for x in v):
                 if "count" in str(k).lower() or "hist" in str(k).lower():
                     out.append((full, list(v)))
             elif isinstance(v, dict) and len(prefix) < 80:
@@ -5551,12 +5573,8 @@ def _check_parity_tautology(task: dict) -> None:
         "timestamp": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "task_id": task.get("id", "unknown"),
         "deliverable": deliverable,
-        "exact_zero_deltas": [
-            {"key": k, "value": v} for k, v in exact_zero_deltas[:8]
-        ],
-        "identical_histogram_pairs": [
-            {"a": a, "b": b} for a, b in identical_pairs[:8]
-        ],
+        "exact_zero_deltas": [{"key": k, "value": v} for k, v in exact_zero_deltas[:8]],
+        "identical_histogram_pairs": [{"a": a, "b": b} for a, b in identical_pairs[:8]],
         "detail": (
             f"Task {task.get('id', 'unknown')} reports parity-test outputs "
             f"that are bit-identical or exactly zero across "
@@ -5572,8 +5590,7 @@ def _check_parity_tautology(task: dict) -> None:
     with open(alerts_path, "a") as f:
         f.write(_json.dumps(record) + "\n")
     logger.warning(
-        "PARITY_TAUTOLOGY alert for %s: %d exact-zero deltas, "
-        "%d identical histogram pairs",
+        "PARITY_TAUTOLOGY alert for %s: %d exact-zero deltas, %d identical histogram pairs",
         task.get("id", "unknown"),
         len(exact_zero_deltas),
         len(identical_pairs),
@@ -5641,18 +5658,13 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                 flags = report.get("flags") or []
                 if flags:
                     critical = [
-                        f
-                        for f in flags
-                        if str(f.get("severity", "")).lower() == "critical"
+                        f for f in flags if str(f.get("severity", "")).lower() == "critical"
                     ]
                     if critical:
                         _adversarial_critical = True
-                        _adversarial_kinds = [
-                            str(f.get("kind", "?")) for f in critical
-                        ]
+                        _adversarial_kinds = [str(f.get("kind", "?")) for f in critical]
                         logger.warning(
-                            "Adversarial-verify flagged %s with %d critical "
-                            "flag(s): %s",
+                            "Adversarial-verify flagged %s with %d critical flag(s): %s",
                             task.get("id", "?"),
                             len(critical),
                             ", ".join(_adversarial_kinds),
@@ -5664,9 +5676,7 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                                 art = json.load(_af)
                             if isinstance(art, dict):
                                 art["flagged_adversarial"] = True
-                                art.setdefault("corrigendum_pending", []).extend(
-                                    flags
-                                )
+                                art.setdefault("corrigendum_pending", []).extend(flags)
                                 with open(deliverable_path, "w") as _af:
                                     json.dump(art, _af, indent=2)
                         except Exception as _e:
@@ -5682,17 +5692,13 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
                     try:
                         with open(deliverable_path) as _af:
                             _existing = json.load(_af)
-                        if isinstance(_existing, dict) and _existing.get(
-                            "flagged_adversarial"
-                        ):
+                        if isinstance(_existing, dict) and _existing.get("flagged_adversarial"):
                             _adversarial_critical = True
                             _adversarial_kinds = ["preexisting_flagged_adversarial"]
                     except Exception:
                         pass
     except Exception as exc:
-        logger.warning(
-            "Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc
-        )
+        logger.warning("Adversarial-verify pass failed for %s: %s", task.get("id", "?"), exc)
     # Fabrication gate (2026-05-30 operator directive). A CRITICAL adversarial
     # flag (DURATION_TOO_SHORT / IMPLAUSIBLE_PERFECT / TAUTOLOGY /
     # GATE_PASSED_WITHOUT_DATA / SAMPLE_SIZE_BELOW_CLAIM) means the result is

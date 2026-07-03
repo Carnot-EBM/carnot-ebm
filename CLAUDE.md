@@ -38,7 +38,10 @@ Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
 the recommended KV260-focus relaxation) · KV260 SSH-Not-SD-Card ·
 Operator-Only External Publication · Never-Stash-Commit-First ·
 Decentralization-Respecting Design Constraints · Pre-Staged Roadmap Convention ·
-Documentation Update Rules · Tests Must Run and Assert ·
+Documentation Update Rules · Tests Must Run and Assert · QA-Layer Authenticity
+(2026-07-03 — the auditor now has an auditor; Layer 2 AI audit of
+adversarial_verify.py/exclusion_manifest_lint.py/in_process_doc_reconcile.py,
+deliberately no Layer 1 since those files ARE the mechanical-lint layer) ·
 ARC-AGI-3 IS a Live Hidden-Game Discovery Agent (foundational framing — read FIRST for any
 ARC work; the deliverable is the live runtime discovery loop, NOT trained weights or offline
 public-game replays; an offline null may be a corpus artifact).
@@ -338,6 +341,165 @@ intact.
   file) — no emojis, professional tone, never delete content
 - `scripts/canonical_url_lint.py` + `scripts/exclusion_manifest_lint.py`
   — sibling structural-discipline linters
+
+## QA-Layer Authenticity Discipline (MANDATORY)
+
+**Origin:** 2026-07-03 operator question, after a single outer-loop session
+found FOUR real bugs in the project's own fabrication-detection / gating /
+reconciliation machinery in one sitting:
+
+1. `in_process_doc_reconcile.py`'s `map_status_label` was missing "success"
+   from its terminal-win-token list, silently misclassifying ~19% of the
+   ENTIRE historical artifact corpus (352+13 of ~4160 artifacts) for an
+   unknown number of months.
+2. `adversarial_verify.py`'s `_inference_substrate_text()` did
+   `str(d.get("inference_substrate"))` assuming a bare string, but the
+   project's own "Principle-Annotated Artifact Fields" discipline (below)
+   allows ANY field to be written as `{"principle": ..., "value": ...}` —
+   silently defeating substrate recognition on 176 artifacts corpus-wide.
+3. `adversarial_verify.py`'s `_flips_gate()` did a plain substring check
+   (`"diffusiongemma_met" in verdict.lower()`) that matched inside the
+   unrelated word "meta" (as in `meta_tensor`, a real PyTorch term) — no
+   word-boundary awareness.
+4. `adversarial_verify.py` had no substrate category for live embedding-only
+   LLM calls (real compute, much cheaper than full generation), so a
+   genuinely fast-but-real 35s run got floored against a 60s threshold
+   calibrated for full generative inference.
+
+None of these were caught by the linter's own pre-existing unit tests (tests
+test what the author thought to test, not the shape of real corpus
+diversity) or by any EXISTING adversarial audit — the Verifier Authenticity
+Discipline's Layer 2 audit is scoped to `python/carnot/verify/*.py` only,
+and the Adversarial Landing-Page Discipline's Layer 2 audit is scoped to
+`docs/index.html` only. The mechanical fabrication-detection / gate /
+reconciliation layer itself — `scripts/adversarial_verify.py`,
+`scripts/exclusion_manifest_lint.py`, `scripts/in_process_doc_reconcile.py`
+— was outside every existing audit's scope by design. The operator's exact
+question: **"shouldn't the adversarial agent be catching these?"** The
+honest answer was no adversarial agent had this layer in scope. This
+discipline closes that gap — the auditor now has an auditor.
+
+**Why this matters more than an ordinary bug class.** A bug in this layer
+is not a bug in one experiment — it is a bug in the thing that DECIDES
+whether every OTHER experiment's result counts as clean or fabricated. A
+false negative here lets fabrication through silently (the linter's entire
+purpose fails without anyone noticing). A false positive quarantines honest
+work, wastes investigation time, and — worse — teaches the project's own
+retrospective process the wrong lesson ("this direction keeps failing")
+when the truth is "the linter was wrong." Both failure modes compound
+silently until someone happens to investigate deeply enough to notice, as
+happened here.
+
+**Three-layer adversarial defense (shipped 2026-07-03), sibling structure
+to the Verifier Authenticity and Adversarial Landing-Page disciplines:**
+
+**Layer 1 — none (deliberately).** Unlike the other two disciplines, this
+layer has no commit-time mechanical lint. The target files ARE the
+mechanical-lint layer for the rest of the project; a lint-of-the-lint would
+just be more of the same pattern-matching code subject to the same bug
+class. Layer 2's adversarial AI audit is the primary defense here.
+
+**Layer 2 — Adversarial AI audit
+(`scripts/qa_layer_authenticity_audit.py`).** Runs at every milestone-close
+(wired into `_run_operational_retrospective`'s caller in
+`scripts/research_conductor.py`, alongside the verifier-authenticity and
+landing-page audits). Invokes an independent LLM with a HOSTILE SOFTWARE
+REVIEWER prompt that hunts the exact bug classes found in the origin
+incident: field-shape assumptions that don't handle principle-wrapped
+fields, substring matching without word/token boundaries, negation/context
+blindness (does a check confuse "did X" with "explicitly did NOT do X"?),
+and off-by-one/boundary floor errors. Two audit granularities:
+
+- **Whole-file** (`exclusion_manifest_lint.py`, `in_process_doc_reconcile.py`
+  — small enough to audit in one shot, mirroring
+  `verifier_authenticity_audit.py`'s pattern).
+- **Function-chunked** (`adversarial_verify.py` — 5600+ lines, far too large
+  for a single-shot audit to stay focused. Extracts every top-level function
+  via `ast`, filters to functions whose body does field extraction or
+  string pattern-matching — the exact risk class — and audits each
+  independently.) `adversarial_verify.py` alone has 150+ risky-function
+  chunks, so a bounded `--limit` run uses **persisted rotation state**
+  (`ops/.qa_layer_audit_rotation.json`) so successive milestone-close runs
+  advance through the whole corpus instead of always re-auditing the same
+  head-slice (the unaddressed limitation the sibling verifier-authenticity
+  audit still has for its own `--limit 20`).
+
+Output: `ops/qa_layer_authenticity_audit_report.md`, structured markdown
+with per-unit verdicts (`CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE |
+NEEDS_REDESIGN`). Reuses the same **audit-integrity guard (Layer 1.5)** as
+`verifier_authenticity_audit.py`: an LLM hostile reviewer can hallucinate
+its smoking gun, so any flagged verdict whose quoted high-specificity
+evidence (a code span, file path, or distinctive identifier) does not
+literally appear in the audited source is auto-downgraded to
+`CANNOT_DETERMINE` rather than acted on. **Critical: the audit NEVER edits
+any file** — operator decides what to act on (fix, add a test case, or
+leave as acceptable risk).
+
+**Layer 3 — This CLAUDE.md rule.** Documents the contract. Same
+defense-in-depth reasoning as every other MANDATORY discipline in this
+file: mechanical/AI enforcement is the safety net, but naming the
+discipline here means any future agent extending `adversarial_verify.py`
+or its siblings reads this as required context and writes the SAME care
+into new checks from the start, rather than waiting for the next
+milestone's audit to catch a preventable gap.
+
+**How to apply (operator).** When the audit report flags a unit:
+
+1. Read `ops/qa_layer_authenticity_audit_report.md` for the flagged
+   function/file's full reasoning and constructed counterexample.
+2. Verify the counterexample is real (the audit-integrity guard already
+   filters hallucinated evidence, but a constructed counterexample is
+   still worth a quick sanity check before spending fix effort).
+3. Fix per the recommendation (`ADD_WORD_BOUNDARY`, `ADD_FIELD_UNWRAP`,
+   `ADD_TEST_CASE`, `ADD_TOKEN`, or `NEEDS_REDESIGN` for structural
+   rework), write a regression test reproducing the counterexample, run
+   the full `adversarial_verify.py` test suite, then do a corpus-wide
+   `--backfill` dry-run sanity check before committing (per the pattern
+   established fixing the four origin-incident bugs).
+
+**How to apply (agent-side, when writing NEW checks in this layer).** When
+adding a check to `adversarial_verify.py` / `exclusion_manifest_lint.py` /
+`in_process_doc_reconcile.py` that reads a field or pattern-matches free
+text:
+
+- Never do `str(d.get("field"))` or `d.get("field")` assuming a bare type
+  without considering the field might be principle-wrapped
+  (`{"value": ..., "principle": "..."}` — see "Principle-Annotated
+  Artifact Fields" below). Either read through a shared unwrap helper, or
+  document explicitly why the field cannot be wrapped for this check.
+- Never do a raw `substring in text` check against free-text fields
+  (`honest_verdict`, prompts, docstrings) without considering whether the
+  substring could appear inside an unrelated longer word. Use a
+  word-boundary-aware regex when the pattern is a multi-character token
+  that could plausibly be a prefix of another real word.
+- When scanning for a forbidden/flagged phrase, consider whether the
+  surrounding text might be explicitly NEGATING it ("do NOT do X",
+  "correctly avoided X") rather than claiming it.
+- Write the regression test for the exact incident/counterexample that
+  motivated the check, not just a synthetic happy-path case.
+
+**Cross-references:**
+
+- 2026-07-03 operator question ("shouldn't the adversarial agent be
+  catching these?") — origin
+- `scripts/qa_layer_authenticity_audit.py` — Layer 2 adversarial AI
+- `ops/qa_layer_authenticity_audit_report.md` — per-milestone audit output
+- `ops/.qa_layer_audit_rotation.json` — rotation state for the
+  function-chunked `adversarial_verify.py` target
+- CLAUDE.md "Verifier Authenticity Discipline" — the sibling this
+  discipline extends coverage from (research verifiers, not QA tooling)
+- CLAUDE.md "Adversarial Landing-Page Discipline" — the other sibling
+  (public docs, not QA tooling)
+- CLAUDE.md "Principle-Annotated Artifact Fields + Verifier-Principle
+  Discipline" — the convention whose unhandled-wrapping was origin bug #2
+- CLAUDE.md "Inference-Substrate Declaration Discipline" — the taxonomy
+  origin bug #4 extended (`live_llm_embedding_extraction`, the 6th value)
+- exp5161 (`results/experiment_5161_gap4_protocol_execution_pilot_v473.json`)
+  — origin bug #2's exemplar incident
+- exp5173 (`results/experiment_5173_diffusiongemma_energy_guided_diffusion_pilot_v474.json`)
+  — origin bug #3's exemplar incident
+- exp5178 (`results/experiment_5178_hidden_state_verifier_pilot_v474.json`)
+  — origin bug #4's exemplar incident
 
 ## Canonical Repository URL Discipline (MANDATORY)
 
