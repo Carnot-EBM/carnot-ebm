@@ -10246,3 +10246,4 @@ web search: |
 | 2026-07-03 20:23 UTC | PHASE C1 re-attempt (never ran in .475, poison-tes | OK | 90 passed, 1 warning in 10.57s |
 | 2026-07-03 20:43 UTC | PHASE C2 hardware continuity -- KV260 + PolarFire  | OK | 123 passed, 1 warning in 8.06s |
 | 2026-07-03 21:09 UTC | RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48+-d | OK | 89 passed, 1 warning in 7.92s |
+| 2026-07-03 21:26 UTC | RESERVED INFRASTRUCTURE 2/2 -- prepare operator-fa | OK | 86 passed, 1 warning in 9.45s |
