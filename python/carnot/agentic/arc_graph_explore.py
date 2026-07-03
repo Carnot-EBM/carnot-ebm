@@ -349,6 +349,7 @@ def graph_explore_solve_v2(
     action_prior_prune_quantile: float | None = None,
     action_effect_expansion_prior: Any | bool | None = None,
     qd_generator: Any | bool | None = None,
+    frontier_seed_bank: Any | None = None,
     candidate_router=None,
     structural_energy_scorer=None,
     move_pruner=None,
@@ -397,6 +398,12 @@ def graph_explore_solve_v2(
     `qd_generator` is the REQ-ARC-WMTE-4653 hook: an additive MAP-Elites
     multi-action sequence generator. It injects a generated sequence into the
     same scored pool while leaving primitive actions available as the fallback.
+
+    `frontier_seed_bank` is the REQ-REPORT-5198 MAP hook: a bounded pre-search
+    map can provide replayable landmark/affordance trajectories that are tried
+    before flat primitive expansion at matching frontier nodes. Seeded actions
+    still consume the same expansion budget and return the same replayable
+    trajectory format, so `arc_solver_kit.reproduce()` remains the solve gate.
     """
     from collections import deque
     from arcengine import GameAction
@@ -444,6 +451,8 @@ def graph_explore_solve_v2(
     )
     qd_sequences_injected = 0
     qd_actions_injected = 0
+    frontier_seed_sequences_injected = 0
+    frontier_seed_actions_injected = 0
     move_pruned = 0
 
     def _label(action_id, data):
@@ -496,6 +505,14 @@ def graph_explore_solve_v2(
             stats["qd_generation_enabled"] = qd_search_generator is not None
             stats["qd_sequences_injected"] = int(qd_sequences_injected)
             stats["qd_actions_injected"] = int(qd_actions_injected)
+            stats["frontier_seed_enabled"] = frontier_seed_bank is not None
+            stats["frontier_seed_sequences_injected"] = int(frontier_seed_sequences_injected)
+            stats["frontier_seed_actions_injected"] = int(frontier_seed_actions_injected)
+            if frontier_seed_bank is not None and hasattr(frontier_seed_bank, "diagnostics"):
+                try:
+                    stats["frontier_seed_diagnostics"] = frontier_seed_bank.diagnostics()
+                except Exception:
+                    stats["frontier_seed_diagnostics"] = None
             stats["move_pruner_enabled"] = move_pruner is not None
             stats["move_pruned"] = int(move_pruned)
             if move_pruner is not None and hasattr(move_pruner, "stats"):
@@ -565,6 +582,96 @@ def graph_explore_solve_v2(
         qd_actions_injected += len(rows)
         return rows
 
+    def _frontier_seed_sequences(frame, node: dict) -> list[list[dict]]:
+        if frontier_seed_bank is None:
+            return []
+        candidates = list(node.get("untested") or [])
+        path = list(node.get("path") or [])
+        try:
+            if hasattr(frontier_seed_bank, "frontier_seed_sequences"):
+                raw = frontier_seed_bank.frontier_seed_sequences(
+                    frame,
+                    candidates,
+                    path=path,
+                    root_path_length=len(prefix),
+                    goal_energy=goal_energy,
+                )
+            elif hasattr(frontier_seed_bank, "best_sequence"):
+                raw = [frontier_seed_bank.best_sequence(frame, candidates, goal_energy=goal_energy)]
+            elif callable(frontier_seed_bank):
+                raw = frontier_seed_bank(frame, candidates)
+            else:
+                raw = []
+        except TypeError:
+            try:
+                raw = frontier_seed_bank.frontier_seed_sequences(frame, candidates)
+            except Exception:
+                raw = []
+        except Exception:
+            raw = []
+        sequences: list[list[dict]] = []
+        for seq in raw or []:
+            rows = []
+            for step in seq or []:
+                if not isinstance(step, dict) or step.get("action") is None:
+                    continue
+                rows.append({"action": int(step["action"]), "data": step.get("data")})
+            if rows:
+                sequences.append(rows)
+        return sequences
+
+    def _next_frontier_seed_sequence(frame, node: dict) -> list[dict]:
+        nonlocal frontier_seed_sequences_injected, frontier_seed_actions_injected
+        if frontier_seed_bank is None or node.get("frontier_seed_exhausted"):
+            return []
+        cursor = int(node.get("frontier_seed_cursor", 0) or 0)
+        sequences = _frontier_seed_sequences(frame, node)
+        if cursor >= len(sequences):
+            node["frontier_seed_exhausted"] = True
+            return []
+        rows = sequences[cursor]
+        node["frontier_seed_cursor"] = cursor + 1
+        frontier_seed_sequences_injected += 1
+        frontier_seed_actions_injected += len(rows)
+        return rows
+
+    def _apply_frontier_seed_sequence(state: dict, frame_here, sequence: list[dict], *, policy: str):
+        nonlocal expansions, best
+        traj = list(state["path"])
+        nf = frame_here
+        for step in sequence:
+            label = _label(step["action"], step.get("data"))
+            if _should_prune(nf, label):
+                return True, None
+            before = nf
+            nf = env.step(
+                _game_action(GameAction, int(step["action"])),
+                data=step.get("data"),
+                reasoning={"policy": policy, "generator": "map_landmark_prestage"},
+            )
+            expansions += 1
+            if nf is None:
+                return True, None
+            traj = traj + [{"action": int(step["action"]), "data": step.get("data")}]
+            lvl = _levels_completed(nf)
+            _observe(before, label, nf, lvl > start_level)
+            if lvl > start_level and _predicate_allows_emit(nf):
+                _mark_goal_plan_emitted()
+                return True, _ret(traj, lvl)
+            best = max(best, lvl)
+            if _game_over(nf) or expansions >= max_expansions:
+                return True, None
+        if nf is not None and not _game_over(nf):
+            nh = node_id(nf)
+            if nh not in states:
+                states[nh] = {
+                    "path": traj,
+                    "untested": _candidates(nf, previous_frame=frame_here),
+                    "frame": nf,
+                }
+                return True, ("new_state", nh)
+        return True, None
+
     def _apply_qd_sequence(state: dict, frame_here, sequence: list[dict], *, policy: str):
         nonlocal expansions, best
         traj = list(state["path"])
@@ -607,6 +714,21 @@ def graph_explore_solve_v2(
                 frontier.popleft()
                 continue
             f_here = replay(st["path"])  # navigate to this state
+            frontier_seed_sequence = _next_frontier_seed_sequence(f_here, st)
+            if frontier_seed_sequence:
+                handled, result = _apply_frontier_seed_sequence(
+                    st,
+                    f_here,
+                    frontier_seed_sequence,
+                    policy="graph_explore_v2_map_frontier_seed",
+                )
+                if isinstance(result, tuple) and result and result[0] != "new_state":
+                    return result
+                if isinstance(result, tuple) and result and result[0] == "new_state":
+                    frontier.append(result[1])
+                if handled and expansions >= max_expansions:
+                    break
+                continue
             qd_sequence = _next_qd_sequence(f_here, st)
             if qd_sequence:
                 handled, result = _apply_qd_sequence(
@@ -693,6 +815,31 @@ def graph_explore_solve_v2(
         # each state expanded once, in priority order)
         while st["untested"]:
             f_here = replay(st["path"])  # navigate to this state
+            frontier_seed_sequence = _next_frontier_seed_sequence(f_here, st)
+            if frontier_seed_sequence:
+                handled, result = _apply_frontier_seed_sequence(
+                    st,
+                    f_here,
+                    frontier_seed_sequence,
+                    policy="graph_explore_v2_heuristic_map_frontier_seed",
+                )
+                if isinstance(result, tuple) and result and result[0] != "new_state":
+                    return result
+                if isinstance(result, tuple) and result and result[0] == "new_state":
+                    nh = result[1]
+                    new_state = states[nh]
+                    heapq.heappush(
+                        heap,
+                        (
+                            len(new_state["path"])
+                            + _priority_value(new_state["frame"], new_state["untested"]),
+                            next(counter),
+                            nh,
+                        ),
+                    )
+                if handled and expansions >= max_expansions:
+                    break
+                continue
             qd_sequence = _next_qd_sequence(f_here, st)
             if qd_sequence:
                 handled, result = _apply_qd_sequence(
