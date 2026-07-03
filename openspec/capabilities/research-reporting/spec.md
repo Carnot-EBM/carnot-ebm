@@ -32709,6 +32709,98 @@ label an identity cache smoke as a successful local-generator measurement.
 |---|---|---|
 | REQ-REPORT-5177 | Planned (`python/carnot/experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) | Planned (`tests/python/test_experiment_5177_gap4_scaleup_decentralization_tier_v474.py`) |
 
+### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
+
+The Exp 5178 workflow SHALL write
+`results/experiment_5178_hidden_state_verifier_pilot_v474.json` for a
+bounded oracle-distinct hidden-state verifier pilot. The workflow SHALL read the
+V474 verifier-moat reference block in `research-references.md`, the Phase D
+MuSR negative artifact `results/distributional_energy_verifier_musr.json`, and
+the local MuSR trace pool under `results/musr_traces/`. The workflow SHALL NOT
+modify `scripts/research_conductor.py`, SHALL NOT update ops/status,
+ops/changelog, or `_bmad/traceability.md`, and SHALL declare
+`inference_substrate="live_llm_inference"`.
+
+The workflow SHALL first check whether
+`unsloth/gemma-4-26B-A4B-it-GGUF` resolves to a local GGUF and whether the
+current llama.cpp path can expose internal vectors from that model. If only
+final-token embedding vectors are available, the artifact SHALL record that
+limitation explicitly and SHALL treat the run as a bounded TrajSelector-style
+linear-probe pilot rather than a full 0.6B end-to-end verifier. If hidden-state
+vectors cannot be read at all, the artifact SHALL report
+`hidden_state_access_feasible=false`, include
+`blocked_hidden_state_access_infeasible` in the honest verdict, and SHALL NOT
+fabricate verifier accuracy.
+
+When vectors are available, the workflow SHALL evaluate a leakage-safe question
+split over MuSR candidates: tune the self-consistency K on training questions,
+evaluate tuned K-way voting on held-out questions, train a small hidden-vector
+probe only on training candidates, and select held-out candidates by probe
+score. The workflow SHALL compute paired bootstrap CI95 for hidden-verifier
+accuracy minus tuned-SC accuracy, McNemar's test, oracle@K headroom, and a
+separate detection measurement for the "both candidates identically wrong"
+case where majority vote structurally cannot detect that the shared answer is
+wrong.
+
+The terminal artifact SHALL include top-level fields
+`hidden_state_access_feasible`, `design_path_taken`, `corpus_used`,
+`tuned_sc_baseline_accuracy`, `hidden_state_verifier_accuracy`,
+`accuracy_delta_ci95`, `mcnemar_p_value`,
+`identically_wrong_detection_result`, `compute_cost_vs_sc`,
+`compute_cost_vs_llm_judge`, `verifier_is_oracle=false`, `headroom_present`,
+`random_seed`, `inference_substrate="live_llm_inference"`,
+`reproducibility_checksum`, and `honest_verdict`. It SHOULD also include
+model/vector access metadata, tuned K by fold, pilot N, oracle@K, compared
+Phase D artifacts, per-question paired correctness arrays, and tests run.
+
+Required field principles:
+
+- `hidden_state_access_feasible`: principle "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model."
+- `design_path_taken`: principle "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification."
+- `corpus_used`: principle "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class."
+- `tuned_sc_baseline_accuracy`: principle "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson."
+- `hidden_state_verifier_accuracy`: principle "Selection accuracy of the hidden-vector verifier on held-out questions."
+- `accuracy_delta_ci95`: principle "Paired bootstrap CI95 for hidden verifier minus tuned SC."
+- `mcnemar_p_value`: principle "Paired exact McNemar test over hidden verifier vs tuned SC correctness."
+- `identically_wrong_detection_result`: principle "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect."
+- `compute_cost_vs_sc`: principle "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency."
+- `compute_cost_vs_llm_judge`: principle "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge."
+- `verifier_is_oracle`: principle "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only."
+- `headroom_present`: principle "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative."
+- `random_seed`: principle "Deterministic split, tuning, bootstrap, and checksum reproducibility."
+- `inference_substrate`: principle "This task uses live local LLM inference for the hidden-vector access check and pilot vectors."
+- `reproducibility_checksum`: principle "Content-addressed hash catches silent artifact or row drift."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency."
+
+#### SCENARIO-REPORT-5178: Hidden Vectors Are Compared Against Tuned SC
+
+**Given** the MuSR trace pool exists, the Phase D MuSR negative artifact exists,
+and the Gemma GGUF path exposes final-token hidden vectors through llama.cpp
+**When** the Exp 5178 workflow runs on a bounded pilot subset
+**Then** it writes the terminal JSON artifact, records
+`hidden_state_access_feasible=true`, records the final-vector access
+limitation, tunes self-consistency K on training questions, evaluates the
+hidden-vector probe on held-out questions, computes paired CI95 and McNemar's
+test, confirms oracle@K headroom, records same-wrong detection, reports compute
+cost versus SC and a generative judge, and sets `verifier_is_oracle=false`.
+
+#### SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS: No Hidden Vectors Blocks Honestly
+
+**Given** the Gemma GGUF is missing or llama.cpp cannot expose usable internal
+vectors
+**When** the Exp 5178 workflow runs
+**Then** it writes a terminal blocked artifact with all required fields,
+records the failed precondition, keeps `verifier_is_oracle=false`, sets
+`hidden_state_access_feasible=false`, leaves unverifiable accuracy fields null
+or zero with an explicit blocker note, and includes
+`blocked_hidden_state_access_infeasible` in `honest_verdict`.
+
+## Implementation Status (REQ-REPORT-5178)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5178 | Planned (`python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py`) | Planned (`tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
