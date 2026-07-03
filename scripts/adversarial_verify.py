@@ -2388,8 +2388,23 @@ def _claims_moat(d: dict[str, Any]) -> bool:
     return False
 
 
+_GATE_MET_RE = re.compile(r"(?<![a-z0-9])gate_met(?![a-z0-9])")
+_DIFFUSIONGEMMA_MET_RE = re.compile(r"diffusiongemma_met(?![a-z0-9])")
+
+
 def _flips_gate(d: dict[str, Any]) -> bool:
-    """True if the artifact asserts a (DiffusionGemma) gate is MET / flipped."""
+    """True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.
+
+    2026-07-02: exp5173's honest_verdict `blocked_diffusiongemma_meta_tensor_bug_
+    unresolved` false-triggered CIRCULAR_MOAT_OVERCLAIM -- a plain `"diffusiongemma_met"
+    in hv.lower()` substring check matched inside "diffusiongemma_META_tensor" (a
+    PyTorch technical term for placeholder tensors, unrelated to a gate being MET). The
+    artifact was honestly BLOCKED (nothing ran: empty arm_rows, all-zero pass@1s) yet
+    got flagged as if it had flipped a circular gate. Fixed with negative-lookahead
+    word-boundary regexes so "met" must not be immediately followed by another
+    lowercase letter/digit (excludes meta/method/metric/metadata/etc colliding with
+    "met"), while still matching the genuine word "met" followed by "_" or end-of-string.
+    """
     v = d.get("diffusiongemma_gate_status")
     if isinstance(v, str) and v.strip().upper() == "MET":
         return True
@@ -2399,8 +2414,10 @@ def _flips_gate(d: dict[str, Any]) -> bool:
     ):
         return True
     hv = d.get("honest_verdict")
-    if isinstance(hv, str) and ("gate_met" in hv.lower() or "diffusiongemma_met" in hv.lower()):
-        return True
+    if isinstance(hv, str):
+        hv_lower = hv.lower()
+        if _GATE_MET_RE.search(hv_lower) or _DIFFUSIONGEMMA_MET_RE.search(hv_lower):
+            return True
     return False
 
 
@@ -4189,9 +4206,7 @@ def _has_qd_context(d: dict[str, Any]) -> bool:
         return False
     text = _qd_first_party_claim_text(d)
     arc_context = _is_arc_artifact(d) or _has_first_party_qd_result_field(d)
-    return arc_context and (
-        _has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",))
-    )
+    return arc_context and (_has_marker(text, _QD_CONTEXT_MARKERS) or _has_marker(text, ("qd",)))
 
 
 def _claims_qd_energy_fitness_claim(d: dict[str, Any]) -> bool:
