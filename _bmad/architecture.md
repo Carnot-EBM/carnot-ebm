@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-05-16
+**Last Reconciled:** 20260703
 
 ## Overview
 
@@ -61,6 +61,23 @@ carnot/
 └── research-complete.yaml     # Completed research milestones (113 archived through 2026.04.103)
 ```
 
+## ARC-AGI-3 Harness Architecture
+
+The current north-star architecture is a live ARC-AGI-3 hidden-game discovery agent, not a public-game replay package. `ops/north-star.md` defines the two first-class metrics as live solve-rate / official score and action/compute efficiency. Public-game replay depth remains useful development evidence, but the scored competition path is the live `E3AgentPolicy` cascade in `python/carnot/agentic/arc_competition_agent.py`.
+
+The architecture has two distinct but coupled execution paths:
+
+| Path | Entry point | Purpose | Claim boundary |
+|---|---|---|---|
+| Offline development twin | `scripts/arc_loop_solve.py` | Runs deterministic no-quota public environments, adaptered verifier-routed solves, adapter-free first contact, checkpoint refresh, and reproducibility capture. | Development proxy unless the result comes from live-agent self-discovery and passes the reproduction gate. |
+| Scored live cascade | `E3AgentPolicy` via the submitted competition kernel | Runs the hidden-game `choose_action` / `is_done` loop with exploration, routing, DSL/world-model induction, trust energy for hidden-state world models, optional active probes, and model-planned execution. | Authoritative hidden leaderboard path; the registry records a current scored baseline of `0.08`, while replay scorecards are not leaderboard evidence. |
+
+The shared search substrate is verifier-routed best-first exploration. `python/carnot/agentic/arc_graph_explore.py` provides adapter-free graph exploration with salience/candidate ordering, A*-style frontier priority, goal-energy hooks, action-effect frontier priority, MAP frontier seeding, QD sequence injection, and move-pruner hooks. `python/carnot/agentic/arc_solver_kit.py` provides the durable `OfflineSolver`: adaptered best-first search ordered by a hand or learned verifier, fresh-env branching for non-idempotent reset games, reusable primitive operators, and `reproduce()` as the executable reproduction gate. A solve only counts when the captured action labels replay through this gate.
+
+`ops/arc_solve_registry.yaml` is the knowledge-capture mechanism. It records general gotchas, reusable primitive operators, per-game mechanics, dead ends, learned verifier checkpoints, reproduction artifacts, and live-submission provenance. As of the current registry it reports `reproducible_total_levels: 69` and `reproducible_total_games: 24`; those totals are a development proxy, not a substitute for the live hidden score. The registry also preserves the practical gotchas that make the architecture work: level progress lives on frames, fresh-env replay is required for some games, coordinates must be derived from the environment, animation/facing can be state, and same-action level transitions must be counted only through the reproduction gate.
+
+This division is intentional: the offline twin is where mechanisms are made reproducible and reusable; the `E3AgentPolicy` cascade is where those mechanisms are tested as a hidden-game runtime discovery process.
+
 ## Key Design Decisions
 
 ### DD-01: Cargo Workspace
@@ -90,6 +107,31 @@ Self-improvement is structured as two phases running inside the research conduct
 **Why this structure works for Carnot specifically:** the dual Rust + JAX layout is uniquely suited to this loop — JAX for fast math experimentation with `vmap`/`grad`/`jit`, Rust for production performance validation and deployability. Crucially, the EBM itself provides a mathematical ground truth for evaluating proposed improvements, so the loop does not need a human judge in the critical path. The IPC path between the Python orchestrator and the Rust EBM is still open (options: gRPC, shared memory, PyO3 direct) — the decision is deferred until the transpilation phase is exercised on a real improvement candidate.
 
 This design decision is what makes REQ-AUTO-* (autonomous self-learning) a first-class requirement rather than an afterthought. Phase 3 — the open-source EBM/EBT foundation model — depends on this loop compounding.
+
+## PHASE D Lifecycle And Retirement
+
+PHASE D was commissioned on 2026-06-30 as the off-ARC distributional-energy verifier-moat program: LoRA-EBM holistic scoring, uPRM-style generated-text/logprob process rewards, EBRM-style post-hoc reward refinement, and closely equivalent distributional-energy rankers against genuine tuned self-consistency on headroom-present reasoning corpora.
+
+The lifecycle is now closed. Across seven milestones the external generated-text/logprob scorer family produced null or marginal evidence rather than a decision-grade verifier moat over tuned self-consistency. `ops/exclusion_manifest.yaml` records `phase_d_external_text_scorer_retired_exp5163_v474`, with Exp 5163 as the terminal continuation and Exp 5170 as the retirement record. `ops/verifier_gaps.md` records the 2026-07-02 retirement note and the MuSR residual: headroom existed, but the clean EBRM arm tied tuned self-consistency with delta `0.0`, CI95 including zero, and McNemar `p=1.0`.
+
+The formal retirement date is 2026-07-02/03. Future reruns of this external-text scorer construction class require an operator override citing a genuinely different mechanism. The retirement is deliberately narrow: hidden-state/internal-representation verifiers, ARC oracle-distinct verifier work, and the FoVer production ensemble are explicitly outside the retired scope.
+
+Architecturally, PHASE D retired one mechanism class, not the verifier thesis. The lesson carried forward is that a fluent generated-text/logprob reranker is insufficient as a moat unless it beats matched tuned self-consistency under paired confidence intervals and survives the circularity/oracle-distinctness checks.
+
+## Hidden-State Verifier Research Frontier
+
+Hidden-state/internal-representation verifiers are the current live verifier-research frontier precisely because they are not the retired PHASE D mechanism. They score or steer a generator's internal representations rather than reranking generated text/logprobs after the fact. `ops/verifier_gaps.md` explicitly preserves TrajSelector-style hidden-state scoring and VerifySteer/PHSV-class internal-representation probes as sanctioned open mechanisms.
+
+The current evidence is honest and still open. Exp 5200 (`results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json`) produced a negative MMLU-Pro hidden-state probe result: the trained probe did not beat tuned self-consistency and left oracle-recoverable candidates unselected. The gap entry keeps the missing discriminator live: a candidate-internal correctness signal that separates correct traces from dense wrong-answer clusters, potentially requiring a stronger supervised probe or transformer-layer sweep once practical `output_hidden_states` access is available.
+
+For ARC, this frontier connects to two open architectural gaps:
+
+| Gap | Current status | Architectural implication |
+|---|---|---|
+| `GAP-4891` | Goal detection improved through relational target-match, but Stage-2/3/4 did not bank new levels; the binding wall is trajectory enumeration/generation. | Verifier energy can identify goal-shaped states, but the harness still needs a generator/search process that enumerates the winning trajectory. |
+| `GAP-4` | Same-shape rule-application consistency has a preliminary positive via execution/program-synthesis verification, but the result is not yet statistically/decentralization complete. | The strongest selector signal is rule execution: induce a program from demos, execute it on test input, and gate candidate promotion by exact or graded consistency. |
+
+The hidden-state program therefore remains architecturally distinct from PHASE D and is still a live path toward an oracle-distinct verifier moat, but it is not yet a production claim.
 
 ## Technology Stack
 
@@ -128,7 +170,23 @@ The `parallel_ising.py` sampler provides a `parallel_sample_states` function tha
 
 ## Verification Pipeline Tiers
 
-The LLM output verification pipeline uses a cascade architecture where cheaper tiers run first:
+The LLM output verification pipeline still uses a cascade architecture where cheaper tiers run first. The current `python/carnot/pipeline/verify_repair.py` path has expanded since the 2026-05-16 table; the current operational view is:
+
+| Tier | Name | Class / hook | Runtime role | Short-circuit / certificate behavior |
+|---|---|---|---|---|
+| Pre-IR | Typed + semantic grounding | `extract_typed_reasoning`, `SemanticGroundingVerifier`, `SemanticVerifierV2` | Extract typed reasoning and semantic evidence before cheap gates. | Adds semantic constraints/certificate fields; no fast-path by itself. |
+| 0 | Pipeline JEPA fast path | `jepa_fast_path_predictor` / `JEPA_FAST_PATH` | Predicts low violation probability from response features before extraction. | `verified=True`, `skipped=True` when below threshold. |
+| 0 | Per-call JEPA fast path | `jepa_predictor` / `FAST_PATH` | Embeds the first response tokens and skips full verification when domain risk is low. | `verified=True`, `skipped=True` when max risk is below threshold. |
+| 0 advisory | HalluField / semantic energy / StreamingCoT / spectral | `HalluFieldDetector`, `semantic_energy_probe`, `tier_0g_streaming_cot`, `tier_0h_spectral` | Records thermodynamic, semantic, streaming, and spectral instability signals. | Advisory certificate only. |
+| 0 violation fast path | ThinkProbe | `CarnotThinkProbe` / `THINK_PROBE_FAST_PATH` | Generative 3-step CoT verdict. | Returns a violation immediately when the probe is confident the response is incorrect. |
+| 0 clean fast path | NUP | `NUPProbeV4` / `NUP_PROBE_FAST_PATH` | Contrastive energy probe for cheap likely-correct responses. | `verified=True`, `skipped=True` when risk is below threshold. |
+| Router | ODAR | `FreeEnergyRouter` / `ODAR_FAST_PATH` | Fuses cheap Tier-0 evidence with expected-free-energy routing. | Fast-paths low-risk cases; missing evidence falls through. |
+| Hot path | Rust arithmetic/logic | `RustVerifyPipeline` | Optional arithmetic/logic verifier when the configured domain is supported. | Falls back to Python on unsupported domains or errors. |
+| Core | Constraint extraction + Ising | `AutoExtractor`, `ComposedEnergy`, metadata energy | Main verification pass over static, learned, retrieved, injected, and semantic constraints. | Produces `VerificationResult` violations and energy certificate. |
+| Memory additions | Constraint memory/template/embedding | `ConstraintMemory`, `ConstraintTemplateLibrary`, `EmbeddingConstraintStore`, `IsingConstraintInjector` | Adds learned/retrieved constraints and optional spin-bias injection. | Additive only; static constraints are not removed. |
+| Post-core advisory | CASAL / InterWhen / AND-compose | `CASALTier`, `InterwhenMonitor`, `and_compose_k5` | Continuous-attribute, mid-stream arithmetic, and k=5 ensemble certificates. | Advisory certificate only; does not override `verified`. |
+
+Historical 2026-05-16 table preserved below for provenance:
 
 | Tier | Name | Class | Cost | Signal Source | Skip Condition |
 |------|------|-------|------|---------------|----------------|
@@ -211,6 +269,18 @@ As of the 20260507 scope-reduction decision, Carnot keeps exactly three
 active hardware tracks. "Active" means a milestone may spend work on the
 track now without adding another speculative branch; it does not imply
 that hardware execution has happened.
+
+### 2026-07-03 Hardware Continuity Update
+
+The current hardware state is narrower than the Exp 1460 portfolio table:
+
+| Board | Current status | Architectural implication |
+|---|---|---|
+| KV260 | Near-terminal / terminal-continuity board. Exp 5201 checked it by SSH only (`ssh -o ConnectTimeout=5 -o BatchMode=yes kria true`) and recorded a hash-verified smoke with no speedup claim. | Keep as the sovereignty-story anchor for edge deployability and hardware-energy-evaluator continuity, but do not infer speedup or inspect host block devices as a KV260 precondition. |
+| PolarFire | Reachable by SSH and hash-verified smoke in Exp 5201, but `polarfire_workload_validated=false`; the terminal bar remains an end-to-end Carnot dispatch run. | Opportunistic continuity only; reachability is not a terminal workload claim. |
+| GateMate | Blocked on DirtyJTAG / GM1Ax IDCODE detection. Exp 5201 narrowed the failure to `jtag_protocol_level`: USB enumeration, permissions, tool version, and 100 kHz..15 MHz clock-rate hypotheses were mechanically eliminated; the leading untested physical hypothesis is cable/port/JTAG-side wiring or board power. | Keep the blocker visible, but do not burn milestones on repeated identical `openFPGALoader -c dirtyJtag --detect` runs without a new operator-side physical angle. |
+
+The historical Exp 1460 active/deferred tables remain below as portfolio provenance; the dated row above is the current operational state.
 
 | Active track | Current scope | Claim boundary |
 |---|---|---|
