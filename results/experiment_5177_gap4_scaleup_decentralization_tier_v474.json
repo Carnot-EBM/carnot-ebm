@@ -41,7 +41,7 @@
     0.015873,
     0.131148
   ],
-  "duration_s": 1.003452,
+  "duration_s": 617.917435,
   "exact_test_discordant_losses": 0,
   "exact_test_discordant_wins": {
     "principle": "The actual discordant wins from the achieved rows, not a projected count.",
@@ -114,9 +114,10 @@
       "checkpoint_resume_used": true,
       "demo_perfect_count": 0,
       "domains": {
-        "arc1": 5
+        "arc1": 3,
+        "arc2": 2
       },
-      "duration_s": 0.007847,
+      "duration_s": 616.157319,
       "identity_cache_smoke": false,
       "induction_rate": 0.0,
       "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
@@ -134,34 +135,12 @@
           "demo_fit": 0.0,
           "demo_perfect": false,
           "domain": "arc1",
-          "local_key": "arc1:0:50a16a69",
-          "pred_in_pool": false,
-          "pred_is_pool_correct": false,
-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle and provide a Python function `transform(grid)` that implements the observed transformation.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2, 5, 2, 5, 1],\n [2, 5, 2, 5, 2, 5, 2, 1],\n [5, 2, 5, 2",
-          "status": "no_code",
-          "task": "50a16a69"
-        },
-        {
-          "demo_fit": 0.0,
-          "demo_perfect": false,
-          "domain": "arc1",
           "local_key": "arc1:1:66e6c45b",
           "pred_in_pool": false,
           "pred_is_pool_correct": false,
-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC puzzle based on two examples and apply the rule to a test input.\n\n**Analysis of Demo 1:**\nInput:\n```\n[[0, 0, 0, 0],\n [0, 3, 4, 0],\n [0, 7, 6, 0],\n [0, 0, 0, 0]]\n```\nOutput:\n```\n[[3, 0, 0, 4],\n [0, 0, 0, 0],\n [0, 0, 0, 0],\n [7, 0, 0, 6]]\n```\n\nLet's look at ",
+          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nI should return a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's look at the demos.\nDemo 1:\nInput:\n[[0,0,0,0],\n [0,3,4,0],\n [0,7,",
           "status": "no_code",
           "task": "66e6c45b"
-        },
-        {
-          "demo_fit": 0.0,
-          "demo_perfect": false,
-          "domain": "arc1",
-          "local_key": "arc1:2:17cae0c1",
-          "pred_in_pool": false,
-          "pred_is_pool_correct": false,
-          "response_preview": "\n\n<think>\nThe user wants me to solve an ARC (Abstraction and Reasoning Corpus) puzzle.\nI need to analyze the provided demos to infer the transformation rule and then apply it to the test input.\nFinally, I need to output a Python function `transform(grid)` that performs this transformation.\n\n**Analys",
-          "status": "no_code",
-          "task": "17cae0c1"
         },
         {
           "demo_fit": 0.0,
@@ -184,12 +163,43 @@
           "response_preview": "\n\n<think>\nThe user wants me to solve an ARC task.\nI need to infer a transformation from the given demos and apply it to the test input.\nThe output should be a single Python code block defining `def transform(grid)`.\n`np` is provided.\n\nLet's analyze the data.\nDemos:\nDemo 1:\nInput:\n[[1,1,0,1,1],\n [1,0",
           "status": "no_code",
           "task": "be03b35f"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc2",
+          "local_key": "arc2:8:28a6681f",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\nReturn only one Python code block defining def transform(grid). np is provided; no imports, files, or environment.\n\n<think>\n\n</think>\n\nTo solve this task, we need to infer the transformation rule from the provided demos and apply it to the test input.\n\n**Analysis of Demos:**\n\n1.  **Demo 1:**\n    *",
+          "status": "no_code",
+          "task": "28a6681f"
+        },
+        {
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "domain": "arc2",
+          "local_key": "arc2:27:dd6b8c4b",
+          "pred_in_pool": false,
+          "pred_is_pool_correct": false,
+          "response_preview": "\n\nReturn only one Python code block defining def transform(grid). np is provided; no imports, files, or numpy.\n\n<think>\n\n</think>\n\nTo solve this task, we need to infer the transformation rule from the provided demos and apply it to the test input.\n\n**Analysis of Demos:**\n\n1.  **Identify Key Objects:",
+          "status": "no_code",
+          "task": "dd6b8c4b"
         }
       ],
       "scoring_kind": "candidate_pool_correct_given_demo_perfect",
       "status": "completed_real_local_generator_subset",
       "target_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
       "target_n": 5
+    }
+  },
+  "model_specs": {
+    "codex_first_arm": "Rescored checked-in GAP-4 ARC-1 and ARC-2 codex-first candidate/program artifacts with checkpoint/resume accounting.",
+    "local_generator_arm": {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "identity_cache_smoke": false,
+      "loader": "llama.cpp",
+      "prompt_kind": "arc_transform_induction_from_demos"
     }
   },
   "partial": false,
@@ -211,7 +221,7 @@
   "remaining_rows": [],
   "reproducibility_checksum": {
     "principle": "Content-addressed hash catches silent artifact or row drift.",
-    "value": "sha256:31e64bc95b84ea8de2fa19dd75c3e08e4058bba3d863de8d99c0cb06193f1466"
+    "value": "sha256:912afa8d18421800a5691e7bd34f70ed6ba930f68e2e9ea18021a6e84183a250"
   },
   "result_path": "results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json",
   "scaleup_rows": [
@@ -1131,6 +1141,7 @@
     "SCENARIO-REPORT-5177",
     "SCENARIO-REPORT-5177-LOCAL-GENERATOR"
   ],
+  "target_model": "unsloth/Qwen3.6-35B-A3B-GGUF",
   "target_n": {
     "principle": "Target selected from Exp 5161's observed 4/60 discordant-win rate, rounded into the 150-200 scale-up range for margin.",
     "value": 180
@@ -1140,23 +1151,5 @@
     "exp5161_observed_n": 60,
     "proportional_n_for_six_wins": 90,
     "selected_with_margin": 180
-  },
-  "flagged_adversarial": true,
-  "corrigendum_pending": [
-    {
-      "kind": "IMPLAUSIBLE_PERFECT",
-      "severity": "info",
-      "detail": "exact_test_discordant_losses=0.0 (exactly zero). Confirm this is not a stub default."
-    },
-    {
-      "kind": "DURATION_TOO_SHORT",
-      "severity": "critical",
-      "detail": "duration_s=1.003452 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
-    },
-    {
-      "kind": "METHODOLOGY_MISSING",
-      "severity": "warn",
-      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
-    }
-  ]
+  }
 }

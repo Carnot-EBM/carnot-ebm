@@ -1,0 +1,231 @@
+{
+  "accuracy_delta_ci95": {
+    "principle": "Paired bootstrap CI95 for hidden verifier minus tuned SC.",
+    "value": [
+      -0.666667,
+      0.0
+    ]
+  },
+  "compute_cost_vs_llm_judge": {
+    "principle": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge.",
+    "value": {
+      "candidate_vectors_scored": 48,
+      "efficiency_result": "wins_vs_llm_judge_no_decode",
+      "generative_decode_tokens_required": 0,
+      "judge_forward_decode_avoided": true,
+      "relative_cost_note": "The hidden-vector probe performs embedding forward passes and a small linear score; a generative judge would require prompt evaluation plus decoded judgment tokens per candidate."
+    }
+  },
+  "compute_cost_vs_sc": {
+    "principle": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency.",
+    "value": {
+      "accuracy_axis": "hidden verifier compared after tuned SC candidate generation",
+      "candidate_vectors_scored": 48,
+      "efficiency_result": "loses_to_sc_extra_hidden_forward",
+      "extra_forward_passes_per_candidate": 1,
+      "generation_reused_from_musr_trace_pool": true,
+      "measured_seconds_per_candidate": 0.665146,
+      "measured_vector_seconds": 31.927019
+    }
+  },
+  "corpus_used": {
+    "principle": "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class.",
+    "value": "MuSR/murder_mysteries"
+  },
+  "design_path_taken": {
+    "principle": "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification.",
+    "value": "trajselector_trained_probe: llama.cpp exposed final-token hidden vectors, not full per-layer states; this pilot trains a leakage-safe centroid probe on those generator internal vectors rather than a 0.6B end-to-end verifier."
+  },
+  "duration_s": 35.279684,
+  "experiment": "experiment_5178_hidden_state_verifier_pilot_v474",
+  "experiment_id": 5178,
+  "field_principles": {
+    "accuracy_delta_ci95": "Paired bootstrap CI95 for hidden verifier minus tuned SC.",
+    "compute_cost_vs_llm_judge": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against a generative judge.",
+    "compute_cost_vs_sc": "Efficiency-parity is co-equal with accuracy; report hidden-vector cost against tuned self-consistency.",
+    "corpus_used": "Reuse MuSR by default for a controlled comparison against the retired Phase D external-text-scorer class.",
+    "design_path_taken": "Records whether this was a TrajSelector-style trained probe or the VerifySteer fallback, with the access/training-budget justification.",
+    "headroom_present": "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative.",
+    "hidden_state_access_feasible": "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model.",
+    "hidden_state_verifier_accuracy": "Selection accuracy of the hidden-vector verifier on held-out questions.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency.",
+    "identically_wrong_detection_result": "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect.",
+    "inference_substrate": "This task uses live local LLM inference for the hidden-vector access check and pilot vectors.",
+    "mcnemar_p_value": "Paired exact McNemar test over hidden verifier vs tuned SC correctness.",
+    "random_seed": "Deterministic split, tuning, bootstrap, and checksum reproducibility.",
+    "reproducibility_checksum": "Content-addressed hash catches silent artifact or row drift.",
+    "tuned_sc_baseline_accuracy": "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson.",
+    "verifier_is_oracle": "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only."
+  },
+  "headroom_delta_oracle_minus_sc": 0.666667,
+  "headroom_present": {
+    "principle": "Confirm oracle@K meaningfully exceeds tuned SC so a null is informative.",
+    "value": true
+  },
+  "hidden_state_access_feasible": {
+    "principle": "Do not claim a hidden-state mechanism unless the local inference path exposes internal vectors from the generator model.",
+    "value": true
+  },
+  "hidden_state_access_metadata": {
+    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "hidden_state_extraction_path": "llama_cpp.Llama(embedding=True,pooling_type=LAST).embed",
+    "llama_cpp_hidden_state_limitation": "final-token embedding vectors available; full per-layer hidden states and steering hooks not exposed",
+    "load_s": 2.621799,
+    "measured_vector_seconds": 31.927019,
+    "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "smoke_s": 0.663237,
+    "status_reason": "llama.cpp final-token embedding vector smoke succeeded",
+    "vector_provider_calls": 48,
+    "vector_shape": [
+      2816
+    ]
+  },
+  "hidden_state_verifier_accuracy": {
+    "principle": "Selection accuracy of the hidden-vector verifier on held-out questions.",
+    "value": 0.0
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ or blocked_ and state plainly whether hidden-state scoring beats, ties, or loses to tuned SC on accuracy and efficiency.",
+    "value": "complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333"
+  },
+  "identically_wrong_detection_result": {
+    "principle": "Measures whether the hidden signal detects same-wrong candidate agreement, which plain majority vote structurally cannot detect.",
+    "value": {
+      "cases": [
+        {
+          "detection_threshold": 0.100959,
+          "hidden_detected": true,
+          "hidden_score": 0.059254,
+          "question_index": 4,
+          "shared_wrong_answer": "Emma"
+        }
+      ],
+      "detected_count": 1,
+      "detection_rate": 1.0,
+      "n_cases": 1,
+      "sc_detection_rate": 0.0,
+      "sc_structural_note": "plain majority vote has no correctness signal when top candidates agree on the same wrong answer"
+    }
+  },
+  "inference_substrate": {
+    "principle": "This task uses live local LLM inference for the hidden-vector access check and pilot vectors.",
+    "value": "live_llm_inference"
+  },
+  "mcnemar_p_value": {
+    "principle": "Paired exact McNemar test over hidden verifier vs tuned SC correctness.",
+    "value": 0.5
+  },
+  "oracle_at_k_accuracy": 1.0,
+  "paired_correct": {
+    "hidden_state_verifier": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "oracle_at_k": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "question_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "tuned_self_consistency": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  "phase_d_context": {
+    "distributional_energy_accuracy": 0.515,
+    "exists": true,
+    "honest_verdict": "complete_musr_energy_verifier_no_win_en_0.515_pure_0.535_vs_sc_0.56_delta_-0.045_ci_-0.105_0.015_puredelta_-0.025_ci_-0.095_0.045_sc_not_saturated_headroom_unrealized",
+    "path": "results/distributional_energy_verifier_musr.json",
+    "self_consistency_accuracy": 0.56,
+    "sha256": "sha256:d4d7196d9f7e29fece0b1dfc8007b3b3c82464211dc1a965fa118548fbdd85fb",
+    "verifier_is_oracle": false
+  },
+  "pilot_n_candidates": 48,
+  "pilot_n_questions": 6,
+  "random_seed": {
+    "principle": "Deterministic split, tuning, bootstrap, and checksum reproducibility.",
+    "value": 5178
+  },
+  "reproducibility_checksum": {
+    "principle": "Content-addressed hash catches silent artifact or row drift.",
+    "value": "sha256:a1c067d8c21c5e204de84ed12bd016fd77271e77bdbbbf11c9215aeba52fbb61"
+  },
+  "research_reference_context": {
+    "exists": true,
+    "markers_found": [
+      "TrajSelector",
+      "VerifySteer",
+      "Discriminative Verification",
+      "Explanatory Verifier"
+    ],
+    "path": "research-references.md"
+  },
+  "result_path": "results/experiment_5178_hidden_state_verifier_pilot_v474.json",
+  "schema": "carnot.hidden_state_verifier_pilot_5178.v1",
+  "score_summary": {
+    "detection_thresholds": {
+      "0": 0.032405,
+      "1": 0.107308,
+      "2": 0.032405,
+      "3": 0.107308,
+      "4": 0.100959,
+      "5": 0.100959
+    },
+    "selected_hidden_scores": {
+      "0": 0.108775,
+      "1": 0.124709,
+      "2": 0.048719,
+      "3": 0.156009,
+      "4": 0.059254,
+      "5": 0.021059
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-5178",
+    "SCENARIO-REPORT-5178",
+    "SCENARIO-REPORT-5178-BLOCKED-HIDDEN-ACCESS"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py -q -o addopts=''"
+  ],
+  "tuned_k_by_fold": {
+    "0": 8,
+    "1": 2,
+    "2": 2
+  },
+  "tuned_k_by_question": {
+    "0": 8,
+    "1": 2,
+    "2": 8,
+    "3": 2,
+    "4": 2,
+    "5": 2
+  },
+  "tuned_sc_baseline_accuracy": {
+    "principle": "Must be a genuine K-way tuned baseline, never a k=1 strawman, per the .461 D3 degeneracy lesson.",
+    "value": 0.333333
+  },
+  "verifier_is_oracle": {
+    "principle": "Must be false for this oracle-distinct construction; gold labels are for training/eval splits only.",
+    "value": false
+  }
+}
