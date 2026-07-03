@@ -229,6 +229,59 @@ _NEGATION_MARKERS = (
 )
 
 
+_PRIOR_DIFFERENTIATION_WINDOW_CHARS = 400
+_PRIOR_DIFFERENTIATION_MARKERS = (
+    "different from",
+    "differs from",
+    "unlike",
+    "not a rerun",
+    "not a re-run",
+    "distinct from",
+    "hardens",
+    "closes",
+    "resolves",
+    "continuation of",
+    "builds on",
+    "addressed by",
+    "different mechanism",
+    "genuinely different",
+    "not the same",
+    "was blocked",
+    "precondition block",
+    "not a failure",
+    "not a methodology failure",
+    "already correctly explains",
+)
+
+
+def _prose_addresses_prior(prompt_text: str, prior_id: str) -> bool:
+    """True if the prompt names a matched prior's experiment_id verbatim AND, in a
+    wide window around that mention, uses language distinguishing this task's scope
+    from it -- the exact shape of the `.474` incident (7 tasks whose own prose
+    already explained why a scope-match wasn't a doomed rerun, but never populated
+    the structured `prior_failures:` field this linter checks). Used ONLY to
+    downgrade HARD -> WARNING (never to fully clear a violation), matching the
+    existing `operator_override` downgrade semantics exactly -- this is a safety
+    net for a planner failure mode already observed twice this milestone-day, not a
+    weaker acceptance bar. See CLASS 3 below and the 2026-07-03 origin note.
+
+    Deliberately conservative: requires the EXACT prior id string (case-insensitive)
+    to appear, not a fuzzy scope match -- a coincidental unrelated mention of
+    "different" elsewhere in a long prompt must not suppress a genuine violation.
+    """
+    lower_prompt = prompt_text.lower()
+    lower_id = prior_id.lower()
+    idx = lower_prompt.find(lower_id)
+    if idx == -1:
+        return False
+    window = lower_prompt[
+        max(0, idx - _PRIOR_DIFFERENTIATION_WINDOW_CHARS) : idx
+        + len(lower_id)
+        + _PRIOR_DIFFERENTIATION_WINDOW_CHARS
+    ]
+    return any(marker in window for marker in _PRIOR_DIFFERENTIATION_MARKERS)
+
+
 def _is_negated_context(text: str, match_start: int) -> bool:
     """True if a negation marker appears shortly before a matched retired-mechanism
     string, i.e. the prompt is telling the agent NOT to use it (compliant), not
@@ -500,6 +553,29 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                         except Exception:
                             valid_priors = False
                     if not valid_priors:
+                        matched_ids = [str(p.experiment_id) for p in check.matched_priors[:5]]
+                        prompt_text = str(task.get("prompt") or "")
+                        prose_addressed = any(
+                            _prose_addresses_prior(prompt_text, pid) for pid in matched_ids
+                        )
+                        downgraded = override or prose_addressed
+                        detail = check.reason[:200]
+                        if prose_addressed and not override:
+                            # Safety net for the `.474`-class incident (2026-07-03):
+                            # the planner's own prose already explains the
+                            # distinction but never populated prior_failures:.
+                            # Downgrade only -- never a full clear -- so the
+                            # reasoning stays visible in the report for audit.
+                            # PREPENDED (not appended): _format_risks truncates
+                            # `detail` to 200 chars at print time, which would
+                            # silently swallow an appended marker whenever
+                            # check.reason is itself near the 200-char cap.
+                            detail = (
+                                f"[AUTO-DOWNGRADED: prompt names a matched prior "
+                                f"with nearby differentiation language, no "
+                                f"structured prior_failures: block -- verify "
+                                f"before trusting] {detail}"
+                            )
                         risks.append(
                             ExclusionRisk(
                                 task_id=task_id,
@@ -507,12 +583,10 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                                 violation_class="SCOPE_MATCHED_PRIOR_FAILURE",
                                 retired_exp_id=None,
                                 retirement_reason=check.reason[:200],
-                                has_operator_override=override,
-                                severity="WARNING" if override else "HARD",
-                                detail=check.reason[:200],
-                                matched_priors=[
-                                    str(p.experiment_id) for p in check.matched_priors[:5]
-                                ],
+                                has_operator_override=downgraded,
+                                severity="WARNING" if downgraded else "HARD",
+                                detail=detail,
+                                matched_priors=matched_ids,
                             )
                         )
             except Exception:

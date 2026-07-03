@@ -1116,7 +1116,14 @@ ignored, because neither of the first two classes could catch a
 brand-new task id with no prior artifact). A task with an `operator_override:`
 or a valid `prior_failures:` block clears the applicable classes; see
 `ops/known-issues.md` "MECHANICAL FIX 2026-07-01" for the incident and
-fix detail.
+fix detail. `SCOPE_MATCHED_PRIOR_FAILURE` also has a third, narrower downgrade
+path (2026-07-03, `_prose_addresses_prior`): if the task's prompt names a
+matched prior's experiment_id verbatim with nearby differentiation language
+(the shape of the `.474` incident — 7 tasks whose own prose already explained
+why a scope-match wasn't a doomed rerun, but never populated the structured
+field, stalling activation ~45 minutes), the violation auto-downgrades HARD →
+WARNING with an `AUTO-DOWNGRADED` marker in the report for later audit —
+never a full clear, same downgrade-only semantics as `operator_override`.
 
 **Why this is in CLAUDE.md, not just in `ops/exclusion_manifest.yaml`.**
 The manifest is the mechanical enforcement target; the planner
