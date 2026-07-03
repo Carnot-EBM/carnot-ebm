@@ -10127,3 +10127,4 @@ web search: |
 | 2026-07-03 07:05 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-07-03 07:56 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-07-03 07:59 UTC | Milestone 2026.07.475 activated | OK | 12 tasks queued |
+| 2026-07-03 08:15 UTC | PHASE 0 transition -- archive .474 truth (hardened | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
