@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.476",
+  "generated_at": "2026-07-03T23:13:09.965469Z",
+  "retro_type": "operational_in_progress",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The timing source for milestone 2026.07.476 is not a usable experiment table: it reports 0 experiment commits from both live git-log and disk-mtime reconstruction while also flagging changelog references for this milestone. With 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, no slowest-run, compute-bound GPU, or DualGPURunner finding can be derived.",
+  "bottlenecks_identified": [
+    "Timing assembly integrity mismatch: the live git-log path and disk-mtime reconstruction both found 0 experiment commits, but the changelog contains milestone references, so the retro cannot produce valid slowest-experiment, wall-time, or compute-bound efficiency analysis from the supplied data."
+  ],
+  "improvements_suggested": [
+    "Fix the timing assembly path so changelog milestone mentions are classified separately from experiment commit evidence before any retrospective metrics are emitted.",
+    "Add a regression fixture for this mismatch shape: empty git-log evidence, empty disk-mtime reconstruction, and changelog references must produce an explicit no-data mismatch state rather than inferred experiment counts.",
+    "Keep GPU-idle and DualGPURunner recommendations gated on compute_bound and 2+ parallel-model markers, respectively, so an idle synthesis-only or no-data milestone is not misreported as wasted accelerator time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the timing-integrity mismatch detector to distinguish structured experiment evidence from generic changelog references.",
+    "Emit machine-readable timing source provenance before the retro prompt is assembled, including which source was used and whether sources disagreed.",
+    "Preserve the compute-bound gate for GPU findings so future idle GPU snapshots only become bottlenecks when compute-bound timing entries exist."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone's operational retrospective should stay intentionally conservative: the authoritative timing block is a provenance failure, not a basis for reconstructing experiment history. The useful next step is to make the timing collector fail explicitly and structurally when its sources disagree.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true
+}
