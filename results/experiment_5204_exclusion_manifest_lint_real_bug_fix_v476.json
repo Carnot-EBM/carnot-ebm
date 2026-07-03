@@ -1,0 +1,119 @@
+{
+  "experiment": "experiment_5204_exclusion_manifest_lint_real_bug_fix_v476",
+  "experiment_id": 5204,
+  "milestone": "2026.07.476",
+  "date": "2026-07-03",
+  "spec_refs": [
+    "REQ-REPORT-5204",
+    "SCENARIO-REPORT-5204-NEGATED-BLOCKED-PATTERN",
+    "SCENARIO-REPORT-5204-WRAPPED-FIELDS",
+    "SCENARIO-REPORT-5204-TERMINAL-PREFIXES"
+  ],
+  "counterexample_regression_test_fails_before_fix": {
+    "principle": "Proves the bug is real and the test genuinely detects it, not a tautology.",
+    "value": true,
+    "evidence": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q failed before implementation with one BLOCKED_PATTERN_MATCHED risk for exp9001-v472-fover-guard."
+  },
+  "counterexample_regression_test_passes_after_fix": {
+    "principle": "The exact audit counterexample must be accepted after the linter learns prevention/negation context.",
+    "value": true,
+    "evidence": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q --no-cov passed after the fix."
+  },
+  "four_issues_fixed": {
+    "principle": "The audit named four defects; the result is incomplete if it fixes only the FoVer counterexample.",
+    "value": {
+      "word_boundary": true,
+      "principle_unwrap": true,
+      "general_negation": true,
+      "terminal_prefix": true
+    }
+  },
+  "shared_unwrap_helper_reused_or_created": {
+    "principle": "Avoiding duplicate principle-wrapper semantics keeps QA-layer checks aligned with adversarial_verify.py.",
+    "value": "Reused scripts.adversarial_verify._normalize_principle_wrapped_fields from scripts/exclusion_manifest_lint.py via _unwrap_principle_value() and _task_with_unwrapped_fields()."
+  },
+  "full_adversarial_verify_test_suite_result": {
+    "principle": "Shared-helper reuse must not regress adversarial_verify.py's own hardening tests.",
+    "value": {
+      "passed": 254,
+      "failed": 0,
+      "command": ".venv/bin/pytest tests/python/test_adversarial_verify*.py -q --no-cov"
+    }
+  },
+  "backfill_dry_run_result": {
+    "principle": "Corpus-wide dry-run checks that the shared QA-layer fix does not create an obvious historical-corpus backfill surprise before any write is applied.",
+    "value": "exit_code=1 dry-run only; scanned 4591 artifact(s), scope=any-critical, found 135 qualifying unstamped critical artifact(s), wrote 0 files. Command: .venv/bin/python scripts/adversarial_verify.py --backfill"
+  },
+  "inference_substrate": {
+    "principle": "This fix and artifact aggregate source, tests, and command outputs only; no live model or hardware inference was performed.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_, and must confirm all FOUR documented issues were addressed, not just the one counterexample.",
+    "value": "success: exclusion_manifest_lint_real_bug_fixed_all_four_issues_word_boundary_principle_unwrap_general_negation_terminal_prefix"
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q",
+      "result": "failed before fix: assertion saw one BLOCKED_PATTERN_MATCHED risk"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py::TestBlockedPatternMatched::test_negated_fover_counterexample_is_not_blocked -q --no-cov",
+      "result": "1 passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py -q --no-cov",
+      "result": "31 passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_exclusion_manifest_lint.py -q -n 0 --cov-reset --cov=scripts.exclusion_manifest_lint --cov-config=/tmp/carnot_exclusion_manifest_coveragerc --cov-report=json:/tmp/exclusion_manifest_coverage.json --cov-report=term-missing --cov-fail-under=0",
+      "result": "31 passed; whole-file coverage 82%; changed executable linter lines covered 35/35"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_adversarial_verify*.py -q --no-cov",
+      "result": "254 passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py --backfill",
+      "result": "exit_code=1 dry-run only; scanned 4591 artifact(s), found 135 would-stamp artifacts, wrote 0 files"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "result": "attempted exact required broad command; interrupted after 2243.44s at 56% because it was already red with unrelated failures and worker crashes: 25791 passed, 212 failed, 96 skipped, 1 error, plus Z3 and JAX worker segfaults"
+    }
+  ],
+  "full_tests_python_result": {
+    "principle": "The requested broad suite status must be reported honestly even when unrelated repository failures prevent an all-green result.",
+    "value": {
+      "command": ".venv/bin/pytest tests/python -q",
+      "completed": false,
+      "exit_code": 2,
+      "interrupted_at_percent": 56,
+      "passed": 25791,
+      "failed": 212,
+      "skipped": 96,
+      "errors": 1,
+      "duration_s": 2243.44,
+      "unrelated_failure_examples": [
+        "tests/python/test_abstention_http_rest_3810.py timed out waiting for HTTP responses",
+        "tests/python/test_adaptive.py worker crashed in z3_math_verifier.py/Z3",
+        "tests/python/test_experiment_557_jepa_v9.py worker crashed during JAX compilation",
+        "multiple capstone tests expected stale arc_levels counts"
+      ]
+    }
+  },
+  "coverage_new_code": {
+    "principle": "Only the linter diff is in scope for the STOP-WHEN-DONE coverage carve-out; pre-existing untested CLI/fallback branches are not chased.",
+    "value": {
+      "changed_executable_lines": 35,
+      "covered_changed_executable_lines": 35,
+      "coverage_percent": 100.0
+    }
+  },
+  "files_changed": [
+    "openspec/capabilities/research-reporting/spec.md",
+    "scripts/exclusion_manifest_lint.py",
+    "tests/python/test_exclusion_manifest_lint.py",
+    "results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json"
+  ]
+}

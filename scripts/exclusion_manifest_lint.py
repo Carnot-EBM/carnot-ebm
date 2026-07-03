@@ -73,11 +73,27 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.adversarial_verify import (  # noqa: E402
+    _normalize_principle_wrapped_fields,
+)
+
 _EXP_ID_RE = re.compile(r"^exp(\d+)[-_]", re.IGNORECASE)
+_TERMINAL_SUCCESS_PREFIXES = (
+    "complete:",
+    "complete_",
+    "success:",
+    "success_",
+    "passed:",
+    "passed_",
+    "shipped:",
+    "shipped_",
+)
 
 # Wrong-mechanism precondition patterns: (board_pattern, retired_path_pattern,
 # replacement_pattern, claude_md_section).
@@ -218,14 +234,27 @@ _NEGATION_WINDOW_CHARS = 80
 _NEGATION_MARKERS = (
     "do not",
     "don't",
+    "don’t",
     "dont ",
     "never ",
+    "must not",
+    "should not",
     "avoid ",
+    "avoids ",
+    "avoided ",
     "not touch",
     "not use",
+    "not rely on",
+    "correctly avoided",
     "without using",
     "no longer",
     "instead of",
+    "guard against",
+    "guards against",
+    "guarding against",
+    "prevent ",
+    "prevents ",
+    "preventing ",
 )
 
 
@@ -300,6 +329,42 @@ def _is_negated_context(text: str, match_start: int) -> bool:
     return any(marker in window for marker in _NEGATION_MARKERS)
 
 
+def _unwrap_principle_value(value: Any) -> Any:
+    """Return a field's bare value when it follows the shared principle wrapper."""
+    return _normalize_principle_wrapped_fields({"field": value})["field"]
+
+
+def _task_with_unwrapped_fields(task: dict[str, Any]) -> dict[str, Any]:
+    """Normalize top-level principle-wrapped roadmap task fields once per task."""
+    return _normalize_principle_wrapped_fields(task)
+
+
+def _has_terminal_success_prefix(text: str) -> bool:
+    """True when text starts with a recognized terminal success prefix."""
+    return text.strip().lower().startswith(_TERMINAL_SUCCESS_PREFIXES)
+
+
+def _blocked_pattern_regex(pattern_str: str) -> re.Pattern[str]:
+    """Compile a blocked-pattern phrase with token boundaries around it."""
+    escaped = re.escape(pattern_str.strip())
+    escaped = re.sub(r"\\\s+", r"\\s+", escaped)
+    return re.compile(rf"(?<!\w){escaped}(?!\w)", re.IGNORECASE)
+
+
+def _blocked_pattern_matches(
+    haystack: str, blocked_patterns: list[tuple[str, str, str]]
+) -> list[tuple[str, str, str]]:
+    """Return non-negated blocked-pattern matches in task title/prompt text."""
+    matched: list[tuple[str, str, str]] = []
+    for pattern_str, source_id, reason in blocked_patterns:
+        pattern = _blocked_pattern_regex(pattern_str)
+        for match in pattern.finditer(haystack):
+            if not _is_negated_context(haystack, match.start()):
+                matched.append((pattern_str, source_id, reason))
+                break
+    return matched
+
+
 def _has_operator_override(task: dict) -> bool:
     """A non-empty `operator_override:` field counts as override.
 
@@ -308,9 +373,11 @@ def _has_operator_override(task: dict) -> bool:
     etc.). Bare True or empty string does NOT count — operator must
     cite the directive source so it's auditable.
     """
-    val = task.get("operator_override")
-    if isinstance(val, str) and len(val.strip()) >= 10:
-        return True
+    val = _unwrap_principle_value(task.get("operator_override"))
+    if isinstance(val, str):
+        stripped = val.strip()
+        if len(stripped) >= 10 or _has_terminal_success_prefix(stripped):
+            return True
     return False
 
 
@@ -324,13 +391,13 @@ def _extract_requires_ids(task: dict) -> list[int]:
         - exp1756.bitstream
     Returns the list of integer exp_ids referenced.
     """
-    requires = task.get("requires")
+    requires = _unwrap_principle_value(task.get("requires"))
     if not requires:
         return []
     if isinstance(requires, str):
         items = [requires]
     elif isinstance(requires, list):
-        items = [str(x) for x in requires]
+        items = [str(_unwrap_principle_value(x)) for x in requires]
     else:
         return []
 
@@ -389,7 +456,10 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
         ledger = None  # type: ignore[assignment]
         validate_prior_failures = None  # type: ignore[assignment]
 
-    for task in tasks:
+    for task_raw in tasks:
+        if not isinstance(task_raw, dict):
+            continue
+        task = _task_with_unwrapped_fields(task_raw)
         task_id = str(task.get("id", "<no-id>"))
         task_title = str(task.get("title", ""))[:120]
         override = _has_operator_override(task)
@@ -447,15 +517,11 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
         is_scope_audit_task = bool(
             _SCOPE_AUDIT_TASK_RE.search(task_id) or _SCOPE_AUDIT_TASK_RE.search(task_title)
         )
-        haystack = f"{task_title} {task.get('prompt', '')}".lower()
+        haystack = f"{task_title} {task.get('prompt', '')}"
         matched: list[tuple[str, str, str]] = (
             []
             if is_scope_audit_task
-            else [
-                (pattern_str, source_id, reason)
-                for pattern_str, source_id, reason in blocked_patterns
-                if pattern_str.lower() in haystack
-            ]
+            else _blocked_pattern_matches(haystack, blocked_patterns)
         )
         if matched:
             valid_priors = False

@@ -33284,6 +33284,66 @@ changelog, traceability, or research-conductor files.
 |---|---|---|
 | REQ-REPORT-5202 | Planned (`python/carnot/experiment_5202_architecture_md_reconciliation_v476.py`) | Planned (`tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py`) |
 
+### REQ-REPORT-5204: Exclusion-Manifest Lint Handles Retired-Scope Mentions Precisely
+
+The exclusion-manifest linter SHALL classify `retired_extras.blocked_patterns`
+matches with word-boundary-aware matching rather than raw substring checks, so
+retired tokens do not match inside unrelated longer words. It SHALL treat
+negated or prevention-oriented prompt language near a matched blocked pattern as
+compliant mention, not as `BLOCKED_PATTERN_MATCHED`.
+
+The linter SHALL normalize principle-wrapped roadmap task fields written as
+`{principle: ..., value: ...}` before reading `id`, `requires`,
+`operator_override`, `title`, or `prompt`. This normalization SHALL make retired
+experiment-id reuse, retired `requires:` dependencies, operator overrides, and
+blocked-pattern scans behave identically for bare and principle-wrapped fields.
+
+The linter SHALL recognize terminal success verdict prefixes
+`complete:`, `complete_`, `success:`, `success_`, `passed:`, `passed_`,
+`shipped:`, and `shipped_` when evaluating operator override text or
+terminal-status prose relevant to exclusion-manifest classification.
+
+The Exp 5204 workflow SHALL write
+`results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json` with
+the required top-level fields `counterexample_regression_test_fails_before_fix`,
+`counterexample_regression_test_passes_after_fix`, `four_issues_fixed`,
+`shared_unwrap_helper_reused_or_created`,
+`full_adversarial_verify_test_suite_result`, `backfill_dry_run_result`,
+`inference_substrate`, and `honest_verdict`. The artifact SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"` and a terminal
+`honest_verdict` confirming all four documented issues were addressed.
+
+#### SCENARIO-REPORT-5204-NEGATED-BLOCKED-PATTERN: Prevention Mentions Do Not Block
+
+**Given** a roadmap task whose prompt says "Do not reuse the FoVer in-domain
+candidate-selection-pool premise" while the manifest blocks that FoVer premise
+**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
+**Then** it emits no `BLOCKED_PATTERN_MATCHED` risk for that task, while a
+non-negated task that re-proposes the same premise is still hard-blocked.
+
+#### SCENARIO-REPORT-5204-WRAPPED-FIELDS: Principle-Wrapped Fields Are Unwrapped
+
+**Given** roadmap task fields `id`, `requires`, `operator_override`, `title`,
+and `prompt` are written as principle-wrapped `{value, principle}` mappings
+**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
+**Then** retired experiment-id reuse, retired `requires:` references, override
+downgrades, and blocked-pattern matches behave the same as they do for bare
+field values.
+
+#### SCENARIO-REPORT-5204-TERMINAL-PREFIXES: Complete Success Prefixes Count
+
+**Given** a blocked-pattern task carries a principle-wrapped
+`operator_override` beginning with any terminal success prefix family
+**When** `scripts/exclusion_manifest_lint.py` scans the roadmap
+**Then** the override is recognized and the matching risk is downgraded to
+warning instead of being hard-blocked.
+
+## Implementation Status (REQ-REPORT-5204)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5204 | Implemented (`scripts/exclusion_manifest_lint.py`, `results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json`) | Implemented (`tests/python/test_exclusion_manifest_lint.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
