@@ -2085,6 +2085,47 @@ that already explains a scope-match now auto-clears the lint). This fix ensures 
 does happen for some other reason, the stuck work survives long enough to actually get diagnosed
 and fixed, instead of silently vanishing into `.root-scratch-trash/` and getting thrown away.
 
+### CANDIDATE: ARC-AGI-3 multi-level deepening literature 2026-07-03 (outer-loop, "let's add those to our planning to follow up on")
+
+**Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
+`docs/research-notes/arc-multilevel-deepening-literature-2026-07-03.md`. Four candidates for the
+deepening/enumeration wall GAP-4891 diagnosed (a correct goal-detection energy separates win from
+near-win but does NOT help search reach it -- the wall is trajectory enumeration, the same as L1
+first-contact, not goal-detection or value-prediction), ranked by how directly each attacks
+enumeration specifically rather than representation/detection accuracy (already shown insufficient):
+
+1. **CoEx (arXiv:2507.22281)** -- reset-free emulator-state propagation across iterations (search-
+   continuity, not just model-weight carry-forward like exp5176's nulled attempt). First pilot: does
+   resuming the search FRONTIER (not just the world-model) at a level transition reduce actions-to-
+   next-levelup vs cold-restart, on the deepened-but-stuck game set (ar25/bp35/cd82/cn04/dc22/ft09)?
+2. **Self-Evolving World Models (arXiv:2606.30639)** -- prediction-mismatch detection/correction.
+   Cheap pre-check before any pipeline work: re-read exp5176's own artifact to determine if its
+   failure mode was "wrong model, confidently used" (this paper's target) or "correct model, search
+   still can't reach the goal" (GAP-4891's target, which this candidate would NOT address).
+3. **Hierarchical RL with Landmarks (arXiv:2504.04366)** -- already flagged in the 2026-06-11
+   literature survey as promising but NEVER actually tested against the enumeration wall specifically.
+   Structurally different from GAP-4891's tested lever (a scalar energy) -- landmark/subgoal
+   decomposition partitions the search itself, shrinking branching factor a flat best-first search
+   can't escape even with a perfect terminal heuristic. Real gap between flagged-and-tested.
+4. **Graph-Based Exploration (arXiv:2512.24156)** -- already cited in project memory, but the open-
+   source reference implementation (github.com/dolphin-in-a-coma/arc-agi-3-just-explore) has, per
+   available records, never actually been read. First step is a READING task (extract concrete
+   frontier-prioritization/graph-maintenance deltas vs Carnot's own exploration code), not a build.
+
+**Context, not levers (worth remembering, not acting on directly):** "Explore Before You Solve"
+(arXiv:2605.25931) found all 25 public games solvable via non-intelligent strategies -- any future
+"solved X" claim on a public game should be checked against a non-intelligent baseline first.
+"Scaling Flaws of Verifier-Guided Search" (arXiv:2502.00271) finds the OPPOSITE dominant failure mode
+(selection, not generation) in math-reasoning search -- a reminder the dominant failure mode may be
+domain-dependent before assuming any future non-ARC verifier work hits the same generation-wall.
+
+**If a future planner picks this up:** scope the FIRST task to whichever candidate's own "first pilot
+shape" is cheapest (candidate 4's reading task, or candidate 2's re-read gate, both need zero new
+infrastructure) before committing to candidate 1 or 3's actual pilot builds. Public games only, per
+this project's offline-first ARC discipline -- never the live/scored stack. Per CLAUDE.md
+"ARC-AGI-3 Incremental-Progress Scoping," any resulting task must target +1..+n levels on one game,
+never "solve everything."
+
 ### CANDIDATE: PAW-inspired per-episode compilation for ARC action-efficiency 2026-07-03 (outer-loop, literature discussion of arXiv:2607.02512 -- "write that up")
 
 **Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
