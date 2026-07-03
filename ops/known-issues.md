@@ -2129,6 +2129,44 @@ that already explains a scope-match now auto-clears the lint). This fix ensures 
 does happen for some other reason, the stuck work survives long enough to actually get diagnosed
 and fixed, instead of silently vanishing into `.root-scratch-trash/` and getting thrown away.
 
+### PLANNER/RETRO/AUDIT MODEL SWITCH: Claude -> codex/gpt-5.5 2026-07-03 (outer-loop, "switch our planning and adversarial model entirely over to codex")
+
+**Quota-conserve directive.** Claude weekly quota at 31% only ~50 hours into the week.
+Operator: "let's go ahead and switch our planning and adversarial model entirely over to
+codex. we want to make sure we have enough claude code quota headroom for this outer
+loop and any highly focused tasks where we know we benefit the most from the superior
+claude models."
+
+**Changed** (`~/.config/systemd/user/carnot-conductor.service.d/10-gemini-routing.conf`):
+`AGENT_TYPE_PLANNER`/`AGENT_TYPE_RETRO`: `claude` -> `codex`. `AGENT_MODEL_PLANNER`/
+`AGENT_MODEL_RETRO`: `claude-sonnet-5` -> `gpt-5.5`. `AGENT_TYPE_AUDIT`/`AGENT_MODEL_AUDIT`
+(the "adversarial" model — `verifier_authenticity_audit.py` / `pages_adversarial_audit.py`
+/ `qa_layer_authenticity_audit.py` / `arc_self_solve_audit.py` all read these): previously
+UNSET here, relying on `research_conductor.py`'s own `claude`/`claude-opus-4-8` defaults
+(line ~107-108) — now set explicitly to `codex`/`gpt-5.5`. Applied via `systemctl --user
+daemon-reload && systemctl --user restart carnot-conductor.service`; verified via
+`systemctl --user show carnot-conductor.service -p Environment`.
+
+**Retro was not named explicitly** in the operator's directive ("planning and adversarial
+model") but was included in the switch: same per-milestone cadence and quota profile as
+planner, and leaving it on Claude alone would only partially serve the stated
+quota-conservation goal. Flag for correction if retro was meant to stay on Claude.
+
+**Codex-as-planner has real precedent, not a leap into an untested path.** Around
+milestone `.100`, `AGENT_TYPE_PLANNER=codex` was already used successfully (see
+`research_conductor.py`'s `STALL_TIMEOUT` comment) — the known stall-timeout tuning issue
+from that era (180s -> 600s for codex) is already baked into the current code.
+
+**Restart interrupted an in-flight task** (PHASE A1 DiffusionGemma unblock attempt, already
+mid-retry after one earlier timeout) — accepted per the same reasoning as the 2026-07-02
+Opus->Sonnet restart: the conductor's own checkpoint/recovery mechanism (`[conductor]
+Checkpoint: preserve uncommitted work from interrupted run`) handles this gracefully, and
+the request was quota-urgent.
+
+CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect this routing
+(never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
+an explicit operator directive, same standing-default discipline as the experiment default).
+
 ### CANDIDATE: ARC-AGI-3 multi-level deepening literature 2026-07-03 (outer-loop, "let's add those to our planning to follow up on")
 
 **Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
