@@ -242,6 +242,22 @@ ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
 )
 
+# LLM embedding-extraction artifacts: the task loads a real local GGUF model and
+# extracts hidden-state / final-token embedding vectors (llama_cpp.Llama(embedding=True)
+# or equivalent) for a small candidate set, WITHOUT full autoregressive generation. This
+# is real compute -- a genuine model load + real forward passes -- but each forward pass
+# is a single pass with no iterative token-by-token decoding loop, so it is far cheaper
+# than LIVE_LLM_SUBSTRATE's generative-inference floor while still needing meaningfully
+# more than VERIFIER_SCORING_SUBSTRATE's "does not load the LLM at all" floor. Discovered
+# 2026-07-03 (exp5178's hidden-state verifier pilot: gemma-4-26B-A4B GGUF, 48 candidates,
+# 35.28s total -- plausible for model load + 48 single-pass embeddings, implausible under
+# the generic 60s live_llm_inference floor calibrated for full generation). Per CLAUDE.md
+# "Inference-Substrate Declaration Discipline" -- the forward-only 6th legal value.
+LLM_EMBEDDING_EXTRACTION_SUBSTRATE = "live_llm_embedding_extraction"
+LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S = (
+    2.0  # model load + >=1 single-pass embedding, even on the smallest SOTA GGUF
+)
+
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
 # learned-verifier checkpoint. Treat those fields as the methodology descriptor
@@ -1807,6 +1823,16 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE)
 
 
+def _is_llm_embedding_extraction(d: dict[str, Any]) -> bool:
+    """True when the artifact declares live LLM embedding-extraction (no generation).
+
+    Recognition is the canonical `inference_substrate` sentinel only (forward-only, no legacy
+    schema-prefix fallback -- this class was introduced 2026-07-03, so there is no pre-discipline
+    history to backfill). See LLM_EMBEDDING_EXTRACTION_SUBSTRATE for the exemplar incident (exp5178).
+    """
+    return _inference_substrate_matches(d, LLM_EMBEDDING_EXTRACTION_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -1897,6 +1923,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
             "min_duration_s": ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S,
             "reason": "arc_live_agent_no_llm",
+        }
+    if _is_llm_embedding_extraction(d):
+        return {
+            "substrate": LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
+            "min_duration_s": LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
+            "reason": "llm_embedding_extraction",
         }
     if _is_live_llm_inference(d):
         return {

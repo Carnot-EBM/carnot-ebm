@@ -1832,6 +1832,7 @@ though the experiments didn't invoke it.
 | `aggregation_from_upstream_artifacts` | Reads upstream JSON, computes deltas / formats tables / builds manifests. Capstones, archive/activate, paper-table builders. | 0.0001s |
 | `hardware_smoke` | SSH-attached board test, FPGA bring-up, etc. | (per-board, see Pre-Launch Preconditions table) |
 | `offline_arcade_live_agent_runtime_self_discovery_no_llm` | The live ARC agent takes real actions against the offline arcade / a live ARC env WITHOUT invoking an LLM (pure Python env-stepping, world-model/verifier scoring, go-explore archive bookkeeping — no GGUF load, no CUDA). GGUF strings that appear elsewhere in the artifact (e.g. naming the generator that WOULD fire if the LLM tier were used, `invoked: false`) are vestigial, not a live-inference claim; `model_specs`/`target_model` is NOT required for this substrate (there is no model to name), but `random_seed` + `reproducibility_checksum` still are. | 0.01s (10ms) |
+| `live_llm_embedding_extraction` | Loads a real local GGUF model and extracts hidden-state / final-token embedding vectors (`llama_cpp.Llama(embedding=True)` or equivalent) for a candidate set, WITHOUT full autoregressive generation — a single forward pass per candidate, no iterative token-by-token decoding loop. Genuine compute (model load + real forward passes), but far cheaper than full generation and thus needs its own floor rather than the 60s `live_llm_inference` floor or the "does not load the LLM at all" `verifier_ensemble_against_cached_candidates` floor. `model_specs`/`target_model` naming the loaded GGUF, `random_seed`, and `reproducibility_checksum` are all still required. Added 2026-07-03 (exp5178 incident — see below). | 2.0s |
 
 The `adversarial_verify.py` linter recognizes each value and applies
 the matching duration floor. The legacy schema-prefix recognition
@@ -1909,6 +1910,13 @@ require full methodology (`random_seed` or `random_seeds_used`,
   per-seed AUROC, SHA256 state-restoration verified)
 - exp2842 (`results/experiment_2842_capstone_v269.json`) &mdash;
   canonical aggregation exemplar (1.3ms wall-clock, cites exp2837)
+- exp5178 (`results/experiment_5178_hidden_state_verifier_pilot_v474.json`)
+  &mdash; canonical `live_llm_embedding_extraction` exemplar (real
+  `gemma-4-26B-A4B-it` GGUF load, 48 candidates embedded via
+  `llama_cpp.Llama(embedding=True, pooling_type=LAST)`, 35.28s total
+  &mdash; false-flagged DURATION_TOO_SHORT under the 60s
+  `live_llm_inference` floor before this substrate value existed;
+  fixed 2026-07-03, `scripts/adversarial_verify.py:_is_llm_embedding_extraction`)
 - CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
   &mdash; the parent rule this discipline tightens
 - CLAUDE.md "Pre-Launch Preconditions Discipline" &mdash; sibling
