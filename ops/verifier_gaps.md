@@ -2702,3 +2702,13 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - priority: high (now THE binding ceiling on within-game deepening; confirmed 2026-06-28 when the .451 A2
   level-up STALLED on a stalled-game with repro=False/newlvls=0 -- the reliable +1/milestone lane is now
   blocked on exactly this; growing reproducible_total_levels via live self-discovery depends on it)
+
+<!-- experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476:start -->
+### experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476
+- status: open
+- evidence: `results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json`; honest_verdict=complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100; probe_accuracy=0.1; tuned_sc_accuracy=0.075; self_certainty_accuracy=0.075; clue_accuracy=0.1; radial_consensus_score_accuracy=0.1.
+- failure mode: probe_missed_oracle_recoverable_candidates.
+- missing discriminator: candidate-internal correctness signal that separates correct MMLU-Pro traces from dense wrong-answer clusters.
+- candidate design: add a stronger supervised hidden-state probe or transformer-layer sweep once output_hidden_states access is practical.
+- priority: medium; oracle-recoverable probe misses=8 on this eval split.
+<!-- experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476:end -->
