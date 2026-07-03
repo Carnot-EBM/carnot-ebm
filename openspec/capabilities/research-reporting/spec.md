@@ -955,6 +955,75 @@ gates every new level, treats `cn04` as a negative control, and emits a terminal
 artifact with `inference_substrate="offline_arcade_live_agent_runtime_self_discovery_no_llm"`
 and `verifier_is_oracle=false`.
 
+### REQ-REPORT-5176: B1/B2-Gated Deepen Live Level-Up Attempt
+
+The Exp 5176 workflow SHALL produce
+`results/experiment_5176_deepen_live_levelup_attempt_v474.json` by reading the
+actual Exp 5174 GAP-LIVE-INTEGRATION reconciliation artifact and the actual Exp
+5175 GAP-4891 relational-mask-pruner A/B artifact before any level-up attempt.
+It SHALL not infer their outcomes from roadmap intent. Exp 5174 SHALL count as
+validated only when it reports a real fixable live-path wiring gap, and Exp 5175
+SHALL count as validated only when it either banks a reproduce-gated level or
+shows a clear state-expansion branching-factor win. Edge pruning with unchanged
+states expanded SHALL not be promoted into a validated level-up lever.
+
+Before any attempt proceeds, the workflow SHALL registry-precheck the current
+`levels_reproduced` for the already-adaptered `deepened_but_stuck` candidate
+set (`ar25`, `bp35`, `cd82`, `cn04`, `dc22`, `ft09`) from
+`ops/arc_solve_registry.yaml`. It SHALL choose two or three target rows by the
+clearest direct Exp5174/Exp5175 signal available, record each target's
+`level_before` and `level_attempted`, and SHALL not re-attempt a level already
+banked in the registry. If no validated lever is available from B1/B2, it SHALL
+write a terminal blocked artifact and stop without fabricating a level-up
+attempt.
+
+Any non-blocked Exp 5176 attempt SHALL wire the validated mechanism through the
+live `E3AgentPolicy` import closure if it is not already live-reachable, SHALL
+run `scripts/arc_orphan_solver_lint.py` before setting
+`live_path_reachable=true`, and SHALL count a new level only when
+`arc_solver_kit.reproduce()` confirms `offline_reproduced=true` and
+`reproduced_levels>=1`. If zero levels are banked, the artifact SHALL name MAP
+(`arXiv:2605.13037`) or another specific evidenced next direction for `.475`;
+a fourth flat-frontier pruning/ranking variant is not sufficient after a clean
+Exp5175 null.
+
+The artifact SHALL include top-level fields `lever_used`, `target_games`,
+`levels_banked`, `reproducible_levels_delta`, `live_path_reachable`,
+`solve_provenance`, `next_direction_if_null`, `verifier_is_oracle`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `lever_used`: principle "one of exp5174 / exp5175 / both / none_available, determined from actual upstream artifacts."
+- `target_games`: principle "list of {game, level_before, level_attempted} from an immediate registry precheck."
+- `levels_banked`: principle "Only reproduce()-confirmed levels count."
+- `reproducible_levels_delta`: principle "the load-bearing ARC metric; zero must be reported plainly."
+- `live_path_reachable`: principle "true only after the live import closure/orphan lint is clean."
+- `solve_provenance`: principle "live_agent_self_discovery only if the live E3AgentPolicy path itself made the discovery at runtime."
+- `next_direction_if_null`: principle "zero-bank artifacts must explicitly name MAP (arXiv:2605.13037) or another evidenced .475 direction."
+- `verifier_is_oracle`: principle "false for this attempt; reproduction is the executable gate, not a claimed verifier win."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_self_discovery_no_llm unless a live LLM is actually invoked."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state plainly how many levels were banked."
+
+#### SCENARIO-REPORT-5176-BLOCKED-NO-VALIDATED-LEVER: Upstream Nulls Stop The Attempt
+
+**Given** Exp 5174 is re-scoped rather than a fixable live wiring gap and Exp
+5175 banks no level and has no state-expansion reduction
+**When** Exp 5176 builds its artifact
+**Then** it sets `lever_used="none_available"`, records registry-prechecked
+target depths, sets `reproducible_levels_delta=0`, emits an `honest_verdict`
+that starts with `complete_` and says zero levels were banked, and names MAP
+(`arXiv:2605.13037`) as the next direction.
+
+#### SCENARIO-REPORT-5176-VALIDATED-LEVER-SELECTION: Direct Banks Or State Wins Unlock Attempts
+
+**Given** Exp 5175 reports a reproduce-gated bank or a clear state-expansion
+reduction, or Exp 5174 reports a real fixable wiring gap
+**When** Exp 5176 evaluates available levers
+**Then** it selects `exp5175`, `exp5174`, or `both` accordingly and never marks
+`live_agent_self_discovery` unless the live path actually discovered the level
+at runtime.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
@@ -990,6 +1059,12 @@ and `verifier_is_oracle=false`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5175 | Implemented (`python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`, `results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json`) | Implemented (`tests/python/test_experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`) |
+
+## Implementation Status (REQ-REPORT-5176)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5176 | Implemented (`python/carnot/experiment_5176_deepen_live_levelup_attempt_v474.py`, `results/experiment_5176_deepen_live_levelup_attempt_v474.json`) | Implemented (`tests/python/test_experiment_5176_deepen_live_levelup_attempt_v474.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
