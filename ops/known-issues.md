@@ -2045,6 +2045,46 @@ The high-precision `--backfill --high-precision-only` dry-run remains at 5 quali
 critical artifacts (same class as the 2026-07-02 dry-run above), so this QD citation-scope fix did not
 hide a critical backfill class.
 
+### ROOT CAUSE FOUND + FIXED: root_clutter_sweep.py was silently discarding stuck roadmap drafts 2026-07-03 (outer-loop, "dig into that self healing")
+
+**There was no self-healing mechanism.** Investigated why milestones `.475` and `.476`'s
+stuck `research-roadmap-next.yaml` (repeatedly REFUSED by `scripts/exclusion_manifest_lint.py`)
+each eventually disappeared and the conductor fell back to "no research-roadmap-next.yaml --
+launching planning agent." An Explore agent first ruled out any purpose-built stuck-roadmap
+detector in `research_conductor.py`/`exclusion_manifest_lint.py` (live-verified: zero subprocess
+activity in the exact 2-minute sleep window the file vanished during) and found the file's removal
+was laundered into an anonymous `[conductor] Checkpoint: preserve uncommitted work` commit --
+correctly identifying the cause as external to the conductor process, but not yet identifying WHAT.
+
+Follow-up found it directly: `scripts/root_clutter_sweep.py`, invoked every 30 minutes by
+`~/.carnot/orphan-cleanup.sh` (itself run by `carnot-orphan-cleanup.timer`), is a generic janitor
+that relocates any UNTRACKED root file older than 120 minutes to `.root-scratch-trash/`.
+`research-roadmap-next.yaml` is untracked by nature exactly while stuck (it only becomes tracked
+once activation succeeds and it's copied to `research-roadmap.yaml`) -- precisely the state a stall
+produces. `/tmp/root-clutter-sweep.log` shows the smoking gun directly: `mv
+research-roadmap-next.yaml`, at least twice. Confirmed physically: `.root-scratch-trash/2026-07-02/
+research-roadmap-next.yaml` and `.root-scratch-trash/2026-07-03/research-roadmap-next.yaml` both
+exist on disk. Every stall so far was silently discarding up to 2 hours of real planner compute
+(the sweeper's age guard) rather than letting the underlying HARD violation get diagnosed and fixed
+-- the conductor's own "fallback" was actually a side effect of an unrelated janitor.
+
+**Fix:** added `research-roadmap-next.yaml` to `root_clutter_sweep.py`'s `ALLOWLIST`, alongside its
+already-protected siblings `research-roadmap.yaml` / `research-complete.yaml` (it was simply missed
+when the allowlist was built, likely because it's transiently untracked by design unlike its
+always-tracked siblings -- "transiently untracked" isn't "safe to delete"). 4 new tests
+(`tests/python/test_root_clutter_sweep_roadmap_protection.py`) exercise the real `sweep()` function
+end-to-end (not just an `ALLOWLIST` membership check, so a future refactor of the matching logic
+can't silently re-break protection while membership still trivially passes): a stuck, old, untracked
+draft survives a real `--apply` sweep; an unrelated old untracked scratch `.py` file is still swept
+(regression guard the fix doesn't over-protect); a fresh young draft is left alone regardless
+(confirms the age guard's own in-flight protection is unaffected).
+
+**Complementary, not redundant, with the earlier `_prose_addresses_prior` auto-downgrade fix
+(same day, same investigation thread).** That fix reduces how OFTEN a stall happens (planner prose
+that already explains a scope-match now auto-clears the lint). This fix ensures that WHEN a stall
+does happen for some other reason, the stuck work survives long enough to actually get diagnosed
+and fixed, instead of silently vanishing into `.root-scratch-trash/` and getting thrown away.
+
 ### CANDIDATE: PAW-inspired per-episode compilation for ARC action-efficiency 2026-07-03 (outer-loop, literature discussion of arXiv:2607.02512 -- "write that up")
 
 **Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
