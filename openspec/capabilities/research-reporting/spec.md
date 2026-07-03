@@ -908,6 +908,53 @@ records verified incremental and outcome-conditioned findings, appends one
 `/deep-research` use, records that `scripts/research_conductor.py` was not
 modified, and preserves idempotence when re-run.
 
+### REQ-REPORT-5175: GAP-4891 Relational-Mask Pruner A/B
+
+The Exp 5175 workflow SHALL produce
+`results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json` by
+running the GAP-4891 Stage-2 energy-guided `graph_explore_solve_v2` search on
+`cd82`, `sk48`, and `sp80`, plus `cn04` as the negative control. The control
+arm SHALL be the same relational goal-energy search without a move pruner; the
+treatment arm SHALL add `RelationalMaskMovePruner` seeded by the relational
+target region induced from the same replayed prefix evidence. Both arms SHALL
+use a 4000-expansion budget, and any claimed new level SHALL pass
+`arc_solver_kit.reproduce()`.
+
+Before the run, the workflow SHALL confirm the existing
+`RelationalMaskMovePruner` unit tests still pass. It SHALL keep
+`verifier_is_oracle=false`, SHALL use the offline ARC live-agent runtime with no
+LLM inference, SHALL run `scripts/arc_orphan_solver_lint.py` before setting
+`live_path_reachable=true`, and SHALL NOT modify `scripts/research_conductor.py`.
+If no separating game banks a reproduction-gated level through the pruner, the
+artifact SHALL name MAP-style map-then-act/hierarchical pre-search as the next
+specific GAP-4891 lever rather than leaving the status vague.
+
+The artifact SHALL include top-level fields
+`unit_tests_still_passing`, `games_tested`, `states_expanded_pruned`,
+`states_expanded_unpruned`, `states_expanded_reduction_pct`,
+`new_level_reached_pruned`, `new_level_reached_unpruned`, `levels_banked`,
+`cn04_negative_control_clean`, `gap4891_status_recommendation`,
+`solve_provenance`, `verifier_is_oracle`, `live_path_reachable`,
+`random_seed`, `inference_substrate`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `levels_banked`: principle "Only reproduce()-confirmed levels count."
+- `cn04_negative_control_clean`: principle "The pruner must not spuriously fix a game whose relational goal-energy is known broken."
+- `gap4891_status_recommendation`: principle "filled only when the pruner banks a reproduced level; otherwise name the next concrete lever."
+- `honest_verdict`: principle "Must start with complete_/success_ and state whether pruning alone closes the enumeration wall."
+
+#### SCENARIO-REPORT-5175-PRUNER-AB: Stage-2 Energy Search Gains A Pruner Arm
+
+**Given** the GAP-4891 Stage-2 prefix replay, relational goal-energy, and
+`RelationalMaskMovePruner` are importable
+**When** Exp 5175 runs on `cd82`, `sk48`, `sp80`, and `cn04`
+**Then** it records pruned and unpruned states-expanded counts, reproduction
+gates every new level, treats `cn04` as a negative control, and emits a terminal
+artifact with `inference_substrate="offline_arcade_live_agent_runtime_self_discovery_no_llm"`
+and `verifier_is_oracle=false`.
+
 ## Implementation Status (REQ-REPORT-5156)
 
 | Requirement | Implementation | Tests |
@@ -937,6 +984,12 @@ modified, and preserves idempotence when re-run.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5172 | Implemented (`python/carnot/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py`, `results/experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.json`, `research-references.md`) | Implemented (`tests/python/test_experiment_5172_sota_ingestion_diffusion_hierarchical_search_v474.py`) |
+
+## Implementation Status (REQ-REPORT-5175)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5175 | Implemented (`python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`, `results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json`) | Implemented (`tests/python/test_experiment_5175_gap4891_relational_mask_pruner_ab_v474.py`) |
 
 ### REQ-REPORT-5135: V471 Source/Scope Audit Before Implementation-Heavy Tasks
 
