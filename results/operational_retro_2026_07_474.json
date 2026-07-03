@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.474",
+  "generated_at": "2026-07-03T02:11:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.07.474 has zero recorded experiment commits since activation per the supplied TIMING DATA: 0 experiments completed, 0 minutes of wall-clock time, no compute-bound tasks to evaluate. Both GPUs are idle at 0% utilization, but with no compute-bound tasks in scope this milestone, that idle state cannot be attributed to a scheduling or dispatch inefficiency. This is the third consecutive milestone (after .469 and .473) whose retro received a zero-commit TIMING DATA block despite the milestone otherwise completing normally in ops/changelog.md.",
+  "bottlenecks_identified": [
+    "No experiment commits are visible in the TIMING DATA block for this milestone, so no compute-bound duration or GPU-utilization analysis can be performed from authoritative data.",
+    "This is a recurring pattern, not an isolated one: milestones .469 and .473 both hit the identical zero-commit TIMING DATA condition in their retros, and exp5164 (v473) was built specifically to diagnose and reconstruct this false-zero gap from disk mtimes. Its own artifact confirms non-zero reconstructed timing for .467/.470/.472 (154.7, 203.8, and 83.3 wall minutes respectively) that the live retro pipeline had reported as zero.",
+    "The bottleneck is therefore most plausibly in the retro-generation tooling itself, not in milestone .474's actual execution: scripts/retro_timing_fallback.py exists on disk (built 2026-07-02, per exp5164) but a repo grep finds zero references to it in scripts/research_conductor.py — the fallback module was never wired into the path that produces the TIMING DATA block this retro consumes."
+  ],
+  "improvements_suggested": [
+    "Wire scripts/retro_timing_fallback.py into whichever research_conductor.py function assembles the TIMING DATA block for operational-retro tasks, per the 'wiring_instructions_present: true' field exp5164 already recorded — this task is explicitly barred from editing research_conductor.py itself, so this is a queued follow-up, not something resolved here.",
+    "Until wired in, have the retro-generation step call the fallback reconstruction directly (or have the operational-retro task prompt include its reconstructed numbers as a supplementary, clearly-labeled block) so retros stop reporting false zeros for milestones that actually ran a full task chain.",
+    "Add a regression check that fails loudly when a milestone's retro reports experiments_completed=0 while ops/changelog.md shows committed experiment entries for that same milestone prefix — this exact mismatch has now recurred 3 times (.469, .473, .474) undetected.",
+    "Re-run this operational retrospective's timing analysis once the fallback module is wired in so future milestones get real duration/GPU-efficiency data instead of an empty set."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the already-built scripts/retro_timing_fallback.py into research_conductor.py's retro TIMING DATA assembly step — this is a known fix sitting unintegrated since .473 (exp5164), and is the direct root cause of this milestone's (and the prior two milestones') empty retro data.",
+    "Add an automated cross-check between a milestone's retro artifact and ops/changelog.md commit count for that milestone prefix, so a false-zero retro is flagged at generation time instead of silently recurring.",
+    "Once real timing data flows through, resume normal compute-bound duration and GPU-utilization analysis — there is nothing further to diagnose about .474's actual execution efficiency from an empty TIMING DATA block."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With zero experiments visible in the authoritative TIMING DATA, this retrospective cannot diagnose .474's real execution efficiency — but it CAN diagnose the retro process's own efficiency, and the finding there is concrete: a disk-mtime timing-reconstruction fix (exp5164) was built specifically for this false-zero gap in .473 and never got wired into research_conductor.py, so the same blind spot has now silently recurred for a third milestone in a row."
+}
