@@ -32937,6 +32937,87 @@ or zero with an explicit blocker note, and includes
 |---|---|---|
 | REQ-REPORT-5178 | Planned (`python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py`) | Planned (`tests/python/test_experiment_5178_hidden_state_verifier_pilot_v474.py`) |
 
+### REQ-REPORT-5200: Hidden-State Verifier V2 MMLU-Pro
+
+The Exp 5200 workflow SHALL write
+`results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json` for the
+zero-shot MMLU-Pro hidden-state verifier retry. The workflow SHALL use
+`results/experiment_mmlu_pro_verifier_candidate_pool.jsonl` as the candidate
+pool and SHALL treat `results/experiment_mmlu_pro_fresh_headroom_check.json`
+as the headroom precondition source. It SHALL NOT substitute the five-shot
+rescaled Exp 5163 numbers for this zero-shot corpus, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="live_llm_embedding_extraction"`.
+
+Before scoring, the workflow SHALL verify that the candidate pool exists with
+240 rows and that `unsloth/gemma-4-26B-A4B-it-GGUF` resolves to a real cached
+GGUF usable by the validated llama.cpp embedding path. If either precondition
+is missing, it SHALL write a terminal blocked artifact whose honest verdict
+starts with `blocked_candidate_pool` or `blocked_hidden_state_access_infeasible`
+and SHALL NOT fabricate selector accuracies.
+
+When preconditions pass, the workflow SHALL extract final-token/final-layer
+embedding vectors for every candidate through
+`llama_cpp.Llama(embedding=True, pooling_type=LAST).embed`. The workflow SHALL
+split train/eval by `question_id` with no leakage across candidates from the
+same question. It SHALL train a small two-layer MLP probe on training
+candidate-boundary vectors and evaluate candidate selection accuracy on held
+out questions. It SHALL also score the same held-out questions with four
+control arms: self-certainty when generator token distributions are available
+or an explicitly disclosed unavailable proxy otherwise, CLUE-style
+training-free hidden-vector clustering, Radial Consensus Score over the same
+embedding geometry, and tuned self-consistency.
+
+The workflow SHALL compute paired bootstrap CI95 and exact McNemar p-values for
+the trained probe against tuned self-consistency and against each zero-training
+control arm. It SHALL record whether a FEPoID-style layer sweep was attempted;
+because the validated llama.cpp path exposes only final-token/final-layer
+vectors, the artifact SHALL explicitly mark final-layer-only runs and state the
+limitation. It SHALL set `verifier_is_oracle=false`, because gold labels are
+used only for train/eval splits, and SHALL log residual present-but-unselectable
+failure modes to `ops/verifier_gaps.md`.
+
+The terminal artifact SHALL include principle-wrapped fields
+`probe_accuracy`, `self_certainty_accuracy`, `clue_accuracy`,
+`radial_consensus_score_accuracy`, `tuned_sc_accuracy`,
+`probe_vs_sc_delta_ci95`, `probe_vs_sc_mcnemar_p`,
+`probe_vs_rcs_delta_ci95`, `n_questions`, `layer_sweep_attempted`,
+`headroom_present`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`random_seed`, `reproducibility_checksum`, `inference_substrate`, and
+`honest_verdict`. The honest verdict SHALL state plainly whether the trained
+probe beats tuned self-consistency and all three zero-training control arms;
+beating self-consistency alone is insufficient.
+
+#### SCENARIO-REPORT-5200: MMLU-Pro Hidden-State Probe Compared To Four Controls
+
+**Given** the zero-shot MMLU-Pro candidate pool has 240 rows, the fresh
+headroom check reports positive headroom, and the Gemma GGUF embedding path is
+available
+**When** the Exp 5200 workflow runs
+**Then** it writes the terminal artifact, evaluates by question-grouped
+train/eval split, reports trained-probe, self-certainty, CLUE, Radial Consensus
+Score, and tuned-SC accuracies on the same held-out questions, computes paired
+bootstrap CI95 and McNemar tests for the required comparisons, sets
+`n_questions` materially above the Exp 5178 pilot's n=6, keeps
+`verifier_is_oracle=false`, marks the final-layer-only limitation unless a
+transformers layer sweep actually runs, and logs residual verifier gaps.
+
+#### SCENARIO-REPORT-5200-BLOCKED-PRECONDITION: Missing Pool Or GGUF Blocks Honestly
+
+**Given** the candidate pool is missing, has the wrong row count, or the Gemma
+GGUF cannot be resolved for llama.cpp embedding extraction
+**When** the Exp 5200 workflow runs
+**Then** it writes a terminal blocked artifact with all required schema fields,
+keeps `verifier_is_oracle=false`, preserves the zero-shot corpus identity,
+sets `headroom_present` from the available headroom artifact when possible, and
+does not report fabricated selector wins.
+
+## Implementation Status (REQ-REPORT-5200)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5200 | Planned (`python/carnot/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`) | Planned (`tests/python/test_experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`) |
+
 ### REQ-REPORT-5181: Archive .474, Activate .475, And Preserve The Precise Handoff Truth
 
 The Exp 5181 workflow SHALL read every `.474` result artifact from
