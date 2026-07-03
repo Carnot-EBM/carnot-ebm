@@ -955,6 +955,67 @@ gates every new level, treats `cn04` as a negative control, and emits a terminal
 artifact with `inference_substrate="offline_arcade_live_agent_runtime_self_discovery_no_llm"`
 and `verifier_is_oracle=false`.
 
+### REQ-REPORT-5198: GAP-4891 MAP Landmark Prestage Prototype
+
+The Exp 5198 workflow SHALL produce
+`results/experiment_5198_map_landmark_prestage_prototype_v476.json` by testing
+the MAP-style map-then-act lever named by Exp 5172 and Exp 5175. For each of
+`cd82`, `sk48`, and `sp80`, plus `cn04` as the negative control, it SHALL build
+a task-specific cognitive map before solver search using a bounded 500-1000
+step novelty exploration budget from the same post-prefix offline arcade state.
+The map SHALL record reachable regions, per-action-class effect deltas,
+relational landmarks, and replayable affordance/landmark trajectories. It SHALL
+then run three comparable 4000-expansion arms: `pruner_only` using the unchanged
+Exp 5175 `RelationalMaskMovePruner` protocol, `map_only` using MAP frontier
+seeding without the pruner, and `map_plus_pruner` using the same MAP frontier
+seeding plus the unchanged pruner.
+
+The MAP frontier seeding SHALL wire into `graph_explore_solve_v2` as replayable
+candidate trajectories proposed ahead of flat primitive expansion. A candidate
+new level SHALL count only if `arc_solver_kit.reproduce()` confirms it. The
+workflow SHALL run `scripts/arc_orphan_solver_lint.py` before declaring the MAP
+prototype reachable or deliberately development-proxy scoped, SHALL keep
+`solve_provenance="development_proxy"`, and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact SHALL include top-level fields `lever_validated`,
+`per_arm_results`, `cn04_negative_control_stayed_clean`, `solve_provenance`,
+`orphan_lint_result`, `reproduction_gate_results`, `random_seed`,
+`reproducibility_checksum`, `inference_substrate`, and `honest_verdict`. The
+`lever_validated` field SHALL be a bare top-level boolean and SHALL be true only
+when `map_only` or `map_plus_pruner` banks a reproduction-gated level on
+`cd82`, `sk48`, or `sp80` that `pruner_only` did not bank under the same
+4000-expansion budget.
+
+Required field principles:
+
+- `lever_validated`: principle "MECHANICAL CONSTRAINT: must be a BARE top-level boolean; true only if map-only or map-plus-pruner banked a reproduction-gated level pruner-only, under the identical budget, did not."
+- `per_arm_results`: principle "{game: {arm: {states_expanded, levels_banked, map_overhead_steps}}}"
+- `cn04_negative_control_stayed_clean`: principle "The MAP prestage must not spuriously solve the cn04 negative control whose relational goal-energy is known not to separate."
+- `solve_provenance`: principle "development_proxy -- offline dev-twin prototyping via arc_loop_solve/GameAdapter, not the scored live agent."
+- `orphan_lint_result`: principle "pass/fail plus scripts/arc_orphan_solver_lint.py output."
+- `reproduction_gate_results`: principle "Per banked level, record arc_solver_kit.reproduce() output."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether MAP validated a lever the pruner did not or the enumeration wall persists."
+
+#### SCENARIO-REPORT-5198-MAP-PRESTAGE: MAP Seeds The Graph Frontier
+
+**Given** a bounded novelty-built cognitive map with relational landmarks and
+seed trajectories
+**When** `graph_explore_solve_v2` runs with that map as a frontier seed bank
+**Then** it proposes the map trajectories before flat primitive expansion,
+records map seed diagnostics in the stats, and still counts a new level only
+after the reproduction gate.
+
+#### SCENARIO-REPORT-5198-THREE-ARM-GATE: MAP Is Promoted Only By A New Reproduced Bank
+
+**Given** the pruner-only baseline, map-only arm, and map-plus-pruner arm all
+use the same 4000-expansion budget on `cd82`, `sk48`, `sp80`, and `cn04`
+**When** Exp 5198 builds its artifact
+**Then** `lever_validated` is a bare boolean that is true only for a
+reproduction-gated MAP bank absent from pruner-only, `cn04` remains clean, and
+the verdict reports either a MAP validation or an honest persistent enumeration
+wall.
+
 ### REQ-REPORT-5176: B1/B2-Gated Deepen Live Level-Up Attempt
 
 The Exp 5176 workflow SHALL produce

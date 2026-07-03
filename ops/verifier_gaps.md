@@ -2600,12 +2600,31 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 ### GAP-4891: goal-induction REPRESENTATION beyond object/colour COUNTS (spatial/value/order goals)
 - status: building (GOAL-DETECTION gap CLOSED for cd82/sk48/sp80 via RELATIONAL target-match; but STAGE-2
   shows it does NOT unlock deepening, and Stage-3 relational-mask pruning still does NOT bank a level or
-  reduce applied states_expanded under the same 4000-expansion budget. Binding wall remains trajectory
-  ENUMERATION/generation, not goal-detection. NEXT specific lever: MAP-style map-then-act / hierarchical
-  pre-search that generates candidate subgoal trajectories before flat frontier enumeration. Ladder:
+  reduce applied states_expanded under the same 4000-expansion budget. Stage-4 MAP-style landmark
+  prestage also seeds the frontier but banks zero levels. Binding wall remains trajectory
+  ENUMERATION/generation, not goal-detection. NEXT specific lever must move beyond this bounded
+  MAP-landmark prestage because it did not alter the banked-level outcome. Ladder:
   counts[GAP-4890]=fail -> richer-scalar=fail -> RELATIONAL target-match=SEPARATES 3/4 -> stage-2
-  guidance=NEITHER arm banks L3 -> stage-3 mask-pruner prunes edges but still NEITHER arm banks L3. See
-  UPDATE-4 then UPDATE-3 [decisive negative] then UPDATE-2.)
+  guidance=NEITHER arm banks L3 -> stage-3 mask-pruner prunes edges but still NEITHER arm banks L3 ->
+  stage-4 MAP landmark prestage seeds frontier but still zero banks. See UPDATE-5 then UPDATE-4 then
+  UPDATE-3 [decisive negative] then UPDATE-2.)
+- UPDATE-5 2026-07-03 (STAGE-4 decisive: bounded MAP-style landmark prestage does NOT close the
+  enumeration wall): built python/carnot/agentic/arc_map_landmark_prestage.py, added the
+  `frontier_seed_bank` hook to graph_explore_solve_v2, and wrote
+  python/carnot/experiment_5198_map_landmark_prestage_prototype_v476.py plus
+  results/experiment_5198_map_landmark_prestage_prototype_v476.json. Protocol: pruner-only uses the
+  exact Exp5175 pruned baseline; map-only and map-plus-pruner build a 750-step state-novelty cognitive
+  map from the post-prefix offline state, record reachable regions/action-effect deltas/relational
+  landmarks, seed replayable landmark trajectories into graph_explore_solve_v2, and run the same
+  4000-expansion reproduction-gated search. RESULT: lever_validated=false; levels_banked=[]; cd82,
+  sk48, sp80, and cn04 all ended at L1 with states_expanded=4000 for pruner_only, map_only, and
+  map_plus_pruner. Map overhead was 750 exploration steps per MAP arm (wall-clock roughly cd82 2.4-2.6s,
+  sk48 7.5-8.6s, sp80 7.3s, cn04 4.9-5.4s). The MAP seed hook fired (frontier seed injected once per
+  MAP arm) and map-plus-pruner still exercised the relational mask (cd82 358 prunes, sk48 22808, sp80 0,
+  cn04 360), but zero reproduction-gated levels were banked. cn04 negative control stayed clean and
+  arc_orphan_solver_lint passed. DECISIVE READ: this bounded MAP-landmark prestage does not enumerate the
+  missing winning trajectory either; GAP-4891 remains a trajectory-enumeration/generation wall under this
+  lever too.
 - UPDATE-4 2026-07-02 (STAGE-3 decisive: relational-mask move-pruner is exercised but does NOT close the
   enumeration wall): built python/carnot/experiment_5175_gap4891_relational_mask_pruner_ab_v474.py and
   wired graph_explore_solve_v2 to accept a live-path move_pruner with the same should_prune/observe
