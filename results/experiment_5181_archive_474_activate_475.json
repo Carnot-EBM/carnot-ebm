@@ -730,5 +730,23 @@
       "path": "results/experiment_5180_capstone_v474.json",
       "task_id": "exp5180-capstone-v474"
     }
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.4946055188775063 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    },
+    {
+      "kind": "value-routing-cost-control-omitted",
+      "severity": "warn",
+      "detail": "value-routing-cost-control-omitted: value-routing live claim omits per_node_feature_cost_ms, sim_timed_out. Report finite per_node_feature_cost_ms and sim_timed_out=false before attributing live lift to value routing."
+    }
   ]
 }
