@@ -1310,11 +1310,22 @@ operator directive + a fresh smoke verification.
 `agent_type: codex` and `model: gpt-5.5`**. Do NOT emit `agent_type: gemini`.
 The narrow exceptions are unchanged in structure from the prior defaults:
 
-1. **Planner / retro / adversarial audits** — stay on Claude (Sonnet 5 as of
-   2026-07-02, `claude-sonnet-5`; was Claude Opus 4.8 2026-05-30 through
-   2026-07-02) via `AGENT_TYPE_PLANNER` / `AGENT_TYPE_RETRO` env + explicit
-   `--model claude` audit invocations (operator directives 2026-05-30,
-   2026-06-08, 2026-07-02).
+1. **Planner / retro / adversarial audits** — codex/gpt-5.5 as of 2026-07-03
+   (quota-conserve: Claude weekly quota at 31% only ~50h into the week;
+   operator directive "switch our planning and adversarial model entirely
+   over to codex... make sure we have enough claude code quota headroom for
+   this outer loop and any highly focused tasks where we know we benefit the
+   most from the superior claude models"). Was Claude (Sonnet 5,
+   `claude-sonnet-5`, 2026-07-02 through 2026-07-03; Opus 4.8 2026-05-30
+   through 2026-07-02) via `AGENT_TYPE_PLANNER` / `AGENT_TYPE_RETRO` /
+   `AGENT_TYPE_AUDIT` env (`~/.config/systemd/user/carnot-conductor.service.d/
+   10-gemini-routing.conf`). Codex-as-planner has real precedent (~milestone
+   `.100`; see `research_conductor.py`'s `STALL_TIMEOUT` comment) and the
+   known stall-timeout tuning from that era (600s) is already in the current
+   code. Re-enabling Claude for this tier requires an explicit operator
+   directive, per the same standing-default discipline as the codex
+   experiment default above — this is not an emergency fallback expected to
+   auto-revert when quota resets.
 2. **Cross-file refactors with deep tool choreography** — `agent_type: claude`
    ONLY with the operator-only `requires_claude_verified: true` flag (the
    planner-emitted `requires_claude` is an ABUSED signal since `.322-`.325 and
