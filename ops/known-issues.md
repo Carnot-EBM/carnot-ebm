@@ -2045,6 +2045,35 @@ The high-precision `--backfill --high-precision-only` dry-run remains at 5 quali
 critical artifacts (same class as the 2026-07-02 dry-run above), so this QD citation-scope fix did not
 hide a critical backfill class.
 
+### CANDIDATE: PAW-inspired per-episode compilation for ARC action-efficiency 2026-07-03 (outer-loop, literature discussion of arXiv:2607.02512 -- "write that up")
+
+**Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
+`docs/research-notes/paw-episode-compilation-arc-efficiency-2026-07-03.md`. One-line version: PAW
+(arXiv:2607.02512) compiles a fuzzy-function spec once (expensive model) into a small artifact a tiny
+frozen interpreter runs cheaply forever after -- a 0.6B interpreter beats direct Qwen3-32B prompting
+at 1/50th the memory. The connection worth testing: after the live ARC agent has spent some actions
+inducing a hidden game's dynamics (its own runtime observations only, no source-reading), could a
+per-game "compile" step let the *rest* of that episode's action-selection run cheaper than
+re-invoking the full 9B generator every step -- a real RHAE efficiency-axis lever, not a candidate-
+generation fix (that axis is separately retired, see `generation_axis_exploration_signal_retired_
+exp5154_v473` in `ops/exclusion_manifest.yaml` -- this does NOT re-open it).
+
+**The gate before any infrastructure investment (per the note's own falsifiable-first-pilot
+design):** a PURE ANALYSIS task, zero new infra, zero model calls beyond a generic small-LoRA timing
+benchmark -- (1) measure remaining-action-count distribution after a plausible "induction is roughly
+done" checkpoint across already-logged public-game episodes, (2) benchmark realistic LoRA-compile
+wall-clock on the target hardware, (3) compute whether ANY plausible compile-cost/savings ratio pays
+off given those two numbers. If the gate fails, the proposal is falsified cheaply and should NOT
+proceed to building a PyTorch/HF-transformers LoRA-training path (a real infra gap -- the current
+scored generator runs inference-only via llama.cpp against a GGUF checkpoint). If the gate passes,
+next step is a small public-games-only pilot, never the live/scored stack, before any further
+consideration.
+
+**If a future planner picks this up:** scope the FIRST task to exactly the gate above (pure analysis),
+not the full pipeline. `inference_substrate: aggregation_from_upstream_artifacts` for the log-analysis
+half; a genuine `live_llm_embedding_extraction`-or-similar declaration for the timing-benchmark half
+if it invokes a real model load. `solve_provenance` doesn't apply (no solve claim at this stage).
+
 ### ENERGY-BASED ARC RESEARCH LINEUP 2026-07-02 (outer-loop, "we want to continue down this energy based models path for ARC-AGI-3, and tackle the multi-level capable live agent" -- "pre-stage the roadmap for all 5")
 
 **Reverses the `.471`-era PHASE-D-majority allocation back toward ARC.** `reproducible_total_levels`
