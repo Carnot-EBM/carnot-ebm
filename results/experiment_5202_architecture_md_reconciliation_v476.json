@@ -1,0 +1,187 @@
+{
+  "arc_registry_summary": {
+    "deepest_reproduced_games": [
+      {
+        "game": "tn36",
+        "levels_reproduced": 7
+      },
+      {
+        "game": "tr87",
+        "levels_reproduced": 6
+      },
+      {
+        "game": "lp85",
+        "levels_reproduced": 5
+      },
+      {
+        "game": "sc25",
+        "levels_reproduced": 5
+      },
+      {
+        "game": "tu93",
+        "levels_reproduced": 5
+      }
+    ],
+    "general_gotchas_count": 29,
+    "reproducible_total_games": 24,
+    "reproducible_total_levels": 69,
+    "scored_leaderboard_baseline": 0.08,
+    "scored_live_path_recorded": true
+  },
+  "architecture_checks": {
+    "last_reconciled": "20260703",
+    "legacy_headings_present": [
+      "## Overview",
+      "## System Architecture",
+      "## Key Design Decisions",
+      "### DD-01: Cargo Workspace",
+      "### DD-02: Trait-Based Core",
+      "### DD-03: JAX for Python",
+      "### DD-04: PyO3 Bindings",
+      "### DD-05: Tier Separation",
+      "### DD-06: Autoresearch Two-Phase Loop",
+      "## Technology Stack",
+      "## Data Flow",
+      "## Cross-Cutting Concerns",
+      "## thrml Integration",
+      "## Verification Pipeline Tiers",
+      "## KAN Fast-Path Tier \u2014 KAEMEnergy (Exp 447)",
+      "## Asymptotic Hardware Mandate (Phase 2 \u2192 Phase 3)",
+      "### The stochastic bottleneck",
+      "### Implications",
+      "### Hardware path",
+      "### Sampler-Optimization Decision Record",
+      "### Active hardware tracks (Exp 1460)",
+      "### Deferred hardware tracks (Exp 1460)",
+      "### Mitigations against $\\tau_{\\text{int}}$ blowup",
+      "### Decentralisation-respecting consequence",
+      "## Phase-3 \u2192 Phase-7 Defence-Layer Stack",
+      "### Stack overview",
+      "### Key closed-form theorems (canonical)",
+      "### Hardware portability theorem",
+      "### Operational implications",
+      "### Cross-refs"
+    ],
+    "missing_legacy_headings": [],
+    "missing_new_sections": [],
+    "new_sections_present": [
+      "ARC-AGI-3 Harness Architecture",
+      "PHASE D Lifecycle And Retirement",
+      "Hidden-State Verifier Research Frontier",
+      "2026-07-03 Hardware Continuity Update"
+    ],
+    "required_topic_markers_missing": []
+  },
+  "duration_s": 0.0,
+  "experiment": "experiment_5202_architecture_md_reconciliation_v476",
+  "experiment_id": "exp5202-architecture-md-reconciliation-v476",
+  "failed_preconditions": [],
+  "field_principles": {
+    "honest_verdict": "Must start with complete:/complete_/success:/success_.",
+    "inference_substrate": "This reconciliation aggregates upstream docs/source artifacts only; no live model or board inference is performed.",
+    "last_reconciled_date_updated": "Bare bool: true only when `_bmad/architecture.md` carries `Last Reconciled: 20260703`.",
+    "sections_added": "List of new architecture sections added by this reconciliation; the list proves the requested topics landed rather than being implied.",
+    "sections_preserved_verbatim": "Count of pre-existing architecture section headings still present verbatim after the additive edit; protects against silent deletion.",
+    "traceability_md_updated": "Bare bool: false for this task because the conductor-owned reconciliation step updates traceability immediately after Exp 5202 exits."
+  },
+  "hardware_summary": {
+    "artifact_present": true,
+    "boards_reachable_count": 2,
+    "gatemate_diagnostic_narrowed_to": "jtag_protocol_level",
+    "gatemate_reachable": false,
+    "hardware_speedup_claimed": false,
+    "kv260_status": "reachable + hash-verified smoke workload_hash=3c8ee5136df77d8b672961cfae69c37c39551aca63eb5f5a06a3294eb1860138",
+    "polarfire_reachable": true,
+    "polarfire_workload_validated": false
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_.",
+    "value": "complete: architecture_md_reconciled_20260703_arc_phase_d_hidden_state_hardware"
+  },
+  "inference_substrate": {
+    "principle": "This reconciliation aggregates upstream docs/source artifacts only; no live model or board inference is performed.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "last_reconciled_date_updated": {
+    "principle": "Bare bool: true only when `_bmad/architecture.md` carries `Last Reconciled: 20260703`.",
+    "value": true
+  },
+  "milestone": "2026.07.476",
+  "phase_d_summary": {
+    "hidden_state_carveout_recorded": true,
+    "manifest_entry_present": true,
+    "operator_reopen_required": true,
+    "recorded_by_artifact": "results/experiment_5170_retire_phase_d_external_text_scorer_v474.json",
+    "retired_by_artifact": "results/experiment_5163_mmlu_pro_verifier_rescale_v473.json",
+    "retired_milestone": "2026.07.474",
+    "seven_milestones_recorded": true
+  },
+  "random_seed": 5202,
+  "reproducibility_checksum": "237d5dd4e17d8aea482f0af7a0944a0d685ccbe089d8583855924179989f2207",
+  "research_conductor_modified": false,
+  "result_path": "results/experiment_5202_architecture_md_reconciliation_v476.json",
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5202_architecture_md_reconciliation.v476",
+  "sections_added": {
+    "principle": "List of new architecture sections added by this reconciliation; the list proves the requested topics landed rather than being implied.",
+    "value": [
+      "ARC-AGI-3 Harness Architecture",
+      "PHASE D Lifecycle And Retirement",
+      "Hidden-State Verifier Research Frontier",
+      "2026-07-03 Hardware Continuity Update"
+    ]
+  },
+  "sections_preserved_verbatim": {
+    "principle": "Count of pre-existing architecture section headings still present verbatim after the additive edit; protects against silent deletion.",
+    "value": 30
+  },
+  "source_artifacts_read": [
+    "_bmad/architecture.md",
+    "ops/north-star.md",
+    "ops/exclusion_manifest.yaml",
+    "ops/verifier_gaps.md",
+    "ops/arc_solve_registry.yaml",
+    "python/carnot/agentic/arc_competition_agent.py",
+    "python/carnot/pipeline/verify_repair.py",
+    "results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5202",
+    "SCENARIO-REPORT-5202",
+    "SCENARIO-REPORT-5202-BLOCKED-PRECONDITION"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py -q --no-cov -o addopts='' -> passed: 8 passed in 0.72s",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5202_architecture_md_reconciliation_v476.py' -m pytest tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py -q --no-cov -o addopts='' && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5202_architecture_md_reconciliation_v476.py' --fail-under=100 -> passed: 100% coverage on new module",
+    ".venv/bin/python scripts/check_spec_coverage.py -> passed: OK: All tests reference specification requirements.",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted after existing failures: 16 failed, 9260 passed, 7 skipped, 120 warnings in 433.96s; xdist worker crashed in Z3 path before interrupt"
+  ],
+  "traceability_carveout": "not updated in Exp 5202; conductor-owned reconciliation step handles _bmad/traceability.md, ops/status.md, and ops/changelog.md immediately after exit",
+  "traceability_md_updated": {
+    "principle": "Bare bool: false for this task because the conductor-owned reconciliation step updates traceability immediately after Exp 5202 exits.",
+    "value": false
+  },
+  "verification_pipeline_summary": {
+    "markers": {
+      "and_compose_k5": true,
+      "casal_tier": true,
+      "interwhen_monitor": true,
+      "jepa_fast_path": true,
+      "nup_probe_fast_path": true,
+      "odar_fast_path": true,
+      "probability_calibration": true,
+      "semantic_verifier_v2": true,
+      "spectral_probe": true,
+      "think_probe_fast_path": true
+    },
+    "representative_modules": [
+      "thinkprm_probe.py",
+      "spilled_energy.py",
+      "nup_probe.py",
+      "hallufield_verifier.py",
+      "sc_energy.py",
+      "and_composition_verifier.py"
+    ],
+    "verify_module_count": 212
+  }
+}

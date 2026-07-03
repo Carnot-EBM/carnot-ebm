@@ -33198,6 +33198,92 @@ does not claim the `.476` handoff is clean.
 |---|---|---|
 | REQ-REPORT-5193 | Planned (`python/carnot/experiment_5193_archive_475_activate_476.py`) | Planned (`tests/python/test_experiment_5193_archive_475_activate_476.py`) |
 
+### REQ-REPORT-5202: Architecture.md Reconciliation For ARC-AGI-3, Phase D, Hidden-State Verifiers, And Hardware
+
+The Exp 5202 workflow SHALL reconcile `_bmad/architecture.md` on 2026-07-03
+after reading the full current architecture document and the current upstream
+state artifacts: `ops/north-star.md`, `ops/exclusion_manifest.yaml`,
+`ops/verifier_gaps.md`, `ops/arc_solve_registry.yaml`,
+`python/carnot/agentic/arc_competition_agent.py`,
+`python/carnot/pipeline/verify_repair.py`, the `python/carnot/verify/`
+directory, and the Exp 5201 hardware artifact when present. The workflow SHALL
+update `_bmad/architecture.md` additively, preserving all pre-existing section
+headings, updating `Last Reconciled` to `20260703`, and documenting:
+
+- the ARC-AGI-3 harness architecture, including the offline
+  `scripts/arc_loop_solve.py` development-twin path, the scored
+  `E3AgentPolicy` live cascade, the verifier-routed best-first
+  `arc_graph_explore.py`/`arc_solver_kit.py` search and reproduction gate, and
+  `ops/arc_solve_registry.yaml` as the knowledge-capture mechanism;
+- PHASE D's full lifecycle as an off-ARC external generated-text/logprob
+  verifier-moat program commissioned on 2026-06-30, producing seven milestones
+  of null or marginal evidence, and retired on 2026-07-02/03 while explicitly
+  carving out hidden-state/internal-representation verifiers as distinct and
+  still open;
+- the hidden-state verifier frontier, including TrajSelector-class and
+  PHSV-class probes, the negative Exp 5200 result, and cross-references to
+  `ops/verifier_gaps.md` entries including GAP-4891 and GAP-4;
+- the current verification-pipeline tiers from `VerifyRepairPipeline.verify()`
+  and `python/carnot/verify/`, not the stale 2026-05-16 table; and
+- the current hardware state: KV260 near-terminal/terminal-by-SSH continuity,
+  PolarFire reachable but not terminal or workload-validated, and GateMate
+  blocked on the DirtyJTAG/GM1Ax IDCODE path narrowed by Exp 5201.
+
+The workflow SHALL write
+`results/experiment_5202_architecture_md_reconciliation_v476.json` with
+principle-wrapped required fields `sections_added`,
+`sections_preserved_verbatim`, `last_reconciled_date_updated`,
+`traceability_md_updated`, `inference_substrate`, and `honest_verdict`. It SHALL
+declare `inference_substrate="aggregation_from_upstream_artifacts"`. Because a
+separate conductor reconciliation step owns ops/status/changelog/traceability
+after Exp 5202 exits, this workflow SHALL NOT modify `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`;
+the artifact SHALL set `traceability_md_updated=false` and explain that carve-out
+honestly.
+
+Required field principles:
+
+- `sections_added`: principle "List of new architecture sections added by this reconciliation; the list proves the requested topics landed rather than being implied."
+- `sections_preserved_verbatim`: principle "Count of pre-existing architecture section headings still present verbatim after the additive edit; protects against silent deletion."
+- `last_reconciled_date_updated`: principle "Bare bool: true only when `_bmad/architecture.md` carries `Last Reconciled: 20260703`."
+- `traceability_md_updated`: principle "Bare bool: false for this task because the conductor-owned reconciliation step updates traceability immediately after Exp 5202 exits."
+- `inference_substrate`: principle "This reconciliation aggregates upstream docs/source artifacts only; no live model or board inference is performed."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+#### SCENARIO-REPORT-5202: Architecture Reconciliation Adds Current ARC And Verifier Architecture Without Deleting Legacy Sections
+
+**Given** `_bmad/architecture.md` was last reconciled on 2026-05-16, the ARC
+registry records 69 reproducible development-proxy levels across 24 games while
+the scored hidden leaderboard baseline remains the live `E3AgentPolicy` path,
+the Phase D exclusion-manifest retirement is narrow to external text/logprob
+scorers, verifier gaps record GAP-4891/GAP-4 and the Exp 5200 hidden-state
+probe residual, and Exp 5201 records the current board statuses
+**When** Exp 5202 reconciles the architecture record on 2026-07-03
+**Then** `_bmad/architecture.md` keeps all pre-existing section headings,
+sets `Last Reconciled` to `20260703`, adds the ARC-AGI-3 harness, Phase D
+lifecycle, hidden-state verifier frontier, and current hardware reconciliation
+sections, refreshes the verification-pipeline table from current code, and
+`results/experiment_5202_architecture_md_reconciliation_v476.json` records the
+required fields with `inference_substrate=aggregation_from_upstream_artifacts`
+and a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-5202-BLOCKED-PRECONDITION: Missing Architecture Inputs Block Without Fabrication
+
+**Given** the architecture file, north-star file, exclusion manifest, verifier
+gap ledger, ARC registry, live agent source, or required OpenSpec anchor is
+missing or malformed
+**When** Exp 5202 builds its artifact
+**Then** it writes a terminal `complete_*blocked*` artifact with failed
+preconditions, does not fabricate section preservation counts, keeps
+`traceability_md_updated=false`, and does not modify conductor-owned status,
+changelog, traceability, or research-conductor files.
+
+## Implementation Status (REQ-REPORT-5202)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5202 | Planned (`python/carnot/experiment_5202_architecture_md_reconciliation_v476.py`) | Planned (`tests/python/test_experiment_5202_architecture_md_reconciliation_v476.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
