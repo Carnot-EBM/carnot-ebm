@@ -10232,3 +10232,4 @@ web search: |
 | 2026-07-03 16:14 UTC | Plan milestone 2026.07.476 | OK | 14 tasks proposed |
 | 2026-07-03 16:16 UTC | Milestone 2026.07.476 activated | OK | 14 tasks queued |
 | 2026-07-03 16:31 UTC | PHASE 0 transition -- archive .475 truth (poison-t | OK | 85 passed, 1 warning in 10.77s |
+| 2026-07-03 16:58 UTC | PHASE INFRA-CRITICAL 1/2 -- build a standalone pre | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |

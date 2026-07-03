@@ -1,0 +1,136 @@
+{
+  "experiment": "experiment_5194_poison_test_cascade_triage_module_v476",
+  "experiment_id": "exp5194-poison-test-cascade-triage-module-v476",
+  "milestone": "2026.07.476",
+  "run_date": "20260703",
+  "schema": "carnot.experiment_5194_poison_test_cascade_triage_module_v476.v1",
+  "duration_s": 261.0,
+  "random_seed": 5194,
+  "reproducibility_checksum": "sha256:31694aea15545910395cf00bf8218757eb1cdb2c2fab8c2b22051ae3549517be",
+  "result_path": "results/experiment_5194_poison_test_cascade_triage_module_v476.json",
+
+  "triage_module_path": "scripts/pretest_triage.py",
+
+  "detection_signature_precision": {
+    "value": "MATCHES (safe to xfail) ONLY when ALL FIVE hold for a failing test: (1) its test file is experiment-specific (tests/python/test_experiment_*.py or test_exp*.py -- never a core/shared test); (2) its failure block references a results/*.json path P; (3) P is a declared `deliverable` of a task in the CURRENT research-roadmap.yaml; (4) P does NOT exist on disk at repo_root/P (the producing task's main() has not delivered); (5) its failure block carries a file-absence marker (FileNotFoundError / 'No such file or directory' / '[Errno 2]' / JSONDecodeError). CORRECTLY DOES NOT MATCH (keeps blocking the gate): a plain AssertionError with no results path (test_unrelated_assertion_failure_does_not_match); a results path that is NOT a declared roadmap deliverable, e.g. a typo/stale path (test_results_path_not_in_roadmap_does_not_match); a deliverable that IS present on disk but the test still fails -- that is a real assertion bug (test_deliverable_present_on_disk_does_not_match); a test that names a pending deliverable but fails on a VALUE assertion rather than a missing-file error (test_missing_absence_marker_does_not_match); a core/shared test (test_pipeline_*, docs, cli) even when it references a pending deliverable (test_core_test_is_never_triaged); and a poison-wait mixed with a genuine failure yields all_failures_explained==False so the gate still blocks (test_mixed_real_and_poison_failure_still_blocks). xfail is scoped to the single matched test node (never a blanket module skip), and its condition re-checks the deliverable's on-disk absence on every collection, so it self-expires the instant the file lands.",
+    "principle": "An over-broad triage rule would silently mask real regressions -- exactly the failure mode Tests-Must-Run-And-Assert exists to prevent. Precision here is the safety property: the five-part conjunction plus the experiment-specific-file gate plus the on-disk-absence recheck together ensure only the narrow deliverable-read-before-produced signature is ever xfailed, and only while the deliverable is genuinely absent."
+  },
+
+  "historical_incidents_matched": [
+    {
+      "experiment_id": "exp5182",
+      "milestone": "2026.07.475",
+      "poison_class": "deliverable_read",
+      "detector_matches": true,
+      "note": "test_experiment_5182_...::test_ondisk_deliverable_is_valid reads results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json before its sibling main() wrote it -> FileNotFoundError. EXACT match of the narrow signature; used as the primary regression fixture (test_detects_the_475_signature)."
+    },
+    {
+      "experiment_id": "exp3521",
+      "milestone": "2026.05.325",
+      "poison_class": "verdict_assertion",
+      "detector_matches": false,
+      "note": "Poison test asserts on the script's in-memory arm results / honest verdict, with 0 results/experiment_*.json references. This is the SIBLING sub-class of the poison cascade, already handled by the conductor's pre-existing consecutive-fail auto-quarantine guard -- NOT the deliverable-read signature this narrow detector targets."
+    },
+    {
+      "experiment_id": "exp3544",
+      "milestone": "2026.05.326",
+      "poison_class": "verdict_assertion",
+      "detector_matches": false,
+      "note": "Poison test asserts on the script's honest verdict, not a deliverable read (0 results/experiment_*.json references). Sibling sub-class; handled by the consecutive-fail quarantine guard."
+    },
+    {
+      "experiment_id": "exp3612",
+      "milestone": "2026.05.332",
+      "poison_class": "verdict_assertion",
+      "detector_matches": false,
+      "note": "Poison test patches assert_deliverable_written and asserts honest_verdict strings on synthetic input (0 results/experiment_*.json references). Sibling sub-class."
+    }
+  ],
+  "historical_incidents_honesty_note": "HONEST retrospective: of the four cited incidents, only exp5182/.475 actually took the deliverable-READ shape this narrow detector targets (1/4 exact match). The three earlier incidents (exp3521/.325, exp3544/.326, exp3612/.332) were the VERDICT-ASSERTION sub-class -- their poison tests assert on the script's in-memory return value / honest_verdict, not on a missing results/*.json file -- and are covered by the conductor's pre-existing consecutive-fail auto-quarantine guard, a sibling mechanism. Claiming the detector would have caught all four as-they-occurred would be false and is deliberately NOT asserted (see scripts/pretest_triage.py:validate_historical_incidents and the _HISTORICAL_INCIDENTS table). The module DOES demonstrate (test_synthetic_deliverable_read_variant_would_match + _synthetic_output_for) that had any of the three earlier incidents instead read its own deliverable, the detector would have matched it -- so the detector fully covers the deliverable-read variant across all four, while honestly scoping its retrospective claim to the one incident that actually took that shape.",
+
+  "wiring_instructions_documented": true,
+  "regression_tests_added": 32,
+  "research_conductor_py_untouched_confirmed": true,
+  "research_conductor_modified": false,
+
+  "inference_substrate": {
+    "value": "aggregation_from_upstream_artifacts",
+    "principle": "This task builds and unit-tests a standalone triage module and aggregates the .475 conductor-log failure signature + roadmap deliverable declarations; it loads no GGUF/CUDA model and runs no LLM inference. Duration floor is 0.0001s for this substrate."
+  },
+
+  "honest_verdict": {
+    "value": "complete_pretest_triage_module_ready_and_tested_wiring_documented_conductor_not_yet_patched_1of4_exact_signature",
+    "principle": "Must start with complete:/complete_/success:/success_. Must NOT claim the conductor's pretest gate is actually patched -- only that a ready, tested triage module (scripts/pretest_triage.py, 100% covered, 32 passing regression tests) plus documented in-file wiring instructions now exist. Same limitation class as scripts/retro_timing_fallback.py's own patch-prep precedent: the module is import-ready for research_conductor.py::run_tests to call, but this task did NOT edit research_conductor.py (confirmed via git) and the wiring is left for the operator/outer-loop to apply."
+  },
+
+  "module_verification": {
+    "tests_passed": 32,
+    "tests_failed": 0,
+    "new_module_coverage_pct": 100.0,
+    "new_module_statements": 273,
+    "new_module_missed": 0,
+    "coverage_note": "scripts/pretest_triage.py is 100% covered by tests/python/test_pretest_triage.py (273 stmts, 0 missed), measured with `coverage run --rcfile=/dev/null --source=scripts.pretest_triage`. The project's pyproject.toml [tool.coverage.run] omits scripts/*.py from the global 100%-gate (scripts are 'not core product code'), consistent with the retro_timing_fallback.py precedent -- so the rcfile override is required to measure it, and it is clean."
+  },
+
+  "wiring_summary": {
+    "target_function": "scripts/research_conductor.py::run_tests (smart-subset pretest gate, failure branch ~lines 1504-1519)",
+    "hook_functions": ["detect_poison_cascade (pure, no side effects)", "apply_xfail (only function that edits test files; only ever ADDS a conditional self-expiring xfail marker)"],
+    "convention": "mirrors scripts/retro_timing_fallback.py -- a standalone module the conductor imports, documented in the module docstring's 'HOW TO WIRE THIS IN' section with the exact `from scripts.pretest_triage import ...` replacement snippet; no direct research_conductor.py edit performed by this task."
+  },
+
+  "self_expiry_mechanism": {
+    "marker": "pytest.mark.xfail scoped to the single matched test node (never a module skip)",
+    "condition": "condition=not os.path.exists(<repo_root>/<deliverable_path>) -- re-evaluated on every pytest collection",
+    "strict": false,
+    "expiry": "the instant the producing task's main() writes the declared deliverable, the xfail condition flips to inactive and the test runs live again; a surprise pass surfaces as a visible XPASS (useful telemetry), never a silent no-op or a re-block",
+    "idempotency": "a per-node `# pretest-triage:xfail <task_id> -> <deliverable>` sentinel prevents double-application; apply_xfail is a no-op on an already-triaged test"
+  },
+
+  "spec_refs": [
+    "REQ-AUTO-5194",
+    "SCENARIO-AUTO-5194-PRIMARY",
+    "SCENARIO-AUTO-5194-PRECISION",
+    "SCENARIO-AUTO-5194-HISTORICAL"
+  ],
+
+  "tests_run": [
+    ".venv/bin/python -m pytest tests/python/test_pretest_triage.py -q  (32 passed)",
+    ".venv/bin/python -m coverage run --rcfile=/dev/null --source=scripts.pretest_triage -m pytest tests/python/test_pretest_triage.py -q -o addopts='' -p no:cacheprovider",
+    ".venv/bin/python -m coverage report -m --rcfile=/dev/null  (scripts/pretest_triage.py 273 0 100%)",
+    "git status --short scripts/research_conductor.py  (empty -> untouched)"
+  ],
+
+  "source_artifacts_read": [
+    {
+      "path": "scripts/retro_timing_fallback.py",
+      "role": "precedent pattern: standalone module the conductor imports without editing research_conductor.py; its docstring wiring-instructions convention was mirrored"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "role": "read-only: the run_tests smart-subset pretest gate failure branch (the hook target); NOT modified by this task"
+    },
+    {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:9320a7ee735ccb2e65e1cdfa3eeefc6d9bd1dbe64668ecfdac4d024b7dc940da",
+      "role": "the .475 failure signature (2026-07-03 08:39-09:42 UTC 'Pre-tests failing, self-heal failed: 1 failed, 116 passed' x~19) reconstructed into the primary regression fixture"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "role": "the CURRENT (.476) task/deliverable declarations that detect_poison_cascade cross-references to distinguish a pending declared deliverable from a genuinely broken test"
+    }
+  ],
+
+  "artifact_sha256_of_module": "sha256:31694aea15545910395cf00bf8218757eb1cdb2c2fab8c2b22051ae3549517be",
+  "artifact_sha256_of_tests": "sha256:52dab4c146ceed2095e9140157e23005ec4452f38fce035429d7a3ff80b3172e",
+
+  "field_principles": {
+    "triage_module_path": "The single deliverable module; standalone under scripts/ so no task edits research_conductor.py, per the retro_timing_fallback.py precedent.",
+    "historical_incidents_matched": "Honest retrospective classification -- 1/4 exact deliverable-read match, 3/4 the sibling verdict-assertion class handled by the pre-existing quarantine guard; over-claiming 4/4 would itself be a fabrication.",
+    "wiring_instructions_documented": "The conductor cannot be edited by this task, so the value is realized only if the documented wiring is applied later; the module docstring carries the exact snippet.",
+    "regression_tests_added": "The triage module's own logic is tested to 100% coverage using .475's actual failure signature as the primary fixture.",
+    "research_conductor_py_untouched_confirmed": "Structural guarantee that this task did not violate the 'no task edits research_conductor.py' constraint (git-verified)."
+  },
+
+  "flagged_adversarial": false,
+  "notes": "Resume of an interrupted .475/.476 run: scripts/pretest_triage.py + tests/python/test_pretest_triage.py were already authored and staged; this run verified them (32 pass, 100% module coverage), confirmed research_conductor.py is untouched, and emitted this deliverable. This closes the incident_agent_shipped_test_cascade class (4 occurrences) with reusable tooling instead of manual per-milestone triage."
+}
