@@ -1,0 +1,89 @@
+{
+  "schema": "carnot.retro_timing_real_fix.v1",
+  "experiment": 5195,
+  "experiment_id": "exp5195-retro-timing-real-fix-known-issues-dedup-v476",
+  "title": "Root-cause + fix the .475 retro-timing false-zero (wiring-site import bug), dedup known-issues.md, guard run_experiment_1911.py",
+  "milestone": "2026.07.476",
+  "run_date": "2026-07-03T17:37:57Z",
+  "duration_s": 480,
+  "random_seed": 5195,
+  "reproducibility_checksum": "eb545ea99bca973ed23c136bc7d3fe46b43902afb71d1ee6546222d6d58749cb",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "git_head_at_run": "f2aca3307273ae71f1ae2335158183cdc9b0bb35",
+  "retro_timing_root_cause_found": "The .475 retro false-zero was NOT a missing wire and NOT an LLM-transcription bug. The wiring landed (scripts/research_conductor.py::_run_operational_retrospective imports + calls build_retro_timing_fallback at ~line 2876). The defect is the IMPORT STATEMENT it used: `from scripts.retro_timing_fallback import build_retro_timing_fallback`. The conductor is launched as `python scripts/research_conductor.py` (systemd ExecStart), so sys.path[0] is the scripts/ directory, NOT the repo root; `scripts` is therefore not importable as a package at conductor runtime and the import raised `ModuleNotFoundError: No module named 'scripts.retro_timing_fallback'` on every retro pass. Every other sibling helper in that file is imported BARE (gpu_monitor, failure_ledger, in_process_doc_reconcile, adversarial_verify) precisely because scripts/ (not the repo root) is on sys.path there; line 2876 was the ONLY `from scripts.X import` in the file. The conductor's outer `except Exception` swallowed the ModuleNotFoundError (WARNING only), leaving experiment_times empty. experiments_completed / reconstructed_from_disk_mtime / timing_integrity_mismatch are Python-prefilled + locked into the retro skeleton (research_conductor.py ~lines 3140/3151/3152), so the zeros were Python-computed from the empty list, not an LLM mistranscription. The module logic itself is correct: a direct call returns 2 experiments / 147.9 wall-min for .475 when the repo root is on sys.path.",
+  "build_retro_timing_fallback_direct_call_result": {
+    "raised": false,
+    "exception_if_any": "",
+    "returned_experiment_times_count": 2,
+    "note": "Direct call build_retro_timing_fallback('2026.07.475', repo_root=<repo>) with the repo root on sys.path: no raise, 2 experiments (exp5181, exp5182), total_wall_time_minutes=147.9, activation_bound resolved to commit 1dbcc55e1 (the earlier `[conductor] Activate milestone 2026.07.475`), exp5181/exp5182 both post-activation (not excluded). This proves the .475 false-zero was a runtime IMPORT failure inside the conductor, not a fallback-logic or _activation_bound failure."
+  },
+  "journalctl_exception_found": true,
+  "journalctl_evidence": "journalctl --user -u carnot-conductor: 'retro_timing_fallback reconstruction also failed for 2026.07.475' + 'ModuleNotFoundError: No module named scripts.retro_timing_fallback' at 2026-07-03 06:38:46, 07:48:05, and 11:16:44 EDT (the last = artifact generated_at 15:16:44Z).",
+  "fix_applied_to": "patch file for research_conductor.py (git apply --check verified, not applied)",
+  "fix_patch_path": "results/experiment_5195_research_conductor_import_fix.patch",
+  "fix_description": "Patch changes line 2876 to import the bare sibling first (`from retro_timing_fallback import ...`, matching the conductor's own gpu_monitor / failure_ledger convention, works at conductor runtime) and fall back to the package form on ModuleNotFoundError (works under pytest where the repo root is on sys.path). The package form is deliberately retained in the except branch so the existing `test_2026_07_03_conductor_imports_fallback_module_for_wiring` assertion stays green. Empirically verified: under a scripts/-only sys.path the OLD form raises the exact ModuleNotFoundError while the bare form imports and returns 2 experiments.",
+  "git_apply_check_verified": true,
+  "regression_test_reproduces_475_conditions": true,
+  "regression_test_passes_after_fix": true,
+  "regression_test_path": "tests/python/test_experiment_5195_retro_timing_real_fix.py",
+  "regression_test_detail": "3 new tests, all pass (3 passed in 3.45s): (1) test_exp5195_conductor_runtime_import_reproduces_475_false_zero_and_fix \u2014 subprocess with conductor-style sys.path (scripts/ present, repo root absent) asserts the OLD `from scripts.retro_timing_fallback import` raises ModuleNotFoundError (the exact .475 trigger) and the fixed bare import succeeds + is callable; (2) test_exp5195_build_fallback_reconstructs_475_shape_non_zero \u2014 hermetic 12-task/2-artifact fixture mirroring .475 (one artifact via an atypical commit path) reconstructs 2 experiments, non-zero wall time, 10 missing_deliverables, 0 excluded_pre_activation; (3) test_exp5195_module_importable_both_ways_when_paths_present \u2014 both import forms resolve to the same on-disk module under pytest. The existing 6-test suite: 5 pass; 1 (test_2026_07_03_wiring_real_469_473_474_reconstruct_non_zero) fails on a PRE-EXISTING, unrelated hardcoded-expectation drift (.474 compute_bound_experiments_count is now 2, asserted 3) \u2014 not touched, documented in known-issues.",
+  "existing_wiring_test_stays_green": true,
+  "known_issues_md_duplicate_count_before": 187,
+  "known_issues_md_duplicate_count_after": 1,
+  "known_issues_dedup_detail": "ops/known-issues.md had 187 identical '### NEW Phase 4 Canonical Metric MANDATORY' 2-line blocks (spammed by run_experiment_1911.py's unconditional append). Surgically removed 186, kept the first, preserved ALL interleaved unique content (the CONFIRMED section, regex-fragility notes, venv notes, RESEARCH-STUDYING CANDIDATES, the 2026-06-20 corrigendum). File 10761 -> 10019 lines; content-preserving per Documentation Update Rules.",
+  "run_experiment_1911_idempotency_guard_added": true,
+  "run_experiment_1911_guard_detail": "scripts/experiments/run_experiment_1911.py section 4 now reads ops/known-issues.md and only appends the '### NEW Phase 4 Canonical Metric MANDATORY' section when its header is not already present, so re-running the experiment is a no-op for that file (fixes the unconditional open(path,'a').write(...) that produced the 187 duplicates). py_compile OK.",
+  "research_conductor_py_untouched_confirmed": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp5164",
+      "path": "results/experiment_5164_retro_timing_falsezero_fix_v473.json",
+      "fields_imported": "the standalone retro_timing_fallback module + its wiring contract"
+    },
+    {
+      "artifact": "results/operational_retro_2026_07_475.json",
+      "fields_imported": "the false-zero symptom (experiments_completed=0, reconstructed_from_disk_mtime=false, timing_integrity_mismatch=true)"
+    },
+    {
+      "source": "journalctl --user -u carnot-conductor (2026-07-03)",
+      "fields_imported": "the swallowed ModuleNotFoundError traceback (root-cause evidence)"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "scripts/retro_timing_fallback.py present + importable",
+      "available": true
+    },
+    {
+      "resource": "results/operational_retro_2026_07_475.json present",
+      "available": true
+    },
+    {
+      "resource": "journalctl --user -u carnot-conductor readable",
+      "available": true
+    },
+    {
+      "resource": "git apply available for patch verification",
+      "available": true
+    }
+  ],
+  "field_provenance": {
+    "retro_timing_root_cause_found": {
+      "principle": "State precisely what was actually wrong; do not conflate 'the wiring exists' with 'the bug is fixed'.",
+      "satisfied_by": "journalctl-confirmed ModuleNotFoundError + direct-call proof the module logic is correct + skeleton-lock proof the zeros are Python-computed."
+    },
+    "fix_applied_to": {
+      "principle": "The retro task must not edit research_conductor.py; the fix ships as a git-apply-verified patch for the operator to apply.",
+      "satisfied_by": "results/experiment_5195_research_conductor_import_fix.patch verified with `git apply --check`; tracked file confirmed untouched via git status."
+    },
+    "known_issues_md_duplicate_count_after": {
+      "principle": "Must be 1, not 0 \u2014 content-preserving deduplication, not deletion of the section itself.",
+      "satisfied_by": "grep -c on disk returns 1; interleaved unique sections verified present."
+    }
+  },
+  "methodology_note": "Investigation-only aggregation artifact: no model inference. Root cause established from (a) a direct call to build_retro_timing_fallback, (b) reading the conductor's retro assembly + skeleton-lock code, (c) the git commit timeline of exp5181/exp5182/the retro passes, and (d) the definitive journalctl ModuleNotFoundError. The fix is prepared as a verified patch (not applied, per the do-not-edit-research_conductor.py constraint).",
+  "optimization_direction": "neither \u2014 diagnostic + fix-preparation + doc-cleanup artifact",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Root cause of the .475 false-zero precisely identified (conductor import-path ModuleNotFoundError) and distinguished from the already-landed wiring; a git-apply-verified fix patch produced without touching research_conductor.py; a regression test reproducing the .475 conditions added and passing; ops/known-issues.md deduped 187->1 (content-preserving); run_experiment_1911.py idempotency guard added.",
+  "honest_verdict": "complete: retro_timing_475_false_zero_root_cause_found_and_fixed \u2014 the wiring was present but used `from scripts.retro_timing_fallback import` which raises ModuleNotFoundError under the conductor's scripts/-on-sys.path runtime (journalctl-confirmed); fix prepared as a git-apply-verified patch for research_conductor.py (NOT applied per task scope, so the operator must apply it to close the user-visible symptom); the retro_timing_fallback module itself was never at fault (direct call returns 2 experiments/147.9 min). Separately: known-issues.md deduped 187->1 and run_experiment_1911.py idempotency-guarded. NOT declaring victory on a partial diagnosis \u2014 the code fix is complete and verified, only its application is operator-gated by the do-not-edit-conductor constraint."
+}
