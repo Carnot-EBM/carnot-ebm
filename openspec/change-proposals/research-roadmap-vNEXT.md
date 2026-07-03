@@ -3,10 +3,56 @@ Retry, MAP Landmark Retry, Hidden-State Verifier V2, QA/Verifier-Authenticity Fo
 
 **Milestone:** `2026.07.476`
 **Status:** Planner-authored (fresh verification pass over an existing outer-loop draft of the same
-milestone number -- see "Provenance" below)
+milestone number -- see "Provenance" below). `research-roadmap-next.yaml` is now written (this planning
+pass's own contribution -- the prior draft diagnosed everything but left the execution manifest unwritten;
+see "Second verification pass" immediately below).
 **Prepared:** 2026-07-03
 **Predecessor:** `2026.07.475`
 **Execution manifest:** `research-roadmap-next.yaml`
+
+## Second verification pass (this planning invocation, 2026-07-03, later same day)
+
+This invocation is the conductor's own automated planning-agent call (`research_conductor.py` logged
+"No research-roadmap-next.yaml -- launching planning agent" at 08:30:26 EDT / 12:30:26 UTC, immediately
+before this session's own turn-start timestamp of 12:30:33 UTC -- these are the same event). Rather than
+re-deriving the plan below from scratch, this pass independently re-verified the prior draft's load-bearing
+claims against primary sources a second time and found the design sound, with three corrections:
+
+1. **The lp85 registry-inconsistency claim in "Current registry / gate state" below is INACCURATE as
+   written.** Direct read of `ops/arc_solve_registry.yaml`'s `lp85` entry (mtime 2026-06-30, unchanged
+   since before this draft was written) shows `levels_reproduced: 5` -- there is no "L3 canonical" value
+   anywhere in the registry. The quarantined artifact's own claimed "prior level 5, new level 6" is
+   actually CONSISTENT with the registry's real prior value (5); the only genuine discrepancy is the
+   quarantined artifact's rejected claim of a new L6, which the mechanical layer already correctly
+   flagged and excluded. There are TWO numbers in tension here (registry=5, quarantined claim=6), not
+   three. `exp5206`'s capstone task (in the execution manifest) is scoped to confirm this precisely and
+   correct any OTHER stale document that might still say "L3" (none found in this pass's search), rather
+   than presupposing a three-way conflict that the primary source does not show.
+2. **`exp5195`'s retro-timing investigation now has a sharp, code-grounded lead**, found by reading
+   `scripts/research_conductor.py` lines 2768-2996 directly (not just the artifact's zero values): the
+   `retro_timing_fallback` import IS present and IS called (confirming the prior draft's "confirmed wired"
+   finding), but the call sits inside a bare `except Exception: logger.warning(...)` block. The `.475`
+   retro's `experiments_completed=0` / `reconstructed_from_disk_mtime=False` combination is consistent with
+   `build_retro_timing_fallback()` itself raising internally for this specific milestone (plausible given
+   `.475`'s unusual execution history -- only 2 of 12 tasks produced artifacts, and one of those,
+   `exp5182`, was produced by a direct outer-loop script invocation outside the conductor's normal
+   task-commit flow, which may not fit whatever commit-message or activation-boundary pattern
+   `_activation_bound()` expects). This is a *more specific, faster-to-test* hypothesis than "the LLM
+   retro-writer may not transcribe faithfully" -- `exp5195`'s manifest task now leads with calling
+   `build_retro_timing_fallback('2026.07.475', ...)` directly and grepping the daemon's `journalctl --user
+   -u carnot-conductor` output around 2026-07-03 10:46 EDT for the swallowed-exception warning line, before
+   falling back to the LLM-transcription theory.
+3. **The ARC Prize deadline correction is now firmly sourced, not a lower-confidence snippet.** A direct
+   `WebSearch` this session (not just a search snippet as the prior draft flagged) independently returned
+   multiple results describing arcprize.org's own 2026 competition structure: **Milestone #1 was 2026-06-30
+   (already passed, the trigger this project already acted on); Milestone #2 is 2026-09-30**, each carrying
+   its own prize tier for open-sourcing by that date. This replaces the prior draft's vaguer "may run
+   through November 2, 2026" framing with a firmer, near-term second date. Still an operator-attention item
+   only (see below) -- this does not change this milestone's task allocation.
+
+Everything else in this document (the `.475` post-mortem, the DiffusionGemma root-cause diagnosis, the
+GAP-4891 ladder, the literature citations, the phase design and dependency graph) was independently
+re-checked against the same primary sources this pass and held up; it is preserved below unchanged.
 
 ## Provenance -- this plan supersedes an unfinished on-disk draft of the same milestone
 
@@ -177,9 +223,12 @@ older papers restated as new.
   `development_proxy` re-reproductions of already-banked levels (regression re-fires, not progress); the
   1 outlier (`experiment_headway_lp85_capture.json`, a claimed lp85 L6) is a confirmed `OUTER_LOOP_RE`
   violation (`used_env_source: true` under a `development_proxy` stamp) that the mechanical layer already
-  caught and quarantined (`flagged_adversarial: true`). The same audit surfaces a **registry inconsistency**:
-  lp85's standing registry ceiling is L3, but the quarantined artifact claims a prior level of 5 and a new
-  level of 6 -- three disagreeing numbers for the same game. `.476`'s capstone reconciles this.
+  caught and quarantined (`flagged_adversarial: true`). **CORRECTED in this pass's second verification
+  (see top of document):** the registry's actual `levels_reproduced` for lp85 is **5**, not "L3" as
+  originally written here -- the quarantined artifact's own "prior level 5" claim already matches the real
+  registry value; only its rejected "new level 6" is in tension with anything. `.476`'s capstone
+  (`exp5206`) confirms this reading directly against the registry rather than reconciling a three-way
+  conflict that the primary source does not actually show.
 - `ops/verifier_gaps.md`: GAP-4891 (ARC trajectory-enumeration wall) diagnosed but not closed through four
   ladder stages (counts -> richer-scalar -> relational target-match [separates 3/4] -> stage-2 goal-energy
   guidance [separates but does not guide search] -> stage-3 relational-mask pruning [prunes edges, banks
@@ -394,11 +443,12 @@ exp5193 (archive/activate)
    with an undefined `.r-desc` class and a stray unmatched `</div>`; the "TTC & PREM" card sits after
    another possibly-early-closing `</div>`. This is a rendering-correctness bug, not only a style judgment
    call. No task here touches `docs/index.html` per Public Documentation Discipline.
-2. **The ARC Prize deadline correction.** This session's research found the `2026-06-30` date this project
-   has treated as the final deadline (the trigger for retiring the ARC-AGI-3 Submission Sprint Forcing
-   Function) is actually "Milestone #1" for early open-source prize eligibility per arcprize.org
-   (WebFetch-confirmed); the overall competition may run through November 2, 2026 (lower confidence --
-   search-snippet only, not independently WebFetched). Combined with the still-unresolved
+2. **The ARC Prize deadline correction (firmed up in this pass's second verification).** The `2026-06-30`
+   date this project has treated as the final deadline (the trigger for retiring the ARC-AGI-3 Submission
+   Sprint Forcing Function) is "Milestone #1" for early open-source prize eligibility per arcprize.org;
+   **Milestone #2 is 2026-09-30**, each carrying its own open-source prize tier -- a firmer, nearer-term
+   date than the original draft's "may run through November 2, 2026" snippet-sourced guess. Combined with
+   the still-unresolved
    "post-PHASE-D strategic direction" question (CLAUDE.md's designated ARC-deadline successor track is
    itself now retired, and the self-solve audit reports zero net live-capability advance in the most recent
    window) -- an explicit operator decision on both facts together would remove ambiguity the next several
