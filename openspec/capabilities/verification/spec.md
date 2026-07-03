@@ -24668,3 +24668,63 @@ one field.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5182 | Implemented (`python/carnot/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`, `results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json`) | Implemented (`tests/python/test_experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.py`) |
+
+### REQ-VERIFY-5203: Verifier Authenticity Remediation Options V476
+
+The repository SHALL provide Exp 5203 at
+`python/carnot/experiment_5203_verifier_authenticity_remediation_options_v476.py`
+to prepare an operator-facing remediation decision package for the two
+`DISHONEST_NAMING` verifier files flagged by the 2026-07-01 verifier
+authenticity audit: `python/carnot/verify/and_composition_verifier.py` and
+`python/carnot/verify/claim_isolation_uncertainty_router.py`.
+
+The workflow SHALL read `ops/verifier_authenticity_audit_report.md` in full,
+the two flagged verifier sources, the CLAUDE.md Verifier Authenticity
+Discipline, and the AND-composition call sites that define retirement blast
+radius. It SHALL independently reconfirm the audit findings against current
+source by checking for the current untrained SOSKAN neutral score, score-capped
+SOSKAN normalization, exception-to-pass masking, deterministic claim-router
+uncertainty scores, artifact-only claim-isolated decisions, and absence of a
+model or isolated-claim verifier substrate in the router.
+
+The workflow SHALL NOT rename, retire, reimplement, or edit either flagged
+verifier. Instead, it SHALL write
+`ops/verifier_remediation_options_v476.md` and
+`results/experiment_5203_verifier_authenticity_remediation_options_v476.json`
+with principle-wrapped top-level fields
+`and_composition_verifier_options`,
+`claim_isolation_uncertainty_router_options`,
+`audit_findings_independently_reconfirmed`, `remediation_doc_path`,
+`no_verifier_modified_this_task`, `inference_substrate`, and
+`honest_verdict`. Each options field SHALL contain `rename`, `retire`,
+`reimplement`, and `recommendation` strings. The artifact SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, and
+`honest_verdict` SHALL start with `complete:`, `complete_`, `success:`, or
+`success_`.
+
+Required field principles:
+
+- `and_composition_verifier_options`: principle "Decision-ready options for the flagged AND-composition verifier; each option must be actionable without implying the operator already chose it."
+- `claim_isolation_uncertainty_router_options`: principle "Decision-ready options for the flagged claim-isolation router; each option must distinguish artifact routing from live isolated-claim verification."
+- `audit_findings_independently_reconfirmed`: principle "Confirms this task read the actual current source rather than trusting the audit report's quotes alone -- audits can also be stale by the time they're acted on."
+- `remediation_doc_path`: principle "Path to the operator-facing remediation options document written by this task."
+- `no_verifier_modified_this_task`: principle "The audit-and-remediation-prep discipline is explicitly non-destructive; this field is the honesty check that this task respected it."
+- `inference_substrate`: principle "This task aggregates current source, audit, and call-site artifacts only; it performs no live verifier inference and no model training."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_."
+
+### SCENARIO-VERIFY-5203: Operator Gets All Three Options For Each Flagged Verifier
+
+Given the 2026-07-01 verifier authenticity audit, the current flagged verifier
+sources, CLAUDE.md's operator-decides contract, and the AND-composition call
+sites are present, when Exp 5203 runs, then it writes the remediation document
+and terminal JSON artifact, includes RENAME_TO_REFLECT_REALITY, RETIRE, and
+REIMPLEMENT_PROPERLY options for both flagged files, states a recommendation
+with rationale for each, independently reconfirms the audit findings from
+current source, declares `aggregation_from_upstream_artifacts`, and leaves both
+verifier files unmodified.
+
+## Implementation Status (REQ-VERIFY-5203)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5203 | Implemented (`python/carnot/experiment_5203_verifier_authenticity_remediation_options_v476.py`, `results/experiment_5203_verifier_authenticity_remediation_options_v476.json`) | Implemented (`tests/python/test_experiment_5203_verifier_authenticity_remediation_options_v476.py`) |
