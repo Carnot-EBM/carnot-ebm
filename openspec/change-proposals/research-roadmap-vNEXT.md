@@ -1,482 +1,269 @@
-# Research Roadmap vNEXT: V474 Oracle-Distinct Verifier Scale-Up, Trajectory-Enumeration Wall, and Phase D Retirement
+# Research Roadmap vNEXT: V475 Hidden-State Verifier On Confirmed Headroom, MAP Landmark Pre-Stage For The Enumeration Wall, DiffusionGemma Unblock Attempt
 
-**Milestone:** `2026.07.474`
-**Status:** Pre-staged next milestone
-**Prepared:** 2026-07-02
-**Predecessor:** `2026.07.473`
+**Milestone:** `2026.07.475`
+**Status:** Pre-staged next milestone (hand-authored by an outer-loop Claude planning session, per the
+Pre-Staged Roadmap Convention)
+**Prepared:** 2026-07-03
+**Predecessor:** `2026.07.474`
 **Execution manifest:** `research-roadmap-next.yaml`
+
+## Why this plan was hand-authored instead of left to the automated planner
+
+The automated conductor's own attempt to plan and activate `.475` stalled for approximately 2.5 hours
+(`ops/conductor-log.md`, 2026-07-03 03:04-05:25 UTC): ~65 consecutive `Activation REFUSED` entries, all
+`exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE`, followed at 06:14 UTC by a
+`Plan next milestone` failure (`Codex CLI error: Error: Reached max turns (50)`). The most probable root
+cause, based on direct inspection of `ops/exclusion_manifest.yaml` and the Exclusion-Manifest Cross-Check
+discipline: a draft task's scope legitimately matched a `.473`/`.474` prior-failure artifact (most likely
+the trajectory-enumeration-wall lineage -- `exp5175`/`exp5176`, both null/blocked -- or the DiffusionGemma
+lineage -- `exp5173`, blocked) without a `prior_failures:` block carrying all four mandatory sub-fields
+(`experiment_id`, `verdict`, `addressed_by`, `retire_if_same_verdict`), which the Layer-2
+`exclusion_manifest_lint.py` HARD-refuses at activation. This has happened before (milestones `.222`-`.227`
+per the roadmap-authoring instructions) and is a known, avoidable failure mode.
+
+This plan was therefore authored with two disciplines applied uniformly and defensively: **(1)** every task
+that continues, extends, or is thematically adjacent to a `.473`/`.474` non-clean-success verdict carries an
+explicit `prior_failures:` block with all four sub-fields, even where the connection is arguable, because the
+cost of an unnecessary block is trivial and the cost of another multi-hour activation stall is not; **(2)**
+no task title or prompt text reproduces any `blocked_patterns:` string from `ops/exclusion_manifest.yaml`
+verbatim (the full retired-scope list was read in full before drafting a single task).
+
+Both directories that carry this repository (`/home/ianblenke/github.com/ianblenke/carnot`, where this plan
+was authored, and `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`, which `carnot-conductor.service` reads
+from) were at identical HEAD (`75bc15756`) when this was written. This plan's files live in the former; they
+need to reach the latter (push/pull, or an equivalent sync) before the live conductor will see them -- that
+is an explicit operator decision, not performed automatically here.
 
 ## Executive Summary
 
-Milestone `2026.07.473` landed one genuine breakthrough (the ARC oracle-distinct Set-Encoder-vs-vote
-win survived corrected cross-corpus replication and the DiffusionGemma scale-up gate flipped to
-`ungate_now`) inside a batch of otherwise-null/blocked results (two deepen-wall warm-start nulls, a
-gate-blocked live level-up attempt, a GAP-4 pilot that was briefly mis-flagged and has since been
-un-quarantined). V474 makes three decisive moves instead of re-running the same levers:
+`.474` closed three open threads and opened one new one. It **hardened** the ARC oracle-distinct
+Set-Encoder-vs-vote win past the CLT sample-size floor (`exp5171`, n=30, gate passed, `gate_passed: true`),
+**retired** the seven-milestone-null PHASE D external-text-scorer program (LoRA-EBM/uPRM/EBRM vs.
+self-consistency on off-ARC corpora -- `exp5170`, 28 artifacts, `phase_d_external_text_scorer_retired_exp5163_v474`
+in the exclusion manifest) while explicitly preserving hidden-state/internal-representation verifiers as an
+exempted, architecturally distinct mechanism class, and **diagnosed but did not close** the ARC
+trajectory-enumeration wall (`exp5175`: a relational-mask pruner correctly prunes edges but
+`states_expanded` is unchanged and zero levels bank -- pruning a fixed frontier does not help when the
+winning trajectory is never enumerated into that frontier in the first place). It also left the
+`hidden_state_verifier_pilot` (`exp5178`) as an honest negative: on a small (n=6 questions) pilot, even on a
+headroom-present slice (oracle=1.0 vs. SC=0.333), a naive trained-centroid hidden-state probe lost to tuned
+self-consistency, and it left `exp5173`'s DiffusionGemma energy-guided-diffusion pilot **blocked before any
+measurement** by a two-GPU device-placement bug.
 
-1. **Cash in the breakthrough.** Harden the Set-Encoder win past its `n=24` sample-size floor (below the
-   CLT `n>=30` minimum CLAUDE.md mandates for any percentage-point delta claim), then activate the
-   DiffusionGemma energy-guided-diffusion pilot the gate now permits — the real experiment the whole
-   `.379-.473` verifier-moat arc has been building toward.
-2. **Attack the diagnosed wall, not another symptom of it.** `ops/verifier_gaps.md` GAP-4891's Stage-2
-   probe (`.452`) delivered a decisive negative: goal-energy correctly SEPARATES win from near-win on 3/4
-   tested games, but ordering the search frontier by it does not help — the winning trajectory is never
-   ENUMERATED. A purpose-built countermeasure (`arc_relational_mask_pruner.py`, branching-factor reduction
-   via a learned change-location prior) was built and unit-tested on 2026-06-28 but has **never been run**
-   against the stalled games. V474 runs that experiment before proposing anything new.
-3. **Retire what seven milestones of evidence already answered.** PHASE D (the off-ARC distributional
-   energy verifier moat: LoRA-EBM, uPRM, EBRM, plus `.473`'s MMLU-Pro continuation) is a
-   consistently-null-or-marginal result across every construction tried, and the `2026-06-30` MANDATORY
-   priority's own falsifiable retirement gate (`retire_if_same_verdict: true`) is met. V474 formally
-   retires the specific external-scorer constructions and redirects the freed majority toward the two live
-   threads above — while keeping the door open for a genuinely different mechanism class (a small,
-   separate verifier that reads the generator's own hidden states, per fresh literature) rather than a
-   fourth external-text-scorer construction.
+V475 makes three decisive moves, each directly informed by fresh literature (independently converged on
+twice -- see `research-references.md`'s two separate `V475` sections, one from `exp5172`'s in-milestone
+sweep, one from this session's three-agent sweep):
 
-V474 also reconciles a stale gap: `GAP-LIVE-INTEGRATION`'s cited evidence (`arc_strategy_router`/
-`arc_world_model_dsl` unimported, `target_levels=1`, `value_weight=0.0`) is **no longer true** —
-`exp4605`/`exp4652` already fixed the wiring and target-levels, and live-tested the value head to an
-honest zero-lift null. Re-proposing that fix would be a doomed no-op; V474 reconciles the gap doc instead
-of blindly re-attacking it.
+1. **Retry the hidden-state verifier with a different design, on a different (headroom-confirmed) corpus,
+   not just a bigger version of the same pilot.** `exp5178`'s failure has two plausible causes conflated:
+   too small a sample (n=6 questions) and too weak a probe (a naive trained centroid, not a proper trained
+   classifier). PHSV (arXiv:2504.05419) supplies a concrete, reproducible probe recipe (last-token/last-layer
+   hidden state, chunk-split reasoning, small trained MLP, AUROC 0.75-0.91 on local open-weight models).
+   Critically, per arXiv:2512.02304's headroom formalism (independently confirming what `.474`'s own PHASE D
+   retrospective found empirically), a verifier can only beat self-consistency where real headroom exists --
+   so V475 targets the MMLU-Pro pool that `ops/known-issues.md`'s 2026-07-01 headroom check already
+   confirmed has real headroom (`oracle_at_k=0.350` vs. `sc_vote=0.075`-`0.269`), not `exp5178`'s
+   near-ceiling MuSR slice. Two free baselines (self-certainty, arXiv:2502.18581; CLUE non-parametric
+   clustering, arXiv:2510.01591) are mandatory control arms, so a trained probe's extraction overhead has to
+   earn its keep against zero-training alternatives.
 
-**Same-day correction absorbed into this plan (2026-07-02, after the `.473` capstone closed):** the
-operator asked the outer loop to "fix the linter to accept both forms" for `exp5161`'s false-positive
-CRITICAL flag. Two commits (`ca5a24945`, `487ee1533`) landed a general fix
-(`_normalize_principle_wrapped_fields()` in `scripts/adversarial_verify.py`) that unwraps
-`{principle, value}`-shaped fields corpus-wide (176 artifacts affected, not just `exp5161`) before any
-check runs, and `exp5161` is now un-quarantined (`flagged_adversarial: false`, live re-check clean). This
-means the root-cause-fix half of what an earlier draft of this plan scoped as `exp5177` **is already
-done** — V474's `exp5177` is rescoped to pure forward work (scale the pilot, exercise the untested
-decentralization tier) rather than re-fixing an already-fixed bug. A separate corpus-wide `--backfill`
-dry-run also stamped 5 previously-unflagged artifacts, including `.473`'s own `exp5163` (MMLU-Pro
-continuation) with a CRITICAL `TAUTOLOGY` flag (`fewshot_oracle_at_k` and `oracle_at_k_ceiling` agree to
->5 significant figures — a redundant-field construction issue, not necessarily fabrication, but it must
-not be cited as a clean headline until reviewed). V474's Phase 0 does not re-litigate this; it is noted
-here so no V474 task treats `exp5163`'s numbers as clean.
+2. **Attack the diagnosed wall with a structurally different mechanism, not a bigger pruner.** `exp5172`'s
+   own MAP deep-read (arXiv:2605.13037) already specified the exact falsifiable gate: on CD82/SK48/SP80, run
+   pruner-only, map-only, and map-plus-pruner under the same expansion budget and reproduction gate; promote
+   MAP only if map-only or map-plus-pruner banks a level that pruner-only does not. A pre-search landmark
+   stage changes WHAT gets proposed into the search frontier; a frontier pruner (already tried) only reorders
+   or filters a frontier that structurally excludes the winner. These are complementary, not redundant, per
+   the literature's own comparison, and the exact same recommendation was independently reached THREE times
+   now (`exp5172`'s sweep, the `.474` design doc's own Phase B contingency note, and this session's fresh
+   three-agent sweep).
 
-## What V473 Proved
+3. **Diagnose before retrying DiffusionGemma, with a hard time-box and an honest bail-out.** The blocking bug
+   (`ValueError: Some modules are dispatched on the CPU or the disk before forward`, then the underlying
+   `Tensor.item() cannot be called on meta tensors` forward error) has now resisted two attempts across
+   `.474` (4 sub-attempts: wrong auto class, two `device_map=auto` retries with different model classes, one
+   with explicit `max_memory={0:24GiB,1:24GiB}` -- all failed identically). V475 tries specific, genuinely new
+   mitigations (explicit non-`auto` device maps, `_no_split_modules` inspection, non-quantized/8-bit
+   fallback) inside a fixed diagnostic budget, and if still blocked, writes an honest
+   `blocked_diffusiongemma_meta_tensor_bug_unresolved_v475` rather than burning the pilot task's turns on a
+   load that has already failed five times.
 
-V473 closed with capstone verdict:
+PHASE D's retirement is respected throughout: nothing in this milestone re-proposes an external-text-scorer
+construction on an off-ARC corpus. The one overdue MANDATORY priority (`ops/known-issues.md`: wiring
+`scripts/retro_timing_fallback.py` into the conductor, pending 4+ milestones -- `.469`, `.473`, `.474`, now
+`.475`) is picked up as a **patch-prep** task rather than a live edit, because every task this roadmap emits
+ends with the standard "do not modify `scripts/research_conductor.py`" instruction, and that file is exactly
+what needs the two-line change; this plan produces a reviewed, tested, ready-to-apply patch instead, and
+flags the actual `git apply` + wiring step as an operator/outer-loop action outside the roadmap-task sandbox.
 
-`complete: v473 reconciled with DiffusionGemma ungated for future scaling, GAP-4 scale-up not filled,
-zero new ARC levels banked, and exp5161 excluded as flagged_adversarial (subsequently un-quarantined
-same-day, see Executive Summary).`
+`_bmad/architecture.md` was last reconciled 2026-05-16 (48 days before this plan) -- past the 30-day
+freshness threshold CLAUDE.md flags. It predates the entire ARC-AGI-3 pivot, the PHASE D lifecycle
+(commit through retirement), and the verifier-tier changes since May. This is flagged to the operator
+directly and picked up as one of the two reserved infrastructure slots.
 
-Key results (all file paths under `results/`):
+## What V474 Proved (verified against primary artifacts, not paraphrased)
 
-- **`exp5160` (real win, oracle-distinct, cross-corpus replicated).** The exp4245 Set-Encoder-vs-vote ARC
-  selection win survives replication on a disjoint ARC-GEN candidate pool after resolving a `game_id`
-  terminology mismatch that had wrongly disqualified the original cross-game test. `cross_corpus_delta:
-  0.5` (oracle_at_k=0.75, set_encoder_at_1=0.75, vote_at_1=0.25), identical across 5 seeds,
-  `second_pool_leak_audit_passed: true`, `verifier_is_oracle: false`, `adversarial_verify` clean (verified
-  directly: no `flagged_adversarial` field present, i.e. never flagged).
-  `diffusiongemma_gate_updated_recommendation: ungate_now`. **Caveat carried into V474:**
-  `held_out_task_n: 24` is below CLAUDE.md's CLT floor (`N>=30` for any percentage-point delta claim) —
-  the delta is real and the mechanical linter is clean, but the sample size itself does not yet clear the
-  project's own rigor bar. This is V474 Phase A's first task.
-- **`exp5161` (GAP-4 pilot, un-quarantined 2026-07-02).** `honest_verdict:
-  complete_gap4_pilot_n60_direction_replicated_not_significant_scale_up_recommended`. Verified directly
-  against the current artifact: `flagged_adversarial: false`, `duration_s: 5.58995` (correctly
-  substrate-classified as `verifier_ensemble_against_cached_candidates`, not `live_llm_inference`, so the
-  short duration is legitimate, not a fabrication signal). The pilot itself: n=60 bounded scale,
-  `exact_test_discordant_wins=4` against a protocol-documented `>=6` floor for significance
-  (`exact_test_passes_min6_rule: false`), `exact_test_p_value_two_sided=0.125`. Direction replicates;
-  scale-up is the honest next step, not a rerun.
-- **`exp5157`/`exp5158` (deepen-wall warm-start, both honest nulls).** ReDRAW-style residual warm-start:
-  `warmstart_replay_ablation_gate_failed_honest_null_delta_0.0`. DynaMITE-RL-style goal-energy-ranker
-  carryover: `goal_energy_ranker_warmstart_gate_failed_improved_1_of_3`. `exp5159` (the gated live
-  level-up attempt) consequently reported `blocked_gate_check_failed` — zero levels banked
-  (`reproducible_total_levels` stays flat, unchanged for 2+ consecutive milestones).
-- **`exp5165` (retirement hygiene).** Formally retired the generation-axis exploration-signal scope
-  (novelty bonus / program-synthesis filter / energy-as-fitness QD — `exp4688`/`exp4689`/`exp5154`, three
-  independent nulls) into `ops/exclusion_manifest.yaml` with `blocked_patterns` scoped precisely enough
-  to NOT catch the deepen-wall or representation-fix work. This is the template V474 Phase 0 follows for
-  the larger PHASE D retirement.
-- **`exp5156` (transition task, still flagged — verified live).** `flagged_adversarial: true`, severity
-  `warn` not critical — `adversarial_verify.py`'s `qd-random-mutation-ablation-omitted` check fires
-  because the transition artifact **cites/reports** `exp5154`'s retired QD finding, not because it makes
-  a fresh QD claim. Confirmed still open (unlike `exp5161`, this one was NOT covered by the 2026-07-02
-  principle-wrapped-field fix — it is a distinct false-positive class). V474 Phase 0 fixes this.
-- **`exp5166` (hardware continuity).** KV260 and PolarFire both `hardware_smoke`-passed
-  (`no_speedup_claim: true`); GateMate `blocked_gatemate_dirtyjtag_idcode` (`openFPGALoader --detect`
-  could not read IDCODE `0x20000001`). `boards_reachable_count: 2/3`.
-- **`exp5164` (retro timing false-zero fix).** Standalone module works and is unit-tested but is
-  **explicitly not wired into `scripts/research_conductor.py`** — correctly so, since experiment task
-  prompts are barred from touching that file. This is an outer-loop/operator wiring item, not a V474
-  roadmap task (see Non-Goals).
+| Task | Verdict (verbatim key) | Key numbers |
+|---|---|---|
+| `exp5168` (archive .473->.474) | `complete_archive_473_closed_474_active_runtime_clean_exp5161_unquarantined` | 1 real win, 2 nulls, 1 blocked gate carried forward accurately |
+| `exp5169` (adversarial-verify QD false-positive fix) | `complete: exp5156_resolves_clean_qd_citation_scope_fixed_warn_only_not_quarantine` | 4 archive artifacts un-flagged, 2 QD artifacts newly flagged in backfill |
+| `exp5170` (PHASE D retirement) | `complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_preserved` | 28 artifacts examined; best point estimate exp5031 delta=+0.08 CI=[0.0,0.165]; terminal exp5163 delta=+0.025 CI=[-0.125,0.175] |
+| `exp5171` (Set-Encoder hardening, n=24->n=30) | `success_arc_set_encoder_cross_corpus_gate_passed_n30` | delta=0.5, CI95=[0.333,0.667], identical across 5 seeds, `gate_passed: true` |
+| `exp5172` (SOTA ingestion) | `complete: map_deep_read_recommends_map_pre_stage_if_phase_b_pruner_stalls` | MAP (2605.13037), Theoria, AutoMem, Unified Energy, Prism identified |
+| `exp5173` (DiffusionGemma pilot) | `blocked_diffusiongemma_meta_tensor_bug_unresolved` | Never launched; `arm_rows=[]`; 4 distinct load-path sub-attempts, all failed |
+| `exp5174` (GAP-LIVE-INTEGRATION reconciliation) | `complete: ... provenance audit finds 4/24 ... live-self-discovery vs 20/24 development-proxy` | Stale claims corrected; router/DSL now imported, `target_levels=3` |
+| `exp5175` (relational-mask-pruner A/B) | `complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged...` | Edges pruned {cd82:358, sk48:22807, sp80:0}; `states_expanded` unchanged on all 4 games; 0 levels banked |
+| `exp5176` (level-up attempt) | `complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked` | 0 levels banked |
+| `exp5177` (GAP-4 scale-up) | `complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended` | n=60->62; still not significant vs. min-6-discordant-wins floor |
+| `exp5178` (hidden-state verifier pilot) | `complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc...` | hidden_verifier accuracy 0.0 vs tuned_sc 0.333, delta=-0.333, CI=[-0.667,0.0]; n=6 questions, 48 candidates |
+| `exp5179` (hardware continuity) | `complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked...polarfire:reachable...` | 2/3 boards reachable; GateMate blocked on DirtyJTAG IDCODE 0x20000001 |
+| `exp5180` (capstone) | `complete: v474 reconciled with no flagged headline artifacts after live verification...` | `reproducible_total_levels=69/24` (flat, 3rd+ consecutive milestone) |
 
-## Three Biggest Gaps Against The PRD
+No CRITICAL `flagged_adversarial` artifacts in `.474`'s own output. `exp5163` (inherited from `.473`) still
+carries a live CRITICAL TAUTOLOGY flag and must not be cited as a clean number -- moot for V475 since PHASE D
+(the scope `exp5163` belongs to) is retired and none of V475's tasks cite its numbers.
 
-1. **FR-12 (verifiable reasoning) has an unproven oracle-distinct generalization story.** The FoVer
-   headline (AUROC 0.9131, G1-G4 all met) proves the verifier ensemble discriminates well on ONE corpus
-   under CPU verifier-scoring. The `.473` Set-Encoder win is the first ARC-domain, cross-corpus-replicated,
-   oracle-distinct positive — but at n=24 it doesn't yet meet the project's own statistical rigor bar, and
-   the actual DiffusionGemma guidance experiment the gate exists to unlock has never been run. Closing this
-   gap (Phase A) is the most direct move toward "verifiable reasoning that generalizes," not just
-   "verifiable reasoning on a frozen benchmark."
-2. **FR-11 (autonomous self-learning) has strong online-learning infrastructure that has never been
-   pointed at the project's own hardest open problem.** `arc_relational_mask_pruner.py` is, by
-   construction, a Tier-1/Tier-2 online constraint learner (research-program.md's framework: pure-CPU
-   counter-style updates from the search's own observed transitions, no offline training corpus) — but it
-   has sat unit-tested-and-unexercised since `2026-06-28`. Phase B closes this gap by actually running it
-   against the diagnosed enumeration wall, which is simultaneously the self-learning experiment CLAUDE.md
-   mandates every milestone and the most concrete lever `ops/verifier_gaps.md` currently has open.
-3. **Research-process discipline (CLAUDE.md's Failed-Experiment Rerun / Depth-over-breadth ethos) is
-   being violated by inertia, not by design.** PHASE D has run for seven milestones with a saturated null
-   or statistically-marginal result on every construction, and `GAP-LIVE-INTEGRATION` is being carried in
-   `ops/verifier_gaps.md` as `status: open` when the code it describes was fixed two milestones' worth of
-   work ago (`exp4605`, `exp4652`). Both are scope-reduction / documentation-hygiene gaps, not research
-   gaps — closing them (Phase 0) is what frees real capacity for Phases A and B instead of adding a
-   thirteenth task that just re-measures what is already known.
+## Current registry / gate state (read directly, not inferred)
 
-## Literature Incorporated For V474
+- `ops/arc_solve_registry.yaml`: `reproducible_total_levels=69`, `reproducible_total_games=24`, flat for 3+
+  consecutive milestones. The wall is diagnosed (enumeration, not selection) but not yet closed.
+- `ops/verifier_gaps.md`: GAP-4891 ("goal-induction REPRESENTATION beyond object/colour COUNTS") status
+  `building` -- floor addressed (single-positive goal-energy), but "pruning alone does not close GAP-4891's
+  enumeration wall; the next lever must generate/structure the [candidate pool] differently." GAP-4 (the
+  same-shape rule-application discriminator, separately the `exp5161`/`exp5177` forward-protocol pilot) is
+  `scale_up_recommended`, n=62 of a ~180 target floor.
+- `ops/exclusion_manifest.yaml`: PHASE D external-text-scorer construction (LoRA-EBM/uPRM/EBRM style vs. SC
+  on off-ARC corpora) is terminally retired as of `.474` (`phase_d_external_text_scorer_retired_exp5163_v474`)
+  with hidden-state/internal-representation verifiers, ARC oracle-distinct verifier work, and the FoVer
+  production ensemble explicitly named as **outside** the retired scope. ARC first-contact
+  candidate-generation exploration-signal tweaks (novelty/program-synthesis/energy-as-fitness QD) are
+  separately retired (`generation_axis_exploration_signal_retired_exp5154_v473`) -- not touched by this plan,
+  since MAP is a pre-search landmark stage on already-partially-solved games' deepening, not a first-contact
+  exploration-signal tweak.
+- `ops/north-star.md`: ARC-AGI-3 (accuracy + efficiency) remains the destination; the FoVer headline
+  (AUROC 0.9131) and the G1-G4 publication gate remain fixed and MET (`paper_ready: true` per
+  `scripts/publication_gate.py`, 2026-06-12). Neither is touched by V475 except a numeric-only
+  technical-report sync task.
+- `_bmad/architecture.md`: **Last Reconciled 2026-05-16 -- 48 days stale, past the 30-day threshold.**
+  Flagged to operator; picked up as a reserved infrastructure task (`exp5189`).
 
-Full scan in the SOTA-ingestion task's citations; headline items surfaced this planning session
-(arXiv IDs verified live via WebFetch, 2026-07-02):
+## Phase design
 
-- **uPRM** (arXiv:2605.10158, EPFL, May 2026) — the sharpest available replication target: derives a
-  step-error scoring function purely from LLM next-token probabilities (no step labels, no ground-truth
-  verification), reporting up to +15% absolute vs LLM-as-Judge for first-error localization and **+6.9%
-  vs majority voting** as a test-time verifier on ProcessBench. Carnot's uPRM replication attempts tested
-  on MuSR specifically; whether MuSR is inside uPRM's own validated domain set is a real open question the
-  retirement task (Phase 0) must check before writing the retirement's scope note, since a null on an
-  out-of-validated-domain replication is a narrower finding than "uPRM doesn't replicate."
-- **Distributional EBM for structured LLM reasoning** (arXiv:2605.18871, May 2026) — closest published
-  analog to Carnot's own architecture (heterogeneous LoRA-adapter ensemble on one frozen encoder, ensemble
-  mean ranks, ensemble std drives an abstain/regenerate loop). Its published comparisons are vs.
-  frontier-LLM single-shot (beats Qwen-72B on 5 benchmarks, matches Claude Sonnet on MuSR), **not
-  explicitly vs. self-consistency** — the exact baseline Carnot's north star requires. Its own honest
-  failure mode — "struggles where pretraining knowledge dominates (code semantics, narrative inference),"
-  i.e. wherever a cheap oracle already exists — directly corroborates Carnot's circular-moat discipline
-  (`CLAUDE.md` "Circularity / Oracle-Distinctness Discipline"). Cited in the Phase 0 retirement writeup as
-  external corroboration, not re-attempted as a fourth construction; Carnot's own replications (not the
-  source paper's frontier-LLM numbers) are what's null/marginal.
-- **TrajSelector** (arXiv:2510.16449, Yu et al.) — a **genuinely different mechanism class** from
-  everything PHASE D tried: a lightweight **0.6B-parameter** verifier reads the sampler LLM's own hidden
-  states for process-level candidate scoring, end-to-end trained, no massive step-level annotation
-  required. Best-of-32 gives +4.61% over majority voting and +4.31-12.21% over existing text-based PRMs, at
-  lower inference cost than a generative judge. This is architecturally closer to Carnot's verifier
-  philosophy than PHASE D's external-text scorers (LoRA-EBM/uPRM/EBRM all score from generated TEXT or
-  logprobs; TrajSelector scores from INTERNAL representations) — a genuinely distinct construction class,
-  not a rerun. Phase C's `exp5178` prototypes this design.
-- **VerifySteer** (arXiv:2605.20745, May 2026) — a complementary, even cheaper mechanism: a hidden-state
-  signal near verification-paragraph boundaries encodes accept/reject strictness; steering it (no
-  fine-tuning) is "competitive with self-consistency while requiring 4-7x less inference compute." Targets
-  the north star's ALREADY-RELAXED win condition (`ops/north-star.md` §5: "equally effective as the LM at
-  lower cost/latency... does NOT need an accuracy edge") more directly than TrajSelector's accuracy-lift
-  framing. Cited as the fallback/secondary design for `exp5178` if hidden-state probe training proves
-  harder to stand up than a steering intervention in the time budget.
-- **Discriminative Verification** (arXiv:2510.14913, Montgomery et al.) and **Calibrated Reasoning /
-  Explanatory Verifier** (arXiv:2509.19681, Garg et al.) — both pair a cheap, separate-model verifier with
-  self-consistency rather than replacing it, and both report results directly on MMLU-Pro-class domains.
-  The Discriminative Verification paper reports +15.3% on AIME2025 vs SOTA generative verification at much
-  lower compute; the Explanatory Verifier is specifically strong at catching "both candidates identically
-  wrong," a failure mode plain majority-vote cannot detect. Both feed `exp5178`'s design as concrete
-  precedent for how a small discriminative verifier should be trained and evaluated against a tuned-SC
-  baseline.
-- **KAEM — Kolmogorov-Arnold Energy Models** (arXiv:2506.14167) — already integrated
-  (`python/carnot/models/kaem_energy.py`, `KAEMEnergy`, Exp 447). No action needed; confirms the project's
-  existing KAN-fast-path tier is aligned with the current literature frontier, not behind it. No 2025-2026
-  paper was found using KAN specifically as a reasoning verifier/reward model — an open gap, not a search
-  miss, noted for a future milestone if the KAN tier's role expands.
-- **"Explore Before You Solve"** (arXiv:2605.25931, ARC-AGI-3-specific) — proposes AERA
-  (explore/verify/plan), reports RHAE=0.2116 (4/25) on the public games with a 0.5B model and RHAE=0.30 on
-  the private 55-game set, and finds "all 25 public ARC-AGI-3 games are solvable via non-intelligent
-  strategies," a benchmark-validity point that corroborates CLAUDE.md's existing framing (public-game
-  replays are not the scored deliverable). Gives Carnot a fresh external RHAE comparator (0.30 private)
-  against Carnot's own ~0.05-0.08.
-- **Autoregressive LMs are Secretly EBMs** (arXiv:2512.15605, revised May 2026) — theory paper proving an
-  explicit bijection between ARMs and EBMs in function space; provides formal grounding for "energy
-  VERIFIES / autoregressive GENERATES" as two views of the same optimum, strengthening the
-  oracle-distinctness framing rather than changing any concrete task.
-- **MAP: Map-then-Act Paradigm for Long-Horizon Interactive Agent Reasoning** (arXiv:2605.13037,
-  independently verified live 2026-07-02, NOT previously in Carnot's literature base) — the strongest
-  ARC-AGI-3-specific finding surfaced this planning session. A 3-stage framework (Global Exploration to
-  Task-Specific Mapping to Knowledge-Augmented Execution) builds a structured "cognitive map" of an
-  environment BEFORE acting, instead of reactive step-by-step planning; reports the approach surpasses a
-  near-zero baseline on **22 of 25 public ARC-AGI-3 games**. This maps directly onto `ops/verifier_gaps.md`
-  GAP-4891's decisive finding (goal-energy SEPARATES win from near-win but does not GUIDE the search — the
-  winning trajectory is never ENUMERATED) and GAP-ARCH-NO-HIERARCHICAL-SEARCH (no subgoal/landmark engine
-  wired): building an explicit map/landmark structure BEFORE search is architecturally distinct from
-  `exp5175`'s relational-mask-pruner (which prunes a flat frontier rather than pre-building a map).
-  CAVEAT: "surpasses near-zero baseline" is a low bar taken from an abstract-level read — this is a strong
-  LEAD, not a validated result, until read in full. NOT built into `.474` directly (the already-built,
-  unit-tested pruner deserves its first real test first); cited in `exp5172` as a priority deep-read and
-  flagged as the leading `.475` candidate if Phase B's pruner does not fully close the wall.
-- **Mind-Studio** (arXiv:2606.16070, June 2026) — synthesizes executable world models from trajectories,
-  improving chosen-action next-state-prediction from 0.3% (PoE-World's own number) to 48.7% on Montezuma's
-  Revenge — supersedes the PoE-World baseline Carnot's retired `exp4689` program-synthesis-filter attempt
-  was built against. Informational only for `.474`; relevant if program-synthesis world-model work is
-  ever reopened.
+### Phase 0 -- Transition
+`exp5181`: routine `.474`->`.475` archive/activation. Codex, `operator_override` per the standing 2026-05-29
+routine-transition authorization.
 
-Full per-paper detail (all requested source categories, plus the MAP/Mind-Studio/ARC-tech-report/p-bit-
-computer findings above) already appended to `research-references.md` under "V474 Outer-Loop Planner
-References — Off-ARC Verifier-Moat Literature And Trajectory-Enumeration Wall - 2026-07-02" (this
-planning session, both citation passes cross-verified with zero discrepancies). `exp5172` (Phase A SOTA
-ingestion) runs a further INCREMENTAL sweep and a full deep-read of MAP specifically — it does not
-re-discover what is already logged here.
+### Phase A -- DiffusionGemma unblock (diagnostic-first, time-boxed) and GAP-4 continuation
+- `exp5182`: root-cause the two-GPU device-placement failure with genuinely new mitigations (not a repeat of
+  `.474`'s four `device_map=auto` variants). Routed to `model: opus` (dual-GPU / device-placement debugging
+  matches the pre-emptive Opus-routing criteria in the roadmap-authoring instructions) with a hard turn
+  budget and an honest bail-out.
+- `exp5183`: **gated on `exp5182`'s `diffusiongemma_loadable` field being `true`.** If unblocked, runs the
+  actual energy-guided-diffusion pilot using the EDLM recipe (arXiv:2410.21357, windowed importance
+  resampling) with an intrinsic-confidence-only control arm (VFScale, arXiv:2502.01989) to satisfy the
+  Circularity/Oracle-Distinctness Discipline, and commit-position telemetry (arXiv:2606.14620) as a
+  precondition for any guidance-helped claim.
+- `exp5184`: continue the GAP-4 forward-protocol scale-up from n=62 toward the ~180-sample significance
+  floor (`exp5161`->`exp5177` lineage), as far as the turn/wall-time budget allows honestly.
 
-## Architecture
+### Phase B -- Trajectory-enumeration wall: MAP landmark pre-stage
+- `exp5185`: prototype the MAP-style map-then-act pre-stage on CD82/SK48/SP80, using the exact 3-arm
+  falsifiable gate `exp5172` already specified (pruner-only vs. map-only vs. map-plus-pruner, same expansion
+  budget, reproduction-gated). This is a structurally different mechanism from the pruner (builds landmarks
+  BEFORE search changes what gets proposed, vs. the pruner which filters an already-fixed frontier after the
+  fact) -- the literature explicitly frames them as complementary, not redundant attempts at the same fix.
+- `exp5186`: **gated on `exp5185` validating a lever** (i.e., map-only or map-plus-pruner banking a level
+  pruner-only did not). The ARC Level-Up Attempt Guarantee's mandatory >=1 attempt-per-roadmap floor.
 
-```text
-                          PHASE 0: Ledger Hygiene (frees capacity)
-                          +----------------------------------------+
-                          | exp5168 archive .473 / activate .474   |
-                          | exp5169 fix false-positive citation    |
-                          |         flag in adversarial_verify.py  |
-                          | exp5170 retire PHASE D (LoRA-EBM/      |
-                          |         uPRM/EBRM external-text-scorer |
-                          |         constructions) into exclusion  |
-                          |         manifest; hidden-state verifier|
-                          |         work explicitly excluded from  |
-                          |         the retirement scope           |
-                          +--------------------+---------------------+
-                                               |
-                +------------------------------+------------------------------+
-                |                                                              |
-   PHASE A: Cash in the ARC oracle-distinct win           PHASE B: Attack the diagnosed enumeration wall
-   +---------------------------------------------+        +----------------------------------------------+
-   | exp5171 harden exp5160: N 24->30+ (CLT      |        | exp5174 reconcile GAP-LIVE-INTEGRATION        |
-   |          floor), confirm delta survives      |        |          (evidence is stale -- exp4605/4652   |
-   |          real variance, not seed-identical   |        |          already fixed wiring+target_levels;  |
-   |          artifact                            |        |          audit what, if anything, is real)   |
-   | exp5172 SOTA ingestion: diffusion guidance +  |        | exp5175 GAP-4891 Stage-3: A/B the relational  |
-   |          hierarchical search + efficiency-    |        |          mask pruner (built+unit-tested,      |
-   |          parity verifier follow-up (feeds     |        |          never run) vs. unpruned, on the 3    |
-   |          exp5173 + Phase B)                   |        |          separating games (cd82/sk48/sp80),   |
-   | exp5173 DiffusionGemma energy-guided          |        |          reproduction-gated. THIS IS THE      |
-   |          discrete-diffusion pilot [GATED on   |        |          SELF-LEARNING EXPERIMENT (online,    |
-   |          exp5171 passing] -- HumanEval/MBPP   |        |          pure-CPU, learns from the search's   |
-   |          executable domain, AR baseline via   |        |          own observed transitions)            |
-   |          gemma-4-26B-A4B-it-GGUF              |        | exp5176 live level-up attempt using whichever |
-   +---------------------------------------------+        |          of exp5174/exp5175 validated a lever |
-                                                            |          (ARC Level-Up Attempt Guarantee)     |
-                                                            +----------------------------------------------+
-                                               |                                                              |
-                                               +------------------------------+------------------------------+
-                                                                              |
-                          PHASE C: New verifier construction, hardware, capstone
-                          +-------------------------------------------------------+
-                          | exp5177 GAP-4 scale-up toward the significance floor  |
-                          |          (methodology already fixed 2026-07-02; this  |
-                          |          is pure forward work) + real-scale test of   |
-                          |          the untested decentralization tier           |
-                          | exp5178 TrajSelector-style hidden-state verifier      |
-                          |          pilot (efficiency-parity, VerifySteer as     |
-                          |          fallback design; NOT a PHASE D rerun)        |
-                          | exp5179 hardware continuity (KV260 + PolarFire smoke +|
-                          |          GateMate dirtyJTAG re-diagnosis)             |
-                          | exp5180 capstone -- reconcile the whole milestone     |
-                          +-------------------------------------------------------+
+### Phase C -- Hidden-state verifier v2
+- `exp5187`: PHSV-style trained probe (last-token/last-layer, chunk-split, small MLP) on the MMLU-Pro
+  headroom-confirmed pool (`oracle_at_k=0.350` vs. `sc_vote=0.075`-`0.269`), with self-certainty and CLUE
+  non-parametric clustering as mandatory free-baseline control arms, and a layer-sweep (FEPoID,
+  arXiv:2605.26366) if the extraction path supports it without excessive engineering cost. This satisfies
+  research-program.md's continuous-self-learning mandate (a probe trained on the model's own accumulated
+  correct/incorrect experience) as well as the open, non-retired hidden-state-verifier thread.
+
+### Reserved infrastructure slots (per the Overdue-Priority Forcing Function's >=2-slot reservation)
+- `exp5189`: `_bmad/architecture.md` reconciliation -- bring the 48-day-stale document up to date with the
+  ARC-AGI-3 pivot, PHASE D's full lifecycle, the hidden-state-verifier program, and current hardware state.
+- `exp5190`: `retro_timing_fallback.py` wiring **patch-prep** (the MANDATORY overdue priority, pending 4+
+  milestones). Produces a reviewed, tested, ready-to-`git apply` patch plus a regression test that fails
+  today and would pass once applied -- without touching `scripts/research_conductor.py` directly, per every
+  task's standing constraint. The actual application is flagged as the next operator/outer-loop action.
+
+### Hardware continuity (mandatory, 1 combined task covering all 3 attached boards)
+- `exp5188`: KV260 (SSH+hash-verified workload, the near-terminal focus board per `ops/north-star.md` §3),
+  PolarFire (SSH+hash-verified workload), GateMate (attempt to actually resolve the DirtyJTAG IDCODE miss
+  that has now persisted across `exp5166` and `exp5179`, not just re-run the same `--detect` call). Routed
+  to `model: opus` (hardware integration / dual-board debugging).
+
+### Docs
+- `exp5191`: numeric-only sync of `docs/technical-report.md` results tables (Set-Encoder n=30 hardening,
+  any new V475 numbers) -- prose stays operator-curated per Public Documentation Discipline.
+
+### Phase Z -- Capstone
+- `exp5192`: milestone capstone, reconciling all of the above honestly (including any Phase A/B/C tasks that
+  come back blocked -- this plan does not assume every lever lands).
+
+## Dependency graph
+
+```
+exp5181 (archive/activate)
+   |
+   +-- exp5182 (DiffusionGemma diagnose+fix) --gated_on(diffusiongemma_loadable==true)--> exp5183 (pilot)
+   |
+   +-- exp5184 (GAP-4 scale-up)                                            [independent]
+   |
+   +-- exp5185 (MAP landmark pre-stage A/B/C) --gated_on(lever validated)--> exp5186 (level-up attempt)
+   |
+   +-- exp5187 (hidden-state verifier v2)                                  [independent]
+   |
+   +-- exp5188 (hardware continuity)                                       [independent]
+   +-- exp5189 (architecture.md reconciliation)                            [independent]
+   +-- exp5190 (retro-timing patch-prep)                                   [independent]
+   +-- exp5191 (technical-report numeric sync)                             [independent]
+   |
+   +-- exp5192 (capstone, reads all of the above)
 ```
 
-## SOTA Model Policy
+## Hardware requirements
 
-Per CLAUDE.md, every experiment invoking an LLM must declare at least one of the three mandated SOTA
-local GGUF models in `model_specs` UNLESS it falls under a more specific frozen-stack rule:
+| Task | Hardware | Notes |
+|---|---|---|
+| `exp5182`/`exp5183` | 2x RTX 3090 (CUDA) | DiffusionGemma's confirmed load path splits a 26B/4B-active MoE across both GPUs at 4-bit NF4; GPU 1 must be idle (checked via `nvidia-smi`) before attempting |
+| `exp5184` | ARC live-submission stack (frozen: Qwen3.5-9B-MTP on iGPU) or cached candidate pool, per whatever `exp5161`/`exp5177` already used | Continue established methodology, do not re-derive |
+| `exp5185`/`exp5186` | CPU (offline ARC arcade simulation) | No GPU required; `arc_solver_kit` reproduction gate runs on CPU |
+| `exp5187` | 1x RTX 3090 or iGPU, GGUF-cached `gemma-4-26B-A4B-it-GGUF` | Matches `exp5178`'s target model for continuity/comparability |
+| `exp5188` | KV260 (SSH), PolarFire (SSH), GateMate (USB DirtyJTAG) | No new hardware; continuity only |
+| `exp5189`, `exp5190`, `exp5191`, `exp5192` | None (CPU, aggregation/doc work) | |
 
-- **`exp5173` (DiffusionGemma pilot)** needs an autoregressive baseline for the guided-vs-unguided /
-  best-of-N comparison. Uses `unsloth/gemma-4-26B-A4B-it-GGUF` as that AR baseline — the natural,
-  scientifically-required control, not a bolted-on compliance checkbox.
-- **`exp5177` (GAP-4 scale-up)** is an offline/dev-scale calibration task (not the live ARC submission
-  path), so it uses `unsloth/Qwen3.6-35B-A3B-GGUF` for the induction-quality generation the
-  decentralization-tier local-generator-arm needs at real scale.
-- **`exp5178` (hidden-state verifier pilot)** needs a model whose hidden states it can probe for the
-  process-scoring / verification-boundary signal; uses `unsloth/gemma-4-26B-A4B-it-GGUF` (dense
-  architecture, more tractable for activation-level hooking than the MoE variant).
-- **ARC live-path tasks (`exp5174`/`exp5175`/`exp5176`)** stay on the FROZEN `Qwen3.5-9B-MTP` iGPU stack
-  per `[[project_arc_live_generator]]` for any LIVE generation — this is a more specific rule than the
-  general SOTA-model mandate and supersedes it for live-path work specifically. Any OFFLINE dev-scale
-  induction inside those tasks may use GPU 0/1 (per the 2026-06-27 GPU allocation directive) with a
-  mandated-SOTA model if a large local LLM is genuinely needed.
-- `exp5168`/`exp5169`/`exp5170`/`exp5172`/`exp5179`/`exp5180` do not invoke an LLM for their core work (a
-  transition, two infra/hygiene fixes, a literature synthesis, hardware smoke tests, and a reconciliation
-  capstone respectively) and are exempt.
+## Risk notes
 
-## Phase Plan
+- **DiffusionGemma may remain blocked a third time.** `exp5183` is gated specifically so this does not
+  cascade -- if `exp5182` fails, `exp5183` is mechanically skipped (no wasted Sonnet/codex call), and nothing
+  else in this roadmap depends on the DiffusionGemma thread.
+- **MAP may not close the enumeration wall either.** `exp5172`'s own citation frames this honestly as
+  "should be prototyped next," not "will work." The 3-arm falsifiable gate is designed so a null result
+  (pruner-only wins, or nothing banks a level) is just as informative and reportable as a positive one, and
+  `exp5186` is gated so a null `exp5185` does not force a doomed level-up attempt.
+- **The hidden-state verifier v2 may also lose to self-consistency.** If a properly-trained probe on a
+  confirmed-headroom corpus with free-baseline controls still loses, that is a strong, well-controlled
+  negative worth reporting (and would suggest the mechanism-class hypothesis itself, not just the prior
+  pilot's small N, needs revisiting) -- this is a legitimate, publication-relevant outcome either way.
+- **The retro-timing patch-prep does not close the MANDATORY priority.** It reduces the remaining work to a
+  reviewed `git apply` + smoke test, but the actual wiring still needs an operator or a differently-scoped
+  outer-loop session with permission to edit `scripts/research_conductor.py`. Flagged explicitly rather than
+  silently deferred again.
 
-### Phase 0: Ledger Hygiene (frees capacity for A and B)
+## Cross-references
 
-Reserved infrastructure slots (2, per CLAUDE.md) plus the mandatory milestone transition.
-
-- **`exp5168`** — standard archive-.473/activate-.474 transition.
-- **`exp5169`** — fix `scripts/adversarial_verify.py`'s `qd-random-mutation-ablation-omitted` check so it
-  scopes to artifacts making their OWN QD/energy-fitness claim, not any artifact that cites/reports one
-  (the `exp5156` false-positive, confirmed still live 2026-07-02 and NOT covered by the same-day
-  principle-wrapped-field fix). Also audits whether milestone-transition modules set `flagged_adversarial`
-  from `exit_code != 0` rather than from `max_severity`, since a WARN-only flag should not read the same as
-  a CRITICAL one.
-- **`exp5170`** — formally retires the PHASE D external-TEXT-scorer constructions (LoRA-EBM holistic
-  scorer, uPRM, EBRM) into `ops/exclusion_manifest.yaml`, following the `exp5165` precedent exactly.
-  Writes a single publishable-null artifact consolidating all seven milestones of evidence. Explicitly
-  scopes `blocked_patterns` to NOT catch `exp5178`'s hidden-state/internal-representation verifier
-  construction — a different mechanism class, not a rerun.
-
-### Phase A: Cash In The ARC Oracle-Distinct Win
-
-- **`exp5171`** — scale `exp5160`'s held-out cross-corpus set from n=24 to n>=30 (CLT floor) or more,
-  using the same disjoint ARC-GEN pool source, and confirm the delta survives with real (not
-  seed-identical) variance. Gates `exp5173`.
-- **`exp5172`** — SOTA-ingestion task (mandatory per CLAUDE.md's SOTA-Ingestion Cycle Discipline for a
-  bleeding-edge headline track): energy-guided/verifier-guided diffusion decoding literature (feeds
-  `exp5173`'s design), hierarchical/subgoal search for interactive agents (feeds Phase B, INCLUDING a full
-  deep-read of MAP, arXiv:2605.13037, beyond this planning session's abstract-level read — confirm or
-  refute the 22/25-games claim's magnitude and log a design note on map-then-act vs. frontier-pruning for
-  `.475`), and an incremental sweep for anything published since this session's literature pass on
-  hidden-state / discriminative verifiers (feeds `exp5178`).
-- **`exp5173`** — the DiffusionGemma Use-Case-1 pilot itself: energy-guided discrete diffusion on an
-  executable domain (HumanEval/MBPP), composing DiffusionGemma's native per-step token distribution with
-  Carnot's executable verifier ensemble during the 12-48 denoising steps, measured against an unguided
-  baseline AND a best-of-N AR baseline. Gated on `exp5171`.
-
-### Phase B: Attack The Diagnosed Enumeration Wall
-
-- **`exp5174`** — reconciliation audit: `GAP-LIVE-INTEGRATION`'s cited evidence
-  (`arc_strategy_router`/`arc_world_model_dsl` unimported, `target_levels=1`, `value_weight=0.0`) is
-  stale against current code (`arc_competition_agent.py` already imports both;
-  `SUBMITTED_TARGET_LEVELS=3` since `exp4605`; `exp4652` already live-tested a real nonzero
-  `value_weight` and found an honest zero-lift null attributed to distribution-shift/calibration, not
-  cost). Updates `ops/verifier_gaps.md`'s status and evidence fields to match reality, and separately
-  audits how many of the registry's reproducible levels are `solve_provenance:
-  live_agent_self_discovery` vs. `development_proxy` (the "mirage vs. real" question the gap actually
-  cares about).
-- **`exp5175`** — runs `arc_relational_mask_pruner.py` (built + unit-tested 2026-06-28, never
-  empirically exercised) combined with the relational goal-energy from GAP-4891 Stage 1, A/B against an
-  unpruned control, on the three games where Stage-2 confirmed goal-energy separates win from near-win
-  (cd82, sk48, sp80). Reproduction-gated. This module is, by construction, an online/self-learning
-  move-pruner (it learns which action classes never touch the relational target region from the search's
-  own observed transitions) — satisfies CLAUDE.md's mandatory self-learning-experiment requirement.
-- **`exp5176`** — reads both `exp5174` and `exp5175`'s outcomes directly (not a mechanical AND-gate, since
-  either lever alone could be the win) and attempts a real level-up on 2-3 currently-stuck games using
-  whichever validated. Satisfies the ARC Level-Up Attempt Guarantee's structural floor regardless of
-  outcome, per the `exp5159` precedent (a gated attempt that reports `blocked_upstream_gate_not_passed`
-  still counts structurally). This targets ALREADY-adaptered, already-deepened games — distinct from the
-  retired first-contact generation-axis scope (`exp4688`/`exp4689`/`exp5154`), which targeted UNSOLVED
-  games. If `exp5175`'s pruner A/B is a clean null too, `exp5176`'s own artifact should explicitly name
-  MAP (arXiv:2605.13037, map-then-act before search) as the recommended `.475` pivot direction rather than
-  a fourth flat-frontier pruning/ranking variant — the pruner and MAP attack the enumeration wall by
-  structurally different means (prune a flat frontier vs. pre-build a map/landmark structure), so a pruner
-  null does not predict a MAP null.
-
-### Phase C: New Verifier Construction, Hardware, Capstone
-
-- **`exp5177`** — GAP-4 forward-protocol scale-up. The bare-value methodology bug that briefly flagged
-  `exp5161` is already fixed (2026-07-02, `_normalize_principle_wrapped_fields()`) — this task is pure
-  forward work: scale the n=60 pilot toward the protocol's own documented `>=6`-discordant-win
-  significance floor, AND run the local-generator-arm (decentralization tier, CLAUDE.md rule 1) at real
-  pilot scale for the first time (previously only cache-smoke-tested with an identity-function response).
-- **`exp5178`** — small, cheap, exploratory pilot of a TrajSelector-style hidden-state verifier: a tiny
-  separate model reading the generator's own hidden states to score/select candidates, trained and
-  evaluated against a tuned-SC baseline on a headroom-present corpus. VerifySteer's steering-only variant
-  is the documented fallback design if hidden-state probe training proves too heavy for the time budget.
-  Targets the north star's efficiency-parity win condition. Explicitly NOT a PHASE D rerun (different
-  mechanism class: internal-representation scoring, not external-text scoring).
-- **`exp5179`** — hardware continuity: KV260 + PolarFire smoke (expected steady-state pass, per 4+
-  consecutive clean milestones) + one more GateMate dirtyJTAG IDCODE diagnostic attempt.
-- **`exp5180`** — capstone: reconcile every task, exclude flagged artifacts from headline aggregation,
-  update `ops/arc_solve_registry.yaml`/`ops/verifier_gaps.md`/`ops/known-issues.md`/`ops/status.md`/
-  `ops/changelog.md` per the Documentation Update Rules.
-
-## Dependency Graph
-
-```text
-exp5168 (transition)
-  |
-  +--> exp5169 (infra: adversarial_verify.py QD-citation-scope fix)  [independent]
-  +--> exp5170 (infra: PHASE D retirement)                           [independent]
-  +--> exp5172 (SOTA ingestion)                                      [independent]
-  +--> exp5174 (GAP-LIVE-INTEGRATION reconciliation)                 [independent]
-  +--> exp5179 (hardware continuity)                                 [independent]
-  +--> exp5177 (GAP-4 scale-up + decentralization tier)              [independent]
-  +--> exp5178 (hidden-state verifier pilot, reads exp5170's retirement scope note only) [soft dep on exp5170]
-  |
-  +--> exp5171 (harden exp5160)
-  |      |
-  |      +--> exp5173 (DiffusionGemma pilot)   [gated_on exp5171.gate_passed==true]
-  |
-  +--> exp5175 (GAP-4891 Stage-3 pruner A/B, reads exp5172's hierarchical-search citations)
-         |
-         +--> exp5176 (live level-up attempt)  [reads exp5174 + exp5175 outcomes directly]
-
-exp5180 (capstone)  <-- depends on ALL of the above (reads every artifact)
-```
-
-`exp5172` (SOTA ingestion) is a soft input to `exp5173` and `exp5175`'s designs but neither is
-mechanically `gated_on` it — ingestion informs design quality, it is not a correctness precondition.
-
-## Hardware Requirements
-
-- **`exp5173` (DiffusionGemma pilot)** needs BOTH RTX 3090s: the only confirmed-successful load path
-  (`results/diffusiongemma_energy_prior_probe.json`, `load_mode: 4bit_nf4_devmap_auto_2gpu`) splits the
-  26B/4B-active MoE across 2 GPUs at 4-bit NF4. The prior GGUF-path attempt failed
-  (`llama_cpp.Llama()` cannot load the converted GGUF — the architecture is not llama.cpp-native, this is
-  a likely-permanent blocker, do not retry it) and the naive single-GPU transformers attempt OOM'd. The
-  successful probe hit a SEPARATE, fixable bug (`Tensor.item() cannot be called on meta tensors` inside
-  the diffusion forward pass under `device_map="auto"`) that `exp5173` must resolve before the actual
-  guidance experiment can run. Per the 2026-06-27 GPU allocation directive (conductor owns GPU 0, outer
-  loop owns GPU 1), this task should check GPU-1 availability via `nvidia-smi` before launching and report
-  `blocked_gpu1_busy` honestly rather than contending silently, since it genuinely needs both devices.
-- **`exp5177` (GAP-4 scale-up)** and **`exp5178` (hidden-state verifier pilot)** need a single GPU (GPU 0,
-  conductor's dedicated device) for GGUF inference at the mandated SOTA model scale.
-- **`exp5174`/`exp5175`/`exp5176`** (ARC live-path work) use the frozen Qwen3.5-9B-MTP iGPU stack for any
-  live generation and are otherwise CPU-only (search, pruning, reconciliation).
-- **`exp5179`** needs SSH reachability to `kria` (KV260) and `polarfire`, plus USB access to the GateMate
-  A1-EVB-2M's onboard DirtyJTAG programmer (`1209:c0ca`). No new hardware acquisition needed this
-  milestone.
-
-## Prior-Failure And Exclusion Discipline
-
-- **`exp5170`** formally retires the PHASE D external-text-scorer constructions (LoRA-EBM/uPRM/EBRM,
-  spanning `exp5001`-`exp5086` plus `.473`'s `exp5163` continuation) into `ops/exclusion_manifest.yaml`,
-  with `retire_if_same_verdict: true` already satisfied by the seven-milestone evidence trail (best clean
-  positive result: LoRA-EBM on MuSR, `delta_vs_tuned_sc=+0.08`, `CI95=[0.0, 0.165]` — the lower bound
-  touches zero, not a clean exclusion; EBRM's cleanest run landed exactly `+0.0`). `blocked_patterns`
-  must be scoped to "external verifier scoring beats/matches self-consistency via a LoRA-EBM/uPRM/EBRM-
-  style TEXT-based construction" specifically — NOT to "any off-ARC verifier work" — so `exp5178`'s
-  hidden-state verifier pilot is not caught. This is the standard-format entry per the `exp5165`/
-  `cross_game_value_transfer_retired_exp4342_v401` precedents.
-- **`exp5171`/`exp5173`/`exp5174`/`exp5175`/`exp5176`/`exp5177`/`exp5178`/`exp5179` do not scope-match any
-  retired exp_id** in `ops/exclusion_manifest.yaml` as of `2026.07.473`'s close (checked against
-  `cross_game_value_transfer_retired_exp4342_v401`, `fover_in_domain_pool_retired_v469`,
-  `generation_axis_exploration_signal_retired_exp5154_v473`, and the entry `exp5170` itself is about to
-  add) — no `operator_override` is required for them. `exp5177` is a direct continuation of `exp5161`'s
-  own `scale_up_recommended` verdict (a SUCCESS terminal-prefix verdict, not a failure), so no
-  `prior_failures` block applies either.
-
-## Acceptance Criteria
-
-- `exp5160`'s cross-corpus win either survives at n>=30 with a non-degenerate CI (Phase A proceeds to
-  the DiffusionGemma pilot) or narrows honestly (the pilot stays gated and V475 re-evaluates — this is
-  an acceptable, non-doomed outcome per the gate's own falsifiability).
-- The relational-mask-pruner A/B produces a clean, reproduction-gated answer (pass or honest null) on at
-  least the 3 target games — either outcome advances `ops/verifier_gaps.md` GAP-4891 from `building` to a
-  resolved status (`filled` or a sharpened `status: building` note naming the NEXT specific lever).
-- `ops/exclusion_manifest.yaml` gains the PHASE D retirement entry, verified via
-  `scripts/exclusion_manifest_lint.py` to not false-positive against `exp5178`.
-- `python3 scripts/publication_gate.py --json` still reports `paper_ready: true` at milestone close (no
-  regression to the already-met G1-G4 gate).
-- `python3 scripts/arc_levelup_guarantee_lint.py` passes against `research-roadmap-next.yaml` (>=1
-  level-up attempt structurally present, via `exp5176`).
-- `reproducible_total_levels`/`reproducible_total_games` in `ops/arc_solve_registry.yaml` either grows or
-  is honestly reported flat with a named reason — never silently stale.
-
-## Non-Goals
-
-- **Do not re-run PHASE D's retired constructions** (LoRA-EBM external text scorer, uPRM, EBRM) without a
-  genuinely new corpus or a construction that is not scope-matched to the retirement. `exp5178`'s
-  hidden-state verifier pilot is the sanctioned exception (different mechanism class).
-- **Do not re-propose GAP-LIVE-INTEGRATION's original "wire the router" framing** — `exp5174` is a
-  reconciliation/audit, not a rebuild; the wiring already happened.
-- **Do not re-diagnose or re-fix `exp5161`'s bare-value methodology bug** — it is already fixed
-  (`_normalize_principle_wrapped_fields()`, 2026-07-02). `exp5177` is pure forward work.
-- **Do not wire `exp5164`'s retro-timing false-zero fix into `scripts/research_conductor.py`** from any
-  V474 task — that file is off-limits to experiment prompts by design. This is flagged here as an
-  outer-loop/operator action item for a future interactive session, not a roadmap task.
-- **Do not attempt a KV260 latency/speedup claim.** The board is POC-tier and effectively at steady state;
-  `exp5179`'s KV260 touch is a reachability smoke test only.
-- **Do not scope any task as "solve ALL levels of game X."** Per CLAUDE.md's Incremental-Progress Scoping,
-  `exp5176` targets +1..+n levels on 2-3 named games, never an all-levels sweep.
-- **Do not cite `exp5163`'s MMLU-Pro numbers as a clean headline.** It carries a live CRITICAL `TAUTOLOGY`
-  flag as of 2026-07-02 (`fewshot_oracle_at_k` == `oracle_at_k_ceiling` to >5 significant figures) from a
-  corpus-wide backfill scan; any V474 task touching MMLU-Pro headroom should measure fresh, independently
-  computed fields rather than importing that artifact's numbers.
+- `ops/exclusion_manifest.yaml` -- the full retired-scope list this plan was cross-checked against
+- `ops/conductor-log.md` (2026-07-03 03:04-06:14 UTC) -- the stall this plan works around
+- `research-references.md` §"V475 Planner References" (from `exp5172`) and §"V475 Outer-Loop Planner
+  References -- Session 2" (this session) -- the two independently-converged literature sweeps
+- `ops/verifier_gaps.md` GAP-4891, GAP-4 -- the open gaps `exp5185`/`exp5184` address
+- `ops/known-issues.md` -- the MANDATORY retro-timing priority (`exp5190`) and the MMLU-Pro headroom check
+  (`exp5187`'s target corpus)
+- `ops/north-star.md` §0, §3, §5 -- ARC-AGI-3 destination framing, hardware focus, verifier-moat reframe
+- CLAUDE.md "Exclusion-Manifest Cross-Check Before Planning", "Failed-Experiment Rerun Discipline",
+  "Circularity / Oracle-Distinctness Discipline", "ARC Live-Path Reachability Discipline", "Inference-Substrate
+  Declaration Discipline", "Architecture Freshness Check"
