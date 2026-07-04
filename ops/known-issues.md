@@ -2167,6 +2167,39 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
 (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
 an explicit operator directive, same standing-default discipline as the experiment default).
 
+### BUG + OPPORTUNITY: human replay corpus staging drops all win signal 2026-07-04 (outer-loop, "don't we have the human generated game event solutions handy?")
+
+Full writeup: `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md`.
+
+**The opportunity:** a real, licensed (CC BY 4.0) human replay corpus already exists at
+`data/arc_public_demo_human_replay_corpus/` with **144 complete winning human trajectories across
+all 25 public ARC-AGI-3 games** (~90,000+ actions total), each with validated per-step
+level-completion signal (`state`, `levels_completed`, `available_actions`, full frame) in the raw
+HuggingFace mirror. This is far richer than the 69-level Carnot-agent-captured corpus this project's
+own TRM-as-generator research note had assumed was the only option.
+
+**The bug:** the *staged* shards actually wired for training (14,797 rows,
+`carnot.arc_human_replay.frame_action_delta.v1`) have `level_progress=0.0` in every single row,
+including full winning sessions -- verified directly, not inferred. `exp4495` (2026-06-20, the
+staging task) dropped `won`/`levels_completed`/`win_levels`/`state`/`available_actions` when
+converting the raw mirror into training shards. This also explains why `exp4490` (the original
+frame-change-predictor consumer of this corpus) has sat in a `blocked_human_replay_corpus_not_cached`
+state since 2026-06-20 04:40 -- it ran ~1.5 hours *before* staging completed at 06:06 the same day,
+and by all available evidence has never been retried in the two weeks since, despite the corpus
+having been available the whole time.
+
+**A real nuance for the fix:** sessions contain `GAME_OVER`/retry cycles mid-session (confirmed across
+multiple games), not clean single-attempt playthroughs. A re-staging or training pipeline needs to
+resolve session-level `resets` markers before treating a session as one continuous sequence, or it
+will silently splice a death-and-restart discontinuity into a supposedly clean win-directed
+sub-trajectory.
+
+**If a future planner picks this up:** scope a narrow re-staging task first (fix `exp4495`'s
+conversion to preserve the win-segmentation fields + resolve the reset-discontinuity question) before
+either retrying `exp4490` or building a TRM-generator pilot on top of this corpus. `solve_provenance:
+development_proxy` for any downstream pilot (offline, public-games-only), per "ARC Live-Path
+Reachability Discipline."
+
 ### CANDIDATE: TRM as the ARC-AGI-3 action-sequence generator 2026-07-04 (outer-loop, "can TRM be used as a generator as that is our biggest wall?" -> "yes")
 
 **Not a new idea -- an existing, unaddressed gap, now with two supporting arguments.** Full writeup:

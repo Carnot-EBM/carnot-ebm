@@ -1473,6 +1473,20 @@ BFS and DFS and routers" — needs two more label sets the router schema already
   proposed leave-one-game-out overfit-generalization pilot (a cheap, falsifiable test of whether the
   current 69-level trajectory corpus carries enough signal at all) BEFORE committing to the full
   build this entry already scopes.
+- **UPDATE 2026-07-04 #2 (outer-loop, operator asked "don't we have the human generated game event
+  solutions handy?"):** yes — full writeup at `docs/research-notes/human-replay-corpus-staging-bug-
+  and-opportunity-2026-07-04.md`. A real, licensed human replay corpus already exists
+  (`data/arc_public_demo_human_replay_corpus/`, CC BY 4.0) with **144 complete winning human
+  trajectories across all 25 public games** (~90,000+ actions), each with validated per-step
+  level-completion signal in the raw source — this supersedes the 69-Carnot-agent-level corpus above
+  as the priority training-data source. BUT the *staged* form (the shards actually wired for
+  training) has a real bug: `level_progress` reads `0.0` in all 14,797 staged rows, including full
+  winning sessions — the staging conversion (`exp4495`) dropped `won`/`levels_completed`/`state`/
+  `available_actions` when building the training shards. Fixing this also unblocks `exp4490` (the
+  original frame-change-predictor consumer), which has sat `blocked_human_replay_corpus_not_cached`
+  since 2026-06-20 (ran ~1.5h before staging completed, never retried since). Concrete next step:
+  re-stage the corpus preserving the win-segmentation fields (and resolve the GAME_OVER/retry
+  discontinuity question the note documents) BEFORE either exp4490 or a TRM pilot consumes it.
 <!-- arc-router-training-gaps-2026-06-17:end -->
 
 ### 2026-06-17 Exp4340 ka59 E3 residual gap
