@@ -33172,6 +33172,92 @@ does not report fabricated selector wins.
 |---|---|---|
 | REQ-REPORT-5200 | Planned (`python/carnot/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`) | Planned (`tests/python/test_experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.py`) |
 
+### REQ-REPORT-5213: Hidden-State Verifier V3 Layer/Chunk Sweep
+
+The Exp 5213 workflow SHALL write
+`results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json`
+as the terminal MMLU-Pro hidden-state verifier v3 artifact. The workflow SHALL
+use `results/experiment_mmlu_pro_verifier_candidate_pool.jsonl` as the
+zero-shot candidate pool and
+`results/experiment_mmlu_pro_fresh_headroom_check.json` as the headroom
+precondition source. It SHALL read Exp 5178, Exp 5200, the V477 hidden-state
+reference trail, and the Phase-D exclusion-manifest retirement entry as context,
+SHALL NOT modify `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="live_llm_hidden_state_extraction"`.
+
+Before scoring, the workflow SHALL call `cached_sota_pair()` first for
+GGUF-backed model resolution and SHALL record exact model specs for the
+mandated SOTA GGUF IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL attempt, for at least one matching
+base model, a Transformers path configured with `output_hidden_states=True`.
+The workflow SHALL only load that non-GGUF model when the available GPU memory
+can plausibly fit it. If the richer Transformers path is unavailable, the
+artifact SHALL record the blocker and SHALL treat the validated GGUF
+final-layer embedding path as a negative-control comparison, not as a rescued
+headline rerun.
+
+When usable internal signals are available, the workflow SHALL build candidate
+features from intermediate-layer states when available, chunk-boundary
+embeddings, final-token embeddings, and any halting/convergence proxy exposed
+by the selected model path. It SHALL record which exact model produced each
+hidden-state tensor or embedding feature. The workflow SHALL split train/eval
+by `question_id` with no candidate leakage across questions, train a small
+probe on train questions only, and evaluate held-out candidate selection on
+the same eval split as tuned self-consistency, self-certainty, CLUE, and
+Radial Consensus Score controls.
+
+The workflow SHALL compute paired bootstrap CI95 and exact McNemar tests for
+the best probe against tuned SC, self-certainty, CLUE, and RCS. It SHALL set
+`beats_all_controls=true` only when the best probe beats every control and
+every paired bootstrap CI lower bound is positive. It SHALL set
+`retire_mmlu_hidden_state_path=true` when no richer signal beats all controls
+with positive paired CIs, and SHALL update `ops/verifier_gaps.md` with the
+remaining failure modes and retirement recommendation when retirement is true.
+Gold labels SHALL be used only for train/eval supervision and scoring, so
+`verifier_is_oracle` SHALL be false.
+
+The terminal artifact SHALL include principle-wrapped fields `models_used`,
+`model_specs`, `intermediate_layer_available`,
+`chunk_features_available`, `halting_or_convergence_signal_available`,
+`best_probe_accuracy`, `tuned_sc_accuracy`, `self_certainty_accuracy`,
+`clue_accuracy`, `radial_consensus_score_accuracy`,
+`beats_all_controls`, `retire_mmlu_hidden_state_path`,
+`verifier_is_oracle`, `inference_substrate`, `honest_verdict`,
+`random_seed`, `reproducibility_checksum`, and `headroom_present`. The
+`honest_verdict` SHALL start with `complete:`, `complete_`, `success:`,
+`success_`, or `blocked_` and SHALL state whether v3 beats all controls or
+retires the MMLU-Pro hidden-state path.
+
+#### SCENARIO-REPORT-5213: Richer Hidden Signals Decide Retirement
+
+**Given** the zero-shot MMLU-Pro candidate pool has 240 rows, the fresh
+headroom artifact reports positive headroom, and at least one mandated GGUF is
+cached
+**When** the Exp 5213 workflow runs
+**Then** it records the `cached_sota_pair()` resolution, attempts
+`output_hidden_states=True`, extracts every technically available
+layer/chunk/final/convergence signal, evaluates a trained probe and all four
+controls on grouped question splits, computes paired bootstrap CIs and
+McNemar tests for every control comparison, keeps `verifier_is_oracle=false`,
+and sets `retire_mmlu_hidden_state_path` from the positive-CI beats-all gate.
+
+#### SCENARIO-REPORT-5213-BLOCKED-PRECONDITION: Missing Pool Or Signals Blocks Honestly
+
+**Given** the MMLU-Pro candidate pool is missing, has the wrong row count, or
+no hidden-state/embedding feature path can be used
+**When** the Exp 5213 workflow runs
+**Then** it writes a terminal blocked artifact with all required schema fields,
+records the failed precondition, preserves the zero-shot corpus identity,
+keeps `verifier_is_oracle=false`, and does not fabricate selector wins.
+
+## Implementation Status (REQ-REPORT-5213)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5213 | Planned (`python/carnot/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.py`, `results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json`) | Planned (`tests/python/test_experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.py`) |
+
 ### REQ-REPORT-5181: Archive .474, Activate .475, And Preserve The Precise Handoff Truth
 
 The Exp 5181 workflow SHALL read every `.474` result artifact from

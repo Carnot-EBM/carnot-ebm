@@ -2740,3 +2740,12 @@ the *structural* verifier/solver gaps behind the 0.08 first live score. Several 
 - candidate design: add a stronger supervised hidden-state probe or transformer-layer sweep once output_hidden_states access is practical.
 - priority: medium; oracle-recoverable probe misses=8 on this eval split.
 <!-- experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476:end -->
+
+<!-- experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477:start -->
+### experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477
+- status: retired
+- evidence: `results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json`; honest_verdict=complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025; best_probe_accuracy=0.075; tuned_sc_accuracy=0.075; self_certainty_accuracy=0.075; clue_accuracy=0.025; radial_consensus_score_accuracy=0.025.
+- failure mode: mmlu_hidden_state_path_retired_no_positive_ci_vs_all_controls.
+- residual gap: richer hidden-state access did not provide a positive-CI selector win over tuned SC, self-certainty, CLUE, and RCS on the headroom-confirmed MMLU-Pro pool.
+- recommendation: retire MMLU-Pro hidden-state verifier path; do not rerun this path without a new non-final-layer internal signal or a different corpus-level mechanism.
+<!-- experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477:end -->
