@@ -28,11 +28,26 @@ on a different combinatorial domain.
 
 ## What's already been tried on ARC with TRM, and why it doesn't count against this
 
-A **Sudoku-trained** TRM checkpoint was run as a static ARC-1/2 grid-transform generator
-(`scripts/experiments/trm_arc_eval_harness.py`) and was weak: pass@1000 = 0.005 (ARC-1), 0.025
-(ARC-2) — `results/trm_arc_baseline_arc_v1.json` / `arc_v2.json`. This is an *expected* result of
-testing a model trained on a completely different domain, not evidence the TRM-as-generator paradigm
-fails on ARC — it's the reason the gap calls for a TRM trained on ARC's own data specifically.
+**Correction (2026-07-04, after the operator asked "did we already try that before?"):** an earlier
+draft of this note cited `results/trm_arc_baseline_arc_v1.json`/`arc_v2.json` (pass@1000 = 0.005 /
+0.025) as evidence of a weak "sudoku-trained checkpoint tested on ARC" attempt. Verified against the
+actual artifacts and git history and that attribution was wrong. `arc_v1`/`arc_v2` are just named
+checkpoint slots in `scripts/experiments/trm_arc_eval_harness.py`'s own CLI, referring to the
+**official `arcprize/trm_arc_prize_verification` checkpoint** (genuinely ARC-trained, not Sudoku).
+The 0.005/0.025 numbers are most likely a methodology artifact: the same checkpoint, reproduced
+properly on 2026-06-09 (`results/trm_verifier_rerank_opportunity.json`, commit `5f56ccc37`, bounded
+to complete each task's full ~1000-augmentation vote) scored pass@2 ~0.52, pass@1000 ~0.62 on a
+29-task subset — genuinely strong, matching the checkpoint's known published range. The commit
+message for that reproduction explicitly flags that an *unbounded* eval risks incomplete per-task
+voting, which plausibly explains the degenerate near-zero numbers in the other two artifacts on the
+same checkpoint name. **Corrected conclusion: static ARC-1 grid-transform solving with TRM has been
+tried and genuinely works well (~45-62% pass@K on the properly-evaluated official checkpoint) — a
+stronger existing precedent than originally stated here, not a weaker one.** This does not change the
+note's actual claim, which was never about static grid-transform solving: no TRM has been trained on
+or evaluated against ARC-AGI-3's *live, interactive action-sequence* format, in any of these
+artifacts, at any performance level. That distinction is what `GAP-ARC-TRM-TRAINED-ON-ARC` and this
+note are about, and it holds unchanged after this correction.
+
 Separately, `exp4100`'s "TRM ARC engine" (`docs/research-notes/arc-agi3-levers-tried-x-verdict-
 2026-06-25.md`) was retired — but that was a verifier-RFT'd TRM used as a *dynamics/world-model
 engine* (predicting state transitions), a different mechanism from directly refining candidate action
@@ -110,8 +125,11 @@ full-FT-on-a-3090 build the existing gap entry already scoped.
 - `ops/verifier_gaps.md` `GAP-ARC-TRM-TRAINED-ON-ARC` — the existing open gap this note adds evidence
   to (update this entry with a pointer to this note rather than tracking the idea in two places)
 - `results/experiment_sudoku_energy_vs_ar_v1.json` — the cross-domain precedent
-- `results/trm_arc_baseline_arc_v1.json` / `arc_v2.json` — the weak sudoku-trained-checkpoint-on-ARC
-  result (expected, not disqualifying)
+- `results/trm_verifier_rerank_opportunity.json` (commit `5f56ccc37`) — the properly-bounded
+  reproduction of the official checkpoint's real static-ARC-1 performance (pass@2 ~0.52, pass@1000
+  ~0.62 on a 29-task subset); `results/trm_arc_baseline_arc_v1.json` / `arc_v2.json` — the same
+  checkpoint evaluated a different (likely unbounded/incomplete-voting) way, giving degenerate
+  near-zero numbers -- a methodology artifact, not a weak-checkpoint finding (correction 2026-07-04)
 - `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md` — exp4100's retired TRM-as-
   dynamics-engine thread (scope-distinct from this proposal)
 - `results/trm_runs/DO_NOT_RELAUNCH` — the retirement sentinel; scoped narrowly to the Sudoku-Extreme
