@@ -10276,3 +10276,4 @@ web search: |
 | 2026-07-04 10:47 UTC | PHASE 1 GAP-1 registry decision -- repair gate-fie | OK | 85 passed, 1 warning in 7.89s |
 | 2026-07-04 12:12 UTC | PHASE 1 GAP-4 authenticity audit -- quarantine fla | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ol_n"] == 0
 +  |
+| 2026-07-04 12:38 UTC | PHASE 1 GAP-4 authenticity audit -- quarantine fla | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
