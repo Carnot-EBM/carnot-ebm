@@ -10264,3 +10264,4 @@ web search: |
 | 2026-07-04 03:48 UTC | PHASE A5 hidden-state verifier v3 -- intermediate/ | OK | 104 passed, 1 warning in 8.37s |
 | 2026-07-04 05:16 UTC | PHASE A6 Continuous Self-Learning -- verifier-memo | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output:  == "heldout_d |
 | 2026-07-04 05:24 UTC | PHASE A6 Continuous Self-Learning -- verifier-memo | OK | 92 passed, 1 warning in 11.16s |
+| 2026-07-04 05:43 UTC | PHASE B1 ARC PAW amortization gate -- decide wheth | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
