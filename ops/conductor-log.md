@@ -10261,3 +10261,4 @@ web search: |
 | 2026-07-04 02:38 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
 | 2026-07-04 03:00 UTC | PHASE A3 GAP-4 SOTA local candidate expansion -- b | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, DURATIO |
 | 2026-07-04 03:20 UTC | PHASE A4 gated on exp5211 candidate_pool_n >= 120  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-07-04 03:48 UTC | PHASE A5 hidden-state verifier v3 -- intermediate/ | OK | 104 passed, 1 warning in 8.37s |
