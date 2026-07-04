@@ -25069,3 +25069,96 @@ uplift, and writes the required artifact without claiming a broad benchmark.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5226 | Planned (`python/carnot/experiment_5226_veribmc_local_solver_feedback_pilot_v478.py`, `results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json`) | Planned (`tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py`) |
+
+### REQ-VERIFY-5238: VerIbmc Methodology-Correct Rerun Or Retire V479
+
+The repository SHALL provide Exp 5238 at
+`python/carnot/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`
+and write
+`results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json`
+without modifying `scripts/research_conductor.py`. The rerun SHALL repeat the
+Exp 5226 VerIbmc-style comparison under methodology-complete receipts:
+deterministic solver-only, local SOTA GGUF LLM-only, and local SOTA GGUF plus
+deterministic solver-feedback arms on the same fixed mini-suite and scoring
+rules.
+
+Before any non-blocked run, the runner SHALL use
+`scripts.experiment_template.cached_sota_pair(gpu_indices=(0, 1))` to construct
+`MODEL_SPECS`. A non-blocked artifact SHALL include at least one mandated SOTA
+GGUF `hf_id` from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If no mandated GGUF is available, the
+runner SHALL emit a `blocked_` precondition-check artifact before attempting a
+headline run.
+
+The artifact SHALL record fixed source paths, random seed, target model,
+resolved `model_specs`, models used, runtime, reproducibility checksum, prompt
+template hash, verifier command, and every verifier pass/fail result. For a
+successful compute-bound local-GGUF run, `methodology_receipts_complete` SHALL
+be true only when the seed, checksum, model receipts, prompt hash, verifier
+receipts, and duration floor are present so the artifact is not missing
+methodology evidence. Correctness SHALL remain determined by deterministic
+solver feedback rather than LLM self-judgment.
+
+The terminal artifact SHALL include principle-wrapped fields
+`preconditions_checked`, `model_specs`, `models_used`, `target_model`,
+`random_seed`, `reproducibility_checksum`, `n_examples`,
+`solver_only_solved`, `llm_only_solved`, `llm_solver_feedback_solved`,
+`solver_feedback_uplift`, `methodology_receipts_complete`,
+`retire_current_veribmc_path`, `prompt_template_hash`, `verifier_command`,
+`verifier_pass_fail_log`, `source_paths`, `validation_commands_run`,
+`inference_substrate`, and `honest_verdict`. For a non-blocked run,
+`inference_substrate` SHALL be
+`local_sota_gguf_plus_deterministic_solver_feedback`; blocked precondition
+artifacts MAY use `precondition_check_only`. `honest_verdict` SHALL start with
+`complete:`, `complete_`, `success:`, `success_`, or `blocked_` and state
+whether solver feedback improved, stayed null, or caused the current path to
+be retired.
+
+Required field principles:
+
+- `preconditions_checked`: principle "True only when cached SOTA GGUF, deterministic solver, source paths, and fixed mini-suite preconditions were checked before any headline run."
+- `model_specs`: principle "MODEL_SPECS resolved through scripts.experiment_template.cached_sota_pair(), including at least one mandated local SOTA GGUF for a non-blocked run."
+- `models_used`: principle "List of HuggingFace model ids actually selected for the local GGUF proposal path."
+- `target_model`: principle "The primary hf_id selected for local GGUF proposal generation, or blocked when preconditions fail."
+- `random_seed`: principle "Single deterministic seed used for prompt generation, solver ordering, and reproducibility receipts."
+- `reproducibility_checksum`: principle "Non-empty checksum over seed, code, spec, and prior-result inputs for rerun reproducibility."
+- `n_examples`: principle "Number of fixed mini-suite examples evaluated under every non-blocked arm."
+- `solver_only_solved`: principle "Count accepted by the deterministic solver-only baseline on the same examples and scoring rules."
+- `llm_only_solved`: principle "Count accepted from initial local SOTA GGUF proposals before solver-feedback retry."
+- `llm_solver_feedback_solved`: principle "Count accepted after at most one structured deterministic solver-feedback retry."
+- `solver_feedback_uplift`: principle "llm_solver_feedback_solved minus the stronger baseline divided by n_examples."
+- `methodology_receipts_complete`: principle "True only when seed, checksum, prompt hash, model specs, target model, duration floor, verifier command, and per-check pass/fail receipts are complete."
+- `retire_current_veribmc_path`: principle "True when methodology-clean receipts show solver-feedback uplift is not positive, retiring this exact local VerIbmc path until a new mechanism or larger labeled benchmark exists."
+- `prompt_template_hash`: principle "Stable hash of the initial and feedback prompt templates used for every fixture example."
+- `verifier_command`: principle "Deterministic verifier invocation used to score every solver-only, LLM-only, and feedback proposal."
+- `verifier_pass_fail_log`: principle "One pass/fail receipt per verifier evaluation, preserving example id, arm, parsed candidate, obligation, and counterexample."
+- `source_paths`: principle "Repository paths anchoring the prior artifact, reference note, spec, model registry, template, module, and tests used by the rerun."
+- `validation_commands_run`: principle "Commands and smoke checks run to validate the methodology-correct rerun."
+- `inference_substrate`: principle "Must be local_sota_gguf_plus_deterministic_solver_feedback for a non-blocked run; blocked precondition artifacts may use precondition_check_only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and state whether solver feedback improved, stayed null, or was retired."
+
+If `solver_feedback_uplift <= 0` under complete methodology receipts, the
+artifact SHALL set `retire_current_veribmc_path=true` for this specific local
+VerIbmc-style solver-feedback path until a new mechanism or larger labeled
+benchmark exists.
+
+### SCENARIO-VERIFY-5238: Clean Null Retires The Current Local Feedback Path
+
+Given the Exp 5226 prior artifact, the VerIbmc reference note, an importable
+deterministic solver, and at least one mandated cached local SOTA GGUF resolved
+through `scripts.experiment_template.cached_sota_pair()`, when Exp 5238 runs,
+then it evaluates solver-only, LLM-only, and LLM-plus-solver-feedback arms on
+the same fixed mini-suite, records prompt/verifier/methodology receipts,
+computes the feedback uplift, writes the required terminal artifact, and marks
+the current path retired when the clean uplift is not positive.
+
+If no mandated local SOTA GGUF is available, then the same runner writes a
+`blocked_` precondition-check artifact with `target_model="blocked"`,
+`methodology_receipts_complete=false`, and no headline solver-feedback claim.
+
+## Implementation Status (REQ-VERIFY-5238)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5238 | Planned (`python/carnot/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`, `results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json`) | Planned (`tests/python/test_experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`) |
