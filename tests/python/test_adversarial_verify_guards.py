@@ -104,6 +104,21 @@ def test_tautology_allows_same_corpus_selector_cross_family_delta_tie():
     assert "TAUTOLOGY" not in _kinds(flags)
 
 
+def test_req_report_5224_row_count_fields_are_not_tautology_metrics():
+    """REQ-REPORT-5224: canonical_pool_n may equal regenerated_rows by construction."""
+
+    flags = []
+    av.check_tautology(
+        {
+            "canonical_pool_n": 120,
+            "regenerated_rows": 120,
+            "repaired_rows": 0,
+        },
+        flags,
+    )
+    assert "TAUTOLOGY" not in _kinds(flags)
+
+
 # --- 3. FALSE_NEGATIVE_RISK on degenerate null claims ----------------------
 
 def test_fnr_flip_count_zero():

@@ -33065,6 +33065,64 @@ machine-readable reasons before any validation artifact can be marked passed.
 |---|---|---|
 | REQ-REPORT-5223 | Implemented (`python/carnot/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py`, `python/carnot/schemas/gap4_candidate_record_v1.json`, `results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json`) | Implemented (`tests/python/test_experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py`) |
 
+### REQ-REPORT-5224: GAP-4 Canonical Pool Builder V478
+
+The repository SHALL provide Exp 5224 at
+`python/carnot/experiment_5224_gap4_canonical_pool_builder_v478.py` to build
+exactly one canonical GAP-4 candidate pool for downstream validation without
+running the GAP-4 scale-validation statistical claim. The workflow SHALL read
+Exp 5223's audit artifact and the canonical schema at
+`python/carnot/schemas/gap4_candidate_record_v1.json`. If Exp 5223 reports
+`gap4_pool_repairable=true`, it SHALL repair only fields recoverable from
+existing source artifacts or logs. If fewer than 120 canonical rows survive,
+it SHALL regenerate the missing rows with at least one mandated local SOTA GGUF
+model resolved through `cached_sota_pair()` and SHALL record the concrete model
+IDs, model paths, deterministic prompt digest, seed, decoding protocol, and
+pass@1/pass@2 readiness fields for every row.
+
+The builder SHALL use a structured/constrained generation protocol inspired by
+P-GCD/STATIC/ProvenanceGuard: deterministic prompt templates, seeded row IDs,
+schema validation, explicit protocol fields, and provenance-bearing source-task
+references. Regenerated rows SHALL be validation-ready candidate records, not
+GAP-4 significance evidence. The terminal artifact SHALL be
+`results/experiment_5224_gap4_canonical_pool_builder_v478.json` and SHALL
+include bare top-level fields `gap4_canonical_pool_usable`,
+`canonical_pool_n`, `canonical_pool_path`, `repaired_rows`,
+`regenerated_rows`, `model_specs`, `models_used`, `random_seed`,
+`protocol_fields_complete`, `adversarial_verify_passed`,
+`inference_substrate`, and `honest_verdict`. `gap4_canonical_pool_usable`
+SHALL be `true` only when the canonical pool has at least 120 schema-valid rows,
+complete provenance, complete protocol fields, and adversarial verification
+passes. `honest_verdict` SHALL start with `complete:`, `complete_`,
+`success:`, or `success_` and SHALL state whether the canonical GAP-4 pool is
+usable for validation.
+
+#### SCENARIO-REPORT-5224-REGENERATE: Nonrepairable Exp 5223 Pool Becomes Canonical
+
+Given Exp 5223 reports `gap4_pool_repairable=false` for the flagged v477 pool,
+when Exp 5224 builds the canonical pool, then it writes at least 120 canonical
+candidate records, records `repaired_rows=0`, records `regenerated_rows` equal
+to the generated deficit, includes at least one mandated SOTA GGUF in
+`model_specs` and `models_used`, sets `protocol_fields_complete=true`, passes
+the Exp 5223 canonical row guard, passes adversarial verification, and writes
+`gap4_canonical_pool_usable=true` without claiming the GAP-4 scale-validation
+statistical result.
+
+#### SCENARIO-REPORT-5224-REPAIR-ONLY: Verified Repair Does Not Invent Provenance
+
+Given Exp 5223 reports `gap4_pool_repairable=true` and existing source
+artifacts contain enough canonical fields to recover rows without invention,
+when Exp 5224 builds the canonical pool, then it preserves those recovered
+fields, reports `models_used=[]` only when all rows were repaired from verified
+provenance, and regenerates only the remaining deficit if fewer than 120 rows
+survive repair.
+
+## Implementation Status (REQ-REPORT-5224)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5224 | Planned (`python/carnot/experiment_5224_gap4_canonical_pool_builder_v478.py`, `results/experiment_5224_gap4_canonical_pool_builder_v478.json`) | Planned (`tests/python/test_experiment_5224_gap4_canonical_pool_builder_v478.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write

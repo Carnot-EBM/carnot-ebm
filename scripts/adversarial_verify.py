@@ -362,6 +362,7 @@ def _is_count_field(name: str) -> bool:
         "_n",
         "num_",
         "_num",
+        "rows",
         "total",
         "size",
         "_index",
