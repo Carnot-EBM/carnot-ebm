@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.477",
+  "generated_at": "2026-07-04T08:09:59Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The authoritative timing block for milestone 2026.07.477 contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Therefore no slowest experiment, GPU utilization finding, or DualGPURunner miss can be attributed to this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No experiment-level operational bottleneck can be ranked because the timing source reports no experiment commits since activation.",
+    "GPU idle is not flagged as a bottleneck because the timing source contains no compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Add a retrospective preflight that emits an explicit no-experiment-commits artifact before generating GPU or slowest-run analysis when both timing sources are empty.",
+    "Gate GPU efficiency recommendations mechanically on compute_bound tags so idle synthesis-only windows do not create false bottleneck work.",
+    "Require closeout prompts to include either structured timing entries or an explicit no-data sentinel before asking for top-5 slowest experiments."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Preserve the no-data sentinel path and skip ranking when the experiment list is empty.",
+    "Make compute_bound tag presence a hard prerequisite for GPU-idle action items.",
+    "Emit a clear 0-experiments-completed closeout note before scheduling performance-tuning work."
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main risk in this retro is over-reading adjacent milestone records; the prompt restricts operational numbers to the supplied timing and GPU blocks. The correct conclusion is absence of milestone-scoped timing evidence, not a performance diagnosis.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
