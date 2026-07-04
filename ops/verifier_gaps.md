@@ -559,6 +559,27 @@ held-out ARC-AGI-2/ConceptARC tasks (the protocol's full bar for `status: filled
 `status` stays **open — FIRST POSITIVE LANDED, now with a bounded-scale (n=60) directional replication
 on top, still short of the significance floor and the decentralization tier.**
 
+### GAP-4: Exp 5212 .477 expanded-pool scale validation (blocked by protocol labels)
+
+**2026-07-04.** `results/experiment_5212_gap4_scale_validation_gated_v477.json`
+loaded the usable Exp 5211 expanded pool (`candidate_pool_n=120`,
+`gap4_expansion_usable=true`) and kept the Exp 5161/5177/5197 protocol fixed.
+All 120 rows passed Exp 5211's feasible/demo-perfect pool gate but lacked the
+registered `vote_top2` / `gated_top2` pass@2 labels required to compare vote vs
+rule-execution gated pass@2 without changing the method mid-test. Result:
+`n_scored=0`, `excluded_rows=120`, exclusion summary
+`missing_protocol_pass2_fields=120`, `exact_test_discordant_wins=0`,
+`exact_test_discordant_losses=0`, `exact_test_p_value_two_sided=1.0`,
+`exact_test_passes_min6_rule=false`, CI95 `[0.0, 0.0]`,
+`gap4_status_recommendation=blocked`.
+
+GAP-4 remains **open**. The failure mode is not a negative significance result
+on 120 protocol-scored rows; it is a blocked validation because the expanded
+local-generation pool is not yet a vote-vs-gated pass@2 evaluation pool. A
+future fill still requires the unchanged floor: at least six discordant wins,
+zero discordant losses, and two-sided exact `p < 0.05` on rows that already
+carry the established protocol labels.
+
 ### GAP-4 Agreement Selector Closure (Exp 4023)
 - status: retired as selector R&D; agreement is a CONFIDENCE LABEL ONLY, not a precision selector.
 - evidence aggregated: chain-arms adversarial report narrowed the result to unestablished precision
