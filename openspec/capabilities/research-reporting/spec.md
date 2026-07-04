@@ -32845,6 +32845,90 @@ measurement.
 |---|---|---|
 | REQ-REPORT-5197 | Implemented (`python/carnot/experiment_5197_gap4_scaleup_real_checkpoint_v476.py`) | Implemented (`tests/python/test_experiment_5197_gap4_scaleup_real_checkpoint_v476.py`) |
 
+### REQ-REPORT-5211: GAP-4 SOTA Local Candidate Expansion V477
+
+The repository SHALL provide Exp 5211 at
+`python/carnot/experiment_5211_gap4_sota_local_candidate_expansion_v477.py`
+to build a larger GAP-4 same-shape transform candidate source pool before any
+new significance validation. The workflow SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` first, SHALL record every returned
+`hf_id` and `model_path`, and SHALL use no legacy tiny models unless the SOTA
+pair is absent, in which case it SHALL write a blocked artifact that marks the
+expected tiny-model output quality as poor rather than using tiny outputs as
+headline evidence.
+
+When the SOTA pair resolves, the workflow SHALL prompt at least one mandated
+local SOTA GGUF for same-shape transform code on a task not already scored in
+Exp 5197. Before a row enters the candidate pool, the workflow SHALL enforce a
+FALCON-style feasibility guard: Python parsing succeeds, restricted execution
+succeeds, every train demo is reproduced exactly, the predicted test output
+shape matches the test input shape, generated code uses no imports, `open`,
+`eval`, or subprocess access, and the prompt, repair, row, and artifact expose
+no test gold. Invalid candidates MAY be repaired with a bounded budget using
+only syntax, runtime, and demo-failure information; candidates that still fail
+SHALL be rejected. The workflow SHALL write an atomic checkpoint after every
+accepted or rejected row and stop at `candidate_pool_n >= 120` or task-budget
+exhaustion.
+
+The terminal artifact SHALL be
+`results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json` and
+the checkpoint SHALL be
+`results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json`.
+The artifact
+SHALL include bare top-level fields `candidate_pool_n` and
+`gap4_expansion_usable`, plus `models_used`, `model_specs`,
+`sota_gguf_resolved`, `accepted_rows`, `rejected_rows`, `repair_attempts`,
+`leakage_audit_passed`, `checkpoint_path`, `inference_substrate`, and
+`honest_verdict`. `candidate_pool_n` SHALL count only feasible demo-perfect
+rows. `gap4_expansion_usable` SHALL be `true` only when `candidate_pool_n >=
+120` and `leakage_audit_passed=true`. `inference_substrate` SHALL equal
+`live_llm_generation_with_deterministic_execution_guard`, and
+`honest_verdict` SHALL start with `complete:`, `complete_`, `success:`,
+`success_`, or `blocked_` while never claiming GAP-4 significance.
+
+Required field principles:
+
+- `candidate_pool_n`: principle "BARE top-level integer used by exp5212 gate. Count only feasible, demo-perfect rows."
+- `gap4_expansion_usable`: principle "BARE top-level boolean used by exp5212 gate. True only if candidate_pool_n >= 120 and leakage_audit_passed is true."
+- `models_used`: principle "Exact local SOTA GGUF Hugging Face IDs actually used for live generation; tiny fallback IDs are allowed only in blocked/smoke artifacts."
+- `model_specs`: principle "Every cached_sota_pair() return is recorded with name, hf_id, gpu, and model_path so the local SOTA path is auditable."
+- `sota_gguf_resolved`: principle "Bare boolean cache gate; false writes a blocked artifact rather than silently substituting tiny models."
+- `accepted_rows`: principle "Rows accepted only after parse, restricted execution, demo-perfect, same-shape, and leakage guards pass."
+- `rejected_rows`: principle "Rows rejected after bounded repair still fails, preserving the failed denominator."
+- `repair_attempts`: principle "Counts bounded FALCON-style syntax/runtime/demo repair attempts, not unbounded search."
+- `leakage_audit_passed`: principle "True only when no test gold, oracle target, import/open/eval/subprocess path, or Exp 5197 scored task leaks into accepted rows."
+- `checkpoint_path`: principle "Path to the atomic per-row progress ledger used for resume and audit."
+- `inference_substrate`: principle "Must be live_llm_generation_with_deterministic_execution_guard."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and must not claim GAP-4 significance."
+
+### SCENARIO-REPORT-5211: Candidate Pool Grows Without Significance Claim
+
+Given the local SOTA GGUF pair resolves, at least 120 same-shape source tasks
+not already scored in Exp 5197 are available, and at least one mandated SOTA
+GGUF is prompted for transform code, when Exp 5211 runs, then it writes a
+checkpoint after every accepted or rejected row, admits only rows passing the
+FALCON-style feasibility guard, records any bounded repair attempts, writes the
+terminal JSON artifact, sets bare `candidate_pool_n >= 120`, sets bare
+`gap4_expansion_usable=true` only after leakage audit passes, declares
+`live_llm_generation_with_deterministic_execution_guard`, and emits a terminal
+honest verdict that does not claim GAP-4 significance.
+
+### SCENARIO-REPORT-5211-BLOCKED-SOTA: Missing SOTA Cache Blocks Honestly
+
+Given `cached_sota_pair(gpu_indices=(0, 1))` returns `None`, when Exp 5211
+runs, then it writes the terminal JSON artifact with
+`sota_gguf_resolved=false`, `candidate_pool_n=0`,
+`gap4_expansion_usable=false`, empty accepted rows, cache-status evidence for
+the mandated SOTA IDs, and an `honest_verdict` starting with
+`blocked_sota_gguf_not_cached` instead of silently using tiny legacy models for
+headline evidence.
+
+## Implementation Status (REQ-REPORT-5211)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5211 | Planned (`python/carnot/experiment_5211_gap4_sota_local_candidate_expansion_v477.py`, `results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json`) | Planned (`tests/python/test_experiment_5211_gap4_sota_local_candidate_expansion_v477.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write
