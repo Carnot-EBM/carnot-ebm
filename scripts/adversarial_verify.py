@@ -356,6 +356,9 @@ def _is_count_field(name: str) -> bool:
     """Field whose name implies a combinatorial count — small-integer
     coincidence is plausible, not suspicious."""
     nl = name.lower()
+    tokens = set(re.findall(r"[a-z0-9]+", nl))
+    if tokens & {"wins", "losses", "ties"}:
+        return True
     count_markers = (
         "count",
         "n_",
@@ -1596,6 +1599,8 @@ def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
                 )
         # Implausible 0.0 on an error/loss field
         if any(s in kl for s in perfect_error_fields) and vf == 0.0:
+            if _is_count_field(k) and _is_integer_value(vf):
+                continue
             if _is_declared_honest_zero_delta(k, d):
                 continue
             # Allow 0.0 only if the field name is a clear baseline marker

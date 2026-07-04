@@ -33123,6 +33123,86 @@ survive repair.
 |---|---|---|
 | REQ-REPORT-5224 | Planned (`python/carnot/experiment_5224_gap4_canonical_pool_builder_v478.py`, `results/experiment_5224_gap4_canonical_pool_builder_v478.json`) | Planned (`tests/python/test_experiment_5224_gap4_canonical_pool_builder_v478.py`) |
 
+### REQ-REPORT-5225: GAP-4 Clean Canonical-Pool Scale Validation V478
+
+The repository SHALL provide Exp 5225 at
+`python/carnot/experiment_5225_gap4_clean_scale_validation_gated_v478.py` to
+run the clean GAP-4 scale-validation decision over the canonical pool emitted
+by Exp 5224. The workflow SHALL first read
+`results/experiment_5224_gap4_canonical_pool_builder_v478.json` and SHALL
+proceed only when Exp 5224 emitted `gap4_canonical_pool_usable=true` and
+`canonical_pool_n >= 120`. Before scoring, the workflow SHALL re-run the
+canonical candidate-record linter from Exp 5223 on every canonical row and
+SHALL exclude any row that is schema-invalid, protocol-empty, or row-flagged
+by adversarial metadata. Excluded rows SHALL be reported with explicit
+machine-readable reasons rather than silently counted in headline metrics.
+
+For each eligible canonical row, the workflow SHALL score the existing
+`pass_at_2_fields.vote_top2` versus `pass_at_2_fields.gated_top2` labels using
+the unchanged Exp 5161 / Exp 5177 / Exp 5197 paired exact-test decision rule.
+The exact test SHALL use the same two-sided binomial/sign-test calculation as
+Exp 5197, and the success floor SHALL remain at least six discordant wins,
+zero discordant losses, and `p < 0.05`. The workflow SHALL NOT change the
+decision rule after seeing results and SHALL NOT promote rows from the flagged
+or protocol-empty v477 pool.
+
+The terminal artifact SHALL be
+`results/experiment_5225_gap4_clean_scale_validation_gated_v478.json` and
+SHALL include required fields `gap4_clean_validation_complete`, `n_scored`,
+`wins`, `losses`, `ties`, `exact_test_p_value`,
+`exact_test_passes_min6_rule`, `effect_direction`, `canonical_pool_path`,
+`adversarial_verify_passed`, `inference_substrate`, and `honest_verdict`.
+`effect_direction` SHALL be one of `positive`, `null`, `negative`, or
+`blocked`; it SHALL be `positive` only when the unchanged min-six rule passes,
+`negative` when scored losses exceed scored wins, `null` when the canonical
+pool scores cleanly without crossing the positive or negative bar, and
+`blocked` when preconditions, row validity, or adversarial verification block a
+clean decision. `inference_substrate` SHALL equal
+`deterministic_validation_over_canonical_pool`. `honest_verdict` SHALL start
+with `complete:`, `complete_`, `success:`, or `success_` and SHALL state the
+clean GAP-4 validation decision.
+
+Required field principles:
+
+- `gap4_clean_validation_complete`: principle "True only when Exp 5224 gates pass, at least one canonical row is scored, row-level exclusions are applied before metrics, and adversarial verification of the Exp 5225 artifact passes."
+- `n_scored`: principle "Rows scored after canonical schema lint, protocol pass@2 presence, and row-level adversarial exclusion."
+- `wins`: principle "Discordant canonical rows where gated pass@2 succeeds and vote pass@2 does not, under the unchanged GAP-4 protocol."
+- `losses`: principle "Discordant canonical rows where vote pass@2 succeeds and gated pass@2 does not, under the unchanged GAP-4 protocol."
+- `ties`: principle "Canonical scored rows where vote and gated pass@2 agree; ties are real rows, not missing data."
+- `exact_test_p_value`: principle "Two-sided Exp 5197 binomial/sign-test p-value over discordant canonical rows."
+- `exact_test_passes_min6_rule`: principle "The unchanged GAP-4 floor: at least six wins, zero losses, and exact p < 0.05."
+- `effect_direction`: principle "Single clean decision label: positive, null, negative, or blocked."
+- `canonical_pool_path`: principle "Path to the exact canonical pool artifact read for validation."
+- `adversarial_verify_passed`: principle "True only after scripts/adversarial_verify.py reports no flags for the Exp 5225 artifact."
+- `inference_substrate`: principle "Must be deterministic_validation_over_canonical_pool; no fresh LLM inference is invoked."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state the clean GAP-4 validation decision."
+
+#### SCENARIO-REPORT-5225-CLEAN-NULL: Canonical Pool Scores Without Positive Lift
+
+Given Exp 5224 emitted a usable canonical pool with at least 120 rows, complete
+canonical schema/protocol fields, and no row-level adversarial flags, when Exp
+5225 runs the unchanged GAP-4 exact-test protocol and all scored rows tie the
+vote baseline, then it writes a terminal artifact with `n_scored` equal to the
+canonical scored row count, `wins=0`, `losses=0`, `ties=n_scored`,
+`exact_test_p_value=1.0`, `exact_test_passes_min6_rule=false`,
+`effect_direction=null`, and an honest verdict that reports a clean null
+decision rather than a positive result.
+
+#### SCENARIO-REPORT-5225-BLOCKED-OR-EXCLUDED: Invalid Or Flagged Rows Do Not Enter Metrics
+
+Given Exp 5224 is missing its gate, has fewer than 120 canonical rows, or the
+canonical row linter finds schema-invalid, protocol-empty, or row-flagged
+records, when Exp 5225 runs, then it reports the precondition or exclusion
+reason explicitly, excludes invalid rows before computing wins/losses/ties, and
+uses `effect_direction=blocked` if no clean row can be scored or if
+adversarial verification of the Exp 5225 artifact fails.
+
+## Implementation Status (REQ-REPORT-5225)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5225 | Planned (`python/carnot/experiment_5225_gap4_clean_scale_validation_gated_v478.py`, `results/experiment_5225_gap4_clean_scale_validation_gated_v478.json`) | Planned (`tests/python/test_experiment_5225_gap4_clean_scale_validation_gated_v478.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write
