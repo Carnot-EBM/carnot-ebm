@@ -1,0 +1,271 @@
+{
+  "accepted_invariants_or_constraints": {
+    "principle": "Accepted invariant or formal-constraint strings, grouped by example and arm.",
+    "value": {
+      "inc_to_n": {
+        "llm_only": null,
+        "llm_solver_feedback": null,
+        "solver_only": "0 <= i <= n"
+      },
+      "paired_decrement": {
+        "llm_only": "x >= 0 and y >= 0",
+        "llm_solver_feedback": "x >= 0 and y >= 0",
+        "solver_only": null
+      },
+      "sum_to_n": {
+        "llm_only": null,
+        "llm_solver_feedback": null,
+        "solver_only": null
+      }
+    }
+  },
+  "checker_substrate": {
+    "principle": "Honest deterministic checker substrate: z3, smt, esbmc, or other.",
+    "value": "z3"
+  },
+  "counterexample_feedback_used": 0,
+  "duration_s": 59.42594,
+  "experiment": "experiment_5226_veribmc_local_solver_feedback_pilot_v478",
+  "experiment_id": "exp5226-veribmc-local-solver-feedback-pilot-v478",
+  "failure_modes": {
+    "parse_error": 4,
+    "postcondition": 2
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether solver feedback improved over baselines.",
+    "value": "complete: clean null; solver feedback did not improve over baselines"
+  },
+  "inference_substrate": {
+    "principle": "Must be local_sota_gguf_plus_deterministic_solver_feedback.",
+    "value": "local_sota_gguf_plus_deterministic_solver_feedback"
+  },
+  "llm_only_solved": {
+    "principle": "Count accepted from initial local SOTA GGUF proposals before solver-feedback retry.",
+    "value": 1
+  },
+  "llm_solver_feedback_solved": {
+    "principle": "Count accepted after at most one structured solver-feedback retry.",
+    "value": 1
+  },
+  "model_specs": {
+    "principle": "Concrete resolved model spec records, including at least one mandated local SOTA GGUF for a non-smoke result.",
+    "value": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ]
+  },
+  "models_used": {
+    "principle": "Concrete model identifiers and paths actually attempted for local SOTA inference.",
+    "value": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF::/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-26B-A4B-it-GGUF::/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ]
+  },
+  "n_examples": {
+    "principle": "Number of fixture examples used for every arm; the pilot is bounded and not a broad benchmark.",
+    "value": 3
+  },
+  "per_example_results": {
+    "llm_only": [
+      {
+        "accepted": false,
+        "arm": "llm_only",
+        "counterexample": {},
+        "example_id": "inc_to_n",
+        "failed_obligation": "parse_error",
+        "failure_mode": "parse_error",
+        "parsed_invariant": null,
+        "raw_output": "Applying the H-invariant (\u0e07\u0e48\u0e32\u0e22\u0e46):\nThe loop runs as long as i < n.\nThe invariant must hold true at the start and hold true after an updates.\nApplying the H-invariant (\u0e07\u0e48\u0e32\u0e22\u0e46):\nThe invariant should capture the relationship between i and n.\nPrecondition: i = 0, n = n.\nPostcondition: i = n.\nThe loop increments i.\nThe invariant should be i <= n.\nThe invariant must be hold true after i = i + 1.\nIf i <= n, then i + 1 <= n + 1. This doesn't guarantee i == n at the end.\nWait, the loop terminates when i < n is false, which means i >= n.\nCombined with",
+        "runtime_ms": 0.0,
+        "solver_feedback": {
+          "checker_status": "no_parseable_invariant",
+          "counterexample": {},
+          "failed_obligation": "parse_error",
+          "repair_hint": "Return exactly JSON with an invariant string."
+        }
+      },
+      {
+        "accepted": false,
+        "arm": "llm_only",
+        "counterexample": {},
+        "example_id": "sum_to_n",
+        "failed_obligation": "parse_error",
+        "failure_mode": "parse_error",
+        "parsed_invariant": "2*s == n*(n+1) is the same as s == n*(n+1)/2",
+        "raw_output": "2*s == n*(n+1) is the same as s == n*(n+1)/2.\nWait, the *Updates* are: i = i + 1, s = s + i + 1.\nLet's re-check the updates.\nIf n=1:\nPrecondition: i=0, s=0.\nGuard: 0 < 1 (True).\nUpdate: i = 0 + 1 = 1. s = 0 + 1 + 1 = 2.\nWait, the update for s is s = s + i + 1.\nIf i was 0, the new i is 1.\nThe new s is 0 + 1 + 1",
+        "runtime_ms": 0.482716,
+        "solver_feedback": {
+          "checker_status": "SyntaxError: invalid syntax (<unknown>, line 1)",
+          "counterexample": {},
+          "failed_obligation": "parse_error",
+          "repair_hint": "Return a Python-style integer invariant over i, s, n."
+        }
+      },
+      {
+        "accepted": true,
+        "arm": "llm_only",
+        "counterexample": {},
+        "example_id": "paired_decrement",
+        "failed_obligation": null,
+        "failure_mode": null,
+        "parsed_invariant": "x >= 0 and y >= 0",
+        "raw_output": "Dearie, l'invariant est invariant.\n<|channel>thought\n<channel|>{\"invariant\":\"x >= 0 and y >= 0\"}",
+        "runtime_ms": 5.489701,
+        "solver_feedback": {}
+      }
+    ],
+    "llm_solver_feedback": [
+      {
+        "accepted": false,
+        "arm": "llm_solver_feedback",
+        "counterexample": {},
+        "example_id": "inc_to_n",
+        "failed_obligation": "parse_error",
+        "failure_mode": "parse_error",
+        "parsed_invariant": null,
+        "raw_output": "Repair the invariant once using the counterexample and hint.\nRepair the the the the the the the the the the the the the the the the the the the the the the the the the the invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant invariant most the the the the the the the the the the the the the the us the the the the the us the the the the us the the the the us the the the the the the the the the</li>\n</ul>\n</head>\n<body>",
+        "runtime_ms": 0.0,
+        "solver_feedback": {
+          "checker_status": "no_parseable_invariant",
+          "counterexample": {},
+          "failed_obligation": "parse_error",
+          "repair_hint": "Return exactly JSON with an invariant string."
+        }
+      },
+      {
+        "accepted": false,
+        "arm": "llm_solver_feedback",
+        "counterexample": {},
+        "example_id": "sum_to_n",
+        "failed_obligation": "parse_error",
+        "failure_mode": "parse_error",
+        "parsed_invariant": null,
+        "raw_output": "\"\"\"\n# Note: The's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's' value in the's",
+        "runtime_ms": 0.0,
+        "solver_feedback": {
+          "checker_status": "no_parseable_invariant",
+          "counterexample": {},
+          "failed_obligation": "parse_error",
+          "repair_hint": "Return exactly JSON with an invariant string."
+        }
+      },
+      {
+        "accepted": true,
+        "arm": "llm_solver_feedback",
+        "counterexample": {},
+        "example_id": "paired_decrement",
+        "failed_obligation": null,
+        "failure_mode": null,
+        "parsed_invariant": "x >= 0 and y >= 0",
+        "raw_output": "Dearie, l'invariant est invariant.\n<|channel>thought\n<channel|>{\"invariant\":\"x >= 0 and y >= 0\"}",
+        "runtime_ms": 5.489701,
+        "solver_feedback": {}
+      }
+    ],
+    "solver_only": [
+      {
+        "accepted": true,
+        "arm": "solver_only",
+        "counterexample": {},
+        "example_id": "inc_to_n",
+        "failed_obligation": null,
+        "failure_mode": null,
+        "parsed_invariant": "0 <= i <= n",
+        "raw_output": "0 <= i <= n",
+        "runtime_ms": 6.045583,
+        "solver_feedback": {}
+      },
+      {
+        "accepted": false,
+        "arm": "solver_only",
+        "counterexample": {
+          "i": 6,
+          "n": 6,
+          "s": 5
+        },
+        "example_id": "sum_to_n",
+        "failed_obligation": "postcondition",
+        "failure_mode": "postcondition",
+        "parsed_invariant": "0 <= i <= n and s >= 0",
+        "raw_output": "0 <= i <= n and s >= 0",
+        "runtime_ms": 9.850853,
+        "solver_feedback": {
+          "candidate_rejected": "0 <= i <= n and s >= 0",
+          "checker_status": "sat_counterexample",
+          "counterexample": {
+            "i": 6,
+            "n": 6,
+            "s": 5
+          },
+          "failed_obligation": "postcondition",
+          "repair_hint": "Relate the accumulator to the counter, not just their bounds."
+        }
+      },
+      {
+        "accepted": false,
+        "arm": "solver_only",
+        "counterexample": {
+          "x": -1,
+          "y": 0
+        },
+        "example_id": "paired_decrement",
+        "failed_obligation": "postcondition",
+        "failure_mode": "postcondition",
+        "parsed_invariant": "y >= 0",
+        "raw_output": "y >= 0",
+        "runtime_ms": 6.032709,
+        "solver_feedback": {
+          "candidate_rejected": "y >= 0",
+          "checker_status": "sat_counterexample",
+          "counterexample": {
+            "x": -1,
+            "y": 0
+          },
+          "failed_obligation": "postcondition",
+          "repair_hint": "Preserve that y stays between 0 and the unchanged x."
+        }
+      }
+    ]
+  },
+  "result_path": "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json",
+  "run_date": "20260704",
+  "runtime_s_by_arm": {
+    "llm_only_checker": 0.005972,
+    "llm_solver_feedback_checker": 0.00549,
+    "solver_only": 0.021929
+  },
+  "schema": "carnot.experiment_5226.veribmc_local_solver_feedback_pilot.v478",
+  "solver_feedback_pilot_complete": {
+    "principle": "True only when all three arms ran on the same bounded fixture and the artifact was validated.",
+    "value": true
+  },
+  "solver_feedback_uplift": {
+    "principle": "llm_solver_feedback_solved minus the stronger of solver_only_solved and llm_only_solved, divided by n_examples.",
+    "value": 0.0
+  },
+  "solver_only_solved": {
+    "principle": "Count accepted by the deterministic solver-only baseline on the same examples.",
+    "value": 1
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5226",
+    "SCENARIO-VERIFY-5226"
+  ],
+  "tests_run": {
+    "principle": "Commands run for this pilot, with pass/fail status.",
+    "value": [
+      ".venv/bin/pytest tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py -q --no-cov -n0: PASS",
+      ".venv/bin/pytest tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py -q -n0 -o addopts='' --cov=python/carnot --cov-report= --cov-report=json:/tmp/experiment_5226_cov.json --cov-fail-under=0 && coverage JSON check new module == 100%: PASS"
+    ]
+  }
+}
