@@ -34057,6 +34057,74 @@ add a task, update `research-roadmap.yaml`, or reopen a retired scope.
 |---|---|---|
 | REQ-REPORT-5234 | Implemented (`python/carnot/experiment_5234_sota_ingestion_v479.py`, `results/experiment_5234_sota_ingestion_v479.json`) | Implemented (`tests/python/test_experiment_5234_sota_ingestion_v479.py`) |
 
+### REQ-REPORT-5235: GAP-4 Artifact QA Null/Tautology Calibration
+
+The Exp 5235 workflow SHALL calibrate or document the adversarial artifact QA
+rules for GAP-4 structured nulls and expected build-count equalities without
+weakening compute-bound methodology checks. It SHALL read the Exp 5224, Exp
+5225, and Exp 5226 artifacts and run focused fixtures through the real artifact
+QA verifier. Expected structural equalities such as
+`canonical_pool_n == regenerated_rows` and expected all-ties nulls such as
+`n_scored == ties` with `wins == losses == 0` SHALL NOT produce CRITICAL
+TAUTOLOGY findings when the artifact carries auditable provenance, field
+principles, and methodology fields. Generic duplicate scalar metrics SHALL
+still produce CRITICAL TAUTOLOGY findings.
+
+The calibration SHALL preserve the GGUF/CUDA compute-bound guards. A live or
+local SOTA GGUF artifact that completes below the live-model duration floor or
+omits required methodology receipts SHALL continue to report
+`DURATION_TOO_SHORT` and/or `METHODOLOGY_MISSING`; Exp 5235 MUST NOT reclassify
+Exp 5226 as clean.
+
+The artifact SHALL write
+`results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`
+and SHALL include the following bare top-level fields:
+`qa_calibration_passed`, `structural_null_rules_documented`,
+`tests_added_or_updated`, `duration_methodology_checks_preserved`,
+`gap4_reclassification_ready`, `validation_commands_run`,
+`research_conductor_py_untouched_confirmed`, `inference_substrate`, and
+`honest_verdict`. `qa_calibration_passed` SHALL be true only when the focused
+tests or documented rules allow a clean GAP-4 reclassification without weakening
+compute-bound methodology checks.
+
+Required field principles:
+
+- `qa_calibration_passed`: principle "BARE top-level boolean. True only if tests or documented rules allow a clean GAP-4 reclassification without weakening compute-bound methodology checks."
+- `structural_null_rules_documented`: principle "True only when the OpenSpec and tests document expected build-count and all-ties null equality handling."
+- `tests_added_or_updated`: principle "List of test paths added or updated to exercise the QA calibration fixtures."
+- `duration_methodology_checks_preserved`: principle "True only when compute-bound GGUF/CUDA artifacts missing duration or methodology receipts still flag."
+- `gap4_reclassification_ready`: principle "True only when Exp 5224 and Exp 5225 can be treated as clean structured GAP-4 artifacts while Exp 5226 remains blocked."
+- `validation_commands_run`: principle "List of commands and pass/fail outcomes used to verify the calibration."
+- `research_conductor_py_untouched_confirmed`: principle "The calibration task must not modify scripts/research_conductor.py."
+- `inference_substrate`: principle "Must be artifact_qa_lint_tests."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether QA calibration passed."
+
+#### SCENARIO-REPORT-5235: Structured GAP-4 Equalities Are Auditable Null Evidence
+
+**Given** an Exp 5224-style builder artifact with
+`canonical_pool_n == regenerated_rows`, auditable provenance/methodology fields,
+and no scale-validation claim
+**And** an Exp 5225-style deterministic validation artifact with
+`n_scored == ties`, `wins == losses == 0`, field principles, and canonical-pool
+provenance
+**When** the adversarial artifact QA verifier runs
+**Then** neither fixture emits a CRITICAL TAUTOLOGY flag, and generic duplicate
+scalar metrics still emit CRITICAL TAUTOLOGY.
+
+#### SCENARIO-REPORT-5235-COMPUTE-BOUND-GUARD: GGUF Methodology Checks Stay Strict
+
+**Given** an Exp 5226-style local SOTA GGUF solver-feedback artifact with a
+sub-floor duration and missing random seed or reproducibility checksum
+**When** the adversarial artifact QA verifier runs
+**Then** the artifact still emits the duration and methodology findings, and the
+Exp 5235 artifact records `duration_methodology_checks_preserved=true`.
+
+## Implementation Status (REQ-REPORT-5235)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5235 | Implemented (`python/carnot/experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`, `results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`) | Implemented (`tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`) |
+
 ### REQ-REPORT-5221: V478 Reserved SOTA Ingestion Refresh
 
 The Exp 5221 workflow SHALL produce

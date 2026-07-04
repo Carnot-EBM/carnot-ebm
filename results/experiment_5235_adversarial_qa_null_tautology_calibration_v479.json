@@ -1,0 +1,119 @@
+{
+  "calibration_checks": {
+    "all_ties_null_not_critical": true,
+    "builder_equality_not_critical": true,
+    "compute_duration_too_short_still_critical": true,
+    "compute_methodology_missing_still_flags": true,
+    "duration_methodology_checks_preserved": true,
+    "gap4_reclassification_ready": true,
+    "qa_calibration_passed": true,
+    "suspicious_duplicate_scalar_still_critical": true
+  },
+  "duration_methodology_checks_preserved": true,
+  "duration_s": 0.5,
+  "experiment": "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
+  "experiment_id": 5235,
+  "field_principles": {
+    "duration_methodology_checks_preserved": "True only when compute-bound GGUF/CUDA artifacts missing duration or methodology receipts still flag.",
+    "gap4_reclassification_ready": "True only when Exp 5224 and Exp 5225 can be treated as clean structured GAP-4 artifacts while Exp 5226 remains blocked.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether QA calibration passed.",
+    "inference_substrate": "Must be artifact_qa_lint_tests.",
+    "qa_calibration_passed": "BARE top-level boolean. True only if tests or documented rules allow a clean GAP-4 reclassification without weakening compute-bound methodology checks.",
+    "research_conductor_py_untouched_confirmed": "The calibration task must not modify scripts/research_conductor.py.",
+    "structural_null_rules_documented": "True only when the OpenSpec and tests document expected build-count and all-ties null equality handling.",
+    "tests_added_or_updated": "List of test paths added or updated to exercise the QA calibration fixtures.",
+    "validation_commands_run": "List of commands and pass/fail outcomes used to verify the calibration."
+  },
+  "fixture_reports": {
+    "compute_bound_missing_receipts": {
+      "artifact": "/tmp/experiment_5235_qa_fixtures/compute_bound_missing_receipts.json",
+      "exp_id": "experiment_5226_veribmc_local_solver_feedback_pilot_v478_fixture",
+      "flag_count": 2,
+      "flags": [
+        {
+          "detail": "duration_s=59.42594 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "honest_verdict": "",
+      "loaded": true,
+      "max_severity": 2,
+      "title": ""
+    },
+    "expected_all_ties_null": {
+      "artifact": "/tmp/experiment_5235_qa_fixtures/expected_all_ties_null.json",
+      "exp_id": "experiment_5225_gap4_clean_scale_validation_gated_v478_fixture",
+      "flag_count": 0,
+      "flags": [],
+      "honest_verdict": "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, tie",
+      "loaded": true,
+      "max_severity": -1,
+      "title": ""
+    },
+    "expected_builder_equality": {
+      "artifact": "/tmp/experiment_5235_qa_fixtures/expected_builder_equality.json",
+      "exp_id": "experiment_5224_gap4_canonical_pool_builder_v478_fixture",
+      "flag_count": 0,
+      "flags": [],
+      "honest_verdict": "success: canonical GAP-4 pool usable for validation with n=120; no scale-validat",
+      "loaded": true,
+      "max_severity": -1,
+      "title": ""
+    },
+    "suspicious_duplicate_scalar": {
+      "artifact": "/tmp/experiment_5235_qa_fixtures/suspicious_duplicate_scalar.json",
+      "exp_id": "suspicious_duplicate_scalar_fixture",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "auroc=0.913173 and kl_divergence=0.913173 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "honest_verdict": "success: copied metrics should be quarantined",
+      "loaded": true,
+      "max_severity": 2,
+      "title": ""
+    }
+  },
+  "gap4_reclassification_ready": true,
+  "honest_verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks.",
+  "inference_substrate": "artifact_qa_lint_tests",
+  "milestone": "2026.07.479",
+  "qa_calibration_passed": true,
+  "reproducibility_checksum": "sha256:7f4e63fc3ac90dd40bdd383ae1dbfd43a92c92bf4ad8d562d44eb742e66b6076",
+  "research_conductor_py_untouched_confirmed": true,
+  "result_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+  "run_date": "2026-07-04",
+  "schema": "carnot.experiment_5235.adversarial_qa_null_tautology_calibration.v479",
+  "source_artifacts": [
+    "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
+    "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+    "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5235",
+    "SCENARIO-REPORT-5235",
+    "SCENARIO-REPORT-5235-COMPUTE-BOUND-GUARD"
+  ],
+  "structural_null_rules_documented": true,
+  "tests_added_or_updated": [
+    "tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py"
+  ],
+  "validation_commands_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py -q -o addopts='': PASS (11 passed)",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5235_adversarial_qa_null_tautology_calibration_v479.py' -m pytest tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py -q --no-cov -o addopts='' && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5235_adversarial_qa_null_tautology_calibration_v479.py' --fail-under=100: PASS (100% new-module coverage)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py: PASS",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml && .venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml: PASS",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json --json: PASS (flagged_count=0 after artifact_qa_lint_tests substrate calibration)",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json --json: PASS_EXPECTED_FLAG (exit 1; Exp 5224/5225 flag_count=0, Exp 5226 keeps DURATION_TOO_SHORT and METHODOLOGY_MISSING)",
+    ".venv/bin/pytest tests/python -q: FAIL/INTERRUPTED after 27m16s, 170 failed, 22580 passed, 89 skipped, 1 error; native Z3/JAX xdist worker crashes observed"
+  ]
+}
