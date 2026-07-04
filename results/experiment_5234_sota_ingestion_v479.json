@@ -1,0 +1,287 @@
+{
+  "arm_ebm_semantic_scholar_status": {
+    "principle": "ARM-EBM metadata must come from the Semantic Scholar response and retry log, not memory; blocked queries must be labeled blocked.",
+    "value": {
+      "backoff_behavior": [
+        "attempt=1 http_code=429",
+        "attempt=2 http_code=200"
+      ],
+      "blocked": false,
+      "citation_count": 8,
+      "paper_id": "c73c449d8116684d89282c153f2ddd60334097d8",
+      "raw_status": "attempt 1 HTTP/2 429 Too Many Requests; attempt 2 HTTP 200",
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction",
+      "year": 2025
+    }
+  },
+  "duration_s": 0.0,
+  "ebt_semantic_scholar_status": {
+    "principle": "EBT metadata must come from the Semantic Scholar response and retry log, not memory; blocked queries must be labeled blocked.",
+    "value": {
+      "backoff_behavior": [
+        "attempt=1 http_code=429",
+        "attempt=2 http_code=200"
+      ],
+      "blocked": false,
+      "citation_count": 26,
+      "paper_id": "2da9163730998a4368c609972ccff0582518b36b",
+      "raw_status": "attempt 1 HTTP/2 429 Too Many Requests; attempt 2 HTTP 200",
+      "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
+      "year": 2025
+    }
+  },
+  "experiment_id": "experiment_5234_sota_ingestion_v479",
+  "field_principles": {
+    "arm_ebm_semantic_scholar_status": "ARM-EBM metadata must come from the Semantic Scholar response and retry log, not memory; blocked queries must be labeled blocked.",
+    "ebt_semantic_scholar_status": "EBT metadata must come from the Semantic Scholar response and retry log, not memory; blocked queries must be labeled blocked.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "inference_substrate": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "new_references_added": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V479.",
+    "retired_scope_reopened": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "sota_to_experiment_mapping": "Each fresh or rechecked source must either map to an existing .479 task or say defer/no action; no new roadmap task may be created here.",
+    "sources_checked": "The ingestion is only useful if it names the concrete source groups checked immediately before execution."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "value": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."
+  },
+  "inference_substrate": {
+    "principle": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "value": "literature_ingestion"
+  },
+  "milestone": "2026.07.479",
+  "new_references_added": {
+    "principle": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V479.",
+    "value": 0
+  },
+  "no_deep_research_used": {
+    "principle": "The prompt forbids /deep-research, so the artifact must affirm it was not used.",
+    "value": true
+  },
+  "references_md_updated": {
+    "principle": "research-references.md is updated only when new genuinely actionable references are added.",
+    "value": false
+  },
+  "references_path": "research-references.md",
+  "reproducibility_checksum": "bb58783ecf606959143fa2db0e0f1b5c5dfe58bf1ebc99fa99ea28103bf68f37",
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "The reserved ingestion task must not modify scripts/research_conductor.py.",
+    "value": true
+  },
+  "result_path": "results/experiment_5234_sota_ingestion_v479.json",
+  "retired_scope_reopened": {
+    "principle": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "value": false
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.experiment_5234_sota_ingestion_v479.v1",
+  "sota_to_experiment_mapping": {
+    "principle": "Each fresh or rechecked source must either map to an existing .479 task or say defer/no action; no new roadmap task may be created here.",
+    "value": [
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The immediate submitted-date window returned zero results.",
+        "source": "arXiv 2026-07-04 date-window refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "They remain future frozen-model diagnostic ideas. The .479 work is QA calibration and decision repair, not a new hidden-signal probe.",
+        "source": "Free-Energy / FLaG hallucination diagnostics"
+      },
+      {
+        "mapped_task_or_defer": "exp5236",
+        "reason": "They reinforce the existing GAP-4 status decision discipline: do not regenerate ad hoc pools, and require deterministic baselines.",
+        "source": "JANUS / Hard-CSP constraint refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5239",
+        "reason": "The five-arm and controlled-stream methods are the direct design input for the typed-memory ablation.",
+        "source": "RW-EBR / AgentCL controlled memory refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5239",
+        "reason": "AgenticSTS, SkillCoach, AutoMem, and related pages reinforce the existing controlled memory and skill-rubric tasks without adding scope.",
+        "source": "HF July 3 memory and skill papers"
+      },
+      {
+        "mapped_task_or_defer": "exp5242",
+        "reason": "These sources remain bounded certificate/abstraction inputs, not a hardware-speedup claim.",
+        "source": "Analog KAN / KAN abstraction refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5243",
+        "reason": "They support the hardware boundary/watchlist task while preserving no-speedup discipline.",
+        "source": "Extropic / p-bit hardware refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The posts support verifier-first architecture but do not expose a reproducible local baseline for .479.",
+        "source": "Logical Intelligence Kona/Aleph posts"
+      },
+      {
+        "mapped_task_or_defer": "exp5238",
+        "reason": "CRV and related repos remain implementation references for verifier node and solver-feedback methodology checks.",
+        "source": "GitHub CRV/STATIC/constrained-diffusion repos"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The citation count is metadata only and does not change any .479 experiment.",
+        "source": "Semantic Scholar EBT metadata retry"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The citation count is metadata only and does not change any .479 experiment.",
+        "source": "Semantic Scholar ARM-EBM metadata retry"
+      }
+    ]
+  },
+  "source_api_responses": {
+    "arxiv_date_window_total_results": {
+      "submitted_date_window": "[202607040000 TO 202607042359]",
+      "total_results": 0,
+      "updated": "2026-07-04T18:26:03Z"
+    },
+    "extropic_status": "HTTP/2 200 for thermodynamic-computing and inside-x0 pages",
+    "github_repo_status": "HTTP/2 200 for CRV, STATIC, constrained-diffusion, and Awesome-LLM-Constrained-Decoding",
+    "huggingface_2026_07_03_status": "HTTP/2 200; page lists AgenticSTS, SkillCoach, AutoMem, DuoMem, and related memory/skill papers",
+    "logical_intelligence_status": "HTTP/2 200 for energy-based-models-for-reasoning",
+    "openreview_pgcd_status": "HTTP/2 307 to /challenge followed by challenge page HTTP/2 200",
+    "openreview_semantic_energy_status": "challenge-gated: /challenge?redirect=%2Fpdf%3Fid%3DE5mL07Fbq8",
+    "openreview_spilled_energy_status": "challenge-gated: /challenge?redirect=%2Fpdf%3Fid%3DEXFKk4Y3yc",
+    "semantic_scholar_arm_ebm_retry_log": [
+      "attempt=1 http_code=429",
+      "attempt=2 http_code=200"
+    ],
+    "semantic_scholar_arm_ebm_success_body": {
+      "citationCount": 8,
+      "paperId": "c73c449d8116684d89282c153f2ddd60334097d8",
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction",
+      "year": 2025
+    },
+    "semantic_scholar_ebt_retry_log": [
+      "attempt=1 http_code=429",
+      "attempt=2 http_code=200"
+    ],
+    "semantic_scholar_ebt_success_body": {
+      "citationCount": 26,
+      "paperId": "2da9163730998a4368c609972ccff0582518b36b",
+      "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
+      "year": 2025
+    }
+  },
+  "source_urls": [
+    "https://export.arxiv.org/api/query?search_query=all:(energy-based OR EBM OR constraint OR Ising OR KAN OR constrained decoding OR hallucination OR continual learning) AND submittedDate:[202607040000 TO 202607042359]",
+    "https://arxiv.org/abs/2606.19404",
+    "https://arxiv.org/abs/2606.00301",
+    "https://arxiv.org/abs/2603.03748",
+    "https://arxiv.org/abs/2602.18419",
+    "https://arxiv.org/abs/2606.26476",
+    "https://arxiv.org/abs/2606.02461",
+    "https://arxiv.org/abs/2606.27892",
+    "https://openreview.net/forum?id=LYBs6f3jlK",
+    "https://openreview.net/pdf?id=E5mL07Fbq8",
+    "https://openreview.net/pdf?id=EXFKk4Y3yc",
+    "https://huggingface.co/papers/date/2026-07-03",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092?fields=title,year,citationCount,externalIds,url",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605?fields=title,year,citationCount,externalIds,url",
+    "https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one",
+    "https://extropic.ai/writing/inside-x0-and-xtr-0",
+    "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+    "https://github.com/facebookresearch/CRV",
+    "https://github.com/youtube/static-constraint-decoding",
+    "https://github.com/eth-sri/constrained-diffusion",
+    "https://github.com/Saibo-creator/Awesome-LLM-Constrained-Decoding"
+  ],
+  "sources_checked": {
+    "principle": "The ingestion is only useful if it names the concrete source groups checked immediately before execution.",
+    "value": [
+      {
+        "checked": [
+          "research-references.md V478 and V479 sections",
+          "openspec/change-proposals/research-roadmap-vNEXT.md",
+          "research-program.md Continuous Self-Learning",
+          "ops/exclusion_manifest.yaml",
+          "ops/known-issues.md"
+        ],
+        "evidence": "The .479 roadmap already maps artifact QA, typed-memory controls, KAN certificate scaling, and hardware continuity to Exp 5235-5243. No retired scope was reopened by the refresh.",
+        "group": "local V478/V479 planning context"
+      },
+      {
+        "checked": [
+          "EBMs for verification",
+          "constraint satisfaction",
+          "Ising/hardware sampling",
+          "hallucination mitigation",
+          "KANs",
+          "constrained or energy-guided decoding",
+          "continual/self-learning for constraints"
+        ],
+        "evidence": "The 2026-07-04 arXiv submitted-date window returned opensearch:totalResults=0. V479 primary arXiv anchors were rechecked as source URLs, but no post-planning actionable reference appeared.",
+        "group": "arXiv API and primary abstract refresh"
+      },
+      {
+        "checked": [
+          "P-GCD forum LYBs6f3jlK",
+          "Semantic Energy PDF E5mL07Fbq8",
+          "Spilled Energy PDF EXFKk4Y3yc"
+        ],
+        "evidence": "OpenReview still redirects direct pages/PDFs to a browser challenge. The search-visible titles remain watchlist-only and do not change .479.",
+        "group": "OpenReview page status"
+      },
+      {
+        "checked": [
+          "Daily Papers 2026-07-03",
+          "memory and skill-transfer paper pages"
+        ],
+        "evidence": "The HF page is reachable and surfaces AgenticSTS, SkillCoach, AutoMem, DuoMem, and related skill/memory items. AgenticSTS, SkillCoach, and AutoMem were already in the V478/V479 references; DuoMem is related background but not a new experiment driver.",
+        "group": "Hugging Face Papers"
+      },
+      {
+        "checked": [
+          "arXiv:2507.02092",
+          "arXiv:2512.15605"
+        ],
+        "evidence": "Both metadata checks hit HTTP 429 on the first attempt and returned HTTP 200 on the second attempt. EBT has 26 citations; ARM-EBM has 8.",
+        "group": "Semantic Scholar Graph API"
+      },
+      {
+        "checked": [
+          "Thermodynamic Computing From Zero to One",
+          "Inside X0 and XTR-0"
+        ],
+        "evidence": "Extropic pages remain reachable and continue to support TSU/EBM sampler watchlist status, not a local Carnot speedup claim.",
+        "group": "Extropic public writing"
+      },
+      {
+        "checked": [
+          "Energy-Based Models for Reasoning",
+          "Kona/Aleph public links"
+        ],
+        "evidence": "Logical Intelligence still frames EBRMs as verifier/reasoning layers under LLM interfaces. It does not expose reproducible Kona internals that would change the .479 baseline set.",
+        "group": "Logical Intelligence public posts"
+      },
+      {
+        "checked": [
+          "facebookresearch/CRV",
+          "youtube/static-constraint-decoding",
+          "eth-sri/constrained-diffusion",
+          "Awesome-LLM-Constrained-Decoding"
+        ],
+        "evidence": "The watched repos are reachable. They remain implementation references for existing verifier-node and constrained-generation ideas, with no new roadmap task required.",
+        "group": "GitHub repository refresh"
+      }
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-5234",
+    "SCENARIO-REPORT-5234",
+    "SCENARIO-REPORT-5234-BLOCKED-METADATA"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5234_sota_ingestion_v479.py -q --no-cov -> pass (38 passed)",
+    ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5234_sota_ingestion_v479.py -q --no-cov -n 0 && .venv/bin/coverage report --include=python/carnot/experiment_5234_sota_ingestion_v479.py --fail-under=100 -> pass (100%)",
+    ".venv/bin/ruff check python/carnot/experiment_5234_sota_ingestion_v479.py tests/python/test_experiment_5234_sota_ingestion_v479.py -> pass",
+    ".venv/bin/ruff format --check python/carnot/experiment_5234_sota_ingestion_v479.py tests/python/test_experiment_5234_sota_ingestion_v479.py -> pass",
+    ".venv/bin/python scripts/check_spec_coverage.py -> fail (pre-existing 1231 untraced tests; new test file has REQ/SCENARIO refs)"
+  ]
+}
