@@ -1,19 +1,19 @@
-milestone: 2026.07.477
-milestone_title: VERIFIER-SET HARDENING + ARC SEARCH-FRONTIER GATES + SELF-LEARNING MEMORY + HARDWARE CONTINUITY
+milestone: 2026.07.478
+milestone_title: GAP-1 REGISTRY PROMOTION + GAP-4 PROVENANCE REPAIR + CONTINUOUS MEMORY + ARC SKILL GATES
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp5207-archive-476-activate-477
-  milestone: 2026.07.477
-  title: "PHASE 0 transition -- archive .476 truth and activate .477"
+- id: exp5220-archive-477-activate-478
+  milestone: 2026.07.478
+  title: "PHASE 0 transition -- archive .477 truth and activate .478"
   priority: critical
   track: planning
-  deliverable: results/experiment_5207_archive_476_activate_477.json
+  deliverable: results/experiment_5220_archive_477_activate_478.json
   operator_override: "2026-05-29 operator directive: routine milestone-transition task; false-positive scope-match against prior archive/activate tasks is expected and authorized."
   prior_failures:
-  - experiment_id: exp5193-archive-475-activate-476
-    verdict: complete_archive_475_activate_476
-    addressed_by: "Routine milestone handoff for a new predecessor/successor pair (.476->.477); the deliverable is the current milestone archive and activation, not a rerun of .475->.476."
+  - experiment_id: exp5207-archive-476-activate-477
+    verdict: "complete: .476 archived and .477 activated; handoff preserves GAP-1 positive, GAP-4/MAP/hidden-state nulls, DiffusionGemma retirement, and hardware reachability facts."
+    addressed_by: "Routine milestone handoff for a new predecessor/successor pair (.477->.478); the deliverable is the current milestone archive and activation, not a rerun of .476->.477."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
@@ -21,40 +21,41 @@ tasks:
   estimated_wall_time_min: 25
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. All tasks in milestone 2026.07.476 have completed.
-    This is the standard transition task: archive .476 accurately, activate .477 by copying
-    research-roadmap-next.yaml into research-roadmap.yaml, and update operational docs. Do not round .476
+    Repo at {project_root}, run on or after {date}. All tasks in milestone 2026.07.477 have completed.
+    This is the standard transition task: archive .477 accurately, activate .478 by copying
+    research-roadmap-next.yaml into research-roadmap.yaml, and update operational docs. Do not round .477
     into a cleaner story than the artifacts support.
 
     EXISTING CODE TO READ FIRST:
-    - research-roadmap.yaml (the .476 plan).
-    - openspec/change-proposals/research-roadmap-vNEXT.md (the .477 design doc).
-    - ops/conductor-log.md (2026-07-03 .476 run).
-    - ops/status.md and ops/changelog.md (latest .476 entries).
-    - results/experiment_5193_archive_475_activate_476.json through results/experiment_5206_capstone_v476.json, focusing on exp5197, exp5198, exp5200, exp5201, exp5205, exp5206.
+    - research-roadmap.yaml (the .477 plan).
+    - openspec/change-proposals/research-roadmap-vNEXT.md (the .478 design doc).
+    - ops/conductor-log.md (the 2026-07-04 .477 run).
+    - ops/status.md and ops/changelog.md.
+    - results/experiment_5207_archive_476_activate_477.json through results/experiment_5219_capstone_v477.json, focusing on exp5209, exp5210, exp5211, exp5212, exp5214, exp5215, exp5216, exp5217, exp5218, and exp5219.
     - ops/exclusion_manifest.yaml.
 
     TASK:
-    Write a precise .476 archive summary, activate the .477 roadmap, and leave the repo ready for the
-    conductor to execute exp5208 onward.
+    Write a precise .477 archive summary, activate the .478 roadmap, and leave the repo ready for the
+    conductor to execute exp5221 onward.
 
     CONCRETE STEPS:
-    1. Read the .476 artifacts directly. Summarize the facts that matter for .477: GAP-1 set-search
-       positive, GAP-4 source-pool exhaustion at n=62, MAP/landmark zero-level result, hidden-state v2
-       tie with CLUE/RCS, DiffusionGemma loading retirement, KV260/PolarFire reachability, GateMate block,
-       and capstone reconciliation.
-    2. Copy research-roadmap-next.yaml into research-roadmap.yaml exactly after archiving the current
-       research-roadmap.yaml content in the artifact summary.
+    1. Read the .477 artifacts directly. Summarize the facts that matter for .478: GAP-1 hardening positive
+       but registry promotion blocked by a gate-field shape; GAP-4 candidate expansion/validation flagged
+       and protocol-blocked; MMLU-Pro hidden-state path retired; continuous self-learning memory written;
+       PAW not viable; ARC zero-level delta; KV260/PolarFire reachable; GateMate still physical/JTAG
+       blocked; verifier-authenticity registry flags applied.
+    2. Copy research-roadmap-next.yaml into research-roadmap.yaml exactly after preserving the old .477 plan
+       facts in the artifact summary.
     3. Run the available roadmap activation checks against the activated research-roadmap.yaml, including
-       exclusion_manifest_lint and validate_prior_failures if present.
+       scripts/exclusion_manifest_lint.py and scripts/validate_prior_failures.py if present.
     4. Update ops/status.md and ops/changelog.md with an append-only transition entry. Do not rewrite old
        entries.
     5. Confirm scripts/research_conductor.py was not modified.
 
     REQUIRED ARTIFACT FIELDS:
-      v476_summary:
-        value: "one paragraph with explicit exp5197/5198/5200/5205/5206 outcomes"
-        principle: "Downstream task context depends on this summary being exact, especially nulls and retired threads."
+      v477_summary:
+        value: "one paragraph with explicit exp5209/5210/5211/5212/5214/5216/5217/5219 outcomes"
+        principle: "Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads."
       research_roadmap_yaml_activated:
         value: bool
       exclusion_manifest_confirmed_clean:
@@ -68,21 +69,21 @@ tasks:
       inference_substrate:
         value: aggregation_from_upstream_artifacts
       honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must state whether .477 was activated."
+        principle: "Must start with complete:/complete_/success:/success_ and must state whether .478 was activated."
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-- id: exp5208-sota-ingestion-v477
-  milestone: 2026.07.477
-  title: "PHASE 0 SOTA ingestion -- refresh 2025-2026 verifier, constraint, hardware, PAW, EBT/ARM citation trail before execution"
+- id: exp5221-sota-ingestion-v478
+  milestone: 2026.07.478
+  title: "PHASE 0 SOTA ingestion -- refresh 2025-2026 verifier, constraint, memory, hardware, and citation trail before execution"
   priority: high
   track: research
-  deliverable: results/experiment_5208_sota_ingestion_v477.json
+  deliverable: results/experiment_5221_sota_ingestion_v478.json
   operator_override: "CLAUDE.md SOTA-ingestion standing rule: every bleeding-edge milestone reserves a SOTA-ingestion slot; recurrence is expected and authorized."
   prior_failures:
-  - experiment_id: exp5172-sota-ingestion-diffusion-hierarchical-search-v474
-    verdict: complete_map_deep_read_recommends_map_pre_stage_if_phase_b_pruner_stalls
-    addressed_by: "This is the required fresh .477 SOTA refresh after .476 completed, with a different source set including ARM-EBM citation-trail retry and PAW/FALCON/self-learning hardware findings."
+  - experiment_id: exp5208-sota-ingestion-v477
+    verdict: "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
+    addressed_by: "This is the required fresh .478 SOTA refresh after .477 completed, with a different emphasis on VerIbmc, P-GCD/STATIC, AutoMem/MHM/SkillCoach, and retryable Semantic Scholar citation checks."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
@@ -90,32 +91,32 @@ tasks:
   estimated_wall_time_min: 45
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. The planning pass appended V477 references to
+    Repo at {project_root}, run on or after {date}. The planning pass appended a V478 section to
     research-references.md, but this reserved SOTA-ingestion task must re-check the freshest frontier
     immediately before execution. Do not use /deep-research. Prefer primary sources: arXiv, OpenReview
     pages, official project docs/repos, Extropic writing, Logical Intelligence posts, Hugging Face Papers,
-    and Semantic Scholar metadata.
+    GitHub repos, and Semantic Scholar metadata.
 
     EXISTING CODE TO READ FIRST:
-    - research-references.md (V476 and V477 sections).
+    - research-references.md (V477 and V478 sections).
     - openspec/change-proposals/research-roadmap-vNEXT.md (SOTA findings and phase plan).
     - research-program.md (Continuous Self-Learning section).
-    - ops/exclusion_manifest.yaml (retired scopes that must not be reopened).
+    - ops/exclusion_manifest.yaml and ops/known-issues.md (retired scopes that must not be reopened).
 
     TASK:
     Produce a short SOTA-to-experiment mapping note and update research-references.md only if new,
-    genuinely actionable findings appear after the planning-time V477 section.
+    genuinely actionable findings appear after the planning-time V478 section.
 
     CONCRETE STEPS:
     1. Re-check arXiv/OpenReview/Hugging Face Papers for 2025-2026 work on EBMs for verification,
        constraint satisfaction, Ising/hardware sampling, hallucination mitigation, KANs, constrained or
        energy-guided decoding, and continual/self-learning for constraints.
-    2. Re-run the Semantic Scholar citation check for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605.
-       If the ARM-EBM API query is still rate-limited, record the exact response and do not invent a
-       citation trail.
-    3. Re-check Extropic writing and Logical Intelligence posts for hardware/Kona architecture updates.
-    4. Map every actionable new finding to an existing .477 task or to "defer/no action." Do not add
-       a task or modify research-roadmap.yaml.
+    2. Retry the Semantic Scholar citation checks for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605.
+       If still rate-limited, record the exact response and do not infer citation counts.
+    3. Re-check Extropic writing, Logical Intelligence posts, and relevant GitHub repos for updates that
+       change the .478 plan.
+    4. Map every actionable new finding to an existing .478 task or to "defer/no action." Do not add a task
+       or modify research-roadmap.yaml.
     5. Append to research-references.md only for new actionable findings, with source URLs.
 
     REQUIRED ARTIFACT FIELDS:
@@ -124,7 +125,7 @@ tasks:
       new_references_added:
         value: int
       sota_to_experiment_mapping:
-        value: "list of {{source, mapped_task_or_defer, reason}}"
+        value: "list of {source, mapped_task_or_defer, reason}"
       ebt_semantic_scholar_citation_count:
         value: "int or blocked"
       arm_ebm_semantic_scholar_status:
@@ -139,16 +140,24 @@ tasks:
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-- id: exp5209-gap1-set-search-holdout-hardening-v477
-  milestone: 2026.07.477
-  title: "PHASE A1 GAP-1 set-search holdout hardening -- confirm exp5205 before registry promotion"
+- id: exp5222-gap1-gate-field-and-registry-promotion-v478
+  milestone: 2026.07.478
+  title: "PHASE 1 GAP-1 registry decision -- repair gate-field shape and promote or explicitly block set verifier"
   priority: critical
   track: verification
-  deliverable: results/experiment_5209_gap1_set_search_holdout_hardening_v477.json
+  deliverable: results/experiment_5222_gap1_gate_field_registry_promotion_v478.json
   prior_failures:
+  - experiment_id: exp5210-gap1-registry-promotion-gated-v477
+    verdict: blocked_gate_check_failed
+    addressed_by: "This task does not depend on the failed conductor gate; it directly reads exp5209's principle-wrapped gap1_hardened_positive.value field, emits bare registry decision fields, and either promotes with tests or records an explicit instability block."
+    retire_if_same_verdict: true
+  - experiment_id: exp5209-gap1-set-search-holdout-hardening-v477
+    verdict: "complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here"
+    addressed_by: "This task is a registry decision and implementation task, not another holdout sweep; it must resolve the unstable-subset warning by freezing an allowed subset or refusing promotion."
+    retire_if_same_verdict: true
   - experiment_id: arc3-trm-verifier-rerank-gap1-20260609
     verdict: complete_refuted_directional_adjacency_degraded_hybrid_pass2_0.452_to_0.419_captured_0_of_2
-    addressed_by: "This task does not re-test the single directional-adjacency invariant; it hardens exp5205's compact set-search result across grouped held-out splits and compares against both the always-on and refuted-single-invariant baselines."
+    addressed_by: "This task does not resurrect the refuted single directional-adjacency invariant; it only considers the compact multi-invariant set-search result hardened in exp5209."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
@@ -156,718 +165,238 @@ tasks:
   estimated_wall_time_min: 45
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. GAP-1 transpose/orientation discrimination was
-    refuted as a single hand-invariant on 2026-06-09, but exp5205 found a structurally different positive:
-    a compact set-search subset [border_ordered_profile, color_centroid_orientation,
-    row_column_run_profile] with pass@2 0.221757 versus always-on 0.087866 and the refuted
-    directional-adjacency baseline 0.150628. Before promotion, harden it against split luck and leakage.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_5205_autopyverifier_gap1_pilot_v476.json.
-    - ops/verifier_gaps.md GAP-1 section.
-    - results/arc_grid_verifier_invariants_v2.json.
-    - Any python/carnot verifier module or experiment script authored by exp5205.
-
-    TASK:
-    Re-evaluate the exp5205 set-search method with repeated grouped splits, leakage checks, and explicit
-    baselines. Produce bare top-level gate fields for exp5210.
-
-    CONCRETE STEPS:
-    1. Reconstruct the exact exp5205 candidate/discriminator matrix from existing artifacts. Do not add
-       LLM-generated candidates in this task.
-    2. Run at least 20 grouped train/held-out splits by task id, preserving the rule that subset selection
-       is fit only on train groups and final metrics are reported only on held-out groups.
-    3. Compare held-out pass@2 and transpose-capture metrics against always-on object_count +
-       palette_histogram_shape and the refuted directional_adjacency_refuted_20260609 baseline.
-    4. Run a leakage audit: no test gold, no test-output-derived features, no selecting subsets on held-out
-       rows, no duplicate task ids across train/eval in a split.
-    5. Update ops/verifier_gaps.md GAP-1 only with the hardening result. Do not promote to registry here.
-
-    REQUIRED ARTIFACT FIELDS: gap1_hardened_positive
-      gap1_hardened_positive:
-        value: bool
-        principle: "BARE top-level boolean used by exp5210 gate. True only if held-out mean pass@2 beats both baselines and the paired delta CI excludes harmful regression."
-      heldout_pass_at_2_mean:
-        value: float
-      baseline_always_on_pass_at_2_mean:
-        value: float
-      single_refuted_directional_pass_at_2_mean:
-        value: float
-      delta_over_always_on:
-        value: float
-      delta_over_single_refuted:
-        value: float
-      paired_delta_ci95:
-        value: "[lo, hi]"
-      n_grouped_splits:
-        value: int
-      leakage_audit_passed:
-        value: bool
-      best_subset_stable:
-        value: bool
-      ops_verifier_gaps_updated:
-        value: bool
-      inference_substrate:
-        value: verifier_ensemble_against_cached_candidates
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and say whether GAP-1 set-search remains positive after hardening."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5210-gap1-registry-promotion-gated-v477
-  milestone: 2026.07.477
-  title: "PHASE A2 gated on exp5209 gap1_hardened_positive == true -- promote GAP-1 set verifier to registry-grade implementation"
-  priority: high
-  track: verification
-  deliverable: results/experiment_5210_gap1_registry_promotion_gated_v477.json
-  gated_on:
-  - upstream: exp5209-gap1-set-search-holdout-hardening-v477
-    artifact_field: gap1_hardened_positive
-    op: '=='
-    value: true
-  prior_failures:
-  - experiment_id: exp5205-autopyverifier-gap1-pilot-v476
-    verdict: complete_set_search_beats_always_on_beats_single_refuted_baseline_0.0879_best_0.2218_single_refuted_0.1506_captured_47_of_239_gap1_candidate_positive
-    addressed_by: "exp5205 was a pilot artifact, not registry promotion. This task only runs after exp5209's held-out gate and changes the deliverable to tested registry integration."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 50
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. This task only runs if exp5209's bare
-    gap1_hardened_positive gate is true. If you are reading this prompt, the held-out hardening gate
-    passed. Promote the GAP-1 set verifier carefully: deterministic, oracle-distinct, tested, and
-    registered without overstating scope.
+    Repo at {project_root}, run on or after {date}. GAP-1 has the strongest .477 positive signal:
+    exp5209 reported held-out pass@2 0.1896 versus always-on 0.0890 and the refuted single-invariant
+    baseline 0.1478, with paired delta CI excluding zero. exp5210 failed only because the conductor gate
+    looked for a bare boolean while exp5209 stored gap1_hardened_positive.value. However, exp5209 also
+    warned that the best subset was not stable and said not to promote inside that task.
 
     EXISTING CODE TO READ FIRST:
     - results/experiment_5209_gap1_set_search_holdout_hardening_v477.json.
-    - results/experiment_5205_autopyverifier_gap1_pilot_v476.json.
-    - ops/verifier_registry.yaml and ops/verifier_gaps.md.
-    - openspec/capabilities/*/spec.md relevant to verifier registry / ARC verifier behavior.
-    - Existing ARC verifier modules and tests under python/carnot and tests/python.
+    - results/experiment_5210_gap1_registry_promotion_gated_v477.json.
+    - ops/verifier_gaps.md GAP-1 section.
+    - python/carnot/verify/ and python/carnot/arc/ modules that register ARC grid/object verifiers.
+    - tests touching verifier registry, ARC grid verifiers, and registry metadata.
+    - openspec/capabilities/*/spec.md for verifier registry and ARC verifier requirements.
 
     TASK:
-    Implement or register the hardened GAP-1 set verifier as a scoped ARC verifier, with tests and docs,
-    without modifying scripts/research_conductor.py.
+    Make a registry-grade GAP-1 decision. If the exp5209 result is strong enough and the subset can be
+    frozen without leakage, promote the set verifier with tests and docs. If the instability warning makes
+    promotion scientifically unsafe, write an explicit blocked decision and a follow-up criterion instead
+    of pretending the gate failure was the only issue.
 
     CONCRETE STEPS:
-    1. Confirm the relevant OpenSpec capability/spec exists and contains REQ-* requirements. If missing,
-       add/update the spec first before implementation.
-    2. Implement the deterministic verifier subset from exp5209 using the repo's existing verifier
-       interfaces. Do not include test-gold-derived logic.
-    3. Add focused tests for transpose-sensitive discrimination, abstention/neutral behavior, and no
-       oracle leakage.
-    4. Update ops/verifier_registry.yaml with scope, evidence artifact, known limits, and non-headline
-       caveats.
-    5. Update ops/verifier_gaps.md GAP-1 to filled only if the registry entry and tests are actually in
-       place; otherwise leave it building.
-    6. Run the targeted tests and any relevant spec-coverage check.
+    1. Parse exp5209 directly and treat gap1_hardened_positive.value as the upstream scientific gate.
+    2. Audit whether the selected subset can be frozen without held-out tuning. Do not run another broad
+       search unless it is only used to support a block reason.
+    3. If promoting, add or update the verifier registry entry with provenance back to exp5209, exclusion of
+       the refuted directional-adjacency single invariant, and clear "building" or "production" status.
+    4. Add or update tests that prove the registry entry loads, the promoted subset is deterministic, and
+       no test-output-derived features enter the decision path.
+    5. Update ops/verifier_gaps.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md as needed.
+    6. Emit bare top-level fields gap1_registry_promoted and gap1_registry_decision for downstream use.
 
-    REQUIRED ARTIFACT FIELDS: gap1_hardened_positive
-      registry_entry_added:
+    REQUIRED ARTIFACT FIELDS:
+      gap1_registry_promoted:
         value: bool
-      verifier_id:
-        value: string
+        principle: "BARE top-level boolean. True only if implementation, tests, and docs support registry promotion."
+      gap1_registry_decision:
+        value: "promoted|blocked_instability|blocked_leakage|blocked_missing_evidence"
+      promoted_registry_path:
+        value: "path or null"
+      frozen_subset:
+        value: "list of invariant names or null"
+      exp5209_gate_parsed_from_value:
+        value: bool
+      refuted_single_invariant_excluded:
+        value: bool
       tests_run:
         value: "list of commands and pass/fail"
-      ops_verifier_registry_updated:
+      ops_docs_updated:
         value: bool
-      ops_verifier_gaps_status:
-        value: "filled | building | open"
-      verifier_is_oracle:
-        value: false
-        principle: "The verifier must use train pairs, test input, and candidate output only; no test gold."
-      no_research_conductor_change:
-        value: true
       inference_substrate:
-        value: deterministic_verifier_module
+        value: deterministic_verifier_registry
       honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must not claim GAP-1 filled unless tests and registry updates both landed."
+        principle: "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was promoted or explicitly blocked."
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-- id: exp5211-gap4-sota-local-candidate-expansion-v477
-  milestone: 2026.07.477
-  title: "PHASE A3 GAP-4 SOTA local candidate expansion -- build feasible n>=120 source pool with repair guards"
+- id: exp5223-gap4-flagged-pool-authenticity-audit-v478
+  milestone: 2026.07.478
+  title: "PHASE 1 GAP-4 authenticity audit -- quarantine flagged pool and define canonical protocol fields"
   priority: critical
   track: verification
-  deliverable: results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json
-  requires_gpu: true
+  deliverable: results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json
   prior_failures:
-  - experiment_id: exp5197-gap4-scaleup-real-checkpoint-v476
-    verdict: complete_gap4_scaleup_v476_n62_source_pool_exhausted_floor_not_crossed_scale_up_recommended
-    addressed_by: "This task changes the prerequisite rather than re-running the scale test: it uses mandated local SOTA GGUF models plus syntax/semantic repair guards to create a new feasible candidate pool before validation."
+  - experiment_id: exp5211-gap4-sota-local-candidate-expansion-v477
+    verdict: complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212
+    addressed_by: "The prior artifact was adversarially flagged for tautology/too-fast generation and models_used=[]; this task audits and quarantines it rather than treating it as usable evidence."
     retire_if_same_verdict: true
-  - experiment_id: exp5177-gap4-scaleup-decentralization-tier-v474
-    verdict: complete_gap4_scaleup_v474_n62_of_target180_floor_not_crossed_scale_up_recommended
-    addressed_by: "exp5177/exp5197 both stopped at n=62; this task targets the source-pool bottleneck directly and requires bare candidate_pool_n before exp5212 can run."
+  - experiment_id: exp5212-gap4-scale-validation-gated-v477
+    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked
+    addressed_by: "The prior validation had n_scored=0 because protocol pass fields were missing; this task defines and enforces those fields before any new validation."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
   max_turns: 50
-  estimated_wall_time_min: 75
+  estimated_wall_time_min: 45
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. GAP-4 same-shape rule-application consistency has a
-    promising but underpowered signal: n=62, 4 discordant wins, 0 losses, p=0.125, below the >=6-win
-    floor. exp5197 could not continue because the source pool was exhausted. This task creates a larger
-    feasible candidate pool before any new significance claim.
-
-    MODEL_SPECS:
-    Use cached_sota_pair() first. If it resolves, record every returned hf_id and model_path. The mandated
-    SOTA candidates are:
-    - unsloth/Qwen3.6-35B-A3B-GGUF
-    - unsloth/gemma-4-31B-it-GGUF
-    - unsloth/gemma-4-26B-A4B-it-GGUF
-    Legacy tiny models are allowed only as CPU smoke tests if cached_sota_pair() returns None, and the
-    artifact must mark expected output quality as poor.
+    Repo at {project_root}, run on or after {date}. GAP-4 was blocked in .477 because exp5211 and exp5212
+    were adversarially flagged: candidate generation looked tautological/too short, models_used was empty,
+    random_seed was missing, and the validation had zero scored rows due missing protocol pass@2 fields.
+    This task is an audit and guardrail task. It must not create headline GAP-4 evidence.
 
     EXISTING CODE TO READ FIRST:
-    - scripts/experiment_template.py cached_sota_pair() docstring.
-    - results/experiment_5197_gap4_scaleup_real_checkpoint_v476.json and its checkpoint file.
-    - results/experiment_5177_gap4_scaleup_decentralization_tier_v474.json.
-    - python/carnot/experiment_5161_gap4_protocol_execution_pilot_v473.py and exp5177/exp5197 lineage.
-    - ops/verifier_gaps.md GAP-4 section.
-    - research-references.md V477 FALCON / Energy-Based Decoding entries.
+    - results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json and any checkpoint beside it.
+    - results/experiment_5212_gap4_scale_validation_gated_v477.json.
+    - scripts/adversarial_verify.py and scripts/conductor_gates.py.
+    - GAP-4 sections in ops/verifier_gaps.md, ops/status.md, and openspec/change-proposals/research-roadmap-vNEXT.md.
+    - Any GAP-4 candidate-pool generation or validation scripts in scripts/ and python/carnot/.
 
     TASK:
-    Generate a new GAP-4 candidate source pool using local SOTA GGUFs and a FALCON-style feasibility guard:
-    parseable transform code, demo-perfect execution, no oracle leakage, and checkpointed progress.
+    Quarantine the flagged GAP-4 artifacts, define the canonical candidate-pool schema/protocol fields, and
+    add a preflight guard that future GAP-4 validation cannot pass with models_used=[], missing seed, missing
+    protocol pass fields, or suspiciously short generation.
 
     CONCRETE STEPS:
-    1. Resolve MODEL_SPECS via cached_sota_pair(gpu_indices=(0, 1)). If blocked, write a blocked artifact
-       with the cache status rather than silently using tiny models as headline evidence.
-    2. Prompt at least one mandated SOTA GGUF to produce same-shape transform candidates for tasks not
-       already scored in exp5197. Use the repo's existing prompt/data format where possible.
-    3. Apply feasibility guards before adding a row to the pool: Python parse succeeds, restricted
-       execution succeeds, every train demo is exactly reproduced, output shape matches, no imports/open/
-       eval/subprocess, and no test gold access.
-    4. Attempt repair for invalid candidates using only syntax/runtime/demo failures. Reject candidates
-       that still fail after a bounded repair budget.
-    5. Write an atomic checkpoint after each accepted or rejected task row.
-    6. Stop when candidate_pool_n >= 120 or the task budget is exhausted. Do not run the significance
-       validation here; exp5212 is gated on this pool.
+    1. Inspect exp5211 and exp5212 artifacts and record exactly why they are not headline-eligible.
+    2. Define a canonical GAP-4 candidate record schema with at least: candidate_id, source_task_id, model_id,
+       model_path_or_digest, prompt_digest, random_seed, generation_started_at, generation_duration_s,
+       decoding_protocol, pass_at_1_fields, pass_at_2_fields, validation_inputs_digest, and provenance_kind.
+    3. Add tests or a linter helper that rejects missing/empty model provenance, missing random_seed, missing
+       pass@2 protocol fields, n_scored=0, and tautology-shaped "pool ready" artifacts.
+    4. Write or update docs explaining that exp5211/exp5212 are quarantined unless a later canonical-pool
+       builder repairs or regenerates the pool.
+    5. Emit bare top-level fields for the next task: gap4_pool_repairable, validated_pool_n, and
+       protocol_fields_complete.
 
-    REQUIRED ARTIFACT FIELDS: candidate_pool_n, gap4_expansion_usable
-      candidate_pool_n:
-        value: int
-        principle: "BARE top-level integer used by exp5212 gate. Count only feasible, demo-perfect rows."
-      gap4_expansion_usable:
+    REQUIRED ARTIFACT FIELDS:
+      gap4_pool_repairable:
         value: bool
-        principle: "BARE top-level boolean used by exp5212 gate. True only if candidate_pool_n >= 120 and leakage_audit_passed is true."
-      models_used:
-        value: "list of exact hf_ids"
-      model_specs:
-        value: "list of {{name, hf_id, gpu, model_path if resolved}}"
-      sota_gguf_resolved:
+        principle: "BARE top-level boolean. True only if existing rows can be repaired without inventing model/protocol provenance."
+      validated_pool_n:
+        value: int
+      protocol_fields_complete:
         value: bool
-      accepted_rows:
-        value: int
-      rejected_rows:
-        value: int
-      repair_attempts:
-        value: int
-      leakage_audit_passed:
+      quarantined_artifacts:
+        value: "list of flagged artifact paths"
+      canonical_schema_path:
+        value: "path"
+      guard_tests_added:
         value: bool
-      checkpoint_path:
-        value: string
+      tests_run:
+        value: "list of commands and pass/fail"
       inference_substrate:
-        value: live_llm_generation_with_deterministic_execution_guard
+        value: artifact_provenance_audit
       honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ or blocked_ and must not claim GAP-4 significance."
+        principle: "Must start with complete:/complete_/success:/success_ and state whether the old GAP-4 pool is repairable or must be regenerated."
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-- id: exp5212-gap4-scale-validation-gated-v477
-  milestone: 2026.07.477
-  title: "PHASE A4 gated on exp5211 candidate_pool_n >= 120 -- validate GAP-4 scale floor"
+- id: exp5224-gap4-canonical-pool-builder-v478
+  milestone: 2026.07.478
+  title: "PHASE 1 GAP-4 canonical pool builder -- repair when possible, otherwise constrained SOTA regeneration"
   priority: high
   track: verification
-  deliverable: results/experiment_5212_gap4_scale_validation_gated_v477.json
+  deliverable: results/experiment_5224_gap4_canonical_pool_builder_v478.json
+  requires_gpu: true
+  prior_failures:
+  - experiment_id: exp5211-gap4-sota-local-candidate-expansion-v477
+    verdict: complete_gap4_sota_local_candidate_expansion_v477_n120_pool_ready_for_exp5212
+    addressed_by: "The prior expansion did not prove real model/protocol provenance; this task either repairs verifiable rows only or regenerates through a constrained protocol using mandated SOTA GGUF model specs."
+    retire_if_same_verdict: true
+  - experiment_id: exp5212-gap4-scale-validation-gated-v477
+    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked
+    addressed_by: "The prior validation had no scored rows; this task produces a canonical pool with complete pass@1/pass@2 protocol fields before validation can run."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. exp5223 should have defined the canonical GAP-4 schema
+    and audited whether old rows are repairable. This task creates exactly one canonical GAP-4 candidate
+    pool for downstream validation. If exp5223 proves old rows are repairable without inventing provenance,
+    repair those rows. Otherwise regenerate with constrained local SOTA GGUF inference.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json.
+    - The canonical schema or linter path produced by exp5223.
+    - scripts/experiment_template.py, especially the cached_sota_pair() docstring.
+    - GAP-4 candidate generation/validation scripts from .476/.477.
+    - research-references.md V478 constrained generation notes for P-GCD, STATIC, and ProvenanceGuard.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE; headline candidate if it fits).
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense).
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).
+    Use scripts/experiment_template.py and cached_sota_pair() for local model resolution. Legacy small
+    models are permitted only for CPU smoke tests and must not be used for headline GAP-4 rows.
+
+    TASK:
+    Build a canonical GAP-4 pool of at least 120 rows with complete provenance, protocol pass fields, and
+    adversarial-verification readiness. Do not run the scale-validation statistical claim here.
+
+    CONCRETE STEPS:
+    1. Load exp5223's audit artifact and canonical schema.
+    2. If exp5223 gap4_pool_repairable is true, repair only fields that can be recovered from existing
+       source artifacts or logs. Do not fabricate model IDs, seeds, or durations.
+    3. If fewer than 120 rows survive repair, regenerate the missing rows with at least one mandated local
+       SOTA GGUF model. Use a structured/constrained decoding protocol inspired by P-GCD/STATIC: deterministic
+       prompt template, recorded seed, schema validation, and explicit pass@1/pass@2 fields.
+    4. Run the exp5223 guard/linter and adversarial_verify on the canonical pool artifact.
+    5. Emit bare top-level fields gap4_canonical_pool_usable and canonical_pool_n for exp5225 gating.
+
+    REQUIRED ARTIFACT FIELDS: gap4_canonical_pool_usable, canonical_pool_n
+      gap4_canonical_pool_usable:
+        value: bool
+        principle: "BARE top-level boolean. True only if the canonical pool passes schema/provenance/adversarial guards."
+      canonical_pool_n:
+        value: int
+      canonical_pool_path:
+        value: "path"
+      repaired_rows:
+        value: int
+      regenerated_rows:
+        value: int
+      model_specs:
+        value: "list including at least one mandated SOTA GGUF when regenerated_rows > 0"
+      models_used:
+        value: "list of concrete model ids/paths actually used, or [] only when all rows were repaired from verified provenance"
+      random_seed:
+        value: int
+      protocol_fields_complete:
+        value: bool
+      adversarial_verify_passed:
+        value: bool
+      inference_substrate:
+        value: local_sota_gguf_constrained_generation_or_verified_repair
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether the canonical GAP-4 pool is usable for validation."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5225-gap4-clean-scale-validation-gated-v478
+  milestone: 2026.07.478
+  title: "PHASE 1 gated on exp5224 canonical pool usable -- GAP-4 clean scale validation"
+  priority: high
+  track: verification
+  deliverable: results/experiment_5225_gap4_clean_scale_validation_gated_v478.json
   gated_on:
-  - upstream: exp5211-gap4-sota-local-candidate-expansion-v477
-    artifact_field: gap4_expansion_usable
-    op: '=='
+  - upstream: exp5224-gap4-canonical-pool-builder-v478
+    artifact_field: gap4_canonical_pool_usable
+    op: "=="
     value: true
-  - upstream: exp5211-gap4-sota-local-candidate-expansion-v477
-    artifact_field: candidate_pool_n
-    op: '>='
+  - upstream: exp5224-gap4-canonical-pool-builder-v478
+    artifact_field: canonical_pool_n
+    op: ">="
     value: 120
   prior_failures:
-  - experiment_id: exp5197-gap4-scaleup-real-checkpoint-v476
-    verdict: complete_gap4_scaleup_v476_n62_source_pool_exhausted_floor_not_crossed_scale_up_recommended
-    addressed_by: "This task is mechanically gated on exp5211 producing a larger feasible pool, so it cannot repeat the n=62 source-exhausted result."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 70
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. This task only runs if exp5211 produced a usable
-    GAP-4 candidate pool with candidate_pool_n >= 120. The goal is to run the same statistical validation
-    protocol as exp5161/exp5177/exp5197 on the expanded pool.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json.
-    - results/experiment_5197_gap4_scaleup_real_checkpoint_v476.json.
-    - results/experiment_5161_gap4_protocol_execution_pilot_v473.json.
-    - python/carnot/experiment_5161_gap4_protocol_execution_pilot_v473.py and exp5177/exp5197 lineage.
-    - ops/verifier_gaps.md GAP-4 section.
-
-    TASK:
-    Score the expanded GAP-4 pool with the established protocol and decide whether the significance floor
-    is crossed, without changing the method mid-test.
-
-    CONCRETE STEPS:
-    1. Load exp5211's feasible pool and verify every row has the required demo-perfect and leakage-audit
-       metadata. Exclude malformed rows and report exclusions.
-    2. Reuse the exp5161/exp5177 scoring protocol exactly: compare vote vs rule-execution gated pass@2,
-       compute discordant wins/losses, two-sided exact binomial p-value, and cluster bootstrap CI.
-    3. Require the existing GAP-4 floor: at least 6 discordant wins, 0 discordant losses, and p < 0.05.
-    4. Report ARC-1 and ARC-2/held-out slices separately if labels are available.
-    5. Update ops/verifier_gaps.md GAP-4: filled only if the floor is crossed; otherwise leave open with
-       the precise new n and failure mode.
-    6. Run the targeted tests for the scoring script.
-
-    REQUIRED ARTIFACT FIELDS:
-      n_scored:
-        value: int
-      exact_test_discordant_wins:
-        value: int
-      exact_test_discordant_losses:
-        value: int
-      exact_test_p_value_two_sided:
-        value: float
-      exact_test_passes_min6_rule:
-        value: bool
-      cluster_bootstrap_delta_ci95:
-        value: "[lo, hi]"
-      gap4_status_recommendation:
-        value: "filled | scale_up_recommended | retire_local_generation_path | blocked"
-      excluded_rows:
-        value: int
-      tests_run:
-        value: "list of commands and pass/fail"
-      inference_substrate:
-        value: verifier_ensemble_against_cached_candidates
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must not claim the floor crossed unless exact_test_passes_min6_rule is true."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
-  milestone: 2026.07.477
-  title: "PHASE A5 hidden-state verifier v3 -- intermediate/chunk/halting sweep or retire MMLU-Pro path"
-  priority: high
-  track: research
-  deliverable: results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json
-  requires_gpu: true
-  prior_failures:
-  - experiment_id: exp5178-hidden-state-verifier-pilot-v474
-    verdict: complete_hidden_state_verifier_ties_tuned_sc_accuracy_point_lower_efficiency_loses_to_sc_extra_hidden_forward_wins_vs_llm_judge_no_decode_hidden0.000_sc0.333_delta-0.333
-    addressed_by: "This task does not use the naive centroid/final-token pilot; it attempts intermediate layers, chunk boundaries, and halting/convergence signals with SOTA GGUF/HF paths."
-    retire_if_same_verdict: true
-  - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
-    verdict: complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100
-    addressed_by: "exp5200 was final-layer-only and tied CLUE/RCS; v3 must find a non-final-layer/chunk/halting signal or explicitly retire this MMLU-Pro hidden-state path."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 80
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. Hidden-state/internal-representation verifiers remain
-    outside the retired Phase-D external text-scorer class. But exp5200 did not beat zero-training hidden
-    controls and exposed a final-layer-only limitation. This is a final, sharper v3 for the MMLU-Pro
-    path: test intermediate layers, chunk boundaries, and halting/convergence signals if technically
-    available; otherwise retire this path honestly.
-
-    MODEL_SPECS:
-    Use cached_sota_pair() first for GGUF-backed embedding extraction where possible:
-    - unsloth/Qwen3.6-35B-A3B-GGUF
-    - unsloth/gemma-4-31B-it-GGUF
-    - unsloth/gemma-4-26B-A4B-it-GGUF
-    If a Transformers non-GGUF load is required for output_hidden_states=True, use the matching base model
-    only if it fits the available GPUs. Record exactly which model produced each hidden-state tensor.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json.
-    - results/experiment_5178_hidden_state_verifier_pilot_v474.json.
-    - results/experiment_mmlu_pro_fresh_headroom_check.json and results/experiment_mmlu_pro_verifier_candidate_pool.jsonl.
-    - python/carnot/experiment_5178_hidden_state_verifier_pilot_v474.py.
-    - research-references.md V477 EBT citation trail, STV, PHSV/CLUE/RCS references.
-    - ops/exclusion_manifest.yaml Phase-D retirement entry.
-
-    TASK:
-    Determine whether a hidden-state verifier with richer internal signals beats tuned SC and all
-    zero-training controls on the MMLU-Pro headroom pool. If not, recommend retiring this MMLU-Pro
-    hidden-state path.
-
-    CONCRETE STEPS:
-    1. Confirm the MMLU-Pro candidate pool and headroom artifact exist. Use grouped question splits with
-       no candidate leakage across train/eval.
-    2. Attempt an output_hidden_states=True extraction path for at least one SOTA model. If unavailable,
-       record why and fall back to the validated GGUF final-layer path only as a negative-control
-       comparison, not as a headline rerun.
-    3. Extract candidate features: intermediate layer states if available, chunk-boundary embeddings,
-       final-token embeddings, and any loop/halting/convergence proxy available from the model path.
-    4. Train a small probe on train questions only. Compare against tuned SC, self-certainty, CLUE, and RCS
-       on the same eval split.
-    5. Compute paired bootstrap CIs and McNemar tests for probe vs every control.
-    6. Set retire_mmlu_hidden_state_path true if no richer signal beats all controls with a positive CI.
-    7. Update ops/verifier_gaps.md with residual failure modes and retirement recommendation if applicable.
-
-    REQUIRED ARTIFACT FIELDS:
-      models_used:
-        value: "list of exact hf_ids"
-      model_specs:
-        value: "list of {{name, hf_id, gpu, model_path/load_path}}"
-      intermediate_layer_available:
-        value: bool
-      chunk_features_available:
-        value: bool
-      halting_or_convergence_signal_available:
-        value: bool
-      best_probe_accuracy:
-        value: float
-      tuned_sc_accuracy:
-        value: float
-      self_certainty_accuracy:
-        value: float
-      clue_accuracy:
-        value: float
-      radial_consensus_score_accuracy:
-        value: float
-      beats_all_controls:
-        value: bool
-      retire_mmlu_hidden_state_path:
-        value: bool
-      verifier_is_oracle:
-        value: false
-      inference_substrate:
-        value: live_llm_hidden_state_extraction
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ or blocked_ and state whether the v3 signal beats all controls or retires this MMLU-Pro path."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5214-continuous-self-learning-verifier-memory-v477
-  milestone: 2026.07.477
-  title: "PHASE A6 Continuous Self-Learning -- verifier-memory promotion and rollback loop"
-  priority: high
-  track: research
-  deliverable: results/experiment_5214_continuous_self_learning_verifier_memory_v477.json
-  prior_failures:
-  - experiment_id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
-    verdict: complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100
-    addressed_by: "This task moves the self-learning unit from a trained hidden-state probe to a verifier-memory promotion/rollback ledger over deterministic ARC/constraint predicates, using held-out gates rather than probe accuracy alone."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 55
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. research-program.md requires at least one continuous
-    self-learning experiment per milestone. For .477, the right small unit is not a broad fine-tune; it is
-    a durable verifier-memory promotion loop. Candidate predicates or discriminator sets should be
-    generated from failures, mechanically checked, evaluated on held-out groups, promoted only if useful,
-    and rolled back if null.
-
-    EXISTING CODE TO READ FIRST:
-    - research-program.md Continuous Self-Learning section.
-    - results/experiment_5205_autopyverifier_gap1_pilot_v476.json.
-    - results/experiment_5209_gap1_set_search_holdout_hardening_v477.json if present.
-    - results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json if present.
-    - ops/verifier_gaps.md GAP-1 and GAP-4 sections.
-    - research-references.md V477 STV, DeepVerifier, ADVENT, Distributional EBM entries.
-    - Existing memory/template modules under python/carnot/pipeline or python/carnot/agentic.
-
-    TASK:
-    Build a minimal verifier-memory artifact and promotion/rollback policy that can be reused by future
-    experiments. It may be a data file plus helper module; keep the implementation focused.
-
-    CONCRETE STEPS:
-    1. Define the memory schema: failure_signature, candidate_predicate_or_set, provenance, deterministic
-       guard result, held-out delta, promotion_state, rollback_reason, and source artifacts.
-    2. Populate it from existing GAP-1 evidence and, if available, the current milestone's GAP-1/GAP-4
-       artifacts. Do not require those artifacts to be positive; nulls should create rollback entries.
-    3. Implement a small helper that decides promote/hold/rollback from deterministic guardrail status
-       and held-out delta thresholds.
-    4. Add focused tests for promote, hold, rollback, duplicate-memory idempotency, and no test-gold leak.
-    5. Write the durable memory file under ops/ or results/ as appropriate and update ops/verifier_gaps.md
-       with a pointer to it.
-
-    REQUIRED ARTIFACT FIELDS:
-      continuous_self_learning_task:
-        value: true
-        principle: "Satisfies research-program.md's per-milestone self-learning requirement."
-      memory_artifact_path:
-        value: string
-      memory_entries_written:
-        value: int
-      promotions:
-        value: int
-      rollbacks:
-        value: int
-      deterministic_guardrails_enforced:
-        value: bool
-      heldout_gate_required_for_promotion:
-        value: bool
-      tests_run:
-        value: "list of commands and pass/fail"
-      inference_substrate:
-        value: verifier_memory_from_upstream_artifacts
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and report promotions and rollbacks separately."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5215-arc-paw-amortization-gate-v477
-  milestone: 2026.07.477
-  title: "PHASE B1 ARC PAW amortization gate -- decide whether mid-episode compile is worth building"
-  priority: high
-  track: research
-  deliverable: results/experiment_5215_arc_paw_amortization_gate_v477.json
-  requires_gpu: true
-  prior_failures:
-  - experiment_id: exp5176-deepen-live-levelup-attempt-v474
-    verdict: complete_blocked_no_validated_lever_from_b1_b2_zero_levels_banked
-    addressed_by: "This task does not attempt a level-up or rerun a no-lever deepen attempt; it runs the PAW amortization precondition gate before any infrastructure build."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 55
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. PAW (Program-as-Weights) is promising only if a
-    compile-once, act-cheaply step can amortize within ARC-AGI-3 episode lengths. The local research note
-    explicitly says the first Carnot task should answer the amortization question before building any LoRA
-    or live-stack infrastructure.
-
-    EXISTING CODE TO READ FIRST:
-    - docs/research-notes/paw-episode-compilation-arc-efficiency-2026-07-03.md.
-    - research-references.md V477 PAW entry.
-    - ops/arc_solve_registry.yaml.
-    - Existing ARC episode logs/results under results/ and scripts/experiments that record action counts.
-    - python/carnot/agentic/arc_competition_agent.py and arc_solver_kit.py for current live path context.
-
-    TASK:
-    Run a pure analysis/benchmark gate: estimate whether a mid-episode PAW-like compile step could pay for
-    itself. Do not wire LoRA training into the live agent in this task.
-
-    CONCRETE STEPS:
-    1. From existing public-game ARC logs, compute remaining-action distributions after plausible
-       induction checkpoints: first level-up, first stable transition model, or N actions without new
-       transition discovery. If logs are insufficient, report the missing data precisely.
-    2. Benchmark or conservatively estimate small-LoRA compile wall-clock on the available GPU for a
-       comparable model size. This can use a generic tiny dataset; it does not need ARC hidden data.
-    3. Estimate current per-step inference wall-clock versus cheap-interpreter per-step wall-clock using
-       existing logs or a small local benchmark.
-    4. Compute break-even remaining actions and compare to the empirical remaining-action distribution.
-    5. Set paw_amortization_viable true only if median and p75 remaining-action budgets can pay the compile
-       cost with a margin.
-    6. Do not claim a level solve and do not modify ops/arc_solve_registry.yaml.
-
-    REQUIRED ARTIFACT FIELDS:
-      paw_amortization_viable:
-        value: bool
-      median_remaining_actions:
-        value: float
-      p75_remaining_actions:
-        value: float
-      compile_wall_clock_s:
-        value: float
-      current_step_wall_clock_s:
-        value: float
-      cheap_step_wall_clock_s:
-        value: float
-      break_even_remaining_actions:
-        value: float
-      arc_registry_modified:
-        value: false
-      inference_substrate:
-        value: arc_log_analysis_plus_local_timing
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ or blocked_ and must not claim PAW solves ARC."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5216-arc-frontier-continuity-landmark-decomposition-v477
-  milestone: 2026.07.477
-  title: "PHASE B2 ARC GAP-4891 frontier continuity plus landmark decomposition live-path attempt"
-  priority: critical
-  track: research
-  deliverable: results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json
-  prior_failures:
-  - experiment_id: exp5198-map-landmark-prestage-prototype-v476
-    verdict: "complete: MAP landmark prestage did not bank a new reproduction-gated level over pruner-only; the GAP-4891 enumeration wall persists under this lever too."
-    addressed_by: "This task is not MAP prestage; it tests frontier continuity and explicit reach-landmark-then-reach-goal decomposition, changing the search structure rather than adding another map detector."
-    retire_if_same_verdict: true
-  - experiment_id: exp5175-gap4891-relational-mask-pruner-ab-v474
-    verdict: complete_relational_mask_pruner_prunes_edges_but_states_expanded_unchanged_no_level_bank_pruning_alone_does_not_close_enumeration_wall_MAP_map_then_act_next
-    addressed_by: "The prior task filtered candidate edges after enumeration; this task changes the frontier seed/order and decomposes search into shorter subsearches."
-    retire_if_same_verdict: true
-  - experiment_id: generation_axis_exploration_signal_retired_exp5154_v473
-    verdict: "retired: 3rd independent null on first-contact candidate-generation exploration-signal tweaks"
-    addressed_by: "This task is scoped to GAP-4891 within-game deepening/search-frontier continuity on public runtime observations, not first-contact exploration-signal tweaks on unsolved games."
-    retire_if_same_verdict: true
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  estimated_wall_time_min: 75
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. GAP-4891 says relational goal energy can recognize
-    target states but search does not enumerate winning trajectories. exp5198's MAP prestage did not bank
-    a level. This task tests a structurally different search lever from the multi-level deepening note:
-    carry useful frontier state across level transitions where valid, and split search into
-    reach-landmark-then-reach-goal subsearches.
-
-    EXISTING CODE TO READ FIRST:
-    - docs/research-notes/arc-multilevel-deepening-literature-2026-07-03.md.
-    - results/experiment_5198_map_landmark_prestage_prototype_v476.json.
-    - results/experiment_5175_gap4891_relational_mask_pruner_ab_v474.json.
-    - ops/verifier_gaps.md GAP-4891 section.
-    - ops/arc_solve_registry.yaml and scripts/arc_orphan_solver_lint.py.
-    - python/carnot/agentic/arc_graph_explore.py, arc_competition_agent.py, arc_solver_kit.py.
-
-    TASK:
-    Implement a bounded public-game pilot for frontier continuity plus landmark decomposition. Prefer a
-    live-agent-reachable path; fall back to development_proxy only if live wiring is not feasible, and
-    declare provenance honestly.
-
-    CONCRETE STEPS:
-    1. Registry-precheck: choose target games that are not duplicate already-reproduced levels for the
-       exact claim. Do not re-solve a level already in ops/arc_solve_registry.yaml.
-    2. Do not read game source and do not run exhaustive offline ground-truth BFS. Use runtime observations
-       from the agent/offline Arcade environment only.
-    3. Implement frontier continuity: when a level transition or partial progress is observed, seed the
-       next search from structurally compatible prior frontier states/actions rather than cold-restarting.
-    4. Implement landmark decomposition: induce one or more intermediate landmarks from the agent's own
-       transition logs and run reach-landmark then reach-goal subsearches under the same expansion budget
-       as the flat-search control.
-    5. Compare against flat/pruner-only controls on at least two public deepened-but-stuck games from the
-       note if available.
-    6. Any level claim must pass arc_solver_kit.reproduce() and record solve_provenance as
-       live_agent_self_discovery or development_proxy. outer_loop_re is not acceptable for a headline.
-    7. Run scripts/arc_orphan_solver_lint.py before declaring done.
-
-    REQUIRED ARTIFACT FIELDS:
-      target_games:
-        value: "list of game ids"
-      duplicate_registry_precheck_passed:
-        value: bool
-      live_path_integration_attempted:
-        value: bool
-      solve_provenance:
-        value: "live_agent_self_discovery | development_proxy | outer_loop_re"
-        principle: "Any level solve claim must declare provenance; outer_loop_re is not headline-eligible."
-      offline_ground_truth_bfs:
-        value: false
-      read_game_source:
-        value: false
-      new_levels_banked:
-        value: "list of {{game, level, solve_provenance}}"
-      reproducible_total_levels_delta:
-        value: int
-      frontier_continuity_lift:
-        value: "per game delta vs flat control"
-      landmark_decomposition_lift:
-        value: "per game delta vs flat control"
-      orphan_lint_result:
-        value: "pass/fail + output"
-      inference_substrate:
-        value: offline_arcade_live_agent_runtime_self_discovery_no_llm
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must not claim a level bank without reproduction-gate evidence."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5217-hardware-continuity-v477
-  milestone: 2026.07.477
-  title: "PHASE C1 hardware continuity -- KV260 SSH-only, PolarFire hash smoke, GateMate diagnostic narrowing"
-  priority: medium
-  track: hardware
-  deliverable: results/experiment_5217_hardware_continuity_v477.json
-  operator_override: "2026-05-18 hardware continuity directive: reserve a per-milestone slot for attached boards not terminal; this is authorized routine continuity, not a doomed rerun."
-  prior_failures:
-  - experiment_id: exp5201-hardware-continuity-gatemate-diagnostic-v476
-    verdict: complete_hardware_continuity_gatemate_diagnostic_kv260_reachable_gatemate_blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire_reachable_no_speedup_claim
-    addressed_by: "Routine continuity advances the board-status ledger with SSH-only KV260 checks and any new GateMate diagnostic angle; it does not claim a speedup or repeat the forbidden host-SD-card precondition."
-    retire_if_same_verdict: true
-  agent_type: claude
-  model: opus
-  requires_claude_verified: true
-  max_turns: 100
-  estimated_wall_time_min: 55
-  prompt: |
-    CONTEXT:
-    Repo at {project_root}, run on or after {date}. Hardware remains part of Carnot's long-run
-    sovereignty/sampling story, but .477 must not claim speedups. KV260 and PolarFire were reachable in
-    exp5201; GateMate remained blocked at DirtyJTAG/JTAG protocol or physical layer.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json.
-    - research-hardware-wishlist.md.
-    - ops/hardware-bringup-prep.md if present.
-    - CLAUDE.md KV260 SSH-Not-SD-Card Discipline.
-
-    TASK:
-    Run correctness/reachability continuity checks and narrow GateMate's block. Do not use host SD-card
-    checks for KV260 and do not modify scripts/research_conductor.py.
-
-    CONCRETE STEPS:
-    1. KV260 precondition: run exactly ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'. Do not check
-       /dev/mmcblk or host removable storage.
-    2. If reachable, run a lightweight workload/hash smoke over SSH and record the hash. No performance
-       claim.
-    3. PolarFire precondition: ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'. If reachable,
-       run its workload/hash smoke and state whether terminal workload validation is now met.
-    4. GateMate: do not merely repeat one detect command. Compare against exp5201's tried angles and add
-       at least one genuinely new diagnostic angle if physical access permits: alternate cable/port,
-       power-cycle note, DirtyJTAG firmware/tool version check, slower JTAG clock, or openFPGALoader issue
-       correlation.
-    5. If a physical operator action is required, write an actionable checklist rather than inventing a
-       result.
-
-    REQUIRED ARTIFACT FIELDS:
-      kv260_status:
-        value: "reachable/unreachable + workload hash if reachable"
-      kv260_precondition_command:
-        value: "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'"
-      polarfire_status:
-        value: "reachable/unreachable + workload hash if reachable"
-      gatemate_status:
-        value: "blocked/resolved + evidence"
-      gatemate_diagnostic_narrowed_to:
-        value: "usb_level | jtag_protocol_level | permissions | clock_rate | firmware_version | cable_or_port | physical_board | unknown"
-      new_diagnostic_angles_tried_this_milestone:
-        value: "list"
-      hardware_speedup_claimed:
-        value: false
-      inference_substrate:
-        value: hardware_smoke
-      honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must not claim latency/speedup."
-
-    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-- id: exp5218-verifier-authenticity-remediation-apply-v477
-  milestone: 2026.07.477
-  title: "PHASE C2 verifier-authenticity remediation -- apply low-risk fixes from exp5203"
-  priority: high
-  track: infrastructure
-  deliverable: results/experiment_5218_verifier_authenticity_remediation_apply_v477.json
-  prior_failures:
-  - experiment_id: exp5203-verifier-authenticity-remediation-options-v476
-    verdict: complete_verifier_authenticity_remediation_options_ready_no_verifier_modified_this_task
-    addressed_by: "exp5203 only produced options and explicitly modified no verifier. This task applies the selected low-risk remediation with tests."
+  - experiment_id: exp5212-gap4-scale-validation-gated-v477
+    verdict: complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked
+    addressed_by: "This validation is gated on a canonical pool with nonzero rows and complete pass@2/provenance fields; it does not reuse the protocol-empty exp5212 input."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
@@ -875,120 +404,608 @@ tasks:
   estimated_wall_time_min: 60
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. exp5203 produced remediation options for
-    verifier-authenticity issues: and_composition_verifier.py and claim_isolation_uncertainty_router.py
-    have misleading names/claims relative to their actual behavior. .477 should apply the low-risk
-    remediation so future headline paths cannot accidentally rely on dishonest naming.
+    Repo at {project_root}, run on or after {date}. This task should only run if exp5224 emitted
+    gap4_canonical_pool_usable == true and canonical_pool_n >= 120. The goal is a clean validation decision,
+    not a forced positive result.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_5203_verifier_authenticity_remediation_options_v476.json.
-    - The remediation doc path recorded in that artifact.
-    - ops/verifier_authenticity_audit_report.md.
-    - python/carnot modules for and_composition_verifier.py and claim_isolation_uncertainty_router.py.
-    - openspec/capabilities/*/spec.md relevant to verifier authenticity/registry behavior.
+    - results/experiment_5224_gap4_canonical_pool_builder_v478.json.
+    - The canonical pool path from exp5224.
+    - results/experiment_5212_gap4_scale_validation_gated_v477.json (blocked prior).
+    - GAP-4 validation scripts and tests.
+    - ops/verifier_gaps.md GAP-4 section.
 
     TASK:
-    Apply the safest remediation available from exp5203: rename, warnings, registry flags, tests, or
-    documentation that prevents these modules from being mistaken for production verifiers. Avoid broad
-    behavior refactors unless the spec and tests require them.
+    Run GAP-4 validation on the canonical pool with no flagged/protocol-empty rows. Report exact statistics
+    and update docs with either a clean positive, clean null, or explicit block.
 
     CONCRETE STEPS:
-    1. Read exp5203's options and pick the lowest-risk option that makes the naming/claim truthful.
-    2. Confirm relevant OpenSpec requirements exist before code edits; add/update requirements first if
-       needed.
-    3. Apply the remediation. Examples: explicit heuristic naming, headline-ineligible registry flag,
-       warning on neutral stub member, or tests asserting no hidden model call is implied.
-    4. Add focused tests that would have failed under the misleading behavior/claim.
-    5. Update ops/verifier_authenticity_audit_report.md or ops/status.md with the remediation outcome if
-       that is the repo's established pattern.
-    6. Run targeted tests and verifier authenticity lint if available.
+    1. Re-run the protocol/schema linter on the canonical pool before scoring.
+    2. Score every eligible row and record n_scored. n_scored must be greater than zero and should match the
+       canonical pool count unless rows are excluded for documented reasons.
+    3. Compare against the agreed baseline using exact/binomial or paired tests appropriate to the existing
+       GAP-4 validation code. Avoid p-hacking or changing the decision rule after seeing results.
+    4. Run adversarial_verify on the artifact and exclude any flagged rows from headline metrics.
+    5. Update ops/verifier_gaps.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md if the GAP-4
+       status changes.
 
     REQUIRED ARTIFACT FIELDS:
-      remediation_applied:
+      gap4_clean_validation_complete:
         value: bool
-      remediated_modules:
-        value: "list"
-      remediation_type:
-        value: "rename | warning | registry_flag | behavior_fix | docs_only | blocked"
-      headline_ineligible_until_real_verification:
+      n_scored:
+        value: int
+      wins:
+        value: int
+      losses:
+        value: int
+      ties:
+        value: int
+      exact_test_p_value:
+        value: float
+      exact_test_passes_min6_rule:
         value: bool
-      tests_run:
-        value: "list of commands and pass/fail"
-      specs_updated:
+      effect_direction:
+        value: "positive|null|negative|blocked"
+      canonical_pool_path:
+        value: "path"
+      adversarial_verify_passed:
         value: bool
-      no_research_conductor_change:
-        value: true
       inference_substrate:
-        value: code_and_doc_remediation
+        value: deterministic_validation_over_canonical_pool
       honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ or blocked_ and state whether the dishonest-naming risk is actually reduced."
+        principle: "Must start with complete:/complete_/success:/success_ and state the clean GAP-4 validation decision."
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-- id: exp5219-capstone-v477
-  milestone: 2026.07.477
-  title: "PHASE Z capstone -- reconcile .477 verifier, ARC, self-learning, hardware, and authenticity outcomes"
-  priority: critical
-  track: planning
-  deliverable: results/experiment_5219_capstone_v477.json
-  operator_override: "2026-05-29 operator directive: routine milestone capstone/reconciliation task; recurrence is expected and authorized."
+- id: exp5226-veribmc-local-solver-feedback-pilot-v478
+  milestone: 2026.07.478
+  title: "PHASE 2 VerIbmc-style local solver feedback -- SOTA GGUF invariant/formalization pilot"
+  priority: high
+  track: verification
+  deliverable: results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json
+  requires_gpu: true
   prior_failures:
-  - experiment_id: exp5206-capstone-v476
-    verdict: complete_v476_reconciled_with_diffusiongemma_loading_retired_gap4891_and_gap4_still_open_exp5199_gated_zero_new_levels_no_flagged_adversarial_headlined
-    addressed_by: "Routine capstone for a new milestone with different upstream task IDs and outcomes; it aggregates .477 artifacts, not .476."
+  - experiment_id: exp2084-code-verification-live-gpu
+    verdict: OK (conductor)
+    addressed_by: "This is not a broad HumanEval code-verification pipeline; it is a small VerIbmc-style invariant/formalization pilot with deterministic solver feedback and mandated local SOTA GGUF model specs."
+    retire_if_same_verdict: true
+  - experiment_id: exp2079-llm-as-extractor
+    verdict: OK (conductor)
+    addressed_by: "The prior LLM-as-extractor path did not center solver counterexample feedback; this task compares solver-only, LLM-only, and solver-feedback loops on a bounded set."
     retire_if_same_verdict: true
   agent_type: codex
   model: gpt-5.5
-  max_turns: 40
-  estimated_wall_time_min: 45
+  max_turns: 50
+  estimated_wall_time_min: 90
   prompt: |
     CONTEXT:
-    Repo at {project_root}, run on or after {date}. This capstone closes milestone 2026.07.477. It must
-    reconcile the actual artifacts, not the plan. Nulls and blocked gates are legitimate outcomes.
+    Repo at {project_root}, run on or after {date}. The V478 SOTA scan added VerIbmc and VERGE as
+    directly actionable verifier-guided formalization ideas. Carnot should test the core pattern locally:
+    local SOTA GGUF proposes a small invariant/formal constraint, a deterministic solver checks it, and the
+    model receives structured counterexample feedback for a bounded retry.
 
     EXISTING CODE TO READ FIRST:
-    - All available results/experiment_5207_*.json through results/experiment_5218_*.json.
-    - research-roadmap.yaml and openspec/change-proposals/research-roadmap-vNEXT.md.
-    - ops/status.md, ops/changelog.md, ops/conductor-log.md.
-    - ops/verifier_gaps.md, ops/verifier_registry.yaml, ops/arc_solve_registry.yaml.
-    - _bmad/traceability.md and _bmad/architecture.md.
-    - research-program.md Continuous Self-Learning section.
+    - research-references.md V478 VerIbmc/VERGE entries.
+    - scripts/experiment_template.py, especially cached_sota_pair().
+    - Existing SMT/Z3/ESBMC/code-verification helpers in scripts/ and python/carnot/.
+    - openspec/capabilities/*/spec.md for verification/formalization capabilities.
+    - Relevant tests for SMT extraction, verifier registry, and code verification.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE).
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense).
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).
+    Use scripts/experiment_template.py and cached_sota_pair(). Legacy small models are permitted only as
+    CPU smoke tests and cannot be used for the headline solver-feedback result.
 
     TASK:
-    Produce the milestone-close artifact and reconcile all changed specs/ops docs. Do not headline any
-    artifact that is gated, missing, flagged adversarial, or off-provenance.
+    Build and run a bounded VerIbmc-style pilot: deterministic solver-only baseline, local SOTA LLM-only
+    proposal, and local SOTA LLM plus solver-feedback retry. The deliverable is the measured uplift or a
+    clean null, not a broad benchmark claim.
 
     CONCRETE STEPS:
-    1. Read every completed .477 artifact directly. Record missing, blocked, and gated tasks explicitly.
-    2. Summarize decisions: GAP-1 promoted or not; GAP-4 floor crossed or not; hidden-state v3 kept or
-       retired; self-learning memory created or blocked; PAW/frontier ARC outcomes; hardware state;
-       authenticity remediation result.
-    3. Update ops/status.md and ops/changelog.md append-only.
-    4. Update openspec/, _bmad/traceability.md, ops/verifier_gaps.md, ops/verifier_registry.yaml,
-       ops/arc_solve_registry.yaml, and _bmad/architecture.md only where actual artifacts require it.
-    5. Run relevant lint/spec-coverage checks and applicable e2e checks from ops/e2e-test-plan.md for
-       changed surfaces. If a full command is blocked by legacy unrelated failures, state that and include
-       targeted commands that passed.
-    6. Confirm scripts/research_conductor.py was not modified.
+    1. Choose a tiny existing verification set from repo artifacts or create a proper test fixture under
+       tests/python/ if needed. Do not create root scratch files.
+    2. Implement or wire a deterministic checker using existing Z3/SMT/ESBMC-compatible helpers where
+       available. If ESBMC is not installed, use Z3/SMT and record the substrate honestly.
+    3. Resolve at least one mandated local SOTA GGUF through cached_sota_pair() and record model paths.
+    4. Run three arms on the same examples: solver-only, LLM-only proposal, and LLM plus solver feedback.
+    5. Compare accepted invariant/formalization count, counterexample use, runtime, and failure modes.
+    6. Update docs only if the pilot changes verifier strategy.
 
     REQUIRED ARTIFACT FIELDS:
-      per_task_summary:
-        value: "map from task id to artifact path/status/verdict"
-      gap1_final_status:
-        value: "filled | building | open | blocked"
-      gap4_final_status:
-        value: "filled | building | open | blocked"
-      hidden_state_path_decision:
-        value: "keep | retire_mmlu_path | blocked"
-      continuous_self_learning_satisfied:
+      solver_feedback_pilot_complete:
+        value: bool
+      n_examples:
+        value: int
+      solver_only_solved:
+        value: int
+      llm_only_solved:
+        value: int
+      llm_solver_feedback_solved:
+        value: int
+      solver_feedback_uplift:
+        value: float
+      accepted_invariants_or_constraints:
+        value: "list or count"
+      model_specs:
+        value: "list including at least one mandated SOTA GGUF"
+      models_used:
+        value: "list of concrete model ids/paths"
+      checker_substrate:
+        value: "z3|smt|esbmc|other"
+      tests_run:
+        value: "list of commands and pass/fail"
+      inference_substrate:
+        value: local_sota_gguf_plus_deterministic_solver_feedback
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether solver feedback improved over baselines."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5227-continuous-self-learning-multihead-memory-v478
+  milestone: 2026.07.478
+  title: "PHASE 2 Continuous Self-Learning -- typed multi-head verifier memory with promotion and rollback"
+  priority: critical
+  track: self_learning
+  deliverable: results/experiment_5227_continuous_self_learning_multihead_memory_v478.json
+  prior_failures:
+  - experiment_id: exp5214-continuous-self-learning-verifier-memory-v477
+    verdict: "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim"
+    addressed_by: "The prior task wrote a shallow memory ledger; this task turns it into typed multi-head memory with retention, promotion, rollback, and consumer-ready APIs."
+    retire_if_same_verdict: true
+  - experiment_id: exp1328-continuous-self-learning-memory-promotion-v2
+    verdict: OK (conductor)
+    addressed_by: "This attempt is scoped to verifier/ARC typed memory informed by AutoMem/MHM/SkillCoach, not a generic memory-promotion rerun."
+    retire_if_same_verdict: true
+  - experiment_id: exp2224-semantic-memory-pruning
+    verdict: OK (conductor)
+    addressed_by: "This task avoids broad semantic-pruning claims and instead uses typed heads for constraint, provenance, failure, and skill memories with explicit rollback tests."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. research-program.md requires continuous self-learning.
+    exp5214 satisfied the previous milestone by writing memory entries, but the PRD wants a loop that can
+    change future verifier/agent behavior. V478 references AutoMem, Multi-Head Recurrent Memory Agents,
+    SkillCoach, AgenticSTS, and Denser Is Not Better. Keep this to verified memory operations; do not propose
+    broad self-distillation or model fine-tuning.
+
+    EXISTING CODE TO READ FIRST:
+    - research-program.md Continuous Self-Learning section.
+    - results/experiment_5214_continuous_self_learning_verifier_memory_v477.json.
+    - Existing memory/ledger modules under python/carnot/ and ops/.
+    - _bmad/prd.md FR-11 and FR-12.
+    - tests for memory, registry, verifier gaps, and traceability.
+
+    TASK:
+    Implement or upgrade typed multi-head verifier memory with promotion, rollback, retention checks, and
+    consumer-ready summaries for GAP-1, GAP-4, and ARC. This is the mandatory continuous self-learning task
+    for .478.
+
+    CONCRETE STEPS:
+    1. Define memory heads for constraints, provenance, failures, and skills/rubrics. Use a small schema
+       rather than an open-ended text blob.
+    2. Import exp5214 promotions/rollbacks and add .477 outcomes: GAP-1 positive-but-unpromoted, GAP-4
+       quarantined, hidden-state MMLU retired, ARC zero-level delta, hardware no-speedup.
+    3. Add promotion and rollback rules with tests: a promoted entry must cite artifact evidence; a rollback
+       must cite the artifact or exclusion reason that invalidated it.
+    4. Add a retention/nonforgetting check that proves older critical retirements are still returned when
+       relevant.
+    5. Provide a small API or data file that exp5228 can consume for ARC rubric setup.
+    6. Update ops/status.md, ops/changelog.md, and _bmad/traceability.md if implementation changes.
+
+    REQUIRED ARTIFACT FIELDS:
+      continuous_self_learning_task:
+        value: true
+        principle: "This field proves the milestone includes the required continuous self-learning experiment."
+      typed_memory_heads:
+        value: "list of memory heads"
+      memory_entries_written:
+        value: int
+      promotions:
+        value: int
+      rollbacks:
+        value: int
+      retention_check_passed:
+        value: bool
+      consumer_ready_path:
+        value: "path"
+      broad_self_distillation_used:
+        value: false
+      tests_run:
+        value: "list of commands and pass/fail"
+      inference_substrate:
+        value: verified_typed_memory_no_model_training
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether typed memory is consumer-ready."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5228-arc-provenance-skill-rubric-gate-v478
+  milestone: 2026.07.478
+  title: "PHASE 3 ARC live-path diagnosis -- provenance and SkillCoach-style rubric gate"
+  priority: high
+  track: arc
+  deliverable: results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json
+  prior_failures:
+  - experiment_id: exp5216-arc-frontier-continuity-landmark-decomposition-v477
+    verdict: "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot."
+    addressed_by: "This task is not another frontier-continuity/landmark decomposition solve attempt; it diagnoses live-agent process failures with provenance and a rubric before any level-up patch runs."
+    retire_if_same_verdict: true
+  - experiment_id: exp5215-arc-paw-amortization-gate-v477
+    verdict: complete_paw_amortization_gate_not_viable_no_arc_solve_claim
+    addressed_by: "The new task does not use PAW amortization; it derives skill-selection/following/composition/reflection rubrics from live-path traces and typed memory."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. The ARC north star is live hidden-game self-discovery.
+    .477 banked zero new levels, and the architecture explicitly distinguishes offline development twin from
+    scored live E3AgentPolicy. This task must not solve a level by outer-loop source reading, offline BFS, or
+    a hand GameAdapter. Its job is to build a process rubric and gate for a later live-path patch.
+
+    EXISTING CODE TO READ FIRST:
+    - ops/north-star.md.
+    - _bmad/architecture.md ARC sections.
+    - ops/arc_solve_registry.yaml and scripts/arc_loop_solve.py.
+    - python/carnot/arc/ live-agent policy code, especially E3AgentPolicy and OfflineSolver boundaries.
+    - results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json.
+    - results/experiment_5227_continuous_self_learning_multihead_memory_v478.json and its consumer-ready path.
+    - research-references.md V478 AutoMem/MHM/SkillCoach/ProvenanceGuard entries.
+
+    TASK:
+    Build an ARC live-path provenance and process-rubric gate that can decide whether a specific live-agent
+    patch is worth attempting in exp5229. The rubric should score skill selection, skill following, skill
+    composition, reflection/retry quality, and provenance validity from live traces.
+
+    CONCRETE STEPS:
+    1. Precheck ops/arc_solve_registry.yaml. Do not propose re-solving a level already reproduced by the live
+       mechanism.
+    2. Identify a small set of existing live-path traces or generate new live traces without reading hidden
+       game source or running offline BFS.
+    3. Define rubric fields inspired by SkillCoach: process quality independent of final reward, plus
+       provenance fields that distinguish live_agent_self_discovery from development_proxy and outer_loop_re.
+    4. Use typed memory from exp5227 to ensure known retirements and .477 nulls are not forgotten.
+    5. Recommend at most one concrete live-agent patch for exp5229. If no credible patch exists, set
+       recommended_live_patch_available to false and explain why.
+
+    REQUIRED ARTIFACT FIELDS: arc_skill_rubric_usable, recommended_live_patch_available
+      arc_skill_rubric_usable:
+        value: bool
+        principle: "BARE top-level boolean. True only if the rubric is grounded in live-path traces and has usable scoring fields."
+      recommended_live_patch_available:
+        value: bool
+        principle: "BARE top-level boolean. True only if exp5229 has a concrete live-path patch to attempt."
+      recommended_patch_summary:
+        value: "string or null"
+      registry_precheck_done:
+        value: bool
+      duplicate_solve_target_avoided:
+        value: bool
+      provenance_fields:
+        value: "list"
+      rubric_path:
+        value: "path"
+      no_outer_loop_re_used:
+        value: bool
+      inference_substrate:
+        value: live_trace_process_rubric
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether a gated live patch is available."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5229-arc-gated-live-levelup-from-rubric-v478
+  milestone: 2026.07.478
+  title: "PHASE 3 gated on exp5228 rubric and patch -- ARC live-agent level-up attempt"
+  priority: high
+  track: arc
+  deliverable: results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json
+  requires_gpu: true
+  gated_on:
+  - upstream: exp5228-arc-provenance-skill-rubric-gate-v478
+    artifact_field: arc_skill_rubric_usable
+    op: "=="
+    value: true
+  - upstream: exp5228-arc-provenance-skill-rubric-gate-v478
+    artifact_field: recommended_live_patch_available
+    op: "=="
+    value: true
+  prior_failures:
+  - experiment_id: exp5216-arc-frontier-continuity-landmark-decomposition-v477
+    verdict: "complete: frontier continuity plus landmark decomposition did not bank a new reproduction-gated level above the registry precheck in this bounded pilot."
+    addressed_by: "This task is gated on a process-rubric patch from exp5228 and does not repeat frontier continuity or landmark decomposition as the main mechanism."
+    retire_if_same_verdict: true
+  - experiment_id: exp5215-arc-paw-amortization-gate-v477
+    verdict: complete_paw_amortization_gate_not_viable_no_arc_solve_claim
+    addressed_by: "This task does not use PAW or episode compilation; it attempts only the live-agent patch recommended by the rubric gate."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. This task should run only if exp5228 produced a usable
+    ARC process rubric and a concrete recommended live-agent patch. The ARC deliverable is live
+    self-discovery from the agent's own attempts and runtime reverse engineering. Offline ground-truth BFS,
+    hidden source reading, and hand-built per-game adapters are not acceptable solve paths.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json.
+    - ops/arc_solve_registry.yaml.
+    - ops/arc-live-agent-canonical-path.md if present.
+    - python/carnot/arc/ live E3AgentPolicy code and tests.
+    - scripts/arc_loop_solve.py and any live runner scripts used by prior ARC tasks.
+    - scripts/experiment_template.py, especially cached_sota_pair(), if the live patch invokes an LLM proposer.
+
+    MODEL_SPECS:
+    - unsloth/Qwen3.6-35B-A3B-GGUF (flagship MoE).
+    - unsloth/gemma-4-31B-it-GGUF (flagship dense).
+    - unsloth/gemma-4-26B-A4B-it-GGUF (middle MoE).
+    If the recommended live patch uses any LLM proposer, resolve at least one mandated local SOTA GGUF
+    through cached_sota_pair() and record model_specs/models_used. If the patch is deterministic and uses no
+    LLM, record models_used=[] and explain why no LLM was invoked.
+
+    TASK:
+    Apply the single live-agent patch recommended by exp5228, run a bounded live-path level-up attempt, and
+    bank a level only if it satisfies ARC live-path provenance and registry rules.
+
+    CONCRETE STEPS:
+    1. Precheck ops/arc_solve_registry.yaml and choose only a target not already reached by the live
+       mechanism. Do not duplicate a registered solve.
+    2. Apply the recommended patch narrowly. Do not add a broad new offline solver or source-specific adapter.
+    3. Run the live agent with bounded attempts and record traces, actions, verifier decisions, and rubric
+       scores.
+    4. If a level is solved, validate that solve_provenance is live_agent_self_discovery. If provenance is
+       development_proxy or outer_loop_re, do not headline or registry-bank it.
+    5. Update ops/arc_solve_registry.yaml only for a reproducible live-agent solve. Otherwise update docs with
+       the null and the next bottleneck.
+
+    REQUIRED ARTIFACT FIELDS:
+      solve_provenance:
+        value: "live_agent_self_discovery|development_proxy|outer_loop_re"
+        principle: "ARC level solve claims must use live_agent_self_discovery. development_proxy and outer_loop_re are not headline deliverables."
+      registry_precheck_done:
+        value: bool
+      duplicate_solve_target_avoided:
+        value: bool
+      live_patch_applied:
         value: bool
       new_levels_banked:
         value: "list"
       reproducible_total_levels_delta:
         value: int
-      hardware_final_state:
-        value: "summary"
-      flagged_adversarial_artifacts_excluded:
+      live_agent_self_discovery_claimed:
+        value: bool
+      model_specs:
+        value: "list including at least one mandated SOTA GGUF if an LLM proposer was used"
+      models_used:
+        value: "list of concrete model ids/paths or [] for deterministic no-LLM patch"
+      no_outer_loop_re_used:
+        value: bool
+      tests_run:
+        value: "list of commands and pass/fail"
+      inference_substrate:
+        value: arc_live_agent_self_discovery
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether any level was banked through live_agent_self_discovery."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5230-kan-milp-verifier-certificate-v478
+  milestone: 2026.07.478
+  title: "PHASE 3 KAN certificate pilot -- small PWA/MILP verifier bound for energy module"
+  priority: medium
+  track: verification
+  deliverable: results/experiment_5230_kan_milp_verifier_certificate_v478.json
+  prior_failures:
+  - experiment_id: exp2082-kan-milp-translation
+    verdict: OK (conductor)
+    addressed_by: "This task is not another translation-only scaffold; it must produce or explicitly fail to produce a small certificate artifact tied to a Carnot energy/verifier module."
+    retire_if_same_verdict: true
+  - experiment_id: exp2052-kan-z3-solver-integration
+    verdict: OK (conductor)
+    addressed_by: "The prior integration showed solver wiring; this task focuses on certificate production, bound tightness, and doc alignment with Optimal KAN abstraction references."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 60
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. V478 references Optimal KAN abstractions and GRS-KAN.
+    Carnot already has prior KAN/PWA/MILP scaffolding, but the next useful step is a small certificate
+    tied to a real energy or verifier module, with clear limits.
+
+    EXISTING CODE TO READ FIRST:
+    - research-references.md V478 KAN entries.
+    - Existing KAN/KAEM/PWA/MILP modules under python/carnot/ and scripts/.
+    - results/experiment_2082_kan_milp.json and results/experiment_2052_kan_z3.json if present.
+    - openspec/capabilities/*/spec.md for energy/verifier requirements.
+    - tests covering KAN, KAEMEnergy, Z3, or MILP verification.
+
+    TASK:
+    Produce a small PWA/MILP certificate pilot for a Carnot KAN/KAEM-style energy or verifier module, or
+    explicitly block with the missing prerequisite. Do not claim broad KAN verification.
+
+    CONCRETE STEPS:
+    1. Select the smallest existing KAN/KAEM/verifier component that can be abstracted without inventing a
+       new research stack.
+    2. Reuse existing PWA/MILP/Z3 helpers where possible. Add only narrowly scoped code/tests.
+    3. Check one or two properties, such as bounded monotonicity, sign stability, or no unsafe decision
+       under a tiny input box.
+    4. Write a certificate artifact or a precise block reason with missing prerequisites.
+    5. Update ops/status.md, ops/changelog.md, _bmad/traceability.md, and specs only if implementation or
+       capability status changes.
+
+    REQUIRED ARTIFACT FIELDS:
+      kan_certificate_produced:
+        value: bool
+      certificate_path:
+        value: "path or null"
+      target_module:
+        value: "path or name"
+      properties_checked:
+        value: "list"
+      bound_tightness:
+        value: "numeric summary or null"
+      reused_existing_helpers:
+        value: bool
+      tests_run:
+        value: "list of commands and pass/fail"
+      inference_substrate:
+        value: deterministic_pwa_milp_certificate
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state whether a certificate was produced."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5231-hardware-continuity-pbit-boundary-v478
+  milestone: 2026.07.478
+  title: "PHASE 3 hardware continuity -- KV260/PolarFire hashes and p-bit boundary plan without speedup claim"
+  priority: high
+  track: hardware
+  deliverable: results/experiment_5231_hardware_continuity_pbit_boundary_v478.json
+  operator_override: "CLAUDE.md hardware-continuity standing rule: recurring hardware reachability tasks are expected, but must avoid retired wrong-mechanism preconditions and speedup claims."
+  prior_failures:
+  - experiment_id: exp5217-hardware-continuity-v477
+    verdict: complete_hardware_continuity_v477_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v477_narrowed_cable_or_port_polarfire:reachable_no_speedup_claim
+    addressed_by: "This is the next continuity check with the same no-speedup discipline plus a p-bit boundary-exchange design note; it does not pretend the GateMate physical/JTAG block is resolved."
+    retire_if_same_verdict: true
+  - experiment_id: exp1929-p-bit-ising-v3
+    verdict: OK (conductor)
+    addressed_by: "This task does not re-run p-bit accounting; it writes a boundary-exchange timing-ratio plan informed by new p-bit/Ising literature and current board reachability."
+    retire_if_same_verdict: true
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  estimated_wall_time_min: 90
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. Hardware remains a correctness/reachability track.
+    .477 confirmed KV260 and PolarFire reachability, and narrowed GateMate to a physical/JTAG block with
+    raw IDCODE 0xffffffff. V478 references one-million p-bit probabilistic computers, FPGA Ising
+    decomposition, and Extropic TSU/XTR-0 writing. Do not claim speedup.
+
+    EXISTING CODE TO READ FIRST:
+    - research-hardware-wishlist.md.
+    - results/experiment_5217_hardware_continuity_v477.json.
+    - hardware docs/scripts for KV260, PolarFire, GateMate, and p-bit samplers.
+    - research-references.md V478 hardware entries.
+    - CLAUDE.md hardware/GateMate/KV260 rules.
+
+    TASK:
+    Run bounded hardware continuity checks and write a p-bit boundary-exchange timing-ratio plan for future
+    sampler work. Do not modify scripts/research_conductor.py, do not use host /dev/mmcblk preconditions for
+    KV260, and do not claim a benchmark speedup.
+
+    CONCRETE STEPS:
+    1. KV260: use SSH-only reachability, e.g. ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'. Do not
+       inspect host /dev/mmcblk as a KV260 prerequisite.
+    2. PolarFire: run the existing reachability/hash smoke if available.
+    3. GateMate: only recheck IDCODE if the operator has changed cable/port/board setup; otherwise preserve
+       the physical/JTAG block and write the next physical action needed.
+    4. Write a short p-bit boundary-exchange timing-ratio plan that names the future workload, partitions,
+       hash/correctness checks, and what measurement would be needed before any speedup claim.
+    5. Update research-hardware-wishlist.md, ops/status.md, ops/changelog.md, and _bmad/traceability.md only
+       with factual changes.
+
+    REQUIRED ARTIFACT FIELDS:
+      kv260_reachable:
+        value: bool
+      kv260_check_method:
+        value: "ssh_only"
+      polarfire_reachable:
+        value: bool
+      gatemate_status:
+        value: "reachable|blocked_physical_jtag|not_checked"
+      gatemate_idcode_raw:
+        value: "string or null"
+      pbit_boundary_plan_path:
+        value: "path"
+      speedup_claimed:
+        value: false
+        principle: "No .478 hardware task may claim speedup without a real end-to-end workload."
+      hardware_docs_updated:
+        value: bool
+      inference_substrate:
+        value: hardware_reachability_and_sampler_boundary_plan
+      honest_verdict:
+        principle: "Must start with complete:/complete_/success:/success_ and state reachability plus no-speedup status."
+
+    Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+- id: exp5232-capstone-v478
+  milestone: 2026.07.478
+  title: "PHASE 4 capstone -- reconcile .478 evidence, exclusions, specs, memory, and ops docs"
+  priority: critical
+  track: planning
+  deliverable: results/experiment_5232_capstone_v478.json
+  operator_override: "2026-05-29 operator directive: recurring milestone capstone tasks are expected and authorized when they summarize a new milestone's artifacts."
+  prior_failures:
+  - experiment_id: exp5219-capstone-v477
+    verdict: "complete: v477 closed with GAP-1 building after blocked registry promotion, GAP-4 blocked by flagged/protocol validation, MMLU hidden-state path retired, self-learning memory created, zero ARC levels banked, hardware reachability maintained with no speedup claim, and flagged artifacts excluded."
+    addressed_by: "This is the .478 capstone over a new artifact set; it must report registry/provenance/memory/ARC/hardware outcomes and exclude any flagged or gated artifacts."
+    retire_if_same_verdict: true
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  estimated_wall_time_min: 45
+  prompt: |
+    CONTEXT:
+    Repo at {project_root}, run on or after {date}. This is the .478 capstone. Do not make the milestone
+    sound better than the artifacts support. Flagged, blocked, or gated-out artifacts cannot become headline
+    claims.
+
+    EXISTING CODE TO READ FIRST:
+    - research-roadmap.yaml (the activated .478 plan).
+    - openspec/change-proposals/research-roadmap-vNEXT.md.
+    - ops/conductor-log.md entries for exp5220 through exp5231.
+    - results/experiment_5220_archive_477_activate_478.json through results/experiment_5231_hardware_continuity_pbit_boundary_v478.json.
+    - research-references.md V478 section.
+    - ops/status.md, ops/changelog.md, ops/verifier_gaps.md, ops/arc_solve_registry.yaml, ops/exclusion_manifest.yaml.
+    - _bmad/traceability.md and relevant openspec/capabilities/*/spec.md files.
+
+    TASK:
+    Reconcile the milestone: summarize what changed, what remains blocked, what must be retired or excluded,
+    and whether the continuous self-learning mandate was met.
+
+    CONCRETE STEPS:
+    1. Read every .478 result artifact directly. Do not infer success from task title.
+    2. Identify headline-eligible claims only when artifacts passed gates and adversarial checks.
+    3. Record GAP-1 status, GAP-4 status, VerIbmc solver-feedback status, typed-memory status, ARC status,
+       KAN certificate status, and hardware status.
+    4. Update openspec, _bmad/traceability.md, ops/status.md, ops/changelog.md, ops/verifier_gaps.md, and
+       research-references.md as needed.
+    5. Run relevant lint/spec-coverage/unit checks and record pass/fail honestly.
+    6. Confirm scripts/research_conductor.py was not modified.
+
+    REQUIRED ARTIFACT FIELDS:
+      gap1_final_status:
+        value: "promoted|blocked|unchanged"
+      gap4_final_status:
+        value: "clean_positive|clean_null|blocked|unchanged"
+      solver_feedback_status:
+        value: "positive|null|blocked|not_run"
+      continuous_self_learning_satisfied:
+        value: bool
+      arc_new_levels_banked:
+        value: "list"
+      arc_reproducible_total_levels_delta:
+        value: int
+      kan_certificate_status:
+        value: "produced|blocked|not_run"
+      hardware_status:
+        value: "one-line summary"
+      flagged_artifacts_excluded:
         value: bool
       docs_reconciled:
         value: bool
@@ -997,8 +1014,8 @@ tasks:
       research_conductor_py_untouched_confirmed:
         value: bool
       inference_substrate:
-        value: aggregation_from_upstream_artifacts
+        value: aggregation_from_milestone_artifacts
       honest_verdict:
-        principle: "Must start with complete:/complete_/success:/success_ and must not inflate nulls or blocked gates."
+        principle: "Must start with complete:/complete_/success:/success_ and state the true .478 outcome without laundering flagged or gated artifacts."
 
     Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
