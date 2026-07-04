@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.478",
+  "generated_at": "2026-07-04T16:42:12Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No data available this milestone for experiment timing beyond the locked empty-window fields: the authoritative timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. With no compute-bound entries, there is no basis to rank slow experiments, diagnose GPU efficiency, or evaluate DualGPURunner engagement.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No data available this milestone for compute-bound wall-time bottlenecks because the timing data contains no experiment commits since activation.",
+    "GPU idle is not flagged as a bottleneck because the timing data contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Add a no-experiment-commits sentinel that causes operational retrospectives to emit the empty-window template immediately when both timing sources are empty.",
+    "Gate all GPU-idle and DualGPURunner recommendations on compute_bound timing entries rather than on a standalone GPU snapshot.",
+    "Require the timing assembler to provide either structured experiment entries or an explicit no-data marker before prompting for slowest-experiment analysis."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Short-circuit retrospective analysis when experiments_completed is 0 and compute_bound_experiments_count is 0.",
+    "Preserve the compute_bound gate for GPU utilization claims so synthesis-only or empty windows do not create false action items.",
+    "Make the no-data state explicit in the artifact and logs before scheduling any performance-tuning work."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main risk in this retrospective is importing experiment IDs, durations, or metrics from adjacent repository records. The correct operational conclusion is no data available for compute-bound execution this milestone, so the idle GPU snapshot remains informational rather than actionable.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
