@@ -444,6 +444,9 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
 <!-- experiment_5205_autopyverifier_gap1_pilot_v476 start -->
 - experiment_5205 AutoPyVerifier-inspired deterministic set search (2026-07-03): best_subset=['border_ordered_profile', 'color_centroid_orientation', 'row_column_run_profile'], pass@2 baseline=0.087866, pass@2 best=0.221757, transpose captures=47 out of 239. Candidate singletons: directional_adjacency_refuted_20260609=helped, row_ordered_edge_profile=helped, column_ordered_edge_profile=helped, diagonal_adjacency_asymmetry=helped, corner_anchored_quadrant_histogram=helped, border_ordered_profile=helped, color_centroid_orientation=helped, row_column_run_profile=helped. Verdict: complete: set_search_beats_always_on_beats_single_refuted_baseline_0.0879_best_0.2218_single_refuted_0.1506_captured_47_of_239_gap1_candidate_positive
 <!-- experiment_5205_autopyverifier_gap1_pilot_v476 end -->
+<!-- experiment_5209_gap1_set_search_holdout_hardening_v477 start -->
+- experiment_5209 GAP-1 set-search holdout hardening (2026-07-04): gap1_hardened_positive=True, heldout pass@2 mean=0.189584, always-on baseline=0.088976, single refuted directional=0.147787, paired delta CI95=[0.023148, 0.060446], leakage_audit_passed=True, best_subset_stable=False. Do not promote to registry here. Verdict: complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here
+<!-- experiment_5209_gap1_set_search_holdout_hardening_v477 end -->
 
 ### GAP-2: content verification for VARIABLE-output-dim tasks
 - status: open
