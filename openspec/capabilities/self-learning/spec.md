@@ -10018,6 +10018,54 @@ reason.
 
 **Spec traces:** REQ-LEARN-5214, SCENARIO-LEARN-5214
 
+## REQ-LEARN-5227: V478 Typed Multi-Head Verifier Memory
+
+**Given** the V477 verifier-memory ledger and V477/V478 outcome artifacts for
+GAP-1, GAP-4, hidden-state MMLU, ARC live-path progress, and hardware
+continuity
+**When** the continuous self-learning memory is upgraded for Exp 5227
+**Then** the durable memory SHALL be split into typed heads named
+`constraints`, `provenance`, `failures`, and `skills_rubrics`
+**And** each memory entry SHALL use a small schema with `entry_id`, `head`,
+`subject`, `promotion_state`, `evidence`, optional `invalidated_by`, and a
+head-specific payload rather than an open-ended text blob
+**And** the upgrade SHALL write a consumer-ready ARC rubric setup file for Exp
+5228.
+
+### REQ-LEARN-5227 Sub-requirements
+
+- REQ-LEARN-5227-1: A `promoted` memory entry SHALL cite at least one artifact
+  evidence path or spec reference before it can be reused by a verifier or
+  agent consumer.
+- REQ-LEARN-5227-2: A `rolled_back` memory entry SHALL cite either the artifact
+  that invalidated it or a concrete exclusion reason that blocks reuse.
+- REQ-LEARN-5227-3: The multi-head ledger SHALL import the Exp 5214 promoted
+  GAP-1 memory and rolled-back GAP-4 memory, then add the V477/V478 outcomes:
+  GAP-1 positive-but-registry-unpromoted, GAP-4 quarantined/clean-null,
+  hidden-state MMLU retired, ARC zero-level delta, and hardware no-speedup.
+- REQ-LEARN-5227-4: A retention/nonforgetting check SHALL query the typed
+  memory for older critical retirements and SHALL pass only when the relevant
+  retirement or rollback entries are returned.
+- REQ-LEARN-5227-5: Exp 5227 SHALL write
+  `results/experiment_5227_continuous_self_learning_multihead_memory_v478.json`
+  with principle-annotated fields for continuous self-learning status, typed
+  heads, entry counts, promotions, rollbacks, retention result, consumer path,
+  no broad self-distillation, tests run, inference substrate, and honest
+  verdict.
+
+### SCENARIO-LEARN-5227: Multi-Head Memory Feeds ARC Rubric Setup
+
+**Given** the existing V477 memory artifact and the V478 handoff outcomes
+**When** the Exp 5227 builder constructs typed memory
+**Then** GAP-1 memory is reusable only as a memory-only discriminator note, not
+as a registry promotion
+**And** GAP-4, hidden-state MMLU, and ARC zero-delta outcomes are retained as
+rollback or retirement memory
+**And** the ARC consumer file contains rubric fields for skill selection, skill
+following, skill composition, reflection/retry quality, and provenance validity.
+
+**Spec traces:** REQ-LEARN-5227, SCENARIO-LEARN-5227
+
 ## REQ-LEARN-3357: FR-11 LogicVault Z3 Integration
 **Given** an incoming fact and a set of historically verified beliefs
 **When** the vault processes the incoming fact

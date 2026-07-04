@@ -1,0 +1,78 @@
+{
+  "broad_self_distillation_used": {
+    "principle": "False because Exp 5227 performs verified typed-memory operations only, with no model training.",
+    "value": false
+  },
+  "consumer_ready_path": {
+    "principle": "Path to the ARC rubric setup file for Exp 5228.",
+    "value": "results/arc_rubric_setup_from_typed_memory_v478.json"
+  },
+  "continuous_self_learning_task": {
+    "principle": "This field proves the milestone includes the required continuous self-learning experiment.",
+    "value": true
+  },
+  "experiment": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+  "experiment_id": 5227,
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether typed memory is consumer-ready.",
+    "value": "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training"
+  },
+  "inference_substrate": {
+    "principle": "Must be verified_typed_memory_no_model_training.",
+    "value": "verified_typed_memory_no_model_training"
+  },
+  "memory_artifact_path": {
+    "principle": "Durable typed memory path.",
+    "value": "results/typed_multihead_verifier_memory_v478.json"
+  },
+  "memory_entries_written": {
+    "principle": "Count of schema-valid typed memory entries written to the durable ledger.",
+    "value": 6
+  },
+  "promotions": {
+    "principle": "Entries reusable by future controllers because they cite artifact evidence.",
+    "value": 2
+  },
+  "retention_check_passed": {
+    "principle": "True only when critical older retirements are returned by relevance queries.",
+    "value": true
+  },
+  "rollbacks": {
+    "principle": "Entries blocked, quarantined, or retired with explicit invalidating evidence.",
+    "value": 4
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.continuous_self_learning_multihead_memory.v1",
+  "source_artifacts": [
+    "research-program.md#continuous-self-learning-core-architectural-goal",
+    "_bmad/prd.md#fr-11-autonomous-self-learning-loop",
+    "_bmad/prd.md#fr-12-verifiable-reasoning",
+    "research-references.md#continuous-self-learning-and-memory",
+    "results/verifier_memory_v477.json",
+    "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
+    "results/experiment_5215_arc_paw_amortization_gate_v477.json",
+    "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
+    "results/experiment_5217_hardware_continuity_v477.json",
+    "results/experiment_5220_archive_477_activate_478.json",
+    "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
+    "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+    "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5227",
+    "SCENARIO-LEARN-5227"
+  ],
+  "tests_run": {
+    "principle": "List of verification commands with pass/fail status.",
+    "value": []
+  },
+  "typed_memory_heads": {
+    "principle": "List of typed memory heads available for verifier and ARC consumers.",
+    "value": [
+      "constraints",
+      "provenance",
+      "failures",
+      "skills_rubrics"
+    ]
+  }
+}
