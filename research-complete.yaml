@@ -74496,3 +74496,86 @@ milestones:
       v2, GAP-4 scale-up progress, and hardware/infra state
     deliverable: results/experiment_5192_capstone_v475.json
     result: OK (conductor)
+- id: 2026.07.476
+  title: POISON-TEST HARDENING + RETRO-TIMING REAL FIX -- DIFFUSIONGEMMA VLLM-NATIVE RETRY -- MAP LANDMARK RE-ATTEMPT -- HIDDEN-STATE
+    VERIFIER V2 -- QA/VERIFIER-AUTHENTICITY FOLLOW-THROUGH
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-07-04'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp5193-archive-475-activate-476
+    title: PHASE 0 transition -- archive .475 truth (poison-test-cascade near-total-loss milestone, exp5182 real DiffusionGemma
+      root-cause result rescued outside the normal task path, retro-timing still false-zero after the wiring landed), activate
+      .476
+    deliverable: results/experiment_5193_archive_475_activate_476.json
+    result: OK (conductor)
+  - id: exp5194-poison-test-cascade-triage-module-v476
+    title: PHASE INFRA-CRITICAL 1/2 -- build a standalone pretest-triage module that detects the "agent-shipped-test-references-not-yet-produced-artifact"
+      pattern (4th occurrence this milestone) and prepares a scoped, auditable xfail remediation
+    deliverable: results/experiment_5194_poison_test_cascade_triage_module_v476.json
+    result: OK (conductor)
+  - id: exp5195-retro-timing-real-fix-known-issues-dedup-v476
+    title: PHASE INFRA-CRITICAL 2/2 -- MANDATORY overdue priority (pending since .469, escalated across 5+ diagnosis events)
+      -- the retro-timing wiring landed but the false-zero recurred anyway; find the deeper cause. Also fix the unrelated
+      known-issues.md 187-copy duplication bug.
+    deliverable: results/experiment_5195_retro_timing_real_fix_known_issues_dedup_v476.json
+    result: OK (conductor)
+  - id: exp5196-diffusiongemma-vllm-native-retry-v476
+    title: PHASE A1 DiffusionGemma unblock attempt 3 -- vLLM native-support retry (genuinely untried path), then HF custom
+      device_map + CPU-offload fallback, then retire the loading thread if both fail
+    deliverable: results/experiment_5196_diffusiongemma_vllm_native_retry_v476.json
+    result: OK (conductor)
+  - id: exp5197-gap4-scaleup-real-checkpoint-v476
+    title: PHASE A2 continue GAP-4 (same-shape rule-application-consistency) scale-up from n=62 toward the n~180 significance
+      floor, with genuine atomic checkpoint/resume this time, plus the decentralization- tier local-generator arm at real
+      pilot scale
+    deliverable: results/experiment_5197_gap4_scaleup_real_checkpoint_v476.json
+    result: OK (conductor)
+  - id: exp5198-map-landmark-prestage-prototype-v476
+    title: PHASE B1 re-attempt (never ran in .475, poison-test cascade) -- attack the GAP-4891 ARC trajectory-enumeration
+      wall with a MAP-style map-then-act landmark pre-stage, 3-arm falsifiable gate
+    deliverable: results/experiment_5198_map_landmark_prestage_prototype_v476.json
+    result: OK (conductor)
+  - id: exp5199-map-gated-levelup-attempt-v476
+    title: PHASE B2 live level-up attempt using the MAP lever if exp5198 validated one -- ARC Level-Up Attempt Guarantee,
+      targeted at the scored live-agent path where integration allows
+    deliverable: results/experiment_5199_map_gated_levelup_attempt_v476.json
+    result: OK (conductor)
+  - id: exp5200-hidden-state-verifier-v2-mmlu-pro-v476
+    title: PHASE C1 re-attempt (never ran in .475, poison-test cascade) -- hidden-state verifier v2 on the zero-shot MMLU-Pro
+      headroom pool, PHSV-style trained probe vs THREE zero-training baselines including Radial Consensus Score; this milestone's
+      continuous self-learning experiment
+    deliverable: results/experiment_5200_hidden_state_verifier_v2_mmlu_pro_v476.json
+    result: OK (conductor)
+  - id: exp5201-hardware-continuity-gatemate-diagnostic-v476
+    title: PHASE C2 hardware continuity -- KV260 + PolarFire SSH-reachability smoke, and a 3rd-consecutive- milestone genuine
+      root-cause diagnostic for GateMate's DirtyJTAG IDCODE regression
+    deliverable: results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json
+    result: OK (conductor)
+  - id: exp5202-architecture-md-reconciliation-v476
+    title: RESERVED INFRASTRUCTURE 1/2 -- reconcile the 48+-day-stale _bmad/architecture.md with the ARC-AGI-3 pivot, the
+      PHASE D lifecycle (commissioned through retired), the hidden-state-verifier program, and current hardware/verifier-tier
+      state
+    deliverable: results/experiment_5202_architecture_md_reconciliation_v476.json
+    result: OK (conductor)
+  - id: exp5203-verifier-authenticity-remediation-options-v476
+    title: RESERVED INFRASTRUCTURE 2/2 -- prepare operator-facing remediation options for the two DISHONEST_NAMING verifiers
+      the 2026-07-01 authenticity audit flagged
+    deliverable: results/experiment_5203_verifier_authenticity_remediation_options_v476.json
+    result: OK (conductor)
+  - id: exp5204-exclusion-manifest-lint-real-bug-fix-v476
+    title: fix scripts/exclusion_manifest_lint.py's documented REAL_BUG -- substring matching without word boundaries, principle-wrapped-field
+      blindness, and partial negation handling
+    deliverable: results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json
+    result: OK (conductor)
+  - id: exp5205-autopyverifier-gap1-pilot-v476
+    title: an AutoPyVerifier-inspired pilot targeting GAP-1 (transpose/orientation discrimination) -- search a compact SET
+      of cheap candidate discriminators instead of one hand-crafted invariant
+    deliverable: results/experiment_5205_autopyverifier_gap1_pilot_v476.json
+    result: OK (conductor)
+  - id: exp5206-capstone-v476
+    title: PHASE Z capstone -- reconcile the DiffusionGemma loading-thread outcome, MAP landmark re-attempt, hidden-state
+      verifier v2, GAP-4 scale-up, infra fixes (poison-test triage, retro-timing, known-issues dedup), and QA/verifier-authenticity
+      follow-through
+    deliverable: results/experiment_5206_capstone_v476.json
+    result: OK (conductor)
