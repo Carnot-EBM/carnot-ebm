@@ -656,6 +656,41 @@ def test_blocked_precondition_check_only_has_no_live_model_floor(tmp_path: Path)
     assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
 
 
+def test_artifact_provenance_audit_quotes_upstream_compute_markers_without_live_floor(
+    tmp_path: Path,
+):
+    """REQ-REPORT-5223: provenance audits may quote quarantined live-model artifacts."""
+
+    artifact = {
+        "experiment": "experiment_5223_gap4_flagged_pool_authenticity_audit_v478",
+        "schema": "carnot.gap4_flagged_pool_authenticity_audit_5223.v1",
+        "honest_verdict": "complete: old GAP-4 pool must be regenerated",
+        "inference_substrate": "artifact_provenance_audit",
+        "duration_s": 0.01,
+        "reproducibility_checksum": "sha256:fixture",
+        "artifact_findings": {
+            "upstream": {
+                "detail": (
+                    "quoted upstream GGUF / CUDA / unsloth/Qwen3.6-35B-A3B-GGUF "
+                    "duration_s=48.6 blocker"
+                )
+            }
+        },
+    }
+    flags = []
+    av.check_duration_vs_claim(artifact, flags)
+    av.check_methodology_present(artifact, flags)
+    report = _report_for_payload(tmp_path, artifact)
+
+    floor = av.duration_floor_for_artifact(artifact)
+    assert floor is not None
+    assert floor["reason"] == "deterministic_verifier"
+    assert "DURATION_TOO_SHORT" not in _kinds(flags)
+    assert "METHODOLOGY_MISSING" not in _kinds(flags)
+    assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
+    assert "METHODOLOGY_MISSING" not in [flag["kind"] for flag in report["flags"]]
+
+
 # --------------------------------------------------------------------------- #
 # TAUTOLOGY excludes wall-clock TIMESTAMP fields (2026-06-26 outer-loop fix)   #
 # Origin: .438 A3 self-play (exp4763) -- checkpoint_mtime_before_ns vs         #

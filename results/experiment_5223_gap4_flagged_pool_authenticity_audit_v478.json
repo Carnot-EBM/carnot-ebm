@@ -1,0 +1,187 @@
+{
+  "artifact_findings": {
+    "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json": {
+      "candidate_rows": 120,
+      "exists": true,
+      "headline_blockers": [
+        "checkpoint preserves the same noncanonical rows; it is audit evidence, not repair provenance"
+      ],
+      "headline_eligible": false,
+      "missing_pass_at_1_rows": 120,
+      "missing_pass_at_2_rows": 120,
+      "missing_random_seed_rows": 120,
+      "path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json"
+    },
+    "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json": {
+      "adversarial_flags": [
+        {
+          "detail": "accepted_rows=120.0 and candidate_pool_n=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "accepted_rows=120.0 and repair_attempts=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "candidate_pool_n=120.0 and repair_attempts=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "source_task_budget=180.0 and source_task_count=180.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=48.623196 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "candidate_pool_n": 120,
+      "candidate_rows": 120,
+      "demo_lookup_rows": 120,
+      "exists": true,
+      "headline_blockers": [
+        "models_used is empty despite a pool-ready artifact",
+        "120 candidate rows are missing random_seed",
+        "120 candidate rows are missing canonical generation fields",
+        "120 candidate rows are missing pass@1 protocol fields",
+        "120 candidate rows are missing pass@2 protocol fields",
+        "duration_s=48.623196 is below the 60s live-GGUF floor",
+        "pool-ready counts collapse to candidate_pool_n=120, accepted_rows=120, repair_attempts=120 with live_prompted_rows=1 and demo_lookup_rows=120",
+        "adversarial_verify recorded flags on the artifact"
+      ],
+      "headline_eligible": false,
+      "live_prompted_rows": 1,
+      "missing_generation_provenance_rows": 120,
+      "missing_pass_at_1_rows": 120,
+      "missing_pass_at_2_rows": 120,
+      "missing_random_seed_rows": 120,
+      "models_used": [],
+      "path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"
+    },
+    "results/experiment_5212_gap4_scale_validation_gated_v477.json": {
+      "adversarial_flags": [
+        {
+          "detail": "excluded_rows=120.0 and exp5211_candidate_pool_n=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "exact_test_discordant_losses=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        }
+      ],
+      "excluded_rows": 120,
+      "exclusion_summary": {
+        "missing_protocol_pass2_fields": 120
+      },
+      "exists": true,
+      "failure_mode": "missing_protocol_pass2_fields",
+      "headline_blockers": [
+        "n_scored=0; no protocol-scored rows exist",
+        "failure_mode=missing_protocol_pass2_fields",
+        "adversarial_verify recorded flags on the artifact"
+      ],
+      "headline_eligible": false,
+      "path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
+      "validated_pool_n": 0
+    }
+  },
+  "canonical_candidate_required_fields": [
+    "candidate_id",
+    "source_task_id",
+    "model_id",
+    "model_path_or_digest",
+    "prompt_digest",
+    "random_seed",
+    "generation_started_at",
+    "generation_duration_s",
+    "decoding_protocol",
+    "pass_at_1_fields",
+    "pass_at_2_fields",
+    "validation_inputs_digest",
+    "provenance_kind"
+  ],
+  "canonical_schema_path": "python/carnot/schemas/gap4_candidate_record_v1.json",
+  "duration_s": 0.248277,
+  "experiment": "experiment_5223_gap4_flagged_pool_authenticity_audit_v478",
+  "experiment_id": 5223,
+  "field_principles": {
+    "canonical_schema_path": {
+      "principle": "Path to the canonical GAP-4 candidate-record JSON schema."
+    },
+    "gap4_pool_repairable": {
+      "principle": "BARE top-level boolean. True only if existing rows can be repaired without inventing model/protocol provenance."
+    },
+    "guard_tests_added": {
+      "principle": "True only when this task added tests that exercise the preflight guard."
+    },
+    "honest_verdict": {
+      "principle": "Must start with complete:/complete_/success:/success_ and state whether the old GAP-4 pool is repairable or must be regenerated."
+    },
+    "inference_substrate": {
+      "principle": "Must be artifact_provenance_audit."
+    },
+    "protocol_fields_complete": {
+      "principle": "BARE top-level boolean. True only when every accepted candidate has complete pass@1 and pass@2 protocol fields."
+    },
+    "quarantined_artifacts": {
+      "principle": "List of flagged v477 GAP-4 artifact paths excluded from headlines."
+    },
+    "tests_run": {
+      "principle": "Commands actually run for this artifact, with pass/fail status."
+    },
+    "validated_pool_n": {
+      "principle": "BARE top-level integer. Count of rows with scored protocol validation."
+    }
+  },
+  "gap4_pool_repairable": false,
+  "guard_tests_added": true,
+  "honest_verdict": "complete: old GAP-4 pool must be regenerated or rebuilt by a canonical-pool builder; exp5211/exp5212 are quarantined from headline evidence",
+  "inference_substrate": "artifact_provenance_audit",
+  "preflight_passed": false,
+  "preflight_reasons": [
+    "generation_duration_too_short",
+    "missing_generation_provenance",
+    "missing_models_used",
+    "missing_protocol_pass1_fields",
+    "missing_protocol_pass2_fields",
+    "missing_random_seed",
+    "tautology_shaped_pool_ready",
+    "validation_n_scored_zero"
+  ],
+  "protocol_fields_complete": false,
+  "quarantined_artifacts": [
+    "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
+    "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json",
+    "results/experiment_5212_gap4_scale_validation_gated_v477.json"
+  ],
+  "reproducibility_checksum": "sha256:3137715c89745e524b80ff97431a1b3db1858d08609d9e430d8e3987cc253896",
+  "result_path": "results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json",
+  "schema": "carnot.gap4_flagged_pool_authenticity_audit_5223.v1",
+  "spec_refs": [
+    "REQ-REPORT-5223",
+    "SCENARIO-REPORT-5223-QUARANTINE",
+    "SCENARIO-REPORT-5223-PREFLIGHT"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py -q -- PASS: 9 passed in 2.10s",
+    ".venv/bin/pytest -o addopts='' tests/python/test_adversarial_verify_guards.py::test_artifact_provenance_audit_quotes_upstream_compute_markers_without_live_floor -q -- PASS: 1 passed in 1.42s",
+    "COVERAGE_FILE=/tmp/carnot_5223_coverage_plain .venv/bin/coverage run --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py -m pytest -o addopts='' tests/python/test_experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py -q && COVERAGE_FILE=/tmp/carnot_5223_coverage_plain .venv/bin/coverage report --fail-under=100 --show-missing -- PASS: 9 passed; new module 287 statements, 0 missed, 100% coverage",
+    ".venv/bin/ruff check python/carnot/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py tests/python/test_experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py scripts/adversarial_verify.py tests/python/test_adversarial_verify_guards.py -- PASS: All checks passed",
+    "python scripts/adversarial_verify.py results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json -- PASS: Scanned 1 artifact; 0 flagged",
+    ".venv/bin/python scripts/check_spec_coverage.py -- FAIL: repo-wide pre-existing 1231 tests missing spec traceability; new/changed 5223 tests contain REQ/SCENARIO refs",
+    ".venv/bin/pytest tests/python -q -- FAIL/INTERRUPTED: 50 failed, 13927 passed, 44 skipped after 656.17s at about 30%; existing failures plus z3 worker segmentation fault"
+  ],
+  "validated_pool_n": 0
+}
