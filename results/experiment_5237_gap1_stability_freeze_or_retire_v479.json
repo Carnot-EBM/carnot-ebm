@@ -1,0 +1,155 @@
+{
+  "decision_path_features": [
+    "exp5209.gap1_hardened_positive.value",
+    "exp5209.leakage_audit_passed.value",
+    "exp5209.leakage_audit.no_subset_selection_on_heldout_rows",
+    "exp5209.subset_stability.selection_counts",
+    "exp5222.gap1_registry_promoted.value"
+  ],
+  "duration_s": 0.0,
+  "experiment": "experiment_5237_gap1_stability_freeze_or_retire_v479",
+  "experiment_id": 5237,
+  "field_principles": {
+    "frozen_subset": "List of frozen invariant names, or null when GAP-1 is not promoted.",
+    "gap1_registry_promoted": "BARE top-level boolean. True only when a deterministic non-leaky stable subset is frozen.",
+    "gap1_stability_decision": "Final GAP-1 stability decision enum: frozen_promoted, blocked_instability, retired_current_path, or blocked_missing_evidence.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.",
+    "inference_substrate": "Must be deterministic_gap1_stability_analysis.",
+    "no_new_broad_search": "True only when Exp 5237 evaluates existing Exp 5209 subset evidence without a new search.",
+    "ops_verifier_gaps_updated": "True when ops/verifier_gaps.md records the block/freeze decision.",
+    "refuted_single_invariant_excluded": "True when directional_adjacency_refuted_20260609 is absent from the frozen/current subset.",
+    "stability_rule_predeclared": "True only when the stability rule is declared before any new performance result.",
+    "tests_run": "List of verification commands with pass/fail booleans for this decision."
+  },
+  "frozen_subset": {
+    "principle": "List of frozen invariant names, or null when GAP-1 is not promoted.",
+    "value": null
+  },
+  "future_reopen_criterion": "Minimum evidence to reopen: choose one frozen subset from training evidence alone, before held-out scoring, and have the exact subset win at least 10 of 20 grouped splits; every frozen invariant must appear in at least half of those splits, all leakage/no-held-out-tuning guards must pass, and directional_adjacency_refuted_20260609 must remain excluded.",
+  "gap1_registry_promoted": {
+    "principle": "BARE top-level boolean. True only when a deterministic non-leaky stable subset is frozen.",
+    "value": false
+  },
+  "gap1_stability_decision": {
+    "principle": "Final GAP-1 stability decision enum: frozen_promoted, blocked_instability, retired_current_path, or blocked_missing_evidence.",
+    "value": "blocked_instability"
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was frozen, blocked, or retired.",
+    "value": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
+  },
+  "inference_substrate": {
+    "principle": "Must be deterministic_gap1_stability_analysis.",
+    "value": "deterministic_gap1_stability_analysis"
+  },
+  "no_new_broad_search": {
+    "principle": "True only when Exp 5237 evaluates existing Exp 5209 subset evidence without a new search.",
+    "value": true
+  },
+  "ops_verifier_gaps_updated": {
+    "principle": "True when ops/verifier_gaps.md records the block/freeze decision.",
+    "value": true
+  },
+  "refuted_single_invariant_excluded": {
+    "principle": "True when directional_adjacency_refuted_20260609 is absent from the frozen/current subset.",
+    "value": true
+  },
+  "registry_audit": {
+    "exists": true,
+    "path": "ops/verifier_registry.yaml",
+    "promoted_gap1_registry_entry_present": false,
+    "promoted_gap1_verifier_ids": [],
+    "verifier_ids_loaded": [
+      "fover_production_ensemble",
+      "outcome_verifier_math_proc_plus_sc",
+      "code_outcome_verifier_formal_oracle",
+      "arc_grid_structural_pruner",
+      "arc_grid_combined_verifier",
+      "gap4_program_induction_stack",
+      "arc_agi3_learned_action_cost_heuristic_4353",
+      "sprite_overlay_resize_verifier"
+    ]
+  },
+  "result_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+  "retirement_or_block_condition": "Freeze is blocked unless the exact-subset and invariant-inclusion stability checks both pass under the no-held-out-tuning leakage guard.",
+  "run_date": "2026-07-04",
+  "schema": "carnot.arc_gap1_stability_freeze_or_retire_5237.v1",
+  "source_artifacts": [
+    "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
+    "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5237",
+    "SCENARIO-VERIFY-5237"
+  ],
+  "stability_audit": {
+    "exact_subset_min_count": 10,
+    "exact_subset_selection_frequency": 0.45,
+    "exact_subset_stability_passed": false,
+    "exp5209_gate_parsed_from_value": true,
+    "exp5222_registry_decision": "blocked_instability",
+    "exp5222_registry_promoted": false,
+    "heldout_rows_used_for_freeze": false,
+    "invariant_inclusion_frequencies": {
+      "color_centroid_orientation": 0.6,
+      "row_column_run_profile": 1.0
+    },
+    "invariant_inclusion_min_frequency": 0.5,
+    "invariant_inclusion_stability_passed": true,
+    "leakage_audit_passed": true,
+    "n_grouped_splits": 20,
+    "no_heldout_tuning": true,
+    "refuted_single_invariant_excluded": true,
+    "rule": "Freeze only if the Exp 5209 positive gate is parsed from its value field, leakage guards pass, no held-out rows select the subset, one exact subset wins at least half of grouped splits, each frozen invariant appears in at least half of grouped splits, and directional_adjacency_refuted_20260609 is excluded.",
+    "source_subset_evidence": "exp5209.subset_stability.selection_counts",
+    "top_subset": [
+      "color_centroid_orientation",
+      "row_column_run_profile"
+    ],
+    "top_subset_count": 9
+  },
+  "stability_rule_predeclared": {
+    "principle": "True only when the stability rule is declared before any new performance result.",
+    "value": true
+  },
+  "tests_run": {
+    "principle": "List of verification commands with pass/fail booleans for this decision.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py -q",
+        "details": "5 passed",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/coverage erase; .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py -q; .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/verify/arc_gap1_stability_freeze_or_retire.py",
+        "details": "5 passed; arc_gap1_stability_freeze_or_retire.py 229 statements, 0 missed, 100% coverage",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/verify/arc_gap1_stability_freeze_or_retire.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
+        "details": "All checks passed",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/ruff format --check python/carnot/verify/arc_gap1_stability_freeze_or_retire.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
+        "details": "2 files already formatted",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5237_gap1_stability_freeze_or_retire_v479.py",
+        "details": "OK: All tests reference specification requirements.",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py",
+        "details": "Failed on 1231 pre-existing untraced tests outside the Exp 5237 test file.",
+        "passed": false
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "details": "Interrupted after the run was already red and worker-unstable: 302 failed, 25524 passed, 90 skipped, 1 error in 2632.75s; observed Z3 segmentation fault, JAX abort, xdist worker crashes, and unrelated historical/spec-anchor failures.",
+        "passed": false
+      }
+    ]
+  }
+}
