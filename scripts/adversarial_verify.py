@@ -258,6 +258,23 @@ LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S = (
     2.0  # model load + >=1 single-pass embedding, even on the smallest SOTA GGUF
 )
 
+# Log-analysis-plus-bounded-local-timing artifacts: a "should we build X" gate that reads a
+# handful of existing JSON logs/artifacts (no LLM call) and runs one small, LOCAL, non-model
+# timing measurement (e.g. a tiny CUDA kernel dispatch to sanity-check an amortization estimate,
+# clamped to a conservative floor rather than trusted raw). Genuine compute -- reads real files,
+# dispatches a real (if microsecond-scale) local operation -- but far cheaper than either full
+# generation or embedding extraction, and the presence of a CUDA/GPU backend string in the timing
+# evidence (e.g. "torch_cuda:0") should not pull this back to the 60s live_llm_inference floor.
+# Discovered 2026-07-04 (exp5215's ARC PAW amortization gate: read 9 arc_loop_solve_*.json logs +
+# one local-GPU micro-timing check clamped to a 2.13s conservative floor, 4.10s total -- correctly
+# concluded paw_amortization_viable=False, but flagged DURATION_TOO_SHORT under the generic 60s
+# floor because no substrate category recognized this shape). Per CLAUDE.md "Inference-Substrate
+# Declaration Discipline" -- the forward-only 7th legal value.
+LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE = "arc_log_analysis_plus_local_timing"
+LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S = (
+    1.0  # reading several JSON logs + one bounded local timing check, no model load
+)
+
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
 # learned-verifier checkpoint. Treat those fields as the methodology descriptor
@@ -1833,6 +1850,16 @@ def _is_llm_embedding_extraction(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LLM_EMBEDDING_EXTRACTION_SUBSTRATE)
 
 
+def _is_log_analysis_local_timing(d: dict[str, Any]) -> bool:
+    """True when the artifact declares log-analysis-plus-bounded-local-timing (no LLM call).
+
+    Recognition is the canonical `inference_substrate` sentinel only (forward-only, no legacy
+    schema-prefix fallback -- this class was introduced 2026-07-04, so there is no pre-discipline
+    history to backfill). See LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE for the exemplar incident (exp5215).
+    """
+    return _inference_substrate_matches(d, LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -1929,6 +1956,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
             "min_duration_s": LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
             "reason": "llm_embedding_extraction",
+        }
+    if _is_log_analysis_local_timing(d):
+        return {
+            "substrate": LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
+            "min_duration_s": LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S,
+            "reason": "log_analysis_local_timing",
         }
     if _is_live_llm_inference(d):
         return {
@@ -2150,12 +2183,12 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # check would be a category error.
     if _is_aggregation_only(d):
         return
-    # ARC live-agent no-LLM artifacts genuinely have no model to name (no LLM
-    # was invoked) -- requiring model_specs/target_model here would be a
-    # category error identical to the aggregation case. random_seed and
-    # reproducibility_checksum are STILL required (this substrate is a real
-    # measurement, just not a model-inference one).
-    no_model_spec_required = _is_arc_live_agent_no_llm(d)
+    # ARC live-agent no-LLM artifacts (and log-analysis-plus-local-timing gates, added
+    # 2026-07-04 alongside the substrate itself) genuinely have no model to name (no LLM
+    # was invoked) -- requiring model_specs/target_model here would be a category error
+    # identical to the aggregation case. random_seed and reproducibility_checksum are
+    # STILL required (this substrate is a real measurement, just not a model-inference one).
+    no_model_spec_required = _is_arc_live_agent_no_llm(d) or _is_log_analysis_local_timing(d)
     has_model_spec = no_model_spec_required or (
         d.get("model_specs") or d.get("target_model") or d.get("models_tested")
     )
