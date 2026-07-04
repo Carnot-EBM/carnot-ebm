@@ -33344,6 +33344,93 @@ warning instead of being hard-blocked.
 |---|---|---|
 | REQ-REPORT-5204 | Implemented (`scripts/exclusion_manifest_lint.py`, `results/experiment_5204_exclusion_manifest_lint_real_bug_fix_v476.json`) | Implemented (`tests/python/test_exclusion_manifest_lint.py`) |
 
+### REQ-REPORT-5207: Archive .476, Activate .477, And Preserve The Verifier-Set Handoff Truth
+
+The Exp 5207 workflow SHALL archive milestone `2026.07.476`, confirm milestone
+`2026.07.477` is active in `research-roadmap.yaml`, and write
+`results/experiment_5207_archive_476_activate_477.json`. It SHALL read the
+active roadmap, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, and the Exp 5193 through
+Exp 5206 result artifacts, focusing on Exp 5197, Exp 5198, Exp 5200, Exp 5201,
+Exp 5205, and Exp 5206. It SHALL run no live model work and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The archive summary SHALL state the `.476` facts needed by downstream `.477`
+tasks without rounding nulls into progress: Exp 5205 found a GAP-1
+set-search positive that beat the always-on and single-refuted baselines but
+still needs held-out hardening; Exp 5197 exhausted the GAP-4 source pool at
+`n=62` with `4/0` discordant wins/losses and did not cross the six-win
+significance floor; Exp 5198 banked zero MAP/landmark levels and left the
+GAP-4891 enumeration wall open; Exp 5200's hidden-state v2 probe scored
+`0.100`, tied CLUE and RCS, and did not beat all controls; Exp 5196 retired the
+DiffusionGemma loading thread after vLLM and HF loading attempts failed; Exp
+5201 confirmed KV260 and PolarFire SSH reachability while GateMate remained
+blocked at the DirtyJTAG/JTAG protocol level with no speedup claim; and Exp
+5206 reconciled the milestone with DiffusionGemma retired, GAP-4891 and GAP-4
+still open, Exp 5199 accurately gated, zero new ARC levels banked, and no
+flagged-adversarial upstreams headlined.
+
+The workflow SHALL activate `.477` by copying `research-roadmap-next.yaml` over
+`research-roadmap.yaml` when the next-file exists. If `research-roadmap.yaml`
+already names milestone `2026.07.477` and contains the Exp 5207 onward task set
+while the root `research-roadmap-next.yaml` is absent, the workflow SHALL record
+that already-active fallback explicitly rather than claiming a copy occurred.
+After activation it SHALL run the available roadmap checks against
+`research-roadmap.yaml`, including `scripts/exclusion_manifest_lint.py` and
+`scripts/validate_prior_failures.py` when present, and SHALL confirm
+`scripts/research_conductor.py` was not modified.
+
+The artifact SHALL include principle-annotated fields `v476_summary`,
+`research_roadmap_yaml_activated`, `exclusion_manifest_confirmed_clean`,
+`validation_commands_run`, `ops_docs_updated`,
+`research_conductor_py_untouched_confirmed`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include source artifact checksums, a roadmap
+activation audit, whether `research-roadmap-next.yaml` was copied or the
+already-active fallback was used, tests run, and a reproducibility checksum.
+
+Required field principles:
+
+- `v476_summary`: principle "Downstream task context depends on this summary being exact, especially nulls and retired threads."
+- `research_roadmap_yaml_activated`: principle "Downstream conductor execution depends on `research-roadmap.yaml` naming `.477` and containing the Exp 5207 onward task set."
+- `exclusion_manifest_confirmed_clean`: principle "The activated .477 roadmap must pass the exclusion-manifest gate without hard retired-scope violations."
+- `validation_commands_run`: principle "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection."
+- `ops_docs_updated`: principle "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid only when an explicit stop rule defers ops reconciliation."
+- `research_conductor_py_untouched_confirmed`: principle "The transition must not modify scripts/research_conductor.py."
+- `inference_substrate`: principle "This archive reads upstream artifacts and activation checks only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must state whether .477 was activated."
+
+#### SCENARIO-REPORT-5207: The Archive Preserves The Precise .476 Outcomes
+
+**Given** Exp 5193 through Exp 5206 artifacts are readable, `research-roadmap.yaml`
+is active for `2026.07.477`, the `.477` design document is present, the
+exclusion-manifest lint exits cleanly or with override-only warnings, available
+prior-failure validation exits zero, and `scripts/research_conductor.py` is
+unchanged
+**When** the Exp 5207 workflow runs
+**Then** it writes
+`results/experiment_5207_archive_476_activate_477.json`, records the exact
+Exp 5197, Exp 5198, Exp 5200, Exp 5205, and Exp 5206 outcomes in
+`v476_summary`, sets `research_roadmap_yaml_activated=true`, sets
+`exclusion_manifest_confirmed_clean=true`, records every validation command and
+pass/fail result, declares `aggregation_from_upstream_artifacts`, and emits an
+honest verdict stating that `.477` was activated.
+
+#### SCENARIO-REPORT-5207-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Clean Activation Claims
+
+**Given** a required `.476` artifact is missing, the active roadmap is not
+`.477`, a required validation command fails, or `scripts/research_conductor.py`
+has been modified
+**When** the Exp 5207 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict` starts with a
+complete-path blocking phrase, records the failed precondition explicitly, and
+does not claim the `.477` handoff is clean.
+
+## Implementation Status (REQ-REPORT-5207)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5207 | Implemented (`python/carnot/experiment_5207_archive_476_activate_477.py`, `results/experiment_5207_archive_476_activate_477.json`) | Implemented (`tests/python/test_experiment_5207_archive_476_activate_477.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
