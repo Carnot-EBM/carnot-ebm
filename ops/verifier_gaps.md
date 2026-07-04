@@ -447,6 +447,7 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
 <!-- experiment_5209_gap1_set_search_holdout_hardening_v477 start -->
 - experiment_5209 GAP-1 set-search holdout hardening (2026-07-04): gap1_hardened_positive=True, heldout pass@2 mean=0.189584, always-on baseline=0.088976, single refuted directional=0.147787, paired delta CI95=[0.023148, 0.060446], leakage_audit_passed=True, best_subset_stable=False. Do not promote to registry here. Verdict: complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here
 <!-- experiment_5209_gap1_set_search_holdout_hardening_v477 end -->
+- Exp 5214 verifier-memory pointer: `results/verifier_memory_v477.json` stores the GAP-1 orientation-discriminator set as a memory-only promotion (not a registry fill) because deterministic guardrails passed and held-out delta cleared the memory threshold.
 
 ### GAP-2: content verification for VARIABLE-output-dim tasks
 - status: open
@@ -579,6 +580,11 @@ local-generation pool is not yet a vote-vs-gated pass@2 evaluation pool. A
 future fill still requires the unchanged floor: at least six discordant wins,
 zero discordant losses, and two-sided exact `p < 0.05` on rows that already
 carry the established protocol labels.
+
+Exp 5214 verifier-memory pointer: `results/verifier_memory_v477.json` records
+the Exp 5211 GAP-4 guarded candidate-pool expansion as a rollback entry because
+deterministic feasibility/leakage guards are not enough without a held-out
+selection delta.
 
 ### GAP-4 Agreement Selector Closure (Exp 4023)
 - status: retired as selector R&D; agreement is a CONFIDENCE LABEL ONLY, not a precision selector.
@@ -1446,6 +1452,20 @@ BFS and DFS and routers" — needs two more label sets the router schema already
 - candidate design: prepare an ARC trajectory dataset from the captured solves; train a TRM
   (full-FT > LoRA per the TTA-TRM finding) on a 3090; wire as a TRM-guided rollout engine.
 - priority: medium (heavier GPU track; gated on enough captured trajectories)
+- **UPDATE 2026-07-04 (outer-loop):** two new supporting arguments, full writeup at
+  `docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md`. (1) Verified
+  `results/experiment_sudoku_energy_vs_ar_v1.json`'s "recursive refinement beats AR" result IS
+  literally the TRM recipe (z←block(x,y,z); y←head(z), 8 cycles, deep supervision) — 18.2% solve rate
+  vs AR's ~0-0.2%, while a near-perfect energy scorer still failed to generate (0%, worse than
+  random) — the exact generation-vs-scoring failure shape GAP-4891 diagnosed for ARC's own
+  enumeration wall, on a different combinatorial domain. (2) arXiv:2604.07822 ("Loop, Think, &
+  Generalize") gives a mechanistic reason recurrent-depth computation should help with ARC's specific
+  compositional-generalization challenge, plus two concrete design rules for any build attempt: train
+  with dynamic (not fixed) recursion depth, and instrument explicitly for "overthinking" (accuracy
+  peaks at some recursion depth, then degrades). Priority should move to first running the note's
+  proposed leave-one-game-out overfit-generalization pilot (a cheap, falsifiable test of whether the
+  current 69-level trajectory corpus carries enough signal at all) BEFORE committing to the full
+  build this entry already scopes.
 <!-- arc-router-training-gaps-2026-06-17:end -->
 
 ### 2026-06-17 Exp4340 ka59 E3 residual gap
