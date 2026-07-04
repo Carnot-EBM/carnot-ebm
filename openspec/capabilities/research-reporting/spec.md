@@ -34599,6 +34599,71 @@ does not claim the `.479` handoff is clean.
 |---|---|---|
 | REQ-REPORT-5233 | Implemented (`python/carnot/experiment_5233_archive_478_activate_479.py`, `results/experiment_5233_archive_478_activate_479.json`) | Implemented (`tests/python/test_experiment_5233_archive_478_activate_479.py`) |
 
+### REQ-REPORT-5240: ARC Rubric And Controlled Memory To Live Patch Synthesis
+
+The Exp 5240 workflow SHALL read
+`results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json`,
+`results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json`,
+and `ops/arc_solve_registry.yaml` to synthesize at most one ARC live-path patch
+candidate for Exp 5241. The workflow SHALL avoid duplicate solve targets already
+covered by the registry, SHALL NOT read hidden game source, SHALL NOT run
+offline ground-truth BFS, SHALL NOT create a hand per-game adapter, and SHALL
+NOT claim a level solve.
+
+If the rubric and controlled-memory evidence identify a concrete live-agent
+mechanism, the patch SHALL be reachable from the live ARC agent. If the evidence
+does not support such a mechanism, the artifact SHALL set
+`recommended_live_patch_available=false` and explain the residual gap.
+
+The artifact SHALL be
+`results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json` and SHALL
+include bare top-level booleans `recommended_live_patch_available` and
+`patch_test_ready`, plus `patch_path`, `patch_failure_mode_targeted`,
+`registry_precheck_done`, `duplicate_solve_target_avoided`,
+`live_agent_reachability_evidence`, `model_specs`, `inference_substrate`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `recommended_live_patch_available`: principle "BARE top-level boolean for Exp 5241. True only when one evidence-backed live-path patch candidate exists."
+- `patch_test_ready`: principle "BARE top-level boolean for Exp 5241. True only when a test or dry-run receipt proves the live agent can reach the candidate."
+- `patch_path`: principle "Path to the code or configuration patch, or null when no patch is justified."
+- `patch_failure_mode_targeted`: principle "One of skill_selection, skill_following, composition, reflection, provenance_routing, or none."
+- `registry_precheck_done`: principle "True only when ops/arc_solve_registry.yaml was read before patch recommendation."
+- `duplicate_solve_target_avoided`: principle "True only when the synthesis does not target an already reached live solve depth."
+- `live_agent_reachability_evidence`: principle "Test command, dry-run receipt, or null."
+- `model_specs`: principle "MODEL_SPECS with mandated SOTA GGUF if any LLM proposer was used; otherwise null."
+- `inference_substrate`: principle "Must be arc_live_path_patch_synthesis."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether a live patch is gated for exp5241."
+
+#### SCENARIO-REPORT-5240-LIVE-PATCH-SYNTHESIS: Controlled Memory Gates A Live Routing Patch
+
+**Given** Exp 5228 produced a usable ARC process rubric without a patch, Exp
+5239 showed aligned typed memory has controlled useful reuse for ARC provenance,
+failure, and skills/rubrics heads, and the ARC solve registry is prechecked
+**When** Exp 5240 synthesizes a live-path patch
+**Then** it may recommend only one non-solve-inflating live-agent patch whose
+targeted failure mode is selected from the required enum, whose code or
+configuration path is reachable from the live agent, and whose artifact emits
+bare top-level `recommended_live_patch_available` and `patch_test_ready`
+booleans for Exp 5241.
+
+#### SCENARIO-REPORT-5240-NO-PATCH-WITHOUT-EVIDENCE: Null Evidence Remains A Null Patch Gate
+
+**Given** either upstream artifact is missing, the registry precheck fails, the
+rubric is unusable, or controlled memory does not show aligned reuse over the
+controls
+**When** Exp 5240 builds its artifact
+**Then** `recommended_live_patch_available=false`, `patch_test_ready=false`,
+`patch_failure_mode_targeted=none`, and the verdict remains complete without
+claiming a level solve.
+
+## Implementation Status (REQ-REPORT-5240)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5240 | Planned (`python/carnot/experiment_5240_arc_rubric_to_patch_synthesis_v479.py`, `python/carnot/agentic/arc_solve_learning.py`, `results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json`) | Planned (`tests/python/test_experiment_5240_arc_rubric_to_patch_synthesis_v479.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce

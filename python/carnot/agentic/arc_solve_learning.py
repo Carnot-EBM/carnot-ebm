@@ -30,6 +30,8 @@ from typing import Any, Optional
 
 import yaml
 
+from .arc_typed_memory_provenance_guard import typed_memory_provenance_guard
+
 REPO = Path(__file__).resolve().parents[3]
 SURVEY = REPO / "results" / "arc3_win_condition_survey.json"
 REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
@@ -727,6 +729,7 @@ def recommend_approach(
     feats = _survey_features()
     reg = _registry()
     strategy = strat.route_for_game(target_game, mechanic=mechanic, reg=reg)
+    typed_memory_guard = typed_memory_provenance_guard()
     feature_router = _feature_router_payload(
         early_play_signature=early_play_signature,
         feature_router_policy=feature_router_policy,
@@ -748,6 +751,7 @@ def recommend_approach(
         return {
             "error": f"{target_game} not in survey",
             "strategy": strategy,
+            "typed_memory_provenance_guard": typed_memory_guard,
             "feature_router": feature_router,
             "retrieved_primitives": primitive_library.retrieve_primitives(primitive_digest),
             "selected_generic_operators": [
@@ -830,6 +834,7 @@ def recommend_approach(
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
         "strategy": strategy,
+        "typed_memory_provenance_guard": typed_memory_guard,
         "feature_router": feature_router,
         "retrieved_primitives": retrieved_primitives,
         "selected_generic_operators": selected_generic_operators,
