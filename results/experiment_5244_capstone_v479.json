@@ -1,0 +1,656 @@
+{
+  "arc_level_delta": {
+    "principle": "integer delta from clean reproduction-gated ARC evidence only",
+    "value": 0
+  },
+  "continuous_self_learning_status": {
+    "principle": "one of controlled_positive | controlled_null | degraded | blocked | unknown, with controlled_positive requiring aligned lift, retention, rollback, and no model distillation",
+    "value": "controlled_positive"
+  },
+  "duration_s": 0.026273,
+  "excluded_from_headline_artifacts": {
+    "exp5235-adversarial-qa-null-tautology-calibration-v479": {
+      "artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete"
+      ],
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": true,
+      "status": "excluded",
+      "verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks."
+    },
+    "exp5236-gap4-clean-status-after-qa-calibration-v479": {
+      "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+      "blocked_decision": "blocked_missing_receipts",
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": false,
+      "status": "blocked",
+      "verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120."
+    },
+    "exp5237-gap1-stability-freeze-or-retire-v479": {
+      "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+      "blocked_decision": "blocked_instability",
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": false,
+      "status": "blocked",
+      "verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
+    },
+    "exp5241-arc-gated-live-patch-attempt-v479": {
+      "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+      "blocked_decision": "no_level_banked",
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete",
+        "failed_validation_command"
+      ],
+      "failed_validation_command": true,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": true,
+      "status": "blocked",
+      "verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
+    }
+  },
+  "experiment": "experiment_5244_capstone_v479",
+  "experiment_id": "exp5244-capstone-v479",
+  "field_principles": {
+    "arc_level_delta": "integer delta from clean reproduction-gated ARC evidence only",
+    "continuous_self_learning_status": "one of controlled_positive | controlled_null | degraded | blocked | unknown, with controlled_positive requiring aligned lift, retention, rollback, and no model distillation",
+    "gap1_final_status": "one of promoted | blocked | retired | unknown, with promoted only after a clean frozen-subset registry promotion",
+    "gap4_final_status": "one of clean_null | clean_positive | blocked | unknown, with blocked required when Exp5236 is flagged or missing receipts",
+    "gated_or_blocked_artifacts": "artifacts or task decisions that are blocked, gate-blocked, or no-bank and must not be rounded up",
+    "hardware_speedup_claimed": "must be false unless authenticated timing evidence exists",
+    "headline_eligible_artifacts": "clean non-flagged artifacts whose methodology and gates permit bounded headline use",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state the honest .479 close state.",
+    "inference_substrate": "milestone_artifact_synthesis",
+    "kan_certificate_status": "one of extended | tiny_only | blocked | unknown, with extended only for bounded deterministic certificate scale-up",
+    "milestone": "the milestone being closed, 2026.07.479",
+    "missing_artifacts": "expected .479 artifacts absent or unreadable, empty only when every Exp5233-Exp5243 deliverable is loadable",
+    "ops_docs_updated": "false when the stop rule delegates ops/status/changelog/traceability updates",
+    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched",
+    "tasks_seen": "count of loadable expected .479 artifacts read directly",
+    "validation_commands_run": "list of validation commands and pass/fail outcomes used for the capstone",
+    "veribmc_final_status": "one of positive | clean_null | retired | blocked | unknown, with retired allowed only after methodology-clean null evidence"
+  },
+  "flagged_adversarial": false,
+  "gap1_final_status": {
+    "principle": "one of promoted | blocked | retired | unknown, with promoted only after a clean frozen-subset registry promotion",
+    "value": "blocked"
+  },
+  "gap4_final_status": {
+    "principle": "one of clean_null | clean_positive | blocked | unknown, with blocked required when Exp5236 is flagged or missing receipts",
+    "value": "blocked"
+  },
+  "gated_or_blocked_artifacts": {
+    "principle": "artifacts or task decisions that are blocked, gate-blocked, or no-bank and must not be rounded up",
+    "value": [
+      {
+        "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+        "reason": "blocked_missing_receipts",
+        "status": "blocked",
+        "task_id": "exp5236-gap4-clean-status-after-qa-calibration-v479"
+      },
+      {
+        "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+        "reason": "blocked_instability",
+        "status": "blocked",
+        "task_id": "exp5237-gap1-stability-freeze-or-retire-v479"
+      },
+      {
+        "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+        "reason": "no_level_banked",
+        "status": "blocked",
+        "task_id": "exp5241-arc-gated-live-patch-attempt-v479"
+      }
+    ]
+  },
+  "hardware_speedup_claimed": {
+    "principle": "must be false unless authenticated timing evidence exists",
+    "value": false
+  },
+  "headline_eligible_artifacts": {
+    "principle": "clean non-flagged artifacts whose methodology and gates permit bounded headline use",
+    "value": [
+      "exp5233-archive-478-activate-479",
+      "exp5234-sota-ingestion-v479",
+      "exp5238-veribmc-methodology-correct-rerun-or-retire-v479",
+      "exp5239-continuous-self-learning-controlled-memory-ablation-v479",
+      "exp5240-arc-rubric-to-patch-synthesis-v479",
+      "exp5242-kan-certificate-abstraction-scale-v479",
+      "exp5243-hardware-continuity-kan-pbit-boundary-v479"
+    ]
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state the honest .479 close state.",
+    "value": "complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded."
+  },
+  "inference_substrate": {
+    "principle": "milestone_artifact_synthesis",
+    "value": "milestone_artifact_synthesis"
+  },
+  "kan_certificate_status": {
+    "principle": "one of extended | tiny_only | blocked | unknown, with extended only for bounded deterministic certificate scale-up",
+    "value": "extended"
+  },
+  "milestone": {
+    "principle": "the milestone being closed, 2026.07.479",
+    "value": "2026.07.479"
+  },
+  "missing_artifacts": {
+    "principle": "expected .479 artifacts absent or unreadable, empty only when every Exp5233-Exp5243 deliverable is loadable",
+    "value": []
+  },
+  "next_top_blockers": [
+    "GAP-4 remains blocked: Exp5236 is flagged, receipt-blocked, or otherwise headline-ineligible",
+    "GAP-1 remains blocked unless subset stability improves: Exp5237 reports blocked_instability",
+    "ARC live patch did not bank a clean level: Exp5241 is flagged or validation-failed, so ARC delta is forced to zero",
+    "Hardware speedup remains unclaimed until authenticated timing and GateMate physical/JTAG setup change."
+  ],
+  "ops_docs_updated": {
+    "principle": "false when the stop rule delegates ops/status/changelog/traceability updates",
+    "value": false
+  },
+  "per_task_summary": {
+    "exp5233-archive-478-activate-479": {
+      "artifact_path": "results/experiment_5233_archive_478_activate_479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim."
+    },
+    "exp5234-sota-ingestion-v479": {
+      "artifact_path": "results/experiment_5234_sota_ingestion_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."
+    },
+    "exp5235-adversarial-qa-null-tautology-calibration-v479": {
+      "artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete"
+      ],
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": true,
+      "status": "excluded",
+      "verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks."
+    },
+    "exp5236-gap4-clean-status-after-qa-calibration-v479": {
+      "artifact_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+      "blocked_decision": "blocked_missing_receipts",
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": false,
+      "status": "blocked",
+      "verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120."
+    },
+    "exp5237-gap1-stability-freeze-or-retire-v479": {
+      "artifact_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+      "blocked_decision": "blocked_instability",
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": false,
+      "status": "blocked",
+      "verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze."
+    },
+    "exp5238-veribmc-methodology-correct-rerun-or-retire-v479": {
+      "artifact_path": "results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"
+    },
+    "exp5239-continuous-self-learning-controlled-memory-ablation-v479": {
+      "artifact_path": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"
+    },
+    "exp5240-arc-rubric-to-patch-synthesis-v479": {
+      "artifact_path": "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim."
+    },
+    "exp5241-arc-gated-live-patch-attempt-v479": {
+      "artifact_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+      "blocked_decision": "no_level_banked",
+      "critical_corrigendum": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete",
+        "failed_validation_command"
+      ],
+      "failed_validation_command": true,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "headline_eligible": false,
+      "methodology_incomplete": true,
+      "status": "blocked",
+      "verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
+    },
+    "exp5242-kan-certificate-abstraction-scale-v479": {
+      "artifact_path": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim"
+    },
+    "exp5243-hardware-continuity-kan-pbit-boundary-v479": {
+      "artifact_path": "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "exclusion_reasons": [],
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "headline_eligible": true,
+      "methodology_incomplete": false,
+      "status": "complete",
+      "verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim"
+    }
+  },
+  "preconditions_checked": {
+    "expected_deliverable_artifacts": 11,
+    "loadable_deliverable_artifacts": 11,
+    "ops_docs_deferred_by_stop_rule": true,
+    "research_conductor_py_untouched": true,
+    "source_context_files_checked": 10
+  },
+  "random_seed": 5244,
+  "reproducibility_checksum": "sha256:076dee392ecec9adeef7b9e03196afaea1f939b35913ab077334e387f38da598",
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
+    "value": true
+  },
+  "result_path": "results/experiment_5244_capstone_v479.json",
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5244_capstone_v479.v1",
+  "source_artifacts": [
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5233,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim.",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5233_archive_478_activate_479.json",
+      "sha256": "sha256:c512628ba1534026b593d0dd1f65eccb4d2ab56bdf30b656ece12b50b6cfa831",
+      "task_id": "exp5233-archive-478-activate-479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5234,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM.",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5234_sota_ingestion_v479.json",
+      "sha256": "sha256:94027d17a30191695b840e7d629f6ad82af1115f8c661d7929837f5bfcee34e3",
+      "task_id": "exp5234-sota-ingestion-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete"
+      ],
+      "exists": true,
+      "experiment_number": 5235,
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks.",
+      "loadable": true,
+      "methodology_incomplete": true,
+      "relative_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "sha256": "sha256:8f5d4d72e57e7285519ae5563c5c61bd0a39a164963d5d22533074bf95aaf671",
+      "task_id": "exp5235-adversarial-qa-null-tautology-calibration-v479"
+    },
+    {
+      "blocked_decision": "blocked_missing_receipts",
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "exists": true,
+      "experiment_number": 5236,
+      "failed_validation_command": false,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+      "sha256": "sha256:7745e7a983f2c2944262d44dfb15a88c7359f9347f1797df931c79a16eb5e48f",
+      "task_id": "exp5236-gap4-clean-status-after-qa-calibration-v479"
+    },
+    {
+      "blocked_decision": "blocked_instability",
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5237,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze.",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+      "sha256": "sha256:cd9060e9b4d2dcfc96487b06b07af97db2e5a1bb215e3114ae73c13e5ae81bd2",
+      "task_id": "exp5237-gap1-stability-freeze-or-retire-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5238,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
+      "sha256": "sha256:100ae31c49ee770c834a2abd0a234027d110d152589e596ed7b5950ac69e1c33",
+      "task_id": "exp5238-veribmc-methodology-correct-rerun-or-retire-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5239,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+      "sha256": "sha256:a5cca69be41f5507e8153da2814b4884cb88d13a4e938dc8d2a7fe0dd14010ed",
+      "task_id": "exp5239-continuous-self-learning-controlled-memory-ablation-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5240,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim.",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
+      "sha256": "sha256:a0ec08ad057303559217373931b547e2bdb5308d17fb2acc612b43f79d8132b6",
+      "task_id": "exp5240-arc-rubric-to-patch-synthesis-v479"
+    },
+    {
+      "blocked_decision": "no_level_banked",
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending",
+        "methodology_incomplete",
+        "failed_validation_command"
+      ],
+      "exists": true,
+      "experiment_number": 5241,
+      "failed_validation_command": true,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked).",
+      "loadable": true,
+      "methodology_incomplete": true,
+      "relative_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+      "sha256": "sha256:2567afe87417435db13486dccbc0b02b7536912491a5c633e5285bd50e5c5498",
+      "task_id": "exp5241-arc-gated-live-patch-attempt-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5242,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
+      "sha256": "sha256:d47e2ae127fb1d9862854159cc007b967546761d359101784311660968e2237f",
+      "task_id": "exp5242-kan-certificate-abstraction-scale-v479"
+    },
+    {
+      "blocked_decision": null,
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5243,
+      "failed_validation_command": false,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim",
+      "loadable": true,
+      "methodology_incomplete": false,
+      "relative_path": "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
+      "sha256": "sha256:6cec8439cf9b251ebf68b3693fc95fc0e0da80db08d8d94b784ac50a4a1ccbf7",
+      "task_id": "exp5243-hardware-continuity-kan-pbit-boundary-v479"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:a938ce3e41779e9cb42f6fdf42916ad83d97474088f955ac09d225bacf33e963"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:aef4c5f4a8ebf94526666b30bb082f00fab772dc12cb87ea3cd0a971158d72f1"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:b522a39e02c8f9ab7fa63a26edc11400a138b6ca034eb3bc830d47b0af3143ca"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:660291513832fbf6b50c259f9c10c6a0b94d753d7a500c5bdf9e3c67c896b636"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:f5eeff7c58d67fa98665a521998726b135a941fad53f0a0053153c2da0c904b3"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:865c4064d6f1d85a61896040100b07b3dce4309457e415abb11176558a66d95f"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/traceability.md",
+      "sha256": "sha256:ff2e74a2b17f772658eb478d0892d2783c2d3d78ded5fff638711d29f8a1dc1d"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-references.md",
+      "sha256": "sha256:cc4b5be99e96c131af863271a958ebfeefe7b99fdd9f33bcf8b872868109d1f3"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5244",
+    "SCENARIO-CAPSTONE-5244",
+    "SCENARIO-CAPSTONE-5244-FIELD-PRINCIPLES"
+  ],
+  "status_decisions": {
+    "arc": "Exp5241 is flagged or validation-failed, so ARC delta is forced to zero",
+    "continuous_self_learning": "Exp5239 aligned typed memory beat controls with retention and rollback exercised",
+    "gap1": "Exp5237 reports blocked_instability",
+    "gap4": "Exp5236 is flagged, receipt-blocked, or otherwise headline-ineligible",
+    "hardware": "KV260=reachable; PolarFire=reachable; GateMate=blocked_physical_jtag; speedup_claimed=False",
+    "kan": "Exp5242 extended the bounded deterministic KAEM certificate",
+    "ops_docs": "ops/status, ops/changelog, _bmad/traceability, and research-complete deferred by stop rule",
+    "veribmc": "Exp5238 records methodology-clean null and retires current path"
+  },
+  "tasks_seen": {
+    "principle": "count of loadable expected .479 artifacts read directly",
+    "value": 11
+  },
+  "validation_commands_run": {
+    "principle": "list of validation commands and pass/fail outcomes used for the capstone",
+    "value": [
+      {
+        "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5244_capstone_v479.py -q",
+        "notes": "filled after the focused verification run",
+        "status": "PENDING"
+      }
+    ]
+  },
+  "veribmc_final_status": {
+    "principle": "one of positive | clean_null | retired | blocked | unknown, with retired allowed only after methodology-clean null evidence",
+    "value": "retired"
+  }
+}
