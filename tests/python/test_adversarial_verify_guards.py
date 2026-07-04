@@ -119,6 +119,35 @@ def test_req_report_5224_row_count_fields_are_not_tautology_metrics():
     assert "TAUTOLOGY" not in _kinds(flags)
 
 
+def test_req_report_5225_discordant_count_fields_are_not_fabrication_metrics(tmp_path):
+    """REQ-REPORT-5225: zero losses and all ties are count evidence, not stub metrics."""
+
+    report = _report_for_payload(
+        tmp_path,
+        {
+            "experiment": "experiment_5225_gap4_clean_scale_validation_gated_v478",
+            "schema": "carnot.gap4_clean_scale_validation_5225.v1",
+            "honest_verdict": "complete: clean GAP-4 validation null decision",
+            "inference_substrate": "deterministic_validation_over_canonical_pool",
+            "duration_s": 0.01,
+            "random_seed": 5225,
+            "reproducibility_checksum": "sha256:" + "0" * 64,
+            "gap4_clean_validation_complete": True,
+            "n_scored": 120,
+            "wins": 0,
+            "losses": 0,
+            "ties": 120,
+            "exact_test_p_value": 1.0,
+            "exact_test_passes_min6_rule": False,
+            "effect_direction": "null",
+            "canonical_pool_path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
+            "adversarial_verify_passed": True,
+        },
+    )
+
+    assert report["flag_count"] == 0
+
+
 # --- 3. FALSE_NEGATIVE_RISK on degenerate null claims ----------------------
 
 def test_fnr_flip_count_zero():
