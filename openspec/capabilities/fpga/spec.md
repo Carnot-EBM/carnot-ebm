@@ -15107,6 +15107,97 @@ speedup.
 
 ---
 
+### REQ-HW-5231
+
+**Title:** Hardware-continuity v478 MUST preserve the GateMate physical/JTAG block and write a p-bit boundary-exchange timing-ratio plan without any speedup claim
+
+**Description:**
+Experiment 5231 MUST produce
+`results/experiment_5231_hardware_continuity_pbit_boundary_v478.json` as a v478
+hardware-continuity and sampler-planning artifact with
+`inference_substrate="hardware_reachability_and_sampler_boundary_plan"` and
+`speedup_claimed=false`. It continues the bounded three-board continuity lane
+without claiming benchmark speedup, and adds a short p-bit boundary-exchange
+timing-ratio plan for future sampler work.
+
+KV260 MUST be checked with SSH reachability only, using
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. The artifact MUST expose
+`kv260_reachable` as a boolean and `kv260_check_method="ssh_only"`. Host
+block-device checks MUST NOT be used as KV260 preconditions.
+
+PolarFire MUST be checked over SSH and, when reachable, MUST run a bounded
+hash-verified board-local smoke. The artifact MUST expose
+`polarfire_reachable` as a boolean and include enough smoke metadata to show the
+workload hash/correctness check when the smoke ran.
+
+GateMate MUST NOT re-run the IDCODE probe unless the operator has changed the
+cable, port, or board setup since exp5217. With no setup change, the artifact
+MUST preserve the v477 physical/JTAG block: `gatemate_status` is
+`blocked_physical_jtag`, `gatemate_idcode_raw="0xffffffff"`, and the next action
+is a physical cable/port/power reseat before any further software loop. If the
+setup has changed, a bounded debug-level IDCODE recheck MAY run and MUST report
+`gatemate_status` as `reachable`, `blocked_physical_jtag`, or `not_checked`.
+
+The p-bit boundary-exchange timing-ratio plan MUST be written to a repository
+path recorded as `pbit_boundary_plan_path`. The plan MUST name the future
+workload, partition shape, boundary-exchange packet/hash checks, correctness
+checks, and the real end-to-end measurement required before any speedup claim.
+References to million-p-bit probabilistic computers, FPGA Ising decomposition,
+and Extropic TSU/XTR-0 writing are motivation only and MUST NOT be reported as
+local speedup evidence.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations where applicable: `kv260_reachable`, `kv260_check_method`,
+`polarfire_reachable`, `gatemate_status`, `gatemate_idcode_raw`,
+`pbit_boundary_plan_path`, `speedup_claimed`, `hardware_docs_updated`,
+`inference_substrate`, and `honest_verdict`.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5231_hardware_continuity_pbit_boundary_v478 --date 20260704`
+  writes `results/experiment_5231_hardware_continuity_pbit_boundary_v478.json`.
+- The artifact includes `experiment_id="exp5231-hardware-continuity-pbit-boundary-v478"`,
+  `milestone="2026.07.478"`, `spec_refs` containing `REQ-HW-5231` and
+  `SCENARIO-HW-5231`, `random_seed=5231`, and a stable
+  `reproducibility_checksum`.
+- `kv260_reachable` is derived only from the SSH command above and
+  `kv260_check_method="ssh_only"`.
+- `polarfire_reachable` reflects the SSH precondition; when reachable, the
+  PolarFire smoke reports matching workload hash and correctness fields.
+- With no GateMate setup change, the artifact records
+  `gatemate_status="blocked_physical_jtag"`,
+  `gatemate_idcode_raw="0xffffffff"`, and no new IDCODE command transcript.
+- `speedup_claimed=false` and the `speedup_claimed` field principle equals:
+  `No .478 hardware task may claim speedup without a real end-to-end workload.`
+- `honest_verdict` starts with `complete_`, `complete:`, `success_`, or
+  `success:`, states KV260/PolarFire reachability, states GateMate status, and
+  states no-speedup status.
+
+**Implementation status:** Pending (Exp 5231)
+
+---
+
+### SCENARIO-HW-5231
+
+**Scenario:** Exp 5231 runs bounded SSH continuity checks, preserves the GateMate physical/JTAG block, and writes a future p-bit boundary-exchange timing-ratio plan with no speedup claim.
+
+**Given:** Exp 5217 confirmed KV260 and PolarFire reachability and narrowed the
+GateMate block to a physical/JTAG problem with raw IDCODE `0xffffffff`, and the
+operator has not changed the GateMate cable, port, or board setup.
+**When:** Experiment 5231 runs the KV260 SSH-only check, runs the PolarFire
+SSH/hash smoke when reachable, skips a redundant GateMate IDCODE recheck, and
+writes the p-bit boundary-exchange timing-ratio plan.
+**Then:** It writes
+`results/experiment_5231_hardware_continuity_pbit_boundary_v478.json` with
+`kv260_check_method="ssh_only"`, boolean reachability fields, preserved
+`gatemate_status="blocked_physical_jtag"` and `gatemate_idcode_raw="0xffffffff"`,
+`pbit_boundary_plan_path`, `speedup_claimed=false`,
+`hardware_docs_updated=true`, the v478 inference substrate, and a complete- or
+success-prefixed honest verdict that reports reachability plus no-speedup status.
+
+**Implementation status:** Pending (Exp 5231)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
