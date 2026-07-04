@@ -10294,3 +10294,4 @@ web search: |
 | 2026-07-04 18:21 UTC | PHASE 0 transition -- archive .478 truth and activ | OK | 88 passed, 1 warning in 8.95s |
 | 2026-07-04 18:39 UTC | PHASE 0 SOTA ingestion -- refresh 2025-2026 artifa | OK | 119 passed, 1 warning in 12.03s |
 | 2026-07-04 19:23 UTC | PHASE 1 artifact QA -- calibrate structured-null a | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-04 19:36 UTC | PHASE 1 gated on exp5235 qa_calibration_passed --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |

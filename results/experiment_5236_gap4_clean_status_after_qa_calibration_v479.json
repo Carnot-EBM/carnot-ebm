@@ -111,5 +111,18 @@
     "tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py"
   ],
   "ties": 120,
-  "wins": 0
+  "wins": 0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "canonical_pool_n=120.0 and ties=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "losses=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
