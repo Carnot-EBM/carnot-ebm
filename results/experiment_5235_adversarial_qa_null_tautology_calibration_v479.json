@@ -115,5 +115,18 @@
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json --json: PASS (flagged_count=0 after artifact_qa_lint_tests substrate calibration)",
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json --json: PASS_EXPECTED_FLAG (exit 1; Exp 5224/5225 flag_count=0, Exp 5226 keeps DURATION_TOO_SHORT and METHODOLOGY_MISSING)",
     ".venv/bin/pytest tests/python -q: FAIL/INTERRUPTED after 27m16s, 170 failed, 22580 passed, 89 skipped, 1 error; native Z3/JAX xdist worker crashes observed"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.5 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+    }
   ]
 }
