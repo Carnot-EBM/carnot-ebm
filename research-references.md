@@ -26873,3 +26873,74 @@ check in the next SOTA-ingestion task before drawing citation-trail conclusions.
 - **Semantic Scholar citation checks:** API requests for arXiv:2507.02092 and arXiv:2512.15605 returned
   HTTP 429 rate-limit responses on 2026-07-04 without an API key. Carnot hook: the `.478` SOTA-ingestion
   task should retry with backoff/key support before deriving citation-trail claims.
+
+## V479 Research Update - 2026-07-04
+
+Search scope: arXiv primary, plus OpenReview search results, HuggingFace papers, Semantic Scholar API,
+Extropic writing, Logical Intelligence posts, and GitHub repository watchlists. This update was performed
+before drafting the `.479` roadmap.
+
+### Hallucination diagnostics and grouped verifier evidence
+- **Free-Energy Signatures for hallucination detection:** arXiv:2606.19404 -
+  https://arxiv.org/abs/2606.19404. Treats each layer's attention Laplacian as a Hamiltonian and extracts
+  thermodynamic/spectral descriptors such as free energy, spectral entropy, heat capacity, and
+  random-matrix spectral-form-factor features. Reports a lightweight frozen-model probe outperforming
+  attention-spectral baselines, plus a weaker unsupervised RMT-deviation detector. Carnot hook: useful
+  future hidden-signal diagnostic that does not require an external text scorer or model fine-tuning.
+- **FLaG latent evidence grouping:** arXiv:2606.00301 - https://arxiv.org/abs/2606.00301. Frames
+  hallucination detection as mechanism-aware aggregation over latent evidence groups, using energy-based
+  routing and log-marginal aggregation. Carnot hook: maps well to typed verifier memory and per-group
+  reliability rather than a single global confidence score.
+- **OpenReview hallucination-energy watch:** search surfaced "Semantic Energy" and "Spilled Energy in
+  Large Language Models" on OpenReview, but direct page access was blocked by a browser challenge during
+  planning. Carnot hook: track in the next SOTA pass, but do not base `.479` tasks on unverified details.
+
+### Constraint generation and candidate provenance
+- **JANUS structured bidirectional generation:** arXiv:2603.03748 - https://arxiv.org/abs/2603.03748.
+  Uses reverse-topological back-filling through a causal graph to satisfy feasible constraints without
+  rejection sampling and provides analytical uncertainty decomposition. Carnot hook: future GAP-4 candidate
+  generation should prefer structured dependency/backfill protocols with receipts over ad hoc generation.
+- **Hard-CSP neural baseline guardrail:** arXiv:2602.18419 - https://arxiv.org/abs/2602.18419. Provides
+  hard random-CSP benchmarks and reports that classical heuristics still outperform GNNs under fair
+  comparison. Carnot hook: any neural constraint-satisfaction claim must include deterministic baselines
+  and should avoid claiming superiority from small or easy pools.
+
+### Continuous self-learning and memory evaluation
+- **Retrieval-Warmed Energy-Based Reasoning:** arXiv:2606.26476 - https://arxiv.org/abs/2606.26476.
+  Introduces a five-arm ablation methodology -- oracle, best-constant, per-query-random, shuffled, and
+  aligned -- to separate prior bias, stochastic warm starts, and aligned value reuse in energy-based
+  reasoning. Carnot hook: this is the clean next test for the `.478` typed multi-head memory, because it
+  can distinguish genuine reusable memory from lucky retrieval or bias shift.
+- **AgentCL continual-learning evaluation:** arXiv:2606.02461 - https://arxiv.org/abs/2606.02461.
+  Builds controlled task streams where earlier sub-solutions, evidence, or workflows are intentionally
+  reusable, and contrasts them with naive streams that can hide memory-induced degradation. Carnot hook:
+  use controlled streams plus retention/degradation metrics before making any continuous self-learning
+  claim.
+- **HuggingFace papers watch:** recent HF paper pages surfaced memory surveys and AgentOdyssey-style
+  test-time continual-learning environments. Carnot hook: useful background only; `.479` should keep the
+  experiment narrow by adapting controlled-stream and five-arm ablation methods to existing Carnot memory
+  artifacts.
+
+### KAN and hardware sampling signals
+- **Analog KAN co-optimization:** arXiv:2606.27892 - https://arxiv.org/abs/2606.27892. Proposes analog
+  Kolmogorov-Arnold Networks with circuit-level error modeling and pruning for low-power function
+  approximation. Carnot hook: informs long-run KAEM/KAN hardware mapping, but current `.479` work should
+  stay at certificate/abstraction level unless local hardware has a reproducible workload.
+- **Extropic TSU/XTR-0:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one and
+  https://extropic.ai/writing/inside-x0-and-xtr-0. Public writing continues to describe TSUs as sampling
+  units for energy-based models, with XTR-0 as a CPU/FPGA/daughterboard development platform. Carnot hook:
+  keep TSU in the architecture watchlist; no local speedup task is possible without hardware access.
+- **Logical Intelligence Aleph/Kona updates:** https://logicalintelligence.com/blog/aleph-leading-benchmarks
+  and https://logicalintelligence.com/blog/aleph-prover-tops-leading-benchmarks. May 2026 posts emphasize
+  formal proof systems, software/hardware verification, and EBRM-style reasoning layers beneath LLM
+  interfaces. Carnot hook: supports verifier-first architecture, but still lacks reproducible Kona
+  internals for a baseline.
+
+### Semantic Scholar citation status
+- **Energy-Based Transformers (EBT):** Semantic Scholar API returned title/year/citation count for
+  arXiv:2507.02092 on 2026-07-04: 26 citations.
+- **ARM-EBM:** Semantic Scholar API returned title/year/citation count for arXiv:2512.15605 on
+  2026-07-04: 8 citations.
+- **Carnot hook:** citation-trail checks are now reachable without a key in this environment, so the
+  `.479` SOTA task should record raw Semantic Scholar responses and retry/backoff behavior instead of
+  inheriting the `.478` HTTP-429-only status.
