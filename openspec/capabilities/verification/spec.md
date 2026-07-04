@@ -7192,6 +7192,50 @@ paired deltas with a 95% confidence interval, leakage-audit status, subset
 stability, an unpromoted GAP-1 verifier-gaps update, the unchanged verifier
 ensemble substrate, and a complete honest verdict for the Exp 5210 gate.
 
+### REQ-VERIFY-5222: GAP-1 Registry Promotion Decision
+
+The repository shall provide a deterministic GAP-1 registry promotion decision
+builder that reads `results/experiment_5209_gap1_set_search_holdout_hardening_v477.json`
+directly, treats `gap1_hardened_positive.value` as the upstream scientific gate,
+and audits whether the selected orientation-discriminator subset can be frozen
+without held-out tuning or registry leakage.
+
+The decision builder SHALL block promotion when Exp 5209 reports a positive
+held-out gate but `best_subset_stable.value` is false, because an unstable
+train-selected subset is not a registry-grade frozen verifier. It SHALL also
+block promotion when the leakage audit fails or when the required Exp 5209
+evidence is missing. It SHALL NOT modify `scripts/research_conductor.py`, SHALL
+NOT run another broad subset search for promotion, and SHALL NOT register the
+previously refuted `directional_adjacency_refuted_20260609` singleton as a
+promoted verifier.
+
+The terminal artifact
+`results/experiment_5222_gap1_gate_field_registry_promotion_v478.json` SHALL
+include principle-wrapped top-level fields `gap1_registry_promoted`,
+`gap1_registry_decision`, `promoted_registry_path`, `frozen_subset`,
+`exp5209_gate_parsed_from_value`, `refuted_single_invariant_excluded`,
+`tests_run`, `ops_docs_updated`, `inference_substrate`, and `honest_verdict`.
+`gap1_registry_decision.value` MUST be one of `promoted`,
+`blocked_instability`, `blocked_leakage`, or `blocked_missing_evidence`.
+`gap1_registry_promoted.value` MUST be true only when implementation, tests,
+and documentation support registry promotion; otherwise `promoted_registry_path`
+and `frozen_subset` MUST be null.
+
+### SCENARIO-VERIFY-5222: Exp 5209 Positive But Unstable Blocks Registry Freeze
+
+Given Exp 5209 reports `gap1_hardened_positive.value=true`,
+`leakage_audit_passed.value=true`, and `best_subset_stable.value=false`,
+When Exp 5222 audits the promotion gate,
+Then it writes the terminal artifact with
+`gap1_registry_promoted.value=false`,
+`gap1_registry_decision.value="blocked_instability"`,
+`exp5209_gate_parsed_from_value.value=true`,
+`frozen_subset.value=null`, `promoted_registry_path.value=null`, a true
+refuted-single-invariant exclusion flag, a deterministic verifier-registry
+substrate, and an honest verdict that explicitly says GAP-1 registry promotion
+was blocked by subset instability rather than by the earlier Exp 5210 gate
+shape failure alone.
+
 ## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879/1880)
 
 | Requirement | Python | Tests |
@@ -7244,6 +7288,7 @@ ensemble substrate, and a complete honest verdict for the Exp 5210 gate.
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 | REQ-VERIFY-5205 | Implemented (`python/carnot/verify/arc_gap1_autopyverifier_pilot.py`) | Implemented (`tests/python/test_experiment_5205_autopyverifier_gap1_pilot_v476.py`) |
 | REQ-VERIFY-5209 | Implemented (`python/carnot/verify/arc_gap1_set_search_holdout_hardening.py`) | Implemented (`tests/python/test_experiment_5209_gap1_set_search_holdout_hardening_v477.py`) |
+| REQ-VERIFY-5222 | Implemented (`python/carnot/verify/arc_gap1_registry_promotion_decision.py`) | Implemented (`tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
