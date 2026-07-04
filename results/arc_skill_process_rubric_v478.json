@@ -1,0 +1,196 @@
+{
+  "arc_skill_rubric_usable": true,
+  "blocked_provenance_classes": [
+    "development_proxy",
+    "outer_loop_re",
+    "offline_bfs",
+    "hand_game_adapter"
+  ],
+  "development_proxy_trace_count": 1,
+  "known_arc_nulls_retained": {
+    "new_levels_banked": [],
+    "no_arc_solve_claim": true,
+    "paw_amortization_viable": false,
+    "reproducible_total_levels_delta": 0,
+    "solve_provenance": "development_proxy"
+  },
+  "live_trace_count": 2,
+  "no_outer_loop_re_used": true,
+  "produced_by": "experiment_5228_arc_provenance_skill_rubric_gate_v478",
+  "provenance_fields": [
+    "solve_provenance",
+    "policy",
+    "runtime_self_discovery",
+    "offline_source_reading_used",
+    "offline_ground_truth_bfs_used",
+    "per_game_bfs_used",
+    "hand_built_adapter_used",
+    "reproduction_gate"
+  ],
+  "registry_precheck": {
+    "games": {
+      "ar25": 3,
+      "bp35": 2,
+      "cd82": 2,
+      "cn04": 3,
+      "dc22": 2,
+      "ft09": 3,
+      "g50t": 2,
+      "ka59": 1,
+      "lf52": 2,
+      "lp85": 5,
+      "ls20": 2,
+      "m0r0": 2,
+      "r11l": 2,
+      "re86": 2,
+      "s5i5": 2,
+      "sb26": 2,
+      "sc25": 5,
+      "sk48": 2,
+      "sp80": 2,
+      "su15": 2,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 5,
+      "vc33": 2,
+      "wa30": 1
+    },
+    "path": "ops/arc_solve_registry.yaml",
+    "present": true,
+    "reproducible_total_levels": 69
+  },
+  "rubric_fields": [
+    "skill_selection",
+    "skill_following",
+    "skill_composition",
+    "reflection_retry_quality",
+    "provenance_validity"
+  ],
+  "run_date": "2026-07-04",
+  "schema": "carnot.arc_skill_process_rubric_v478.v1",
+  "scored_trace_count": 3,
+  "scored_traces": [
+    {
+      "accepted_for_patch_evidence": true,
+      "artifact_path": "results/experiment_5054_arc_live_path_self_discovery.json",
+      "duplicate_solve_avoided": true,
+      "experiment": "experiment_5054_arc_live_path_self_discovery",
+      "new_levels_banked": 0,
+      "overall_process_score": 0.85,
+      "process_notes": [
+        "registry_precheck_done",
+        "candidate_audit_skipped_known_dead_ends",
+        "bounded_action_trace_present",
+        "composition_lever_not_exercised_or_degenerate",
+        "no_concrete_patch_proposal_in_trace"
+      ],
+      "proposed_live_patch": null,
+      "provenance_blockers": [],
+      "scores": {
+        "provenance_validity": 1.0,
+        "reflection_retry_quality": 0.75,
+        "skill_composition": 0.5,
+        "skill_following": 1.0,
+        "skill_selection": 1.0
+      },
+      "solve_provenance": "live_agent_self_discovery",
+      "target_game": "tu93",
+      "target_level": 6
+    },
+    {
+      "accepted_for_patch_evidence": true,
+      "artifact_path": "results/experiment_5067_arc_live_path_self_discovery.json",
+      "duplicate_solve_avoided": true,
+      "experiment": "experiment_5067_arc_live_path_self_discovery",
+      "new_levels_banked": 0,
+      "overall_process_score": 0.9,
+      "process_notes": [
+        "registry_precheck_done",
+        "candidate_audit_skipped_known_dead_ends",
+        "bounded_action_trace_present",
+        "composition_lever_not_exercised_or_degenerate",
+        "no_concrete_patch_proposal_in_trace"
+      ],
+      "proposed_live_patch": null,
+      "provenance_blockers": [],
+      "scores": {
+        "provenance_validity": 1.0,
+        "reflection_retry_quality": 1.0,
+        "skill_composition": 0.5,
+        "skill_following": 1.0,
+        "skill_selection": 1.0
+      },
+      "solve_provenance": "live_agent_self_discovery",
+      "target_game": "re86",
+      "target_level": 3
+    },
+    {
+      "accepted_for_patch_evidence": false,
+      "artifact_path": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
+      "duplicate_solve_avoided": true,
+      "experiment": "experiment_5216_arc_frontier_continuity_landmark_decomposition_v477",
+      "new_levels_banked": 0,
+      "overall_process_score": 0.1,
+      "process_notes": [
+        "registry_precheck_done",
+        "composition_lever_not_exercised_or_degenerate",
+        "no_concrete_patch_proposal_in_trace"
+      ],
+      "proposed_live_patch": null,
+      "provenance_blockers": [
+        "development_proxy",
+        "not_E3AgentPolicy",
+        "runtime_self_discovery_missing"
+      ],
+      "scores": {
+        "provenance_validity": 0.0,
+        "reflection_retry_quality": 0.0,
+        "skill_composition": 0.0,
+        "skill_following": 0.0,
+        "skill_selection": 0.5
+      },
+      "solve_provenance": "development_proxy",
+      "target_game": null,
+      "target_level": null
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5228",
+    "SCENARIO-REPORT-5228-PROCESS-RUBRIC",
+    "SCENARIO-REPORT-5228-PROVENANCE-GATE",
+    "SCENARIO-REPORT-5228-PATCH-DECISION"
+  ],
+  "typed_memory_handoff": {
+    "consumer_ready": true,
+    "known_arc_nulls": {
+      "new_levels_banked": [],
+      "no_arc_solve_claim": true,
+      "paw_amortization_viable": false,
+      "reproducible_total_levels_delta": 0,
+      "solve_provenance": "development_proxy"
+    },
+    "provenance_requirements": {
+      "accepted": [
+        "live_agent_self_discovery"
+      ],
+      "blocked": [
+        "development_proxy",
+        "outer_loop_re",
+        "offline_bfs",
+        "hand_game_adapter"
+      ],
+      "required_fields": [
+        "solve_provenance",
+        "registry_precheck_done",
+        "new_levels_banked"
+      ]
+    },
+    "rubric_fields": [
+      "skill_selection",
+      "skill_following",
+      "skill_composition",
+      "reflection_retry_quality",
+      "provenance_validity"
+    ]
+  }
+}

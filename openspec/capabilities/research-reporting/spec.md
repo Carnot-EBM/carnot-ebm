@@ -34206,6 +34206,80 @@ reproduction-gated new levels above the registry precheck.
 |---|---|---|
 | REQ-REPORT-5216 | Implemented (`python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`, `python/carnot/agentic/arc_frontier_continuity_landmarks.py`, `results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json`) | Implemented (`tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`) |
 
+### REQ-REPORT-5228: ARC Live-Path Provenance Skill Rubric Gate V478
+
+The Exp 5228 workflow SHALL write
+`results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json` as a
+process-rubric gate for deciding whether Exp 5229 has a concrete ARC live-agent
+patch worth attempting. The workflow SHALL precheck `ops/arc_solve_registry.yaml`
+before any target recommendation, SHALL use existing or newly generated live-path
+trace artifacts without reading hidden game source, SHALL NOT run offline BFS,
+and SHALL NOT use a hand `GameAdapter` as evidence for a live-agent patch.
+
+The rubric SHALL score process quality independently of final reward with fields
+for `skill_selection`, `skill_following`, `skill_composition`,
+`reflection_retry_quality`, and `provenance_validity`. It SHALL consume the Exp
+5227 typed-memory ARC handoff so known retirements, `.477` null results, blocked
+provenance classes, and zero banked ARC levels are retained. It SHALL distinguish
+`live_agent_self_discovery`, `development_proxy`, and `outer_loop_re`, and only
+`live_agent_self_discovery` traces with no hidden source reading, no offline BFS,
+and no hand adapter may pass provenance validity.
+
+The artifact SHALL include bare top-level fields `arc_skill_rubric_usable`,
+`recommended_live_patch_available`, `recommended_patch_summary`,
+`registry_precheck_done`, `duplicate_solve_target_avoided`,
+`provenance_fields`, `rubric_path`, `no_outer_loop_re_used`,
+`inference_substrate`, and `honest_verdict`. `arc_skill_rubric_usable` SHALL be
+true only when the rubric is grounded in live-path traces and exposes usable
+scoring fields. `recommended_live_patch_available` SHALL be true only when the
+scored traces identify exactly one concrete live-agent patch for Exp 5229 that
+does not replay a retired or duplicate target. If no credible patch exists, the
+artifact SHALL set `recommended_live_patch_available=false` and explain why in
+`recommended_patch_summary` while still preserving the usable rubric.
+
+Required field principles:
+
+- `arc_skill_rubric_usable`: principle "BARE top-level boolean. True only if the rubric is grounded in live-path traces and has usable scoring fields."
+- `recommended_live_patch_available`: principle "BARE top-level boolean. True only if exp5229 has a concrete live-path patch to attempt."
+- `provenance_fields`: principle "Fields used to distinguish live_agent_self_discovery from development_proxy, outer_loop_re, offline_bfs, and hand_game_adapter evidence."
+- `no_outer_loop_re_used`: principle "Must remain true for this gate; outer-loop RE may appear only as a blocked provenance class, not as evidence."
+- `inference_substrate`: principle "Must be live_trace_process_rubric."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether a gated live patch is available."
+
+#### SCENARIO-REPORT-5228-PROCESS-RUBRIC: Live Traces Score Process Fields
+
+**Given** live-path trace artifacts that record policy, action budget, target
+selection, retry/reflection evidence, and provenance flags
+**When** Exp 5228 builds its process rubric
+**Then** it scores skill selection, skill following, skill composition,
+reflection/retry quality, and provenance validity without requiring a final
+reward increase.
+
+#### SCENARIO-REPORT-5228-PROVENANCE-GATE: Block Development Proxy And Outer Loop Evidence
+
+**Given** a mixture of `live_agent_self_discovery`, `development_proxy`, and
+`outer_loop_re` trace rows
+**When** Exp 5228 evaluates provenance validity
+**Then** only rows with live-agent self-discovery, no hidden source reading, no
+offline BFS, no per-game BFS, no hand adapter, runtime self-discovery, and
+`E3AgentPolicy` evidence may count toward patch readiness.
+
+#### SCENARIO-REPORT-5228-PATCH-DECISION: No Patch Without Concrete Non-Duplicate Gap
+
+**Given** the registry precheck, Exp 5227 typed memory, and usable live trace
+rubric
+**When** the scored traces contain only no-bank or duplicate-depth outcomes and
+no non-degenerate concrete live-agent mechanism to change
+**Then** the artifact sets `recommended_live_patch_available=false`,
+`recommended_patch_summary` explains the insufficiency, and
+`duplicate_solve_target_avoided=true`.
+
+## Implementation Status (REQ-REPORT-5228)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5228 | Planned (`python/carnot/experiment_5228_arc_provenance_skill_rubric_gate_v478.py`, `results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json`) | Planned (`tests/python/test_experiment_5228_arc_provenance_skill_rubric_gate_v478.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
