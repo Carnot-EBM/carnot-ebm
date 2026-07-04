@@ -10301,3 +10301,4 @@ web search: |
 | 2026-07-04 21:40 UTC | PHASE 2 ARC rubric-to-patch synthesis -- convert t | OK | 109 passed, 1 warning in 11.02s |
 | 2026-07-04 21:55 UTC | PHASE 2 gated on exp5240 live patch -- ARC live-pa | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-04 22:06 UTC | PHASE 3 KAN certificate scale -- extend tiny KAEM  | OK | 87 passed, 1 warning in 8.37s |
+| 2026-07-04 22:21 UTC | PHASE 3 hardware continuity -- KV260/PolarFire has | OK | 89 passed, 1 warning in 9.45s |
