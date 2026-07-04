@@ -15001,6 +15001,112 @@ claims no speedup.
 
 ---
 
+### REQ-HW-5217
+
+**Title:** Hardware-continuity v477 MUST run KV260/PolarFire correctness smokes and ADVANCE the GateMate narrowing with a new debug-level raw-TDO angle
+
+**Description:**
+Experiment 5217 MUST produce
+`results/experiment_5217_hardware_continuity_v477.json` as a v477
+hardware-continuity artifact with `inference_substrate=hardware_smoke` and
+`hardware_speedup_claimed=false`. It continues the three-board rotation and
+narrows the GateMate DirtyJTAG IDCODE block one notch further than exp5201
+(v476). One blocked board MUST remain a per-board blocker, not a reason to skip
+the other boards, and NO field may claim any latency or speedup win.
+
+KV260 is a graduated/terminal board and MUST be checked over SSH only with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`, recorded verbatim in a
+`kv260_precondition_command` field. Host block devices / SD-card device nodes
+(`/dev/mmcblk*`) MUST NOT be inspected as a KV260 precondition. When SSH is
+reachable the experiment MUST run a light-touch hash-verified board-local
+Ising-energy smoke and record its workload hash and correctness.
+
+PolarFire MUST be checked over SSH with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. When reachable it
+MUST run the same hash-verified smoke and record its workload hash. The artifact
+MUST report `polarfire_workload_validated` and MUST NOT set it true from a smoke
+alone: the terminal bar is an end-to-end Carnot dispatch run, so a reachable
+hash-verified smoke reports `polarfire_workload_validated=false` with rationale.
+
+GateMate MUST run `openFPGALoader -c dirtyJtag --detect` and, on a missing
+IDCODE, MUST add at least one GENUINELY NEW diagnostic angle that prior
+milestones did not run. The required new angles are: (a) a DEBUG-verbosity detect
+(`openFPGALoader -c dirtyJtag --detect --verbose-level 2`) that captures the RAW
+word clocked back on TDO (recorded in a `gatemate_raw_idcode` field), and (b) a
+sysfs read of the DirtyJTAG PROBE firmware revision (`bcdDevice`), distinct from
+the openFPGALoader TOOL version eliminated in v476. When the raw TDO readback is
+an all-ones / all-zeros idle word (an OPEN / undriven line), the narrowing MUST
+ADVANCE to `cable_or_port` (physical layer) with `physical_board` (board power)
+as the leading untested hypothesis; a specific non-idle readback stays at
+`jtag_protocol_level`. The artifact MUST compute
+`gatemate_diagnostic_narrowed_to` from evidence (one of `usb_level`,
+`jtag_protocol_level`, `permissions`, `clock_rate`, `firmware_version`,
+`cable_or_port`, `physical_board`, `unknown`, or `resolved`) and record the
+mechanically eliminated causes.
+
+The artifact MUST include these bare required fields with `field_principles`
+annotations: `kv260_status`, `kv260_precondition_command`, `polarfire_status`,
+`gatemate_status`, `gatemate_diagnostic_narrowed_to`,
+`new_diagnostic_angles_tried_this_milestone`, `boards_reachable_count`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`inference_substrate`, `hardware_speedup_claimed`, and `honest_verdict`.
+
+**Acceptance criteria:**
+- `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_5217_hardware_continuity_v477.py --date 20260704`
+  writes `results/experiment_5217_hardware_continuity_v477.json`.
+- The artifact includes
+  `experiment_id="exp5217-hardware-continuity-v477"`,
+  `milestone="2026.07.477"`, `spec_refs` containing `REQ-HW-5217` and
+  `SCENARIO-HW-5217`, `random_seed=5217`, `inference_substrate="hardware_smoke"`,
+  `hardware_speedup_claimed=false`, and a stable `reproducibility_checksum`.
+- `new_diagnostic_angles_tried_this_milestone` is a non-empty list of dicts and
+  MUST include at least a `debug_level_raw_idcode_capture` angle, a
+  `dirtyjtag_probe_firmware_version` angle, and a `cable_or_port_swap` angle.
+- `gatemate_diagnostic_narrowed_to` is one of the allowed narrowing values and,
+  when the DirtyJTAG probe enumerates but the debug-level detect reads an
+  all-ones raw TDO word with permissions/tool-version/clock-rate intact, equals
+  `cable_or_port` with a `physical_board` leading untested hypothesis.
+- `boards_reachable_count` equals the number of boards whose status is reachable
+  (out of 3); `polarfire_workload_validated` is not set true from a smoke.
+- `honest_verdict` starts with `complete_`, `complete:`, `success_`, or
+  `success:`, reports per-board reachability, and claims no hardware speedup.
+- No artifact field cites host storage markers such as `/dev/mmcblk` or
+  `/dev/disk`.
+
+**Implementation status:** Pending (Exp 5217)
+
+---
+
+### SCENARIO-HW-5217
+
+**Scenario:** Exp 5217 advances the GateMate DirtyJTAG IDCODE narrowing to the physical (cable_or_port) layer via a debug-level raw-TDO readback while KV260 and PolarFire smokes stay green.
+
+**Given:** The DirtyJTAG probe enumerates over USB and openFPGALoader can talk to
+it, but the GM1Ax IDCODE has been unreadable for many milestones; exp5201 (v476)
+eliminated the USB, permission, tool-firmware, and clock-rate layers and narrowed
+to `jtag_protocol_level`; KV260 is terminal and checked over SSH only; and
+PolarFire has no terminal-state mandate.
+**When:** Experiment 5217 runs all three board preconditions, executes the
+light-touch hash-verified smokes for the SSH boards, and — on the GateMate IDCODE
+miss — runs a DEBUG-verbosity detect that captures an all-ones raw TDO readback
+(`0xffffffff`) plus a sysfs read of the unchanged DirtyJTAG probe firmware
+revision, then mechanically eliminates the USB, permission, clock-rate,
+tool-firmware, and probe-firmware layers.
+**Then:** It writes
+`results/experiment_5217_hardware_continuity_v477.json` with
+`gatemate_diagnostic_narrowed_to=cable_or_port`, a `physical_board` leading
+untested hypothesis, `gatemate_raw_idcode="0xffffffff"`, the eliminated causes,
+at least the debug-raw-idcode, probe-firmware, and cable/port-swap new angles,
+`boards_reachable_count`, per-board statuses, `polarfire_workload_validated=false`
+with rationale, `kv260_precondition_command` recorded verbatim,
+`inference_substrate=hardware_smoke`, `hardware_speedup_claimed=false`, no host
+block-device touches, and a `complete_`-prefixed honest verdict that claims no
+speedup.
+
+**Implementation status:** Pending (Exp 5217)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
