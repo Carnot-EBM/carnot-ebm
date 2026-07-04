@@ -7144,6 +7144,54 @@ subset, baseline and selected pass@2, captured transpose mis-votes, a false
 oracle flag, deterministic seed/checksum fields, and an honest terminal verdict
 that reports either a non-degrading improvement or a precise null.
 
+### REQ-VERIFY-5209: GAP-1 Set Search Holdout Hardening
+
+The repository shall provide a deterministic hardening pass for the Exp 5205
+GAP-1 set-search method before any registry promotion. The hardening pass shall
+reconstruct the exact Exp 5205 candidate/discriminator score matrix from
+`results/experiment_5205_autopyverifier_gap1_pilot_v476.json`,
+`results/arc_grid_verifier_invariants_v2.json`, and the cached ARC
+square-transpose candidate pool; it shall not add new LLM-generated candidates
+or new discriminator families.
+
+The hardening pass shall run at least 20 repeated train/held-out splits grouped
+by ARC task id. For every split, candidate subset selection SHALL be fit only on
+train groups and final pass@2 and transpose-capture metrics SHALL be computed
+only on held-out groups. It SHALL compare the held-out selected subset against
+both explicit baselines: the always-on `object_count` +
+`palette_histogram_shape` baseline and the
+`directional_adjacency_refuted_20260609` singleton baseline.
+
+The hardening pass shall audit leakage and fail closed unless all of these hold:
+no test gold is used in candidate scoring, no test-output-derived feature is
+introduced, no subset is selected on held-out rows, and no task id appears in
+both train and held-out groups for any split.
+
+The workflow SHALL write
+`results/experiment_5209_gap1_set_search_holdout_hardening_v477.json` with
+top-level principle-wrapped fields `gap1_hardened_positive`,
+`heldout_pass_at_2_mean`, `baseline_always_on_pass_at_2_mean`,
+`single_refuted_directional_pass_at_2_mean`, `delta_over_always_on`,
+`delta_over_single_refuted`, `paired_delta_ci95`, `n_grouped_splits`,
+`leakage_audit_passed`, `best_subset_stable`, `ops_verifier_gaps_updated`,
+`inference_substrate`, and `honest_verdict`. `gap1_hardened_positive.value`
+MUST be true only when held-out mean pass@2 beats both baselines, leakage audit
+passes, and the paired 95% confidence interval over the per-split smaller
+selected-minus-baseline delta excludes harmful regression. `honest_verdict`
+MUST begin with `complete:`, `complete_`, `success:`, or `success_`, and MUST
+state whether GAP-1 set-search remains positive after hardening.
+
+### SCENARIO-VERIFY-5209: GAP-1 Hardening Reports Held-Out Gate Metrics
+
+Given the Exp 5205 artifact, the cached ARC square-transpose distractor pool,
+and the Exp 5205 discriminator library,
+When Exp 5209 reconstructs the score matrix and repeats grouped train/held-out
+subset searches,
+Then the terminal artifact records held-out selected and baseline pass@2 means,
+paired deltas with a 95% confidence interval, leakage-audit status, subset
+stability, an unpromoted GAP-1 verifier-gaps update, the unchanged verifier
+ensemble substrate, and a complete honest verdict for the Exp 5210 gate.
+
 ## Implementation Status (REQ-VERIFY-1415/1416/1423/1434/1469/1473/1474/1475/1481/1486/1487/1495/1496/1499/1500/1501/1507/1508/1509/1510/1520/1521/1522/1525/1537/1538/1541/1542/1551/1552/1553/1554/1557/1562/1571/1578/1580/1588/1591/1642/1666/1878/1879/1880)
 
 | Requirement | Python | Tests |
@@ -7195,6 +7243,7 @@ that reports either a non-degrading improvement or a precise null.
 | REQ-VERIFY-1641 | Implemented (`python/carnot/pipeline/nsvif_sota.py`; legacy wrapper `scripts/experiment_1641_nsvif_sota.py`) | Implemented (`tests/python/test_pipeline_nsvif_sota.py`, `tests/python/test_experiment_1641_nsvif_sota.py`) |
 | REQ-VERIFY-1642 | Implemented (`scripts/experiment_1642_llguidance.py`) | Implemented (`tests/python/test_experiment_1642_llguidance.py`) |
 | REQ-VERIFY-5205 | Implemented (`python/carnot/verify/arc_gap1_autopyverifier_pilot.py`) | Implemented (`tests/python/test_experiment_5205_autopyverifier_gap1_pilot_v476.py`) |
+| REQ-VERIFY-5209 | Implemented (`python/carnot/verify/arc_gap1_set_search_holdout_hardening.py`) | Implemented (`tests/python/test_experiment_5209_gap1_set_search_holdout_hardening_v477.py`) |
 | REQ-VERIFY-1646 | Implemented (`scripts/experiment_1646_ebcn.py`) | Implemented (`tests/python/test_experiment_1646_ebcn.py`) |
 | REQ-VERIFY-1666 | Implemented (`python/carnot/pipeline/nsvif_parser.py`) | Implemented (`tests/python/test_pipeline_nsvif_parser.py`) |
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
