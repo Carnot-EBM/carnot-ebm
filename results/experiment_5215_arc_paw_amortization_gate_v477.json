@@ -1,0 +1,179 @@
+{
+  "arc_registry_modified": {
+    "principle": "pure analysis gate; registry must remain unchanged",
+    "value": false
+  },
+  "break_even_remaining_actions": {
+    "principle": "compile / per-step wall-clock savings",
+    "value": 45.748641
+  },
+  "cheap_step_wall_clock_s": {
+    "principle": "cheap interpreter action-step estimate from bounded local timing plus conservative floor",
+    "value": 2.133333
+  },
+  "checkpoint_analysis": {
+    "first_level_up": {
+      "missing": [
+        {
+          "game": "sc25",
+          "reason": "missing_level_up_checkpoint",
+          "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_sc25.json"
+        },
+        {
+          "game": "tn36",
+          "reason": "missing_level_up_checkpoint",
+          "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tn36.json"
+        },
+        {
+          "game": "wa30",
+          "reason": "missing_level_up_checkpoint",
+          "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_wa30.json"
+        }
+      ],
+      "n": 22,
+      "remaining_actions": [
+        0.0,
+        7.0,
+        14.0,
+        15.0,
+        15.0,
+        21.0,
+        21.0,
+        23.0,
+        24.0,
+        26.0,
+        29.0,
+        30.0,
+        31.0,
+        34.0,
+        36.0,
+        40.0,
+        45.0,
+        46.0,
+        50.0,
+        51.0,
+        109.0,
+        113.0
+      ],
+      "status": "computed"
+    },
+    "no_new_transition_discovery": {
+      "missing": "existing logs do not record per-action transition-discovery events",
+      "status": "missing_data"
+    },
+    "stable_transition_model": {
+      "missing": "existing logs do not record a stable-transition-model checkpoint",
+      "status": "missing_data"
+    }
+  },
+  "compile_wall_clock_s": {
+    "principle": "conservative small-LoRA compile wall-clock estimate on local GPU",
+    "value": 236.068201
+  },
+  "current_step_wall_clock_s": {
+    "principle": "Qwen3.5-9B-MTP action-step estimate from local ARC generator timing logs",
+    "value": 7.293447
+  },
+  "duration_s": 4.09946,
+  "experiment": "experiment_5215_arc_paw_amortization_gate_v477",
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ or blocked_ and must not claim PAW solves ARC.",
+    "value": "complete_paw_amortization_gate_not_viable_no_arc_solve_claim"
+  },
+  "inference_substrate": {
+    "principle": "ARC log analysis plus bounded local timing",
+    "value": "arc_log_analysis_plus_local_timing"
+  },
+  "level_solve_claimed": false,
+  "median_remaining_actions": {
+    "principle": "empirical first-level-up checkpoint",
+    "value": 29.5
+  },
+  "p75_remaining_actions": {
+    "principle": "empirical first-level-up checkpoint",
+    "value": 43.75
+  },
+  "paw_amortization_viable": {
+    "principle": "median and p75 must clear break-even with margin",
+    "value": false
+  },
+  "schema": "carnot.arc_paw_amortization_gate.v1",
+  "source_artifacts_read": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ar25.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_bp35.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_cd82.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_cn04.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_dc22.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ft09.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_g50t.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ka59.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lp85.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ls20.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_m0r0.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_re86.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_s5i5.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_sb26.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_sc25.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_sk48.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_sp80.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_su15.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tn36.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tr87.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_tu93.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_vc33.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_wa30.json"
+  ],
+  "spec_refs": [
+    "REQ-ARC-WMTE-5215",
+    "SCENARIO-ARC-WMTE-5215-AMORTIZATION-GATE",
+    "SCENARIO-ARC-WMTE-5215-NO-SOLVE-OR-REGISTRY-MUTATION"
+  ],
+  "timing_evidence": {
+    "arc_registry_modified_by_runner": false,
+    "arc_registry_sha256_after": "57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877",
+    "arc_registry_sha256_before": "57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877",
+    "cheap_step": {
+      "backend": "torch_cuda:0",
+      "conservative_floor_s": 2.1333333333333333,
+      "measured_local_step_s": 1.3061955105513334e-05,
+      "method": "max(local tiny interpreter timing, PAW-note 0.6B CPU 30 tok/s conservative floor)",
+      "token_budget": 64
+    },
+    "compile": {
+      "compile_steps": 128,
+      "dataset": "synthetic Gaussian batch, no ARC hidden data",
+      "device": "NVIDIA GeForce RTX 3090",
+      "elapsed_s": 0.11526767606846988,
+      "method": "synthetic Qwen-size LoRA block timing scaled to 40 layers * 128 steps * 4x conservative safety for omitted attention, data, and adapter materialization costs",
+      "per_block_step_s": 0.011526767606846988,
+      "safety_factor": 4.0,
+      "target_layers": 40,
+      "timed_steps": 10,
+      "trainable_lora_params_in_block": 503808
+    },
+    "current_step": {
+      "median_tok_per_s": 8.774999999999999,
+      "method": "current step = 64 generated action-decision tokens / median logged Qwen3.5-9B-MTP tok_per_s",
+      "source_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_layerb_repeat_bench_qwen3_5-9b-mtp_mtp.json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_layerb_ar_model_test_qwen3_5-9b-mtp_mtp.json"
+      ],
+      "tok_per_s_values": [
+        15.24,
+        11.41,
+        7.51,
+        6.93,
+        8.69,
+        8.67,
+        8.86,
+        8.38,
+        11.53,
+        13.02
+      ],
+      "token_budget": 64
+    }
+  },
+  "viability_margin": 1.25
+}
