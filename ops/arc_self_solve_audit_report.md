@@ -16,29 +16,29 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: `0 SELF_DISCOVERY_ADVANCE`; `17 DUPLICATE`; `1 UNCLEAR`; `1 OUTER_LOOP_RE`; `0 OFF_PATH`. Do not count any of these as new live-agent hidden-game capability.
+TL;DR: 18 artifacts are **UNCLEAR**, not creditable as live self-discovery from this evidence alone; 1 artifact is **OUTER_LOOP_RE** because it declares `used_env_source`.
 
-| Artifact | Verdict | Evidence | Recommended action |
+| Artifact | Verdict | Evidence | Recommended Action |
 |---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` | `DUPLICATE` | L3 claim is below registry L5; dev proxy/offline loop only. | Repro-only; do not bank. |
-| `results/arc_loop_solve_r11l.json` | `DUPLICATE` | L2 already registered; reachable loop, no outer-loop flags. | Repro-only. |
-| `results/arc_loop_solve_ls20.json` | `DUPLICATE` | L2 already registered; dev proxy. | Repro-only. |
-| `results/arc_loop_solve_dc22.json` | `UNCLEAR` | Artifact claims L3, but audit says registry still records dc22 at L2; clean flags are not enough. | Reconcile registry vs artifact; even if valid, label dev-proxy advance, not live self-discovery. |
-| `results/arc_loop_solve_vc33.json` | `DUPLICATE` | L2 already registered; no new depth. | Repro-only. |
-| `results/arc_loop_solve_g50t.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_s5i5.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_sp80.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_su15.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_sk48.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_ft09.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
-| `results/arc_loop_solve_ar25.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
-| `results/arc_loop_solve_m0r0.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_cn04.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
-| `results/arc_loop_solve_lf52.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_bp35.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_re86.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
-| `results/arc_loop_solve_ka59.json` | `DUPLICATE` | L1 already registered. | Repro-only. |
-| `results/experiment_headway_lp85_capture.json` | `OUTER_LOOP_RE` | Declares `used_env_source`; lp85 L6 was “confirmed” by source access, not live attempts/runtime RE. | Quarantine; do not count lp85 L6; relabel as outer-loop RE or delete from capability claims. |
+| `results/arc_loop_solve_lp85.json` L3 | UNCLEAR | Reachable filename/path and no declared outer-loop inputs, but provenance is `development_proxy`, mode is `standing_arc_loop_offline_no_quota`, and `honest_verdict` is blank. | Do not count until artifact includes live attempt trace, observations, policy decisions, and no hidden/source leakage attestation. |
+| `results/arc_loop_solve_r11l.json` L2 | UNCLEAR | Same: reachable-looking live loop, but only dev proxy/offline-no-quota metadata. | Same. |
+| `results/arc_loop_solve_ls20.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_dc22.json` L3 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_vc33.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_g50t.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_s5i5.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sp80.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_su15.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_sk48.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ft09.json` L3 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ar25.json` L3 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_m0r0.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_cn04.json` L3 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_lf52.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_bp35.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_re86.json` L2 | UNCLEAR | Same. | Same. |
+| `results/arc_loop_solve_ka59.json` L1 | UNCLEAR | Same. | Same. |
+| `results/experiment_headway_lp85_capture.json` L6 | OUTER_LOOP_RE | Declares `outer_loop_inputs_declared: ["used_env_source"]`; artifact name is experiment/capture, not a live entrypoint solve. | Quarantine as non-credit. It may inform tooling/debugging, but must not be registered as live hidden-game capability. |
 
-Pattern watch: reachability lint being green is not a victory condition. This batch is almost entirely dev-proxy reproduction activity, plus one explicit source-read violation at an L6 boundary. The drift is clear: when deepening stalls, the process is tempted to convert human/outer-loop reverse-engineering into “agent progress.” Keep those artifacts out of totals and headlines.
+Pattern watch: the drift is toward laundering development-proxy/offline artifacts as ARC progress. Reachability of modules is necessary but not sufficient. A valid credit artifact needs to prove the live agent, through `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`, discovered the solution from runtime observations and its own attempts, without source reads, offline ground-truth BFS, or hand-built per-game adapters.
 

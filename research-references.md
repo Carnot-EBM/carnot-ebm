@@ -26780,3 +26780,96 @@ check in the next SOTA-ingestion task before drawing citation-trail conclusions.
   mostly lists rather than directly runnable Carnot baselines.
 - **Actionability:** Use PAW docs only for the amortization-gate task; otherwise keep repo-watch as
   references for the next SOTA-ingestion update.
+
+## V478 Research Update - 2026-07-04
+
+### Verifier-guided formalization and code verification
+- **VerIbmc / Neuro-Symbolic Software Verification:** arXiv:2606.16886 -
+  https://arxiv.org/abs/2606.16886. A local open-weight LLM proposes loop invariants and ESBMC provides
+  symbolic counterexample feedback; the symbolic phase solves a baseline subset without the LLM, while the
+  LLM-feedback loop broadens coverage. Carnot hook: a small local SOTA GGUF + deterministic verifier pilot
+  can test whether solver feedback improves invariant/formal-constraint synthesis without cloud models.
+- **VERGE:** arXiv:2601.20055 - https://arxiv.org/abs/2601.20055. Uses semantic routing, SMT/ATP calls,
+  and minimal correction-set localization to improve verified reasoning. Carnot hook: route candidate
+  claims to the cheapest deterministic verifier and localize failed premises instead of only scoring final
+  answers.
+- **CRV computational graph:** arXiv:2510.09312 - https://arxiv.org/abs/2510.09312; OpenReview
+  https://openreview.net/forum?id=CxiNICq0Rr; code https://github.com/facebookresearch/CRV. Embeds
+  deductive verification into an LLM reasoning graph and reports larger gains on deductive tasks than on
+  general knowledge. Carnot hook: useful design pattern for explicit verifier nodes, but not a direct
+  hidden-state rescue.
+- **BEAVER:** arXiv:2512.05439 - https://arxiv.org/abs/2512.05439; HuggingFace paper page
+  https://huggingface.co/papers/2512.05439. Provides deterministic sound bounds for prefix-closed
+  constraints around LLM outputs. Carnot hook: a candidate risk-control layer for constrained generation
+  once GAP-4 has clean protocol fields.
+
+### Constrained generation and candidate provenance
+- **P-GCD / tractable constrained decoding proposals:** arXiv:2606.01926 -
+  https://arxiv.org/abs/2606.01926; OpenReview https://openreview.net/forum?id=LYBs6f3jlK. Replaces
+  uniform random fallback in generalized constrained decoding with tractable proposal distributions.
+  Carnot hook: GAP-4 candidate generation should use a structured proposal/protocol instead of untracked
+  ad hoc generation.
+- **STATIC vectorized trie constrained decoding:** arXiv:2602.22647 -
+  https://arxiv.org/abs/2602.22647; code https://github.com/youtube/static-constraint-decoding. Vectorizes
+  trie-constrained decoding and reports hardware-conscious speedups. Carnot hook: use the schema/protocol
+  idea for candidate pools now; defer performance claims until a real local workload exists.
+- **Constrained diffusion LLM classifier-free guidance:** arXiv:2508.10111 -
+  https://arxiv.org/abs/2508.10111; code https://github.com/eth-sri/constrained-diffusion; OpenReview
+  https://openreview.net/forum?id=7Sph4KyeYO. Shows constraint-guided generation for diffusion LMs.
+  Carnot hook: relevant if the DiffusionGemma path reopens upstream, but current Carnot work should use
+  autoregressive local GGUF constrained generation.
+- **ProvenanceGuard / source-aware factuality:** arXiv:2607.01236 - https://arxiv.org/abs/2607.01236 and
+  arXiv:2606.18037 - https://arxiv.org/html/2606.18037v1. Both emphasize source/provenance tracking for
+  agent outputs. Carnot hook: GAP-4 and ARC artifacts must record model IDs, seeds, source paths, and
+  live-path provenance so adversarial verification cannot mistake a generated artifact for a tautology.
+
+### Continuous self-learning and memory
+- **AutoMem:** arXiv:2607.01224 - https://arxiv.org/abs/2607.01224. Treats memory as an active skill in
+  long-horizon games and reports large gains from learned memory operations. Carnot hook: upgrade the
+  verifier-memory ledger from static notes into typed promotion/rollback operations that can be tested
+  across later tasks.
+- **Multi-Head Recurrent Memory Agents:** arXiv:2607.01523 - https://arxiv.org/abs/2607.01523. Shows that
+  single shared memory degrades under long context, while multi-head typed memory with eviction improves
+  retention. Carnot hook: separate constraint, provenance, failure, and skill memories rather than writing
+  one undifferentiated ledger.
+- **SkillCoach:** arXiv:2607.01874 - https://arxiv.org/abs/2607.01874. Evolves process rubrics from
+  rollouts and separates process quality from final reward. Carnot hook: build ARC live-agent rubrics for
+  skill selection/following/composition/reflection instead of only checking whether a new level was solved.
+- **AgenticSTS:** arXiv:2607.02255 - https://arxiv.org/abs/2607.02255. Bounded-memory skill-transfer
+  testbed where retrieval plus skill abstraction improves later tasks. Carnot hook: useful methodology for
+  ARC and verifier-memory retention tests.
+- **Denser Is Not Better:** arXiv:2607.01763 - https://arxiv.org/abs/2607.01763. Warns that on-policy
+  self-distillation can worsen forgetting/collapse. Carnot hook: keep `.478` self-learning to verified
+  memory/rubric updates; do not propose broad self-distillation or model fine-tuning.
+
+### KAN and symbolic constraint modules
+- **Optimal abstract interpretation for KANs:** arXiv:2602.06737 -
+  https://arxiv.org/abs/2602.06737. Gives piecewise-linear abstractions for KAN verification.
+  Carnot hook: pilot MILP/PWA certificate generation for a small KAEM/KAN-style energy module.
+- **GRS-KAN:** arXiv:2607.01449 - https://arxiv.org/abs/2607.01449. Injects differentiable logical and
+  geometric R-functions into KAN branches. Carnot hook: a future interpretable constraint-energy component
+  for explicit regions/supports.
+- **KANFIS:** arXiv:2602.03034 - https://arxiv.org/abs/2602.03034. Uses additive KAN structure for compact
+  fuzzy-rule extraction. Carnot hook: candidate readable-rule backend after a certificate pilot works.
+
+### Hardware sampling and external architecture signals
+- **One-million p-bit probabilistic computer:** arXiv:2606.25313 -
+  https://arxiv.org/abs/2606.25313. Demonstrates a large p-bit architecture and boundary-exchange
+  decomposition ideas. Carnot hook: informs a p-bit timing-ratio design note, not a speedup claim.
+- **Large-scale Ising decomposition on FPGAs:** arXiv:2602.15985 -
+  https://arxiv.org/abs/2602.15985. Studies decomposition strategies for Ising workloads on FPGA hardware.
+  Carnot hook: use as a guide for future KV260/PolarFire sampler partitioning once a small canonical
+  workload is stable.
+- **Extropic TSU/XTR-0 updates:** https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-
+  hardware, https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one, and
+  https://extropic.ai/writing/inside-x0-and-xtr-0. Public writing frames TSUs as stochastic EBM samplers.
+  Carnot hook: maintain hardware continuity and correctness hashes while avoiding benchmark headlines.
+- **Logical Intelligence / Kona / Aleph updates:** https://logicalintelligence.com/blog/aleph-solves-
+  putnambench, https://logicalintelligence.com/blog/energy-based-models-for-reasoning,
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo, and
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation. Public material
+  reinforces verifier-first product positioning but does not expose enough reproducible internals for a
+  baseline.
+- **Semantic Scholar citation checks:** API requests for arXiv:2507.02092 and arXiv:2512.15605 returned
+  HTTP 429 rate-limit responses on 2026-07-04 without an API key. Carnot hook: the `.478` SOTA-ingestion
+  task should retry with backoff/key support before deriving citation-trail claims.
