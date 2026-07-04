@@ -124,7 +124,7 @@ tasks:
       new_references_added:
         value: int
       sota_to_experiment_mapping:
-        value: "list of {source, mapped_task_or_defer, reason}"
+        value: "list of {{source, mapped_task_or_defer, reason}}"
       ebt_semantic_scholar_citation_count:
         value: "int or blocked"
       arm_ebm_semantic_scholar_status:
@@ -360,7 +360,7 @@ tasks:
       models_used:
         value: "list of exact hf_ids"
       model_specs:
-        value: "list of {name, hf_id, gpu, model_path if resolved}"
+        value: "list of {{name, hf_id, gpu, model_path if resolved}}"
       sota_gguf_resolved:
         value: bool
       accepted_rows:
@@ -525,7 +525,7 @@ tasks:
       models_used:
         value: "list of exact hf_ids"
       model_specs:
-        value: "list of {name, hf_id, gpu, model_path/load_path}"
+        value: "list of {{name, hf_id, gpu, model_path/load_path}}"
       intermediate_layer_available:
         value: bool
       chunk_features_available:
@@ -773,7 +773,7 @@ tasks:
       read_game_source:
         value: false
       new_levels_banked:
-        value: "list of {game, level, solve_provenance}"
+        value: "list of {{game, level, solve_provenance}}"
       reproducible_total_levels_delta:
         value: int
       frontier_continuity_lift:
