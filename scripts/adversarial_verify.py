@@ -276,6 +276,15 @@ LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S = (
     1.0  # reading several JSON logs + one bounded local timing check, no model load
 )
 
+# Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
+# including negative controls whose details mention GGUF/CUDA/live-model markers.
+# The artifact itself runs JSON lint tests, not model inference, so exact
+# substrate recognition is needed to avoid re-flagging the calibration receipt
+# for the fixture text it is required to preserve. This does not weaken real
+# compute-bound artifacts; they do not declare this substrate.
+ARTIFACT_QA_LINT_TESTS_SUBSTRATE = "artifact_qa_lint_tests"
+ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S = 0.0001
+
 # Offline ARC solve / learned-verifier artifacts do not have a model to name:
 # their methodology is the solver entrypoint, reproduce gate/checksum, and
 # learned-verifier checkpoint. Treat those fields as the methodology descriptor
@@ -1867,6 +1876,12 @@ def _is_log_analysis_local_timing(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE)
 
 
+def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:
+    """True when the artifact declares fixture-driven artifact QA lint tests."""
+
+    return _inference_substrate_matches(d, ARTIFACT_QA_LINT_TESTS_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -1969,6 +1984,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
             "min_duration_s": LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S,
             "reason": "log_analysis_local_timing",
+        }
+    if _is_artifact_qa_lint_tests(d):
+        return {
+            "substrate": ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
+            "min_duration_s": ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S,
+            "reason": "artifact_qa_lint_tests",
         }
     if _is_live_llm_inference(d):
         return {
@@ -2200,6 +2221,8 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # was invoked) -- requiring model_specs/target_model here would be a category error
     # identical to the aggregation case. random_seed and reproducibility_checksum are
     # STILL required (this substrate is a real measurement, just not a model-inference one).
+    if _is_artifact_qa_lint_tests(d):
+        return
     no_model_spec_required = _is_arc_live_agent_no_llm(d) or _is_log_analysis_local_timing(d)
     has_model_spec = no_model_spec_required or (
         d.get("model_specs") or d.get("target_model") or d.get("models_tested")
