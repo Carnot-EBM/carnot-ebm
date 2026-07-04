@@ -267,5 +267,18 @@
       ".venv/bin/pytest tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py -q --no-cov -n0: PASS",
       ".venv/bin/pytest tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py -q -n0 -o addopts='' --cov=python/carnot --cov-report= --cov-report=json:/tmp/experiment_5226_cov.json --cov-fail-under=0 && coverage JSON check new module == 100%: PASS"
     ]
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=59.42594 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
