@@ -5703,3 +5703,9 @@ The critical path for milestone .250:
 - theme: timing-integrity retrospective for a milestone whose timing sources disagree
 - key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments but also flags a mismatch between empty git/disk reconstruction and changelog references, so no experiment IDs, durations, slowest runs, or compute-bound GPU findings are reportable
 - acceptance: 0/0 criteria met -- no experiment criteria were available from the supplied timing data
+
+### Milestone 2026.07.477
+- exp_range: no data available this milestone
+- theme: operational retrospective for an empty milestone-scoped timing window
+- key result: no data available this milestone; the timing source reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no longest compute-bound experiment, GPU-idle bug, or DualGPURunner miss can be derived
+- acceptance: 0/0 criteria met -- no experiment criteria were available from the supplied timing data
