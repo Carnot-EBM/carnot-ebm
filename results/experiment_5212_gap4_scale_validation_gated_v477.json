@@ -179,5 +179,18 @@
       ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest -q -o addopts='' tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py && .venv/bin/coverage report --include='*/experiment_5212_gap4_scale_validation_gated_v477.py' --fail-under=100 --show-missing: pass (100% new-module coverage)",
       ".venv/bin/pytest tests/python -q: fail/interrupted after failure summary (4 failed, 6305 passed, 7 skipped; failures in test_abstention_http_rest_3810.py, test_adaptive.py worker segfault in z3_math_verifier, test_experiment_1504_thrml_carnot_simulator_parity_v3.py)"
     ]
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "excluded_rows=120.0 and exp5211_candidate_pool_n=120.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "exact_test_discordant_losses=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
