@@ -409,3 +409,12 @@ K nearest neighbors.
   - OSS-CAD-Suite installed at `/home/ianblenke/tools/oss-cad-suite`
   - Tool presence: yosys=present; nextpnr-ice40=present; icepack=present
   - Gates Exp 816 (KV260 synthesis v2)
+
+<!-- exp5231-pbit-boundary-plan:start -->
+### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)
+
+- KV260 continuity remains SSH-only; no benchmark speedup is claimed.
+- PolarFire continuity uses SSH plus a bounded hash/correctness smoke when reachable.
+- GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup.
+- Future sampler plan: `docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md` for `distributed_sparse_pbit_boundary_exchange_n1024x4`.
+<!-- exp5231-pbit-boundary-plan:end -->

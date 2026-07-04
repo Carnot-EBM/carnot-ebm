@@ -1,0 +1,130 @@
+{
+  "command_probes": {
+    "gatemate_debug_detect": null,
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.652361,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_smoke": {
+      "combined_output": "{\"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"executable_sha256\": \"5495cb60e38bb94d076fc8628a8c6ab63900cdc887b59bffcc4a8249d57973d0\", \"inference_substrate\": \"hardware_reachability_and_sampler_boundary_plan\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport json, math\npayload = '\"'\"'{\"board\": \"polarfire\", \"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5231-hardware-continuity-pbit-boundary-v478\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5231_inline_ising_energy_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nprint(json.dumps({\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2'\"'\"',\n    '\"'\"'executable_sha256'\"'\"': '\"'\"'5495cb60e38bb94d076fc8628a8c6ab63900cdc887b59bffcc4a8249d57973d0'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_reachability_and_sampler_boundary_plan'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'sample_quality'\"'\"': {'\"'\"'sample_count'\"'\"': len(spins), '\"'\"'finite_energy'\"'\"': math.isfinite(float(energy))},\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}, sort_keys=True))\nPY'",
+      "duration_s": 1.274411,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"executable_sha256\": \"5495cb60e38bb94d076fc8628a8c6ab63900cdc887b59bffcc4a8249d57973d0\", \"inference_substrate\": \"hardware_reachability_and_sampler_boundary_plan\", \"sample_quality\": {\"finite_energy\": true, \"sample_count\": 8}, \"workload_sha256\": \"19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2\"}\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.887516,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "conductor_modified": false,
+  "duration_s": 6.814401,
+  "experiment": "experiment_5231_hardware_continuity_pbit_boundary",
+  "experiment_id": "exp5231-hardware-continuity-pbit-boundary-v478",
+  "field_principles": {
+    "gatemate_idcode_raw": "preserve the raw v477 IDCODE evidence or record the bounded recheck result.",
+    "gatemate_status": "preserve the physical/JTAG blocker unless the operator changed the setup.",
+    "hardware_docs_updated": "true only when the p-bit plan and hardware wishlist note were written.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state reachability plus no-speedup status.",
+    "inference_substrate": "declares this as reachability plus sampler-boundary planning evidence.",
+    "kv260_check_method": "records the SSH-only method so host-storage preconditions cannot creep back in.",
+    "kv260_reachable": "true only when the KV260 SSH BatchMode precondition exits zero.",
+    "pbit_boundary_plan_path": "points to the future sampler timing-ratio plan, not a benchmark result.",
+    "polarfire_reachable": "true only when the PolarFire SSH precondition exits zero.",
+    "speedup_claimed": "No .478 hardware task may claim speedup without a real end-to-end workload."
+  },
+  "gatemate_check_note": "preserved v477 physical/JTAG block; no operator cable, port, or board setup change was provided",
+  "gatemate_idcode_raw": "0xffffffff",
+  "gatemate_next_physical_action": "operator reseat or replace GateMate JTAG cable/port path and verify board power before another IDCODE loop",
+  "gatemate_operator_setup_changed": false,
+  "gatemate_rechecked": false,
+  "gatemate_status": "blocked_physical_jtag",
+  "hardware_docs_updated": true,
+  "honest_verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup",
+  "inference_substrate": "hardware_reachability_and_sampler_boundary_plan",
+  "kv260_check_method": "ssh_only",
+  "kv260_reachable": true,
+  "milestone": "2026.07.478",
+  "pbit_boundary_plan": {
+    "future_workload": "distributed_sparse_pbit_boundary_exchange_n1024x4",
+    "hash_correctness_checks": [
+      "graph_csr_hash",
+      "partition_map_hash",
+      "seed_hash",
+      "boundary_packet_stream_hash",
+      "cpu_reference_energy",
+      "final_state_checksum"
+    ],
+    "measurement_before_speedup": "same workload/seeds/partitions/exchange schedule, end-to-end wall clock, boundary-transfer overhead, and hash/correctness parity on each substrate",
+    "partitions": "4 x 256 p-bits",
+    "speedup_claim_allowed": false
+  },
+  "pbit_boundary_plan_path": "docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md",
+  "polarfire_reachable": true,
+  "polarfire_smoke": {
+    "blocked_reason": null,
+    "correctness_ok": true,
+    "expected_workload_hash": "19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2",
+    "hash_verified": true,
+    "output": {
+      "correctness": {
+        "energy_matches_expected": true
+      },
+      "energy": 6,
+      "executable_sha256": "5495cb60e38bb94d076fc8628a8c6ab63900cdc887b59bffcc4a8249d57973d0",
+      "inference_substrate": "hardware_reachability_and_sampler_boundary_plan",
+      "sample_quality": {
+        "finite_energy": true,
+        "sample_count": 8
+      },
+      "workload_sha256": "19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2"
+    },
+    "status": "hash_verified_correctness_ok",
+    "workload_hash": "19ca89d982db8bc434f37edfc6c52ca2c4cd510f2cc80f9547d7ff3ca5b080c2"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "discipline": "ssh_only",
+      "duration_s": 4.652361,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "discipline": "ssh_only",
+      "duration_s": 0.887516,
+      "exit_code": 0,
+      "observed": "",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "prior_gatemate_reference": {
+    "path": "results/experiment_5217_hardware_continuity_v477.json",
+    "raw_idcode": "0xffffffff",
+    "status": "physical/JTAG block preserved unless operator setup changed"
+  },
+  "random_seed": 5231,
+  "reproducibility_checksum": "8af2713491489bfec98ec93d3ef2ee96338bd8d7f6f9fa8ad385166929eb0316",
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5231_hardware_continuity_pbit_boundary.v478",
+  "spec_refs": [
+    "REQ-HW-5231",
+    "SCENARIO-HW-5231"
+  ],
+  "speedup_claimed": false
+}
