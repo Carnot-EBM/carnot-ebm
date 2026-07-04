@@ -1,0 +1,388 @@
+{
+  "artifact": "typed_multihead_verifier_memory_v478",
+  "entries": [
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:cc94abc086cfda4c",
+      "evidence": [
+        "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
+        "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
+        "results/verifier_memory_v477.json"
+      ],
+      "head": "provenance",
+      "invalidated_by": null,
+      "keywords": [
+        "20260609",
+        "adjacency",
+        "after",
+        "alone,",
+        "but",
+        "directional",
+        "discriminator",
+        "evidence",
+        "exact",
+        "excluded",
+        "from",
+        "frozen",
+        "gap",
+        "grouped",
+        "guards",
+        "half",
+        "leakage",
+        "least",
+        "memory",
+        "memory:fdd0d952dbf7f33e",
+        "one",
+        "only",
+        "orientation",
+        "pass,",
+        "positive",
+        "predeclared",
+        "promoted",
+        "promotion",
+        "provenance",
+        "reconsider",
+        "refuted",
+        "registry",
+        "remains",
+        "selected",
+        "splits,",
+        "subset",
+        "training",
+        "unpromoted",
+        "verifier",
+        "verifier.",
+        "wins"
+      ],
+      "payload": {
+        "allowed_use": "memory_only",
+        "blocked_use": "registry_promotion",
+        "imported_from_memory_id": "verifier-memory:fdd0d952dbf7f33e",
+        "next_gate": "Reconsider registry promotion only after a predeclared frozen subset is selected from training evidence alone, one exact subset wins at least half of grouped splits, leakage guards pass, and directional_adjacency_refuted_20260609 remains excluded from the promoted frozen verifier.",
+        "registry_state": "positive_but_unpromoted",
+        "source_scope": "GAP-1"
+      },
+      "promotion_state": "promoted",
+      "rollback_reason": null,
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "GAP-1 orientation discriminator memory-only promotion"
+    },
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:e0deea370480e02e",
+      "evidence": [
+        "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"
+      ],
+      "head": "provenance",
+      "invalidated_by": {
+        "artifact": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json"
+      },
+      "keywords": [
+        "20260609",
+        "adjacency",
+        "after",
+        "alone,",
+        "blocked",
+        "directional",
+        "evidence",
+        "exact",
+        "excluded",
+        "from",
+        "frozen",
+        "gap",
+        "grouped",
+        "guards",
+        "half",
+        "instability",
+        "leakage",
+        "least",
+        "memory",
+        "one",
+        "only",
+        "pass,",
+        "predeclared",
+        "promoted",
+        "promotion",
+        "provenance",
+        "reconsider",
+        "refuted",
+        "registry",
+        "remains",
+        "selected",
+        "splits,",
+        "subset",
+        "training",
+        "verifier.",
+        "wins"
+      ],
+      "payload": {
+        "allowed_use": "memory_only",
+        "blocked_use": "registry_promotion",
+        "next_gate": "Reconsider registry promotion only after a predeclared frozen subset is selected from training evidence alone, one exact subset wins at least half of grouped splits, leakage guards pass, and directional_adjacency_refuted_20260609 remains excluded from the promoted frozen verifier.",
+        "registry_state": "blocked_instability",
+        "source_scope": "GAP-1"
+      },
+      "promotion_state": "rolled_back",
+      "rollback_reason": "blocked_instability",
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "GAP-1 registry promotion blocked by subset instability"
+    },
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:019fdac5c76cd771",
+      "evidence": [
+        "results/experiment_5214_continuous_self_learning_verifier_memory_v477.json",
+        "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+        "results/verifier_memory_v477.json"
+      ],
+      "head": "failures",
+      "invalidated_by": {
+        "artifact": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
+      },
+      "keywords": [
+        "candidate",
+        "canonical",
+        "crosses",
+        "discordant",
+        "exact",
+        "failures",
+        "floor",
+        "future",
+        "gap",
+        "gap4",
+        "losses",
+        "losses=0,",
+        "memory:d7f9fad14ee64512",
+        "null",
+        "pool",
+        "quarantine",
+        "quarantined",
+        "scored=120,",
+        "six",
+        "ties=120",
+        "validation",
+        "verifier",
+        "wins",
+        "wins=0,",
+        "zero"
+      ],
+      "payload": {
+        "avoid_until": "future canonical validation crosses floor",
+        "failure_id": "gap4_clean_validation_null",
+        "failure_mode": "n_scored=120, wins=0, losses=0, ties=120",
+        "imported_from_memory_id": "verifier-memory:d7f9fad14ee64512",
+        "replacement_gate": "six_discordant_wins_zero_losses_exact_p_lt_0_05",
+        "retirement_status": "quarantined"
+      },
+      "promotion_state": "rolled_back",
+      "rollback_reason": "gap4_clean_null",
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "GAP-4 candidate-pool validation null/quarantine"
+    },
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:87fc979f476351a1",
+      "evidence": [
+        "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json"
+      ],
+      "head": "failures",
+      "invalidated_by": {
+        "artifact": "results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json"
+      },
+      "keywords": [
+        "beat",
+        "best",
+        "certainty",
+        "clue",
+        "controls",
+        "corpus",
+        "did",
+        "different",
+        "failures",
+        "final",
+        "hidden",
+        "layer",
+        "mechanism",
+        "mmlu",
+        "new",
+        "non",
+        "not",
+        "positive",
+        "probe",
+        "rcs",
+        "retired",
+        "self",
+        "signal",
+        "state",
+        "tuned",
+        "verifier"
+      ],
+      "payload": {
+        "avoid_until": "new non-final-layer signal or different corpus mechanism",
+        "best_probe_accuracy": 0.075,
+        "failure_id": "mmlu_hidden_state_path_retired",
+        "failure_mode": "best hidden-state probe did not beat controls",
+        "replacement_gate": "positive_ci_vs_tuned_sc_self_certainty_clue_rcs",
+        "retirement_status": "retired",
+        "tuned_sc_accuracy": 0.075
+      },
+      "promotion_state": "rolled_back",
+      "rollback_reason": "mmlu_hidden_state_path_retired",
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "MMLU hidden-state verifier path retired"
+    },
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:167bdd7cc037ccb4",
+      "evidence": [
+        "results/experiment_5215_arc_paw_amortization_gate_v477.json",
+        "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
+        "results/experiment_5220_archive_477_activate_478.json"
+      ],
+      "head": "skills_rubrics",
+      "invalidated_by": {
+        "artifact": "results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json",
+        "exclusion_reason": "reproducible_total_levels_delta_zero"
+      },
+      "keywords": [
+        "arc",
+        "before",
+        "build",
+        "composition",
+        "delta",
+        "following",
+        "level",
+        "live",
+        "patch",
+        "process",
+        "provenance",
+        "quality",
+        "reflection",
+        "retained",
+        "retry",
+        "rubric",
+        "seed",
+        "selection",
+        "setup",
+        "skill",
+        "skills_rubrics",
+        "validity",
+        "zero"
+      ],
+      "payload": {
+        "domain": "ARC",
+        "fields": [
+          "skill_selection",
+          "skill_following",
+          "skill_composition",
+          "reflection_retry_quality",
+          "provenance_validity"
+        ],
+        "known_nulls": {
+          "new_levels_banked": [],
+          "paw_amortization_viable": false,
+          "reproducible_total_levels_delta": 0,
+          "solve_provenance": "development_proxy"
+        },
+        "recommended_consumer_action": "build_process_rubric_before_level_patch",
+        "rubric_id": "arc_live_path_process_rubric_seed"
+      },
+      "promotion_state": "rolled_back",
+      "rollback_reason": "arc_zero_level_delta",
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "ARC live-path zero-level delta retained for rubric setup"
+    },
+    {
+      "created_by": "experiment_5227_continuous_self_learning_multihead_memory_v478",
+      "entry_id": "typed-memory:2ae7153179835716",
+      "evidence": [
+        "results/experiment_5217_hardware_continuity_v477.json"
+      ],
+      "head": "constraints",
+      "invalidated_by": null,
+      "keywords": [
+        "authenticated",
+        "block",
+        "boundary",
+        "claim",
+        "constraints",
+        "end",
+        "hardware",
+        "hash",
+        "hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32",
+        "reachable",
+        "reporting",
+        "smoke",
+        "speedup",
+        "transcript",
+        "until",
+        "verified",
+        "without",
+        "workload"
+      ],
+      "payload": {
+        "action": "block_speedup_claim_until_end_to_end_workload_transcript",
+        "constraint_id": "hardware_no_speedup_without_transcript",
+        "forbidden_claim": "hardware_speedup_without_authenticated_transcript",
+        "kv260_status": "reachable + hash-verified smoke workload_hash=48683aa401c6f9f1e6ca471acd44cfb0a883ef0639fcf3d8baf09aee90f4df32",
+        "must_enforce": true,
+        "polarfire_status": {
+          "blocked_reason": null,
+          "hash_verified": true,
+          "polarfire_workload_validated": false,
+          "reachable": true,
+          "summary": "reachable + hash-verified smoke workload_hash=9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967; polarfire_workload_validated=false (terminal bar is an end-to-end dispatch run)",
+          "terminal_bar_rationale": "A reachable, hash-verified Ising-energy smoke is a reachability + correctness check, not the end-to-end Carnot dispatch run the terminal bar requires; north-star marks PolarFire opportunistic with no terminal-state mandate, so polarfire_workload_validated stays false.",
+          "workload_hash": "9172e92a9403761da21f332f0327e4ab284557c88fae668c8815707f7feea967"
+        },
+        "scope": "hardware_reporting"
+      },
+      "promotion_state": "promoted",
+      "rollback_reason": null,
+      "spec_refs": [
+        "REQ-LEARN-5227",
+        "SCENARIO-LEARN-5227"
+      ],
+      "subject": "Hardware speedup claim boundary"
+    }
+  ],
+  "heads": [
+    "constraints",
+    "provenance",
+    "failures",
+    "skills_rubrics"
+  ],
+  "schema": "carnot.typed_multihead_verifier_memory.v1",
+  "spec_refs": [
+    "REQ-LEARN-5227",
+    "SCENARIO-LEARN-5227"
+  ],
+  "summary": {
+    "consumer_ready_path": "results/arc_rubric_setup_from_typed_memory_v478.json",
+    "heads": [
+      "constraints",
+      "provenance",
+      "failures",
+      "skills_rubrics"
+    ],
+    "memory_artifact_path": "results/typed_multihead_verifier_memory_v478.json",
+    "memory_entries_written": 6,
+    "promotions": 2,
+    "rollbacks": 4
+  }
+}
