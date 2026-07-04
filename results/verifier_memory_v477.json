@@ -1,0 +1,112 @@
+{
+  "schema": "carnot.verifier_memory.v1",
+  "artifact": "verifier_memory_v477",
+  "spec_refs": [
+    "REQ-LEARN-5214",
+    "SCENARIO-LEARN-5214"
+  ],
+  "promotion_policy": {
+    "promotion_threshold": 0.02,
+    "promotion_rule": "promote only when deterministic guardrails pass and held-out delta is greater than or equal to the threshold",
+    "hold_rule": "hold when deterministic guardrails pass but positive held-out delta is below threshold",
+    "rollback_rule": "rollback when deterministic guardrails fail or held-out delta is missing, zero, or negative"
+  },
+  "summary": {
+    "memory_entries_written": 2,
+    "promotions": 1,
+    "holds": 0,
+    "rollbacks": 1,
+    "deterministic_guardrails_enforced": true,
+    "heldout_gate_required_for_promotion": true
+  },
+  "entries": [
+    {
+      "memory_id": "verifier-memory:d7f9fad14ee64512",
+      "failure_signature": "GAP-4: local same-shape transform candidate pool lacks held-out verifier delta",
+      "candidate_predicate_or_set": {
+        "kind": "candidate_pool_guard",
+        "name": "same_shape_demo_perfect_transform_code_pool",
+        "accepted_rows": 120,
+        "candidate_pool_n": 120
+      },
+      "provenance": {
+        "gap": "GAP-4",
+        "generated_from_failure": "local generators did not surface demo-perfect programs under the unchanged GAP-4 verifier",
+        "mechanical_check": "parse, restricted execution, demo reproduction, same-shape, and leakage guards",
+        "heldout_gate": "not yet run; Exp 5211 is pool expansion only",
+        "adversarial_note": "artifact has critical corrigendum flags, so no promotion is allowed without later held-out validation"
+      },
+      "deterministic_guard_result": {
+        "passed": true,
+        "checks": {
+          "parse_guard_passed": true,
+          "restricted_execution_passed": true,
+          "demo_reproduction_passed": true,
+          "same_shape_guard_passed": true,
+          "leakage_audit_passed": true
+        },
+        "no_test_gold_leak": true
+      },
+      "heldout_delta": {
+        "metric": "heldout_selection_delta",
+        "value": null,
+        "reason": "Exp 5211 contains guarded candidate-pool expansion but no held-out usefulness evaluation",
+        "promotion_threshold": 0.02
+      },
+      "promotion_state": "rolled_back",
+      "promotion_reason": "heldout_delta_missing",
+      "rollback_reason": "heldout_delta_missing",
+      "source_artifacts": [
+        "ops/verifier_gaps.md#gap-4",
+        "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"
+      ]
+    },
+    {
+      "memory_id": "verifier-memory:fdd0d952dbf7f33e",
+      "failure_signature": "GAP-1: square transpose orientation blind spot",
+      "candidate_predicate_or_set": {
+        "kind": "discriminator_set",
+        "members": [
+          "color_centroid_orientation",
+          "row_column_run_profile"
+        ],
+        "registry_promotion_allowed": false,
+        "selection_basis": "Exp 5209 top repeated grouped held-out subset"
+      },
+      "provenance": {
+        "gap": "GAP-1",
+        "generated_from_failure": "square transpose mis-votes where always-on object and palette features are orientation-blind",
+        "mechanical_check": "cached candidate/discriminator score matrix with grouped train-heldout splits",
+        "heldout_gate": "20 repeated task-grouped splits; held-out rows used only for final metrics",
+        "registry_note": "memory-only promotion; registry promotion remains blocked by subset instability"
+      },
+      "deterministic_guard_result": {
+        "passed": true,
+        "checks": {
+          "verifier_is_oracle_false": true,
+          "leakage_audit_passed": true,
+          "grouped_train_heldout_splits": true,
+          "no_llm_generated_candidates_added": true
+        },
+        "no_test_gold_leak": true
+      },
+      "heldout_delta": {
+        "metric": "min_heldout_pass_at_2_delta_vs_baselines",
+        "value": 0.041797,
+        "baseline_always_on_pass_at_2_mean": 0.088976,
+        "heldout_pass_at_2_mean": 0.189584,
+        "single_refuted_directional_pass_at_2_mean": 0.147787,
+        "paired_delta_ci95": "[0.023148, 0.060446]",
+        "promotion_threshold": 0.02
+      },
+      "promotion_state": "promoted",
+      "promotion_reason": "heldout_delta_clears_promotion_threshold",
+      "rollback_reason": null,
+      "source_artifacts": [
+        "ops/verifier_gaps.md#gap-1",
+        "results/experiment_5205_autopyverifier_gap1_pilot_v476.json",
+        "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json"
+      ]
+    }
+  ]
+}

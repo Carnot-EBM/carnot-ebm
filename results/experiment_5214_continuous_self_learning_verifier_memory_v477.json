@@ -1,0 +1,81 @@
+{
+  "schema": "carnot.continuous_self_learning_verifier_memory.v1",
+  "experiment": "experiment_5214_continuous_self_learning_verifier_memory_v477",
+  "experiment_id": 5214,
+  "run_date": "2026-07-04",
+  "spec_refs": [
+    "REQ-LEARN-5214",
+    "SCENARIO-LEARN-5214"
+  ],
+  "continuous_self_learning_task": {
+    "principle": "Satisfies research-program.md's per-milestone self-learning requirement.",
+    "value": true
+  },
+  "memory_artifact_path": {
+    "principle": "Durable verifier-memory ledger written for reuse by later experiments.",
+    "value": "results/verifier_memory_v477.json"
+  },
+  "memory_entries_written": {
+    "principle": "Count of idempotently deduplicated memory entries in the durable ledger.",
+    "value": 2
+  },
+  "promotions": {
+    "principle": "Entries promoted to reusable verifier memory after deterministic guards and held-out gate passed.",
+    "value": 1
+  },
+  "rollbacks": {
+    "principle": "Entries rolled back or blocked because deterministic guards or held-out usefulness evidence were insufficient.",
+    "value": 1
+  },
+  "deterministic_guardrails_enforced": {
+    "principle": "Promotion policy requires deterministic guardrail status before any memory promotion.",
+    "value": true
+  },
+  "heldout_gate_required_for_promotion": {
+    "principle": "Promotion policy requires useful held-out delta; null, zero, negative, or missing held-out evidence rolls back.",
+    "value": true
+  },
+  "tests_run": {
+    "principle": "Commands executed while building Exp 5214, with pass/fail status.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_verifier_memory.py -q --no-cov -o addopts=''",
+        "result": "FAIL",
+        "note": "Expected red test before this result artifact existed; failed on FileNotFoundError for results/experiment_5214_continuous_self_learning_verifier_memory_v477.json."
+      }
+    ]
+  },
+  "inference_substrate": {
+    "principle": "Declares that Exp 5214 builds verifier memory from prior deterministic artifacts rather than new model inference.",
+    "value": "verifier_memory_from_upstream_artifacts"
+  },
+  "source_artifacts": {
+    "principle": "Upstream evidence used to populate the memory entries without copying raw candidate rows or test labels.",
+    "value": [
+      "research-program.md#continuous-self-learning-core-architectural-goal",
+      "ops/verifier_gaps.md#gap-1",
+      "ops/verifier_gaps.md#gap-4",
+      "research-references.md#v477-planner-references-2026-07-03",
+      "results/experiment_5205_autopyverifier_gap1_pilot_v476.json",
+      "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json",
+      "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"
+    ]
+  },
+  "memory_summary": {
+    "principle": "Separates promoted memory from rollback records so later experiments can reuse positives and avoid null candidates.",
+    "value": {
+      "promotion_threshold": 0.02,
+      "promoted_memory_ids": [
+        "verifier-memory:fdd0d952dbf7f33e"
+      ],
+      "rolled_back_memory_ids": [
+        "verifier-memory:d7f9fad14ee64512"
+      ],
+      "held_entries": 0
+    }
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and report promotions and rollbacks separately.",
+    "value": "complete: verifier_memory_from_upstream_artifacts_promotions_1_rollbacks_1_heldout_gate_required_no_registry_claim"
+  }
+}
