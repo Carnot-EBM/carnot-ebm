@@ -2187,10 +2187,15 @@ mechanics into a winning action sequence), plus two concrete design rules for an
 DYNAMIC recursion depth (not fixed), and instrument explicitly for "overthinking" (accuracy peaks at
 some recursion depth then degrades -- more iterations isn't automatically better).
 
-**Explicitly distinct from two already-retired TRM-on-ARC threads** (cite both if the exclusion-
-manifest lint flags a scope match): the sudoku-trained-checkpoint-as-static-ARC-generator attempt
-(weak because untrained on ARC, not disqualifying) and exp4100's TRM-as-dynamics-engine (a different
-mechanism -- predicting state transitions, not refining action sequences).
+**Explicitly distinct from two already-tried/retired TRM-on-ARC threads** (cite both if the
+exclusion-manifest lint flags a scope match): static ARC-1 grid-transform solving with the official
+`arcprize/trm_arc_prize_verification` checkpoint (properly evaluated, this genuinely works well --
+pass@2 ~0.52, pass@1000 ~0.62 on a 29-task subset, `results/trm_verifier_rerank_opportunity.json` --
+correction 2026-07-04, an earlier draft wrongly attributed a separate, likely eval-methodology-
+artifact weak number to a "sudoku-trained checkpoint"; see the research note for the full
+correction) and exp4100's TRM-as-dynamics-engine (a different mechanism -- predicting state
+transitions, not refining action sequences). Neither of these is live ARC-AGI-3 action-sequence
+generation, which is what this gap and note are actually about.
 
 **The real open question, not assumed either way:** whether the 69 reproducible levels' captured
 trajectories carry enough training signal (the effective (state,action) pair count is unmeasured --
