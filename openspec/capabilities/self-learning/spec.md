@@ -9976,6 +9976,48 @@ episodes that can be loaded, keeps `controller_memory_only=true`,
 **Then** it reverts the memory state
 **And** increments rollback_count and rollback_recovered_count.
 
+## REQ-LEARN-5214: V477 Verifier-Memory Promotion and Rollback Ledger
+
+**Given** GAP-1 and GAP-4 verifier failure artifacts that propose predicates,
+discriminator sets, or guarded candidate pools
+**When** the continuous self-learning verifier memory is updated
+**Then** each durable memory entry SHALL include `failure_signature`,
+`candidate_predicate_or_set`, `provenance`, `deterministic_guard_result`,
+`heldout_delta`, `promotion_state`, `rollback_reason`, and `source_artifacts`
+**And** duplicate entries with the same failure signature and candidate
+definition SHALL be idempotently collapsed.
+
+### REQ-LEARN-5214 Sub-requirements
+
+- REQ-LEARN-5214-1: Promotion SHALL be allowed only when deterministic
+  guardrails pass, no test-gold leakage is present, and the held-out delta is
+  greater than or equal to the configured promotion threshold.
+- REQ-LEARN-5214-2: A candidate with passing deterministic guardrails but a
+  positive held-out delta below the promotion threshold SHALL be held rather
+  than promoted.
+- REQ-LEARN-5214-3: A candidate with failed deterministic guardrails, missing
+  held-out delta, zero held-out delta, or negative held-out delta SHALL be
+  rolled back with an explicit `rollback_reason`.
+- REQ-LEARN-5214-4: The memory artifact SHALL not embed test-gold labels,
+  oracle targets, raw candidate correctness labels, or test-output payloads.
+- REQ-LEARN-5214-5: Exp 5214 SHALL write
+  `results/experiment_5214_continuous_self_learning_verifier_memory_v477.json`
+  and point to the durable memory artifact path.
+
+### SCENARIO-LEARN-5214: Verifier Memory Promotes Useful Candidates and Rolls Back Nulls
+
+**Given** a guarded GAP-1 discriminator-set candidate with a positive held-out
+delta above threshold
+**When** the verifier-memory helper applies the promotion policy
+**Then** the entry is marked `promoted` and has no rollback reason.
+
+**Given** a guarded candidate with no held-out usefulness delta
+**When** the verifier-memory helper applies the promotion policy
+**Then** the entry is marked `rolled_back` and records the missing/null delta
+reason.
+
+**Spec traces:** REQ-LEARN-5214, SCENARIO-LEARN-5214
+
 ## REQ-LEARN-3357: FR-11 LogicVault Z3 Integration
 **Given** an incoming fact and a set of historically verified beliefs
 **When** the vault processes the incoming fact
