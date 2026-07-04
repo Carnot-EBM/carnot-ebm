@@ -26944,3 +26944,69 @@ before drafting the `.479` roadmap.
 - **Carnot hook:** citation-trail checks are now reachable without a key in this environment, so the
   `.479` SOTA task should record raw Semantic Scholar responses and retry/backoff behavior instead of
   inheriting the `.478` HTTP-429-only status.
+
+## V480 Research Update - 2026-07-04
+
+Search scope: arXiv primary, plus OpenReview search snippets, HuggingFace Papers pages, Semantic Scholar
+API, Extropic writing, Logical Intelligence posts, and GitHub repository search. This update was performed
+before drafting the `.480` roadmap. OpenReview direct fetches for two candidate pages hit a browser
+challenge, so only matching arXiv or official repository sources are treated as actionable.
+
+### Memory and continuous self-learning
+- **MemCollab: Cross-Model Memory Collaboration via Contrastive Trajectory Distillation:** arXiv:2603.23234 -
+  https://arxiv.org/abs/2603.23234. The paper explicitly targets heterogeneous agents whose memories
+  otherwise entangle task knowledge with model-specific reasoning style; it distills shared constraints
+  from contrastive trajectories and uses task-aware retrieval. Carnot hook: `.479` proved aligned typed
+  memory can beat shuffled/no-memory controls, but only inside one local stack. The next test should check
+  whether promoted verifier memories transfer across at least two mandated SOTA GGUF model families
+  (Qwen/Gemma) without degrading held-out tasks.
+- **HalluHard:** arXiv:2602.01031 - https://arxiv.org/abs/2602.01031. A hard multi-turn hallucination
+  benchmark requiring inline citations and evidence-retrieval judging across legal, research, medical, and
+  coding domains. Carnot hook: use it as a small evidence-grounded stress test for verifier memory and
+  provenance discipline, not as a broad web-search benchmark. A mini task can evaluate whether typed
+  provenance memory reduces repeated citation-support errors over turns.
+
+### Verification allocation and constrained/self-checking generation
+- **Hybrid Verified Decoding:** arXiv:2606.01019 - https://arxiv.org/abs/2606.01019. Predicts the accepted
+  length/payoff of cache drafts before verifier calls, choosing between cache verification and model-based
+  drafting; reports strongest gains on agentic workflows. Carnot hook: rather than running all expensive
+  verifiers on every token/step, learn a verifier-dose scheduler that predicts when Carnot memory or a cheap
+  deterministic gate is enough and when a SOTA GGUF verifier/generator call is warranted.
+- **Token-Guard:** arXiv:2601.21969 - https://arxiv.org/abs/2601.21969; code
+  https://github.com/RongHuiQiang/Token-Guard. Uses token-level self-checking decoding with latent
+  hallucination-risk scoring and prune/regenerate loops. Carnot hook: a bounded local pilot can compare
+  Carnot's energy/provenance gate as the token/fragment risk scorer, but only with mandated SOTA GGUF
+  model specs and full runtime receipts.
+- **SLOT: Structuring the Output of Large Language Models:** arXiv:2505.04016 -
+  https://arxiv.org/abs/2505.04016; HuggingFace paper page
+  https://huggingface.co/papers/2505.04016. A model-agnostic post-processing approach repairs
+  unstructured outputs into schema-conformant structured outputs and measures both schema accuracy and
+  content fidelity. Carnot hook: `.477` through `.479` repeatedly suffered from principle-wrapped or
+  malformed gate fields. A small artifact-normalization task should test schema repair as a producer-side
+  guard while preserving bare gate fields and without weakening adversarial verification.
+
+### KAN certification and hardware-bound energy paths
+- **Efficient Convexification of KANs with Polynomial Functional Forms:** arXiv:2604.03871 -
+  https://arxiv.org/abs/2604.03871. Builds exact convex envelopes for polynomial univariate KAN components
+  using a continuous Graham Scan, exploiting KAN additivity to form strong relaxations. Carnot hook:
+  extend the `.478/.479` KAEM PWA/MILP certificate from finite segment stress tests toward convex-envelope
+  bounds for polynomial spline components, reporting slack and solve time without broad KAN claims.
+- **Extropic TSU/XTR-0 public status:** https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-
+  hardware and https://extropic.ai/writing/inside-x0-and-xtr-0. Public pages still frame TSUs as
+  programmable samplers; no local SDK or hardware transcript is available. Carnot hook: keep TSU as an
+  architecture watch item and continue local FPGA/CPU hash smokes only.
+- **Logical Intelligence Aleph/Kona updates:** https://logicalintelligence.com/blog/aleph-leading-benchmarks
+  and https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation. Public posts
+  emphasize formal verification as a correctness stress test and position EBRM/Kona-style models underneath
+  LLM interfaces, but do not provide reproducible internals. Carnot hook: align `.480` with verifier-first
+  and formal-spec/code/proof decomposition, while avoiding Kona baseline claims.
+
+### Citation and repository status
+- **Semantic Scholar citation checks:** direct API call for EBT arXiv:2507.02092 returned HTTP 429 twice on
+  2026-07-04 without an API key. ARM-EBM arXiv:2512.15605 returned title, year 2025, citationCount 8, and
+  influentialCitationCount 2. Carnot hook: preserve citation-trail checks as metadata only; do not infer
+  trend changes from a rate-limited EBT request.
+- **GitHub watch:** `alexiglad/EBT` remains the primary code reference for Energy-Based Transformers;
+  `RongHuiQiang/Token-Guard` is an ICLR 2026 self-checking decoding implementation; `IBM/p-kit` is a
+  practical p-bit simulation reference. These are useful watchlist entries, but `.480` should not add new
+  hardware-speedup or broad EBT implementation claims from repository availability alone.
