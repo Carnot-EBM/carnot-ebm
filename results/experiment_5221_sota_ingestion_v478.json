@@ -1,0 +1,262 @@
+{
+  "arm_ebm_semantic_scholar_status": {
+    "principle": "ARM-EBM rate limits or API errors must be recorded exactly rather than converted into a citation trail.",
+    "value": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 09:46:11 GMT\nx-amz-apigw-id: f-ZvoFCfPHcEdIg=\nx-amzn-requestid: 7d82125d-10f3-4382-b704-63b793898ced\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 456dd60f1399d8458ed20abe4eae33a0.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: _cDDgKoZZVKWHViK8FkWvHEupHBXP32QcQVor622pRLVZF5INa-jFQ==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}"
+  },
+  "duration_s": 0.0,
+  "ebt_semantic_scholar_citation_count": {
+    "principle": "EBT citation counts must come from the Semantic Scholar response, not memory; blocked queries must be labeled blocked.",
+    "value": "blocked"
+  },
+  "experiment_id": "experiment_5221_sota_ingestion_v478",
+  "field_principles": {
+    "arm_ebm_semantic_scholar_status": "ARM-EBM rate limits or API errors must be recorded exactly rather than converted into a citation trail.",
+    "ebt_semantic_scholar_citation_count": "EBT citation counts must come from the Semantic Scholar response, not memory; blocked queries must be labeled blocked.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "inference_substrate": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "new_references_added": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V478.",
+    "retired_scope_reopened": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "sota_to_experiment_mapping": "Each fresh or rechecked source must either map to an existing .478 task or say defer/no action; no new roadmap task may be created here.",
+    "sources_checked": "The ingestion is only useful if it names the concrete source groups checked immediately before execution."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "value": "complete: V478 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
+  },
+  "inference_substrate": {
+    "principle": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "value": "literature_ingestion"
+  },
+  "milestone": "2026.07.478",
+  "new_references_added": {
+    "principle": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V478.",
+    "value": 0
+  },
+  "no_deep_research_used": {
+    "principle": "The prompt forbids /deep-research, so the artifact must affirm it was not used.",
+    "value": true
+  },
+  "references_md_updated": {
+    "principle": "research-references.md is updated only when new genuinely actionable references are added.",
+    "value": false
+  },
+  "references_path": "research-references.md",
+  "reproducibility_checksum": "c2740fe94b54f6bd6b8dedb624c80f1ece1e704d1cb7ee9cf377591c99aed46a",
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "The reserved ingestion task must not modify scripts/research_conductor.py.",
+    "value": true
+  },
+  "result_path": "results/experiment_5221_sota_ingestion_v478.json",
+  "retired_scope_reopened": {
+    "principle": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "value": false
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.experiment_5221_sota_ingestion_v478.v1",
+  "sota_to_experiment_mapping": {
+    "principle": "Each fresh or rechecked source must either map to an existing .478 task or say defer/no action; no new roadmap task may be created here.",
+    "value": [
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The immediate post-planning arXiv date-window returned zero results, so there is no new reference to append.",
+        "source": "arXiv 2026-07-04 date-window refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5226",
+        "reason": "These sources remain the existing VerIbmc/local solver-feedback and explicit verifier-node design inputs; no new task is needed.",
+        "source": "VerIbmc / VERGE / CRV / BEAVER verifier refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5224",
+        "reason": "They continue to constrain GAP-4 canonical candidate-pool generation and protocol fields. STATIC's GitHub URL is live; P-GCD's OpenReview page is challenge-gated, so no new claim is added.",
+        "source": "P-GCD / STATIC constrained generation refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5223",
+        "reason": "The sources remain protocol/provenance guardrails for the GAP-4 audit and canonical schema; they do not require roadmap changes.",
+        "source": "ProvenanceGuard / source-aware factuality refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5227",
+        "reason": "They still map to typed constraint/provenance/failure/skill memory with promotion and rollback gates.",
+        "source": "AutoMem / Multi-Head Memory refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5228",
+        "reason": "They remain process-rubric and retention-test references for ARC live trace diagnosis before any gated live patch.",
+        "source": "SkillCoach / AgenticSTS refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5230",
+        "reason": "The KAN references still support a small PWA/MILP certificate pilot, not a broad KAN verification claim.",
+        "source": "KAN abstraction / GRS-KAN / KANFIS refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5231",
+        "reason": "The sources remain hardware continuity and boundary-planning inputs. They do not justify a .478 speedup claim.",
+        "source": "p-bit / FPGA Ising / Extropic refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The exact response is HTTP/2 429 Too Many Requests. Citation count is recorded as blocked rather than inferred.",
+        "source": "EBT Semantic Scholar API refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The exact response is HTTP/2 429 Too Many Requests. No ARM-EBM citation trail is inferred.",
+        "source": "ARM-EBM Semantic Scholar refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The posts reinforce verifier-first strategy but do not expose enough reproducible internals to become a local baseline.",
+        "source": "Logical Intelligence public posts refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "HF returned a paper-not-found page for 2606.01926, so arXiv/OpenReview remain the source of record and no new Carnot action follows.",
+        "source": "Hugging Face P-GCD page refresh"
+      }
+    ]
+  },
+  "source_api_responses": {
+    "arxiv_date_window_total_results": {
+      "submitted_date_window": "[202607040000 TO 202607042359]",
+      "total_results": 0,
+      "updated": "2026-07-04T09:46:11Z"
+    },
+    "huggingface_pgcd_status": "HTTP/2 404; x-error-message: Paper not found. For an arXiv paper to appear on Hugging Face, its arxiv.org URL needs to be mentioned in at least one model, dataset or Space's README.md.",
+    "openreview_pgcd_status": "HTTP/2 307 to /challenge?redirect=%2Fforum%3Fid%3DLYBs6f3jlK",
+    "semantic_scholar_arm_ebm_arxiv_2512_15605": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 09:46:11 GMT\nx-amz-apigw-id: f-ZvoFCfPHcEdIg=\nx-amzn-requestid: 7d82125d-10f3-4382-b704-63b793898ced\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 456dd60f1399d8458ed20abe4eae33a0.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: _cDDgKoZZVKWHViK8FkWvHEupHBXP32QcQVor622pRLVZF5INa-jFQ==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}",
+    "semantic_scholar_ebt_arxiv_2507_02092": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 09:46:11 GMT\nx-amz-apigw-id: f-ZvmEb3PHcEeNg=\nx-amzn-requestid: 9de12c5c-0b50-415c-8319-9d8c1e104c76\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 e1c42f7e378e3bdce50f3034fd2550f4.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: jBENh58Rtx55Rb1UeoSPhh3WjevfuF5ZL_xCl9ljQQUbnbNKXJY84Q==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}"
+  },
+  "source_urls": [
+    "https://export.arxiv.org/api/query?search_query=all:(EBM OR energy-based OR constraint OR Ising OR KAN OR constrained decoding OR hallucination OR continual learning) AND submittedDate:[202607040000 TO 202607042359]",
+    "https://arxiv.org/abs/2606.16886",
+    "https://arxiv.org/abs/2601.20055",
+    "https://arxiv.org/abs/2510.09312",
+    "https://arxiv.org/abs/2512.05439",
+    "https://arxiv.org/abs/2606.01926",
+    "https://arxiv.org/abs/2602.22647",
+    "https://arxiv.org/abs/2607.01236",
+    "https://arxiv.org/html/2606.18037v1",
+    "https://arxiv.org/abs/2607.01224",
+    "https://arxiv.org/abs/2607.01523",
+    "https://arxiv.org/abs/2607.01874",
+    "https://arxiv.org/abs/2607.02255",
+    "https://arxiv.org/abs/2602.06737",
+    "https://arxiv.org/abs/2607.01449",
+    "https://arxiv.org/abs/2606.25313",
+    "https://arxiv.org/abs/2602.15985",
+    "https://openreview.net/forum?id=LYBs6f3jlK",
+    "https://huggingface.co/papers/2512.05439",
+    "https://huggingface.co/papers/2606.01926",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092?fields=title,citationCount,externalIds,url",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605?fields=title,citationCount,externalIds,url",
+    "https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one",
+    "https://extropic.ai/writing/inside-x0-and-xtr-0",
+    "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
+    "https://logicalintelligence.com/blog/aleph-solves-putnambench",
+    "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+    "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo",
+    "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation",
+    "https://github.com/facebookresearch/CRV",
+    "https://github.com/youtube/static-constraint-decoding",
+    "https://github.com/eth-sri/constrained-diffusion"
+  ],
+  "sources_checked": {
+    "principle": "The ingestion is only useful if it names the concrete source groups checked immediately before execution.",
+    "value": [
+      {
+        "checked": [
+          "research-references.md V477 and V478 sections",
+          "openspec/change-proposals/research-roadmap-vNEXT.md",
+          "research-program.md Continuous Self-Learning",
+          "ops/exclusion_manifest.yaml",
+          "ops/known-issues.md"
+        ],
+        "evidence": "V478 already maps verifier feedback, constrained generation, typed memory, KAN certificates, hardware continuity, and provenance repair to existing Exp 5223-5231 tasks. Retired Phase-D text scoring, MMLU hidden-state, ARC source-reading/BFS, and hardware speedup scopes remain closed.",
+        "group": "local V477/V478 planning context"
+      },
+      {
+        "checked": [
+          "EBMs for verification",
+          "constraint satisfaction",
+          "Ising/hardware sampling",
+          "hallucination mitigation",
+          "KANs",
+          "constrained or energy-guided decoding",
+          "continual/self-learning for constraints"
+        ],
+        "evidence": "arXiv API checked on 2026-07-04T09:46:11Z returned opensearch:totalResults=0 for the 20260704 submittedDate window. Primary arXiv URLs from the V478 block were rechecked for the selected anchors and did not reveal a new post-planning actionable reference.",
+        "group": "arXiv API and primary abstract refresh"
+      },
+      {
+        "checked": [
+          "P-GCD forum LYBs6f3jlK",
+          "constrained diffusion forum 7Sph4KyeYO",
+          "CRV forum CxiNICq0Rr"
+        ],
+        "evidence": "OpenReview forum HEAD for LYBs6f3jlK returned HTTP/2 307 to /challenge; the page remains a known source URL but did not expose new metadata that changes the .478 plan.",
+        "group": "OpenReview page status"
+      },
+      {
+        "checked": [
+          "BEAVER 2512.05439",
+          "P-GCD 2606.01926",
+          "constrained decoding and verifier paper pages"
+        ],
+        "evidence": "HF Papers check found BEAVER's paper page as a V478 source. The P-GCD HF paper URL returned 404 with Hugging Face's 'Paper not found' message, so the arXiv/OpenReview URLs remain the authoritative sources.",
+        "group": "Hugging Face Papers"
+      },
+      {
+        "checked": [
+          "arXiv:2507.02092",
+          "arXiv:2512.15605"
+        ],
+        "evidence": "EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 both returned HTTP/2 429 with Too Many Requests bodies at 2026-07-04 09:46:11 UTC. No citation count is inferred.",
+        "group": "Semantic Scholar Graph API"
+      },
+      {
+        "checked": [
+          "Thermodynamic Computing From Zero to One",
+          "Inside X0 and XTR-0",
+          "TSU 101"
+        ],
+        "evidence": "Extropic writing URLs returned HTTP/2 200 during the refresh. They still support programmable stochastic sampler framing, not a Carnot speedup claim.",
+        "group": "Extropic public writing"
+      },
+      {
+        "checked": [
+          "Aleph solves PutnamBench",
+          "Energy-Based Models for Reasoning",
+          "Kona Sudoku demo",
+          "Automatic formal verification for code generation"
+        ],
+        "evidence": "Logical Intelligence posts returned HTTP/2 200 and continue to support verifier-first positioning. They do not expose a reproducible Carnot baseline or alter the VerIbmc-style Exp 5226 plan.",
+        "group": "Logical Intelligence public posts"
+      },
+      {
+        "checked": [
+          "facebookresearch/CRV",
+          "youtube/static-constraint-decoding",
+          "eth-sri/constrained-diffusion"
+        ],
+        "evidence": "CRV and STATIC GitHub repository URLs returned HTTP/2 200. The repos remain implementation references for explicit verifier nodes and constrained-generation protocols already mapped into .478.",
+        "group": "GitHub repository refresh"
+      }
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-5221",
+    "SCENARIO-REPORT-5221",
+    "SCENARIO-REPORT-5221-BLOCKED-METADATA"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5221_sota_ingestion_v478.py -q --no-cov -o addopts='' -> pass (39 passed in 0.71s)",
+    ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5221_sota_ingestion_v478.py' -m pytest tests/python/test_experiment_5221_sota_ingestion_v478.py -q --no-cov -o addopts='' && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5221_sota_ingestion_v478.py' --fail-under=100 -> pass (100% new-code coverage)",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5221_sota_ingestion_v478.py -> pass",
+    "ruff check python/carnot/experiment_5221_sota_ingestion_v478.py tests/python/test_experiment_5221_sota_ingestion_v478.py -> pass",
+    ".venv/bin/python -m py_compile python/carnot/experiment_5221_sota_ingestion_v478.py -> pass",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted after unrelated failures and Z3 worker segfault (15 failed, 8022 passed, 7 skipped at interrupt)"
+  ]
+}
