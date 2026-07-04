@@ -10288,3 +10288,4 @@ web search: |
 | 2026-07-04 15:39 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
 | 2026-07-04 15:50 UTC | PHASE 3 KAN certificate pilot -- small PWA/MILP ve | OK | 87 passed, 1 warning in 10.53s |
 | 2026-07-04 16:09 UTC | PHASE 3 hardware continuity -- KV260/PolarFire has | OK | 107 passed, 1 warning in 11.84s |
+| 2026-07-04 16:24 UTC | PHASE 4 capstone -- reconcile .478 evidence, exclu | OK | 85 passed, 1 warning in 10.23s |
