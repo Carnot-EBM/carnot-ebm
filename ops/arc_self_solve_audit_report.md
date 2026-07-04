@@ -16,29 +16,27 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-TL;DR: 18 artifacts are **UNCLEAR**, not creditable as live self-discovery from this evidence alone; 1 artifact is **OUTER_LOOP_RE** because it declares `used_env_source`.
+TL;DR: **16 are UNCLEAR, 1 is OUTER_LOOP_RE. No artifact here cleanly earns SELF_DISCOVERY_ADVANCE.**
 
-| Artifact | Verdict | Evidence | Recommended Action |
+| Artifact | Verdict | Evidence | Recommended action |
 |---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` L3 | UNCLEAR | Reachable filename/path and no declared outer-loop inputs, but provenance is `development_proxy`, mode is `standing_arc_loop_offline_no_quota`, and `honest_verdict` is blank. | Do not count until artifact includes live attempt trace, observations, policy decisions, and no hidden/source leakage attestation. |
-| `results/arc_loop_solve_r11l.json` L2 | UNCLEAR | Same: reachable-looking live loop, but only dev proxy/offline-no-quota metadata. | Same. |
-| `results/arc_loop_solve_ls20.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_dc22.json` L3 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_vc33.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_g50t.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_s5i5.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_sp80.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_su15.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_sk48.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_ft09.json` L3 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_ar25.json` L3 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_m0r0.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_cn04.json` L3 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_lf52.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_bp35.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_re86.json` L2 | UNCLEAR | Same. | Same. |
-| `results/arc_loop_solve_ka59.json` L1 | UNCLEAR | Same. | Same. |
-| `results/experiment_headway_lp85_capture.json` L6 | OUTER_LOOP_RE | Declares `outer_loop_inputs_declared: ["used_env_source"]`; artifact name is experiment/capture, not a live entrypoint solve. | Quarantine as non-credit. It may inform tooling/debugging, but must not be registered as live hidden-game capability. |
+| `results/arc_loop_solve_lp85.json` L3 | UNCLEAR | Reachable path implied by `arc_loop_solve`, but provenance is only `development_proxy`; `honest_verdict` is blank; no explicit self-discovery trace. | Do not count as live capability until artifact records attempts, observations, learned model/strategy, and no source/BFS/per-game help. |
+| `results/arc_loop_solve_r11l.json` L2 | UNCLEAR | Same: live-ish entrypoint name, but only `development_proxy` and blank verdict. | Require self-discovery audit fields before registry credit. |
+| `results/arc_loop_solve_ls20.json` L2 | UNCLEAR | No declared outer-loop inputs, but absence is not proof; no runtime discovery evidence. | Quarantine as uncredited dev proxy result. |
+| `results/arc_loop_solve_dc22.json` L3 | UNCLEAR | `standing_arc_loop_offline_no_quota` may be reachable, but artifact does not prove autonomous hidden-game solving. | Re-run with provenance capture. |
+| `results/arc_loop_solve_vc33.json` L2 | UNCLEAR | Blank `honest_verdict`; `development_proxy` is weak provenance. | Do not promote to solve registry without trace. |
+| `results/arc_loop_solve_g50t.json` L2 | UNCLEAR | No source/BFS declared, but no evidence of agent-derived rule discovery either. | Mark pending verification. |
+| `results/arc_loop_solve_sp80.json` L2 | UNCLEAR | Reachability lint passes globally; this artifact still lacks live self-discovery proof. | Require replayable live log. |
+| `results/arc_loop_solve_su15.json` L2 | UNCLEAR | Same development proxy ambiguity. | Keep out of headline metrics. |
+| `results/arc_loop_solve_sk48.json` L2 | UNCLEAR | No per-game adapter/source declared, but no positive proof. | Add provenance gate. |
+| `results/arc_loop_solve_ft09.json` L3 | UNCLEAR | Offline no-quota dev proxy is not enough to claim hidden-game autonomy. | Re-run under live-agent audit mode. |
+| `results/arc_loop_solve_ar25.json` L3 | UNCLEAR | Blank honest verdict; no attempt-to-solve causal chain. | Hold as dev artifact only. |
+| `results/arc_loop_solve_m0r0.json` L2 | UNCLEAR | No explicit outer-loop inputs, but no self-discovery evidence. | Do not count yet. |
+| `results/arc_loop_solve_cn04.json` L3 | UNCLEAR | Same weak provenance. | Require logged runtime RE evidence. |
+| `results/arc_loop_solve_lf52.json` L2 | UNCLEAR | Reachable does not equal autonomous discovery. | Registry credit blocked. |
+| `results/arc_loop_solve_bp35.json` L2 | UNCLEAR | Dev proxy only; blank verdict. | Reproduce through live entrypoint with audit trail. |
+| `results/arc_loop_solve_ka59.json` L1 | UNCLEAR | Level 1 solve, but provenance still does not prove self-discovery. | Treat as unverified smoke result. |
+| `results/experiment_headway_lp85_capture.json` L6 | OUTER_LOOP_RE | Explicit `outer_loop_inputs_declared: ["used_env_source"]`; verdict says captured bank trajectory. That is source-assisted reverse engineering, not hidden-game self-discovery. | Exclude from live capability metrics; keep only as diagnostic/dev note with clear red label. |
 
-Pattern watch: the drift is toward laundering development-proxy/offline artifacts as ARC progress. Reachability of modules is necessary but not sufficient. A valid credit artifact needs to prove the live agent, through `scripts/arc_loop_solve.py` or `python/carnot/agentic/arc_competition_agent.py`, discovered the solution from runtime observations and its own attempts, without source reads, offline ground-truth BFS, or hand-built per-game adapters.
+**Pattern watch:** the drift is toward laundering development artifacts into solve evidence. `development_proxy`, `offline_no_quota`, blank `honest_verdict`, and missing attempt/observation/model traces are not enough. The `lp85` L6 artifact crosses the line outright by declaring `used_env_source`. The registry should reject anything that cannot show the live agent’s own attempts produced the solve.
 
