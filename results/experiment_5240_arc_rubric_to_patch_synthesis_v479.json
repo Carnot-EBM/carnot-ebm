@@ -1,0 +1,112 @@
+{
+  "arc_level_solve_claimed": false,
+  "duplicate_solve_target_avoided": true,
+  "experiment": "experiment_5240_arc_rubric_to_patch_synthesis_v479",
+  "experiment_id": 5240,
+  "field_principles": {
+    "duplicate_solve_target_avoided": "True only when the synthesis does not target an already reached live solve depth.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether a live patch is gated for exp5241.",
+    "inference_substrate": "Must be arc_live_path_patch_synthesis.",
+    "live_agent_reachability_evidence": "Test command, dry-run receipt, or null.",
+    "model_specs": "MODEL_SPECS with mandated SOTA GGUF if any LLM proposer was used; otherwise null.",
+    "patch_failure_mode_targeted": "One of skill_selection, skill_following, composition, reflection, provenance_routing, or none.",
+    "patch_path": "Path to the code or configuration patch, or null when no patch is justified.",
+    "patch_test_ready": "BARE top-level boolean for Exp 5241. True only when a test or dry-run receipt proves the live agent can reach the candidate.",
+    "recommended_live_patch_available": "BARE top-level boolean for Exp 5241. True only when one evidence-backed live-path patch candidate exists.",
+    "registry_precheck_done": "True only when ops/arc_solve_registry.yaml was read before patch recommendation."
+  },
+  "hand_per_game_adapter_created": false,
+  "honest_verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim.",
+  "inference_substrate": "arc_live_path_patch_synthesis",
+  "live_agent_reachability_evidence": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5240_arc_rubric_to_patch_synthesis_v479.py tests/python/test_arc_solve_learning_confidence.py -q",
+  "llm_proposer_used": false,
+  "model_specs": null,
+  "offline_ground_truth_bfs": false,
+  "patch_candidate": {
+    "guard": {
+      "blocked_arc_consumer_actions": [
+        "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "quarantine_gap4_candidate_pool_until_positive_validation"
+      ],
+      "controlled_reuse": {
+        "aligned_vs_no_memory_delta": 0.666667,
+        "aligned_vs_shuffled_delta": 1.0,
+        "degradation_detected": true,
+        "retention_passed": true,
+        "rollback_policy_exercised": true
+      },
+      "enabled": true,
+      "failure_mode_targeted": "provenance_routing",
+      "recommended_heads": [
+        "provenance",
+        "failures",
+        "skills_rubrics"
+      ],
+      "registry_precheck_done": true,
+      "routing_rule": "Before registry promotion or reusable candidate-pool routing, require live-agent self-discovery provenance and honor rolled-back ARC memory actions as block or quarantine guardrails.",
+      "source_artifacts": [
+        "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
+        "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "ops/arc_solve_registry.yaml"
+      ]
+    },
+    "kind": "narrow_live_routing_rule",
+    "summary": "Before registry promotion or reusable candidate-pool routing, require live-agent self-discovery provenance and honor rolled-back ARC memory actions as block or quarantine guardrails."
+  },
+  "patch_failure_mode_targeted": "provenance_routing",
+  "patch_path": "python/carnot/agentic/arc_solve_learning.py",
+  "patch_test_ready": true,
+  "read_hidden_game_source": false,
+  "recommended_live_patch_available": true,
+  "registry_precheck_done": true,
+  "registry_summary": {
+    "games": {
+      "ar25": 3,
+      "bp35": 2,
+      "cd82": 2,
+      "cn04": 3,
+      "dc22": 2,
+      "ft09": 3,
+      "g50t": 2,
+      "ka59": 1,
+      "lf52": 2,
+      "lp85": 5,
+      "ls20": 2,
+      "m0r0": 2,
+      "r11l": 2,
+      "re86": 2,
+      "s5i5": 2,
+      "sb26": 2,
+      "sc25": 5,
+      "sk48": 2,
+      "sp80": 2,
+      "su15": 2,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 5,
+      "vc33": 2,
+      "wa30": 1
+    },
+    "path": "ops/arc_solve_registry.yaml",
+    "present": true,
+    "reproducible_total_levels": 69
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.arc_rubric_to_patch_synthesis_v479.v1",
+  "source_artifacts": [
+    "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
+    "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+    "ops/arc_solve_registry.yaml"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5240",
+    "SCENARIO-REPORT-5240-LIVE-PATCH-SYNTHESIS",
+    "SCENARIO-REPORT-5240-NO-PATCH-WITHOUT-EVIDENCE"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5240_arc_rubric_to_patch_synthesis_v479.py tests/python/test_arc_solve_learning_confidence.py -q",
+      "passed": true
+    }
+  ]
+}
