@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.479",
+  "generated_at": "2026-07-04T22:47:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "No data available this milestone for experiment runtime analysis: the locked timing fields report 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot cannot be interpreted as wasted compute because the timing data contains no compute-bound task entries.",
+  "bottlenecks_identified": [
+    "No data available this milestone for slowest compute-bound experiments because the timing window contains 0 completed experiments.",
+    "No GPU-utilization bottleneck is supported because compute_bound_experiments_count is 0 and gpu_idle_on_compute_bound_tasks is null.",
+    "No DualGPURunner miss can be assessed because the timing data contains no compute-bound task with 2+ parallel models."
+  ],
+  "improvements_suggested": [
+    "Teach the retrospective generator to treat an empty live-git-log plus disk-mtime window as a terminal no-data case before asking for slowest-run analysis.",
+    "Keep GPU-idle recommendations gated on compute_bound entries so synthesis-only or empty milestones do not create false performance work.",
+    "Emit a structured no-experiment-commits reason in the artifact so downstream ops summaries can distinguish empty data from missing reconstruction."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an explicit empty-window branch to the operational-retro prompt assembly.",
+    "Propagate compute_bound_experiments_count into every GPU-efficiency recommendation gate.",
+    "Log the absence of timing entries as an intentional no-data outcome before scheduling any tuning task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main operational hazard in this retrospective is over-reading the standalone GPU snapshot. With 0 compute-bound experiments in the timing data, the correct answer to the efficiency questions is no data available rather than an inferred utilization problem."
+}
