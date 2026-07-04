@@ -1,0 +1,241 @@
+{
+  "arm_ebm_semantic_scholar_status": {
+    "principle": "ARM-EBM rate limits or API errors must be recorded exactly rather than converted into a citation trail.",
+    "value": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 01:54:45 GMT\nx-amz-apigw-id: f9Ur8EmkPHcEQEQ=\nx-amzn-requestid: 71253428-4ec4-4425-8dc5-b6e67336f62f\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 068df0c205693925392105783899e172.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: BnSCH9LvR-Rar4Mx8SAbeHRaE20UFPSQGnDmtGJlVuQq5CSa9mayvg==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}"
+  },
+  "duration_s": 0.0,
+  "ebt_semantic_scholar_citation_count": {
+    "principle": "EBT citation counts must come from the Semantic Scholar response, not memory; blocked queries must be labeled blocked.",
+    "value": "blocked"
+  },
+  "experiment_id": "experiment_5208_sota_ingestion_v477",
+  "field_principles": {
+    "arm_ebm_semantic_scholar_status": "ARM-EBM rate limits or API errors must be recorded exactly rather than converted into a citation trail.",
+    "ebt_semantic_scholar_citation_count": "EBT citation counts must come from the Semantic Scholar response, not memory; blocked queries must be labeled blocked.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "inference_substrate": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "new_references_added": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V477.",
+    "retired_scope_reopened": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "sota_to_experiment_mapping": "Each fresh or rechecked source must either map to an existing .477 task or say defer/no action; no new roadmap task may be created here.",
+    "sources_checked": "The ingestion is only useful if it names the concrete source groups checked immediately before execution."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh.",
+    "value": "complete: V477 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
+  },
+  "inference_substrate": {
+    "principle": "This workflow ingests literature and metadata only; it does not run model training or benchmarks.",
+    "value": "literature_ingestion"
+  },
+  "milestone": "2026.07.477",
+  "new_references_added": {
+    "principle": "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V477.",
+    "value": 0
+  },
+  "no_deep_research_used": {
+    "principle": "The prompt forbids /deep-research, so the artifact must affirm it was not used.",
+    "value": true
+  },
+  "references_md_updated": {
+    "principle": "research-references.md is updated only when new genuinely actionable references are added.",
+    "value": false
+  },
+  "references_path": "research-references.md",
+  "reproducibility_checksum": "ac050c67ad1d3f47f09bc34093c7c0f0106e314bf26427f6174e5d00153dc7d7",
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "The reserved ingestion task must not modify scripts/research_conductor.py.",
+    "value": true
+  },
+  "result_path": "results/experiment_5208_sota_ingestion_v477.json",
+  "retired_scope_reopened": {
+    "principle": "A SOTA citation cannot override the exclusion manifest by implication.",
+    "value": false
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.experiment_5208_sota_ingestion_v477.v1",
+  "sota_to_experiment_mapping": {
+    "principle": "Each fresh or rechecked source must either map to an existing .477 task or say defer/no action; no new roadmap task may be created here.",
+    "value": [
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The fresh submittedDate window returned zero relevant entries, so there is no reference to append and no experiment to retarget.",
+        "source": "arXiv date-window 2026-07-03..2026-07-04"
+      },
+      {
+        "mapped_task_or_defer": "exp5215",
+        "reason": "PAW remains the amortization-gate input already selected by V477; the HF models/dataset links confirm availability but do not require a new task.",
+        "source": "Program-as-Weights HF/arXiv refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5214",
+        "reason": "Predicate invention with Prolog verification is already the knowledge pool promotion pattern for the verifier-memory task.",
+        "source": "ADVENT arXiv refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5211 optional arm",
+        "reason": "EBD remains an optional decoding arm for SOTA local candidate generation if token-level control is available; no roadmap change.",
+        "source": "Energy-Based Decoding arXiv refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5213",
+        "reason": "The EBT source paper remains unchanged and continues to support intermediate/chunk/halting signals for hidden-state v3. The blocked Semantic Scholar call adds no new citation trail.",
+        "source": "EBT arXiv refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The exact API response is HTTP/2 429 Too Many Requests. The planning-time citation count is not reused as fresh evidence.",
+        "source": "EBT Semantic Scholar API refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The exact API response is HTTP/2 429 Too Many Requests. No citation trail is inferred from a blocked metadata query.",
+        "source": "ARM-EBM Semantic Scholar refresh"
+      },
+      {
+        "mapped_task_or_defer": "exp5217",
+        "reason": "Extropic continues to support hardware continuity as correctness/hash smokes only; no speedup claim or new hardware task is justified.",
+        "source": "Extropic TSU/XTR-0 refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "Public posts reinforce verifier-first strategy but still lack enough reproducible technical detail to become a Carnot baseline.",
+        "source": "Logical Intelligence Kona/Aleph refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "The page/API were challenge-blocked and the search result points at diffusion constrained decoding while DiffusionGemma loading is a retired thread until upstream loader status materially changes.",
+        "source": "OpenReview constrained diffusion decoding refresh"
+      },
+      {
+        "mapped_task_or_defer": "defer/no action",
+        "reason": "DINGO is useful background for constrained diffusion inference, but it does not override the DiffusionGemma loader retirement or create a .477 task.",
+        "source": "Hugging Face DINGO constrained dLLM refresh"
+      }
+    ]
+  },
+  "source_api_responses": {
+    "arxiv_date_window_total_results": {
+      "submitted_date_window": "[202607030000 TO 202607042359]",
+      "total_results": 0,
+      "updated": "2026-07-04T01:54:45Z"
+    },
+    "openreview_api_status": {
+      "selected_note_ids": [
+        "7Sph4KyeYO",
+        "JEWqDI4BEx",
+        "QYrzaPAqnX",
+        "PAQsJGXtnV"
+      ],
+      "status": "forum HEAD requests redirected to /challenge; browser fetch read PAQsJGXtnV, while other selected forum/API reads were challenge-gated"
+    },
+    "semantic_scholar_arm_ebm_arxiv_2512_15605": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 01:54:45 GMT\nx-amz-apigw-id: f9Ur8EmkPHcEQEQ=\nx-amzn-requestid: 71253428-4ec4-4425-8dc5-b6e67336f62f\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 068df0c205693925392105783899e172.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: BnSCH9LvR-Rar4Mx8SAbeHRaE20UFPSQGnDmtGJlVuQq5CSa9mayvg==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}",
+    "semantic_scholar_ebt_arxiv_2507_02092": "HTTP/2 429\ncontent-type: application/json\ncontent-length: 174\ndate: Sat, 04 Jul 2026 01:54:45 GMT\nx-amz-apigw-id: f9Ur6FDhPHcEZiQ=\nx-amzn-requestid: 9245e85a-c598-44ad-80c2-f05f9db7162b\nx-amzn-errortype: TooManyRequestsException\nx-cache: Error from cloudfront\nvia: 1.1 456dd60f1399d8458ed20abe4eae33a0.cloudfront.net (CloudFront)\nx-amz-cf-pop: MIA3-P5\nx-amz-cf-id: SbytvRMZm0ZiHqapWmZXvkOUt7mfBKLUR1BRSmNU6U4uh7iTdtpPYA==\n\n{\"message\": \"Too Many Requests. Please wait and try again or apply for a key for higher rate limits. https://www.semanticscholar.org/product/api#api-key-form\", \"code\": \"429\"}"
+  },
+  "source_urls": [
+    "https://export.arxiv.org/api/query?search_query=(EBM+OR+constraint+OR+Ising+OR+KAN+OR+constrained+decoding+OR+hallucination+OR+continual+learning)+AND+submittedDate:20260703-20260704",
+    "https://arxiv.org/abs/2607.02512",
+    "https://arxiv.org/abs/2607.01585",
+    "https://arxiv.org/abs/2605.28020",
+    "https://arxiv.org/abs/2507.02092",
+    "https://arxiv.org/abs/2512.15605",
+    "https://huggingface.co/papers/2607.02512",
+    "https://huggingface.co/papers/2505.23061",
+    "https://openreview.net/forum?id=ZBj3Qp1bYg",
+    "https://openreview.net/forum?id=7Sph4KyeYO",
+    "https://openreview.net/forum?id=QYrzaPAqnX",
+    "https://openreview.net/forum?id=PAQsJGXtnV",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092?fields=title,citationCount,externalIds,url",
+    "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605?fields=title,citationCount,externalIds,url",
+    "https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one",
+    "https://extropic.ai/writing/inside-x0-and-xtr-0",
+    "https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation",
+    "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+    "https://logicalintelligence.com/blog/aleph-leading-benchmarks"
+  ],
+  "sources_checked": {
+    "principle": "The ingestion is only useful if it names the concrete source groups checked immediately before execution.",
+    "value": [
+      {
+        "checked": [
+          "research-references.md V476/V477 sections",
+          "openspec/change-proposals/research-roadmap-vNEXT.md",
+          "research-program.md Continuous Self-Learning",
+          "ops/exclusion_manifest.yaml"
+        ],
+        "evidence": "The V477 section already maps FALCON, distributional EBMs, EBD, STV/DeepVerifier, ADVENT, PAW, EBT, KAN variants, Extropic, and Logical Intelligence into .477 task design. The exclusion manifest keeps retired scopes closed.",
+        "group": "local planning context"
+      },
+      {
+        "checked": [
+          "EBMs for verification",
+          "constraint satisfaction",
+          "Ising/hardware sampling",
+          "hallucination mitigation",
+          "KANs",
+          "constrained or energy-guided decoding",
+          "continual/self-learning for constraints"
+        ],
+        "evidence": "arXiv API updated 2026-07-04T01:54:45Z and returned opensearch:totalResults=0 for the submittedDate window [202607030000 TO 202607042359].",
+        "group": "arXiv API date-window refresh"
+      },
+      {
+        "checked": [
+          "Energy-Based Transformers page",
+          "constrained diffusion decoding page",
+          "KAN pages",
+          "hallucination mitigation pages"
+        ],
+        "evidence": "Search resurfaced EBT, constrained diffusion decoding, KAN, and hallucination-mitigation pages. Browser fetch read the premise-verification OpenReview page, while selected forum/API reads still redirected to challenge-gated pages. No OpenReview result changed the V477 task mapping.",
+        "group": "OpenReview search/API status"
+      },
+      {
+        "checked": [
+          "energy-based decoding",
+          "constrained decoding",
+          "hallucination mitigation",
+          "KAN constraints",
+          "continual self-learning constraints"
+        ],
+        "evidence": "HF Papers showed Program-as-Weights as the July 3 submitted #1 paper with models and a dataset, already covered by V477's PAW entry. The constrained-decoding query resurfaced DINGO and older constrained decoding work, but nothing created a new .477 task.",
+        "group": "Hugging Face Papers"
+      },
+      {
+        "checked": [
+          "arXiv:2507.02092",
+          "arXiv:2512.15605"
+        ],
+        "evidence": "EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 both returned HTTP/2 429 with Too Many Requests bodies, so the planning-time EBT citation count was not reused as a fresh metadata claim.",
+        "group": "Semantic Scholar Graph API"
+      },
+      {
+        "checked": [
+          "Thermodynamic Computing From Zero to One",
+          "Inside X0 and XTR-0"
+        ],
+        "evidence": "The public TSU/XTR-0 framing remains sampling from programmable EBMs with thrml simulation/replication links. No new public hardware architecture update changes the .477 hardware-continuity task.",
+        "group": "Extropic public writing"
+      },
+      {
+        "checked": [
+          "automatic formal verification for code generation",
+          "energy-based models for reasoning",
+          "Aleph leading benchmarks",
+          "Kona/Aleph search results"
+        ],
+        "evidence": "The posts still support the verifier-first/product-strategy stance: Kona as an EBRM-style reasoning model and Aleph as orchestration. They do not expose a reproducible baseline that would change .477.",
+        "group": "Logical Intelligence public posts"
+      }
+    ]
+  },
+  "spec_refs": [
+    "REQ-REPORT-5208",
+    "SCENARIO-REPORT-5208",
+    "SCENARIO-REPORT-5208-BLOCKED-METADATA"
+  ],
+  "tests_run": [
+    "ruff format python/carnot/experiment_5208_sota_ingestion_v477.py tests/python/test_experiment_5208_sota_ingestion_v477.py -> passed",
+    "ruff check python/carnot/experiment_5208_sota_ingestion_v477.py tests/python/test_experiment_5208_sota_ingestion_v477.py -> passed",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run --include=python/carnot/experiment_5208_sota_ingestion_v477.py -m pytest -o addopts= tests/python/test_experiment_5208_sota_ingestion_v477.py -q && .venv/bin/coverage report --fail-under=100 --show-missing -> 39 passed, 100% coverage on new module",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted after repo failures: test_abstention_http_rest_3810.py two HTTP timeouts, test_experiment_1504_thrml_carnot_simulator_parity_v3.py blocked vs complete, test_adaptive.py Z3 segmentation fault worker crash"
+  ]
+}
