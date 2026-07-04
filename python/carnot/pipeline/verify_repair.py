@@ -528,16 +528,18 @@ class VerifyRepairPipeline:
         """
         self.learning_mode = learning_mode
         self.n_learning_cycles = n_learning_cycles
-        
+
         self.enable_abductive_csp = enable_abductive_csp
         if self.enable_abductive_csp:
             from carnot.pipeline.abductive_csp import AbductiveCSPLayer
+
             self.abductive_csp_layer = AbductiveCSPLayer()
         else:
             self.abductive_csp_layer = None
         if learning_mode:
             from carnot.verify.nexus_constraint_memory import NexusConstraintMemory
             from carnot.pipeline.ttt_loop import TTTLoop
+
             self.nexus_memory = NexusConstraintMemory()
             self.ttt_loop = TTTLoop(self.nexus_memory)
 
@@ -596,6 +598,7 @@ class VerifyRepairPipeline:
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
+
             self._repair_router = OdarRouter(max_iterations=max_repairs)
 
         # Restore persisted learning state if session_memory was provided
@@ -1498,6 +1501,7 @@ class VerifyRepairPipeline:
         # CRANE (arXiv:2502.09061) balance ratio gating
         if getattr(self, "balance_ratio", 1.0) < 1.0:
             import random
+
             if random.random() > self.balance_ratio:
                 baseline_score = _with_fst_certificate(
                     VerificationResult(
@@ -1965,6 +1969,8 @@ class VerifyRepairPipeline:
                     "k": _and_result.k,
                     "per_verifier_scores": _and_result.per_verifier_scores,
                     "per_verifier_verified": _and_result.per_verifier_verified,
+                    "headline_eligible": _and_result.headline_eligible,
+                    "headline_ineligible_reason": _and_result.headline_ineligible_reason,
                 }
             except Exception as _exc:
                 logger.debug("AND-compose ensemble degraded: %s", _exc)
@@ -2332,9 +2338,7 @@ class VerifyRepairPipeline:
                     prior_energy = current_energy + 1.0
 
                 route_to_repair, vfe, _ = self._repair_router.route(
-                    current_energy=current_energy,
-                    prior_energy=prior_energy,
-                    iteration=i
+                    current_energy=current_energy, prior_energy=prior_energy, iteration=i
                 )
                 if not route_to_repair:
                     logger.info("ODAR routing VFE=%.3f >= 0. Stopping repair.", vfe)
@@ -2401,7 +2405,9 @@ class VerifyRepairPipeline:
                 if self.learning_mode and delta_post_repair > 0:
                     # Record successful repair in NEXUS — the constraint memory learns from
                     # each successful repair, improving rule quality across cycles (FR-11 Tier 4).
-                    self.nexus_memory.record_successful_repair(question, previous_response, response, delta_post_repair)
+                    self.nexus_memory.record_successful_repair(
+                        question, previous_response, response, delta_post_repair
+                    )
 
                 return RepairResult(
                     initial_response=initial_response,

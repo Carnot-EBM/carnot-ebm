@@ -24829,3 +24829,77 @@ verifier files unmodified.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5203 | Implemented (`python/carnot/experiment_5203_verifier_authenticity_remediation_options_v476.py`, `results/experiment_5203_verifier_authenticity_remediation_options_v476.json`) | Implemented (`tests/python/test_experiment_5203_verifier_authenticity_remediation_options_v476.py`) |
+
+### REQ-VERIFY-5218: Verifier Authenticity Remediation Apply V477
+
+The repository SHALL apply the lowest-risk Exp 5203 remediation for the two
+`DISHONEST_NAMING` verifier files without refactoring verifier behavior,
+without modifying `scripts/research_conductor.py`, and without promoting either
+file as headline verifier evidence. The remediation SHALL make the current
+behavior truthful by adding explicit module-level authenticity metadata and
+docstring language to `python/carnot/verify/and_composition_verifier.py` and
+`python/carnot/verify/claim_isolation_uncertainty_router.py`.
+
+`and_composition_verifier.py` SHALL identify the default surface as an advisory
+k=5 adapter harness, not a production trained k=5 headline verifier. It SHALL
+expose `AUTHENTICITY_REMEDIATION_TYPE="registry_flag"`,
+`AUTHENTICITY_STATUS="advisory_adapter_harness"`, `HEADLINE_ELIGIBLE=False`,
+and a non-empty `HEADLINE_INELIGIBLE_REASON` that mentions the untrained
+neutral SOSKAN default and advisory use. Default `AndCompositionVerifier`
+instances SHALL expose matching headline-ineligibility properties.
+
+`claim_isolation_uncertainty_router.py` SHALL identify itself as an artifact
+routing ledger, not a live isolated-claim verifier. It SHALL expose
+`AUTHENTICITY_REMEDIATION_TYPE="registry_flag"`,
+`AUTHENTICITY_STATUS="artifact_routing_ledger"`, `HEADLINE_ELIGIBLE=False`,
+`LIVE_ISOLATED_CLAIM_VERIFICATION=False`, and a non-empty
+`HEADLINE_INELIGIBLE_REASON` that mentions artifact routing and no live
+isolated-claim verifier call.
+
+The repository SHALL provide Exp 5218 at
+`python/carnot/experiment_5218_verifier_authenticity_remediation_apply_v477.py`
+and write
+`results/experiment_5218_verifier_authenticity_remediation_apply_v477.json`.
+The artifact SHALL include principle-wrapped fields `remediation_applied`,
+`remediated_modules`, `remediation_type`,
+`headline_ineligible_until_real_verification`, `tests_run`, `specs_updated`,
+`no_research_conductor_change`, `inference_substrate`, and `honest_verdict`.
+The `remediation_type` value SHALL be one of `rename`, `warning`,
+`registry_flag`, `behavior_fix`, `docs_only`, or `blocked`; this low-risk
+application SHALL use `registry_flag` when both modules expose the required
+headline-ineligible metadata. `inference_substrate` SHALL be
+`code_and_doc_remediation`, and `honest_verdict` SHALL start with
+`complete:`, `complete_`, `success:`, `success_`, or `blocked_` and state
+plainly whether the dishonest-naming risk was actually reduced.
+
+Required field principles:
+
+- `remediation_applied`: principle "True only when both flagged modules expose truthful non-headline authenticity metadata."
+- `remediated_modules`: principle "Exact flagged module paths remediated by this apply step."
+- `remediation_type`: principle "One of rename | warning | registry_flag | behavior_fix | docs_only | blocked."
+- `headline_ineligible_until_real_verification`: principle "Both remediated surfaces must remain headline-ineligible until a real trained/live verification substrate is implemented."
+- `tests_run`: principle "Commands run for this apply step, with pass/fail status."
+- `specs_updated`: principle "True when REQ-VERIFY-5218 and SCENARIO-VERIFY-5218 are present before implementation."
+- `no_research_conductor_change`: principle "Must remain true; scripts/research_conductor.py is outside this remediation."
+- `inference_substrate`: principle "Must be code_and_doc_remediation."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and state whether the dishonest-naming risk is actually reduced."
+
+### SCENARIO-VERIFY-5218: Flagged Verifiers Are Quarantined From Headline Use
+
+Given Exp 5203 has produced remediation options and the two flagged verifier
+modules still exist, when Exp 5218 validates the applied remediation, then
+`and_composition_verifier.py` reports an advisory adapter-harness status,
+`claim_isolation_uncertainty_router.py` reports an artifact-routing-ledger
+status, both modules report `HEADLINE_ELIGIBLE=False`, the claim router reports
+`LIVE_ISOLATED_CLAIM_VERIFICATION=False`, and the terminal artifact records
+`remediation_applied=true`, `remediation_type=registry_flag`,
+`headline_ineligible_until_real_verification=true`,
+`no_research_conductor_change=true`,
+`inference_substrate=code_and_doc_remediation`, and a terminal
+`honest_verdict` that says the dishonest-naming risk is reduced.
+
+## Implementation Status (REQ-VERIFY-5218)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5218 | Implemented (`python/carnot/experiment_5218_verifier_authenticity_remediation_apply_v477.py`, `python/carnot/verify/and_composition_verifier.py`, `python/carnot/verify/claim_isolation_uncertainty_router.py`, `results/experiment_5218_verifier_authenticity_remediation_apply_v477.json`) | Implemented (`tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py`) |
