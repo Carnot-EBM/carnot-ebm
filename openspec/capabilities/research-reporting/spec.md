@@ -33756,6 +33756,71 @@ or reopen a retired scope.
 |---|---|---|
 | REQ-REPORT-5208 | Implemented (`python/carnot/experiment_5208_sota_ingestion_v477.py`, `results/experiment_5208_sota_ingestion_v477.json`) | Implemented (`tests/python/test_experiment_5208_sota_ingestion_v477.py`) |
 
+### REQ-REPORT-5216: ARC Frontier Continuity And Landmark Decomposition Pilot
+
+The Exp 5216 workflow SHALL write
+`results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json`
+for a bounded public-game GAP-4891 pilot. It SHALL registry-precheck the target
+games before any level claim, SHALL NOT read game source, SHALL NOT run
+exhaustive offline ground-truth BFS, and SHALL declare whether any solve claim
+came from `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`.
+Only `live_agent_self_discovery` or `development_proxy` claims that pass
+`arc_solver_kit.reproduce()` are allowed to increase
+`reproducible_total_levels_delta`; `outer_loop_re` is not headline-eligible.
+
+The pilot SHALL compare flat/pruner-only control rows against frontier
+continuity and landmark-decomposition rows on at least two public
+deepened-but-stuck games when available. Frontier continuity SHALL seed a new
+search from structurally compatible prior frontier states/actions observed by
+the agent at runtime instead of cold-restarting. Landmark decomposition SHALL
+induce intermediate landmarks from the agent's own transition logs and run
+reach-landmark then reach-goal subsearches under the same expansion budget as
+the flat control.
+
+The artifact SHALL include top-level fields `target_games`,
+`duplicate_registry_precheck_passed`, `live_path_integration_attempted`,
+`solve_provenance`, `offline_ground_truth_bfs`, `read_game_source`,
+`new_levels_banked`, `reproducible_total_levels_delta`,
+`frontier_continuity_lift`, `landmark_decomposition_lift`,
+`orphan_lint_result`, `inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `solve_provenance`: principle "Any level solve claim must declare provenance; outer_loop_re is not headline-eligible."
+- `offline_ground_truth_bfs`: principle "Must remain false; the pilot may use bounded runtime observations only."
+- `read_game_source`: principle "Must remain false; no game source may be inspected for the pilot."
+- `new_levels_banked`: principle "Each claimed level must name game, level, solve_provenance, and reproduction-gate evidence."
+- `frontier_continuity_lift`: principle "Per-game delta versus the flat/pruner-only control under the same expansion budget."
+- `landmark_decomposition_lift`: principle "Per-game delta versus the flat/pruner-only control under the same expansion budget."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must not claim a level bank without reproduction-gate evidence."
+
+#### SCENARIO-REPORT-5216-CONTINUITY-LANDMARKS: Runtime Logs Seed Structured Subsearches
+
+**Given** a bounded transition log collected from the agent/runtime environment
+without game-source reads or exhaustive BFS
+**When** Exp 5216 builds a frontier-continuity and landmark-decomposition seed
+bank
+**Then** structurally compatible root/frontier states expose replayable
+continuity sequences, induced landmark states expose reach-landmark then
+reach-goal sequences, and the graph-search hook consumes those sequences within
+the same expansion budget used by the flat control.
+
+#### SCENARIO-REPORT-5216-ARTIFACT-GATE: Artifact Does Not Fabricate New Levels
+
+**Given** candidate public games already have registry depths
+**When** Exp 5216 builds its terminal artifact
+**Then** duplicate registry depths are not counted as new banked levels,
+`offline_ground_truth_bfs=false`, `read_game_source=false`,
+`orphan_lint_result` records `scripts/arc_orphan_solver_lint.py`, and
+`reproducible_total_levels_delta` equals only the count of
+reproduction-gated new levels above the registry precheck.
+
+## Implementation Status (REQ-REPORT-5216)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5216 | Implemented (`python/carnot/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`, `python/carnot/agentic/arc_frontier_continuity_landmarks.py`, `results/experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.json`) | Implemented (`tests/python/test_experiment_5216_arc_frontier_continuity_landmark_decomposition_v477.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
