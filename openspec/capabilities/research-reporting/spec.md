@@ -34664,6 +34664,83 @@ claiming a level solve.
 |---|---|---|
 | REQ-REPORT-5240 | Planned (`python/carnot/experiment_5240_arc_rubric_to_patch_synthesis_v479.py`, `python/carnot/agentic/arc_solve_learning.py`, `results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json`) | Planned (`tests/python/test_experiment_5240_arc_rubric_to_patch_synthesis_v479.py`) |
 
+### REQ-REPORT-5241: ARC Gated Live Patch Attempt With Strict Provenance
+
+The Exp 5241 workflow SHALL run only after Exp 5240 produced a tested live
+patch candidate, SHALL enable only that patch, SHALL read
+`ops/arc_solve_registry.yaml` before target selection, and SHALL avoid targeting
+a duplicate level already reproduced by the live mechanism. The live attempt
+SHALL use fixed seeds and a bounded budget, SHALL record the exact command,
+runtime, model IDs, and whether an LLM proposer was used, and SHALL NOT read
+hidden game source, SHALL NOT use exhaustive offline ground-truth BFS, and SHALL
+NOT rely on a hand per-game development adapter.
+
+If an LLM proposer is used, the workflow SHALL use `cached_sota_pair()` with
+`MODEL_SPECS` containing at least one of `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`. If no LLM
+proposer is used, `model_specs` SHALL be null.
+
+A level solve SHALL be claimed only when the live agent's own attempts and
+runtime reverse engineering produce the solution, the solve provenance is
+`live_agent_self_discovery`, and the repo's ARC registry validation accepts the
+reproduction. If no level is banked, the artifact SHALL record the
+skill-selection, skill-following, composition, and reflection deltas, SHALL keep
+the reproducible total unchanged, and SHALL recommend whether the patch should
+be kept, rolled back, iterated, or treated as no-solve/no-regression.
+
+The artifact SHALL be
+`results/experiment_5241_arc_gated_live_patch_attempt_v479.json` and SHALL
+include the required top-level fields `preconditions_checked`,
+`solve_provenance`, `registry_precheck_done`, `duplicate_solve_target_avoided`,
+`reproducible_total_levels_before`, `reproducible_total_levels_after`,
+`reproducible_total_levels_delta`, `live_agent_patch_enabled`, `model_specs`,
+`random_seed`, `arc_validation_commands`, `patch_recommendation`,
+`inference_substrate`, and `honest_verdict`.
+
+Required field principles:
+
+- `preconditions_checked`: principle "bare bool confirming Exp 5240 patch readiness, registry precheck, and forbidden-method guards were checked."
+- `solve_provenance`: principle "Required for any ARC level solve claim; outer-loop RE or development proxy cannot be headline evidence."
+- `registry_precheck_done`: principle "bare bool confirming ops/arc_solve_registry.yaml was read before the live attempt."
+- `duplicate_solve_target_avoided`: principle "bare bool confirming the attempted target was not already reproduced by the live mechanism."
+- `reproducible_total_levels_before`: principle "registry reproducible_total_levels before the live attempt."
+- `reproducible_total_levels_after`: principle "registry reproducible_total_levels after accepted live self-discovery banking, unchanged on no-bank."
+- `reproducible_total_levels_delta`: principle "after minus before; may be positive only for accepted live self-discovery reproduction."
+- `live_agent_patch_enabled`: principle "bare bool confirming only the Exp 5240 patch was enabled for the live path."
+- `model_specs`: principle "MODEL_SPECS with mandated SOTA GGUF if any LLM proposer was used; otherwise null."
+- `random_seed`: principle "fixed integer seed used for the bounded live attempt."
+- `arc_validation_commands`: principle "list of ARC registry/lint commands with pass/fail outcomes."
+- `patch_recommendation`: principle "one of keep, rollback, iterate, or no_solve_no_regression."
+- `inference_substrate`: principle "must be arc_live_agent_self_discovery."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ or blocked_ and state level delta and provenance."
+
+#### SCENARIO-REPORT-5241-NO-BANK-LIVE-PATCH-ATTEMPT: Gated Live Path Runs Without Inflating Registry
+
+**Given** Exp 5240 produced a tested provenance-routing live patch, the registry
+is readable, and no LLM proposer is required
+**When** Exp 5241 runs the bounded fixed-seed live path under that patch
+**Then** it records `preconditions_checked=true`, `registry_precheck_done=true`,
+`duplicate_solve_target_avoided=true`, `live_agent_patch_enabled=true`,
+`model_specs=null`, `inference_substrate=arc_live_agent_self_discovery`, no
+hidden-source/offline-BFS/hand-adapter use, zero reproducible-level delta, and a
+terminal no-bank verdict with live-agent self-discovery provenance.
+
+#### SCENARIO-REPORT-5241-SOLVE-CLAIM-GATE: Live Self-Discovery And Registry Validation Are Required
+
+**Given** a bounded live attempt reports a level beyond the registry depth
+**When** Exp 5241 builds its artifact
+**Then** it may increase `reproducible_total_levels_after` only if
+`solve_provenance=live_agent_self_discovery`, forbidden methods are false, the
+solution labels came from the live run, and ARC registry validation passed;
+otherwise the artifact remains a no-bank complete verdict and the registry total
+is unchanged.
+
+## Implementation Status (REQ-REPORT-5241)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5241 | Planned (`python/carnot/experiment_5241_arc_gated_live_patch_attempt_v479.py`, `results/experiment_5241_arc_gated_live_patch_attempt_v479.json`) | Planned (`tests/python/test_experiment_5241_arc_gated_live_patch_attempt_v479.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
