@@ -1,0 +1,139 @@
+{
+  "decision_path_features": [
+    "gap1_hardened_positive.value",
+    "leakage_audit_passed.value",
+    "leakage_audit.no_test_output_derived_features",
+    "best_subset_stable.value",
+    "subset_stability.top_subset"
+  ],
+  "duration_s": 0.0,
+  "exp5209_gate_parsed_from_value": {
+    "principle": "True only when the upstream scientific gate was parsed from gap1_hardened_positive.value.",
+    "value": true
+  },
+  "experiment": "experiment_5222_gap1_gate_field_registry_promotion_v478",
+  "experiment_id": 5222,
+  "field_principles": {
+    "exp5209_gate_parsed_from_value": "True only when the upstream scientific gate was parsed from gap1_hardened_positive.value.",
+    "frozen_subset": "Frozen invariant subset promoted into the registry, or null when GAP-1 is blocked.",
+    "gap1_registry_decision": "Registry decision enum: promoted, blocked_instability, blocked_leakage, or blocked_missing_evidence.",
+    "gap1_registry_promoted": "BARE top-level boolean. True only if implementation, tests, and docs support registry promotion.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was promoted or explicitly blocked.",
+    "inference_substrate": "Must be deterministic_verifier_registry.",
+    "ops_docs_updated": "True when the GAP-1 verifier-gaps ledger records this promotion decision.",
+    "promoted_registry_path": "Path to the registry modified for promotion, or null when GAP-1 is blocked.",
+    "refuted_single_invariant_excluded": "True when the refuted directional-adjacency singleton is not promoted as the frozen GAP-1 verifier.",
+    "tests_run": "List of verification commands with pass/fail booleans for this decision."
+  },
+  "follow_up_criterion": "Reconsider registry promotion only after a predeclared frozen subset is selected from training evidence alone, one exact subset wins at least half of grouped splits, leakage guards pass, and directional_adjacency_refuted_20260609 remains excluded from the promoted frozen verifier.",
+  "frozen_subset": {
+    "principle": "Frozen invariant subset promoted into the registry, or null when GAP-1 is blocked.",
+    "value": null
+  },
+  "gap1_registry_decision": {
+    "principle": "Registry decision enum: promoted, blocked_instability, blocked_leakage, or blocked_missing_evidence.",
+    "value": "blocked_instability"
+  },
+  "gap1_registry_promoted": {
+    "principle": "BARE top-level boolean. True only if implementation, tests, and docs support registry promotion.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether GAP-1 was promoted or explicitly blocked.",
+    "value": "complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone."
+  },
+  "inference_substrate": {
+    "principle": "Must be deterministic_verifier_registry.",
+    "value": "deterministic_verifier_registry"
+  },
+  "ops_docs_updated": {
+    "principle": "True when the GAP-1 verifier-gaps ledger records this promotion decision.",
+    "value": true
+  },
+  "promoted_registry_path": {
+    "principle": "Path to the registry modified for promotion, or null when GAP-1 is blocked.",
+    "value": null
+  },
+  "refuted_single_invariant_excluded": {
+    "principle": "True when the refuted directional-adjacency singleton is not promoted as the frozen GAP-1 verifier.",
+    "value": true
+  },
+  "registry_audit": {
+    "exists": true,
+    "path": "ops/verifier_registry.yaml",
+    "promoted_gap1_registry_entry_present": false,
+    "promoted_gap1_verifier_ids": [],
+    "verifier_ids_loaded": [
+      "fover_production_ensemble",
+      "outcome_verifier_math_proc_plus_sc",
+      "code_outcome_verifier_formal_oracle",
+      "arc_grid_structural_pruner",
+      "arc_grid_combined_verifier",
+      "gap4_program_induction_stack",
+      "arc_agi3_learned_action_cost_heuristic_4353",
+      "sprite_overlay_resize_verifier"
+    ]
+  },
+  "result_path": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
+  "run_date": "2026-07-04",
+  "schema": "carnot.arc_gap1_registry_promotion_decision_5222.v1",
+  "source_artifacts": [
+    "results/experiment_5209_gap1_set_search_holdout_hardening_v477.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5222",
+    "SCENARIO-VERIFY-5222"
+  ],
+  "subset_freeze_audit": {
+    "best_subset_stable": false,
+    "can_freeze_without_heldout_tuning": false,
+    "heldout_rows_used_for_freeze": false,
+    "selection_count_source": "exp5209.subset_stability",
+    "stability_rule": "one exact subset selected in at least half of grouped splits",
+    "top_subset": [
+      "color_centroid_orientation",
+      "row_column_run_profile"
+    ],
+    "top_subset_count": 9,
+    "top_subset_fraction": 0.45
+  },
+  "tests_run": {
+    "principle": "List of verification commands with pass/fail booleans for this decision.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py -q",
+        "details": "4 passed",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py -q && .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/verify/arc_gap1_registry_promotion_decision.py",
+        "details": "4 passed; arc_gap1_registry_promotion_decision.py 158 statements, 0 missed, 100% coverage",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/verify/arc_gap1_registry_promotion_decision.py tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py",
+        "details": "All checks passed",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/ruff format --check python/carnot/verify/arc_gap1_registry_promotion_decision.py tests/python/test_experiment_5222_gap1_gate_field_registry_promotion_v478.py",
+        "details": "2 files already formatted",
+        "passed": true
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "details": "Interrupted after failures and worker crashes unrelated to Exp 5222 scope: 169 failed, 22163 passed, 89 skipped, 1 error in 1607.82s; observed Z3 segfault and JAX abort in unrelated tests.",
+        "passed": false
+      }
+    ]
+  },
+  "upstream_scientific_gate": {
+    "baseline_always_on_pass_at_2_mean": 0.088976,
+    "best_subset_stable": false,
+    "gap1_hardened_positive": true,
+    "heldout_pass_at_2_mean": 0.189584,
+    "leakage_audit_passed": true,
+    "paired_delta_ci95": "[0.023148, 0.060446]",
+    "single_refuted_directional_pass_at_2_mean": 0.147787
+  }
+}

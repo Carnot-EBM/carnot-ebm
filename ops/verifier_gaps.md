@@ -447,6 +447,10 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
 <!-- experiment_5209_gap1_set_search_holdout_hardening_v477 start -->
 - experiment_5209 GAP-1 set-search holdout hardening (2026-07-04): gap1_hardened_positive=True, heldout pass@2 mean=0.189584, always-on baseline=0.088976, single refuted directional=0.147787, paired delta CI95=[0.023148, 0.060446], leakage_audit_passed=True, best_subset_stable=False. Do not promote to registry here. Verdict: complete: set_search_remains_positive_after_hardening_heldout_0.1896_always_0.0890_single_refuted_0.1478_paired_delta_ci95_0.0231_0.0604_best_subset_not_stable_do_not_promote_to_registry_here
 <!-- experiment_5209_gap1_set_search_holdout_hardening_v477 end -->
+<!-- experiment_5222_gap1_gate_field_registry_promotion_v478 start -->
+- experiment_5222 GAP-1 registry promotion decision (2026-07-04): decision=blocked_instability, gap1_registry_promoted=False, exp5209_gate_parsed_from_value=True, frozen_subset=None. Follow-up criterion: Reconsider registry promotion only after a predeclared frozen subset is selected from training evidence alone, one exact subset wins at least half of grouped splits, leakage guards pass, and directional_adjacency_refuted_20260609 remains excluded from the promoted frozen verifier. Verdict: complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone.
+<!-- experiment_5222_gap1_gate_field_registry_promotion_v478 end -->
+
 - Exp 5214 verifier-memory pointer: `results/verifier_memory_v477.json` stores the GAP-1 orientation-discriminator set as a memory-only promotion (not a registry fill) because deterministic guardrails passed and held-out delta cleared the memory threshold.
 
 ### GAP-2: content verification for VARIABLE-output-dim tasks
