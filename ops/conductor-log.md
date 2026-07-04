@@ -10284,3 +10284,4 @@ web search: |
 | 2026-07-04 15:15 UTC | PHASE 2 Continuous Self-Learning -- typed multi-he | OK | 89 passed, 1 warning in 8.51s |
 | 2026-07-04 15:33 UTC | PHASE 3 ARC live-path diagnosis -- provenance and  | OK | 86 passed, 1 warning in 11.23s |
 | 2026-07-04 15:35 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
+| 2026-07-04 15:37 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
