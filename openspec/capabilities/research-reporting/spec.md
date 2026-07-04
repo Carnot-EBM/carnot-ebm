@@ -34125,6 +34125,79 @@ Exp 5235 artifact records `duration_methodology_checks_preserved=true`.
 |---|---|---|
 | REQ-REPORT-5235 | Implemented (`python/carnot/experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`, `results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`) | Implemented (`tests/python/test_experiment_5235_adversarial_qa_null_tautology_calibration_v479.py`) |
 
+### REQ-REPORT-5236: GAP-4 Clean Status After QA Calibration
+
+The Exp 5236 workflow SHALL reclassify the existing GAP-4 evidence only after
+reading `results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json`
+and confirming `qa_calibration_passed=true`. It SHALL read the frozen Exp 5224
+canonical pool artifact and the frozen Exp 5225 validation artifact, SHALL
+re-run available schema/result checks and adversarial artifact QA checks against
+those artifacts, and SHALL NOT generate new GAP-4 candidates, modify the
+`n=120` canonical pool, or tune the unchanged GAP-4 threshold.
+
+The workflow SHALL choose exactly one `gap4_status_decision` from
+`clean_null`, `clean_positive`, `blocked_flagged`, or
+`blocked_missing_receipts`. It SHALL use `clean_positive` only when the frozen
+validation artifact is clean and the unchanged min-six exact-test rule passes;
+it SHALL use `clean_null` when the frozen validation artifact is clean but does
+not cross that rule; it SHALL use `blocked_flagged` when any recheck reports
+adversarial flags; and it SHALL use `blocked_missing_receipts` when calibration,
+schema, source-artifact, receipt, or precondition evidence is missing or
+malformed.
+
+The artifact SHALL write
+`results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json` and
+SHALL include bare top-level fields `gap4_status_decision`,
+`gap4_headline_eligible`, `canonical_pool_n`, `wins`, `losses`, `ties`,
+`qa_recheck_commands`, `pool_regenerated`, `ops_docs_updated`,
+`inference_substrate`, and `honest_verdict`. `pool_regenerated` SHALL be
+`false`; `inference_substrate` SHALL be
+`frozen_gap4_artifact_reclassification`; and `ops_docs_updated` SHALL be a bare
+boolean so a conductor stop rule can delegate ops/status/traceability
+reconciliation without changing the evidence decision.
+
+Required field principles:
+
+- `gap4_status_decision`: principle "BARE top-level string, exactly one of clean_null, clean_positive, blocked_flagged, blocked_missing_receipts."
+- `gap4_headline_eligible`: principle "BARE top-level boolean. True only for a clean-positive GAP-4 decision that crosses the unchanged min-six rule."
+- `canonical_pool_n`: principle "BARE top-level integer copied from the frozen Exp 5224 canonical pool; must remain 120 for the .478 reclassification."
+- `wins`: principle "BARE top-level integer copied from frozen Exp 5225 validation wins; no new scoring pass may alter it."
+- `losses`: principle "BARE top-level integer copied from frozen Exp 5225 validation losses; no new scoring pass may alter it."
+- `ties`: principle "BARE top-level integer copied from frozen Exp 5225 validation ties; no new scoring pass may alter it."
+- `qa_recheck_commands`: principle "List of commands or deterministic checks and pass/fail outcomes used to recheck Exp 5224 and Exp 5225."
+- `pool_regenerated`: principle "Must be false; Exp 5236 is a reclassification over the frozen .478 pool, not candidate generation."
+- `ops_docs_updated`: principle "Bare boolean recording whether this task updated ops/status/changelog/traceability docs; false is valid when a conductor stop rule delegates reconciliation."
+- `inference_substrate`: principle "Must be frozen_gap4_artifact_reclassification."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether GAP-4 is clean-null, clean-positive, or still blocked."
+
+#### SCENARIO-REPORT-5236-CLEAN-NULL: Frozen Validation Reclassifies As Clean Null
+
+**Given** Exp 5235 reports `qa_calibration_passed=true`
+**And** Exp 5224 reports a usable frozen canonical pool with
+`canonical_pool_n=120`
+**And** Exp 5225 reports a clean validation with `wins=0`, `losses=0`,
+`ties=120`, and `exact_test_passes_min6_rule=false`
+**When** Exp 5236 re-runs the schema/result checks and adversarial QA checks
+without regenerating the pool
+**Then** the artifact records `gap4_status_decision=clean_null`,
+`gap4_headline_eligible=false`, `pool_regenerated=false`, and a terminal
+honest verdict that says GAP-4 is clean-null.
+
+#### SCENARIO-REPORT-5236-BLOCKED-RECHECK: Flags Or Missing Receipts Block Reclassification
+
+**Given** Exp 5235 is missing or fails calibration, Exp 5224/5225 schema checks
+fail, required frozen metrics are missing, or adversarial QA reports flags
+**When** Exp 5236 builds the status artifact
+**Then** the artifact records either `blocked_missing_receipts` or
+`blocked_flagged`, preserves the frozen metrics that could be read, keeps
+`gap4_headline_eligible=false`, and states the exact remaining blocker.
+
+## Implementation Status (REQ-REPORT-5236)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5236 | Implemented (`python/carnot/experiment_5236_gap4_clean_status_after_qa_calibration_v479.py`, `results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json`) | Implemented (`tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py`) |
+
 ### REQ-REPORT-5221: V478 Reserved SOTA Ingestion Refresh
 
 The Exp 5221 workflow SHALL produce

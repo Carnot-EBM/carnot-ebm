@@ -1,0 +1,115 @@
+{
+  "canonical_pool_n": 120,
+  "duration_s": 0.25,
+  "experiment": "experiment_5236_gap4_clean_status_after_qa_calibration_v479",
+  "experiment_id": 5236,
+  "field_principles": {
+    "canonical_pool_n": "BARE top-level integer copied from the frozen Exp 5224 canonical pool; must remain 120 for the .478 reclassification.",
+    "gap4_headline_eligible": "BARE top-level boolean. True only for a clean-positive GAP-4 decision that crosses the unchanged min-six rule.",
+    "gap4_status_decision": "BARE top-level string, exactly one of clean_null, clean_positive, blocked_flagged, blocked_missing_receipts.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether GAP-4 is clean-null, clean-positive, or still blocked.",
+    "inference_substrate": "Must be frozen_gap4_artifact_reclassification.",
+    "losses": "BARE top-level integer copied from frozen Exp 5225 validation losses; no new scoring pass may alter it.",
+    "ops_docs_updated": "Bare boolean recording whether this task updated ops/status/changelog/traceability docs; false is valid when a conductor stop rule delegates reconciliation.",
+    "pool_regenerated": "Must be false; Exp 5236 is a reclassification over the frozen .478 pool, not candidate generation.",
+    "qa_recheck_commands": "List of commands or deterministic checks and pass/fail outcomes used to recheck Exp 5224 and Exp 5225.",
+    "ties": "BARE top-level integer copied from frozen Exp 5225 validation ties; no new scoring pass may alter it.",
+    "wins": "BARE top-level integer copied from frozen Exp 5225 validation wins; no new scoring pass may alter it."
+  },
+  "gap4_headline_eligible": false,
+  "gap4_status_decision": "blocked_missing_receipts",
+  "honest_verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.",
+  "inference_substrate": "frozen_gap4_artifact_reclassification",
+  "losses": 0,
+  "milestone": "2026.07.479",
+  "ops_docs_updated": false,
+  "pool_regenerated": false,
+  "qa_calibration_artifact_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+  "qa_calibration_passed": true,
+  "qa_recheck_commands": [
+    "read results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json: PASS (qa_calibration_passed=True)",
+    "exp5224_artifact_schema_errors: FAIL (1 errors)",
+    "exp5225_artifact_schema_errors: FAIL (1 errors)",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json --json: PASS (flagged_count=0)",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5224_gap4_canonical_pool_builder_v478.json results/experiment_5225_gap4_clean_scale_validation_gated_v478.json --json: PASS (flagged_count=0)"
+  ],
+  "recheck_reports": {
+    "adversarial": [
+      {
+        "error": null,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "name": "adversarial_verify",
+        "passed": true,
+        "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json"
+      },
+      {
+        "error": null,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "name": "adversarial_verify",
+        "passed": true,
+        "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
+      }
+    ],
+    "schema": [
+      {
+        "errors": [
+          "reproducibility_checksum"
+        ],
+        "name": "exp5224_artifact_schema_errors",
+        "passed": false,
+        "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json"
+      },
+      {
+        "errors": [
+          "reproducibility_checksum"
+        ],
+        "name": "exp5225_artifact_schema_errors",
+        "passed": false,
+        "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
+      }
+    ]
+  },
+  "remaining_blocker": "exp5224_artifact_schema_errors: reproducibility_checksum; exp5225_artifact_schema_errors: reproducibility_checksum",
+  "reproducibility_checksum": "sha256:7867d25c38f825310690a990564f3110b8a25330f169d6a0781692c884f11a8d",
+  "result_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+  "run_date": "2026-07-04",
+  "schema": "carnot.experiment_5236.gap4_clean_status_after_qa_calibration.v479",
+  "source_artifacts": [
+    {
+      "exists": true,
+      "experiment": "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
+      "experiment_id": 5235,
+      "path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "sha256": "sha256:8f5d4d72e57e7285519ae5563c5c61bd0a39a164963d5d22533074bf95aaf671"
+    },
+    {
+      "exists": true,
+      "experiment": "experiment_5224_gap4_canonical_pool_builder_v478",
+      "experiment_id": 5224,
+      "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
+      "sha256": "sha256:283dfdfc616053d0d00e487aa4e6722b049ac2d0bbd8e058e4a2a560865be9d9"
+    },
+    {
+      "exists": true,
+      "experiment": "experiment_5225_gap4_clean_scale_validation_gated_v478",
+      "experiment_id": 5225,
+      "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+      "sha256": "sha256:d45ef78163cda3b34b2f00191e14bb7566795371f53f4dd6408f0c783754dc9e"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5236",
+    "SCENARIO-REPORT-5236-CLEAN-NULL",
+    "SCENARIO-REPORT-5236-BLOCKED-RECHECK"
+  ],
+  "status_rationale": "exp5224_artifact_schema_errors: reproducibility_checksum; exp5225_artifact_schema_errors: reproducibility_checksum",
+  "tests_added_or_updated": [
+    "tests/python/test_experiment_5236_gap4_clean_status_after_qa_calibration_v479.py"
+  ],
+  "ties": 120,
+  "wins": 0
+}
