@@ -1,0 +1,528 @@
+{
+  "arc_new_levels_banked": {
+    "principle": "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated",
+    "value": []
+  },
+  "arc_reproducible_total_levels_delta": {
+    "principle": "integer delta from clean reproduction-gated ARC evidence only",
+    "value": 0
+  },
+  "continuous_self_learning_satisfied": {
+    "principle": "true only when typed memory, retention, promotion/rollback, and a consumer-ready handoff are present",
+    "value": true
+  },
+  "docs_reconciled": {
+    "principle": "false when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation to a later step",
+    "value": false
+  },
+  "duration_s": 0.02103,
+  "excluded_from_headline_task_ids": [
+    "exp5223-gap4-flagged-pool-authenticity-audit-v478",
+    "exp5224-gap4-canonical-pool-builder-v478",
+    "exp5225-gap4-clean-scale-validation-gated-v478",
+    "exp5226-veribmc-local-solver-feedback-pilot-v478",
+    "exp5229-arc-gated-live-levelup-from-rubric-v478"
+  ],
+  "experiment": "experiment_5232_capstone_v478",
+  "experiment_id": "exp5232-capstone-v478",
+  "field_principles": {
+    "arc_new_levels_banked": "list of clean reproduction-gated ARC level banks; empty is valid and must not be inflated",
+    "arc_reproducible_total_levels_delta": "integer delta from clean reproduction-gated ARC evidence only",
+    "continuous_self_learning_satisfied": "true only when typed memory, retention, promotion/rollback, and a consumer-ready handoff are present",
+    "docs_reconciled": "false when the operator stop rule delegates ops/status/changelog/traceability/reference reconciliation to a later step",
+    "flagged_artifacts_excluded": "true when every flagged, critical-corrigendum, or gate-blocked artifact is excluded from headline aggregation",
+    "gap1_final_status": "one of promoted | blocked | unchanged; promoted only when a clean registry promotion artifact registers the verifier",
+    "gap4_final_status": "one of clean_positive | clean_null | blocked | unchanged; clean_* only when the validation artifact is not flagged and passes adversarial checks",
+    "hardware_status": "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline",
+    "honest_verdict": "terminal-prefix single sentence that states the true .478 outcome without laundering flagged or gated artifacts",
+    "inference_substrate": "aggregation_from_milestone_artifacts",
+    "kan_certificate_status": "one of produced | blocked | not_run; produced only for the bounded tiny KAEM certificate supported by Exp5230",
+    "per_task_summary": "map from task id to artifact path/status/verdict/headline eligibility, including flagged, blocked, gated, and bounded evidence without importing excluded metrics into headline claims",
+    "research_conductor_py_untouched_confirmed": "hard constraint that scripts/research_conductor.py stayed untouched",
+    "solver_feedback_status": "one of positive | null | blocked | not_run; positive/null only when the VerIbmc artifact survives adversarial checks",
+    "validation_commands_run": "list of commands and pass/fail/block status used to validate the capstone and changed surfaces"
+  },
+  "flagged_adversarial": false,
+  "flagged_artifacts_excluded": {
+    "principle": "true when every flagged, critical-corrigendum, or gate-blocked artifact is excluded from headline aggregation",
+    "value": true
+  },
+  "gap1_final_status": {
+    "principle": "one of promoted | blocked | unchanged; promoted only when a clean registry promotion artifact registers the verifier",
+    "value": "blocked"
+  },
+  "gap4_final_status": {
+    "principle": "one of clean_positive | clean_null | blocked | unchanged; clean_* only when the validation artifact is not flagged and passes adversarial checks",
+    "value": "blocked"
+  },
+  "hardware_status": {
+    "principle": "one-line summary of KV260, PolarFire, GateMate, p-bit plan, and no-speedup discipline",
+    "value": "KV260=reachable via ssh_only; PolarFire=reachable; GateMate=blocked_physical_jtag IDCODE=0xffffffff; p-bit plan=docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md; no speedup claim"
+  },
+  "headline_eligible_task_ids": [
+    "exp5220-archive-477-activate-478",
+    "exp5221-sota-ingestion-v478",
+    "exp5222-gap1-gate-field-and-registry-promotion-v478",
+    "exp5227-continuous-self-learning-multihead-memory-v478",
+    "exp5228-arc-provenance-skill-rubric-gate-v478",
+    "exp5230-kan-milp-verifier-certificate-v478",
+    "exp5231-hardware-continuity-pbit-boundary-v478"
+  ],
+  "honest_verdict": "complete: v478 reconciled with GAP-1 blocked, GAP-4 blocked, VerIbmc solver-feedback blocked, typed memory satisfied, ARC delta 0, KAN certificate produced, hardware continuity/no-speedup recorded, and flagged/gated artifacts excluded.",
+  "inference_substrate": "aggregation_from_milestone_artifacts",
+  "kan_certificate_status": {
+    "principle": "one of produced | blocked | not_run; produced only for the bounded tiny KAEM certificate supported by Exp5230",
+    "value": "produced"
+  },
+  "milestone": "2026.07.478",
+  "missing_artifacts": [],
+  "per_task_summary": {
+    "principle": "map from task id to artifact path/status/verdict/headline eligibility, including flagged, blocked, gated, and bounded evidence without importing excluded metrics into headline claims",
+    "value": {
+      "exp5220-archive-477-activate-478": {
+        "artifact_path": "results/experiment_5220_archive_477_activate_478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, self-learning memory written, ARC zero-delta, hardware reachability, and verifier-authenticity registry flags."
+      },
+      "exp5221-sota-ingestion-v478": {
+        "artifact_path": "results/experiment_5221_sota_ingestion_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete: V478 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred."
+      },
+      "exp5222-gap1-gate-field-and-registry-promotion-v478": {
+        "artifact_path": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone."
+      },
+      "exp5223-gap4-flagged-pool-authenticity-audit-v478": {
+        "artifact_path": "results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json",
+        "critical_corrigendum": true,
+        "exclusion_reasons": [
+          "flagged_adversarial",
+          "critical_corrigendum_pending"
+        ],
+        "flagged_adversarial": true,
+        "gate_blocked": false,
+        "headline_eligible": false,
+        "status": "excluded",
+        "verdict": "complete: old GAP-4 pool must be regenerated or rebuilt by a canonical-pool builder; exp5211/exp5212 are quarantined from headline evidence"
+      },
+      "exp5224-gap4-canonical-pool-builder-v478": {
+        "artifact_path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
+        "critical_corrigendum": true,
+        "exclusion_reasons": [
+          "flagged_adversarial",
+          "critical_corrigendum_pending"
+        ],
+        "flagged_adversarial": true,
+        "gate_blocked": false,
+        "headline_eligible": false,
+        "status": "excluded",
+        "verdict": "success: canonical GAP-4 pool usable for validation with n=120; no scale-validation claim run"
+      },
+      "exp5225-gap4-clean-scale-validation-gated-v478": {
+        "artifact_path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+        "critical_corrigendum": true,
+        "exclusion_reasons": [
+          "flagged_adversarial",
+          "critical_corrigendum_pending"
+        ],
+        "flagged_adversarial": true,
+        "gate_blocked": false,
+        "headline_eligible": false,
+        "status": "excluded",
+        "verdict": "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, ties=120; min-six rule not crossed"
+      },
+      "exp5226-veribmc-local-solver-feedback-pilot-v478": {
+        "artifact_path": "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json",
+        "critical_corrigendum": true,
+        "exclusion_reasons": [
+          "flagged_adversarial",
+          "critical_corrigendum_pending"
+        ],
+        "flagged_adversarial": true,
+        "gate_blocked": false,
+        "headline_eligible": false,
+        "status": "excluded",
+        "verdict": "complete: clean null; solver feedback did not improve over baselines"
+      },
+      "exp5227-continuous-self-learning-multihead-memory-v478": {
+        "artifact_path": "results/experiment_5227_continuous_self_learning_multihead_memory_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training"
+      },
+      "exp5228-arc-provenance-skill-rubric-gate-v478": {
+        "artifact_path": "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete: ARC skill rubric usable; no exp5229 live patch is currently gated."
+      },
+      "exp5229-arc-gated-live-levelup-from-rubric-v478": {
+        "artifact_path": "results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [
+          "gate_blocked"
+        ],
+        "flagged_adversarial": false,
+        "gate_blocked": true,
+        "headline_eligible": false,
+        "status": "gate_blocked",
+        "verdict": "blocked_gate_check_failed"
+      },
+      "exp5230-kan-milp-verifier-certificate-v478": {
+        "artifact_path": "results/experiment_5230_kan_milp_verifier_certificate_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision"
+      },
+      "exp5231-hardware-continuity-pbit-boundary-v478": {
+        "artifact_path": "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
+        "critical_corrigendum": false,
+        "exclusion_reasons": [],
+        "flagged_adversarial": false,
+        "gate_blocked": false,
+        "headline_eligible": true,
+        "status": "complete",
+        "verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup"
+      }
+    }
+  },
+  "preconditions_checked": {
+    "docs_reconciliation_deferred_by_stop_rule": true,
+    "expected_deliverable_artifacts": 12,
+    "loadable_deliverable_artifacts": 12,
+    "research_conductor_py_untouched": true,
+    "source_context_files_checked": 10
+  },
+  "random_seed": 5232,
+  "reproducibility_checksum": "sha256:b7600a3a4c3b020cfe55a8b8217afc234fdec7b85db9697ab4606defc8308d1c",
+  "research_conductor_py_untouched_confirmed": {
+    "principle": "hard constraint that scripts/research_conductor.py stayed untouched",
+    "value": true
+  },
+  "result_path": "results/experiment_5232_capstone_v478.json",
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5232_capstone_v478.v1",
+  "solver_feedback_status": {
+    "principle": "one of positive | null | blocked | not_run; positive/null only when the VerIbmc artifact survives adversarial checks",
+    "value": "blocked"
+  },
+  "source_artifacts": [
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5220,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: .477 archived and .478 activated; handoff preserves GAP-1 positive but unpromoted, GAP-4 flagged/protocol-blocked, MMLU hidden-state retired, self-learning memory written, ARC zero-delta, hardware reachability, and verifier-authenticity registry flags.",
+      "loadable": true,
+      "relative_path": "results/experiment_5220_archive_477_activate_478.json",
+      "sha256": "sha256:1ad2f089bd64fbcd4cb6dbbbdb3d7426b5fca90a9c5cc5c3022cb9e21cb9c42b",
+      "task_id": "exp5220-archive-477-activate-478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5221,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: V478 SOTA refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar returned HTTP/2 429 for both EBT and ARM-EBM, so no fresh citation trail was inferred.",
+      "loadable": true,
+      "relative_path": "results/experiment_5221_sota_ingestion_v478.json",
+      "sha256": "sha256:5aae57d3769a3af387f977ea7c2fb80cf05b6cabab7e54b30fe833444a21b8b1",
+      "task_id": "exp5221-sota-ingestion-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5222,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: GAP-1 registry promotion blocked_instability; exp5209 gate parsed from gap1_hardened_positive.value=True, but the selected subset is not stable enough to freeze without held-out tuning; this is not the exp5210 gate-shape failure alone.",
+      "loadable": true,
+      "relative_path": "results/experiment_5222_gap1_gate_field_registry_promotion_v478.json",
+      "sha256": "sha256:58428f0c4c140eb35b7f1ebae4a5e577ed749b4ee827b5b6472040c44a57ae47",
+      "task_id": "exp5222-gap1-gate-field-and-registry-promotion-v478"
+    },
+    {
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "exists": true,
+      "experiment_number": 5223,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: old GAP-4 pool must be regenerated or rebuilt by a canonical-pool builder; exp5211/exp5212 are quarantined from headline evidence",
+      "loadable": true,
+      "relative_path": "results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json",
+      "sha256": "sha256:f7c7a36a4195334297f0be9b96edfeda0bcaa09464aa3ee08eedf112600409a9",
+      "task_id": "exp5223-gap4-flagged-pool-authenticity-audit-v478"
+    },
+    {
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "exists": true,
+      "experiment_number": 5224,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "success: canonical GAP-4 pool usable for validation with n=120; no scale-validation claim run",
+      "loadable": true,
+      "relative_path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json",
+      "sha256": "sha256:283dfdfc616053d0d00e487aa4e6722b049ac2d0bbd8e058e4a2a560865be9d9",
+      "task_id": "exp5224-gap4-canonical-pool-builder-v478"
+    },
+    {
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "exists": true,
+      "experiment_number": 5225,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, ties=120; min-six rule not crossed",
+      "loadable": true,
+      "relative_path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json",
+      "sha256": "sha256:d45ef78163cda3b34b2f00191e14bb7566795371f53f4dd6408f0c783754dc9e",
+      "task_id": "exp5225-gap4-clean-scale-validation-gated-v478"
+    },
+    {
+      "critical_corrigendum": true,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "flagged_adversarial",
+        "critical_corrigendum_pending"
+      ],
+      "exists": true,
+      "experiment_number": 5226,
+      "flagged_adversarial": true,
+      "gate_blocked": false,
+      "honest_verdict": "complete: clean null; solver feedback did not improve over baselines",
+      "loadable": true,
+      "relative_path": "results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json",
+      "sha256": "sha256:24a12d7a435831c5cd1dfc539989b2262d10294f232ee2657d4aaa7c4f6efe3b",
+      "task_id": "exp5226-veribmc-local-solver-feedback-pilot-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5227,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training",
+      "loadable": true,
+      "relative_path": "results/experiment_5227_continuous_self_learning_multihead_memory_v478.json",
+      "sha256": "sha256:55fe756a38e70e70a425d109e99ec29654fc0ae7bd55f524d7b755a9f9191a5f",
+      "task_id": "exp5227-continuous-self-learning-multihead-memory-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5228,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete: ARC skill rubric usable; no exp5229 live patch is currently gated.",
+      "loadable": true,
+      "relative_path": "results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json",
+      "sha256": "sha256:2e8930384971a20a9b96a24ed9ee0856c70545bf36058f80af703394fbcd9225",
+      "task_id": "exp5228-arc-provenance-skill-rubric-gate-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": true,
+      "exclusion_reasons": [
+        "gate_blocked"
+      ],
+      "exists": true,
+      "experiment_number": 5229,
+      "flagged_adversarial": false,
+      "gate_blocked": true,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "relative_path": "results/experiment_5229_arc_gated_live_levelup_from_rubric_v478.json",
+      "sha256": "sha256:a7c5af1d31dbfe5baf052977ad8b207606b5389da96509c134e50eae5082108e",
+      "task_id": "exp5229-arc-gated-live-levelup-from-rubric-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5230,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision",
+      "loadable": true,
+      "relative_path": "results/experiment_5230_kan_milp_verifier_certificate_v478.json",
+      "sha256": "sha256:2aad99bc43afae17ff8df3599f126d3425ccbe5d6f4c7ee59105b577e26754ce",
+      "task_id": "exp5230-kan-milp-verifier-certificate-v478"
+    },
+    {
+      "critical_corrigendum": false,
+      "error": null,
+      "excluded_from_headline": false,
+      "exclusion_reasons": [],
+      "exists": true,
+      "experiment_number": 5231,
+      "flagged_adversarial": false,
+      "gate_blocked": false,
+      "honest_verdict": "complete_hardware_continuity_pbit_boundary_v478_kv260:reachable_polarfire:reachable_gatemate:blocked_physical_jtag_no_speedup",
+      "loadable": true,
+      "relative_path": "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
+      "sha256": "sha256:e968b892259bf8d149388cfcbf7a2651201c690feb215596593d7ad6b4cf3d9e",
+      "task_id": "exp5231-hardware-continuity-pbit-boundary-v478"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:dbcf1d6a574a5b1f1234047a0fe63525185edd45337b98ece04801c0881ddd92"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:92784c88d4238fd32f64da50e2b12ecb3ee24172c208053ce9c050996a9182c5"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:07e72c877150838c6111be9a627315109cbb3ffd10b025de4d3b4d1d7e0a600b"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-references.md",
+      "sha256": "sha256:4208cb88d5c78ace1ff2ce2ddde860016c8d593350d0b94400be9323582540e9"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:1bff1853f5c8125ed29e91933a58e4aeeb5b2072b77550f3c240a07739b54d7c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:84481870f20470a04b761fb9fb6ac18a8e16caf45294319390be3789e18ac00c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/verifier_gaps.md",
+      "sha256": "sha256:400d1015bc05bf22c22bcd410aca367f5cfee2a46150ef503570acb3184e2511"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:57c139f8257dac085d4e5e660ebd1c31ff14565c3270e376279b2ea43639a877"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/traceability.md",
+      "sha256": "sha256:b4e5e3f5983a14d7d0e37c82883addf1548b6eb59b3c361cde66f1b0a1f8f099"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5232",
+    "SCENARIO-CAPSTONE-5232",
+    "SCENARIO-CAPSTONE-5232-FIELD-PRINCIPLES"
+  ],
+  "status_decisions": {
+    "arc": "Exp5228 retained zero-delta ARC memory and Exp5229 was gate-blocked",
+    "continuous_self_learning": "Exp5227 wrote typed memory, retention passed, and Exp5228 consumer file is ready",
+    "docs": "ops/status, ops/changelog, _bmad/traceability, and research-references deferred by stop rule",
+    "excluded_from_headline_task_ids": [
+      "exp5223-gap4-flagged-pool-authenticity-audit-v478",
+      "exp5224-gap4-canonical-pool-builder-v478",
+      "exp5225-gap4-clean-scale-validation-gated-v478",
+      "exp5226-veribmc-local-solver-feedback-pilot-v478",
+      "exp5229-arc-gated-live-levelup-from-rubric-v478"
+    ],
+    "gap1": "Exp5222 blocked registry promotion: blocked_instability",
+    "gap4": "Exp5225 metrics are excluded because the artifact is flagged or gated",
+    "hardware": "KV260=reachable via ssh_only; PolarFire=reachable; GateMate=blocked_physical_jtag IDCODE=0xffffffff; p-bit plan=docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md; no speedup claim",
+    "kan": "Exp5230 produced the bounded tiny KAEM PWA/MILP certificate",
+    "solver_feedback": "Exp5226 solver-feedback outcome is excluded because the artifact is flagged"
+  },
+  "validation_commands_run": {
+    "principle": "list of commands and pass/fail/block status used to validate the capstone and changed surfaces",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5232_capstone_v478.py -q --no-cov -o addopts=''",
+        "notes": "filled by the final run after implementation",
+        "status": "PENDING"
+      }
+    ]
+  }
+}
