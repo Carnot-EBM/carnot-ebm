@@ -26650,3 +26650,133 @@ papers restated as new.
 a well-grounded secondary lever (custom device_map + CPU offload) before any retirement decision; GAP-1
 gets a structurally-different pilot design (AutoPyVerifier) instead of repeating the refuted hand-invariant
 approach; the hidden-state verifier v2 gets a third, newly-verified free baseline (RCS) to clear.
+
+## V477 Planner References - 2026-07-03
+
+Added by the `.477` planning pass after `.476` completed. Search scope: arXiv primary sweep over 2025-2026
+EBMs, constraint satisfaction, Ising/sampling hardware, hallucination mitigation, KANs, energy-guided
+decoding, continual/self-learning; secondary checks against OpenReview snippets, Hugging Face Papers,
+GitHub repos, Extropic writing, Logical Intelligence posts, and a Semantic Scholar API citation check for
+EBT. Semantic Scholar returned `citationCount=26` for EBT (`arXiv:2507.02092`) and exposed several relevant
+2026 citations; the ARM-EBM (`arXiv:2512.15605`) citation query was rate-limited (`429`), so rerun that API
+check in the next SOTA-ingestion task before drawing citation-trail conclusions.
+
+### FALCON: guaranteed feasibility for LLM combinatorial optimization
+- **Source:** arXiv:2602.01090 - https://arxiv.org/abs/2602.01090
+- **Finding:** Combines grammar-constrained decoding, a semantic feasibility-repair layer, and adaptive
+  Best-of-N sampling to guarantee 100% feasibility on seven NP-hard combinatorial optimization problems.
+- **Carnot hook:** Directly supports the next GAP-4/GAP-1 hardening pattern: use local SOTA LLMs to propose
+  candidate verifier code/rules, then force all outputs through a syntax + semantic repair/feasibility layer
+  before scoring. This is not a Phase-D external text scorer; it is a hard structured-output guard.
+- **Actionability:** Use as a design constraint for any new local-GGUF verifier-synthesis or ARC rule-code
+  generation task: invalid code is repaired or rejected before entering the candidate pool.
+
+### Distributional EBMs for uncertainty-aware structured LLM reasoning
+- **Source:** arXiv:2605.18871 - https://arxiv.org/abs/2605.18871
+- **Finding:** Decomposes structured-output verification into learned quality plus deterministic analytical
+  constraint penalties, with ensemble uncertainty driving regeneration or abstention.
+- **Carnot hook:** Useful only as an uncertainty/abstention pattern around structured verifier artifacts.
+  Do **not** reopen the retired Phase-D external generated-text scorer class. The safe Carnot adaptation is
+  "deterministic constraints first, learned uncertainty only for abstain/regenerate routing."
+- **Actionability:** Candidate for the continuous self-learning verifier-set task: promote a learned
+  discriminator only when deterministic guardrails and held-out deltas clear the gate; otherwise abstain.
+
+### Energy-Based Decoding for frozen pretrained LLMs
+- **Source:** arXiv:2605.28020 - https://arxiv.org/abs/2605.28020
+- **Finding:** Training-free reward-guided decoding tilts a frozen LLM's distribution toward high-utility
+  outputs while anchoring to the model prior; reports large instruction-following gains without parameter
+  updates.
+- **Carnot hook:** A plausible local SOTA GGUF path for generating GAP-4/GAP-1 verifier candidates when the
+  reward is executable feasibility, not a text-quality score. Must be evaluated against the concrete
+  candidate-pool pass@2/discordant-win gates, not claimed from paper analogy.
+- **Actionability:** Fold into the SOTA local generator expansion task as an optional decoding arm if the
+  existing loader exposes enough token-level control; otherwise record as deferred.
+
+### Self-Trained Verification and DeepVerifier
+- **Sources:** STV arXiv:2605.30290 - https://arxiv.org/abs/2605.30290; DeepVerifier arXiv:2601.15808 -
+  https://arxiv.org/abs/2601.15808 and https://github.com/yxwan123/DeepVerifier
+- **Finding:** Both papers exploit verification asymmetry: a model/verifier can learn from more informed
+  self-critique or rubric-based feedback, improving test-time refinement and self-improvement loops.
+- **Carnot hook:** Strong fit for `research-program.md` Continuous Self-Learning Tier 1/2: maintain an
+  experience ledger of verifier wins/losses, derive rubrics/failure classes, and promote verifier memories
+  only after held-out deltas stay positive.
+- **Actionability:** Use as the conceptual backbone for `.477`'s continuous self-learning task, but keep the
+  implementation small: update a verifier-set memory and rollback policy, not a broad RL fine-tune.
+
+### ADVENT: abductive LLM predicate invention with Prolog verification
+- **Source:** arXiv:2607.01585 - https://arxiv.org/html/2607.01585v1
+- **Finding:** Pairs LLM abductive predicate generation with Prolog deductive verification; invented
+  predicates/rules accumulate in a reusable knowledge pool.
+- **Carnot hook:** Very close to Carnot's desired "Trace2Skill"/constraint-memory loop: propose candidate
+  predicates from failures, verify them mechanically, and reuse only predicates that survive the verifier.
+- **Actionability:** Feed into the verifier-set self-learning experiment as the knowledge-pool promotion
+  rule. No outer-loop source-reading or oracle labels at runtime.
+
+### Program-as-Weights (PAW)
+- **Source:** arXiv:2607.02512 - https://arxiv.org/abs/2607.02512; docs/research-notes/paw-episode-
+  compilation-arc-efficiency-2026-07-03.md
+- **Finding:** A large compiler produces compact neural artifacts run by a small local interpreter; paper
+  reports a 0.6B Qwen3 interpreter matching direct Qwen3-32B prompting on fuzzy functions with much lower
+  inference memory.
+- **Carnot hook:** Two hooks, only one immediately buildable. Immediate: estimate whether a mid-episode ARC
+  "compile once, act cheaply" step can amortize before the episode ends. Deferred: PAW-like hybrid rule
+  artifacts for GAP-4891/GAP-4 demo-underdetermination.
+- **Actionability:** First `.477` ARC task should be an amortization/data gate, not LoRA infrastructure.
+
+### EBT citation trail: fixed-point / looped latent refinement
+- **Sources:** EBT arXiv:2507.02092 - https://arxiv.org/abs/2507.02092; FPRM arXiv:2606.18206 -
+  https://arxiv.org/abs/2606.18206; LoopUS arXiv:2605.11011 - https://arxiv.org/abs/2605.11011; CEM
+  arXiv:2605.07588 - https://arxiv.org/abs/2605.07588
+- **Finding:** Semantic Scholar API reported 26 citations to EBT; relevant 2026 descendants include
+  fixed-point halting for adaptive looped transformers, post-training conversion of LLMs into looped
+  latent-refinement models, and transformer layers interpreted as causal energy-minimization updates.
+- **Carnot hook:** Reinforces a hidden-state verifier / live-agent pattern: if a model's latent state is
+  refined iteratively, evaluate convergence/halting and stability signals, not only final text. This
+  supports a layer/chunk hidden-state sweep, but does not rescue the failed final-layer-only probe by
+  itself.
+- **Actionability:** Scope hidden-state verifier v3 to "intermediate/chunk/halting signals or retire this
+  MMLU-Pro path if null again", not another final-layer probe.
+
+### KAN constraint variants: GRS-KAN and KANFIS
+- **Sources:** GRS-KAN arXiv:2607.01449 - https://arxiv.org/abs/2607.01449; KANFIS arXiv:2602.03034 -
+  https://arxiv.org/abs/2602.03034; OpenReview KAF page https://openreview.net/forum?id=qcNu1mL46N
+- **Finding:** GRS-KAN injects differentiable logical/geometric R-functions into KAN branches; KANFIS uses
+  additive KAN structure for compact interpretable fuzzy rules; KAF addresses KAN parameter explosion via
+  spectral reparameterization.
+- **Carnot hook:** Good fit for a later interpretable constraint-energy module when inputs have explicit
+  supports/regions. For `.477`, keep as reference; do not distract from GAP-1/GAP-4/ARC bottlenecks unless
+  a task needs differentiable logical constraints.
+
+### Hardware sampling and thermodynamic AI
+- **Sources:** Extropic TSU/XTR-0 writing https://extropic.ai/writing/thermodynamic-computing-from-zero-to-
+  one and https://extropic.ai/writing/inside-x0-and-xtr-0; FPGA p-computers arXiv:2512.24558 -
+  https://arxiv.org/abs/2512.24558; Scaling Up Thermodynamic AI Models arXiv:2607.00170 -
+  https://arxiv.org/abs/2607.00170
+- **Finding:** Extropic's public TSU/XTR-0 stack frames hardware as sampling from programmable EBMs, not
+  deterministic processing. The FPGA p-computer paper implements sparse Boltzmann sampling for neural
+  quantum states on multi-FPGA hardware. The thermodynamic-AI scaling paper trains high-temperature
+  Gibbs-sampled Ising systems for neural inference and analyzes inference-cost/accuracy tradeoffs.
+- **Carnot hook:** Supports the long-run hardware thesis while keeping `.477` pragmatic: KV260/PolarFire/
+  GateMate should continue with correctness/hash smokes only; no speedup claims without an end-to-end
+  sampler workload.
+- **Actionability:** Add a hardware-continuity task, but keep it SSH-only for KV260 and focused on
+  reproducible hashes, not benchmark headlines.
+
+### Logical Intelligence / Kona / Aleph public architecture signals
+- **Sources:** https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation,
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning, and
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks
+- **Finding:** Public posts frame EBRMs as the reasoning/correctness layer and LLMs as interface/
+  coordination; formal verification/code generation is the initial deployment wedge.
+- **Carnot hook:** Aligns with Carnot's PRD direction but does not provide enough reproducible technical
+  detail to copy. Use it as product-strategy evidence for "verifier-first, LLM-as-interface" rather than
+  as an experimental baseline.
+
+### Repository watch
+- **Sources:** ProgramAsWeights GitHub https://github.com/programasweights; Awesome-EBM
+  https://github.com/yataobian/awesome-ebm; Awesome-KAN https://github.com/mintisan/awesome-kan; Awesome
+  constrained decoding https://github.com/Saibo-creator/Awesome-LLM-Constrained-Decoding
+- **Finding:** PAW has live packages/docs; EBM/KAN/constrained-decoding repos are useful watchlists but
+  mostly lists rather than directly runnable Carnot baselines.
+- **Actionability:** Use PAW docs only for the amortization-gate task; otherwise keep repo-watch as
+  references for the next SOTA-ingestion update.

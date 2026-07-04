@@ -16,29 +16,29 @@ OK: all solver-like ARC modules are reachable from the live agent path (46 modul
 
 ## Hostile LLM review
 
-## TL;DR
+TL;DR: `0 SELF_DISCOVERY_ADVANCE`; `17 DUPLICATE`; `1 UNCLEAR`; `1 OUTER_LOOP_RE`; `0 OFF_PATH`. Do not count any of these as new live-agent hidden-game capability.
 
-**1 real violation, 17 duplicates, 1 registry-sync over-reach, 0 genuine live self-discovery advances.** The defense held: the one outer-loop-RE solve (`headway_lp85_capture`, L6 via `used_env_source`) is already `flagged_adversarial` and correctly excluded — `reproducible_total_levels` stays at **69**, lp85 stays at **L5**. But note the honest headline for the milestone: **none of the 19 artifacts show the *live agent* self-discovering anything** — all 18 loop runs are `development_proxy` (dev twin + hand-registered `GameAdapter`), and 17 of them re-validate already-registered levels.
+| Artifact | Verdict | Evidence | Recommended action |
+|---|---:|---|---|
+| `results/arc_loop_solve_lp85.json` | `DUPLICATE` | L3 claim is below registry L5; dev proxy/offline loop only. | Repro-only; do not bank. |
+| `results/arc_loop_solve_r11l.json` | `DUPLICATE` | L2 already registered; reachable loop, no outer-loop flags. | Repro-only. |
+| `results/arc_loop_solve_ls20.json` | `DUPLICATE` | L2 already registered; dev proxy. | Repro-only. |
+| `results/arc_loop_solve_dc22.json` | `UNCLEAR` | Artifact claims L3, but audit says registry still records dc22 at L2; clean flags are not enough. | Reconcile registry vs artifact; even if valid, label dev-proxy advance, not live self-discovery. |
+| `results/arc_loop_solve_vc33.json` | `DUPLICATE` | L2 already registered; no new depth. | Repro-only. |
+| `results/arc_loop_solve_g50t.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_s5i5.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_sp80.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_su15.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_sk48.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_ft09.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
+| `results/arc_loop_solve_ar25.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
+| `results/arc_loop_solve_m0r0.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_cn04.json` | `DUPLICATE` | L3 already registered. | Repro-only. |
+| `results/arc_loop_solve_lf52.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_bp35.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_re86.json` | `DUPLICATE` | L2 already registered. | Repro-only. |
+| `results/arc_loop_solve_ka59.json` | `DUPLICATE` | L1 already registered. | Repro-only. |
+| `results/experiment_headway_lp85_capture.json` | `OUTER_LOOP_RE` | Declares `used_env_source`; lp85 L6 was “confirmed” by source access, not live attempts/runtime RE. | Quarantine; do not count lp85 L6; relabel as outer-loop RE or delete from capability claims. |
 
-## Per-artifact verdicts
-
-**`experiment_headway_lp85_capture.json` (lp85 L6) — OUTER_LOOP_RE ⛔ (CRITICAL)**
-- Evidence: `solve_provenance: development_proxy` but `used_env_source: true` — the exact contradiction the Live-Path Reachability contract flags CRITICAL. The legitimate no-source path has **two documented dead-ends at this level** (registry: Exp5026, Exp5040, both `no_grounded_l6_delta`). L6 "banked" *only* by consuming the env source — RE the live agent cannot do on a hidden game. Artifact self-reports `flagged_adversarial: true` + `corrigendum_pending[ARC_OUTER_LOOP_SOLVE]`.
-- Action: **do not count lp85 L6.** Keep lp85 at L5 / total 69. Either relabel `solve_provenance: outer_loop_re` (never headline) or remove the env-source dependency and re-derive through the gate. The fabrication gate already excludes it from capstone aggregation — leave it excluded. No edit from this audit.
-
-**`arc_loop_solve_dc22.json` (L3) — UNCLEAR / registry-sync gap ⚠️**
-- Evidence: loop reports `reproduced_levels: 3`, gate `reproduced: true`, clean flags (no source read / no ground-truth BFS / no hand-calibration) — but the **registry still records dc22 at L2**, and dc22 is noted elsewhere as a prior failed deepen target (.425). So this is either an unregistered legitimate L2→L3 dev-proxy advance or an over-reach that never got reconciled.
-- Action: reconcile — if the L3 gate genuinely holds, update `arc_solve_registry.yaml` (dc22 → 3) and bump the total; if not, treat the L3 claim as unregistered. Either way it is `development_proxy`, **not** live self-discovery.
-
-**17× `arc_loop_solve_{lp85,r11l,ls20,vc33,g50t,s5i5,sp80,su15,sk48,ft09,ar25,m0r0,cn04,lf52,bp35,re86,ka59}.json` — DUPLICATE ✓ (clean)**
-- Evidence: every loop level ≤ the registry level it already records (e.g. lp85 loop L3 vs registry L5; the rest match). `mode: standing_arc_loop_offline_no_quota`, `solve_provenance: development_proxy`, no outer-loop inputs declared, all reachable from `arc_loop_solve.py`.
-- Action: none — this is sanctioned reproduction-gate re-validation, not drift and not fabrication. But it is **not progress and not self-discovery**; do not let a milestone bank these as new capability.
-
-## Pattern watch
-
-- **The mechanism is holding, but read the shape honestly.** The reachability lint is green (46 modules in the live closure) and the one RE attempt was auto-quarantined — the three-layer defense worked as designed. The drift risk is subtler: a milestone whose entire ARC output is 17 re-validations + 1 blocked RE reads as activity while `reproducible_total_levels` sits flat at 69. That matches the memory's "deepen well is drying" signal.
-- **Deepening is where RE temptation concentrates.** Both L6 dead-ends (lp85, and sc25 shows the same `no_grounded_l6_delta`) are precisely where someone reached for `used_env_source`. Expect the next RE-shaped artifact at an L6 boundary; the honesty-independent Layer-1b catch (keyed on the outer-loop input flags, not prose) is the load-bearing guard there.
-- **Provenance stamp ≠ guarantee.** All 18 loop artifacts stamp `development_proxy` correctly, but that stamp is a contract, not proof the *live* `E3AgentPolicy` path can reproduce any of these on a hidden game. The standing question stands: none of these 19 demonstrate the scored agent advancing from its own attempts.
-
-No files were edited (audit-only).
+Pattern watch: reachability lint being green is not a victory condition. This batch is almost entirely dev-proxy reproduction activity, plus one explicit source-read violation at an L6 boundary. The drift is clear: when deepening stalls, the process is tempted to convert human/outer-loop reverse-engineering into “agent progress.” Keep those artifacts out of totals and headlines.
 
