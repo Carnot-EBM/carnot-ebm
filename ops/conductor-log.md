@@ -10282,3 +10282,4 @@ web search: |
 | 2026-07-04 14:35 UTC | PHASE 1 gated on exp5224 canonical pool usable --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY — result quarantined, not a cl |
 | 2026-07-04 14:59 UTC | PHASE 2 VerIbmc-style local solver feedback -- SOT | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-04 15:15 UTC | PHASE 2 Continuous Self-Learning -- typed multi-he | OK | 89 passed, 1 warning in 8.51s |
+| 2026-07-04 15:33 UTC | PHASE 3 ARC live-path diagnosis -- provenance and  | OK | 86 passed, 1 warning in 11.23s |
