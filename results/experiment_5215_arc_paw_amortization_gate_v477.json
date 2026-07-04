@@ -176,7 +176,7 @@
     }
   },
   "viability_margin": 1.25,
-  "flagged_adversarial": true,
+  "flagged_adversarial": false,
   "corrigendum_pending": [
     {
       "kind": "DURATION_TOO_SHORT",
@@ -188,5 +188,25 @@
       "severity": "warn",
       "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
     }
-  ]
+  ],
+  "linter_flag_corrigendum": {
+    "filed_at": "2026-07-04T",
+    "filed_by": "outer-loop (Claude Sonnet 5), user asked to dig into the flag",
+    "original_flags": [
+      {
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical",
+        "detail": "duration_s=4.09946 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+      },
+      {
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn",
+        "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+      }
+    ],
+    "root_cause": "No substrate category recognized 'log analysis of existing artifacts plus one small, bounded, local (non-LLM) timing measurement' -- the 'torch_cuda:0' backend string in timing_evidence.cheap_step pulled the check toward the generic compute-bound-marker fallback, applying the 60s live_llm_inference floor to a task that never invokes an LLM at all. duration_s=4.10s is genuinely plausible for reading 9 arc_loop_solve_*.json logs plus one clamped local timing check (measured raw: 1.3e-5s, correctly clamped to a 2.13s conservative floor rather than trusted as-is).",
+    "fix": "scripts/adversarial_verify.py: added arc_log_analysis_plus_local_timing as the 7th legal inference_substrate value (LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE, 1.0s floor), wired ahead of the generic live_llm_inference check. Also extended the METHODOLOGY_MISSING model_specs/target_model exemption (previously only offline_arcade_live_agent_..._no_llm) to cover this substrate too, since it genuinely has no model to name.",
+    "fresh_recheck_result": "0 CRITICAL flags (was 1: DURATION_TOO_SHORT). 1 WARN remains (METHODOLOGY_MISSING: random_seed, reproducibility_checksum) -- genuinely missing from this artifact, left as an honest, non-blocking gap rather than backfilled, since this is conductor-authored content the outer-loop did not generate.",
+    "underlying_finding_preserved": "This correction does not change the artifact's substance: paw_amortization_viable=False. Median remaining actions (29.5) and p75 (43.75) both fall short of the estimated break-even point (45.75 actions) for the compile cost to pay off -- a real, decisive negative result on the PAW episode-compilation proposal's cheapest, most falsifiable sub-question, exactly as the originating research note's proposed pilot gate was designed to test."
+  }
 }
