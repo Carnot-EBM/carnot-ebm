@@ -33671,6 +33671,101 @@ does not claim the `.477` handoff is clean.
 |---|---|---|
 | REQ-REPORT-5207 | Implemented (`python/carnot/experiment_5207_archive_476_activate_477.py`, `results/experiment_5207_archive_476_activate_477.json`) | Implemented (`tests/python/test_experiment_5207_archive_476_activate_477.py`) |
 
+### REQ-REPORT-5220: Archive .477, Activate .478, And Preserve The Flagged-Gate Handoff Truth
+
+The Exp 5220 workflow SHALL archive milestone `2026.07.477`, confirm milestone
+`2026.07.478` is active in `research-roadmap.yaml`, and write
+`results/experiment_5220_archive_477_activate_478.json`. It SHALL read the
+active roadmap, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, `ops/status.md`,
+`ops/changelog.md`, and the Exp 5207 through Exp 5219 result artifacts,
+focusing on Exp 5209, Exp 5210, Exp 5211, Exp 5212, Exp 5214, Exp 5215,
+Exp 5216, Exp 5217, Exp 5218, and Exp 5219. It SHALL run no live model work and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The archive summary SHALL state the `.477` facts needed by downstream `.478`
+tasks without rounding blocked or flagged outcomes into progress: Exp 5209 found
+GAP-1 set-search remained positive on held-out grouped splits
+(`heldout_pass_at_2_mean=0.189584`) with a positive paired delta CI but
+`best_subset_stable=false`; Exp 5210 blocked registry promotion at the conductor
+pre-gate because the gate compared expected bare `true` with the principle-
+wrapped `gap1_hardened_positive` object; Exp 5211 produced a 120-row GAP-4
+candidate pool but was adversarially flagged for tautology, duration, and missing
+methodology issues; Exp 5212 scored zero GAP-4 rows because all 120 rows missed
+the established protocol pass@2 fields, carried adversarial flags, and did not
+cross the unchanged six-discordant-win floor; Exp 5213 retired the MMLU-Pro
+hidden-state path; Exp 5214 wrote durable verifier memory with one promotion and
+one rollback; Exp 5215 found PAW amortization not viable and must not be used as
+an ARC solve claim; Exp 5216 banked zero reproduction-gated ARC levels; Exp
+5217 confirmed KV260 and PolarFire reachable while GateMate remained blocked at
+the physical/JTAG cable-or-port boundary with no speedup claim; Exp 5218 applied
+verifier-authenticity registry flags and kept modules headline-ineligible until
+real verification; and Exp 5219 reconciled `.477` as GAP-1 building, GAP-4
+blocked, hidden-state MMLU retired, self-learning satisfied, zero ARC delta, and
+flagged artifacts excluded.
+
+The workflow SHALL activate `.478` by copying `research-roadmap-next.yaml` over
+`research-roadmap.yaml` when the next-file exists. If `research-roadmap.yaml`
+already names milestone `2026.07.478` and contains the Exp 5220 onward task set
+while the root `research-roadmap-next.yaml` is absent, the workflow SHALL record
+that already-active fallback explicitly rather than claiming a copy occurred.
+After activation it SHALL run available roadmap checks against
+`research-roadmap.yaml`, including `scripts/exclusion_manifest_lint.py` and
+`scripts/validate_prior_failures.py` when present, and SHALL confirm
+`scripts/research_conductor.py` was not modified.
+
+The artifact SHALL include principle-annotated fields `v477_summary`,
+`research_roadmap_yaml_activated`, `exclusion_manifest_confirmed_clean`,
+`validation_commands_run`, `ops_docs_updated`,
+`research_conductor_py_untouched_confirmed`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include source artifact checksums, a roadmap
+activation audit, whether `research-roadmap-next.yaml` was copied or the
+already-active fallback was used, tests run, and a reproducibility checksum.
+
+Required field principles:
+
+- `v477_summary`: principle "Downstream task context depends on this summary being exact, especially nulls, flags, and retired threads."
+- `research_roadmap_yaml_activated`: principle "Downstream conductor execution depends on `research-roadmap.yaml` naming `.478` and containing the Exp 5220 onward task set."
+- `exclusion_manifest_confirmed_clean`: principle "The activated .478 roadmap must pass the exclusion-manifest gate without hard retired-scope violations."
+- `validation_commands_run`: principle "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection."
+- `ops_docs_updated`: principle "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid when the conductor stop rule defers ops reconciliation."
+- `research_conductor_py_untouched_confirmed`: principle "The transition must not modify scripts/research_conductor.py."
+- `inference_substrate`: principle "This archive reads upstream artifacts and activation checks only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must state whether .478 was activated."
+
+#### SCENARIO-REPORT-5220: The Archive Preserves The Precise .477 Outcomes
+
+**Given** Exp 5207 through Exp 5219 artifacts are readable,
+`research-roadmap.yaml` is active for `2026.07.478`, the `.478` design document
+is present, the exclusion-manifest lint exits cleanly or with override-only
+warnings, available prior-failure validation exits zero, and
+`scripts/research_conductor.py` is unchanged
+**When** the Exp 5220 workflow runs
+**Then** it writes
+`results/experiment_5220_archive_477_activate_478.json`, records the exact
+Exp 5209, Exp 5210, Exp 5211, Exp 5212, Exp 5214, Exp 5216, Exp 5217, and
+Exp 5219 outcomes in `v477_summary`, sets
+`research_roadmap_yaml_activated=true`, sets
+`exclusion_manifest_confirmed_clean=true`, records every validation command and
+pass/fail result, declares `aggregation_from_upstream_artifacts`, and emits an
+honest verdict stating that `.478` was activated.
+
+#### SCENARIO-REPORT-5220-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Clean Activation Claims
+
+**Given** a required `.477` artifact is missing, the active roadmap is not
+`.478`, a required validation command fails, or `scripts/research_conductor.py`
+has been modified
+**When** the Exp 5220 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict` starts with a
+complete-path blocking phrase, records the failed precondition explicitly, and
+does not claim the `.478` handoff is clean.
+
+## Implementation Status (REQ-REPORT-5220)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5220 | Implemented (`python/carnot/experiment_5220_archive_477_activate_478.py`, `results/experiment_5220_archive_477_activate_478.json`) | Implemented (`tests/python/test_experiment_5220_archive_477_activate_478.py`) |
+
 ### REQ-REPORT-5208: V477 Reserved SOTA Ingestion Refresh
 
 The Exp 5208 workflow SHALL produce
