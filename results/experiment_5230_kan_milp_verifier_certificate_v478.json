@@ -1,0 +1,379 @@
+{
+  "blocked_reason": null,
+  "bound_tightness": {
+    "principle": "Safety threshold minus certified maximum energy for the no-unsafe-decision check.",
+    "value": 0.07500000372529225
+  },
+  "certificate": {
+    "input_box": [
+      [
+        -0.25,
+        0.5
+      ],
+      [
+        -0.25,
+        0.5
+      ]
+    ],
+    "limits": [
+      "tiny deterministic KAEM fixture only",
+      "no trained-network soundness claim",
+      "no broad KAN verification claim",
+      "no GRS-KAN implementation claim",
+      "no hardware or live LLM inference claim"
+    ],
+    "property_results": [
+      {
+        "bound_tightness": 0.22500000670552264,
+        "certified_upper_bound": null,
+        "details": {
+          "input_box": [
+            [
+              -0.25,
+              0.5
+            ],
+            [
+              -0.25,
+              0.5
+            ]
+          ],
+          "overlapping_slopes": [
+            {
+              "segment_index": 1,
+              "slope": 0.3000000201165679,
+              "unit_index": 0,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796
+            },
+            {
+              "segment_index": 2,
+              "slope": 0.45000004470348626,
+              "unit_index": 0,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632
+            },
+            {
+              "segment_index": 1,
+              "slope": 0.22500000670552264,
+              "unit_index": 1,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796
+            },
+            {
+              "segment_index": 2,
+              "slope": 0.3000000223517431,
+              "unit_index": 1,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632
+            }
+          ],
+          "statement": "All active PWA slopes over the tiny box are nonnegative."
+        },
+        "method": "pwa_slope_inspection",
+        "min_slope": 0.22500000670552264,
+        "property_id": "bounded_monotonicity",
+        "solver_status": "not_needed_slope_inspection",
+        "threshold": 0.0,
+        "verified": true,
+        "witness_inputs": null
+      },
+      {
+        "bound_tightness": 0.07500000372529225,
+        "certified_upper_bound": 0.6249999962747077,
+        "details": {
+          "constraint_count": 43,
+          "input_box": [
+            [
+              -0.25,
+              0.5
+            ],
+            [
+              -0.25,
+              0.5
+            ]
+          ],
+          "selected_segments": [
+            2,
+            2
+          ],
+          "statement": "For all x in the tiny input box, additive KAEM energy remains below unsafe threshold 0.7."
+        },
+        "method": "z3_mixed_integer_pwa_box_bound",
+        "min_slope": null,
+        "property_id": "no_unsafe_decision",
+        "solver_status": "optimal",
+        "threshold": 0.7,
+        "verified": true,
+        "witness_inputs": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "pwa_abstraction": {
+      "binary_variable_count": 6,
+      "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+      "declared_error_budgets": {
+        "global_error_budget": 0.0,
+        "local_error_budget": 0.0,
+        "per_unit_error_bounds": [
+          0.0,
+          0.0
+        ]
+      },
+      "global_error_bound": 0.0,
+      "input_dimension": 2,
+      "local_error_bound": 0.0,
+      "pwa_piece_count": 6,
+      "scale_up_note": "two-variable additive KAEM property; Exp 5080 had one variable",
+      "units": [
+        {
+          "binary_variable_count": 3,
+          "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+          "control_points": [
+            0.0,
+            0.10000000149011612,
+            0.30000001192092896,
+            0.6000000238418579
+          ],
+          "error_bound": 0.0,
+          "exact_for_linear_kaem_spline": true,
+          "knots": [
+            -1.0,
+            -0.333333283662796,
+            0.3333333730697632,
+            1.0
+          ],
+          "n_segments": 3,
+          "segments": [
+            {
+              "index": 0,
+              "intercept": 0.14999999105930395,
+              "slope": 0.14999999105930395,
+              "x_max": -0.333333283662796,
+              "x_min": -1.0,
+              "y_max": 0.10000000149011612,
+              "y_min": 0.0
+            },
+            {
+              "index": 1,
+              "intercept": 0.19999999329447654,
+              "slope": 0.3000000201165679,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796,
+              "y_max": 0.30000001192092896,
+              "y_min": 0.10000000149011612
+            },
+            {
+              "index": 2,
+              "intercept": 0.14999997913837165,
+              "slope": 0.45000004470348626,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632,
+              "y_max": 0.6000000238418579,
+              "y_min": 0.30000001192092896
+            }
+          ],
+          "variable_index": 0
+        },
+        {
+          "binary_variable_count": 3,
+          "component_path": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+          "control_points": [
+            0.0,
+            0.05000000074505806,
+            0.20000000298023224,
+            0.4000000059604645
+          ],
+          "error_bound": 0.0,
+          "exact_for_linear_kaem_spline": true,
+          "knots": [
+            -1.0,
+            -0.333333283662796,
+            0.3333333730697632,
+            1.0
+          ],
+          "n_segments": 3,
+          "segments": [
+            {
+              "index": 0,
+              "intercept": 0.07499999552965197,
+              "slope": 0.07499999552965197,
+              "x_max": -0.333333283662796,
+              "x_min": -1.0,
+              "y_max": 0.05000000074505806,
+              "y_min": 0.0
+            },
+            {
+              "index": 1,
+              "intercept": 0.12499999180436104,
+              "slope": 0.22500000670552264,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796,
+              "y_max": 0.20000000298023224,
+              "y_min": 0.05000000074505806
+            },
+            {
+              "index": 2,
+              "intercept": 0.09999998360872135,
+              "slope": 0.3000000223517431,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632,
+              "y_max": 0.4000000059604645,
+              "y_min": 0.20000000298023224
+            }
+          ],
+          "variable_index": 1
+        }
+      ]
+    },
+    "target_module": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer"
+  },
+  "certificate_path": {
+    "principle": "Path to the written certificate artifact, or null when blocked.",
+    "value": "results/experiment_5230_kan_milp_verifier_certificate_v478.json"
+  },
+  "duration_s": 0.400322,
+  "experiment_id": "exp5230-kan-milp-verifier-certificate-v478",
+  "field_principles": {
+    "bound_tightness": "Safety threshold minus certified maximum energy for the no-unsafe-decision check.",
+    "certificate_path": "Path to the written certificate artifact, or null when blocked.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state whether a certificate was produced.",
+    "inference_substrate": "Must be deterministic_pwa_milp_certificate.",
+    "kan_certificate_produced": "True only when monotonicity and no-unsafe-decision checks are both verified.",
+    "properties_checked": "Bounded properties checked by deterministic PWA/MILP evidence.",
+    "reused_existing_helpers": "True only when the pilot reuses the existing Exp 5080/5091 PWA abstraction helpers.",
+    "target_module": "The real Carnot KAEM/KAN-style module being abstracted.",
+    "tests_run": "Commands run for this certificate pilot, with pass/fail status."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether a certificate was produced.",
+    "value": "success: tiny KAEM PWA/MILP certificate produced for bounded monotonicity and no unsafe decision"
+  },
+  "inference_substrate": {
+    "principle": "Must be deterministic_pwa_milp_certificate.",
+    "value": "deterministic_pwa_milp_certificate"
+  },
+  "kan_certificate_produced": {
+    "principle": "True only when monotonicity and no-unsafe-decision checks are both verified.",
+    "value": true
+  },
+  "methodology_note": "This is a small deterministic certificate for one KAEM PWA fixture, not broad KAN verification. It reuses existing Carnot PWA helpers and keeps the claim to bounded monotonicity plus a no-unsafe-decision box bound.",
+  "properties_checked": {
+    "principle": "Bounded properties checked by deterministic PWA/MILP evidence.",
+    "value": [
+      {
+        "bound_tightness": 0.22500000670552264,
+        "certified_upper_bound": null,
+        "details": {
+          "input_box": [
+            [
+              -0.25,
+              0.5
+            ],
+            [
+              -0.25,
+              0.5
+            ]
+          ],
+          "overlapping_slopes": [
+            {
+              "segment_index": 1,
+              "slope": 0.3000000201165679,
+              "unit_index": 0,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796
+            },
+            {
+              "segment_index": 2,
+              "slope": 0.45000004470348626,
+              "unit_index": 0,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632
+            },
+            {
+              "segment_index": 1,
+              "slope": 0.22500000670552264,
+              "unit_index": 1,
+              "x_max": 0.3333333730697632,
+              "x_min": -0.333333283662796
+            },
+            {
+              "segment_index": 2,
+              "slope": 0.3000000223517431,
+              "unit_index": 1,
+              "x_max": 1.0,
+              "x_min": 0.3333333730697632
+            }
+          ],
+          "statement": "All active PWA slopes over the tiny box are nonnegative."
+        },
+        "method": "pwa_slope_inspection",
+        "min_slope": 0.22500000670552264,
+        "property_id": "bounded_monotonicity",
+        "solver_status": "not_needed_slope_inspection",
+        "threshold": 0.0,
+        "verified": true,
+        "witness_inputs": null
+      },
+      {
+        "bound_tightness": 0.07500000372529225,
+        "certified_upper_bound": 0.6249999962747077,
+        "details": {
+          "constraint_count": 43,
+          "input_box": [
+            [
+              -0.25,
+              0.5
+            ],
+            [
+              -0.25,
+              0.5
+            ]
+          ],
+          "selected_segments": [
+            2,
+            2
+          ],
+          "statement": "For all x in the tiny input box, additive KAEM energy remains below unsafe threshold 0.7."
+        },
+        "method": "z3_mixed_integer_pwa_box_bound",
+        "min_slope": null,
+        "property_id": "no_unsafe_decision",
+        "solver_status": "optimal",
+        "threshold": 0.7,
+        "verified": true,
+        "witness_inputs": [
+          0.5,
+          0.5
+        ]
+      }
+    ]
+  },
+  "random_seed": 5230,
+  "reproducibility_checksum": "16af5082abdd766624d8b966065c824c20de6ba0e7a092ef628f13adaf436cf6",
+  "reused_existing_helpers": {
+    "principle": "True only when the pilot reuses the existing Exp 5080/5091 PWA abstraction helpers.",
+    "value": true
+  },
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5230.kan_milp_verifier_certificate.v478",
+  "solver_available": true,
+  "solver_status": "optimal",
+  "source_helpers": [
+    "carnot.experiment_5080_kan_pwa_milp_bridge_v466.build_pwa_abstraction",
+    "carnot.experiment_5091_kan_pwa_milp_scale_v467.MultiUnitPWAAbstraction"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5230",
+    "SCENARIO-KAN-5230"
+  ],
+  "target_module": {
+    "principle": "The real Carnot KAEM/KAN-style module being abstracted.",
+    "value": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer"
+  },
+  "tests_run": {
+    "principle": "Commands run for this certificate pilot, with pass/fail status.",
+    "value": []
+  }
+}
