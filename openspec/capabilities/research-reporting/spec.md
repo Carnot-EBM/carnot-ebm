@@ -32999,6 +32999,72 @@ an honest verdict that does not claim GAP-4 was filled.
 |---|---|---|
 | REQ-REPORT-5212 | Planned (`python/carnot/experiment_5212_gap4_scale_validation_gated_v477.py`, `results/experiment_5212_gap4_scale_validation_gated_v477.json`) | Planned (`tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py`) |
 
+### REQ-REPORT-5223: GAP-4 Flagged Pool Authenticity Audit V478
+
+The repository SHALL provide Exp 5223 at
+`python/carnot/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py`
+to quarantine the flagged Exp 5211 / Exp 5212 GAP-4 pool artifacts and to
+define the canonical candidate-pool provenance contract before any later
+GAP-4 validation can run. The workflow SHALL read
+`results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json`,
+`results/experiment_5211_gap4_sota_local_candidate_expansion_v477.checkpoint.json`,
+and `results/experiment_5212_gap4_scale_validation_gated_v477.json`; SHALL
+record exactly why those artifacts are not headline-eligible; SHALL NOT create
+GAP-4 headline evidence; and SHALL NOT modify `scripts/research_conductor.py`.
+
+The canonical schema SHALL be written to
+`python/carnot/schemas/gap4_candidate_record_v1.json`. Each canonical GAP-4
+candidate record SHALL require at least `candidate_id`, `source_task_id`,
+`model_id`, `model_path_or_digest`, `prompt_digest`, `random_seed`,
+`generation_started_at`, `generation_duration_s`, `decoding_protocol`,
+`pass_at_1_fields`, `pass_at_2_fields`, `validation_inputs_digest`, and
+`provenance_kind`. A validation preflight SHALL reject missing or empty model
+provenance, missing `random_seed`, missing pass@2 protocol fields,
+`n_scored=0`, and tautology-shaped pool-ready artifacts whose candidate count,
+accepted count, and repair count collapse onto the same number without enough
+live-generation provenance.
+
+The terminal artifact SHALL be
+`results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json` and
+SHALL include bare top-level fields `gap4_pool_repairable`,
+`validated_pool_n`, `protocol_fields_complete`, `quarantined_artifacts`,
+`canonical_schema_path`, `guard_tests_added`, `tests_run`,
+`inference_substrate`, and `honest_verdict`. `gap4_pool_repairable` SHALL be
+`true` only if existing rows can be repaired without inventing model,
+seed, generation, or protocol provenance. `validated_pool_n` SHALL equal the
+number of protocol-scored validation rows accepted by the audit.
+`protocol_fields_complete` SHALL be `true` only when every accepted candidate
+record carries complete pass@1 and pass@2 protocol fields. `inference_substrate`
+SHALL equal `artifact_provenance_audit`. `honest_verdict` SHALL start with
+`complete:`, `complete_`, `success:`, or `success_` and state whether the old
+GAP-4 pool is repairable or must be regenerated.
+
+#### SCENARIO-REPORT-5223-QUARANTINE: Flagged V477 GAP-4 Pool Is Not Headline Evidence
+
+Given Exp 5211 reports a pool-ready GAP-4 expansion with empty `models_used`,
+missing random seeds, repaired/demo-lookup-shaped generation rows, and no
+pass@2 protocol labels, and Exp 5212 reports zero scored rows because those
+labels are absent, when Exp 5223 audits the artifacts, then it quarantines the
+Exp 5211 artifact, Exp 5211 checkpoint, and Exp 5212 artifact; writes
+`gap4_pool_repairable=false`, `validated_pool_n=0`, and
+`protocol_fields_complete=false`; and emits a terminal verdict saying the old
+pool must be regenerated or rebuilt by a later canonical-pool builder rather
+than promoted.
+
+#### SCENARIO-REPORT-5223-PREFLIGHT: GAP-4 Validation Cannot Pass Without Canonical Provenance
+
+Given a future GAP-4 validation input has `models_used=[]`, lacks
+`random_seed`, lacks canonical pass@2 protocol fields, reports `n_scored=0`,
+or has a tautology-shaped pool-ready count pattern, when the Exp 5223
+preflight helper evaluates it, then the helper rejects the input with explicit
+machine-readable reasons before any validation artifact can be marked passed.
+
+## Implementation Status (REQ-REPORT-5223)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5223 | Implemented (`python/carnot/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py`, `python/carnot/schemas/gap4_candidate_record_v1.json`, `results/experiment_5223_gap4_flagged_pool_authenticity_audit_v478.json`) | Implemented (`tests/python/test_experiment_5223_gap4_flagged_pool_authenticity_audit_v478.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write

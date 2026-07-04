@@ -1,0 +1,116 @@
+{
+  "$id": "https://carnot-ebm.org/schemas/gap4_candidate_record_v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Carnot GAP-4 Candidate Record v1",
+  "description": "Canonical provenance record for one GAP-4 candidate before validation.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "candidate_id",
+    "source_task_id",
+    "model_id",
+    "model_path_or_digest",
+    "prompt_digest",
+    "random_seed",
+    "generation_started_at",
+    "generation_duration_s",
+    "decoding_protocol",
+    "pass_at_1_fields",
+    "pass_at_2_fields",
+    "validation_inputs_digest",
+    "provenance_kind"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_path_or_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "random_seed": {
+      "type": "integer"
+    },
+    "generation_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "generation_duration_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "decoding_protocol": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": true
+    },
+    "pass_at_1_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "vote_top1",
+        "gated_top1",
+        "scoring_protocol"
+      ],
+      "properties": {
+        "vote_top1": {
+          "type": "boolean"
+        },
+        "gated_top1": {
+          "type": "boolean"
+        },
+        "scoring_protocol": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "pass_at_2_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "vote_top2",
+        "gated_top2",
+        "scoring_protocol"
+      ],
+      "properties": {
+        "vote_top2": {
+          "type": "boolean"
+        },
+        "gated_top2": {
+          "type": "boolean"
+        },
+        "scoring_protocol": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "validation_inputs_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "provenance_kind": {
+      "type": "string",
+      "enum": [
+        "live_llm_generation",
+        "canonical_pool_builder_repair",
+        "deterministic_replay",
+        "blocked_quarantined_legacy"
+      ]
+    }
+  }
+}

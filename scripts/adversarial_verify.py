@@ -222,6 +222,7 @@ AGGREGATION_MIN_DURATION_S = 0.0001  # 100us floor catches truly-zero/missing
 DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_verifier",
     "deterministic_verifier_plus_replay",
+    "artifact_provenance_audit",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 
@@ -2182,6 +2183,11 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # sources they cite; they aren't themselves a measurement, so this
     # check would be a category error.
     if _is_aggregation_only(d):
+        return
+    # Deterministic verifier/audit artifacts cite upstream model strings while
+    # reading checked-in evidence; requiring fresh model_specs/random_seed would
+    # confuse provenance audit with model inference.
+    if _is_deterministic_verifier(d):
         return
     # ARC live-agent no-LLM artifacts (and log-analysis-plus-local-timing gates, added
     # 2026-07-04 alongside the substrate itself) genuinely have no model to name (no LLM
