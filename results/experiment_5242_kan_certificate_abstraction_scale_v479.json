@@ -1,0 +1,206 @@
+{
+  "baseline": {
+    "dimensions": {
+      "baseline_slack": 0.07500000372529225,
+      "baseline_solve_status": "optimal",
+      "binary_variable_count": 6,
+      "constraint_count": 43,
+      "input_box": [
+        [
+          -0.25,
+          0.5
+        ],
+        [
+          -0.25,
+          0.5
+        ]
+      ],
+      "input_dimension": 2,
+      "pwa_piece_count": 6,
+      "source_artifact": "results/experiment_5230_kan_milp_verifier_certificate_v478.json"
+    },
+    "reproduced": true
+  },
+  "blocked_reason": null,
+  "certificate_slack_min": {
+    "principle": "Minimum positive slack across verified non-false stress certificates, or null when blocked.",
+    "value": 0.021250013932586076
+  },
+  "claim_limits": [
+    "no hardware readiness or execution claim",
+    "no analog KAN speedup claim",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "bounded deterministic KAEM PWA/MILP fixture only"
+  ],
+  "duration_s": 0.424573,
+  "experiment_id": "exp5242-kan-certificate-abstraction-scale-v479",
+  "false_property_rejected": {
+    "principle": "True only when the deliberate false property is rejected by the same deterministic solver path.",
+    "value": true
+  },
+  "field_principles": {
+    "certificate_slack_min": "Minimum positive slack across verified non-false stress certificates, or null when blocked.",
+    "false_property_rejected": "True only when the deliberate false property is rejected by the same deterministic solver path.",
+    "honest_verdict": "Must start with complete:/complete_/success:/success_ and state the bounded certificate scale achieved or blocked.",
+    "inference_substrate": "Must be deterministic_kan_pwa_milp_certificate.",
+    "kan_certificate_baseline_reproduced": "True only when the committed Exp 5230 artifact validates and its exact dimensions are recorded.",
+    "kan_certificate_extended": "True only when at least one bounded stress certificate verifies and the deliberate false property is rejected.",
+    "max_pwa_segments_verified": "Largest total PWA segment count among verified non-false stress certificates.",
+    "solve_time_s": "Total deterministic solver time across stress rows.",
+    "stress_axes": "List of bounded stress dimensions applied after reproducing Exp 5230.",
+    "tests_run": "Commands run for this artifact, with pass/fail status."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state the bounded certificate scale achieved or blocked.",
+    "value": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim"
+  },
+  "inference_substrate": {
+    "principle": "Must be deterministic_kan_pwa_milp_certificate.",
+    "value": "deterministic_kan_pwa_milp_certificate"
+  },
+  "kan_certificate_baseline_reproduced": {
+    "principle": "True only when the committed Exp 5230 artifact validates and its exact dimensions are recorded.",
+    "value": true
+  },
+  "kan_certificate_extended": {
+    "principle": "True only when at least one bounded stress certificate verifies and the deliberate false property is rejected.",
+    "value": true
+  },
+  "max_pwa_segments_verified": {
+    "principle": "Largest total PWA segment count among verified non-false stress certificates.",
+    "value": 10
+  },
+  "random_seed": 5242,
+  "reproducibility_checksum": "bb9786e971125f39c879e02235d122149edd80fa20de845bf19cc5e69c29dd72",
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5242.kan_certificate_abstraction_scale.v479",
+  "solve_time_s": {
+    "principle": "Total deterministic solver time across stress rows.",
+    "value": 0.055886
+  },
+  "source_artifacts": [
+    "results/experiment_5230_kan_milp_verifier_certificate_v478.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5242",
+    "SCENARIO-KAN-5242"
+  ],
+  "stress_axes": {
+    "principle": "List of bounded stress dimensions applied after reproducing Exp 5230.",
+    "value": [
+      "more_pwa_segments",
+      "wider_input_bounds",
+      "deliberate_false_property"
+    ]
+  },
+  "stress_results": [
+    {
+      "binary_variable_count": 10,
+      "case_id": "more_pwa_segments",
+      "certificate_slack": 0.042500016819685627,
+      "certified_upper_bound": 0.6774999831803143,
+      "constraint_count": 67,
+      "false_property_rejected": false,
+      "input_box": [
+        [
+          -0.25,
+          0.5
+        ],
+        [
+          -0.25,
+          0.5
+        ]
+      ],
+      "min_slope": 0.15000000838190305,
+      "numerical_instability": "none_detected",
+      "pwa_piece_count": 10,
+      "selected_segments": [
+        3,
+        3
+      ],
+      "solve_time_s": 0.014913,
+      "solver_status": "optimal",
+      "stress_axis": "more_pwa_segments",
+      "threshold": 0.72,
+      "verified": true,
+      "witness_inputs": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "binary_variable_count": 10,
+      "case_id": "wider_input_bounds",
+      "certificate_slack": 0.021250013932586076,
+      "certified_upper_bound": 0.8587499860674139,
+      "constraint_count": 67,
+      "false_property_rejected": false,
+      "input_box": [
+        [
+          -0.5,
+          0.75
+        ],
+        [
+          -0.5,
+          0.75
+        ]
+      ],
+      "min_slope": 0.15000000838190305,
+      "numerical_instability": "none_detected",
+      "pwa_piece_count": 10,
+      "selected_segments": [
+        4,
+        4
+      ],
+      "solve_time_s": 0.019949,
+      "solver_status": "optimal",
+      "stress_axis": "wider_input_bounds",
+      "threshold": 0.88,
+      "verified": true,
+      "witness_inputs": [
+        0.75,
+        0.75
+      ]
+    },
+    {
+      "binary_variable_count": 10,
+      "case_id": "deliberate_false_property",
+      "certificate_slack": -0.01874998606741396,
+      "certified_upper_bound": 0.8587499860674139,
+      "constraint_count": 67,
+      "false_property_rejected": true,
+      "input_box": [
+        [
+          -0.5,
+          0.75
+        ],
+        [
+          -0.5,
+          0.75
+        ]
+      ],
+      "min_slope": 0.15000000838190305,
+      "numerical_instability": "none_detected",
+      "pwa_piece_count": 10,
+      "selected_segments": [
+        4,
+        4
+      ],
+      "solve_time_s": 0.021024,
+      "solver_status": "optimal",
+      "stress_axis": "deliberate_false_property",
+      "threshold": 0.84,
+      "verified": false,
+      "witness_inputs": [
+        0.75,
+        0.75
+      ]
+    }
+  ],
+  "target_module": "python/carnot/models/kaem_energy.py::UnivariateKAEMLayer",
+  "tests_run": {
+    "principle": "Commands run for this artifact, with pass/fail status.",
+    "value": []
+  }
+}
