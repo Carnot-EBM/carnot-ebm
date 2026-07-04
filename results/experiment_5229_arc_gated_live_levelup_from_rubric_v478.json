@@ -1,0 +1,33 @@
+{
+  "experiment": 5229,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-04",
+  "started_at": "2026-07-04T15:35:31.016491+00:00",
+  "finished_at": "2026-07-04T15:35:31.016491+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE 3 gated on exp5228 rubric and patch -- ARC live-agent level-up attempt",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v478.recommended_live_patch_available (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5228-arc-provenance-skill-rubric-gate-v478",
+      "artifact_field": "arc_skill_rubric_usable",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp5228-arc-provenance-skill-rubric-gate-v478",
+      "artifact_field": "recommended_live_patch_available",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
