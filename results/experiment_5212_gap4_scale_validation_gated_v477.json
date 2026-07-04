@@ -1,0 +1,183 @@
+{
+  "arc1_slice_result": {
+    "labels_available": false,
+    "n_entries": 0,
+    "reason": "no_labeled_rows"
+  },
+  "arc2_heldout_slice_result": {
+    "labels_available": false,
+    "n_entries": 0,
+    "reason": "no_labeled_rows"
+  },
+  "cluster_bootstrap_delta_ci95": {
+    "principle": "Cluster bootstrap CI over gated pass@2 minus vote pass@2, using the existing Exp 5177 bootstrap implementation.",
+    "value": [
+      0.0,
+      0.0
+    ]
+  },
+  "duration_s": 2.538397,
+  "exact_test_discordant_losses": {
+    "principle": "Actual vote-over-gated pass@2 losses under the unchanged Exp 5161/5177/5197 protocol.",
+    "value": 0
+  },
+  "exact_test_discordant_wins": {
+    "principle": "Actual gated-over-vote pass@2 wins under the unchanged Exp 5161/5177/5197 protocol.",
+    "value": 0
+  },
+  "exact_test_p_value_two_sided": {
+    "principle": "Two-sided scipy.stats.binomtest p-value over discordant pass@2 pairs.",
+    "value": 1.0
+  },
+  "exact_test_passes_min6_rule": {
+    "principle": "The GAP-4 floor remains at least six discordant wins, zero discordant losses, and p < 0.05.",
+    "value": false
+  },
+  "excluded_row_examples": [
+    {
+      "index": 0,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:0"
+    },
+    {
+      "index": 1,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:1"
+    },
+    {
+      "index": 2,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:2"
+    },
+    {
+      "index": 3,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:3"
+    },
+    {
+      "index": 4,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:4"
+    },
+    {
+      "index": 5,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:5"
+    },
+    {
+      "index": 6,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:6"
+    },
+    {
+      "index": 7,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:7"
+    },
+    {
+      "index": 8,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:8"
+    },
+    {
+      "index": 9,
+      "reason": "missing_protocol_pass2_fields",
+      "task_id": "human_replay:ar25:0:9"
+    }
+  ],
+  "excluded_rows": {
+    "principle": "Rows excluded before statistics because they are malformed, leak-prone, or lack unchanged-protocol scoring labels.",
+    "value": 120
+  },
+  "exclusion_summary": {
+    "missing_protocol_pass2_fields": 120
+  },
+  "exp5211_candidate_pool_n": 120,
+  "exp5211_gap4_expansion_usable": true,
+  "exp5211_result_path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json",
+  "experiment": "experiment_5212_gap4_scale_validation_gated_v477",
+  "experiment_id": 5212,
+  "failure_mode": "missing_protocol_pass2_fields",
+  "field_principles": {
+    "cluster_bootstrap_delta_ci95": {
+      "principle": "Cluster bootstrap CI over gated pass@2 minus vote pass@2, using the existing Exp 5177 bootstrap implementation."
+    },
+    "exact_test_discordant_losses": {
+      "principle": "Actual vote-over-gated pass@2 losses under the unchanged Exp 5161/5177/5197 protocol."
+    },
+    "exact_test_discordant_wins": {
+      "principle": "Actual gated-over-vote pass@2 wins under the unchanged Exp 5161/5177/5197 protocol."
+    },
+    "exact_test_p_value_two_sided": {
+      "principle": "Two-sided scipy.stats.binomtest p-value over discordant pass@2 pairs."
+    },
+    "exact_test_passes_min6_rule": {
+      "principle": "The GAP-4 floor remains at least six discordant wins, zero discordant losses, and p < 0.05."
+    },
+    "excluded_rows": {
+      "principle": "Rows excluded before statistics because they are malformed, leak-prone, or lack unchanged-protocol scoring labels."
+    },
+    "gap4_status_recommendation": {
+      "principle": "filled only if the exact min-6 rule passes; blocked or scale-up/retirement is reported otherwise."
+    },
+    "honest_verdict": {
+      "principle": "Must start with complete:/complete_/success:/success_ and must not claim the floor crossed unless exact_test_passes_min6_rule is true."
+    },
+    "inference_substrate": {
+      "principle": "Must be verifier_ensemble_against_cached_candidates."
+    },
+    "n_scored": {
+      "principle": "Rows scored only after Exp 5211 feasibility/leakage metadata and the established pass@2 protocol labels are present."
+    },
+    "tests_run": {
+      "principle": "Commands actually run for this artifact, with pass/fail status."
+    }
+  },
+  "gap4_status_recommendation": {
+    "principle": "filled only if the exact min-6 rule passes; blocked or scale-up/retirement is reported otherwise.",
+    "value": "blocked"
+  },
+  "honest_verdict": "complete_gap4_scale_validation_v477_n0_missing_protocol_pass2_fields_blocked",
+  "inference_substrate": {
+    "principle": "Must be verifier_ensemble_against_cached_candidates.",
+    "value": "verifier_ensemble_against_cached_candidates"
+  },
+  "n_scored": {
+    "principle": "Rows scored only after Exp 5211 feasibility/leakage metadata and the established pass@2 protocol labels are present.",
+    "value": 0
+  },
+  "reproducibility_checksum": "sha256:16ce257834ce0751f11f5405d1f54916f3c6848218046f5c2803d4887d064279",
+  "result_path": "results/experiment_5212_gap4_scale_validation_gated_v477.json",
+  "schema": "carnot.gap4_scale_validation_gated_5212.v1",
+  "scored_rows": [],
+  "scoring_protocol": {
+    "bootstrap": "experiment_5177.cluster_bootstrap_delta_ci",
+    "exact_test": "experiment_5197.exact_test scipy.stats.binomtest",
+    "lineage": [
+      "experiment_5161",
+      "experiment_5177",
+      "experiment_5197"
+    ],
+    "method_changed_mid_test": false
+  },
+  "source_artifacts": [
+    {
+      "exists": true,
+      "path": "results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5212",
+    "SCENARIO-REPORT-5212",
+    "SCENARIO-REPORT-5212-BLOCKED-PROTOCOL-METADATA"
+  ],
+  "tests_run": {
+    "principle": "Commands actually run for this artifact, with pass/fail status.",
+    "value": [
+      "ruff check python/carnot/experiment_5212_gap4_scale_validation_gated_v477.py tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py: pass",
+      ".venv/bin/pytest tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py -q --no-cov: pass (6 passed)",
+      ".venv/bin/coverage erase && .venv/bin/coverage run -m pytest -q -o addopts='' tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py && .venv/bin/coverage report --include='*/experiment_5212_gap4_scale_validation_gated_v477.py' --fail-under=100 --show-missing: pass (100% new-module coverage)",
+      ".venv/bin/pytest tests/python -q: fail/interrupted after failure summary (4 failed, 6305 passed, 7 skipped; failures in test_abstention_http_rest_3810.py, test_adaptive.py worker segfault in z3_math_verifier, test_experiment_1504_thrml_carnot_simulator_parity_v3.py)"
+    ]
+  }
+}

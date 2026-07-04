@@ -32929,6 +32929,76 @@ headline evidence.
 |---|---|---|
 | REQ-REPORT-5211 | Planned (`python/carnot/experiment_5211_gap4_sota_local_candidate_expansion_v477.py`, `results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json`) | Planned (`tests/python/test_experiment_5211_gap4_sota_local_candidate_expansion_v477.py`) |
 
+### REQ-REPORT-5212: GAP-4 Expanded-Pool Scale Validation V477
+
+The repository SHALL provide Exp 5212 at
+`python/carnot/experiment_5212_gap4_scale_validation_gated_v477.py` to validate
+the Exp 5211 expanded GAP-4 candidate pool without changing the established
+Exp 5161 / Exp 5177 / Exp 5197 statistical protocol. The workflow SHALL first
+load `results/experiment_5211_gap4_sota_local_candidate_expansion_v477.json`
+and SHALL proceed only when the upstream bare gate reports
+`candidate_pool_n >= 120` and `gap4_expansion_usable=true`. Every candidate row
+SHALL be audited for demo-perfect metadata, same-shape execution metadata, and
+leakage-audit metadata before scoring. Rows missing those fields, rows leaking
+test-gold/protocol-forbidden code paths, or rows missing the established
+`vote_top2` and `gated_top2` pass@2 labels SHALL be excluded and counted in the
+artifact rather than remapped into a new method.
+
+The artifact SHALL be
+`results/experiment_5212_gap4_scale_validation_gated_v477.json` and SHALL
+include principle-annotated fields `n_scored`,
+`exact_test_discordant_wins`, `exact_test_discordant_losses`,
+`exact_test_p_value_two_sided`, `exact_test_passes_min6_rule`,
+`cluster_bootstrap_delta_ci95`, `gap4_status_recommendation`,
+`excluded_rows`, `tests_run`, and `inference_substrate`, plus a terminal
+`honest_verdict`. The exact test SHALL reuse the same two-sided
+`scipy.stats.binomtest` calculation as Exp 5197, the bootstrap SHALL reuse the
+same cluster bootstrap as Exp 5177, and GAP-4 SHALL be recommended as `filled`
+only when the actual scored rows produce at least six discordant wins, zero
+discordant losses, and two-sided `p < 0.05`. If Exp 5211 rows lack protocol
+pass@2 labels, Exp 5212 SHALL report `gap4_status_recommendation=blocked`,
+`n_scored=0`, and the precise exclusion/failure mode rather than declaring the
+expanded pool significant.
+
+Required field principles:
+
+- `n_scored`: principle "Rows scored only after Exp 5211 feasibility/leakage metadata and the established pass@2 protocol labels are present."
+- `exact_test_discordant_wins`: principle "Actual gated-over-vote pass@2 wins under the unchanged Exp 5161/5177/5197 protocol."
+- `exact_test_discordant_losses`: principle "Actual vote-over-gated pass@2 losses under the unchanged Exp 5161/5177/5197 protocol."
+- `exact_test_p_value_two_sided`: principle "Two-sided scipy.stats.binomtest p-value over discordant pass@2 pairs."
+- `exact_test_passes_min6_rule`: principle "The GAP-4 floor remains at least six discordant wins, zero discordant losses, and p < 0.05."
+- `cluster_bootstrap_delta_ci95`: principle "Cluster bootstrap CI over gated pass@2 minus vote pass@2, using the existing Exp 5177 bootstrap implementation."
+- `gap4_status_recommendation`: principle "filled only if the exact min-6 rule passes; blocked or scale-up/retirement is reported otherwise."
+- `excluded_rows`: principle "Rows excluded before statistics because they are malformed, leak-prone, or lack unchanged-protocol scoring labels."
+- `tests_run`: principle "Commands actually run for this artifact, with pass/fail status."
+- `inference_substrate`: principle "Must be verifier_ensemble_against_cached_candidates."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must not claim the floor crossed unless exact_test_passes_min6_rule is true."
+
+#### SCENARIO-REPORT-5212: Expanded Pool Is Scored Only With Protocol Labels
+
+Given Exp 5211 produced a usable candidate pool with `candidate_pool_n >= 120`,
+when Exp 5212 runs, then it audits every row for demo-perfect and leakage
+metadata, excludes rows missing the established pass@2 labels, computes exact
+discordant wins/losses and cluster-bootstrap CI over any remaining scored rows,
+reports ARC-1 and ARC-2/held-out slices separately when labels are available,
+and writes a terminal artifact that keeps GAP-4 open unless the unchanged
+min-6 zero-loss exact-test floor is crossed.
+
+#### SCENARIO-REPORT-5212-BLOCKED-PROTOCOL-METADATA: Expanded Pool Cannot Be Relabeled
+
+Given Exp 5211 produced feasible demo-perfect rows but they do not include the
+Exp 5161/5177/5197 `vote_top2` and `gated_top2` pass@2 labels, when Exp 5212
+runs, then all such rows are excluded with a
+`missing_protocol_pass2_fields` failure mode, `n_scored=0`,
+`exact_test_passes_min6_rule=false`, `gap4_status_recommendation=blocked`, and
+an honest verdict that does not claim GAP-4 was filled.
+
+## Implementation Status (REQ-REPORT-5212)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5212 | Planned (`python/carnot/experiment_5212_gap4_scale_validation_gated_v477.py`, `results/experiment_5212_gap4_scale_validation_gated_v477.json`) | Planned (`tests/python/test_experiment_5212_gap4_scale_validation_gated_v477.py`) |
+
 ### REQ-REPORT-5178: Hidden-State Verifier Pilot V474
 
 The Exp 5178 workflow SHALL write
