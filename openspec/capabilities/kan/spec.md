@@ -739,6 +739,42 @@ Then the artifact produces a certificate only when both properties are
 verified, records bound tightness and helper provenance, and otherwise blocks
 with the exact missing solver prerequisite.
 
+## REQ-KAN-5242: V479 KAEM Certificate Abstraction Scale Boundary
+
+The KAN verification tier SHALL extend the Exp 5230 tiny KAEM PWA/MILP
+certificate into a bounded abstraction stress test without claiming hardware
+hardware readiness, live LLM inference, analog KAN execution, trained-network soundness,
+or broad KAN verification. The experiment MUST reproduce the Exp 5230
+certificate path first and record the exact baseline dimensions before trying
+any stress case.
+
+The stress test MUST include one or two bounded stress axes selected from
+additional PWA segments, wider input bounds, more constraints, and a deliberate
+false property. If a deliberate false property is included, the verifier MUST
+reject it rather than counting it as a successful certificate. Every stress row
+MUST record certificate success or failure, solver status, solve time,
+slack/margin when applicable, and any detected numerical instability.
+
+The deliverable MUST be written to
+`results/experiment_5242_kan_certificate_abstraction_scale_v479.json` with
+principle-wrapped fields for `kan_certificate_baseline_reproduced`,
+`kan_certificate_extended`, `stress_axes`, `max_pwa_segments_verified`,
+`false_property_rejected`, `certificate_slack_min`, `solve_time_s`,
+`tests_run`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` MUST be
+`deterministic_kan_pwa_milp_certificate`. `honest_verdict` MUST start with
+`complete:`, `complete_`, `success:`, or `success_` and state the bounded
+certificate scale achieved or blocked.
+
+### SCENARIO-KAN-5242: Bounded Certificate Stress Reports Scale Boundary
+
+Given the committed Exp 5230 KAEM PWA/MILP certificate artifact,
+When Exp 5242 reproduces the baseline dimensions and runs bounded stress cases
+with more PWA pieces, wider input bounds, or a deliberate false property,
+Then the artifact reports the maximum PWA segment count verified, whether the
+false property was rejected, minimum certificate slack, solver timing, and an
+honest verdict scoped only to the bounded deterministic KAEM certificate.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -778,6 +814,7 @@ with the exact missing solver prerequisite.
 | REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
 | REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
 | REQ-KAN-5230 | Planned | Exp 5230 target: V478 tiny KAEM PWA/MILP certificate pilot tied to `UnivariateKAEMLayer`, with monotonicity and no-unsafe-decision checks only. |
+| REQ-KAN-5242 | Planned | Exp 5242 target: V479 bounded abstraction stress test that reproduces Exp 5230, adds limited segment/domain/false-property pressure, and reports the achieved certificate boundary without hardware or broad KAN claims. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
