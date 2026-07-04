@@ -10259,3 +10259,4 @@ web search: |
 | 2026-07-04 02:34 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
 | 2026-07-04 02:36 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
 | 2026-07-04 02:38 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
+| 2026-07-04 03:00 UTC | PHASE A3 GAP-4 SOTA local candidate expansion -- b | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, DURATIO |
