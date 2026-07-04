@@ -2167,6 +2167,44 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
 (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
 an explicit operator directive, same standing-default discipline as the experiment default).
 
+### CANDIDATE: TRM as the ARC-AGI-3 action-sequence generator 2026-07-04 (outer-loop, "can TRM be used as a generator as that is our biggest wall?" -> "yes")
+
+**Not a new idea -- an existing, unaddressed gap, now with two supporting arguments.** Full writeup:
+`docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md`. `ops/verifier_gaps.md`'s
+`GAP-ARC-TRM-TRAINED-ON-ARC` has been open, never attempted, since 2026-06-17: train a TRM on ARC's
+own captured trajectories (not the sudoku-trained checkpoint already tried and found weak) to
+propose/refine candidate action sequences directly, attacking the diagnosed generation/enumeration
+wall rather than another selection/verifier improvement.
+
+**What's new:** (1) verified the Sudoku "recursive refinement beats AR" precedent
+(`results/experiment_sudoku_energy_vs_ar_v1.json`) IS literally the TRM recipe -- 18.2% solve rate vs
+AR's ~0-0.2%, while a near-perfect energy scorer still failed to generate (0%, worse than random) --
+the exact generation-vs-scoring failure shape GAP-4891 diagnosed for ARC, already broken through once
+on a different combinatorial domain. (2) arXiv:2604.07822 ("Loop, Think, & Generalize: Implicit
+Reasoning in Recurrent-Depth Transformers") gives a mechanistic reason recurrent-depth computation
+should help ARC's specific compositional-generalization challenge (composing freshly-discovered game
+mechanics into a winning action sequence), plus two concrete design rules for any build: train with
+DYNAMIC recursion depth (not fixed), and instrument explicitly for "overthinking" (accuracy peaks at
+some recursion depth then degrades -- more iterations isn't automatically better).
+
+**Explicitly distinct from two already-retired TRM-on-ARC threads** (cite both if the exclusion-
+manifest lint flags a scope match): the sudoku-trained-checkpoint-as-static-ARC-generator attempt
+(weak because untrained on ARC, not disqualifying) and exp4100's TRM-as-dynamics-engine (a different
+mechanism -- predicting state transitions, not refining action sequences).
+
+**The real open question, not assumed either way:** whether the 69 reproducible levels' captured
+trajectories carry enough training signal (the effective (state,action) pair count is unmeasured --
+likely larger than "69" since each level's trajectory contributes many pairs, but this should be
+counted, not assumed).
+
+**If a future planner picks this up:** scope the FIRST task to the note's proposed leave-one-game-out
+overfit-generalization pilot (count the actual training-pair size; train nano-TRM-scale on all-but-
+one game; test held-out, offline, against the trivial baseline) -- a cheap, falsifiable gate on
+whether the corpus has any signal at all -- BEFORE committing to the existing gap entry's full
+full-FT-on-a-3090 build. `solve_provenance: development_proxy`; if it graduates past piloting it must
+wire into the live agent path (a `GameAdapter`), never a standalone script, per "ARC Live-Path
+Reachability Discipline."
+
 ### CANDIDATE: ARC-AGI-3 multi-level deepening literature 2026-07-03 (outer-loop, "let's add those to our planning to follow up on")
 
 **Not yet scoped as a task -- flagging for planner consideration.** Full writeup:
