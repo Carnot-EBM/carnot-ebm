@@ -1,0 +1,663 @@
+{
+  "aligned_vs_no_memory_delta": {
+    "principle": "Accuracy delta isolating aligned memory transfer over no memory.",
+    "value": 0.666667
+  },
+  "aligned_vs_shuffled_delta": {
+    "principle": "Accuracy delta isolating task-aligned memory from shuffled-memory bias.",
+    "value": 1.0
+  },
+  "arm_metrics": {
+    "aligned_memory": {
+      "accuracy": 1.0,
+      "arm": "aligned_memory",
+      "correct_n": 6,
+      "n": 6,
+      "rows": [
+        {
+          "arc_patch_relevant": true,
+          "correct": true,
+          "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "expected_head": "provenance",
+          "expected_state": "promoted",
+          "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+          "selected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "selected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": true,
+          "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "expected_head": "provenance",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "query": "ARC GAP-1 registry promotion retry after subset instability",
+          "selected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "selected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": true,
+          "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+          "selected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "selected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": true,
+          "expected_action": "retire_mmlu_hidden_state_path",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "MMLU hidden-state verifier path retired",
+          "query": "MMLU hidden-state verifier path after failed controls",
+          "selected_action": "retire_mmlu_hidden_state_path",
+          "selected_subject": "MMLU hidden-state verifier path retired",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": true,
+          "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "expected_head": "skills_rubrics",
+          "expected_state": "rolled_back",
+          "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "query": "ARC live path zero-level delta before patch synthesis",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": true,
+          "expected_action": "block_hardware_speedup_claim_until_transcript",
+          "expected_head": "constraints",
+          "expected_state": "promoted",
+          "expected_subject": "Hardware speedup claim boundary",
+          "query": "Hardware speedup claim without authenticated transcript",
+          "selected_action": "block_hardware_speedup_claim_until_transcript",
+          "selected_subject": "Hardware speedup claim boundary",
+          "task_id": "hardware_speedup_boundary_consumer"
+        }
+      ],
+      "selected_subjects": [
+        "GAP-1 orientation discriminator memory-only promotion",
+        "GAP-1 registry promotion blocked by subset instability",
+        "GAP-4 candidate-pool validation null/quarantine",
+        "MMLU hidden-state verifier path retired",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "Hardware speedup claim boundary"
+      ]
+    },
+    "best_constant": {
+      "accuracy": 0.166667,
+      "arm": "best_constant",
+      "constant_candidates": [
+        {
+          "correct_n": 1,
+          "subject": "GAP-1 orientation discriminator memory-only promotion"
+        },
+        {
+          "correct_n": 1,
+          "subject": "GAP-1 registry promotion blocked by subset instability"
+        },
+        {
+          "correct_n": 1,
+          "subject": "GAP-4 candidate-pool validation null/quarantine"
+        },
+        {
+          "correct_n": 1,
+          "subject": "MMLU hidden-state verifier path retired"
+        },
+        {
+          "correct_n": 1,
+          "subject": "ARC live-path zero-level delta retained for rubric setup"
+        },
+        {
+          "correct_n": 1,
+          "subject": "Hardware speedup claim boundary"
+        }
+      ],
+      "correct_n": 1,
+      "n": 6,
+      "rows": [
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "expected_head": "provenance",
+          "expected_state": "promoted",
+          "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "expected_head": "provenance",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "query": "ARC GAP-1 registry promotion retry after subset instability",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "retire_mmlu_hidden_state_path",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "MMLU hidden-state verifier path retired",
+          "query": "MMLU hidden-state verifier path after failed controls",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": true,
+          "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "expected_head": "skills_rubrics",
+          "expected_state": "rolled_back",
+          "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "query": "ARC live path zero-level delta before patch synthesis",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "block_hardware_speedup_claim_until_transcript",
+          "expected_head": "constraints",
+          "expected_state": "promoted",
+          "expected_subject": "Hardware speedup claim boundary",
+          "query": "Hardware speedup claim without authenticated transcript",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "hardware_speedup_boundary_consumer"
+        }
+      ],
+      "selected_constant_subject": "ARC live-path zero-level delta retained for rubric setup",
+      "selected_subjects": [
+        "ARC live-path zero-level delta retained for rubric setup",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "ARC live-path zero-level delta retained for rubric setup"
+      ]
+    },
+    "no_memory": {
+      "accuracy": 0.333333,
+      "arm": "no_memory",
+      "correct_n": 2,
+      "n": 6,
+      "rows": [
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "expected_head": "provenance",
+          "expected_state": "promoted",
+          "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+          "selected_action": "attempt_gap1_registry_promotion",
+          "selected_subject": null,
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "expected_head": "provenance",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "query": "ARC GAP-1 registry promotion retry after subset instability",
+          "selected_action": "attempt_gap1_registry_promotion",
+          "selected_subject": null,
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+          "selected_action": "reuse_gap4_candidate_pool",
+          "selected_subject": null,
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": true,
+          "expected_action": "retire_mmlu_hidden_state_path",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "MMLU hidden-state verifier path retired",
+          "query": "MMLU hidden-state verifier path after failed controls",
+          "selected_action": "retire_mmlu_hidden_state_path",
+          "selected_subject": null,
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "expected_head": "skills_rubrics",
+          "expected_state": "rolled_back",
+          "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "query": "ARC live path zero-level delta before patch synthesis",
+          "selected_action": "patch_arc_level_directly",
+          "selected_subject": null,
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": true,
+          "expected_action": "block_hardware_speedup_claim_until_transcript",
+          "expected_head": "constraints",
+          "expected_state": "promoted",
+          "expected_subject": "Hardware speedup claim boundary",
+          "query": "Hardware speedup claim without authenticated transcript",
+          "selected_action": "block_hardware_speedup_claim_until_transcript",
+          "selected_subject": null,
+          "task_id": "hardware_speedup_boundary_consumer"
+        }
+      ],
+      "selected_subjects": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "per_query_random": {
+      "accuracy": 0.0,
+      "arm": "per_query_random",
+      "correct_n": 0,
+      "n": 6,
+      "rows": [
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "expected_head": "provenance",
+          "expected_state": "promoted",
+          "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+          "selected_action": "retire_mmlu_hidden_state_path",
+          "selected_subject": "MMLU hidden-state verifier path retired",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "expected_head": "provenance",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "query": "ARC GAP-1 registry promotion retry after subset instability",
+          "selected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "selected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+          "selected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "selected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "retire_mmlu_hidden_state_path",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "MMLU hidden-state verifier path retired",
+          "query": "MMLU hidden-state verifier path after failed controls",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "expected_head": "skills_rubrics",
+          "expected_state": "rolled_back",
+          "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "query": "ARC live path zero-level delta before patch synthesis",
+          "selected_action": "block_hardware_speedup_claim_until_transcript",
+          "selected_subject": "Hardware speedup claim boundary",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "block_hardware_speedup_claim_until_transcript",
+          "expected_head": "constraints",
+          "expected_state": "promoted",
+          "expected_subject": "Hardware speedup claim boundary",
+          "query": "Hardware speedup claim without authenticated transcript",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "hardware_speedup_boundary_consumer"
+        }
+      ],
+      "selected_subjects": [
+        "MMLU hidden-state verifier path retired",
+        "GAP-4 candidate-pool validation null/quarantine",
+        "GAP-1 registry promotion blocked by subset instability",
+        "ARC live-path zero-level delta retained for rubric setup",
+        "Hardware speedup claim boundary",
+        "ARC live-path zero-level delta retained for rubric setup"
+      ]
+    },
+    "shuffled_memory": {
+      "accuracy": 0.0,
+      "arm": "shuffled_memory",
+      "correct_n": 0,
+      "fixed_points": 0,
+      "n": 6,
+      "rows": [
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "expected_head": "provenance",
+          "expected_state": "promoted",
+          "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+          "selected_action": "block_hardware_speedup_claim_until_transcript",
+          "selected_subject": "Hardware speedup claim boundary",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "expected_head": "provenance",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "query": "ARC GAP-1 registry promotion retry after subset instability",
+          "selected_action": "use_gap1_orientation_discriminator_as_memory_only",
+          "selected_subject": "GAP-1 orientation discriminator memory-only promotion",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+          "selected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "selected_subject": "GAP-1 registry promotion blocked by subset instability",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "retire_mmlu_hidden_state_path",
+          "expected_head": "failures",
+          "expected_state": "rolled_back",
+          "expected_subject": "MMLU hidden-state verifier path retired",
+          "query": "MMLU hidden-state verifier path after failed controls",
+          "selected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "selected_subject": "GAP-4 candidate-pool validation null/quarantine",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "arc_patch_relevant": true,
+          "correct": false,
+          "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "expected_head": "skills_rubrics",
+          "expected_state": "rolled_back",
+          "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "query": "ARC live path zero-level delta before patch synthesis",
+          "selected_action": "retire_mmlu_hidden_state_path",
+          "selected_subject": "MMLU hidden-state verifier path retired",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "arc_patch_relevant": false,
+          "correct": false,
+          "expected_action": "block_hardware_speedup_claim_until_transcript",
+          "expected_head": "constraints",
+          "expected_state": "promoted",
+          "expected_subject": "Hardware speedup claim boundary",
+          "query": "Hardware speedup claim without authenticated transcript",
+          "selected_action": "build_arc_process_rubric_before_patch_synthesis",
+          "selected_subject": "ARC live-path zero-level delta retained for rubric setup",
+          "task_id": "hardware_speedup_boundary_consumer"
+        }
+      ],
+      "selected_subjects": [
+        "Hardware speedup claim boundary",
+        "GAP-1 orientation discriminator memory-only promotion",
+        "GAP-1 registry promotion blocked by subset instability",
+        "GAP-4 candidate-pool validation null/quarantine",
+        "MMLU hidden-state verifier path retired",
+        "ARC live-path zero-level delta retained for rubric setup"
+      ]
+    }
+  },
+  "arms": {
+    "principle": "The exact five ablation arms used with a fixed one-prior-slot budget.",
+    "value": [
+      "no_memory",
+      "best_constant",
+      "per_query_random",
+      "shuffled_memory",
+      "aligned_memory"
+    ]
+  },
+  "broad_self_distillation_used": {
+    "principle": "False because this experiment performs no model distillation.",
+    "value": false
+  },
+  "budget": {
+    "prior_slots_per_query": 1,
+    "random_seed": 5239,
+    "task_budget_per_arm": 6
+  },
+  "continuous_self_learning_task": {
+    "principle": "This field proves the milestone includes the required continuous self-learning experiment.",
+    "value": true
+  },
+  "controlled_stream": [
+    {
+      "arc_patch_relevant": true,
+      "default_action": "attempt_gap1_registry_promotion",
+      "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+      "expected_head": "provenance",
+      "expected_state": "promoted",
+      "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+      "query": "ARC GAP-1 orientation discriminator: choose memory-only or registry promotion",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "gap1_memory_only_consumer"
+    },
+    {
+      "arc_patch_relevant": true,
+      "default_action": "attempt_gap1_registry_promotion",
+      "expected_action": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "expected_head": "provenance",
+      "expected_state": "rolled_back",
+      "expected_subject": "GAP-1 registry promotion blocked by subset instability",
+      "query": "ARC GAP-1 registry promotion retry after subset instability",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "gap1_registry_rollback_consumer"
+    },
+    {
+      "arc_patch_relevant": true,
+      "default_action": "reuse_gap4_candidate_pool",
+      "expected_action": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "expected_head": "failures",
+      "expected_state": "rolled_back",
+      "expected_subject": "GAP-4 candidate-pool validation null/quarantine",
+      "query": "ARC GAP-4 clean candidate pool should be reused or quarantined",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "gap4_candidate_pool_consumer"
+    },
+    {
+      "arc_patch_relevant": false,
+      "default_action": "retire_mmlu_hidden_state_path",
+      "expected_action": "retire_mmlu_hidden_state_path",
+      "expected_head": "failures",
+      "expected_state": "rolled_back",
+      "expected_subject": "MMLU hidden-state verifier path retired",
+      "query": "MMLU hidden-state verifier path after failed controls",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "mmlu_hidden_state_retention_consumer"
+    },
+    {
+      "arc_patch_relevant": true,
+      "default_action": "patch_arc_level_directly",
+      "expected_action": "build_arc_process_rubric_before_patch_synthesis",
+      "expected_head": "skills_rubrics",
+      "expected_state": "rolled_back",
+      "expected_subject": "ARC live-path zero-level delta retained for rubric setup",
+      "query": "ARC live path zero-level delta before patch synthesis",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "arc_rubric_before_patch_consumer"
+    },
+    {
+      "arc_patch_relevant": false,
+      "default_action": "block_hardware_speedup_claim_until_transcript",
+      "expected_action": "block_hardware_speedup_claim_until_transcript",
+      "expected_head": "constraints",
+      "expected_state": "promoted",
+      "expected_subject": "Hardware speedup claim boundary",
+      "query": "Hardware speedup claim without authenticated transcript",
+      "spec_refs": [
+        "REQ-LEARN-5239",
+        "SCENARIO-LEARN-5239"
+      ],
+      "task_id": "hardware_speedup_boundary_consumer"
+    }
+  ],
+  "controlled_stream_n": {
+    "principle": "Number of controlled tasks evaluated under every arm.",
+    "value": 6
+  },
+  "degradation_detected": {
+    "principle": "True when irrelevant random, shuffled, or constant memory underperforms no memory.",
+    "value": true
+  },
+  "experiment": "experiment_5239_continuous_self_learning_controlled_memory_ablation_v479",
+  "experiment_id": 5239,
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ and state whether typed memory shows controlled useful reuse.",
+    "value": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"
+  },
+  "inference_substrate": {
+    "principle": "Must be controlled_nonparametric_typed_memory_ablation.",
+    "value": "controlled_nonparametric_typed_memory_ablation"
+  },
+  "memory_heads_tested": {
+    "principle": "List of typed heads consumed by the controlled stream.",
+    "value": [
+      "constraints",
+      "provenance",
+      "failures",
+      "skills_rubrics"
+    ]
+  },
+  "nonparametric_memory_updates": {
+    "principle": "True only when the experiment consumes memory without model training or fine-tuning.",
+    "value": true
+  },
+  "recommended_arc_memory_heads": {
+    "principle": "Typed heads that show controlled useful reuse for ARC patch-synthesis decisions.",
+    "value": [
+      "provenance",
+      "failures",
+      "skills_rubrics"
+    ]
+  },
+  "retention": {
+    "passed": true,
+    "promoted_correct_n": 2,
+    "queries": {
+      "gap4_quarantined": "GAP-4 clean validation null quarantine",
+      "mmlu_hidden_state_retired": "hidden-state MMLU path should stay retired"
+    },
+    "rolled_back_correct_n": 4,
+    "typed_memory_retention_passed": true
+  },
+  "retention_check_passed": {
+    "principle": "True when promoted and rolled-back entries remain correctly reusable in the stream.",
+    "value": true
+  },
+  "rollback_policy_exercised": {
+    "principle": "True when a rolled-back entry changes a consumer action to block, quarantine, retire, or no-promote.",
+    "value": true
+  },
+  "run_date": "2026-07-04",
+  "schema": "carnot.continuous_self_learning_controlled_memory_ablation.v1",
+  "source_artifacts": [
+    "research-program.md#continuous-self-learning-core-architectural-goal",
+    "research-references.md#v479-research-update-2026-07-04",
+    "ops/arc_solve_registry.yaml#primitive_persistent_action_effect_memory_operator",
+    "results/experiment_5227_continuous_self_learning_multihead_memory_v478.json",
+    "results/typed_multihead_verifier_memory_v478.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5239",
+    "SCENARIO-LEARN-5239"
+  ],
+  "tests_run": {
+    "principle": "List of verification commands with pass/fail status.",
+    "value": []
+  }
+}
