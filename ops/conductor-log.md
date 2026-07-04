@@ -10256,3 +10256,4 @@ web search: |
 | 2026-07-04 01:50 UTC | PHASE 0 SOTA ingestion -- refresh 2025-2026 verifi | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: th), "--test-r |
 | 2026-07-04 02:09 UTC | PHASE 0 SOTA ingestion -- refresh 2025-2026 verifi | OK | 120 passed, 1 warning in 11.92s |
 | 2026-07-04 02:30 UTC | PHASE A1 GAP-1 set-search holdout hardening -- con | OK | 94 passed, 1 warning in 14.04s |
+| 2026-07-04 02:34 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
