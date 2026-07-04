@@ -34280,6 +34280,97 @@ no non-degenerate concrete live-agent mechanism to change
 |---|---|---|
 | REQ-REPORT-5228 | Planned (`python/carnot/experiment_5228_arc_provenance_skill_rubric_gate_v478.py`, `results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json`) | Planned (`tests/python/test_experiment_5228_arc_provenance_skill_rubric_gate_v478.py`) |
 
+### REQ-REPORT-5233: Archive .478, Activate .479, And Preserve Blocked Evidence As Blocked
+
+The Exp 5233 workflow SHALL archive milestone `2026.07.478`, confirm milestone
+`2026.07.479` is active in `research-roadmap.yaml`, and write
+`results/experiment_5233_archive_478_activate_479.json`. It SHALL read the
+active roadmap, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, `ops/status.md`,
+`ops/changelog.md`, and the Exp 5220 through Exp 5232 result artifacts. It
+SHALL run no live model work and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The archive summary SHALL state the `.478` facts needed by downstream `.479`
+tasks without converting blocked, flagged, or gate-blocked artifacts into
+headline claims: Exp 5222 repaired the `.477` gate-field parsing but kept GAP-1
+registry promotion blocked by subset instability; Exp 5224 produced a canonical
+GAP-4 n=120 pool but the artifact was adversarially flagged; Exp 5225 produced
+a null GAP-4 validation with n=120, wins=0, losses=0, ties=120, and the
+unchanged min-six rule not crossed, but the artifact was adversarially flagged;
+Exp 5226 reported zero VerIbmc solver-feedback uplift but was flagged for
+duration and methodology issues; Exp 5227 produced consumer-ready typed
+multi-head memory with constraints, provenance, failures, and skills/rubrics
+heads; Exp 5228 produced a usable ARC skill rubric but no recommended live
+patch; Exp 5230 produced a tiny bounded KAEM PWA/MILP certificate; Exp 5231
+confirmed KV260 and PolarFire reachable, kept GateMate blocked at the
+physical/JTAG boundary, and made no speedup claim; and Exp 5232 reconciled the
+milestone as GAP-1 blocked, GAP-4 blocked, VerIbmc blocked, typed memory
+satisfied, ARC delta zero, KAN produced, hardware continuity/no-speedup
+recorded, and flagged/gated artifacts excluded.
+
+The workflow SHALL activate `.479` by copying `research-roadmap-next.yaml` over
+`research-roadmap.yaml` when the next-file exists. If `research-roadmap.yaml`
+already names milestone `2026.07.479` and contains the Exp 5233 onward task set
+while the root `research-roadmap-next.yaml` is absent, the workflow SHALL record
+that already-active fallback explicitly rather than claiming a copy occurred.
+After activation it SHALL run available roadmap checks against
+`research-roadmap.yaml`, including `scripts/exclusion_manifest_lint.py` and
+`scripts/validate_prior_failures.py` when present, and SHALL confirm
+`scripts/research_conductor.py` was not modified.
+
+The artifact SHALL include principle-annotated fields `v478_summary`,
+`research_roadmap_yaml_activated`, `exclusion_manifest_confirmed_clean`,
+`validation_commands_run`, `ops_docs_updated`,
+`research_conductor_py_untouched_confirmed`, `inference_substrate`, and
+`honest_verdict`. It SHOULD also include source artifact checksums, a roadmap
+activation audit, whether `research-roadmap-next.yaml` was copied or the
+already-active fallback was used, tests run, and a reproducibility checksum.
+
+Required field principles:
+
+- `v478_summary`: principle "Downstream .479 task context depends on exact .478 blocked, flagged, gated, and bounded-positive evidence."
+- `research_roadmap_yaml_activated`: principle "Downstream conductor execution depends on `research-roadmap.yaml` naming `.479` and containing the Exp 5233 onward task set."
+- `exclusion_manifest_confirmed_clean`: principle "The activated .479 roadmap must pass the exclusion-manifest gate without hard retired-scope violations."
+- `validation_commands_run`: principle "Activation claims must be backed by named commands with pass/fail outcomes, not by implied manual inspection."
+- `ops_docs_updated`: principle "Records whether this task changed ops/status.md or ops/changelog.md; a false value is valid when the conductor stop rule defers ops reconciliation."
+- `research_conductor_py_untouched_confirmed`: principle "The transition must not modify scripts/research_conductor.py."
+- `inference_substrate`: principle "This archive reads upstream artifacts and activation checks only."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and must state whether .479 was activated."
+
+#### SCENARIO-REPORT-5233: The Archive Preserves The Precise .478 Outcomes
+
+**Given** Exp 5220 through Exp 5232 artifacts are readable,
+`research-roadmap.yaml` is active for `2026.07.479`, the `.479` design document
+is present, the exclusion-manifest lint exits cleanly or with override-only
+warnings, available prior-failure validation exits zero, and
+`scripts/research_conductor.py` is unchanged
+**When** the Exp 5233 workflow runs
+**Then** it writes
+`results/experiment_5233_archive_478_activate_479.json`, records the exact Exp
+5222, Exp 5224, Exp 5225, Exp 5226, Exp 5227, Exp 5228, Exp 5230, Exp 5231,
+and Exp 5232 outcomes in `v478_summary`, sets
+`research_roadmap_yaml_activated=true`, sets
+`exclusion_manifest_confirmed_clean=true`, records every validation command and
+pass/fail result, declares `aggregation_from_upstream_artifacts`, and emits an
+honest verdict stating that `.479` was activated.
+
+#### SCENARIO-REPORT-5233-BLOCKED-PRECONDITION: Missing Or Dirty Inputs Block Clean Activation Claims
+
+**Given** a required `.478` artifact is missing, the active roadmap is not
+`.479`, a required validation command fails, or `scripts/research_conductor.py`
+has been modified
+**When** the Exp 5233 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict` starts with a
+complete-path blocking phrase, records the failed precondition explicitly, and
+does not claim the `.479` handoff is clean.
+
+## Implementation Status (REQ-REPORT-5233)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5233 | Implemented (`python/carnot/experiment_5233_archive_478_activate_479.py`, `results/experiment_5233_archive_478_activate_479.json`) | Implemented (`tests/python/test_experiment_5233_archive_478_activate_479.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
