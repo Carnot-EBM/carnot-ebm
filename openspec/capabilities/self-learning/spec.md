@@ -16427,3 +16427,76 @@ rollback receipt.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5143 | Planned (`python/carnot/experiment_5143_openskill_k2v_self_learning_v471.py`) | Planned (`tests/python/test_experiment_5143_openskill_k2v_self_learning_v471.py`) |
+
+---
+
+## REQ-LEARN-5239: Controlled Typed-Memory Consumer Ablation
+
+Experiment 5239 SHALL evaluate the Exp 5227 typed multi-head verifier memory as
+a controlled nonparametric consumer before any ARC patch-synthesis promotion.
+The evaluation SHALL use a small controlled stream derived from existing
+verifier and ARC artifacts where the correct prior is intentionally reusable by
+a later task. The experiment SHALL NOT train, fine-tune, or mutate model
+weights.
+
+The experiment SHALL compare exactly these five arms with fixed seeds and the
+same one-prior-slot per-query budget:
+
+- `no_memory`
+- `best_constant`
+- `per_query_random`
+- `shuffled_memory`
+- `aligned_memory`
+
+The result artifact SHALL be
+`results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json`
+and SHALL include `continuous_self_learning_task`, `memory_heads_tested`,
+`controlled_stream_n`, `arms`, `aligned_vs_shuffled_delta`,
+`aligned_vs_no_memory_delta`, `degradation_detected`,
+`retention_check_passed`, `rollback_policy_exercised`,
+`recommended_arc_memory_heads`, `inference_substrate`, and
+`honest_verdict`. The `inference_substrate` value SHALL be
+`controlled_nonparametric_typed_memory_ablation`.
+
+### REQ-LEARN-5239 Sub-requirements
+
+- REQ-LEARN-5239-1: The controlled stream SHALL be constructed from the existing
+  Exp 5227 typed memory artifact and SHALL exercise the `constraints`,
+  `provenance`, `failures`, and `skills_rubrics` heads.
+- REQ-LEARN-5239-2: The `aligned_memory` arm SHALL retrieve the entry intended
+  for the current task, while `shuffled_memory` SHALL use a fixed derangement of
+  the same entries so any gain is attributable to task-aligned memory rather
+  than generic memory bias.
+- REQ-LEARN-5239-3: The `best_constant` arm SHALL choose one memory entry for
+  all tasks by deterministic held-in score, and `per_query_random` SHALL choose
+  one memory entry per task with a fixed random seed.
+- REQ-LEARN-5239-4: The artifact SHALL report aligned-vs-shuffled and
+  aligned-vs-no-memory deltas, detect irrelevant-memory degradation, and record
+  whether retention passed after both promoted and rolled-back memories were
+  consumed.
+- REQ-LEARN-5239-5: Rollback behavior SHALL be considered exercised only when
+  at least one rolled-back typed-memory entry changes the selected consumer
+  action to a rollback, quarantine, retirement, or no-promote action.
+- REQ-LEARN-5239-6: `recommended_arc_memory_heads` SHALL list only the typed
+  heads that show controlled useful reuse for ARC patch-synthesis decisions.
+
+### SCENARIO-LEARN-5239: Aligned Memory Beats Shuffled and No-Memory Controls
+
+**Given** the Exp 5227 typed multi-head memory artifact contains promoted and
+rolled-back verifier/ARC entries
+**When** Experiment 5239 evaluates `no_memory`, `best_constant`,
+`per_query_random`, `shuffled_memory`, and `aligned_memory` on the same
+controlled stream with the same one-prior-slot budget
+**Then** `aligned_memory` reports positive `aligned_vs_shuffled_delta` and
+positive `aligned_vs_no_memory_delta`
+**And** irrelevant memory degradation is detected when shuffled or random memory
+falls below the no-memory arm
+**And** retention and rollback checks pass without model training
+**And** the honest verdict starts with `complete:`, `complete_`, `success:`, or
+`success_` and states whether typed memory shows controlled useful reuse.
+
+## Implementation Status (Exp 5239)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5239 | Planned (`python/carnot/pipeline/controlled_memory_ablation.py`) | Planned (`tests/python/test_experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.py`) |
