@@ -78,6 +78,17 @@ grid-refinement recipe to (encode as a padded tensor of action-ids + coordinates
 handles a padded Sudoku grid), but a genuine adaptation, not a drop-in — TRM currently refines
 fixed-size grids, not variable-length action sequences.
 
+**Update 2026-07-04 (operator asked whether human-generated solutions were already available):**
+this question is resolved far more favorably than the paragraph below originally assumed. See
+`docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md`: a real, licensed
+human replay corpus already exists (`data/arc_public_demo_human_replay_corpus/`) with **144 complete
+winning human trajectories across all 25 public games** (roughly 90,000+ actions), each with validated
+per-step level-completion signal. The corpus's *staged* form currently has a bug that drops this
+signal entirely (verified: `level_progress=0.0` in all 14,797 staged rows, including full winning
+sessions) — the raw source is intact, but needs re-staging before it's usable. This is now the more
+promising data source for a training pilot than the 69-level Carnot-agent corpus discussed below,
+which remains true but is superseded in priority by the human corpus once re-staged.
+
 **Training data is the real open question, and this note does not assume an answer either way.** The
 existing candidate design in `ops/verifier_gaps.md` already specifies the outline (prepare a
 trajectory dataset from captured solves, full-FT not LoRA per the TTA-TRM finding, train on a 3090,
@@ -85,7 +96,8 @@ wire as a rollout engine) — but commits to that full build before knowing whet
 captured trajectories is enough signal at all. `reproducible_total_levels=69` is a level count, not a
 training-example count — each level's trajectory contributes many (state, action) pairs, so the
 effective training set could be meaningfully larger than "69 examples" suggests, but this note does
-not assume that either; it should be the first thing measured.
+not assume that either; it should be the first thing measured. (Superseded in priority by the human
+corpus above — measure that first.)
 
 ## Proposed first pilot — small, falsifiable, before the full build
 
@@ -122,6 +134,9 @@ full-FT-on-a-3090 build the existing gap entry already scoped.
 
 ## Cross-references
 
+- `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md` — the much
+  larger, better-validated training-data source (144 winning human trajectories, all 25 public games)
+  found in response to the operator's direct question, and the staging bug currently blocking it
 - `ops/verifier_gaps.md` `GAP-ARC-TRM-TRAINED-ON-ARC` — the existing open gap this note adds evidence
   to (update this entry with a pointer to this note rather than tracking the idea in two places)
 - `results/experiment_sudoku_energy_vs_ar_v1.json` — the cross-domain precedent
