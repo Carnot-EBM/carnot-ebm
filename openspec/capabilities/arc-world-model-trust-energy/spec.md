@@ -14534,3 +14534,46 @@ Then every required field is present, no-bank artifacts keep the reproducible
 total unchanged, mandated GGUF model specs are recorded, legacy models are
 smoke-only, and the reproducibility checksum matches the target, provenance,
 attempt, model, and bank-summary payload.
+
+### REQ-ARC-WMTE-5215: PAW Episode Amortization Gate
+
+Experiment 5215 SHALL answer only whether a PAW-like mid-episode compile step
+could amortize inside ARC-AGI-3 public-game episode lengths. It SHALL NOT wire
+LoRA training into the live agent, SHALL NOT claim a level solve, and SHALL NOT
+modify `ops/arc_solve_registry.yaml`.
+
+The workflow SHALL read existing public-game ARC action logs/results, recover
+remaining-action budgets after plausible induction checkpoints when the logs
+support them, and report missing checkpoint data precisely when they do not. It
+SHALL benchmark or conservatively estimate a small-LoRA compile wall-clock on
+the available GPU, estimate current full-generator step wall-clock and cheap
+interpreter step wall-clock from existing logs plus bounded local timing, then
+compute the break-even remaining-action count. The gate SHALL set
+`paw_amortization_viable=true` only when both the median and p75 empirical
+remaining-action budgets can pay the compile cost with a margin.
+
+Experiment 5215 SHALL write
+`results/experiment_5215_arc_paw_amortization_gate_v477.json` with required
+principle-wrapped fields `paw_amortization_viable`,
+`median_remaining_actions`, `p75_remaining_actions`,
+`compile_wall_clock_s`, `current_step_wall_clock_s`,
+`cheap_step_wall_clock_s`, `break_even_remaining_actions`,
+`arc_registry_modified`, `inference_substrate`, and `honest_verdict`.
+`arc_registry_modified.value` SHALL be `false` and
+`inference_substrate.value` SHALL be `arc_log_analysis_plus_local_timing`.
+
+#### SCENARIO-ARC-WMTE-5215-AMORTIZATION-GATE
+
+Given existing public-game ARC logs and local timing evidence
+When Experiment 5215 computes the PAW amortization gate
+Then the artifact reports median and p75 remaining actions, compile cost,
+current step cost, cheap step cost, and break-even remaining actions
+And `paw_amortization_viable` is true only if both empirical budgets exceed the
+margin-adjusted break-even count.
+
+#### SCENARIO-ARC-WMTE-5215-NO-SOLVE-OR-REGISTRY-MUTATION
+
+Given Experiment 5215 is a pure analysis gate
+When it writes the terminal artifact
+Then `arc_registry_modified.value=false`, the honest verdict does not claim PAW
+solves ARC, and the ARC solve registry is not modified.
