@@ -699,6 +699,46 @@ label-shuffle controls are detected, near-margin controls abstain, family
 holdout checks report their rates, and `symbolic_kan_ready=true` only when all
 soundness and control gates pass.
 
+## REQ-KAN-5230: V478 KAEM PWA/MILP Verifier Certificate Pilot
+
+The KAN verification tier SHALL provide an Exp 5230 CPU-only certificate pilot
+that ties an existing KAEM/KAN-style module to deterministic PWA/MILP property
+checks without claiming broad KAN verification. The pilot MUST target
+`python/carnot/models/kaem_energy.py::UnivariateKAEMLayer`, reuse the existing
+Exp 5080/5091 KAEM PWA helpers where possible, and check only a tiny bounded
+input box.
+
+The pilot MUST check at least two bounded properties, including monotonicity of
+the exported KAEM PWA energy over the tiny input box and a no-unsafe-decision
+bound for a fixed decision threshold. If a supported MILP/Z3 backend is
+missing, it MUST write an honest blocked artifact with the missing prerequisite
+rather than an enumeration-only certificate.
+
+The deliverable MUST be written to
+`results/experiment_5230_kan_milp_verifier_certificate_v478.json` with
+principle-wrapped fields for `kan_certificate_produced`,
+`certificate_path`, `target_module`, `properties_checked`,
+`bound_tightness`, `reused_existing_helpers`, `tests_run`,
+`inference_substrate`, and `honest_verdict`.
+`inference_substrate` MUST be
+`deterministic_pwa_milp_certificate`. `honest_verdict` MUST start with
+`complete:`, `complete_`, `success:`, or `success_` and state whether a
+certificate was produced.
+
+The artifact MUST NOT claim trained-network soundness, deployed verifier
+improvement, hardware execution, live LLM inference, GRS-KAN implementation, or
+general KAN verifier readiness.
+
+### SCENARIO-KAN-5230: Tiny KAEM Certificate Checks Monotonicity And Unsafe Bound
+
+Given a deterministic two-variable `UnivariateKAEMLayer` fixture with exact
+linear-interpolation control points and a tiny input box,
+When Exp 5230 exports the fixture through the existing PWA helpers and submits
+monotonicity plus no-unsafe-decision checks to the deterministic solver,
+Then the artifact produces a certificate only when both properties are
+verified, records bound tightness and helper provenance, and otherwise blocks
+with the exact missing solver prerequisite.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -737,6 +777,7 @@ soundness and control gates pass.
 | REQ-KAN-5114 | Proposed | Exp 5114 target: post-wall CPU abstraction-refinement/decomposition diagnostic that compares against Exp 5108, preserves false-property and near-margin controls, and reports progress only when conservative certificates avoid unsound false positives beyond the exact-MILP wall. |
 | REQ-KAN-5128 | Proposed | Exp 5128 target: V470 certificate-breadth audit across independent property families with deterministic explanation reconstruction and symbolic cycle-consistency checks over Exp 5114 certificates. |
 | REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
+| REQ-KAN-5230 | Planned | Exp 5230 target: V478 tiny KAEM PWA/MILP certificate pilot tied to `UnivariateKAEMLayer`, with monotonicity and no-unsafe-decision checks only. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
