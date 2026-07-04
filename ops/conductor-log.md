@@ -10296,3 +10296,4 @@ web search: |
 | 2026-07-04 19:23 UTC | PHASE 1 artifact QA -- calibrate structured-null a | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-04 19:36 UTC | PHASE 1 gated on exp5235 qa_calibration_passed --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-04 20:33 UTC | PHASE 1 GAP-1 stability decision -- freeze a non-l | OK | 86 passed, 1 warning in 7.84s |
+| 2026-07-04 20:58 UTC | PHASE 1 VerIbmc methodology-correct rerun -- local | OK | 88 passed, 1 warning in 8.32s |
