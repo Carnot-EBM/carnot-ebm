@@ -1,0 +1,84 @@
+{
+  "duration_s": 0.0,
+  "experiment": "experiment_5218_verifier_authenticity_remediation_apply_v477",
+  "experiment_id": "exp5218-verifier-authenticity-remediation-apply-v477",
+  "headline_ineligible_until_real_verification": {
+    "principle": "Both remediated surfaces must remain headline-ineligible until a real trained/live verification substrate is implemented.",
+    "value": true
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete:/complete_/success:/success_ or blocked_ and state whether the dishonest-naming risk is actually reduced.",
+    "value": "complete: dishonest-naming risk reduced by registry flags; modules remain headline-ineligible until real verification"
+  },
+  "inference_substrate": {
+    "principle": "Must be code_and_doc_remediation.",
+    "value": "code_and_doc_remediation"
+  },
+  "no_research_conductor_change": {
+    "principle": "Must remain true; scripts/research_conductor.py is outside this remediation.",
+    "value": true
+  },
+  "remediated_modules": {
+    "principle": "Exact flagged module paths remediated by this apply step.",
+    "value": [
+      "python/carnot/verify/and_composition_verifier.py",
+      "python/carnot/verify/claim_isolation_uncertainty_router.py"
+    ]
+  },
+  "remediation_applied": {
+    "principle": "True only when both flagged modules expose truthful non-headline authenticity metadata.",
+    "value": true
+  },
+  "remediation_inspection": {
+    "and_composition_verifier": {
+      "authenticity_status": "advisory_adapter_harness",
+      "headline_eligible": false,
+      "headline_ineligible_reason": "Default k=5 surface is advisory only: the SOSKAN adapter returns neutral 0.5 while untrained, SemEnergy uses a proxy scorer, and exceptions are non-blocking for compatibility.",
+      "remediated": true
+    },
+    "claim_isolation_uncertainty_router": {
+      "authenticity_status": "artifact_routing_ledger",
+      "headline_eligible": false,
+      "headline_ineligible_reason": "Artifact routing ledger only: this module reads existing JSON/JSONL rows and performs no live isolated-claim verifier call.",
+      "live_isolated_claim_verification": false,
+      "remediated": true
+    }
+  },
+  "remediation_type": {
+    "principle": "One of rename | warning | registry_flag | behavior_fix | docs_only | blocked.",
+    "value": "registry_flag"
+  },
+  "result_path": "results/experiment_5218_verifier_authenticity_remediation_apply_v477.json",
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5218_verifier_authenticity_remediation_apply.v477",
+  "source_artifacts_read": [
+    "results/experiment_5203_verifier_authenticity_remediation_options_v476.json",
+    "ops/verifier_remediation_options_v476.md",
+    "ops/verifier_authenticity_audit_report.md",
+    "python/carnot/verify/and_composition_verifier.py",
+    "python/carnot/verify/claim_isolation_uncertainty_router.py",
+    "openspec/capabilities/verification/spec.md"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5218",
+    "SCENARIO-VERIFY-5218"
+  ],
+  "specs_updated": {
+    "principle": "True when REQ-VERIFY-5218 and SCENARIO-VERIFY-5218 are present before implementation.",
+    "value": true
+  },
+  "tests_run": {
+    "principle": "Commands run for this apply step, with pass/fail status.",
+    "value": [
+      ".venv/bin/pytest tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py -q --no-cov -o addopts=\"\" -- PASS (6 passed)",
+      ".venv/bin/pytest tests/python/test_and_compose_k5.py tests/python/test_experiment_1541_claim_isolation_uncertainty_router.py tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py -q --no-cov -o addopts=\"\" -- PASS (16 passed)",
+      ".venv/bin/coverage run --rcfile=/dev/null --include=\"*/experiment_5218_verifier_authenticity_remediation_apply_v477.py\" -m pytest tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py -q --no-cov -o addopts=\"\" && .venv/bin/coverage report --rcfile=/dev/null -m --include=\"*/experiment_5218_verifier_authenticity_remediation_apply_v477.py\" --fail-under=100 -- PASS (100% coverage on new code)",
+      ".venv/bin/ruff check <touched python files> -- PASS",
+      ".venv/bin/ruff format --check <touched python files> -- PASS",
+      ".venv/bin/python scripts/verifier_authenticity_lint.py -- PASS (clean, 562 files scanned)",
+      ".venv/bin/python scripts/check_spec_coverage.py -- FAIL (pre-existing: 1222 unrelated tests lack spec references)",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py -- PASS",
+      ".venv/bin/pytest tests/python -q -- FAIL/INTERRUPTED after 25:40 (170 failed, 22106 passed, 89 skipped, 1 error; unrelated Z3/JAX worker crashes observed)"
+    ]
+  }
+}

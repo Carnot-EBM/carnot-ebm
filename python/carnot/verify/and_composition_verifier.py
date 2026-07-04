@@ -1,48 +1,46 @@
-"""AND-Composition Verifier: k=5 ensemble with exponential null-space shrinkage.
+"""Advisory k=5 verifier-adapter harness.
 
-**Why this exists:**
-    A single verifier has a kernel (null space) — a set of responses it cannot
-    distinguish from correct ones. An attacker can craft responses that sit in
-    that null space, fooling the verifier. AND-composition of k independent
-    verifiers shrinks the exploitable null space exponentially: the attacker
-    must simultaneously satisfy all k kernels, which becomes exponentially
-    harder as k grows (arXiv 2604.12086 §3.2).
+This module keeps the historical AND-composition API used by pipeline
+certificates, but the default surface is not a production headline verifier.
+It is an advisory harness over mixed verifier adapters. The default SOSKAN
+adapter is neutral until trained, SemEnergy uses its proxy scorer, and adapter
+failures remain non-blocking for compatibility with the existing pipeline.
 
-    Exp 1108 measured pairwise r-correlation across 6 candidate verifiers on
-    the FoVer 500-pair holdout. The k=5 subset (dropping ThinkPRM, which has
-    r=0.507 with Z3MathVerifier — above the 0.5 viability threshold) achieves
-    max_r=0.462, meeting the AND-composition viability criterion.
+Use this output as diagnostic certificate data only. A future headline verifier
+must wire real trained/live verification substrates, calibrated thresholds, and
+fail-closed behavior before removing the headline-ineligible flag below.
 
-**The k=5 ensemble:**
-    1. SOSKANEnergyV3   — contrastive energy (AUC=0.9545 on FoVer)
-    2. SemEnergyProbe   — logit-space Boltzmann energy (AUC=0.948 @ 0.017ms)
-    3. ASTStructureVerifier — AST/bracket structural integrity
-    4. SemanticConsistencyVerifier — cross-sentence contradiction detection
-    5. Z3MathVerifier   — formal arithmetic claim checking
-
-    ThinkPRM is intentionally excluded: its r=0.507 with Z3MathVerifier
-    exceeds the 0.5 viability threshold. It stays as a standalone Tier 0a
-    cascade component.
-
-**Verification convention:**
-    Each adapter normalises its underlying verifier to return a float
-    ``energy`` in [0, 1] where 0.0 means "confident this response is correct"
-    and 1.0 means "confident this response violates constraints."
-    ``verified = energy < threshold`` (default threshold 0.5 for all).
-
-    For SemEnergyProbe, whose raw score is a per-word Boltzmann energy
-    (more negative = more confident), the adapter applies the published
-    is_hallucinating() threshold of -0.5 and maps to [0, 1]:
-        energy_normalized = 1.0 if raw_score > -0.5 else 0.0
-    This matches SemEnergyProbe.is_hallucinating(energy, threshold=-0.5).
-
-Spec: REQ-VERIFY-1121, SCENARIO-PHASE1D-001
+Spec: REQ-VERIFY-1121, SCENARIO-PHASE1D-001, REQ-VERIFY-5218,
+SCENARIO-VERIFY-5218.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
+
+
+AUTHENTICITY_REMEDIATION_TYPE = "registry_flag"
+AUTHENTICITY_STATUS = "advisory_adapter_harness"
+HEADLINE_ELIGIBLE = False
+HEADLINE_INELIGIBLE_REASON = (
+    "Default k=5 surface is advisory only: the SOSKAN adapter returns neutral "
+    "0.5 while untrained, SemEnergy uses a proxy scorer, and exceptions are "
+    "non-blocking for compatibility."
+)
+REAL_VERIFICATION_REQUIRED_FOR_HEADLINE = True
+
+
+def authenticity_metadata() -> dict[str, object]:
+    """Return the explicit authenticity flags for registry and artifact callers."""
+
+    return {
+        "authenticity_remediation_type": AUTHENTICITY_REMEDIATION_TYPE,
+        "authenticity_status": AUTHENTICITY_STATUS,
+        "headline_eligible": HEADLINE_ELIGIBLE,
+        "headline_ineligible_reason": HEADLINE_INELIGIBLE_REASON,
+        "real_verification_required_for_headline": REAL_VERIFICATION_REQUIRED_FOR_HEADLINE,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -122,10 +120,10 @@ class Z3MathAdapter:
 
 
 class SemEnergyProbeAdapter:
-    """Adapter for SemEnergyProbe; maps raw Boltzmann energy to [0, 1].
+    """Adapter for SemEnergyProbe proxy scoring; maps its score to [0, 1].
 
-    Raw score from score_response_proxy() is a per-word energy where more
-    negative = more confident (less likely hallucinating). The published
+    Raw score from score_response_proxy() is a per-word proxy where more
+    negative = more confident (less likely hallucinating). The existing
     is_hallucinating() threshold is -0.5: scores above -0.5 indicate
     possible hallucination.
 
@@ -366,6 +364,9 @@ class AndCompositionResult:
             (energy < threshold), keyed by verifier name.
         thresholds: The threshold applied per verifier, keyed by name.
         k: Number of verifiers in the ensemble (should be 5 for default).
+        headline_eligible: Always false for the default advisory harness until
+            real trained/live verification is implemented.
+        headline_ineligible_reason: Why this result must remain non-headline.
     """
 
     verified: bool
@@ -373,6 +374,8 @@ class AndCompositionResult:
     per_verifier_verified: dict[str, bool] = field(default_factory=dict)
     thresholds: dict[str, float] = field(default_factory=dict)
     k: int = 0
+    headline_eligible: bool = HEADLINE_ELIGIBLE
+    headline_ineligible_reason: str = HEADLINE_INELIGIBLE_REASON
 
 
 # ---------------------------------------------------------------------------
@@ -381,13 +384,12 @@ class AndCompositionResult:
 
 
 class AndCompositionVerifier:
-    """Ensemble verifier using AND-composition of k independent verifiers.
+    """Advisory ensemble harness using AND-composition over adapter scores.
 
     AND-composition requires ALL k verifiers to agree that a response is
-    clean before returning verified=True. This raises the attack bar: an
-    adversarial response must simultaneously fool all k verifiers, which
-    becomes exponentially harder as k grows (when verifiers have orthogonal
-    kernels — low pairwise r-correlation).
+    clean before returning verified=True. The current default construction is
+    a compatibility harness, not proof that all five real independent signals
+    are active or calibrated.
 
     Threshold default 0.5 applies to all adapters. Scores above 0.5 = violation.
 
@@ -406,7 +408,7 @@ class AndCompositionVerifier:
         thresholds: Per-verifier thresholds in the same order as verifiers.
             Defaults to 0.5 for all. Values above threshold = violation.
 
-    Spec: REQ-VERIFY-1121, SCENARIO-PHASE1D-001
+    Spec: REQ-VERIFY-1121, SCENARIO-PHASE1D-001, REQ-VERIFY-5218.
     """
 
     def __init__(
@@ -438,6 +440,20 @@ class AndCompositionVerifier:
     def verifier_names(self) -> list[str]:
         """Names of all verifiers in the ensemble (for artifact recording)."""
         return [v.name for v in self._verifiers]
+
+    @property
+    def headline_eligible(self) -> bool:
+        """False until this harness is replaced by real headline verification."""
+        return HEADLINE_ELIGIBLE
+
+    @property
+    def headline_ineligible_reason(self) -> str:
+        """Reason downstream headline paths must treat this as advisory only."""
+        return HEADLINE_INELIGIBLE_REASON
+
+    def authenticity_metadata(self) -> dict[str, object]:
+        """Return headline quarantine metadata for certificates and registries."""
+        return authenticity_metadata()
 
     def verify(self, question: str, response: str) -> AndCompositionResult:
         """Run all k verifiers and return AND-composition result.
@@ -484,6 +500,8 @@ class AndCompositionVerifier:
             per_verifier_verified=verdicts,
             thresholds=threshold_map,
             k=self.k,
+            headline_eligible=HEADLINE_ELIGIBLE,
+            headline_ineligible_reason=HEADLINE_INELIGIBLE_REASON,
         )
 
 
@@ -493,12 +511,10 @@ class AndCompositionVerifier:
 
 
 def _make_k5_verifiers() -> list[VerifierAdapter]:
-    """Build the default k=5 AND-composition verifier list.
+    """Build the default k=5 advisory adapter list.
 
-    ThinkPRM is intentionally excluded because its pairwise r-correlation
-    with Z3MathVerifier is 0.507 (above the 0.5 viability threshold for
-    exponential null-space shrinkage). Including it would degrade the
-    ensemble's kernel-orthogonality guarantee.
+    ThinkPRM remains excluded to preserve the historical Exp 1121 shape, but
+    this list is not enough by itself to make a production headline verifier.
     """
     return [
         SOSKANEnergyV3Adapter(),
@@ -510,17 +526,18 @@ def _make_k5_verifiers() -> list[VerifierAdapter]:
 
 
 def build_default_verifier_ensemble() -> AndCompositionVerifier:
-    """Return the production k=5 AND-composition verifier ensemble.
+    """Return the default advisory k=5 verifier-adapter harness.
 
     Constructs and returns an AndCompositionVerifier pre-loaded with the
-    five verifiers validated by Exp 1108:
+    historical five adapters:
         1. SOSKANEnergyV3   (contrastive energy)
-        2. SemEnergyProbe   (logit-space Boltzmann energy)
+        2. SemEnergyProbe   (proxy score adapter)
         3. ASTStructureVerifier (syntactic structure)
         4. SemanticConsistencyVerifier (cross-sentence logic)
         5. Z3MathVerifier   (formal arithmetic)
 
-    ThinkPRM is NOT in this set (see _make_k5_verifiers docstring).
+    This helper is headline-ineligible until a real trained/live verification
+    substrate replaces the current advisory defaults.
 
     Returns:
         AndCompositionVerifier with k=5, all thresholds at 0.5.

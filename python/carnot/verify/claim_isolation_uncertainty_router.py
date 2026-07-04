@@ -1,12 +1,17 @@
-"""Exp 1541 claim-isolation uncertainty router.
+"""Exp 1541 claim-isolation artifact routing ledger.
 
-Spec: REQ-VERIFY-1541, SCENARIO-VERIFY-1541.
+Spec: REQ-VERIFY-1541, SCENARIO-VERIFY-1541, REQ-VERIFY-5218,
+SCENARIO-VERIFY-5218.
 
-Claim isolation is useful only when the extra checker calls are spent on cases
-where the answer is uncertain, risky, or already disagrees with a deterministic
-validator.  This module builds a small cross-source case set from existing live
-SOTA artifacts, routes only selected cases to isolated-claim verification, and
+Claim isolation can be useful when extra checker calls are spent on uncertain,
+risky, or validator-disagreeing cases. This module does not make those live
+isolated-claim verifier calls. It reads existing artifacts, builds a routing
+ledger, copies available full-context and claim-isolated accept booleans, and
 keeps SAT/product-line/runtime validators as the authority for false accepts.
+
+The ledger is not headline verifier evidence until a future implementation
+performs real isolated-claim verification with recorded model/verifier
+provenance.
 """
 
 from __future__ import annotations
@@ -37,6 +42,28 @@ DEFAULT_RUNTIME_MANIFEST_PATH = Path("results/runtime_contract_e2e_manifest_1520
 DEFAULT_SATQUEST_MANIFEST_PATH = Path("results/satquest_cnf_verifier_1536.jsonl")
 DEFAULT_PRODUCT_LINE_MANIFEST_PATH = Path("results/product_line_rescue_1523.jsonl")
 ROUTER_MODULE_PATH = "python/carnot/verify/claim_isolation_uncertainty_router.py"
+
+AUTHENTICITY_REMEDIATION_TYPE = "registry_flag"
+AUTHENTICITY_STATUS = "artifact_routing_ledger"
+HEADLINE_ELIGIBLE = False
+LIVE_ISOLATED_CLAIM_VERIFICATION = False
+HEADLINE_INELIGIBLE_REASON = (
+    "Artifact routing ledger only: this module reads existing JSON/JSONL rows "
+    "and performs no live isolated-claim verifier call."
+)
+
+
+def authenticity_metadata() -> JsonDict:
+    """Return explicit authenticity flags for downstream registries and artifacts."""
+
+    return {
+        "authenticity_remediation_type": AUTHENTICITY_REMEDIATION_TYPE,
+        "authenticity_status": AUTHENTICITY_STATUS,
+        "headline_eligible": HEADLINE_ELIGIBLE,
+        "headline_ineligible_reason": HEADLINE_INELIGIBLE_REASON,
+        "live_isolated_claim_verification": LIVE_ISOLATED_CLAIM_VERIFICATION,
+    }
+
 
 DEFAULT_ROUTING_POLICY: JsonDict = {
     "uncertainty_threshold": 0.5,
@@ -118,7 +145,7 @@ def route_case(
     prefix_risk_by_case: Mapping[str, float],
     policy: Mapping[str, Any] | None = None,
 ) -> JsonDict:
-    """REQ-VERIFY-1541: deterministically route one case or bypass it."""
+    """REQ-VERIFY-1541: deterministically route one ledger case or bypass it."""
 
     active_policy = dict(DEFAULT_ROUTING_POLICY if policy is None else policy)
     prefix_risk = _prefix_risk(case, prefix_risk_by_case)
@@ -146,7 +173,7 @@ def evaluate_routing(
     focused_tests_passed: bool,
     policy: Mapping[str, Any] | None = None,
 ) -> JsonDict:
-    """SCENARIO-VERIFY-1541: compare full-context and routed isolated decisions."""
+    """SCENARIO-VERIFY-1541: compare existing full-context and isolated decisions."""
 
     rows: list[JsonDict] = []
     full_accepts = 0
@@ -374,7 +401,9 @@ def _satquest_cases(rows: Sequence[Mapping[str, Any]], *, limit: int) -> list[Js
             or _mapping(row.get("verifier")).get("self_verifier_false_accept")
             or not parse_ok
         )
-        uncertainty = 1.0 if not parse_ok else 0.75 if float(baseline.get("energy", 0.0)) >= 50 else 0.0
+        uncertainty = (
+            1.0 if not parse_ok else 0.75 if float(baseline.get("energy", 0.0)) >= 50 else 0.0
+        )
         answer_text = str(answer) if answer is not None else "NO_ANSWER"
         cases.append(
             _case(
@@ -405,7 +434,9 @@ def _product_line_cases(rows: Sequence[Mapping[str, Any]], *, limit: int) -> lis
             continue
         policy = _mapping(row.get("policy_result"))
         verifier = _mapping(row.get("verifier_result"))
-        deterministic_accept = bool(oracle.get("oracle_agrees")) and not bool(policy.get("false_accept"))
+        deterministic_accept = bool(oracle.get("oracle_agrees")) and not bool(
+            policy.get("false_accept")
+        )
         full_accept = bool(policy.get("accepted") or verifier.get("accepted"))
         cases.append(
             _case(
@@ -559,6 +590,10 @@ def _artifact_from_summary(
         "source_kinds_loaded": list(summary.get("source_kinds_loaded") or []),
         "false_accept_count": int(summary.get("false_accept_count", 0)),
         "prior_claim_isolation_budget_delta": summary.get("prior_claim_isolation_budget_delta"),
+        "authenticity_status": AUTHENTICITY_STATUS,
+        "headline_eligible": HEADLINE_ELIGIBLE,
+        "headline_ineligible_reason": HEADLINE_INELIGIBLE_REASON,
+        "live_isolated_claim_verification": LIVE_ISOLATED_CLAIM_VERIFICATION,
     }
     return artifact
 
@@ -662,8 +697,14 @@ if __name__ == "__main__":  # pragma: no cover
 
 __all__ = [
     "DEFAULT_ROUTING_POLICY",
+    "AUTHENTICITY_REMEDIATION_TYPE",
+    "AUTHENTICITY_STATUS",
+    "HEADLINE_ELIGIBLE",
+    "HEADLINE_INELIGIBLE_REASON",
+    "LIVE_ISOLATED_CLAIM_VERIFICATION",
     "MODEL_SPECS",
     "REQUIRED_ARTIFACT_FIELDS",
+    "authenticity_metadata",
     "build_bounded_case_set",
     "evaluate_routing",
     "load_beaver_prefix_risk",
