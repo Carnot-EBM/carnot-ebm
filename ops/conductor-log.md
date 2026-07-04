@@ -10258,3 +10258,4 @@ web search: |
 | 2026-07-04 02:30 UTC | PHASE A1 GAP-1 set-search holdout hardening -- con | OK | 94 passed, 1 warning in 14.04s |
 | 2026-07-04 02:34 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
 | 2026-07-04 02:36 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
+| 2026-07-04 02:38 UTC | PHASE A2 gated on exp5209 gap1_hardened_positive = | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5209-gap1-set-search-holdout-hardening- |
