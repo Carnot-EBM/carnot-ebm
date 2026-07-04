@@ -24948,3 +24948,77 @@ status, both modules report `HEADLINE_ELIGIBLE=False`, the claim router reports
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5218 | Implemented (`python/carnot/experiment_5218_verifier_authenticity_remediation_apply_v477.py`, `python/carnot/verify/and_composition_verifier.py`, `python/carnot/verify/claim_isolation_uncertainty_router.py`, `results/experiment_5218_verifier_authenticity_remediation_apply_v477.json`) | Implemented (`tests/python/test_experiment_5218_verifier_authenticity_remediation_apply_v477.py`) |
+
+### REQ-VERIFY-5226: VerIbmc Local Solver-Feedback Pilot V478
+
+The repository SHALL provide Exp 5226 at
+`python/carnot/experiment_5226_veribmc_local_solver_feedback_pilot_v478.py`
+and write
+`results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json`
+without modifying `scripts/research_conductor.py`. The pilot SHALL test the
+V478 VerIbmc/VERGE pattern on a tiny bounded fixture: a deterministic
+solver-only baseline, a local SOTA GGUF LLM-only invariant or formal-constraint
+proposal arm, and a local SOTA GGUF plus deterministic solver-feedback retry
+arm on the same examples.
+
+The checker SHALL use a deterministic substrate (`z3`, `smt`, `esbmc`, or
+honestly named `other`). If ESBMC is unavailable, Z3/SMT is acceptable and
+MUST be recorded as the checker substrate. The runner MUST call
+`cached_sota_pair(gpu_indices=(0, 1))` before selecting model paths, and
+`model_specs`/`models_used` MUST include at least one mandated local SOTA GGUF
+from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` for a non-smoke result. Legacy tiny models
+MAY be used only in test fixtures or explicit CPU smoke paths and MUST NOT be
+used for the headline solver-feedback result.
+
+For every example, the artifact SHALL record the solver-only candidate, the
+initial local-GGUF proposal, the parsed invariant/formal constraint, the
+deterministic checker result, any structured counterexample feedback, the
+bounded retry proposal, and the final checker result. Solver feedback MUST be
+structured enough for the model prompt to reuse, including the failed proof
+obligation, concrete counterexample values when available, and a bounded repair
+hint. Correctness SHALL be determined by the deterministic checker, not by LLM
+self-judgment.
+
+The terminal artifact SHALL include principle-wrapped top-level fields
+`solver_feedback_pilot_complete`, `n_examples`, `solver_only_solved`,
+`llm_only_solved`, `llm_solver_feedback_solved`, `solver_feedback_uplift`,
+`accepted_invariants_or_constraints`, `model_specs`, `models_used`,
+`checker_substrate`, `tests_run`, `inference_substrate`, and `honest_verdict`.
+`inference_substrate` SHALL be
+`local_sota_gguf_plus_deterministic_solver_feedback`. `honest_verdict` SHALL
+start with `complete:`, `complete_`, `success:`, or `success_` and state
+plainly whether solver feedback improved over the baselines.
+
+Required field principles:
+
+- `solver_feedback_pilot_complete`: principle "True only when all three arms ran on the same bounded fixture and the artifact was validated."
+- `n_examples`: principle "Number of fixture examples used for every arm; the pilot is bounded and not a broad benchmark."
+- `solver_only_solved`: principle "Count accepted by the deterministic solver-only baseline on the same examples."
+- `llm_only_solved`: principle "Count accepted from initial local SOTA GGUF proposals before solver-feedback retry."
+- `llm_solver_feedback_solved`: principle "Count accepted after at most one structured solver-feedback retry."
+- `solver_feedback_uplift`: principle "llm_solver_feedback_solved minus the stronger of solver_only_solved and llm_only_solved, divided by n_examples."
+- `accepted_invariants_or_constraints`: principle "Accepted invariant or formal-constraint strings, grouped by example and arm."
+- `model_specs`: principle "Concrete resolved model spec records, including at least one mandated local SOTA GGUF for a non-smoke result."
+- `models_used`: principle "Concrete model identifiers and paths actually attempted for local SOTA inference."
+- `checker_substrate`: principle "Honest deterministic checker substrate: z3, smt, esbmc, or other."
+- `tests_run`: principle "Commands run for this pilot, with pass/fail status."
+- `inference_substrate`: principle "Must be local_sota_gguf_plus_deterministic_solver_feedback."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and state whether solver feedback improved over baselines."
+
+### SCENARIO-VERIFY-5226: Structured Counterexamples Bound The Retry
+
+Given the V478 VerIbmc/VERGE fixture examples, an importable deterministic
+solver, and at least one cached mandated local SOTA GGUF resolved through
+`cached_sota_pair()`, when Exp 5226 runs, then it executes solver-only,
+LLM-only, and LLM-plus-solver-feedback arms on the same examples, retries each
+failed LLM proposal at most once with structured counterexample feedback,
+computes accepted counts, runtime, counterexample usage, failure modes, and
+uplift, and writes the required artifact without claiming a broad benchmark.
+
+## Implementation Status (REQ-VERIFY-5226)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5226 | Planned (`python/carnot/experiment_5226_veribmc_local_solver_feedback_pilot_v478.py`, `results/experiment_5226_veribmc_local_solver_feedback_pilot_v478.json`) | Planned (`tests/python/test_experiment_5226_veribmc_local_solver_feedback_pilot_v478.py`) |
