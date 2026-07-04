@@ -10286,3 +10286,4 @@ web search: |
 | 2026-07-04 15:35 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
 | 2026-07-04 15:37 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
 | 2026-07-04 15:39 UTC | PHASE 3 gated on exp5228 rubric and patch -- ARC l | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5228-arc-provenance-skill-rubric-gate-v |
+| 2026-07-04 15:50 UTC | PHASE 3 KAN certificate pilot -- small PWA/MILP ve | OK | 87 passed, 1 warning in 10.53s |
