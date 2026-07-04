@@ -33431,6 +33431,91 @@ does not claim the `.477` handoff is clean.
 |---|---|---|
 | REQ-REPORT-5207 | Implemented (`python/carnot/experiment_5207_archive_476_activate_477.py`, `results/experiment_5207_archive_476_activate_477.json`) | Implemented (`tests/python/test_experiment_5207_archive_476_activate_477.py`) |
 
+### REQ-REPORT-5208: V477 Reserved SOTA Ingestion Refresh
+
+The Exp 5208 workflow SHALL produce
+`results/experiment_5208_sota_ingestion_v477.json` for the reserved `.477`
+SOTA-ingestion slot. The workflow SHALL read the V476 and V477 sections of
+`research-references.md`, the SOTA findings and phase plan in
+`openspec/change-proposals/research-roadmap-vNEXT.md`, the Continuous
+Self-Learning section of `research-program.md`, and
+`ops/exclusion_manifest.yaml`. It SHALL re-check fresh 2025-2026 sources for
+EBMs for verification, constraint satisfaction, Ising/hardware sampling,
+hallucination mitigation, KANs, constrained or energy-guided decoding, and
+continual or self-learning for constraints. It SHALL prefer primary sources
+including arXiv, OpenReview pages or API status, official project docs/repos,
+Extropic writing, Logical Intelligence posts, Hugging Face Papers, and
+Semantic Scholar metadata.
+
+The workflow SHALL re-run the Semantic Scholar citation checks for EBT
+`arXiv:2507.02092` and ARM-EBM `arXiv:2512.15605`. If either query is
+rate-limited or otherwise blocked, the artifact SHALL record the exact
+response/status and SHALL NOT infer a citation trail. The workflow SHALL also
+re-check Extropic and Logical Intelligence public writing for hardware, Kona,
+and Aleph architecture updates. It SHALL map every actionable finding to an
+existing `.477` task or to `defer/no action`, SHALL NOT add tasks or modify
+`research-roadmap.yaml`, SHALL NOT reopen any retired scope by implication, and
+SHALL NOT modify `scripts/research_conductor.py`.
+
+The workflow SHALL append to `research-references.md` only when a genuinely new
+actionable finding appears after the planning-time V477 section. If the refresh
+only reconfirms already-ingested V477 findings or finds blocked/non-actionable
+metadata, it SHALL leave `research-references.md` unchanged and report
+`new_references_added=0`.
+
+The artifact SHALL include principle-annotated fields `sources_checked`,
+`new_references_added`, `sota_to_experiment_mapping`,
+`ebt_semantic_scholar_citation_count`, `arm_ebm_semantic_scholar_status`,
+`retired_scope_reopened`, `inference_substrate`, and `honest_verdict`. It
+SHOULD also include `experiment_id`, `milestone`, `run_date`,
+`references_md_updated`, `no_deep_research_used`,
+`research_conductor_py_untouched_confirmed`, source URLs, exact API snippets,
+tests run, and a reproducibility checksum.
+
+Required field principles:
+
+- `sources_checked`: principle "The ingestion is only useful if it names the concrete source groups checked immediately before execution."
+- `new_references_added`: principle "A zero value is valid when the refresh finds no genuinely new actionable finding beyond V477."
+- `sota_to_experiment_mapping`: principle "Each fresh or rechecked source must either map to an existing .477 task or say defer/no action; no new roadmap task may be created here."
+- `ebt_semantic_scholar_citation_count`: principle "EBT citation counts must come from the Semantic Scholar response, not memory; blocked queries must be labeled blocked."
+- `arm_ebm_semantic_scholar_status`: principle "ARM-EBM rate limits or API errors must be recorded exactly rather than converted into a citation trail."
+- `retired_scope_reopened`: principle "A SOTA citation cannot override the exclusion manifest by implication."
+- `inference_substrate`: principle "This workflow ingests literature and metadata only; it does not run model training or benchmarks."
+- `honest_verdict`: principle "Must start with complete:/complete_/success:/success_ and distinguish new actionable findings from no-op refresh."
+
+#### SCENARIO-REPORT-5208: No-Op Refresh Records Fresh Checks Without Padding References
+
+**Given** the V477 planner references already contain the actionable FALCON,
+distributional EBM, EBD, STV, DeepVerifier, ADVENT, PAW, EBT, KAN, Extropic,
+and Logical Intelligence findings
+**And** the fresh arXiv/OpenReview/Hugging Face Papers, Semantic Scholar,
+Extropic, and Logical Intelligence checks add no genuinely new actionable
+finding
+**When** the Exp 5208 ingestion workflow runs
+**Then** it writes
+`results/experiment_5208_sota_ingestion_v477.json`, records the source groups
+checked, records `new_references_added=0`, leaves `research-references.md`
+unchanged, maps refreshed sources to existing `.477` tasks or `defer/no
+action`, records the EBT Semantic Scholar citation count or blocked status,
+records any ARM-EBM rate-limit/error response exactly, sets
+`retired_scope_reopened=false`, declares `literature_ingestion`, and emits an
+honest no-op refresh verdict.
+
+#### SCENARIO-REPORT-5208-BLOCKED-METADATA: Blocked Citation Metadata Fails Closed
+
+**Given** the ARM-EBM Semantic Scholar query is rate-limited or otherwise
+returns an error
+**When** the Exp 5208 ingestion workflow builds the artifact
+**Then** it records the exact status/body in `arm_ebm_semantic_scholar_status`
+and does not invent a citation count, add a task, update `research-roadmap.yaml`,
+or reopen a retired scope.
+
+## Implementation Status (REQ-REPORT-5208)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5208 | Implemented (`python/carnot/experiment_5208_sota_ingestion_v477.py`, `results/experiment_5208_sota_ingestion_v477.json`) | Implemented (`tests/python/test_experiment_5208_sota_ingestion_v477.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
