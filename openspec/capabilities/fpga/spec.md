@@ -15198,6 +15198,102 @@ success-prefixed honest verdict that reports reachability plus no-speedup status
 
 ---
 
+### REQ-HW-5243
+
+**Title:** Hardware-continuity v479 MUST report only SSH/hash continuity and a KAN/p-bit speedup boundary plan
+
+**Description:**
+Experiment 5243 MUST produce
+`results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json` as a
+v479 hardware-continuity artifact with
+`inference_substrate="hardware_reachability_hash_boundary"` and
+`speedup_claimed=false`. It may run only bounded board-reachability and
+hash/correctness checks that are safe in the current environment. It MUST NOT
+claim KV260, PolarFire, GateMate, analog KAN, p-bit, or Extropic TSU speedup.
+
+KV260 MUST be checked by SSH only, using
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`, and any reachable smoke
+MUST run on the board over SSH without requiring host-visible `/dev/mmcblk*` or
+other host block-device preconditions. The artifact MUST expose
+`kv260_status` as `reachable`, `blocked`, or `not_checked`, and MUST set
+`kv260_ssh_only_confirmed=true` whenever the KV260 path was evaluated by this
+SSH-only discipline.
+
+PolarFire MUST be checked by SSH and, when reachable, MAY run the same bounded
+board-local hash/correctness smoke. If PolarFire is not reachable, the artifact
+MUST emit `polarfire_status="blocked"` plus a blocked substatus that records the
+exact command and error text from the failed check.
+
+GateMate MUST NOT re-run physical or JTAG probing unless the operator explicitly
+changed the cable, port, power, or board setup. With no setup change, the
+artifact MUST carry forward `gatemate_status="blocked_physical_jtag"` with a
+timestamp and rationale. If setup changed, the artifact MAY record
+`gatemate_status` as `reachable`, `blocked_physical_jtag`, or `not_checked`, but
+physical probing remains outside the default safe path.
+
+The workflow MUST review the committed Exp 5242 KAN certificate boundary and the
+V479 analog KAN/p-bit hardware references, then write a small repository note
+whose path is recorded as `kan_pbit_boundary_note_path`. The note MUST state the
+workload and measurement evidence needed before a valid speedup experiment:
+same canonical KAN/p-bit workload, same seeds, same partitions, same boundary
+exchange schedule, board-local hash/correctness parity, analog/KAN error-budget
+accounting where applicable, data-transfer accounting, and end-to-end wall
+clock against a CPU baseline. Extropic TSU references remain watch-only until
+authenticated local hardware evidence exists.
+
+The artifact MUST include principle-wrapped required fields `kv260_status`,
+`kv260_ssh_only_confirmed`, `polarfire_status`, `gatemate_status`,
+`physical_setup_changed`, `speedup_claimed`, `kan_pbit_boundary_note_path`,
+`safe_commands_run`, `inference_substrate`, and `honest_verdict`.
+`honest_verdict` MUST start with `complete:`, `complete_`, `success:`,
+`success_`, or `blocked_`, and state KV260, PolarFire, and GateMate statuses
+with no speedup claim.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5243_hardware_continuity_kan_pbit_boundary_v479 --date 20260704`
+  writes `results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json`.
+- The artifact includes `experiment_id="exp5243-hardware-continuity-kan-pbit-boundary-v479"`,
+  `spec_refs` containing `REQ-HW-5243` and `SCENARIO-HW-5243`, `random_seed=5243`,
+  and a stable `reproducibility_checksum`.
+- KV260 status is derived only from SSH reachability plus any SSH board-local
+  hash/correctness smoke; host block-device names such as `/dev/mmcblk` do not
+  appear in the artifact.
+- PolarFire blocked status records the exact command and error when SSH is not
+  available; reachable status records hash/correctness smoke metadata when run.
+- With `physical_setup_changed=false`, GateMate is carried forward as
+  `blocked_physical_jtag` with timestamp and rationale and no physical/JTAG
+  command is run.
+- `speedup_claimed=false`; the KAN/p-bit boundary note exists; and the verdict
+  states KV260, PolarFire, GateMate, and no-speedup status.
+
+**Implementation status:** Pending (Exp 5243)
+
+---
+
+### SCENARIO-HW-5243
+
+**Scenario:** Exp 5243 runs safe SSH/hash continuity checks and writes the KAN/p-bit speedup-boundary note without making any speedup claim.
+
+**Given:** Exp 5231 kept KV260 and PolarFire in the SSH/hash continuity lane,
+GateMate remained blocked at the physical/JTAG layer, Exp 5242 reported only a
+bounded deterministic KAEM certificate boundary, and V479 references added
+analog KAN co-optimization plus watch-only Extropic TSU context.
+**When:** Experiment 5243 runs KV260 SSH-only reachability plus board-local hash
+smoke if reachable, runs PolarFire SSH/hash continuity or records the exact
+blocked command/error, skips GateMate physical/JTAG probing because the operator
+did not change setup, and writes the KAN/p-bit boundary note.
+**Then:** It writes
+`results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json` with
+principle-wrapped required fields for board statuses, `physical_setup_changed`,
+`safe_commands_run`, `kan_pbit_boundary_note_path`,
+`inference_substrate="hardware_reachability_hash_boundary"`,
+`speedup_claimed=false`, and a terminal honest verdict that states board
+statuses and no speedup claim.
+
+**Implementation status:** Pending (Exp 5243)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
