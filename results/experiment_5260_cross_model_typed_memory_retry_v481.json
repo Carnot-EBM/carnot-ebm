@@ -1,0 +1,944 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Mandated model IDs, roles, quantization/file receipts, source/target direction, and runtime receipts used for headline metrics.",
+    "value": {
+      "all_model_receipts": {
+        "flagship_dense": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_sha256": null,
+          "file_receipt": {
+            "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "size_bytes": 18323731456
+          },
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "flagship_dense",
+          "runtime_probe": {
+            "command": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "-c",
+              "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+              "<probe-code>",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+            ],
+            "config": {
+              "n_ctx": 256,
+              "n_gpu_layers": -1,
+              "n_predict": 1,
+              "seed": 5259,
+              "temperature": 0.0
+            },
+            "outcome": "tokenized 5 tokens and generated 2 chars",
+            "returncode": 0,
+            "runtime_ready": true,
+            "status": "runtime_ready",
+            "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n",
+            "traceback": null
+          },
+          "runtime_ready": true,
+          "size_bytes": 18323731456,
+          "status": "runtime_ready"
+        },
+        "flagship_moe": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_sha256": null,
+          "file_receipt": {
+            "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "size_bytes": 22134528992
+          },
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "flagship_moe",
+          "runtime_probe": {
+            "command": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "-c",
+              "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+              "<probe-code>",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+            ],
+            "config": {
+              "n_ctx": 256,
+              "n_gpu_layers": -1,
+              "n_predict": 1,
+              "seed": 5259,
+              "temperature": 0.0
+            },
+            "outcome": "tokenized 4 tokens and generated 2 chars",
+            "returncode": 0,
+            "runtime_ready": true,
+            "status": "runtime_ready",
+            "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n",
+            "traceback": null
+          },
+          "runtime_ready": true,
+          "size_bytes": 22134528992,
+          "status": "runtime_ready"
+        },
+        "middle_moe": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_sha256": null,
+          "file_receipt": {
+            "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "size_bytes": 16947539744
+          },
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "middle_moe",
+          "runtime_probe": {
+            "command": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+              "-c",
+              "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+              "<probe-code>",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+            ],
+            "config": {
+              "n_ctx": 256,
+              "n_gpu_layers": -1,
+              "n_predict": 1,
+              "seed": 5259,
+              "temperature": 0.0
+            },
+            "outcome": "tokenized 5 tokens and generated 3 chars",
+            "returncode": 0,
+            "runtime_ready": true,
+            "status": "runtime_ready",
+            "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+            "traceback": null
+          },
+          "runtime_ready": true,
+          "size_bytes": 16947539744,
+          "status": "runtime_ready"
+        }
+      },
+      "direction": "flagship_moe_to_flagship_dense",
+      "headline_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "optional_third_family_check": {
+        "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+        "checksum_sha256": null,
+        "file_receipt": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 5 tokens and generated 3 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 16947539744,
+        "status": "runtime_ready"
+      },
+      "principle": "Mandated model IDs, roles, quantization/file receipts, source/target direction, and runtime receipts used for headline metrics.",
+      "second_direction": "runtime_skipped_not_inferred",
+      "source_model": {
+        "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+        "checksum_sha256": null,
+        "file_receipt": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 4 tokens and generated 2 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 22134528992,
+        "status": "runtime_ready"
+      },
+      "target_model": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_sha256": null,
+        "file_receipt": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 5 tokens and generated 2 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 18323731456,
+        "status": "runtime_ready"
+      },
+      "tiny_smoke_tests": []
+    }
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/python -m carnot.pipeline.cross_model_typed_memory_retry",
+      "outcome": "live_run_invoked"
+    }
+  ],
+  "cross_model_memory_useful": false,
+  "cross_model_memory_useful_principle": "True only when aligned memory beats no-memory and shuffled-memory controls, unsafe false accepts are zero, rollback is exercised, and leakage checks pass.",
+  "delta_over_no_memory": {
+    "principle": "Aligned-memory target accuracy minus no-memory target accuracy.",
+    "value": 0.0
+  },
+  "delta_over_shuffled_memory": {
+    "principle": "Aligned-memory target accuracy minus shuffled-memory target accuracy.",
+    "value": 0.0
+  },
+  "duration_s": 145.112927,
+  "experiment": "experiment_5260_cross_model_typed_memory_retry_v481",
+  "experiment_id": 5260,
+  "honest_verdict": {
+    "principle": "Terminal verdict; starts with complete: or blocked_ and states whether cross-model memory was useful, harmful, null, or unmeasured.",
+    "value": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"
+  },
+  "inference_substrate": {
+    "principle": "The live local GGUF SOTA model-call substrate used by Exp 5260.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "leakage_controls": {
+    "principle": "Checksums and guards proving memory text omits target answer tokens, prompts omit fixture task IDs, and no post-hoc curation occurred.",
+    "value": {
+      "memory_checksums": {
+        "bounded integer claim verifier": "sha256:2621527e0e5081c3ff8feacb2180639c2b24c33323f877173b03cb87b0035914",
+        "citation support verifier": "sha256:c0a9790753d9d108e92acb73746da8216b5132cd6466e5461e18db4f2da291d1",
+        "stale shortcut rollback verifier": "sha256:c38075471c8590d86fe2d500d9db932429c09f8847e1eecedbf6a81c0dc380ab",
+        "stepwise verifier rubric": "sha256:6ddd98300978b8c0e4c4d084f68832749113998fb25491c6b9d51268e9c746cd"
+      },
+      "no_fixture_labels_in_prompts": {
+        "passed": true,
+        "source_prompt_label_leaks": [],
+        "target_prompt_label_leaks": []
+      },
+      "no_posthoc_curation": {
+        "passed": true
+      },
+      "no_target_answer_text_in_memory": {
+        "leaked_tokens": [],
+        "passed": true
+      },
+      "passed": true,
+      "prompt_checksums": {
+        "heldout": {
+          "citation_negative_heldout": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+          "positive_supported_heldout": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+          "range_negative_heldout": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+          "rollback_shortcut_heldout": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23"
+        },
+        "source": {
+          "source_memory_0": "sha256:ddc5b75375ca19a65d9086ada6c05bafad8e0fa55727638e3f065e567624f9df",
+          "source_memory_1": "sha256:f8ad0583579cecef592e4689339ba10a036e8fb6a2c678ab19de7d525c87beb5",
+          "source_memory_2": "sha256:f4ba1ce54b66a0e342dfd66417c59e4ac3f37574a8be5a5f5313b57263245f0f",
+          "source_memory_3": "sha256:d054bcbbc7291a5756f88e13d7eb6b03edbdcc3de7ce7cf8fa4ae58f4a953079"
+        }
+      }
+    }
+  },
+  "measurement": {
+    "arm_metrics": {
+      "aligned_memory": {
+        "accuracy": 1.0,
+        "arm": "aligned_memory",
+        "correct_n": 4,
+        "n": 4,
+        "rows": [
+          {
+            "arm": "aligned_memory",
+            "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+            "repeated_error_key": "accepts_out_of_range_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "range_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "aligned_memory",
+            "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+            "repeated_error_key": "accepts_unsupported_citation",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "citation_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "aligned_memory",
+            "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+            "completion": "\n@@2",
+            "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+            "correct": true,
+            "expected_token": "@@2",
+            "parsed_token": "@@2",
+            "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+            "repeated_error_key": "reuses_retired_shortcut",
+            "rollback_trigger": true,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "rollback_shortcut_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "aligned_memory",
+            "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+            "completion": "\n@@0",
+            "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+            "correct": true,
+            "expected_token": "@@0",
+            "parsed_token": "@@0",
+            "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+            "repeated_error_key": "rejects_supported_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "positive_supported_heldout",
+            "unsafe_false_accept": false
+          }
+        ],
+        "unsafe_false_accepts": 0
+      },
+      "no_memory": {
+        "accuracy": 1.0,
+        "arm": "no_memory",
+        "correct_n": 4,
+        "n": 4,
+        "rows": [
+          {
+            "arm": "no_memory",
+            "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+            "repeated_error_key": "accepts_out_of_range_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "range_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "no_memory",
+            "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+            "repeated_error_key": "accepts_unsupported_citation",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "citation_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "no_memory",
+            "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+            "completion": "\n@@2",
+            "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+            "correct": true,
+            "expected_token": "@@2",
+            "parsed_token": "@@2",
+            "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+            "repeated_error_key": "reuses_retired_shortcut",
+            "rollback_trigger": true,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "rollback_shortcut_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "no_memory",
+            "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+            "completion": "\n@@0",
+            "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+            "correct": true,
+            "expected_token": "@@0",
+            "parsed_token": "@@0",
+            "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+            "repeated_error_key": "rejects_supported_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "positive_supported_heldout",
+            "unsafe_false_accept": false
+          }
+        ],
+        "unsafe_false_accepts": 0
+      },
+      "shuffled_memory": {
+        "accuracy": 1.0,
+        "arm": "shuffled_memory",
+        "correct_n": 4,
+        "n": 4,
+        "rows": [
+          {
+            "arm": "shuffled_memory",
+            "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+            "repeated_error_key": "accepts_out_of_range_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "range_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "shuffled_memory",
+            "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+            "completion": "\n@@1",
+            "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+            "correct": true,
+            "expected_token": "@@1",
+            "parsed_token": "@@1",
+            "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+            "repeated_error_key": "accepts_unsupported_citation",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "citation_negative_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "shuffled_memory",
+            "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+            "completion": "\n@@2",
+            "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+            "correct": true,
+            "expected_token": "@@2",
+            "parsed_token": "@@2",
+            "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+            "repeated_error_key": "reuses_retired_shortcut",
+            "rollback_trigger": true,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "rollback_shortcut_heldout",
+            "unsafe_false_accept": false
+          },
+          {
+            "arm": "shuffled_memory",
+            "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+            "completion": "\n@@0",
+            "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+            "correct": true,
+            "expected_token": "@@0",
+            "parsed_token": "@@0",
+            "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+            "repeated_error_key": "rejects_supported_claim",
+            "rollback_trigger": false,
+            "selected_memory_head": null,
+            "selected_memory_state": null,
+            "selected_memory_subject": null,
+            "task_id": "positive_supported_heldout",
+            "unsafe_false_accept": false
+          }
+        ],
+        "unsafe_false_accepts": 0
+      }
+    },
+    "completion_records": [
+      {
+        "arm": "aligned_memory",
+        "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+        "repeated_error_key": "accepts_out_of_range_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "range_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "aligned_memory",
+        "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+        "repeated_error_key": "accepts_unsupported_citation",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "citation_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "aligned_memory",
+        "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+        "completion": "\n@@2",
+        "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+        "correct": true,
+        "expected_token": "@@2",
+        "parsed_token": "@@2",
+        "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+        "repeated_error_key": "reuses_retired_shortcut",
+        "rollback_trigger": true,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "rollback_shortcut_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "aligned_memory",
+        "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+        "completion": "\n@@0",
+        "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+        "correct": true,
+        "expected_token": "@@0",
+        "parsed_token": "@@0",
+        "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+        "repeated_error_key": "rejects_supported_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "positive_supported_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "no_memory",
+        "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+        "repeated_error_key": "accepts_out_of_range_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "range_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "no_memory",
+        "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+        "repeated_error_key": "accepts_unsupported_citation",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "citation_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "no_memory",
+        "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+        "completion": "\n@@2",
+        "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+        "correct": true,
+        "expected_token": "@@2",
+        "parsed_token": "@@2",
+        "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+        "repeated_error_key": "reuses_retired_shortcut",
+        "rollback_trigger": true,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "rollback_shortcut_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "no_memory",
+        "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+        "completion": "\n@@0",
+        "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+        "correct": true,
+        "expected_token": "@@0",
+        "parsed_token": "@@0",
+        "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+        "repeated_error_key": "rejects_supported_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "positive_supported_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "shuffled_memory",
+        "base_prompt_checksum": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:b034c3bba3011b6ecc3ad352b7583fdacddb11cf3154427908d50c0bb6b76363",
+        "repeated_error_key": "accepts_out_of_range_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "range_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "shuffled_memory",
+        "base_prompt_checksum": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+        "completion": "\n@@1",
+        "completion_checksum": "sha256:3f2d4113f53f9039292ebe463e93b72db1237b323b29d3ff62a4c02a00b5dc64",
+        "correct": true,
+        "expected_token": "@@1",
+        "parsed_token": "@@1",
+        "prompt_checksum": "sha256:6a1b2fc68401035d756b375e90cd67014fabd0e0abd94ce6be2f66e641a204e9",
+        "repeated_error_key": "accepts_unsupported_citation",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "citation_negative_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "shuffled_memory",
+        "base_prompt_checksum": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23",
+        "completion": "\n@@2",
+        "completion_checksum": "sha256:34512bacea6d17d62d0b05b643aa5d280c69b27308140503c800a1b7879f988d",
+        "correct": true,
+        "expected_token": "@@2",
+        "parsed_token": "@@2",
+        "prompt_checksum": "sha256:2e4b04bbb54b70a1fad0025f8b66392c87499d9fa6d7894255b21110d91ae8de",
+        "repeated_error_key": "reuses_retired_shortcut",
+        "rollback_trigger": true,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "rollback_shortcut_heldout",
+        "unsafe_false_accept": false
+      },
+      {
+        "arm": "shuffled_memory",
+        "base_prompt_checksum": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+        "completion": "\n@@0",
+        "completion_checksum": "sha256:40620a817855d20a091efb1f26257e31ddf0245ad9cb720b4b278d325291119c",
+        "correct": true,
+        "expected_token": "@@0",
+        "parsed_token": "@@0",
+        "prompt_checksum": "sha256:9143fec7d0a759bff9f4bb3b88437e026d85742a967d3ccbc25ede221a97b1eb",
+        "repeated_error_key": "rejects_supported_claim",
+        "rollback_trigger": false,
+        "selected_memory_head": null,
+        "selected_memory_state": null,
+        "selected_memory_subject": null,
+        "task_id": "positive_supported_heldout",
+        "unsafe_false_accept": false
+      }
+    ],
+    "cross_model_memory_useful": false,
+    "delta_over_no_memory": 0.0,
+    "delta_over_shuffled_memory": 0.0,
+    "direction_name": "flagship_moe_to_flagship_dense",
+    "leakage_controls": {
+      "memory_checksums": {
+        "bounded integer claim verifier": "sha256:2621527e0e5081c3ff8feacb2180639c2b24c33323f877173b03cb87b0035914",
+        "citation support verifier": "sha256:c0a9790753d9d108e92acb73746da8216b5132cd6466e5461e18db4f2da291d1",
+        "stale shortcut rollback verifier": "sha256:c38075471c8590d86fe2d500d9db932429c09f8847e1eecedbf6a81c0dc380ab",
+        "stepwise verifier rubric": "sha256:6ddd98300978b8c0e4c4d084f68832749113998fb25491c6b9d51268e9c746cd"
+      },
+      "no_fixture_labels_in_prompts": {
+        "passed": true,
+        "source_prompt_label_leaks": [],
+        "target_prompt_label_leaks": []
+      },
+      "no_posthoc_curation": {
+        "passed": true
+      },
+      "no_target_answer_text_in_memory": {
+        "leaked_tokens": [],
+        "passed": true
+      },
+      "passed": true,
+      "prompt_checksums": {
+        "heldout": {
+          "citation_negative_heldout": "sha256:3296d2f858ac80bab26eca8d8b7d5febad5648b6e5f6d4fb4b27a2f509a7998b",
+          "positive_supported_heldout": "sha256:ffc4a0d88df0f70bdb22cf9fd55d51c2e273e582bdb0f4d75fbf91c082753cbf",
+          "range_negative_heldout": "sha256:3e47dfda8f3795837d802c097c85761e5607a11192c625db372c29a351982607",
+          "rollback_shortcut_heldout": "sha256:82cb39cede873ca351e78c1a70269e1707be83eea05aee8c79bbc9f502713f23"
+        },
+        "source": {
+          "source_memory_0": "sha256:ddc5b75375ca19a65d9086ada6c05bafad8e0fa55727638e3f065e567624f9df",
+          "source_memory_1": "sha256:f8ad0583579cecef592e4689339ba10a036e8fb6a2c678ab19de7d525c87beb5",
+          "source_memory_2": "sha256:f4ba1ce54b66a0e342dfd66417c59e4ac3f37574a8be5a5f5313b57263245f0f",
+          "source_memory_3": "sha256:d054bcbbc7291a5756f88e13d7eb6b03edbdcc3de7ce7cf8fa4ae58f4a953079"
+        }
+      }
+    },
+    "promoted_memory_subjects": [],
+    "repeated_error_rate": 0.0,
+    "rollback_exercised": false,
+    "source_memory_records": [
+      {
+        "completion": "\n\n<think>\nHere's a",
+        "completion_checksum": "sha256:72d26e1ba864f344a5069f6c7a0362b64c41ca381aed1ff5635d9acc54eafb3d",
+        "expected_source_token": "M0",
+        "memory_subject": "bounded integer claim verifier",
+        "parsed_token": "UNPARSED",
+        "phase": "source_memory_promotion",
+        "promoted_by_source": false,
+        "prompt_checksum": "sha256:ddc5b75375ca19a65d9086ada6c05bafad8e0fa55727638e3f065e567624f9df",
+        "prompt_id": "source_memory_0"
+      },
+      {
+        "completion": "\n\n<think>\nHere's a",
+        "completion_checksum": "sha256:72d26e1ba864f344a5069f6c7a0362b64c41ca381aed1ff5635d9acc54eafb3d",
+        "expected_source_token": "M1",
+        "memory_subject": "citation support verifier",
+        "parsed_token": "UNPARSED",
+        "phase": "source_memory_promotion",
+        "promoted_by_source": false,
+        "prompt_checksum": "sha256:f8ad0583579cecef592e4689339ba10a036e8fb6a2c678ab19de7d525c87beb5",
+        "prompt_id": "source_memory_1"
+      },
+      {
+        "completion": "\n\n<think>\nHere's a",
+        "completion_checksum": "sha256:72d26e1ba864f344a5069f6c7a0362b64c41ca381aed1ff5635d9acc54eafb3d",
+        "expected_source_token": "M2",
+        "memory_subject": "stale shortcut rollback verifier",
+        "parsed_token": "UNPARSED",
+        "phase": "source_memory_promotion",
+        "promoted_by_source": false,
+        "prompt_checksum": "sha256:f4ba1ce54b66a0e342dfd66417c59e4ac3f37574a8be5a5f5313b57263245f0f",
+        "prompt_id": "source_memory_2"
+      },
+      {
+        "completion": "\n\n<think>\nHere's a",
+        "completion_checksum": "sha256:72d26e1ba864f344a5069f6c7a0362b64c41ca381aed1ff5635d9acc54eafb3d",
+        "expected_source_token": "M3",
+        "memory_subject": "stepwise verifier rubric",
+        "parsed_token": "UNPARSED",
+        "phase": "source_memory_promotion",
+        "promoted_by_source": false,
+        "prompt_checksum": "sha256:d054bcbbc7291a5756f88e13d7eb6b03edbdcc3de7ce7cf8fa4ae58f4a953079",
+        "prompt_id": "source_memory_3"
+      }
+    ],
+    "source_model_role": "flagship_moe",
+    "target_model_role": "flagship_dense",
+    "unsafe_false_accepts": 0
+  },
+  "preconditions_checked": {
+    "principle": "Exp 5259 readiness, GPU/runtime receipts, and memory-store snapshot recorded before any in-memory memory promotion attempt.",
+    "value": {
+      "exp5259_honest_verdict": "complete: sota_runtime_ready=true ready through flagship_moe",
+      "exp5259_sota_runtime_ready": true,
+      "exp5259_sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe completing the local GGUF runtime path.",
+      "gpu_offload_receipts": {
+        "cuda_runtime": {
+          "command": [
+            "nvidia-smi"
+          ],
+          "duration_s": 0.094388,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Sun Jul  5 02:58:41 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   45C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   48C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+        },
+        "gpu_visible": true,
+        "llama_cpp": {
+          "import_ok": true,
+          "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "version": "0.3.29"
+        },
+        "llama_cpp_python_distribution": "llama-cpp-python",
+        "nvcc": {
+          "command": [
+            "nvcc",
+            "--version"
+          ],
+          "duration_s": 0.016137,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_Apr_24_07:22:02_PM_PDT_2026\nCuda compilation tools, release 13.3, V13.3.33\nBuild cuda_13.3.r13.3/compiler.37862127_0"
+        },
+        "nvidia_smi": {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.034005,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+        },
+        "offload_settings": {
+          "n_ctx": 256,
+          "n_gpu_layers": -1,
+          "n_predict": 1,
+          "seed": 5259,
+          "temperature": 0.0
+        },
+        "torch_cuda": {
+          "available": true,
+          "device_count": 2,
+          "import_ok": true,
+          "version": "2.11.0+cu128"
+        }
+      },
+      "memory_store_snapshot_before_mutation": {
+        "entry_count": 6,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/typed_multihead_verifier_memory_v478.json",
+        "present": true,
+        "promotion_state_counts": {
+          "promoted": 2,
+          "rolled_back": 4
+        },
+        "schema": "carnot.typed_multihead_verifier_memory.v1",
+        "sha256": "sha256:1da9ea9000a9ce3e74fa43e1328289924bbb1b86b084ba36389ef7a412457561",
+        "size_bytes": 12043
+      }
+    }
+  },
+  "repeated_error_rate": {
+    "principle": "Fraction of held-out tasks where aligned memory repeats the no-memory wrong answer.",
+    "value": 0.0
+  },
+  "reproducibility_checksum": "8551f07a4c2387f6",
+  "rollback_exercised": {
+    "principle": "True only when a rolled-back typed-memory entry changes the held-out degradation case to the rollback token.",
+    "value": false
+  },
+  "run_date": "2026-07-05",
+  "schema": "carnot.cross_model_typed_memory_retry.v481",
+  "spec_refs": [
+    "REQ-LEARN-5260",
+    "SCENARIO-LEARN-5260-COMPLETE-MEASUREMENT",
+    "SCENARIO-LEARN-5260-BLOCKED-PRECONDITION"
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Unsafe accept count in the aligned-memory arm; zero is required for usefulness.",
+    "value": 0
+  }
+}
