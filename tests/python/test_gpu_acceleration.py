@@ -31,10 +31,11 @@ import pytest
 _SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "experiment_template.py"
 sys.path.insert(0, str(_SCRIPT_PATH.parent))
 
-_spec = importlib.util.spec_from_file_location("experiment_template", _SCRIPT_PATH)
+_MODULE_NAME = "experiment_template_gpu_acceleration"
+_spec = importlib.util.spec_from_file_location(_MODULE_NAME, _SCRIPT_PATH)
 assert _spec is not None and _spec.loader is not None
 _mod = importlib.util.module_from_spec(_spec)
-sys.modules["experiment_template"] = _mod
+sys.modules[_MODULE_NAME] = _mod
 _spec.loader.exec_module(_mod)  # type: ignore[union-attr]
 
 ExperimentTemplate = _mod.ExperimentTemplate
@@ -96,10 +97,6 @@ class TestCudaIsAvailable:
         fake_torch.cuda = fake_cuda
 
         with patch.dict(sys.modules, {"torch": fake_torch}):
-            # Force re-evaluation inside the helper
-            import importlib
-
-            importlib.reload(_mod)
             result = _mod._cuda_is_available()
         assert result is False
 

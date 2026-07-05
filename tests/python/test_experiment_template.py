@@ -5,6 +5,7 @@ All tests run in mock mode (no GPU hardware required).
 Spec coverage:
   REQ-VERIFY-083  — Experiment scaffolding template eliminates cold-start boilerplate
   REQ-VERIFY-084  — BatchedInferenceRunner groups questions and enforces batch timeout
+  REQ-REPORT-5267 — Producer-side strict artifact normalizer adoption
   SCENARIO-VERIFY-109 — ExperimentTemplate instantiates with required fields
   SCENARIO-VERIFY-110 — setup_gpu() returns health_status dict from pre-warm
   SCENARIO-VERIFY-111 — checkpoint_save/resume round-trips correctly
@@ -13,12 +14,15 @@ Spec coverage:
   SCENARIO-VERIFY-114 — batch timeout is batch_size * 60s, not per-question
   SCENARIO-VERIFY-115 — batch logging records batch_id, batch_size, batch_time_s per batch
   SCENARIO-VERIFY-116 — run_with_timeout returns partial result dict on timeout
+  SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION — template boundary normalizes safe shapes
+  SCENARIO-REPORT-5267-UNSAFE-REJECTION — template boundary does not invent evidence
 """
 
 from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import time
@@ -33,6 +37,8 @@ import pytest
 # ---------------------------------------------------------------------------
 
 _SCRIPT_PATH = Path(__file__).resolve().parents[2] / "scripts" / "experiment_template.py"
+_REPO_ROOT = _SCRIPT_PATH.parents[1]
+_SPEC_PATH = _REPO_ROOT / "openspec" / "capabilities" / "research-reporting" / "spec.md"
 sys.path.insert(0, str(_SCRIPT_PATH.parent))
 
 import importlib.util
@@ -47,6 +53,7 @@ ExperimentTemplate = _mod.ExperimentTemplate
 BatchedInferenceRunner = _mod.BatchedInferenceRunner
 InferenceResult = _mod.InferenceResult
 REQUIRED_RESULT_FIELDS = _mod.REQUIRED_RESULT_FIELDS
+PRODUCER_NORMALIZER_RECEIPTS_FIELD = _mod.PRODUCER_NORMALIZER_RECEIPTS_FIELD
 
 
 # ---------------------------------------------------------------------------
@@ -349,6 +356,191 @@ class TestBuildResult:
         t = ExperimentTemplate(306, "T", "results/out.json", repo_root=tmp_path)
         result = t.build_result({}, status="blocked")
         assert result["status"] == "blocked"
+
+
+class TestProducerArtifactNormalizer:
+    """Producer-side strict artifact normalization for template-built artifacts."""
+
+    def _receipt_kinds(self, artifact: dict[str, Any], receipt_kind: str) -> set[str]:
+        receipts = artifact.get(PRODUCER_NORMALIZER_RECEIPTS_FIELD, {})
+        rows = receipts.get(receipt_kind, [])
+        return {str(row["kind"]) for row in rows}
+
+    def test_req_report_5267_spec_declares_template_adoption_contract(self) -> None:
+        """REQ-REPORT-5267: OpenSpec anchors producer-side normalizer adoption."""
+
+        spec = _SPEC_PATH.read_text(encoding="utf-8")
+        section = spec[spec.index("### REQ-REPORT-5267") : spec.index("### REQ-REPORT-5257")]
+
+        for marker in (
+            "REQ-REPORT-5267",
+            "SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION",
+            "SCENARIO-REPORT-5267-UNSAFE-REJECTION",
+            "scripts/experiment_template.py",
+            "scripts/research_conductor.py",
+            "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+            "cached_fixture_replay_no_llm",
+        ):
+            assert marker in section
+
+    def test_scenario_report_5267_bare_gate_fields_are_preserved(self, tmp_path: Path) -> None:
+        """SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION: bare gate booleans stay bare."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: fixture",
+                "inference_substrate": "cached_fixture_replay_no_llm",
+                "producer_normalizer_ready": True,
+            },
+            status="success",
+            producer_gate_fields=("producer_normalizer_ready",),
+        )
+
+        assert artifact["producer_normalizer_ready"] is True
+        assert "producer_gate_fields" not in artifact
+        assert PRODUCER_NORMALIZER_RECEIPTS_FIELD not in artifact
+
+    def test_scenario_report_5267_principle_wrapped_fields_normalize_at_build_result(
+        self, tmp_path: Path
+    ) -> None:
+        """SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION: top-level wrappers unwrap."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": {
+                    "value": "complete: wrapped fixture",
+                    "principle": "terminal verdict",
+                },
+                "inference_substrate": {
+                    "value": "cached_fixture_replay_no_llm",
+                    "principle": "substrate declaration",
+                },
+                "acceptance_gate_passed": {
+                    "value": True,
+                    "principle": "gate already measured by producer",
+                },
+            },
+            status="success",
+            producer_gate_fields=("acceptance_gate_passed",),
+        )
+
+        assert artifact["honest_verdict"] == "complete: wrapped fixture"
+        assert artifact["inference_substrate"] == "cached_fixture_replay_no_llm"
+        assert artifact["acceptance_gate_passed"] is True
+        assert "top_level_wrapper_unwrapped" in self._receipt_kinds(artifact, "safe_repairs")
+        assert self._receipt_kinds(artifact, "unsafe_rejections") == set()
+
+    def test_scenario_report_5267_unambiguous_nested_gate_can_be_surfaced(
+        self, tmp_path: Path
+    ) -> None:
+        """SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION: named nested gate can surface."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: nested gate fixture",
+                "inference_substrate": "cached_fixture_replay_no_llm",
+                "gate_receipts": {
+                    "producer_normalizer_ready": {
+                        "value": True,
+                        "principle": "producer measured this gate",
+                    }
+                },
+            },
+            status="success",
+            producer_gate_fields=("producer_normalizer_ready",),
+        )
+
+        assert artifact["producer_normalizer_ready"] is True
+        assert "unambiguous_gate_boolean_extracted" in self._receipt_kinds(artifact, "safe_repairs")
+
+    def test_scenario_report_5267_unsafe_missing_receipts_are_not_synthesized(
+        self, tmp_path: Path
+    ) -> None:
+        """SCENARIO-REPORT-5267-UNSAFE-REJECTION: methodology evidence is not invented."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: live fixture",
+                "inference_substrate": "live_llm_inference",
+                "duration_s": 61.0,
+                "field_principles": {
+                    "honest_verdict": "terminal verdict",
+                    "inference_substrate": "substrate declaration",
+                    "duration_s": "wall-clock receipt",
+                },
+            },
+            status="success",
+            producer_required_principle_fields=(
+                "honest_verdict",
+                "inference_substrate",
+                "duration_s",
+            ),
+        )
+
+        assert "model_specs" not in artifact
+        assert "target_model" not in artifact
+        assert "missing_methodology_receipt" in self._receipt_kinds(artifact, "unsafe_rejections")
+        assert artifact[PRODUCER_NORMALIZER_RECEIPTS_FIELD]["ready_for_gated_consumers"] is False
+
+    def test_scenario_report_5267_duration_policy_remains_strict(self, tmp_path: Path) -> None:
+        """SCENARIO-REPORT-5267-UNSAFE-REJECTION: sub-floor live duration is blocked."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: too-fast fixture",
+                "inference_substrate": "live_llm_inference",
+                "duration_s": 0.5,
+                "model_specs": [{"hf_id": "fixture-35B-GGUF"}],
+            },
+            status="success",
+        )
+
+        assert artifact["duration_s"] == 0.5
+        assert "duration_too_short" in self._receipt_kinds(artifact, "unsafe_rejections")
+
+    def test_scenario_report_5267_solve_provenance_is_preserved(self, tmp_path: Path) -> None:
+        """SCENARIO-REPORT-5267-UNSAFE-REJECTION: solve provenance is not rewritten."""
+
+        t = ExperimentTemplate(5267, "Producer normalizer", "results/out.json", repo_root=tmp_path)
+
+        artifact = t.build_result(
+            {
+                "honest_verdict": "complete: solve provenance fixture",
+                "inference_substrate": "cached_fixture_replay_no_llm",
+                "solve_provenance": {
+                    "value": "live_agent_self_discovery",
+                    "principle": "source solve provenance",
+                },
+            },
+            status="success",
+            producer_required_principle_fields=("solve_provenance",),
+        )
+
+        assert artifact["solve_provenance"] == "live_agent_self_discovery"
+        assert "solve_provenance_synthesized" not in self._receipt_kinds(artifact, "safe_repairs")
+
+    def test_scenario_report_5267_research_conductor_is_not_modified(self) -> None:
+        """SCENARIO-REPORT-5267-UNSAFE-REJECTION: conductor remains untouched."""
+
+        diff = subprocess.run(
+            ["git", "diff", "--", "scripts/research_conductor.py"],
+            cwd=_REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        assert diff.stdout == ""
 
 
 # ---------------------------------------------------------------------------

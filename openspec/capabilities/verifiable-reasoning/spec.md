@@ -5450,8 +5450,11 @@ Instead:
   and return a `LiveGPUDiagnostic` dataclass with `is_live_capable: bool` and
   `failure_reason: str` identifying the first failed layer.
 - `ExperimentTemplate.setup_gpu()` must call `diagnose_live_gpu()` when
-  `CARNOT_FORCE_LIVE=1` and any model pre-warm fails.  If `not is_live_capable`, it
-  must raise `RuntimeError("Live GPU required but unavailable: <failure_reason>")`.
+  `CARNOT_FORCE_LIVE=1` and any model pre-warm fails. If no model passed its
+  health-check and `not is_live_capable`, it must raise
+  `RuntimeError("Live GPU required but unavailable: <failure_reason>")`.
+  Otherwise it must return a status dict whose `all_healthy` boolean remains
+  the pure aggregate of per-model health-checks.
 - `diagnose_live_gpu()` is CI-safe: it never raises; it returns a diagnostic even when
   no GPU is present.
 
@@ -5496,6 +5499,12 @@ were idle throughout.  Silent fallback is a correctness bug, not a usability fea
 **And** all model pre-warms fail
 **When** `ExperimentTemplate.setup_gpu(model_specs)` is called
 **Then** no exception is raised
+**And** the returned dict has `all_healthy=False`
+
+**Given** `CARNOT_FORCE_LIVE=1` is set
+**And** at least one model pre-warm passes while another fails
+**When** `ExperimentTemplate.setup_gpu(model_specs)` is called
+**Then** no exception is raised solely because of the partial failure
 **And** the returned dict has `all_healthy=False`
 
 ### REQ-INFRA-015: Conductor GPU Environment Propagation

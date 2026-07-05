@@ -262,6 +262,7 @@ def normalize_artifact(
     nullable_fields: Sequence[str] = (),
     gate_fields: Sequence[str] = (),
     required_principle_fields: Sequence[str] = (),
+    require_inference_substrate: bool = True,
 ) -> NormalizationResult:
     """Return a strictly normalized artifact copy and auditable repair receipts."""
 
@@ -317,7 +318,7 @@ def normalize_artifact(
         safe_repairs.append({"kind": "unambiguous_gate_boolean_extracted", "field": gate})
 
     substrate = normalized.get("inference_substrate")
-    if not isinstance(substrate, str) or not substrate.strip():
+    if require_inference_substrate and (not isinstance(substrate, str) or not substrate.strip()):
         _add_rejection(
             unsafe_rejections,
             "missing_inference_substrate",
