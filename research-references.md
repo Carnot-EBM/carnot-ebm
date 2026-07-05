@@ -27010,3 +27010,87 @@ challenge, so only matching arXiv or official repository sources are treated as 
   `RongHuiQiang/Token-Guard` is an ICLR 2026 self-checking decoding implementation; `IBM/p-kit` is a
   practical p-bit simulation reference. These are useful watchlist entries, but `.480` should not add new
   hardware-speedup or broad EBT implementation claims from repository availability alone.
+
+## V481 Research Update - 2026-07-05
+
+Search scope: arXiv primary, plus OpenReview search results, HuggingFace Papers, Semantic Scholar API
+citation trails for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605, GitHub repository search,
+Extropic writing, and Logical Intelligence posts. This update was performed before drafting the `.481`
+roadmap. Public hardware/product pages are treated as architecture signals only unless Carnot has local
+execution receipts.
+
+### Constraint reasoning and solver-grounded verification
+- **Satisfiability Solving with LLMs:** arXiv:2605.28602 - https://arxiv.org/abs/2605.28602. Frames SAT and
+  CSP-style tasks as a central substrate for measuring symbolic reasoning with LLMs. Carnot hook: add a
+  solver-grounded constraint-extraction pilot that asks a mandated local SOTA GGUF model to produce
+  checkable constraints, then lets Z3/SAT-style tooling score satisfiability and counterexamples. This is
+  deliberately distinct from the retired VerIbmc local solver-feedback uplift route.
+- **Code-Based Assurance of Prompt-Defined Constraints / ConstrainPrompt:** OpenReview search result -
+  https://openreview.net/. The paper direction is to convert natural-language prompt constraints into
+  executable checks. Carnot hook: use code/verifier-backed constraint extraction as an oracle-distinct
+  verifier path, not as an external generated-text/logprob scorer.
+- **MathConstraint:** arXiv:2605.08498 - https://arxiv.org/abs/2605.08498. Provides adaptive
+  combinatorial-reasoning instances with solver verification. Carnot hook: useful as a future source of
+  small solver-labeled fixtures after the `.481` constraint-extraction pilot proves receipts and schema.
+
+### Hallucination and internal-state verification
+- **Neuron-Level Evidence for Medical LLM Hallucination:** arXiv:2607.00158 -
+  https://arxiv.org/abs/2607.00158. Reports hallucination-associated neuron evidence and intervention-style
+  analysis. Carnot hook: the next hallucination verifier should prefer hidden/internal signals over retired
+  external text scorers; a bounded pilot can test whether local GGUF-accessible states or logits expose a
+  stable hallucination signal on small factual/medical fixtures.
+- **Detecting Contextual Hallucinations in Large Language Models by Analyzing Attention High-Frequency
+  Energy:** arXiv:2602.18145 - https://arxiv.org/abs/2602.18145. Uses attention-distribution frequency
+  structure as a hallucination signal. Carnot hook: pair this with the neuron-level finding as an
+  attention/logit-energy preflight; if the local llama.cpp path cannot expose the needed internals, emit a
+  blocked capability artifact rather than falling back to text reranking.
+- **Semantic Energy: Detecting LLM Hallucination Beyond Entropy** and **Spilled Energy in Large Language
+  Models:** OpenReview search results - https://openreview.net/. Both reinforce energy/logit-based
+  hallucination signals. Carnot hook: measure energy-like internal/logit features only when the runtime
+  exposes reproducible receipts; do not reopen the retired Phase D external text/logprob scorer.
+
+### Continuous self-learning and memory stability
+- **Modular Memory is the Key to Continual Learning Agents:** arXiv:2603.01761 -
+  https://arxiv.org/abs/2603.01761. Argues for modular memory as the mechanism by which agents reuse
+  reasoning traces without entangling tasks. Carnot hook: test typed verifier memories for retention,
+  interference, promotion, and eviction before claiming cross-task self-learning.
+- **When Continual Learning Moves to Memory:** arXiv:2604.27003 - https://arxiv.org/abs/2604.27003.
+  Highlights memory-level stability-plasticity problems under finite context and retrieval limits. Carnot
+  hook: add a memory-interference audit that measures whether useful verifier memories crowd out or corrupt
+  unrelated constraints.
+- **AgentOdyssey:** arXiv:2606.24893 and HuggingFace Papers - https://huggingface.co/papers/2606.24893.
+  Uses procedurally generated text games to evaluate test-time learning, memory, exploration, and planning.
+  Carnot hook: keep as a future self-learning benchmark source; `.481` should first validate typed-memory
+  interference and local SOTA runtime receipts on smaller deterministic fixtures.
+- **ALMA: Automated Meta-Learning of Agentic Memory Designs:** arXiv:2602.07755 -
+  https://arxiv.org/abs/2602.07755. Automates selection of memory designs for agents. Carnot hook: future
+  search over memory promotion/eviction policies, after `.481` defines safe interference metrics.
+
+### Energy hardware, Ising, and certificates
+- **Scaling Up Thermodynamic AI Models:** arXiv:2607.00170 - https://arxiv.org/abs/2607.00170. Describes
+  high-temperature Gibbs-sampled Ising systems as feed-forward inference substrates and relates inference
+  cost, accuracy, and autocorrelation. Carnot hook: update the hardware roadmap with sampler-cost and
+  autocorrelation receipts; do not claim local thermodynamic speedup without real hardware.
+- **Extropic X0/XTR-0 and TSU 101 updates:** https://extropic.ai/writing/inside-x0-and-xtr-0 and
+  https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware. Public material still
+  describes TSUs as programmable EBM samplers; no local SDK or device is available. Carnot hook: maintain a
+  boundary note and avoid execution claims.
+- **Logical Intelligence Aleph/Kona updates:** https://logicalintelligence.com/blog/energy-based-models-for-ai-reasoning,
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation, and related
+  Aleph benchmark posts. Carnot hook: supports verifier-first positioning and formal-code/proof tasks, but
+  public posts still do not expose Kona internals for a reproducible baseline.
+- **Awesome KAN / KAN-Papers and CIKAN references:** https://github.com/mintisan/awesome-kan and
+  https://github.com/RamtinMoslemi/KAN-Papers. Carnot hook: keep KAN certificate work focused on bounded
+  convex-envelope or constraint-informed cases with explicit slack and false-property rejection.
+
+### Citation and repository status
+- **Semantic Scholar citation checks:** direct API calls on 2026-07-05 returned EBT arXiv:2507.02092 with
+  citationCount 26 and influentialCitationCount 2, and ARM-EBM arXiv:2512.15605 with citationCount 8 and
+  influentialCitationCount 2. Notable citation-trail hooks include Fixed-Point Reasoners, LoopUS,
+  Ontology-Constrained Neural Reasoning, Graph Energy Matching, and Path-Measure Dynamics of
+  Attention-Driven World Models. Carnot hook: use these as watch items only; none overrides the immediate
+  `.481` need to unblock local SOTA GGUF runtime and oracle-distinct verification.
+- **GitHub watch:** `yataobian/awesome-ebm`, `mintisan/awesome-kan`, `RamtinMoslemi/KAN-Papers`,
+  `smiles724/Awesome-LLM-RLVR`, and `Thinklab-SJTU/awesome-ml4co` are useful survey/watchlist repos.
+  No newly found repository provides enough local, maintained Carnot-compatible code to justify replacing
+  existing bounded verifier, KAN, or typed-memory experiments in `.481`.

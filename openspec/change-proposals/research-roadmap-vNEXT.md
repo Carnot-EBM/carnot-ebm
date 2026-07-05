@@ -1,7 +1,7 @@
-# Research Roadmap vNEXT: Milestone 2026.07.480
+# Research Roadmap vNEXT: Milestone 2026.07.481
 
 Status: proposed
-Milestone title: Typed Memory, Receipt Integrity, and Verified Decoding Allocation
+Milestone title: Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability
 
 ## Inputs Read
 
@@ -20,148 +20,157 @@ Milestone title: Typed Memory, Receipt Integrity, and Verified Decoding Allocati
 - `CODEX.md`
 - `ops/exclusion_manifest.yaml`
 
-## What 2026.07.479 Proved
+## What 2026.07.480 Proved
 
-Milestone `.479` closed a useful but uneven research loop:
+Milestone `.480` closed with useful negative and boundary-setting results:
 
-- The controlled memory loop produced a real positive result: aligned memory beat shuffled and no-memory controls, rollback was exercised, retention passed, and no model training claim was made.
-- The KAN certificate path moved beyond the tiny single-axis case: the certificate now covers 10 PWA segments across two variables, includes false-property rejection, and still avoids broad hardware or KAN generality claims.
-- ARC rubric-to-patch synthesis produced a provenance-routed live patch, but the follow-up live run had `level_delta=0` and was methodology-flagged. No new ARC level should be banked from `.479`.
-- GAP-4 and GAP-1 remain blocked by receipt/methodology instability, not by a clean negative scientific result.
-- The current VerIbmc local solver-feedback route is retired: the methodology-correct rerun showed `solver_feedback_uplift=0.0`.
-- Hardware continuity stayed honest: KV260 and PolarFire remain reachable; GateMate remains blocked by physical/JTAG setup; no speedup was claimed.
+- Artifact normalization is ready enough for downstream use, but the producer side still needs adoption so future artifacts do not depend on post-hoc cleanup.
+- GAP-4 is no longer an ambiguous blocked win: the current pool was salvaged as a clean null with wins=0, losses=0, ties=120.
+- Cross-model typed memory and verifier-dose allocation did not get measured because the local SOTA GGUF runtime hit a llama.cpp GPU-offload blocker.
+- Token-Guard/Carnot fragment self-checking was harmful on its bounded pilot; the route should not be broadened without a different mechanism.
+- HalluHard-style provenance memory was a clean null on the small fixture set; it did not reduce an already-zero unsupported-claim rate.
+- ARC provenance patching produced `level_delta=0` with clean receipts and should be retired for the current patch route rather than rerun.
+- KAN convex-envelope certification produced a bounded positive: a two-variable upper-bound certificate with false-threshold rejection and explicit slack.
+- Hardware continuity stayed honest: KV260 and PolarFire remain reachable, GateMate remains blocked by physical/JTAG state, and no hardware speedup was claimed.
 
 ## Three Biggest Gaps to the PRD Vision
 
-1. Artifact credibility is still the first bottleneck.
+1. Local SOTA execution is still blocking headline evidence.
 
-   The PRD asks for verifiable reasoning with auditable evidence, but recent milestones repeatedly lost candidate wins to missing receipts, malformed gate fields, duration flags, and post-hoc artifact ambiguity. The next milestone must make producer-side artifact validation a first-class research object before reusing borderline results.
+   The PRD requires verifiable reasoning with modern local models, and `CLAUDE.md` now mandates SOTA GGUF headline models. `.480` showed that memory transfer and verifier-dose experiments cannot be interpreted until the llama.cpp/GGUF runtime and GPU-offload path emit reproducible receipts or an honest precondition failure.
 
-2. Continuous self-learning is promising but not yet transferable.
+2. Continuous self-learning is not yet stable enough to trust.
 
-   `.479` proved that aligned memory can matter inside a controlled setup. The PRD vision is broader: persistent learning that improves future verifier decisions without hidden training or leakage. The next step is cross-model, typed memory transfer between the mandated local SOTA GGUF models, plus a verifier-dose scheduler that decides when memory is enough and when full verification is required.
+   `.479` found a controlled typed-memory positive, while `.480` failed to measure cross-model transfer. The PRD's autonomous self-learning target requires more than one useful replay: Carnot needs retention, interference, promotion, eviction, rollback, and cross-model checks before memory can guide verifier decisions.
 
-3. Live-path verification remains too narrow.
+3. Oracle-distinct verification needs internal and solver-grounded routes.
 
-   ARC still has no new live level, hallucination verification has not been stress-tested in multi-turn citation settings, and KAN certificates are still toy-scale. The next milestone must improve live-agent evidence paths, add a hallucination/provenance microbench, and test a stronger convex-envelope KAN certificate without reviving retired external text-scorer routes.
+   The Phase D external generated-text/logprob scorer is retired, Token-Guard/Carnot was harmful, and HalluHard was null. The next verifier frontier is not another text reranker; it is hidden/logit/attention energy signals, solver-grounded constraint extraction, deterministic verifier-dose replay, and tighter artifact production.
 
 ## 2025-2026 Research Incorporated
 
 The following findings were added to `research-references.md` before this roadmap was designed:
 
-- MemCollab, arXiv 2603.23234: cross-model memory via contrastive trajectory distillation and task-aware retrieval. This motivates the cross-model typed-memory experiment.
-- HalluHard, arXiv 2602.01031: multi-turn hallucination benchmark with inline citation requirements and strong residual hallucination rates. This motivates a small provenance-memory hallucination microbench.
-- Hybrid Verified Decoding, arXiv 2606.01019: dynamic choice between cache and model drafting using predicted accepted length and payoff. This motivates verifier-dose scheduling.
-- Token-Guard, arXiv 2601.21969: token-level self-checking and regeneration using latent hallucination-risk estimates. This motivates a local fragment-level self-checking pilot.
-- SLOT, arXiv 2505.04016: model-agnostic structured-output postprocessing with schema/content fidelity. This motivates artifact schema normalization.
-- Efficient Convexification of KANs, arXiv 2604.03871: convex hulls and envelopes for polynomial KANs. This motivates the next KAN certificate step.
-- Extropic TSU/XTR-0 public updates: still relevant for energy-native hardware direction, but not yet a local reproducible substrate.
-- Logical Intelligence Aleph/Kona updates: reinforce the energy-based verification target, but public materials do not expose enough internals to implement Kona compatibility claims.
-- Semantic Scholar status: ARM-EBM has early citations; EBT citation discovery was rate-limited and should be retried, but no actionable dependent experiment should wait on it.
+- Satisfiability Solving with LLMs, arXiv 2605.28602: use SAT/CSP as a solver-grounded substrate for checking model-produced constraints.
+- ConstrainPrompt / code-based assurance of prompt-defined constraints, OpenReview: motivate converting natural-language requirements into executable checks rather than external text scoring.
+- Neuron-Level Evidence for Medical LLM Hallucination, arXiv 2607.00158: motivates internal-state hallucination probes.
+- Detecting Contextual Hallucinations with Attention High-Frequency Energy, arXiv 2602.18145: motivates attention/logit-energy preflights when the runtime exposes the needed receipts.
+- Modular Memory for Continual Learning Agents, arXiv 2603.01761, and When Continual Learning Moves to Memory, arXiv 2604.27003: motivate typed-memory interference and stability-plasticity audits.
+- AgentOdyssey, arXiv 2606.24893, and ALMA, arXiv 2602.07755: future benchmarks and policy-search directions for test-time agent learning, after smaller typed-memory audits are clean.
+- Scaling Up Thermodynamic AI Models, arXiv 2607.00170: motivates sampler-cost/autocorrelation hardware notes without claiming local thermodynamic execution.
+- Extropic TSU/XTR-0 and Logical Intelligence Aleph/Kona public updates: support the long-term EBM/hardware direction but remain non-executable without local SDKs or reproducible internals.
+- Semantic Scholar citation trails for EBT and ARM-EBM remain watch items; no citation changed the immediate `.481` priorities.
 
 ## Architecture Target
 
 ```text
-                         recent 2025-2026 papers
-                                   |
-                                   v
-                    exp5246 SOTA ingestion and deltas
-                                   |
-                                   v
-  raw experiment artifacts -> exp5247 SLOT-style schema/receipt normalizer
-                                   |
-                    +--------------+--------------+
-                    |                             |
-                    v                             v
-       exp5248 GAP-4 receipt salvage       local SOTA GGUF workers
-                    |                             |
-                    |                             v
-                    |              exp5249 cross-model typed memory
-                    |                             |
-                    |                             v
-                    |              exp5250 verifier-dose scheduler
-                    |                             |
-                    +--------------+--------------+
-                                   |
-                                   v
-           deterministic verifiers, provenance gates, rollback checks
-                    |              |              |
-                    v              v              v
-         exp5251 token guard  exp5252 HalluHard  exp5253 ARC live receipts
-                                                     |
-                                                     v
-                                live self-discovery registry, no duplicate solves
+                         V481 literature and status refresh
+                                      |
+                                      v
+                exp5257 archive .480 -> exp5258 SOTA delta check
+                                      |
+                                      v
+                     exp5259 local SOTA GGUF runtime preflight
+                         |              |              |
+             sota_runtime_ready     blocked       receipt-only
+                         |
+              +----------+-----------+
+              |                      |
+              v                      v
+ exp5260 cross-model typed   exp5262 solver-grounded
+ memory transfer retry       constraint extraction
+              |                      |
+              v                      v
+       verifier memory        executable constraints,
+       promotion/rollback     SAT/Z3 counterexamples
 
-       exp5254 KAN convex certificate      exp5255 hardware continuity
-                    |                                  |
-                    +----------------+-----------------+
-                                     v
-                          exp5256 capstone synthesis
+ exp5261 memory interference audit runs independently as the
+ continuous-self-learning safety rail when live SOTA runtime is blocked.
+
+              +----------------------+----------------------+
+              |                      |                      |
+              v                      v                      v
+ exp5263 internal energy     exp5264 verifier-dose   exp5265 KAN certificate
+ hallucination probe         scheduler replay        explanation/refinement
+
+              +----------------------+----------------------+
+                                      |
+                                      v
+                    exp5266 hardware thermodynamic boundary
+                    exp5267 producer-side artifact adoption
+                                      |
+                                      v
+                           exp5268 capstone synthesis
 ```
 
-The target is not a new monolith. It is a tighter evidence pipeline:
+The target is a stricter evidence loop:
 
-- Normalize and validate artifacts before promoting claims.
-- Convert controlled memory gains into cross-model typed-memory evidence.
-- Allocate verifier work based on measured payoff instead of using every verifier everywhere.
-- Keep ARC solve credit on the live agent path only.
-- Continue KAN and hardware work under conservative certificate and no-speedup boundaries.
+- Prove or block the mandated SOTA GGUF runtime before interpreting LLM-dependent experiments.
+- Keep continuous self-learning alive through memory-stability audits even if live model execution is blocked.
+- Replace retired external text-scoring with oracle-distinct internals, solver checks, and deterministic verifier allocation.
+- Extend the bounded KAN certificate path without broad generality claims.
+- Keep hardware work receipt-only unless real board/runtime execution changes.
 
 ## Phase Plan
 
-### Phase 0: Close and Refresh
+### Phase 0: Closeout, SOTA Refresh, and Runtime Preflight
 
-- `exp5245`: archive `.479` into `research-complete.yaml`, `ops/status.md`, `ops/changelog.md`, and traceability.
-- `exp5246`: refresh SOTA references against the V480 additions and rerun Semantic Scholar/OpenReview/HF/GitHub checks without using `/deep-research`.
+- `exp5257`: archive `.480`, update durable ops/research records, and prepare `.481` activation without modifying `research-roadmap.yaml`.
+- `exp5258`: refresh SOTA references from the new V481 research block and append only genuinely new deltas.
+- `exp5259`: unblock or honestly block the mandated local SOTA GGUF runtime using llama.cpp/GGUF receipts before any headline LLM task runs.
 
-### Phase 1: Evidence Integrity
+### Phase 1: Continuous Self-Learning and Memory Stability
 
-- `exp5247`: implement a SLOT-inspired artifact schema and receipt normalizer outside `scripts/research_conductor.py`.
-- `exp5248`: use the normalizer to salvage, reject, or retire the current GAP-4 pool. This is a receipts task, not a new generation sweep.
+- `exp5260`: gated on `exp5259.sota_runtime_ready == true`, retry cross-model typed-memory transfer with mandated local SOTA models.
+- `exp5261`: independently audit typed-memory retention, interference, promotion, eviction, and rollback on deterministic fixtures. This is the milestone's always-runnable continuous self-learning task.
 
-### Phase 2: Continuous Self-Learning and Allocation
+### Phase 2: Oracle-Distinct Verification
 
-- `exp5249`: run cross-model typed-memory transfer using the mandated local GGUF models. This is the milestone's required continuous self-learning experiment.
-- `exp5250`: if cross-model memory is eligible, build a verifier-dose scheduler inspired by Hybrid Verified Decoding to decide when memory, cheap deterministic checks, or full local SOTA verification is warranted.
-- `exp5251`: run a Token-Guard/Carnot fragment self-checking pilot with local SOTA GGUF generation and deterministic energy/provenance gates.
-- `exp5252`: run a HalluHard-style multi-turn provenance-memory microbench with local SOTA GGUF models and citation-support checks.
+- `exp5262`: gated on SOTA runtime, run a solver-grounded constraint-extraction pilot inspired by SAT/CSP and ConstrainPrompt literature.
+- `exp5263`: gated on SOTA runtime, test whether local internals/logits can support neuron/attention-energy hallucination signals; emit a clean blocked artifact if the runtime cannot expose them.
+- `exp5264`: run a deterministic verifier-dose scheduler replay using cached fixtures, avoiding the live-model blocker that skipped `.480` exp5250.
 
-### Phase 3: Live Paths, Certificates, Hardware, Synthesis
+### Phase 3: Certificates, Hardware, Evidence Production, and Synthesis
 
-- `exp5253`: rerun the `.479` ARC provenance patch with clean live-path receipts and retire the patch if it repeats `level_delta=0`.
-- `exp5254`: extend KAN certification using convex-envelope ideas from arXiv 2604.03871.
-- `exp5255`: continue hardware continuity with KV260 and PolarFire receipts, GateMate physical/JTAG status, and p-kit boundary notes. No speedup claim is allowed.
-- `exp5256`: capstone synthesis and next-roadmap recommendations.
+- `exp5265`: extend the KAN convex-envelope certificate with explanation/refinement and false-property rejection.
+- `exp5266`: update hardware continuity with thermodynamic sampler-cost/autocorrelation boundaries from the 2026 literature; no speedup claim.
+- `exp5267`: adopt the `.480` artifact normalizer at the producer/template boundary without changing `scripts/research_conductor.py`.
+- `exp5268`: synthesize `.481`, retire or carry forward blocked scopes, and recommend the next milestone.
 
 ## Dependency Graph
 
 ```text
-exp5245 archive
+exp5257 archive .480
    |
    v
-exp5246 SOTA refresh
+exp5258 SOTA refresh
    |
-   +--> exp5247 schema/receipt normalizer --> exp5248 GAP-4 receipt salvage
+   +--> exp5259 SOTA GGUF runtime preflight
+   |        |
+   |        +--> exp5260 cross-model typed memory retry
+   |        |
+   |        +--> exp5262 solver-grounded constraint extraction
+   |        |
+   |        +--> exp5263 internal energy hallucination probe
    |
-   +--> exp5249 cross-model typed memory --> exp5250 verifier-dose scheduler
+   +--> exp5261 typed-memory interference audit
    |
-   +--> exp5251 Token-Guard/Carnot pilot
+   +--> exp5264 verifier-dose scheduler replay
    |
-   +--> exp5252 HalluHard provenance microbench
+   +--> exp5265 KAN certificate explanation/refinement
    |
-   +--> exp5253 ARC live patch receipt-clean rerun
+   +--> exp5266 hardware thermodynamic boundary
    |
-   +--> exp5254 KAN convex-envelope certificate
-   |
-   +--> exp5255 hardware continuity
+   +--> exp5267 artifact normalizer producer adoption
 
-all completed or honestly blocked --> exp5256 capstone
+all completed, skipped by structured gate, or honestly blocked --> exp5268 capstone
 ```
 
 Structured conductor gates:
 
-- `exp5248` is gated on `exp5247.artifact_normalizer_ready == true`.
-- `exp5250` is gated on `exp5249.cross_model_memory_eligible == true`.
+- `exp5260` is gated on `exp5259.sota_runtime_ready == true`.
+- `exp5262` is gated on `exp5259.sota_runtime_ready == true`.
+- `exp5263` is gated on `exp5259.sota_runtime_ready == true`.
 
 ## Model and Inference Requirements
 
@@ -173,21 +182,22 @@ Any experiment that calls an LLM must declare `MODEL_SPECS` and include at least
 
 Legacy tiny models may be used only for CPU smoke tests. They cannot be headline-result models.
 
-Required inference-substrate labels for `.480`:
+Required inference-substrate labels for `.481`:
 
-- `live_llm_inference_local_gguf_sota`: real local GGUF calls with model id, quantization, llama-server/llama.cpp command, seed, prompt checksum, completion checksum, and wall-clock receipts.
-- `cached_fixture_replay_no_llm`: deterministic replay of existing candidate artifacts; no generation or model-quality claim.
-- `offline_deterministic_certificate_no_llm`: deterministic certificate or verifier computation; no LLM claim.
+- `live_llm_inference_local_gguf_sota`: real local GGUF calls with model id, quantization, llama-server or llama.cpp command, seed, prompt checksum, completion checksum, wall-clock receipt, and GPU/offload receipt.
+- `llama_cpp_runtime_preflight_no_quality_claim`: GGUF loading/tokenization/offload preflight only; no model-quality claim.
+- `cached_fixture_replay_no_llm`: deterministic replay of existing artifacts or fixtures; no generation or model-quality claim.
+- `offline_deterministic_certificate_no_llm`: deterministic certificate, solver, or verifier computation; no LLM claim.
 - `hardware_probe_no_speedup_claim`: board reachability and environment receipts only.
-- `offline_arcade_live_agent_runtime_self_discovery_no_llm`: ARC live-agent runtime receipts where solve credit must come from live self-discovery, not outer-loop reverse engineering.
+- `literature_ingestion_network_sources`: network-backed literature/source refresh; no experiment outcome claim.
 
 ## Hardware Requirements
 
-- Local NVIDIA GPU with enough memory for at least one mandated GGUF headline model. If unavailable, LLM experiments must write an honest precondition failure artifact rather than falling back to legacy tiny headline models.
-- KV260 reachable via SSH only. Do not require host `/dev/mmcblk*`.
-- PolarFire reachable for continuity probes only unless a terminal workload already exists.
-- GateMate remains blocked by physical/JTAG setup; report status only unless the operator has changed hardware access.
-- Extropic TSU/XTR-0 and Kona/Aleph public updates are reference material only. Do not claim execution, compatibility, or speedup without local reproducible receipts.
+- Local NVIDIA GPUs are required for headline SOTA GGUF inference. If unavailable or if llama.cpp/GGUF GPU offload fails, LLM-dependent experiments must skip through structured gates or emit honest blocked artifacts; they must not fall back to tiny headline models.
+- KV260 is reachable via SSH only. Do not require host `/dev/mmcblk*`.
+- PolarFire remains a reachability/continuity target unless a terminal workload already exists.
+- GateMate remains blocked by physical/JTAG setup unless the operator has changed the physical state.
+- Extropic TSU/XTR-0 and Logical/Kona updates are reference material only. Do not claim execution, compatibility, or speedup without local reproducible receipts.
 
 ## No-Go Rules
 
@@ -195,19 +205,19 @@ Required inference-substrate labels for `.480`:
 - Do not modify `scripts/research_conductor.py`.
 - Do not push.
 - Do not use `/deep-research`.
-- Do not rerun retired scopes unless the task includes a complete `prior_failures` block and changes the technique, prerequisite, or retirement rule.
+- Do not emit `agent_type: gemini`; active `CLAUDE.md` routing defaults to `agent_type: codex` and `model: gpt-5.5`.
+- Do not rerun retired scopes unless the task includes a complete `prior_failures` block and a changed prerequisite, technique, or authorized override.
 - Do not revive the retired Phase D external generated-text/logprob scorer path.
-- Do not headline offline ARC BFS, per-game calibration solves, or outer-loop reverse engineering.
-- Do not duplicate an ARC solve already present in `ops/arc_solve_registry.yaml`.
-- Do not make hardware speedup claims from reachability probes.
+- Do not rerun the retired ARC provenance-routing patch or claim duplicate/off-path ARC solves.
+- Do not make hardware speedup claims from reachability or public roadmap material.
 
 ## Success Criteria
 
-Milestone `.480` succeeds if it produces at least one of the following clean positives, plus clean retirement or blocking decisions for the rest:
+Milestone `.481` succeeds if it produces one or more clean positives and honest terminal decisions for the rest:
 
-- Cross-model typed memory transfers useful verifier state between mandated local SOTA GGUF models without leakage or rollback failure.
-- The verifier-dose scheduler reduces unnecessary full verification calls while preserving decision quality on a controlled replay set.
-- GAP-4 is either salvaged with complete receipts or explicitly retired as unsalvageable in its current form.
-- The ARC provenance patch is either banked through clean live-path self-discovery evidence or retired after a clean repeated zero-delta result.
-- The KAN convex-envelope certificate covers a larger or more expressive property while rejecting a false property.
-- Hardware continuity remains current and honest, with no unsupported speedup claims.
+- The mandated SOTA GGUF runtime is either unblocked with receipts or cleanly blocked with actionable diagnostics.
+- Typed memory shows cross-model transfer or, at minimum, a clean interference/retention policy that advances continuous self-learning safely.
+- Solver-grounded constraints or internal energy probes produce oracle-distinct verification signal without reopening retired external scorer paths.
+- The verifier-dose scheduler replay defines a safe allocation policy from cached evidence.
+- The KAN certificate path gains explanation/refinement coverage while still rejecting false properties.
+- Hardware documentation remains current and receipt-bound with no unsupported speedup claim.
