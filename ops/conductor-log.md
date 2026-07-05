@@ -10347,3 +10347,4 @@ web search: |
 | 2026-07-05 17:03 UTC | PHASE 1 solver grounding -- constraint-extraction  | OK | cache hit: 87 passed, 1 warning in 12.89s |
 | 2026-07-05 17:34 UTC | PHASE 1 gated on exp5273 solver_fixture_ready -- S | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-05 17:47 UTC | PHASE 2 continuous self-learning -- governed decis | OK | 87 passed, 1 warning in 10.74s |
+| 2026-07-05 18:03 UTC | PHASE 2 gated on exp5271 and exp5275 -- memory-ass | OK | 89 passed, 1 warning in 8.49s |
