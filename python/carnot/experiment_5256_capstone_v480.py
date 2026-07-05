@@ -440,9 +440,9 @@ def _status_decisions(payloads: Mapping[int, JsonMap]) -> JsonDict:
 
 def build_artifact(
     *,
+    duration_s: float,
     root: Path | str = REPO_ROOT,
     run_date: str = RUN_DATE,
-    duration_s: float = 0.0,
     validation_commands_run: Sequence[JsonMap] = (),
     conductor_untouched: bool = True,
     ops_docs_updated: bool = False,
