@@ -34834,6 +34834,86 @@ fails
 |---|---|---|
 | REQ-REPORT-5245 | Implemented (`python/carnot/experiment_5245_archive_479_activate_480.py`, `results/experiment_5245_archive_479_activate_480.json`) | Implemented (`tests/python/test_experiment_5245_archive_479_activate_480.py`) |
 
+### REQ-REPORT-5247: Strict SLOT Artifact Schema And Receipt Normalizer
+
+The Exp 5247 workflow SHALL provide a strict artifact schema/receipt normalizer
+outside `scripts/research_conductor.py` and SHALL write
+`results/experiment_5247_slot_artifact_normalizer_v480.json`. The normalizer
+SHALL operate on in-memory artifact copies or temporary audit files only and
+SHALL NOT alter historical result artifacts.
+
+The normalizer MAY perform only safe repairs: unwrap top-level
+`{"value": ..., "principle": ...}` field wrappers to their bare values, add
+missing explicit `null` values only for fields the caller declares nullable, and
+surface a missing top-level gate boolean only when exactly one real non-metadata
+source field already contains a boolean value for that same gate. It SHALL reject
+unsafe repairs instead of synthesizing evidence. Unsafe repairs include missing
+methodology receipts, missing or sub-floor duration receipts, missing model
+receipts, solve-provenance fabrication, performance-win fabrication, missing
+`inference_substrate`, missing required field principles, non-boolean gate
+values, and conflicting gate values.
+
+The workflow SHALL run the normalizer on representative `.479` artifacts
+including Exp 5235, Exp 5236, and Exp 5241 and SHALL record before/after
+classifications without editing those files. The classification SHALL preserve
+existing adversarial/corrigendum stamps and duration-policy findings; a
+normalized copy MUST NOT turn a flagged, missing-receipt, or blocked artifact
+into clean gated evidence.
+
+The Exp 5247 artifact SHALL include principle-wrapped top-level fields
+`honest_verdict`, `inference_substrate`, `safe_repairs_supported`,
+`unsafe_repairs_rejected`, `duration_policy_preserved`, and
+`conductor_modified`; bare boolean `artifact_normalizer_ready`; bare string
+`artifact_normalizer_ready_principle`; and bare list `tests_run`.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether the normalizer is ready for gated consumers.
+`inference_substrate.value` SHALL equal `cached_fixture_replay_no_llm`.
+`conductor_modified.value` SHALL be false for `scripts/research_conductor.py`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether the strict normalizer is ready for gated consumers."
+- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because Exp5247 only replays checked-in artifacts and tests the normalizer."
+- `artifact_normalizer_ready`: principle "Bare bool gate for Exp5248; true only when strict safe-repair, unsafe-rejection, duration, gate, and principle tests pass."
+- `artifact_normalizer_ready_principle`: principle "Explains why the bare gate is safe for downstream consumers."
+- `safe_repairs_supported`: principle "Lists only copy/null/wrapper repairs that do not create methodology, duration, model, solve, or win evidence."
+- `unsafe_repairs_rejected`: principle "Lists missing-evidence and synthesis attempts the normalizer refuses."
+- `duration_policy_preserved`: principle "True only when compute-bound duration and methodology findings remain blocked after normalization."
+- `conductor_modified`: principle "False because the normalizer lives outside scripts/research_conductor.py."
+- `tests_run`: principle "Records command/outcome receipts for unit, coverage, spec, and artifact verification checks."
+
+#### SCENARIO-REPORT-5247-SAFE-REPAIR: Wrappers, Nulls, And Unambiguous Gate Fields Normalize
+
+**Given** an artifact with principle-wrapped top-level fields, a caller-declared
+nullable missing field, and exactly one non-metadata boolean field matching a
+requested gate
+**When** the strict normalizer runs
+**Then** it returns a normalized copy with bare top-level values, an explicit
+`null` for the declared nullable field, the surfaced gate boolean, and safe
+repair receipts.
+
+#### SCENARIO-REPORT-5247-UNSAFE-REJECTION: Missing Evidence Does Not Become Evidence
+
+**Given** an artifact missing methodology, duration, model, solve-provenance,
+principle, or gate evidence, or carrying conflicting gate values
+**When** the strict normalizer runs
+**Then** it records unsafe rejection reasons and does not synthesize evidence or
+mark the artifact ready for gated consumers.
+
+#### SCENARIO-REPORT-5247-REPRESENTATIVE-479: Representative Artifacts Stay Quarantined When Flagged
+
+**Given** Exp 5235, Exp 5236, and Exp 5241 `.479` artifacts are present
+**When** Exp 5247 classifies them before and after normalization
+**Then** it records before/after classifications, preserves existing
+adversarial/corrigendum evidence, keeps duration-policy blockers visible, and
+does not modify the historical artifacts.
+
+## Implementation Status (REQ-REPORT-5247)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5247 | Implemented (`python/carnot/experiment_5247_slot_artifact_normalizer_v480.py`, `results/experiment_5247_slot_artifact_normalizer_v480.json`) | Implemented (`tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce

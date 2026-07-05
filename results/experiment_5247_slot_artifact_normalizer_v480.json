@@ -1,0 +1,166 @@
+{
+  "artifact_normalizer_ready": true,
+  "artifact_normalizer_ready_principle": "Bare bool gate for Exp5248; true only when strict safe-repair, unsafe-rejection, duration, gate, and principle tests pass.",
+  "conductor_modified": {
+    "principle": "False because the normalizer lives outside scripts/research_conductor.py.",
+    "value": false
+  },
+  "duration_policy_preserved": {
+    "principle": "True only when compute-bound duration and methodology findings remain blocked after normalization.",
+    "value": true
+  },
+  "duration_s": 0.25,
+  "experiment": "experiment_5247_slot_artifact_normalizer_v480",
+  "experiment_id": "exp5247-slot-artifact-normalizer-v480",
+  "field_principles": {
+    "artifact_normalizer_ready": "Bare bool gate for Exp5248; true only when strict safe-repair, unsafe-rejection, duration, gate, and principle tests pass.",
+    "artifact_normalizer_ready_principle": "Explains why the bare gate is safe for downstream consumers.",
+    "conductor_modified": "False because the normalizer lives outside scripts/research_conductor.py.",
+    "duration_policy_preserved": "True only when compute-bound duration and methodology findings remain blocked after normalization.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether the strict normalizer is ready for gated consumers.",
+    "inference_substrate": "Must be cached_fixture_replay_no_llm because Exp5247 only replays checked-in artifacts and tests the normalizer.",
+    "safe_repairs_supported": "Lists only copy/null/wrapper repairs that do not create methodology, duration, model, solve, or win evidence.",
+    "tests_run": "Records command/outcome receipts for unit, coverage, spec, and artifact verification checks.",
+    "unsafe_repairs_rejected": "Lists missing-evidence and synthesis attempts the normalizer refuses."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether the strict normalizer is ready for gated consumers.",
+    "value": "complete: strict artifact schema/receipt normalizer ready for gated consumers; safe repairs are shape-only and missing evidence remains blocked."
+  },
+  "inference_substrate": {
+    "principle": "Must be cached_fixture_replay_no_llm because Exp5247 only replays checked-in artifacts and tests the normalizer.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "milestone": "2026.07.480",
+  "representative_artifact_classifications": {
+    "experiment_5235_adversarial_qa_null_tautology_calibration_v479.json": {
+      "after_live_flag_kinds": [],
+      "before_live_flag_kinds": [],
+      "normalization_rejections": [
+        "duration_too_short",
+        "missing_methodology_receipt",
+        "source_flagged_adversarial",
+        "source_corrigendum_pending"
+      ],
+      "normalizer_ready_for_gates": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "safe_repairs": [],
+      "source_corrigendum_kinds": [
+        "DURATION_TOO_SHORT",
+        "METHODOLOGY_MISSING"
+      ],
+      "source_flagged_adversarial": true
+    },
+    "experiment_5236_gap4_clean_status_after_qa_calibration_v479.json": {
+      "after_live_flag_kinds": [],
+      "before_live_flag_kinds": [],
+      "normalization_rejections": [
+        "source_flagged_adversarial",
+        "source_corrigendum_pending"
+      ],
+      "normalizer_ready_for_gates": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+      "safe_repairs": [],
+      "source_corrigendum_kinds": [
+        "IMPLAUSIBLE_PERFECT",
+        "TAUTOLOGY"
+      ],
+      "source_flagged_adversarial": true
+    },
+    "experiment_5241_arc_gated_live_patch_attempt_v479.json": {
+      "after_live_flag_kinds": [
+        "DURATION_TOO_SHORT",
+        "METHODOLOGY_MISSING"
+      ],
+      "before_live_flag_kinds": [
+        "DURATION_TOO_SHORT",
+        "METHODOLOGY_MISSING"
+      ],
+      "normalization_rejections": [
+        "duration_too_short",
+        "missing_methodology_receipt",
+        "source_flagged_adversarial",
+        "source_corrigendum_pending"
+      ],
+      "normalizer_ready_for_gates": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+      "safe_repairs": [],
+      "source_corrigendum_kinds": [
+        "DURATION_TOO_SHORT",
+        "IMPLAUSIBLE_PERFECT",
+        "METHODOLOGY_MISSING"
+      ],
+      "source_flagged_adversarial": true
+    }
+  },
+  "reproducibility_checksum": "sha256:07f5a76a71370c90e39eebf8561357bb6d32dca5dc723f2a9dce837f89e229c9",
+  "result_path": "results/experiment_5247_slot_artifact_normalizer_v480.json",
+  "run_date": "2026-07-05",
+  "safe_repair_receipts": [
+    "top_level_principle_wrapper_unwrap",
+    "missing_explicit_null_for_declared_nullable_fields",
+    "unambiguous_boolean_gate_field_extraction"
+  ],
+  "safe_repairs_supported": {
+    "principle": "Lists only copy/null/wrapper repairs that do not create methodology, duration, model, solve, or win evidence.",
+    "value": [
+      "top_level_principle_wrapper_unwrap",
+      "missing_explicit_null_for_declared_nullable_fields",
+      "unambiguous_boolean_gate_field_extraction"
+    ]
+  },
+  "schema": "carnot.experiment_5247.slot_artifact_normalizer.v480",
+  "spec_refs": [
+    "REQ-REPORT-5247",
+    "SCENARIO-REPORT-5247-SAFE-REPAIR",
+    "SCENARIO-REPORT-5247-UNSAFE-REJECTION",
+    "SCENARIO-REPORT-5247-REPRESENTATIVE-479"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py -q",
+      "outcome": "PASS (12 passed)"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5247_slot_artifact_normalizer_v480.py' -m pytest --override-ini addopts= tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py -q --no-cov && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5247_slot_artifact_normalizer_v480.py' --fail-under=100",
+      "outcome": "PASS (100% coverage on new module)"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5247_slot_artifact_normalizer_v480.py tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_5247_slot_artifact_normalizer_v480.json --json",
+      "outcome": "PASS (flagged_count=0)"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "FAIL/INTERRUPTED after unrelated suite failures and a Z3 worker crash: 4 failed, 6543 passed, 7 skipped before KeyboardInterrupt; failing tests were test_abstention_http_rest_3810.py::test_req_spoe_3810_http_uses_configured_threshold_path_not_default, test_abstention_http_rest_3810.py::test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain, test_experiment_1504_thrml_carnot_simulator_parity_v3.py::test_installed_thrml_runs_energy_and_stochastic_parity, and test_adaptive.py::TestRunComparison::test_warmup_and_eval_split worker crash in z3"
+    }
+  ],
+  "unsafe_rejection_receipts": [
+    "missing_methodology_receipts",
+    "missing_duration_receipt",
+    "subfloor_compute_duration",
+    "missing_model_receipts",
+    "missing_or_conflicting_gate_boolean",
+    "missing_principle_for_required_fields",
+    "solve_provenance_or_performance_win_synthesis"
+  ],
+  "unsafe_repairs_rejected": {
+    "principle": "Lists missing-evidence and synthesis attempts the normalizer refuses.",
+    "value": [
+      "missing_methodology_receipts",
+      "missing_duration_receipt",
+      "subfloor_compute_duration",
+      "missing_model_receipts",
+      "missing_or_conflicting_gate_boolean",
+      "missing_principle_for_required_fields",
+      "solve_provenance_or_performance_win_synthesis"
+    ]
+  }
+}
