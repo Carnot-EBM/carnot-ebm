@@ -25654,6 +25654,86 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
+
+The repository SHALL provide Exp 5272 at
+`python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py`
+and write
+`results/experiment_5272_internal_hallucination_probe_gated_v482.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL execute
+only when
+`results/experiment_5271_sota_telemetry_receipt_harness_v482.json` reports
+`telemetry_harness_ready=true`; otherwise it SHALL write a terminal
+`blocked_telemetry_harness_not_ready` artifact and SHALL NOT substitute tiny
+models, generated-text judges, external scorers, LoRA-EBM, uPRM, EBRM text
+rerankers, or any retired Phase D text-verifier path.
+
+The mandated headline `MODEL_SPECS` are exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe` and
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`. The runner MAY include
+`unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe` when the Exp 5271
+receipts show the model is available and runtime permits. Legacy or tiny models
+MAY be used only for CPU smoke tests and SHALL NOT appear in headline metrics.
+
+The fixture set SHALL be a small local factual panel containing supported,
+unsupported, and contradiction cases. Labels SHALL live outside the prompt and
+the artifact SHALL record prompt, label, and fixture-set checksums. The runner
+SHALL compute internal/logit features only from telemetry fields exposed by Exp
+5271. It SHALL include lexical, entropy/logprob, and shuffled-label controls
+when the scored sample count is sufficient to make them meaningful. AUROC or a
+paired separation score MAY be reported only when the artifact records the
+sample count, label counts, controls, and whether higher scores mean greater
+unsupported-risk.
+
+The artifact SHALL include principle-annotated top-level fields
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `internal_signal_available`,
+`delta_over_lexical_baseline`, `auroc`, `false_accepts`,
+`telemetry_receipts`, `retired_external_scorer_reopened`, and `tests_run`.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether the internal signal is positive, null, harmful, or unmeasured.
+`inference_substrate.value` SHALL be
+`live_llm_internal_telemetry_local_gguf_sota`. `internal_signal_available.value`
+SHALL be boolean. `delta_over_lexical_baseline.value` SHALL be numeric.
+`auroc.value` SHALL be numeric or null. `false_accepts.value` SHALL be integer.
+`retired_external_scorer_reopened.value` SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5272 verdict; starts with complete: or blocked_ and states whether the exposed internal/logit hallucination signal was positive, null, harmful, or unmeasured."
+- `inference_substrate`: principle "Declares live local SOTA GGUF internal telemetry, not cached text scoring, external judging, or a tiny-model smoke path."
+- `preconditions_checked`: principle "Records the Exp 5271 gate, exposed telemetry fields, fixture-label adequacy, retired-scorer exclusion, and local model readiness before any quality number is interpreted."
+- `MODEL_SPECS`: principle "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, and which roles contributed headline telemetry."
+- `internal_signal_available`: principle "Boolean gate showing whether logits, token logprobs, hidden states, or attention receipts were actually available from Exp 5271 and live fixture rows."
+- `delta_over_lexical_baseline`: principle "Internal AUROC minus lexical baseline AUROC; negative or zero values honestly show that the internal signal did not beat the cheap fixture-only control."
+- `auroc`: principle "Reports AUROC only with explicit sample counts and controls; null is required for blocked or under-supported measurements."
+- `false_accepts`: principle "Counts unsupported or contradiction fixtures accepted as safe under the fixed supported-threshold policy."
+- `telemetry_receipts`: principle "Records field availability, per-model durations, fixture checksums, and control metrics so a downstream auditor can separate real telemetry from text-only fallback."
+- `retired_external_scorer_reopened`: principle "Must remain false so the retired Phase D generated-text scorer, LLM judge, LoRA-EBM, uPRM, and EBRM reranker paths stay closed."
+- `tests_run`: principle "Commands run to validate the 5272 module, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5272: Gated Logit Probe Reports Controls Or Blocks
+
+Given Exp 5271 reports `telemetry_harness_ready=true`, exposes logit or token
+logprob receipts for the mandated SOTA GGUF roles, and the local fixture panel
+contains supported, unsupported, and contradiction labels, when Exp 5272 runs,
+then it uses only those exposed telemetry fields, records fixture checksums,
+computes lexical and entropy/logprob baselines plus a shuffled-label control
+when feasible, writes the required artifact, and keeps
+`retired_external_scorer_reopened.value=false`.
+
+If Exp 5271 is absent, not ready, exposes no usable non-text telemetry, fixture
+labels are inadequate, or live fixture rows do not contain the promised
+telemetry receipts, then the same runner writes a `blocked_` artifact with an
+`honest_verdict.value` that states `unmeasured`, neutral numeric fields,
+`auroc.value=null`, `false_accepts.value=0`, and no external scorer fallback.
+
+## Implementation Status (REQ-VERIFY-5272)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5272 | Planned (`python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py`, `results/experiment_5272_internal_hallucination_probe_gated_v482.json`) | Planned (`tests/python/test_experiment_5272_internal_hallucination_probe_gated_v482.py`) |
+
 ### REQ-VERIFY-5264: Cached-Fixture Verifier-Dose Scheduler Replay V481
 
 The repository SHALL provide Exp 5264 at

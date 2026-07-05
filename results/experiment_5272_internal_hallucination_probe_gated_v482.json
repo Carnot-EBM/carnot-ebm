@@ -1,0 +1,3154 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, and which roles contributed headline telemetry.",
+    "value": {
+      "flagship_dense": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "headline_metric_role": true,
+        "headline_required": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "legacy_tiny_model": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "optional": false,
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_status": "telemetry_ready",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "headline_metric_role": true,
+        "headline_required": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "legacy_tiny_model": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "optional": false,
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_status": "telemetry_ready",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "headline_metric_role": true,
+        "headline_required": false,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "legacy_tiny_model": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "optional": true,
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_status": "telemetry_ready",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "auroc": {
+    "principle": "Reports AUROC only with explicit sample counts and controls; null is required for blocked or under-supported measurements.",
+    "value": 0.654320987654321
+  },
+  "control_summary": {
+    "case_type_counts": {
+      "contradiction": 9,
+      "supported": 9,
+      "unsupported": 9
+    },
+    "delta_over_lexical_baseline": -0.345679012345679,
+    "entropy_logprob": {
+      "auroc": 0.4444444444444444,
+      "sample_count": 18,
+      "supported_mean": 6.997904066472965e-06,
+      "unsupported_mean": 1.06462449524079e-05,
+      "unsupported_minus_supported": 3.648340885934935e-06
+    },
+    "false_accepts": 18,
+    "higher_score_means": "greater_unsupported_risk",
+    "internal": {
+      "auroc": 0.654320987654321,
+      "sample_count": 27,
+      "supported_mean": 0.09319369240932658,
+      "unsupported_mean": 0.11857167793379476,
+      "unsupported_minus_supported": 0.025377985524468183
+    },
+    "label_counts": {
+      "supported": 9,
+      "unsupported_or_contradiction": 18
+    },
+    "lexical": {
+      "auroc": 1.0,
+      "sample_count": 27,
+      "supported_mean": 0.0,
+      "unsupported_mean": 0.2518518518518518,
+      "unsupported_minus_supported": 0.2518518518518518
+    },
+    "sample_count": 27,
+    "shuffled_label_control": {
+      "auroc": 0.6419753086419753,
+      "label_rotation": "left_by_one",
+      "sample_count": 27
+    },
+    "supported_threshold": 0.43888125552685686
+  },
+  "delta_over_lexical_baseline": {
+    "principle": "Internal AUROC minus lexical baseline AUROC; negative or zero values honestly show that the internal signal did not beat the cheap fixture-only control.",
+    "value": -0.345679012345679
+  },
+  "duration_s": 188.803533,
+  "experiment": 5272,
+  "experiment_name": "experiment_5272_internal_hallucination_probe_gated_v482",
+  "false_accepts": {
+    "principle": "Counts unsupported or contradiction fixtures accepted as safe under the fixed supported-threshold policy.",
+    "value": 18
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5272 verdict; starts with complete: or blocked_ and states whether the exposed internal/logit hallucination signal was positive, null, harmful, or unmeasured.",
+    "value": "complete: harmful internal/logit signal delta_over_lexical=-0.345679 auroc=0.654321 sample_count=27"
+  },
+  "inference_substrate": {
+    "principle": "Declares live local SOTA GGUF internal telemetry, not cached text scoring, external judging, or a tiny-model smoke path.",
+    "value": "live_llm_internal_telemetry_local_gguf_sota"
+  },
+  "internal_signal_available": {
+    "principle": "Boolean gate showing whether logits, token logprobs, hidden states, or attention receipts were actually available from Exp 5271 and live fixture rows.",
+    "value": true
+  },
+  "pilot_rows": [
+    {
+      "case_type": "supported",
+      "claim_checksum": "25fc434d9ac705df",
+      "duration_s": 58.843799,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-001-supported-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": 4.114515470041016e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 2.463034169952749e-07,
+        "final_token_top1_probability": 0.999999753696583,
+        "full_logit_entropy_topk": 4.373783235203476e-06,
+        "full_logit_spilled_energy": 3.8836692850541255e-07,
+        "full_logit_top1_probability": 0.9999996116330715,
+        "primary_internal_score": 0.10590792982836916,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.10590792982836916,
+        "sequence_spilled_energy": 0.08937639075375842,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "948f0b2038bfd6db",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 4.114515470041016e-06,
+        "internal": 0.10590792982836916,
+        "lexical": 0.0
+      },
+      "seed": 5272,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 4.373783235203476e-06,
+          "steps": 68,
+          "top1_probability": 0.9999996116330715,
+          "top_logits": [
+            {
+              "logit": 30.118797302246094,
+              "probability": 0.9999996116330715,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.772486686706543,
+              "probability": 2.16362411569925e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 12.218271255493164,
+              "probability": 1.6822872214482212e-08,
+              "token_index": 332
+            },
+            {
+              "logit": 11.511852264404297,
+              "probability": 8.300538653739012e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.967781066894531,
+              "probability": 4.8174715379157135e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.901808738708496,
+              "probability": 4.509908590114146e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 10.890294075012207,
+              "probability": 4.458276343854947e-09,
+              "token_index": 65
+            },
+            {
+              "logit": 10.736390113830566,
+              "probability": 3.822322645247395e-09,
+              "token_index": 14235
+            }
+          ],
+          "top_mass_probability": 0.999999870726873,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "a21185afcf559579",
+      "duration_s": 3.717686,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-002-supported-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.4491476220478127e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 8.018243957685911e-08,
+        "final_token_top1_probability": 0.9999999198175604,
+        "full_logit_entropy_topk": 1.635677567388396e-06,
+        "full_logit_spilled_energy": 1.7511827454796958e-07,
+        "full_logit_top1_probability": 0.9999998248817255,
+        "primary_internal_score": 0.09648860339074972,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.09648860339074972,
+        "sequence_spilled_energy": 0.0835588968924934,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "e4f210e060133d17",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 1.4491476220478127e-06,
+        "internal": 0.09648860339074972,
+        "lexical": 0.0
+      },
+      "seed": 5273,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.635677567388396e-06,
+          "steps": 59,
+          "top1_probability": 0.9999998248817255,
+          "top_logits": [
+            {
+              "logit": 30.629859924316406,
+              "probability": 0.9999998248817255,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.056524276733398,
+              "probability": 6.342956097707343e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.957759857177734,
+              "probability": 7.776960609413112e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 11.473041534423828,
+              "probability": 4.789601778410124e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.338411331176758,
+              "probability": 4.186299078049926e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 11.244853973388672,
+              "probability": 3.8124030454189744e-09,
+              "token_index": 56484
+            },
+            {
+              "logit": 11.105411529541016,
+              "probability": 3.316192432332775e-09,
+              "token_index": 62
+            },
+            {
+              "logit": 10.566547393798828,
+              "probability": 1.934701655345968e-09,
+              "token_index": 65
+            }
+          ],
+          "top_mass_probability": 0.999999914127445,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "dc1dde213b501cff",
+      "duration_s": 3.376177,
+      "evidence_checksum": "d7bbae1ca2512bb9",
+      "fixture_id": "ihp-003-supported-route",
+      "internal_features": {
+        "entropy_logprob_baseline": 5.005855986148465e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 2.946210966303653e-07,
+        "final_token_top1_probability": 0.9999997053789034,
+        "full_logit_entropy_topk": 5.658072092975489e-06,
+        "full_logit_spilled_energy": 6.636047874541973e-07,
+        "full_logit_top1_probability": 0.9999993363952125,
+        "primary_internal_score": 0.10845831828189034,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.10845831828189034,
+        "sequence_spilled_energy": 0.09164849381827073,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "5bfc4e84b7e0f0f5",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 5.005855986148465e-06,
+        "internal": 0.10845831828189034,
+        "lexical": 0.0
+      },
+      "seed": 5274,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 5.658072092975489e-06,
+          "steps": 57,
+          "top1_probability": 0.9999993363952125,
+          "top_logits": [
+            {
+              "logit": 29.076618194580078,
+              "probability": 0.9999993363952125,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.604459762573242,
+              "probability": 1.9077729277803601e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 12.595258712768555,
+              "probability": 6.954024790707633e-08,
+              "token_index": 332
+            },
+            {
+              "logit": 11.215412139892578,
+              "probability": 1.7497519336014057e-08,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.175085067749023,
+              "probability": 1.6805934137487695e-08,
+              "token_index": 14235
+            },
+            {
+              "logit": 11.169661521911621,
+              "probability": 1.6715033109119574e-08,
+              "token_index": 8
+            },
+            {
+              "logit": 10.55339527130127,
+              "probability": 9.025394814874635e-09,
+              "token_index": 65
+            },
+            {
+              "logit": 10.4516019821167,
+              "probability": 8.151883141571949e-09,
+              "token_index": 16546
+            }
+          ],
+          "top_mass_probability": 0.9999996649085178,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "ecbdadd4e00ac0dd",
+      "duration_s": 3.256249,
+      "evidence_checksum": "053cfe8ed6539427",
+      "fixture_id": "ihp-004-unsupported-manufacturer",
+      "internal_features": {
+        "entropy_logprob_baseline": 2.4531253818074193e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 1.4151351312996496e-07,
+        "final_token_top1_probability": 0.9999998584864869,
+        "full_logit_entropy_topk": 2.6461135909596624e-06,
+        "full_logit_spilled_energy": 2.530742780892936e-07,
+        "full_logit_top1_probability": 0.9999997469257219,
+        "primary_internal_score": 0.11350852577015047,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.11350852577015047,
+        "sequence_spilled_energy": 0.09207923483949823,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "e1320b97597ad47e",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 2.4531253818074193e-06,
+        "internal": 0.11350852577015047,
+        "lexical": 0.5
+      },
+      "seed": 5275,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 2.6461135909596624e-06,
+          "steps": 60,
+          "top1_probability": 0.9999997469257219,
+          "top_logits": [
+            {
+              "logit": 30.152538299560547,
+              "probability": 0.9999997469257219,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.224472999572754,
+              "probability": 1.209285994073867e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 11.772122383117676,
+              "probability": 1.0410861825465022e-08,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.233048439025879,
+              "probability": 6.072532436000718e-09,
+              "token_index": 328
+            },
+            {
+              "logit": 10.840621948242188,
+              "probability": 4.101485530315267e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 10.657026290893555,
+              "probability": 3.4135526274579234e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.634601593017578,
+              "probability": 3.337856642953179e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.395313262939453,
+              "probability": 2.6275202935274235e-09,
+              "token_index": 62
+            }
+          ],
+          "top_mass_probability": 0.9999998978181307,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "28dad5223d9906e5",
+      "duration_s": 3.143924,
+      "evidence_checksum": "47f1f6be6faec2fa",
+      "fixture_id": "ihp-005-unsupported-sensor",
+      "internal_features": {
+        "entropy_logprob_baseline": 7.256735904882871e-07,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 3.8887662201503304e-08,
+        "final_token_top1_probability": 0.9999999611123378,
+        "full_logit_entropy_topk": 7.724056221182808e-07,
+        "full_logit_spilled_energy": 8.478458768390595e-08,
+        "full_logit_top1_probability": 0.9999999152154123,
+        "primary_internal_score": 0.1032771368627401,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.1032771368627401,
+        "sequence_spilled_energy": 0.08555793329589972,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "d52c1e3b6bb1d6ab",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 7.256735904882871e-07,
+        "internal": 0.1032771368627401,
+        "lexical": 0.25
+      },
+      "seed": 5276,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 7.724056221182808e-07,
+          "steps": 60,
+          "top1_probability": 0.9999999152154123,
+          "top_logits": [
+            {
+              "logit": 31.32892417907715,
+              "probability": 0.9999999152154123,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.084213256835938,
+              "probability": 3.241284613674517e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 12.03641128540039,
+              "probability": 4.181846345598433e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.926004409790039,
+              "probability": 1.3776043093921662e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.517219543457031,
+              "probability": 9.153590526062048e-10,
+              "token_index": 62
+            },
+            {
+              "logit": 10.430177688598633,
+              "probability": 8.390535586017363e-10,
+              "token_index": 42630
+            },
+            {
+              "logit": 10.206086158752441,
+              "probability": 6.7060682458817e-10,
+              "token_index": 56484
+            },
+            {
+              "logit": 10.108999252319336,
+              "probability": 6.085603613004136e-10,
+              "token_index": 8
+            }
+          ],
+          "top_mass_probability": 0.9999999562212889,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "c6051926be517a6b",
+      "duration_s": 3.004637,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-006-unsupported-bench-count",
+      "internal_features": {
+        "entropy_logprob_baseline": 4.2355672593803086e-07,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 2.1968205921041317e-08,
+        "final_token_top1_probability": 0.9999999780317941,
+        "full_logit_entropy_topk": 4.5131014975227844e-07,
+        "full_logit_spilled_energy": 5.203691300081914e-08,
+        "full_logit_top1_probability": 0.999999947963087,
+        "primary_internal_score": 0.11763517011422664,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.11763517011422664,
+        "sequence_spilled_energy": 0.09511127586240126,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "e35c8dc6bde22d9b",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 4.2355672593803086e-07,
+        "internal": 0.11763517011422664,
+        "lexical": 0.2
+      },
+      "seed": 5277,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 4.5131014975227844e-07,
+          "steps": 58,
+          "top1_probability": 0.999999947963087,
+          "top_logits": [
+            {
+              "logit": 31.55931854248047,
+              "probability": 0.999999947963087,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.732336044311523,
+              "probability": 1.810672265543141e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.471075057983398,
+              "probability": 1.8870642232999697e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 11.024181365966797,
+              "probability": 1.2069887342530553e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.571344375610352,
+              "probability": 7.67429713695971e-10,
+              "token_index": 8
+            },
+            {
+              "logit": 10.013458251953125,
+              "probability": 4.3929043319682843e-10,
+              "token_index": 56484
+            },
+            {
+              "logit": 9.94413948059082,
+              "probability": 4.098708057038468e-10,
+              "token_index": 271
+            },
+            {
+              "logit": 9.863289833068848,
+              "probability": 3.780371058703459e-10,
+              "token_index": 328
+            }
+          ],
+          "top_mass_probability": 0.9999999711584907,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "7760cae167f7f73e",
+      "duration_s": 3.024628,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-007-contradiction-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.6774864791106784e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 9.385195942623881e-08,
+        "final_token_top1_probability": 0.9999999061480406,
+        "full_logit_entropy_topk": 1.888731069690965e-06,
+        "full_logit_spilled_energy": 2.600052616541504e-07,
+        "full_logit_top1_probability": 0.9999997399947383,
+        "primary_internal_score": 0.09792540606576239,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.09792540606576239,
+        "sequence_spilled_energy": 0.08225245804166129,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "5beb8184715322af",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 1.6774864791106784e-06,
+        "internal": 0.09792540606576239,
+        "lexical": 0.1111111111111111
+      },
+      "seed": 5278,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.888731069690965e-06,
+          "steps": 68,
+          "top1_probability": 0.9999997399947383,
+          "top_logits": [
+            {
+              "logit": 29.85382080078125,
+              "probability": 0.9999997399947383,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.45693588256836,
+              "probability": 7.566991509995683e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.346914291381836,
+              "probability": 9.173868550060054e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.696605682373047,
+              "probability": 4.787701577268761e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.570493698120117,
+              "probability": 4.220436143635816e-09,
+              "token_index": 328
+            },
+            {
+              "logit": 10.555197715759277,
+              "probability": 4.156371640658627e-09,
+              "token_index": 14235
+            },
+            {
+              "logit": 10.383928298950195,
+              "probability": 3.5021360246865627e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.109004020690918,
+              "probability": 2.660326333007976e-09,
+              "token_index": 1144
+            }
+          ],
+          "top_mass_probability": 0.9999998441654937,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "f8d003ee7df2fc79",
+      "duration_s": 2.719387,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-008-contradiction-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": 5.226360615461756e-07,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 2.7613077713262157e-08,
+        "final_token_top1_probability": 0.9999999723869223,
+        "full_logit_entropy_topk": 5.523119817407769e-07,
+        "full_logit_spilled_energy": 6.16967055222517e-08,
+        "full_logit_top1_probability": 0.9999999383032945,
+        "primary_internal_score": 0.08520068891812116,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.08520068891812116,
+        "sequence_spilled_energy": 0.07327549579720019,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "b6f83cbf1ae44656",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 5.226360615461756e-07,
+        "internal": 0.08520068891812116,
+        "lexical": 0.2
+      },
+      "seed": 5279,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 5.523119817407769e-07,
+          "steps": 59,
+          "top1_probability": 0.9999999383032945,
+          "top_logits": [
+            {
+              "logit": 31.527706146240234,
+              "probability": 0.9999999383032945,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.980409622192383,
+              "probability": 2.3950022209921323e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.532729148864746,
+              "probability": 2.0715327203029366e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.601829528808594,
+              "probability": 8.165959643031366e-10,
+              "token_index": 56484
+            },
+            {
+              "logit": 10.549450874328613,
+              "probability": 7.749246372137894e-10,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.025337219238281,
+              "probability": 4.58817316344754e-10,
+              "token_index": 271
+            },
+            {
+              "logit": 9.979941368103027,
+              "probability": 4.384546019380317e-10,
+              "token_index": 8
+            },
+            {
+              "logit": 9.934419631958008,
+              "probability": 4.1894286068793016e-10,
+              "token_index": 328
+            }
+          ],
+          "top_mass_probability": 0.9999999672325848,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "97c9e4a72efb799e",
+      "duration_s": 2.895016,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-009-contradiction-year",
+      "internal_features": {
+        "entropy_logprob_baseline": 6.441923071234363e-07,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 3.441599705222842e-08,
+        "final_token_top1_probability": 0.999999965584003,
+        "full_logit_entropy_topk": 6.831795632362043e-07,
+        "full_logit_spilled_energy": 6.663432472464592e-08,
+        "full_logit_top1_probability": 0.9999999333656753,
+        "primary_internal_score": 0.11385481181786972,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.11385481181786972,
+        "sequence_spilled_energy": 0.09245015574941384,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "prompt_checksum": "cd7e4a1cb28dd2ba",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "scores": {
+        "entropy_logprob": 6.441923071234363e-07,
+        "internal": 0.11385481181786972,
+        "lexical": 0.25
+      },
+      "seed": 5280,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 6.831795632362043e-07,
+          "steps": 61,
+          "top1_probability": 0.9999999333656753,
+          "top_logits": [
+            {
+              "logit": 31.49237060546875,
+              "probability": 0.9999999333656753,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.161249160766602,
+              "probability": 2.972963398432899e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.730295181274414,
+              "probability": 2.6148071472029234e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.849051475524902,
+              "probability": 1.0832292654181006e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.757356643676758,
+              "probability": 9.883205490659145e-10,
+              "token_index": 8
+            },
+            {
+              "logit": 10.283794403076172,
+              "probability": 6.15506094266247e-10,
+              "token_index": 271
+            },
+            {
+              "logit": 10.210521697998047,
+              "probability": 5.720189623681117e-10,
+              "token_index": 14235
+            },
+            {
+              "logit": 10.196176528930664,
+              "probability": 5.638718293553383e-10,
+              "token_index": 56484
+            }
+          ],
+          "top_mass_probability": 0.9999999695330631,
+          "vocab_size": 248320
+        },
+        "runtime_error": null,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "25fc434d9ac705df",
+      "duration_s": 33.224489,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-001-supported-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.17444360027447778,
+        "full_logit_spilled_energy": 0.03714387809260655,
+        "full_logit_top1_probability": 0.9628561219073934,
+        "primary_internal_score": 0.03714387809260655,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "948f0b2038bfd6db",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.03714387809260655,
+        "lexical": 0.0
+      },
+      "seed": 6272,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.17444360027447778,
+          "steps": 69,
+          "top1_probability": 0.9628561219073934,
+          "top_logits": [
+            {
+              "logit": 15.996943473815918,
+              "probability": 0.9628561219073934,
+              "token_index": 106
+            },
+            {
+              "logit": 11.981962203979492,
+              "probability": 0.0173730946443438,
+              "token_index": 642
+            },
+            {
+              "logit": 10.208683013916016,
+              "probability": 0.00294952321311651,
+              "token_index": 101
+            },
+            {
+              "logit": 10.203348159790039,
+              "probability": 0.002933829835194648,
+              "token_index": 107
+            },
+            {
+              "logit": 10.0064115524292,
+              "probability": 0.0024093863129110854,
+              "token_index": 108
+            },
+            {
+              "logit": 9.714783668518066,
+              "probability": 0.0017999235453942325,
+              "token_index": 156646
+            },
+            {
+              "logit": 9.508772850036621,
+              "probability": 0.0014648214687926473,
+              "token_index": 2977
+            },
+            {
+              "logit": 8.530335426330566,
+              "probability": 0.0005506234743982287,
+              "token_index": 236743
+            }
+          ],
+          "top_mass_probability": 0.9923373244015447,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "a21185afcf559579",
+      "duration_s": 3.553925,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-002-supported-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 1.2167948651726899,
+        "full_logit_spilled_energy": 0.43888125552685686,
+        "full_logit_top1_probability": 0.5611187444731431,
+        "primary_internal_score": 0.43888125552685686,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "e4f210e060133d17",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.43888125552685686,
+        "lexical": 0.0
+      },
+      "seed": 6273,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.2167948651726899,
+          "steps": 57,
+          "top1_probability": 0.5611187444731431,
+          "top_logits": [
+            {
+              "logit": 11.750242233276367,
+              "probability": 0.5611187444731431,
+              "token_index": 106
+            },
+            {
+              "logit": 10.652822494506836,
+              "probability": 0.18726276857940385,
+              "token_index": 156646
+            },
+            {
+              "logit": 10.251607894897461,
+              "probability": 0.1253736163931049,
+              "token_index": 642
+            },
+            {
+              "logit": 9.975916862487793,
+              "probability": 0.09516451950588341,
+              "token_index": 107
+            },
+            {
+              "logit": 7.982054710388184,
+              "probability": 0.012958410359615457,
+              "token_index": 236751
+            },
+            {
+              "logit": 6.4109416007995605,
+              "probability": 0.0026929356449251433,
+              "token_index": 11130
+            },
+            {
+              "logit": 6.152678966522217,
+              "probability": 0.0020800028878424255,
+              "token_index": 108
+            },
+            {
+              "logit": 5.407033920288086,
+              "probability": 0.0009868119701449294,
+              "token_index": 24181
+            }
+          ],
+          "top_mass_probability": 0.9876378098140632,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "dc1dde213b501cff",
+      "duration_s": 3.429792,
+      "evidence_checksum": "d7bbae1ca2512bb9",
+      "fixture_id": "ihp-003-supported-route",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.21479397129438677,
+        "full_logit_spilled_energy": 0.04586771993530703,
+        "full_logit_top1_probability": 0.954132280064693,
+        "primary_internal_score": 0.04586771993530703,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "5bfc4e84b7e0f0f5",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.04586771993530703,
+        "lexical": 0.0
+      },
+      "seed": 6274,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.21479397129438677,
+          "steps": 56,
+          "top1_probability": 0.954132280064693,
+          "top_logits": [
+            {
+              "logit": 15.858449935913086,
+              "probability": 0.954132280064693,
+              "token_index": 106
+            },
+            {
+              "logit": 11.777806282043457,
+              "probability": 0.0161215786965951,
+              "token_index": 101
+            },
+            {
+              "logit": 11.65446949005127,
+              "probability": 0.014250925818492983,
+              "token_index": 642
+            },
+            {
+              "logit": 10.615195274353027,
+              "probability": 0.005040713596282241,
+              "token_index": 107
+            },
+            {
+              "logit": 9.412452697753906,
+              "probability": 0.0015140755913807622,
+              "token_index": 156646
+            },
+            {
+              "logit": 9.303454399108887,
+              "probability": 0.0013577199471443877,
+              "token_index": 108
+            },
+            {
+              "logit": 7.341058731079102,
+              "probability": 0.00019078867355502719,
+              "token_index": 236751
+            },
+            {
+              "logit": 7.187290668487549,
+              "probability": 0.00016359573133459932,
+              "token_index": 12730
+            }
+          ],
+          "top_mass_probability": 0.9927716781194781,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "ecbdadd4e00ac0dd",
+      "duration_s": 3.498519,
+      "evidence_checksum": "053cfe8ed6539427",
+      "fixture_id": "ihp-004-unsupported-manufacturer",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.6521541974906173,
+        "full_logit_spilled_energy": 0.2527212591232727,
+        "full_logit_top1_probability": 0.7472787408767273,
+        "primary_internal_score": 0.2527212591232727,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "e1320b97597ad47e",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.2527212591232727,
+        "lexical": 0.5
+      },
+      "seed": 6275,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.6521541974906173,
+          "steps": 56,
+          "top1_probability": 0.7472787408767273,
+          "top_logits": [
+            {
+              "logit": 15.155635833740234,
+              "probability": 0.7472787408767273,
+              "token_index": 106
+            },
+            {
+              "logit": 13.929569244384766,
+              "probability": 0.21928487273453645,
+              "token_index": 107
+            },
+            {
+              "logit": 10.883142471313477,
+              "probability": 0.01042227038882846,
+              "token_index": 156646
+            },
+            {
+              "logit": 10.117521286010742,
+              "probability": 0.004846824338348243,
+              "token_index": 642
+            },
+            {
+              "logit": 9.108785629272461,
+              "probability": 0.001767538778253122,
+              "token_index": 236743
+            },
+            {
+              "logit": 8.98334789276123,
+              "probability": 0.0015591648442270724,
+              "token_index": 108
+            },
+            {
+              "logit": 8.739751815795898,
+              "probability": 0.0012220799017717446,
+              "token_index": 101
+            },
+            {
+              "logit": 7.699578762054443,
+              "probability": 0.00043187511893659177,
+              "token_index": 2977
+            }
+          ],
+          "top_mass_probability": 0.986813366981629,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "28dad5223d9906e5",
+      "duration_s": 3.660751,
+      "evidence_checksum": "47f1f6be6faec2fa",
+      "fixture_id": "ihp-005-unsupported-sensor",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.807452993785429,
+        "full_logit_spilled_energy": 0.23780124693280158,
+        "full_logit_top1_probability": 0.7621987530671984,
+        "primary_internal_score": 0.23780124693280158,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "d52c1e3b6bb1d6ab",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.23780124693280158,
+        "lexical": 0.25
+      },
+      "seed": 6276,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.807452993785429,
+          "steps": 59,
+          "top1_probability": 0.7621987530671984,
+          "top_logits": [
+            {
+              "logit": 12.644898414611816,
+              "probability": 0.7621987530671984,
+              "token_index": 106
+            },
+            {
+              "logit": 10.359343528747559,
+              "probability": 0.07752903153058986,
+              "token_index": 107
+            },
+            {
+              "logit": 10.21041202545166,
+              "probability": 0.0668011945797372,
+              "token_index": 642
+            },
+            {
+              "logit": 10.104740142822266,
+              "probability": 0.06010235831872375,
+              "token_index": 156646
+            },
+            {
+              "logit": 7.35154914855957,
+              "probability": 0.0038299742748506135,
+              "token_index": 24181
+            },
+            {
+              "logit": 6.916067600250244,
+              "probability": 0.0024778135496682577,
+              "token_index": 236743
+            },
+            {
+              "logit": 6.812948703765869,
+              "probability": 0.002235036684611186,
+              "token_index": 9043
+            },
+            {
+              "logit": 6.015951156616211,
+              "probability": 0.0010072865128579753,
+              "token_index": 2977
+            }
+          ],
+          "top_mass_probability": 0.9761814485182373,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "c6051926be517a6b",
+      "duration_s": 3.663079,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-006-unsupported-bench-count",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.9619232090471567,
+        "full_logit_spilled_energy": 0.3417491582151835,
+        "full_logit_top1_probability": 0.6582508417848165,
+        "primary_internal_score": 0.3417491582151835,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "e35c8dc6bde22d9b",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.3417491582151835,
+        "lexical": 0.2
+      },
+      "seed": 6277,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.9619232090471567,
+          "steps": 57,
+          "top1_probability": 0.6582508417848165,
+          "top_logits": [
+            {
+              "logit": 14.399728775024414,
+              "probability": 0.6582508417848165,
+              "token_index": 106
+            },
+            {
+              "logit": 13.223040580749512,
+              "probability": 0.20293746612161476,
+              "token_index": 107
+            },
+            {
+              "logit": 12.424277305603027,
+              "probability": 0.09129852279398722,
+              "token_index": 642
+            },
+            {
+              "logit": 10.944150924682617,
+              "probability": 0.020780358274914493,
+              "token_index": 156646
+            },
+            {
+              "logit": 9.498628616333008,
+              "probability": 0.004896329870771912,
+              "token_index": 24181
+            },
+            {
+              "logit": 9.203689575195312,
+              "probability": 0.003645694482056968,
+              "token_index": 236751
+            },
+            {
+              "logit": 8.331276893615723,
+              "probability": 0.001523688737302385,
+              "token_index": 12730
+            },
+            {
+              "logit": 8.089093208312988,
+              "probability": 0.0011959615551477875,
+              "token_index": 236743
+            }
+          ],
+          "top_mass_probability": 0.9845288636206121,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "7760cae167f7f73e",
+      "duration_s": 4.644043,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-007-contradiction-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.19955178182260838,
+        "full_logit_spilled_energy": 0.03886698382103548,
+        "full_logit_top1_probability": 0.9611330161789645,
+        "primary_internal_score": 0.03886698382103548,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "5beb8184715322af",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.03886698382103548,
+        "lexical": 0.1111111111111111
+      },
+      "seed": 6278,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.19955178182260838,
+          "steps": 69,
+          "top1_probability": 0.9611330161789645,
+          "top_logits": [
+            {
+              "logit": 14.651385307312012,
+              "probability": 0.9611330161789645,
+              "token_index": 106
+            },
+            {
+              "logit": 10.47857666015625,
+              "probability": 0.014810022782160478,
+              "token_index": 642
+            },
+            {
+              "logit": 9.914984703063965,
+              "probability": 0.00842928716799724,
+              "token_index": 156646
+            },
+            {
+              "logit": 9.673602104187012,
+              "probability": 0.006621550854773225,
+              "token_index": 101
+            },
+            {
+              "logit": 8.514375686645508,
+              "probability": 0.0020773710853941043,
+              "token_index": 108
+            },
+            {
+              "logit": 8.274019241333008,
+              "probability": 0.0016335356036510022,
+              "token_index": 107
+            },
+            {
+              "logit": 6.90009880065918,
+              "probability": 0.0004134686047966992,
+              "token_index": 24181
+            },
+            {
+              "logit": 6.687935829162598,
+              "probability": 0.0003344269983228072,
+              "token_index": 11130
+            }
+          ],
+          "top_mass_probability": 0.9954526792760601,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "f8d003ee7df2fc79",
+      "duration_s": 3.650055,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-008-contradiction-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.7983099279920925,
+        "full_logit_spilled_energy": 0.25253379725196556,
+        "full_logit_top1_probability": 0.7474662027480344,
+        "primary_internal_score": 0.25253379725196556,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "b6f83cbf1ae44656",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.25253379725196556,
+        "lexical": 0.2
+      },
+      "seed": 6279,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.7983099279920925,
+          "steps": 57,
+          "top1_probability": 0.7474662027480344,
+          "top_logits": [
+            {
+              "logit": 12.895573616027832,
+              "probability": 0.7474662027480344,
+              "token_index": 106
+            },
+            {
+              "logit": 11.277461051940918,
+              "probability": 0.14820204718651256,
+              "token_index": 156646
+            },
+            {
+              "logit": 10.185221672058105,
+              "probability": 0.04971651375162461,
+              "token_index": 642
+            },
+            {
+              "logit": 9.197056770324707,
+              "probability": 0.0185074294771099,
+              "token_index": 107
+            },
+            {
+              "logit": 8.215448379516602,
+              "probability": 0.0069348807207570504,
+              "token_index": 108
+            },
+            {
+              "logit": 7.765689849853516,
+              "probability": 0.004422943056307813,
+              "token_index": 24181
+            },
+            {
+              "logit": 6.8337507247924805,
+              "probability": 0.0017417079274295337,
+              "token_index": 189639
+            },
+            {
+              "logit": 6.634307861328125,
+              "probability": 0.0014267845354628316,
+              "token_index": 203949
+            }
+          ],
+          "top_mass_probability": 0.9784185094032387,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "97c9e4a72efb799e",
+      "duration_s": 3.837492,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-009-contradiction-year",
+      "internal_features": {
+        "entropy_logprob_baseline": null,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": null,
+        "final_token_top1_probability": null,
+        "full_logit_entropy_topk": 0.1806870473593399,
+        "full_logit_spilled_energy": 0.03799515554360999,
+        "full_logit_top1_probability": 0.96200484445639,
+        "primary_internal_score": 0.03799515554360999,
+        "primary_internal_score_name": "full_logit_spilled_energy",
+        "sequence_marginal_energy": null,
+        "sequence_spilled_energy": null,
+        "signal_available": true,
+        "token_count": 0,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "prompt_checksum": "cd7e4a1cb28dd2ba",
+      "raw_response_checksum": "e3b0c44298fc1c14",
+      "raw_response_excerpt": "",
+      "scores": {
+        "entropy_logprob": null,
+        "internal": 0.03799515554360999,
+        "lexical": 0.25
+      },
+      "seed": 6280,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.1806870473593399,
+          "steps": 60,
+          "top1_probability": 0.96200484445639,
+          "top_logits": [
+            {
+              "logit": 15.187032699584961,
+              "probability": 0.96200484445639,
+              "token_index": 106
+            },
+            {
+              "logit": 11.259688377380371,
+              "probability": 0.018947560017473077,
+              "token_index": 107
+            },
+            {
+              "logit": 10.312686920166016,
+              "probability": 0.0073498044472283695,
+              "token_index": 642
+            },
+            {
+              "logit": 9.486995697021484,
+              "probability": 0.0032187158765290278,
+              "token_index": 156646
+            },
+            {
+              "logit": 8.344256401062012,
+              "probability": 0.0010265905725737243,
+              "token_index": 24181
+            },
+            {
+              "logit": 8.156379699707031,
+              "probability": 0.0008507529369588361,
+              "token_index": 236751
+            },
+            {
+              "logit": 7.264062881469727,
+              "probability": 0.0003485581057656551,
+              "token_index": 236743
+            },
+            {
+              "logit": 7.220841884613037,
+              "probability": 0.00033381399961620223,
+              "token_index": 108
+            }
+          ],
+          "top_mass_probability": 0.9940806404125349,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 0,
+        "top_logprobs_count": 0
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "25fc434d9ac705df",
+      "duration_s": 18.270761,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-001-supported-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": 3.1699760869135576e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 1.8089783793140413e-07,
+        "final_token_top1_probability": 0.9999998191021621,
+        "full_logit_entropy_topk": 4.516171576054642e-05,
+        "full_logit_spilled_energy": 4.038969574793327e-06,
+        "full_logit_top1_probability": 0.9999959610304252,
+        "primary_internal_score": 0.0011306485975997778,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.0011306485975997778,
+        "sequence_spilled_energy": 0.0011287734210537377,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "948f0b2038bfd6db",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 3.1699760869135576e-06,
+        "internal": 0.0011306485975997778,
+        "lexical": 0.0
+      },
+      "seed": 7272,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 4.516171576054642e-05,
+          "steps": 72,
+          "top1_probability": 0.9999959610304252,
+          "top_logits": [
+            {
+              "logit": 17.670150756835938,
+              "probability": 0.9999959610304252,
+              "token_index": 106
+            },
+            {
+              "logit": 4.754377841949463,
+              "probability": 2.458947970239979e-06,
+              "token_index": 236779
+            },
+            {
+              "logit": 2.874413251876831,
+              "probability": 3.752244172637181e-07,
+              "token_index": 101
+            },
+            {
+              "logit": 1.6074963808059692,
+              "probability": 1.0570026732224634e-07,
+              "token_index": 237141
+            },
+            {
+              "logit": 0.7722793221473694,
+              "probability": 4.5850695301156645e-08,
+              "token_index": 568
+            },
+            {
+              "logit": 0.7706970572471619,
+              "probability": 4.577820472010623e-08,
+              "token_index": 778
+            },
+            {
+              "logit": 0.7644317150115967,
+              "probability": 4.5492285227642986e-08,
+              "token_index": 236820
+            },
+            {
+              "logit": 0.6888010501861572,
+              "probability": 4.217856237269566e-08,
+              "token_index": 655
+            }
+          ],
+          "top_mass_probability": 0.9999990802028277,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "a21185afcf559579",
+      "duration_s": 2.863159,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-002-supported-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.6498350821537626e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 1.0471669945610884e-06,
+        "final_token_top1_probability": 0.9999989528330054,
+        "full_logit_entropy_topk": 5.6247899449763664e-05,
+        "full_logit_spilled_energy": 5.458643543732045e-06,
+        "full_logit_top1_probability": 0.9999945413564563,
+        "primary_internal_score": 0.002809501204334689,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.002809501204334689,
+        "sequence_spilled_energy": 0.0027980575752333627,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "e4f210e060133d17",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.6498350821537626e-05,
+        "internal": 0.002809501204334689,
+        "lexical": 0.0
+      },
+      "seed": 7273,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 5.6247899449763664e-05,
+          "steps": 60,
+          "top1_probability": 0.9999945413564563,
+          "top_logits": [
+            {
+              "logit": 18.020353317260742,
+              "probability": 0.9999945413564563,
+              "token_index": 106
+            },
+            {
+              "logit": 5.166561126708984,
+              "probability": 2.6161739047963734e-06,
+              "token_index": 236779
+            },
+            {
+              "logit": 3.846605062484741,
+              "probability": 6.989031122288169e-07,
+              "token_index": 101
+            },
+            {
+              "logit": 2.411963939666748,
+              "probability": 1.6647930388341442e-07,
+              "token_index": 237141
+            },
+            {
+              "logit": 2.0801262855529785,
+              "probability": 1.194661833231372e-07,
+              "token_index": 236820
+            },
+            {
+              "logit": 1.88948392868042,
+              "probability": 9.873021109328747e-08,
+              "token_index": 568
+            },
+            {
+              "logit": 1.806613564491272,
+              "probability": 9.08782433561669e-08,
+              "token_index": 236909
+            },
+            {
+              "logit": 1.6537045240402222,
+              "probability": 7.79924155222423e-08,
+              "token_index": 655
+            }
+          ],
+          "top_mass_probability": 0.9999984099798305,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "supported",
+      "claim_checksum": "dc1dde213b501cff",
+      "duration_s": 2.919585,
+      "evidence_checksum": "d7bbae1ca2512bb9",
+      "fixture_id": "ihp-003-supported-route",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.1749578412149313e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 7.239558591498607e-07,
+        "final_token_top1_probability": 0.9999992760441409,
+        "full_logit_entropy_topk": 4.520039286986901e-05,
+        "full_logit_spilled_energy": 4.2628552331391845e-06,
+        "full_logit_top1_probability": 0.9999957371447669,
+        "primary_internal_score": 0.0020553768262251046,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.0020553768262251046,
+        "sequence_spilled_energy": 0.002049134037356145,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "5bfc4e84b7e0f0f5",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.1749578412149313e-05,
+        "internal": 0.0020553768262251046,
+        "lexical": 0.0
+      },
+      "seed": 7274,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 4.520039286986901e-05,
+          "steps": 59,
+          "top1_probability": 0.9999957371447669,
+          "top_logits": [
+            {
+              "logit": 17.743751525878906,
+              "probability": 0.9999957371447669,
+              "token_index": 106
+            },
+            {
+              "logit": 4.884007453918457,
+              "probability": 2.600652104854775e-06,
+              "token_index": 236779
+            },
+            {
+              "logit": 2.3423397541046143,
+              "probability": 2.0476230166243932e-07,
+              "token_index": 101
+            },
+            {
+              "logit": 1.4727665185928345,
+              "probability": 8.58221015200354e-08,
+              "token_index": 237141
+            },
+            {
+              "logit": 1.307195782661438,
+              "probability": 7.272650007647285e-08,
+              "token_index": 568
+            },
+            {
+              "logit": 1.2208796739578247,
+              "probability": 6.671232524689833e-08,
+              "token_index": 778
+            },
+            {
+              "logit": 1.024489164352417,
+              "probability": 5.481693683613341e-08,
+              "token_index": 655
+            },
+            {
+              "logit": 0.9518148303031921,
+              "probability": 5.097446792806454e-08,
+              "token_index": 236820
+            }
+          ],
+          "top_mass_probability": 0.999998873611505,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": false
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "ecbdadd4e00ac0dd",
+      "duration_s": 2.822849,
+      "evidence_checksum": "053cfe8ed6539427",
+      "fixture_id": "ihp-004-unsupported-manufacturer",
+      "internal_features": {
+        "entropy_logprob_baseline": 5.467452456491264e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 4.076985137602129e-06,
+        "final_token_top1_probability": 0.9999959230148624,
+        "full_logit_entropy_topk": 0.0006156041717818707,
+        "full_logit_spilled_energy": 6.608675682084897e-05,
+        "full_logit_top1_probability": 0.9999339132431792,
+        "primary_internal_score": 0.018340253908566712,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.018340253908566712,
+        "sequence_spilled_energy": 0.017849689589033286,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "e1320b97597ad47e",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 5.467452456491264e-05,
+        "internal": 0.018340253908566712,
+        "lexical": 0.5
+      },
+      "seed": 7275,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.0006156041717818707,
+          "steps": 59,
+          "top1_probability": 0.9999339132431792,
+          "top_logits": [
+            {
+              "logit": 21.81743812561035,
+              "probability": 0.9999339132431792,
+              "token_index": 106
+            },
+            {
+              "logit": 11.204331398010254,
+              "probability": 2.4589947997010575e-05,
+              "token_index": 236786
+            },
+            {
+              "logit": 10.269608497619629,
+              "probability": 9.656341415522702e-06,
+              "token_index": 653
+            },
+            {
+              "logit": 9.554021835327148,
+              "probability": 4.72103558314329e-06,
+              "token_index": 69
+            },
+            {
+              "logit": 9.419397354125977,
+              "probability": 4.126393155935152e-06,
+              "token_index": 568
+            },
+            {
+              "logit": 8.83442211151123,
+              "probability": 2.2988947292310566e-06,
+              "token_index": 1788
+            },
+            {
+              "logit": 8.782828330993652,
+              "probability": 2.18329384467464e-06,
+              "token_index": 237141
+            },
+            {
+              "logit": 8.692338943481445,
+              "probability": 1.9944040559506063e-06,
+              "token_index": 655
+            }
+          ],
+          "top_mass_probability": 0.9999834835539606,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "28dad5223d9906e5",
+      "duration_s": 3.082873,
+      "evidence_checksum": "47f1f6be6faec2fa",
+      "fixture_id": "ihp-005-unsupported-sensor",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.0375328402352116e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 6.815041072583128e-07,
+        "final_token_top1_probability": 0.9999993184958927,
+        "full_logit_entropy_topk": 0.2888293721320692,
+        "full_logit_spilled_energy": 0.06042575590111132,
+        "full_logit_top1_probability": 0.9395742440988887,
+        "primary_internal_score": 0.028662480928005607,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.028662480928005607,
+        "sequence_spilled_energy": 0.027477594571839625,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "d52c1e3b6bb1d6ab",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.0375328402352116e-05,
+        "internal": 0.028662480928005607,
+        "lexical": 0.25
+      },
+      "seed": 7276,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.2888293721320692,
+          "steps": 62,
+          "top1_probability": 0.9395742440988887,
+          "top_logits": [
+            {
+              "logit": 14.498695373535156,
+              "probability": 0.9395742440988887,
+              "token_index": 106
+            },
+            {
+              "logit": 11.154484748840332,
+              "probability": 0.03315575200816054,
+              "token_index": 236786
+            },
+            {
+              "logit": 10.615633964538574,
+              "probability": 0.019343673823849487,
+              "token_index": 653
+            },
+            {
+              "logit": 8.671167373657227,
+              "probability": 0.0027673739581100193,
+              "token_index": 107
+            },
+            {
+              "logit": 8.094109535217285,
+              "probability": 0.0015540135984708167,
+              "token_index": 568
+            },
+            {
+              "logit": 7.7892537117004395,
+              "probability": 0.0011456649135865838,
+              "token_index": 84410
+            },
+            {
+              "logit": 7.096349716186523,
+              "probability": 0.0005729717780203972,
+              "token_index": 108
+            },
+            {
+              "logit": 6.904827117919922,
+              "probability": 0.00047310335030715335,
+              "token_index": 236743
+            }
+          ],
+          "top_mass_probability": 0.9985867975293937,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "unsupported",
+      "claim_checksum": "c6051926be517a6b",
+      "duration_s": 2.760266,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-006-unsupported-bench-count",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.9201354485477127e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 1.244534102107231e-06,
+        "final_token_top1_probability": 0.9999987554658979,
+        "full_logit_entropy_topk": 0.3207255052715949,
+        "full_logit_spilled_energy": 0.06636668117071876,
+        "full_logit_top1_probability": 0.9336333188292812,
+        "primary_internal_score": 0.17713886283763713,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.17713886283763713,
+        "sequence_spilled_energy": 0.13742525259096658,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "e35c8dc6bde22d9b",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.9201354485477127e-05,
+        "internal": 0.17713886283763713,
+        "lexical": 0.2
+      },
+      "seed": 7277,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.3207255052715949,
+          "steps": 60,
+          "top1_probability": 0.9336333188292812,
+          "top_logits": [
+            {
+              "logit": 14.516552925109863,
+              "probability": 0.9336333188292812,
+              "token_index": 106
+            },
+            {
+              "logit": 10.900121688842773,
+              "probability": 0.025094596212413788,
+              "token_index": 236786
+            },
+            {
+              "logit": 10.868424415588379,
+              "probability": 0.02431164027619431,
+              "token_index": 653
+            },
+            {
+              "logit": 10.207813262939453,
+              "probability": 0.01255782662572668,
+              "token_index": 84410
+            },
+            {
+              "logit": 8.046619415283203,
+              "probability": 0.0014465049378151714,
+              "token_index": 568
+            },
+            {
+              "logit": 7.6950459480285645,
+              "probability": 0.0010177321726387322,
+              "token_index": 107
+            },
+            {
+              "logit": 6.1451287269592285,
+              "probability": 0.00021602947348953286,
+              "token_index": 101
+            },
+            {
+              "logit": 5.9651408195495605,
+              "probability": 0.00018044516602894482,
+              "token_index": 8005
+            }
+          ],
+          "top_mass_probability": 0.9984580936935884,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "7760cae167f7f73e",
+      "duration_s": 3.161216,
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "ihp-007-contradiction-runtime",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.3375917490285433e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 8.537421120058397e-07,
+        "final_token_top1_probability": 0.999999146257888,
+        "full_logit_entropy_topk": 0.2032465292448198,
+        "full_logit_spilled_energy": 0.03857052269074901,
+        "full_logit_top1_probability": 0.961429477309251,
+        "primary_internal_score": 0.036170991409107955,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.036170991409107955,
+        "sequence_spilled_energy": 0.034279182851148914,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "5beb8184715322af",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.3375917490285433e-05,
+        "internal": 0.036170991409107955,
+        "lexical": 0.1111111111111111
+      },
+      "seed": 7278,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.2032465292448198,
+          "steps": 72,
+          "top1_probability": 0.961429477309251,
+          "top_logits": [
+            {
+              "logit": 14.737443923950195,
+              "probability": 0.961429477309251,
+              "token_index": 106
+            },
+            {
+              "logit": 10.730402946472168,
+              "probability": 0.017485644645597754,
+              "token_index": 84410
+            },
+            {
+              "logit": 10.381126403808594,
+              "probability": 0.012330843135592143,
+              "token_index": 236786
+            },
+            {
+              "logit": 9.197416305541992,
+              "probability": 0.003774974385569641,
+              "token_index": 653
+            },
+            {
+              "logit": 8.185731887817383,
+              "probability": 0.0013726033329258306,
+              "token_index": 568
+            },
+            {
+              "logit": 7.783285140991211,
+              "probability": 0.0009178350696877912,
+              "token_index": 107
+            },
+            {
+              "logit": 6.819326400756836,
+              "probability": 0.0003500440387595301,
+              "token_index": 101
+            },
+            {
+              "logit": 6.80366849899292,
+              "probability": 0.00034460577062950666,
+              "token_index": 69
+            }
+          ],
+          "top_mass_probability": 0.9980060276880132,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "f8d003ee7df2fc79",
+      "duration_s": 2.743703,
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "ihp-008-contradiction-enrollment",
+      "internal_features": {
+        "entropy_logprob_baseline": 7.872357111556418e-06,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 4.806149870306697e-07,
+        "final_token_top1_probability": 0.999999519385013,
+        "full_logit_entropy_topk": 1.0975666921337457,
+        "full_logit_spilled_energy": 0.4716666535071733,
+        "full_logit_top1_probability": 0.5283333464928267,
+        "primary_internal_score": 0.06990038322082152,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.06990038322082152,
+        "sequence_spilled_energy": 0.06306066560515033,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "b6f83cbf1ae44656",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 7.872357111556418e-06,
+        "internal": 0.06990038322082152,
+        "lexical": 0.2
+      },
+      "seed": 7279,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.0975666921337457,
+          "steps": 60,
+          "top1_probability": 0.5283333464928267,
+          "top_logits": [
+            {
+              "logit": 13.44413948059082,
+              "probability": 0.5283333464928267,
+              "token_index": 106
+            },
+            {
+              "logit": 12.86113452911377,
+              "probability": 0.29492540827848907,
+              "token_index": 236786
+            },
+            {
+              "logit": 12.194738388061523,
+              "probability": 0.15146072191094917,
+              "token_index": 653
+            },
+            {
+              "logit": 9.223094940185547,
+              "probability": 0.007757676599986136,
+              "token_index": 107
+            },
+            {
+              "logit": 9.166116714477539,
+              "probability": 0.007328014869008675,
+              "token_index": 84410
+            },
+            {
+              "logit": 8.81550407409668,
+              "probability": 0.005160802115003587,
+              "token_index": 568
+            },
+            {
+              "logit": 7.1287078857421875,
+              "probability": 0.0009553245318537971,
+              "token_index": 236787
+            },
+            {
+              "logit": 7.1277947425842285,
+              "probability": 0.0009544525819620316,
+              "token_index": 965
+            }
+          ],
+          "top_mass_probability": 0.9968757473800791,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    },
+    {
+      "case_type": "contradiction",
+      "claim_checksum": "97c9e4a72efb799e",
+      "duration_s": 2.925794,
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "ihp-009-contradiction-year",
+      "internal_features": {
+        "entropy_logprob_baseline": 1.580878682829704e-05,
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "final_token_spilled_energy": 1.0333679374419091e-06,
+        "final_token_top1_probability": 0.9999989666320626,
+        "full_logit_entropy_topk": 0.5875476194146932,
+        "full_logit_spilled_energy": 0.16820906525673351,
+        "full_logit_top1_probability": 0.8317909347432665,
+        "primary_internal_score": 0.011007890067427676,
+        "primary_internal_score_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.011007890067427676,
+        "sequence_spilled_energy": 0.010828288169920838,
+        "signal_available": true,
+        "token_count": 3,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "label_source": "curated_local_evidence_label",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "prompt_checksum": "cd7e4a1cb28dd2ba",
+      "raw_response_checksum": "d3b3af86d6740afa",
+      "raw_response_excerpt": "\nSUPPORTED",
+      "scores": {
+        "entropy_logprob": 1.580878682829704e-05,
+        "internal": 0.011007890067427676,
+        "lexical": 0.25
+      },
+      "seed": 7280,
+      "signal_receipts": {
+        "field_usage": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 0.5875476194146932,
+          "steps": 63,
+          "top1_probability": 0.8317909347432665,
+          "top_logits": [
+            {
+              "logit": 15.667634010314941,
+              "probability": 0.8317909347432665,
+              "token_index": 106
+            },
+            {
+              "logit": 13.756187438964844,
+              "probability": 0.12299387501890548,
+              "token_index": 236786
+            },
+            {
+              "logit": 12.35318374633789,
+              "probability": 0.030238951101454643,
+              "token_index": 653
+            },
+            {
+              "logit": 10.48328971862793,
+              "probability": 0.004661031787246267,
+              "token_index": 568
+            },
+            {
+              "logit": 9.830235481262207,
+              "probability": 0.00242585150741991,
+              "token_index": 84410
+            },
+            {
+              "logit": 9.70141887664795,
+              "probability": 0.002132651401865643,
+              "token_index": 236787
+            },
+            {
+              "logit": 9.670727729797363,
+              "probability": 0.0020681921090089997,
+              "token_index": 107
+            },
+            {
+              "logit": 8.858224868774414,
+              "probability": 0.0009177520593901994,
+              "token_index": 101
+            }
+          ],
+          "top_mass_probability": 0.9972292397285576,
+          "vocab_size": 262144
+        },
+        "runtime_error": null,
+        "token_logprob_count": 3,
+        "top_logprobs_count": 3
+      },
+      "unsupported_label": true
+    }
+  ],
+  "preconditions_checked": {
+    "principle": "Records the Exp 5271 gate, exposed telemetry fields, fixture-label adequacy, retired-scorer exclusion, and local model readiness before any quality number is interpreted.",
+    "value": {
+      "blocker": "",
+      "disallowed_external_scorers": [
+        "external_generated_text_scorer",
+        "llm_judge",
+        "lora_ebm",
+        "uprm",
+        "ebrm_text_reranker",
+        "nli_text_scorer"
+      ],
+      "exp5271_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5271_sota_telemetry_receipt_harness_v482.json",
+      "exp5271_telemetry_harness_ready": true,
+      "exp5271_telemetry_harness_ready_principle": "telemetry_harness_ready=true because live mandated SOTA GGUF telemetry completed with usable internal/logprob/logit receipts for flagship_moe, flagship_dense, middle_moe; hidden or attention gaps remain recorded as capability_absent.",
+      "exposed_telemetry_fields": {
+        "flagship_dense": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "flagship_moe": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "middle_moe": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        }
+      },
+      "fixture_label_counts": {
+        "case_type_counts": {
+          "contradiction": 3,
+          "supported": 3,
+          "unsupported": 3
+        },
+        "supported": 3,
+        "unsupported": 6
+      },
+      "fixture_labels_adequate": true,
+      "headline_roles_ready": [
+        "flagship_moe",
+        "flagship_dense"
+      ],
+      "headline_roles_required": [
+        "flagship_moe",
+        "flagship_dense"
+      ],
+      "legacy_tiny_models_headline": false,
+      "retired_external_scorer_reopened": false,
+      "role_blocker": "",
+      "selected_model_roles": [
+        "flagship_moe",
+        "flagship_dense",
+        "middle_moe"
+      ]
+    }
+  },
+  "random_seed": 5272,
+  "reproducibility_checksum": "3265c96332da4e8d",
+  "retired_external_scorer_reopened": {
+    "principle": "Must remain false so the retired Phase D generated-text scorer, LLM judge, LoRA-EBM, uPRM, and EBRM reranker paths stay closed.",
+    "value": false
+  },
+  "schema": "carnot.experiment_5272.internal_hallucination_probe_gated.v482",
+  "spec_refs": [
+    "REQ-VERIFY-5272",
+    "SCENARIO-VERIFY-5272"
+  ],
+  "telemetry_receipts": {
+    "principle": "Records field availability, per-model durations, fixture checksums, and control metrics so a downstream auditor can separate real telemetry from text-only fallback.",
+    "value": {
+      "controls": {
+        "entropy_logprob": {
+          "auroc": 0.4444444444444444,
+          "sample_count": 18,
+          "supported_mean": 6.997904066472965e-06,
+          "unsupported_mean": 1.06462449524079e-05,
+          "unsupported_minus_supported": 3.648340885934935e-06
+        },
+        "higher_score_means": "greater_unsupported_risk",
+        "lexical": {
+          "auroc": 1.0,
+          "sample_count": 27,
+          "supported_mean": 0.0,
+          "unsupported_mean": 0.2518518518518518,
+          "unsupported_minus_supported": 0.2518518518518518
+        },
+        "shuffled_label_control": {
+          "auroc": 0.6419753086419753,
+          "label_rotation": "left_by_one",
+          "sample_count": 27
+        }
+      },
+      "duration": {
+        "per_model_fixture_duration_s": {
+          "flagship_dense": 63.162145,
+          "flagship_moe": 83.981503,
+          "middle_moe": 41.550206
+        },
+        "total_wall_clock_s": 188.803533
+      },
+      "exp5271_telemetry_harness_ready": true,
+      "field_availability": {
+        "flagship_dense": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "flagship_moe": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        },
+        "middle_moe": {
+          "attention_summaries": "capability_absent",
+          "hidden_states": "capability_absent",
+          "logits": "available",
+          "token_logprobs": "available"
+        }
+      },
+      "fixture_checksums": {
+        "case_type_counts": {
+          "contradiction": 3,
+          "supported": 3,
+          "unsupported": 3
+        },
+        "fixture_count": 9,
+        "fixture_set_checksum": "f556b65e062b0d8f",
+        "label_checksum": "f7d070d551b2c7b1",
+        "label_source": "curated_local_evidence_label",
+        "prompt_checksums": {
+          "ihp-001-supported-runtime": "948f0b2038bfd6db",
+          "ihp-002-supported-enrollment": "e4f210e060133d17",
+          "ihp-003-supported-route": "5bfc4e84b7e0f0f5",
+          "ihp-004-unsupported-manufacturer": "e1320b97597ad47e",
+          "ihp-005-unsupported-sensor": "d52c1e3b6bb1d6ab",
+          "ihp-006-unsupported-bench-count": "e35c8dc6bde22d9b",
+          "ihp-007-contradiction-runtime": "5beb8184715322af",
+          "ihp-008-contradiction-enrollment": "b6f83cbf1ae44656",
+          "ihp-009-contradiction-year": "cd7e4a1cb28dd2ba"
+        },
+        "supported_count": 3,
+        "unsupported_count": 6
+      },
+      "label_counts": {
+        "supported": 9,
+        "unsupported_or_contradiction": 18
+      },
+      "model_roles_scored": [
+        "flagship_moe",
+        "flagship_dense",
+        "middle_moe"
+      ],
+      "sample_count": 27,
+      "upstream_duration_receipts": {
+        "minimum_live_model_duration_s": 1.0,
+        "per_model": {
+          "flagship_dense": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 40.945817
+          },
+          "flagship_moe": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 30.221738
+          },
+          "middle_moe": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 16.702565
+          }
+        },
+        "total_wall_clock_s": 90.993698
+      }
+    }
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5272_internal_hallucination_probe_gated_v482.py -q -o addopts=",
+      "outcome": "passed: 9 tests"
+    },
+    {
+      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5272_internal_hallucination_probe_gated_v482.py -q -o addopts= && .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py",
+      "outcome": "passed: 100% coverage on new module"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py tests/python/test_experiment_5272_internal_hallucination_probe_gated_v482.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py tests/python/test_experiment_5272_internal_hallucination_probe_gated_v482.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: 1241 pre-existing tests lack spec references; 5272 tests include REQ-VERIFY-5272/SCENARIO-VERIFY-5272"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed/interrupted: observed test failures and a Z3 worker segmentation fault, stopped at about 14%, exit 130"
+    }
+  ]
+}
