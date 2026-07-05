@@ -2255,8 +2255,14 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     if _is_artifact_qa_lint_tests(d):
         return
     no_model_spec_required = _is_arc_live_agent_no_llm(d) or _is_log_analysis_local_timing(d)
+    # Some experiment scripts (24 in the corpus as of 2026-07-05, e.g. exp5262/exp5263) declare
+    # the field as the uppercase Python-constant-style "MODEL_SPECS" rather than lowercase
+    # "model_specs" -- both are legitimate, so recognize either casing.
     has_model_spec = no_model_spec_required or (
-        d.get("model_specs") or d.get("target_model") or d.get("models_tested")
+        d.get("model_specs")
+        or d.get("MODEL_SPECS")
+        or d.get("target_model")
+        or d.get("models_tested")
     )
     # Recognize singular (`random_seed`, `seed`) and plural
     # (`random_seeds_used`, `seeds`) forms. Multi-seed experiments
