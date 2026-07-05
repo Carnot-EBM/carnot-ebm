@@ -25313,3 +25313,86 @@ If no mandated local SOTA GGUF is available, then the same runner writes a
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5238 | Planned (`python/carnot/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`, `results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json`) | Planned (`tests/python/test_experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.py`) |
+
+### REQ-VERIFY-5259: SOTA GGUF GPU-Offload Runtime Preflight V481
+
+The repository SHALL provide Exp 5259 at
+`python/carnot/experiment_5259_sota_gguf_gpu_offload_preflight_v481.py`
+and write
+`results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json`
+without modifying `scripts/research_conductor.py`. The runner is a strict
+runtime preflight only: it SHALL decide whether downstream V481 LLM-dependent
+tasks may run with headline local SOTA GGUF models, and it SHALL NOT claim
+model quality, memory usefulness, verifier-dose uplift, or any benchmark
+improvement.
+
+The preflight SHALL record Step 0 receipts before any model load attempt:
+GPU visibility, NVIDIA driver/CUDA/runtime details, torch CUDA availability
+when importable, llama.cpp or llama-cpp-python version and origin, GGUF cache
+paths, free disk, and local resolvability for every mandated model. The
+mandated `MODEL_SPECS` are exactly:
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as `middle_moe`. Legacy tiny models MAY
+appear only as explicitly labeled `smoke_test_not_headline` CPU smoke
+receipts, never as headline readiness evidence.
+
+The runner SHALL prefer the current `cached_sota_pair()`/GGUF local-helper
+pattern for discovery and SHALL resolve GGUF files from local cache or
+project-local model directories without downloading large artifacts. For each
+locally resolved mandated model, it SHALL test GGUF file discovery, checksum
+and size, GGUF metadata/header readability, embedded vocab/tokenization via
+llama.cpp or an equivalent GGUF-path loader, minimal prompt construction, and
+a tiny deterministic generation or a dry-run load when safe. It SHALL record
+`n_gpu_layers`, offload settings, command/config, outcome, and any traceback.
+
+The implementation SHALL NOT call `AutoTokenizer.from_pretrained()` on a
+`-GGUF` repo, SHALL NOT convert GGUF models, and SHALL NOT silently substitute
+legacy transformers models for headline readiness. It SHALL emit the bare gate
+field `sota_runtime_ready=true` only when at least one mandated SOTA model
+completes a reproducible local GGUF inference or safe load path suitable for
+downstream headline experiments. Otherwise it SHALL emit
+`sota_runtime_ready=false` with the exact blocker.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`sota_runtime_ready`, `sota_runtime_ready_principle`, `model_receipts`,
+`gpu_offload_receipts`, `no_quality_claim`, and `tests_run`.
+`honest_verdict`, `inference_substrate`, `preconditions_checked`, and
+`no_quality_claim` SHALL be principle-wrapped objects. `honest_verdict.value`
+SHALL start with `complete:` or `blocked_` and state whether the SOTA runtime
+is ready. `inference_substrate.value` SHALL be
+`llama_cpp_runtime_preflight_no_quality_claim`. `no_quality_claim.value`
+SHALL be true.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal preflight verdict; starts with complete: or blocked_ and states whether the mandated SOTA GGUF runtime is ready."
+- `inference_substrate`: principle "Declares a llama.cpp runtime preflight only, preventing quality, memory, verifier-dose, or benchmark claims from being inferred."
+- `preconditions_checked`: principle "Records GPU, CUDA/runtime, llama.cpp, disk, cache, and local GGUF resolvability receipts before any headline task can run."
+- `sota_runtime_ready`: principle "Bare conductor gate for exp5260/exp5262/exp5263; true only after at least one mandated SOTA GGUF completes the local GGUF load or inference path."
+- `sota_runtime_ready_principle`: principle "Explains the exact blocker or readiness evidence used by structured gates."
+- `model_receipts`: principle "Per mandated model receipts with role, status, local path/checksum when available, command/config, outcome, and traceback on failure."
+- `gpu_offload_receipts`: principle "Driver/device/runtime/offload settings proving which GPU-offload path was attempted or why it was not safe."
+- `no_quality_claim`: principle "True guard that this artifact measures runtime readiness only and makes no model-quality, memory-usefulness, or verification-uplift claim."
+- `tests_run`: principle "Commands run to validate the preflight module and artifact contract."
+
+### SCENARIO-VERIFY-5259: Block Or Ready Through Structured Runtime Receipts
+
+Given the V481 runtime preflight task, local GPU and llama.cpp environment
+receipts, and the three mandated SOTA GGUF model IDs, when Exp 5259 runs, then
+it resolves local GGUF paths without using `AutoTokenizer` on GGUF repos,
+records metadata/tokenization/prompt/load or generation receipts per available
+model, writes the required artifact, and sets `sota_runtime_ready` to true only
+when at least one mandated model completes the local GGUF runtime path.
+
+If every mandated model is missing, a pointer file, metadata-unreadable,
+tokenizer-unloadable, or runtime-load blocked, then the same runner writes a
+`blocked_` verdict with `sota_runtime_ready=false`, preserves exact blockers
+and tracebacks, and still sets `no_quality_claim.value=true`.
+
+## Implementation Status (REQ-VERIFY-5259)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5259 | Planned (`python/carnot/experiment_5259_sota_gguf_gpu_offload_preflight_v481.py`, `results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json`) | Planned (`tests/python/test_experiment_5259_sota_gguf_gpu_offload_preflight_v481.py`) |
