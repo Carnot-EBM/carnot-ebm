@@ -85,6 +85,80 @@ If any precondition is missing, then the same artifact is written with an
 `honest_verdict.value` beginning with `blocked_`, `fixtures_count.value=0`,
 `retired_phase_d_path_reopened.value=false`, and no tiny-model headline.
 
+### REQ-VERIFY-5252: HalluHard-Style Provenance-Memory Microbench
+
+The repository shall provide an Exp 5252 local HalluHard-style microbench that
+tests whether typed provenance memory reduces repeated unsupported
+citation/support errors across turns on 10-20 local curated evidence fixtures.
+The benchmark shall first check CUDA visibility, a local CUDA-capable GGUF
+runtime, and at least one mandated cached SOTA GGUF from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If any precondition is unavailable, it shall
+write a blocked artifact and shall not substitute a tiny model for headline
+results.
+
+The benchmark shall use only local curated evidence snippets at benchmark time,
+shall compare `no_memory`, `raw_conversation_memory`, and
+`typed_provenance_memory` arms over the same question turns, and shall score
+answers with deterministic citation-support labels. The labels shall track
+unsupported claim rate, citation support rate, repeated unsupported-error rate,
+over-refusal, missed-answer cost, and leakage checks showing that gold labels
+are not injected outside intended evidence snippets or model-produced memory.
+
+The terminal artifact shall be
+`results/experiment_5252_halluhard_provenance_memory_microbench_v480.json` and
+shall include principle-annotated `honest_verdict`, `inference_substrate`,
+`model_specs`, `fixture_count`, `unsupported_claim_rate_no_memory`,
+`unsupported_claim_rate_typed_memory`, `repeated_error_delta`,
+`citation_support_delta`, `leakage_checks`, and
+`no_network_at_benchmark_time` fields. `inference_substrate.value` shall be
+`live_llm_inference_local_gguf_sota`, and `honest_verdict.value` shall begin
+with `complete:` or `blocked_` while stating whether typed provenance memory
+reduced hallucination errors on the measured microbench.
+
+Field principles:
+
+- `honest_verdict`: Terminal verdict states whether provenance memory reduced
+  unsupported citation/support errors or blocked before measurement.
+- `inference_substrate`: Declares local SOTA GGUF live inference so cached
+  scoring, external search, and tiny-model smoke paths cannot be mistaken for
+  headline evidence.
+- `model_specs`: Names the mandated model, quantization, runtime command,
+  seeds, prompt checksums, and completion checksums needed to replay the
+  microbench.
+- `fixture_count`: Bounds the HalluHard-style panel to the requested 10-20
+  local curated evidence items.
+- `unsupported_claim_rate_no_memory`: Baseline unsupported support-error rate
+  before memory intervention.
+- `unsupported_claim_rate_typed_memory`: Typed-memory unsupported support-error
+  rate on the same fixture turns.
+- `repeated_error_delta`: No-memory repeated-error rate minus typed-memory
+  repeated-error rate; positive values mean typed provenance memory reduced
+  persistent errors.
+- `citation_support_delta`: Typed-memory citation support rate minus
+  no-memory citation support rate; positive values mean citations became more
+  evidence-supported.
+- `leakage_checks`: Records local-evidence-only, gold-label visibility, and
+  typed-memory prompt checks that prevent hidden answer leakage.
+- `no_network_at_benchmark_time`: Confirms the benchmark used local curated
+  snippets and local GGUF inference without network search.
+
+### SCENARIO-VERIFY-5252: Typed Provenance Memory Reports Multi-Turn Support Delta
+
+Given CUDA, a local CUDA-capable GGUF runtime, and a mandated SOTA GGUF are
+available,
+When Exp 5252 runs over 10-20 local curated evidence fixtures,
+Then the artifact records all three arms, deterministic support labels,
+unsupported-claim rates, citation-support rates, repeated-error deltas,
+over-refusal and missed-answer costs, leakage checks, prompt checksums,
+completion checksums, and a terminal verdict that states whether typed
+provenance memory reduced hallucination errors.
+
+If any precondition is missing, then the same artifact is written with an
+`honest_verdict.value` beginning with `blocked_`, neutral numeric metrics,
+`fixture_count.value=0`, `no_network_at_benchmark_time.value=true`, and no
+tiny-model headline.
+
 ### REQ-VERIFY-2976: Intent-Preserving Trace-Aware DCCD Repair Protocol
 
 The repository shall provide a deterministic Exp 2976 protocol builder that
