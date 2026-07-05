@@ -1,0 +1,302 @@
+{
+  "activation_milestone": "2026.07.481",
+  "activation_ready": true,
+  "activation_ready_principle": "Bare boolean confirming .481 can proceed without overwriting research-roadmap.yaml.",
+  "archived_milestone": "2026.07.480",
+  "closeout_fact_failures": [],
+  "closeout_facts": {
+    "arc_level_delta": 0,
+    "arc_patch_retired": true,
+    "artifact_normalizer_ready": true,
+    "exp5249_runtime_blocked": true,
+    "exp5250_gated_skipped": true,
+    "gap4_final_decision": "salvaged_clean_null",
+    "halluhard_clean_null": true,
+    "hardware_no_speedup": true,
+    "kan_bounded_positive": true,
+    "token_guard_harmful": true
+  },
+  "commands_run": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/validate_prior_failures.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/audit_roadmap_gates.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 3,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 12,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 12,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}"
+    }
+  ],
+  "duration_s": 15.636723,
+  "exclusions_checked": {
+    "principle": "The transition must run or explicitly record available exclusion/prior-failure checks.",
+    "value": true
+  },
+  "experiment": "experiment_5257_archive_480_activate_481",
+  "experiment_id": "exp5257-archive-480-activate-481",
+  "failed_preconditions": [],
+  "field_principles": {
+    "activation_ready": "Bare boolean confirming .481 can proceed without overwriting research-roadmap.yaml.",
+    "commands_run": "Every validation command must be recorded with pass/fail outcome.",
+    "exclusions_checked": "The transition must run or explicitly record available exclusion/prior-failure checks.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .480 was archived and .481 is activation-ready.",
+    "inference_substrate": "cached_fixture_replay_no_llm because Exp5257 only reads existing artifacts and local records.",
+    "milestone_archived": "Bare boolean confirming the .480 closeout is represented in durable research records.",
+    "ops_docs_updated": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "research_complete_updated": "True only if this workflow appended or reconciled research-complete.yaml; false when .480 was already present.",
+    "roadmap_activation_check": "No roadmap overwrite is allowed; activated must remain false."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .480 was archived and .481 is activation-ready.",
+    "value": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used."
+  },
+  "inference_substrate": {
+    "principle": "cached_fixture_replay_no_llm because Exp5257 only reads existing artifacts and local records.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "milestone_archived": true,
+  "milestone_archived_principle": "Bare boolean confirming the .480 closeout is represented in durable research records.",
+  "ops_docs_updated": {
+    "principle": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "value": false
+  },
+  "random_seed": 5257,
+  "reproducibility_checksum": "sha256:8a48b8e2633acb133791fdbae872ab9c9a66cf71d82894da16867caeca5c4290",
+  "research_complete_check": {
+    "had_2026_07_480_before": true,
+    "has_2026_07_480_after": true,
+    "path": "research-complete.yaml",
+    "sha256": "sha256:af94de57f4af3d383dcd52c7f4ba831b2285623722c98daada9a7cf2252a2e00",
+    "updated": false
+  },
+  "research_complete_updated": {
+    "principle": "True only if this workflow appended or reconciled research-complete.yaml; false when .480 was already present.",
+    "value": false
+  },
+  "result_path": "results/experiment_5257_archive_480_activate_481.json",
+  "roadmap_activation_check": {
+    "activated": false,
+    "activation_ready_without_overwrite": true,
+    "active_roadmap_already_481": true,
+    "active_roadmap_milestone": "2026.07.481",
+    "active_roadmap_missing_task_prefixes": [],
+    "active_roadmap_modified": false,
+    "active_roadmap_sha256": "sha256:8d417c9fd992bb4159594144e408fdd041ed984bb6ef550390a8f055b2b899ec",
+    "active_roadmap_task_ids": [
+      "exp5257-archive-480-activate-481",
+      "exp5258-sota-refresh-v481",
+      "exp5259-sota-gguf-gpu-offload-preflight-v481",
+      "exp5260-cross-model-typed-memory-retry-v481",
+      "exp5261-typed-memory-interference-audit-v481",
+      "exp5262-solver-grounded-constraint-extraction-v481",
+      "exp5263-neuron-attention-energy-hallucination-probe-v481",
+      "exp5264-verifier-dose-scheduler-replay-v481",
+      "exp5265-kan-certificate-explanation-refinement-v481",
+      "exp5266-hardware-thermodynamic-schedule-boundary-v481",
+      "exp5267-artifact-normalizer-template-adoption-v481",
+      "exp5268-capstone-v481"
+    ],
+    "principle": "No roadmap overwrite is allowed; activated must remain false.",
+    "roadmap_next_milestone": null,
+    "roadmap_next_missing_task_prefixes": [],
+    "roadmap_next_present": false,
+    "roadmap_next_sha256": null,
+    "roadmap_next_task_ids": [],
+    "vnext_names_2026_07_481": true,
+    "vnext_present": true
+  },
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5257_archive_480_activate_481.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5245,
+      "honest_verdict": "blocked_archive_479_activate_480: .479 archived but .480 activation-ready verification is blocked by the failed/interrupted full tests/python run; no roadmap overwrite performed.",
+      "loadable": true,
+      "relative_path": "results/experiment_5245_archive_479_activate_480.json",
+      "sha256": "sha256:1df6a1e43296ea010007a9691045e37ce7fe744ca2e40b03a20c3ab0640311b5",
+      "task_id": "exp5245-archive-479-activate-480"
+    },
+    {
+      "error": "missing",
+      "exists": false,
+      "experiment_number": 5246,
+      "honest_verdict": "",
+      "loadable": false,
+      "relative_path": "results/experiment_5246_sota_refresh_v480.json",
+      "sha256": null,
+      "task_id": "exp5246-sota-refresh-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5247,
+      "honest_verdict": "complete: strict artifact schema/receipt normalizer ready for gated consumers; safe repairs are shape-only and missing evidence remains blocked.",
+      "loadable": true,
+      "relative_path": "results/experiment_5247_slot_artifact_normalizer_v480.json",
+      "sha256": "sha256:1ed8a7809f4c5da66869f787d3736d9f3f43456ce8fe4a68c3b6ca5b1079d434",
+      "task_id": "exp5247-slot-artifact-normalizer-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5248,
+      "honest_verdict": "complete: GAP-4 final decision salvaged_clean_null; frozen validation preserves wins=0, losses=0, ties=120, and all claim-critical receipts are present after safe normalization.",
+      "loadable": true,
+      "relative_path": "results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json",
+      "sha256": "sha256:fbdc642393f71f8b2859b99687c7fc3906363eeaa99b57185286046b3f5517bc",
+      "task_id": "exp5248-gap4-receipt-salvage-or-retire-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5249,
+      "honest_verdict": "blocked_precondition_cross_model_memory_not_measured: cross-model memory usefulness not measured; blockers=blocked_llama_cpp_gpu_offload",
+      "loadable": true,
+      "relative_path": "results/experiment_5249_cross_model_typed_memory_transfer_v480.json",
+      "sha256": "sha256:65efeef439cf00e25d7a7a72af1137eaae390ae521ac0932e8de00a5eb0641e4",
+      "task_id": "exp5249-cross-model-typed-memory-transfer-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5250,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "relative_path": "results/experiment_5250_verifier_dose_scheduler_v480.json",
+      "sha256": "sha256:df54cd7fc97bf094e8cf0f7a8c33b4a5daf3c4f74f51ed12f68fc310239f7003",
+      "task_id": "exp5250-verifier-dose-scheduler-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5251,
+      "honest_verdict": "complete: fragment self-checking was harmful on this bounded panel",
+      "loadable": true,
+      "relative_path": "results/experiment_5251_token_guard_carnot_pilot_v480.json",
+      "sha256": "sha256:d0918a87c490b8a0fb5d725f574572d2ad9055d694937f5b39b0192e77035833",
+      "task_id": "exp5251-token-guard-carnot-pilot-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5252,
+      "honest_verdict": "complete: typed provenance memory did not reduce hallucination errors on this local microbench",
+      "loadable": true,
+      "relative_path": "results/experiment_5252_halluhard_provenance_memory_microbench_v480.json",
+      "sha256": "sha256:7f201cf0ca24dcfab7f994c377736f2d3ffd4c56d2c05b1100b289dd82a5027e",
+      "task_id": "exp5252-halluhard-provenance-memory-microbench-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5253,
+      "honest_verdict": "complete: level_delta=0 patch_decision=retire_current_provenance_patch solve_provenance=live_agent_self_discovery; clean_zero_delta_no_level_banked.",
+      "loadable": true,
+      "relative_path": "results/experiment_5253_arc_live_patch_clean_receipts_v480.json",
+      "sha256": "sha256:ee75bdb2ba57be9b895427732f671d5afe4d099949a0ac308ead89bd726e1e4c",
+      "task_id": "exp5253-arc-live-patch-clean-receipts-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5254,
+      "honest_verdict": "complete: bounded two-variable convex-envelope certificate prototype certified one true upper-bound property and rejected one false threshold; scope is additive quadratic univariate components on [-0.5, 0.75]^2 only",
+      "loadable": true,
+      "relative_path": "results/experiment_5254_kan_convex_envelope_certificate_v480.json",
+      "sha256": "sha256:47f9e5f2f48450f309d0249f12f6d2b3b41ef4957a700f0147b0d7614f24b0f3",
+      "task_id": "exp5254-kan-convex-envelope-certificate-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5255,
+      "honest_verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "sha256": "sha256:ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7",
+      "task_id": "exp5255-hardware-continuity-pkit-boundary-v480"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5256,
+      "honest_verdict": "complete: .480 capstone closed with normalizer ready; GAP-4 salvaged clean null; cross-model memory and verifier dose blocked; Token-Guard harmful; HalluHard clean null; ARC delta 0 with patch retired; KAN bounded positive; hardware no-speedup.",
+      "loadable": true,
+      "relative_path": "results/experiment_5256_capstone_v480.json",
+      "sha256": "sha256:f79687bbf0ce3925c6ce22391e710849bcf9f2d8360602a717bc1bc7ae56c2c9",
+      "task_id": "exp5256-capstone-v480"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:af94de57f4af3d383dcd52c7f4ba831b2285623722c98daada9a7cf2252a2e00"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:8d417c9fd992bb4159594144e408fdd041ed984bb6ef550390a8f055b2b899ec"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:af8d013e435979b8951638ee586657f0b4cd53f4fe0ec6678fbc8f4e187f9678"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:ce7450f2eeb5a751d4421b2ef0ade0d7e5baab71171ba43173f56575bb7e6c49"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:8abe45b6265150e2d6f8a182e4a3042e89fc3d5e31aa8d42dc33f0de9740c500"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:3970920d71a09cacedea6cfffb807db34a3356b6097cad3be23c92fb0724797d"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5257",
+    "SCENARIO-REPORT-5257",
+    "SCENARIO-REPORT-5257-BLOCKED-CLOSEOUT"
+  ]
+}
