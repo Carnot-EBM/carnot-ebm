@@ -1,0 +1,482 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records mandated local SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and headline inclusion.",
+    "value": {
+      "flagship_dense": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "headline_included": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "required": true,
+        "role": "flagship_dense",
+        "runtime_ready": true,
+        "runtime_status": "local_file_ready",
+        "slot": "flagship_dense"
+      },
+      "flagship_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "headline_included": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quantization": "Q4_K_M",
+        "required": true,
+        "role": "flagship_moe",
+        "runtime_ready": true,
+        "runtime_status": "local_file_ready",
+        "slot": "flagship_moe"
+      },
+      "middle_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "headline_included": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "required": false,
+        "role": "optional_middle_moe_third_family_check",
+        "runtime_ready": true,
+        "runtime_status": "local_file_ready",
+        "slot": "middle_moe"
+      }
+    }
+  },
+  "aggregate_metrics": {
+    "baseline_validity": 0.5,
+    "counterexample_agreement_rate": 0.0,
+    "improved": false,
+    "malformed_outputs": 0,
+    "malformed_rate": 0.0,
+    "prior_v481_validity": 0.25,
+    "retry_outcome": "unmeasured",
+    "rows_total": 0,
+    "satisfiable_label_accuracy": 0.0,
+    "schema_valid_outputs": 0,
+    "solver_invalid_constraints": 0,
+    "unsafe_false_accepts": 0,
+    "validity_rate": 0.0
+  },
+  "baseline_validity": {
+    "principle": "Baseline validity from the rebuilt Exp 5273 fixture controls used as the comparison floor.",
+    "value": 0.5
+  },
+  "blockers": [
+    "llama_cpp_gpu_offload_unavailable"
+  ],
+  "commands_run": [
+    {
+      "command": ".venv/bin/python -m carnot.experiment_5274_solver_constraint_extraction_retry_gated_v482 --output results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json",
+      "outcome": "completed module invocation"
+    }
+  ],
+  "duration_s": 0.143891,
+  "external_text_scorer_used": false,
+  "extraction_results": [],
+  "fixture_baselines": {
+    "deterministic_shuffled_reference": {
+      "counterexamples_found": 4,
+      "false_accepts": 2,
+      "rows": [
+        {
+          "assignment": {
+            "d": 4,
+            "e": 5,
+            "s": 1
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "fixed_schedule_window"
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "gold_assignment": {
+              "a": 2,
+              "b": 3
+            },
+            "principle": "Reference SAT witness shows the candidate overconstrained a satisfiable fixture."
+          },
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "even_and_odd"
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "gold_assignment": {
+              "d": 4,
+              "e": 5,
+              "s": 1
+            },
+            "principle": "Reference SAT witness shows the candidate overconstrained a satisfiable fixture."
+          },
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "too_large_sum"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "even_and_odd",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "bounded_gap_conflict"
+        },
+        {
+          "assignment": {
+            "x": 4
+          },
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {
+              "x": 4
+            }
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "too_large_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "single_even_high"
+        },
+        {
+          "assignment": {
+            "a": 2,
+            "b": 3
+          },
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {
+              "a": 2,
+              "b": 3
+            }
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "small_pair_sum"
+        }
+      ],
+      "validity_rate": 0.3333333333333333
+    },
+    "empty_extraction": {
+      "counterexamples_found": 3,
+      "false_accepts": 3,
+      "rows": [
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "even_and_odd",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "too_large_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        }
+      ],
+      "validity_rate": 0.5
+    },
+    "reference_copy": {
+      "counterexamples_found": 0,
+      "false_accepts": 0,
+      "rows": [
+        {
+          "assignment": {
+            "x": 4
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "single_even_high"
+        },
+        {
+          "assignment": {
+            "a": 2,
+            "b": 3
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "small_pair_sum"
+        },
+        {
+          "assignment": {
+            "d": 4,
+            "e": 5,
+            "s": 1
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "fixed_schedule_window"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "even_and_odd",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "even_and_odd"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "too_large_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "too_large_sum"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "bounded_gap_conflict"
+        }
+      ],
+      "validity_rate": 1.0
+    }
+  },
+  "fixture_checksums": {
+    "principle": "Carries Exp 5273 fixture and per-prompt/output checksums so extraction scoring cannot silently drift from the gated fixture.",
+    "value": {
+      "prompt_output_checksums": {},
+      "source_exp5273_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5273_solver_fixture_rebuild_v482.json",
+      "source_fixture_checksums": {
+        "bounded_gap_conflict": {
+          "counterexamples_sha256": "169d5c530971e1ab46b919ef9ed98b59bde0aef9d20dff28ec70cc742baf5358",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "1df9eba8ac55388e114f871c86d812a773da0e2f1928792bbe6e37c00291f4b6",
+          "reference_encoding_sha256": "0945504d462b7cb24854f6eae67c545d43ead83a4dd7aed39540f525696f8d4c"
+        },
+        "even_and_odd": {
+          "counterexamples_sha256": "74f74ea2bf6c6c1c659167508f0a0ceaeaed34a341381ef249d24be2d77e766e",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "3f67cb74dba7e81d0aa34a9b036309507bb8af5be5179ed2ffd7ac8f9f74b66c",
+          "reference_encoding_sha256": "b5f9cd277f4e4ecf7bcf6cae1c19dfefd8fdd496d4c71e2c8bff203ddf6a3417"
+        },
+        "fixed_schedule_window": {
+          "counterexamples_sha256": "f865e5785595d4c376363fe3935a2a2e9accdeafa01b247baa89bd70c16c6f60",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "ad41e38fa9be478430c0e4f5e54a7bc9cf3f3a5e38e821e128563e76fcadb984",
+          "reference_encoding_sha256": "219156f732271689ba4529d473ce54f21e221e1bc8f9aa2071ff4a84d0a7b5ce"
+        },
+        "single_even_high": {
+          "counterexamples_sha256": "4dad774562f2429a68ae35e9bffc8e591623a81708a190023ee8d0eccc7b372c",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "8c348cdc0cf355cbb252e9084eb8ef508f07fe77e4cd12943e37c11f02e7be4c",
+          "reference_encoding_sha256": "09b7a1a6169ce48ce4f2fea56f08418a85f44122d379a30e6100bfd48ec5de72"
+        },
+        "small_pair_sum": {
+          "counterexamples_sha256": "f835e3329254d0ac099b196f063f996eebb8211400c9e94781aeab2789790f09",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "fbf7f47ec6e9852a3e3ae84317463949fcb5454efccc6c4047f64f67b48d86ec",
+          "reference_encoding_sha256": "ae0eaebb5a56a8497258e062e6990accb7fb611d3e6b34436513d16a05b1b146"
+        },
+        "too_large_sum": {
+          "counterexamples_sha256": "96e466abb5afb9ae8af82c3a51ce9471b538a0861f1ace451ae4347737f8eafb",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "90557912d097dc58e2a8049b2f3184d5e9e4fd2dc670e63fb31bed9644b56aa4",
+          "reference_encoding_sha256": "b895e8ae41dfdbea8555b22ff77c08f8837cd60841dcf7a008663bc67afe1956"
+        }
+      },
+      "source_fixture_set_sha256": "7ecb3cd38e0b17b174cb185078b69008d2bc305a8ccebabdbda68c649f233be6"
+    }
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5274 verdict; starts with complete: or blocked_ and states whether the retry improved, nulled, regressed, or was unmeasured.",
+    "value": "blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured"
+  },
+  "inference_substrate": {
+    "principle": "Declares live local SOTA GGUF inference plus deterministic solver scoring over the rebuilt Exp 5273 fixture.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "malformed_rate": {
+    "principle": "Fraction of model-fixture rows rejected by schema validation before solver scoring.",
+    "value": 0.0
+  },
+  "preconditions_checked": {
+    "principle": "Records Exp 5273 fixture readiness, local mandated GGUF availability, deterministic solver availability, and exclusion of external scorers before extraction.",
+    "value": {
+      "blockers": [
+        "llama_cpp_gpu_offload_unavailable"
+      ],
+      "deterministic_solver": "z3",
+      "deterministic_solver_available": true,
+      "exp5273_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5273_solver_fixture_rebuild_v482.json",
+      "exp5273_solver_fixture_ready": true,
+      "external_text_scorers_used": false,
+      "headline_model_slots": [
+        "flagship_moe",
+        "flagship_dense",
+        "middle_moe"
+      ],
+      "live_runtime": {
+        "llama_cpp_gpu_offload_supported": false,
+        "llama_cpp_import_ok": true,
+        "llama_cpp_version": "0.3.29",
+        "principle": "Large mandated SOTA GGUF extraction must not silently fall back to multi-hour CPU decoding when GPU offload is unavailable.",
+        "required": true
+      },
+      "required_headline_models_available": true
+    }
+  },
+  "prior_v481": {
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+    "validity_rate": 0.25
+  },
+  "retired_solver_feedback_scope_reopened": false,
+  "schema": "carnot.experiment_5274.solver_constraint_extraction_retry_gated.v482",
+  "solver_extraction_improved": {
+    "principle": "True only when schema-valid solver-scored extraction beats the rebuilt baseline and prior V481 validity without unsafe false accepts.",
+    "value": false
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5274",
+    "SCENARIO-VERIFY-5274"
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Count of expected-UNSAT fixture rows whose schema-valid generated constraints were satisfiable.",
+    "value": 0
+  },
+  "validity_rate": {
+    "principle": "Fraction of model-fixture rows whose schema-valid executable constraints matched the deterministic solver label.",
+    "value": 0.0
+  }
+}
