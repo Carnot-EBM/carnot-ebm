@@ -10332,3 +10332,4 @@ web search: |
 | 2026-07-05 08:55 UTC | PHASE 1 continuous self-learning -- typed-memory r | OK | 87 passed, 1 warning in 8.65s |
 | 2026-07-05 09:15 UTC | PHASE 2 gated on exp5259 sota_runtime_ready -- sol | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-05 09:46 UTC | PHASE 2 gated on exp5259 sota_runtime_ready -- neu | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-05 10:01 UTC | PHASE 2 replay -- verifier-dose scheduler without  | OK | 88 passed, 1 warning in 10.32s |
