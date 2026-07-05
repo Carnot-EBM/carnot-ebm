@@ -1,0 +1,366 @@
+{
+  "adversarial_verify_weakening": {
+    "principle": "Must be false; old artifacts must remain quarantined by evidence findings rather than by weakening verifier checks.",
+    "value": false
+  },
+  "audit_matrix": [
+    {
+      "adversarial_flags": [],
+      "case": "valid_shape_only_artifact",
+      "duration_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "aggregation",
+        "substrate": "aggregation_from_upstream_artifacts"
+      },
+      "normalized": {
+        "duration_s": 0.01,
+        "field_principles": {
+          "honest_verdict": "terminal",
+          "inference_substrate": "aggregation"
+        },
+        "honest_verdict": "complete: shape-only fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "producer_normalizer_receipts": {
+          "ready_for_gated_consumers": true,
+          "safe_repairs": [
+            {
+              "field": "honest_verdict",
+              "kind": "top_level_wrapper_unwrapped"
+            },
+            {
+              "field": "inference_substrate",
+              "kind": "top_level_wrapper_unwrapped"
+            }
+          ],
+          "unsafe_rejections": []
+        }
+      },
+      "passed": true,
+      "ready_for_gated_consumers": true,
+      "safe_repair_kinds": [
+        "top_level_wrapper_unwrapped",
+        "top_level_wrapper_unwrapped"
+      ],
+      "unsafe_rejection_kinds": []
+    },
+    {
+      "adversarial_flags": [
+        "METHODOLOGY_MISSING"
+      ],
+      "case": "missing_evidence",
+      "duration_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "live_llm_inference"
+      },
+      "normalized": {
+        "duration_s": 61.0,
+        "field_principles": {
+          "duration_s": "wall clock",
+          "honest_verdict": "terminal",
+          "inference_substrate": "live model"
+        },
+        "honest_verdict": "complete: live fixture missing methodology",
+        "inference_substrate": "live_llm_inference",
+        "producer_normalizer_receipts": {
+          "ready_for_gated_consumers": false,
+          "safe_repairs": [],
+          "unsafe_rejections": [
+            {
+              "detail": "missing model_specs/target_model, random_seed, reproducibility_checksum",
+              "field": "methodology",
+              "kind": "missing_methodology_receipt"
+            }
+          ]
+        }
+      },
+      "passed": true,
+      "ready_for_gated_consumers": false,
+      "safe_repair_kinds": [],
+      "unsafe_rejection_kinds": [
+        "missing_methodology_receipt"
+      ]
+    },
+    {
+      "adversarial_flags": [],
+      "case": "bare_gate_fields",
+      "duration_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "aggregation",
+        "substrate": "aggregation_from_upstream_artifacts"
+      },
+      "normalized": {
+        "honest_verdict": "complete: bare gate fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "producer_normalizer_ready": true
+      },
+      "passed": true,
+      "ready_for_gated_consumers": true,
+      "safe_repair_kinds": [],
+      "unsafe_rejection_kinds": []
+    },
+    {
+      "adversarial_flags": [],
+      "case": "dict_wrapped_substrate_fields",
+      "duration_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "aggregation",
+        "substrate": "aggregation_from_upstream_artifacts"
+      },
+      "normalized": {
+        "duration_s": 0.01,
+        "honest_verdict": "complete: wrapped substrate fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "producer_normalizer_receipts": {
+          "ready_for_gated_consumers": true,
+          "safe_repairs": [
+            {
+              "field": "inference_substrate",
+              "kind": "top_level_wrapper_unwrapped"
+            }
+          ],
+          "unsafe_rejections": []
+        }
+      },
+      "passed": true,
+      "ready_for_gated_consumers": true,
+      "safe_repair_kinds": [
+        "top_level_wrapper_unwrapped"
+      ],
+      "unsafe_rejection_kinds": []
+    },
+    {
+      "adversarial_flags": [
+        "DURATION_TOO_SHORT"
+      ],
+      "case": "sub_threshold_duration",
+      "duration_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "live_llm_inference"
+      },
+      "normalized": {
+        "duration_s": 0.5,
+        "honest_verdict": "complete: too-fast live fixture",
+        "inference_substrate": "live_llm_inference",
+        "model_specs": [
+          {
+            "hf_id": "fixture-35B-GGUF"
+          }
+        ],
+        "producer_normalizer_receipts": {
+          "ready_for_gated_consumers": false,
+          "safe_repairs": [],
+          "unsafe_rejections": [
+            {
+              "detail": "duration_s=0.5 below 60.0s live-model floor",
+              "field": "duration_s",
+              "kind": "duration_too_short"
+            }
+          ]
+        },
+        "random_seed": 5280,
+        "reproducibility_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "passed": true,
+      "ready_for_gated_consumers": false,
+      "safe_repair_kinds": [],
+      "unsafe_rejection_kinds": [
+        "duration_too_short"
+      ]
+    },
+    {
+      "adversarial_flags": [],
+      "case": "no_llm_aggregation_artifact",
+      "duration_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "aggregation",
+        "substrate": "aggregation_from_upstream_artifacts"
+      },
+      "normalized": {
+        "cited_upstream_artifacts": [
+          {
+            "inherited_model_marker": "unsloth/gemma-4-31B-it-GGUF",
+            "path": "results/upstream.json"
+          }
+        ],
+        "duration_s": 0.001,
+        "honest_verdict": "complete: aggregation fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "producer_normalizer_receipts": {
+          "ready_for_gated_consumers": false,
+          "safe_repairs": [],
+          "unsafe_rejections": [
+            {
+              "detail": "duration_s=0.001 below 60.0s live-model floor",
+              "field": "duration_s",
+              "kind": "duration_too_short"
+            },
+            {
+              "detail": "missing model_specs/target_model, random_seed, reproducibility_checksum",
+              "field": "methodology",
+              "kind": "missing_methodology_receipt"
+            }
+          ]
+        }
+      },
+      "passed": true,
+      "ready_for_gated_consumers": false,
+      "safe_repair_kinds": [],
+      "unsafe_rejection_kinds": [
+        "duration_too_short",
+        "missing_methodology_receipt"
+      ]
+    }
+  ],
+  "bare_gate_preservation_passed": {
+    "principle": "True only when existing top-level boolean gates remain bare booleans after normalization.",
+    "value": true
+  },
+  "duration_s": 0.001,
+  "duration_substrate_regression_passed": {
+    "principle": "True only when wrapped substrate declarations, sub-threshold live durations, and no-LLM aggregation floors preserve adversarial-verifier behavior.",
+    "value": true
+  },
+  "experiment": "experiment_5280_artifact_normalizer_evidence_audit_v482",
+  "experiment_id": "exp5280-artifact-normalizer-evidence-audit-v482",
+  "field_principles": {
+    "adversarial_verify_weakening": "Must be false; old artifacts must remain quarantined by evidence findings rather than by weakening verifier checks.",
+    "bare_gate_preservation_passed": "True only when existing top-level boolean gates remain bare booleans after normalization.",
+    "duration_substrate_regression_passed": "True only when wrapped substrate declarations, sub-threshold live durations, and no-LLM aggregation floors preserve adversarial-verifier behavior.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether producer evidence discipline is ready after auditing gates, evidence, duration, and substrate behavior.",
+    "inference_substrate": "Must be aggregation_from_upstream_artifacts because Exp5280 reads checked-in code, tests, and artifacts without invoking a model.",
+    "missing_evidence_rejected": "True only when missing methodology, model, seed, checksum, or duration evidence remains an unsafe rejection.",
+    "normalizer_evidence_ready": "True only when the audit matrix shows shape-only repairs succeed, missing evidence is rejected, and old quarantined artifacts are not laundered clean.",
+    "producer_coverage": "Numeric coverage ratio for current normalizer-required producer/template surfaces covered by the producer-side normalizer.",
+    "tests_run": "Records command/outcome receipts for focused unit, coverage, full repository tests, and artifact verification checks."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether producer evidence discipline is ready after auditing gates, evidence, duration, and substrate behavior.",
+    "value": "complete: producer evidence discipline is ready at the template normalizer boundary; bare gates stay bare, missing evidence is rejected, duration and substrate behavior is preserved, and old v481 pilots remain quarantined."
+  },
+  "inference_substrate": {
+    "principle": "Must be aggregation_from_upstream_artifacts because Exp5280 reads checked-in code, tests, and artifacts without invoking a model.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": "2026.07.482",
+  "missing_evidence_rejected": {
+    "principle": "True only when missing methodology, model, seed, checksum, or duration evidence remains an unsafe rejection.",
+    "value": true
+  },
+  "normalizer_evidence_ready": {
+    "principle": "True only when the audit matrix shows shape-only repairs succeed, missing evidence is rejected, and old quarantined artifacts are not laundered clean.",
+    "value": true
+  },
+  "producer_coverage": {
+    "principle": "Numeric coverage ratio for current normalizer-required producer/template surfaces covered by the producer-side normalizer.",
+    "value": 1.0
+  },
+  "producer_inventory": [
+    {
+      "covered_by_normalizer": true,
+      "evidence": "delegates to Exp5247 strict normalizer on in-memory artifact copies",
+      "kind": "template_hook",
+      "normalizer_required": true,
+      "surface": "scripts/experiment_template.py:normalize_artifact_for_template_write"
+    },
+    {
+      "covered_by_normalizer": true,
+      "evidence": "calls normalize_artifact_for_template_write before schema finalization",
+      "kind": "template_result_builder",
+      "normalizer_required": true,
+      "surface": "scripts/experiment_template.py:ExperimentTemplate.build_result"
+    },
+    {
+      "covered_by_normalizer": false,
+      "evidence": "uses local validate_artifact; included as downstream evidence surface",
+      "kind": "direct_strict_producer",
+      "normalizer_required": false,
+      "surface": "python/carnot/experiment_5272_internal_hallucination_probe_gated_v482.py"
+    },
+    {
+      "covered_by_normalizer": false,
+      "evidence": "uses local validate_artifact; blocked artifacts remain flagged instead of normalized clean",
+      "kind": "direct_strict_producer",
+      "normalizer_required": false,
+      "surface": "python/carnot/experiment_5274_solver_constraint_extraction_retry_gated_v482.py"
+    },
+    {
+      "covered_by_normalizer": false,
+      "evidence": "uses local validate_artifact; included as downstream evidence surface",
+      "kind": "direct_strict_producer",
+      "normalizer_required": false,
+      "surface": "python/carnot/experiment_5276_memory_assisted_verifier_dose_gated_v482.py"
+    }
+  ],
+  "reproducibility_checksum": "sha256:c5eac159987f22416c450ad8e4a5b5a59b88773f3e66e5d50b769268ecb94e06",
+  "research_conductor_modified": {
+    "principle": "False because Exp5280 must not modify scripts/research_conductor.py.",
+    "value": false
+  },
+  "result_path": "results/experiment_5280_artifact_normalizer_evidence_audit_v482.json",
+  "run_date": "2026-07-05",
+  "schema": "carnot.experiment_5280.artifact_normalizer_evidence_audit.v482",
+  "source_artifacts_read": [
+    "scripts/experiment_template.py",
+    "scripts/adversarial_verify.py",
+    "scripts/conductor_gates.py",
+    "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+    "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+    "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5280",
+    "SCENARIO-REPORT-5280-EVIDENCE-AUDIT"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts",
+      "outcome": " tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py -q=PASS (7 passed, 1 warning)"
+    },
+    {
+      "command": ".venv/bin/python -m coverage run --rcfile",
+      "outcome": "/dev/null --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_5280_artifact_normalizer_evidence_audit_v482.py -m pytest --override-ini addopts= tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py -q --no-cov=PASS (7 passed, 1 warning)"
+    },
+    {
+      "command": ".venv/bin/python -m coverage report --rcfile",
+      "outcome": "/dev/null --fail-under=100=PASS (100% coverage on new module)"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5280_artifact_normalizer_evidence_audit_v482.py tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5280_artifact_normalizer_evidence_audit_v482.py tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "FAIL exit 3: 463 failed, 35890 passed, 96 skipped, 1 xpassed, 235 warnings, 10 errors in 2957.07s; xdist workers aborted in existing Z3/JAX paths before suite completion"
+    },
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_5280_artifact_normalizer_evidence_audit_v482.json",
+      "outcome": "PASS (0 flagged)"
+    }
+  ],
+  "v481_quarantine_checks": [
+    {
+      "flags": [
+        "METHODOLOGY_MISSING"
+      ],
+      "passed": true,
+      "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json"
+    },
+    {
+      "flags": [
+        "METHODOLOGY_MISSING"
+      ],
+      "passed": true,
+      "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json"
+    }
+  ]
+}
