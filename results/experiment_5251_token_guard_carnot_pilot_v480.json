@@ -1,0 +1,1577 @@
+{
+  "accuracy_change": {
+    "principle": "Accuracy guards against reducing unsupported claims by damaging answer correctness.",
+    "value": -0.25
+  },
+  "baseline_accuracy": 1.0,
+  "baseline_deterministic_violations": 0,
+  "baseline_unsupported_claims": 0,
+  "consumer_recommendation": {
+    "principle": "Converts the measured delta into keep, retire, or redesign guidance.",
+    "value": "redesign_or_retire: fragment gate worsened at least one primary metric"
+  },
+  "deterministic_violation_delta": {
+    "principle": "Secondary metric: gated deterministic verifier violations minus no-gate violations.",
+    "value": 4.0
+  },
+  "duration_s": 491.125251,
+  "experiment": "experiment_5251_token_guard_carnot_pilot_v480",
+  "false_accepts": {
+    "principle": "Counts accepted fragments that later led to deterministic final violations.",
+    "value": 0
+  },
+  "finished_at": "2026-07-05T02:12:22Z",
+  "fixtures_count": {
+    "principle": "Bounds the pilot to the requested existing deterministic fixture panel.",
+    "value": 8
+  },
+  "gated_accuracy": 0.75,
+  "gated_deterministic_violations": 4,
+  "gated_unsupported_claims": 1,
+  "honest_verdict": {
+    "principle": "The terminal value must say whether fragment self-checking helped, was null, was harmful, or blocked before inference.",
+    "value": "complete: fragment self-checking was harmful on this bounded panel"
+  },
+  "inference_substrate": {
+    "principle": "Declares that this artifact used local SOTA GGUF inference rather than cached candidate scoring or external text scoring.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "model_specs": {
+    "principle": "Names the exact mandated model, quantization, runtime, seed, and hashes so the live inference claim is replayable.",
+    "value": {
+      "completion_checksums": [
+        "c5844ee8f3a153b0",
+        "5c4abb634c7f3644",
+        "5c4abb634c7f3644",
+        "f8074a5574e42c41",
+        "8a33dbf8a5254e7b",
+        "abca839fabd26267",
+        "bde814a4d7f76bf7",
+        "b2f98ee4e55342f1",
+        "f0e415bcbc1067d3",
+        "108ca1735ec57749",
+        "108ca1735ec57749",
+        "ad6c12fd29f80f73",
+        "4b83afe5b38abb9c",
+        "1033ad96b480819e",
+        "05fe4950c7d12676",
+        "761e40de79cedda8",
+        "675a0dae5f984a5c",
+        "e2e8e680d47c4009",
+        "9cf5cbe0b27fbe07",
+        "c77ac882f7536daf",
+        "976965d16e9f69e6",
+        "976965d16e9f69e6",
+        "6cd61c6da1ba573a",
+        "fdea482afdb80975",
+        "c22f9c1bad32db22",
+        "9203627d5f1f2d9c",
+        "50cac850209bd886",
+        "589fdfe20ad915a6",
+        "7d361f97876df31e",
+        "1eb33a45bb899a49"
+      ],
+      "headline_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "prompt_checksums": [
+        "9e0f84b5119bcdeb",
+        "50d8c56ec14c7859",
+        "5934898cf64b550a",
+        "7f319eeb4a2e32e3",
+        "3112bb4c74519960",
+        "abc30e04dbbdfae1",
+        "c61059a8f8537c6c",
+        "1d37821d0bb7df2f",
+        "78dedcb002d72da3",
+        "46e700f0c8538e41",
+        "f88919d8a8434ad2",
+        "573e522af975fdf0",
+        "c1c68a579a32ab7e",
+        "ded754853b284d31",
+        "238529a4c28f830a",
+        "a75d5b19ea343a33",
+        "7449d9afcb0086c6",
+        "19d7c1702494496e",
+        "11a2ae393b958f00",
+        "e413425030ea4c6f",
+        "d3997700419af578",
+        "a979edd2e40bee10",
+        "e21861d469648b32",
+        "0c56230893abfefb",
+        "27fe3bbf2f64caa2",
+        "37f57e47e40dbdf0",
+        "bc924194e1866a04",
+        "989c36d92ef65ce6",
+        "cb4a0c77c2319d89",
+        "e4427632114cbf36"
+      ],
+      "quantization": "UD-Q4_K_M",
+      "runtime_command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "-c",
+        "1536",
+        "-no-cnv",
+        "--no-display-prompt",
+        "--simple-io"
+      ],
+      "seed": 5251
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "torch_cuda_devices=2",
+      "resource": "cuda_gpu"
+    },
+    {
+      "available": true,
+      "cuda_linked": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+      "resource": "local_gguf_runtime"
+    },
+    {
+      "available": true,
+      "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "mandated_sota_gguf"
+    }
+  ],
+  "random_seed": 5251,
+  "regeneration_count": {
+    "principle": "Measures how often the fragment gate actually exercised regeneration.",
+    "value": 6
+  },
+  "reproducibility_checksum": "7a86129497a206e2",
+  "result_path": "results/experiment_5251_token_guard_carnot_pilot_v480.json",
+  "retired_phase_d_path_reopened": {
+    "principle": "Guards against reviving off-path generated-text/logprob scoring as the primary metric.",
+    "value": false
+  },
+  "rows": [
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            13.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5251",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: Three notebooks cost $4 each. After a $2 discount, a $3 service fee\nis added. How much is the final charge?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "c5844ee8f3a153b0",
+          "duration_s": 17.557617,
+          "prompt_checksum": "9e0f84b5119bcdeb",
+          "returncode": 0,
+          "seed": 5251,
+          "stderr_tail": "time =     335.70 ms /    60 tokens (    5.59 ms per token,   178.73 tokens per second)\n0.16.998.435 I common_perf_print:        eval time =     467.22 ms /    59 runs   (    7.92 ms per token,   126.28 tokens per second)\n0.16.998.435 I common_perf_print:       total time =     819.29 ms /   119 tokens\n0.16.998.437 I common_perf_print: unaccounted time =       1.34 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.998.437 I common_perf_print:    graphs reused =         58\n",
+          "stdout_tail": "<|channel>thought\n<channel|>1. Cost of three notebooks: 3 * $4 = $12\n2. Subtract discount: $12 - $2 = $10\n3. Add service fee: $10 + $3 = $13\n\nFINAL: 13 [end of text]\n\n\n",
+          "tag": "exp214-followup-omitted-premise-5:baseline"
+        }
+      },
+      "expected_outcome": "$13 final charge",
+      "fixture_id": "exp214-followup-omitted-premise-5",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            13.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5252",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: Three notebooks cost $4 each. After a $2 discount, a $3 service fee\nis added. How much is the final charge?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "5c4abb634c7f3644",
+            "duration_s": 15.692274,
+            "prompt_checksum": "50d8c56ec14c7859",
+            "returncode": 0,
+            "seed": 5252,
+            "stderr_tail": "time =     365.25 ms /    77 tokens (    4.74 ms per token,   210.82 tokens per second)\n0.15.093.255 I common_perf_print:        eval time =     134.29 ms /    14 runs   (    9.59 ms per token,   104.25 tokens per second)\n0.15.093.255 I common_perf_print:       total time =     505.28 ms /    91 tokens\n0.15.093.256 I common_perf_print: unaccounted time =       1.11 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.093.257 I common_perf_print:    graphs reused =         13\n",
+            "stdout_tail": "<|channel>thought\n<channel|>3 notebooks * $4 each = $12 [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-5:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5253",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: Three notebooks cost $4 each. After a $2 discount, a $3 service fee\nis added. How much is the final charge?\nRejected fragment: 3 notebooks * $4 each = $12<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "5c4abb634c7f3644",
+            "duration_s": 15.847564,
+            "prompt_checksum": "5934898cf64b550a",
+            "returncode": 0,
+            "seed": 5253,
+            "stderr_tail": "time =     307.21 ms /    83 tokens (    3.70 ms per token,   270.17 tokens per second)\n0.15.212.752 I common_perf_print:        eval time =     142.02 ms /    14 runs   (   10.14 ms per token,    98.58 tokens per second)\n0.15.212.752 I common_perf_print:       total time =     455.90 ms /    97 tokens\n0.15.212.755 I common_perf_print: unaccounted time =       1.12 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.212.755 I common_perf_print:    graphs reused =         13\n",
+            "stdout_tail": "<|channel>thought\n<channel|>3 notebooks * $4 each = $12 [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-5:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5254",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: Three notebooks cost $4 each. After a $2 discount, a $3 service fee\nis added. How much is the final charge?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "f8074a5574e42c41",
+            "duration_s": 16.769455,
+            "prompt_checksum": "7f319eeb4a2e32e3",
+            "returncode": 0,
+            "seed": 5254,
+            "stderr_tail": "time =     315.46 ms /    72 tokens (    4.38 ms per token,   228.24 tokens per second)\n0.16.133.937 I common_perf_print:        eval time =    1085.44 ms /   141 runs   (    7.70 ms per token,   129.90 tokens per second)\n0.16.133.938 I common_perf_print:       total time =    1447.89 ms /   213 tokens\n0.16.133.941 I common_perf_print: unaccounted time =       2.67 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.133.974 I common_perf_print:    graphs reused =        140\n",
+            "stdout_tail": "<|channel>thought\n<channel|>To solve the problem, we follow these steps:\n\n1.  **Calculate the initial cost of the notebooks:**\n    There are 3 notebooks, and each costs $4.\n    $3 \\times \\$4 = \\$12$\n\n2.  **Apply the discount:**\n    A $2 discount is applied to the total cost.\n    $\\$12 - \\$2 = \\$10$\n\n3.  **Add the service fee:**\n    A $3 service fee is added to the discounted amount.\n    $\\$10 + \\$3 = \\$13$\n\nThe final charge is $13.\n\nFINAL: 13 [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-5:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "omitted_premises"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            28.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5261",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: The first bus arrives in 8 minutes and waits 4 minutes. The second\nbus arrives 10 minutes after the first bus leaves and leaves\nimmediately. The third bus arrives 6 minutes after the second bus\nleaves, and that is Mina's bus. How long does Mina wait in total?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "8a33dbf8a5254e7b",
+          "duration_s": 17.330653,
+          "prompt_checksum": "3112bb4c74519960",
+          "returncode": 0,
+          "seed": 5261,
+          "stderr_tail": "time =     358.88 ms /    94 tokens (    3.82 ms per token,   261.92 tokens per second)\n0.16.736.197 I common_perf_print:        eval time =    1460.42 ms /   191 runs   (    7.65 ms per token,   130.78 tokens per second)\n0.16.736.197 I common_perf_print:       total time =    1872.09 ms /   285 tokens\n0.16.736.199 I common_perf_print: unaccounted time =       2.34 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.16.736.199 I common_perf_print:    graphs reused =        189\n",
+          "stdout_tail": "uses:\n\n1.  **First Bus:**\n    *   Arrives at: 8 minutes.\n    *   Waits for: 4 minutes.\n    *   Leaves at: $8 + 4 = 12$ minutes.\n\n2.  **Second Bus:**\n    *   Arrives 10 minutes after the first bus leaves: $12 + 10 = 22$ minutes.\n    *   Leaves immediately: 22 minutes.\n\n3.  **Third Bus (Mina's Bus):**\n    *   Arrives 6 minutes after the second bus leaves: $22 + 6 = 28$ minutes.\n\nThe problem asks how long Mina waits in total. In the context of such problems, \"waiting\" typically refers to the time\n\n",
+          "tag": "exp214-followup-omitted-premise-6:baseline"
+        }
+      },
+      "expected_outcome": "28 minutes",
+      "fixture_id": "exp214-followup-omitted-premise-6",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 1.0,
+          "final_numbers": [
+            28.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5262",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: The first bus arrives in 8 minutes and waits 4 minutes. The second\nbus arrives 10 minutes after the first bus leaves and leaves\nimmediately. The third bus arrives 6 minutes after the second bus\nleaves, and that is Mina's bus. How long does Mina wait in total?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "abca839fabd26267",
+            "duration_s": 15.684225,
+            "prompt_checksum": "abc30e04dbbdfae1",
+            "returncode": 0,
+            "seed": 5262,
+            "stderr_tail": "time =     345.74 ms /   111 tokens (    3.11 ms per token,   321.05 tokens per second)\n0.15.078.580 I common_perf_print:        eval time =     371.65 ms /    46 runs   (    8.08 ms per token,   123.77 tokens per second)\n0.15.078.581 I common_perf_print:       total time =     732.58 ms /   157 tokens\n0.15.078.583 I common_perf_print: unaccounted time =       1.21 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.078.584 I common_perf_print:    graphs reused =         45\n",
+            "stdout_tail": "<|channel>thought\n<channel|>The first bus leaves at 8 + 4 = 12 minutes, so the second bus arrives at 12 + 10 = 22 minutes and leaves at 22 minutes. [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-6:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5263",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: The first bus arrives in 8 minutes and waits 4 minutes. The second\nbus arrives 10 minutes after the first bus leaves and leaves\nimmediately. The third bus arrives 6 minutes after the second bus\nleaves, and that is Mina's bus. How long does Mina wait in total?\nRejected fragment: The first bus leaves at 8 + 4 = 12 minutes, so the second bus arrives at 12 + 10 = 22 minutes and leaves at 22 minutes.<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "bde814a4d7f76bf7",
+            "duration_s": 15.855134,
+            "prompt_checksum": "c61059a8f8537c6c",
+            "returncode": 0,
+            "seed": 5263,
+            "stderr_tail": "time =     326.66 ms /   148 tokens (    2.21 ms per token,   453.07 tokens per second)\n0.15.301.349 I common_perf_print:        eval time =     476.95 ms /    59 runs   (    8.08 ms per token,   123.70 tokens per second)\n0.15.301.350 I common_perf_print:       total time =     824.39 ms /   207 tokens\n0.15.301.353 I common_perf_print: unaccounted time =       2.49 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.15.301.353 I common_perf_print:    graphs reused =         58\n",
+            "stdout_tail": "<|channel>thought\n<channel|>The first bus arrives at 8 minutes and stays for 4 minutes, meaning it leaves at 12 minutes. The second bus arrives 10 minutes after the first bus leaves, which is at 22 minutes, and leaves immediately at 22 minutes. [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-6:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5264",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: The first bus arrives in 8 minutes and waits 4 minutes. The second\nbus arrives 10 minutes after the first bus leaves and leaves\nimmediately. The third bus arrives 6 minutes after the second bus\nleaves, and that is Mina's bus. How long does Mina wait in total?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "b2f98ee4e55342f1",
+            "duration_s": 17.223523,
+            "prompt_checksum": "1d37821d0bb7df2f",
+            "returncode": 0,
+            "seed": 5264,
+            "stderr_tail": "time =     343.29 ms /   106 tokens (    3.24 ms per token,   308.78 tokens per second)\n0.16.662.490 I common_perf_print:        eval time =    1464.57 ms /   191 runs   (    7.67 ms per token,   130.41 tokens per second)\n0.16.662.491 I common_perf_print:       total time =    1867.40 ms /   297 tokens\n0.16.662.493 I common_perf_print: unaccounted time =       3.89 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.662.493 I common_perf_print:    graphs reused =        189\n",
+            "stdout_tail": "k the timeline of the buses step by step:\n\n1.  **First Bus:**\n    *   Arrives at: 8 minutes.\n    *   Waits for: 4 minutes.\n    *   Leaves at: $8 + 4 = 12$ minutes.\n\n2.  **Second Bus:**\n    *   Arrives: 10 minutes after the first bus leaves.\n    *   Arrival time: $12 + 10 = 22$ minutes.\n    *   Leaves: Immediately (so it leaves at 22 minutes).\n\n3.  **Third Bus (Mina's Bus):**\n    *   Arrives: 6 minutes after the second bus leaves.\n    *   Arrival time: $22 + 6 = 28$ minutes.\n\nThe question asks:\n\n",
+            "tag": "exp214-followup-omitted-premise-6:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "omitted_premises"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            3.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5271",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: A gardener picks 60 tulips. 12 are donated. The rest are divided\nequally into 4 bouquets, and one quarter of each bouquet is red.\nHow many red tulips are in each bouquet?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "f0e415bcbc1067d3",
+          "duration_s": 15.8372,
+          "prompt_checksum": "78dedcb002d72da3",
+          "returncode": 0,
+          "seed": 5271,
+          "stderr_tail": "time =     354.92 ms /    76 tokens (    4.67 ms per token,   214.13 tokens per second)\n0.15.370.876 I common_perf_print:        eval time =     783.56 ms /    75 runs   (   10.45 ms per token,    95.72 tokens per second)\n0.15.370.877 I common_perf_print:       total time =    1162.32 ms /   151 tokens\n0.15.370.879 I common_perf_print: unaccounted time =       1.45 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.15.370.881 I common_perf_print:    graphs reused =         74\n",
+          "stdout_tail": "<|channel>thought\n<channel|>1. Total tulips picked: 60\n2. Tulips remaining after donation: 60 - 12 = 48\n3. Tulips per bouquet: 48 / 4 = 12\n4. Red tulips per bouquet: 1/4 of 12 = 3\n\nFINAL: 3 [end of text]\n\n\n",
+          "tag": "exp214-followup-omitted-premise-7:baseline"
+        }
+      },
+      "expected_outcome": "3 red tulips per bouquet",
+      "fixture_id": "exp214-followup-omitted-premise-7",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            3.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5272",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: A gardener picks 60 tulips. 12 are donated. The rest are divided\nequally into 4 bouquets, and one quarter of each bouquet is red.\nHow many red tulips are in each bouquet?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "108ca1735ec57749",
+            "duration_s": 15.469816,
+            "prompt_checksum": "46e700f0c8538e41",
+            "returncode": 0,
+            "seed": 5272,
+            "stderr_tail": "time =     331.62 ms /    93 tokens (    3.57 ms per token,   280.44 tokens per second)\n0.14.917.615 I common_perf_print:        eval time =     266.91 ms /    32 runs   (    8.34 ms per token,   119.89 tokens per second)\n0.14.917.616 I common_perf_print:       total time =     608.49 ms /   125 tokens\n0.14.917.617 I common_perf_print: unaccounted time =       1.29 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.14.917.618 I common_perf_print:    graphs reused =         31\n",
+            "stdout_tail": "<|channel>thought\n<channel|>60 - 12 = 48 tulips remaining, and 48 / 4 = 12 tulips per bouquet. [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-7:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5273",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: A gardener picks 60 tulips. 12 are donated. The rest are divided\nequally into 4 bouquets, and one quarter of each bouquet is red.\nHow many red tulips are in each bouquet?\nRejected fragment: 60 - 12 = 48 tulips remaining, and 48 / 4 = 12 tulips per bouquet.<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "108ca1735ec57749",
+            "duration_s": 16.010306,
+            "prompt_checksum": "f88919d8a8434ad2",
+            "returncode": 0,
+            "seed": 5273,
+            "stderr_tail": "time =     331.87 ms /   117 tokens (    2.84 ms per token,   352.54 tokens per second)\n0.15.456.295 I common_perf_print:        eval time =     266.92 ms /    32 runs   (    8.34 ms per token,   119.89 tokens per second)\n0.15.456.296 I common_perf_print:       total time =     610.84 ms /   149 tokens\n0.15.456.297 I common_perf_print: unaccounted time =       2.36 ms /   0.4 %      (total - sampling - prompt eval - eval) / (total)\n0.15.456.297 I common_perf_print:    graphs reused =         31\n",
+            "stdout_tail": "<|channel>thought\n<channel|>60 - 12 = 48 tulips remaining, and 48 / 4 = 12 tulips per bouquet. [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-7:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5274",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: A gardener picks 60 tulips. 12 are donated. The rest are divided\nequally into 4 bouquets, and one quarter of each bouquet is red.\nHow many red tulips are in each bouquet?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "ad6c12fd29f80f73",
+            "duration_s": 17.107314,
+            "prompt_checksum": "573e522af975fdf0",
+            "returncode": 0,
+            "seed": 5274,
+            "stderr_tail": "time =     334.20 ms /    88 tokens (    3.80 ms per token,   263.32 tokens per second)\n0.16.495.677 I common_perf_print:        eval time =    1310.53 ms /   171 runs   (    7.66 ms per token,   130.48 tokens per second)\n0.16.495.678 I common_perf_print:       total time =    1697.35 ms /   259 tokens\n0.16.495.679 I common_perf_print: unaccounted time =       2.50 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.16.495.680 I common_perf_print:    graphs reused =        169\n",
+            "stdout_tail": "mber of tulips remaining after the donation:**\n    The gardener starts with 60 tulips and donates 12.\n    $60 - 12 = 48$ tulips remaining.\n\n2.  **Find the number of tulips in each bouquet:**\n    The remaining 48 tulips are divided equally into 4 bouquets.\n    $48 \\div 4 = 12$ tulips per bouquet.\n\n3.  **Find the number of red tulips in each bouquet:**\n    One quarter of each bouquet is red.\n    $\\frac{1}{4} \\times 12 = 3$ red tulips.\n\nEach bouquet contains 3 red tulips.\n\nFINAL: 3 [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-7:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "omitted_premises"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            27.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5281",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: A museum charges $9 per ticket. Lena buys 4 tickets, but one ticket\nis free with the family promotion. How much does she pay?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "4b83afe5b38abb9c",
+          "duration_s": 15.763007,
+          "prompt_checksum": "c1c68a579a32ab7e",
+          "returncode": 0,
+          "seed": 5281,
+          "stderr_tail": "time =     310.87 ms /    62 tokens (    5.01 ms per token,   199.44 tokens per second)\n0.15.167.797 I common_perf_print:        eval time =     344.03 ms /    42 runs   (    8.19 ms per token,   122.08 tokens per second)\n0.15.167.798 I common_perf_print:       total time =     668.05 ms /   104 tokens\n0.15.167.800 I common_perf_print: unaccounted time =       1.34 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.167.800 I common_perf_print:    graphs reused =         41\n",
+          "stdout_tail": "<|channel>thought\n<channel|>Lena buys 4 tickets, but one is free, so she pays for 3 tickets.\n3 tickets \u00d7 $9 per ticket = $27.\n\nFINAL: 27 [end of text]\n\n\n",
+          "tag": "exp214-followup-omitted-premise-8:baseline"
+        }
+      },
+      "expected_outcome": "$27",
+      "fixture_id": "exp214-followup-omitted-premise-8",
+      "gated": {
+        "accepted_fragment_count": 1,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            27.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": true,
+            "deterministic_violation_count": 0,
+            "energy_score": 0.0,
+            "reasons": [],
+            "semantic_violation_types": [
+              "missing_quantity_coverage"
+            ],
+            "unsupported_claim_count": 0,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5282",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: A museum charges $9 per ticket. Lena buys 4 tickets, but one ticket\nis free with the family promotion. How much does she pay?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "1033ad96b480819e",
+            "duration_s": 15.707286,
+            "prompt_checksum": "ded754853b284d31",
+            "returncode": 0,
+            "seed": 5282,
+            "stderr_tail": "time =     334.35 ms /    79 tokens (    4.23 ms per token,   236.28 tokens per second)\n0.15.179.143 I common_perf_print:        eval time =     139.04 ms /    15 runs   (    9.27 ms per token,   107.88 tokens per second)\n0.15.179.144 I common_perf_print:       total time =     480.28 ms /    94 tokens\n0.15.179.145 I common_perf_print: unaccounted time =       1.29 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.15.179.146 I common_perf_print:    graphs reused =         14\n",
+            "stdout_tail": "<|channel>thought\n<channel|>Lena pays for 3 tickets at $9 each. [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-8:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5284",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: A museum charges $9 per ticket. Lena buys 4 tickets, but one ticket\nis free with the family promotion. How much does she pay?\nAccepted fragments:\n- Lena pays for 3 tickets at $9 each.<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "05fe4950c7d12676",
+            "duration_s": 16.994942,
+            "prompt_checksum": "238529a4c28f830a",
+            "returncode": 0,
+            "seed": 5284,
+            "stderr_tail": "time =     460.38 ms /    82 tokens (    5.61 ms per token,   178.11 tokens per second)\n0.16.405.416 I common_perf_print:        eval time =     887.63 ms /   115 runs   (    7.72 ms per token,   129.56 tokens per second)\n0.16.405.417 I common_perf_print:       total time =    1383.59 ms /   197 tokens\n0.16.405.419 I common_perf_print: unaccounted time =       1.93 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.16.405.421 I common_perf_print:    graphs reused =        114\n",
+            "stdout_tail": "<|channel>thought\n<channel|>To solve the problem, we follow these steps:\n\n1.  **Identify the total number of tickets:** Lena buys 4 tickets.\n2.  **Apply the promotion:** One ticket is free, so she only pays for $4 - 1 = 3$ tickets.\n3.  **Calculate the cost:** Lena pays for 3 tickets at $9 each.\n4.  **Perform the multiplication:** $3 \\times 9 = 27$.\n\nLena pays $27.\n\nFINAL: 27 [end of text]\n\n\n",
+            "tag": "exp214-followup-omitted-premise-8:gated_final"
+          }
+        ],
+        "regeneration_count": 0
+      },
+      "taxonomy_label": "omitted_premises"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            30.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5291",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: Rina buys 6 shirts at $10 each and gets 20% off the total. She later\nsells 2 shirts for $18 total. How much money is she out?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "761e40de79cedda8",
+          "duration_s": 16.052956,
+          "prompt_checksum": "a75d5b19ea343a33",
+          "returncode": 0,
+          "seed": 5291,
+          "stderr_tail": "time =     308.44 ms /    73 tokens (    4.23 ms per token,   236.67 tokens per second)\n0.15.504.861 I common_perf_print:        eval time =     751.76 ms /    97 runs   (    7.75 ms per token,   129.03 tokens per second)\n0.15.504.862 I common_perf_print:       total time =    1090.11 ms /   170 tokens\n0.15.504.863 I common_perf_print: unaccounted time =       1.62 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.15.504.864 I common_perf_print:    graphs reused =         96\n",
+          "stdout_tail": "<|channel>thought\n<channel|>1. Total cost of shirts: 6 shirts \u00d7 $10 = $60.\n2. Discount: 20% of $60 = $12.\n3. Amount paid: $60 - $12 = $48.\n4. Amount earned from selling: $18.\n5. Money lost (out): $48 - $18 = $30.\n\nFINAL: 30 [end of text]\n\n\n",
+          "tag": "exp214-followup-entity-binding-1:baseline"
+        }
+      },
+      "expected_outcome": "$30",
+      "fixture_id": "exp214-followup-entity-binding-1",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": false,
+          "deterministic_violation_count": 3,
+          "energy_score": 3.0,
+          "final_numbers": [
+            4.0
+          ],
+          "semantic_violation_types": [
+            "missing_quantity_coverage",
+            "answer_target_mismatch"
+          ],
+          "unsupported_claim_count": 1
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5292",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: Rina buys 6 shirts at $10 each and gets 20% off the total. She later\nsells 2 shirts for $18 total. How much money is she out?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "675a0dae5f984a5c",
+            "duration_s": 15.515256,
+            "prompt_checksum": "7449d9afcb0086c6",
+            "returncode": 0,
+            "seed": 5292,
+            "stderr_tail": "time =     309.38 ms /    90 tokens (    3.44 ms per token,   290.90 tokens per second)\n0.14.919.144 I common_perf_print:        eval time =     253.96 ms /    30 runs   (    8.47 ms per token,   118.13 tokens per second)\n0.14.919.145 I common_perf_print:       total time =     574.22 ms /   120 tokens\n0.14.919.148 I common_perf_print: unaccounted time =       1.38 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.14.919.149 I common_perf_print:    graphs reused =         29\n",
+            "stdout_tail": "<|channel>thought\n<channel|>The total cost of the shirts is $60, and with a 20% discount, she pays $48. [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-1:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5293",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: Rina buys 6 shirts at $10 each and gets 20% off the total. She later\nsells 2 shirts for $18 total. How much money is she out?\nRejected fragment: The total cost of the shirts is $60, and with a 20% discount, she pays $48.<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "e2e8e680d47c4009",
+            "duration_s": 16.332433,
+            "prompt_checksum": "19d7c1702494496e",
+            "returncode": 0,
+            "seed": 5293,
+            "stderr_tail": "time =     410.91 ms /   111 tokens (    3.70 ms per token,   270.13 tokens per second)\n0.15.785.701 I common_perf_print:        eval time =     537.23 ms /    46 runs   (   11.68 ms per token,    85.62 tokens per second)\n0.15.785.701 I common_perf_print:       total time =     964.05 ms /   157 tokens\n0.15.785.703 I common_perf_print: unaccounted time =       1.81 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.785.704 I common_perf_print:    graphs reused =         45\n",
+            "stdout_tail": "<|channel>thought\n<channel|>Rina buys 6 shirts at $10 each, making the initial total $60. Applying a 20% discount reduces the price by $12, so she pays $48. [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-1:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5294",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: Rina buys 6 shirts at $10 each and gets 20% off the total. She later\nsells 2 shirts for $18 total. How much money is she out?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "9cf5cbe0b27fbe07",
+            "duration_s": 17.316244,
+            "prompt_checksum": "11a2ae393b958f00",
+            "returncode": 0,
+            "seed": 5294,
+            "stderr_tail": "time =     335.64 ms /    85 tokens (    3.95 ms per token,   253.24 tokens per second)\n0.16.715.220 I common_perf_print:        eval time =    1468.52 ms /   191 runs   (    7.69 ms per token,   130.06 tokens per second)\n0.16.715.223 I common_perf_print:       total time =    1867.21 ms /   276 tokens\n0.16.715.224 I common_perf_print: unaccounted time =       3.62 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.715.226 I common_perf_print:    graphs reused =        189\n",
+            "stdout_tail": " selling the shirts.\n\n1.  **Calculate the total cost of the shirts before the discount:**\n    Rina buys 6 shirts at $10 each.\n    Total cost = $6 \\times 10 = \\$60$.\n\n2.  **Calculate the discount amount:**\n    She gets 20% off the total.\n    Discount = $20\\% \\text{ of } \\$60 = 0.20 \\times 60 = \\$12$.\n\n3.  **Calculate the total amount Rina spent (the net cost):**\n    Net cost = Total cost - Discount\n    Net cost = $\\$60 - \\$12 = \\$48$.\n\n4.  **Calculate the money she earned from selling shirts:**\n\n",
+            "tag": "exp214-followup-entity-binding-1:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "entity_quantity_binding_errors"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 1.0,
+          "final_numbers": [
+            90.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5301",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: Five horses each need shoes on all four hooves. Shoes are sold in\npairs for $9. How much will all the horses' shoes cost?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "c77ac882f7536daf",
+          "duration_s": 16.241605,
+          "prompt_checksum": "e413425030ea4c6f",
+          "returncode": 0,
+          "seed": 5301,
+          "stderr_tail": "time =     337.42 ms /    62 tokens (    5.44 ms per token,   183.75 tokens per second)\n0.15.694.091 I common_perf_print:        eval time =     634.74 ms /    81 runs   (    7.84 ms per token,   127.61 tokens per second)\n0.15.694.092 I common_perf_print:       total time =     998.19 ms /   143 tokens\n0.15.694.093 I common_perf_print: unaccounted time =       1.62 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.694.093 I common_perf_print:    graphs reused =         80\n",
+          "stdout_tail": "<|channel>thought\n<channel|>1. Total hooves to be shod: 5 horses \u00d7 4 hooves/horse = 20 hooves.\n2. Total pairs needed: 20 hooves \u00f7 2 hooves/pair = 10 pairs.\n3. Total cost: 10 pairs \u00d7 $9/pair = $90.\n\nFINAL: 90 [end of text]\n\n\n",
+          "tag": "exp214-followup-entity-binding-2:baseline"
+        }
+      },
+      "expected_outcome": "$90",
+      "fixture_id": "exp214-followup-entity-binding-2",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            90.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5302",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: Five horses each need shoes on all four hooves. Shoes are sold in\npairs for $9. How much will all the horses' shoes cost?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "976965d16e9f69e6",
+            "duration_s": 15.463863,
+            "prompt_checksum": "d3997700419af578",
+            "returncode": 0,
+            "seed": 5302,
+            "stderr_tail": "time =     323.27 ms /    79 tokens (    4.09 ms per token,   244.38 tokens per second)\n0.14.965.265 I common_perf_print:        eval time =     163.46 ms /    19 runs   (    8.60 ms per token,   116.24 tokens per second)\n0.14.965.266 I common_perf_print:       total time =     493.16 ms /    98 tokens\n0.14.965.267 I common_perf_print: unaccounted time =       0.98 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.14.965.268 I common_perf_print:    graphs reused =         18\n",
+            "stdout_tail": "<|channel>thought\n<channel|>5 horses \u00d7 4 hooves/horse = 20 hooves [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-2:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5303",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: Five horses each need shoes on all four hooves. Shoes are sold in\npairs for $9. How much will all the horses' shoes cost?\nRejected fragment: 5 horses \u00d7 4 hooves/horse = 20 hooves<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "976965d16e9f69e6",
+            "duration_s": 16.391897,
+            "prompt_checksum": "a979edd2e40bee10",
+            "returncode": 0,
+            "seed": 5303,
+            "stderr_tail": "time =     389.58 ms /    90 tokens (    4.33 ms per token,   231.02 tokens per second)\n0.15.769.459 I common_perf_print:        eval time =     351.58 ms /    19 runs   (   18.50 ms per token,    54.04 tokens per second)\n0.15.769.459 I common_perf_print:       total time =     750.69 ms /   109 tokens\n0.15.769.461 I common_perf_print: unaccounted time =       1.79 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.769.461 I common_perf_print:    graphs reused =         18\n",
+            "stdout_tail": "<|channel>thought\n<channel|>5 horses \u00d7 4 hooves/horse = 20 hooves [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-2:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5304",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: Five horses each need shoes on all four hooves. Shoes are sold in\npairs for $9. How much will all the horses' shoes cost?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "6cd61c6da1ba573a",
+            "duration_s": 17.292433,
+            "prompt_checksum": "e21861d469648b32",
+            "returncode": 0,
+            "seed": 5304,
+            "stderr_tail": "time =     323.05 ms /    74 tokens (    4.37 ms per token,   229.07 tokens per second)\n0.16.657.375 I common_perf_print:        eval time =    1287.12 ms /   168 runs   (    7.66 ms per token,   130.52 tokens per second)\n0.16.657.383 I common_perf_print:       total time =    1664.60 ms /   242 tokens\n0.16.657.385 I common_perf_print: unaccounted time =       2.88 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.657.386 I common_perf_print:    graphs reused =        167\n",
+            "stdout_tail": "red and then calculate the cost based on the price per pair.\n\n1.  **Calculate the total number of shoes needed:**\n    There are 5 horses, and each horse needs shoes on all 4 hooves.\n    Total shoes = 5 horses \u00d7 4 shoes/horse = 20 shoes.\n\n2.  **Calculate the number of pairs needed:**\n    Shoes are sold in pairs.\n    Total pairs = 20 shoes / 2 shoes per pair = 10 pairs.\n\n3.  **Calculate the total cost:**\n    Each pair costs $9.\n    Total cost = 10 pairs \u00d7 $9/pair = $90.\n\nFINAL: 90 [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-2:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "entity_quantity_binding_errors"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            72.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5311",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: Tara buys 9 packs of 4 candles for $3 each. She sells each candle\nfor $5. What profit does she make?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "fdea482afdb80975",
+          "duration_s": 16.5142,
+          "prompt_checksum": "0c56230893abfefb",
+          "returncode": 0,
+          "seed": 5311,
+          "stderr_tail": "time =     304.83 ms /    60 tokens (    5.08 ms per token,   196.83 tokens per second)\n0.15.968.572 I common_perf_print:        eval time =     921.93 ms /   119 runs   (    7.75 ms per token,   129.08 tokens per second)\n0.15.968.572 I common_perf_print:       total time =    1261.17 ms /   179 tokens\n0.15.968.574 I common_perf_print: unaccounted time =       1.93 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.968.575 I common_perf_print:    graphs reused =        118\n",
+          "stdout_tail": "<|channel>thought\n<channel|>1. Total candles: $9 \\text{ packs} \\times 4 \\text{ candles/pack} = 36 \\text{ candles}$.\n2. Total cost: $36 \\text{ candles} \\times \\$3/\\text{candle} = \\$108$.\n3. Total revenue: $36 \\text{ candles} \\times \\$5/\\text{candle} = \\$180$.\n4. Profit: $\\$180 - \\$108 = \\$72$.\n\nFINAL: 72 [end of text]\n\n\n",
+          "tag": "exp214-followup-entity-binding-3:baseline"
+        }
+      },
+      "expected_outcome": "$72",
+      "fixture_id": "exp214-followup-entity-binding-3",
+      "gated": {
+        "accepted_fragment_count": 0,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": false,
+          "deterministic_violation_count": 1,
+          "energy_score": 1.0,
+          "final_numbers": [
+            180.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          },
+          {
+            "accepted": false,
+            "deterministic_violation_count": 1,
+            "energy_score": 1.25,
+            "reasons": [
+              "unsupported_semantic_claim"
+            ],
+            "semantic_violation_types": [
+              "missing_quantity_coverage",
+              "answer_target_mismatch"
+            ],
+            "unsupported_claim_count": 1,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5312",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: Tara buys 9 packs of 4 candles for $3 each. She sells each candle\nfor $5. What profit does she make?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "c22f9c1bad32db22",
+            "duration_s": 15.824666,
+            "prompt_checksum": "27fe3bbf2f64caa2",
+            "returncode": 0,
+            "seed": 5312,
+            "stderr_tail": "time =     353.98 ms /    77 tokens (    4.60 ms per token,   217.52 tokens per second)\n0.15.320.256 I common_perf_print:        eval time =     339.24 ms /    17 runs   (   19.96 ms per token,    50.11 tokens per second)\n0.15.320.257 I common_perf_print:       total time =     701.01 ms /    94 tokens\n0.15.320.258 I common_perf_print: unaccounted time =       1.49 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.320.259 I common_perf_print:    graphs reused =         16\n",
+            "stdout_tail": "<|channel>thought\n<channel|>Total candles = 9 * 4 = 36. [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-3:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5313",
+              "-p",
+              "<|turn>user\nThe previous fragment was rejected by deterministic Carnot gates for unsupported_semantic_claim. Regenerate one corrected short fragment using only supported facts.\n\nProblem: Tara buys 9 packs of 4 candles for $3 each. She sells each candle\nfor $5. What profit does she make?\nRejected fragment: Total candles = 9 * 4 = 36.<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "9203627d5f1f2d9c",
+            "duration_s": 16.061865,
+            "prompt_checksum": "37f57e47e40dbdf0",
+            "returncode": 0,
+            "seed": 5313,
+            "stderr_tail": "time =     309.96 ms /    85 tokens (    3.65 ms per token,   274.23 tokens per second)\n0.15.459.031 I common_perf_print:        eval time =     191.57 ms /    22 runs   (    8.71 ms per token,   114.84 tokens per second)\n0.15.459.032 I common_perf_print:       total time =     508.26 ms /   107 tokens\n0.15.459.033 I common_perf_print: unaccounted time =       1.11 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.459.034 I common_perf_print:    graphs reused =         21\n",
+            "stdout_tail": "<|channel>thought\n<channel|>Total candles = 9 packs \u00d7 4 candles/pack = 36 candles. [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-3:fragment1"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5314",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: Tara buys 9 packs of 4 candles for $3 each. She sells each candle\nfor $5. What profit does she make?\nAccepted fragments:\n- no fragment accepted<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "50cac850209bd886",
+            "duration_s": 17.499539,
+            "prompt_checksum": "bc924194e1866a04",
+            "returncode": 0,
+            "seed": 5314,
+            "stderr_tail": "time =     339.13 ms /    72 tokens (    4.71 ms per token,   212.31 tokens per second)\n0.16.904.104 I common_perf_print:        eval time =    1461.16 ms /   191 runs   (    7.65 ms per token,   130.72 tokens per second)\n0.16.904.104 I common_perf_print:       total time =    1858.44 ms /   263 tokens\n0.16.904.106 I common_perf_print: unaccounted time =       2.53 ms /   0.1 %      (total - sampling - prompt eval - eval) / (total)\n0.16.904.118 I common_perf_print:    graphs reused =        189\n",
+            "stdout_tail": "number of candles:**\n    Tara buys 9 packs, and each pack contains 4 candles.\n    Total candles = $9 \\times 4 = 36$ candles.\n\n2.  **Calculate the total cost:**\n    Each pack costs $3.\n    Total cost = $9 \\text{ packs} \\times \\$3/\\text{pack} = \\$27$.\n\n3.  **Calculate the total revenue:**\n    She sells each of the 36 candles for $5.\n    Total revenue = $36 \\text{ candles} \\times \\$5/\\text{candle} = \\$180$.\n\n4.  **Calculate the profit:**\n    Profit = Total revenue - Total cost\n    Profit = $\\$180\n\n",
+            "tag": "exp214-followup-entity-binding-3:gated_final"
+          }
+        ],
+        "regeneration_count": 1
+      },
+      "taxonomy_label": "entity_quantity_binding_errors"
+    },
+    {
+      "baseline": {
+        "check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 0.0,
+          "final_numbers": [
+            6.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "receipt": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "1536",
+            "-n",
+            "192",
+            "--temp",
+            "0",
+            "--seed",
+            "5321",
+            "-p",
+            "<|turn>user\nSolve the word problem. Keep the answer concise. End with 'FINAL: <number>'.\n\nProblem: Three boxes hold 8 markers each. Two markers in each box are blue.\nHow many blue markers are there?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "589fdfe20ad915a6",
+          "duration_s": 15.520785,
+          "prompt_checksum": "989c36d92ef65ce6",
+          "returncode": 0,
+          "seed": 5321,
+          "stderr_tail": "time =     390.05 ms /    55 tokens (    7.09 ms per token,   141.01 tokens per second)\n0.14.958.514 I common_perf_print:        eval time =     366.98 ms /    40 runs   (    9.17 ms per token,   109.00 tokens per second)\n0.14.958.514 I common_perf_print:       total time =     772.84 ms /    95 tokens\n0.14.958.516 I common_perf_print: unaccounted time =       1.78 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.14.958.519 I common_perf_print:    graphs reused =         39\n",
+          "stdout_tail": "<|channel>thought\n<channel|>There are 3 boxes, and each box contains 2 blue markers.\n3 boxes \u00d7 2 blue markers/box = 6 blue markers.\n\nFINAL: 6 [end of text]\n\n\n",
+          "tag": "exp214-followup-entity-binding-4:baseline"
+        }
+      },
+      "expected_outcome": "6 blue markers",
+      "fixture_id": "exp214-followup-entity-binding-4",
+      "gated": {
+        "accepted_fragment_count": 1,
+        "false_accept": false,
+        "final_check": {
+          "accuracy": true,
+          "deterministic_violation_count": 0,
+          "energy_score": 1.0,
+          "final_numbers": [
+            6.0
+          ],
+          "semantic_violation_types": [],
+          "unsupported_claim_count": 0
+        },
+        "gate_decisions": [
+          {
+            "accepted": true,
+            "deterministic_violation_count": 0,
+            "energy_score": 0.0,
+            "reasons": [],
+            "semantic_violation_types": [],
+            "unsupported_claim_count": 0,
+            "unsupported_numbers": []
+          }
+        ],
+        "receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "128",
+              "--temp",
+              "0",
+              "--seed",
+              "5322",
+              "-p",
+              "<|turn>user\nGenerate exactly one short reasoning fragment for this word problem. Use only quantities stated in the problem or directly derived by arithmetic. Do not give the final answer unless the fragment proves it.\n\nProblem: Three boxes hold 8 markers each. Two markers in each box are blue.\nHow many blue markers are there?<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "7d361f97876df31e",
+            "duration_s": 16.27825,
+            "prompt_checksum": "cb4a0c77c2319d89",
+            "returncode": 0,
+            "seed": 5322,
+            "stderr_tail": "time =     348.21 ms /    72 tokens (    4.84 ms per token,   206.77 tokens per second)\n0.15.785.032 I common_perf_print:        eval time =     364.49 ms /    18 runs   (   20.25 ms per token,    49.38 tokens per second)\n0.15.785.032 I common_perf_print:       total time =     720.29 ms /    90 tokens\n0.15.785.034 I common_perf_print: unaccounted time =       1.26 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.15.785.034 I common_perf_print:    graphs reused =         17\n",
+            "stdout_tail": "<|channel>thought\n<channel|>3 boxes * 2 blue markers per box = 6 blue markers [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-4:fragment0"
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "-ngl",
+              "999",
+              "-c",
+              "1536",
+              "-n",
+              "192",
+              "--temp",
+              "0",
+              "--seed",
+              "5324",
+              "-p",
+              "<|turn>user\nSolve the problem using only the accepted fragments and the original problem. End with 'FINAL: <number>'.\n\nProblem: Three boxes hold 8 markers each. Two markers in each box are blue.\nHow many blue markers are there?\nAccepted fragments:\n- 3 boxes * 2 blue markers per box = 6 blue markers<turn|>\n<|turn>model\n",
+              "-no-cnv",
+              "--no-display-prompt",
+              "--simple-io",
+              "--no-warmup"
+            ],
+            "completion_checksum": "1eb33a45bb899a49",
+            "duration_s": 16.753381,
+            "prompt_checksum": "e4427632114cbf36",
+            "returncode": 0,
+            "seed": 5324,
+            "stderr_tail": "time =     365.15 ms /    79 tokens (    4.62 ms per token,   216.35 tokens per second)\n0.16.193.688 I common_perf_print:        eval time =    1028.86 ms /   107 runs   (    9.62 ms per token,   104.00 tokens per second)\n0.16.193.689 I common_perf_print:       total time =    1430.25 ms /   186 tokens\n0.16.193.691 I common_perf_print: unaccounted time =       2.20 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.16.193.694 I common_perf_print:    graphs reused =        106\n",
+            "stdout_tail": "<|channel>thought\n<channel|>To solve the problem, we identify the given information:\n- There are 3 boxes.\n- Each box contains 8 markers.\n- Each box contains 2 blue markers.\n\nThe question asks for the total number of blue markers. Since we know there are 3 boxes and each box has 2 blue markers, we multiply the number of boxes by the number of blue markers per box:\n3 boxes * 2 blue markers per box = 6 blue markers.\n\nFINAL: 6 [end of text]\n\n\n",
+            "tag": "exp214-followup-entity-binding-4:gated_final"
+          }
+        ],
+        "regeneration_count": 0
+      },
+      "taxonomy_label": "entity_quantity_binding_errors"
+    }
+  ],
+  "schema": "carnot.token_guard_carnot_pilot.v480",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-VERIFY-5251",
+    "SCENARIO-VERIFY-5251"
+  ],
+  "started_at": "2026-07-05T02:04:11Z",
+  "unsupported_claim_delta": {
+    "principle": "Primary harm metric: gated unsupported claims minus no-gate unsupported claims.",
+    "value": 1.0
+  }
+}
