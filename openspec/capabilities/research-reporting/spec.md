@@ -35173,6 +35173,81 @@ fails
 |---|---|---|
 | REQ-REPORT-5257 | Planned (`python/carnot/experiment_5257_archive_480_activate_481.py`, `results/experiment_5257_archive_480_activate_481.json`) | Planned (`tests/python/test_experiment_5257_archive_480_activate_481.py`) |
 
+### REQ-REPORT-5258: V481 Execution-Time SOTA Refresh
+
+The Exp 5258 workflow SHALL search 2025-2026 network sources for actionable
+deltas relevant to the Carnot research program and write
+`results/experiment_5258_sota_refresh_v481.json`. It SHALL read
+`CLAUDE.md`, `CODEX.md`, `research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present, and
+`ops/exclusion_manifest.yaml`. It SHALL use arXiv, OpenReview, HuggingFace
+Papers, Semantic Scholar citation trails for EBT `arXiv:2507.02092` and
+ARM-EBM `arXiv:2512.15605`, GitHub repository discovery, Extropic writing,
+and Logical Intelligence public pages. It SHALL NOT use `/deep-research`,
+modify `research-roadmap.yaml`, modify `scripts/research_conductor.py`, or
+reopen retired scopes without a specific exclusion-manifest override.
+
+The workflow SHALL compare findings against the existing `V481 Research
+Update - 2026-07-05` section in `research-references.md`. If genuinely new
+actionable findings exist, it SHALL append a dated V481 execution refresh
+subsection without rewriting prior reference history. If no genuinely new
+findings exist, it SHALL leave `research-references.md` unchanged and record a
+no-op refresh honestly. It SHALL state whether the executable `.481` task plan
+changes; plan-changing findings are advisory only in this workflow and SHALL
+not edit `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+The artifact SHALL include required principle-annotated fields
+`honest_verdict`, `inference_substrate`, `sources_checked`,
+`new_references_added`, `references_md_updated`, `actionable_deltas`,
+`retired_scope_reopened`, and `semantic_scholar_status`. It SHOULD also
+include `experiment_id`, `milestone`, `spec_refs`, `search_window`,
+`no_deep_research_used`, `research_roadmap_yaml_modified`,
+`research_conductor_modified`, `plan_change_required`, `tests_run`, and
+`references_section_heading` so downstream planning can audit what was checked.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: and distinguish new actionable findings from an honest no-op refresh."
+- `inference_substrate`: principle "literature_ingestion_network_sources because Exp5258 reads network literature/source metadata and makes no experiment outcome claim."
+- `sources_checked`: principle "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+- `new_references_added`: principle "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false."
+- `references_md_updated`: principle "True only when a dated V481 execution refresh subsection was appended to research-references.md."
+- `actionable_deltas`: principle "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh."
+- `retired_scope_reopened`: principle "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope."
+- `semantic_scholar_status`: principle "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims."
+
+#### SCENARIO-REPORT-5258-APPEND-DELTAS: New Network Findings Append A V481 Refresh
+
+**Given** `research-references.md` contains the `V481 Research Update -
+2026-07-05` section
+**And** the focused network sweep finds source-verified actionable deltas not
+already recorded in the V481 section
+**When** the Exp 5258 workflow runs
+**Then** it appends one dated V481 execution refresh subsection, writes
+`results/experiment_5258_sota_refresh_v481.json`, declares
+`literature_ingestion_network_sources`, records all required source families
+including Semantic Scholar EBT and ARM-EBM status, sets
+`new_references_added.value` to the appended reference count, sets
+`references_md_updated.value=true`, leaves retired scopes closed, and records
+that no executable `.481` task change was required.
+
+#### SCENARIO-REPORT-5258-NOOP: No New Findings Leave References Unchanged
+
+**Given** the focused network sweep only rediscovers items already present in
+the V481 section or elsewhere in `research-references.md`
+**When** the Exp 5258 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`complete:`, sets `new_references_added.value=0`, sets
+`references_md_updated.value=false`, leaves `actionable_deltas.value=[]`, and
+does not churn `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5258)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5258 | Implemented (`python/carnot/experiment_5258_sota_refresh_v481.py`, `results/experiment_5258_sota_refresh_v481.json`) | Implemented (`tests/python/test_experiment_5258_sota_refresh_v481.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce

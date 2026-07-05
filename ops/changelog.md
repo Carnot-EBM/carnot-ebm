@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-07-05 (Exp 5258 V481 execution-refresh test fix -- codex)
+
+- Fixed the Exp 5258 V481 execution-refresh test failure without reverting prior work and
+  without modifying `scripts/research_conductor.py`.
+- Normalized the Semantic Scholar LoopUS citation sample title in
+  `python/carnot/experiment_5258_sota_refresh_v481.py` and the checked result artifact while
+  preserving the full source title for auditability.
+- Expanded `tests/python/test_experiment_5258_sota_refresh_v481.py` to cover remaining
+  fail-closed artifact validation branches; focused tests pass (`29 passed`) and scoped
+  module coverage is 100%.
+
 ## 2026-07-03 (Exp 5197 GAP-4 real-checkpoint regression fix -- codex)
 
 - Fixed the Exp 5197 v476 test failures without reverting prior work and without modifying

@@ -1,0 +1,268 @@
+{
+  "actionable_deltas": {
+    "principle": "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh.",
+    "value": [
+      {
+        "actionability": "Record aligned precomputed memory versus no-memory and shuffled-memory controls; defer adapter training unless a later task has explicit training scope.",
+        "arxiv_id_or_repo": "2606.29961",
+        "carnot_hook": "Split Exp5260/Exp5261 memory analysis into context-space memory usefulness and parameter-space training pressure; Carnot can test the context-memory arm without reopening LoRA or broad fine-tuning.",
+        "category": "continuous_self_learning_memory",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2606.29961",
+        "title": "DuoMem: Towards Capable On-Device Memory Agents via Dual-Space Distillation"
+      },
+      {
+        "actionability": "Add Q-alignment style ordering as an analysis note for cached scheduler replay, without changing the already planned task.",
+        "arxiv_id_or_repo": "2606.32034",
+        "carnot_hook": "Exp5264 can score verifier-dose policies by whether cheap signals order cached actions/candidates like a stronger reference policy before any training run.",
+        "category": "verifier_dose_scheduler",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2606.32034",
+        "title": "QVal: Cheaply Evaluating Dense Supervision Signals for Long-Horizon LLM Agents"
+      },
+      {
+        "actionability": "Include conflict, scope-validity, update-tracking, and personalization-only cases inside the deterministic typed-memory interference audit.",
+        "arxiv_id_or_repo": "2607.01071",
+        "carnot_hook": "Exp5261 should treat harmful memory as more than storage/retrieval failure: fixtures should verify that memory is rejected when objective evidence conflicts or when the memory is out of scope.",
+        "category": "memory_interference_safety",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2607.01071",
+        "title": "MemSyco-Bench: Benchmarking Sycophancy in Agent Memory"
+      },
+      {
+        "actionability": "Report broad-transfer versus role-specific memory entries separately instead of collapsing them into one memory-usefulness metric.",
+        "arxiv_id_or_repo": "2606.23127",
+        "carnot_hook": "The AFTER benchmark separates local improvement, cross-task transfer, cross-role transfer, and cross-model generalization, matching Exp5260's blocked cross-model typed-memory question.",
+        "category": "cross_model_memory_transfer",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2606.23127",
+        "title": "Managing Procedural Memory in LLM Agents: Control, Adaptation, and Evaluation"
+      },
+      {
+        "actionability": "Use persistent decision-history rows as an optional schema check in Exp5261 and future skill-memory work; do not import a deep-research workflow.",
+        "arxiv_id_or_repo": "2606.08671",
+        "carnot_hook": "Typed verifier memory should preserve diagnoses, rejected revisions, evidence, and outcomes, not only the final promoted skill or constraint.",
+        "category": "persistent_decision_history",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2606.08671",
+        "title": "SkillHone: A Harness for Continual Agent Skill Evolution Through Persistent Decision History"
+      },
+      {
+        "actionability": "Use only as a receipt-gated comparator for cross-domain hallucination fixtures; keep Phase D external text scoring retired.",
+        "arxiv_id_or_repo": "2601.19245",
+        "carnot_hook": "Exp5263 can treat multi-turn uncertainty fluctuation as a narrow control if the runtime exposes token probabilities; it must not replace the planned internal or logit-energy receipts with a text-only scorer.",
+        "category": "hallucination_mitigation",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv_openreview",
+        "source_url": "https://arxiv.org/abs/2601.19245",
+        "title": "Beyond In-Domain Detection: SpikeScore for Cross-Domain Hallucination Detection"
+      },
+      {
+        "actionability": "Use as a design comparison for Exp5266 boundary notes only; do not add a dependency or claim TSU execution from a third-party repository.",
+        "arxiv_id_or_repo": "xiaohanma-oss/PLN-THRML",
+        "carnot_hook": "The repository shows a concrete PLN-to-Ising-factor-graph mapping with CPU confidence propagation and sampler-side strength propagation.",
+        "category": "hardware_accelerated_sampling_watch",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "github",
+        "source_url": "https://github.com/xiaohanma-oss/PLN-THRML",
+        "title": "PLN-THRML: Probabilistic Logic Rules Compiled To Thermodynamic Factor Graphs"
+      }
+    ]
+  },
+  "duration_s": 0.0,
+  "experiment_id": "experiment_5258_sota_refresh_v481",
+  "field_principles": {
+    "actionable_deltas": "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh.",
+    "honest_verdict": "Must start with complete: and distinguish new actionable findings from an honest no-op refresh.",
+    "inference_substrate": "literature_ingestion_network_sources because Exp5258 reads network literature/source metadata and makes no experiment outcome claim.",
+    "new_references_added": "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false.",
+    "references_md_updated": "True only when a dated V481 execution refresh subsection was appended to research-references.md.",
+    "retired_scope_reopened": "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope.",
+    "semantic_scholar_status": "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims.",
+    "sources_checked": "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: and distinguish new actionable findings from an honest no-op refresh.",
+    "value": "complete: 7 new actionable findings appended; executable .481 plan unchanged."
+  },
+  "inference_substrate": {
+    "principle": "literature_ingestion_network_sources because Exp5258 reads network literature/source metadata and makes no experiment outcome claim.",
+    "value": "literature_ingestion_network_sources"
+  },
+  "milestone": "2026.07.481",
+  "new_references_added": {
+    "principle": "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false.",
+    "value": 7
+  },
+  "no_deep_research_used": true,
+  "plan_change_required": false,
+  "references_md_updated": {
+    "principle": "True only when a dated V481 execution refresh subsection was appended to research-references.md.",
+    "value": true
+  },
+  "references_section_heading": "### V481 Execution Refresh - 2026-07-05",
+  "research_conductor_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "retired_scope_reopened": {
+    "principle": "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope.",
+    "value": false
+  },
+  "search_window": {
+    "comparison_anchor": "research-references.md V481 Research Update - 2026-07-05",
+    "run_date": "2026-07-05",
+    "years": "2025-2026"
+  },
+  "semantic_scholar_status": {
+    "principle": "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims.",
+    "value": {
+      "ARM-EBM": {
+        "arxiv_id": "2512.15605",
+        "citationCount": 8,
+        "citation_samples": [
+          {
+            "arxiv_id": "2607.02154",
+            "title": "Path-Measure Dynamics of Attention-Driven World Models",
+            "year": 2026
+          },
+          {
+            "arxiv_id": "2605.18871",
+            "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+            "year": 2026
+          },
+          {
+            "arxiv_id": "2605.11011",
+            "full_title": "LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models",
+            "title": "LoopUS",
+            "year": 2026
+          }
+        ],
+        "influentialCitationCount": 2,
+        "title": "Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction",
+        "url": "https://www.semanticscholar.org/paper/c73c449d8116684d89282c153f2ddd60334097d8",
+        "year": 2025
+      },
+      "EBT": {
+        "arxiv_id": "2507.02092",
+        "citationCount": 26,
+        "citation_samples": [
+          {
+            "arxiv_id": "2606.18206",
+            "title": "Fixed-Point Reasoners: Stable and Adaptive Deep Looped Transformers",
+            "year": 2026
+          },
+          {
+            "arxiv_id": "2605.11011",
+            "full_title": "LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models",
+            "title": "LoopUS",
+            "year": 2026
+          },
+          {
+            "arxiv_id": null,
+            "title": "Towards System-2 AI: Workloads and Characterizations of Energy-Based Models",
+            "year": 2026
+          }
+        ],
+        "influentialCitationCount": 2,
+        "title": "Energy-Based Transformers are Scalable Learners and Thinkers",
+        "url": "https://www.semanticscholar.org/paper/2da9163730998a4368c609972ccff0582518b36b",
+        "year": 2025
+      }
+    }
+  },
+  "sources_checked": {
+    "principle": "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result.",
+    "value": {
+      "arxiv": {
+        "new_actionable_ids": [
+          "2606.29961",
+          "2606.32034",
+          "2607.01071",
+          "2606.23127",
+          "2606.08671",
+          "2601.19245"
+        ],
+        "queries": [
+          "EBMs for verification/reasoning",
+          "neural constraint satisfaction and SAT/CSP",
+          "hallucination mitigation and energy/logit diagnostics",
+          "KANs and hardware-accelerated sampling",
+          "continual/online learning for constraints"
+        ],
+        "status": "ok"
+      },
+      "extropic": {
+        "queries": [
+          "extropic.ai/writing TSU/XTR-0/Z1/THRML pages"
+        ],
+        "result": "no new local SDK or hardware receipt; architecture watch only",
+        "status": "ok"
+      },
+      "github": {
+        "queries": [
+          "Extropic THRML and thermodynamic reasoning repos",
+          "EBM/KAN/ML4CO watchlists"
+        ],
+        "result": "PLN-THRML is a new watch item; no maintained replacement for local Carnot code",
+        "status": "ok"
+      },
+      "huggingface_papers": {
+        "queries": [
+          "Daily/weekly/monthly papers around 2026-07-03 memory and agent learning"
+        ],
+        "result": "surfaced DuoMem, QVal, MemSyco-Bench, and related memory papers",
+        "status": "ok"
+      },
+      "local_v481_comparison": {
+        "queries": [
+          "research-references.md V481 section and repo-wide duplicate search"
+        ],
+        "result": "new deltas are not in the V481 planning block; several other search hits were already indexed",
+        "status": "ok"
+      },
+      "logical_intelligence": {
+        "queries": [
+          "logicalintelligence.com Aleph/Kona formal verification and EBRM posts"
+        ],
+        "result": "no reproducible Kona internals; supports verifier-first framing only",
+        "status": "ok"
+      },
+      "openreview": {
+        "queries": [
+          "ConstrainPrompt prompt-defined constraints",
+          "Semantic Energy and Spilled Energy hallucination checks",
+          "energy-guided decoding and constraint benchmarks"
+        ],
+        "result": "no plan-changing item beyond the already indexed V481 OpenReview signals",
+        "status": "ok"
+      },
+      "semantic_scholar": {
+        "queries": [
+          "DOI:10.48550/arXiv.2507.02092 metadata and citations",
+          "DOI:10.48550/arXiv.2512.15605 metadata and citations"
+        ],
+        "result": "metadata and citation samples returned without rate-limit failure",
+        "status": "ok"
+      }
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-5258",
+    "SCENARIO-REPORT-5258-APPEND-DELTAS",
+    "SCENARIO-REPORT-5258-NOOP"
+  ],
+  "tests_run": [
+    "tests/python/test_experiment_5258_sota_refresh_v481.py"
+  ]
+}
