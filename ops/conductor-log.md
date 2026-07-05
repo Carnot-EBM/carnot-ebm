@@ -10309,3 +10309,4 @@ web search: |
 | 2026-07-05 00:16 UTC | PHASE 0 SOTA refresh -- 2025-2026 memory, verifica | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-07-05 00:18 UTC | PHASE 0 SOTA refresh -- 2025-2026 memory, verifica | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-07-05 00:20 UTC | PHASE 0 SOTA refresh -- 2025-2026 memory, verifica | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
+| 2026-07-05 00:41 UTC | PHASE 1 evidence integrity -- SLOT-style artifact  | OK | 93 passed, 1 warning in 7.80s |
