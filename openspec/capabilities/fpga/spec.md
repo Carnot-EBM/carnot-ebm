@@ -15391,6 +15391,103 @@ block-device precondition, and an honest verdict beginning with `complete:` or
 
 ---
 
+### REQ-HW-5266
+
+**Title:** Hardware-continuity v481 MUST refresh SSH reachability and document thermodynamic sampler-cost/autocorrelation boundaries without any hardware speedup claim
+
+**Description:**
+Experiment 5266 MUST produce
+`results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json` as a
+v481 hardware-continuity artifact with
+`inference_substrate="hardware_probe_no_speedup_claim"` and bare
+`speedup_claimed=false`. It refreshes the smallest safe reachability receipts for
+KV260 and PolarFire, carries forward the GateMate physical/JTAG block when the
+physical setup has not changed, and writes a short ops/research note explaining
+that arXiv:2607.00170 and Extropic TSU/XTR-0 public pages create future
+sampler-cost and autocorrelation requirements rather than current local
+execution evidence.
+
+The artifact MUST record Step 0 preconditions before board probing: host CPU,
+host GPU visibility, network reachability assumptions, and available hardware
+credential/environment indicators. KV260 MUST NOT require or mention host
+`/dev/mmcblk*` storage. KV260 reachability MUST be checked only by the existing
+SSH-safe pattern `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` when the
+repo provides that safe command/config. PolarFire reachability MUST use the
+existing SSH-safe pattern
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` when available.
+Each probe attempt MUST record command, timeout, exit code, duration, and
+outcome. If a safe command is unavailable, the corresponding board status MUST
+be `blocked_safe_probe_missing` rather than inferred.
+
+GateMate MUST report `blocked_physical_jtag` unless the operator records a
+physical setup change. Exp 5266 MUST NOT invent a software workaround for the
+known physical/JTAG block.
+
+The thermodynamic boundary note MUST summarize that Scaling Up Thermodynamic AI
+Models relates inference cost, accuracy, and autocorrelation for Gibbs-sampled
+Ising inference schedules, while Extropic public pages describe TSUs/XTR-0 as
+programmable EBM samplers without giving Carnot a local SDK, device, or
+reproducible execution transcript. Future valid hardware claims MUST require
+local sampler-cost, autocorrelation, workload-hash, and wall-clock receipts.
+
+The artifact MUST include principle-wrapped required fields `honest_verdict`,
+`inference_substrate`, `preconditions_checked`, `kv260_status`,
+`polarfire_status`, `gatemate_status`, and `thermodynamic_boundary_updated`.
+It MUST also include bare `speedup_claimed=false`,
+`speedup_claimed_principle`, and `commands_run`. The `honest_verdict.value`
+MUST start with `complete:` or `blocked_`, MUST state KV260, PolarFire, and
+GateMate reachability/blocker statuses, and MUST state that no speedup is
+claimed.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5266_hardware_thermodynamic_schedule_boundary_v481 --date 20260705`
+  writes `results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json`.
+- The artifact includes
+  `experiment_id="exp5266-hardware-thermodynamic-schedule-boundary-v481"`,
+  `spec_refs` containing `REQ-HW-5266` and `SCENARIO-HW-5266`,
+  `random_seed=5266`, and a stable `reproducibility_checksum`.
+- `preconditions_checked.value` records host CPU/GPU, network assumptions, and
+  hardware credential/environment checks before board probes.
+- KV260 status is derived only from SSH reachability and no host block-device
+  names such as `/dev/mmcblk` appear in the artifact.
+- PolarFire status is derived from the bounded SSH reachability command or an
+  explicit safe-probe-missing blocker.
+- With `physical_setup_changed=false`, GateMate is carried forward as
+  `blocked_physical_jtag` and no physical/JTAG workaround command is recorded.
+- The thermodynamic boundary note exists and states future sampler-cost and
+  autocorrelation receipt requirements without claiming TSU, XTR-0, Kona, FPGA,
+  or other hardware acceleration.
+- `speedup_claimed=false`, `speedup_claimed_principle` explains why, and
+  `honest_verdict.value` states board statuses and no speedup claim.
+
+**Implementation status:** Pending (Exp 5266)
+
+---
+
+### SCENARIO-HW-5266
+
+**Scenario:** Exp 5266 refreshes bounded board reachability and writes the thermodynamic sampler-cost/autocorrelation boundary note without acceleration claims.
+
+**Given:** Exp 5255 showed no speedup-ready hardware path, V481 references added
+Scaling Up Thermodynamic AI Models and Extropic TSU/XTR-0 public context, and no
+local TSU SDK/device receipt exists.
+**When:** Experiment 5266 records preconditions, probes KV260 and PolarFire with
+existing SSH-safe commands when available, carries GateMate forward as
+`blocked_physical_jtag` absent a physical setup change, and writes the
+thermodynamic boundary note.
+**Then:** It writes
+`results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json`
+with all required principle-wrapped fields,
+`inference_substrate="hardware_probe_no_speedup_claim"`,
+`thermodynamic_boundary_updated.value=true`, bare `speedup_claimed=false`,
+`commands_run` receipts, no host block-device precondition, and an honest
+verdict beginning with `complete:` or `blocked_` that states KV260, PolarFire,
+GateMate, and no-speedup status.
+
+**Implementation status:** Pending (Exp 5266)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
