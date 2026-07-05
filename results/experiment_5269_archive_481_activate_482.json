@@ -1,0 +1,330 @@
+{
+  "activation_milestone": "2026.07.482",
+  "activation_ready": true,
+  "activation_ready_principle": "Bare boolean confirming .482 can proceed without overwriting research-roadmap.yaml.",
+  "archived_milestone": "2026.07.481",
+  "closeout_fact_failures": [],
+  "closeout_facts": {
+    "artifact_normalizer_producer_adoption_positive": true,
+    "cross_model_memory_clean_null": true,
+    "hardware_blocked_no_speedup": true,
+    "kan_refinement_positive": true,
+    "memory_policy_positive": true,
+    "solver_internal_verifier_pilots_quarantined": true,
+    "sota_runtime_ready": true,
+    "verifier_dose_scheduler_replay_positive": true
+  },
+  "commands_run": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/check_exclusion_manifest.py 5269",
+      "command_label": "scripts/check_exclusion_manifest.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/validate_prior_failures.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/audit_roadmap_gates.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 4,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 13,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 13,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}"
+    }
+  ],
+  "duration_s": 17.390021,
+  "exclusions_checked": {
+    "principle": "The transition must run or explicitly record available exclusion, prior-failure, and roadmap checks.",
+    "value": true
+  },
+  "experiment": "experiment_5269_archive_481_activate_482",
+  "experiment_id": "exp5269-archive-481-activate-482",
+  "failed_preconditions": [],
+  "field_principles": {
+    "activation_ready": "Bare boolean confirming .482 can proceed without overwriting research-roadmap.yaml.",
+    "commands_run": "Every validation command must be recorded with pass/fail outcome.",
+    "exclusions_checked": "The transition must run or explicitly record available exclusion, prior-failure, and roadmap checks.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .481 was archived and .482 is activation-ready.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because Exp5269 only reads existing artifacts and local records.",
+    "milestone_archived": "Bare boolean confirming the .481 closeout is represented in durable research records.",
+    "ops_docs_updated": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "research_complete_updated": "True only if this workflow appended or reconciled research-complete.yaml; false when .481 was already present.",
+    "roadmap_activation_check": "No roadmap overwrite is allowed; activated must remain false."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .481 was archived and .482 is activation-ready.",
+    "value": "complete: .481 archived and .482 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+  },
+  "inference_substrate": {
+    "principle": "aggregation_from_upstream_artifacts because Exp5269 only reads existing artifacts and local records.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone_archived": true,
+  "milestone_archived_principle": "Bare boolean confirming the .481 closeout is represented in durable research records.",
+  "ops_docs_updated": {
+    "principle": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "value": false
+  },
+  "random_seed": 5269,
+  "reproducibility_checksum": "sha256:6ed9e67fecbf5281663ec14a07005deb618fef604cc26e9f78a0a723663e4d3a",
+  "research_complete_check": {
+    "count_after": 2,
+    "count_before": 2,
+    "had_2026_07_481_before": true,
+    "has_2026_07_481_after": true,
+    "milestone": "2026.07.481",
+    "path": "research-complete.yaml",
+    "sha256": "sha256:ce379fb5153af0414386e781305d8f9d5fc444186ec367a1910bca55c295d182",
+    "updated": false
+  },
+  "research_complete_updated": {
+    "principle": "True only if this workflow appended or reconciled research-complete.yaml; false when .481 was already present.",
+    "value": false
+  },
+  "result_path": "results/experiment_5269_archive_481_activate_482.json",
+  "roadmap_activation_check": {
+    "activated": false,
+    "activation_ready_without_overwrite": true,
+    "active_roadmap_already_482": true,
+    "active_roadmap_milestone": "2026.07.482",
+    "active_roadmap_missing_task_prefixes": [],
+    "active_roadmap_modified": false,
+    "active_roadmap_sha256": "sha256:40443328b953d8be977b1d24414a6a63e298ed2fc2b905205cefbb72efc9a86c",
+    "active_roadmap_task_ids": [
+      "exp5269-archive-481-activate-482",
+      "exp5270-sota-source-delta-v482",
+      "exp5271-sota-telemetry-receipt-harness-v482",
+      "exp5272-internal-hallucination-probe-gated-v482",
+      "exp5273-solver-fixture-rebuild-v482",
+      "exp5274-solver-constraint-extraction-retry-gated-v482",
+      "exp5275-governed-decision-history-memory-v482",
+      "exp5276-memory-assisted-verifier-dose-gated-v482",
+      "exp5277-kan-milp-certificate-scale-v482",
+      "exp5278-constraint-factor-graph-boundary-v482",
+      "exp5279-hardware-continuity-reachability-v482",
+      "exp5280-artifact-normalizer-evidence-audit-v482",
+      "exp5281-capstone-v482"
+    ],
+    "principle": "No roadmap overwrite is allowed; activated must remain false.",
+    "roadmap_next_milestone": null,
+    "roadmap_next_missing_task_prefixes": [],
+    "roadmap_next_present": false,
+    "roadmap_next_sha256": null,
+    "roadmap_next_task_ids": [],
+    "vnext_names_2026_07_482": true,
+    "vnext_present": true
+  },
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5269_archive_481_activate_482.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5257,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used.",
+      "loadable": true,
+      "relative_path": "results/experiment_5257_archive_480_activate_481.json",
+      "sha256": "sha256:603717214057e5b194aec129795ba9cee473d1b88c3f8b6ac5b224a19fad551a",
+      "task_id": "exp5257-archive-480-activate-481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5258,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: 7 new actionable findings appended; executable .481 plan unchanged.",
+      "loadable": true,
+      "relative_path": "results/experiment_5258_sota_refresh_v481.json",
+      "sha256": "sha256:faee92918b24daeff8d76d695a0c75bd90930c4217f61140f2cfa9f92880e25f",
+      "task_id": "exp5258-sota-refresh-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5259,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_runtime_ready=true ready through flagship_moe",
+      "loadable": true,
+      "relative_path": "results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
+      "sha256": "sha256:5105872f79fc03b2e15b6f46133fab0e6b37be79fe06b17cd870ae78c559960d",
+      "task_id": "exp5259-sota-gguf-gpu-offload-preflight-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5260,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false",
+      "loadable": true,
+      "relative_path": "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
+      "sha256": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
+      "task_id": "exp5260-cross-model-typed-memory-retry-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5261,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed",
+      "loadable": true,
+      "relative_path": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+      "sha256": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
+      "task_id": "exp5261-typed-memory-interference-audit-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5262,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)",
+      "loadable": true,
+      "relative_path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+      "sha256": "sha256:0b758e34dbd62ab8dac17d1a8e5aad8eb07c1a5a841078e894a2d8f211c18246",
+      "task_id": "exp5262-solver-grounded-constraint-extraction-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5263,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: null logit-energy unsupported-minus-supported delta=0.004811",
+      "loadable": true,
+      "relative_path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
+      "sha256": "sha256:ef1e4d9ed79c0652b96a191aef35c1bac222e3442c26c91295eb40ded74c2d4c",
+      "task_id": "exp5263-neuron-attention-energy-hallucination-probe-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5264,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls",
+      "loadable": true,
+      "relative_path": "results/experiment_5264_verifier_dose_scheduler_replay_v481.json",
+      "sha256": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
+      "task_id": "exp5264-verifier-dose-scheduler-replay-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5265,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight",
+      "loadable": true,
+      "relative_path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
+      "sha256": "sha256:d8fa1293b2f366cc31affaf04de9d3bb6f4c861616c4959ffa1bd5ed94d2a911",
+      "task_id": "exp5265-kan-certificate-explanation-refinement-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5266,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json",
+      "sha256": "sha256:9bdc6f3465064edfd441f38ee43f629a7e65c939ac09daad45e0adaab983b5b1",
+      "task_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5267,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence.",
+      "loadable": true,
+      "relative_path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+      "sha256": "sha256:ac3b48230745af7d7d9d9e371c2d7e18fe84f54ed44f32cfe2291c1a426ba5f0",
+      "task_id": "exp5267-artifact-normalizer-template-adoption-v481"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5268,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .481 synthesized with 7 clean positives, 1 clean null, 2 flagged verifier artifacts quarantined, hardware blocked, and no speedup claim.",
+      "loadable": true,
+      "relative_path": "results/experiment_5268_capstone_v481.json",
+      "sha256": "sha256:50b61e5dcc670b5a2eb835f1c2e748eb713749ef95a63ac538d298c3fa23c0a6",
+      "task_id": "exp5268-capstone-v481"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:0808ef451e1c5d460eb9250a65532ab91a189dd0f3350eb7482301e9bef67794"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:2b2b1629ec94106e339087d32e06e66ef1513cdcfd89f0fb3fc37c7c3c903473"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:e4e3f375eb4bc5666aa8b1ee0760c15e22c2f63cf8db319585c485916ddef41e"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:ce379fb5153af0414386e781305d8f9d5fc444186ec367a1910bca55c295d182"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:40443328b953d8be977b1d24414a6a63e298ed2fc2b905205cefbb72efc9a86c"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:e8d48e80d246f9d48316e76499ebcd00ddaf491e961e97a77d21866fdfba191a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/traceability.md",
+      "sha256": "sha256:3e7ff3c2576c85d25af7e8710814a48c9592f4edba12f3d3f4d25d78ebdff866"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5269",
+    "SCENARIO-REPORT-5269",
+    "SCENARIO-REPORT-5269-BLOCKED-CLOSEOUT"
+  ]
+}
