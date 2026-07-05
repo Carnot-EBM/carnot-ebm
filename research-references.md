@@ -27115,3 +27115,120 @@ Execution-time sweep after the `.481` plan checked arXiv, OpenReview, HuggingFac
 - **Semantic Scholar:** EBT returned citationCount=26 and influentialCitationCount=2; ARM-EBM returned citationCount=8 and influentialCitationCount=2. The citation samples remain watch items only.
 
 <!-- V481-EXECUTION-REFRESH-2026-07-05-END -->
+
+## V482 Research Update - 2026-07-05
+
+Search scope: arXiv primary sources, OpenReview search results, HuggingFace Papers pages, Semantic
+Scholar search/API attempts for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605, GitHub repository
+search, Extropic writing, and Logical Intelligence public posts. This update was performed before
+drafting the `.482` roadmap. Public product pages and citation snippets are treated as planning signals
+only unless Carnot has local execution receipts.
+
+### Receipt-clean internal verification and constrained generation
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning:** arXiv:2605.18871 -
+  https://arxiv.org/abs/2605.18871. The decomposed-energy framing combines learned quality with analytical
+  constraint penalties and uncertainty-triggered regeneration. Carnot hook: useful as a structural
+  reference for verifier allocation and deterministic penalties, but the retired Phase D external
+  generated-text/logprob scorer path remains closed. `.482` should borrow the two-pass allocation idea,
+  not reopen LoRA/uPRM/EBRM text scoring.
+- **Structural Rigidity and the 57-Token Predictive Window:** arXiv:2604.03524 -
+  https://arxiv.org/abs/2604.03524. Reports that internal geometry signals are model/task/configuration
+  specific and that factual hallucination can lack a pre-commitment signal. Carnot hook: `.481`'s internal
+  probe must become a receipt-first telemetry harness before any quality claim; absence of signal is a
+  valid result and must not be masked by text-only fallback scorers.
+- **Weakly Supervised Distillation of Hallucination Signals into LLM Hidden States:** arXiv:2604.06277 -
+  https://arxiv.org/abs/2604.06277. Trains hidden-state probes with external grounding used only during
+  training-time label construction. Carnot hook: evaluate internal features as a local verifier substrate,
+  while recording whether the local GGUF path exposes hidden/logit receipts.
+- **Detecting Representational Inconsistencies for Factual Truthfulness:** arXiv:2601.14210 -
+  https://arxiv.org/abs/2601.14210. Uses intermediate hidden states for low-overhead uncertainty routing.
+  Carnot hook: pair hidden/logit features with verifier-dose scheduling rather than treating every case as
+  requiring full verifier calls.
+- **TRIDENT: Temporally Restricted Inference via DFA-Enhanced Neural Traversal:** arXiv:2506.09701 -
+  https://arxiv.org/abs/2506.09701. Compiles temporal constraints into automata used during beam search,
+  with formal satisfaction guarantees. Carnot hook: a solver-grounded fixture rebuild should make
+  constraints executable and auditable before rerunning extraction with a SOTA GGUF proposer.
+- **OpenReview constrained-decoding updates:** OpenReview search surfaced ICLR/ICML 2026 threads on
+  globally constrained decoding and tractable finite-automata constraints, including
+  https://openreview.net/pdf?id=LYBs6f3jlK and https://openreview.net/forum?id=OhndOnT4Ih. Carnot hook:
+  finite-state constraints are promising for syntax/temporal guardrails, but `.482` should keep headline
+  claims on solver-labeled fixtures rather than broad open-ended generation.
+
+### Continuous self-learning and memory governance
+- **From Player to Master / MemoPilot:** arXiv:2606.08656 - https://arxiv.org/abs/2606.08656. Treats memory
+  updates as a multi-turn decision problem optimized for test-time learning. Carnot hook: `.482` should
+  turn typed memory into persistent decision-history rows with evidence, rejected revisions, outcomes,
+  conflict handling, and rollback, while avoiding parameter-training claims.
+- **Governing Evolving Memory in LLM Agents:** arXiv:2603.11768 -
+  https://arxiv.org/abs/2603.11768. Highlights governance, semantic drift, and privacy risks as memory
+  becomes dynamic. Carnot hook: self-learning artifacts need scope-validity, stale-conflict eviction, and
+  harmful-memory rollback fields, not just accuracy deltas.
+- **Portable Agent Memory:** arXiv:2605.11032 - https://arxiv.org/abs/2605.11032. Defines structured memory
+  with provenance, scoped disclosure, and injection-resistant rehydration. Carnot hook: memory entries
+  should carry provenance and capability/scope metadata before being injected into another model or task.
+- **Securing LLM-Agent Long-Term Memory Against Poisoning:** arXiv:2606.24322 -
+  https://arxiv.org/abs/2606.24322, and **MemLineage:** arXiv:2605.14421 -
+  https://arxiv.org/abs/2605.14421. Both reinforce that derivation history alone is not enough unless
+  enforcement controls how memory can affect future actions. Carnot hook: memory-assisted verifier-dose
+  pilots must measure unsafe false accepts and rollback, not only verifier-call reduction.
+- **From Storage to Experience / LLM agent memory survey:** HuggingFace/arXiv 2605.06716 -
+  https://huggingface.co/papers/2605.06716 and https://arxiv.org/html/2605.06716v1. The storage,
+  reflection, experience taxonomy matches Carnot's typed-memory progression. Carnot hook: `.482` should
+  test whether stored decisions become reusable experience without cross-model overclaiming.
+- **Just-In-Time Reinforcement Learning:** HuggingFace/arXiv 2601.18510 -
+  https://huggingface.co/papers/2601.18510. Training-free test-time policy optimization without weight
+  updates is relevant to continuous self-learning under local-resource constraints. Carnot hook: treat as
+  inspiration for retrieval/policy updates, not a mandate for GRPO or gradient updates in `.482`.
+
+### KAN certificates, CSP landscapes, and hardware-bound sampling
+- **Optimal Abstractions for Verifying Properties of KANs:** arXiv:2602.06737 -
+  https://arxiv.org/abs/2602.06737. Replaces KAN units with piecewise-affine abstractions and verifies
+  properties through MILP with local/global error estimates. Carnot hook: scale `.481`'s KAN certificate
+  refinement toward multi-component PWA/MILP certificates with explicit slack, piece counts, and
+  false-property rejection.
+- **Formal Verification of Neural Certificates Done Dynamically:** arXiv:2507.11987 -
+  https://arxiv.org/abs/2507.11987. Uses runtime monitoring over finite lookahead regions as a lighter
+  alternative to exhaustive static verification. Carnot hook: pair KAN/MILP static certificates with a
+  dynamic spot-check harness before claiming robustness beyond the certified region.
+- **Finding the right path: statistical mechanics of connected solutions in CSPs:** arXiv:2505.20954 -
+  https://arxiv.org/abs/2505.20954. Studies connected solution manifolds and local entropy bias in hard
+  CSPs. Carnot hook: useful for designing factor-graph/sampler boundary tests that measure landscape
+  structure rather than only final solve success.
+- **Probabilistic Computers for Neural Quantum States:** arXiv:2512.24558 -
+  https://arxiv.org/abs/2512.24558. Demonstrates FPGA probabilistic computing for Boltzmann-style sampling
+  at large lattice sizes. Carnot hook: reinforces the sampling-hardware thesis, but `.482` must limit local
+  claims to interface, reachability, autocorrelation, and no-speedup receipts.
+- **Extropic X0/XTR-0 public material:** https://extropic.ai/writing/inside-x0-and-xtr-0 and
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one. Public pages still describe TSUs
+  as programmable EBM samplers and XTR-0 as a CPU+FPGA+TSU-daughterboard platform; no Carnot-local SDK or
+  device is available. Carnot hook: keep TSU as roadmap context only.
+- **Logical Intelligence Kona/Aleph updates:** https://logicalintelligence.com/blog/energy-based-model-sudoku-demo,
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks, and
+  https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation. Public posts
+  emphasize EBM/EBRM advantages on CSP and formal-verification tasks but provide no reproducible internals.
+  Carnot hook: use Sudoku/formal verification as external motivation for solver-grounded constraints, not
+  as a baseline claim.
+
+### Citation and repository status
+- **Semantic Scholar EBT / ARM-EBM check:** direct API attempts on 2026-07-05 returned HTTP 429/network
+  errors in this pass. Semantic Scholar search pages still surfaced EBT arXiv:2507.02092 as a cited work
+  for Transformers-as-Intrinsic-Optimizers, Learning Iterative Reasoning through Energy Diffusion, and
+  EBT-Policy; ARM-EBM arXiv:2512.15605 appeared in related pages for ShiQ, path-star/pathological tasks,
+  and formal aspects of language modeling. Carnot hook: no citation-count delta should be claimed from
+  this pass; keep citation trails as watch metadata only.
+- **GitHub watch:** constrained decoding and memory lists remain useful discovery aids:
+  https://github.com/Saibo-creator/Awesome-LLM-Constrained-Decoding,
+  https://github.com/jxzhangjhu/awesome-LLM-controlled-decoding-generation,
+  https://github.com/TeleAI-UAGI/Awesome-Agent-Memory, and
+  https://github.com/topics/continual-learning. Carnot hook: no repository found in this sweep justifies
+  replacing existing Carnot verifier, memory, KAN, or hardware-boundary code paths in `.482`.
+
+### Planning impact
+- **Run receipt-first before quality:** The flagged `.481` internal and solver pilots should split into
+  harness/fixture tasks followed by gated reruns.
+- **Self-learning must be governed:** The milestone needs at least one continuous self-learning task that
+  measures provenance, conflict, rollback, and unsafe false accepts, not just memory-usefulness deltas.
+- **Keep hardware honest:** Factor-graph and hardware tasks should advance interface and autocorrelation
+  evidence while explicitly refusing speedup claims without board/runtime receipts.
+
+<!-- V482-RESEARCH-UPDATE-2026-07-05-END -->
