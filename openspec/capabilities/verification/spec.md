@@ -25962,3 +25962,90 @@ harmful, keeps `scheduler_ready=false`, and preserves exact receipt blockers.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5264 | Implemented (`python/carnot/pipeline/verifier_dose_scheduler_replay.py`, `results/experiment_5264_verifier_dose_scheduler_replay_v481.json`) | Implemented (`tests/python/test_experiment_5264_verifier_dose_scheduler_replay_v481.py`) |
+
+### REQ-VERIFY-5276: Memory-Assisted Verifier-Dose Gated Pilot V482
+
+The repository SHALL provide Exp 5276 at
+`python/carnot/experiment_5276_memory_assisted_verifier_dose_gated_v482.py`
+and write
+`results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL execute
+only when both upstream gates are true:
+`results/experiment_5271_sota_telemetry_receipt_harness_v482.json`
+reports `telemetry_harness_ready=true`, and
+`results/experiment_5275_governed_decision_history_memory_v482.json`
+reports `memory_decision_history_ready=true`. If either gate is absent or
+false, the runner SHALL write a terminal `blocked_` artifact, preserve the
+checked preconditions, and SHALL NOT synthesize live-SOTA, verifier, or memory
+evidence.
+
+The pilot SHALL reuse the Exp 5264 verifier-dose scheduling policy shape and
+add governed decision-history memory as an allocation feature only. Governed
+memory MAY choose whether a full verifier dose is needed or which deterministic
+check family to run. Governed memory SHALL NOT inject the answer, selected
+decision, or accepted claim directly. The pilot SHALL compare the
+memory-assisted scheduler against an always-full-verifier baseline and a
+no-memory scheduler baseline on the same bounded live-local-SOTA receipt-backed
+fixtures.
+
+The mandated headline `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe` and
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`. The runner MAY include
+`unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe` only when the Exp
+5271 receipts show the model is available and runtime permits. Legacy or tiny
+models MAY be recorded only in CPU smoke-test metadata and SHALL NOT appear in
+headline metrics.
+
+The artifact SHALL include principle-wrapped top-level fields
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `memory_verifier_dose_ready`, `calls_avoided_rate`,
+`decision_quality_delta`, `unsafe_false_accepts`, `rollback_exercised`, and
+`memory_scope_violations_blocked`, plus a bare `commands_run` list. It SHALL
+also include model/runtime/memory snapshots, a row-level pilot trace, baseline
+metrics, source artifact checksums, `duration_s`, `random_seed`, and
+`reproducibility_checksum`. `honest_verdict.value` SHALL start with
+`complete:` or `blocked_` and state whether memory-assisted verifier dosing is
+positive, null, harmful, or unmeasured. `inference_substrate.value` SHALL be
+`live_llm_inference_local_gguf_sota`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5276 verdict; starts with complete: or blocked_ and states whether memory-assisted verifier dosing is positive, null, harmful, or unmeasured."
+- `inference_substrate`: principle "Declares the bounded local SOTA GGUF receipt-backed pilot, not cached-only replay, tiny-model smoke, external judging, or answer injection."
+- `preconditions_checked`: principle "Records the Exp 5271 telemetry gate, Exp 5275 governed-memory gate, Exp 5264 scheduler replay readiness, model/runtime snapshots, and exclusion-manifest check before allocation metrics are interpreted."
+- `MODEL_SPECS`: principle "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, and headline inclusion; tiny legacy smoke models cannot contribute headline metrics."
+- `memory_verifier_dose_ready`: principle "True only when governed memory changes allocation, avoids full verifier calls, preserves always-full decision quality, causes zero unsafe false accepts, suppresses unsafe memory rows, and exercises rollback."
+- `calls_avoided_rate`: principle "Fraction of always-full verifier calls avoided by the memory-assisted policy on live-SOTA-receipt-backed pilot rows."
+- `decision_quality_delta`: principle "Memory-assisted quality rate minus always-full quality rate on the same pilot rows; negative values are harmful."
+- `unsafe_false_accepts`: principle "Counts unsafe acceptances introduced by memory-assisted allocation; any positive value blocks readiness."
+- `rollback_exercised`: principle "Confirms the pilot included a harmful-memory allocation case and selected rollback/block/quarantine/retire instead of trusting memory."
+- `memory_scope_violations_blocked`: principle "Counts stale, poisoning-like, out-of-scope, or harmful memory rows blocked before they can influence allocation."
+- `commands_run`: principle "Commands run to validate the module, artifact schema, new-code coverage, repository tests, and adversarial verification."
+
+### SCENARIO-VERIFY-5276: Governed Memory Reduces Full Verifier Dose Without Unsafe Accepts
+
+Given Exp 5271 live local SOTA GGUF telemetry receipts are ready, Exp 5275
+governed decision-history memory is ready, and Exp 5264 scheduler replay is
+ready, when Exp 5276 runs, then it builds a bounded pilot from the receipt-backed
+scheduler fixtures, attaches mandated live model/runtime receipts, applies a
+memory-assisted allocation policy that uses governed memory only to select a
+verifier dose or deterministic check, compares against always-full and
+no-memory baselines, records stale/harmful/scope/poison memory suppression,
+exercises rollback, writes the required artifact, and sets
+`memory_verifier_dose_ready.value=true` only when decision quality is not below
+always-full, unsafe false accepts remain zero, and at least one full verifier
+call is avoided.
+
+If either upstream gate is false, the scheduler replay is absent or not ready,
+the mandated SOTA receipts are missing for both headline roles, memory changes
+the selected answer directly, decision quality drops below always-full, unsafe
+false accepts are introduced, no unsafe memory row is suppressed, or rollback is
+not exercised, then the same runner writes a terminal `blocked_` or `complete:`
+artifact that states `unmeasured`, `null`, or `harmful`, keeps
+`memory_verifier_dose_ready.value=false`, and preserves exact blockers.
+
+## Implementation Status (REQ-VERIFY-5276)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5276 | Planned (`python/carnot/experiment_5276_memory_assisted_verifier_dose_gated_v482.py`, `results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json`) | Planned (`tests/python/test_experiment_5276_memory_assisted_verifier_dose_gated_v482.py`) |
