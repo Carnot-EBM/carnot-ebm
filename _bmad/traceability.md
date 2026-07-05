@@ -1,5 +1,13 @@
 # Carnot — Traceability Matrix
 
+**Operational Note:** 2026-07-05 Exp 5258 V481 execution-refresh test fix
+normalized the Semantic Scholar LoopUS citation sample while preserving the
+full source title, and expanded defensive artifact-validation coverage under
+`REQ-REPORT-5258`. Focused tests:
+`tests/python/test_experiment_5258_sota_refresh_v481.py` (`29 passed`);
+scoped Coverage.py report for the Exp 5258 module is 100% (`131` statements,
+`0` missing). No changes were made to `scripts/research_conductor.py`.
+
 **Operational Note:** 2026-07-03 Exp 5197 GAP-4 real-checkpoint regression
 fix reconciled `REQ-REPORT-5197` by adding the exact field-principle contract
 to OpenSpec, marking the v476 implementation/tests implemented, and hardening
@@ -76,7 +84,7 @@ and the `scripts/__init__.py` package hook, without modifying
 The full spec-coverage audit is still blocked by pre-existing unreferenced
 legacy tests.
 
-**Last Updated:** 2026-07-03 (Exp 5197 GAP-4 real-checkpoint regression fix; REQ-REPORT-5197 implementation/test traceability reconciled)
+**Last Updated:** 2026-07-05 (Exp 5258 V481 execution-refresh test fix; REQ-REPORT-5258 implementation/test traceability reconciled)
 
 **Operational Note:** 2026-05-27 milestone 2026.05.294 operational retrospective updated `results/operational_retro_2026_05_294.json` and `ops/status.md`; `ops/changelog.md` and `docs/research-log.md` already contained matching milestone entries. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 

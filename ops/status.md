@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-05 (Milestone 2026.07.480 operational retro)
+**Last Updated:** 2026-07-05 (Exp 5258 V481 execution-refresh test fix)
+
+## Session 2026-07-05 — Exp 5258 V481 Execution-Refresh Test Fix
+
+Fixed the Exp 5258 V481 execution-refresh regression without reverting prior
+changes and without modifying `scripts/research_conductor.py`. The Semantic
+Scholar LoopUS citation sample now uses the normalized title expected by the
+artifact contract while preserving the full source title for auditability.
+Expanded validation tests cover the remaining fail-closed artifact branches.
+
+Validation for this fix: Exp 5258 focused tests pass (`29 passed`), and scoped
+Coverage.py report for `python/carnot/experiment_5258_sota_refresh_v481.py` is
+100% (`131` statements, `0` missing). The E2E plan has no Exp
+5258-specific model-training or hardware check; this reporting refresh is
+covered by focused artifact/schema/reference tests.
 
 ## Session 2026-07-05 - Milestone 2026.07.480 Operational Retro
 

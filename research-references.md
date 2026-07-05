@@ -27094,3 +27094,24 @@ execution receipts.
   `smiles724/Awesome-LLM-RLVR`, and `Thinklab-SJTU/awesome-ml4co` are useful survey/watchlist repos.
   No newly found repository provides enough local, maintained Carnot-compatible code to justify replacing
   existing bounded verifier, KAN, or typed-memory experiments in `.481`.
+
+
+### V481 Execution Refresh - 2026-07-05
+
+Execution-time sweep after the `.481` plan checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, and Logical Intelligence public pages. The items below were not in the V481 planning block and are actionable as implementation notes, but they do not require a roadmap edit.
+
+### New actionable deltas
+- **DuoMem: Towards Capable On-Device Memory Agents via Dual-Space Distillation** (https://arxiv.org/abs/2606.29961): Split Exp5260/Exp5261 memory analysis into context-space memory usefulness and parameter-space training pressure; Carnot can test the context-memory arm without reopening LoRA or broad fine-tuning. Actionability: Record aligned precomputed memory versus no-memory and shuffled-memory controls; defer adapter training unless a later task has explicit training scope.
+- **QVal: Cheaply Evaluating Dense Supervision Signals for Long-Horizon LLM Agents** (https://arxiv.org/abs/2606.32034): Exp5264 can score verifier-dose policies by whether cheap signals order cached actions/candidates like a stronger reference policy before any training run. Actionability: Add Q-alignment style ordering as an analysis note for cached scheduler replay, without changing the already planned task.
+- **MemSyco-Bench: Benchmarking Sycophancy in Agent Memory** (https://arxiv.org/abs/2607.01071): Exp5261 should treat harmful memory as more than storage/retrieval failure: fixtures should verify that memory is rejected when objective evidence conflicts or when the memory is out of scope. Actionability: Include conflict, scope-validity, update-tracking, and personalization-only cases inside the deterministic typed-memory interference audit.
+- **Managing Procedural Memory in LLM Agents: Control, Adaptation, and Evaluation** (https://arxiv.org/abs/2606.23127): The AFTER benchmark separates local improvement, cross-task transfer, cross-role transfer, and cross-model generalization, matching Exp5260's blocked cross-model typed-memory question. Actionability: Report broad-transfer versus role-specific memory entries separately instead of collapsing them into one memory-usefulness metric.
+- **SkillHone: A Harness for Continual Agent Skill Evolution Through Persistent Decision History** (https://arxiv.org/abs/2606.08671): Typed verifier memory should preserve diagnoses, rejected revisions, evidence, and outcomes, not only the final promoted skill or constraint. Actionability: Use persistent decision-history rows as an optional schema check in Exp5261 and future skill-memory work; do not import a deep-research workflow.
+- **Beyond In-Domain Detection: SpikeScore for Cross-Domain Hallucination Detection** (https://arxiv.org/abs/2601.19245): Exp5263 can treat multi-turn uncertainty fluctuation as a narrow control if the runtime exposes token probabilities; it must not replace the planned internal or logit-energy receipts with a text-only scorer. Actionability: Use only as a receipt-gated comparator for cross-domain hallucination fixtures; keep Phase D external text scoring retired.
+- **PLN-THRML: Probabilistic Logic Rules Compiled To Thermodynamic Factor Graphs** (https://github.com/xiaohanma-oss/PLN-THRML): The repository shows a concrete PLN-to-Ising-factor-graph mapping with CPU confidence propagation and sampler-side strength propagation. Actionability: Use as a design comparison for Exp5266 boundary notes only; do not add a dependency or claim TSU execution from a third-party repository.
+
+### Execution impact
+- **Plan impact:** No executable `.481` task edit is required. The deltas sharpen Exp5260/Exp5261 memory checks, Exp5263 hallucination controls, Exp5264 scheduler analysis, and Exp5266 hardware boundary notes.
+- **Retired scope:** No retired scope was reopened; Phase D external generated-text scoring, broad LoRA fine-tuning, and TSU/Kona execution claims remain closed unless a future task carries an explicit override.
+- **Semantic Scholar:** EBT returned citationCount=26 and influentialCitationCount=2; ARM-EBM returned citationCount=8 and influentialCitationCount=2. The citation samples remain watch items only.
+
+<!-- V481-EXECUTION-REFRESH-2026-07-05-END -->
