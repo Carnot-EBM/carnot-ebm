@@ -1,0 +1,347 @@
+{
+  "audit_rows": {
+    "aligned": [
+      {
+        "correct": true,
+        "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+        "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+        "selected_action": "use_gap1_orientation_discriminator_as_memory_only",
+        "selected_subject": "GAP-1 orientation discriminator memory-only promotion",
+        "task_id": "gap1_orientation_holdout",
+        "task_kind": "useful",
+        "task_slot": "gap1_orientation"
+      },
+      {
+        "correct": true,
+        "expected_action": "block_speedup_claim_until_transcript",
+        "expected_subject": "Hardware speedup claim boundary",
+        "selected_action": "block_speedup_claim_until_transcript",
+        "selected_subject": "Hardware speedup claim boundary",
+        "task_id": "hardware_reporting_holdout",
+        "task_kind": "useful",
+        "task_slot": "hardware_reporting"
+      },
+      {
+        "correct": true,
+        "expected_action": "retire_mmlu_hidden_state_path",
+        "expected_subject": "MMLU hidden-state verifier path retired",
+        "selected_action": "retire_mmlu_hidden_state_path",
+        "selected_subject": "MMLU hidden-state verifier path retired",
+        "task_id": "mmlu_hidden_state_holdout",
+        "task_kind": "useful",
+        "task_slot": "mmlu_hidden_state"
+      },
+      {
+        "correct": true,
+        "expected_action": "block_arc_patch_until_positive_validation",
+        "expected_subject": "ARC harmful direct patch rollback",
+        "selected_action": "block_arc_patch_until_positive_validation",
+        "selected_subject": "ARC harmful direct patch rollback",
+        "task_id": "arc_patch_harmful_holdout",
+        "task_kind": "useful",
+        "task_slot": "arc_patch"
+      }
+    ],
+    "shuffled": [
+      {
+        "correct": false,
+        "expected_action": "use_gap1_orientation_discriminator_as_memory_only",
+        "expected_subject": "GAP-1 orientation discriminator memory-only promotion",
+        "selected_action": "block_arc_patch_until_positive_validation",
+        "selected_subject": "ARC harmful direct patch rollback",
+        "task_id": "gap1_orientation_holdout",
+        "task_kind": "useful",
+        "task_slot": "gap1_orientation"
+      },
+      {
+        "correct": false,
+        "expected_action": "block_speedup_claim_until_transcript",
+        "expected_subject": "Hardware speedup claim boundary",
+        "selected_action": "use_gap1_orientation_discriminator_as_memory_only",
+        "selected_subject": "GAP-1 orientation discriminator memory-only promotion",
+        "task_id": "hardware_reporting_holdout",
+        "task_kind": "useful",
+        "task_slot": "hardware_reporting"
+      },
+      {
+        "correct": false,
+        "expected_action": "retire_mmlu_hidden_state_path",
+        "expected_subject": "MMLU hidden-state verifier path retired",
+        "selected_action": "block_speedup_claim_until_transcript",
+        "selected_subject": "Hardware speedup claim boundary",
+        "task_id": "mmlu_hidden_state_holdout",
+        "task_kind": "useful",
+        "task_slot": "mmlu_hidden_state"
+      },
+      {
+        "correct": false,
+        "expected_action": "block_arc_patch_until_positive_validation",
+        "expected_subject": "ARC harmful direct patch rollback",
+        "selected_action": "retire_mmlu_hidden_state_path",
+        "selected_subject": "MMLU hidden-state verifier path retired",
+        "task_id": "arc_patch_harmful_holdout",
+        "task_kind": "useful",
+        "task_slot": "arc_patch"
+      }
+    ],
+    "unrelated": [
+      {
+        "correct": true,
+        "expected_action": "answer_without_memory",
+        "expected_subject": null,
+        "selected_action": "answer_without_memory",
+        "selected_subject": null,
+        "task_id": "range_constraint_unrelated",
+        "task_kind": "unrelated",
+        "task_slot": "numeric_range"
+      },
+      {
+        "correct": true,
+        "expected_action": "answer_without_memory",
+        "expected_subject": null,
+        "selected_action": "answer_without_memory",
+        "selected_subject": null,
+        "task_id": "prompt_style_unrelated",
+        "task_kind": "unrelated",
+        "task_slot": "prompt_style"
+      },
+      {
+        "correct": true,
+        "expected_action": "answer_without_memory",
+        "expected_subject": null,
+        "selected_action": "answer_without_memory",
+        "selected_subject": null,
+        "task_id": "proof_obligation_unrelated",
+        "task_kind": "unrelated",
+        "task_slot": "proof_obligation"
+      }
+    ]
+  },
+  "experiment": "experiment_5261_typed_memory_interference_audit_v481",
+  "experiment_id": 5261,
+  "fixture_checksums": {
+    "principle": "Stable SHA-256 receipts for deterministic fixtures and cached source artifacts.",
+    "value": {
+      "fixture_set_sha256": "sha256:bf7ca6f85982b9611e132e512040a3ce0257efd0ebdae3c3af9dec07cf8530de",
+      "memories": {
+        "ARC harmful direct patch rollback": "sha256:9e0ee312b64631a4ca8fbdf27389f51df15b9459c2f23cea65e05adf5d496326",
+        "Citation-style irrelevant held memory": "sha256:d4cc0a4ee148346198584a3429dac31fbe10c3cff099e21c783ba18e0de9a47e",
+        "GAP-1 contradictory registry promotion stale copy": "sha256:c4ffc797a6089189ea1b5649d8dc1b71e7d11989f0b9de0c9560a125ac006966",
+        "GAP-1 orientation discriminator memory-only promotion": "sha256:6644a0ece59408bccba4b73fa00abf14089fc296ae47d27e0347c4d85141c32a",
+        "Hardware speedup claim boundary": "sha256:507e6233fbdb7bd7f15d1a7e88dfa1d3df4f959860cc6b5ce7da8730dcad1949",
+        "Hardware speedup outdated smoke-only shortcut": "sha256:2db5a405b80b333fcf7322e00237fc09cb22769780b6ceafbdc8bcd36b4265cc",
+        "MMLU hidden-state verifier path retired": "sha256:5116937fbefef961d7a912d07bb7d7e5bf73f5edd85d397552b9ebdb14ecf7d3"
+      },
+      "source_artifacts": {
+        "research-references.md#v481-research-update-2026-07-05": "sha256:1cc9e2ded66aac4aa43108f8d24437361a5e6f89a48eda52cd6617b54cc0b624",
+        "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json": "sha256:a5cca69be41f5507e8153da2814b4884cb88d13a4e938dc8d2a7fe0dd14010ed",
+        "results/experiment_5249_cross_model_typed_memory_transfer_v480.json": "sha256:65efeef439cf00e25d7a7a72af1137eaae390ae521ac0932e8de00a5eb0641e4",
+        "results/typed_multihead_verifier_memory_v478.json": "sha256:1da9ea9000a9ce3e74fa43e1328289924bbb1b86b084ba36389ef7a412457561",
+        "results/verifier_memory_v477.json": "sha256:62bcf90d2e6fd54d53d6a08f7350c50cc35628119ac783e7e45437687b7b43cb"
+      },
+      "tasks": {
+        "arc_patch_harmful_holdout": "sha256:6fc585d5a2cb776e412aa19e4c14d86ce60d65e424216b92b0ca12890b84825e",
+        "gap1_orientation_holdout": "sha256:e18d41a3af6f886eda70d1e6707f9809773ad77c2869609ad37a268901dbf6ec",
+        "hardware_reporting_holdout": "sha256:c94c7f2e7618aaae8393c6b7fcfeb5dc27d78623177d01b292deb786e69fabb0",
+        "mmlu_hidden_state_holdout": "sha256:d9bc72293d67d3c3c87079c100ffc20c3fc9428e9a29008429e655eb3dfe8475",
+        "prompt_style_unrelated": "sha256:93a7e4937a01e716c0e449aaeaffe14b600b1b402783ad8f4d22755704890e4b",
+        "proof_obligation_unrelated": "sha256:959f3da7a9b642206229c02d866a440c039219438e4e5ede24194f17747e4098",
+        "range_constraint_unrelated": "sha256:c089ee6e1b34fa57e221e92239bf987af4ab6064c31eeca6108702366577b670"
+      }
+    }
+  },
+  "fixture_memory_kinds": [
+    "aligned",
+    "conflicting",
+    "irrelevant",
+    "shuffled",
+    "stale"
+  ],
+  "harmful_memory_rollback_passed": {
+    "principle": "True only when harmful memory rolls back into a safe block/quarantine/retire action on the degradation fixture.",
+    "value": true
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict starts with complete: or blocked_ and states whether the memory policy is ready, blocked, harmful, or needs redesign.",
+    "value": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed"
+  },
+  "inference_substrate": {
+    "principle": "Declares cached fixture replay with no live LLM calls, preventing a false SOTA inference claim.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "interference_rate": {
+    "principle": "Unrelated tasks receiving an action from irrelevant, stale, conflicting, or shuffled memory.",
+    "value": 0.0
+  },
+  "memory_policy_ready": true,
+  "memory_policy_ready_principle": "Bare readiness gate for future cached/no-LLM self-learning experiments; true only when retention, interference, eviction, and harmful rollback pass.",
+  "promotion_eviction_policy": {
+    "principle": "Promotion, hold, rollback, stale eviction, and conflict eviction receipts.",
+    "value": {
+      "active_subjects": [
+        "ARC harmful direct patch rollback",
+        "GAP-1 orientation discriminator memory-only promotion",
+        "Hardware speedup claim boundary",
+        "MMLU hidden-state verifier path retired"
+      ],
+      "decisions": [
+        {
+          "action": "use_gap1_orientation_discriminator_as_memory_only",
+          "active": true,
+          "conflicts_with": null,
+          "effective_state": "promoted",
+          "eviction_reason": null,
+          "fixture_kind": "aligned",
+          "harmful": false,
+          "head": "provenance",
+          "heldout_delta": 0.041797,
+          "promotion_reason": "heldout_delta_clears_promotion_threshold",
+          "rollback_reason": null,
+          "stale": false,
+          "subject": "GAP-1 orientation discriminator memory-only promotion",
+          "task_slot": "gap1_orientation"
+        },
+        {
+          "action": "block_speedup_claim_until_transcript",
+          "active": true,
+          "conflicts_with": null,
+          "effective_state": "promoted",
+          "eviction_reason": null,
+          "fixture_kind": "aligned",
+          "harmful": false,
+          "head": "constraints",
+          "heldout_delta": 0.05,
+          "promotion_reason": "heldout_delta_clears_promotion_threshold",
+          "rollback_reason": null,
+          "stale": false,
+          "subject": "Hardware speedup claim boundary",
+          "task_slot": "hardware_reporting"
+        },
+        {
+          "action": "retire_mmlu_hidden_state_path",
+          "active": true,
+          "conflicts_with": null,
+          "effective_state": "rolled_back",
+          "eviction_reason": null,
+          "fixture_kind": "aligned",
+          "harmful": false,
+          "head": "failures",
+          "heldout_delta": 0.0,
+          "promotion_reason": "heldout_delta_null",
+          "rollback_reason": "heldout_delta_null",
+          "stale": false,
+          "subject": "MMLU hidden-state verifier path retired",
+          "task_slot": "mmlu_hidden_state"
+        },
+        {
+          "action": "block_arc_patch_until_positive_validation",
+          "active": true,
+          "conflicts_with": null,
+          "effective_state": "rolled_back",
+          "eviction_reason": null,
+          "fixture_kind": "aligned",
+          "harmful": true,
+          "head": "skills_rubrics",
+          "heldout_delta": -0.2,
+          "promotion_reason": "heldout_delta_negative",
+          "rollback_reason": "heldout_delta_negative",
+          "stale": false,
+          "subject": "ARC harmful direct patch rollback",
+          "task_slot": "arc_patch"
+        },
+        {
+          "action": "promote_gap1_registry_now",
+          "active": false,
+          "conflicts_with": "GAP-1 orientation discriminator memory-only promotion",
+          "effective_state": "promoted",
+          "eviction_reason": "conflicting",
+          "fixture_kind": "conflicting",
+          "harmful": false,
+          "head": "provenance",
+          "heldout_delta": 0.03,
+          "promotion_reason": "heldout_delta_clears_promotion_threshold",
+          "rollback_reason": null,
+          "stale": false,
+          "subject": "GAP-1 contradictory registry promotion stale copy",
+          "task_slot": "gap1_orientation"
+        },
+        {
+          "action": "accept_hardware_speedup_from_smoke_only",
+          "active": false,
+          "conflicts_with": null,
+          "effective_state": "rolled_back",
+          "eviction_reason": "stale",
+          "fixture_kind": "stale",
+          "harmful": false,
+          "head": "constraints",
+          "heldout_delta": null,
+          "promotion_reason": "heldout_delta_missing",
+          "rollback_reason": "heldout_delta_missing",
+          "stale": true,
+          "subject": "Hardware speedup outdated smoke-only shortcut",
+          "task_slot": "hardware_reporting"
+        },
+        {
+          "action": "apply_citation_support_memory",
+          "active": false,
+          "conflicts_with": null,
+          "effective_state": "held",
+          "eviction_reason": null,
+          "fixture_kind": "irrelevant",
+          "harmful": false,
+          "head": "failures",
+          "heldout_delta": 0.01,
+          "promotion_reason": "heldout_delta_below_promotion_threshold",
+          "rollback_reason": null,
+          "stale": false,
+          "subject": "Citation-style irrelevant held memory",
+          "task_slot": "citation_support"
+        }
+      ],
+      "eviction_summary": {
+        "evicted_by_reason": {
+          "conflicting": 1,
+          "stale": 1
+        },
+        "evicted_n": 2,
+        "evicted_subjects": [
+          "GAP-1 contradictory registry promotion stale copy",
+          "Hardware speedup outdated smoke-only shortcut"
+        ]
+      },
+      "promotion_summary": {
+        "held": 1,
+        "promoted": 3,
+        "rolled_back": 3
+      }
+    }
+  },
+  "random_seed": 5261,
+  "reproducibility_checksum": "sha256:b89bbf19716c5f990adb48e70ac01cd5dbc990365b576a9ba0f39ef66513b87a",
+  "retention_rate": {
+    "principle": "Useful aligned memories retained after deterministic distractor insertion.",
+    "value": 1.0
+  },
+  "run_date": "2026-07-05",
+  "schema": "carnot.typed_memory_interference_audit.v481",
+  "source_artifacts": [
+    "results/verifier_memory_v477.json",
+    "results/typed_multihead_verifier_memory_v478.json",
+    "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+    "results/experiment_5249_cross_model_typed_memory_transfer_v480.json",
+    "research-references.md#v481-research-update-2026-07-05"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5261",
+    "SCENARIO-LEARN-5261"
+  ],
+  "tests_run": [],
+  "typed_memory_schema_invariants": [
+    "fixed typed heads: constraints, provenance, failures, skills_rubrics",
+    "deterministic memory identifiers derived from typed content",
+    "evidence-gated promotion above the held-out delta threshold",
+    "invalidation-gated rollback for null, harmful, or refuted memories",
+    "idempotent duplicate collapse by stable memory id",
+    "test-gold leakage rejection before durable memory write"
+  ]
+}
