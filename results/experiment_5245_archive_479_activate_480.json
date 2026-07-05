@@ -1,0 +1,333 @@
+{
+  "activation_milestone": "2026.07.480",
+  "activation_ready": false,
+  "activation_ready_principle": "Bare boolean confirming .480 can proceed without overwriting research-roadmap.yaml.",
+  "archived_milestone": "2026.07.479",
+  "closeout_fact_failures": [],
+  "closeout_facts": {
+    "arc_level_delta": 0,
+    "continuous_self_learning_status": "controlled_positive",
+    "gap1_final_status": "blocked",
+    "gap4_final_status": "blocked",
+    "hardware_speedup_claimed": false,
+    "kan_certificate_status": "extended",
+    "veribmc_final_status": "retired"
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "command_label": "scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: research-roadmap.yaml"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "command_label": "scripts/validate_prior_failures.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] research-roadmap.yaml -- no schema errors, no prior_failures violations"
+    },
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5245_archive_479_activate_480.py -q",
+      "command_label": "focused_pytest_5245",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "6 passed in 1.10s"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5245_archive_479_activate_480.py' -m pytest tests/python/test_experiment_5245_archive_479_activate_480.py -q --no-cov --override-ini addopts=",
+      "command_label": "coverage_run_5245",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "6 passed in 1.71s"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5245_archive_479_activate_480.py' --fail-under=100",
+      "command_label": "coverage_report_5245",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "python/carnot/experiment_5245_archive_479_activate_480.py 289 statements, 0 missed, 100% coverage"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py tests/python/test_experiment_5245_archive_479_activate_480.py",
+      "command_label": "spec_coverage_5245",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "OK: All tests reference specification requirements."
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "command_label": "full_pytest_tests_python",
+      "exit_code": 2,
+      "passed": false,
+      "stderr": "KeyboardInterrupt after repeated worker crashes and slow progress near 49%.",
+      "stdout": "Interrupted after failures/crashes: 170 failed, 22592 passed, 89 skipped, 1 error in 1507.17s. Visible failures included abstention HTTP timeouts, THRML parity blocked status, historical capstone level-count drift, missing transition_fixture hooks, ONNX/HF/CUDA environment tests, source-scope audit tests, and worker crashes in z3_math_verifier/test_adaptive plus JAX JEPA training."
+    }
+  ],
+  "duration_s": 4.235079,
+  "exclusions_checked": {
+    "principle": "The transition must run or explicitly record available exclusion/prior-failure checks.",
+    "value": true
+  },
+  "experiment": "experiment_5245_archive_479_activate_480",
+  "experiment_id": "exp5245-archive-479-activate-480",
+  "failed_preconditions": [
+    "full_python_suite_failed_or_interrupted"
+  ],
+  "field_principles": {
+    "activation_ready": "Bare boolean confirming .480 can proceed without overwriting research-roadmap.yaml.",
+    "commands_run": "Every validation command must be recorded with pass/fail outcome.",
+    "exclusions_checked": "The transition must run or explicitly record available exclusion/prior-failure checks.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .479 was archived and .480 is activation-ready.",
+    "inference_substrate": "cached_fixture_replay_no_llm because Exp5245 only reads existing artifacts and local records.",
+    "milestone_archived": "Bare boolean confirming the .479 closeout is represented in durable research records.",
+    "ops_docs_updated": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "research_complete_updated": "True only if this workflow appended or reconciled research-complete.yaml; false when .479 was already present.",
+    "roadmap_activation_check": "No roadmap overwrite is allowed; activated must remain false."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .479 was archived and .480 is activation-ready.",
+    "value": "blocked_archive_479_activate_480: .479 archived but .480 activation-ready verification is blocked by the failed/interrupted full tests/python run; no roadmap overwrite performed."
+  },
+  "inference_substrate": {
+    "principle": "cached_fixture_replay_no_llm because Exp5245 only reads existing artifacts and local records.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "milestone_archived": true,
+  "milestone_archived_principle": "Bare boolean confirming the .479 closeout is represented in durable research records.",
+  "ops_docs_updated": {
+    "principle": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "value": false
+  },
+  "random_seed": 5245,
+  "reproducibility_checksum": "sha256:cd0c82c8afe3203f410d9fd0e41703bae551aa856e05a762a10050f681c86ca7",
+  "research_complete_check": {
+    "had_2026_07_479_before": true,
+    "has_2026_07_479_after": true,
+    "path": "research-complete.yaml",
+    "sha256": "sha256:e5d486133d6da866fae30a49bba4842f91fbc14f14260d345655a692c06c2260",
+    "updated": false
+  },
+  "research_complete_updated": {
+    "principle": "True only if this workflow appended or reconciled research-complete.yaml; false when .479 was already present.",
+    "value": false
+  },
+  "result_path": "results/experiment_5245_archive_479_activate_480.json",
+  "roadmap_activation_check": {
+    "activated": false,
+    "activation_ready_without_overwrite": true,
+    "active_roadmap_already_480": true,
+    "active_roadmap_milestone": "2026.07.480",
+    "active_roadmap_missing_task_prefixes": [],
+    "active_roadmap_modified": false,
+    "active_roadmap_sha256": "sha256:b1479948003a2e17376962906d7625721bcf73ed71f8fb94e5d533b02935a24e",
+    "active_roadmap_task_ids": [
+      "exp5245-archive-479-activate-480",
+      "exp5246-sota-refresh-v480",
+      "exp5247-slot-artifact-normalizer-v480",
+      "exp5248-gap4-receipt-salvage-or-retire-v480",
+      "exp5249-cross-model-typed-memory-transfer-v480",
+      "exp5250-verifier-dose-scheduler-v480",
+      "exp5251-token-guard-carnot-pilot-v480",
+      "exp5252-halluhard-provenance-memory-microbench-v480",
+      "exp5253-arc-live-patch-clean-receipts-v480",
+      "exp5254-kan-convex-envelope-certificate-v480",
+      "exp5255-hardware-continuity-pkit-boundary-v480",
+      "exp5256-capstone-v480"
+    ],
+    "principle": "No roadmap overwrite is allowed; activated must remain false.",
+    "roadmap_next_milestone": null,
+    "roadmap_next_missing_task_prefixes": [],
+    "roadmap_next_present": false,
+    "roadmap_next_sha256": null,
+    "roadmap_next_task_ids": [],
+    "vnext_names_2026_07_480": true,
+    "vnext_present": true
+  },
+  "run_date": "20260704",
+  "schema": "carnot.experiment_5245_archive_479_activate_480.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5233,
+      "honest_verdict": "complete: .478 archived and .479 activated; handoff preserves GAP-1 blocked, GAP-4 flagged/blocked, VerIbmc flagged/blocked, typed memory consumer-ready, ARC rubric usable without patch, tiny KAN certificate produced, and hardware reachability with no speedup claim.",
+      "loadable": true,
+      "relative_path": "results/experiment_5233_archive_478_activate_479.json",
+      "sha256": "sha256:c512628ba1534026b593d0dd1f65eccb4d2ab56bdf30b656ece12b50b6cfa831",
+      "task_id": "exp5233-archive-478-activate-479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5234,
+      "honest_verdict": "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM.",
+      "loadable": true,
+      "relative_path": "results/experiment_5234_sota_ingestion_v479.json",
+      "sha256": "sha256:94027d17a30191695b840e7d629f6ad82af1115f8c661d7929837f5bfcee34e3",
+      "task_id": "exp5234-sota-ingestion-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5235,
+      "honest_verdict": "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks.",
+      "loadable": true,
+      "relative_path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json",
+      "sha256": "sha256:8f5d4d72e57e7285519ae5563c5c61bd0a39a164963d5d22533074bf95aaf671",
+      "task_id": "exp5235-adversarial-qa-null-tautology-calibration-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5236,
+      "honest_verdict": "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120.",
+      "loadable": true,
+      "relative_path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json",
+      "sha256": "sha256:7745e7a983f2c2944262d44dfb15a88c7359f9347f1797df931c79a16eb5e48f",
+      "task_id": "exp5236-gap4-clean-status-after-qa-calibration-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5237,
+      "honest_verdict": "complete: GAP-1 blocked_instability; the existing Exp 5209 positive result is non-leaky, but the exact selected subset is not stable enough to freeze.",
+      "loadable": true,
+      "relative_path": "results/experiment_5237_gap1_stability_freeze_or_retire_v479.json",
+      "sha256": "sha256:cd9060e9b4d2dcfc96487b06b07af97db2e5a1bb215e3114ae73c13e5ae81bd2",
+      "task_id": "exp5237-gap1-stability-freeze-or-retire-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5238,
+      "honest_verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path",
+      "loadable": true,
+      "relative_path": "results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
+      "sha256": "sha256:100ae31c49ee770c834a2abd0a234027d110d152589e596ed7b5950ac69e1c33",
+      "task_id": "exp5238-veribmc-methodology-correct-rerun-or-retire-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5239,
+      "honest_verdict": "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training",
+      "loadable": true,
+      "relative_path": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+      "sha256": "sha256:a5cca69be41f5507e8153da2814b4884cb88d13a4e938dc8d2a7fe0dd14010ed",
+      "task_id": "exp5239-continuous-self-learning-controlled-memory-ablation-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5240,
+      "honest_verdict": "success: provenance-routing live patch is gated for exp5241 without a solve claim.",
+      "loadable": true,
+      "relative_path": "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
+      "sha256": "sha256:a0ec08ad057303559217373931b547e2bdb5308d17fb2acc612b43f79d8132b6",
+      "task_id": "exp5240-arc-rubric-to-patch-synthesis-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5241,
+      "honest_verdict": "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked).",
+      "loadable": true,
+      "relative_path": "results/experiment_5241_arc_gated_live_patch_attempt_v479.json",
+      "sha256": "sha256:2567afe87417435db13486dccbc0b02b7536912491a5c633e5285bd50e5c5498",
+      "task_id": "exp5241-arc-gated-live-patch-attempt-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5242,
+      "honest_verdict": "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
+      "sha256": "sha256:d47e2ae127fb1d9862854159cc007b967546761d359101784311660968e2237f",
+      "task_id": "exp5242-kan-certificate-abstraction-scale-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5243,
+      "honest_verdict": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
+      "sha256": "sha256:6cec8439cf9b251ebf68b3693fc95fc0e0da80db08d8d94b784ac50a4a1ccbf7",
+      "task_id": "exp5243-hardware-continuity-kan-pbit-boundary-v479"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5244,
+      "honest_verdict": "complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded.",
+      "loadable": true,
+      "relative_path": "results/experiment_5244_capstone_v479.json",
+      "sha256": "sha256:5101f251f05de5e334361ed55207332a2760c30702ee6e8e303baf24e44aa145",
+      "task_id": "exp5244-capstone-v479"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:e5d486133d6da866fae30a49bba4842f91fbc14f14260d345655a692c06c2260"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:b1479948003a2e17376962906d7625721bcf73ed71f8fb94e5d533b02935a24e"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:fad517fa4ab12bf2a3f9f449c6875f82db57782cdcd423dd76ba0892999b01ff"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:13f2cf09ab7b4ca88fc6e0cfa94603d1d9770a5cfb94c228ce0b039759f5d4b2"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:9c6f64269cabd07536bb6c4c334ed5eccdc3632e9a2b6f1c7cda920e820bef01"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:e7650ce672085bc628c1cad1f596cd82f816ed33a9eaf0c70ecf248cd73e1a1c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:d7e93103ac35588aa6c1277d2d7f1f95b0a556f1c43383950ef59930517f4acc"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5245",
+    "SCENARIO-REPORT-5245",
+    "SCENARIO-REPORT-5245-BLOCKED-CLOSEOUT"
+  ]
+}
