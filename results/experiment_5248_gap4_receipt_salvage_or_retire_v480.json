@@ -1,0 +1,331 @@
+{
+  "duration_s": 0.25,
+  "experiment": "experiment_5248_gap4_receipt_salvage_or_retire_v480",
+  "experiment_id": "exp5248-gap4-receipt-salvage-or-retire-v480",
+  "field_principles": {
+    "gap4_final_decision": "Exactly one of salvaged_clean_null, blocked_missing_receipts, or retire_current_gap4_pool.",
+    "honest_verdict": "Must start with complete: or blocked_ and state the final GAP-4 receipt decision.",
+    "inference_substrate": "Must be cached_fixture_replay_no_llm because Exp5248 replays checked-in artifacts without LLM generation.",
+    "losses": "Integer copied from frozen Exp5225 validation losses; never rescored by Exp5248.",
+    "no_new_generation": "True because Exp5248 does not regenerate the pool, run a broad search, or invoke LLM generation.",
+    "normalized_artifacts": "Lists each source artifact, normalizer receipts, checksum classification, and claim-criticality.",
+    "normalizer_checksum": "Records the checked Exp5247 result checksum that gated this replay.",
+    "normalizer_version": "Records the Exp5247 normalizer implementation identity used for this replay.",
+    "pool_retired": "True only when the final decision retires the current GAP-4 pool.",
+    "ties": "Integer copied from frozen Exp5225 validation ties; never rescored by Exp5248.",
+    "unsafe_missing_receipts": "Lists claim-critical missing evidence still unsafe after safe normalization.",
+    "wins": "Integer copied from frozen Exp5225 validation wins; never rescored by Exp5248."
+  },
+  "gap4_final_decision": {
+    "principle": "Exactly one of salvaged_clean_null, blocked_missing_receipts, or retire_current_gap4_pool.",
+    "value": "salvaged_clean_null"
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state the final GAP-4 receipt decision.",
+    "value": "complete: GAP-4 final decision salvaged_clean_null; frozen validation preserves wins=0, losses=0, ties=120, and all claim-critical receipts are present after safe normalization."
+  },
+  "inference_substrate": {
+    "principle": "Must be cached_fixture_replay_no_llm because Exp5248 replays checked-in artifacts without LLM generation.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "losses": {
+    "principle": "Integer copied from frozen Exp5225 validation losses; never rescored by Exp5248.",
+    "value": 0
+  },
+  "milestone": "2026.07.480",
+  "no_new_generation": {
+    "principle": "True because Exp5248 does not regenerate the pool, run a broad search, or invoke LLM generation.",
+    "value": true
+  },
+  "normalized_artifacts": {
+    "principle": "Lists each source artifact, normalizer receipts, checksum classification, and claim-criticality.",
+    "value": [
+      {
+        "checksum_receipt": {
+          "claim_critical": true,
+          "classification": "safe-normalized",
+          "full_payload_checksum": "sha256:d6da774551487f0c3f4ee8f7ff88e15e67c8df290c7ea111a171d42bdcb5c7da",
+          "pre_qa_checksum": "sha256:ce249375322b555e57b6fc17600de289cdd3872cb6485ebaf181bf14a1b444f8",
+          "pre_qa_checksum_matches_stored": true,
+          "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending",
+          "stored_checksum": "sha256:ce249375322b555e57b6fc17600de289cdd3872cb6485ebaf181bf14a1b444f8"
+        },
+        "experiment": "experiment_5224_gap4_canonical_pool_builder_v478",
+        "experiment_id": 5224,
+        "field_classifications": [
+          {
+            "claim_critical": true,
+            "classification": "safe-normalized",
+            "field": "reproducibility_checksum",
+            "kind": "checksum_receipt",
+            "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          }
+        ],
+        "normalizer_ready_for_gates": false,
+        "normalizer_safe_repairs": [],
+        "normalizer_unsafe_rejections": [
+          {
+            "detail": "existing source artifact marks itself adversarially flagged",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial"
+          },
+          {
+            "detail": "existing source artifact carries corrigendum flags",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending"
+          }
+        ],
+        "path": "results/experiment_5224_gap4_canonical_pool_builder_v478.json"
+      },
+      {
+        "checksum_receipt": {
+          "claim_critical": true,
+          "classification": "safe-normalized",
+          "full_payload_checksum": "sha256:2bdcadd8f01f42fd83afc2d115f3543d4a6066aadf363326ca7a91d9340c0109",
+          "pre_qa_checksum": "sha256:cb6a4a3e25d344799da758b689ffeed2d34402626d078d0c7333cb07b1225f72",
+          "pre_qa_checksum_matches_stored": true,
+          "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending",
+          "stored_checksum": "sha256:cb6a4a3e25d344799da758b689ffeed2d34402626d078d0c7333cb07b1225f72"
+        },
+        "experiment": "experiment_5225_gap4_clean_scale_validation_gated_v478",
+        "experiment_id": 5225,
+        "field_classifications": [
+          {
+            "claim_critical": true,
+            "classification": "safe-normalized",
+            "field": "reproducibility_checksum",
+            "kind": "checksum_receipt",
+            "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          }
+        ],
+        "normalizer_ready_for_gates": false,
+        "normalizer_safe_repairs": [],
+        "normalizer_unsafe_rejections": [
+          {
+            "detail": "existing source artifact marks itself adversarially flagged",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial"
+          },
+          {
+            "detail": "existing source artifact carries corrigendum flags",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending"
+          }
+        ],
+        "path": "results/experiment_5225_gap4_clean_scale_validation_gated_v478.json"
+      },
+      {
+        "checksum_receipt": {
+          "claim_critical": true,
+          "classification": "safe-normalized",
+          "full_payload_checksum": "sha256:128f336f72001c37e34b554b85274012bb7c26893fd2be68a864152461b625e6",
+          "pre_qa_checksum": "sha256:7f4e63fc3ac90dd40bdd383ae1dbfd43a92c92bf4ad8d562d44eb742e66b6076",
+          "pre_qa_checksum_matches_stored": true,
+          "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending",
+          "stored_checksum": "sha256:7f4e63fc3ac90dd40bdd383ae1dbfd43a92c92bf4ad8d562d44eb742e66b6076"
+        },
+        "experiment": "experiment_5235_adversarial_qa_null_tautology_calibration_v479",
+        "experiment_id": 5235,
+        "field_classifications": [
+          {
+            "claim_critical": true,
+            "classification": "safe-normalized",
+            "field": "reproducibility_checksum",
+            "kind": "checksum_receipt",
+            "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "duration_s",
+            "kind": "duration_too_short",
+            "reason": "Exp5235 uses compute-bound fixture flags as QA calibration sentinels"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "methodology",
+            "kind": "missing_methodology_receipt",
+            "reason": "Exp5235 uses compute-bound fixture flags as QA calibration sentinels"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          }
+        ],
+        "normalizer_ready_for_gates": false,
+        "normalizer_safe_repairs": [],
+        "normalizer_unsafe_rejections": [
+          {
+            "detail": "duration_s=0.5 below 60.0s live-model floor",
+            "field": "duration_s",
+            "kind": "duration_too_short"
+          },
+          {
+            "detail": "missing model_specs/target_model, random_seed",
+            "field": "methodology",
+            "kind": "missing_methodology_receipt"
+          },
+          {
+            "detail": "existing source artifact marks itself adversarially flagged",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial"
+          },
+          {
+            "detail": "existing source artifact carries corrigendum flags",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending"
+          }
+        ],
+        "path": "results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json"
+      },
+      {
+        "checksum_receipt": {
+          "claim_critical": true,
+          "classification": "safe-normalized",
+          "full_payload_checksum": "sha256:a94311c7ae0f0d8c97ffdce7c555a77166d0eaa6bf8d7baa2c827377cb1f97f0",
+          "pre_qa_checksum": "sha256:7867d25c38f825310690a990564f3110b8a25330f169d6a0781692c884f11a8d",
+          "pre_qa_checksum_matches_stored": true,
+          "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending",
+          "stored_checksum": "sha256:7867d25c38f825310690a990564f3110b8a25330f169d6a0781692c884f11a8d"
+        },
+        "experiment": "experiment_5236_gap4_clean_status_after_qa_calibration_v479",
+        "experiment_id": 5236,
+        "field_classifications": [
+          {
+            "claim_critical": true,
+            "classification": "safe-normalized",
+            "field": "reproducibility_checksum",
+            "kind": "checksum_receipt",
+            "reason": "stored checksum matches after removing only post-hoc QA annotations: flagged_adversarial and corrigendum_pending"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          },
+          {
+            "claim_critical": false,
+            "classification": "irrelevant-to-claim",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending",
+            "reason": "post-hoc adversarial-QA annotation is preserved but not missing claim evidence"
+          },
+          {
+            "claim_critical": true,
+            "classification": "safe-normalized",
+            "field": "remaining_blocker",
+            "kind": "prior_schema_checksum_blocker",
+            "reason": "Exp5236 blocker named only upstream checksum drift resolved by pre-QA checksum replay"
+          }
+        ],
+        "normalizer_ready_for_gates": false,
+        "normalizer_safe_repairs": [],
+        "normalizer_unsafe_rejections": [
+          {
+            "detail": "existing source artifact marks itself adversarially flagged",
+            "field": "flagged_adversarial",
+            "kind": "source_flagged_adversarial"
+          },
+          {
+            "detail": "existing source artifact carries corrigendum flags",
+            "field": "corrigendum_pending",
+            "kind": "source_corrigendum_pending"
+          }
+        ],
+        "path": "results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json"
+      }
+    ]
+  },
+  "normalizer_checksum": {
+    "principle": "Records the checked Exp5247 result checksum that gated this replay.",
+    "value": "sha256:07f5a76a71370c90e39eebf8561357bb6d32dca5dc723f2a9dce837f89e229c9"
+  },
+  "normalizer_version": {
+    "principle": "Records the Exp5247 normalizer implementation identity used for this replay.",
+    "value": "experiment_5247_slot_artifact_normalizer_v480"
+  },
+  "pool_retired": {
+    "principle": "True only when the final decision retires the current GAP-4 pool.",
+    "value": false
+  },
+  "reproducibility_checksum": "sha256:0e32e13060814817746fcec50b3252723381562086cf449821eec33cdbfc6769",
+  "result_path": "results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json",
+  "run_date": "2026-07-05",
+  "schema": "carnot.experiment_5248.gap4_receipt_salvage_or_retire.v480",
+  "spec_refs": [
+    "REQ-REPORT-5248",
+    "SCENARIO-REPORT-5248-SALVAGED-CLEAN-NULL",
+    "SCENARIO-REPORT-5248-BLOCKED-OR-RETIRED"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py -q",
+      "outcome": "PASS (9 passed, 1 skipped before repository artifact write)"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5248_gap4_receipt_salvage_or_retire_v480.py' -m pytest --override-ini addopts= tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py -q --no-cov && .venv/bin/coverage report --rcfile=/dev/null -m --include='*/experiment_5248_gap4_receipt_salvage_or_retire_v480.py' --fail-under=100",
+      "outcome": "PASS (100% coverage on new module)"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5248_gap4_receipt_salvage_or_retire_v480.py tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py",
+      "outcome": "PASS"
+    }
+  ],
+  "ties": {
+    "principle": "Integer copied from frozen Exp5225 validation ties; never rescored by Exp5248.",
+    "value": 120
+  },
+  "unsafe_missing_receipts": {
+    "principle": "Lists claim-critical missing evidence still unsafe after safe normalization.",
+    "value": []
+  },
+  "wins": {
+    "principle": "Integer copied from frozen Exp5225 validation wins; never rescored by Exp5248.",
+    "value": 0
+  }
+}
