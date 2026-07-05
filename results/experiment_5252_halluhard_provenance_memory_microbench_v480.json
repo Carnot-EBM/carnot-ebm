@@ -1,0 +1,1515 @@
+{
+  "arm_metrics": {
+    "no_memory": {
+      "arm": "no_memory",
+      "citation_support_rate": 1.0,
+      "fixture_count": 12,
+      "missed_answer_rate": 0.125,
+      "over_refusal_rate": 0.125,
+      "receipts": [
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5252",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: first\nArm: no_memory\nMemory: none.\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: How long did the Aster-9 battery run under the amber-load test?\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Which crew serviced Buoy K-17?\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: How many participants did Trial Nacre enroll?\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: In what year did the Cedar lab open?\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Who donated the glass moth pendant?\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Which plant was recorded in plot V-3?\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: Which gate did Route 6 skip during the lantern parade?\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Which spice did Soup Batch 14 use?\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Who drew the vellum map?\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Which company manufactured reagent Pavo?\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: What award did the kite dance win?\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Which microscope was used for sample Q-2?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "bdea3a8c273385fd",
+          "duration_s": 19.657731,
+          "prompt_checksum": "0147b7d4be9d2476",
+          "returncode": 0,
+          "seed": 5252,
+          "stderr_tail": "time =     481.24 ms /   921 tokens (    0.52 ms per token,  1913.79 tokens per second)\n0.19.076.709 I common_perf_print:        eval time =    2123.56 ms /   270 runs   (    7.87 ms per token,   127.15 tokens per second)\n0.19.076.710 I common_perf_print:       total time =    2688.23 ms /  1191 tokens\n0.19.076.711 I common_perf_print: unaccounted time =       9.14 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.19.076.711 I common_perf_print:    graphs reused =        268\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "no_memory:turn1"
+        },
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5253",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: second\nArm: no_memory\nMemory: none; answer independently from the evidence.\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: State the Aster-9 amber-load runtime again with a citation.\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Repeat the Buoy K-17 servicing crew with a citation.\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: Give the Trial Nacre enrollment count again with a citation.\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: Restate the Cedar lab opening year with a citation.\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Answer again: who donated the glass moth pendant? Cite the evidence.\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Repeat the plant recorded in plot V-3 with a citation.\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: State the skipped Route 6 gate again with a citation.\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Repeat the Soup Batch 14 spice with a citation.\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Repeat who drew the vellum map, or say if the evidence is insufficient.\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Give the manufacturer of reagent Pavo with a citation, or say if unsupported.\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: Repeat the kite dance award with a citation, or say if unsupported.\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Name the microscope used for sample Q-2 with a citation, or say if unsupported.<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "0352595c7e9c615e",
+          "duration_s": 17.984095,
+          "prompt_checksum": "2d997480631d1505",
+          "returncode": 0,
+          "seed": 5253,
+          "stderr_tail": "time =     528.65 ms /   978 tokens (    0.54 ms per token,  1850.00 tokens per second)\n0.17.400.144 I common_perf_print:        eval time =    2107.37 ms /   268 runs   (    7.86 ms per token,   127.17 tokens per second)\n0.17.400.145 I common_perf_print:       total time =    2703.84 ms /  1246 tokens\n0.17.400.145 I common_perf_print: unaccounted time =       6.57 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.17.400.146 I common_perf_print:    graphs reused =        266\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "no_memory:turn2"
+        }
+      ],
+      "repeated_error_rate": 0.0,
+      "response_count": 24,
+      "turns": {
+        "1": [
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "e5133c2a150c56a4",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: dock crew Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hh",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "7d5e39ebb461070e",
+            "case_text_excerpt": "ANSWER: dock crew Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          }
+        ],
+        "2": [
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "8eee15b58841fed4",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-007: AN",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "7bed2cb668b032fc",
+            "case_text_excerpt": "ANSWER: Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "no_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "no_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          }
+        ]
+      },
+      "unsupported_claim_rate": 0.0
+    },
+    "raw_conversation_memory": {
+      "arm": "raw_conversation_memory",
+      "citation_support_rate": 1.0,
+      "fixture_count": 12,
+      "missed_answer_rate": 0.125,
+      "over_refusal_rate": 0.125,
+      "receipts": [
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5262",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: first\nArm: raw_conversation_memory\nRaw conversation memory: no prior assistant answer yet.\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: How long did the Aster-9 battery run under the amber-load test?\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Which crew serviced Buoy K-17?\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: How many participants did Trial Nacre enroll?\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: In what year did the Cedar lab open?\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Who donated the glass moth pendant?\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Which plant was recorded in plot V-3?\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: Which gate did Route 6 skip during the lantern parade?\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Which spice did Soup Batch 14 use?\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Who drew the vellum map?\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Which company manufactured reagent Pavo?\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: What award did the kite dance win?\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Which microscope was used for sample Q-2?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "d016910eaad34270",
+          "duration_s": 17.621526,
+          "prompt_checksum": "bcb595ee063a948e",
+          "returncode": 0,
+          "seed": 5262,
+          "stderr_tail": "time =     462.96 ms /   929 tokens (    0.50 ms per token,  2006.64 tokens per second)\n0.17.003.492 I common_perf_print:        eval time =    2112.88 ms /   269 runs   (    7.85 ms per token,   127.31 tokens per second)\n0.17.003.493 I common_perf_print:       total time =    2646.05 ms /  1198 tokens\n0.17.003.495 I common_perf_print: unaccounted time =       6.04 ms /   0.2 %      (total - sampling - prompt eval - eval) / (total)\n0.17.003.496 I common_perf_print:    graphs reused =        267\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "raw_conversation_memory:turn1"
+        },
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5263",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: second\nArm: raw_conversation_memory\nRaw conversation memory follows. It is prior model output, not gold evidence.\nBEGIN PRIOR MODEL OUTPUT\nCASE hhpm-001: ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: crew Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1] CASE hhpm-008: ANSWER: saffron; CITATIONS: [E1] CASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] CASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] CASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] CASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000 mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900\nEND PRIOR MODEL OUTPUT\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: State the Aster-9 amber-load runtime again with a citation.\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Repeat the Buoy K-17 servicing crew with a citation.\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: Give the Trial Nacre enrollment count again with a citation.\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: Restate the Cedar lab opening year with a citation.\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Answer again: who donated the glass moth pendant? Cite the evidence.\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Repeat the plant recorded in plot V-3 with a citation.\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: State the skipped Route 6 gate again with a citation.\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Repeat the Soup Batch 14 spice with a citation.\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Repeat who drew the vellum map, or say if the evidence is insufficient.\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Give the manufacturer of reagent Pavo with a citation, or say if unsupported.\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: Repeat the kite dance award with a citation, or say if unsupported.\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Name the microscope used for sample Q-2 with a citation, or say if unsupported.<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "d016910eaad34270",
+          "duration_s": 18.066472,
+          "prompt_checksum": "99db40281e64226f",
+          "returncode": 0,
+          "seed": 5263,
+          "stderr_tail": "time =     532.43 ms /  1470 tokens (    0.36 ms per token,  2760.94 tokens per second)\n0.17.480.258 I common_perf_print:        eval time =    2133.83 ms /   269 runs   (    7.93 ms per token,   126.06 tokens per second)\n0.17.480.259 I common_perf_print:       total time =    2739.51 ms /  1739 tokens\n0.17.480.260 I common_perf_print: unaccounted time =       8.01 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.17.480.260 I common_perf_print:    graphs reused =        267\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "raw_conversation_memory:turn2"
+        }
+      ],
+      "repeated_error_rate": 0.0,
+      "response_count": 24,
+      "turns": {
+        "1": [
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "0d6861b4abc6ca8f",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: crew Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-00",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "b26d5fd26b70e1c7",
+            "case_text_excerpt": "ANSWER: crew Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          }
+        ],
+        "2": [
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "0d6861b4abc6ca8f",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: crew Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-00",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "b26d5fd26b70e1c7",
+            "case_text_excerpt": "ANSWER: crew Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "raw_conversation_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          }
+        ]
+      },
+      "unsupported_claim_rate": 0.0
+    },
+    "typed_provenance_memory": {
+      "arm": "typed_provenance_memory",
+      "citation_support_rate": 1.0,
+      "fixture_count": 12,
+      "missed_answer_rate": 0.125,
+      "over_refusal_rate": 0.125,
+      "receipts": [
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5272",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: first\nArm: typed_provenance_memory\nTyped provenance memory: no prior answer yet; bind every claim to a listed evidence ID.\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: How long did the Aster-9 battery run under the amber-load test?\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Which crew serviced Buoy K-17?\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: How many participants did Trial Nacre enroll?\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: In what year did the Cedar lab open?\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Who donated the glass moth pendant?\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Which plant was recorded in plot V-3?\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: Which gate did Route 6 skip during the lantern parade?\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Which spice did Soup Batch 14 use?\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Who drew the vellum map?\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Which company manufactured reagent Pavo?\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: What award did the kite dance win?\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Which microscope was used for sample Q-2?<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "d016910eaad34270",
+          "duration_s": 17.506176,
+          "prompt_checksum": "dbbbcf4b8be5d483",
+          "returncode": 0,
+          "seed": 5272,
+          "stderr_tail": "time =     494.69 ms /   938 tokens (    0.53 ms per token,  1896.13 tokens per second)\n0.16.909.059 I common_perf_print:        eval time =    2112.58 ms /   269 runs   (    7.85 ms per token,   127.33 tokens per second)\n0.16.909.060 I common_perf_print:       total time =    2682.03 ms /  1207 tokens\n0.16.909.061 I common_perf_print: unaccounted time =       7.42 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.16.909.061 I common_perf_print:    graphs reused =        267\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "typed_provenance_memory:turn1"
+        },
+        {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "-ngl",
+            "999",
+            "-c",
+            "4096",
+            "-n",
+            "1400",
+            "--temp",
+            "0",
+            "--seed",
+            "5273",
+            "-p",
+            "<|turn>user\nLocal HalluHard-style citation support microbench. Use only the evidence snippets inside each case. Do not use outside knowledge or web search. If the evidence does not support the answer, write INSUFFICIENT_EVIDENCE.\n\nReturn exactly one line per case in this format:\nCASE <id>: ANSWER: <short answer or INSUFFICIENT_EVIDENCE>; CITATIONS: [E1] or []\n\nTurn: second\nArm: typed_provenance_memory\nTyped provenance memory:\nCASE hhpm-001: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-002: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-003: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-004: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-005: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-006: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-007: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-008: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-009: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-010: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-011: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\nCASE hhpm-012: prior_support=supported; reasons=none; rule=use evidence IDs only and abstain with INSUFFICIENT_EVIDENCE when missing.\n\nCASE hhpm-001\nEvidence:\n[E1] Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test.\n[E2] Larkspur inventory note: the Aster-9 casing color was matte blue.\nQuestion: State the Aster-9 amber-load runtime again with a citation.\n\nCASE hhpm-002\nEvidence:\n[E1] Rillwick harbor log: Buoy K-17 was serviced on 12 March by dock crew Juno.\n[E2] Rillwick harbor log: Buoy K-18 was retired after the south-channel drill.\nQuestion: Repeat the Buoy K-17 servicing crew with a citation.\n\nCASE hhpm-003\nEvidence:\n[E1] Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control.\n[E2] Mira Vale clinic snippet: Trial Nacre measured sleep latency after four nights.\nQuestion: Give the Trial Nacre enrollment count again with a citation.\n\nCASE hhpm-004\nEvidence:\n[E1] Tavian school board note: the Cedar lab opened in 2024 with six benches.\n[E2] Tavian school board note: the Maple lab stored microscopes, not reagents.\nQuestion: Restate the Cedar lab opening year with a citation.\n\nCASE hhpm-005\nEvidence:\n[E1] Orison museum label: the glass moth pendant was donated by Priya Sen.\n[E2] Orison museum label: the basalt cup was cataloged in room C.\nQuestion: Answer again: who donated the glass moth pendant? Cite the evidence.\n\nCASE hhpm-006\nEvidence:\n[E1] Kelross field sheet: plot V-3 contained red clover and two marker flags.\n[E2] Kelross field sheet: plot V-4 contained ryegrass and one marker flag.\nQuestion: Repeat the plant recorded in plot V-3 with a citation.\n\nCASE hhpm-007\nEvidence:\n[E1] Noma transit note: Route 6 skipped Pear Gate during the lantern parade.\n[E2] Noma transit note: Route 8 stopped at Pear Gate after 19:00.\nQuestion: State the skipped Route 6 gate again with a citation.\n\nCASE hhpm-008\nEvidence:\n[E1] Eldwick kitchen card: Soup Batch 14 used saffron after the onions softened.\n[E2] Eldwick kitchen card: Soup Batch 15 used turmeric after the onions browned.\nQuestion: Repeat the Soup Batch 14 spice with a citation.\n\nCASE hhpm-009\nEvidence:\n[E1] Rookfen archive card: the vellum map was folded twice before storage.\n[E2] Rookfen archive card: the linen chart was stored in drawer Delta.\nQuestion: Repeat who drew the vellum map, or say if the evidence is insufficient.\n\nCASE hhpm-010\nEvidence:\n[E1] Solenne lab note: reagent Pavo turned violet at pH 5.2.\n[E2] Solenne lab note: reagent Mira stayed clear at pH 7.0.\nQuestion: Give the manufacturer of reagent Pavo with a citation, or say if unsupported.\n\nCASE hhpm-011\nEvidence:\n[E1] Istra festival note: the noon bell rang after the kite dance.\n[E2] Istra festival note: the lantern walk began at dusk.\nQuestion: Repeat the kite dance award with a citation, or say if unsupported.\n\nCASE hhpm-012\nEvidence:\n[E1] Vesper quarry note: sample Q-2 weighed 31 grams after drying.\n[E2] Vesper quarry note: sample Q-3 was discarded because its label tore.\nQuestion: Name the microscope used for sample Q-2 with a citation, or say if unsupported.<turn|>\n<|turn>model\n",
+            "-no-cnv",
+            "--no-display-prompt",
+            "--simple-io",
+            "--no-warmup"
+          ],
+          "completion_checksum": "0352595c7e9c615e",
+          "duration_s": 17.786155,
+          "prompt_checksum": "c2a1f2a13bfc7fb5",
+          "returncode": 0,
+          "seed": 5273,
+          "stderr_tail": "time =     577.46 ms /  1431 tokens (    0.40 ms per token,  2478.08 tokens per second)\n0.17.290.600 I common_perf_print:        eval time =    2130.83 ms /   268 runs   (    7.95 ms per token,   125.77 tokens per second)\n0.17.290.601 I common_perf_print:       total time =    2785.70 ms /  1699 tokens\n0.17.290.604 I common_perf_print: unaccounted time =       8.37 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)\n0.17.290.604 I common_perf_print:    graphs reused =        266\n",
+          "stdout_tail": "CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1]\nCASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1]\nCASE hhpm-006: ANSWER: red clover; CITATIONS: [E1]\nCASE hhpm-007: ANSWER: Pear Gate; CITATIONS: [E1]\nCASE hhpm-008: ANSWER: saffron; CITATIONS: [E1]\nCASE hhpm-009: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-010: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-011: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []\nCASE hhpm-012: ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] [end of text]\n\n\n",
+          "tag": "typed_provenance_memory:turn2"
+        }
+      ],
+      "repeated_error_rate": 0.0,
+      "response_count": 24,
+      "turns": {
+        "1": [
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "0d6861b4abc6ca8f",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: crew Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-00",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "b26d5fd26b70e1c7",
+            "case_text_excerpt": "ANSWER: crew Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 1,
+            "unsupported_claim": false
+          }
+        ],
+        "2": [
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "8eee15b58841fed4",
+            "case_text_excerpt": "ANSWER: 47 minutes; CITATIONS: [E1] CASE hhpm-002: ANSWER: Juno; CITATIONS: [E1] CASE hhpm-003: ANSWER: 18 participants; CITATIONS: [E1] CASE hhpm-004: ANSWER: 2024; CITATIONS: [E1] CASE hhpm-005: ANSWER: Priya Sen; CITATIONS: [E1] CASE hhpm-006: ANSWER: red clover; CITATIONS: [E1] CASE hhpm-007: AN",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-001",
+            "missed_answer": true,
+            "over_refusal": true,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "7bed2cb668b032fc",
+            "case_text_excerpt": "ANSWER: Juno; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-002",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "455865b6dc44adc8",
+            "case_text_excerpt": "ANSWER: 18 participants; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-003",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "eee530f103a90076",
+            "case_text_excerpt": "ANSWER: 2024; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-004",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "cdb30cb7be8c6044",
+            "case_text_excerpt": "ANSWER: Priya Sen; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-005",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "677ffccd0ef4d706",
+            "case_text_excerpt": "ANSWER: red clover; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-006",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "3bc0f3116b5f3a02",
+            "case_text_excerpt": "ANSWER: Pear Gate; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-007",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": true,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "a509128ca9cb06d4",
+            "case_text_excerpt": "ANSWER: saffron; CITATIONS: [E1]",
+            "citation_supported": true,
+            "citations": [
+              "E1"
+            ],
+            "fixture_id": "hhpm-008",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-009",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-010",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "ed572b1f4160c018",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: []",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-011",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          },
+          {
+            "answerable": false,
+            "arm": "typed_provenance_memory",
+            "case_text_checksum": "05e4b20de09e58d3",
+            "case_text_excerpt": "ANSWER: INSUFFICIENT_EVIDENCE; CITATIONS: [] repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000 dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = -1 top_k = 64, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xt",
+            "citation_supported": true,
+            "citations": [],
+            "fixture_id": "hhpm-012",
+            "missed_answer": false,
+            "over_refusal": false,
+            "reasons": [],
+            "turn": 2,
+            "unsupported_claim": false
+          }
+        ]
+      },
+      "unsupported_claim_rate": 0.0
+    }
+  },
+  "arms": [
+    "no_memory",
+    "raw_conversation_memory",
+    "typed_provenance_memory"
+  ],
+  "citation_support_delta": {
+    "principle": "Typed-memory citation support rate minus",
+    "value": 0.0
+  },
+  "duration_s": 112.53202,
+  "experiment": "experiment_5252_halluhard_provenance_memory_microbench_v480",
+  "experiment_id": 5252,
+  "finished_at": "2026-07-05T02:39:39Z",
+  "fixture_count": {
+    "principle": "Bounds the HalluHard-style panel to the requested 10-20",
+    "value": 12
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict states whether provenance memory reduced",
+    "value": "complete: typed provenance memory did not reduce hallucination errors on this local microbench"
+  },
+  "inference_substrate": {
+    "principle": "Declares local SOTA GGUF live inference",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "leakage_checks": {
+    "principle": "Records local-evidence-only, gold-label visibility",
+    "value": {
+      "fixture_count_in_range": {
+        "passed": true,
+        "value": 12
+      },
+      "gold_answers_in_evidence": {
+        "passed": true
+      },
+      "gold_answers_not_in_questions": {
+        "passed": true
+      },
+      "local_curated_evidence_only": {
+        "passed": true
+      },
+      "no_network_search_used": {
+        "passed": true
+      },
+      "passed": true,
+      "raw_memory_model_output_marked": {
+        "passed": true
+      },
+      "typed_memory_does_not_add_gold_answers": {
+        "passed": true
+      }
+    }
+  },
+  "missed_answer_costs": {
+    "no_memory": 0.125,
+    "raw_conversation_memory": 0.125,
+    "typed_provenance_memory": 0.125
+  },
+  "model_specs": {
+    "principle": "Names the mandated model, quantization, runtime command",
+    "value": {
+      "completion_checksums": [
+        "bdea3a8c273385fd",
+        "0352595c7e9c615e",
+        "d016910eaad34270",
+        "d016910eaad34270",
+        "d016910eaad34270",
+        "0352595c7e9c615e"
+      ],
+      "headline_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "precondition_checks": [
+        {
+          "available": true,
+          "detail": "torch_cuda_devices=2",
+          "resource": "cuda_gpu"
+        },
+        {
+          "available": true,
+          "cuda_linked": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+          "resource": "local_gguf_runtime"
+        },
+        {
+          "available": true,
+          "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "resource": "mandated_sota_gguf"
+        }
+      ],
+      "prompt_checksums": [
+        "0147b7d4be9d2476",
+        "2d997480631d1505",
+        "bcb595ee063a948e",
+        "99db40281e64226f",
+        "dbbbcf4b8be5d483",
+        "c2a1f2a13bfc7fb5"
+      ],
+      "quantization": "UD-Q4_K_M",
+      "runtime_command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "-c",
+        "4096",
+        "-no-cnv",
+        "--no-display-prompt",
+        "--simple-io"
+      ],
+      "seeds": [
+        5252
+      ]
+    }
+  },
+  "no_network_at_benchmark_time": {
+    "principle": "Confirms the benchmark used local curated",
+    "value": true
+  },
+  "over_refusal_costs": {
+    "no_memory": 0.125,
+    "raw_conversation_memory": 0.125,
+    "typed_provenance_memory": 0.125
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "torch_cuda_devices=2",
+      "resource": "cuda_gpu"
+    },
+    {
+      "available": true,
+      "cuda_linked": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+      "resource": "local_gguf_runtime"
+    },
+    {
+      "available": true,
+      "model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "mandated_sota_gguf"
+    }
+  ],
+  "random_seed": 5252,
+  "repeated_error_delta": {
+    "principle": "No-memory repeated-error rate minus typed-memory",
+    "value": 0.0
+  },
+  "reproducibility_checksum": "7e94057a97347a6f",
+  "result_path": "results/experiment_5252_halluhard_provenance_memory_microbench_v480.json",
+  "schema": "carnot.halluhard_provenance_memory_microbench.v480",
+  "schema_errors": [],
+  "spec_refs": [
+    "REQ-VERIFY-5252",
+    "SCENARIO-VERIFY-5252"
+  ],
+  "started_at": "2026-07-05T02:37:46Z",
+  "unsupported_claim_rate_no_memory": {
+    "principle": "Baseline unsupported support-error rate",
+    "value": 0.0
+  },
+  "unsupported_claim_rate_typed_memory": {
+    "principle": "Typed-memory unsupported support-error",
+    "value": 0.0
+  }
+}
