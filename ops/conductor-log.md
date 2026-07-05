@@ -10350,3 +10350,4 @@ web search: |
 | 2026-07-05 18:03 UTC | PHASE 2 gated on exp5271 and exp5275 -- memory-ass | OK | 89 passed, 1 warning in 8.49s |
 | 2026-07-05 18:18 UTC | PHASE 3 certificates -- KAN PWA/MILP certificate s | OK | 88 passed, 1 warning in 9.83s |
 | 2026-07-05 18:41 UTC | PHASE 3 sampler boundary -- constraint fixture to  | OK | 85 passed, 1 warning in 8.75s |
+| 2026-07-05 18:57 UTC | PHASE 3 hardware continuity -- KV260 PolarFire Gat | OK | 88 passed, 1 warning in 10.47s |
