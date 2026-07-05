@@ -1,0 +1,620 @@
+{
+  "abstain_or_block_count": {
+    "principle": "Count of scheduler decisions that route to abstain, block, quarantine, or retire instead of accepting unsafe evidence.",
+    "value": 4
+  },
+  "decision_quality_delta": {
+    "principle": "Scheduler decision-quality rate minus always-full decision-quality rate on the same cached fixtures.",
+    "value": 0.0
+  },
+  "experiment": "experiment_5264_verifier_dose_scheduler_replay_v481",
+  "experiment_id": 5264,
+  "false_accept_delta": {
+    "principle": "Scheduler false-accept rate minus always-full false-accept rate on the same cached fixtures; positive values are unsafe.",
+    "value": 0.0
+  },
+  "fixture_receipts": {
+    "checksums": {
+      "fixture_rows": {
+        "arc_rubric_before_patch_consumer": "sha256:bc01b16e9b2a1903301e264289c7076306744a583b04445a6293bb2d75f2d36e",
+        "gap1_memory_only_consumer": "sha256:d0d1356b8739e87ddd04021c458e6e8a1aa589427ad0fb465afea97d46c897e3",
+        "gap1_registry_rollback_consumer": "sha256:99351780bc8276cb9b9f0c008887dfafcc538a03b222213339d3ab16ca7b6239",
+        "gap4_candidate_pool_consumer": "sha256:f510f488bf58ebf47de566ff92b28214188a887f39cc6ae0211bcda8bcbe16a2",
+        "hardware_speedup_boundary_consumer": "sha256:178431bef80a5358577ab4bb4b0e0f6ebbbfe5987be9fdcb987207a04f7bb1a2",
+        "mmlu_hidden_state_retention_consumer": "sha256:13189273f34fb474a1f5f43c24221eba77d7df3118ccc9c48f55fe9ed3adfeda",
+        "range_constraint_unrelated": "sha256:40fad0bf86dc1fb2a3a0a4264143867336f6f936f6900ae43d11008755873da5"
+      },
+      "fixture_set_sha256": "sha256:49510875c088370a74aa2614f6bd4ae7ade0c78f385c493eabeb990fe9084b51",
+      "source_artifacts": {
+        "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json": "sha256:a5cca69be41f5507e8153da2814b4884cb88d13a4e938dc8d2a7fe0dd14010ed",
+        "results/experiment_5247_slot_artifact_normalizer_v480.json": "sha256:1ed8a7809f4c5da66869f787d3736d9f3f43456ce8fe4a68c3b6ca5b1079d434",
+        "results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json": "sha256:fbdc642393f71f8b2859b99687c7fc3906363eeaa99b57185286046b3f5517bc",
+        "results/experiment_5250_verifier_dose_scheduler_v480.json": "sha256:df54cd7fc97bf094e8cf0f7a8c33b4a5daf3c4f74f51ed12f68fc310239f7003",
+        "results/experiment_5261_typed_memory_interference_audit_v481.json": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2"
+      }
+    },
+    "principle": "Checksums for every source artifact and deterministic fixture row used by the cached replay."
+  },
+  "full_verifier_calls_avoided_rate": {
+    "principle": "Fraction of always-full replay calls avoided by the scheduler on receipt-backed cached fixtures.",
+    "value": 0.857143
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5264 verdict; starts with complete: or blocked_ and states whether cached scheduler replay is useful, null, harmful, or underpowered.",
+    "value": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"
+  },
+  "inference_substrate": {
+    "principle": "Declares cached fixture replay with no live LLM calls, preventing Exp 5264 from being mistaken for live verifier-dose inference.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "random_seed": 5264,
+  "replay": {
+    "abstain_or_block_count": 4,
+    "baseline_metrics": {
+      "always_cheap": {
+        "correct_n": 3,
+        "cost_units": 7,
+        "false_accept_rate": 0.285714,
+        "false_accepts": 2,
+        "full_verifier_calls": 0,
+        "n": 7,
+        "quality_rate": 0.428571
+      },
+      "always_full": {
+        "correct_n": 7,
+        "cost_units": 70,
+        "false_accept_rate": 0.0,
+        "false_accepts": 0,
+        "full_verifier_calls": 7,
+        "n": 7,
+        "quality_rate": 1.0
+      },
+      "no_verifier": {
+        "correct_n": 3,
+        "cost_units": 0,
+        "false_accept_rate": 0.285714,
+        "false_accepts": 2,
+        "full_verifier_calls": 0,
+        "n": 7,
+        "quality_rate": 0.428571
+      }
+    },
+    "baseline_rows": {
+      "always_cheap": [
+        {
+          "correct": false,
+          "cost_units": 1,
+          "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.94
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "attempt_gap1_registry_promotion",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 1,
+          "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "false_accept": true,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.91
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "attempt_gap1_registry_promotion",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 1,
+          "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "false_accept": true,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 3,
+            "memory_confidence": 0.86
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "reuse_gap4_candidate_pool",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 1,
+          "expected_decision": "retire_mmlu_hidden_state_path",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.72
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "retire_mmlu_hidden_state_path",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 1,
+          "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.9
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "patch_arc_level_directly",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 1,
+          "expected_decision": "block_hardware_speedup_claim_until_transcript",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.58
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "block_hardware_speedup_claim_until_transcript",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "hardware_speedup_boundary_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 1,
+          "expected_decision": "answer_without_memory",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.2
+          },
+          "full_verifier_call": false,
+          "route": "cheap_deterministic",
+          "selected_decision": "answer_without_memory",
+          "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+          "task_id": "range_constraint_unrelated"
+        }
+      ],
+      "always_full": [
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.94
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.91
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 3,
+            "memory_confidence": 0.86
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "retire_mmlu_hidden_state_path",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.72
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "retire_mmlu_hidden_state_path",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.9
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "block_hardware_speedup_claim_until_transcript",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.58
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "block_hardware_speedup_claim_until_transcript",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "hardware_speedup_boundary_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 10,
+          "expected_decision": "answer_without_memory",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.2
+          },
+          "full_verifier_call": true,
+          "route": "full_replay",
+          "selected_decision": "answer_without_memory",
+          "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+          "task_id": "range_constraint_unrelated"
+        }
+      ],
+      "no_verifier": [
+        {
+          "correct": false,
+          "cost_units": 0,
+          "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.94
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "attempt_gap1_registry_promotion",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_memory_only_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 0,
+          "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "false_accept": true,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.91
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "attempt_gap1_registry_promotion",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap1_registry_rollback_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 0,
+          "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+          "false_accept": true,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 3,
+            "memory_confidence": 0.86
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "reuse_gap4_candidate_pool",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "gap4_candidate_pool_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 0,
+          "expected_decision": "retire_mmlu_hidden_state_path",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.72
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "retire_mmlu_hidden_state_path",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "mmlu_hidden_state_retention_consumer"
+        },
+        {
+          "correct": false,
+          "cost_units": 0,
+          "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 2,
+            "memory_confidence": 0.9
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "patch_arc_level_directly",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "arc_rubric_before_patch_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 0,
+          "expected_decision": "block_hardware_speedup_claim_until_transcript",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": false,
+            "deterministic_violation_count": 1,
+            "memory_confidence": 0.58
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "block_hardware_speedup_claim_until_transcript",
+          "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+          "task_id": "hardware_speedup_boundary_consumer"
+        },
+        {
+          "correct": true,
+          "cost_units": 0,
+          "expected_decision": "answer_without_memory",
+          "false_accept": false,
+          "features": {
+            "artifact_receipt_complete": true,
+            "cheap_gate_passed": true,
+            "deterministic_violation_count": 0,
+            "memory_confidence": 0.2
+          },
+          "full_verifier_call": false,
+          "route": "no_verifier",
+          "selected_decision": "answer_without_memory",
+          "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+          "task_id": "range_constraint_unrelated"
+        }
+      ]
+    },
+    "decision_quality_delta": 0.0,
+    "false_accept_delta": 0.0,
+    "fixture_count": 7,
+    "full_verifier_calls_avoided_rate": 0.857143,
+    "policy_features": [
+      "cheap_gate_passed",
+      "memory_confidence",
+      "deterministic_violation_count",
+      "artifact_receipt_complete"
+    ],
+    "policy_rules": [
+      "receipt_complete=false routes to full_replay fail-closed handling",
+      "deterministic_violation_count>=3 routes to full_replay",
+      "cheap_gate_passed=false and memory_confidence>=0.8 routes to typed_memory",
+      "cheap_gate_passed=false routes remaining cases to cheap_deterministic",
+      "cheap_gate_passed=true with low memory confidence and no violations routes to no_verifier",
+      "all other cached cases route to cheap_deterministic"
+    ],
+    "route_counts": {
+      "cheap_deterministic": 2,
+      "full_replay": 1,
+      "no_verifier": 1,
+      "typed_memory": 3
+    },
+    "scheduler_metrics": {
+      "correct_n": 7,
+      "cost_units": 18,
+      "false_accept_rate": 0.0,
+      "false_accepts": 0,
+      "full_verifier_calls": 1,
+      "n": 7,
+      "quality_rate": 1.0
+    },
+    "scheduler_ready": true,
+    "scheduler_rows": [
+      {
+        "correct": true,
+        "cost_units": 2,
+        "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": false,
+          "deterministic_violation_count": 1,
+          "memory_confidence": 0.94
+        },
+        "full_verifier_call": false,
+        "route": "typed_memory",
+        "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "gap1_memory_only_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 2,
+        "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": false,
+          "deterministic_violation_count": 2,
+          "memory_confidence": 0.91
+        },
+        "full_verifier_call": false,
+        "route": "typed_memory",
+        "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "gap1_registry_rollback_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 10,
+        "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": false,
+          "deterministic_violation_count": 3,
+          "memory_confidence": 0.86
+        },
+        "full_verifier_call": true,
+        "route": "full_replay",
+        "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "gap4_candidate_pool_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 1,
+        "expected_decision": "retire_mmlu_hidden_state_path",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": true,
+          "deterministic_violation_count": 0,
+          "memory_confidence": 0.72
+        },
+        "full_verifier_call": false,
+        "route": "cheap_deterministic",
+        "selected_decision": "retire_mmlu_hidden_state_path",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "mmlu_hidden_state_retention_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 2,
+        "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": false,
+          "deterministic_violation_count": 2,
+          "memory_confidence": 0.9
+        },
+        "full_verifier_call": false,
+        "route": "typed_memory",
+        "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "arc_rubric_before_patch_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 1,
+        "expected_decision": "block_hardware_speedup_claim_until_transcript",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": false,
+          "deterministic_violation_count": 1,
+          "memory_confidence": 0.58
+        },
+        "full_verifier_call": false,
+        "route": "cheap_deterministic",
+        "selected_decision": "block_hardware_speedup_claim_until_transcript",
+        "source_artifact": "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+        "task_id": "hardware_speedup_boundary_consumer"
+      },
+      {
+        "correct": true,
+        "cost_units": 0,
+        "expected_decision": "answer_without_memory",
+        "false_accept": false,
+        "features": {
+          "artifact_receipt_complete": true,
+          "cheap_gate_passed": true,
+          "deterministic_violation_count": 0,
+          "memory_confidence": 0.2
+        },
+        "full_verifier_call": false,
+        "route": "no_verifier",
+        "selected_decision": "answer_without_memory",
+        "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "task_id": "range_constraint_unrelated"
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:b3406696f3dac001d855382cf941166140012605881f9e8be53bf183a4f18720",
+  "run_date": "2026-07-05",
+  "scheduler_ready": true,
+  "scheduler_ready_principle": "scheduler_ready=true only when fixture_count>=6, decision_quality_delta>=0, false_accept_delta<=0, and full_verifier_calls_avoided_rate>0; observed fixture_count=7, decision_quality_delta=0.000000, false_accept_delta=0.000000, full_verifier_calls_avoided_rate=0.857143",
+  "schema": "carnot.verifier_dose_scheduler_replay.v481",
+  "source_artifacts": [
+    "results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json",
+    "results/experiment_5247_slot_artifact_normalizer_v480.json",
+    "results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json",
+    "results/experiment_5250_verifier_dose_scheduler_v480.json",
+    "results/experiment_5261_typed_memory_interference_audit_v481.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5264",
+    "SCENARIO-VERIFY-5264"
+  ],
+  "tests_run": []
+}

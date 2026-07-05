@@ -25569,3 +25569,73 @@ text scorer fallback.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5263 | Planned (`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`, `results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`) | Planned (`tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`) |
+
+### REQ-VERIFY-5264: Cached-Fixture Verifier-Dose Scheduler Replay V481
+
+The repository SHALL provide Exp 5264 at
+`python/carnot/pipeline/verifier_dose_scheduler_replay.py` and write
+`results/experiment_5264_verifier_dose_scheduler_replay_v481.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL use only
+cached fixture replay with no live LLM inference because Exp 5250 was blocked
+by the live cross-model typed-memory gate. It SHALL read prior receipt-backed
+artifacts including Exp 5239, Exp 5247, Exp 5248, Exp 5250, and Exp 5261 when
+present, and SHALL convert only replayable cached decisions, costs, and
+outcomes into scheduler fixtures.
+
+The scheduler policy SHALL choose among `no_verifier`, `cheap_deterministic`,
+`typed_memory`, and `full_replay` using transparent features: cheap gate
+pass/fail, typed-memory confidence, deterministic violation count, and artifact
+receipt completeness. Incomplete receipts SHALL fail closed to abstain/block
+rather than create synthetic verifier evidence. The replay SHALL compare the
+scheduler against `no_verifier`, `always_cheap`, and `always_full` baselines,
+and SHALL measure verifier calls avoided, decision-quality delta,
+false-accept delta, and abstain/block routing.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `scheduler_ready`,
+`scheduler_ready_principle`, `full_verifier_calls_avoided_rate`,
+`decision_quality_delta`, `false_accept_delta`, `abstain_or_block_count`,
+`fixture_receipts`, and `tests_run`. `scheduler_ready` SHALL be a bare
+boolean. `honest_verdict`, `inference_substrate`,
+`full_verifier_calls_avoided_rate`, `decision_quality_delta`,
+`false_accept_delta`, and `abstain_or_block_count` SHALL be
+principle-wrapped objects. `fixture_receipts` SHALL be an object with
+`checksums` and `principle`. `honest_verdict.value` SHALL start with
+`complete:` or `blocked_` and state whether scheduler replay is useful, null,
+harmful, or underpowered. `inference_substrate.value` SHALL be
+`cached_fixture_replay_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5264 verdict; starts with complete: or blocked_ and states whether cached scheduler replay is useful, null, harmful, or underpowered."
+- `inference_substrate`: principle "Declares cached fixture replay with no live LLM calls, preventing Exp 5264 from being mistaken for live verifier-dose inference."
+- `scheduler_ready`: principle "Bare readiness boolean; true only when cached replay preserves always-full decision quality, does not increase false accepts, and avoids at least one full verifier replay."
+- `scheduler_ready_principle`: principle "Explains why the scheduler is ready, null, harmful, underpowered, or blocked for downstream verifier-dose use."
+- `full_verifier_calls_avoided_rate`: principle "Fraction of always-full replay calls avoided by the scheduler on receipt-backed cached fixtures."
+- `decision_quality_delta`: principle "Scheduler decision-quality rate minus always-full decision-quality rate on the same cached fixtures."
+- `false_accept_delta`: principle "Scheduler false-accept rate minus always-full false-accept rate on the same cached fixtures; positive values are unsafe."
+- `abstain_or_block_count`: principle "Count of scheduler decisions that route to abstain, block, quarantine, or retire instead of accepting unsafe evidence."
+- `fixture_receipts`: principle "Checksums for every source artifact and deterministic fixture row used by the cached replay."
+- `tests_run`: principle "Commands run to validate the scheduler module, coverage, spec coverage, and artifact contract."
+
+### SCENARIO-VERIFY-5264: Cached Scheduler Preserves Full-Verifier Safety
+
+Given the V481 cached replay task and prior receipt-backed artifacts, when Exp
+5264 runs, then it builds deterministic fixtures from replayable cached
+decisions, applies the transparent verifier-dose policy, compares against
+no-verifier, always-cheap, and always-full baselines, writes the required
+artifact, and sets `scheduler_ready=true` only when decision quality is not
+below always-full, false accepts do not increase, and at least one full verifier
+call is avoided.
+
+If replayable fixture receipts are missing, the policy has fewer than the
+minimum cached cases, or the scheduler increases false accepts or loses
+decision quality relative to always-full, then the same runner writes a
+terminal `blocked_` or `complete:` verdict that states underpowered, null, or
+harmful, keeps `scheduler_ready=false`, and preserves exact receipt blockers.
+
+## Implementation Status (REQ-VERIFY-5264)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5264 | Implemented (`python/carnot/pipeline/verifier_dose_scheduler_replay.py`, `results/experiment_5264_verifier_dose_scheduler_replay_v481.json`) | Implemented (`tests/python/test_experiment_5264_verifier_dose_scheduler_replay_v481.py`) |
