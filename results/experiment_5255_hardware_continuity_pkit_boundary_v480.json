@@ -1,0 +1,246 @@
+{
+  "board_receipts": {
+    "kv260": {
+      "binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+      "blocked_reason": null,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'kv260'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "commit": "e9b25bae1211a1c9bede550401429643d9e70549",
+      "correctness_ok": true,
+      "error": "",
+      "expected_binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+      "expected_output_hash": "434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af",
+      "expected_workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835",
+      "hash_verified": true,
+      "output": {
+        "binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+        "board": "kv260",
+        "correctness": {
+          "energy_matches_expected": true
+        },
+        "energy": 6,
+        "inference_substrate": "hardware_probe_no_speedup_claim",
+        "output_sha256": "434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af",
+        "workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835"
+      },
+      "output_hash": "434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af",
+      "status": "reachable",
+      "wall_clock_s": 0.584627,
+      "workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835"
+    },
+    "polarfire": {
+      "binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+      "blocked_reason": null,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'polarfire'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "commit": "e9b25bae1211a1c9bede550401429643d9e70549",
+      "correctness_ok": true,
+      "error": "",
+      "expected_binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+      "expected_output_hash": "4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc",
+      "expected_workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835",
+      "hash_verified": true,
+      "output": {
+        "binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+        "board": "polarfire",
+        "correctness": {
+          "energy_matches_expected": true
+        },
+        "energy": 6,
+        "inference_substrate": "hardware_probe_no_speedup_claim",
+        "output_sha256": "4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc",
+        "workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835"
+      },
+      "output_hash": "4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc",
+      "status": "reachable",
+      "wall_clock_s": 1.328215,
+      "workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835"
+    }
+  },
+  "command_probes": {
+    "gatemate_physical_jtag": null,
+    "kv260_hash_smoke": {
+      "combined_output": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"kv260\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'kv260'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "duration_s": 0.584627,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"kv260\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n"
+    },
+    "kv260_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.597925,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "polarfire_hash_smoke": {
+      "combined_output": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"polarfire\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'polarfire'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "duration_s": 1.328215,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"polarfire\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n"
+    },
+    "polarfire_ssh": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.909553,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "conductor_modified": false,
+  "duration_s": 7.42088,
+  "experiment": "experiment_5255_hardware_continuity_pkit_boundary",
+  "experiment_id": "exp5255-hardware-continuity-pkit-boundary-v480",
+  "extropic_kona_boundary_note_path": {
+    "principle": "Repository path to the Extropic/Kona/Aleph boundary note.",
+    "value": "docs/research-notes/experiment_5255_extropic_kona_boundary_v480.md"
+  },
+  "field_principles": {
+    "extropic_kona_boundary_note_path": "Repository path to the Extropic/Kona/Aleph boundary note.",
+    "gatemate_status": "Carry forward blocked_physical_jtag unless the operator changed the physical setup.",
+    "honest_verdict": "Value starts with complete: or blocked_ and states KV260, PolarFire, GateMate, and no-speedup status.",
+    "inference_substrate": "Must be hardware_probe_no_speedup_claim; this is a receipt, not acceleration evidence.",
+    "kv260_ssh_only_confirmed": "True only when KV260 is evaluated without host block-device preconditions.",
+    "kv260_status": "Reachable only when SSH and the board-local hash/correctness smoke both pass.",
+    "physical_setup_changed": "Boolean operator setup input controlling whether GateMate probing is allowed.",
+    "pkit_boundary_note_path": "Repository path to the IBM p-kit local-claim boundary note.",
+    "polarfire_status": "Reachable only when SSH and the board-local hash/correctness smoke both pass.",
+    "speedup_claimed": "False because this experiment is continuity and boundary documentation only.",
+    "workload_hashes": "Commit, workload, executable or bitstream, and output hashes are receipt fields only."
+  },
+  "gatemate_carry_forward": {
+    "evidence": [
+      "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
+      "results/experiment_5231_hardware_continuity_pbit_boundary_v478.json",
+      "research-hardware-wishlist.md exp5231-pbit-boundary-plan block"
+    ],
+    "physical_setup_changed": false,
+    "rationale": "no operator cable, port, power, or board setup change was provided",
+    "status": "blocked_physical_jtag",
+    "timestamp": "20260705"
+  },
+  "gatemate_status": {
+    "principle": "Carry forward blocked_physical_jtag unless the operator changed the physical setup.",
+    "value": "blocked_physical_jtag"
+  },
+  "honest_verdict": {
+    "principle": "Value starts with complete: or blocked_ and states KV260, PolarFire, GateMate, and no-speedup status.",
+    "value": "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim"
+  },
+  "inference_substrate": {
+    "principle": "Must be hardware_probe_no_speedup_claim; this is a receipt, not acceleration evidence.",
+    "value": "hardware_probe_no_speedup_claim"
+  },
+  "kv260_blocked_precondition": null,
+  "kv260_ssh_only_confirmed": {
+    "principle": "True only when KV260 is evaluated without host block-device preconditions.",
+    "value": true
+  },
+  "kv260_status": {
+    "principle": "Reachable only when SSH and the board-local hash/correctness smoke both pass.",
+    "value": "reachable"
+  },
+  "milestone": "2026.07.480",
+  "physical_setup_changed": {
+    "principle": "Boolean operator setup input controlling whether GateMate probing is allowed.",
+    "value": false
+  },
+  "pkit_boundary_note_path": {
+    "principle": "Repository path to the IBM p-kit local-claim boundary note.",
+    "value": "docs/research-notes/experiment_5255_pkit_boundary_v480.md"
+  },
+  "polarfire_blocked_precondition": null,
+  "polarfire_status": {
+    "principle": "Reachable only when SSH and the board-local hash/correctness smoke both pass.",
+    "value": "reachable"
+  },
+  "random_seed": 5255,
+  "reproducibility_checksum": "36c2edcc7b1df0a1fa9338ffc0dfc082d7cc66c1179941227fe2554a7ad997c9",
+  "reviewed_inputs": [
+    "CLAUDE.md hardware continuity and KV260 SSH-only sections",
+    "CODEX.md required workflow",
+    "research-hardware-wishlist.md active tracks and exp5231 carry-forward note",
+    "research-references.md Extropic/Logical/GitHub watch entries",
+    "results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json",
+    "ops/exclusion_manifest.yaml"
+  ],
+  "reviewed_public_sources": {
+    "extropic_hardware": "https://extropic.ai/hardware",
+    "extropic_tsu_101": "https://extropic.ai/writing/tsu-101-an-entirely-new-type-of-computing-hardware",
+    "extropic_xtr0": "https://extropic.ai/writing/inside-x0-and-xtr-0",
+    "ibm_pkit": "https://github.com/IBM/p-kit",
+    "logical_aleph": "https://logicalintelligence.com/blog/aleph-leading-benchmarks",
+    "logical_kona": "https://logicalintelligence.com/blog/energy-based-model-sudoku-demo"
+  },
+  "run_date": "20260705",
+  "safe_commands_run": [
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.597925,
+      "error": "",
+      "exit_code": 0,
+      "kind": "ssh_reachability",
+      "passed": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'kv260'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "duration_s": 0.584627,
+      "error": "",
+      "exit_code": 0,
+      "kind": "board_local_hash_smoke",
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"kv260\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n"
+    },
+    {
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.909553,
+      "error": "",
+      "exit_code": 0,
+      "kind": "ssh_reachability",
+      "passed": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nimport hashlib, json\npayload = '\"'\"'{\"edges\": [[0, 1, 1], [1, 2, -1], [2, 3, 1], [3, 4, -1], [4, 5, 1], [6, 7, 1]], \"expected_energy\": 6, \"experiment_id\": \"exp5255-hardware-continuity-pkit-boundary-v480\", \"spins\": [1, -1, -1, 1, 1, -1, 1, -1], \"workload\": \"exp5255_inline_hash_ising_smoke\"}'\"'\"'\ndata = json.loads(payload)\nspins = [int(value) for value in data['\"'\"'spins'\"'\"']]\nenergy = 0\nfor row, col, coupling in data['\"'\"'edges'\"'\"']:\n    energy -= int(coupling) * spins[int(row)] * spins[int(col)]\nout = {\n    '\"'\"'board'\"'\"': '\"'\"'polarfire'\"'\"',\n    '\"'\"'workload_sha256'\"'\"': '\"'\"'01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835'\"'\"',\n    '\"'\"'binary_or_bitstream_sha256'\"'\"': '\"'\"'25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e'\"'\"',\n    '\"'\"'inference_substrate'\"'\"': '\"'\"'hardware_probe_no_speedup_claim'\"'\"',\n    '\"'\"'energy'\"'\"': energy,\n    '\"'\"'correctness'\"'\"': {'\"'\"'energy_matches_expected'\"'\"': energy == data['\"'\"'expected_energy'\"'\"']},\n}\nencoded = json.dumps(out, sort_keys=True, separators=('\"'\"','\"'\"', '\"'\"':'\"'\"')).encode()\nout['\"'\"'output_sha256'\"'\"'] = hashlib.sha256(encoded).hexdigest()\nprint(json.dumps(out, sort_keys=True))\nPY'",
+      "duration_s": 1.328215,
+      "error": "",
+      "exit_code": 0,
+      "kind": "board_local_hash_smoke",
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\"binary_or_bitstream_sha256\": \"25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e\", \"board\": \"polarfire\", \"correctness\": {\"energy_matches_expected\": true}, \"energy\": 6, \"inference_substrate\": \"hardware_probe_no_speedup_claim\", \"output_sha256\": \"4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc\", \"workload_sha256\": \"01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835\"}\n"
+    }
+  ],
+  "schema": "carnot.experiment_5255.hardware_continuity_pkit_boundary.v480",
+  "spec_refs": [
+    "REQ-HW-5255",
+    "SCENARIO-HW-5255"
+  ],
+  "speedup_claimed": {
+    "principle": "False because this experiment is continuity and boundary documentation only.",
+    "value": false
+  },
+  "workload_hashes": {
+    "principle": "Commit, workload, executable or bitstream, and output hashes are receipt fields only.",
+    "value": {
+      "binary_or_bitstream_sha256": "25fd63b0185d503c4479f0d86095fa802c95494940f6e286e25611d82729ee5e",
+      "commit": "e9b25bae1211a1c9bede550401429643d9e70549",
+      "output_hashes": {
+        "kv260": "434a6373cf42b11c89cf037e313fe6f5aa597fe9e36869272ec3a7c8e1a2d8af",
+        "polarfire": "4d01309802291fb7b1f784a6acba244284a4feaa9e6f6b3c68cb79f3a17b9fdc"
+      },
+      "workload_sha256": "01ed5fb420ba795a5e82fd81969ef80ef4bdd6c158dde4fc79d58d59876ff835"
+    }
+  }
+}

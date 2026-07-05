@@ -15294,6 +15294,103 @@ statuses and no speedup claim.
 
 ---
 
+### REQ-HW-5255
+
+**Title:** Hardware-continuity v480 MUST refresh KV260 and PolarFire SSH/hash receipts and boundary p-kit, Extropic, Kona, and Aleph references without any speedup claim
+
+**Description:**
+Experiment 5255 MUST produce
+`results/experiment_5255_hardware_continuity_pkit_boundary_v480.json` as a v480
+hardware-continuity artifact with
+`inference_substrate="hardware_probe_no_speedup_claim"` and
+`speedup_claimed=false`. It refreshes the smallest safe continuity receipts for
+KV260 and PolarFire, carries forward the GateMate physical/JTAG block when the
+physical setup has not changed, and writes repository boundary notes for IBM
+p-kit, Extropic TSU/XTR-0/Z1, and Logical Intelligence Kona/Aleph references.
+
+KV260 MUST be checked over SSH only with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host block-device names
+such as `/dev/mmcblk*` MUST NOT be used as KV260 preconditions. If the SSH
+precondition fails, the artifact MUST report `kv260_status="blocked"` with a
+connection receipt containing the exact command, exit code, error text, and
+wall-clock duration. When reachable, KV260 MUST run the smallest board-local
+hash/correctness smoke available from the existing v479 continuity pattern and
+record command, commit, workload hash, executable or bitstream hash, output
+hash, correctness, and wall-clock duration as receipt evidence only.
+
+PolarFire MUST be checked over SSH with
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. If reachable, it
+MUST run the same bounded board-local hash/correctness smoke and record the same
+receipt fields. If unreachable, it MUST emit a blocked precondition receipt with
+the exact command, exit code, error text, and wall-clock duration.
+
+GateMate MUST NOT re-run physical or JTAG probing unless the operator changed
+the cable, USB port, power, or board setup. With `physical_setup_changed=false`,
+the artifact MUST carry forward `gatemate_status="blocked_physical_jtag"` with
+evidence from exp5243/exp5231 and MUST NOT spend time on redundant IDCODE
+reruns.
+
+The p-kit boundary note MUST record IBM `p-kit` as a GitHub/software reference
+for probabilistic-circuit simulation, not as local p-bit hardware. The
+Extropic/Kona boundary note MUST record Extropic TSU/XTR-0/Z1 and Logical
+Intelligence Kona/Aleph as public architecture references only. Neither note may
+claim Carnot has local TSU/XTR-0/Z1, Kona, Aleph, or p-kit hardware execution.
+
+The artifact MUST include principle-wrapped required fields `honest_verdict`,
+`inference_substrate`, `kv260_status`, `kv260_ssh_only_confirmed`,
+`polarfire_status`, `gatemate_status`, `physical_setup_changed`,
+`workload_hashes`, `pkit_boundary_note_path`,
+`extropic_kona_boundary_note_path`, and `speedup_claimed`. The
+`honest_verdict.value` MUST start with `complete:` or `blocked_`, MUST state
+KV260, PolarFire, and GateMate statuses, and MUST state that no speedup is
+claimed.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5255_hardware_continuity_pkit_boundary_v480 --date 20260705`
+  writes `results/experiment_5255_hardware_continuity_pkit_boundary_v480.json`.
+- The artifact includes
+  `experiment_id="exp5255-hardware-continuity-pkit-boundary-v480"`,
+  `spec_refs` containing `REQ-HW-5255` and `SCENARIO-HW-5255`,
+  `random_seed=5255`, and a stable `reproducibility_checksum`.
+- KV260 status is derived only from SSH reachability plus any SSH board-local
+  hash/correctness smoke; host block-device names such as `/dev/mmcblk` do not
+  appear in the artifact.
+- KV260 and PolarFire reachable smokes record command, commit, workload hash,
+  executable or bitstream hash, output hash, correctness, and wall-clock
+  duration as receipts only.
+- With `physical_setup_changed=false`, GateMate is carried forward as
+  `blocked_physical_jtag` with evidence and no physical/JTAG command transcript.
+- The p-kit and Extropic/Kona boundary notes exist and state local claim limits.
+- `speedup_claimed=false` and `honest_verdict.value` states board statuses and
+  no speedup claim.
+
+**Implementation status:** Pending (Exp 5255)
+
+---
+
+### SCENARIO-HW-5255
+
+**Scenario:** Exp 5255 refreshes SSH/hash continuity receipts and writes p-kit, Extropic, Kona, and Aleph boundary notes with no acceleration claim.
+
+**Given:** Exp 5243 showed KV260 and PolarFire reachable, GateMate remained
+blocked at the physical/JTAG layer, IBM p-kit is a GitHub/software watch
+reference rather than local p-bit hardware, and Extropic/Kona/Aleph references
+are public architecture signals only.
+**When:** Experiment 5255 runs KV260 SSH-only reachability plus board-local hash
+smoke if reachable, runs PolarFire SSH/hash continuity or records the blocked
+precondition receipt, skips GateMate physical/JTAG probing because the physical
+setup did not change, and writes the boundary notes.
+**Then:** It writes
+`results/experiment_5255_hardware_continuity_pkit_boundary_v480.json` with all
+principle-wrapped required fields, `inference_substrate="hardware_probe_no_speedup_claim"`,
+`speedup_claimed=false`, board receipt hashes, boundary note paths, no host
+block-device precondition, and an honest verdict beginning with `complete:` or
+`blocked_` that states KV260, PolarFire, GateMate, and no-speedup status.
+
+**Implementation status:** Pending (Exp 5255)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
