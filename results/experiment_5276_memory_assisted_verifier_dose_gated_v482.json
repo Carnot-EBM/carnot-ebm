@@ -1,0 +1,1326 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, and headline inclusion; tiny legacy smoke models cannot contribute headline metrics.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "allocation_changed_by_memory_count": 3,
+  "baseline_metrics": {
+    "always_full": {
+      "correct_n": 7,
+      "false_accept_rate": 0.0,
+      "false_accepts": 0,
+      "full_verifier_calls": 7,
+      "n": 7,
+      "quality_rate": 1.0
+    },
+    "no_memory_scheduler": {
+      "correct_n": 7,
+      "false_accept_rate": 0.0,
+      "false_accepts": 0,
+      "full_verifier_calls": 4,
+      "n": 7,
+      "quality_rate": 1.0
+    }
+  },
+  "baseline_rows": {
+    "always_full": [
+      {
+        "active_memory_decision_ids": [
+          "decision-history:79724a05029a15ef"
+        ],
+        "cheap_decision": "attempt_gap1_registry_promotion",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "deterministic_violation_count": 1,
+        "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "false_accept": false,
+        "full_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.94,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap1_orientation",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "attempt_gap1_registry_promotion",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "evict_stale_conflict"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:b415193c099621d0"
+        ],
+        "task_id": "gap1_memory_only_consumer"
+      },
+      {
+        "active_memory_decision_ids": [
+          "decision-history:79724a05029a15ef"
+        ],
+        "cheap_decision": "attempt_gap1_registry_promotion",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "deterministic_violation_count": 2,
+        "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "false_accept": false,
+        "full_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.91,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap1_orientation",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_role": "flagship_dense",
+        "no_verifier_decision": "attempt_gap1_registry_promotion",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "evict_stale_conflict"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:b415193c099621d0"
+        ],
+        "task_id": "gap1_registry_rollback_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "reuse_gap4_candidate_pool",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "deterministic_violation_count": 3,
+        "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "false_accept": false,
+        "full_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.86,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap4_claims",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_role": "middle_moe",
+        "no_verifier_decision": "reuse_gap4_candidate_pool",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "reject_poisoning"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:000edcd256a6bf5f"
+        ],
+        "task_id": "gap4_candidate_pool_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "retire_mmlu_hidden_state_path",
+        "cheap_gate_passed": true,
+        "correct": true,
+        "deterministic_check_decision": "retire_mmlu_hidden_state_path",
+        "deterministic_violation_count": 0,
+        "expected_decision": "retire_mmlu_hidden_state_path",
+        "false_accept": false,
+        "full_decision": "retire_mmlu_hidden_state_path",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.72,
+        "memory_feature_active": false,
+        "memory_scope": null,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "retire_mmlu_hidden_state_path",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "retire_mmlu_hidden_state_path",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [],
+        "suppressed_memory_decision_ids": [],
+        "task_id": "mmlu_hidden_state_retention_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "patch_arc_level_directly",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "deterministic_violation_count": 2,
+        "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "false_accept": false,
+        "full_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.9,
+        "memory_feature_active": true,
+        "memory_scope": "arc/patch_synthesis",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_role": "flagship_dense",
+        "no_verifier_decision": "patch_arc_level_directly",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "rollback_harmful"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:f31ef30e7e590472"
+        ],
+        "task_id": "arc_rubric_before_patch_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "block_hardware_speedup_claim_until_transcript",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "block_hardware_speedup_claim_until_transcript",
+        "deterministic_violation_count": 1,
+        "expected_decision": "block_hardware_speedup_claim_until_transcript",
+        "false_accept": false,
+        "full_decision": "block_hardware_speedup_claim_until_transcript",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.58,
+        "memory_feature_active": true,
+        "memory_scope": "hardware/reporting",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_role": "middle_moe",
+        "no_verifier_decision": "block_hardware_speedup_claim_until_transcript",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "block_hardware_speedup_claim_until_transcript",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "reject_out_of_scope"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:8c9c5b32b3bea333"
+        ],
+        "task_id": "hardware_speedup_boundary_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "answer_without_memory",
+        "cheap_gate_passed": true,
+        "correct": true,
+        "deterministic_check_decision": "answer_without_memory",
+        "deterministic_violation_count": 0,
+        "expected_decision": "answer_without_memory",
+        "false_accept": false,
+        "full_decision": "answer_without_memory",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.2,
+        "memory_feature_active": false,
+        "memory_scope": null,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "answer_without_memory",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "answer_without_memory",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [],
+        "suppressed_memory_decision_ids": [],
+        "task_id": "range_constraint_unrelated"
+      }
+    ],
+    "no_memory_scheduler": [
+      {
+        "active_memory_decision_ids": [
+          "decision-history:79724a05029a15ef"
+        ],
+        "cheap_decision": "attempt_gap1_registry_promotion",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "deterministic_violation_count": 1,
+        "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "false_accept": false,
+        "full_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.94,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap1_orientation",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "attempt_gap1_registry_promotion",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "evict_stale_conflict"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:b415193c099621d0"
+        ],
+        "task_id": "gap1_memory_only_consumer"
+      },
+      {
+        "active_memory_decision_ids": [
+          "decision-history:79724a05029a15ef"
+        ],
+        "cheap_decision": "attempt_gap1_registry_promotion",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "deterministic_violation_count": 2,
+        "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "false_accept": false,
+        "full_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.91,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap1_orientation",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_role": "flagship_dense",
+        "no_verifier_decision": "attempt_gap1_registry_promotion",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "evict_stale_conflict"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:b415193c099621d0"
+        ],
+        "task_id": "gap1_registry_rollback_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "reuse_gap4_candidate_pool",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "deterministic_violation_count": 3,
+        "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "false_accept": false,
+        "full_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.86,
+        "memory_feature_active": true,
+        "memory_scope": "verifier/gap4_claims",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_role": "middle_moe",
+        "no_verifier_decision": "reuse_gap4_candidate_pool",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "reject_poisoning"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:000edcd256a6bf5f"
+        ],
+        "task_id": "gap4_candidate_pool_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "retire_mmlu_hidden_state_path",
+        "cheap_gate_passed": true,
+        "correct": true,
+        "deterministic_check_decision": "retire_mmlu_hidden_state_path",
+        "deterministic_violation_count": 0,
+        "expected_decision": "retire_mmlu_hidden_state_path",
+        "false_accept": false,
+        "full_decision": "retire_mmlu_hidden_state_path",
+        "full_verifier_call": false,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.72,
+        "memory_feature_active": false,
+        "memory_scope": null,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "retire_mmlu_hidden_state_path",
+        "receipt_complete": true,
+        "route": "cheap_deterministic",
+        "selected_decision": "retire_mmlu_hidden_state_path",
+        "selected_decision_source": "cheap_deterministic_check",
+        "suppressed_memory_actions": [],
+        "suppressed_memory_decision_ids": [],
+        "task_id": "mmlu_hidden_state_retention_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "patch_arc_level_directly",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "deterministic_violation_count": 2,
+        "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "false_accept": false,
+        "full_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "full_verifier_call": true,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.9,
+        "memory_feature_active": true,
+        "memory_scope": "arc/patch_synthesis",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_role": "flagship_dense",
+        "no_verifier_decision": "patch_arc_level_directly",
+        "receipt_complete": true,
+        "route": "full_verifier",
+        "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+        "selected_decision_source": "full_verifier",
+        "suppressed_memory_actions": [
+          "rollback_harmful"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:f31ef30e7e590472"
+        ],
+        "task_id": "arc_rubric_before_patch_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "block_hardware_speedup_claim_until_transcript",
+        "cheap_gate_passed": false,
+        "correct": true,
+        "deterministic_check_decision": "block_hardware_speedup_claim_until_transcript",
+        "deterministic_violation_count": 1,
+        "expected_decision": "block_hardware_speedup_claim_until_transcript",
+        "false_accept": false,
+        "full_decision": "block_hardware_speedup_claim_until_transcript",
+        "full_verifier_call": false,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.58,
+        "memory_feature_active": true,
+        "memory_scope": "hardware/reporting",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_role": "middle_moe",
+        "no_verifier_decision": "block_hardware_speedup_claim_until_transcript",
+        "receipt_complete": true,
+        "route": "cheap_deterministic",
+        "selected_decision": "block_hardware_speedup_claim_until_transcript",
+        "selected_decision_source": "cheap_deterministic_check",
+        "suppressed_memory_actions": [
+          "reject_out_of_scope"
+        ],
+        "suppressed_memory_decision_ids": [
+          "decision-history:8c9c5b32b3bea333"
+        ],
+        "task_id": "hardware_speedup_boundary_consumer"
+      },
+      {
+        "active_memory_decision_ids": [],
+        "cheap_decision": "answer_without_memory",
+        "cheap_gate_passed": true,
+        "correct": true,
+        "deterministic_check_decision": "answer_without_memory",
+        "deterministic_violation_count": 0,
+        "expected_decision": "answer_without_memory",
+        "false_accept": false,
+        "full_decision": "answer_without_memory",
+        "full_verifier_call": false,
+        "live_receipt_available": true,
+        "memory_answer_injection_blocked": true,
+        "memory_confidence": 0.2,
+        "memory_feature_active": false,
+        "memory_scope": null,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_role": "flagship_moe",
+        "no_verifier_decision": "answer_without_memory",
+        "receipt_complete": true,
+        "route": "no_verifier",
+        "selected_decision": "answer_without_memory",
+        "selected_decision_source": "no_verifier_baseline_output",
+        "suppressed_memory_actions": [],
+        "suppressed_memory_decision_ids": [],
+        "task_id": "range_constraint_unrelated"
+      }
+    ]
+  },
+  "calls_avoided_rate": {
+    "principle": "Fraction of always-full verifier calls avoided by the memory-assisted policy on live-SOTA-receipt-backed pilot rows.",
+    "value": 0.857143
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5276_memory_assisted_verifier_dose_gated_v482.py -q -o addopts=",
+      "outcome": "failed before implementation, then partial focused suite passed after implementation fixes"
+    }
+  ],
+  "decision_quality_delta": {
+    "principle": "Memory-assisted quality rate minus always-full quality rate on the same pilot rows; negative values are harmful.",
+    "value": 0.0
+  },
+  "duration_s": 90.993698,
+  "experiment": "experiment_5276_memory_assisted_verifier_dose_gated_v482",
+  "experiment_id": 5276,
+  "field_principles": {
+    "MODEL_SPECS": "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, and headline inclusion; tiny legacy smoke models cannot contribute headline metrics.",
+    "calls_avoided_rate": "Fraction of always-full verifier calls avoided by the memory-assisted policy on live-SOTA-receipt-backed pilot rows.",
+    "commands_run": "Commands run to validate the module, artifact schema, new-code coverage, repository tests, and adversarial verification.",
+    "decision_quality_delta": "Memory-assisted quality rate minus always-full quality rate on the same pilot rows; negative values are harmful.",
+    "honest_verdict": "Terminal Exp 5276 verdict; starts with complete: or blocked_ and states whether memory-assisted verifier dosing is positive, null, harmful, or unmeasured.",
+    "inference_substrate": "Declares the bounded local SOTA GGUF receipt-backed pilot, not cached-only replay, tiny-model smoke, external judging, or answer injection.",
+    "memory_scope_violations_blocked": "Counts stale, poisoning-like, out-of-scope, or harmful memory rows blocked before they can influence allocation.",
+    "memory_verifier_dose_ready": "True only when governed memory changes allocation, avoids full verifier calls, preserves always-full decision quality, causes zero unsafe false accepts, suppresses unsafe memory rows, and exercises rollback.",
+    "preconditions_checked": "Records the Exp 5271 telemetry gate, Exp 5275 governed-memory gate, Exp 5264 scheduler replay readiness, model/runtime snapshots, and exclusion-manifest check before allocation metrics are interpreted.",
+    "rollback_exercised": "Confirms the pilot included a harmful-memory allocation case and selected rollback/block/quarantine/retire instead of trusting memory.",
+    "unsafe_false_accepts": "Counts unsafe acceptances introduced by memory-assisted allocation; any positive value blocks readiness."
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5276 verdict; starts with complete: or blocked_ and states whether memory-assisted verifier dosing is positive, null, harmful, or unmeasured.",
+    "value": "complete: positive memory-assisted verifier dosing preserved always-full quality, avoided 0.857143 full verifier calls, blocked unsafe memory rows, and kept unsafe_false_accepts=0"
+  },
+  "inference_substrate": {
+    "principle": "Declares the bounded local SOTA GGUF receipt-backed pilot, not cached-only replay, tiny-model smoke, external judging, or answer injection.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "memory_assisted_metrics": {
+    "correct_n": 7,
+    "false_accept_rate": 0.0,
+    "false_accepts": 0,
+    "full_verifier_calls": 1,
+    "n": 7,
+    "quality_rate": 1.0
+  },
+  "memory_scope_violations_blocked": {
+    "principle": "Counts stale, poisoning-like, out-of-scope, or harmful memory rows blocked before they can influence allocation.",
+    "value": 4
+  },
+  "memory_snapshot": {
+    "governance_action_counts": {
+      "evict_stale_conflict": 1,
+      "promote": 1,
+      "reject_out_of_scope": 1,
+      "reject_poisoning": 1,
+      "rollback_harmful": 1
+    },
+    "memory_decision_history_ready": true,
+    "memory_decision_history_ready_principle": "Bare gate for Exp5276; true only when provenance, scope enforcement, stale conflict eviction, poisoning rejection, and harmful rollback pass.",
+    "row_count": 5,
+    "unsafe_false_accepts": 0
+  },
+  "memory_verifier_dose_ready": {
+    "principle": "True only when governed memory changes allocation, avoids full verifier calls, preserves always-full decision quality, causes zero unsafe false accepts, suppresses unsafe memory rows, and exercises rollback.",
+    "value": true
+  },
+  "model_runtime_snapshot": {
+    "models": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_status": "telemetry_ready",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      }
+    },
+    "runtime": {
+      "duration_receipts": {
+        "minimum_live_model_duration_s": 1.0,
+        "per_model": {
+          "flagship_dense": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 40.945817
+          },
+          "flagship_moe": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 30.221738
+          },
+          "middle_moe": {
+            "runtime_ready": true,
+            "status": "telemetry_ready",
+            "wall_clock_s": 16.702565
+          }
+        },
+        "total_wall_clock_s": 90.993698
+      },
+      "exposed_telemetry_fields": {
+        "flagship_dense": {
+          "attention_summaries": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_attention_export"
+          },
+          "hidden_states": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_hidden_state_export"
+          },
+          "logits": {
+            "availability": "available",
+            "steps": 6,
+            "top_k_count": 8,
+            "top_logits_checksum": "c7a442f9f7243ee5",
+            "vocab_size": 262144
+          },
+          "token_logprobs": {
+            "availability": "available",
+            "token_count": 0,
+            "tokens_checksum": "c2c259f330f21e07",
+            "top_logprobs_count": 2
+          }
+        },
+        "flagship_moe": {
+          "attention_summaries": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_attention_export"
+          },
+          "hidden_states": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_hidden_state_export"
+          },
+          "logits": {
+            "availability": "available",
+            "steps": 5,
+            "top_k_count": 8,
+            "top_logits_checksum": "a4564c7111732d3d",
+            "vocab_size": 248320
+          },
+          "token_logprobs": {
+            "availability": "available",
+            "token_count": 0,
+            "tokens_checksum": "b23082dcbb1b02e9",
+            "top_logprobs_count": 2
+          }
+        },
+        "middle_moe": {
+          "attention_summaries": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_attention_export"
+          },
+          "hidden_states": {
+            "availability": "capability_absent",
+            "reason": "llama_cpp_api_no_hidden_state_export"
+          },
+          "logits": {
+            "availability": "available",
+            "steps": 6,
+            "top_k_count": 8,
+            "top_logits_checksum": "0d0c17eb4059fde0",
+            "vocab_size": 262144
+          },
+          "token_logprobs": {
+            "availability": "available",
+            "token_count": 0,
+            "tokens_checksum": "67403718a1af7344",
+            "top_logprobs_count": 2
+          }
+        }
+      },
+      "gpu_offload_receipts": {
+        "cuda_runtime": {
+          "command": [
+            "nvidia-smi"
+          ],
+          "duration_s": 0.097394,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Sun Jul  5 10:49:08 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   47C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   49C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+        },
+        "gpu_visible": true,
+        "llama_cpp": {
+          "import_ok": true,
+          "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "version": "0.3.29"
+        },
+        "llama_cpp_python_distribution": "llama-cpp-python",
+        "nvidia_smi": {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.035026,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+        },
+        "offload_settings": {
+          "logits_all": true,
+          "logprobs": 5,
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "seed": 5271,
+          "temperature": 0.0
+        },
+        "torch_cuda": {
+          "available": true,
+          "device_count": 2,
+          "import_ok": true,
+          "version": "2.11.0+cu128"
+        }
+      },
+      "inference_substrate": "live_llm_internal_telemetry_local_gguf_sota",
+      "telemetry_harness_ready": true,
+      "telemetry_harness_ready_principle": "telemetry_harness_ready=true because live mandated SOTA GGUF telemetry completed with usable internal/logprob/logit receipts for flagship_moe, flagship_dense, middle_moe; hidden or attention gaps remain recorded as capability_absent."
+    }
+  },
+  "pilot_rows": [
+    {
+      "active_memory_decision_ids": [
+        "decision-history:79724a05029a15ef"
+      ],
+      "cheap_decision": "attempt_gap1_registry_promotion",
+      "cheap_gate_passed": false,
+      "correct": true,
+      "deterministic_check_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "deterministic_violation_count": 1,
+      "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "false_accept": false,
+      "full_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.94,
+      "memory_feature_active": true,
+      "memory_scope": "verifier/gap1_orientation",
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "no_verifier_decision": "attempt_gap1_registry_promotion",
+      "receipt_complete": true,
+      "route": "memory_guided_deterministic_check",
+      "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "suppressed_memory_actions": [
+        "evict_stale_conflict"
+      ],
+      "suppressed_memory_decision_ids": [
+        "decision-history:b415193c099621d0"
+      ],
+      "task_id": "gap1_memory_only_consumer"
+    },
+    {
+      "active_memory_decision_ids": [
+        "decision-history:79724a05029a15ef"
+      ],
+      "cheap_decision": "attempt_gap1_registry_promotion",
+      "cheap_gate_passed": false,
+      "correct": true,
+      "deterministic_check_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "deterministic_violation_count": 2,
+      "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "false_accept": false,
+      "full_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.91,
+      "memory_feature_active": true,
+      "memory_scope": "verifier/gap1_orientation",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "no_verifier_decision": "attempt_gap1_registry_promotion",
+      "receipt_complete": true,
+      "route": "memory_guided_deterministic_check",
+      "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "suppressed_memory_actions": [
+        "evict_stale_conflict"
+      ],
+      "suppressed_memory_decision_ids": [
+        "decision-history:b415193c099621d0"
+      ],
+      "task_id": "gap1_registry_rollback_consumer"
+    },
+    {
+      "active_memory_decision_ids": [],
+      "cheap_decision": "reuse_gap4_candidate_pool",
+      "cheap_gate_passed": false,
+      "correct": true,
+      "deterministic_check_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "deterministic_violation_count": 3,
+      "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "false_accept": false,
+      "full_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "full_verifier_call": true,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.86,
+      "memory_feature_active": true,
+      "memory_scope": "verifier/gap4_claims",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "no_verifier_decision": "reuse_gap4_candidate_pool",
+      "receipt_complete": true,
+      "route": "full_verifier",
+      "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "selected_decision_source": "full_verifier",
+      "suppressed_memory_actions": [
+        "reject_poisoning"
+      ],
+      "suppressed_memory_decision_ids": [
+        "decision-history:000edcd256a6bf5f"
+      ],
+      "task_id": "gap4_candidate_pool_consumer"
+    },
+    {
+      "active_memory_decision_ids": [],
+      "cheap_decision": "retire_mmlu_hidden_state_path",
+      "cheap_gate_passed": true,
+      "correct": true,
+      "deterministic_check_decision": "retire_mmlu_hidden_state_path",
+      "deterministic_violation_count": 0,
+      "expected_decision": "retire_mmlu_hidden_state_path",
+      "false_accept": false,
+      "full_decision": "retire_mmlu_hidden_state_path",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.72,
+      "memory_feature_active": false,
+      "memory_scope": null,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "no_verifier_decision": "retire_mmlu_hidden_state_path",
+      "receipt_complete": true,
+      "route": "cheap_deterministic",
+      "selected_decision": "retire_mmlu_hidden_state_path",
+      "selected_decision_source": "cheap_deterministic_check",
+      "suppressed_memory_actions": [],
+      "suppressed_memory_decision_ids": [],
+      "task_id": "mmlu_hidden_state_retention_consumer"
+    },
+    {
+      "active_memory_decision_ids": [],
+      "cheap_decision": "patch_arc_level_directly",
+      "cheap_gate_passed": false,
+      "correct": true,
+      "deterministic_check_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "deterministic_violation_count": 2,
+      "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "false_accept": false,
+      "full_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.9,
+      "memory_feature_active": true,
+      "memory_scope": "arc/patch_synthesis",
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_role": "flagship_dense",
+      "no_verifier_decision": "patch_arc_level_directly",
+      "receipt_complete": true,
+      "route": "memory_guided_deterministic_check",
+      "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "suppressed_memory_actions": [
+        "rollback_harmful"
+      ],
+      "suppressed_memory_decision_ids": [
+        "decision-history:f31ef30e7e590472"
+      ],
+      "task_id": "arc_rubric_before_patch_consumer"
+    },
+    {
+      "active_memory_decision_ids": [],
+      "cheap_decision": "block_hardware_speedup_claim_until_transcript",
+      "cheap_gate_passed": false,
+      "correct": true,
+      "deterministic_check_decision": "block_hardware_speedup_claim_until_transcript",
+      "deterministic_violation_count": 1,
+      "expected_decision": "block_hardware_speedup_claim_until_transcript",
+      "false_accept": false,
+      "full_decision": "block_hardware_speedup_claim_until_transcript",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.58,
+      "memory_feature_active": true,
+      "memory_scope": "hardware/reporting",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_role": "middle_moe",
+      "no_verifier_decision": "block_hardware_speedup_claim_until_transcript",
+      "receipt_complete": true,
+      "route": "cheap_deterministic",
+      "selected_decision": "block_hardware_speedup_claim_until_transcript",
+      "selected_decision_source": "cheap_deterministic_check",
+      "suppressed_memory_actions": [
+        "reject_out_of_scope"
+      ],
+      "suppressed_memory_decision_ids": [
+        "decision-history:8c9c5b32b3bea333"
+      ],
+      "task_id": "hardware_speedup_boundary_consumer"
+    },
+    {
+      "active_memory_decision_ids": [],
+      "cheap_decision": "answer_without_memory",
+      "cheap_gate_passed": true,
+      "correct": true,
+      "deterministic_check_decision": "answer_without_memory",
+      "deterministic_violation_count": 0,
+      "expected_decision": "answer_without_memory",
+      "false_accept": false,
+      "full_decision": "answer_without_memory",
+      "full_verifier_call": false,
+      "live_receipt_available": true,
+      "memory_answer_injection_blocked": true,
+      "memory_confidence": 0.2,
+      "memory_feature_active": false,
+      "memory_scope": null,
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_role": "flagship_moe",
+      "no_verifier_decision": "answer_without_memory",
+      "receipt_complete": true,
+      "route": "no_verifier",
+      "selected_decision": "answer_without_memory",
+      "selected_decision_source": "no_verifier_baseline_output",
+      "suppressed_memory_actions": [],
+      "suppressed_memory_decision_ids": [],
+      "task_id": "range_constraint_unrelated"
+    }
+  ],
+  "preconditions_checked": {
+    "principle": "Records the Exp 5271 telemetry gate, Exp 5275 governed-memory gate, Exp 5264 scheduler replay readiness, model/runtime snapshots, and exclusion-manifest check before allocation metrics are interpreted.",
+    "value": {
+      "all_gates_ready": true,
+      "blockers": [],
+      "exclusion_manifest_allows_exp5276": true,
+      "exclusion_manifest_checked": true,
+      "exp5264.scheduler_ready": true,
+      "exp5271.telemetry_harness_ready": true,
+      "exp5275.memory_decision_history_ready": true,
+      "headline_roles_ready": true,
+      "memory_snapshot": {
+        "governance_action_counts": {
+          "evict_stale_conflict": 1,
+          "promote": 1,
+          "reject_out_of_scope": 1,
+          "reject_poisoning": 1,
+          "rollback_harmful": 1
+        },
+        "memory_decision_history_ready": true,
+        "memory_decision_history_ready_principle": "Bare gate for Exp5276; true only when provenance, scope enforcement, stale conflict eviction, poisoning rejection, and harmful rollback pass.",
+        "row_count": 5,
+        "unsafe_false_accepts": 0
+      },
+      "model_snapshot": {
+        "flagship_dense": {
+          "autotokenizer_used": false,
+          "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+          "file_receipts": {
+            "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+            "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "size_bytes": 18323731456
+          },
+          "headline_role": true,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "metadata": {
+            "magic": "GGUF",
+            "metadata_kv_count": 57,
+            "tensor_count": 833,
+            "version": 3
+          },
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "flagship_dense",
+          "runtime_status": "telemetry_ready",
+          "smoke_label": null,
+          "status": "local_gguf_resolved"
+        },
+        "flagship_moe": {
+          "autotokenizer_used": false,
+          "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+          "file_receipts": {
+            "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+            "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "size_bytes": 22134528992
+          },
+          "headline_role": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "metadata": {
+            "magic": "GGUF",
+            "metadata_kv_count": 54,
+            "tensor_count": 733,
+            "version": 3
+          },
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "flagship_moe",
+          "runtime_status": "telemetry_ready",
+          "smoke_label": null,
+          "status": "local_gguf_resolved"
+        },
+        "middle_moe": {
+          "autotokenizer_used": false,
+          "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+          "file_receipts": {
+            "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+            "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+            "checksum_sha256": null,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "size_bytes": 16947539744
+          },
+          "headline_role": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "metadata": {
+            "magic": "GGUF",
+            "metadata_kv_count": 60,
+            "tensor_count": 658,
+            "version": 3
+          },
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "quantization": "Q4_K_M",
+          "role": "middle_moe",
+          "runtime_status": "telemetry_ready",
+          "smoke_label": null,
+          "status": "local_gguf_resolved"
+        }
+      },
+      "runtime_snapshot": {
+        "duration_receipts": {
+          "minimum_live_model_duration_s": 1.0,
+          "per_model": {
+            "flagship_dense": {
+              "runtime_ready": true,
+              "status": "telemetry_ready",
+              "wall_clock_s": 40.945817
+            },
+            "flagship_moe": {
+              "runtime_ready": true,
+              "status": "telemetry_ready",
+              "wall_clock_s": 30.221738
+            },
+            "middle_moe": {
+              "runtime_ready": true,
+              "status": "telemetry_ready",
+              "wall_clock_s": 16.702565
+            }
+          },
+          "total_wall_clock_s": 90.993698
+        },
+        "exposed_telemetry_fields": {
+          "flagship_dense": {
+            "attention_summaries": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_attention_export"
+            },
+            "hidden_states": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_hidden_state_export"
+            },
+            "logits": {
+              "availability": "available",
+              "steps": 6,
+              "top_k_count": 8,
+              "top_logits_checksum": "c7a442f9f7243ee5",
+              "vocab_size": 262144
+            },
+            "token_logprobs": {
+              "availability": "available",
+              "token_count": 0,
+              "tokens_checksum": "c2c259f330f21e07",
+              "top_logprobs_count": 2
+            }
+          },
+          "flagship_moe": {
+            "attention_summaries": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_attention_export"
+            },
+            "hidden_states": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_hidden_state_export"
+            },
+            "logits": {
+              "availability": "available",
+              "steps": 5,
+              "top_k_count": 8,
+              "top_logits_checksum": "a4564c7111732d3d",
+              "vocab_size": 248320
+            },
+            "token_logprobs": {
+              "availability": "available",
+              "token_count": 0,
+              "tokens_checksum": "b23082dcbb1b02e9",
+              "top_logprobs_count": 2
+            }
+          },
+          "middle_moe": {
+            "attention_summaries": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_attention_export"
+            },
+            "hidden_states": {
+              "availability": "capability_absent",
+              "reason": "llama_cpp_api_no_hidden_state_export"
+            },
+            "logits": {
+              "availability": "available",
+              "steps": 6,
+              "top_k_count": 8,
+              "top_logits_checksum": "0d0c17eb4059fde0",
+              "vocab_size": 262144
+            },
+            "token_logprobs": {
+              "availability": "available",
+              "token_count": 0,
+              "tokens_checksum": "67403718a1af7344",
+              "top_logprobs_count": 2
+            }
+          }
+        },
+        "gpu_offload_receipts": {
+          "cuda_runtime": {
+            "command": [
+              "nvidia-smi"
+            ],
+            "duration_s": 0.097394,
+            "ok": true,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "Sun Jul  5 10:49:08 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   47C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   49C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+          },
+          "gpu_visible": true,
+          "llama_cpp": {
+            "import_ok": true,
+            "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+            "version": "0.3.29"
+          },
+          "llama_cpp_python_distribution": "llama-cpp-python",
+          "nvidia_smi": {
+            "command": [
+              "nvidia-smi",
+              "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "duration_s": 0.035026,
+            "ok": true,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+          },
+          "offload_settings": {
+            "logits_all": true,
+            "logprobs": 5,
+            "max_tokens": 2,
+            "n_ctx": 512,
+            "n_gpu_layers": -1,
+            "seed": 5271,
+            "temperature": 0.0
+          },
+          "torch_cuda": {
+            "available": true,
+            "device_count": 2,
+            "import_ok": true,
+            "version": "2.11.0+cu128"
+          }
+        },
+        "inference_substrate": "live_llm_internal_telemetry_local_gguf_sota",
+        "telemetry_harness_ready": true,
+        "telemetry_harness_ready_principle": "telemetry_harness_ready=true because live mandated SOTA GGUF telemetry completed with usable internal/logprob/logit receipts for flagship_moe, flagship_dense, middle_moe; hidden or attention gaps remain recorded as capability_absent."
+      },
+      "scheduler_snapshot": {
+        "decision_quality_delta": 0.0,
+        "false_accept_delta": 0.0,
+        "full_verifier_calls_avoided_rate": 0.857143,
+        "scheduler_ready": true,
+        "scheduler_ready_principle": "scheduler_ready=true only when fixture_count>=6, decision_quality_delta>=0, false_accept_delta<=0, and full_verifier_calls_avoided_rate>0; observed fixture_count=7, decision_quality_delta=0.000000, false_accept_delta=0.000000, full_verifier_calls_avoided_rate=0.857143"
+      }
+    }
+  },
+  "random_seed": 5276,
+  "reproducibility_checksum": "sha256:62c37eb219158a16daa07f07a231f769af522fe5058c10ce493a86e552e1801d",
+  "result_path": "results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json",
+  "rollback_exercised": {
+    "principle": "Confirms the pilot included a harmful-memory allocation case and selected rollback/block/quarantine/retire instead of trusting memory.",
+    "value": true
+  },
+  "route_counts": {
+    "cheap_deterministic": 2,
+    "full_verifier": 1,
+    "memory_guided_deterministic_check": 3,
+    "no_verifier": 1
+  },
+  "run_date": "2026-07-05",
+  "scheduler_snapshot": {
+    "decision_quality_delta": 0.0,
+    "false_accept_delta": 0.0,
+    "full_verifier_calls_avoided_rate": 0.857143,
+    "scheduler_ready": true,
+    "scheduler_ready_principle": "scheduler_ready=true only when fixture_count>=6, decision_quality_delta>=0, false_accept_delta<=0, and full_verifier_calls_avoided_rate>0; observed fixture_count=7, decision_quality_delta=0.000000, false_accept_delta=0.000000, full_verifier_calls_avoided_rate=0.857143"
+  },
+  "schema": "carnot.experiment_5276.memory_assisted_verifier_dose_gated.v482",
+  "source_artifact_checksums": {
+    "exclusion_manifest": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6",
+    "exp5264": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
+    "exp5271": "sha256:5e2bad92538e807318c4d715c02214a8142a17fdf70d2d145895e4b9214a54ad",
+    "exp5275": "sha256:8939df38942f856857fe821e3a330d1a2b6783e186fd04fe3945431998566f0c"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5276",
+    "SCENARIO-VERIFY-5276"
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Counts unsafe acceptances introduced by memory-assisted allocation; any positive value blocks readiness.",
+    "value": 0
+  }
+}
