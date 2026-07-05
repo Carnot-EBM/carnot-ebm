@@ -25643,6 +25643,75 @@ solver-feedback scope.
 |---|---|---|
 | REQ-VERIFY-5274 | Planned (`python/carnot/experiment_5274_solver_constraint_extraction_retry_gated_v482.py`, `results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json`) | Planned (`tests/python/test_experiment_5274_solver_constraint_extraction_retry_gated_v482.py`) |
 
+### REQ-VERIFY-5278: Constraint Fixture To Factor-Graph Boundary V482
+
+The repository SHALL provide Exp 5278 at
+`python/carnot/experiment_5278_constraint_factor_graph_boundary_v482.py` and
+write `results/experiment_5278_constraint_factor_graph_boundary_v482.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL select a
+tiny solver-labeled fixture from Exp 5273 when that artifact is reusable, or a
+local deterministic fallback fixture when Exp 5273 is unavailable or not ready.
+
+The runner SHALL define a transparent finite-domain to binary mapping and a
+pairwise QUBO/Ising-style sampler interface for that fixture. The mapping SHALL
+record variable domains, binary one-hot variables, factor definitions,
+pairwise coefficients, and a round-trip check from the solver witness
+assignment to binary state, decoded assignment, deterministic energy, and
+constraint-violation count. A false assignment from the fixture's rejecting
+examples SHALL have positive energy or positive violation and SHALL be recorded
+as rejected.
+
+The runner SHALL execute only CPU-local deterministic enumeration or a CPU-only
+sampler on the tiny instance. Autocorrelation SHALL be reported only when a real
+chain metric is meaningful for the chosen run; exhaustive enumeration MAY record
+`autocorrelation_metric.value=null` with an explanatory principle. Hardware or
+hardware-stub hooks MAY be inspected only for interface compatibility. The
+runner SHALL NOT run board-specific commands and SHALL NOT claim hardware
+speedup.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `factor_graph_boundary_ready`,
+`sampler_interface_ready`, `mapping_roundtrip_passed`,
+`false_assignment_rejected`, `autocorrelation_metric`,
+`hardware_speedup_claimed`, and `tests_run`. `honest_verdict.value` SHALL start
+with `complete:` or `blocked_` and state whether the factor-graph boundary is
+usable. `inference_substrate.value` SHALL be
+`offline_deterministic_certificate_no_llm`. `hardware_speedup_claimed.value`
+SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5278 verdict; starts with complete: or blocked_ and states whether the factor-graph boundary is usable."
+- `inference_substrate`: principle "Must be offline_deterministic_certificate_no_llm because Exp 5278 is a deterministic boundary certificate with no LLM inference."
+- `factor_graph_boundary_ready`: principle "True only when the selected solver fixture is represented as transparent variables, factors, binary one-hot variables, and pairwise QUBO coefficients."
+- `sampler_interface_ready`: principle "True only when the boundary emits finite bias/coupling arrays and backend-compatible interface metadata without running board-specific hardware."
+- `mapping_roundtrip_passed`: principle "True only when the solver witness encodes to bits, decodes back to the same assignment, has zero deterministic energy, and has zero constraint violation."
+- `false_assignment_rejected`: principle "True only when a deterministic rejecting assignment from the fixture has positive energy or positive constraint violation."
+- `autocorrelation_metric`: principle "Numeric only for a meaningful CPU chain metric; null is required for exhaustive deterministic enumeration without a Markov chain."
+- `hardware_speedup_claimed`: principle "Always false for Exp 5278; interface compatibility is not hardware timing or acceleration evidence."
+- `tests_run`: principle "Commands run to validate mapping correctness, false-assignment rejection, no-speedup artifact fields, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5278: Solver Witness Round-Trips Through Factor-Graph Boundary
+
+Given a reusable Exp 5273 tiny SAT fixture or the deterministic fallback with
+the same variable semantics, when Exp 5278 runs, then it maps the solver witness
+to one-hot binary variables, decodes it back to the original integer
+assignment, evaluates deterministic factor/QUBO energy at zero, records zero
+constraint violation, enumerates the tiny CPU state space, emits sampler
+interface shapes and coefficients, writes the required artifact fields, and
+sets `hardware_speedup_claimed.value=false`.
+
+If the fixture is not reusable, the mapping cannot round-trip, no finite
+pairwise interface can be emitted, or the rejecting assignment is accepted, then
+the runner writes a `blocked_` artifact and does not claim sampler readiness,
+hardware execution, hardware latency, or speedup.
+
+## Implementation Status (REQ-VERIFY-5278)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5278 | Implemented (`python/carnot/experiment_5278_constraint_factor_graph_boundary_v482.py`, `results/experiment_5278_constraint_factor_graph_boundary_v482.json`) | Implemented (`tests/python/test_experiment_5278_constraint_factor_graph_boundary_v482.py`) |
+
 ### REQ-VERIFY-5263: Neuron/Attention/Logit Energy Hallucination Probe V481
 
 The repository SHALL provide Exp 5263 at

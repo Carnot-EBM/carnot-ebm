@@ -1,0 +1,537 @@
+{
+  "autocorrelation_metric": {
+    "principle": "Numeric only for a meaningful CPU chain metric; null is required for exhaustive deterministic enumeration without a Markov chain.",
+    "value": null
+  },
+  "constraint_violation_metrics": {
+    "false_assignment_violation": 1,
+    "solver_assignment_violation": 0
+  },
+  "deterministic_energy": {
+    "false_assignment_energy": 5.0,
+    "solver_assignment_energy": 0.0
+  },
+  "enumeration_metrics": {
+    "autocorrelation_metric": null,
+    "autocorrelation_reason": "exhaustive enumeration is not a Markov chain",
+    "best_assignments": [
+      {
+        "a": 2,
+        "b": 3
+      }
+    ],
+    "best_energy": 0.0,
+    "method": "cpu_exhaustive_enumerator",
+    "state_count": 256,
+    "valid_onehot_state_count": 16
+  },
+  "factor_graph_boundary": {
+    "binary_variable_order": [
+      "a_0",
+      "a_1",
+      "a_2",
+      "a_3",
+      "b_0",
+      "b_1",
+      "b_2",
+      "b_3"
+    ],
+    "factors": [
+      {
+        "id": "a_one_hot",
+        "type": "one_hot",
+        "variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3"
+        ],
+        "violation": "(sum(a_i) - 1)^2",
+        "weight": 20.0
+      },
+      {
+        "id": "b_one_hot",
+        "type": "one_hot",
+        "variables": [
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "violation": "(sum(b_i) - 1)^2",
+        "weight": 20.0
+      },
+      {
+        "id": "sum_is_five",
+        "type": "linear_equality_square",
+        "variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "violation": "(decoded_a + decoded_b - 5)^2",
+        "weight": 2.0
+      },
+      {
+        "id": "a_less_than_b",
+        "type": "pairwise_order_penalty",
+        "variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "violation": "sum(a_i * b_j for i >= j)",
+        "weight": 5.0
+      }
+    ],
+    "fixture_id": "small_pair_sum",
+    "qubo": {
+      "constant": 90.0,
+      "convention": "minimize constant + linear.x + pairwise.x_i.x_j",
+      "linear": [
+        -20.0,
+        -38.0,
+        -52.0,
+        -62.0,
+        -20.0,
+        -38.0,
+        -52.0,
+        -62.0
+      ],
+      "quadratic": [
+        {
+          "left": "a_0",
+          "right": "a_1",
+          "weight": 40.0
+        },
+        {
+          "left": "a_0",
+          "right": "a_2",
+          "weight": 40.0
+        },
+        {
+          "left": "a_0",
+          "right": "a_3",
+          "weight": 40.0
+        },
+        {
+          "left": "a_0",
+          "right": "b_0",
+          "weight": 5.0
+        },
+        {
+          "left": "a_0",
+          "right": "b_1",
+          "weight": 0.0
+        },
+        {
+          "left": "a_0",
+          "right": "b_2",
+          "weight": 0.0
+        },
+        {
+          "left": "a_0",
+          "right": "b_3",
+          "weight": 0.0
+        },
+        {
+          "left": "a_1",
+          "right": "a_2",
+          "weight": 48.0
+        },
+        {
+          "left": "a_1",
+          "right": "a_3",
+          "weight": 52.0
+        },
+        {
+          "left": "a_1",
+          "right": "b_0",
+          "weight": 5.0
+        },
+        {
+          "left": "a_1",
+          "right": "b_1",
+          "weight": 9.0
+        },
+        {
+          "left": "a_1",
+          "right": "b_2",
+          "weight": 8.0
+        },
+        {
+          "left": "a_1",
+          "right": "b_3",
+          "weight": 12.0
+        },
+        {
+          "left": "a_2",
+          "right": "a_3",
+          "weight": 64.0
+        },
+        {
+          "left": "a_2",
+          "right": "b_0",
+          "weight": 5.0
+        },
+        {
+          "left": "a_2",
+          "right": "b_1",
+          "weight": 13.0
+        },
+        {
+          "left": "a_2",
+          "right": "b_2",
+          "weight": 21.0
+        },
+        {
+          "left": "a_2",
+          "right": "b_3",
+          "weight": 24.0
+        },
+        {
+          "left": "a_3",
+          "right": "b_0",
+          "weight": 5.0
+        },
+        {
+          "left": "a_3",
+          "right": "b_1",
+          "weight": 17.0
+        },
+        {
+          "left": "a_3",
+          "right": "b_2",
+          "weight": 29.0
+        },
+        {
+          "left": "a_3",
+          "right": "b_3",
+          "weight": 41.0
+        },
+        {
+          "left": "b_0",
+          "right": "b_1",
+          "weight": 40.0
+        },
+        {
+          "left": "b_0",
+          "right": "b_2",
+          "weight": 40.0
+        },
+        {
+          "left": "b_0",
+          "right": "b_3",
+          "weight": 40.0
+        },
+        {
+          "left": "b_1",
+          "right": "b_2",
+          "weight": 48.0
+        },
+        {
+          "left": "b_1",
+          "right": "b_3",
+          "weight": 52.0
+        },
+        {
+          "left": "b_2",
+          "right": "b_3",
+          "weight": 64.0
+        }
+      ]
+    },
+    "source": "exp5273_result",
+    "variables": {
+      "a": {
+        "domain": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "encoding": "one_hot"
+      },
+      "b": {
+        "domain": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "encoding": "one_hot"
+      }
+    }
+  },
+  "factor_graph_boundary_ready": {
+    "principle": "True only when the selected solver fixture is represented as transparent variables, factors, binary one-hot variables, and pairwise QUBO coefficients.",
+    "value": true
+  },
+  "false_assignment_check": {
+    "assignment": {
+      "a": 3,
+      "b": 2
+    },
+    "bits": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
+    "constraint_violation": 1,
+    "energy": 5.0,
+    "rejected": true
+  },
+  "false_assignment_rejected": {
+    "principle": "True only when a deterministic rejecting assignment from the fixture has positive energy or positive constraint violation.",
+    "value": true
+  },
+  "hardware_speedup_claimed": {
+    "principle": "Always false for Exp 5278; interface compatibility is not hardware timing or acceleration evidence.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5278 verdict; starts with complete: or blocked_ and states whether the factor-graph boundary is usable.",
+    "value": "complete: factor-graph boundary is usable for the tiny solver fixture; sampler interface compatibility is shape-only and no hardware speedup is claimed"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because Exp 5278 is a deterministic boundary certificate with no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "mapping_roundtrip": {
+    "assignment": {
+      "a": 2,
+      "b": 3
+    },
+    "bits": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    "constraint_violation": 0,
+    "decoded_assignment": {
+      "a": 2,
+      "b": 3
+    },
+    "energy": 0.0,
+    "passed": true
+  },
+  "mapping_roundtrip_passed": {
+    "principle": "True only when the solver witness encodes to bits, decodes back to the same assignment, has zero deterministic energy, and has zero constraint violation.",
+    "value": true
+  },
+  "sampler_interface": {
+    "backend_protocol": "SamplerBackend",
+    "bias_shape": [
+      8
+    ],
+    "biases": [
+      20.0,
+      38.0,
+      52.0,
+      62.0,
+      20.0,
+      38.0,
+      52.0,
+      62.0
+    ],
+    "binary_variable_order": [
+      "a_0",
+      "a_1",
+      "a_2",
+      "a_3",
+      "b_0",
+      "b_1",
+      "b_2",
+      "b_3"
+    ],
+    "compatible_backends_checked": [
+      "CpuBackend",
+      "TsuBackend"
+    ],
+    "coupling_shape": [
+      8,
+      8
+    ],
+    "couplings": [
+      [
+        0.0,
+        -20.0,
+        -20.0,
+        -20.0,
+        -2.5,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        -20.0,
+        0.0,
+        -24.0,
+        -26.0,
+        -2.5,
+        -4.5,
+        -4.0,
+        -6.0
+      ],
+      [
+        -20.0,
+        -24.0,
+        0.0,
+        -32.0,
+        -2.5,
+        -6.5,
+        -10.5,
+        -12.0
+      ],
+      [
+        -20.0,
+        -26.0,
+        -32.0,
+        0.0,
+        -2.5,
+        -8.5,
+        -14.5,
+        -20.5
+      ],
+      [
+        -2.5,
+        -2.5,
+        -2.5,
+        -2.5,
+        0.0,
+        -20.0,
+        -20.0,
+        -20.0
+      ],
+      [
+        -0.0,
+        -4.5,
+        -6.5,
+        -8.5,
+        -20.0,
+        0.0,
+        -24.0,
+        -26.0
+      ],
+      [
+        -0.0,
+        -4.0,
+        -10.5,
+        -14.5,
+        -20.0,
+        -24.0,
+        0.0,
+        -32.0
+      ],
+      [
+        -0.0,
+        -6.0,
+        -12.0,
+        -20.5,
+        -20.0,
+        -26.0,
+        -32.0,
+        0.0
+      ]
+    ],
+    "cpu_enumerator_best_energy": 0.0,
+    "cpu_enumerator_state_count": 256,
+    "energy_convention": "maximize biases.x + x.T couplings x equals negative QUBO up to constant",
+    "hardware_board_command_run": false,
+    "speedup_claimed": false
+  },
+  "sampler_interface_ready": {
+    "principle": "True only when the boundary emits finite bias/coupling arrays and backend-compatible interface metadata without running board-specific hardware.",
+    "value": true
+  },
+  "schema": "carnot.experiment_5278.constraint_factor_graph_boundary.v482",
+  "source_fixture": {
+    "expected_status": "sat",
+    "false_assignment": {
+      "a": 3,
+      "b": 2
+    },
+    "fixture_id": "small_pair_sum",
+    "reference_encoding": {
+      "constraints": [
+        {
+          "expr": "a >= 0",
+          "id": "a_low"
+        },
+        {
+          "expr": "a <= 3",
+          "id": "a_high"
+        },
+        {
+          "expr": "b >= 0",
+          "id": "b_low"
+        },
+        {
+          "expr": "b <= 3",
+          "id": "b_high"
+        },
+        {
+          "expr": "a + b == 5",
+          "id": "sum_is_five"
+        },
+        {
+          "expr": "a < b",
+          "id": "a_less_than_b"
+        }
+      ],
+      "schema_version": "solver_constraint_ir_v1",
+      "variables": {
+        "a": {
+          "type": "int"
+        },
+        "b": {
+          "type": "int"
+        }
+      }
+    },
+    "solver_assignment": {
+      "a": 2,
+      "b": 3
+    },
+    "source": "exp5273_result",
+    "source_artifact_reusable": true
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5278",
+    "SCENARIO-VERIFY-5278"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5278_constraint_factor_graph_boundary_v482.py -q --no-cov",
+      "outcome": "passed: 4 passed in 3.88s"
+    },
+    {
+      "command": ".venv/bin/coverage erase && .venv/bin/coverage run /tmp/exp5278_cov_driver.py && .venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_5278_constraint_factor_graph_boundary_v482.py",
+      "outcome": "passed: 100% statement coverage for new module (175/175 statements)"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed: stopped after unrelated pre-existing suite failures and Z3 worker crash; summary before interrupt was 4 failed, 6156 passed, 7 skipped, 95 warnings in 248.58s"
+    }
+  ]
+}
