@@ -10327,3 +10327,4 @@ web search: |
 | 2026-07-05 05:22 UTC | PHASE 0 SOTA refresh -- V481 deltas after planning | OK | 110 passed, 1 warning in 8.20s |
 | 2026-07-05 06:49 UTC | PHASE 0 runtime unblock -- mandated SOTA GGUF llam | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: s_not_use_auto |
 | 2026-07-05 07:01 UTC | PHASE 0 runtime unblock -- mandated SOTA GGUF llam | OK | cache hit: 88 passed, 1 warning in 13.26s |
+| 2026-07-05 08:27 UTC | PHASE 1 gated on exp5259 sota_runtime_ready -- cro | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: T_PATH.read_te |

@@ -16577,3 +16577,98 @@ checks pass without model training.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5249 | Planned (`python/carnot/pipeline/cross_model_typed_memory_transfer.py`) | Planned (`tests/python/test_experiment_5249_cross_model_typed_memory_transfer_v480.py`) |
+
+---
+
+## REQ-LEARN-5260: Cross-Model Typed-Memory Retry on Live Local SOTA GGUF Runtime
+
+Experiment 5260 SHALL run only after Exp 5259 reports
+`sota_runtime_ready=true`. It SHALL measure whether typed verifier memories
+learned or promoted by one mandated local SOTA GGUF model improve a different
+mandated local SOTA GGUF model on held-out constraint/verifier tasks. The
+experiment SHALL reuse the existing typed-memory heads and promotion/rollback
+rules rather than introducing a new memory format, SHALL snapshot the durable
+memory store before any in-memory promotion attempt, and SHALL NOT mutate model
+weights.
+
+The headline `MODEL_SPECS` SHALL include:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`
+- `unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`
+- `unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe`
+
+Tiny legacy models MAY be used only for CPU smoke tests and SHALL NOT appear in
+headline metrics. The primary measured direction SHALL cross model families
+(`flagship_moe` source to `flagship_dense` target, or the reverse). A second
+direction MAY run when runtime permits, but omitted directions SHALL be recorded
+as runtime-skipped rather than inferred.
+
+The deterministic fixture set SHALL include aligned memory, shuffled memory,
+no-memory, and held-out tasks. It SHALL record prompt and completion checksums,
+accuracy/usefulness, unsafe false accepts, repeated-error rate, rollback
+behavior, and leakage controls. Leakage controls SHALL ensure no target answer
+text is stored in memory, no fixture labels are exposed in prompts, and no
+post-hoc hand curation occurs after held-out results are seen.
+
+The result artifact SHALL be
+`results/experiment_5260_cross_model_typed_memory_retry_v481.json` and SHALL
+include these required fields:
+
+- principle-wrapped `honest_verdict` whose value starts with `complete:` or
+  `blocked_` and states whether cross-model memory was useful, harmful, null,
+  or unmeasured
+- principle-wrapped `inference_substrate` with value
+  `live_llm_inference_local_gguf_sota`
+- principle-wrapped `preconditions_checked`
+- principle-wrapped `MODEL_SPECS` with model IDs, roles, quantization/file
+  receipts, and runtime receipts
+- bare `cross_model_memory_useful` bool plus
+  `cross_model_memory_useful_principle`
+- principle-wrapped `delta_over_no_memory`
+- principle-wrapped `delta_over_shuffled_memory`
+- principle-wrapped `unsafe_false_accepts`
+- principle-wrapped `rollback_exercised`
+- principle-wrapped `leakage_controls`
+- `commands_run` list with command/outcome rows
+
+### REQ-LEARN-5260 Sub-requirements
+
+- REQ-LEARN-5260-1: The experiment SHALL fail closed to a `blocked_` artifact
+  when Exp 5259 is missing or `sota_runtime_ready` is not true.
+- REQ-LEARN-5260-2: The memory-store snapshot SHALL include path, size,
+  SHA-256 checksum, schema, entry count, and promotion-state counts before any
+  in-memory memory candidate is promoted or rolled back.
+- REQ-LEARN-5260-3: Held-out prompts SHALL omit fixture task IDs and expected
+  answer text, while memory text SHALL omit the exact target answer token.
+- REQ-LEARN-5260-4: Aligned memory SHALL be counted useful only when target
+  accuracy beats both no-memory and shuffled-memory controls, unsafe false
+  accepts are zero, rollback is exercised, and leakage checks pass.
+- REQ-LEARN-5260-5: Rollback behavior SHALL be true only when a rolled-back
+  typed-memory entry changes a target decision to a rollback/block/retire style
+  action on a held-out degradation task.
+
+### SCENARIO-LEARN-5260-COMPLETE-MEASUREMENT
+
+**Given** Exp 5259 reports `sota_runtime_ready=true`, the three mandated SOTA
+GGUF model receipts are present, and the typed-memory store is snapshotted
+**When** Experiment 5260 evaluates a source-to-target family transfer on
+held-out verifier tasks with aligned, shuffled, and no-memory arms
+**Then** the artifact uses `live_llm_inference_local_gguf_sota`, records prompt
+and completion checksums, reports deltas over no-memory and shuffled-memory
+controls, reports unsafe false accepts and repeated-error rate, and records a
+terminal `complete:` verdict stating useful, harmful, or null.
+
+### SCENARIO-LEARN-5260-BLOCKED-PRECONDITION
+
+**Given** Exp 5259 is missing or has `sota_runtime_ready=false`
+**When** Experiment 5260 starts
+**Then** it writes the required artifact fields with neutral metric values,
+sets `cross_model_memory_useful=false`, records the failing precondition, and
+uses an `honest_verdict` beginning with `blocked_` that states memory usefulness
+was unmeasured.
+
+## Implementation Status (Exp 5260)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5260 | Planned (`python/carnot/pipeline/cross_model_typed_memory_retry.py`) | Planned (`tests/python/test_experiment_5260_cross_model_typed_memory_retry_v481.py`) |
