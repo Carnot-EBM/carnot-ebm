@@ -25483,3 +25483,89 @@ and still preserves the precondition receipts and retired-scope guard.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5262 | Planned (`python/carnot/experiment_5262_solver_grounded_constraint_extraction_v481.py`, `results/experiment_5262_solver_grounded_constraint_extraction_v481.json`) | Planned (`tests/python/test_experiment_5262_solver_grounded_constraint_extraction_v481.py`) |
+
+### REQ-VERIFY-5263: Neuron/Attention/Logit Energy Hallucination Probe V481
+
+The repository SHALL provide Exp 5263 at
+`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`
+and write
+`results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL execute
+only when Exp 5259 reports `sota_runtime_ready=true`, SHALL record the Exp
+5259 model/runtime receipts it relies on, and SHALL first determine whether
+the local SOTA GGUF runtime exposes hidden states, attention tensors, logits,
+token logprobs, or only generated text.
+
+If the runtime exposes only generated text, the runner SHALL stop before any
+hallucination pilot and emit a terminal `blocked_internal_signal_unavailable`
+artifact. It SHALL NOT substitute an external generated-text scorer, LLM judge,
+NLI scorer, or any retired Phase D generated-text/logprob scorer.
+
+The mandated `MODEL_SPECS` are exactly:
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe`. `MODEL_SPECS`
+SHALL record model IDs, roles, quantization/file receipts, runtime statuses
+inherited from Exp 5259, and the selected pilot model when a pilot runs.
+
+When hidden states, attention tensors, logits, or token logprobs are available
+with receipts, the runner SHALL build a bounded hallucination fixture set with
+supported and unsupported claims, prompt checksums, and independent labels.
+It SHALL extract only available internal/logit/attention features, compute
+simple pre-registered energy features, and avoid training a flexible probe.
+It MAY report AUROC, precision, and false accepts at a fixed false-accept
+budget only when labels and signal receipts are adequate. It SHALL compare
+against deterministic baselines and SHALL preserve hidden-state and attention
+unavailability rather than pretending logprob access is full internal-state
+access.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `internal_signal_available`,
+`internal_signal_available_principle`,
+`hidden_energy_probe_signal_delta`,
+`hidden_energy_probe_signal_delta_principle`,
+`false_accepts_at_threshold`, `external_text_scorer_used`,
+`fixture_checksums`, and `commands_run`. `internal_signal_available` SHALL be
+a bare boolean. `hidden_energy_probe_signal_delta` SHALL be a bare float.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+signal, null, harmful, or unavailable. `inference_substrate.value` SHALL be
+`live_llm_inference_local_gguf_sota` only when internal/logit receipts exist;
+otherwise it SHALL be `llama_cpp_runtime_preflight_no_quality_claim`.
+`external_text_scorer_used.value` SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable."
+- `inference_substrate`: principle "Declares live local SOTA GGUF inference only when internal/logit receipts exist; otherwise remains a llama.cpp runtime preflight with no quality claim."
+- `preconditions_checked`: principle "Records Exp 5259 readiness, llama.cpp signal surface, model/runtime receipts, fixture label adequacy, and retired Phase D exclusion before scoring."
+- `MODEL_SPECS`: principle "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and selected pilot model."
+- `internal_signal_available`: principle "Bare boolean; true only when hidden states, attention tensors, logits, or token logprobs are exposed with receipts beyond generated text."
+- `internal_signal_available_principle`: principle "Explains which signal classes were available and whether the runtime was text-only."
+- `hidden_energy_probe_signal_delta`: principle "Unsupported-minus-supported mean of the pre-registered available energy score; zero only for blocked or no-signal artifacts."
+- `false_accepts_at_threshold`: principle "Count of unsupported fixtures accepted as safe at the pre-registered zero false-accept budget threshold."
+- `external_text_scorer_used`: principle "Must be false; Phase D external generated-text/logprob scorers are retired and not reopened."
+- `fixture_checksums`: principle "Records fixture prompt checksums, label checksum, and fixture-set checksum for the bounded supported/unsupported panel."
+- `commands_run`: principle "Commands run to create and validate the artifact, with outcomes."
+
+### SCENARIO-VERIFY-5263: Runtime Signal Receipts Gate Hallucination-Energy Pilot
+
+Given Exp 5259 `sota_runtime_ready=true`, the mandated V481 local SOTA GGUF
+models, and a bounded supported/unsupported hallucination fixture set, when
+Exp 5263 runs, then it records hidden-state, attention, logit, and token
+logprob availability, stops with `blocked_internal_signal_unavailable` if only
+generated text is available, or otherwise extracts available internal/logit
+energy features, computes deterministic baseline comparisons, writes the
+required result artifact, and keeps `external_text_scorer_used.value=false`.
+
+If labels are insufficient, receipts are text-only, Exp 5259 is missing or not
+ready, or every live generation omits logit/logprob/internal receipts, then the
+same runner writes a terminal `blocked_` artifact with exact blockers,
+`internal_signal_available=false`, neutral numeric fields, and no external
+text scorer fallback.
+
+## Implementation Status (REQ-VERIFY-5263)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5263 | Planned (`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`, `results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`) | Planned (`tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`) |
