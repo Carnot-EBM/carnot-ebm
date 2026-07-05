@@ -1,0 +1,338 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records mandated local SOTA GGUF model IDs, roles, quantization/file receipts, and runtime status used for the pilot.",
+    "value": {
+      "flagship_dense": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense_candidate_generator_or_cross_checker",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready"
+      },
+      "flagship_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe_candidate_generator",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready"
+      },
+      "middle_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "optional_middle_moe_cross_checker",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready"
+      }
+    }
+  },
+  "baseline": {
+    "arm": "baseline_no_constraints",
+    "counterexamples_found": 0,
+    "false_accepts": 2,
+    "rows": [
+      {
+        "arm": "baseline_no_constraints",
+        "expected_status": "sat",
+        "fixture_id": "single_even_high",
+        "generated_ir": null,
+        "parseable": false,
+        "prompt_requirements": "Choose an integer x. x must be at least 0 and at most 5. x must be even. x must be greater than 3.",
+        "raw_output": "",
+        "validation": {
+          "assignment": {},
+          "counterexample": {},
+          "error": null,
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "solver_status": "sat"
+        }
+      },
+      {
+        "arm": "baseline_no_constraints",
+        "expected_status": "sat",
+        "fixture_id": "small_pair_sum",
+        "generated_ir": null,
+        "parseable": false,
+        "prompt_requirements": "Choose integers a and b. Each must be between 0 and 3 inclusive. Their sum must be 5. Also require a to be less than b.",
+        "raw_output": "",
+        "validation": {
+          "assignment": {},
+          "counterexample": {},
+          "error": null,
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": true,
+          "solver_status": "sat"
+        }
+      },
+      {
+        "arm": "baseline_no_constraints",
+        "expected_status": "unsat",
+        "fixture_id": "even_and_odd",
+        "generated_ir": null,
+        "parseable": false,
+        "prompt_requirements": "Choose an integer y. y must be between 1 and 4 inclusive. y must be even. y must also be odd.",
+        "raw_output": "",
+        "validation": {
+          "assignment": {},
+          "counterexample": {},
+          "error": null,
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "even_and_odd",
+          "matches_expected": false,
+          "solver_status": "sat"
+        }
+      },
+      {
+        "arm": "baseline_no_constraints",
+        "expected_status": "unsat",
+        "fixture_id": "too_large_sum",
+        "generated_ir": null,
+        "parseable": false,
+        "prompt_requirements": "Choose integers p and q. Each must be between 0 and 2 inclusive. The sum p + q must equal 5.",
+        "raw_output": "",
+        "validation": {
+          "assignment": {},
+          "counterexample": {},
+          "error": null,
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "too_large_sum",
+          "matches_expected": false,
+          "solver_status": "sat"
+        }
+      }
+    ],
+    "validity_rate": 0.5
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/python -m carnot.experiment_5262_solver_grounded_constraint_extraction_v481 --output results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+      "outcome": "completed module invocation"
+    }
+  ],
+  "constraint_validity_rate": {
+    "principle": "Fraction of fixture cases where generated executable constraints matched the deterministic solver label.",
+    "value": 0.25
+  },
+  "counterexamples_found": {
+    "principle": "Count of deterministic counterexamples recorded for generated constraint sets that disagreed with fixture labels.",
+    "value": 3
+  },
+  "duration_s": 56.308939,
+  "extraction_results": [
+    {
+      "arm": "live_llm_constraints",
+      "expected_status": "sat",
+      "fixture_id": "single_even_high",
+      "generated_ir": null,
+      "parseable": false,
+      "prompt_requirements": "Choose an integer x. x must be at least 0 and at most 5. x must be even. x must be greater than 3.",
+      "raw_output": "Return the JSON object.\n\n<think>\n\n</think>\n\n{\n  \"variables\": {\n    \"x\": {\n      \"type\": \"int\"\n    }\n  },\n  \"constraints\": [\n    x >= 0,\n    x <= 5,\n    x % 2 == 0,\n    x > 3\n  ]\n}",
+      "validation": {
+        "assignment": {},
+        "counterexample": {
+          "x": 4
+        },
+        "error": "no_parseable_constraint_ir",
+        "expected_status": "sat",
+        "false_accept": false,
+        "fixture_id": "single_even_high",
+        "matches_expected": false,
+        "solver_status": "parse_error"
+      }
+    },
+    {
+      "arm": "live_llm_constraints",
+      "expected_status": "sat",
+      "fixture_id": "small_pair_sum",
+      "generated_ir": null,
+      "parseable": false,
+      "prompt_requirements": "Choose integers a and b. Each must be between 0 and 3 inclusive. Their sum must be 5. Also require a to be less than b.",
+      "raw_output": "\n\n<think>\nHere's a thinking process:\n\n1.  **Analyze User Input:**\n   - **Natural Language Requirements:**\n     - Choose integers `a` and `b`.\n     - Each must be between 0 and 3 inclusive. (0 <= a <= 3, 0 <= b <= 3)\n     - Their sum must be 5. (a + b == 5)\n     - Also require `a` to be less than `b`. (a < b)\n   - **Output Format:**\n     - JSON object with keys `variables` and `constraints`.\n     - `variables`: maps each variable name to `{\"type\": \"int\"}`.\n     - `constraints`: list of Python/Z3-style integer formulas using `==, <, <=, >, >=, %, +, -, *`.\n     - Do not state satisfiability.\n     - Return only the JSON object.\n\n2.  **Define Variables:**\n   - `a`: `{\"type\": \"int\"}`\n   - `b`: `{\"type\": \"int\"}`\n\n3.  **Define Constraints:**\n   - `0 <= a <= 3` -> Can be",
+      "validation": {
+        "assignment": {},
+        "counterexample": {
+          "a": 2,
+          "b": 3
+        },
+        "error": "no_parseable_constraint_ir",
+        "expected_status": "sat",
+        "false_accept": false,
+        "fixture_id": "small_pair_sum",
+        "matches_expected": false,
+        "solver_status": "parse_error"
+      }
+    },
+    {
+      "arm": "live_llm_constraints",
+      "expected_status": "unsat",
+      "fixture_id": "even_and_odd",
+      "generated_ir": {
+        "constraints": [
+          "1 <= y",
+          "y <= 4",
+          "y % 2 == 0",
+          "y % 2 == 1"
+        ],
+        "normalization_notes": [],
+        "variables": {
+          "y": {
+            "type": "int"
+          }
+        }
+      },
+      "parseable": true,
+      "prompt_requirements": "Choose an integer y. y must be between 1 and 4 inclusive. y must be even. y must also be odd.",
+      "raw_output": "\n\n{\n  \"variables\": {\n    \"y\": {\n      \"type\": \"int\"\n    }\n  },\n  \"constraints\": [\n    \"1 <= y\",\n    \"y <= 4\",\n    \"y % 2 == 0\",\n    \"y % 2 == 1\"\n  ]\n}",
+      "validation": {
+        "assignment": {},
+        "counterexample": {},
+        "error": null,
+        "expected_status": "unsat",
+        "false_accept": false,
+        "fixture_id": "even_and_odd",
+        "matches_expected": true,
+        "solver_status": "unsat"
+      }
+    },
+    {
+      "arm": "live_llm_constraints",
+      "expected_status": "unsat",
+      "fixture_id": "too_large_sum",
+      "generated_ir": null,
+      "parseable": false,
+      "prompt_requirements": "Choose integers p and q. Each must be between 0 and 2 inclusive. The sum p + q must equal 5.",
+      "raw_output": "\n\n",
+      "validation": {
+        "assignment": {},
+        "counterexample": {
+          "expected_status": "unsat",
+          "generated_solver_status": "parse_error"
+        },
+        "error": "no_parseable_constraint_ir",
+        "expected_status": "unsat",
+        "false_accept": false,
+        "fixture_id": "too_large_sum",
+        "matches_expected": false,
+        "solver_status": "parse_error"
+      }
+    }
+  ],
+  "false_accepts": {
+    "principle": "Count of expected-UNSAT fixtures whose generated constraints were satisfiable, exposing missed contradictions.",
+    "value": 0
+  },
+  "fixtures": [
+    {
+      "expected_status": "sat",
+      "fixture_id": "single_even_high",
+      "gold_assignment": {
+        "x": 4
+      },
+      "prompt_requirements": "Choose an integer x. x must be at least 0 and at most 5. x must be even. x must be greater than 3."
+    },
+    {
+      "expected_status": "sat",
+      "fixture_id": "small_pair_sum",
+      "gold_assignment": {
+        "a": 2,
+        "b": 3
+      },
+      "prompt_requirements": "Choose integers a and b. Each must be between 0 and 3 inclusive. Their sum must be 5. Also require a to be less than b."
+    },
+    {
+      "expected_status": "unsat",
+      "fixture_id": "even_and_odd",
+      "gold_assignment": {},
+      "prompt_requirements": "Choose an integer y. y must be between 1 and 4 inclusive. y must be even. y must also be odd."
+    },
+    {
+      "expected_status": "unsat",
+      "fixture_id": "too_large_sum",
+      "gold_assignment": {},
+      "prompt_requirements": "Choose integers p and q. Each must be between 0 and 2 inclusive. The sum p + q must equal 5."
+    }
+  ],
+  "honest_verdict": {
+    "principle": "Terminal Exp 5262 verdict; starts with complete: or blocked_ and states whether solver-grounded extraction produced useful oracle-distinct signal.",
+    "value": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"
+  },
+  "inference_substrate": {
+    "principle": "Declares live local SOTA GGUF inference plus deterministic solver validation, not a broad solver-feedback or VerIbmc uplift result.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "no_broad_solver_feedback_claim": true,
+  "preconditions_checked": {
+    "principle": "Records Exp 5259 readiness, model/runtime receipts, deterministic checker availability, and retired-scope exclusions before headline extraction.",
+    "value": {
+      "deterministic_checker": "z3",
+      "deterministic_checker_available": true,
+      "exclusion_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "exp5259_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
+      "exp5259_sota_runtime_ready": true,
+      "exp5259_sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe completing the local GGUF runtime path.",
+      "model_runtime_receipts": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        }
+      },
+      "prior_veribmc_retirement_receipt": {
+        "found": true,
+        "honest_verdict": "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5238_veribmc_methodology_correct_rerun_or_retire_v479.json",
+        "retired": true
+      },
+      "retired_veribmc_scope_reopened": false
+    }
+  },
+  "reproducibility_checksum": "4e2ece9478fbc78b",
+  "retired_veribmc_scope_reopened": {
+    "principle": "Must remain false; Exp 5262 is constraint extraction plus deterministic checking, not the retired VerIbmc local solver-feedback route.",
+    "value": false
+  },
+  "schema": "carnot.experiment_5262.solver_grounded_constraint_extraction.v481",
+  "solver_grounded_extractor_ready": false,
+  "solver_grounded_extractor_ready_principle": "ready=false because useful_signal=False, validity=0.25, baseline_validity=0.5, false_accepts=0.",
+  "spec_refs": [
+    "REQ-VERIFY-5262",
+    "SCENARIO-VERIFY-5262"
+  ]
+}
