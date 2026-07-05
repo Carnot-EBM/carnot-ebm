@@ -30,6 +30,7 @@ def test_req_verify_4437_spec_declares_template_lint_and_floors() -> None:
         "scripts/arc_artifact_lint.py",
         "aggregation_from_upstream_artifacts",
         "verifier_ensemble_against_cached_candidates",
+        "offline_arcade_live_agent_runtime_self_discovery_no_llm",
         "live_llm_inference",
         "experiment_4437_arc_artifact_discipline_template.json",
     ):
@@ -57,6 +58,29 @@ def test_req_verify_4437_helper_builds_offline_template_with_canonical_substrate
     assert len(artifact["reproducibility_checksum"]) == 64
     assert discipline.validate_arc_solve_artifact(artifact) == []
     assert discipline.duration_floor_s(123) is None
+
+
+def test_req_verify_4437_helper_accepts_arc_live_agent_no_llm_substrate() -> None:
+    """REQ-VERIFY-4437: live ARC no-LLM receipts use the canonical 0.01s floor."""
+
+    artifact = discipline.build_arc_solve_artifact(
+        experiment="experiment_9996_arc_live_patch_receipt",
+        honest_verdict="complete: no_bank_live_agent_receipt",
+        inference_substrate=discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+        duration_s=0.02,
+        artifact_kind="arc_solve",
+        result_path="results/experiment_9996_arc_live_patch_receipt.json",
+        extra_fields={"solve_provenance": "live_agent_self_discovery", "level_delta": 0},
+    )
+
+    assert artifact["inference_substrate"] == discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
+    assert discipline.duration_floor_s(discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE) == 0.01
+    assert discipline.validate_arc_solve_artifact(artifact) == []
+
+    too_short = dict(artifact, duration_s=0.0)
+    assert [issue.kind for issue in discipline.validate_arc_solve_artifact(too_short)] == [
+        "DURATION_BELOW_SUBSTRATE_FLOOR"
+    ]
 
 
 def test_scenario_verify_4437_helper_rejects_missing_short_and_nonterminal_cases() -> None:

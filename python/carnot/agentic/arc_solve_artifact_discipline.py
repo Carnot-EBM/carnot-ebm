@@ -15,11 +15,13 @@ from typing import Any
 
 AGGREGATION_SUBSTRATE = "aggregation_from_upstream_artifacts"
 VERIFIER_SCORING_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
+ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
 SUBSTRATE_DURATION_FLOORS = {
     AGGREGATION_SUBSTRATE: 0.0001,
     VERIFIER_SCORING_SUBSTRATE: 1.0,
+    ARC_LIVE_AGENT_NO_LLM_SUBSTRATE: 0.01,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
 
@@ -32,7 +34,8 @@ FIELD_PRINCIPLES = {
         "canonical ARC solve/scoring substrate; offline aggregation uses "
         "aggregation_from_upstream_artifacts, cached scoring uses "
         "verifier_ensemble_against_cached_candidates, and real LLM induction "
-        "uses live_llm_inference"
+        "uses live_llm_inference; no-LLM live ARC environment stepping uses "
+        "offline_arcade_live_agent_runtime_self_discovery_no_llm"
     ),
     "duration_s": "bare float; must meet the selected substrate floor",
     "template_shipped": "bare bool: the helper + lint + tests landed green",
@@ -54,6 +57,7 @@ class ArtifactDisciplineIssue:
 def duration_floor_s(inference_substrate: Any) -> float | None:
     """Return the required duration floor for a canonical substrate."""
 
+    inference_substrate = _unwrap_principle_value(inference_substrate)
     if not isinstance(inference_substrate, str):
         return None
     return SUBSTRATE_DURATION_FLOORS.get(inference_substrate)
@@ -62,6 +66,7 @@ def duration_floor_s(inference_substrate: Any) -> float | None:
 def terminal_prefixed(value: Any) -> bool:
     """Return true when a verdict starts with an accepted terminal prefix."""
 
+    value = _unwrap_principle_value(value)
     return isinstance(value, str) and value.startswith(TERMINAL_VERDICT_PREFIXES)
 
 
@@ -73,7 +78,7 @@ def validate_arc_solve_artifact(
     """Validate the ARC artifact fields required by REQ-VERIFY-4437."""
 
     issues: list[ArtifactDisciplineIssue] = []
-    substrate = artifact.get("inference_substrate")
+    substrate = _unwrap_principle_value(artifact.get("inference_substrate"))
     if not isinstance(substrate, str) or not substrate:
         issues.append(
             ArtifactDisciplineIssue(
@@ -91,7 +96,7 @@ def validate_arc_solve_artifact(
                 )
             )
         else:
-            duration = artifact.get("duration_s")
+            duration = _unwrap_principle_value(artifact.get("duration_s"))
             if not _is_finite_number(duration):
                 issues.append(
                     ArtifactDisciplineIssue(
@@ -166,11 +171,18 @@ def build_arc_solve_artifact(
 
 
 def _is_finite_number(value: Any) -> bool:
+    value = _unwrap_principle_value(value)
     if isinstance(value, bool):
         return False
     if isinstance(value, (int, float)):
         return math.isfinite(float(value))
     return False
+
+
+def _unwrap_principle_value(value: Any) -> Any:
+    if isinstance(value, Mapping) and "value" in value:
+        return value.get("value")
+    return value
 
 
 def _stable_json(value: Any) -> str:
@@ -183,6 +195,7 @@ def _sha256(value: Any) -> str:
 
 __all__ = [
     "AGGREGATION_SUBSTRATE",
+    "ARC_LIVE_AGENT_NO_LLM_SUBSTRATE",
     "ArtifactDisciplineIssue",
     "FIELD_PRINCIPLES",
     "LIVE_LLM_SUBSTRATE",

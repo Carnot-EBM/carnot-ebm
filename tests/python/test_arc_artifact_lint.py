@@ -107,6 +107,51 @@ def test_scenario_verify_4437_live_llm_requires_allowlist_and_duration_floor(
     assert [issue.kind for issue in short_issues] == ["DURATION_BELOW_SUBSTRATE_FLOOR"]
 
 
+def test_req_verify_4437_lint_accepts_arc_live_agent_no_llm_substrate(
+    tmp_path: Path,
+) -> None:
+    """REQ-VERIFY-4437: no-LLM live ARC receipts pass the ARC artifact lint."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_9005_arc_live_patch_receipt.json",
+        {
+            "honest_verdict": "complete: level_delta=0 patch_retired",
+            "duration_s": 0.02,
+            "inference_substrate": discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+            "solve_provenance": "live_agent_self_discovery",
+            "target_game": "zz99_exp5253_live_receipt_probe",
+            "reproduction_gate": {"reproduced": False},
+        },
+    )
+
+    assert lint.lint_paths([artifact]) == []
+
+
+def test_req_verify_4437_lint_accepts_principle_wrapped_arc_fields(
+    tmp_path: Path,
+) -> None:
+    """REQ-VERIFY-4437: principle-wrapped ARC receipt fields still lint cleanly."""
+
+    artifact = _write_json(
+        tmp_path / "results" / "experiment_9005_arc_wrapped_receipt.json",
+        {
+            "honest_verdict": {
+                "value": "complete: level_delta=0 patch_decision=retire",
+                "principle": "terminal-prefixed",
+            },
+            "duration_s": {"value": 0.02, "principle": "measured wall-clock"},
+            "inference_substrate": {
+                "value": discipline.ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
+                "principle": "canonical substrate",
+            },
+            "target_game": "zz99_exp5253_live_receipt_probe",
+            "reproduction_gate": {"reproduced": False},
+        },
+    )
+
+    assert lint.lint_paths([artifact]) == []
+
+
 def test_req_verify_4437_lint_main_returns_nonzero_and_json_report(
     tmp_path: Path,
     capsys,

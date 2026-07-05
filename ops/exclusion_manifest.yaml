@@ -694,3 +694,22 @@ retired_extras:
   - rerun uprm text scorer on off-arc reasoning corpus
   - rerun ebrm external text reward scorer on off-arc reasoning corpus
   - phase d external text scorer rerun
+- id: exp5240_arc_provenance_routing_patch_scope_retired_v480
+  experiment_scope: Exp 5240/5241 ARC provenance-routing live patch scope
+  reason: >-
+    retire_current_provenance_patch: Exp 5253 clean live-path receipts kept
+    level_delta=0, so future work should not rerun this zero-delta
+    provenance-routing patch as a solve candidate without an operator
+    override and a new mechanism.
+  experiment_ids:
+  - exp5240
+  - exp5241
+  - exp5253
+  retired_milestone: 2026.07.480
+  retired_by_artifact: results/experiment_5253_arc_live_patch_clean_receipts_v480.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - experiment_5240_arc_rubric_to_patch_synthesis_v479
+  - experiment_5241_arc_gated_live_patch_attempt_v479
+  - provenance-routing live patch zero-delta rerun

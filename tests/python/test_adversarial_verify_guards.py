@@ -209,6 +209,27 @@ def test_fnr_does_not_fire_on_positive_claim():
     assert "FALSE_NEGATIVE_RISK" not in _kinds(flags)
 
 
+def test_implausible_perfect_allows_receipted_zero_arc_level_delta():
+    """REQ-REPORT-5253: a receipted ARC no-bank level_delta=0 is not a stub warning."""
+
+    flags = []
+    av.check_implausible_perfect(
+        {
+            "experiment": "experiment_5253_arc_live_patch_clean_receipts_v480",
+            "honest_verdict": "complete: level_delta=0 patch_decision=retire_current_provenance_patch",
+            "level_delta": 0,
+            "positive_control_passed": True,
+            "null_delta_methodology_note": (
+                "level_delta=0 is the measured clean no-bank result: the live route reached "
+                "the Exp5240 guard, registry precheck ran, and reproduction_gate did not "
+                "reproduce a level."
+            ),
+        },
+        flags,
+    )
+    assert "IMPLAUSIBLE_PERFECT" not in _kinds(flags)
+
+
 def test_fnr_does_not_fire_when_oracle_exceeds_baseline_even_if_null():
     """REQ: if there IS headroom (oracle>baseline) the null is informative —
     the signal-2 false-negative guard must not fire."""

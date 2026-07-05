@@ -20120,9 +20120,12 @@ helper SHALL require every constructed ARC solve/scoring artifact to declare
 `aggregation_from_upstream_artifacts` for sub-60s deterministic offline
 aggregation/reproduction with a 100us duration floor,
 `verifier_ensemble_against_cached_candidates` for cached verifier scoring with a
-1s duration floor, or `live_llm_inference` for real LLM-induction solves with a
-60s duration floor. The helper SHALL also require a terminal-prefixed
-`honest_verdict` using one of `complete:`, `success:`, `passed:`, or `shipped:`.
+1s duration floor,
+`offline_arcade_live_agent_runtime_self_discovery_no_llm` for live ARC-agent
+environment stepping without LLM invocation with a 0.01s duration floor, or
+`live_llm_inference` for real LLM-induction solves with a 60s duration floor.
+The helper SHALL also require a terminal-prefixed `honest_verdict` using one of
+`complete:`, `success:`, `passed:`, or `shipped:`.
 
 The lint SHALL scan candidate `results/experiment_*.json` artifacts whose path
 or artifact metadata marks them as ARC, solve, scoring, or config-rule work, and
@@ -20147,7 +20150,8 @@ SHALL include:
 
 Given an ARC config-rule solve artifact that completes offline in under 60
 seconds, when the helper builds or validates it, then it accepts only
-`inference_substrate=aggregation_from_upstream_artifacts` or
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`offline_arcade_live_agent_runtime_self_discovery_no_llm`, or
 `verifier_ensemble_against_cached_candidates` with the appropriate duration
 floor and a terminal-prefixed verdict. Given the lint scans ARC solve/config
 artifacts under `results`, when an artifact lacks `inference_substrate` or emits

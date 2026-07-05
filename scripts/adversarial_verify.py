@@ -1558,6 +1558,8 @@ def _is_declared_honest_zero_delta(k: str, d: dict[str, Any]) -> bool:
             "state_coverage",
             "actions",
             "live_lift",
+            "level_delta",
+            "reproducible_total_levels_delta",
         )
     )
 
