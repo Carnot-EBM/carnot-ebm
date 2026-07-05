@@ -5733,3 +5733,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a milestone whose timing reconstruction found no post-activation experiment commits
 - key result: no data available this milestone; the supplied timing data records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no compute-bound duration, GPU-idle bug, or DualGPURunner miss can be reported
 - acceptance: 0/0 criteria met -- no experiment criteria were available from the supplied timing data
+
+### Milestone 2026.07.482
+- exp_range: no data available this milestone
+- theme: empty milestone-scoped timing window with GPU-state interpretation gated off
+- key result: honest negative -- no data available this milestone; the authoritative block gives 0 experiments, 0 total minutes, and 0 compute-bound tasks, so the observed idle GPUs cannot be promoted into a runtime-efficiency finding and there is no supported DualGPURunner issue
+- acceptance: 0/0 criteria met -- the timing block contains no experiment entries to score

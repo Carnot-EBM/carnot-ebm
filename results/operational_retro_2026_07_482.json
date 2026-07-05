@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.482",
+  "generated_at": "2026-07-05T22:33:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "No data available this milestone for experiment timing: the authoritative timing block reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The idle GPU snapshot is therefore not evidence of a compute-bound utilization bug, and no DualGPURunner miss can be assessed.",
+  "bottlenecks_identified": [
+    "No compute-bound runtime bottleneck can be ranked because no experiment commits were found since activation.",
+    "No GPU bottleneck is supported: compute_bound_experiments_count is 0, so the 0% utilization snapshot is not tied to any compute-bound task."
+  ],
+  "improvements_suggested": [
+    "Emit a structured no-experiment-commits marker when both live git-log and disk-mtime reconstruction are empty, then skip slowest-experiment, GPU-idle, and DualGPURunner analysis for that milestone.",
+    "Gate GPU-idle warnings in operational retros on compute_bound_experiments_count > 0 and an explicit GGUF/CUDA/requires_gpu marker.",
+    "Require parallel-model metadata before suggesting DualGPURunner so single-model or empty-window milestones do not receive irrelevant dual-GPU advice."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an empty-window short-circuit to the retro generator that writes no data available this milestone for timing-dependent sections.",
+    "Keep GPU utilization conclusions behind compute-bound task tags rather than raw GPU monitor state.",
+    "Record model parallelism in task metadata before evaluating whether DualGPURunner should have been used."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective treats the empty timing window as the operational result. The GPU monitor shows idle devices, but with 0 compute-bound experiments that state cannot be converted into a bottleneck claim."
+}
