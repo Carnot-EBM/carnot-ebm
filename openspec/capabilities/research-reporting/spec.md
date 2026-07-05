@@ -35148,6 +35148,90 @@ evidence, preserves any existing `solve_provenance`, and leaves
 |---|---|---|
 | REQ-REPORT-5267 | Implemented (`scripts/experiment_template.py`, `results/experiment_5267_artifact_normalizer_template_adoption_v481.json`) | Implemented (`tests/python/test_experiment_template.py`) |
 
+### REQ-REPORT-5268: Capstone .481 Synthesis And Next-Gap Recommendation
+
+The Exp 5268 workflow SHALL synthesize milestone `2026.07.481` from the
+available result artifacts `results/experiment_5257_*.json` through
+`results/experiment_5267_*.json`, the active `.481` roadmap, the `.481` vNEXT
+document, `research-complete.yaml`, `ops/status.md`, `ops/changelog.md`,
+`ops/conductor-log.md`, and `ops/exclusion_manifest.yaml`. It SHALL write
+`results/experiment_5268_capstone_v481.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate.value="cached_fixture_replay_no_llm"`.
+
+The workflow SHALL classify upstream `.481` outcomes into clean positives,
+clean nulls, harmful results, blocked or skipped results, and retirements or
+exclusions. It SHALL skip any upstream artifact stamped
+`flagged_adversarial=true` from clean positive or clean-null evidence, while
+preserving the quarantined result in blocked/skipped context. It SHALL preserve
+the milestone truth that SOTA GGUF runtime was preflight-ready but not a quality
+claim, cross-model typed memory was a clean live null, memory-policy replay was
+ready on cached fixtures, solver-grounded and internal/logit-energy probes were
+flagged and cannot headline, verifier-dose replay was a useful cached positive,
+KAN certificate explanation/refinement was a bounded positive, hardware board
+reachability was blocked with no speedup claim, and producer-side artifact
+normalization was ready.
+
+The workflow MAY append a minimal `2026.07.481` entry to
+`research-complete.yaml` only if that milestone is missing. It SHALL NOT update
+`ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md` when the
+conductor stop rule delegates those documents to the separate reconciliation
+step. It SHALL inspect whether `research-roadmap.yaml` or
+`scripts/research_conductor.py` are modified in the worktree and report those
+booleans honestly.
+
+The artifact SHALL include required principle-annotated fields
+`honest_verdict`, `inference_substrate`, `milestone_summary`,
+`clean_positives`, `clean_nulls`, `harmful_results`, `blocked_or_skipped`,
+`retirements_or_exclusions`, `next_top_gaps`, `conductor_modified`, and
+`roadmap_modified`, plus a bare `commands_run` list. It SHOULD also include
+source artifact hashes, skipped flagged artifact paths, research-complete update
+status, validation command outcomes, spec refs, duration, run date, random seed,
+and a reproducibility checksum.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes."
+- `inference_substrate`: principle "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only."
+- `milestone_summary`: principle "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware."
+- `clean_positives`: principle "Only non-flagged upstreams with useful complete outcomes count as positives."
+- `clean_nulls`: principle "Only non-flagged complete no-improvement outcomes count as clean nulls."
+- `harmful_results`: principle "Harmful outcomes must remain visible and must not be silently converted to nulls."
+- `blocked_or_skipped`: principle "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics."
+- `retirements_or_exclusions`: principle "Records prior-failure discipline decisions and scopes that should not be rerun unchanged."
+- `next_top_gaps`: principle "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production."
+- `conductor_modified`: principle "Reports whether scripts/research_conductor.py changed; must not hide a violation."
+- `roadmap_modified`: principle "Reports whether research-roadmap.yaml changed; must not hide a violation."
+- `commands_run`: principle "Records validation and test commands with outcomes."
+
+#### SCENARIO-REPORT-5268: V481 Capstone Preserves Flagged, Null, Positive, And Blocked Outcomes
+
+**Given** the `.481` artifacts from Exp5257 through Exp5267 exist
+**When** the Exp5268 capstone workflow runs
+**Then** it writes `results/experiment_5268_capstone_v481.json`, declares
+`cached_fixture_replay_no_llm`, records non-flagged positives for runtime
+preflight, cached memory policy, verifier-dose replay, KAN refinement, and
+producer normalizer readiness, records the cross-model typed-memory live null
+as a clean null, quarantines Exp5262 and Exp5263 as adversarially flagged rather
+than clean evidence, records Exp5266 board reachability as blocked with
+`speedup_claimed=false`, and sets `conductor_modified.value=false` and
+`roadmap_modified.value=false` when the worktree shows no changes to those files.
+
+#### SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT: Missing Required Upstreams Fail Closed
+
+**Given** a required `.481` primary artifact is missing or malformed
+**When** the Exp5268 capstone workflow runs
+**Then** it still writes a terminal artifact whose `honest_verdict.value`
+starts with `blocked_`, records the missing or malformed input in
+`blocked_or_skipped`, keeps `inference_substrate.value="cached_fixture_replay_no_llm"`,
+and does not modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5268)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5268 | Implemented (`python/carnot/experiment_5268_capstone_v481.py`, `results/experiment_5268_capstone_v481.json`) | Implemented (`tests/python/test_experiment_5268_capstone_v481.py`) |
+
 ### REQ-REPORT-5257: Archive .480 And Emit .481 Activation-Ready Record
 
 The Exp 5257 workflow SHALL archive the honest closeout for milestone
