@@ -16746,3 +16746,100 @@ whether the current memory policy is ready, blocked, harmful, or needs redesign.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5261 | Planned (`python/carnot/pipeline/typed_memory_interference_audit.py`) | Planned (`tests/python/test_experiment_5261_typed_memory_interference_audit_v481.py`) |
+
+---
+
+## REQ-LEARN-5275: Governed Decision-History Memory for Verifier/Self-Learning Decisions
+
+Experiment 5275 SHALL extend the existing typed verifier-memory policy with a
+compatible decision-history row substrate. The extension SHALL preserve the
+existing deterministic identifiers, evidence-gated promotion, and
+invalidation-gated rollback behavior while adding row-level governance fields:
+source artifact, task scope, evidence checksum, promoted decision, rejected
+alternatives, verifier outcome, conflict status, poisoning flags, scope flags,
+and rollback status.
+
+The experiment SHALL use deterministic cached fixtures only and SHALL label its
+inference substrate `aggregation_from_upstream_artifacts`. It SHALL NOT invoke
+LoRA, GRPO, VPRM, parameter training, or local LLM inference.
+
+The fixture set SHALL exercise:
+
+- promotion of an in-scope, evidence-backed verifier/self-learning decision
+- stale conflict eviction against a canonical promoted row for the same task
+  scope
+- out-of-scope memory rejection before disclosure to a consumer task
+- poisoning-like instruction rejection before promotion
+- rollback of a harmful decision with rollback metadata preserved
+
+The result artifact SHALL be
+`results/experiment_5275_governed_decision_history_memory_v482.json` and SHALL
+include principle-wrapped `honest_verdict`, principle-wrapped
+`inference_substrate`, bare `memory_decision_history_ready` plus
+`memory_decision_history_ready_principle`, principle-wrapped
+`provenance_fields_present`, principle-wrapped `scope_enforcement_passed`,
+principle-wrapped `stale_conflict_eviction_passed`, principle-wrapped
+`harmful_memory_rollback_passed`, principle-wrapped `unsafe_false_accepts`,
+principle-wrapped `fixture_checksums`, and a `tests_run` list.
+
+The required field principles SHALL be:
+
+- `honest_verdict`: States whether governed decision-history memory is ready,
+  blocked, or unsafe without hiding null or rollback outcomes.
+- `inference_substrate`: Declares aggregation from upstream artifacts so cached
+  governance replay is not mistaken for local LLM inference.
+- `provenance_fields_present`: Requires source artifact, task scope, evidence
+  checksum, decision, rejected alternatives, verifier outcome, conflict, scope,
+  poisoning, and rollback metadata on every row.
+- `scope_enforcement_passed`: Confirms out-of-scope rows are rejected before
+  disclosure to verifier or self-learning consumers.
+- `stale_conflict_eviction_passed`: Confirms stale conflicting rows cannot
+  override the canonical promoted decision for the same task scope.
+- `harmful_memory_rollback_passed`: Confirms harmful decisions route to
+  rollback, block, quarantine, or retire actions with rollback metadata
+  preserved.
+- `unsafe_false_accepts`: Counts accepted rows that should have been rejected
+  for poisoning, scope, stale conflict, or harmful rollback risk.
+- `fixture_checksums`: Pins deterministic fixture rows and upstream artifacts so
+  the decision-history audit cannot silently drift.
+
+### REQ-LEARN-5275 Sub-requirements
+
+- REQ-LEARN-5275-1: Decision-history rows SHALL keep compatibility with legacy
+  typed verifier-memory entries by deriving defaults from `source_artifacts`,
+  `provenance`, `promotion_state`, `rollback_reason`, and deterministic memory
+  identifiers when the new fields are absent.
+- REQ-LEARN-5275-2: Promotion SHALL require deterministic guard success,
+  in-scope disclosure, no poisoning-like instruction flags, no test-gold
+  leakage, and held-out delta greater than or equal to the configured promotion
+  threshold.
+- REQ-LEARN-5275-3: Stale or conflicting rows SHALL be evicted when their
+  conflict evidence contradicts a canonical promoted row for the same task
+  scope before retrieval metrics are computed.
+- REQ-LEARN-5275-4: Scope enforcement SHALL reject out-of-scope memories before
+  they can influence a verifier or self-learning task.
+- REQ-LEARN-5275-5: Poisoning-like instruction flags SHALL reject memory rows
+  before promotion and SHALL count as unsafe false accepts only if such a row is
+  accepted.
+- REQ-LEARN-5275-6: Harmful memory rollback SHALL pass only when a harmful
+  decision is rolled back or quarantined and a degradation fixture selects the
+  safe rollback/block/quarantine/retire action.
+
+### SCENARIO-LEARN-5275: Cached Governed Decision History Audits Memory Safety
+
+**Given** existing typed verifier-memory artifacts and cached V481 memory audit
+artifacts
+**When** Experiment 5275 builds decision-history rows with provenance, scope,
+conflict, poisoning, and rollback metadata
+**Then** promotion, stale conflict eviction, out-of-scope rejection,
+poisoning-like instruction rejection, and harmful rollback all pass without
+model training or local LLM inference
+**And** the artifact uses `aggregation_from_upstream_artifacts`
+**And** the honest verdict starts with `complete:` or `blocked_` and states
+whether governed decision-history memory is ready.
+
+## Implementation Status (Exp 5275)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5275 | Planned (`python/carnot/pipeline/governed_decision_history_memory.py`) | Planned (`tests/python/test_experiment_5275_governed_decision_history_memory_v482.py`) |
