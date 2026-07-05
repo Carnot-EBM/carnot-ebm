@@ -1,26 +1,26 @@
-milestone: "2026.07.480"
-milestone_title: "Typed Memory, Receipt Integrity, and Verified Decoding Allocation"
+milestone: "2026.07.481"
+milestone_title: "Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp5245-archive-479-activate-480
-    milestone: "2026.07.480"
-    title: "PHASE 0 transition -- archive .479 truth and prepare .480 activation"
+  - id: exp5257-archive-480-activate-481
+    milestone: "2026.07.481"
+    title: "PHASE 0 transition -- archive .480 truth and prepare .481 activation"
     priority: critical
     track: reporting
-    deliverable: results/experiment_5245_archive_479_activate_480.json
-    operator_override: "Standing transition task authorized by the operator request to plan the next milestone after .479 completed."
+    deliverable: results/experiment_5257_archive_480_activate_481.json
+    operator_override: "Standing transition task authorized by the operator request to plan the next milestone after .480 completed."
     prior_failures:
-      - experiment_id: exp5244-capstone-v479
-        verdict: "complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded."
-        addressed_by: "This task is the next milestone archive/activation handoff, not a rerun of the .479 capstone synthesis."
+      - experiment_id: exp5256-capstone-v480
+        verdict: "complete: .480 closed with artifact normalizer ready, GAP-4 salvaged clean null, cross-model memory and verifier-dose blocked by SOTA runtime, Token-Guard harmful, HalluHard clean null, ARC patch retired after zero delta, KAN bounded positive, and hardware no-speedup."
+        addressed_by: "This task is the next milestone archive/activation handoff, not a rerun of the .480 capstone synthesis."
         retire_if_same_verdict: true
     agent_type: codex
-    model: gpt-5.5
+    model: "gpt-5.5"
     max_turns: 30
     estimated_wall_time_min: 20
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. All tasks in milestone 2026.07.479 have completed. The next milestone is 2026.07.480. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
+      Repo at {project_root}, run on or after {date}. All tasks in milestone 2026.07.480 have completed. The next milestone is 2026.07.481. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
@@ -34,20 +34,20 @@ tasks:
       - research-complete.yaml
       - research-roadmap.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_5233_archive_478_activate_479.json through results/experiment_5244_capstone_v479.json, including any missing/gated artifacts
+      - results/experiment_5245_archive_479_activate_480.json through results/experiment_5256_capstone_v480.json, including any missing/gated artifacts
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Archive the honest 2026.07.479 closeout into durable research and ops records, then emit the 2026.07.480 activation artifact. This is a reporting and consistency task. Do not create new research claims.
+      Archive the honest 2026.07.480 closeout into durable research and ops records, then emit the 2026.07.481 activation artifact. This is a reporting and consistency task. Do not create new research claims.
 
       CONCRETE STEPS:
-      1. Confirm .479 close state from ops/status.md, ops/changelog.md, ops/conductor-log.md, and available result artifacts: GAP-4 blocked, GAP-1 blocked, VerIbmc retired, typed memory controlled positive, ARC level_delta=0/no level banked, KAN certificate extended, hardware no-speedup.
-      2. Append or reconcile the .479 milestone entry in research-complete.yaml if it is missing, preserving existing findings and not rewriting unrelated history.
-      3. Update ops/status.md, ops/changelog.md, _bmad/traceability.md, and ops/exclusion_manifest.yaml only where the .479 closeout requires alignment. Do not edit docs/index.html.
-      4. Verify openspec/change-proposals/research-roadmap-vNEXT.md points to milestone 2026.07.480 and that research-roadmap-next.yaml exists. Do not activate it by overwriting research-roadmap.yaml.
+      1. Confirm .480 close state from ops/status.md, ops/changelog.md, ops/conductor-log.md, and available result artifacts: normalizer ready, GAP-4 salvaged clean null, exp5249 blocked by llama.cpp/GGUF runtime, exp5250 gated/skipped, Token-Guard harmful, HalluHard clean null, ARC patch level_delta=0 and retired, KAN bounded positive, hardware no-speedup.
+      2. Append or reconcile the .480 milestone entry in research-complete.yaml if it is missing, preserving existing findings and not rewriting unrelated history.
+      3. Update ops/status.md, ops/changelog.md, _bmad/traceability.md, and ops/exclusion_manifest.yaml only where the .480 closeout requires alignment. Do not edit docs/index.html.
+      4. Verify openspec/change-proposals/research-roadmap-vNEXT.md points to milestone 2026.07.481 and that research-roadmap-next.yaml exists. Do not activate it by overwriting research-roadmap.yaml.
       5. Run the available roadmap/exclusion checks used by this repo, including prior-failure and exclusion-manifest validation if those scripts exist.
-      6. Write results/experiment_5245_archive_479_activate_480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether .479 was archived and .480 is activation-ready.
+      6. Write results/experiment_5257_archive_480_activate_481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether .480 was archived and .481 is activation-ready.
          - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm because this task reads existing artifacts only.
          - milestone_archived: bare bool plus milestone_archived_principle string.
          - activation_ready: bare bool plus activation_ready_principle string.
@@ -58,24 +58,24 @@ tasks:
          - commands_run: list of commands and pass/fail outcomes.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5246-sota-refresh-v480
-    milestone: "2026.07.480"
-    title: "PHASE 0 SOTA refresh -- 2025-2026 memory, verification, KAN, decoding, and hardware deltas"
+  - id: exp5258-sota-refresh-v481
+    milestone: "2026.07.481"
+    title: "PHASE 0 SOTA refresh -- V481 deltas after planning references"
     priority: critical
     track: literature
-    deliverable: results/experiment_5246_sota_refresh_v480.json
+    deliverable: results/experiment_5258_sota_refresh_v481.json
     prior_failures:
-      - experiment_id: exp5234-sota-ingestion-v479
-        verdict: "complete: V479 SOTA execution refresh found no new actionable findings beyond the planning section; research-references.md unchanged; Semantic Scholar metadata was reachable after one 429 retry for both EBT and ARM-EBM."
-        addressed_by: "This refresh starts from the V480 references already added during planning and only appends genuinely newer or missed actionable deltas."
+      - experiment_id: exp5246-sota-refresh-v480
+        verdict: "failed_model_metadata_gemini_3_1_pro_preview_not_found: conductor could not start the requested Gemini model, so the execution-time SOTA refresh did not produce a valid artifact."
+        addressed_by: "This task routes to codex/gpt-5.5 per active CLAUDE.md and starts from the V481 references already added during planning."
         retire_if_same_verdict: true
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 50
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 30
     estimated_wall_time_min: 30
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. The V480 planning pass already added a research-references.md section with MemCollab, HalluHard, Hybrid Verified Decoding, Token-Guard, SLOT, KAN convexification, Extropic TSU/XTR-0, Logical Intelligence Aleph/Kona, Semantic Scholar citation status, and GitHub watch items. This task checks whether anything newer or missed changes the executable .480 plan.
+      Repo at {project_root}, run on or after {date}. The V481 planning pass already added a research-references.md section with SAT/CSP reasoning, ConstrainPrompt-style executable constraints, neuron/attention-energy hallucination detection, modular memory and memory-level continual learning, AgentOdyssey/ALMA, thermodynamic AI models, Extropic/Logical status, Semantic Scholar citation trails, and GitHub watch items. This task checks whether anything newer or missed changes the executable .481 plan.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
@@ -91,10 +91,10 @@ tasks:
 
       CONCRETE STEPS:
       1. Query the required sources for the topics named in research-program.md: EBMs for verification/reasoning, neural constraint satisfaction, Ising/ML, hallucination mitigation, KANs, energy-guided decoding, hardware-accelerated sampling, continual/online learning for constraints.
-      2. Compare findings against the V480 section already present in research-references.md.
-      3. Append only genuinely new actionable findings to research-references.md under a dated V480 execution refresh subsection. If there are no new findings, do not churn the file.
+      2. Compare findings against the V481 section already present in research-references.md.
+      3. Append only genuinely new actionable findings to research-references.md under a dated V481 execution refresh subsection. If there are no new findings, do not churn the file.
       4. Check whether any new finding changes the planned tasks, but do not edit research-roadmap.yaml or scripts/research_conductor.py.
-      5. Write results/experiment_5246_sota_refresh_v480.json with REQUIRED ARTIFACT FIELDS:
+      5. Write results/experiment_5258_sota_refresh_v481.json with REQUIRED ARTIFACT FIELDS:
          - honest_verdict: object with value/principle; value must start with complete: and distinguish new actionable findings from a no-op refresh.
          - inference_substrate: object with value/principle; use literature_ingestion_network_sources.
          - sources_checked: object with value/principle.
@@ -105,563 +105,563 @@ tasks:
          - semantic_scholar_status: object with EBT and ARM-EBM lookup results/principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5247-slot-artifact-normalizer-v480
-    milestone: "2026.07.480"
-    title: "PHASE 1 evidence integrity -- SLOT-style artifact schema and receipt normalizer"
+  - id: exp5259-sota-gguf-gpu-offload-preflight-v481
+    milestone: "2026.07.481"
+    title: "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_5247_slot_artifact_normalizer_v480.json
+    deliverable: results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
     prior_failures:
-      - experiment_id: exp5235-adversarial-qa-null-tautology-calibration-v479
-        verdict: "complete: QA calibration passed; Exp 5224/5225 structured null equalities are ready for clean GAP-4 reclassification while Exp 5226 remains blocked by compute-bound duration/methodology checks."
-        addressed_by: "This task moves from post-hoc QA calibration to producer-side schema/receipt normalization without weakening methodology checks."
+      - experiment_id: exp5249-cross-model-typed-memory-v480
+        verdict: "blocked_llama_cpp_gpu_offload: cross-model typed memory usefulness was not measured because the mandated local SOTA GGUF runtime did not reach a valid GPU-offload inference path."
+        addressed_by: "This task isolates the runtime/GGUF/offload blocker before any memory-quality claim is attempted."
         retire_if_same_verdict: true
-      - experiment_id: exp5241-arc-gated-live-patch-attempt-v479
-        verdict: "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
-        addressed_by: "This task addresses the artifact/receipt shape that caused the ARC result to be quarantined, before any clean ARC rerun is attempted."
+      - experiment_id: exp2848-llama-cpp-gpu-offload-precondition
+        verdict: "blocked_llama_cpp_gpu_offload: cached SOTA pair setup failed before headline inference could run."
+        addressed_by: "This task uses the current mandated model set, explicit GGUF/llama.cpp receipts, and a preflight-only no-quality-claim artifact."
         retire_if_same_verdict: true
     agent_type: codex
-    model: gpt-5.5
+    model: "gpt-5.5"
     max_turns: 50
     estimated_wall_time_min: 45
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. Recent milestones repeatedly hit artifact-shape and receipt problems: missing top-level gate booleans, DURATION_TOO_SHORT flags, structured-null/tautology ambiguity, and methodology receipts that were hard to audit. SLOT (arXiv 2505.04016) suggests a model-agnostic structured-output repair layer, but Carnot needs strict repair that never turns bad evidence into good evidence.
+      Repo at {project_root}, run on or after {date}. .480 exp5249 and exp5250 were blocked by local SOTA GGUF runtime/GPU-offload issues, so no cross-model typed-memory or verifier-dose claim was measurable. This task is a runtime preflight only: it must not claim model quality, memory usefulness, or verification uplift.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - CODEX.md
       - scripts/experiment_template.py
       - scripts/conductor_gates.py
-      - scripts/adversarial_verify.py or the current adversarial verification entry point
-      - tests touching artifact validation, conductor gates, or result schemas
-      - results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json
-      - results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
-      - results/experiment_5241_arc_gated_live_patch_attempt_v479.json
+      - tests touching cached_sota_pair, GGUF loading, or local inference helpers
+      - results/experiment_5249_cross_model_typed_memory_v480.json if present
+      - results/experiment_5250_verifier_dose_scheduler_v480.json if present
+      - research-hardware-wishlist.md
+      - ops/status.md
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Implement or prototype a strict artifact schema/receipt normalizer outside scripts/research_conductor.py. It may add missing explicit nulls, normalize field wrappers, and surface gate booleans when the source artifact already unambiguously contains the value. It must never synthesize methodology evidence, duration, model receipts, solve provenance, or performance wins.
+      Build and run a strict preflight for the mandated local SOTA GGUF inference path. The goal is to decide whether .481 LLM-dependent tasks may run with headline SOTA models or must be skipped through structured gates.
 
       CONCRETE STEPS:
-      1. Identify the existing result artifact schema patterns and the adversarial verification checks that flagged exp5235/exp5236/exp5241.
-      2. Add the smallest repo-native normalizer/helper and tests in the existing Python package or scripts area, not in scripts/research_conductor.py.
-      3. Define strict rules: safe normalization, unsafe missing-evidence rejection, gate-field extraction, inference_substrate labeling, duration receipt validation, and principle-field presence checks.
-      4. Run the normalizer on representative .479 artifacts and record before/after classifications. Do not alter historical result artifacts unless an existing ops process explicitly expects it.
-      5. Run focused unit tests and any spec/coverage checks relevant to the changed files.
-      6. Write results/experiment_5247_slot_artifact_normalizer_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether the normalizer is ready for gated consumers.
-         - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
-         - artifact_normalizer_ready: bare bool gate field for exp5248.
-         - artifact_normalizer_ready_principle: string explaining the gate.
-         - safe_repairs_supported: object with list value/principle.
-         - unsafe_repairs_rejected: object with list value/principle.
-         - duration_policy_preserved: object with bool value/principle.
-         - conductor_modified: object with bool value/principle; must be false for scripts/research_conductor.py.
+      1. Step 0 PRECONDITIONS: record GPU visibility, driver/CUDA/runtime receipts, llama.cpp or llama-cpp-python version, GGUF cache paths, free disk, and whether each mandated model is locally resolvable without using AutoTokenizer on a GGUF repo.
+      2. MODEL_SPECS for preflight:
+         - unsloth/Qwen3.6-35B-A3B-GGUF as flagship_moe
+         - unsloth/gemma-4-31B-it-GGUF as flagship_dense
+         - unsloth/gemma-4-26B-A4B-it-GGUF as middle_moe
+         Tiny legacy models may be used only as CPU smoke tests and must be labeled smoke_test_not_headline.
+      3. Prefer the repo's cached_sota_pair() or current local helper pattern. If helper code needs a small fix outside scripts/research_conductor.py, make the minimal change and add focused tests.
+      4. For each available mandated model, test GGUF file discovery, metadata read, vocab/tokenization path, minimal prompt construction, and a tiny deterministic generation or dry-run load when safe. Record n_gpu_layers/offload settings and any failure traceback.
+      5. Do not fall back to transformers AutoTokenizer for GGUF repositories. Do not convert GGUF models. Do not download excessive artifacts without checking local cache conventions.
+      6. Emit sota_runtime_ready=true only if at least one mandated SOTA model completes a reproducible local inference/load path suitable for downstream headline experiments. Otherwise emit sota_runtime_ready=false with the exact blocker.
+      7. Run focused unit or smoke tests for any changed runtime helper.
+      8. Write results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether SOTA runtime is ready.
+         - inference_substrate: object with value/principle; use llama_cpp_runtime_preflight_no_quality_claim.
+         - preconditions_checked: object with value/principle.
+         - sota_runtime_ready: bare bool gate field for exp5260/exp5262/exp5263.
+         - sota_runtime_ready_principle: string explaining the gate.
+         - model_receipts: object with per-model status, path/checksum where available, command/config, outcome, and principle.
+         - gpu_offload_receipts: object with driver/device/offload settings and principle.
+         - no_quality_claim: object with value=true and principle.
          - tests_run: list with command/outcome.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5248-gap4-receipt-salvage-or-retire-v480
-    milestone: "2026.07.480"
-    title: "PHASE 1 gated on exp5247 artifact_normalizer_ready -- GAP-4 receipt salvage or retire current pool"
+  - id: exp5260-cross-model-typed-memory-retry-v481
+    milestone: "2026.07.481"
+    title: "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry"
     priority: critical
-    track: verification
-    deliverable: results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json
+    track: continuous-self-learning
+    deliverable: results/experiment_5260_cross_model_typed_memory_retry_v481.json
     requires:
-      - exp5247-slot-artifact-normalizer-v480
+      - exp5259-sota-gguf-gpu-offload-preflight-v481
     gated_on:
-      - upstream: exp5247-slot-artifact-normalizer-v480
-        artifact_field: artifact_normalizer_ready
+      - upstream: exp5259-sota-gguf-gpu-offload-preflight-v481
+        artifact_field: sota_runtime_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5224-gap4-canonical-pool-builder-v478
-        verdict: "success: canonical GAP-4 pool usable for validation with n=120; no scale-validation claim run."
-        addressed_by: "This task does not rebuild or regenerate the pool; it tests whether its receipts are sufficient under the stricter normalizer."
+      - experiment_id: exp5249-cross-model-typed-memory-v480
+        verdict: "blocked_llama_cpp_gpu_offload: cross-model typed memory usefulness was not measured."
+        addressed_by: "This retry is structurally gated on exp5259.sota_runtime_ready=true, so it only runs after the runtime blocker is resolved."
         retire_if_same_verdict: true
-      - experiment_id: exp5225-gap4-clean-scale-validation-gated-v478
-        verdict: "complete: clean GAP-4 validation null decision with n=120, wins=0, losses=0, ties=120; min-six rule not crossed."
-        addressed_by: "This task resolves whether the prior null decision can be kept after receipt normalization or must be retired as unsalvageable."
-        retire_if_same_verdict: true
-      - experiment_id: exp5236-gap4-clean-status-after-qa-calibration-v479
-        verdict: "complete: GAP-4 is still blocked after QA calibration with decision blocked_missing_receipts; frozen n=120 validation currently has wins=0, losses=0, ties=120."
-        addressed_by: "This task uses the new strict normalizer and ends with salvage, blocked_missing_receipts, or retirement of the current GAP-4 pool."
+      - experiment_id: exp5239-controlled-self-learning-memory-v479
+        verdict: "complete: aligned typed memory beat shuffled and no-memory controls inside one controlled local stack with rollback and retention receipts."
+        addressed_by: "This task tests cross-model transfer between mandated SOTA GGUF model families instead of repeating the same-stack controlled positive."
         retire_if_same_verdict: true
     agent_type: codex
-    model: gpt-5.5
-    max_turns: 40
-    estimated_wall_time_min: 35
-    prompt: |
-      CONTEXT:
-      Repo at {project_root}, run on or after {date}. This task runs only if exp5247 emitted artifact_normalizer_ready=true. GAP-4 currently has a frozen n=120 null result but is blocked by missing receipts. Do not regenerate the pool and do not run a new broad search.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - CODEX.md
-      - results/experiment_5224_gap4_canonical_pool_builder_v478.json
-      - results/experiment_5225_gap4_clean_scale_validation_gated_v478.json
-      - results/experiment_5235_adversarial_qa_null_tautology_calibration_v479.json
-      - results/experiment_5236_gap4_clean_status_after_qa_calibration_v479.json
-      - results/experiment_5247_slot_artifact_normalizer_v480.json
-      - the normalizer/helper and tests created by exp5247
-      - ops/exclusion_manifest.yaml
-
-      TASK:
-      Make a final receipt-based decision for the current GAP-4 pool: salvaged clean-null, still blocked_missing_receipts, or retire_current_gap4_pool. This is a receipts and classification task, not a generation or model-quality task.
-
-      CONCRETE STEPS:
-      1. Confirm exp5247.artifact_normalizer_ready=true and record the normalizer version/checksum.
-      2. Run the normalizer over the GAP-4 artifacts from exp5224, exp5225, exp5235, and exp5236.
-      3. Preserve the original outcome counts; do not change wins/losses/ties unless the source artifact already contains contradictory auditable evidence.
-      4. Classify missing fields into safe-normalized, unsafe-missing, or irrelevant-to-claim.
-      5. If all claim-critical receipts are present after safe normalization, emit gap4_final_decision=salvaged_clean_null. If any claim-critical receipt is still missing, emit blocked_missing_receipts or retire_current_gap4_pool with the specific missing evidence.
-      6. Update ops/status.md, ops/changelog.md, and ops/exclusion_manifest.yaml only if the decision changes the durable state.
-      7. Write results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state the final GAP-4 decision.
-         - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
-         - gap4_final_decision: object with value/principle.
-         - normalized_artifacts: object with list value/principle.
-         - unsafe_missing_receipts: object with list value/principle.
-         - wins: object with integer value/principle.
-         - losses: object with integer value/principle.
-         - ties: object with integer value/principle.
-         - pool_retired: object with bool value/principle.
-         - no_new_generation: object with bool value/principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5249-cross-model-typed-memory-transfer-v480
-    milestone: "2026.07.480"
-    title: "PHASE 2 Continuous Self-Learning -- cross-model typed memory transfer with local SOTA GGUFs"
-    priority: critical
-    track: self-learning
-    deliverable: results/experiment_5249_cross_model_typed_memory_transfer_v480.json
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp5227-continuous-self-learning-multihead-memory-v478
-        verdict: "complete: typed memory consumer-ready for exp5228 with 4 heads, promotions_2_rollbacks_4, retention_passed_True, verified_typed_memory_no_model_training"
-        addressed_by: "This task tests transfer across distinct mandated local SOTA models instead of only building a same-pipeline memory registry."
-        retire_if_same_verdict: true
-      - experiment_id: exp5239-continuous-self-learning-controlled-memory-ablation-v479
-        verdict: "complete: typed memory shows controlled useful reuse; aligned_vs_shuffled_delta=1.000000, aligned_vs_no_memory_delta=0.666667, degradation_detected=true, retention_passed=true, rollback_exercised=true, no_model_training"
-        addressed_by: "This task keeps the controlled arms but adds cross-model producer/consumer splits and leakage checks inspired by MemCollab."
-        retire_if_same_verdict: true
-    agent_type: codex
-    model: gpt-5.5
+    model: "gpt-5.5"
     max_turns: 50
-    estimated_wall_time_min: 90
+    estimated_wall_time_min: 60
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. Continuous self-learning is a PRD requirement. Milestone .479 proved a controlled aligned-memory benefit inside one setup. MemCollab (arXiv 2603.23234) motivates testing whether useful memory transfers across different model families without leakage or hidden training.
+      Repo at {project_root}, run on or after {date}. This task runs only if exp5259 emitted sota_runtime_ready=true. .479 showed a controlled typed-memory positive in one stack; .480 failed to measure cross-model transfer because the SOTA GGUF runtime was blocked. This is the milestone's gated live local-LLM continuous self-learning experiment.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - CODEX.md
-      - research-program.md, especially Continuous Self-Learning
-      - scripts/experiment_template.py and its cached_sota_pair() pattern
-      - results/experiment_5227_continuous_self_learning_multihead_memory_v478.json
-      - results/experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.json
-      - existing typed-memory/self-learning code and tests
+      - research-program.md
+      - scripts/experiment_template.py
+      - typed-memory, verifier-memory, or self-learning modules/tests currently in the repo
+      - results/experiment_5239_controlled_self_learning_memory_v479.json
+      - results/experiment_5249_cross_model_typed_memory_v480.json if present
+      - results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Run a small but real cross-model typed-memory transfer experiment. One mandated local SOTA GGUF model must produce typed memories from solved/verified traces, and a different mandated local SOTA GGUF model must consume them on held-out verifier tasks. Include aligned, shuffled, no-memory, stale-memory, and rollback arms.
+      Measure whether typed verifier memories learned or promoted by one mandated local SOTA model improve another mandated local SOTA model on held-out constraint/verifier tasks, while preserving rollback and leakage controls.
 
       CONCRETE STEPS:
-      1. PRECONDITIONS: Verify local GPU and llama.cpp/llama-server access. If a mandated model cannot be run, write an honest blocked_precondition artifact; do not fall back to tiny headline models.
-      2. MODEL_SPECS for headline results must include at least two of:
-         - unsloth/Qwen3.6-35B-A3B-GGUF
-         - unsloth/gemma-4-31B-it-GGUF
-         - unsloth/gemma-4-26B-A4B-it-GGUF
-         Tiny models may appear only under tiny_smoke_tests.
-      3. Select a bounded held-out verifier task set from existing fixtures where labels/provenance are deterministic and no training is performed.
-      4. Build typed memories with explicit heads: constraints, provenance, failure modes, and skill/rubric hints. Record producer model, consumer model, prompts, seeds, checksums, and wall-clock receipts.
-      5. Compare aligned transfer, shuffled transfer, no memory, stale memory, and rollback-triggered memory. Predeclare the pass condition before inspecting results.
-      6. Run leakage checks: held-out split check, prompt checksum check, label visibility check, and rollback-on-degradation check.
-      7. Run relevant unit/integration tests.
-      8. Write results/experiment_5249_cross_model_typed_memory_transfer_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether cross-model memory is useful.
-         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota if model calls ran.
-         - model_specs: object with headline models, quantization, runtime command, seeds, prompt checksums, and principle.
-         - cross_model_memory_eligible: bare bool gate field for exp5250.
-         - cross_model_memory_eligible_principle: string explaining the gate.
-         - producer_model: object with value/principle.
-         - consumer_model: object with value/principle.
-         - aligned_vs_shuffled_delta: object with numeric value/principle.
-         - aligned_vs_no_memory_delta: object with numeric value/principle.
-         - stale_memory_delta: object with numeric value/principle.
+      1. Step 0 PRECONDITIONS: confirm exp5259.sota_runtime_ready=true, record GPU/runtime/model receipts, and record memory-store snapshot/checksum before mutation.
+      2. MODEL_SPECS for headline results:
+         - unsloth/Qwen3.6-35B-A3B-GGUF as source_or_target flagship_moe
+         - unsloth/gemma-4-31B-it-GGUF as source_or_target flagship_dense
+         - unsloth/gemma-4-26B-A4B-it-GGUF as middle_moe optional third-family check
+         Tiny legacy models may be used only for CPU smoke tests and must not appear in headline metrics.
+      3. Reuse the repo's typed-memory representation and promotion/rollback rules rather than inventing a new memory format.
+      4. Build a small deterministic fixture set with aligned memory, shuffled memory, no-memory, and held-out tasks. Include prompt and completion checksums.
+      5. Run at least one source-to-target direction across different model families, and a second direction if runtime permits. Measure accuracy/usefulness, unsafe false accepts, repeated-error rate, and rollback behavior.
+      6. Prevent leakage: no target answer text in memory, no fixture labels in prompts, no post-hoc hand curation after seeing held-out results.
+      7. Update ops/status.md and ops/changelog.md only if the result changes durable memory/self-learning state.
+      8. Write results/experiment_5260_cross_model_typed_memory_retry_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether cross-model memory was useful, harmful, null, or unmeasured.
+         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota.
+         - preconditions_checked: object with value/principle.
+         - MODEL_SPECS: object with model ids, roles, quantization/file receipts, and principle.
+         - cross_model_memory_useful: bare bool plus cross_model_memory_useful_principle string.
+         - delta_over_no_memory: object with numeric value/principle.
+         - delta_over_shuffled_memory: object with numeric value/principle.
+         - unsafe_false_accepts: object with integer value/principle.
          - rollback_exercised: object with bool value/principle.
-         - retention_check_passed: object with bool value/principle.
-         - no_model_training: object with bool value/principle.
-         - leakage_checks: object with value/principle.
+         - leakage_controls: object with checksums and principle.
+         - commands_run: list with command/outcome.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5250-verifier-dose-scheduler-v480
-    milestone: "2026.07.480"
-    title: "PHASE 2 gated on exp5249 cross_model_memory_eligible -- verifier-dose scheduler for memory, cheap checks, and SOTA verification"
+  - id: exp5261-typed-memory-interference-audit-v481
+    milestone: "2026.07.481"
+    title: "PHASE 1 continuous self-learning -- typed-memory retention and interference audit"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_5261_typed_memory_interference_audit_v481.json
+    prior_failures:
+      - experiment_id: exp5239-controlled-self-learning-memory-v479
+        verdict: "complete: aligned typed memory beat shuffled and no-memory controls inside one controlled local stack with rollback and retention receipts."
+        addressed_by: "This audit tests memory stability, interference, promotion, eviction, and retention rather than repeating the same useful-replay measurement."
+        retire_if_same_verdict: true
+      - experiment_id: exp5249-cross-model-typed-memory-v480
+        verdict: "blocked_llama_cpp_gpu_offload: cross-model typed memory usefulness was not measured."
+        addressed_by: "This task is a deterministic memory-policy audit that remains executable even if live SOTA LLM inference is blocked."
+        retire_if_same_verdict: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 45
+    prompt: |
+      CONTEXT:
+      Repo at {project_root}, run on or after {date}. The research program requires continuous self-learning, and the V481 literature update highlights modular memory and memory-level stability-plasticity. This task must be runnable without live LLM inference so the milestone still advances self-learning if SOTA GGUF runtime remains blocked.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - research-program.md
+      - typed-memory, verifier-memory, rollback, or self-learning modules/tests currently in the repo
+      - results/experiment_5239_controlled_self_learning_memory_v479.json
+      - results/experiment_5249_cross_model_typed_memory_v480.json if present
+      - research-references.md V481 memory section
+      - ops/exclusion_manifest.yaml
+
+      TASK:
+      Audit typed verifier memory for retention, interference, promotion, eviction, and rollback safety using deterministic fixtures and cached artifacts. The output should define whether the current memory policy is safe enough to support future continuous self-learning experiments.
+
+      CONCRETE STEPS:
+      1. Identify the current typed-memory schema and write down the invariants it claims to preserve.
+      2. Build or reuse deterministic fixtures that cover aligned memory, irrelevant memory, conflicting memory, stale memory, and shuffled memory.
+      3. Measure retention of useful memories after distractor insertion, interference on unrelated tasks, eviction of stale/conflicting entries, promotion thresholds, and rollback after harmful memory.
+      4. Do not call an LLM unless a cached fixture explicitly records prior outputs; label the run cached_fixture_replay_no_llm.
+      5. Add focused tests for any memory-policy helper changed by the audit.
+      6. Update ops/status.md and ops/changelog.md only if the memory policy becomes durable ready/blocked/retired.
+      7. Write results/experiment_5261_typed_memory_interference_audit_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether the memory policy is ready, blocked, harmful, or needs redesign.
+         - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
+         - memory_policy_ready: bare bool plus memory_policy_ready_principle string.
+         - retention_rate: object with numeric value/principle.
+         - interference_rate: object with numeric value/principle.
+         - harmful_memory_rollback_passed: object with bool value/principle.
+         - promotion_eviction_policy: object with value/principle.
+         - fixture_checksums: object with value/principle.
+         - tests_run: list with command/outcome.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5262-solver-grounded-constraint-extraction-v481
+    milestone: "2026.07.481"
+    title: "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot"
     priority: high
     track: verification
-    deliverable: results/experiment_5250_verifier_dose_scheduler_v480.json
+    deliverable: results/experiment_5262_solver_grounded_constraint_extraction_v481.json
     requires:
-      - exp5249-cross-model-typed-memory-transfer-v480
+      - exp5259-sota-gguf-gpu-offload-preflight-v481
     gated_on:
-      - upstream: exp5249-cross-model-typed-memory-transfer-v480
-        artifact_field: cross_model_memory_eligible
+      - upstream: exp5259-sota-gguf-gpu-offload-preflight-v481
+        artifact_field: sota_runtime_ready
         op: "=="
         value: true
-    requires_gpu: true
     prior_failures:
-      - experiment_id: exp738-step-probe-tier2-memory
-        verdict: "OK (conductor): Step-Level Latent Probe + Tier 2 Cross-Session Memory"
-        addressed_by: "This scheduler consumes cross-model typed memory and deterministic verifier receipts instead of testing a latent probe memory tier."
-        retire_if_same_verdict: true
-      - experiment_id: exp1290-skill-graph-promotion-demotion
-        verdict: "OK (conductor): Skill Graph Promotion/Demotion - Gated on Verifier Memory Update"
-        addressed_by: "This task routes verifier effort at decision time; it does not promote or demote a skill graph."
-        retire_if_same_verdict: true
-      - experiment_id: exp2842-cross-corpus-matrix-v3
-        verdict: "OK (conductor): Cross-Corpus Per-Verifier Dual-Condition Matrix v3"
-        addressed_by: "This task measures dose allocation on a controlled replay set, not a cross-corpus verifier matrix headline."
-        retire_if_same_verdict: true
-      - experiment_id: exp3811-abstention-cross-surface-parity-smoke
-        verdict: "OK (conductor): Cross-surface abstention PARITY smoke"
-        addressed_by: "This scheduler may abstain from expensive verification, but it is not an integration-surface parity smoke."
-        retire_if_same_verdict: true
-      - experiment_id: exp3962-capstone-v366
-        verdict: "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3962_capstone_v366.json"
-        addressed_by: "This task has a concrete deliverable artifact and is not a capstone aggregation."
+      - experiment_id: exp5238-veribmc-retire-or-revive-v479
+        verdict: "complete: VerIbmc local solver-feedback route retired after methodology-correct rerun showed solver_feedback_uplift=0.0."
+        addressed_by: "This task does not rerun VerIbmc solver feedback; it asks SOTA GGUF models to emit executable prompt-defined constraints and lets deterministic solvers validate them."
         retire_if_same_verdict: true
     agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 75
-    prompt: |
-      CONTEXT:
-      Repo at {project_root}, run on or after {date}. This task runs only if exp5249 proves cross-model typed memory is eligible for a consumer. Hybrid Verified Decoding (arXiv 2606.01019) suggests allocating expensive verification based on predicted payoff. Carnot needs a verifier-dose scheduler, not a speedup claim.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py and cached_sota_pair()
-      - results/experiment_5249_cross_model_typed_memory_transfer_v480.json
-      - existing verifier, artifact QA, and typed-memory modules/tests
-      - ops/exclusion_manifest.yaml
-
-      TASK:
-      Prototype a scheduler that routes each verifier decision through one of three doses: memory-only suggestion plus deterministic check, cheap verifier-only check, or full local SOTA GGUF verification. Measure decision preservation and avoided full-verifier calls on a controlled replay set.
-
-      CONCRETE STEPS:
-      1. PRECONDITIONS: Verify access to the same mandated local SOTA GGUF model family used in exp5249. If unavailable, write a blocked_precondition artifact.
-      2. MODEL_SPECS for any LLM call must include at least one of:
-         - unsloth/Qwen3.6-35B-A3B-GGUF
-         - unsloth/gemma-4-31B-it-GGUF
-         - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. Build the scheduler over cached/replayed examples from exp5249 plus deterministic verifiers. Use live model calls only for the full-dose arm where necessary.
-      4. Predeclare routing features: memory confidence, deterministic verifier disagreement, provenance completeness, and prior rollback/degradation signal.
-      5. Compare scheduler decisions with always-full-verification and no-memory baselines. Report preserved_correctness, false_accepts, false_rejects, full_verifier_calls_avoided, and any wall-clock measurements as secondary only.
-      6. Ensure the scheduler never overrides a deterministic verifier failure or missing provenance receipt.
-      7. Run focused tests for routing rules and artifact schema.
-      8. Write results/experiment_5250_verifier_dose_scheduler_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether the scheduler is consumer-ready.
-         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota if any LLM calls ran, otherwise cached_fixture_replay_no_llm.
-         - model_specs: object with value/principle if LLM calls ran; otherwise null plus principle explaining no LLM was used.
-         - scheduler_ready: object with bool value/principle.
-         - preserved_correctness: object with numeric value/principle.
-         - false_accepts: object with integer value/principle.
-         - false_rejects: object with integer value/principle.
-         - full_verifier_calls_avoided: object with integer value/principle.
-         - deterministic_failures_overridden: object with integer value/principle; must be 0.
-         - no_speedup_claim: object with bool value/principle; wall-clock is exploratory only.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5251-token-guard-carnot-pilot-v480
-    milestone: "2026.07.480"
-    title: "PHASE 2 Token-Guard/Carnot pilot -- fragment self-checking with energy and provenance gates"
-    priority: high
-    track: decoding
-    deliverable: results/experiment_5251_token_guard_carnot_pilot_v480.json
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp5238-veribmc-methodology-correct-rerun-or-retire-v479
-        verdict: "complete: solver feedback stayed null under clean methodology receipts; retired current VerIbmc local solver-feedback path"
-        addressed_by: "This task is not solver-feedback for VerIbmc; it tests decoding-time fragment self-checking with deterministic gates on a bounded fixture."
-        retire_if_same_verdict: true
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 75
-    prompt: |
-      CONTEXT:
-      Repo at {project_root}, run on or after {date}. Token-Guard (arXiv 2601.21969) suggests token-level self-checking and regeneration. Carnot should test the idea at fragment level with energy/provenance gates, while avoiding the retired Phase D external text/logprob scorer path.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py and cached_sota_pair()
-      - research-references.md V480 Token-Guard entry
-      - existing decoding, verifier, energy, or provenance-gate code
-      - ops/exclusion_manifest.yaml
-
-      TASK:
-      Run a bounded local SOTA GGUF pilot where an LLM generates short reasoning fragments and Carnot gates each fragment using deterministic constraint/provenance checks and an internal energy-style score already available in the repo. The goal is to measure whether fragment self-checking reduces unsupported claims without reviving external text scoring.
-
-      CONCRETE STEPS:
-      1. PRECONDITIONS: Confirm GPU and local GGUF runtime. If unavailable, emit blocked_precondition with no tiny-model headline.
-      2. MODEL_SPECS for headline results must include at least one of:
-         - unsloth/Qwen3.6-35B-A3B-GGUF
-         - unsloth/gemma-4-31B-it-GGUF
-         - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. Select 8-12 existing verification/citation/constraint fixtures with deterministic support checks. Do not use off-path generated-text/logprob scoring as the primary metric.
-      4. Implement or script a fragment loop: generate fragment, score/gate with Carnot evidence, accept or regenerate once, then verify final answer.
-      5. Compare against no-fragment-gate generation using the same model, seed policy, and fixture set.
-      6. Report unsupported_claim_delta, deterministic_violation_delta, regeneration_count, and any accuracy change. If the method is null or harmful, say so and recommend retirement or redesign.
-      7. Run relevant tests and artifact verification.
-      8. Write results/experiment_5251_token_guard_carnot_pilot_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether fragment self-checking helped.
-         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota.
-         - model_specs: object with headline model, quantization, runtime command, seed, prompt checksums, completion checksums, and principle.
-         - retired_phase_d_path_reopened: object with bool value/principle; must be false unless explicitly justified.
-         - fixtures_count: object with integer value/principle.
-         - unsupported_claim_delta: object with numeric value/principle.
-         - deterministic_violation_delta: object with numeric value/principle.
-         - regeneration_count: object with integer value/principle.
-         - false_accepts: object with integer value/principle.
-         - consumer_recommendation: object with value/principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5252-halluhard-provenance-memory-microbench-v480
-    milestone: "2026.07.480"
-    title: "PHASE 2 HalluHard-style microbench -- multi-turn provenance memory with local SOTA GGUFs"
-    priority: high
-    track: hallucination
-    deliverable: results/experiment_5252_halluhard_provenance_memory_microbench_v480.json
-    requires_gpu: true
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 90
-    prompt: |
-      CONTEXT:
-      Repo at {project_root}, run on or after {date}. HalluHard (arXiv 2602.01031) shows persistent multi-turn hallucination even with tool use and citation requirements. Carnot should test a small local variant focused on provenance memory and citation support, not broad benchmark claims.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - CODEX.md
-      - scripts/experiment_template.py and cached_sota_pair()
-      - research-program.md Verifiable Reasoning and Continuous Self-Learning sections
-      - research-references.md V480 HalluHard entry
-      - existing provenance, citation, hallucination, verifier, or memory modules/tests
-      - ops/exclusion_manifest.yaml
-
-      TASK:
-      Build and run a 10-20 item HalluHard-style microbench using local curated evidence snippets. Measure whether typed provenance memory reduces repeated unsupported citation/support errors across turns for a mandated local SOTA GGUF model.
-
-      CONCRETE STEPS:
-      1. PRECONDITIONS: Confirm GPU and local GGUF runtime. If unavailable, emit blocked_precondition and do not use tiny models for headline results.
-      2. MODEL_SPECS for headline results must include at least one of:
-         - unsloth/Qwen3.6-35B-A3B-GGUF
-         - unsloth/gemma-4-31B-it-GGUF
-         - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. Create or reuse a tiny fixture set with evidence snippets, question turns, expected supported/unsupported claims, and deterministic citation-support labels.
-      4. Compare three arms: no memory, raw conversation memory, and typed provenance memory. Do not call network search at benchmark time.
-      5. Track unsupported_claim_rate, citation_support_rate, repeated_error_rate, and any over-refusal or missed-answer costs.
-      6. Include leakage checks showing answers are not in prompts except through the intended evidence snippets.
-      7. Run focused tests for fixture labels and support-check logic.
-      8. Write results/experiment_5252_halluhard_provenance_memory_microbench_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether provenance memory reduced hallucination errors.
-         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota.
-         - model_specs: object with headline model, quantization, runtime command, seeds, prompt checksums, completion checksums, and principle.
-         - fixture_count: object with integer value/principle.
-         - unsupported_claim_rate_no_memory: object with numeric value/principle.
-         - unsupported_claim_rate_typed_memory: object with numeric value/principle.
-         - repeated_error_delta: object with numeric value/principle.
-         - citation_support_delta: object with numeric value/principle.
-         - leakage_checks: object with value/principle.
-         - no_network_at_benchmark_time: object with bool value/principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5253-arc-live-patch-clean-receipts-v480
-    milestone: "2026.07.480"
-    title: "PHASE 3 ARC live path -- receipt-clean rerun or retire the .479 provenance patch"
-    priority: high
-    track: arc
-    deliverable: results/experiment_5253_arc_live_patch_clean_receipts_v480.json
-    prior_failures:
-      - experiment_id: exp5228-arc-provenance-skill-rubric-gate-v478
-        verdict: "complete: ARC skill rubric usable; no exp5229 live patch is currently gated."
-        addressed_by: "This task uses the later exp5240 provenance patch and focuses on live-path receipts rather than another rubric-only gate."
-        retire_if_same_verdict: true
-      - experiment_id: exp5240-arc-rubric-to-patch-synthesis-v479
-        verdict: "success: provenance-routing live patch is gated for exp5241 without a solve claim."
-        addressed_by: "This task tests the already-synthesized patch under clean live receipts; it does not synthesize another patch first."
-        retire_if_same_verdict: true
-      - experiment_id: exp5241-arc-gated-live-patch-attempt-v479
-        verdict: "complete: level_delta=0 provenance=live_agent_self_discovery; no level banked under the gated live patch path (no_level_banked)."
-        addressed_by: "This task repeats only with explicit receipt completeness and retires the patch if the same zero-delta outcome repeats cleanly."
-        retire_if_same_verdict: true
-    agent_type: codex
-    model: gpt-5.5
+    model: "gpt-5.5"
     max_turns: 50
     estimated_wall_time_min: 60
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. ARC solve credit must come from the live agent's own attempts and runtime reverse engineering, not offline ground-truth BFS, per-game adapters, or outer-loop reverse engineering. The .479 provenance patch produced level_delta=0 and was quarantined by a duration/methodology flag. This task fixes receipts and makes a final patch decision.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md, especially ARC Live-Path Reachability Discipline
-      - CODEX.md
-      - ops/arc_solve_registry.yaml
-      - results/experiment_5228_arc_provenance_skill_rubric_gate_v478.json
-      - results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json
-      - results/experiment_5241_arc_gated_live_patch_attempt_v479.json
-      - ARC live agent, patch, registry, and test files touched by exp5240/exp5241
-      - ops/exclusion_manifest.yaml
-
-      TASK:
-      Rerun or replay the exp5240 provenance patch through the live ARC agent with complete methodology receipts. If the live mechanism already reaches the target level in ops/arc_solve_registry.yaml, do not duplicate the solve; improve receipts or retire the patch instead.
-
-      CONCRETE STEPS:
-      1. Registry-precheck: read ops/arc_solve_registry.yaml and record whether the target level is already reproduced. If already reproduced, do not claim a duplicate solve.
-      2. Enable only the exp5240 patch or the minimal equivalent already present. Do not add offline BFS, per-game ground-truth adapters, or outer-loop reverse engineering.
-      3. Run the live ARC path with deterministic seed, wall-clock timing, input/output checksums, attempt logs, and provenance route receipts.
-      4. REQUIRED ARTIFACT FIELDS must include solve_provenance=live_agent_self_discovery if any level solve is claimed. If no solve is claimed, still record solve_provenance with value/principle explaining no solve was banked.
-      5. If level_delta remains 0 under clean receipts, emit retire_current_provenance_patch=true and update ops/exclusion_manifest.yaml only for that patch scope.
-      6. Run ARC-focused tests and adversarial verification.
-      7. Write results/experiment_5253_arc_live_patch_clean_receipts_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state level_delta and patch decision.
-         - inference_substrate: object with value/principle; use offline_arcade_live_agent_runtime_self_discovery_no_llm unless a mandated local SOTA GGUF proposer actually ran.
-         - solve_provenance: object with value in [live_agent_self_discovery, development_proxy, outer_loop_re] and principle; headline credit requires live_agent_self_discovery.
-         - registry_precheck: object with value/principle.
-         - level_delta: object with integer value/principle.
-         - levels_reproduced: object with list value/principle.
-         - duplicate_solve_claimed: object with bool value/principle; must be false.
-         - retire_current_provenance_patch: object with bool value/principle.
-         - duration_s: object with numeric value/principle.
-         - attempt_log_path: object with value/principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5254-kan-convex-envelope-certificate-v480
-    milestone: "2026.07.480"
-    title: "PHASE 3 KAN certificate -- convex-envelope stress test inspired by arXiv 2604.03871"
-    priority: high
-    track: kan
-    deliverable: results/experiment_5254_kan_convex_envelope_certificate_v480.json
-    prior_failures:
-      - experiment_id: exp5242-kan-certificate-abstraction-scale-v479
-        verdict: "success: bounded KAEM certificate extended to 10 total PWA segments over two variables, a wider [-0.5, 0.75] input box, and a rejected false property; no hardware or broad KAN verification claim"
-        addressed_by: "This task changes the certificate technique toward convex-envelope bounds rather than only adding more PWA segments."
-        retire_if_same_verdict: true
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 60
-    prompt: |
-      CONTEXT:
-      Repo at {project_root}, run on or after {date}. Exp5242 extended the tiny KAEM/PWA/MILP certificate to 10 total PWA segments and two variables. arXiv 2604.03871 proposes efficient convexification for KANs via convex envelopes. Carnot should test a bounded convex-envelope-style certificate while keeping claims narrow.
+      Repo at {project_root}, run on or after {date}. This task runs only if exp5259 emitted sota_runtime_ready=true. V481 literature added SAT/CSP reasoning and ConstrainPrompt-style executable constraint assurance. The retired VerIbmc local solver-feedback uplift route must not be reopened.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - CODEX.md
-      - research-references.md V480 KAN convexification entry
-      - results/experiment_5242_kan_certificate_abstraction_scale_v479.json
-      - existing KAN, KAEM, PWA, MILP, or certificate code and tests
-      - openspec/capabilities related to KAN/certification
+      - research-references.md V481 constraint reasoning section
+      - verifier, SAT/Z3, constraint, or formal-checker modules/tests currently in the repo
+      - results/experiment_5238_veribmc_retire_or_revive_v479.json
+      - results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Extend the bounded KAN certificate path with a convex-envelope or convex-relaxation stress test. The deliverable may be a prototype if the full paper method is too large, but it must include a true-property certificate, a false-property rejection, and explicit certificate scope.
+      Run a bounded solver-grounded constraint-extraction pilot: use a mandated local SOTA GGUF model to translate natural-language requirements into executable constraints, then use deterministic solvers/checkers to score satisfiability, counterexample quality, and false-accept risk.
 
       CONCRETE STEPS:
-      1. Identify the current KAN/PWA/MILP certificate implementation and its tests.
-      2. Implement the smallest convex-envelope-style relaxation that fits the existing codebase, or produce a clearly scoped deterministic prototype if integration is too large.
-      3. Compare against the exp5242 PWA baseline on a bounded property. Record segment counts, variable count, input box, solve time, slack, and false-property rejection.
-      4. Do not claim broad KAN verification, nonlinear global proof coverage, or hardware acceleration.
-      5. Add or update OpenSpec requirements/scenarios only if implementation behavior changed.
-      6. Run unit tests, lint/spec coverage, and any focused certificate tests.
-      7. Write results/experiment_5254_kan_convex_envelope_certificate_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state bounded certificate scope.
+      1. Step 0 PRECONDITIONS: confirm exp5259.sota_runtime_ready=true, record model/runtime receipts, and confirm a deterministic checker is available.
+      2. MODEL_SPECS for headline results:
+         - unsloth/Qwen3.6-35B-A3B-GGUF as flagship_moe candidate generator
+         - unsloth/gemma-4-31B-it-GGUF as flagship_dense candidate generator or cross-checker
+         - unsloth/gemma-4-26B-A4B-it-GGUF as optional middle_moe cross-checker
+      3. Create a small fixture set of prompt-defined constraints where the expected satisfiable/unsatisfiable status is solver-checkable and not encoded in the model prompt.
+      4. Ask the model for executable constraints or a constrained intermediate representation; normalize only syntax, not semantics.
+      5. Run deterministic solver/checker validation and record counterexamples for bad constraints.
+      6. Compare against a simple baseline such as hand-written template extraction or no-constraint generation. Do not call this a broad solver-feedback result.
+      7. Write results/experiment_5262_solver_grounded_constraint_extraction_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether solver-grounded extraction produced useful oracle-distinct signal.
+         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota.
+         - preconditions_checked: object with value/principle.
+         - MODEL_SPECS: object with model ids, roles, quantization/file receipts, and principle.
+         - solver_grounded_extractor_ready: bare bool plus solver_grounded_extractor_ready_principle string.
+         - constraint_validity_rate: object with numeric value/principle.
+         - false_accepts: object with integer value/principle.
+         - counterexamples_found: object with integer value/principle.
+         - retired_veribmc_scope_reopened: object with value=false and principle.
+         - commands_run: list with command/outcome.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5263-neuron-attention-energy-hallucination-probe-v481
+    milestone: "2026.07.481"
+    title: "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+    requires:
+      - exp5259-sota-gguf-gpu-offload-preflight-v481
+    gated_on:
+      - upstream: exp5259-sota-gguf-gpu-offload-preflight-v481
+        artifact_field: sota_runtime_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5200-hidden-state-verifier-v2
+        verdict: "complete: hidden-state probe did not beat tuned self-consistency on MMLU-Pro and left oracle-recoverable candidates unselected."
+        addressed_by: "This task changes the signal family to neuron/attention/logit energy on bounded hallucination fixtures and includes an explicit runtime-capability preflight."
+        retire_if_same_verdict: true
+      - experiment_id: exp5251-token-guard-carnot-pilot-v480
+        verdict: "complete: Token-Guard/Carnot fragment self-checking was harmful with accuracy_change=-0.25, deterministic_violation_delta=4.0, unsupported_claim_delta=1.0, and false_accepts=0."
+        addressed_by: "This task avoids fragment prune/regenerate decoding and tests internal or logit energy signals as a verifier-side diagnostic only."
+        retire_if_same_verdict: true
+      - experiment_id: exp5252-halluhard-provenance-memory-v480
+        verdict: "complete: HalluHard microbench was a clean null with unsupported_claim_rate_no_memory=0.0 and typed_memory=0.0 on 12 fixtures."
+        addressed_by: "This task uses hidden/logit/attention signals on a different bounded fixture design instead of repeating typed provenance memory."
+        retire_if_same_verdict: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 60
+    prompt: |
+      CONTEXT:
+      Repo at {project_root}, run on or after {date}. This task runs only if exp5259 emitted sota_runtime_ready=true. V481 literature added neuron-level hallucination evidence and attention high-frequency energy. Phase D external generated-text/logprob scorers are retired; do not reopen them.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - _bmad/architecture.md Phase D retirement notes
+      - research-references.md V481 hallucination/internal-state section
+      - hidden-state, verifier, hallucination, or logit/attention probe modules/tests currently in the repo
+      - results/experiment_5200_hidden_state_verifier_v2.json if present
+      - results/experiment_5251_token_guard_carnot_pilot_v480.json
+      - results/experiment_5252_halluhard_provenance_memory_v480.json
+      - results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
+      - ops/exclusion_manifest.yaml
+
+      TASK:
+      Test whether the local SOTA GGUF runtime exposes enough internal, attention, or logit information to build a bounded hallucination-energy diagnostic, and run a small pilot if it does. If the runtime cannot expose the needed signals, emit a clean blocked capability artifact.
+
+      CONCRETE STEPS:
+      1. Step 0 PRECONDITIONS: confirm exp5259.sota_runtime_ready=true and record whether the local runtime exposes hidden states, attention tensors, logits, token logprobs, or only generated text.
+      2. MODEL_SPECS for headline results:
+         - unsloth/Qwen3.6-35B-A3B-GGUF as flagship_moe
+         - unsloth/gemma-4-31B-it-GGUF as flagship_dense
+         - unsloth/gemma-4-26B-A4B-it-GGUF as optional middle_moe
+      3. If only generated text is available, stop and write blocked_internal_signal_unavailable. Do not substitute an external text scorer.
+      4. Build a small bounded hallucination fixture set with supported and unsupported claims, prompt checksums, and independent labels.
+      5. Extract available internal/logit/attention features and compute simple pre-registered energy features. Avoid training a large flexible probe unless there is enough held-out data.
+      6. Compare against deterministic baselines and report AUROC/precision at fixed false-accept budget only if labels and receipts are adequate.
+      7. Write results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state signal, null, harmful, or unavailable.
+         - inference_substrate: object with value/principle; use live_llm_inference_local_gguf_sota if internal/logit receipts exist, otherwise llama_cpp_runtime_preflight_no_quality_claim.
+         - preconditions_checked: object with value/principle.
+         - MODEL_SPECS: object with model ids, roles, quantization/file receipts, and principle.
+         - internal_signal_available: bare bool plus internal_signal_available_principle string.
+         - hidden_energy_probe_signal_delta: bare float plus hidden_energy_probe_signal_delta_principle string.
+         - false_accepts_at_threshold: object with integer value/principle.
+         - external_text_scorer_used: object with value=false and principle.
+         - fixture_checksums: object with value/principle.
+         - commands_run: list with command/outcome.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5264-verifier-dose-scheduler-replay-v481
+    milestone: "2026.07.481"
+    title: "PHASE 2 replay -- verifier-dose scheduler without live-model dependency"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5264_verifier_dose_scheduler_replay_v481.json
+    prior_failures:
+      - experiment_id: exp5250-verifier-dose-scheduler-v480
+        verdict: "skipped_gated_blocked: exp5250 did not run because exp5249.cross_model_memory_eligible was false or unavailable after SOTA runtime failure."
+        addressed_by: "This task removes the live-model prerequisite and builds a cached-fixture replay scheduler from existing verifier/memory artifacts."
+        retire_if_same_verdict: true
+      - experiment_id: exp5249-cross-model-typed-memory-v480
+        verdict: "blocked_llama_cpp_gpu_offload: cross-model typed memory usefulness was not measured."
+        addressed_by: "This replay task does not depend on live cross-model memory; it only uses cached fixture outcomes and deterministic verifier costs."
+        retire_if_same_verdict: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
+    prompt: |
+      CONTEXT:
+      Repo at {project_root}, run on or after {date}. .480 verifier-dose allocation was skipped because it was gated on a blocked live SOTA memory experiment. V481 keeps the Hybrid Verified Decoding insight but converts it into a deterministic replay task that can run without live LLM inference.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - research-references.md entries for Hybrid Verified Decoding and V481 verification
+      - verifier, gate, memory, or replay modules/tests currently in the repo
+      - results/experiment_5239_controlled_self_learning_memory_v479.json
+      - results/experiment_5247_slot_artifact_normalizer_v480.json
+      - results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json
+      - results/experiment_5250_verifier_dose_scheduler_v480.json if present
+      - ops/exclusion_manifest.yaml
+
+      TASK:
+      Build a cached-fixture verifier-dose scheduler that chooses between no verifier, cheap deterministic verifier, typed-memory verifier, and expensive/full verifier replay based on expected payoff. It must preserve decision quality and false-accept safety.
+
+      CONCRETE STEPS:
+      1. Gather cached verifier decisions, costs, and outcomes from prior artifacts where receipts are complete enough to replay.
+      2. Define a small scheduler policy with transparent features such as cheap-gate pass/fail, memory confidence, deterministic violation count, and artifact receipt completeness.
+      3. Replay the scheduler on cached fixtures and compare against always-cheap, always-full, and no-verifier baselines.
+      4. Measure verifier calls avoided, decision-quality delta, false accepts, and cases routed to abstain/block.
+      5. Add focused tests for scheduler logic if new code is added.
+      6. Write results/experiment_5264_verifier_dose_scheduler_replay_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether scheduler replay is useful, null, harmful, or underpowered.
+         - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
+         - scheduler_ready: bare bool plus scheduler_ready_principle string.
+         - full_verifier_calls_avoided_rate: object with numeric value/principle.
+         - decision_quality_delta: object with numeric value/principle.
+         - false_accept_delta: object with numeric value/principle.
+         - abstain_or_block_count: object with integer value/principle.
+         - fixture_receipts: object with checksums and principle.
+         - tests_run: list with command/outcome.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5265-kan-certificate-explanation-refinement-v481
+    milestone: "2026.07.481"
+    title: "PHASE 3 KAN -- convex-envelope certificate explanation and refinement"
+    priority: high
+    track: kan-certificates
+    deliverable: results/experiment_5265_kan_certificate_explanation_refinement_v481.json
+    prior_failures:
+      - experiment_id: exp5254-kan-convex-envelope-certificate-v480
+        verdict: "complete: KAN convex-envelope certificate produced a bounded positive on a two-variable upper-bound property with true property certified, false threshold rejected, and slack around 0.02125."
+        addressed_by: "This task extends the bounded positive with explanation/refinement and does not repeat the same two-variable certificate unchanged."
+        retire_if_same_verdict: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 60
+    prompt: |
+      CONTEXT:
+      Repo at {project_root}, run on or after {date}. .480 produced a bounded positive KAN convex-envelope certificate. V481 should make that certificate more useful for verification by adding explanation, refinement, or a modestly harder property while preserving false-property rejection and explicit slack.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - KAN, KAEMEnergy, certificate, convex-envelope, MILP, or PWA modules/tests currently in the repo
+      - results/experiment_5254_kan_convex_envelope_certificate_v480.json
+      - research-references.md KAN/certificate sections
+      - openspec/capabilities related to KAN or certificates, if present
+      - ops/exclusion_manifest.yaml
+
+      TASK:
+      Extend the bounded KAN certificate path with explanation/refinement: identify which univariate components or envelope intervals drive the bound, tighten at least one interval or abstraction when possible, and keep a false-property rejection check.
+
+      CONCRETE STEPS:
+      1. Read the current KAN certificate implementation and .480 artifact to identify the exact certified property and slack.
+      2. Before editing implementation code, confirm the relevant openspec capability spec exists and contains REQ-* requirements; if missing, add the minimal spec/update first.
+      3. Add a focused explanation/refinement layer that reports bound contributors, interval/refinement decisions, and slack changes. Avoid broad KAN claims.
+      4. Test the true property, a near-threshold false property, and at least one refinement/no-refinement comparison.
+      5. Run focused unit tests and any relevant lint/spec-coverage commands.
+      6. Write results/experiment_5265_kan_certificate_explanation_refinement_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether the refinement added certificate value.
          - inference_substrate: object with value/principle; use offline_deterministic_certificate_no_llm.
-         - certificate_method: object with value/principle.
-         - variables_verified: object with integer value/principle.
-         - max_segments_or_envelopes_verified: object with integer value/principle.
-         - input_box: object with value/principle.
+         - certificate_refinement_ready: bare bool plus certificate_refinement_ready_principle string.
          - true_property_certified: object with bool value/principle.
          - false_property_rejected: object with bool value/principle.
-         - certificate_slack_min: object with numeric value/principle.
-         - solve_time_s: object with numeric value/principle.
-         - no_hardware_speedup_claim: object with bool value/principle.
+         - slack_before_after: object with numeric values/principle.
+         - explanation_artifact_path: object with value/principle.
+         - spec_updated: object with bool value/principle.
+         - tests_run: list with command/outcome.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5255-hardware-continuity-pkit-boundary-v480
-    milestone: "2026.07.480"
-    title: "PHASE 3 hardware continuity -- KV260, PolarFire, GateMate, p-kit boundary, and no speedup claim"
+  - id: exp5266-hardware-thermodynamic-schedule-boundary-v481
+    milestone: "2026.07.481"
+    title: "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity"
     priority: high
     track: hardware
-    deliverable: results/experiment_5255_hardware_continuity_pkit_boundary_v480.json
-    operator_override: "Hardware continuity is required by CLAUDE.md unless a terminal state exists; this task is reachability and boundary tracking only."
+    deliverable: results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
     prior_failures:
-      - experiment_id: exp5243-hardware-continuity-kan-pbit-boundary-v479
-        verdict: "complete: kv260=reachable polarfire=reachable gatemate=blocked_physical_jtag no_speedup_claim"
-        addressed_by: "This continuity task updates board receipts and adds p-kit boundary notes without rerunning blocked GateMate physical setup or claiming speedup."
+      - experiment_id: exp5255-hardware-continuity-v480
+        verdict: "complete: KV260 reachable, PolarFire reachable, GateMate blocked by physical/JTAG state, and no hardware speedup claimed."
+        addressed_by: "This task carries forward required hardware continuity and adds a thermodynamic sampler-cost/autocorrelation boundary note from new literature without claiming speedup."
         retire_if_same_verdict: true
-    agent_type: claude
-    model: opus
-    max_turns: 100
-    estimated_wall_time_min: 60
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 45
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. CLAUDE.md requires hardware continuity unless terminal. Exp5243 showed KV260 reachable, PolarFire reachable, GateMate blocked_physical_jtag, and no speedup claim. IBM p-kit is on the GitHub watch list as a software reference, not local p-bit hardware.
+      Repo at {project_root}, run on or after {date}. Hardware continuity is mandatory for Carnot, but .480 found no speedup-ready hardware path. V481 literature added Scaling Up Thermodynamic AI Models, while Extropic TSU/XTR-0 still has no local SDK/device. This task updates the boundary honestly.
 
       EXISTING CODE TO READ FIRST:
-      - CLAUDE.md hardware sections
+      - CLAUDE.md
       - CODEX.md
       - research-hardware-wishlist.md
-      - research-references.md V480 Extropic/Logical/GitHub watch entries
-      - results/experiment_5243_hardware_continuity_kan_pbit_boundary_v479.json
-      - any existing hardware probe scripts/tests used by exp5243
+      - research-references.md V481 hardware section
+      - ops/status.md
+      - ops/changelog.md
+      - results/experiment_5255_hardware_continuity_v480.json
+      - hardware probe scripts/tests currently in the repo
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Refresh hardware continuity receipts for KV260 and PolarFire, carry forward GateMate only if physical setup is unchanged, and write a boundary note for p-kit/Extropic/Kona references. This task must not claim acceleration.
+      Refresh board reachability and document the thermodynamic sampler-cost/autocorrelation boundary. Do not claim hardware acceleration, TSU execution, Kona compatibility, or FPGA speedup without local reproducible receipts.
 
       CONCRETE STEPS:
-      1. PRECONDITIONS: Use KV260 SSH only. Do not require host /dev/mmcblk*. If the board is unreachable, emit a blocked_precondition artifact with connection receipts.
-      2. Re-run the smallest existing hash/correctness smoke on KV260 and PolarFire if reachable. Capture command, commit, binary or bitstream hash, output hash, wall-clock as receipt only.
-      3. For GateMate, check whether physical/JTAG setup changed. If not, carry forward blocked_physical_jtag with evidence and do not spend time on doomed reruns.
-      4. Review IBM p-kit, Extropic TSU/XTR-0, and Logical Intelligence Kona/Aleph public notes. Write a short boundary note under docs/research-notes/ explaining what Carnot can and cannot claim locally.
-      5. Run any hardware smoke tests that are safe and already present.
-      6. Write results/experiment_5255_hardware_continuity_pkit_boundary_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state board statuses with no speedup claim.
+      1. Step 0 PRECONDITIONS: record host CPU/GPU, network reachability assumptions, and available hardware credentials/environment. Do not require host /dev/mmcblk* for KV260.
+      2. Probe KV260 via SSH only if existing safe probe scripts/configs are present. Record command, timeout, and result.
+      3. Probe PolarFire reachability using existing safe scripts/configs if present. Record command, timeout, and result.
+      4. For GateMate, report blocked_physical_jtag unless the physical state has changed; do not invent a software workaround.
+      5. Add a short ops/research note summarizing thermodynamic sampler-cost/autocorrelation implications from arXiv:2607.00170 and Extropic public pages as future requirements, not current execution.
+      6. Update research-hardware-wishlist.md, ops/status.md, and ops/changelog.md only where the observed state changed.
+      7. Write results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state board reachability and no-speedup status.
          - inference_substrate: object with value/principle; use hardware_probe_no_speedup_claim.
+         - preconditions_checked: object with value/principle.
          - kv260_status: object with value/principle.
-         - kv260_ssh_only_confirmed: object with bool value/principle.
          - polarfire_status: object with value/principle.
          - gatemate_status: object with value/principle.
-         - physical_setup_changed: object with bool value/principle.
-         - workload_hashes: object with value/principle.
-         - pkit_boundary_note_path: object with value/principle.
-         - extropic_kona_boundary_note_path: object with value/principle.
-         - speedup_claimed: object with bool value/principle; must be false.
+         - thermodynamic_boundary_updated: object with bool value/principle.
+         - speedup_claimed: bare bool plus speedup_claimed_principle string; must be false unless local benchmark receipts exist.
+         - commands_run: list with command/outcome.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5256-capstone-v480
-    milestone: "2026.07.480"
-    title: "PHASE Z capstone -- reconcile .480 evidence, gates, memory, ARC, KAN, hardware, and next plan"
-    priority: critical
-    track: synthesis
-    deliverable: results/experiment_5256_capstone_v480.json
-    operator_override: "Standing capstone task authorized by milestone process to reconcile all completed .480 artifacts before the next roadmap."
+  - id: exp5267-artifact-normalizer-template-adoption-v481
+    milestone: "2026.07.481"
+    title: "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary"
+    priority: high
+    track: infrastructure
+    deliverable: results/experiment_5267_artifact_normalizer_template_adoption_v481.json
     prior_failures:
-      - experiment_id: exp5244-capstone-v479
-        verdict: "complete: .479 closed with GAP-4 blocked, GAP-1 blocked, VerIbmc retired after clean-null evidence, continuous self-learning controlled_positive, ARC delta 0, KAN certificate extended, hardware no-speedup, and flagged/gated artifacts excluded."
-        addressed_by: "This capstone reconciles the new .480 evidence and does not reopen .479 conclusions without new artifacts."
+      - experiment_id: exp5247-slot-artifact-normalizer-v480
+        verdict: "complete: artifact normalizer ready, safe repairs supported, unsafe missing receipts rejected, and scripts/research_conductor.py unchanged."
+        addressed_by: "This task moves from post-hoc normalizer readiness to producer/template adoption so new artifacts are shaped correctly at creation time."
         retire_if_same_verdict: true
     agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 40
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
     prompt: |
       CONTEXT:
-      Repo at {project_root}, run on or after {date}. This is the final synthesis task for milestone 2026.07.480. It must reconcile only artifacts that exist and must not turn gated, skipped, flagged, or blocked tasks into successes.
+      Repo at {project_root}, run on or after {date}. .480 proved a strict artifact normalizer can classify safe and unsafe repairs, but producer-side adoption is still needed. This task may edit experiment templates/helpers, but must not modify scripts/research_conductor.py.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - scripts/experiment_template.py
+      - artifact normalizer/helper created or updated by exp5247
+      - tests touching experiment_template, artifact schema, conductor gates, or adversarial verification
+      - results/experiment_5247_slot_artifact_normalizer_v480.json
+      - results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json
+      - ops/exclusion_manifest.yaml
+
+      TASK:
+      Adopt the strict artifact normalizer at the producer/template boundary so new experiment artifacts are easier to verify before conductor gates inspect them. Preserve existing bare gate fields and never synthesize missing methodology evidence.
+
+      CONCRETE STEPS:
+      1. Read the current template and normalizer implementation to identify the smallest producer-side hook.
+      2. Before editing implementation code, confirm the relevant openspec capability spec exists and contains REQ-* requirements; if missing, add the minimal spec/update first.
+      3. Add a small helper/template path that validates or normalizes artifact shape at write time without touching scripts/research_conductor.py.
+      4. Add regression tests for bare gate fields, principle-wrapped fields, unsafe missing receipts, duration policy, solve_provenance preservation, and no conductor modification.
+      5. Run focused unit tests plus any available artifact/schema/adversarial verification checks.
+      6. Write results/experiment_5267_artifact_normalizer_template_adoption_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state whether producer-side adoption is ready.
+         - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
+         - producer_normalizer_ready: bare bool plus producer_normalizer_ready_principle string.
+         - conductor_modified: object with value=false and principle.
+         - safe_repairs_supported: object with list value/principle.
+         - unsafe_repairs_rejected: object with list value/principle.
+         - gate_fields_preserved: object with bool value/principle.
+         - spec_updated: object with bool value/principle.
+         - tests_run: list with command/outcome.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5268-capstone-v481
+    milestone: "2026.07.481"
+    title: "PHASE 3 capstone -- synthesize .481 and recommend .482"
+    priority: critical
+    track: reporting
+    deliverable: results/experiment_5268_capstone_v481.json
+    requires:
+      - exp5257-archive-480-activate-481
+      - exp5258-sota-refresh-v481
+      - exp5259-sota-gguf-gpu-offload-preflight-v481
+      - exp5260-cross-model-typed-memory-retry-v481
+      - exp5261-typed-memory-interference-audit-v481
+      - exp5262-solver-grounded-constraint-extraction-v481
+      - exp5263-neuron-attention-energy-hallucination-probe-v481
+      - exp5264-verifier-dose-scheduler-replay-v481
+      - exp5265-kan-certificate-explanation-refinement-v481
+      - exp5266-hardware-thermodynamic-schedule-boundary-v481
+      - exp5267-artifact-normalizer-template-adoption-v481
+    operator_override: "Standing capstone synthesis task authorized by the operator request to plan the next milestone after .480 completed."
+    prior_failures:
+      - experiment_id: exp5256-capstone-v480
+        verdict: "complete: .480 synthesized normalizer readiness, GAP-4 clean null, blocked SOTA memory path, harmful Token-Guard, HalluHard null, ARC zero-delta patch retirement, KAN bounded positive, and hardware no-speedup."
+        addressed_by: "This capstone synthesizes the new .481 task set and does not repeat .480 conclusions unchanged."
+        retire_if_same_verdict: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 45
+    prompt: |
+      CONTEXT:
+      Repo at {project_root}, run on or after {date}. This is the .481 capstone. It should run after all prior .481 tasks have completed, skipped through structured gates, or emitted honest blocked artifacts. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
@@ -673,35 +673,33 @@ tasks:
       - ops/changelog.md
       - ops/conductor-log.md
       - research-complete.yaml
+      - research-roadmap.yaml
       - research-roadmap-next.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_5245_archive_479_activate_480.json through results/experiment_5255_hardware_continuity_pkit_boundary_v480.json, including any skipped/gated/missing artifacts
+      - all results/experiment_5257_*.json through results/experiment_5267_*.json that exist
       - ops/exclusion_manifest.yaml
 
       TASK:
-      Produce the honest .480 capstone: summarize what improved, what failed cleanly, what was blocked, what should be retired, and what should be considered for the next milestone.
+      Synthesize milestone 2026.07.481 into durable research records and recommend the next milestone direction. Preserve blocked/skipped/null/harmful outcomes honestly and retire repeated failed scopes when the prior_failures discipline requires it.
 
       CONCRETE STEPS:
-      1. Load every .480 artifact that exists and list missing or gated-skipped tasks explicitly.
-      2. For each track, preserve the artifact's honest_verdict and methodology flags. Do not reinterpret quarantined artifacts as clean wins.
-      3. Update ops/status.md, ops/changelog.md, research-complete.yaml, _bmad/traceability.md, and ops/exclusion_manifest.yaml as required by the actual results.
-      4. Summarize the final status for artifact normalizer, GAP-4, cross-model memory, verifier-dose scheduler, Token-Guard/Carnot pilot, HalluHard microbench, ARC patch, KAN certificate, and hardware continuity.
-      5. Recommend 3-5 concrete next-milestone candidates, with retired-scope warnings where applicable.
-      6. Run relevant docs/spec/roadmap validation checks. Do not modify research-roadmap.yaml and do not modify scripts/research_conductor.py.
-      7. Write results/experiment_5256_capstone_v480.json with REQUIRED ARTIFACT FIELDS:
-         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and state the honest .480 close state.
+      1. Read every .481 artifact and distinguish complete positives, clean nulls, harmful results, structured-gate skips, and blocked preconditions.
+      2. Update research-complete.yaml with the .481 milestone summary if missing.
+      3. Update ops/status.md, ops/changelog.md, _bmad/traceability.md, and ops/exclusion_manifest.yaml only where .481 outcomes change durable state.
+      4. Verify no task modified research-roadmap.yaml or scripts/research_conductor.py; if either changed, report it explicitly and do not hide the violation.
+      5. Recommend the next milestone's top 3 gaps, including whether SOTA runtime, continuous self-learning, internal verification, KAN certificates, hardware, or artifact production should be prioritized.
+      6. Run the available roadmap/exclusion/artifact validation checks used by this repo.
+      7. Write results/experiment_5268_capstone_v481.json with REQUIRED ARTIFACT FIELDS:
+         - honest_verdict: object with value/principle; value must start with complete: or blocked_ and summarize the milestone truth.
          - inference_substrate: object with value/principle; use cached_fixture_replay_no_llm.
-         - tasks_seen: object with integer value/principle.
-         - tasks_missing_or_skipped: object with list value/principle.
-         - artifact_normalizer_status: object with value/principle.
-         - gap4_final_status: object with value/principle.
-         - continuous_self_learning_status: object with value/principle.
-         - verifier_dose_status: object with value/principle.
-         - token_guard_status: object with value/principle.
-         - halluhard_status: object with value/principle.
-         - arc_level_delta: object with integer value/principle.
-         - kan_certificate_status: object with value/principle.
-         - hardware_speedup_claimed: object with bool value/principle.
-         - ops_docs_updated: object with bool value/principle.
-         - recommended_next_tasks: object with list value/principle.
+         - milestone_summary: object with value/principle.
+         - clean_positives: object with list value/principle.
+         - clean_nulls: object with list value/principle.
+         - harmful_results: object with list value/principle.
+         - blocked_or_skipped: object with list value/principle.
+         - retirements_or_exclusions: object with list value/principle.
+         - next_top_gaps: object with list value/principle.
+         - conductor_modified: object with bool value/principle.
+         - roadmap_modified: object with bool value/principle.
+         - commands_run: list with command/outcome.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
