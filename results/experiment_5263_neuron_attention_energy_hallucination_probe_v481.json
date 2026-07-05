@@ -1,0 +1,698 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records mandated SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and selected pilot model.",
+    "value": {
+      "flagship_dense": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready",
+        "selected_for_pilot": false,
+        "slot": "flagship_dense"
+      },
+      "flagship_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready",
+        "selected_for_pilot": true,
+        "slot": "flagship_moe"
+      },
+      "middle_moe": {
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "quantization": "Q4_K_M",
+        "role": "optional_middle_moe",
+        "runtime_ready": true,
+        "runtime_status": "runtime_ready",
+        "selected_for_pilot": false,
+        "slot": "middle_moe"
+      }
+    }
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py -q -o addopts=",
+      "outcome": "passed: 8 tests"
+    },
+    {
+      "command": ".venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py",
+      "outcome": "passed: 100% coverage on new module"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed/interrupted after 10m26s at 29%: 57 failed, 13752 passed, 44 skipped; unrelated pre-existing failures and Z3 worker crash observed"
+    },
+    {
+      "command": ".venv/bin/python -m carnot.experiment_5263_neuron_attention_energy_hallucination_probe_v481 --output results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
+      "outcome": "completed via direct run_pilot invocation with command receipts"
+    }
+  ],
+  "deterministic_baselines": {
+    "always_supported": {
+      "accuracy": 0.5,
+      "false_accepts": 3
+    },
+    "lexical_claim_terms": {
+      "accuracy": 1.0,
+      "false_accepts": 0,
+      "uses_model_output": false
+    }
+  },
+  "duration_s": 23.660199,
+  "external_text_scorer_used": {
+    "principle": "Must be false; Phase D external generated-text/logprob scorers are retired and not reopened.",
+    "value": false
+  },
+  "false_accepts_at_threshold": {
+    "principle": "Count of unsupported fixtures accepted as safe at the pre-registered zero false-accept budget threshold.",
+    "value": 0
+  },
+  "feature_preregistration": {
+    "detector_trained": false,
+    "higher_energy_means_more_unsupported_risk": true,
+    "primary_energy_order": [
+      "sequence_marginal_energy",
+      "full_logit_spilled_energy",
+      "final_token_spilled_energy"
+    ]
+  },
+  "fixture_checksums": {
+    "principle": "Records fixture prompt checksums, label checksum, and fixture-set checksum for the bounded supported/unsupported panel.",
+    "value": {
+      "fixture_count": 6,
+      "fixture_set_checksum": "dbc219c147ec4d61",
+      "label_checksum": "99a0936dfad4c287",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksums": {
+        "hae-001-supported-runtime": "948f0b2038bfd6db",
+        "hae-002-unsupported-runtime": "5beb8184715322af",
+        "hae-003-supported-enrollment": "e4f210e060133d17",
+        "hae-004-unsupported-manufacturer": "e1320b97597ad47e",
+        "hae-005-supported-route": "5bfc4e84b7e0f0f5",
+        "hae-006-unsupported-year": "cd7e4a1cb28dd2ba"
+      },
+      "supported_count": 3,
+      "unsupported_count": 3
+    }
+  },
+  "hidden_energy_probe_signal_delta": 0.004811297384257784,
+  "hidden_energy_probe_signal_delta_principle": "Unsupported-minus-supported mean of the pre-registered available energy score; zero only for blocked or no-signal artifacts.",
+  "honest_verdict": {
+    "principle": "Terminal Exp 5263 verdict; starts with complete: or blocked_ and states whether the available internal/logit/attention signal was useful, null, harmful, or unavailable.",
+    "value": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
+  },
+  "inference_substrate": {
+    "principle": "Declares live local SOTA GGUF inference only when internal/logit receipts exist; otherwise remains a llama.cpp runtime preflight with no quality claim.",
+    "value": "live_llm_inference_local_gguf_sota"
+  },
+  "internal_signal_available": true,
+  "internal_signal_available_principle": "internal_signal_available=true because the runtime exposed ['logits', 'token_logprobs'] with live receipts; hidden_states=False, attention_tensors=False.",
+  "pilot_rows": [
+    {
+      "claim_checksum": "25fc434d9ac705df",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 15.216701658610123,
+        "final_token_spilled_energy": 2.463034169952749e-07,
+        "final_token_top1_probability": 0.999999753696583,
+        "full_logit_entropy_topk": 4.373783235203476e-06,
+        "full_logit_spilled_energy": 3.8836692850541255e-07,
+        "full_logit_top1_probability": 0.9999996116330715,
+        "primary_energy": 0.10590792982836916,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.10590792982836916,
+        "sequence_spilled_energy": 0.08937639075375842,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "hae-001-supported-runtime",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "948f0b2038bfd6db",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5263,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 4.373783235203476e-06,
+          "steps": 68,
+          "top1_probability": 0.9999996116330715,
+          "top_logits": [
+            {
+              "logit": 30.118797302246094,
+              "probability": 0.9999996116330715,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.772486686706543,
+              "probability": 2.16362411569925e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 12.218271255493164,
+              "probability": 1.6822872214482212e-08,
+              "token_index": 332
+            },
+            {
+              "logit": 11.511852264404297,
+              "probability": 8.300538653739012e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.967781066894531,
+              "probability": 4.8174715379157135e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.901808738708496,
+              "probability": 4.509908590114146e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 10.890294075012207,
+              "probability": 4.458276343854947e-09,
+              "token_index": 65
+            },
+            {
+              "logit": 10.736390113830566,
+              "probability": 3.822322645247395e-09,
+              "token_index": 14235
+            }
+          ],
+          "top_mass_probability": 0.999999870726873,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "claim_checksum": "7760cae167f7f73e",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 16.181547195855455,
+        "final_token_spilled_energy": 9.385195942623881e-08,
+        "final_token_top1_probability": 0.9999999061480406,
+        "full_logit_entropy_topk": 1.888731069690965e-06,
+        "full_logit_spilled_energy": 2.600052616541504e-07,
+        "full_logit_top1_probability": 0.9999997399947383,
+        "primary_energy": 0.09792540606576239,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.09792540606576239,
+        "sequence_spilled_energy": 0.08225245804166129,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "ecb5d30e95ac186a",
+      "fixture_id": "hae-002-unsupported-runtime",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "5beb8184715322af",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5264,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.888731069690965e-06,
+          "steps": 68,
+          "top1_probability": 0.9999997399947383,
+          "top_logits": [
+            {
+              "logit": 29.85382080078125,
+              "probability": 0.9999997399947383,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.45693588256836,
+              "probability": 7.566991509995683e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.346914291381836,
+              "probability": 9.173868550060054e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.696605682373047,
+              "probability": 4.787701577268761e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.570493698120117,
+              "probability": 4.220436143635816e-09,
+              "token_index": 328
+            },
+            {
+              "logit": 10.555197715759277,
+              "probability": 4.156371640658627e-09,
+              "token_index": 14235
+            },
+            {
+              "logit": 10.383928298950195,
+              "probability": 3.5021360246865627e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.109004020690918,
+              "probability": 2.660326333007976e-09,
+              "token_index": 1144
+            }
+          ],
+          "top_mass_probability": 0.9999998441654937,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "claim_checksum": "a21185afcf559579",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 16.338961303943247,
+        "final_token_spilled_energy": 8.018243957685911e-08,
+        "final_token_top1_probability": 0.9999999198175604,
+        "full_logit_entropy_topk": 1.635677567388396e-06,
+        "full_logit_spilled_energy": 1.7511827454796958e-07,
+        "full_logit_top1_probability": 0.9999998248817255,
+        "primary_energy": 0.09648860339074972,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.09648860339074972,
+        "sequence_spilled_energy": 0.0835588968924934,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "b49a7e6acde9304e",
+      "fixture_id": "hae-003-supported-enrollment",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "e4f210e060133d17",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5265,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 1.635677567388396e-06,
+          "steps": 59,
+          "top1_probability": 0.9999998248817255,
+          "top_logits": [
+            {
+              "logit": 30.629859924316406,
+              "probability": 0.9999998248817255,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.056524276733398,
+              "probability": 6.342956097707343e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.957759857177734,
+              "probability": 7.776960609413112e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 11.473041534423828,
+              "probability": 4.789601778410124e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.338411331176758,
+              "probability": 4.186299078049926e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 11.244853973388672,
+              "probability": 3.8124030454189744e-09,
+              "token_index": 56484
+            },
+            {
+              "logit": 11.105411529541016,
+              "probability": 3.316192432332775e-09,
+              "token_index": 62
+            },
+            {
+              "logit": 10.566547393798828,
+              "probability": 1.934701655345968e-09,
+              "token_index": 65
+            }
+          ],
+          "top_mass_probability": 0.999999914127445,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "claim_checksum": "ecbdadd4e00ac0dd",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 15.770870625271177,
+        "final_token_spilled_energy": 1.4151351312996496e-07,
+        "final_token_top1_probability": 0.9999998584864869,
+        "full_logit_entropy_topk": 2.6461135909596624e-06,
+        "full_logit_spilled_energy": 2.530742780892936e-07,
+        "full_logit_top1_probability": 0.9999997469257219,
+        "primary_energy": 0.11350852577015047,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.11350852577015047,
+        "sequence_spilled_energy": 0.09207923483949823,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "053cfe8ed6539427",
+      "fixture_id": "hae-004-unsupported-manufacturer",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "e1320b97597ad47e",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5266,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 2.6461135909596624e-06,
+          "steps": 60,
+          "top1_probability": 0.9999997469257219,
+          "top_logits": [
+            {
+              "logit": 30.152538299560547,
+              "probability": 0.9999997469257219,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.224472999572754,
+              "probability": 1.209285994073867e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 11.772122383117676,
+              "probability": 1.0410861825465022e-08,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.233048439025879,
+              "probability": 6.072532436000718e-09,
+              "token_index": 328
+            },
+            {
+              "logit": 10.840621948242188,
+              "probability": 4.101485530315267e-09,
+              "token_index": 8
+            },
+            {
+              "logit": 10.657026290893555,
+              "probability": 3.4135526274579234e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.634601593017578,
+              "probability": 3.337856642953179e-09,
+              "token_index": 271
+            },
+            {
+              "logit": 10.395313262939453,
+              "probability": 2.6275202935274235e-09,
+              "token_index": 62
+            }
+          ],
+          "top_mass_probability": 0.9999998978181307,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    },
+    {
+      "claim_checksum": "dc1dde213b501cff",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 15.037575724380797,
+        "final_token_spilled_energy": 2.946210966303653e-07,
+        "final_token_top1_probability": 0.9999997053789034,
+        "full_logit_entropy_topk": 5.658072092975489e-06,
+        "full_logit_spilled_energy": 6.636047874541973e-07,
+        "full_logit_top1_probability": 0.9999993363952125,
+        "primary_energy": 0.10845831828189034,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.10845831828189034,
+        "sequence_spilled_energy": 0.09164849381827073,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "d7bbae1ca2512bb9",
+      "fixture_id": "hae-005-supported-route",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "5bfc4e84b7e0f0f5",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5267,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 5.658072092975489e-06,
+          "steps": 57,
+          "top1_probability": 0.9999993363952125,
+          "top_logits": [
+            {
+              "logit": 29.076618194580078,
+              "probability": 0.9999993363952125,
+              "token_index": 248069
+            },
+            {
+              "logit": 13.604459762573242,
+              "probability": 1.9077729277803601e-07,
+              "token_index": 510
+            },
+            {
+              "logit": 12.595258712768555,
+              "probability": 6.954024790707633e-08,
+              "token_index": 332
+            },
+            {
+              "logit": 11.215412139892578,
+              "probability": 1.7497519336014057e-08,
+              "token_index": 10638
+            },
+            {
+              "logit": 11.175085067749023,
+              "probability": 1.6805934137487695e-08,
+              "token_index": 14235
+            },
+            {
+              "logit": 11.169661521911621,
+              "probability": 1.6715033109119574e-08,
+              "token_index": 8
+            },
+            {
+              "logit": 10.55339527130127,
+              "probability": 9.025394814874635e-09,
+              "token_index": 65
+            },
+            {
+              "logit": 10.4516019821167,
+              "probability": 8.151883141571949e-09,
+              "token_index": 16546
+            }
+          ],
+          "top_mass_probability": 0.9999996649085178,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": false
+    },
+    {
+      "claim_checksum": "97c9e4a72efb799e",
+      "energy_features": {
+        "final_logits_count": 0,
+        "final_token_marginal_energy": 17.184744350072236,
+        "final_token_spilled_energy": 3.441599705222842e-08,
+        "final_token_top1_probability": 0.999999965584003,
+        "full_logit_entropy_topk": 6.831795632362043e-07,
+        "full_logit_spilled_energy": 6.663432472464592e-08,
+        "full_logit_top1_probability": 0.9999999333656753,
+        "primary_energy": 0.11385481181786972,
+        "primary_energy_name": "sequence_marginal_energy",
+        "sequence_marginal_energy": 0.11385481181786972,
+        "sequence_spilled_energy": 0.09245015574941384,
+        "signal_available": true,
+        "token_count": 4,
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "evidence_checksum": "209439d69d4e6d67",
+      "fixture_id": "hae-006-unsupported-year",
+      "label_source": "curated_local_evidence_label",
+      "prompt_checksum": "cd7e4a1cb28dd2ba",
+      "raw_response_checksum": "7eb660b90fc62a90",
+      "raw_response_excerpt": "\n\n<think>\n\n</think>",
+      "seed": 5268,
+      "signal_receipts": {
+        "final_logits_count": 0,
+        "logit_receipt": {
+          "entropy_topk": 6.831795632362043e-07,
+          "steps": 61,
+          "top1_probability": 0.9999999333656753,
+          "top_logits": [
+            {
+              "logit": 31.49237060546875,
+              "probability": 0.9999999333656753,
+              "token_index": 248069
+            },
+            {
+              "logit": 14.161249160766602,
+              "probability": 2.972963398432899e-08,
+              "token_index": 510
+            },
+            {
+              "logit": 11.730295181274414,
+              "probability": 2.6148071472029234e-09,
+              "token_index": 332
+            },
+            {
+              "logit": 10.849051475524902,
+              "probability": 1.0832292654181006e-09,
+              "token_index": 10638
+            },
+            {
+              "logit": 10.757356643676758,
+              "probability": 9.883205490659145e-10,
+              "token_index": 8
+            },
+            {
+              "logit": 10.283794403076172,
+              "probability": 6.15506094266247e-10,
+              "token_index": 271
+            },
+            {
+              "logit": 10.210521697998047,
+              "probability": 5.720189623681117e-10,
+              "token_index": 14235
+            },
+            {
+              "logit": 10.196176528930664,
+              "probability": 5.638718293553383e-10,
+              "token_index": 56484
+            }
+          ],
+          "top_mass_probability": 0.9999999695330631,
+          "vocab_size": 248320
+        },
+        "token_logprob_count": 4,
+        "top_logprobs_count": 4
+      },
+      "unsupported_label": true
+    }
+  ],
+  "preconditions_checked": {
+    "principle": "Records Exp 5259 readiness, llama.cpp signal surface, model/runtime receipts, fixture label adequacy, and retired Phase D exclusion before scoring.",
+    "value": {
+      "blocker": "",
+      "exp5259_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
+      "exp5259_sota_runtime_ready": true,
+      "exp5259_sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe completing the local GGUF runtime path.",
+      "external_text_scorer_used": false,
+      "fixture_label_counts": {
+        "supported": 3,
+        "unsupported": 3
+      },
+      "live_signal_receipts_found": true,
+      "model_runtime_receipts": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "runtime_ready": true,
+          "status": "runtime_ready"
+        }
+      },
+      "phase_d_external_text_scorer_retired": true,
+      "signal_surface": {
+        "api_receipts": {
+          "Llama.__call__": "(self, prompt: 'str', suffix: 'Optional[str]' = None, max_tokens: 'Optional[int]' = 16, temperature: 'float' = 0.8, top_p: 'float' = 0.95, min_p: 'float' = 0.05, typical_p: 'float' = 1.0, logprobs: 'Optional[int]' = None, echo: 'bool' = False, stop: 'Optional[Union[str, List[str]]]' = [], frequency_penalty: 'float' = 0.0, presence_penalty: 'float' = 0.0, repeat_penalty: 'float' = 1.0, top_k: 'int' = 40, stream: 'bool' = False, seed: 'Optional[int]' = None, tfs_z: 'float' = 1.0, mirostat_mode: 'int' = 0, mirostat_tau: 'float' = 5.0, mirostat_eta: 'float' = 0.1, model: 'Optional[str]' = None, stopping_criteria: 'Optional[StoppingCriteriaList]' = None, logits_processor: 'Optional[LogitsProcessorList]' = None, grammar: 'Optional[LlamaGrammar]' = None, logit_bias: 'Optional[Dict[int, float]]' = None) -> 'Union[CreateCompletionResponse, Iterator[CreateCompletionStreamResponse]]'",
+          "Llama.__init__": "(self, model_path: 'str', *, n_gpu_layers: 'int' = 0, split_mode: 'int' = 1, main_gpu: 'int' = 0, tensor_split: 'Optional[List[float]]' = None, vocab_only: 'bool' = False, use_mmap: 'bool' = True, use_mlock: 'bool' = False, kv_overrides: 'Optional[Dict[str, Union[bool, int, float, str]]]' = None, seed: 'int' = 4294967295, n_ctx: 'int' = 512, n_batch: 'int' = 512, n_ubatch: 'int' = 512, n_threads: 'Optional[int]' = None, n_threads_batch: 'Optional[int]' = None, rope_scaling_type: 'Optional[int]' = -1, pooling_type: 'int' = -1, attention_type: 'int' = -1, rope_freq_base: 'float' = 0.0, rope_freq_scale: 'float' = 0.0, yarn_ext_factor: 'float' = -1.0, yarn_attn_factor: 'float' = 1.0, yarn_beta_fast: 'float' = 32.0, yarn_beta_slow: 'float' = 1.0, yarn_orig_ctx: 'int' = 0, logits_all: 'bool' = False, embedding: 'bool' = False, offload_kqv: 'bool' = True, flash_attn: 'bool' = False, op_offload: 'Optional[bool]' = None, swa_full: 'Optional[bool]' = None, no_perf: 'bool' = False, last_n_tokens_size: 'int' = 64, lora_base: 'Optional[str]' = None, lora_scale: 'float' = 1.0, lora_path: 'Optional[str]' = None, numa: 'Union[bool, int]' = False, chat_format: 'Optional[str]' = None, chat_handler: 'Optional[llama_chat_format.LlamaChatCompletionHandler]' = None, draft_model: 'Optional[LlamaDraftModel]' = None, tokenizer: 'Optional[BaseLlamaTokenizer]' = None, type_k: 'Optional[int]' = None, type_v: 'Optional[int]' = None, spm_infill: 'bool' = False, verbose: 'bool' = True, **kwargs)",
+          "eval_logits_property": true,
+          "logits_all_parameter": true,
+          "logprobs_parameter": true
+        },
+        "attention_tensors": false,
+        "generated_text": true,
+        "hidden_states": false,
+        "logits": true,
+        "token_logprobs": true
+      },
+      "signal_surface_has_internal_signal": true,
+      "text_only_runtime": false
+    }
+  },
+  "reproducibility_checksum": "83bb2a7e2b3e3116",
+  "schema": "carnot.experiment_5263.neuron_attention_energy_hallucination_probe.v481",
+  "separation_summary": {
+    "auroc": 0.7777777777777778,
+    "detector_trained": false,
+    "false_accepts_at_threshold": 0,
+    "label_counts": {
+      "supported": 3,
+      "unsupported": 3
+    },
+    "n_scored": 6,
+    "precision_at_threshold": 0.6,
+    "signal_delta": 0.004811297384257784,
+    "supported_mean_energy": 0.10361828383366974,
+    "threshold": 0.09792540606476238,
+    "threshold_policy": "zero_false_accept_budget_on_unsupported_labels",
+    "unsupported_mean_energy": 0.10842958121792752
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5263",
+    "SCENARIO-VERIFY-5263"
+  ]
+}
