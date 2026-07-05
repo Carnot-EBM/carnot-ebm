@@ -10320,3 +10320,4 @@ web search: |
 | 2026-07-05 03:00 UTC | PHASE 3 ARC live path -- receipt-clean rerun or re | OK | 204 passed, 1 warning in 11.36s |
 | 2026-07-05 03:10 UTC | PHASE 3 KAN certificate -- convex-envelope stress  | OK | 87 passed, 1 warning in 8.42s |
 | 2026-07-05 03:29 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, G | OK | 89 passed, 1 warning in 9.97s |
+| 2026-07-05 03:45 UTC | PHASE Z capstone -- reconcile .480 evidence, gates | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
