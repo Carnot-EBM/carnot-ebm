@@ -10344,3 +10344,4 @@ web search: |
 | 2026-07-05 14:51 UTC | PHASE 0 runtime receipts -- SOTA GGUF internal tel | OK | 97 passed, 1 warning in 9.60s |
 | 2026-07-05 15:20 UTC | PHASE 1 gated on exp5271 telemetry_harness_ready - | OK | 90 passed, 1 warning in 9.50s |
 | 2026-07-05 16:44 UTC | PHASE 1 solver grounding -- constraint-extraction  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  broken = dict |
+| 2026-07-05 17:03 UTC | PHASE 1 solver grounding -- constraint-extraction  | OK | cache hit: 87 passed, 1 warning in 12.89s |
