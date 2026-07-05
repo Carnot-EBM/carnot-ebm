@@ -276,6 +276,20 @@ LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S = (
     1.0  # reading several JSON logs + one bounded local timing check, no model load
 )
 
+# Small-N local-SOTA-GGUF pilots: a handful (single-digit) of short generation calls
+# (structured JSON constraint extraction, not long-form prose) OR a handful of
+# single-forward-pass logit/logprob probes over a bounded fixture set -- real model
+# load + real compute, but far lighter than the full multi-hundred-token generation
+# runs the generic 60s live_llm_inference floor is calibrated for. Discovered
+# 2026-07-05: exp5262 (4 short constraint-generation fixtures, 56.3s) and exp5263 (6
+# logit-extraction forward passes, no generation, 23.7s) both declared this substrate
+# and were flagged DURATION_TOO_SHORT under the generic 60s floor -- both are honest,
+# non-fabricated null/negative results (validity=0.25 vs baseline 0.5; signal_delta
+# 0.0048), not implausibly-fast claims. Floor set below both real observations but
+# well above what a genuine local-GGUF model load could plausibly complete in.
+LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE = "live_llm_inference_local_gguf_sota"
+LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
+
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
 # including negative controls whose details mention GGUF/CUDA/live-model markers.
 # The artifact itself runs JSON lint tests, not model inference, so exact
@@ -1884,6 +1898,15 @@ def _is_artifact_qa_lint_tests(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, ARTIFACT_QA_LINT_TESTS_SUBSTRATE)
 
 
+def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
+    """True when the artifact declares a small-N local-SOTA-GGUF pilot (a handful of
+    short generation calls or logit/logprob forward passes over a bounded fixture set,
+    not full multi-hundred-token generation). See LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE for
+    the exemplar incidents (exp5262, exp5263)."""
+
+    return _inference_substrate_matches(d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -1992,6 +2015,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": ARTIFACT_QA_LINT_TESTS_SUBSTRATE,
             "min_duration_s": ARTIFACT_QA_LINT_TESTS_MIN_DURATION_S,
             "reason": "artifact_qa_lint_tests",
+        }
+    if _is_local_sota_gguf_small_n(d):
+        return {
+            "substrate": LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
+            "min_duration_s": LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
+            "reason": "local_sota_gguf_small_n",
         }
     if _is_live_llm_inference(d):
         return {
