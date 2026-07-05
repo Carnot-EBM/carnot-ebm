@@ -16,51 +16,57 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: **0 SELF_DISCOVERY_ADVANCE.** Ten artifacts are **UNCLEAR** at best because `development_proxy` + offline/no-quota mode does not prove live self-discovery; one is clear **OUTER_LOOP_RE** because it declares `used_env_source`.
+TL;DR: **0 SELF_DISCOVERY_ADVANCE.** Most are **DUPLICATE** stale/proxy loop artifacts; `dc22` is **UNCLEAR** because the artifact now claims L3 without clean live provenance or registry reconciliation; `experiment_headway_lp85_capture` is clear **OUTER_LOOP_RE**.
 
-- `results/arc_loop_solve_lp85.json` `{UNCLEAR}`
-  Evidence: reachable-looking live-loop artifact, but provenance is `development_proxy`; no `honest_verdict`; offline/no-quota mode does not prove the live agent discovered the solve from attempts.
-  Recommended action: do not count as capability; require attempt trace, runtime observations, policy changes, and no source/BFS/per-game adapter inputs.
+- `results/arc_loop_solve_lp85.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims lp85 L3, while registry already records lp85 through L5. Also `solve_provenance=development_proxy`, offline/no-quota, no `honest_verdict`.  
+  Recommended action: do not count; keep only as replay/regression material.
 
-- `results/arc_loop_solve_r11l.json` `{UNCLEAR}`
-  Evidence: same pattern: `development_proxy`, blank verdict, no declared outer-loop inputs, offline/no-quota.
-  Recommended action: quarantine from leaderboard/registry until live-attempt provenance is shown.
+- `results/arc_loop_solve_r11l.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims r11l L2; registry already records r11l L2. Proxy/offline metadata does not prove self-discovery.  
+  Recommended action: no new capability credit.
 
-- `results/arc_loop_solve_ls20.json` `{UNCLEAR}`
-  Evidence: no clear self-discovery chain; only proxy/offline metadata.
-  Recommended action: rerun through live entrypoint with captured agent attempts and runtime RE trace.
+- `results/arc_loop_solve_ls20.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims ls20 L2; registry already records ls20 L2.  
+  Recommended action: mark non-advancing.
 
-- `results/arc_loop_solve_dc22.json` `{UNCLEAR}`
-  Evidence: live reachability pre-pass helps, but artifact still lacks proof the live agent found the solve itself.
-  Recommended action: require provenance bundle before accepting.
+- `results/arc_loop_solve_dc22.json`  
+  `{verdict: UNCLEAR}`  
+  Evidence: current artifact claims dc22 L3, but provenance is still `development_proxy` + offline/no-quota with blank verdict. Related Exp4894 records same path as duplicate/no-bank/stable L2, so this needs reconciliation before any claim.  
+  Recommended action: quarantine; require live-entrypoint attempt trace, runtime RE evidence, and registry/spec reconciliation.
 
-- `results/arc_loop_solve_sp80.json` `{UNCLEAR}`
-  Evidence: `development_proxy` is not acceptable evidence of autonomous hidden-game discovery.
-  Recommended action: mark non-counting pending clean live replay.
+- `results/arc_loop_solve_sp80.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims sp80 L2; registry already records sp80 L2.  
+  Recommended action: do not count.
 
-- `results/arc_loop_solve_su15.json` `{UNCLEAR}`
-  Evidence: no explicit outer-loop source use, but also no live self-discovery evidence.
-  Recommended action: keep out of registry as an advance.
+- `results/arc_loop_solve_su15.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims su15 L2; registry already records su15 L2.  
+  Recommended action: no new live capability credit.
 
-- `results/arc_loop_solve_ft09.json` `{UNCLEAR}`
-  Evidence: offline/no-quota proxy result; no honest verdict.
-  Recommended action: demand trace-backed live solve.
+- `results/arc_loop_solve_ft09.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims ft09 L3; registry already records ft09 L3.  
+  Recommended action: keep as existing gate/replay only.
 
-- `results/arc_loop_solve_ar25.json` `{UNCLEAR}`
-  Evidence: reachable path, but provenance still reads like development scaffolding, not autonomous solve evidence.
-  Recommended action: quarantine until verified.
+- `results/arc_loop_solve_lf52.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims lf52 L2; registry already records lf52 L2.  
+  Recommended action: non-advancing.
 
-- `results/arc_loop_solve_lf52.json` `{UNCLEAR}`
-  Evidence: same insufficient metadata; absence of declared outer-loop inputs is not proof of clean discovery.
-  Recommended action: rerun under production constraints with trace capture.
+- `results/arc_loop_solve_ka59.json`  
+  `{verdict: DUPLICATE}`  
+  Evidence: artifact claims ka59 L1; registry already records ka59 L1, and historical registry notes include hand/world-model concerns.  
+  Recommended action: do not count as fresh progress.
 
-- `results/arc_loop_solve_ka59.json` `{UNCLEAR}`
-  Evidence: level 1 proxy/offline solve, blank verdict; no demonstrated autonomous discovery.
-  Recommended action: do not count as new live capability.
+- `results/experiment_headway_lp85_capture.json`  
+  `{verdict: OUTER_LOOP_RE}`  
+  Evidence: explicitly declares `used_env_source`; verdict says L6 bank trajectory captured. That is source-assisted/captured trajectory work, not hidden-game self-discovery by the live agent.  
+  Recommended action: label contaminated; never count as ARC solve progress.
 
-- `results/experiment_headway_lp85_capture.json` `{OUTER_LOOP_RE}`
-  Evidence: explicitly declares `outer_loop_inputs_declared: ["used_env_source"]`; verdict says captured bank trajectory. That is outer-loop reverse-engineering, not live hidden-game discovery.
-  Recommended action: label as contaminated analysis artifact; never count as ARC solve progress except as negative evidence / debugging reference.
-
-**Pattern Watch:** The drift is obvious: `development_proxy`, offline/no-quota runs, and captured trajectories are being allowed to look like solve artifacts. Reachability is necessary but not sufficient. The acceptance bar must be live-entrypoint execution plus auditable self-discovery trace from the agent’s own attempts, with explicit exclusion of source reads, offline BFS, and hand-built per-game knowledge.
+Pattern watch: reachability is being used as camouflage for legitimacy. `development_proxy`, offline/no-quota gates, stale duplicate-depth loop files, and source-assisted trajectory capture are drifting into “solve artifact” territory. The acceptance bar has to be live-entrypoint execution plus auditable agent attempts/runtime reverse-engineering, not replayable artifacts the live agent did not demonstrably discover.
 

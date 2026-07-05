@@ -27251,3 +27251,109 @@ Execution-time sweep after the `.482` plan checked arXiv, OpenReview, HuggingFac
 - **Semantic Scholar:** Direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 returned HTTP 429 in this pass, so no citation-count delta is claimed.
 
 <!-- V482-EXECUTION-REFRESH-2026-07-05-END -->
+
+## V483 Research Update - 2026-07-05
+
+Search scope: arXiv primary sources; OpenReview constrained-decoding search results; HuggingFace Papers
+verification/memory pages; Semantic Scholar API attempts for EBT arXiv:2507.02092 and ARM-EBM
+arXiv:2512.15605; GitHub repository search; Extropic writing; and Logical Intelligence public posts.
+Semantic Scholar API calls returned HTTP 429 during this planning pass, so no citation-count delta is
+claimed. Public hardware/product pages remain architecture signals only unless Carnot has local execution
+receipts.
+
+### Verification, constrained generation, and reasoning traces
+- **CheckRLM: Effective Knowledge-Thought Coherence Checking in Retrieval-Augmented Reasoning** -
+  arXiv:2607.02262 / ACL 2026, https://arxiv.org/abs/2607.02262 and
+  https://aclanthology.org/2026.acl-long.1780/. Extracts factual claims from reasoning chains, checks
+  them during inference, and performs minimal corrections against retrieved knowledge. Carnot hook: add a
+  knowledge-thought coherence pilot that treats claim extraction and correction locality as measured
+  artifacts; this is a better next step than rerunning the harmful internal/logit probe from Exp5272.
+- **VeryTrace: Verifying Reasoning Traces through Compilable Formalism and Structured Verification** -
+  arXiv:2606.24124, https://arxiv.org/abs/2606.24124. Formalizes CoT into a DSL with explicit dependency
+  links, executable quantitative expressions, and deduction schemas. Carnot hook: use the rebuilt solver
+  fixture from Exp5273 as a seed for a tiny compilable trace DSL before asking SOTA GGUFs for full
+  constraint extraction again.
+- **Grammar-Constrained Decoding Can Jailbreak LLMs into Generating Malicious Code** - arXiv:2606.11817,
+  https://arxiv.org/abs/2606.11817. Shows grammar-constrained decoding can become a safety attack surface
+  for code generation. Carnot hook: any constrained/guided decoding experiment must include a safety
+  negative-control fixture and must not equate syntactic validity with semantic safety.
+- **From Hallucination to Structure Snowballing: The Alignment Tax of Constrained Decoding in LLM
+  Reflection** - arXiv:2604.06066, https://arxiv.org/abs/2604.06066. Reports that constrained structured
+  reflection can push models into formatting traps while semantic errors persist. Carnot hook: compare
+  structured-output compliance against semantic correctness and false accepts in any schema/trace task.
+- **When Correct Isn't Usable: Improving Structured Output Reliability in Small Language Models** -
+  arXiv:2605.02363, https://arxiv.org/abs/2605.02363. Measures the joint correctness+format problem and
+  reports constrained decoding latency/quality tradeoffs. Carnot hook: keep artifact normalizer work
+  producer-side and test format validity separately from reasoning validity.
+
+### Continuous self-learning and memory reliability
+- **HaluMem: Evaluating Hallucinations in Memory Systems of Agents** - arXiv:2511.03506,
+  https://arxiv.org/abs/2511.03506, HuggingFace page https://huggingface.co/papers/2511.03506, and code
+  https://github.com/MemTensor/HaluMem. Defines operation-level memory hallucination tasks for extraction,
+  updating, and memory QA. Carnot hook: extend governed decision-history memory with operation-stage
+  hallucination counters and unsafe propagation checks instead of only measuring final decision quality.
+- **Are We Ready For An Agent-Native Memory System?** - arXiv:2606.24775,
+  https://arxiv.org/abs/2606.24775, HuggingFace page https://huggingface.co/papers/2606.24775, and code
+  https://github.com/OpenDataBox/MemoryData. Decomposes agent memory into representation/storage,
+  extraction, retrieval/routing, and maintenance, and emphasizes cost-performance tradeoffs. Carnot hook:
+  the next self-learning experiment should report module-level memory failure attribution and local
+  maintenance cost, not only end-to-end call avoidance.
+- **MemTrace: Tracing and Attributing Errors in Large Language Model Memory Systems** - arXiv:2605.28732,
+  https://arxiv.org/abs/2605.28732, HuggingFace page https://huggingface.co/papers/2605.28732, and code
+  https://github.com/zjunlp/MemTrace. Casts memory failure attribution as graph exploration over operation
+  subgraphs. Carnot hook: build a small memory-error attribution harness over Exp5275/Exp5276 governed
+  memory rows to identify whether failures originate in extraction, routing, maintenance, or use.
+
+### Solver guidance, Ising hardware, and EBM theory
+- **G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models** - arXiv:2607.02491,
+  https://arxiv.org/abs/2607.02491. Neural guidance helps only when the symbolic solver can overwrite bad
+  hints and recover. Carnot hook: use solver-authoritative conflict/overwrite telemetry if retrying
+  SOTA-GGUF constraint extraction after Exp5274's GPU-offload block.
+- **Probabilistic-bit Guided CDCL for SAT Solving using Ising Consensus Assumptions** - arXiv:2605.04033,
+  https://arxiv.org/abs/2605.04033. Uses p-bit Ising samples as assumptions for CDCL, preserving solver
+  correctness through fallback and reporting distribution-sensitive gains. Carnot hook: pair Exp5278's
+  factor-graph boundary with a tiny CDCL-guidance benchmark that records conflicts saved, fallback use, and
+  instance-class gates before any hardware claim.
+- **Energy-efficient codon optimization on thermodynamic hardware** - arXiv:2606.17327,
+  https://arxiv.org/abs/2606.17327. Maps a pharmaceutical combinatorial optimization problem to an Ising
+  model for TSU-style thermodynamic hardware with prototype-grounded energy estimates. Carnot hook: useful
+  as a concrete TSU application pattern, but only for roadmap context until Carnot has authenticated TSU
+  access.
+- **Enhanced Convergence in p-bit Based Simulated Annealing with Partial Deactivation** - arXiv:2601.15561,
+  https://arxiv.org/abs/2601.15561. Studies partial deactivation for large-scale p-bit simulated annealing.
+  Carnot hook: potential CPU/FPGA sampler heuristic to test on factor-graph fixtures without changing
+  board-reachability claims.
+- **NRGPT: An Energy-based Alternative for GPT** - arXiv:2512.16762,
+  https://arxiv.org/abs/2512.16762 and OpenReview https://openreview.net/forum?id=B3Muyi2zgo. Frames a
+  GPT-like token update as energy-landscape exploration. Carnot hook: long-horizon architecture reference
+  only; next milestone should not attempt a foundation-model implementation, but can use it to justify
+  local trace-energy objectives.
+- **Distributional simplicity bias and effective convexity in Energy Based Models** - arXiv:2605.07844,
+  https://arxiv.org/abs/2605.07844. Explains why low-order interactions are learned first in EBM gradient
+  dynamics. Carnot hook: informs KAN/Ising certificate curriculum design and argues for measuring
+  low-order factor success before higher-order factor graph claims.
+
+### Secondary-source status
+- **OpenReview:** constrained-decoding pages surfaced globally constrained decoding, parser-stack
+  constrained decoding, diffusion-LLM constrained decoding, and automata-guided beam search. Carnot hook:
+  treat as method watch; only arXiv/ACL-backed items above are promoted into `.483` experiments.
+- **Extropic:** `inside-x0-and-xtr-0`, `thermodynamic-computing-from-zero-to-one`, and `tsu-101` still frame
+  TSUs as programmable samplers for EBMs/PGMs. Carnot hook: no local TSU execution or speedup claim.
+- **Logical Intelligence:** Kona/Aleph posts continue to emphasize EBRMs for constraint satisfaction,
+  partial-trace energy, Sudoku, and formal verification. Carnot hook: align with trace-energy and
+  solver/certificate work, but do not claim Kona baseline parity from public posts.
+- **GitHub watch:** `AI9Stars/CheckRLM`, `MemTensor/HaluMem`, `zjunlp/MemTrace`, `Thinklab-SJTU/awesome-ml4co`,
+  and constrained-decoding/memory watchlists are useful discovery sources. No new repository replaces
+  Carnot's local verifier, memory, or sampler code paths.
+
+### Planning impact
+- Move receipt-clean verifier work away from Exp5272's harmful internal/logit signal and toward
+  claim-level knowledge-thought coherence plus compilable trace verification.
+- Turn governed memory into measured continuous self-learning by attributing failures across memory
+  extraction, update, routing, maintenance, and use stages.
+- Carry Exp5273's solver fixture forward, but only retry SOTA extraction after GPU/offload preconditions are
+  rechecked; keep the symbolic solver authoritative and record overwrite/fallback telemetry.
+- Advance factor-graph work through CDCL/p-bit guidance and CPU sampler gates before making any board or
+  TSU speedup claim.
+
+<!-- V483-RESEARCH-UPDATE-2026-07-05-END -->

@@ -7,52 +7,47 @@
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 2 |
-| `MINOR_RISK` | 0 |
-| `REAL_BUG` | 8 |
-| `CANNOT_DETERMINE` | 10 |
+| `CLEAN` | 0 |
+| `MINOR_RISK` | 1 |
+| `REAL_BUG` | 11 |
+| `CANNOT_DETERMINE` | 8 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_is_verified_arithmetic_delta` — **REAL_BUG**
-- `adversarial_verify.py::_finite_float` — **REAL_BUG**
-- `adversarial_verify.py::_is_positive_control_null_claim` — **REAL_BUG**
-- `adversarial_verify.py::check_false_negative_risk` — **REAL_BUG**
-- `adversarial_verify.py::_is_comparative_claim` — **REAL_BUG**
-- `adversarial_verify.py::check_ceiling_saturation` — **REAL_BUG**
-- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — **REAL_BUG**
-- `adversarial_verify.py::check_degenerate_separation` — **REAL_BUG**
+- `adversarial_verify.py::_documented_identical_controls` — **REAL_BUG**
+- `adversarial_verify.py::_arm_numeric_value` — **REAL_BUG**
+- `adversarial_verify.py::check_degenerate_controls` — **REAL_BUG**
+- `adversarial_verify.py::_is_declared_honest_null` — **REAL_BUG**
+- `adversarial_verify.py::_passing_positive_control_key` — **REAL_BUG**
+- `adversarial_verify.py::_declared_null_delta_descriptor` — **REAL_BUG**
+- `adversarial_verify.py::_is_declared_honest_zero_delta` — **REAL_BUG**
+- `adversarial_verify.py::check_implausible_perfect` — **REAL_BUG**
+- `adversarial_verify.py::check_sign_anomaly` — **REAL_BUG**
+- `adversarial_verify.py::_inference_substrate_text` — **REAL_BUG**
+- `adversarial_verify.py::_is_precondition_check_only_blocked` — **REAL_BUG**
 
 ### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)
 These verdicts were FLAGGED by the LLM reviewer but cited concrete code/path strings that do NOT exist in the source chunk. Auto-downgraded to `CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN was partly unreliable, not that the code is buggy.
-- `adversarial_verify.py::_is_chance_floor_score` — was **REAL_BUG**; absent evidence: `d.get(...)`
-- `adversarial_verify.py::_is_reference_field` — was **REAL_BUG**; absent evidence: `d.get("field_name")`
-- `adversarial_verify.py::_is_rate_metric_field` — was **REAL_BUG**; absent evidence: `d.get(...)`
-- `adversarial_verify.py::_add_variant_denominators_from_value` — was **REAL_BUG**; absent evidence: `d.get(...)`
-- `adversarial_verify.py::_is_small_shared_denominator_rate_pair` — was **REAL_BUG**; absent evidence: `d.get("field")`
-- `adversarial_verify.py::_has_positive_control_null_metric` — was **REAL_BUG**; absent evidence: `d.get(...)`; `value = d.get(key)`; `re.search`; `re.match`
-- `adversarial_verify.py::_positive_control_failed_or_unchecked` — was **REAL_BUG**; absent evidence: `, falsely classifying the artifact as failed-or-unchecked.
+- `adversarial_verify.py::_is_placebo_or_replicate_key` — was **REAL_BUG**; absent evidence: `d.get(...)`; `.
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-This is a real false-positive bug against the project’s own annotated-field convention. The function needs a shared unwrap/coercion helper before comparing pass/fail booleans, plus regression tests for wrapped`
-- `adversarial_verify.py::_metric_from_top_or_pass_rates` — was **REAL_BUG**; absent evidence: `.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-negative path: valid metrics written in the project’s documented wrapped-field format disappear. The function should normalize/unbox field values before numeric validation, including top-level metrics,`
-- `adversarial_verify.py::_is_control_arm_key` — was **REAL_BUG**; absent evidence: `d.get(...)`
+This helper is a quarantine bypass, so substring permissiveness is dangerous: it turns unrelated wording into an exemption from a critical degenerate-controls flag. It needs token-aware matching plus explicit allowed intent/context, and tests for`
+- `adversarial_verify.py::_has_control_treatment_qualifier` — was **REAL_BUG**; absent evidence: `d.get(...)`
+- `adversarial_verify.py::_delta_key_covers_pair` — was **REAL_BUG**; absent evidence: `d.get(...)`
+- `adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor` — was **REAL_BUG**; absent evidence: `followed by type/identity checks on fields that may legally be principle-wrapped. The substring check is also too weak for a critical verifier because it treats negated or longer labels containing`
+- `adversarial_verify.py::_legitimate_pair` — was **REAL_BUG**; absent evidence: `d.get(...)`
+- `adversarial_verify.py::_has_compute_bound_marker` — was **REAL_BUG**; absent evidence: `d.get(...)`
+- `adversarial_verify.py::_inference_substrate_matches` — was **REAL_BUG**; absent evidence: `d.get(...)`
 
 ---
 
 Scanned 20 unit(s) (whole-files + function-chunks) with codex as the hostile reviewer. Targets: exclusion_manifest_lint.py, in_process_doc_reconcile.py (whole-file), adversarial_verify.py (function-chunked).
 
-## adversarial_verify.py::_is_chance_floor_score
+## adversarial_verify.py::_is_placebo_or_replicate_key
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -60,58 +55,311 @@ Scanned 20 unit(s) (whole-files + function-chunks) with codex as the hostile rev
 REAL_BUG
 
 ## CLAIM
-This function claims to identify AUROC/probe/control score fields whose legitimate chance floor is 0.5.
+`"""True for intentionally duplicated placebo/replicate controls."""`
 
 ## FINDINGS
-1. No `d.get(...)` field extraction exists in this snippet. The only type assumption is `kl = k.lower()`: this assumes `k` is a bare string and will crash on `None`, list, dict, or wrapped metadata. If `k` is always a JSON object key, that is probably acceptable; if it is ever derived from artifact field content, it is brittle.
+1. Field extraction: no `d.get(...)` or dict-field read exists in this helper. The only type assumption is `kl = key.lower()`: direct non-string input crashes, but the observed caller gates `arm_key` with `isinstance(arm_key, str)` first.
 
-2. `t in kl` is boundary-blind. `"auc"` matches inside unrelated words like `"caucus_minutes_score"` or `"sauce_score"`. `"control"` matches `"uncontrolled_latency_score"`, even though that may mean not controlled. `"probe"` matches `"improbe_score"` or any longer token containing those letters.
+2. Boundary bug: `return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)` is raw substring matching. `cross_corpus_replication_baseline` matches `replica` inside `replication`, even though "replication" means an independent repeat, not a deliberately duplicated placebo/replicate control.
 
-3. Context is blind. `"not_control_score"`, `"uncontrolled_score"`, `"control_check_failed_score"`, or `"no_probe_used_score"` all classify as chance-floor score fields even though the text may explicitly negate the condition.
+3. Negation/context blindness: the same line matches `nonduplicate_control`, `deduplicated_control`, or `duplicate_not_attempted_control`. Those phrases explicitly do not mean "this is an intentionally duplicated control."
 
-4. The numeric threshold claim is about “exactly 0.5”, but this function has no numeric comparison. Boundary correctness cannot be determined here; the risk is that this broad classifier may exempt non-chance fields elsewhere when their values equal 0.5.
+4. Numeric boundary/off-by-one: none. There are no numeric thresholds in this function.
 
-5. The docstring says “AUROC / probe / control SCORE whose chance floor is 0.5.” The implementation is broader: it accepts any field name containing any of `auroc`, `auc`, `probe`, `control`, `chance`, `baseline`, `majority`, or `shuffled`, with no requirement that the field is actually a score and no token boundaries.
+5. Docstring mismatch: the docstring claims intentional duplicated placebo/replicate controls; the implementation detects any key containing `placebo`, `replicate`, `replica`, or `duplicate` anywhere. Actual behavior is broader and semantically different.
 
-6. Concrete false positive: key `"caucus_alignment_score"` returns `True` because `"auc"` is inside `"caucus"`, despite having nothing to do with AUROC/AUC or a 0.5 chance floor.
+6. Misclassification: yes. In `check_degenerate_controls`, this helper can suppress a real `DEGENERATE_CONTROLS` flag when all bit-identical control arms merely contain `replication` in their names.
 
 ## COUNTEREXAMPLE
-`_is_chance_floor_score("caucus_alignment_score") == True`
+```python
+{
+    "condition_accuracy": {
+        "rfg_cross_corpus_replication_baseline": 0.3,
+        "unguided_cross_corpus_replication_baseline": 0.3,
+        "entrgi_cross_corpus_replication_baseline": 0.3,
+    }
+}
+```
+These are distinct control arms with bit-identical values, but `_is_placebo_or_replicate_key` returns true for all three because `replica` is inside `replication`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This helper is a quarantine bypass, so substring permissiveness is dangerous: it turns unrelated wording into an exemption from a critical degenerate-controls flag. It needs token-aware matching plus explicit allowed intent/context, and tests for `replication`, `nonduplicate`, and `deduplicated` arm names.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`; `.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This helper is a quarantine bypass, so substring permissiveness is dangerous: it turns unrelated wording into an exemption from a critical degenerate-controls flag. It needs token-aware matching plus explicit allowed intent/context, and tests for`
+
+
+
+## adversarial_verify.py::_documented_identical_controls
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+True when the artifact explicitly says identical controls are expected.
+
+## FINDINGS
+1. `kl = key.lower()` assumes every dict key is a string. A non-string key crashes instead of returning `False`.
+2. `if isinstance(value, bool)` only handles bare booleans. It silently ignores `{"principle": "...", "value": True}` even if the key documents identical controls.
+3. `if isinstance(value, str):` only handles bare strings. It silently ignores wrapped strings, lists of strings, and structured artifact fields.
+4. `"identical" in kl` has no boundary or negation handling. `nonidentical_control_expected: True` falsely matches.
+5. `"control" in kl`, `"arm" in kl`, and `"placebo" in kl` are raw substrings. `charm_identical: True` falsely matches because `"arm"` is inside `"charm"`.
+6. `"deliberately identical" in vl` / `"intentionally identical" in vl` are context-blind. `"controls were not deliberately identical"` still matches.
+7. No numeric thresholds exist, so there are no off-by-one issues.
+8. The implementation is narrower and broader than the docstring: narrower because it misses wrapped/list structured fields; broader because it treats negated or substring-coincidental text as explicit documentation.
+
+## COUNTEREXAMPLE
+```python
+{
+    "notes": "The control arm was not deliberately identical; it used a separate placebo batch."
+}
+```
+This returns `True`, even though the artifact explicitly says the controls were not deliberately identical.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This function is not safely detecting explicit documentation; it is doing substring coincidence over partially supported field shapes. It has both false negatives on wrapped artifact fields and false positives on negated text, which is exactly the failure mode this verifier cannot tolerate.
+
+
+## adversarial_verify.py::_arm_numeric_value
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Extract an accuracy-like numeric value from either a flat arm entry or a nested arm entry.
+
+## FINDINGS
+1. Field extraction assumption: `metric = value.get(metric_key)` assumes the metric field is a bare finite number. If the metric is encoded as `{"principle": "...", "value": 0.91}`, `_is_finite_number(metric)` will fail and the function silently returns `None`.
+
+2. Top-level wrapper blindness: after `if not isinstance(value, dict): return None`, the code treats any dict as a metric container, not as a possible Principle-Annotated wrapper. A top-level input like `{"principle": "reported validation accuracy", "value": 0.91}` is only handled if `"value"` happens to be in `CONDITION_ARM_METRIC_KEYS`; otherwise it is missed.
+
+3. String/substring matching: none present.
+
+4. Negation/context blindness: none present.
+
+5. Boundary/off-by-one: no numeric thresholds or comparisons besides finite-number checks.
+
+6. Docstring mismatch: `"flat or nested arm entry"` is broader than the implementation. The implementation handles flat numbers and one-level dicts whose selected metric fields are bare numbers; it does not handle wrapped metric values or genuinely nested numeric fields.
+
+## COUNTEREXAMPLE
+```python
+{
+    "accuracy": {
+        "principle": "Principle-Annotated Artifact Fields",
+        "value": 0.934
+    }
+}
+```
+
+If `"accuracy"` is in `CONDITION_ARM_METRIC_KEYS`, this honest nested metric returns `None` instead of `0.934`.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+This is the same class of bug as the documented field-shape failure: a valid project encoding is treated as non-numeric because the code only accepts bare numbers. In a fabrication detector, returning `None` here can suppress downstream checks entirely, which is a dangerous false negative.
+
+
+## adversarial_verify.py::check_degenerate_controls
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Detect condition-arm maps where distinct control arms report bit-identical finite numeric values.
+
+## FINDINGS
+1. Field extraction assumption: `arm_map = d.get(map_key)` assumes the field is the actual arm map. A `{ "principle": ..., "value": {...} }` wrapper makes the function iterate `"principle"` / `"value"` instead of arms, causing a false negative when called directly.
+
+2. Nested field extraction assumption: `metric = value.get(metric_key)` assumes nested arm metrics are bare numbers. `{"accuracy": {"principle": "...", "value": 0.25}}` is ignored because `_is_finite_number(metric)` fails.
+
+3. Substring matching without boundaries: `return any(marker in kl for marker in CONTROL_ARM_MARKERS)` matches inside unrelated names. `controlnet_guided` matches `control`; `not_randomized_policy` matches `random`; `rfgain_probe` matches `rfg`.
+
+4. Substring matching without boundaries: `return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)` makes `nonduplicate_control_a` and `nonduplicate_control_b` count as intentional duplicates because `duplicate` is a substring.
+
+5. Negation/context blindness: `_documented_identical_controls` treats any string containing `"deliberately identical"` plus `"control"` as permission to suppress the flag. `"controls were not deliberately identical"` still matches.
+
+6. Negation/context blindness: the key check `value is True and "identical" in kl and ("control" in kl or "arm" in kl or "placebo" in kl)` treats `controls_not_identical: true` as documented identical controls.
+
+7. Boundary bug in key matching: `"arm" in kl` matches inside unrelated words. `identical_farm_runs: true` satisfies the documented-identical exception because `farm` contains `arm`.
+
+8. No numeric off-by-one found. `len(controls) < 2` and `len(duplicate_controls) < 2` correctly implement “at least two.”
+
+9. Docstring mismatch: `"Detect condition-arm maps where distinct controls are bit-identical"` is narrower in implementation because wrapped/list metrics are invisible, and broader/different in exemption behavior because any unscoped prose match can suppress all duplicate-control flags.
+
+## COUNTEREXAMPLE
+```python
+{
+    "methodology_note": (
+        "The harness includes a guard for deliberately identical controls; "
+        "controls were not deliberately identical and should be independently exercised."
+    ),
+    "condition_accuracy": {
+        "carnot": 0.867,
+        "rfg": 0.3,
+        "unguided": 0.3,
+        "entrgi": 0.3,
+    },
+}
+```
+This should flag `rfg`, `unguided`, and `entrgi` as bit-identical controls. It does not, because the methodology prose triggers `documented_identical`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This function trusts unstructured prose and substring matches to decide both inclusion and exemption. Replace those with structured fields, scoped exceptions, nested value unwrapping, and token-boundary matching; then add regression tests for negated prose and principle-wrapped nested metrics.
+
+
+## adversarial_verify.py::_is_declared_honest_null
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+True if the artifact's `honest_verdict` declares a no-value/no-lever null result.
+
+## FINDINGS
+1. Field extraction bug: `v = str(d.get("honest_verdict", "")).lower()` does not unwrap Principle-Annotated fields. It scans the Python repr of dicts/lists/None instead of the actual `value`, so metadata like `principle` can trigger the result.
+
+2. Substring-boundary bug: `return any(tok in v for tok in _HONEST_NULL_VERDICT_TOKENS)` uses raw substring matching. Examples: `not_honest_null`, `dishonest_null_claim_detected`, `nano_delta_seconds`, `mono_value_encoder`, and `blocked_no_value_not_attempted` all falsely match tokens.
+
+3. Negation/context blindness: the same `tok in v` check cannot distinguish declaration from denial or discussion. `did_not_declare_honest_null`, `no_delta_check_passed_because_not_applicable`, or `correctly_avoided_no_value_added_claim` would be treated as declared nulls.
+
+4. Boundary/off-by-one: no numeric thresholds exist in this function, so no numeric comparison bug is present.
+
+5. Docstring mismatch: the docstring claims it detects when `honest_verdict` “declares” a null result. The implementation is broader because it matches any substring anywhere in any stringified object, and narrower because it only recognizes hardcoded underscore tokens rather than normalized declarations.
+
+6. Concrete misclassification exists: a wrapped field whose `value` is positive but whose `principle` mentions null labels will return `True`.
+
+## COUNTEREXAMPLE
+```python
+{
+    "honest_verdict": {
+        "principle": "Do not mark honest_null unless no_metric_moved and no_value_added are explicitly supported.",
+        "value": "positive_improvement_replicated"
+    }
+}
+```
+
+This returns `True`, even though the actual verdict value is not a null declaration.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+This function is using `str()` as a parser and substring search as classification. For critical fabrication-detection logic, that is too sloppy: unwrap `{"principle": ..., "value": ...}`, normalize only the actual value, and match complete allowed verdict tokens with explicit boundaries or exact tokenization.
+
+
+## adversarial_verify.py::_has_control_treatment_qualifier
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+True if a metric key carries a control/treatment ablation-arm qualifier.
+
+## FINDINGS
+1. Field extraction assumptions: no `d.get(...)` or dict-field read exists in this function. The only type assumption is `kl = k.lower()`, which assumes `k` is a string and will crash on a non-string key.
+
+2. Raw substring matching is unsafe: `return any(q in kl for q in _CONTROL_TREATMENT_QUALIFIERS)`. It can falsely match longer unrelated tokens:
+   - `latency_controlled_probe` matches `_control`.
+   - `saliency_integrated_gradients_auroc` matches `_integrated`.
+   - `citation_referenceable_score` matches `_reference`.
+   - `ablationist_comment_score` matches `_ablation`.
+
+3. It also falsely fails valid qualifier forms because every qualifier starts with `_`. `baseline_auroc` and `treatment_auroc` carry obvious ablation-arm qualifiers but return `False` because the qualifier is at the start of the key, not after an underscore.
+
+4. Negation/context blindness exists for key text. `not_control_metric`, `without_control_rate`, or `control_not_used_score` all satisfy `_control` even though the key context says the opposite or is not naming an arm.
+
+5. Boundary/off-by-one: no numeric threshold or comparison exists in this function.
+
+6. Docstring mismatch: `"""True if the metric key carries a control/treatment ablation-arm qualifier."""` Actual logic is broader than that claim because it matches inside unrelated words, and narrower because it misses prefix/hyphenated/camel-case qualifier forms.
+
+## COUNTEREXAMPLE
+```python
+{
+    "honest_verdict": "complete: honest_null no_value_added",
+    "baseline_auroc": 0.73142,
+    "treatment_auroc": 0.73142
+}
+```
+Both metric keys plainly name baseline/treatment arms, but `_has_control_treatment_qualifier("baseline_auroc")` and `_has_control_treatment_qualifier("treatment_auroc")` return `False`.
 
 ## RECOMMENDATION
 ADD_WORD_BOUNDARY
 
 ## RATIONALE
-This is not clean: the function’s entire decision is substring matching over a free-form key. It will silently broaden the tautology exemption to unrelated fields whose names merely contain `"auc"`, `"control"`, or `"probe"` as substrings or negated context.
+This is a real boundary bug, not style. The helper should tokenize metric keys and match whole qualifier tokens in expected positions, including start-of-key forms, instead of using raw substring membership.
 
 > **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
 
 
 
-## adversarial_verify.py::_is_identifier_field
+## adversarial_verify.py::_passing_positive_control_key
 
-**Verdict:** `CLEAN`
+**Verdict:** `REAL_BUG`
 
 ## VERDICT
-CLEAN
+REAL_BUG
 
 ## CLAIM
-Detect whether a field key is an identifier, seed, timestamp, or metadata field rather than a measured metric.
+Return a top-level passing positive-control key if the artifact declares one.
 
 ## FINDINGS
-none found
+1. Field extraction assumptions: `if (kl == "positive_control_passed" or kl.endswith("_control_passed")) and value is True:` assumes the field value is the bare singleton bool `True`. A valid wrapped field like `{"principle": "...", "value": True}` will be silently ignored. That is a false negative.
+
+2. String/substring matching without boundaries: `kl.endswith("_control_passed")` is not free-text matching, but it is still overbroad taxonomy matching. It treats `negative_control_passed`, `null_control_passed`, `placebo_control_passed`, or `no_positive_control_passed` as a positive-control key.
+
+3. Negation / context blindness: `no_positive_control_passed: True` or `blocked_positive_control_passed: True` would satisfy `kl.endswith("_control_passed")` even though the key name negates or changes the meaning.
+
+4. Boundary / off-by-one errors: no numeric thresholds.
+
+5. Docstring mismatch: the docstring says “positive-control key”; the implementation accepts any key ending in `_control_passed`, including explicitly non-positive controls. The logic is broader than the claim.
+
+6. Concrete misclassification exists: a wrapped honest positive-control declaration is missed, and a negative-control key can be incorrectly returned as a positive-control key.
 
 ## COUNTEREXAMPLE
-none constructed
+```python
+{
+    "negative_control_passed": True,
+    "positive_control_passed": {
+        "principle": "Principle-Annotated Artifact Fields",
+        "value": True
+    }
+}
+```
+This returns `"negative_control_passed"` instead of recognizing the wrapped positive-control value.
 
 ## RECOMMENDATION
-KEEP
+NEEDS_REDESIGN
 
 ## RATIONALE
-This function operates on a field key, not a field value, and contains no `d.get(...)` extraction, numeric threshold, or free-text verdict scanning. The suffix checks are broad by design but not substring-boundary bugs: `_id`, `_seed`, and `_seed_used` must occur as suffixes, and `_is_timestamp_field` / `_IDENTIFIER_FIELDS` cannot be judged from the provided code.
+This function conflates “any control passed” with “positive control passed” and rejects the repo’s documented wrapped field shape. The `value is True` check is brittle, and the suffix rule is semantically unsafe because control polarity is encoded in the key name.
 
 
-## adversarial_verify.py::_is_reference_field
+## adversarial_verify.py::_delta_key_covers_pair
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -119,39 +367,174 @@ This function operates on a field key, not a field value, and contains no `d.get
 REAL_BUG
 
 ## CLAIM
-`_is_reference_field` claims to identify known prior baseline/reference field names while avoiding substring collisions with measured outcomes.
+True when a zero-delta field names the metric family shared by both arms.
 
 ## FINDINGS
-1. No `d.get("field_name")` reads exist in this function. It does assume `k` is a bare string at `kl = k.lower()`, but since this is a field-name helper, wrapped `{"principle": ..., "value": ...}` artifact values are not directly implicated here.
+1. No `d.get(...)` field reads exist in this function. But the function does assume `left` and `right` are bare strings: `left_lower = left.lower()` and `right_lower = right.lower()`. A wrapped field like `{"principle": "...", "value": "AUROC baseline"}`, a list, or `None` would raise or behave outside the documented artifact-field convention unless callers unwrap before entry.
 
-2. The substring checks are not actually suffix-anchored: `or "_baseline_" in kl` and `or "_reference_" in kl` match anywhere. Concrete false positive: `model_baseline_error_rate` is a measured outcome about baseline error rate, not necessarily a carried reference field, but it is classified as reference.
+2. Boundaryless substring matching is present twice: `if stem and stem in left_lower and stem in right_lower:` and `return any(tok in left_lower and tok in right_lower for tok in tokens)`. Counterexample: a delta stem/token `auc` would match both `"saucer_control_latency"` and `"because_variant_latency"` even though neither arm names an AUC metric.
 
-3. The prefix checks are too broad: `kl.startswith(("prior_best", "prior_submitted"))` matches longer unrelated tokens without a separator boundary. Concrete false positive: `prior_bestiary_score`, `prior_submittedness_rate`, or `prior_bestowed_reward` all match.
+3. The token fallback is especially broad. `tok in left_lower` can match inside unrelated compounds or terms. Example: token `met` matches `"meta_tensor_baseline"` and `"parameter_method_probe"` even if the intended metric family was `MET`.
 
-4. No negation/context issue applies; this function only sees field names, not prose.
+4. Negation/context blindness is inherent in the free-text scan. A left/right label like `"not_auc_experiment_control"` and `"auc_check_not_attempted_variant"` would be treated as covered by `auc`, even though the text may explicitly say the artifact did not run or use AUC. The function has no concept of assertion versus denial.
 
-5. No numeric threshold/off-by-one issue applies.
+5. The exact behavior is broader than the docstring. The claim says the zero-delta field “names the metric family shared by both arms”; the implementation accepts any shared substring or any shared token of length at least 3, even when that token appears inside unrelated longer words.
 
-6. The implementation contradicts its own claim. The docstring says “Suffix-anchored to avoid substring collisions with measured outcomes,” but the implementation explicitly uses unanchored interior substring checks and broad prefix checks.
+6. Numeric threshold/off-by-one issues are not applicable in this function. There are no numeric floors or threshold comparisons except token length filtering: `len(tok) >= 3`, which is explicit but arbitrary.
 
 ## COUNTEREXAMPLE
 ```python
-_is_reference_field("model_baseline_error_rate")
+_delta_key_covers_pair(
+    "delta_auc",
+    "saucer_control_latency_ms",
+    "because_variant_latency_ms",
+)
 ```
-
-This plausibly names a measured outcome field, not a reference field, but returns `True` because `"_baseline_" in kl`.
+This can return `True` via token `auc`, falsely treating unrelated labels as sharing the AUC metric family.
 
 ## RECOMMENDATION
 ADD_WORD_BOUNDARY
 
 ## RATIONALE
-The function is not clean: its own collision-avoidance claim is violated by unanchored substring matching. This can suppress legitimate comparisons by misclassifying measured outcome fields as references, which is exactly the kind of silent false negative this linter is supposed to prevent.
+The core bug is boundaryless substring matching over free-text-ish identifiers. This is exactly the class of silent false positive that can quarantine honest artifacts or mask a real mismatch by claiming coverage where none exists. Use tokenized comparison or regex boundaries against normalized identifier tokens, and add tests for embedded substrings like `saucer`, `because`, `meta_tensor`, and negated labels.
 
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get("field_name")`
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
 
 
 
-## adversarial_verify.py::_delta_stem
+## adversarial_verify.py::_is_heldout_firstwin_null_delta_pair
+
+**Verdict:** `MINOR_RISK`
+
+## VERDICT
+MINOR_RISK
+
+## CLAIM
+True for the retargeted A4 first-win baseline-vs-integrated equality pair.
+
+## FINDINGS
+1. No `d.get("field_name")` or dict-field read exists in this function. However, the implementation assumes both inputs are bare strings: `return {left.lower(), right.lower()} == {`. If either value is `None`, a list, or a `{"principle": ..., "value": ...}` wrapper, this crashes instead of returning `False`.
+
+2. No substring, prefix, suffix, or regex matching exists. The comparison is exact after `.lower()`, so there is no word-boundary substring bug here.
+
+3. No free-text forbidden phrase scan exists. There is no negation/context-blind trigger in this function.
+
+4. No numeric thresholds or boundary comparisons exist.
+
+5. The implementation mostly matches the docstring, but only for clean bare-string inputs. It is narrower than the claim if upstream artifact fields may be wrapped or include harmless whitespace, because `" first_win_baseline "` falsely fails.
+
+6. Concrete false negative: `left={"principle": "metric_name", "value": "first_win_baseline"}`, `right={"principle": "metric_name", "value": "first_win_rate_integrated"}`. Under the project’s wrapped-field convention, that is the same pair, but this function raises `AttributeError` instead of returning `True`.
+
+## COUNTEREXAMPLE
+```python
+_is_heldout_firstwin_null_delta_pair(
+    {"principle": "metric_name", "value": "first_win_baseline"},
+    {"principle": "metric_name", "value": "first_win_rate_integrated"},
+)
+```
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+The core pair logic is not substring-based and has no threshold bug. The real weakness is the unguarded `.lower()` assumption: if these values come from artifact fields, this repeats the same wrapped-field failure mode already found elsewhere.
+
+
+## adversarial_verify.py::_declared_null_delta_descriptor
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+The function claims to recognize explicit honest-null evidence for an equal metric pair requiring a zero delta, a methodology note, and a passing control.
+
+## FINDINGS
+1. Field extraction bug: `note = d.get("null_delta_methodology_note")` followed by `if not isinstance(note, str) or not note.strip():` assumes the methodology note is a bare string. A valid `{"principle": "...", "value": "..."}` wrapper is rejected immediately, producing a false negative before delta/control checks run.
+
+2. Field-shape risk: `_is_explicit_zero(d.get("first_win_delta_vs_baseline"))` and `_is_explicit_zero(value)` may be safe only if `_is_explicit_zero` unwraps principle/value dicts. This function itself does no unwrapping, so the snippet cannot be credited as shape-safe.
+
+3. String boundary review: no visible substring scan against free-text fields exists here. `if key in (left, right):` is exact tuple membership, not substring matching.
+
+4. Negation/context blindness: no forbidden-phrase scan exists here. The opposite problem exists: any non-empty bare string passes as a “methodology note,” including useless text like `"not documented"`.
+
+5. Threshold/off-by-one review: no visible numeric inequality exists. Exact-zero behavior is delegated to `_is_explicit_zero`, so this snippet alone cannot prove threshold correctness.
+
+6. Docstring mismatch: the docstring says it needs “a methodology note,” but the implementation only checks “non-empty bare string.” That is narrower than the project’s allowed field shape and broader than a real methodology validation.
+
+## COUNTEREXAMPLE
+```python
+{
+    "null_delta_methodology_note": {
+        "principle": "Principle-Annotated Artifact Fields",
+        "value": "Paired recomputation showed exactly zero first-win delta because both metrics were computed from the same held-out event table."
+    },
+    "first_win_delta_vs_baseline": 0.0,
+    "positive_control_result": "passed"
+}
+```
+This honest wrapped methodology note is rejected at `isinstance(note, str)`, so the function returns `None` before checking the otherwise valid null-delta evidence.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+This is a real false-negative path in critical fabrication-detection code. The function rejects the project’s own allowed principle/value field shape while pretending to detect explicit honest-null evidence.
+
+
+## adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Recognizes validated ARC generation/exploration no-lift first-win null descriptors.
+
+## FINDINGS
+1. Field extraction bug: `note = d.get("null_delta_methodology_note")` assumes the field is a bare string. A wrapped field like `{"principle": "...", "value": "validated by bootstrap null"}` is rejected by `not isinstance(note, str)`, causing a false negative.
+
+2. Field extraction bug: `if d.get("positive_control_passed") is not True:` assumes the field is a bare bool. A wrapped field like `{"principle": "...", "value": True}` is rejected, causing a false negative.
+
+3. Substring-boundary bug: `if "first_win" not in left_lower or "first_win" not in right_lower:` performs raw substring matching. It will accept unrelated keys like `not_first_win_control`, `first_window_metric`, or `anti_first_win_claim`, even if the actual metric is not the intended `first_win`.
+
+4. Negation/context blindness: the same `"first_win" in ...` check cannot distinguish `first_win` from `not_first_win`, `blocked_first_win_not_attempted`, or `first_win_invalidated`. This can falsely validate descriptors whose labels explicitly negate or reject the relevant metric.
+
+5. Boundary/off-by-one: no numeric thresholds exist in this function.
+
+6. Docstring mismatch: `"Recognize validated ARC generation/exploration no-lift first-win nulls."` claims validated recognition, but the implementation only checks broad artifact type, one non-degeneracy flag, nonempty note, positive control, and substring occurrence. It does not verify “no-lift,” “null,” or exact first-win metric identity robustly.
+
+## COUNTEREXAMPLE
+```python
+d = {
+    "arms_non_degenerate": {"principle": "artifact field annotation", "value": True},
+    "null_delta_methodology_note": {
+        "principle": "artifact field annotation",
+        "value": "Empirical null from non-degenerate ARC first-win exploration."
+    },
+    "positive_control_passed": {
+        "principle": "artifact field annotation",
+        "value": True
+    },
+}
+left = "arc_first_win_rate"
+right = "arc_first_win_baseline"
+```
+This is plausibly valid under the project’s annotated-field convention, but the function rejects it.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+The function repeats the exact class of bug already found: raw `d.get(...)` followed by type/identity checks on fields that may legally be principle-wrapped. The substring check is also too weak for a critical verifier because it treats negated or longer labels containing `first_win` as equivalent to the intended metric.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `followed by type/identity checks on fields that may legally be principle-wrapped. The substring check is also too weak for a critical verifier because it treats negated or longer labels containing`
+
+
+
+## adversarial_verify.py::check_tautology
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -159,186 +542,32 @@ The function is not clean: its own collision-avoidance claim is violated by unan
 CANNOT_DETERMINE
 
 ## CLAIM
-`_delta_stem` claims to detect keys naming a delta/diff/change metric and return the base metric stem before the delta token.
+Detect distinct floating-point metrics that agree to `TAUTOLOGY_DIGITS` significant figures while avoiding known legitimate coincidences.
 
 ## FINDINGS
-1. Field extraction assumptions: none found. This function does not read dict fields with `d.get(...)` or similar.
+1. Field extraction assumptions: no direct `d.get("field_name")` or direct artifact-field read appears in the shown function. The actual extraction is delegated to `_numeric_pairs(d)`, `_declared_null_delta_descriptor(d, k1, k2)`, `_declared_arc_nondegenerate_firstwin_null_descriptor(d, k1, k2)`, `_is_declared_honest_null(d)`, `_is_small_shared_denominator_rate_pair(..., d)`, and `_is_structural_nonmeasurement(..., d)`, so wrapper/list/None handling cannot be judged from this snippet.
 
-2. Type assumption: `kl = k.lower()` assumes `k` is a string-like object. If a caller passes `None`, a list, or a principle-wrapped dict, it raises instead of returning `None`.
+2. String/substring matching without boundaries: no direct `in`, `.startswith`, `.endswith`, `re.search`, or `re.match` against free-text fields appears in the shown function. Any substring-boundary risk is hidden inside helper calls, especially `_is_declared_honest_null(d)` and the declared-null descriptor helpers.
 
-3. Boundary risk depends on `_DELTA_SUFFIXES`, which is omitted. If it contains bare tokens like `"delta"`, `"diff"`, or `"change"`, then `if kl.endswith(suf):` will falsely classify unrelated words such as `"modelta"` as stem `"mo"` or `"undiff"` as stem `"un"`.
+3. Negation/context blindness: no direct free-text scan is visible. However, the comment says the carve-out gates on “honest-null verdict”; if `_is_declared_honest_null(d)` is substring based, a verdict like `not_verifier_router_no_value_added_because_metric_improved` could be misread. That cannot be confirmed from this function alone.
 
-4. Substring/context risk: `if marker in kl:` only checks for `suf + "_"` anywhere in the key. If `_DELTA_SUFFIXES` contains a token not already boundary-protected, a string like `"modelta_accuracy"` could falsely match `"delta_"` inside `"modelta_accuracy"`.
+4. Boundary/off-by-one errors: the user-facing detail says `agree to >{TAUTOLOGY_DIGITS} sig figs`, while the docstring says “agreeing to `TAUTOLOGY_DIGITS` sig figs.” If `_significant_digits_match(v1, v2, TAUTOLOGY_DIGITS)` means “at least `TAUTOLOGY_DIGITS`”, the emitted message is off by one/misleading.
 
-5. Negation/context blindness: not applicable. This function scans metric key names, not verdict prose.
+5. Implementation vs claim: the docstring claims it detects “distinct metrics agreeing to `TAUTOLOGY_DIGITS` sig figs.” The implementation is narrower: it suppresses identifiers, chance-floor scores, small-denominator rates, declared honest nulls, count coincidences, small integers, and structural nonmeasurement fields.
 
-6. Numeric boundary/off-by-one: none found. There are no numeric thresholds.
-
-## COUNTEREXAMPLE
-If `_DELTA_SUFFIXES = ("delta", "diff", "change")`, then `_delta_stem("modelta_accuracy")` returns `"mo"` even though `"modelta_accuracy"` is not a delta metric.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-The function may be clean if `_DELTA_SUFFIXES` only contains boundary-safe suffixes such as `"_delta"` and `"_diff"`, but that critical context is missing. As written, the logic is substring-based and has no defensive type handling, so the safety of the detector is outsourced to an unseen constant and caller discipline.
-
-
-## adversarial_verify.py::_is_verified_arithmetic_delta
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Detects whether a delta/diff/change field is a genuinely derived arithmetic difference between two numeric fields sharing the same metric stem.
-
-## FINDINGS
-1. Field extraction assumptions: `if stem is None or not _is_finite_number(v):` assumes `v` is a bare finite number. A wrapped value like `{"principle": "...", "value": 0.04}` falsely returns `False`.
-
-2. Field extraction assumptions: `if _is_finite_number(x) ...` assumes operand fields are bare finite numbers. Wrapped numeric operands are ignored, so valid derived deltas are missed.
-
-3. Field extraction assumptions: `kk.lower() != k.lower()` and `stem in kk.lower()` assume every key is a string. The type says `dict[str, Any]`, so this is probably acceptable, but the runtime does not defend itself.
-
-4. String/substring matching without boundaries: `(stem == "" or stem in kk.lower())` is raw substring matching. If `stem == "auroc"`, then `calibration_aurocish_baseline` or `not_auroc_metric` can be accepted as an operand field even though it is not the same metric stem.
-
-5. Negation/context blindness: the stem match has no semantic context. A field named `not_accuracy_baseline` or `accuracy_check_detects_fabrication` can qualify as an operand for an `accuracy_delta`, even though it is not necessarily the metric being compared.
-
-6. Boundary/off-by-one: `if target <= 1e-12:` excludes exactly `1e-12`. The docstring says “Null deltas (==0) are out of scope,” not “near-zero deltas are out of scope.” This is broader than claimed.
-
-7. Implementation mismatch: the docstring claims operands must “SHARE its metric stem.” The implementation uses `stem in kk.lower()`, which is weaker than stem sharing; it accepts arbitrary containment inside unrelated field names.
-
-8. Implementation mismatch: the docstring claims this proves a “genuinely DERIVED quantity.” The implementation only proves some two numeric fields in the artifact happen to differ by the delta. It does not verify provenance, naming symmetry, direction, or that the two operands are the intended before/after pair.
-
-## COUNTEREXAMPLE
-```python
-k = "auroc_delta"
-v = {"principle": "derived from baseline and treatment AUROC", "value": 0.04}
-d = {
-    "auroc_baseline": {"principle": "measured", "value": 0.91},
-    "auroc_treatment": {"principle": "measured", "value": 0.95},
-    "auroc_delta": {"principle": "computed", "value": 0.04},
-}
-```
-This is a plausible honest artifact, but the function returns `False` because it never unwraps `value`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The wrapper-value miss is a direct false negative against the project’s documented field convention. The substring stem binding is also too loose for critical fabrication detection; it can certify accidental arithmetic coincidences from unrelated fields.
-
-
-## adversarial_verify.py::_is_rate_metric_field
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_is_rate_metric_field` claims to identify small-sample `k/N` ARC rate fields, not arbitrary floats.
-
-## FINDINGS
-1. Field extraction assumptions: no `d.get(...)` or dict-field read exists in this function. It does assume `k` is a bare string at `kl = k.lower()`; `None`, list, dict, or principle-wrapped values would raise `AttributeError`, but field keys should normally be strings.
-
-2. Substring/boundary bugs:
-   - `kl.endswith(("_rate", "_fraction"))` is too broad. Counterexamples: `learning_rate`, `dropout_rate`, `sampling_rate`, `memory_fraction`, `train_fraction`.
-   - `"_rate_" in kl` is worse. Counterexamples: `learning_rate_scheduler`, `gpu_rate_limit`, `not_a_rate_metric`, `sample_rate_hz`.
-   - `"_fraction_" in kl` similarly matches unrelated fields like `memory_fraction_reserved` or `dataset_fraction_used`.
-   - `any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])` is unknowable from this snippet, but structurally unsafe: raw substring matching against field names will match inside unrelated longer identifiers unless every marker is boundary-safe.
-
-3. Negation/context blindness: yes, for field names. `not_a_rate_metric`, `non_rate_field`, or `rate_metric_disabled` can be treated as rate metrics purely because the substring appears.
-
-4. Boundary/off-by-one errors: no numeric threshold exists here.
-
-5. Docstring mismatch: the docstring says “small-sample k/N ARC rate fields, not arbitrary floats.” The implementation is much broader: it accepts generic rate/fraction naming patterns that commonly refer to arbitrary continuous floats, hyperparameters, resource ratios, or limits.
-
-6. Concrete misclassification: `learning_rate` would return `True`, even though it is a training hyperparameter float, not a small-sample `k/N` ARC rate metric.
-
-## COUNTEREXAMPLE
-```python
-_is_rate_metric_field("learning_rate")  # returns True, but this is not a k/N ARC rate field
-```
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-This is not a small boundary bug; the predicate is semantically overbroad. It claims to identify a specific metric family, but actually classifies by loose substrings that collide with ordinary ML/statistics field names.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
-
-
-
-## adversarial_verify.py::_add_variant_denominators_from_value
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Collects explicit small variant denominators from numeric count fields or variant-list lengths.
-
-## FINDINGS
-1. Field extraction assumptions: none found for `d.get(...)`; this function does not directly read named dict fields. It recursively handles `dict`, `list`, and non-container values, so `{"principle": "...", "value": ...}` wrappers are not an obvious miss here.
-
-2. Substring matching without boundaries: `any(marker in kl for marker in _DENOMINATOR_KEY_MARKERS)` can match marker text inside unrelated key names, depending on marker values. More concretely, `if "variant" in kl and 1 < len(value) <= _SMALL_SHARED_DENOMINATOR_MAX:` matches `invariant`, `covariant`, `nonvariant`, or `variantless`. Counterexample key: `"safety_invariants"`.
-
-3. Negation/context blindness: `"variant" in kl` is context-blind. A key like `"no_variants_used"` or `"variantless_controls"` would still be treated as evidence of variant denominators.
-
-4. Boundary/off-by-one: `1 < n <= _SMALL_SHARED_DENOMINATOR_MAX` and `1 < len(value) <= _SMALL_SHARED_DENOMINATOR_MAX` are internally coherent for “small” denominators if singleton denominators are intentionally excluded. Cannot determine whether exact max inclusion matches the hidden constant’s spec.
-
-5. Docstring mismatch: `"Collect explicit small variant denominators from counts or list lengths."` Actual behavior is broader: it collects denominators from any list whose key merely contains the substring `"variant"`, including unrelated words like `"invariants"`.
-
-6. Misclassification fragment exists: a non-variant list under an invariant-related key would be falsely treated as a small shared denominator source.
-
-## COUNTEREXAMPLE
-```python
-key = "safety_invariants"
-value = ["same_seed", "same_prompt_template", "same_eval_split"]
-out = set()
-
-_add_variant_denominators_from_value(key, value, out)
-# out becomes {3}, even though these are invariants, not experimental variants.
-```
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-The recursive shape handling is better than the previous field-wrapper failure mode, but the key matching is still sloppy. Treating `"variant"` as a raw substring will fabricate denominator evidence from unrelated fields like `"invariants"`, which is exactly the kind of silent false positive this linter must not create.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
-
-
-
-## adversarial_verify.py::_variant_denominators
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-Return small variant denominators explicitly evidenced in the artifact.
-
-## FINDINGS
-none found
+6. Concrete misclassification: cannot construct one from this snippet alone without knowing `_numeric_pairs`, `_significant_digits_match`, and the helper predicates.
 
 ## COUNTEREXAMPLE
 none constructed
 
 ## RECOMMENDATION
-KEEP
+ADD_TEST_CASE
 
 ## RATIONALE
-This function does not read named fields with `d.get`, coerce field values to strings, run substring searches, scan negated free text, or apply numeric thresholds. All semantic risk is delegated to `_add_variant_denominators_from_value`, which is not shown here; this wrapper only iterates over `d.items()` and passes each raw value through.
+The shown function is mostly orchestration; the dangerous behavior is likely in helper predicates that actually unwrap fields and scan text. The one visible defect is semantic drift between “to `TAUTOLOGY_DIGITS`” and `>{TAUTOLOGY_DIGITS}` in the flag detail, which should be pinned with threshold-edge tests.
 
 
-## adversarial_verify.py::_is_small_shared_denominator_rate_pair
+## adversarial_verify.py::_legitimate_pair
 
 **Verdict:** `CANNOT_DETERMINE`
 
@@ -346,553 +575,322 @@ This function does not read named fields with `d.get`, coerce field values to st
 REAL_BUG
 
 ## CLAIM
-`"True for equal small k/N ARC rate metrics over the same denominator."`
+Detects metric-key pairs where exact bit-identity is structurally legitimate.
 
 ## FINDINGS
-1. Field extraction assumptions: no direct `d.get("field")` exists in this function. The only artifact read is `for denominator in _variant_denominators(d):` at line 651; its helper recursively handles dicts/lists, so `{"principle": ..., "value": ...}` wrappers are not the main bug here.
+1. Field extraction assumptions: none. There are no `d.get(...)` or dict-field reads in this function. It does assume `k1` and `k2` are bare strings because it calls `k1.startswith(...)`, `k1.endswith(...)`, and `k1.lower()` directly.
 
-2. String matching without boundaries: `_is_rate_metric_field` uses `any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])` at line 590. That means any key containing `transfer`, `first_win`, or `winner_generated` is treated as a rate metric. Concrete false matches: `nontransferable_score`, `transfer_entropy`, `first_winner_loss`, `winner_generated_seconds`.
+2. Boundaryless prefix match: `if k1.startswith(k2) or k2.startswith(k1):` can legitimize unrelated keys when one merely prefixes the other. Counterexample: `k1="accuracy_abs"`, `k2="acc"` returns `True` because `"accuracy_abs".startswith("acc")` and `k1.endswith("_abs")`.
 
-3. Denominator matching is also substring-blind: line 601 uses `any(marker in kl for marker in _DENOMINATOR_KEY_MARKERS)`, and line 607 uses `"variant" in kl`. Counterexamples: `covariant_count=25` matches `variant_count`; `invariant_features=[...]` creates fake denominator evidence.
+3. Boundaryless marker match: `if any(m in kl1 for m in repro_markers) or any(m in kl2 for m in repro_markers):` matches inside negated or unrelated words. Counterexamples: `"irreproducible_delta"` contains `"reproduc"`; `"unreplicated_score"` contains `"replicat"`. Both are the opposite of a successful reproduction.
 
-4. Negation/context blindness: field names like `no_transfer_attempted_score` or `nontransferable_score` still satisfy the `transfer` marker. The function cannot distinguish “transfer metric” from “not transferable” or unrelated terminology.
+4. Negation/context blindness: the reproduction carve-out treats any marker occurrence as legitimate: `repro_markers = (...)` followed by `any(m in kl1...)`. A key like `not_reproduced_delta` or `failed_replication_delta` would be accepted even though the name says reproduction failed or did not happen.
 
-5. Boundary/off-by-one: no clear `>`/`>=` numeric threshold bug in this function. `1 < n <= 100` is consistent with the named max, and `0.0 <= v <= 1.0` is plausible for k/N rates.
+5. Overbroad reproduction logic: the comment claims “When such a field matches the metric it reproduces” and “cannot mask a genuine two-distinct-metric coincidence.” The implementation does not verify that the other key is the reproduced metric, or even metric-like. Any equality involving any key containing `rescore`, `reproduc`, `replicat`, or `cleanroom` is accepted.
 
-6. Implementation mismatch: the docstring claims equal small k/N ARC rate metrics over the same denominator, but the implementation accepts any two numeric fields whose names contain loose substrings and whose values happen to be fractions over any denominator found anywhere in the artifact. It does not prove the denominator belongs to either metric.
-
-## COUNTEREXAMPLE
-```python
-{
-    "variant_count": {"principle": "25 evaluation variants", "value": 25},
-    "transfer_entropy": 0.08,
-    "nontransferable_score": 0.08,
-}
-```
-For `k1="transfer_entropy"`, `k2="nontransferable_score"`, `v1=v2=0.08`, the function returns `True` because both names contain `transfer` and `0.08 == 2/25`. These are not k/N ARC rate metrics, so this suppresses a TAUTOLOGY flag incorrectly.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-This is a real false-negative path in critical anti-fabrication logic. The rate-field and denominator detectors need token-boundary matching and probably an allowlist of actual rate/fraction key shapes, not bare substring membership.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get("field")`
-
-
-
-## adversarial_verify.py::_finite_float
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_finite_float` claims, by name, to extract a finite float value from a dict field.
-
-## FINDINGS
-1. Field extraction assumption: `value = d.get(key)` assumes the stored field itself is the numeric value. It does not unwrap `{"principle": "...", "value": ...}`. A field like `{"principle": "measured", "value": 0.91}` will likely be rejected as non-numeric and return `None`.
-
-2. No string/substring matching exists in this function.
-
-3. No negation/context scanning exists in this function.
-
-4. Boundary behavior depends entirely on `_is_finite_number(value)`, which is not shown. This function itself has no numeric threshold or off-by-one comparison.
-
-5. The implementation is narrower than the name implies: it extracts only bare finite numeric fields, not finite numeric values stored using the project’s documented wrapped-field convention.
-
-6. Concrete false negative: an artifact with `{"auroc": {"principle": "reported_metric", "value": 0.997}}` would return `None` for `_finite_float(d, "auroc")`, potentially causing downstream fabrication checks to skip an implausibly high AUROC instead of evaluating it.
+6. Boundary/off-by-one numeric threshold issues: none. There are no numeric thresholds or floor comparisons.
 
 ## COUNTEREXAMPLE
-```python
-d = {
-    "auroc": {
-        "principle": "reported_metric",
-        "value": 0.997
-    }
-}
-
-_finite_float(d, "auroc")  # returns None instead of 0.997
-```
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is the same class of field-shape bug already observed in the project: the code reads a field directly and trusts the raw shape. In critical fabrication detection, returning `None` for a valid wrapped metric is dangerous because downstream checks commonly treat missing data as “cannot assess” rather than “suspicious.”
-
-
-## adversarial_verify.py::_has_positive_control_null_metric
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_has_positive_control_null_metric` claims to detect whether an artifact contains a positive-control metric showing a null result.
-
-## FINDINGS
-1. Field extraction assumption: the displayed body has no direct `d.get(...)`, but it hides field reads behind `value = _finite_float(d, key)` and `_metric_pair_equal(d, left, right)`. In the same implementation, `_finite_float` does `value = d.get(key)` and only accepts bare finite numbers, so `{"principle": "...", "value": 0.0}`, lists, and `None` are silently treated as absent.
-
-2. String/substring matching: none found in this function. There is no free-text `in`, `.startswith`, `.endswith`, `re.search`, or `re.match` here; the string literals are exact metric key names.
-
-3. Negation/context blindness: no free-text negation bug exists here because no free text is scanned. The context bug is numeric: equality in `("core_efficiency_baseline", "core_efficiency_best")` is treated as a positive-control null metric without this function proving those fields actually represent a positive-control claim.
-
-4. Boundary behavior: `math.isclose(value, 0.0, rel_tol=0.0, abs_tol=1e-12)` classifies `1e-12` and `-1e-12` as null. If “null” means exactly zero, the implementation is broader than the claim.
-
-5. Claim mismatch: there is no docstring, but the name says `positive_control_null_metric`; the implementation is narrower because it only sees configured delta keys and four hard-coded metric pairs, and broader because near-zero/equal-within-tolerance counts as null.
-
-## COUNTEREXAMPLE
-```python
-{
-    "efficiency_delta": {
-        "principle": "Positive-control delta; zero means the control produced no lift.",
-        "value": 0.0,
-    },
-    "core_efficiency_baseline": {
-        "principle": "Baseline positive-control efficiency.",
-        "value": 0.812,
-    },
-    "core_efficiency_best": {
-        "principle": "Best positive-control efficiency.",
-        "value": 0.812,
-    },
-}
-```
-Expected: `True`. Actual, without external pre-normalization: `False`.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-The function delegates all reads to a bare-number helper, so a documented artifact field shape can erase exactly the null metric this predicate exists to catch. A critical linter helper should not silently rely on callers having normalized the dict first.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`; `value = d.get(key)`; `re.search`; `re.match`
-
-
-
-## adversarial_verify.py::_is_positive_control_null_claim
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-True for efficiency/proposer/transfer nulls that require a positive control.
-
-## FINDINGS
-1. Field extraction assumptions: `"positive_control_passed" in d` and `"false_negative_risk_checked" in d` only check key presence, not the wrapped or actual value. A field like `{"positive_control_passed": {"principle": "...", "value": False}}` still satisfies the gate.
-
-2. String matching without boundaries: `"positive_control" in verdict` can match inside unrelated tokens like `"not_a_positive_controlled_study"`. `marker in text` and `marker in verdict` are raw substring scans; depending on marker values, `"transfer"` matches `"nontransferable"`, `"efficiency"` matches `"inefficiency"`, and `"null"` matches `"annulling"`.
-
-3. Negation/context blindness: the presence gate treats any verdict containing `"positive_control"` as relevant, including `"positive_control_not_required"` or `"positive_control_not_attempted"`. The marker scans have no handling for “did not”, “avoided”, “not required”, or “check exists to detect”.
-
-4. Boundary/off-by-one errors: no numeric thresholds exist in this function.
-
-5. Docstring mismatch: the docstring says “efficiency/proposer/transfer nulls that require a positive control.” Actual logic is broader and weaker: it detects key names plus substring markers, not whether the claim actually is a null, belongs to those domains, or requires a positive control.
-
-6. The call `_has_positive_control_null_metric(d)` is opaque here; if it unwraps annotated fields correctly, that only helps the final return path, not the earlier key-presence and substring gates.
-
-## COUNTEREXAMPLE
-```python
-d = {
-    "positive_control_passed": {"principle": "audit note", "value": False},
-    "notes": "embedding-only experiment"
-}
-verdict = "success: positive_control_not_required; transfer check exists to detect null-result fabrication, but this artifact did not make a transfer-null claim"
-```
-This can be classified as a positive-control null claim because raw substrings and key presence fire despite the text explicitly saying the opposite.
+`_legitimate_pair("failed_replication_delta", "oracle_score_delta")` returns `True` solely because `"replicat"` appears inside `"failed_replication_delta"`, even though the key explicitly describes a failed replication, not structurally legitimate bit-identity.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The function is doing semantic classification with key presence and unbounded substring scans. That is exactly the kind of brittle logic that creates both false positives and false negatives in fabrication-detection infrastructure. It needs explicit field unwrapping, token/phrase boundaries, and negation-aware claim parsing.
-
-
-## adversarial_verify.py::_positive_control_failed_or_unchecked
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-A null result is informative only if both `positive_control_passed` and `false_negative_risk_checked` passed.
-
-## FINDINGS
-1. Field extraction assumption: `d.get("positive_control_passed") is not True` assumes the field is a bare `bool`. A wrapped field like `{"principle": "...", "value": True}` is treated as failure because a dict is not identical to `True`.
-
-2. Field extraction assumption: `d.get("false_negative_risk_checked") is not True` has the same bug. It rejects wrapped `value: True`, numeric truthy values, string `"true"`, and list-wrapped values without distinguishing malformed data from honest annotated fields.
-
-3. String/substring matching: none present.
-
-4. Negation/context blindness: none present.
-
-5. Boundary/off-by-one: no numeric threshold. But the identity check `is not True` is an exact bare-bool check, not a semantic “passed” check.
-
-6. Docstring mismatch: the docstring says the condition is about whether checks “passed.” The implementation is broader: it flags checks that did pass but were stored using the project’s documented annotated field shape.
-
-## COUNTEREXAMPLE
-```python
-{
-    "positive_control_passed": {
-        "principle": "positive control must pass before interpreting nulls",
-        "value": True,
-    },
-    "false_negative_risk_checked": {
-        "principle": "FNR risk reviewed before accepting null result",
-        "value": True,
-    },
-}
-```
-
-This returns `True`, falsely classifying the artifact as failed-or-unchecked.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-positive bug against the project’s own annotated-field convention. The function needs a shared unwrap/coercion helper before comparing pass/fail booleans, plus regression tests for wrapped `value: True` and wrapped `value: False`.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `, falsely classifying the artifact as failed-or-unchecked.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-positive bug against the project’s own annotated-field convention. The function needs a shared unwrap/coercion helper before comparing pass/fail booleans, plus regression tests for wrapped`
-
-
-
-## adversarial_verify.py::check_false_negative_risk
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Detect null/negative claims that are uninformative because the method was not exercised, had no positive-control/oracle headroom, or self-reported degeneracy.
-
-## FINDINGS
-1. Field extraction is broken for wrapped fields. `verdict_raw = d.get("honest_verdict") or ""` followed by `verdict = (verdict_raw if isinstance(verdict_raw, str) else "").lower()` silently turns `{"principle": "...", "value": "no_improvement"}` into `""`, causing a false negative.
-
-2. Numeric fields are also assumed bare. `if not _is_finite_number(v): continue` and then `float(v)` never unwrap `{"principle": ..., "value": 0}`. Wrapped `flip_count`, `oracle_score`, or `baseline_score` values will be skipped or crash depending on `_is_finite_number`.
-
-3. Boolean gate fields are assumed bare. `isinstance(v, bool) and v is False` misses `{"principle": "...", "value": False}` for `non_degenerate`, `g2`, or `headroom` gates.
-
-4. Null-claim detection uses raw substring matching: `is_null_claim = any(m in verdict for m in null_markers)`. Counterexamples: `not_a_null_result_positive_gain` matches `null_result`; `unrefuted_positive_gain` matches `refuted`; `does_not_require_positive_control_because_gain_replicated` matches `does_not`.
-
-5. Field-name matching has substring-boundary bugs. `("flip" in kl and "count" in kl)` would flag `flipbook_discount=0`. `any(s in kl for s in ("oracle", "optimal", ...))` treats `suboptimal_score` as an oracle because it contains `optimal`.
-
-6. The `n_changed` implementation is narrower than the docstring. The docstring claims ``*n_changed*`` fields are detected, but code uses `kl.startswith("n_changed")`, so `reranker_n_changed=0` is missed.
-
-7. The explicit-gate check is context blind. `("non_degenerate" in kl or "g2" in kl or "headroom" in kl)` with `v is False` flags fields like `headroom_missing=False` or `blocked_g2_bypass_attempted=False`, even though those mean the opposite of degeneracy.
-
-8. Numeric threshold logic is mostly aligned with the docstring: `float(v) == 0.0` matches “field == 0”, and `oracle <= baseline` matches “does NOT exceed baseline.” The bug is not the operator; it is that the wrong fields can be selected.
-
-9. The implementation does not fully match its own claim. It says it detects ``*n_changed*`` anywhere and acceptance gates, but it misses wrapped values and suffix/prefix `n_changed` fields, while also treating arbitrary `headroom`/`g2` false fields as failed degeneracy gates.
-
-## COUNTEREXAMPLE
-```python
-{
-    "honest_verdict": {"principle": "annotated", "value": "no_improvement"},
-    "reranker_n_changed": {"principle": "annotated", "value": 0},
-    "oracle_solve_rate": {"principle": "annotated", "value": 0.72},
-    "baseline_solve_rate": {"principle": "annotated", "value": 0.72},
-    "non_degenerate_gate": {"principle": "annotated", "value": False},
-}
-```
-This is exactly the degenerate null case the function claims to catch, but the wrapped verdict and wrapped numeric/bool fields make it miss the risk.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-This is not one missing regex boundary; the function has no normalized field-access layer, so every signal is vulnerable to wrapper-shaped artifacts. It also uses substring matching over free text and field names for semantically loaded claims, which guarantees both false positives and false negatives in realistic artifact metadata.
-
-
-## adversarial_verify.py::_is_comparative_claim
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Detects whether an artifact makes a comparative claim: one method beating another, needed before CEILING_SATURATION matters.
-
-## FINDINGS
-1. Field extraction assumption: `v = str(d.get("honest_verdict", "")).lower()` assumes `honest_verdict` is useful as a bare scalar string. A wrapped field like `{"principle": "...", "value": "method A beats baseline"}` is converted to Python dict repr, so matching can hit metadata or miss value-specific conventions.
-
-2. Field extraction assumption: `headline = d.get("solve_rate") or d.get("accuracy") or d.get("pass_rate")` assumes bare numeric fields and does not unwrap `{"principle": ..., "value": ...}`. It also incorrectly treats legitimate `0` / `0.0` as absent and falls through to another metric.
-
-3. Field extraction assumption: `if _is_finite_number(vv) and float(vv) < float(headline):` assumes baseline values are bare numbers. Wrapped baseline fields silently fail numeric detection, causing false negatives.
-
-4. String matching without boundaries: `if any(m in v for m in _COMPARISON_VERDICT_MARKERS):` is raw substring matching against free text. If a marker is `"beat"`, `"win"`, `"better"`, `"vs"`, etc., counterexamples include `"heartbeat artifact"`, `"windowed evaluation"`, `"alphabetter_token"`, or `"canvas_vsnap"`.
-
-5. String matching without boundaries: `if "baseline" in kl and "exact" not in kl and "oracle" not in kl:` scans field names by substring. False positives: `"not_baseline_related"`, `"baselinefree_score"`. False exclusions: `"inexact_baseline"` contains `"exact"` and gets excluded even though it is not an exact/oracle upper bound.
-
-6. Negation/context blindness: `any(m in v for m in _COMPARISON_VERDICT_MARKERS)` cannot distinguish `"model A beats baseline"` from `"does_not_claim_model_A_beats_baseline"` or `"comparison_not_attempted"`. It treats discussion, denial, and actual assertion the same.
-
-7. Boundary/threshold issue: `float(vv) < float(headline)` matches the comment saying “strictly below,” so the operator itself is consistent. The bigger threshold bug is upstream: `headline = d.get("solve_rate") or ...` makes exact zero behave as missing.
-
-8. Claim mismatch: the docstring claims “artifact asserts one method beats another.” The implementation is broader because it flags any marker substring anywhere in `honest_verdict`, including negated or incidental text, and narrower because wrapped numeric/string fields can make real comparative claims invisible.
-
-## COUNTEREXAMPLE
-```python
-{
-    "honest_verdict": "comparison_not_attempted: the artifact explicitly does not claim the method beats the baseline",
-    "solve_rate": {"principle": "reported metric", "value": 0.93},
-    "weak_baseline_solve_rate": {"principle": "baseline metric", "value": 0.72}
-}
-```
-This is an honest non-comparative verdict, but the raw text scan can still flag it as comparative; the wrapped numeric fields also make the baseline-rate evidence unusable.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-This function mixes schema extraction, free-text classification, and numeric evidence using brittle substring and bare-scalar assumptions. It needs centralized field unwrapping, token/boundary-aware marker matching, explicit negation handling, and tests for wrapped fields, zero values, and misleading field names.
-
-
-## adversarial_verify.py::check_ceiling_saturation
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Detects comparative method-superiority claims where method variants or difficulty tiers are ceiling-saturated, making the claim uninformative.
-
-## FINDINGS
-1. Field wrapping false negative: `for k, v in d.items():` plus `if not isinstance(v, dict): continue` only accepts a raw breakdown dict. A valid wrapped field like `{"principle": "...", "value": {"vanilla_descent": 1.0, "energy": 1.0}}` is treated as the breakdown itself, so the real numeric values are never inspected.
-
-2. Wrapped numeric values are ignored: `nums = {kk: float(vv) for kk, vv in v.items() if _is_finite_number(vv)}` appears twice. If entries are `{"principle": "...", "value": 1.0}`, `_is_finite_number(vv)` will likely reject the dict, causing a silent false negative.
-
-3. String matching has no boundaries: `s in kl` for `"by_optimizer"`, `"by_variant"`, `"by_method"`, `"by_model"`, `"by_approach"`, `"by_sampler"`, `"by_solver"` can match unrelated keys such as `"standby_optimizer_health"` or `"not_by_model_notes"`. Same issue for `"by_difficulty"`, `"by_tier"`, `"by_hardness"`, `"by_level"`; `"nearby_level_metrics"` falsely matches `"by_level"`.
-
-4. Baseline marker matching has no boundaries: `any(m in kk.lower() for m in _TRIVIAL_BASELINE_MARKERS)` can match inside longer names. If a marker is `"ar"`, `"baseline"`, `"greedy"`, etc., names like `"linear_probe"`, `"nonbaseline_corrected"`, or `"greedyfree_ablation"` can be misclassified depending on marker contents.
-
-5. Context blindness: the key scan does not distinguish metric tables from audit or negation fields. A field named `"not_by_optimizer_because_no_optimizer_was_used"` or `"ceiling_check_by_difficulty_explanation"` can be treated as evidence if it contains numeric dict data.
-
-6. Threshold behavior is mostly explicit but semantically brittle: `CEIL = 0.99`, `max(nums.values()) < CEIL`, and `vv >= CEIL` mean exactly `0.99` is ceiling. The detail string says `>= 0.99`, so the operator matches the emitted claim. No off-by-one bug there.
-
-7. The implementation is narrower than the docstring. The docstring says “every method variant ... and/or every difficulty tier hits the same maximum,” but Signal 1 only flags if at least one saturated variant name contains a trivial-baseline marker. It will miss all-method saturation when no variant is named with the expected marker.
-
-## COUNTEREXAMPLE
-```python
-{
-    "honest_verdict": "energy inference beats vanilla_descent on hard graph coloring",
-    "by_optimizer": {
-        "principle": "Principle-Annotated Artifact Fields",
-        "value": {
-            "energy_global_inference": 1.0,
-            "vanilla_descent": 1.0,
-            "annealed_sampler": 1.0
-        }
-    },
-    "by_difficulty": {
-        "principle": "Principle-Annotated Artifact Fields",
-        "value": {
-            "easy": 1.0,
-            "hard": 1.0,
-            "extreme": 1.0
-        }
-    }
-}
-```
-This should flag ceiling saturation, but the wrapped fields make `nums` empty and the function silently misses it.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-The main failure mode is exactly the prior class of bug: valid principle-wrapped fields are not unwrapped before inspection. The substring matching is also sloppy and should get boundary-aware key classification, but the wrapped-field miss is the dangerous false negative.
-
-
-## adversarial_verify.py::_metric_from_top_or_pass_rates
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`_metric_from_top_or_pass_rates` claims to extract a numeric metric from either a top-level artifact field or `pass_rates`.
-
-## FINDINGS
-1. `value = d.get(key)` assumes the top-level metric is a bare finite number. It does not unwrap `{"principle": "...", "value": 0.91}`, so valid principle-annotated metric fields are silently ignored.
-
-2. `pass_rates = d.get("pass_rates")` assumes `pass_rates` is a bare dict. If the field is wrapped as `{"principle": "...", "value": {"auroc": 0.91}}`, the function treats it as the metric map itself and fails.
-
-3. `pass_rates.get(key)` assumes each nested metric value is bare numeric. `{"pass_rates": {"auroc": {"principle": "...", "value": 0.91}}}` silently fails.
-
-4. No string or substring matching exists in this function, so there are no word-boundary or negation-context bugs here.
-
-5. No numeric threshold or off-by-one comparison exists here. The only numeric gate is `_is_finite_number(...)`.
-
-6. The implementation is narrower than the name: it extracts only bare numeric values from the top level or a bare `pass_rates` dict, not valid artifact fields using the project’s principle/value convention.
-
-## COUNTEREXAMPLE
-```python
-{
-    "auroc": {"principle": "principle-annotated artifact field", "value": 0.94}
-}
-```
-
-Called as `_metric_from_top_or_pass_rates(d, "auroc")`, this returns `None` instead of `0.94`.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-negative path: valid metrics written in the project’s documented wrapped-field format disappear. The function should normalize/unbox field values before numeric validation, including top-level metrics, `pass_rates`, and nested `pass_rates[key]` values.
-
-> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-negative path: valid metrics written in the project’s documented wrapped-field format disappear. The function should normalize/unbox field values before numeric validation, including top-level metrics,`
-
-
-
-## adversarial_verify.py::_metric_items_from_top_or_pass_rates
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-The function name claims to extract finite metric items from either top-level metric fields or `pass_rates`.
-
-## FINDINGS
-1. Field extraction assumption: `pass_rates = d.get("pass_rates")` assumes `pass_rates` is the actual metrics dict. If it is wrapped as `{"principle": "...", "value": {...}}`, the code silently looks for metric keys at the wrapper level and finds nothing.
-
-2. Field extraction assumption: `value = d.get(key)` assumes each metric field is a bare finite number. A valid wrapped field like `{"principle": "...", "value": 0.91}` is rejected by `_is_finite_number(value)`.
-
-3. Field extraction assumption: `pass_rates.get(key)` assumes each nested metric value is a bare finite number. A wrapped nested metric like `{"principle": "...", "value": 0.91}` is rejected.
-
-4. No string/substring matching exists here. No boundary bug found.
-
-5. No negation/context scan exists here. No context-blind text bug found.
-
-6. No explicit numeric thresholds or off-by-one comparisons exist here. The numeric gate is type/shape based, not threshold based.
-
-7. Implementation is narrower than the function name: it extracts only unwrapped finite numbers from direct fields or direct `pass_rates` entries, not principle-wrapped values that the project convention allows.
-
-## COUNTEREXAMPLE
-```python
-d = {
-    "pass_rates": {
-        "principle": "metrics must include provenance",
-        "value": {
-            "auroc": 0.94,
-            "accuracy": 0.88,
-        },
-    }
-}
-
-_metric_items_from_top_or_pass_rates(d, ("auroc", "accuracy"))
-```
-
-Expected: `[("auroc", 0.94), ("accuracy", 0.88)]`  
-Actual: `[]`
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This is a real false-negative risk: valid metric evidence can disappear solely because it uses the repository’s documented principle-wrapped field shape. The function should unwrap `{"value": ...}` consistently before checking numeric-ness or traversing `pass_rates`, with tests for top-level wrapped metrics, wrapped `pass_rates`, and wrapped nested metric values.
-
-
-## adversarial_verify.py::check_degenerate_separation
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-Detects degenerate selector wins where vote cannot win, deltas are near-perfect, or oracle/set-encoder saturation makes the selection result non-evidential.
-
-## FINDINGS
-1. Field extraction assumption: `str(d.get(key, "")).lower() for key in ("honest_verdict", "experiment", "schema")` assumes these fields can be meaningfully stringified. It does not unwrap `{"principle": ..., "value": ...}` and can match text from `principle` instead of the actual value, or miss structured/list values depending on shape.
-
-2. Substring matching without boundaries: `marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")` is boundaryless. Counterexamples: `"not_arcgenerator_related"` matches `arcgen`; `"schema_cross_family_history_only"` matches `cross_family`; `"degeneralized_baseline"` matches `generaliz`.
-
-3. Negation/context blindness: the same marker scan does not distinguish actual scope from denial or metadata. `"not_arcgen_not_cross_family_no_generalization_claim"` still passes the scope gate, so unrelated or explicitly disclaimed artifacts can be checked and flagged if metrics happen to satisfy the thresholds.
-
-4. Threshold boundaries: `value >= DEGENERATE_DELTA_THRESHOLD` and `value <= DEGENERATE_BASELINE_THRESHOLD` are consistent with “near-perfect” and “near-zero” only if the constants are inclusive by design. The docstring explicitly cites `delta=1.0`, `vote@1=0.0`, and `oracle@K=1.0`, so equality at those exact values should be caught. No obvious off-by-one bug here.
-
-5. Docstring mismatch: the docstring says this detects “synthetic selection wins where vote cannot win and oracle saturates,” but the implementation can flag on `(near_perfect_delta and trivial_baseline)` without requiring `oracle_at_k` saturation. That is broader than the stated headline claim.
-
-6. Metric extraction cannot be fully audited from this snippet because `_metric_items_from_top_or_pass_rates` and `_metric_from_top_or_pass_rates` are not shown. The visible free-text gate is already enough to create both false positives and false negatives.
-
-## COUNTEREXAMPLE
-```python
-{
-    "honest_verdict": {
-        "principle": "This artifact is not an ArcGen or cross-family generalization claim.",
-        "value": "single-family diagnostic only; no transfer claim"
-    },
-    "top_pass_rates": {
-        "delta": 1.0,
-        "vote_at_1": 0.0
-    }
-}
-```
-This can pass the scope gate because `str(dict)` includes the negated `principle` text, then flag an artifact whose actual value explicitly says it is not a transfer/generalization claim.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The scope gate is not a reliable classifier: it stringifies arbitrary field shapes, uses boundaryless substring tests, and ignores negation/context. That makes the detector depend on accidental prose rather than structured artifact semantics, which is unacceptable for critical fabrication-detection infrastructure.
-
-
-## adversarial_verify.py::_is_control_arm_key
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-The function claims to return true only when an arm name describes a baseline/control condition.
-
-## FINDINGS
-1. Field extraction assumptions: no `d.get(...)` appears here, but `kl = key.lower()` assumes `key` is a bare string. A wrapped field like `{"principle": "...", "value": "baseline"}`, a list, or `None` will raise `AttributeError` instead of being unwrapped or rejected cleanly.
-
-2. String/substring matching without boundaries: `return any(marker in kl for marker in CONTROL_ARM_MARKERS)` performs raw substring matching. If `CONTROL_ARM_MARKERS` contains likely markers such as `"control"`, `"baseline"`, `"null"`, or `"sham"`, it can match inside unrelated names like `"uncontrolled_variable_probe"`, `"nonbaseline_model"`, `"nullify_patch_test"`, or `"shampoo_tokenizer_eval"`.
-
-3. Negation/context blindness: the same substring scan cannot distinguish `"control"` from `"not_control"`, `"anti_control"`, `"control_not_used"`, or `"non_control_arm"`. Those could be experimental arms explicitly saying they are not a control, yet this function would classify them as control arms.
-
-4. Boundary/off-by-one errors: no numeric thresholds exist.
-
-5. Docstring mismatch: `"True when an arm name describes a baseline/control condition."` The implementation is broader: it returns true when the lowercased key merely contains any marker substring, regardless of word boundaries, negation, or semantic context.
-
-6. Concrete misclassification exists: an honest experimental arm named `"uncontrolled_dropout_ablation"` could be classified as a control arm if `"control"` is in `CONTROL_ARM_MARKERS`, even though it describes an uncontrolled/experimental condition, not a baseline.
-
-## COUNTEREXAMPLE
-`key = "uncontrolled_dropout_ablation"`
-
-If `CONTROL_ARM_MARKERS` contains `"control"`, `_is_control_arm_key(key)` returns `True`, falsely classifying an experimental arm as a control arm.
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-This is a real bug pattern: raw substring matching is too weak for classifying experiment arms in adversarial QA infrastructure. The function should unwrap structured field values before normalization and match explicit tokens or anchored patterns with negation handling, not arbitrary substrings.
+The reproduction exception is dangerously broad: it converts a substring marker anywhere in either key into a blanket allowlist for exact equality. This is exactly the kind of false negative path a fabrication linter cannot afford, especially because negated names like `not_reproduced` and `failed_replication` look realistic.
 
 > **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
 
+
+
+## adversarial_verify.py::_is_declared_honest_zero_delta
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Returns true only for explicit zero-delta metrics documented as measured honest nulls.
+
+## FINDINGS
+1. Field extraction assumption: `if not d.get("null_delta_methodology_note"):` treats any truthy wrapper dict as a valid note, even if `{"principle": "...", "value": ""}` or `{"value": None}`. That is a false positive path.
+2. Field extraction assumption: `d.get("bare_control_passed") is True`, `d.get("positive_control_passed") is True`, and `d.get("false_negative_risk_checked") is True` require bare booleans. Wrapped honest fields like `{"principle": "...", "value": True}` are rejected. That is a false negative.
+3. Substring matching without boundaries: `if "delta" not in kl:` matches inside unrelated words or negated labels. Example: `nondelta_solve_rate` passes the delta gate even though it says non-delta.
+4. Substring matching without boundaries: `marker in kl` lets `"actions"` match inside `"transactions_delta"`, `"solve_rate"` match inside `"unsolve_rate_delta"`, and `"live_lift"` match inside `"not_live_lift_delta"`.
+5. Negation/context blindness: keys like `not_level_delta`, `no_live_lift_delta`, `blocked_delta_not_attempted_solve_rate`, or `nondelta_solve_rate` can satisfy the marker checks despite explicitly negating or excluding the condition.
+6. Boundary/off-by-one: no numeric thresholds exist here.
+7. Docstring mismatch: claim is “explicit zero deltas documented as measured honest nulls.” The implementation never checks that the metric value is zero, never checks that the note says it was measured, and accepts arbitrary truthy note content.
+
+## COUNTEREXAMPLE
+```python
+k = "transactions_delta"
+d = {
+    "null_delta_methodology_note": {"principle": "audit", "value": ""},
+    "bare_control_passed": True,
+}
+```
+This returns `True` because `"delta"` is present and `"actions"` matches inside `"transactions"`, despite not being an actions metric and having an empty wrapped methodology note.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This is not just missing a word boundary; it combines wrapper-blind field extraction, exact-boolean assumptions, substring taxonomy matching, and no verification of “zero” or “measured.” In critical QA/fabrication detection code, that produces both silent false negatives and bogus quarantine exemptions.
+
+
+## adversarial_verify.py::check_implausible_perfect
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Detects implausibly perfect metrics: score fields at `1.0` and error/loss fields at `0.0`.
+
+## FINDINGS
+1. Field extraction assumption: `if not _is_finite_number(v): continue` assumes metric values are bare finite numbers. A wrapped field like `{"principle": "...", "value": 1.0}` is silently skipped, producing a false negative.
+
+2. Field extraction assumption: `n = d.get("n_samples") or d.get("n_adversarial_examples") or 0` assumes sample counts are bare numbers. If `n_samples` is `{"principle": "...", "value": 42}`, `int(n)` fails and `n` becomes `0`, suppressing the perfect-score warning.
+
+3. Substring matching bug: `any(s in kl for s in perfect_score_fields)` has no boundaries. `imprecision=1.0` falsely matches `"precision"` even though imprecision is not precision. `accuracy_note=1.0` also matches even if the field is not a metric.
+
+4. Substring matching bug: `any(s in kl for s in perfect_error_fields)` has no boundaries. `terror=0.0` matches `"error"` inside an unrelated word. `clossary=0.0` would match `"loss"` inside nonsense/free-form field naming.
+
+5. Substring matching bug: `if "baseline" not in kl and "zero" not in kl:` is context-free. `nonbaseline_loss=0.0` contains `"baseline"` and is incorrectly exempted. `not_zero_stub_error=0.0` contains `"zero"` and is incorrectly exempted.
+
+6. Negation/context blindness: the field-name exemption treats any occurrence of `"baseline"` or `"zero"` as exculpatory. It cannot distinguish `baseline_loss` from `nonbaseline_loss`, or `zero_reference_delta` from `not_zero_fabricated_error`.
+
+7. Boundary issue: `if n > 0 and n < 1000:` means exactly `n == 1000` is not flagged. The docstring does not state a sample threshold, so the implementation is narrower than the claim.
+
+8. Claim mismatch: docstring says `TPR/acc=1.0, error=0.0`; implementation also scans `auroc`, `f1`, `precision`, `recall`, `pass_rate`, `success_rate`, `agreement_rate`, `loss`, `delta`, `divergence`, and `violations`. That is broader than the parenthetical claim, but narrower in practice because wrapped values are invisible.
+
+## COUNTEREXAMPLE
+```python
+{
+    "accuracy": {"principle": "reported metric", "value": 1.0},
+    "n_samples": {"principle": "sample count", "value": 176}
+}
+```
+This is a plausible project artifact field shape and should be flagged as implausibly perfect at small N, but the function skips `accuracy` because the value is a dict.
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+The field-wrapper failure is a real false negative in the exact convention the project uses. The substring checks are also too loose and can both over-flag honest fields and under-flag suspicious ones through accidental exemptions.
+
+
+## adversarial_verify.py::check_sign_anomaly
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+The function claims to detect optimization metrics whose final value moved in the wrong direction.
+
+## FINDINGS
+1. Field extraction is broken for wrapped values. `init_keys = [k for k in d if k.startswith("initial_") and _is_finite_number(d[k])]` assumes `d[k]` is a bare finite number. A valid `{"principle": "...", "value": 0.4}` field is silently skipped.
+
+2. The same bug exists for finals: `if fk not in d or not _is_finite_number(d[fk]): continue` assumes `d[fk]` is bare numeric. Wrapped final values, lists, or `None` are treated as non-numeric and the anomaly is missed instead of being normalized or explicitly rejected.
+
+3. The conversions `iv = float(d[ik])` and `fv = float(d[fk])` also assume bare numeric fields. There is no unwrap step, so this is incompatible with Principle-Annotated Artifact Fields.
+
+4. Substring matching has no boundaries: `m in metric_name.lower()` will match inside unrelated or negated words. `initial_inaccuracy` matches `accuracy`; `initial_lossless_compression_ratio` matches `loss`; `initial_unrewarded_fraction` matches `reward`; `initial_no_violation_rate` matches `violation`.
+
+5. The code is context-blind. `no_violation_rate` increasing is good, but this code treats `violation` as decrease-expected and flags it. `inaccuracy` decreasing is good, but this code sees `accuracy` and flags it as a maximization failure.
+
+6. Metrics containing both token classes become nonsensical. `reward_loss` or `loss_score` can set both `decrease_expected` and `increase_expected`, so either direction can be flagged depending on the branch.
+
+7. No boundary/off-by-one bug found in `fv > iv` / `fv < iv`. Equality is not flagged, which matches the narrow docstring claim of “wrong direction,” not “no improvement.”
+
+8. The implementation is much narrower than the docstring. It only handles `initial_*` / `final_*` pairs and a tiny hardcoded token list; common maximize metrics like `auroc`, `auc`, `f1`, `precision`, `recall`, and `pass_rate` are missed entirely.
+
+## COUNTEREXAMPLE
+```python
+{
+    "initial_loss": {"principle": "measured before optimization", "value": 0.25},
+    "final_loss": {"principle": "measured after optimization", "value": 0.90},
+}
+```
+This is a real loss increase and should be flagged. The function skips it because both values are wrapped dicts, not bare numbers.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This function is not safe as critical QA infrastructure because it combines untyped field reads with substring-based semantic inference. It creates silent false negatives for wrapped fields and common metrics, and false positives for negated or compound metric names. The fix needs explicit value unwrapping plus explicit metric direction metadata or a tokenized, tested classifier.
+
+
+## adversarial_verify.py::_has_compute_bound_marker
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+The function claims to “Walk dict for any compute-bound marker string.”
+
+## FINDINGS
+1. Field extraction assumptions: none via `d.get(...)`; the code does not read individual fields. It does assume `d` is JSON-serializable: `text = json.dumps(d)`. Non-JSON values would raise instead of returning `False`.
+
+2. Substring matching without boundaries: `return any(m in text for m in COMPUTE_BOUND_MARKERS)` is raw substring search across the entire JSON serialization. A marker like `cuda` would match `not_cuda`, `cuda_disabled`, or `avoided_cuda`; a marker like `gpu` would match `egpu`, `gpuless`, or `no_gpu_used`; a marker like `met` would match `meta_tensor`.
+
+3. Negation/context blindness: `return any(m in text for m in COMPUTE_BOUND_MARKERS)` cannot distinguish “used GPU” from “did not use GPU” or “blocked GPU path.” It will also match explanatory text such as “this check exists to detect CUDA fabrication” even when the artifact is explicitly saying it did not use CUDA.
+
+4. Boundary/off-by-one errors: none; no numeric thresholds or comparisons exist in this function.
+
+5. Docstring/name mismatch: claim: `"""Walk dict for any compute-bound marker string."""` Actual logic is broader and dumber than “marker” detection: it scans keys, values, principle annotations, notes, docstrings, negated statements, and longer unrelated tokens after JSON stringification.
+
+6. Concrete misclassification: an honest artifact field like `{"honest_verdict": "embedding_only_cpu_run; no_gpu_used; cuda_not_available; compute-bound path explicitly not attempted"}` would be flagged if `gpu`, `cuda`, or `compute-bound` are markers, despite saying the opposite.
+
+## COUNTEREXAMPLE
+```python
+{
+    "honest_verdict": "embedding_only_cpu_run; no_gpu_used; cuda_not_available; compute-bound path explicitly not attempted",
+    "inference_substrate": {"principle": "truthful compute disclosure", "value": "cpu_embeddings_only"}
+}
+```
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This is not robust marker detection; it is unstructured substring search over serialized JSON. It will produce false positives from negation, provenance text, wrapper metadata, and unrelated longer tokens, and it may produce false negatives if marker casing differs from the artifact text.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
+
+
+
+## adversarial_verify.py::_inference_substrate_text
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Return the declared `inference_substrate` as a stripped string.
+
+## FINDINGS
+1. Field extraction assumption: `return str(d.get("inference_substrate") or "").strip()` assumes `inference_substrate` is a bare scalar. If the field is `{"principle": "...", "value": "embedding_only_llm"}`, this returns the Python dict repr, not the declared substrate value.
+
+2. Field extraction also mishandles falsey bare values: `d.get("inference_substrate") or ""` converts `0`, `False`, `[]`, and `{}` to `""` before `str()`. If those are invalid, this silently normalizes bad data instead of preserving or rejecting it.
+
+3. No substring or regex matching occurs in this function, so there is no direct word-boundary bug here.
+
+4. No negation/context scan occurs in this function.
+
+5. No numeric threshold or off-by-one condition exists.
+
+6. The implementation is narrower than the docstring: it does not return the declared substrate when the declaration uses the project’s documented wrapped-field shape.
+
+## COUNTEREXAMPLE
+```python
+{
+    "inference_substrate": {
+        "principle": "Principle-Annotated Artifact Fields",
+        "value": "embedding_only_llm"
+    }
+}
+```
+
+This returns:
+```python
+"{'principle': 'Principle-Annotated Artifact Fields', 'value': 'embedding_only_llm'}"
+```
+
+not:
+```python
+"embedding_only_llm"
+```
+
+## RECOMMENDATION
+ADD_FIELD_UNWRAP
+
+## RATIONALE
+This is the same class of silent field-shape bug already found elsewhere: documented wrapped fields are treated as Python repr text. Any downstream exact match or taxonomy lookup on the returned substrate will fail or behave accidentally based on substrings inside the repr.
+
+
+## adversarial_verify.py::_inference_substrate_matches
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+Detects whether `inference_substrate` declares a canonical substrate value, allowing human annotation after the value.
+
+## FINDINGS
+1. Field extraction assumption: no direct `d.get(...)` appears, but `raw = _inference_substrate_text(d)` is trusted to return a string. The function immediately does `raw.split(...)` and `raw.startswith(...)`; if the helper returns `None`, a list, or an unwrapped `{"principle": ..., "value": ...}` dict, this either crashes or silently misclassifies. Cannot verify from this snippet whether `_inference_substrate_text` unwraps principle/value fields.
+
+2. Substring/boundary issue: `if raw.startswith(canonical):` allows `-` as a boundary. That means `canonical="embedding_only_llm_calls"` falsely matches `embedding_only_llm_calls-v2`, even though that could be a distinct enum/substrate rather than an annotation separator. The comment only defends against `_v2`, not `-v2`.
+
+3. Negation/context blindness: this function does not scan for forbidden phrases, so no direct negation bug is present.
+
+4. Boundary/off-by-one: `raw[len(canonical) : len(canonical) + 1] in {...}` handles exact equality separately, so exact-threshold string length is fine. The bug is semantic boundary choice, not off-by-one.
+
+5. Docstring mismatch: claim says “declares a canonical substrate value.” Actual logic is broader: it accepts any string starting with the canonical value followed by `" "`, `"-"`, `";"`, `","`, `":"`, or `"."`, even when that suffix may be part of a different substrate identifier.
+
+6. Misclassification is constructible: a distinct substrate enum using hyphen suffix will be accepted as the canonical substrate.
+
+## COUNTEREXAMPLE
+```python
+d = {"inference_substrate": "embedding_only_llm_calls-v2"}
+canonical = "embedding_only_llm_calls"
+```
+This returns `True`, falsely treating a potentially distinct substrate as the canonical one.
+
+## RECOMMENDATION
+ADD_TEST_CASE
+
+## RATIONALE
+The separator tolerance is intentionally broad, but `-` is not a safe boundary for enum-like values because hyphenated variants are realistic. Add tests for `canonical-v2`, `canonical_fast`, and principle/value wrapped substrate fields; if hyphenated variants are valid enum syntax, the matching rule needs redesign rather than another substring patch.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `REAL_BUG` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `d.get(...)`
+
+
+
+## adversarial_verify.py::_is_precondition_check_only_blocked
+
+**Verdict:** `REAL_BUG`
+
+## VERDICT
+REAL_BUG
+
+## CLAIM
+`_is_precondition_check_only_blocked` claims to detect artifacts that stopped before invoking the compute substrate, either by `precondition_check_only` substrate declaration or by a `blocked_` honest verdict.
+
+## FINDINGS
+1. `verdict = str(d.get("honest_verdict") or "")` assumes `honest_verdict` is a bare scalar. A wrapped field like `{"principle": "terminal verdict", "value": "blocked_precondition_failed"}` becomes a Python dict repr and fails `startswith("blocked_")`, causing a false negative.
+
+2. The docstring says it recognizes “the explicit `precondition_check_only` substrate declaration,” but the implementation never reads `inference_substrate` at all. That claimed detection path is completely missing.
+
+3. `verdict.startswith("blocked_")` does not match inside unrelated longer words, but it also does not enforce the docstring’s “bare `blocked_`-prefixed honest_verdict on its own.” A free-text verdict like `blocked_precondition_failed_but_manual_retry_ran_full_generation` is accepted solely because of the prefix.
+
+4. Negation/context blindness exists. Any verdict beginning with `blocked_` is trusted as proof no compute happened, even if the rest of the string says compute later happened, the block was bypassed, or this was only describing a blocked case.
+
+5. No numeric thresholds or off-by-one risks exist in this function.
+
+6. Implementation is narrower than the docstring because it omits `precondition_check_only`; broader than the docstring because it accepts any prefix string, not a validated terminal blocked verdict.
+
+## COUNTEREXAMPLE
+```python
+{
+    "inference_substrate": {"principle": "declared substrate", "value": "precondition_check_only"},
+    "honest_verdict": "passed"
+}
+```
+This should return `True` per the docstring’s explicit substrate declaration path, but returns `False`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This function is currently neither implementing its own claimed contract nor safely parsing project-standard wrapped fields. The dangerous part is silent false negatives: honest blocked/precondition-only artifacts can still fall through to duration floors, while malformed or context-bearing `blocked_...` text is blindly trusted.
 
