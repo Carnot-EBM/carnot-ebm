@@ -25570,6 +25570,90 @@ text scorer fallback.
 |---|---|---|
 | REQ-VERIFY-5263 | Planned (`python/carnot/experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`, `results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json`) | Planned (`tests/python/test_experiment_5263_neuron_attention_energy_hallucination_probe_v481.py`) |
 
+### REQ-VERIFY-5271: SOTA GGUF Internal Telemetry Receipt Harness V482
+
+The repository SHALL provide Exp 5271 at
+`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`
+and write
+`results/experiment_5271_sota_telemetry_receipt_harness_v482.json`
+without modifying `scripts/research_conductor.py`. The runner is a
+receipts-first local telemetry harness only: it SHALL record whether local
+llama.cpp-backed SOTA GGUF inference exposes logits, token logprobs, hidden
+states, attention summaries, timing receipts, prompt checksums, output
+checksums, and GPU/offload receipts for downstream internal-verifier
+experiments. It SHALL NOT claim hallucination-detection quality, verifier
+uplift, benchmark improvement, or memory usefulness.
+
+The Step 0 preconditions SHALL run before model telemetry: GPU visibility,
+llama.cpp or llama-cpp-python import/version/origin, model cache paths, free
+disk, and local resolvability for at least one mandated SOTA GGUF model without
+using `AutoTokenizer` or any transformers tokenizer on a GGUF repository. The
+mandated `MODEL_SPECS` are exactly:
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as `middle_moe`. Legacy tiny models MAY be
+recorded only as `smoke_test_not_headline` CPU smoke receipts and SHALL NOT
+open the headline telemetry gate.
+
+For every locally available mandated model, the runner SHALL load the concrete
+local `.gguf` path through llama.cpp-backed APIs only, run a tiny deterministic
+prompt, and record per-model telemetry availability. Hidden states or attention
+summaries that are not exposed by the runtime SHALL be recorded as
+`capability_absent`; the runner SHALL NOT fall back to generated-text scoring,
+external text scorers, LLM judges, NLI scorers, or any other substitute signal.
+Live-model telemetry receipts SHALL include real wall-clock duration and SHALL
+not emit a sub-second duration for any completed live-model claim.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `telemetry_harness_ready`,
+`telemetry_harness_ready_principle`, `exposed_telemetry_fields`,
+`duration_receipts`, `gpu_offload_receipts`, `prompt_output_checksums`,
+`no_quality_claim`, and `tests_run`. `telemetry_harness_ready` SHALL be a bare
+boolean gate for Exp 5272 and Exp 5276. `honest_verdict.value` SHALL start with
+`complete:` or `blocked_` and state whether telemetry receipts are ready.
+`inference_substrate.value` SHALL be
+`live_llm_internal_telemetry_local_gguf_sota`. `no_quality_claim.value` SHALL
+be true.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5271 verdict; starts with complete: or blocked_ and states whether SOTA GGUF telemetry receipts are ready for downstream verifier experiments."
+- `inference_substrate`: principle "Declares live llama.cpp-backed local SOTA GGUF internal telemetry, preventing cached text scoring or non-GGUF fallbacks from being mistaken for receipts."
+- `preconditions_checked`: principle "Records GPU visibility, llama.cpp version/origin, cache paths, free disk, and local GGUF resolvability before any telemetry claim."
+- `MODEL_SPECS`: principle "Records mandated SOTA GGUF model IDs, roles, quantization, local file receipts, and runtime status; legacy smoke models cannot open the headline gate."
+- `telemetry_harness_ready`: principle "Bare gate for exp5272 and exp5276; true only when at least one mandated local SOTA GGUF completes live telemetry with usable internal/logprob/logit receipts."
+- `telemetry_harness_ready_principle`: principle "Explains the exact ready model receipts or blockers used by downstream structured gates."
+- `exposed_telemetry_fields`: principle "Per-model availability map for logits, token logprobs, hidden states, and attention summaries; unavailable internal surfaces are recorded as capability_absent rather than substituted."
+- `duration_receipts`: principle "Per-model and total wall-clock receipts proving live local GGUF telemetry took real time and did not produce a sub-second live-model artifact."
+- `gpu_offload_receipts`: principle "Driver/device/runtime/offload settings proving which GPU and llama.cpp offload path was visible or attempted."
+- `prompt_output_checksums`: principle "Per-model prompt and output checksums prove the tiny deterministic telemetry prompt and observed output without treating text content as a verifier score."
+- `no_quality_claim`: principle "Must be true; Exp 5271 measures telemetry availability only and makes no hallucination-detection or verifier-quality claim."
+- `tests_run`: principle "Commands run to validate the harness module, new-code coverage, and repository test status, with outcomes."
+
+### SCENARIO-VERIFY-5271: Receipt-Only Telemetry Gate
+
+Given local GPU and llama.cpp environment receipts and the three mandated SOTA
+GGUF model IDs, when Exp 5271 runs, then it resolves local `.gguf` paths without
+using `AutoTokenizer`, runs a tiny deterministic llama.cpp-backed prompt for
+each available mandated model, records prompt/output checksums, timing,
+GPU/offload receipts, and exposed telemetry fields, writes the required result
+artifact, and sets `telemetry_harness_ready=true` only when at least one
+mandated model completes live telemetry with usable logit, logprob, hidden, or
+attention receipts.
+
+If no mandated model resolves, llama.cpp is unavailable, every live run fails,
+or every completed live run exposes only generated text, then the same runner
+writes a `blocked_` artifact, preserves exact blockers and duration receipts,
+sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces as
+`capability_absent` when applicable, and keeps `no_quality_claim.value=true`.
+
+## Implementation Status (REQ-VERIFY-5271)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
+
 ### REQ-VERIFY-5264: Cached-Fixture Verifier-Dose Scheduler Replay V481
 
 The repository SHALL provide Exp 5264 at
