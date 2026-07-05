@@ -12,6 +12,79 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-5251: Token-Guard Fragment-Level Carnot Pilot
+
+The repository shall provide an Exp 5251 local SOTA GGUF pilot that tests a
+Token-Guard-inspired fragment self-check loop over 8-12 existing semantic
+verification fixtures. The pilot shall first check CUDA visibility, a local
+CUDA-capable GGUF runtime, and at least one mandated cached SOTA GGUF from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If any precondition is unavailable, the
+pilot shall write a blocked artifact and shall not substitute a tiny model.
+
+The pilot shall compare no-fragment-gate generation against a fragment loop
+that generates a short reasoning fragment, gates it with deterministic Carnot
+provenance/support checks and an internal energy-style score, allows one
+regeneration, then verifies the final answer with deterministic fixture
+checks. The pilot shall not reopen the retired Phase D generated-text/logprob
+scorer path.
+
+The terminal artifact shall be
+`results/experiment_5251_token_guard_carnot_pilot_v480.json` and shall include
+principle-annotated `honest_verdict`, `inference_substrate`,
+`model_specs`, `retired_phase_d_path_reopened`, `fixtures_count`,
+`unsupported_claim_delta`, `deterministic_violation_delta`,
+`regeneration_count`, `false_accepts`, and `consumer_recommendation` fields.
+
+Field principles:
+
+- Verbatim: The terminal value must say whether fragment self-checking helped, was null, was harmful, or blocked before inference.
+- Verbatim: Declares that this artifact used local SOTA GGUF inference rather than cached candidate scoring or external text scoring.
+- Verbatim: Names the exact mandated model, quantization, runtime, seed, and hashes so the live inference claim is replayable.
+- Verbatim: Guards against reviving off-path generated-text/logprob scoring as the primary metric.
+- Verbatim: Bounds the pilot to the requested existing deterministic fixture panel.
+- Verbatim: Primary harm metric: gated unsupported claims minus no-gate unsupported claims.
+- Verbatim: Secondary metric: gated deterministic verifier violations minus no-gate violations.
+- Verbatim: Measures how often the fragment gate actually exercised regeneration.
+- Verbatim: Counts accepted fragments that later led to deterministic final violations.
+- Verbatim: Converts the measured delta into keep, retire, or redesign guidance.
+
+- `honest_verdict`: The terminal value must say whether fragment
+  self-checking helped, was null, was harmful, or blocked before inference.
+- `inference_substrate`: Declares that this artifact used local SOTA GGUF
+  inference rather than cached candidate scoring or external text scoring.
+- `model_specs`: Names the exact mandated model, quantization, runtime, seed,
+  and hashes so the live inference claim is replayable.
+- `retired_phase_d_path_reopened`: Guards against reviving off-path
+  generated-text/logprob scoring as the primary metric.
+- `fixtures_count`: Bounds the pilot to the requested existing deterministic
+  fixture panel.
+- `unsupported_claim_delta`: Primary harm metric: gated unsupported claims
+  minus no-gate unsupported claims.
+- `deterministic_violation_delta`: Secondary metric: gated deterministic
+  verifier violations minus no-gate violations.
+- `regeneration_count`: Measures how often the fragment gate actually
+  exercised regeneration.
+- `false_accepts`: Counts accepted fragments that later led to deterministic
+  final violations.
+- `consumer_recommendation`: Converts the measured delta into keep, retire, or
+  redesign guidance.
+
+### SCENARIO-VERIFY-5251: Fragment Gate Reports Bounded SOTA Delta
+
+Given CUDA, a local CUDA-capable GGUF runtime, and a mandated SOTA GGUF are
+available,
+When the Exp 5251 pilot runs over 8-12 selected Exp 214 semantic-failure
+fixtures,
+Then the artifact records prompt and completion checksums, fixture count,
+unsupported-claim delta, deterministic-violation delta, regeneration count,
+false accepts, accuracy change, and a consumer recommendation that explicitly
+states whether fragment self-checking helped, was null, or was harmful.
+
+If any precondition is missing, then the same artifact is written with an
+`honest_verdict.value` beginning with `blocked_`, `fixtures_count.value=0`,
+`retired_phase_d_path_reopened.value=false`, and no tiny-model headline.
+
 ### REQ-VERIFY-2976: Intent-Preserving Trace-Aware DCCD Repair Protocol
 
 The repository shall provide a deterministic Exp 2976 protocol builder that
