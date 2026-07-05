@@ -1,0 +1,167 @@
+{
+  "bound_contributors": [
+    {
+      "bound_contribution": 0.45000000000000007,
+      "contribution_fraction": 0.6440071556350626,
+      "driver_rank": 1,
+      "driver_reason": "largest contribution to certified upper bound",
+      "interval": [
+        -0.5,
+        0.75
+      ],
+      "max_envelope_gap": 0.078125,
+      "variable_index": 0
+    },
+    {
+      "bound_contribution": 0.24875000000000003,
+      "contribution_fraction": 0.3559928443649374,
+      "driver_rank": 2,
+      "driver_reason": "secondary contribution",
+      "interval": [
+        -0.5,
+        0.75
+      ],
+      "max_envelope_gap": 0.0390625,
+      "variable_index": 1
+    }
+  ],
+  "experiment_id": "exp5265-kan-certificate-explanation-refinement-v481",
+  "methodology_note": "The refined split tightens the pointwise chord-envelope gap. The output upper bound and same-property slack remain unchanged because both univariate components are monotone on the bounded interval and the maximum is already at the shared upper endpoint.",
+  "no_refinement": {
+    "envelope_gap_bound": 0.1171875,
+    "envelope_gap_reduction": 0.0,
+    "interval_count": 2,
+    "intervals_by_variable": [
+      [
+        {
+          "chord_intercept": 0.22500000000000003,
+          "chord_slope": 0.30000000000000004,
+          "interval": [
+            -0.5,
+            0.75
+          ],
+          "max_envelope_gap": 0.078125,
+          "max_envelope_value": 0.45000000000000007,
+          "max_witness_x": 0.75,
+          "variable_index": 0
+        }
+      ],
+      [
+        {
+          "chord_intercept": 0.11750000000000002,
+          "chord_slope": 0.17500000000000002,
+          "interval": [
+            -0.5,
+            0.75
+          ],
+          "max_envelope_gap": 0.0390625,
+          "max_envelope_value": 0.24875000000000003,
+          "max_witness_x": 0.75,
+          "variable_index": 1
+        }
+      ]
+    ],
+    "label": "no_refinement",
+    "output_upper_bound": 0.6987500000000001,
+    "same_property_slack": 0.02124999999999988
+  },
+  "property_results": [
+    {
+      "actual_witness_value": null,
+      "certificate_slack": 0.02124999999999988,
+      "certified": true,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": null,
+      "property_id": "v481_true_upper_property_preserved",
+      "rejected": false,
+      "threshold": 0.72
+    },
+    {
+      "actual_witness_value": 0.6987500000000001,
+      "certificate_slack": -0.0007500000000001394,
+      "certified": false,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": [
+        0.75,
+        0.75
+      ],
+      "property_id": "v481_near_threshold_false_upper_property",
+      "rejected": true,
+      "threshold": 0.698
+    }
+  ],
+  "refined": {
+    "envelope_gap_bound": 0.05859375,
+    "envelope_gap_reduction": 0.05859375,
+    "interval_count": 3,
+    "intervals_by_variable": [
+      [
+        {
+          "chord_intercept": 0.1625,
+          "chord_slope": 0.17500000000000002,
+          "interval": [
+            -0.5,
+            0.125
+          ],
+          "max_envelope_gap": 0.01953125,
+          "max_envelope_value": 0.184375,
+          "max_witness_x": 0.125,
+          "variable_index": 0
+        },
+        {
+          "chord_intercept": 0.13125,
+          "chord_slope": 0.4250000000000001,
+          "interval": [
+            0.125,
+            0.75
+          ],
+          "max_envelope_gap": 0.01953125,
+          "max_envelope_value": 0.45000000000000007,
+          "max_witness_x": 0.75,
+          "variable_index": 0
+        }
+      ],
+      [
+        {
+          "chord_intercept": 0.11750000000000002,
+          "chord_slope": 0.17500000000000002,
+          "interval": [
+            -0.5,
+            0.75
+          ],
+          "max_envelope_gap": 0.0390625,
+          "max_envelope_value": 0.24875000000000003,
+          "max_witness_x": 0.75,
+          "variable_index": 1
+        }
+      ]
+    ],
+    "label": "driver_refined",
+    "output_upper_bound": 0.6987500000000001,
+    "same_property_slack": 0.02124999999999988
+  },
+  "refinement_decisions": [
+    {
+      "decision": "split_interval",
+      "original_interval": [
+        -0.5,
+        0.75
+      ],
+      "reason": "largest bound contributor also has the largest convex-envelope gap; splitting the interval reduces pointwise gap without changing the endpoint maximum",
+      "refined_intervals": [
+        [
+          -0.5,
+          0.125
+        ],
+        [
+          0.125,
+          0.75
+        ]
+      ],
+      "variable_index": 0
+    }
+  ],
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5265.kan_certificate_explanation_refinement.v481.explanation",
+  "source_artifact": "results/experiment_5254_kan_convex_envelope_certificate_v480.json"
+}
