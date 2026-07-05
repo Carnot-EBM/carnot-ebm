@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.481",
+  "generated_at": "2026-07-05T12:59:18Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The authoritative timing window contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. The GPU snapshot is idle, but with no compute-bound entries in the timing data, no GPU-efficiency bug or DualGPURunner miss is supported.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone for compute-bound experiment duration bottlenecks",
+    "no GPU-idle bottleneck is reportable because the timing data contains 0 compute-bound experiments"
+  ],
+  "improvements_suggested": [
+    "Have the retrospective path emit an explicit empty-window classification when live git-log and disk-mtime reconstruction both find no experiment commits.",
+    "Keep GPU-idle recommendations gated on compute-bound timing entries carrying GGUF, CUDA, or requires_gpu evidence.",
+    "Auto-fill no-data retrospective sections from the locked timing fields before consulting any broader repository context."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a structured empty-window reason to the timing collector output.",
+    "Suppress GPU-utilization remediation text unless compute_bound_experiments_count is greater than 0.",
+    "Add a retro self-check that rejects experiment IDs, durations, or metrics absent from the supplied timing block."
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective is intentionally narrow because the timing block contains no experiment entries. The idle GPU state is recorded as context only; it is not treated as wasted compute without a compute-bound task in the milestone-scoped data.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
