@@ -134,6 +134,9 @@ full-FT-on-a-3090 build the existing gap entry already scoped.
 
 ## Cross-references
 
+- `docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md` — the staged plan for turning a
+  successfully-trained public-game TRM into something that can help on hidden games (weights don't
+  transfer, but a recipe + online adaptation might)
 - `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md` — the much
   larger, better-validated training-data source (144 winning human trajectories, all 25 public games)
   found in response to the operator's direct question, and the staging bug currently blocking it
