@@ -775,6 +775,41 @@ Then the artifact reports the maximum PWA segment count verified, whether the
 false property was rejected, minimum certificate slack, solver timing, and an
 honest verdict scoped only to the bounded deterministic KAEM certificate.
 
+## REQ-KAN-5254: V480 Bounded KAN Convex-Envelope Certificate Stress Test
+
+The KAN verification tier SHALL provide an Exp 5254 CPU-only convex-envelope or
+convex-relaxation stress test for a small additive KAEM/KAN-style fixture. The
+stress test MUST compare against the committed Exp 5242 PWA baseline on a
+bounded input property, certify at least one expected-true property, reject at
+least one deliberate expected-false property, and state the certificate scope
+explicitly.
+
+The implementation MAY be a deterministic prototype when the full arXiv
+2604.03871 method is too large for the current codebase, but it MUST keep the
+claim narrow: bounded polynomial univariate components, offline deterministic
+certificate arithmetic, no broad KAN verification, no nonlinear global proof
+coverage, no hardware execution, and no hardware speedup claim.
+
+The deliverable MUST be written to
+`results/experiment_5254_kan_convex_envelope_certificate_v480.json` with
+principle-wrapped fields for `honest_verdict`, `inference_substrate`,
+`certificate_method`, `variables_verified`, `max_segments_or_envelopes_verified`,
+`input_box`, `true_property_certified`, `false_property_rejected`,
+`certificate_slack_min`, `solve_time_s`, and `no_hardware_speedup_claim`.
+`inference_substrate` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict` MUST start with `complete:` or `blocked_` and state the bounded
+certificate scope.
+
+### SCENARIO-KAN-5254: Convex Envelope Certificate Certifies True Bound And Rejects False Bound
+
+Given the committed Exp 5242 bounded KAEM PWA/MILP baseline artifact,
+When Exp 5254 builds a deterministic two-variable convex-envelope relaxation
+over the same bounded input box,
+Then the artifact records the baseline PWA segment count, convex envelope count,
+variable count, input box, solve time, minimum slack, true-property
+certification, false-property rejection, explicit certificate method, and no
+hardware speedup claim without claiming broad KAN verification.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -815,6 +850,7 @@ honest verdict scoped only to the bounded deterministic KAEM certificate.
 | REQ-KAN-5140 | Proposed | Exp 5140 target: V471 symbolic distillation of Exp 5128 residual/certificate behavior with exact cycle reconstruction and adversarial controls. |
 | REQ-KAN-5230 | Planned | Exp 5230 target: V478 tiny KAEM PWA/MILP certificate pilot tied to `UnivariateKAEMLayer`, with monotonicity and no-unsafe-decision checks only. |
 | REQ-KAN-5242 | Planned | Exp 5242 target: V479 bounded abstraction stress test that reproduces Exp 5230, adds limited segment/domain/false-property pressure, and reports the achieved certificate boundary without hardware or broad KAN claims. |
+| REQ-KAN-5254 | Planned | Exp 5254 target: V480 bounded convex-envelope certificate prototype compared against Exp 5242, with true-property certification, false-property rejection, and no hardware or broad KAN claims. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

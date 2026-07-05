@@ -1,0 +1,196 @@
+{
+  "baseline_comparison": {
+    "certificate_slack_min": 0.021250013932586076,
+    "false_property_rejected": true,
+    "input_box": [
+      [
+        -0.5,
+        0.75
+      ],
+      [
+        -0.5,
+        0.75
+      ]
+    ],
+    "max_pwa_segments_verified": 10,
+    "reproduced": true,
+    "solve_time_s": 0.055886,
+    "source_artifact": "results/experiment_5242_kan_certificate_abstraction_scale_v479.json",
+    "variables_verified": 2
+  },
+  "blocked_reason": null,
+  "certificate_method": {
+    "principle": "Names the narrow deterministic convex-relaxation method actually used.",
+    "value": "convex_chord_upper_relaxation_for_bounded_univariate_quadratics"
+  },
+  "certificate_slack_min": {
+    "principle": "Minimum positive slack among certified expected-true properties.",
+    "value": 0.02124999999999988
+  },
+  "claim_limits": [
+    "bounded deterministic convex-relaxation prototype only",
+    "no broad KAN verification claim",
+    "no nonlinear global proof coverage claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "convex_relaxation": {
+    "envelope_count": 2,
+    "envelope_upper_bound": 0.6987500000000001,
+    "input_box": [
+      [
+        -0.5,
+        0.75
+      ],
+      [
+        -0.5,
+        0.75
+      ]
+    ],
+    "method": "convex_chord_upper_relaxation_for_bounded_univariate_quadratics",
+    "scope": "bounded two-variable additive polynomial fixture; chord upper relaxations only, not full nonlinear KAN global verification",
+    "units": [
+      {
+        "chord_upper_envelope": {
+          "intercept": 0.22500000000000003,
+          "max_envelope_value": 0.45000000000000007,
+          "max_witness_x": 0.75,
+          "slope": 0.30000000000000004
+        },
+        "interval": [
+          -0.5,
+          0.75
+        ],
+        "polynomial": {
+          "constant": 0.15,
+          "linear": 0.25,
+          "quadratic": 0.2
+        },
+        "variable_index": 0
+      },
+      {
+        "chord_upper_envelope": {
+          "intercept": 0.11750000000000002,
+          "max_envelope_value": 0.24875000000000003,
+          "max_witness_x": 0.75,
+          "slope": 0.17500000000000002
+        },
+        "interval": [
+          -0.5,
+          0.75
+        ],
+        "polynomial": {
+          "constant": 0.08,
+          "linear": 0.15,
+          "quadratic": 0.1
+        },
+        "variable_index": 1
+      }
+    ],
+    "variable_count": 2,
+    "witness_inputs": [
+      0.75,
+      0.75
+    ]
+  },
+  "duration_s": 0.000233,
+  "experiment_id": "exp5254-kan-convex-envelope-certificate-v480",
+  "false_property_rejected": {
+    "principle": "True only when the deliberate false threshold is rejected with a deterministic witness.",
+    "value": true
+  },
+  "field_principles": {
+    "certificate_method": "Names the narrow deterministic convex-relaxation method actually used.",
+    "certificate_slack_min": "Minimum positive slack among certified expected-true properties.",
+    "false_property_rejected": "True only when the deliberate false threshold is rejected with a deterministic witness.",
+    "honest_verdict": "Must start with complete: or blocked_ and state the bounded certificate scope.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm.",
+    "input_box": "Bounded input intervals used for both the baseline comparison and certificate.",
+    "max_segments_or_envelopes_verified": "Integer count of convex envelopes verified by this method, not a broad KAN scale claim.",
+    "no_hardware_speedup_claim": "True only when the artifact makes no hardware execution or speedup claim.",
+    "solve_time_s": "Measured offline deterministic certificate time in seconds.",
+    "true_property_certified": "True only when the expected-true upper-bound property is certified by the relaxation.",
+    "variables_verified": "Integer count of input variables covered by the bounded certificate."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state the bounded certificate scope.",
+    "value": "complete: bounded two-variable convex-envelope certificate prototype certified one true upper-bound property and rejected one false threshold; scope is additive quadratic univariate components on [-0.5, 0.75]^2 only"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "input_box": {
+    "principle": "Bounded input intervals used for both the baseline comparison and certificate.",
+    "value": [
+      [
+        -0.5,
+        0.75
+      ],
+      [
+        -0.5,
+        0.75
+      ]
+    ]
+  },
+  "max_segments_or_envelopes_verified": {
+    "principle": "Integer count of convex envelopes verified by this method, not a broad KAN scale claim.",
+    "value": 2
+  },
+  "no_hardware_speedup_claim": {
+    "principle": "True only when the artifact makes no hardware execution or speedup claim.",
+    "value": true
+  },
+  "property_results": [
+    {
+      "actual_witness_value": null,
+      "certificate_slack": 0.02124999999999988,
+      "certified": true,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": null,
+      "method": "convex_chord_upper_relaxation_for_bounded_univariate_quadratics",
+      "property_id": "bounded_true_upper_property",
+      "rejected": false,
+      "threshold": 0.72
+    },
+    {
+      "actual_witness_value": 0.6987500000000001,
+      "certificate_slack": -0.018750000000000044,
+      "certified": false,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": [
+        0.75,
+        0.75
+      ],
+      "method": "convex_chord_upper_relaxation_for_bounded_univariate_quadratics",
+      "property_id": "deliberate_false_upper_property",
+      "rejected": true,
+      "threshold": 0.68
+    }
+  ],
+  "random_seed": 5254,
+  "reproducibility_checksum": "55272a6305e9bf6135fabbf5f1a47f38070645607277432e797ccb7514fc78de",
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5254.kan_convex_envelope_certificate.v480",
+  "solve_time_s": {
+    "principle": "Measured offline deterministic certificate time in seconds.",
+    "value": 0.000221
+  },
+  "source_artifacts": [
+    "results/experiment_5242_kan_certificate_abstraction_scale_v479.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5254",
+    "SCENARIO-KAN-5254"
+  ],
+  "tests_run": [],
+  "true_property_certified": {
+    "principle": "True only when the expected-true upper-bound property is certified by the relaxation.",
+    "value": true
+  },
+  "variables_verified": {
+    "principle": "Integer count of input variables covered by the bounded certificate.",
+    "value": 2
+  }
+}
