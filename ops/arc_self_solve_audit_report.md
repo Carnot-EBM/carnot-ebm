@@ -16,28 +16,27 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: **15/16 are not creditable as live self-discovery from the evidence; 1/16 is explicit OUTER_LOOP_RE.** The reachable-path lint passes, but provenance does not. `development_proxy` + offline/no-quota + empty honest verdict is not a live hidden-game solve claim I would count.
+TL;DR: **14 UNCLEAR, 1 OUTER_LOOP_RE, 0 clean SELF_DISCOVERY_ADVANCE.** Do not count any of these as new hidden-game live-agent capability without stronger live trace evidence.
 
-| artifact | verdict | evidence | recommended action |
+| Artifact | Verdict | Evidence | Recommended action |
 |---|---:|---|---|
-| `results/arc_loop_solve_lp85.json` L3 | UNCLEAR | Reachable mode, but `solve_provenance=development_proxy`, `honest_verdict` empty, no proof of live attempts/runtime RE. | Do not count. Re-run through live entrypoint with locked hidden-game conditions and attempt trace. |
-| `results/arc_loop_solve_r11l.json` L2 | UNCLEAR | Same: development proxy/offline/no-quota is not evidence of autonomous discovery. | Do not count until replayable live trace exists. |
-| `results/arc_loop_solve_ls20.json` L2 | UNCLEAR | No declared outer-loop input, but also no affirmative live-agent provenance. | Quarantine as dev artifact. |
-| `results/arc_loop_solve_dc22.json` L3 | UNCLEAR | Reachable solver path only proves code can be called, not that this solve was self-discovered. | Require trace: observations, attempts, inferred model, final policy. |
-| `results/arc_loop_solve_vc33.json` L2 | UNCLEAR | `development_proxy` and empty verdict fail the hidden live-agent standard. | Do not promote to registry. |
-| `results/arc_loop_solve_sp80.json` L2 | UNCLEAR | Offline/no-quota development run; no live self-discovery evidence. | Re-run under ARC loop constraints. |
-| `results/arc_loop_solve_su15.json` L2 | UNCLEAR | Same evidence gap. | Mark non-credit until provenance is upgraded. |
-| `results/arc_loop_solve_sk48.json` L2 | UNCLEAR | Same evidence gap. | Keep out of solved capability accounting. |
-| `results/arc_loop_solve_ft09.json` L3 | UNCLEAR | Same evidence gap. | Require live trace and hidden-state separation proof. |
-| `results/arc_loop_solve_ar25.json` L3 | UNCLEAR | Same evidence gap. | Treat as development smoke result only. |
-| `results/arc_loop_solve_m0r0.json` L2 | UNCLEAR | Same evidence gap. | Reproduce via live entrypoint with provenance stamped. |
-| `results/arc_loop_solve_cn04.json` L3 | UNCLEAR | Same evidence gap. | Do not count. |
-| `results/arc_loop_solve_lf52.json` L2 | UNCLEAR | Same evidence gap. | Do not count. |
-| `results/arc_loop_solve_bp35.json` L2 | UNCLEAR | Same evidence gap. | Do not count. |
-| `results/arc_loop_solve_ka59.json` L1 | UNCLEAR | Same evidence gap, even if low level. | Do not count without live trace. |
-| `results/experiment_headway_lp85_capture.json` L6 | OUTER_LOOP_RE | Explicit `outer_loop_inputs_declared=["used_env_source"]`; artifact name and verdict say captured trajectory, not live discovery. | Exclude from solve registry. It may be useful as a diagnostic fixture, but must be labeled non-competitive/non-credit. |
+| `arc_loop_solve_lp85.json` L3 | UNCLEAR | Reachable path, but `development_proxy`, empty `honest_verdict`, offline/no-quota mode. No proof of own attempts/runtime RE. | Quarantine from capability claims until backed by live trace. |
+| `arc_loop_solve_r11l.json` L2 | UNCLEAR | Same: proxy provenance, no honest verdict, no discovery trace. | Require attempt log + live entrypoint invocation. |
+| `arc_loop_solve_ls20.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_dc22.json` L3 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_vc33.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_sp80.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_su15.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_ft09.json` L3 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_ar25.json` L3 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_m0r0.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_cn04.json` L3 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_lf52.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_bp35.json` L2 | UNCLEAR | Same. | Do not count yet. |
+| `arc_loop_solve_ka59.json` L1 | UNCLEAR | Same. | Do not count yet. |
+| `experiment_headway_lp85_capture.json` L6 | OUTER_LOOP_RE | Explicitly declares `used_env_source`; artifact name is experiment/capture, not live solve path. | Exclude from solve registry; keep only as negative/prohibited provenance example. |
 
 **Pattern Watch**
 
-The main drift is provenance laundering: reachable modules and `arc_loop_solve_*` filenames are being allowed to look like live capability even when the artifact says `development_proxy` and carries no honest live-discovery trace. The `lp85` L6 capture is worse: it openly used env source. Tighten the gate so any promoted solve must include live entrypoint, hidden-game conditions, no source/BFS/per-game adapter inputs, and a machine-checkable attempt/runtime-RE trace.
+The drift is obvious: many artifacts are being emitted as “solves” with `development_proxy` provenance and no honest verdict. That is not evidence of a live hidden-game agent discovering anything. The lp85 L6 artifact crosses the line outright by using environment source. Treat proxy/offline artifacts as diagnostics only unless they include a reproducible live entrypoint run, attempt history, runtime observations, and proof no source/BFS/per-game adapter was used.
 
