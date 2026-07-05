@@ -10318,3 +10318,4 @@ web search: |
 | 2026-07-05 02:15 UTC | PHASE 2 Token-Guard/Carnot pilot -- fragment self- | OK | 93 passed, 1 warning in 12.91s |
 | 2026-07-05 02:42 UTC | PHASE 2 HalluHard-style microbench -- multi-turn p | OK | 88 passed, 1 warning in 9.37s |
 | 2026-07-05 03:00 UTC | PHASE 3 ARC live path -- receipt-clean rerun or re | OK | 204 passed, 1 warning in 11.36s |
+| 2026-07-05 03:10 UTC | PHASE 3 KAN certificate -- convex-envelope stress  | OK | 87 passed, 1 warning in 8.42s |
