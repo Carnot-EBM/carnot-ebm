@@ -16500,3 +16500,80 @@ falls below the no-memory arm
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5239 | Planned (`python/carnot/pipeline/controlled_memory_ablation.py`) | Planned (`tests/python/test_experiment_5239_continuous_self_learning_controlled_memory_ablation_v479.py`) |
+
+---
+
+## REQ-LEARN-5249: Cross-Model Typed-Memory Transfer Preflight and Measurement
+
+Experiment 5249 SHALL test whether verifier-derived typed memory transfers
+across different mandated local SOTA GGUF model families without hidden
+training, label leakage, or prompt contamination. The producer and consumer
+models for headline claims SHALL be selected from at least two of:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Tiny models MAY appear only under
+`tiny_smoke_tests`.
+
+Before any inference call, the experiment SHALL verify CUDA visibility,
+llama.cpp or llama-server availability, llama.cpp GPU-offload support where
+llama.cpp is used directly, and materialized non-pointer GGUF files for the
+producer and consumer models. If any precondition fails, the experiment SHALL
+write
+`results/experiment_5249_cross_model_typed_memory_transfer_v480.json` with an
+`honest_verdict` beginning with `blocked_`, SHALL NOT fall back to tiny headline
+models, and SHALL set `cross_model_memory_eligible=false`.
+
+When all preconditions pass, the experiment SHALL generate typed memories from
+solved and verifier-checked producer traces, then evaluate a different consumer
+model on bounded held-out verifier tasks under exactly these arms:
+`aligned_memory`, `shuffled_memory`, `no_memory`, `stale_memory`, and
+`rollback_triggered_memory`. The pass condition SHALL be predeclared before
+inspection: aligned memory is useful only when it beats both shuffled and
+no-memory controls, stale memory does not improve over aligned memory, rollback
+is exercised, retention passes, and all leakage checks pass.
+
+### REQ-LEARN-5249 Sub-requirements
+
+- REQ-LEARN-5249-1: Headline `model_specs` SHALL name at least two mandated SOTA
+  GGUF hub IDs, quantization, runtime command, seeds, prompt checksums, and
+  precondition receipts.
+- REQ-LEARN-5249-2: Typed memories SHALL expose the heads `constraints`,
+  `provenance`, `failure_modes`, and `skill_rubric_hints`, and SHALL record
+  producer model, consumer model, prompts, seeds, checksums, wall-clock receipts,
+  and no-model-training status.
+- REQ-LEARN-5249-3: Leakage checks SHALL include held-out split check, prompt
+  checksum check, label visibility check, and rollback-on-degradation check.
+- REQ-LEARN-5249-4: Blocked artifacts SHALL still include principle-annotated
+  `honest_verdict`, `inference_substrate`, `model_specs`, `producer_model`,
+  `consumer_model`, aligned/no/shuffled/stale deltas, rollback, retention,
+  no-training, and leakage fields with nonfabricated neutral metric values.
+- REQ-LEARN-5249-5: The artifact SHALL include a bare
+  `cross_model_memory_eligible` boolean gate plus
+  `cross_model_memory_eligible_principle` for Exp5250.
+
+### SCENARIO-LEARN-5249-BLOCKED-PRECONDITION
+
+**Given** CUDA is visible but the mandated GGUF runtime is not able to execute
+GPU-backed local inference or the resolved GGUF files are only Git-LFS pointer
+stubs
+**When** Experiment 5249 starts
+**Then** it writes a blocked artifact, records the failing precondition receipts,
+sets `cross_model_memory_eligible=false`, keeps numeric transfer deltas at
+neutral `0.0`, and states that cross-model memory usefulness was not measured.
+
+### SCENARIO-LEARN-5249-LIVE-TRANSFER
+
+**Given** two different mandated local SOTA GGUF models are materialized and
+GPU-backed inference is available
+**When** producer traces build typed memories and the consumer evaluates held-out
+verifier tasks
+**Then** the artifact compares aligned, shuffled, no-memory, stale-memory, and
+rollback-triggered arms, reports the predeclared pass condition, and permits
+`cross_model_memory_eligible=true` only if retention, rollback, and all leakage
+checks pass without model training.
+
+## Implementation Status (Exp 5249)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5249 | Planned (`python/carnot/pipeline/cross_model_typed_memory_transfer.py`) | Planned (`tests/python/test_experiment_5249_cross_model_typed_memory_transfer_v480.py`) |
