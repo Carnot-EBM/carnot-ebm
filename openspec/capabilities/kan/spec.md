@@ -810,6 +810,45 @@ variable count, input box, solve time, minimum slack, true-property
 certification, false-property rejection, explicit certificate method, and no
 hardware speedup claim without claiming broad KAN verification.
 
+## REQ-KAN-5265: V481 KAN Certificate Explanation And Refinement Layer
+
+The KAN verification tier SHALL extend the Exp 5254 bounded convex-envelope
+certificate with an explanation/refinement layer that remains scoped to the
+same deterministic two-variable additive quadratic fixture. The layer MUST load
+or reproduce the Exp 5254 certificate, identify which univariate component and
+which envelope interval contribute most to the certified upper bound, and
+attempt a local abstraction refinement when the envelope has nonzero interior
+gap.
+
+The refinement MUST preserve the certified true upper-bound property, MUST keep
+a near-threshold expected-false property rejected by a deterministic witness,
+and MUST report explicit slack before and after refinement. If endpoint
+monotonicity prevents the certified output upper bound from tightening, the
+artifact MUST say so directly while still reporting any tighter pointwise
+envelope-gap bound from the refined abstraction. The layer MUST avoid broad KAN
+verification, trained-network soundness, hardware execution, hardware speedup,
+or live LLM claims.
+
+The deliverable MUST be written to
+`results/experiment_5265_kan_certificate_explanation_refinement_v481.json` with
+the required fields `honest_verdict`, `inference_substrate`,
+`certificate_refinement_ready`, `certificate_refinement_ready_principle`,
+`true_property_certified`, `false_property_rejected`, `slack_before_after`,
+`explanation_artifact_path`, `spec_updated`, and `tests_run`.
+`inference_substrate` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict.value` MUST start with `complete:` or `blocked_` and state
+whether the refinement added certificate value.
+
+### SCENARIO-KAN-5265: Explanation Identifies Bound Drivers And Refines Envelope Gap
+
+Given the committed Exp 5254 bounded convex-envelope certificate artifact,
+When Exp 5265 builds the explanation/refinement layer on CPU,
+Then the artifact identifies the largest bound-contributing univariate
+component and interval, compares no-refinement and refinement summaries,
+preserves true-property certification, rejects a near-threshold false property,
+reports before/after slack and envelope-gap numbers, and writes an explanation
+artifact path without claiming broad KAN verification.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -851,6 +890,7 @@ hardware speedup claim without claiming broad KAN verification.
 | REQ-KAN-5230 | Planned | Exp 5230 target: V478 tiny KAEM PWA/MILP certificate pilot tied to `UnivariateKAEMLayer`, with monotonicity and no-unsafe-decision checks only. |
 | REQ-KAN-5242 | Planned | Exp 5242 target: V479 bounded abstraction stress test that reproduces Exp 5230, adds limited segment/domain/false-property pressure, and reports the achieved certificate boundary without hardware or broad KAN claims. |
 | REQ-KAN-5254 | Planned | Exp 5254 target: V480 bounded convex-envelope certificate prototype compared against Exp 5242, with true-property certification, false-property rejection, and no hardware or broad KAN claims. |
+| REQ-KAN-5265 | Planned | Exp 5265 target: V481 explanation/refinement layer over the V480 bounded convex-envelope certificate, with bound-contributor reporting, envelope-gap tightening, before/after slack, and near-threshold false-property rejection. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

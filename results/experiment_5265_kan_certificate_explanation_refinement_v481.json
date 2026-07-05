@@ -1,0 +1,204 @@
+{
+  "blocked_reason": null,
+  "bound_driver": {
+    "bound_contribution": 0.45000000000000007,
+    "contribution_fraction": 0.6440071556350626,
+    "driver_rank": 1,
+    "driver_reason": "largest contribution to certified upper bound",
+    "interval": [
+      -0.5,
+      0.75
+    ],
+    "max_envelope_gap": 0.078125,
+    "variable_index": 0
+  },
+  "certificate_refinement_ready": true,
+  "certificate_refinement_ready_principle": "True only when the V481 layer preserves the V480 true certificate, rejects the near-threshold false property, and records a nonzero envelope-gap refinement.",
+  "claim_limits": [
+    "bounded deterministic V480 fixture only",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "duration_s": 0.000114,
+  "experiment_id": "exp5265-kan-certificate-explanation-refinement-v481",
+  "explanation_artifact_path": {
+    "principle": "Path to the machine-readable contributor and refinement explanation artifact.",
+    "value": "results/experiment_5265_kan_certificate_explanation_refinement_v481_explanation.json"
+  },
+  "false_property_rejected": {
+    "principle": "True only when a near-threshold false upper-bound property is rejected by a witness.",
+    "value": true
+  },
+  "field_principles": {
+    "certificate_refinement_ready": "True only when the V481 layer preserves the V480 true certificate, rejects the near-threshold false property, and records a nonzero envelope-gap refinement.",
+    "explanation_artifact_path": "Path to the machine-readable contributor and refinement explanation artifact.",
+    "false_property_rejected": "True only when a near-threshold false upper-bound property is rejected by a witness.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether refinement added certificate value.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm.",
+    "slack_before_after": "Numeric before/after slack and envelope-gap values expose whether refinement tightened the certificate or only added explanation.",
+    "spec_updated": "True only when REQ-KAN-5265 and SCENARIO-KAN-5265 anchor the change.",
+    "true_property_certified": "True only when the original V480 true upper-bound property remains certified."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether refinement added certificate value.",
+    "value": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "property_results": [
+    {
+      "actual_witness_value": null,
+      "certificate_slack": 0.02124999999999988,
+      "certified": true,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": null,
+      "property_id": "v481_true_upper_property_preserved",
+      "rejected": false,
+      "threshold": 0.72
+    },
+    {
+      "actual_witness_value": 0.6987500000000001,
+      "certificate_slack": -0.0007500000000001394,
+      "certified": false,
+      "certified_upper_bound": 0.6987500000000001,
+      "counterexample_inputs": [
+        0.75,
+        0.75
+      ],
+      "property_id": "v481_near_threshold_false_upper_property",
+      "rejected": true,
+      "threshold": 0.698
+    }
+  ],
+  "random_seed": 5265,
+  "refinement_summary": {
+    "no_refinement": {
+      "envelope_gap_bound": 0.1171875,
+      "envelope_gap_reduction": 0.0,
+      "interval_count": 2,
+      "intervals_by_variable": [
+        [
+          {
+            "chord_intercept": 0.22500000000000003,
+            "chord_slope": 0.30000000000000004,
+            "interval": [
+              -0.5,
+              0.75
+            ],
+            "max_envelope_gap": 0.078125,
+            "max_envelope_value": 0.45000000000000007,
+            "max_witness_x": 0.75,
+            "variable_index": 0
+          }
+        ],
+        [
+          {
+            "chord_intercept": 0.11750000000000002,
+            "chord_slope": 0.17500000000000002,
+            "interval": [
+              -0.5,
+              0.75
+            ],
+            "max_envelope_gap": 0.0390625,
+            "max_envelope_value": 0.24875000000000003,
+            "max_witness_x": 0.75,
+            "variable_index": 1
+          }
+        ]
+      ],
+      "label": "no_refinement",
+      "output_upper_bound": 0.6987500000000001,
+      "same_property_slack": 0.02124999999999988
+    },
+    "refined": {
+      "envelope_gap_bound": 0.05859375,
+      "envelope_gap_reduction": 0.05859375,
+      "interval_count": 3,
+      "intervals_by_variable": [
+        [
+          {
+            "chord_intercept": 0.1625,
+            "chord_slope": 0.17500000000000002,
+            "interval": [
+              -0.5,
+              0.125
+            ],
+            "max_envelope_gap": 0.01953125,
+            "max_envelope_value": 0.184375,
+            "max_witness_x": 0.125,
+            "variable_index": 0
+          },
+          {
+            "chord_intercept": 0.13125,
+            "chord_slope": 0.4250000000000001,
+            "interval": [
+              0.125,
+              0.75
+            ],
+            "max_envelope_gap": 0.01953125,
+            "max_envelope_value": 0.45000000000000007,
+            "max_witness_x": 0.75,
+            "variable_index": 0
+          }
+        ],
+        [
+          {
+            "chord_intercept": 0.11750000000000002,
+            "chord_slope": 0.17500000000000002,
+            "interval": [
+              -0.5,
+              0.75
+            ],
+            "max_envelope_gap": 0.0390625,
+            "max_envelope_value": 0.24875000000000003,
+            "max_witness_x": 0.75,
+            "variable_index": 1
+          }
+        ]
+      ],
+      "label": "driver_refined",
+      "output_upper_bound": 0.6987500000000001,
+      "same_property_slack": 0.02124999999999988
+    }
+  },
+  "reproducibility_checksum": "e64fb8cb4b2d6b7d4407a1213be28ef06ebb7cee2d290d86b65de21b40ce7802",
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5265.kan_certificate_explanation_refinement.v481",
+  "slack_before_after": {
+    "principle": "Numeric before/after slack and envelope-gap values expose whether refinement tightened the certificate or only added explanation.",
+    "value": {
+      "envelope_gap_bound_after": 0.05859375,
+      "envelope_gap_bound_before": 0.1171875,
+      "envelope_gap_bound_reduction": 0.05859375,
+      "near_false_property_slack_after": -0.0007500000000001394,
+      "same_property_slack_after": 0.02124999999999988,
+      "same_property_slack_before": 0.02124999999999988,
+      "same_property_slack_delta": 0.0
+    }
+  },
+  "source_artifacts": [
+    "results/experiment_5254_kan_convex_envelope_certificate_v480.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5265",
+    "SCENARIO-KAN-5265"
+  ],
+  "spec_updated": {
+    "principle": "True only when REQ-KAN-5265 and SCENARIO-KAN-5265 anchor the change.",
+    "value": true
+  },
+  "tests_run": [
+    {
+      "command": "initial artifact generation",
+      "outcome": "generated before verification"
+    }
+  ],
+  "true_property_certified": {
+    "principle": "True only when the original V480 true upper-bound property remains certified.",
+    "value": true
+  }
+}
