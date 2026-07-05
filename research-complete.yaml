@@ -74811,7 +74811,63 @@ milestones:
   title: Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-07-05'
-  finding: SOTA runtime preflight ready; cross-model typed memory clean null; cached memory policy, verifier-dose scheduler, KAN certificate refinement, and producer artifact normalizer positive; flagged internal-verification pilots quarantined; hardware blocked with no speedup claim.
+  finding: SOTA runtime preflight ready; cross-model typed memory clean null; cached memory policy, verifier-dose scheduler,
+    KAN certificate refinement, and producer artifact normalizer positive; flagged internal-verification pilots quarantined;
+    hardware blocked with no speedup claim.
+  tasks:
+  - id: exp5257-archive-480-activate-481
+    title: PHASE 0 transition -- archive .480 truth and prepare .481 activation
+    deliverable: results/experiment_5257_archive_480_activate_481.json
+    result: OK (conductor)
+  - id: exp5258-sota-refresh-v481
+    title: PHASE 0 SOTA refresh -- V481 deltas after planning references
+    deliverable: results/experiment_5258_sota_refresh_v481.json
+    result: OK (conductor)
+  - id: exp5259-sota-gguf-gpu-offload-preflight-v481
+    title: PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight
+    deliverable: results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json
+    result: OK (conductor)
+  - id: exp5260-cross-model-typed-memory-retry-v481
+    title: PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry
+    deliverable: results/experiment_5260_cross_model_typed_memory_retry_v481.json
+    result: OK (conductor)
+  - id: exp5261-typed-memory-interference-audit-v481
+    title: PHASE 1 continuous self-learning -- typed-memory retention and interference audit
+    deliverable: results/experiment_5261_typed_memory_interference_audit_v481.json
+    result: OK (conductor)
+  - id: exp5262-solver-grounded-constraint-extraction-v481
+    title: PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot
+    deliverable: results/experiment_5262_solver_grounded_constraint_extraction_v481.json
+    result: OK (conductor)
+  - id: exp5263-neuron-attention-energy-hallucination-probe-v481
+    title: PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe
+    deliverable: results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+    result: OK (conductor)
+  - id: exp5264-verifier-dose-scheduler-replay-v481
+    title: PHASE 2 replay -- verifier-dose scheduler without live-model dependency
+    deliverable: results/experiment_5264_verifier_dose_scheduler_replay_v481.json
+    result: OK (conductor)
+  - id: exp5265-kan-certificate-explanation-refinement-v481
+    title: PHASE 3 KAN -- convex-envelope certificate explanation and refinement
+    deliverable: results/experiment_5265_kan_certificate_explanation_refinement_v481.json
+    result: OK (conductor)
+  - id: exp5266-hardware-thermodynamic-schedule-boundary-v481
+    title: PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity
+    deliverable: results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json
+    result: OK (conductor)
+  - id: exp5267-artifact-normalizer-template-adoption-v481
+    title: PHASE 3 evidence production -- artifact normalizer adoption at producer boundary
+    deliverable: results/experiment_5267_artifact_normalizer_template_adoption_v481.json
+    result: OK (conductor)
+  - id: exp5268-capstone-v481
+    title: PHASE 3 capstone -- synthesize .481 and recommend .482
+    deliverable: results/experiment_5268_capstone_v481.json
+    result: OK (conductor)
+- id: 2026.07.481
+  title: Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-07-05'
+  finding: See conductor log for per-experiment results.
   tasks:
   - id: exp5257-archive-480-activate-481
     title: PHASE 0 transition -- archive .480 truth and prepare .481 activation
