@@ -1,0 +1,507 @@
+"""Tests for Exp 5269 archive .481 / .482 activation artifact.
+
+Spec refs: REQ-REPORT-5269, SCENARIO-REPORT-5269,
+SCENARIO-REPORT-5269-BLOCKED-CLOSEOUT.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import pytest
+import yaml
+
+from carnot import experiment_5269_archive_481_activate_482 as mod
+
+
+REPO = Path(__file__).resolve().parents[2]
+SPEC_PATH = REPO / "openspec" / "capabilities" / "research-reporting" / "spec.md"
+RESULT_PATH = REPO / mod.RESULT_RELATIVE_PATH
+
+
+def _wrap(value: Any, principle: str = "fixture principle") -> dict[str, Any]:
+    return {"principle": principle, "value": value}
+
+
+def _write_json(path: Path, payload: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _roadmap(milestone: str, start: int = 5269, stop: int = 5281) -> str:
+    return yaml.safe_dump(
+        {
+            "milestone": milestone,
+            "milestone_title": f"fixture {milestone}",
+            "tasks": [
+                {
+                    "id": f"exp{idx}-fixture-v{milestone.split('.')[-1]}",
+                    "milestone": milestone,
+                    "deliverable": f"results/experiment_{idx}_fixture.json",
+                    "title": f"fixture task {idx}",
+                    "agent_type": "codex",
+                    "model": "gpt-5.5",
+                    "prompt": "fixture REQUIRED ARTIFACT FIELDS:\n- honest_verdict",
+                    "prior_failures": [
+                        {
+                            "experiment_id": f"exp{idx - 1}",
+                            "verdict": "complete: fixture",
+                            "addressed_by": "fixture",
+                            "retire_if_same_verdict": True,
+                        }
+                    ],
+                }
+                for idx in range(start, stop + 1)
+            ],
+        },
+        sort_keys=False,
+    )
+
+
+def _capstone_payload() -> dict[str, Any]:
+    return {
+        "experiment_id": "exp5268-capstone-v481",
+        "honest_verdict": _wrap(
+            "complete: .481 synthesized with 7 clean positives, 1 clean null, 2 flagged verifier artifacts quarantined, hardware blocked, and no speedup claim."
+        ),
+        "milestone_summary": _wrap(
+            {
+                "clean_positive_count": 7,
+                "clean_null_count": 1,
+                "flagged_artifacts_skipped_count": 2,
+                "blocked_or_skipped_count": 3,
+                "truth": (
+                    "SOTA runtime preflight is ready without a quality claim; continuous self-learning "
+                    "has a clean live cross-model null plus cached memory-policy and scheduler positives; "
+                    "solver/internal verification pilots are flagged and not clean evidence; KAN certificate "
+                    "refinement and producer artifact normalization are bounded positives; hardware is blocked "
+                    "with no speedup claim."
+                ),
+            }
+        ),
+        "clean_positives": _wrap(
+            [
+                {"experiment_number": 5259, "summary": "SOTA GGUF runtime preflight ready=True; no model-quality claim"},
+                {"experiment_number": 5261, "summary": "memory_policy_ready=True; retention_rate=1.0; interference_rate=0.0; rollback_passed=True"},
+                {"experiment_number": 5264, "summary": "scheduler_ready=True; full_verifier_calls_avoided_rate=0.857143; decision_quality_delta=0.0; false_accept_delta=0.0"},
+                {"experiment_number": 5265, "summary": "certificate_refinement_ready=True; true_property_certified=True; false_property_rejected=True"},
+                {"experiment_number": 5267, "summary": "producer_normalizer_ready=True; gate_fields_preserved=True"},
+            ]
+        ),
+        "clean_nulls": _wrap(
+            [
+                {
+                    "experiment_number": 5260,
+                    "summary": "cross-model typed memory useful=False; delta_over_no_memory=0.0; delta_over_shuffled_memory=0.0; unsafe_false_accepts=0; rollback_exercised=False",
+                }
+            ]
+        ),
+        "blocked_or_skipped": _wrap(
+            [
+                {"experiment_number": 5262, "classification": "flagged_adversarial", "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence"},
+                {"experiment_number": 5263, "classification": "flagged_adversarial", "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811; not clean evidence"},
+                {"experiment_number": 5266, "classification": "blocked", "summary": "kv260=blocked_kv260_ssh_unreachable; polarfire=blocked_polarfire_ssh_unreachable; gatemate=blocked_physical_jtag; speedup_claimed=false"},
+            ]
+        ),
+        "research_complete_updated": _wrap(True),
+        "flagged_artifacts_skipped": [
+            {"experiment_number": 5262, "summary": "flagged solver-grounded extraction"},
+            {"experiment_number": 5263, "summary": "flagged internal/logit-energy pilot"},
+        ],
+    }
+
+
+def _upstream_payload(number: int) -> dict[str, Any]:
+    payloads: dict[int, dict[str, Any]] = {
+        5257: {"honest_verdict": _wrap("complete: .480 archived and .481 activation-ready")},
+        5258: {"honest_verdict": _wrap("complete: 7 new actionable findings appended"), "new_references_added": _wrap(7)},
+        5259: {"honest_verdict": _wrap("complete: sota_runtime_ready=true ready through flagship_moe"), "sota_runtime_ready": True, "no_quality_claim": _wrap(True)},
+        5260: {"honest_verdict": _wrap("complete: cross-model typed memory null"), "cross_model_memory_useful": False, "delta_over_no_memory": _wrap(0.0), "delta_over_shuffled_memory": _wrap(0.0), "unsafe_false_accepts": _wrap(0), "rollback_exercised": _wrap(False)},
+        5261: {"honest_verdict": _wrap("complete: memory policy ready"), "memory_policy_ready": True, "retention_rate": _wrap(1.0), "interference_rate": _wrap(0.0), "harmful_memory_rollback_passed": _wrap(True)},
+        5262: {"honest_verdict": _wrap("complete: solver-grounded extraction produced no useful oracle-distinct signal"), "flagged_adversarial": True},
+        5263: {"honest_verdict": _wrap("complete: null logit-energy unsupported-minus-supported delta=0.004811"), "flagged_adversarial": True},
+        5264: {"honest_verdict": _wrap("complete: useful scheduler replay"), "scheduler_ready": True, "decision_quality_delta": _wrap(0.0), "false_accept_delta": _wrap(0.0)},
+        5265: {"honest_verdict": _wrap("complete: refinement added certificate value"), "certificate_refinement_ready": True, "true_property_certified": _wrap(True), "false_property_rejected": _wrap(True)},
+        5266: {"honest_verdict": _wrap("blocked_board_reachability: no_speedup_claim"), "speedup_claimed": False},
+        5267: {"honest_verdict": _wrap("complete: producer-side normalizer adoption is ready"), "producer_normalizer_ready": True, "gate_fields_preserved": _wrap(True)},
+        5268: _capstone_payload(),
+    }
+    return payloads[number]
+
+
+def _research_complete(has_v481: bool = True) -> str:
+    milestones: list[dict[str, Any]] = [
+        {
+            "id": "2026.07.480",
+            "title": "prior fixture",
+            "completed": "2026-07-05",
+            "finding": "fixture",
+            "tasks": [],
+        }
+    ]
+    if has_v481:
+        milestones.append(
+            {
+                "id": "2026.07.481",
+                "title": "Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability",
+                "completed": "2026-07-05",
+                "finding": "SOTA runtime preflight ready; cross-model typed memory clean null; flagged verifier pilots quarantined; hardware blocked with no speedup claim.",
+                "tasks": [],
+            }
+        )
+    return yaml.safe_dump({"milestones": milestones}, sort_keys=False)
+
+
+def _make_repo(
+    root: Path,
+    *,
+    has_v481_complete: bool = True,
+    active_milestone: str = "2026.07.482",
+    vnext_milestone: str = "2026.07.482",
+    next_file: bool = False,
+    capstone: dict[str, Any] | None = None,
+) -> Path:
+    for source in mod.UPSTREAM_SOURCES:
+        _write_json(root / source.relative_path, _upstream_payload(source.experiment_number))
+    if capstone is not None:
+        _write_json(root / mod.CAPSTONE_RELATIVE_PATH, capstone)
+    _write_json(
+        root / "results/experiment_5265_kan_certificate_explanation_refinement_v481_explanation.json",
+        {"schema": "fixture", "experiment_id": "exp5265-kan-certificate-explanation-refinement-v481"},
+    )
+    (root / "research-complete.yaml").write_text(_research_complete(has_v481_complete), encoding="utf-8")
+    (root / "research-roadmap.yaml").write_text(_roadmap(active_milestone), encoding="utf-8")
+    if next_file:
+        (root / "research-roadmap-next.yaml").write_text(_roadmap("2026.07.482"), encoding="utf-8")
+    (root / "openspec/change-proposals").mkdir(parents=True, exist_ok=True)
+    (root / "openspec/change-proposals/research-roadmap-vNEXT.md").write_text(
+        f"# Research Roadmap vNEXT: Milestone {vnext_milestone}\nMilestone: {vnext_milestone}\n",
+        encoding="utf-8",
+    )
+    (root / "ops").mkdir(parents=True, exist_ok=True)
+    for relative in ("status.md", "changelog.md", "conductor-log.md", "exclusion_manifest.yaml"):
+        (root / "ops" / relative).write_text(
+            "fixture .481 sota_runtime_ready clean null memory policy flagged quarantined scheduler KAN hardware no_speedup normalizer\n",
+            encoding="utf-8",
+        )
+    (root / "_bmad").mkdir(parents=True, exist_ok=True)
+    (root / "_bmad/traceability.md").write_text("fixture\n", encoding="utf-8")
+    (root / "scripts").mkdir(parents=True, exist_ok=True)
+    (root / "scripts/research_conductor.py").write_text("# fixture\n", encoding="utf-8")
+    return root
+
+
+def _passed_commands() -> list[mod.CommandResult]:
+    return [
+        mod.CommandResult((".venv/bin/python", "scripts/exclusion_manifest_lint.py", "research-roadmap.yaml"), 0, "clean", ""),
+        mod.CommandResult((".venv/bin/python", "scripts/check_exclusion_manifest.py"), 0, "clean", ""),
+        mod.CommandResult((".venv/bin/python", "scripts/validate_prior_failures.py", "research-roadmap.yaml"), 0, "clean", ""),
+        mod.CommandResult((".venv/bin/python", "scripts/audit_roadmap_gates.py", "research-roadmap.yaml"), 0, "clean", ""),
+    ]
+
+
+def _failed_commands() -> list[mod.CommandResult]:
+    return [
+        mod.CommandResult((".venv/bin/python", "scripts/exclusion_manifest_lint.py", "research-roadmap.yaml"), 1, "HARD violation", "")
+    ]
+
+
+def test_req_report_5269_spec_declares_archive_contract() -> None:
+    """REQ-REPORT-5269: OpenSpec anchors the .481 archive and .482 activation contract."""
+
+    spec = SPEC_PATH.read_text(encoding="utf-8")
+    section = spec[spec.index("REQ-REPORT-5269") : spec.index("REQ-REPORT-5257")]
+
+    for marker in (
+        "REQ-REPORT-5269",
+        "SCENARIO-REPORT-5269",
+        "SCENARIO-REPORT-5269-BLOCKED-CLOSEOUT",
+        str(mod.RESULT_RELATIVE_PATH),
+        "aggregation_from_upstream_artifacts",
+        "roadmap_activation_check.activated=false",
+        "flagged and quarantined",
+        "commands_run",
+    ):
+        assert marker in section
+    for field, principle in mod.FIELD_PRINCIPLES.items():
+        assert f"`{field}`" in section
+        assert principle in section
+
+
+def test_scenario_report_5269_already_active_records_no_overwrite(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5269: already-active .482 produces a complete no-overwrite artifact."""
+
+    root = _make_repo(tmp_path)
+    before = (root / "research-roadmap.yaml").read_text(encoding="utf-8")
+    artifact = mod.build_artifact(
+        root=root,
+        run_date="20260705",
+        duration_s=1.25,
+        validation_results=_passed_commands(),
+        update_research_complete=False,
+    )
+
+    mod.validate_artifact(artifact)
+    assert (root / "research-roadmap.yaml").read_text(encoding="utf-8") == before
+    assert artifact["milestone_archived"] is True
+    assert artifact["activation_ready"] is True
+    assert artifact["honest_verdict"]["value"].startswith("complete:")
+    assert ".481 archived" in artifact["honest_verdict"]["value"]
+    assert ".482 activation-ready" in artifact["honest_verdict"]["value"]
+    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
+    assert artifact["ops_docs_updated"]["value"] is False
+    assert artifact["research_complete_updated"]["value"] is False
+    assert artifact["exclusions_checked"]["value"] is True
+    assert artifact["roadmap_activation_check"]["activated"] is False
+    assert artifact["roadmap_activation_check"]["active_roadmap_already_482"] is True
+    assert artifact["roadmap_activation_check"]["roadmap_next_present"] is False
+    assert [row["passed"] for row in artifact["commands_run"]] == [True, True, True, True]
+    assert artifact["closeout_facts"]["sota_runtime_ready"] is True
+    assert artifact["closeout_facts"]["cross_model_memory_clean_null"] is True
+    assert artifact["closeout_facts"]["memory_policy_positive"] is True
+    assert artifact["closeout_facts"]["solver_internal_verifier_pilots_quarantined"] is True
+    assert artifact["closeout_facts"]["verifier_dose_scheduler_replay_positive"] is True
+    assert artifact["closeout_facts"]["kan_refinement_positive"] is True
+    assert artifact["closeout_facts"]["hardware_blocked_no_speedup"] is True
+    assert artifact["closeout_facts"]["artifact_normalizer_producer_adoption_positive"] is True
+    assert artifact["failed_preconditions"] == []
+    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
+
+
+def test_scenario_report_5269_blocked_closeout_keeps_failures_visible(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-5269-BLOCKED-CLOSEOUT: contradictory evidence blocks readiness."""
+
+    bad_capstone = _capstone_payload() | {
+        "clean_nulls": _wrap([]),
+        "blocked_or_skipped": _wrap([]),
+    }
+    artifact = mod.build_artifact(
+        root=_make_repo(
+            tmp_path,
+            has_v481_complete=False,
+            active_milestone="2026.07.481",
+            vnext_milestone="2026.07.483",
+            capstone=bad_capstone,
+        ),
+        run_date="20260705",
+        duration_s=0.5,
+        validation_results=_failed_commands(),
+        update_research_complete=False,
+    )
+
+    mod.validate_artifact(artifact)
+    assert artifact["milestone_archived"] is False
+    assert artifact["activation_ready"] is False
+    assert artifact["honest_verdict"]["value"].startswith("blocked_")
+    assert artifact["roadmap_activation_check"]["activated"] is False
+    assert "closeout_cross_model_memory_clean_null_expected_True_observed_False" in artifact["failed_preconditions"]
+    assert "closeout_solver_internal_verifier_pilots_quarantined_expected_True_observed_False" in artifact["failed_preconditions"]
+    assert "research_complete_missing_2026.07.481" in artifact["failed_preconditions"]
+    assert "vnext_missing_2026.07.482" in artifact["failed_preconditions"]
+    assert "active_or_next_roadmap_not_ready_for_482" in artifact["failed_preconditions"]
+    assert "validation_failed_scripts/exclusion_manifest_lint.py" in artifact["failed_preconditions"]
+    assert artifact["exclusions_checked"]["value"] is False
+
+
+def test_req_report_5269_can_append_missing_research_complete_and_run(tmp_path: Path) -> None:
+    """REQ-REPORT-5269: missing research-complete .481 entry can be appended once."""
+
+    root = _make_repo(tmp_path, has_v481_complete=False, active_milestone="2026.07.481", next_file=True)
+    out = mod.run(
+        root=root,
+        run_date="20260705",
+        duration_s=0.25,
+        validation_results=_passed_commands(),
+        update_research_complete=True,
+    )
+
+    saved = json.loads(out.read_text(encoding="utf-8"))
+    mod.validate_artifact(saved)
+    assert saved["research_complete_updated"]["value"] is True
+    assert saved["milestone_archived"] is True
+    complete = yaml.safe_load((root / "research-complete.yaml").read_text(encoding="utf-8"))
+    assert [row["id"] for row in complete["milestones"]][-1] == "2026.07.481"
+    assert saved["roadmap_activation_check"]["roadmap_next_present"] is True
+    assert saved["roadmap_activation_check"]["roadmap_next_milestone"] == "2026.07.482"
+    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
+
+
+def test_req_report_5269_repository_artifact_matches_schema() -> None:
+    """REQ-REPORT-5269: checked-in deliverable is a valid archive artifact."""
+
+    artifact = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+
+    mod.validate_artifact(artifact)
+    assert artifact["experiment_id"] == mod.EXPERIMENT_ID
+    assert artifact["milestone_archived"] is True
+    assert artifact["activation_ready"] is True
+    assert artifact["roadmap_activation_check"]["activated"] is False
+    assert artifact["roadmap_activation_check"]["active_roadmap_already_482"] is True
+    assert artifact["roadmap_activation_check"]["roadmap_next_present"] is False
+    assert artifact["research_complete_updated"]["value"] is False
+    assert artifact["exclusions_checked"]["value"] is True
+    assert artifact["inference_substrate"]["value"] == mod.INFERENCE_SUBSTRATE
+    assert artifact["honest_verdict"]["value"].startswith("complete:")
+
+
+def test_req_report_5269_helper_edges_and_validation_guards(tmp_path: Path) -> None:
+    """REQ-REPORT-5269: helpers fail closed instead of hiding schema drift."""
+
+    root = _make_repo(tmp_path / "repo")
+    artifact = mod.build_artifact(
+        root=root,
+        run_date="20260705",
+        duration_s=1.0,
+        validation_results=_passed_commands(),
+        update_research_complete=False,
+    )
+
+    with pytest.raises(ValueError, match="missing required"):
+        mod.validate_artifact({key: value for key, value in artifact.items() if key != "schema"})
+    with pytest.raises(ValueError, match="schema"):
+        mod.validate_artifact(artifact | {"schema": "wrong"})
+    with pytest.raises(ValueError, match="field_principles"):
+        mod.validate_artifact(artifact | {"field_principles": {}})
+    with pytest.raises(ValueError, match="principle mismatch"):
+        mod.validate_artifact(artifact | {"honest_verdict": _wrap("complete: ok")})
+    with pytest.raises(ValueError, match="missing value"):
+        mod.validate_artifact(
+            artifact | {"honest_verdict": {"principle": mod.FIELD_PRINCIPLES["honest_verdict"]}}
+        )
+    with pytest.raises(ValueError, match="honest_verdict"):
+        mod.validate_artifact(
+            artifact
+            | {
+                "honest_verdict": {
+                    "principle": mod.FIELD_PRINCIPLES["honest_verdict"],
+                    "value": "done",
+                }
+            }
+        )
+    with pytest.raises(ValueError, match="inference_substrate"):
+        mod.validate_artifact(
+            artifact
+            | {
+                "inference_substrate": {
+                    "principle": mod.FIELD_PRINCIPLES["inference_substrate"],
+                    "value": "cached_fixture_replay_no_llm",
+                }
+            }
+        )
+    with pytest.raises(ValueError, match="milestone_archived"):
+        mod.validate_artifact(artifact | {"milestone_archived": "true"})
+    with pytest.raises(ValueError, match="milestone_archived"):
+        mod.validate_artifact(artifact | {"milestone_archived_principle": "wrong"})
+    with pytest.raises(ValueError, match="activation_ready"):
+        mod.validate_artifact(artifact | {"activation_ready": "true"})
+    with pytest.raises(ValueError, match="activation_ready"):
+        mod.validate_artifact(artifact | {"activation_ready_principle": "wrong"})
+    with pytest.raises(ValueError, match="ops_docs_updated"):
+        mod.validate_artifact(
+            artifact
+            | {
+                "ops_docs_updated": {
+                    "principle": mod.FIELD_PRINCIPLES["ops_docs_updated"],
+                    "value": True,
+                }
+            }
+        )
+    with pytest.raises(ValueError, match="research_complete_updated"):
+        mod.validate_artifact(
+            artifact
+            | {
+                "research_complete_updated": {
+                    "principle": mod.FIELD_PRINCIPLES["research_complete_updated"],
+                    "value": "false",
+                }
+            }
+        )
+    with pytest.raises(ValueError, match="exclusions_checked"):
+        mod.validate_artifact(
+            artifact
+            | {
+                "exclusions_checked": {
+                    "principle": mod.FIELD_PRINCIPLES["exclusions_checked"],
+                    "value": "true",
+                }
+            }
+        )
+    with pytest.raises(ValueError, match="roadmap_activation_check"):
+        mod.validate_artifact(artifact | {"roadmap_activation_check": {"activated": False}})
+    with pytest.raises(ValueError, match="roadmap_activation_check"):
+        mod.validate_artifact(
+            artifact | {"roadmap_activation_check": artifact["roadmap_activation_check"] | {"activated": True}}
+        )
+    with pytest.raises(ValueError, match="commands_run"):
+        mod.validate_artifact(artifact | {"commands_run": []})
+    with pytest.raises(ValueError, match="commands_run"):
+        mod.validate_artifact(artifact | {"commands_run": [{"command": "x"}]})
+    with pytest.raises(ValueError, match="reproducibility_checksum"):
+        mod.validate_artifact(artifact | {"reproducibility_checksum": "sha256:bad"})
+
+    assert mod.value_of(_wrap("x")) == "x"
+    assert mod.value_of("x") == "x"
+    assert mod.text_sha256("abc").startswith("sha256:")
+    assert mod.closeout_fact_failures({}) == ["capstone_artifact_missing_or_unloadable"]
+    assert mod._roadmap_data("bad: [") == {}
+    assert mod._task_ids({"tasks": "not-list"}) == []
+    assert mod._milestones([]) == []
+    assert mod._command_label("") == "unknown_command"
+    assert mod._command_label("python scripts/check_exclusion_manifest.py") == "scripts/check_exclusion_manifest.py"
+    assert mod._command_label("python scripts/validate_prior_failures.py research-roadmap.yaml") == "scripts/validate_prior_failures.py"
+    assert mod._command_label("custom --flag") == "custom"
+    assert mod._commands_passed([]) is False
+    assert mod._commands_passed(mod.commands_run_rows(_passed_commands())) is True
+
+    malformed = tmp_path / "bad.json"
+    malformed.write_text("{bad", encoding="utf-8")
+    assert mod.read_json_mapping(malformed)[1]["error"] == "malformed_json"
+    array_json = tmp_path / "array.json"
+    array_json.write_text("[]", encoding="utf-8")
+    assert mod.read_json_mapping(array_json)[1]["error"] == "not_json_object"
+    missing = tmp_path / "missing.json"
+    assert mod.read_json_mapping(missing)[1]["error"] == "missing"
+
+    missing_complete = tmp_path / "missing-complete"
+    missing_complete.mkdir()
+    assert mod.research_complete_milestone_count(missing_complete) == 0
+    malformed_complete = tmp_path / "malformed-complete"
+    malformed_complete.mkdir()
+    (malformed_complete / "research-complete.yaml").write_text("bad: [", encoding="utf-8")
+    assert mod.research_complete_milestone_count(malformed_complete) == 0
+    assert mod.append_research_complete_milestone(malformed_complete) is True
+    assert mod.append_research_complete_milestone(malformed_complete) is False
+
+    nondict_complete = tmp_path / "nondict-complete"
+    nondict_complete.mkdir()
+    (nondict_complete / "research-complete.yaml").write_text("[]\n", encoding="utf-8")
+    assert mod.append_research_complete_milestone(nondict_complete) is True
+    nonlist_complete = tmp_path / "nonlist-complete"
+    nonlist_complete.mkdir()
+    (nonlist_complete / "research-complete.yaml").write_text("milestones: nope\n", encoding="utf-8")
+    assert mod.append_research_complete_milestone(nonlist_complete) is True
+
+    failures = mod.failed_preconditions(
+        closeout_failures=[],
+        research_complete={"has_2026_07_481_after": False},
+        roadmap={"vnext_names_2026_07_482": True, "activation_ready_without_overwrite": True},
+        commands=[],
+    )
+    assert failures == ["research_complete_missing_2026.07.481", "validation_commands_missing"]
+
+    no_scripts = tmp_path / "no-scripts"
+    no_scripts.mkdir()
+    assert mod.validation_commands(no_scripts) == []
+    assert mod.run_validation_commands(no_scripts) == []
+
+    script_root = _make_repo(tmp_path / "script-root")
+    (script_root / "scripts/exclusion_manifest_lint.py").write_text("print('exclusion ok')\n", encoding="utf-8")
+    (script_root / "scripts/check_exclusion_manifest.py").write_text("print('manifest ok')\n", encoding="utf-8")
+    (script_root / "scripts/validate_prior_failures.py").write_text("print('prior ok')\n", encoding="utf-8")
+    (script_root / "scripts/audit_roadmap_gates.py").write_text("print('roadmap ok')\n", encoding="utf-8")
+    commands = mod.validation_commands(script_root)
+    assert len(commands) == 4
+    results = mod.run_validation_commands(script_root)
+    assert [row["passed"] for row in mod.commands_run_rows(results)] == [True, True, True, True]
