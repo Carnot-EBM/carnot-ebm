@@ -16672,3 +16672,77 @@ was unmeasured.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5260 | Planned (`python/carnot/pipeline/cross_model_typed_memory_retry.py`) | Planned (`tests/python/test_experiment_5260_cross_model_typed_memory_retry_v481.py`) |
+
+---
+
+## REQ-LEARN-5261: Typed-Memory Retention and Interference Audit
+
+Experiment 5261 SHALL audit the existing typed verifier-memory policy without
+live LLM inference. The audit SHALL reuse the current typed-memory schemas from
+`carnot.pipeline.verifier_memory` and
+`carnot.pipeline.multihead_verifier_memory`: fixed typed heads, deterministic
+memory identifiers, evidence-gated promotion, invalidation-gated rollback,
+idempotent duplicate collapse, and test-gold leakage rejection.
+
+The audit fixture set SHALL be deterministic and SHALL include aligned memory,
+irrelevant memory, conflicting memory, stale memory, and shuffled memory. It
+SHALL replay cached artifacts only and SHALL label its inference substrate
+`cached_fixture_replay_no_llm`.
+
+The audit SHALL measure:
+
+- retention of useful memories after distractor insertion
+- interference on unrelated tasks
+- eviction of stale or conflicting entries
+- promotion-threshold decisions
+- rollback after harmful memory
+
+The result artifact SHALL be
+`results/experiment_5261_typed_memory_interference_audit_v481.json` and SHALL
+include principle-wrapped `honest_verdict`, principle-wrapped
+`inference_substrate`, bare `memory_policy_ready` plus
+`memory_policy_ready_principle`, principle-wrapped `retention_rate`,
+principle-wrapped `interference_rate`, principle-wrapped
+`harmful_memory_rollback_passed`, principle-wrapped
+`promotion_eviction_policy`, principle-wrapped `fixture_checksums`, and a
+`tests_run` list.
+
+### REQ-LEARN-5261 Sub-requirements
+
+- REQ-LEARN-5261-1: Retention SHALL be counted on aligned useful memories after
+  deterministic distractor insertion, and the audit SHALL report a numeric
+  retention rate.
+- REQ-LEARN-5261-2: Interference SHALL be counted when unrelated tasks receive
+  a non-null action from irrelevant, stale, conflicting, or shuffled memory, and
+  the audit SHALL report a numeric interference rate.
+- REQ-LEARN-5261-3: Eviction SHALL remove stale entries and entries whose
+  conflict evidence contradicts a promoted canonical entry for the same task
+  slot before retrieval metrics are computed.
+- REQ-LEARN-5261-4: Promotion SHALL continue to require deterministic guard
+  success, no test-gold leakage, and held-out delta greater than or equal to the
+  configured promotion threshold; null, negative, missing, or harmful deltas
+  SHALL roll back.
+- REQ-LEARN-5261-5: Harmful memory rollback SHALL pass only when a harmful
+  candidate is rolled back and a held-out degradation task selects the safe
+  rollback/block/quarantine/retire action.
+- REQ-LEARN-5261-6: The artifact SHALL state whether the current memory policy
+  is ready, blocked, harmful, or needs redesign for future continuous
+  self-learning experiments.
+
+### SCENARIO-LEARN-5261: Cached Fixture Replay Audits Memory Safety
+
+**Given** the current typed verifier-memory schemas and cached memory artifacts
+**When** Experiment 5261 replays deterministic aligned, irrelevant,
+conflicting, stale, and shuffled fixtures without LLM calls
+**Then** it reports retention, interference, promotion, eviction, and rollback
+metrics
+**And** writes the required artifact with `inference_substrate` set to
+`cached_fixture_replay_no_llm`
+**And** the honest verdict starts with `complete:` or `blocked_` and states
+whether the current memory policy is ready, blocked, harmful, or needs redesign.
+
+## Implementation Status (Exp 5261)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5261 | Planned (`python/carnot/pipeline/typed_memory_interference_audit.py`) | Planned (`tests/python/test_experiment_5261_typed_memory_interference_audit_v481.py`) |
