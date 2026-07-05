@@ -10346,3 +10346,4 @@ web search: |
 | 2026-07-05 16:44 UTC | PHASE 1 solver grounding -- constraint-extraction  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  broken = dict |
 | 2026-07-05 17:03 UTC | PHASE 1 solver grounding -- constraint-extraction  | OK | cache hit: 87 passed, 1 warning in 12.89s |
 | 2026-07-05 17:34 UTC | PHASE 1 gated on exp5273 solver_fixture_ready -- S | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-05 17:47 UTC | PHASE 2 continuous self-learning -- governed decis | OK | 87 passed, 1 warning in 10.74s |
