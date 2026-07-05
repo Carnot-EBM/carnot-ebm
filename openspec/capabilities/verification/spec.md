@@ -25396,3 +25396,90 @@ and tracebacks, and still sets `no_quality_claim.value=true`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5259 | Planned (`python/carnot/experiment_5259_sota_gguf_gpu_offload_preflight_v481.py`, `results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json`) | Planned (`tests/python/test_experiment_5259_sota_gguf_gpu_offload_preflight_v481.py`) |
+
+### REQ-VERIFY-5262: Solver-Grounded Constraint Extraction Pilot V481
+
+The repository SHALL provide Exp 5262 at
+`python/carnot/experiment_5262_solver_grounded_constraint_extraction_v481.py`
+and write
+`results/experiment_5262_solver_grounded_constraint_extraction_v481.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL execute
+only when Exp 5259 reports `sota_runtime_ready=true`, SHALL record the Exp
+5259 model/runtime receipts it relies on, and SHALL confirm a deterministic
+checker is available before collecting headline results.
+
+The pilot SHALL ask a mandated local SOTA GGUF model to translate small
+natural-language requirement fixtures into executable integer constraints or a
+constrained intermediate representation. The fixture set SHALL have
+solver-checkable satisfiable and unsatisfiable labels, and the prompt SHALL NOT
+include the expected SAT/UNSAT label. The runner MAY normalize syntax required
+to parse the model's emitted IR, but it SHALL NOT add, delete, or semantically
+repair constraints before solver validation.
+
+The mandated `MODEL_SPECS` are exactly:
+`unsloth/Qwen3.6-35B-A3B-GGUF` as the `flagship_moe` candidate generator,
+`unsloth/gemma-4-31B-it-GGUF` as the `flagship_dense` candidate generator or
+cross-checker, and `unsloth/gemma-4-26B-A4B-it-GGUF` as the optional
+`middle_moe` cross-checker. `MODEL_SPECS` SHALL record model IDs, roles,
+quantization/file receipts, runtime statuses inherited from Exp 5259 or
+resolved locally, and the principle for treating local GGUF inference as the
+headline substrate.
+
+The deterministic checker SHALL validate each emitted constraint set with Z3
+or an equivalent exact bounded solver/checker, record SAT/UNSAT status, and
+record a counterexample whenever the emitted constraints disagree with the
+fixture label. A counterexample SHALL be a satisfying assignment for an
+expected-UNSAT fixture whose generated constraints are SAT, or a known-valid
+gold assignment for an expected-SAT fixture whose generated constraints are
+UNSAT. The pilot SHALL compare this live extraction path against a simple
+baseline such as no-constraint generation or hand-written template extraction,
+and it SHALL NOT call the result a broad solver-feedback uplift.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `solver_grounded_extractor_ready`,
+`solver_grounded_extractor_ready_principle`, `constraint_validity_rate`,
+`false_accepts`, `counterexamples_found`, `retired_veribmc_scope_reopened`,
+and `commands_run`. `solver_grounded_extractor_ready` SHALL be a bare boolean.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether solver-grounded extraction produced useful oracle-distinct signal.
+`inference_substrate.value` SHALL be
+`live_llm_inference_local_gguf_sota`. `retired_veribmc_scope_reopened.value`
+SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5262 verdict; starts with complete: or blocked_ and states whether solver-grounded extraction produced useful oracle-distinct signal."
+- `inference_substrate`: principle "Declares live local SOTA GGUF inference plus deterministic solver validation, not a broad solver-feedback or VerIbmc uplift result."
+- `preconditions_checked`: principle "Records Exp 5259 readiness, model/runtime receipts, deterministic checker availability, and retired-scope exclusions before headline extraction."
+- `MODEL_SPECS`: principle "Records mandated local SOTA GGUF model IDs, roles, quantization/file receipts, and runtime status used for the pilot."
+- `solver_grounded_extractor_ready`: principle "Bare readiness boolean; true only when live GGUF extraction ran, deterministic validation ran, and the result beat the simple baseline without false accepts."
+- `solver_grounded_extractor_ready_principle`: principle "Explains whether the solver-grounded extractor is ready and whether its signal is oracle-distinct from the baseline."
+- `constraint_validity_rate`: principle "Fraction of fixture cases where generated executable constraints matched the deterministic solver label."
+- `false_accepts`: principle "Count of expected-UNSAT fixtures whose generated constraints were satisfiable, exposing missed contradictions."
+- `counterexamples_found`: principle "Count of deterministic counterexamples recorded for generated constraint sets that disagreed with fixture labels."
+- `retired_veribmc_scope_reopened`: principle "Must remain false; Exp 5262 is constraint extraction plus deterministic checking, not the retired VerIbmc local solver-feedback route."
+- `commands_run`: principle "Commands run to create and validate the artifact, with outcomes."
+
+### SCENARIO-VERIFY-5262: Local GGUF Constraint IR Is Checked By Solver
+
+Given Exp 5259 `sota_runtime_ready=true`, the mandated V481 local SOTA GGUF
+models, a fixture pack with hidden solver labels, and an importable
+deterministic Z3 checker, when Exp 5262 runs, then it prompts the
+`flagship_moe` model for executable constraint IR, parses only the emitted
+syntax, validates every generated constraint set with the solver, records
+counterexamples for disagreements, compares against a simple baseline, writes
+the required result artifact, and leaves
+`retired_veribmc_scope_reopened.value=false`.
+
+If Exp 5259 is missing or not ready, the deterministic checker is unavailable,
+no mandated local model receipt is ready, or the model emits no parseable
+constraint IR, then the same runner writes a `blocked_` or `complete:` honest
+verdict with exact blockers, keeps `solver_grounded_extractor_ready=false`,
+and still preserves the precondition receipts and retired-scope guard.
+
+## Implementation Status (REQ-VERIFY-5262)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5262 | Planned (`python/carnot/experiment_5262_solver_grounded_constraint_extraction_v481.py`, `results/experiment_5262_solver_grounded_constraint_extraction_v481.json`) | Planned (`tests/python/test_experiment_5262_solver_grounded_constraint_extraction_v481.py`) |
