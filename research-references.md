@@ -27357,3 +27357,20 @@ receipts.
   TSU speedup claim.
 
 <!-- V483-RESEARCH-UPDATE-2026-07-05-END -->
+
+
+### V483 Execution Refresh - 2026-07-05
+
+Execution-time sweep after the `.483` plan checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, and Logical Intelligence public pages. The items below were not in the V483 planning block or nearby reference history and are actionable as implementation notes, but they do not require a roadmap edit.
+
+### New actionable deltas
+- **ConsFormer-LNS: Large Neighborhood Search meets Iterative Neural Constraint Heuristics** (https://arxiv.org/abs/2603.20801; secondary source https://github.com/khalil-research/ConsFormer): The paper decomposes iterative neural CSP heuristics into destroy and repair operators and reports stronger Sudoku, graph-coloring, and MaxCut behavior when neural proposals are wrapped in Large Neighborhood Search. Actionability: For Exp5292-style solver guidance, record destroy strategy, repair decoder mode, classical baseline, and fallback/overwrite telemetry separately before claiming any neural sampler or p-bit guidance win.
+- **AS2: Attention-Based Soft Answer Sets** (https://arxiv.org/abs/2603.18436): AS2 replaces a hard ASP solver boundary with a differentiable soft fixed-point operator while preserving declarative constraint-group structure and reporting Clingo-verified Sudoku constraint satisfaction. Actionability: For Exp5287/Exp5291 trace and low-order-factor fixtures, keep declarative constraint-group metadata alongside any neural/soft relaxation and validate final assignments with an external symbolic checker.
+- **EBT spectral-control companion artifact** (https://huggingface.co/blackhao0426/ebt-spectral-control; secondary source https://huggingface.co/papers/2507.02092): The Hugging Face model card provides a tiny EBT study where adaptive inner-step control using a power-iteration estimate of the largest Hessian eigenvalue prevents a sharpened energy landscape from diverging. Actionability: Before any Carnot EBT or energy-guided decoding experiment treats extra inner optimization steps as safe, add a tiny spectral-step-control diagnostic that logs lambda-max estimates, alpha choices, and divergence/recovery behavior.
+
+### Execution impact
+- **Plan impact:** No executable `.483` task edit is required. The deltas sharpen Exp5287 trace fixtures, Exp5291 low-order/certificate curriculum notes, Exp5292 solver-guidance telemetry, and future EBT stability diagnostics.
+- **Retired scope:** No retired scope was reopened; Phase D external generated-text scoring, broad GRPO/fine-tuning, and TSU/Kona execution claims remain closed unless a future task carries an explicit override.
+- **Semantic Scholar:** Direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 returned HTTP 429 in this pass, so no citation-count delta is claimed.
+
+<!-- V483-EXECUTION-REFRESH-2026-07-05-END -->
