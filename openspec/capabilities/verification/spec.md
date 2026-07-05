@@ -25484,6 +25484,79 @@ and still preserves the precondition receipts and retired-scope guard.
 |---|---|---|
 | REQ-VERIFY-5262 | Planned (`python/carnot/experiment_5262_solver_grounded_constraint_extraction_v481.py`, `results/experiment_5262_solver_grounded_constraint_extraction_v481.json`) | Planned (`tests/python/test_experiment_5262_solver_grounded_constraint_extraction_v481.py`) |
 
+### REQ-VERIFY-5273: Deterministic Solver Fixture Rebuild V482
+
+The repository SHALL provide Exp 5273 at
+`python/carnot/experiment_5273_solver_fixture_rebuild_v482.py` and write
+`results/experiment_5273_solver_fixture_rebuild_v482.json` without invoking an
+LLM and without modifying `scripts/research_conductor.py`. The runner SHALL
+diagnose why Exp 5262 / V481 was not useful: the empty baseline accepted every
+SAT-shaped case, malformed generated JSON was only discovered after model
+output, and model validity mixed schema failure with solver validity.
+
+The runner SHALL build a small deterministic fixture set with unambiguous
+natural-language constraints, executable integer solver encodings, exact
+SAT/UNSAT labels, witness assignments for SAT rows, and deterministic
+counterexamples or negative assignments for every fixture. Fixture labels SHALL
+come from Z3 or an equivalent exact bounded solver, not LLM self-judgment.
+
+The runner SHALL expose an executable constraint IR schema that rejects malformed
+extracted constraints before solver scoring. The schema SHALL require a version,
+integer variables, and executable constraint expressions in the bounded Python /
+Z3 integer subset used by the fixture. Schema failures SHALL be reported as
+schema failures, not as SAT/UNSAT solver outcomes.
+
+The runner SHALL score deterministic baselines, including a reference-copy
+encoding baseline, an empty-extraction baseline, and a deterministic shuffled
+reference-control baseline. The reference baseline SHALL reach 100% validity
+before `solver_fixture_ready` can be true, and the controls SHALL be recorded so
+downstream Exp 5274 can separate fixture sanity from extraction quality.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `solver_fixture_ready`,
+`solver_fixture_ready_principle`, `fixture_count`, `baseline_validity`,
+`counterexample_coverage`, `schema_checks_passed`, `fixture_checksums`, and
+`tests_run`. `solver_fixture_ready` SHALL be a bare boolean gate for Exp 5274.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether the solver fixture is ready. `inference_substrate.value` SHALL be
+`offline_deterministic_certificate_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5273 verdict; starts with complete: or blocked_ and states whether the deterministic solver fixture is ready for Exp 5274."
+- `inference_substrate`: principle "Declares an offline deterministic certificate with no LLM call, preventing fixture readiness from being mistaken for live extraction quality."
+- `solver_fixture_ready`: principle "Bare gate for Exp 5274; true only when schema validation, exact solver labels, reference baseline validity, controls, counterexamples, and checksums all pass."
+- `solver_fixture_ready_principle`: principle "Explains the exact deterministic checks that opened or blocked the downstream extraction retry gate."
+- `fixture_count`: principle "Counts solver-labeled natural-language fixtures so downstream extraction cannot silently shrink the evaluation panel."
+- `baseline_validity`: principle "Reference-copy baseline validity proves the executable labels are internally consistent before any model is scored."
+- `counterexample_coverage`: principle "Fraction of fixtures with deterministic negative assignments or counterexamples, preventing SAT-only or empty-extraction baselines from looking useful."
+- `schema_checks_passed`: principle "Records whether malformed extracted constraints were rejected before solver scoring."
+- `fixture_checksums`: principle "Content-addressed receipts for prompts, labels, reference encodings, counterexamples, schema, and the fixture set prevent silent fixture drift."
+- `tests_run`: principle "Commands run to validate fixture generation, schema validation, solver scoring, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5273: Offline Fixture Gate Opens Only On Solver-Clean Receipts
+
+Given the V481 solver-grounded extraction pilot artifact, a deterministic Z3
+checker, and the V482 fixture specification, when Exp 5273 runs, then it builds
+the solver-labeled fixture set, validates every reference encoding with the
+solver, rejects malformed extracted-constraint payloads before solver scoring,
+scores reference, empty, and shuffled baselines, records checksum receipts, writes
+the required artifact, and sets `solver_fixture_ready=true` only when the
+reference baseline is 100% valid, schema checks pass, counterexample coverage is
+complete, and fixture checksums are present.
+
+If Z3 is unavailable, a reference encoding disagrees with its exact label, schema
+validation fails to reject malformed constraints, any fixture lacks
+counterexample evidence, or checksum receipts are incomplete, then the same
+runner writes a `blocked_` or non-ready `complete:` artifact with
+`solver_fixture_ready=false` and no downstream extraction-quality claim.
+
+## Implementation Status (REQ-VERIFY-5273)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5273 | Planned (`python/carnot/experiment_5273_solver_fixture_rebuild_v482.py`, `results/experiment_5273_solver_fixture_rebuild_v482.json`) | Planned (`tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py`) |
+
 ### REQ-VERIFY-5263: Neuron/Attention/Logit Energy Hallucination Probe V481
 
 The repository SHALL provide Exp 5263 at

@@ -1,0 +1,717 @@
+{
+  "baseline_validity": {
+    "principle": "Reference-copy baseline validity proves the executable labels are internally consistent before any model is scored.",
+    "value": 1.0
+  },
+  "baselines": {
+    "deterministic_shuffled_reference": {
+      "counterexamples_found": 4,
+      "false_accepts": 2,
+      "rows": [
+        {
+          "assignment": {
+            "d": 4,
+            "e": 5,
+            "s": 1
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "fixed_schedule_window"
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "gold_assignment": {
+              "a": 2,
+              "b": 3
+            },
+            "principle": "Reference SAT witness shows the candidate overconstrained a satisfiable fixture."
+          },
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "even_and_odd"
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "gold_assignment": {
+              "d": 4,
+              "e": 5,
+              "s": 1
+            },
+            "principle": "Reference SAT witness shows the candidate overconstrained a satisfiable fixture."
+          },
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "too_large_sum"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "even_and_odd",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "bounded_gap_conflict"
+        },
+        {
+          "assignment": {
+            "x": 4
+          },
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {
+              "x": 4
+            }
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "too_large_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "single_even_high"
+        },
+        {
+          "assignment": {
+            "a": 2,
+            "b": 3
+          },
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {
+              "a": 2,
+              "b": 3
+            }
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "small_pair_sum"
+        }
+      ],
+      "validity_rate": 0.3333333333333333
+    },
+    "empty_extraction": {
+      "counterexamples_found": 3,
+      "false_accepts": 3,
+      "rows": [
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "even_and_odd",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "too_large_sum",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        },
+        {
+          "assignment": {},
+          "counterexample": {
+            "principle": "Candidate missed a contradiction and accepted an expected-UNSAT fixture.",
+            "satisfying_assignment": {}
+          },
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": true,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": false,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": null
+        }
+      ],
+      "validity_rate": 0.5
+    },
+    "reference_copy": {
+      "counterexamples_found": 0,
+      "false_accepts": 0,
+      "rows": [
+        {
+          "assignment": {
+            "x": 4
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "single_even_high",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "single_even_high"
+        },
+        {
+          "assignment": {
+            "a": 2,
+            "b": 3
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "small_pair_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "small_pair_sum"
+        },
+        {
+          "assignment": {
+            "d": 4,
+            "e": 5,
+            "s": 1
+          },
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "sat",
+          "false_accept": false,
+          "fixture_id": "fixed_schedule_window",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "sat",
+          "source_fixture_id": "fixed_schedule_window"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "even_and_odd",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "even_and_odd"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "too_large_sum",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "too_large_sum"
+        },
+        {
+          "assignment": {},
+          "counterexample": {},
+          "errors": [],
+          "expected_status": "unsat",
+          "false_accept": false,
+          "fixture_id": "bounded_gap_conflict",
+          "matches_expected": true,
+          "schema_valid": true,
+          "solver_status": "unsat",
+          "source_fixture_id": "bounded_gap_conflict"
+        }
+      ],
+      "validity_rate": 1.0
+    }
+  },
+  "counterexample_coverage": {
+    "principle": "Fraction of fixtures with deterministic negative assignments or counterexamples, preventing SAT-only or empty-extraction baselines from looking useful.",
+    "value": 1.0
+  },
+  "duration_s": 0.025785,
+  "fixture_checksums": {
+    "principle": "Content-addressed receipts for prompts, labels, reference encodings, counterexamples, schema, and the fixture set prevent silent fixture drift.",
+    "value": {
+      "fixture_set_sha256": "7ecb3cd38e0b17b174cb185078b69008d2bc305a8ccebabdbda68c649f233be6",
+      "fixtures": {
+        "bounded_gap_conflict": {
+          "counterexamples_sha256": "169d5c530971e1ab46b919ef9ed98b59bde0aef9d20dff28ec70cc742baf5358",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "1df9eba8ac55388e114f871c86d812a773da0e2f1928792bbe6e37c00291f4b6",
+          "reference_encoding_sha256": "0945504d462b7cb24854f6eae67c545d43ead83a4dd7aed39540f525696f8d4c"
+        },
+        "even_and_odd": {
+          "counterexamples_sha256": "74f74ea2bf6c6c1c659167508f0a0ceaeaed34a341381ef249d24be2d77e766e",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "3f67cb74dba7e81d0aa34a9b036309507bb8af5be5179ed2ffd7ac8f9f74b66c",
+          "reference_encoding_sha256": "b5f9cd277f4e4ecf7bcf6cae1c19dfefd8fdd496d4c71e2c8bff203ddf6a3417"
+        },
+        "fixed_schedule_window": {
+          "counterexamples_sha256": "f865e5785595d4c376363fe3935a2a2e9accdeafa01b247baa89bd70c16c6f60",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "ad41e38fa9be478430c0e4f5e54a7bc9cf3f3a5e38e821e128563e76fcadb984",
+          "reference_encoding_sha256": "219156f732271689ba4529d473ce54f21e221e1bc8f9aa2071ff4a84d0a7b5ce"
+        },
+        "single_even_high": {
+          "counterexamples_sha256": "4dad774562f2429a68ae35e9bffc8e591623a81708a190023ee8d0eccc7b372c",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "8c348cdc0cf355cbb252e9084eb8ef508f07fe77e4cd12943e37c11f02e7be4c",
+          "reference_encoding_sha256": "09b7a1a6169ce48ce4f2fea56f08418a85f44122d379a30e6100bfd48ec5de72"
+        },
+        "small_pair_sum": {
+          "counterexamples_sha256": "f835e3329254d0ac099b196f063f996eebb8211400c9e94781aeab2789790f09",
+          "label_sha256": "339efeab70b4cc6e2755ec57d2290484ef2363f955c16df3900ad44382227429",
+          "natural_language_sha256": "fbf7f47ec6e9852a3e3ae84317463949fcb5454efccc6c4047f64f67b48d86ec",
+          "reference_encoding_sha256": "ae0eaebb5a56a8497258e062e6990accb7fb611d3e6b34436513d16a05b1b146"
+        },
+        "too_large_sum": {
+          "counterexamples_sha256": "96e466abb5afb9ae8af82c3a51ce9471b538a0861f1ace451ae4347737f8eafb",
+          "label_sha256": "af3a14c11c198ad9e92ed4a8f341a59e2602c0e1088144f05f0a6607d3cac3c1",
+          "natural_language_sha256": "90557912d097dc58e2a8049b2f3184d5e9e4fd2dc670e63fb31bed9644b56aa4",
+          "reference_encoding_sha256": "b895e8ae41dfdbea8555b22ff77c08f8837cd60841dcf7a008663bc67afe1956"
+        }
+      },
+      "schema_sha256": "9dd5d124b8a5de8a1faaac7440591431e02b3a8279c941f986a7ac829592fa83"
+    }
+  },
+  "fixture_count": {
+    "principle": "Counts solver-labeled natural-language fixtures so downstream extraction cannot silently shrink the evaluation panel.",
+    "value": 6
+  },
+  "fixtures": [
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "x": 5
+          },
+          "violated_constraints": [
+            "x_even"
+          ]
+        }
+      ],
+      "expected_status": "sat",
+      "family": "single_integer_parity",
+      "fixture_id": "single_even_high",
+      "gold_assignment": {
+        "x": 4
+      },
+      "natural_language": "Choose one integer x. It must be at least 0 and at most 5, it must be even, and it must be greater than 3.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "x >= 0",
+            "id": "x_low"
+          },
+          {
+            "expr": "x <= 5",
+            "id": "x_high"
+          },
+          {
+            "expr": "x % 2 == 0",
+            "id": "x_even"
+          },
+          {
+            "expr": "x > 3",
+            "id": "x_gt_three"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "x": {
+            "type": "int"
+          }
+        }
+      }
+    },
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "a": 3,
+            "b": 2
+          },
+          "violated_constraints": [
+            "a_less_than_b"
+          ]
+        }
+      ],
+      "expected_status": "sat",
+      "family": "bounded_pair_sum",
+      "fixture_id": "small_pair_sum",
+      "gold_assignment": {
+        "a": 2,
+        "b": 3
+      },
+      "natural_language": "Choose integers a and b. Each must be between 0 and 3 inclusive. Their sum must equal 5, and a must be less than b.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "a >= 0",
+            "id": "a_low"
+          },
+          {
+            "expr": "a <= 3",
+            "id": "a_high"
+          },
+          {
+            "expr": "b >= 0",
+            "id": "b_low"
+          },
+          {
+            "expr": "b <= 3",
+            "id": "b_high"
+          },
+          {
+            "expr": "a + b == 5",
+            "id": "sum_is_five"
+          },
+          {
+            "expr": "a < b",
+            "id": "a_less_than_b"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "a": {
+            "type": "int"
+          },
+          "b": {
+            "type": "int"
+          }
+        }
+      }
+    },
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "d": 3,
+            "e": 4,
+            "s": 1
+          },
+          "violated_constraints": [
+            "duration_fixed"
+          ]
+        }
+      ],
+      "expected_status": "sat",
+      "family": "linear_schedule",
+      "fixture_id": "fixed_schedule_window",
+      "gold_assignment": {
+        "d": 4,
+        "e": 5,
+        "s": 1
+      },
+      "natural_language": "Choose integer start s, duration d, and end e. The start must be exactly 1, the duration must be exactly 4, the end must equal start plus duration, and the end must be no later than 5.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "s == 1",
+            "id": "start_fixed"
+          },
+          {
+            "expr": "d == 4",
+            "id": "duration_fixed"
+          },
+          {
+            "expr": "s + d == e",
+            "id": "end_sum"
+          },
+          {
+            "expr": "e <= 5",
+            "id": "end_bound"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "d": {
+            "type": "int"
+          },
+          "e": {
+            "type": "int"
+          },
+          "s": {
+            "type": "int"
+          }
+        }
+      }
+    },
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "y": 2
+          },
+          "violated_constraints": [
+            "y_odd"
+          ]
+        }
+      ],
+      "expected_status": "unsat",
+      "family": "parity_contradiction",
+      "fixture_id": "even_and_odd",
+      "gold_assignment": {},
+      "natural_language": "Choose one integer y. It must be between 1 and 4 inclusive, it must be even, and it must also be odd.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "y >= 1",
+            "id": "y_low"
+          },
+          {
+            "expr": "y <= 4",
+            "id": "y_high"
+          },
+          {
+            "expr": "y % 2 == 0",
+            "id": "y_even"
+          },
+          {
+            "expr": "y % 2 == 1",
+            "id": "y_odd"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "y": {
+            "type": "int"
+          }
+        }
+      }
+    },
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "p": 2,
+            "q": 2
+          },
+          "violated_constraints": [
+            "sum_is_five"
+          ]
+        }
+      ],
+      "expected_status": "unsat",
+      "family": "bounded_sum_contradiction",
+      "fixture_id": "too_large_sum",
+      "gold_assignment": {},
+      "natural_language": "Choose integers p and q. Each must be between 0 and 2 inclusive. The sum p plus q must equal 5.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "p >= 0",
+            "id": "p_low"
+          },
+          {
+            "expr": "p <= 2",
+            "id": "p_high"
+          },
+          {
+            "expr": "q >= 0",
+            "id": "q_low"
+          },
+          {
+            "expr": "q <= 2",
+            "id": "q_high"
+          },
+          {
+            "expr": "p + q == 5",
+            "id": "sum_is_five"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "p": {
+            "type": "int"
+          },
+          "q": {
+            "type": "int"
+          }
+        }
+      }
+    },
+    {
+      "counterexamples": [
+        {
+          "assignment": {
+            "u": 2,
+            "v": 0
+          },
+          "violated_constraints": [
+            "gap_gt_two"
+          ]
+        }
+      ],
+      "expected_status": "unsat",
+      "family": "bounded_gap_contradiction",
+      "fixture_id": "bounded_gap_conflict",
+      "gold_assignment": {},
+      "natural_language": "Choose integers u and v. Both must be between 0 and 2 inclusive. The value u must be more than 2 greater than v.",
+      "reference_encoding": {
+        "constraints": [
+          {
+            "expr": "u >= 0",
+            "id": "u_low"
+          },
+          {
+            "expr": "u <= 2",
+            "id": "u_high"
+          },
+          {
+            "expr": "v >= 0",
+            "id": "v_low"
+          },
+          {
+            "expr": "v <= 2",
+            "id": "v_high"
+          },
+          {
+            "expr": "u - v > 2",
+            "id": "gap_gt_two"
+          }
+        ],
+        "schema_version": "solver_constraint_ir_v1",
+        "variables": {
+          "u": {
+            "type": "int"
+          },
+          "v": {
+            "type": "int"
+          }
+        }
+      }
+    }
+  ],
+  "honest_verdict": {
+    "principle": "Terminal Exp 5273 verdict; starts with complete: or blocked_ and states whether the deterministic solver fixture is ready for Exp 5274.",
+    "value": "complete: solver_fixture_ready true for Exp 5274 deterministic gated retry"
+  },
+  "inference_substrate": {
+    "principle": "Declares an offline deterministic certificate with no LLM call, preventing fixture readiness from being mistaken for live extraction quality.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "no_llm_invoked": true,
+  "prior_v481_diagnosis": {
+    "baseline_false_accepts": 2,
+    "baseline_validity": 0.5,
+    "baseline_validity_not_useful": true,
+    "diagnosis": "V481 mixed malformed extraction with solver validity: only 1/4 model rows were parseable, while the empty baseline scored 0.5 by accepting all SAT-shaped cases and false-accepting UNSAT contradictions.",
+    "model_validity": 0.25,
+    "model_validity_not_useful": true,
+    "parseable_rows": 1,
+    "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+    "total_rows": 4
+  },
+  "schema": "carnot.experiment_5273.solver_fixture_rebuild.v482",
+  "schema_check_report": {
+    "malformed_rejections": [
+      true,
+      true,
+      true
+    ],
+    "passed": true,
+    "valid_reference_accepted": true
+  },
+  "schema_checks_passed": {
+    "principle": "Records whether malformed extracted constraints were rejected before solver scoring.",
+    "value": true
+  },
+  "solver_fixture_ready": true,
+  "solver_fixture_ready_principle": "ready=true because Z3 is available, malformed schemas reject before solver scoring, reference baseline validity is 1.0, counterexample coverage is 1.0, empty/shuffled controls are recorded, and checksums exist.",
+  "spec_refs": [
+    "REQ-VERIFY-5273",
+    "SCENARIO-VERIFY-5273"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py -q",
+      "outcome": "failed: 6 assertions passed, but repo-wide pytest-cov addopts failed global coverage at 0.50% against 99%"
+    },
+    {
+      "command": ".venv/bin/pytest --no-cov tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py -q",
+      "outcome": "passed: 6 passed in 3.83s"
+    },
+    {
+      "command": ".venv/bin/coverage run --include=\"*/python/carnot/experiment_5273_solver_fixture_rebuild_v482.py\" -m pytest --no-cov -n 0 tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py -q",
+      "outcome": "passed: 6 passed in 3.80s"
+    },
+    {
+      "command": ".venv/bin/coverage report --include=\"*/python/carnot/experiment_5273_solver_fixture_rebuild_v482.py\" --fail-under=100",
+      "outcome": "passed: 100% line coverage on python/carnot/experiment_5273_solver_fixture_rebuild_v482.py"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed/interrupted after first clear unrelated full-suite failures: 15 failed, 10958 passed, 23 skipped, 120 warnings in 597.25s; failures included existing abstention HTTP timeouts, THRML blocked status, Z3 worker segfault in test_adaptive.py, missing onnx for experiment_304 tests, and unrelated artifact expectation drift"
+    }
+  ]
+}
