@@ -34914,6 +34914,89 @@ does not modify the historical artifacts.
 |---|---|---|
 | REQ-REPORT-5247 | Implemented (`python/carnot/experiment_5247_slot_artifact_normalizer_v480.py`, `results/experiment_5247_slot_artifact_normalizer_v480.json`) | Implemented (`tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py`) |
 
+### REQ-REPORT-5248: GAP-4 Receipt Salvage Or Retirement Decision
+
+The Exp 5248 workflow SHALL run only after
+`results/experiment_5247_slot_artifact_normalizer_v480.json` records bare
+`artifact_normalizer_ready=true`. It SHALL record the Exp 5247 normalizer
+version and reproducibility checksum, SHALL run the normalizer over the frozen
+GAP-4 artifacts Exp 5224, Exp 5225, Exp 5235, and Exp 5236, and SHALL write
+`results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json`.
+
+The workflow SHALL be a cached receipt replay and classification only. It SHALL
+NOT regenerate the GAP-4 pool, SHALL NOT run a broad search, SHALL NOT invoke
+LLM generation, SHALL NOT modify `scripts/research_conductor.py`, and SHALL
+preserve the frozen Exp 5225 outcome counts unless the source artifacts already
+contain contradictory auditable evidence. The required outcome-count fields are
+`wins`, `losses`, and `ties`.
+
+The workflow SHALL classify every missing or blocking field relevant to the
+GAP-4 decision into exactly one of `safe-normalized`, `unsafe-missing`, or
+`irrelevant-to-claim`. A checksum mismatch caused only by post-hoc
+adversarial-QA annotation fields outside the source artifact schema MAY be
+classified `safe-normalized` when recomputing the source checksum after
+removing only `flagged_adversarial` and `corrigendum_pending` matches the
+stored checksum. QA flags that Exp 5235 already calibrated as expected GAP-4
+structural-null equalities MAY be classified `irrelevant-to-claim` for the
+clean-null claim, but compute-bound missing duration, methodology, model, or
+solve provenance receipts SHALL remain `unsafe-missing` when they are
+claim-critical.
+
+The final decision SHALL be `salvaged_clean_null` only if all claim-critical
+GAP-4 receipts are present after safe normalization, the frozen validation is
+complete, and the preserved counts do not cross the unchanged min-six rule. If
+any claim-critical receipt remains absent, the decision SHALL be
+`blocked_missing_receipts` or `retire_current_gap4_pool` and the artifact SHALL
+name the specific missing evidence.
+
+The Exp 5248 artifact SHALL include principle-wrapped top-level fields
+`honest_verdict`, `inference_substrate`, `gap4_final_decision`,
+`normalized_artifacts`, `unsafe_missing_receipts`, `wins`, `losses`, `ties`,
+`pool_retired`, and `no_new_generation`. `honest_verdict.value` SHALL start
+with `complete:` or `blocked_` and state the final GAP-4 decision.
+`inference_substrate.value` SHALL equal `cached_fixture_replay_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state the final GAP-4 receipt decision."
+- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because Exp5248 replays checked-in artifacts without LLM generation."
+- `gap4_final_decision`: principle "Exactly one of salvaged_clean_null, blocked_missing_receipts, or retire_current_gap4_pool."
+- `normalized_artifacts`: principle "Lists each source artifact, normalizer receipts, checksum classification, and claim-criticality."
+- `unsafe_missing_receipts`: principle "Lists claim-critical missing evidence still unsafe after safe normalization."
+- `wins`: principle "Integer copied from frozen Exp5225 validation wins; never rescored by Exp5248."
+- `losses`: principle "Integer copied from frozen Exp5225 validation losses; never rescored by Exp5248."
+- `ties`: principle "Integer copied from frozen Exp5225 validation ties; never rescored by Exp5248."
+- `pool_retired`: principle "True only when the final decision retires the current GAP-4 pool."
+- `no_new_generation`: principle "True because Exp5248 does not regenerate the pool, run a broad search, or invoke LLM generation."
+
+#### SCENARIO-REPORT-5248-SALVAGED-CLEAN-NULL: Frozen Null Is Salvaged By Receipt Classification
+
+**Given** Exp 5247 is ready, Exp 5224 and Exp 5225 checksums match their
+pre-QA payloads after removing only post-hoc QA annotations, Exp 5235 calibrates
+the GAP-4 structural-null QA flags, and Exp 5236 preserves frozen counts
+`wins=0`, `losses=0`, and `ties=120`
+**When** Exp 5248 classifies the receipts
+**Then** it writes a terminal artifact with
+`gap4_final_decision.value=salvaged_clean_null`, empty
+`unsafe_missing_receipts.value`, preserved counts, `pool_retired.value=false`,
+and `no_new_generation.value=true`.
+
+#### SCENARIO-REPORT-5248-BLOCKED-OR-RETIRED: Claim-Critical Missing Evidence Fails Closed
+
+**Given** a source artifact lacks a claim-critical duration, methodology, model,
+solve-provenance, checksum, or validation-count receipt after safe normalization
+**When** Exp 5248 classifies the receipts
+**Then** it writes a terminal `blocked_` artifact with decision
+`blocked_missing_receipts` or `retire_current_gap4_pool`, records the missing
+evidence in `unsafe_missing_receipts.value`, and does not alter the frozen
+GAP-4 counts.
+
+## Implementation Status (REQ-REPORT-5248)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5248 | Implemented (`python/carnot/experiment_5248_gap4_receipt_salvage_or_retire_v480.py`, `results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json`) | Implemented (`tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
