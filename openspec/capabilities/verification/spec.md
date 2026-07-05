@@ -25557,6 +25557,92 @@ runner writes a `blocked_` or non-ready `complete:` artifact with
 |---|---|---|
 | REQ-VERIFY-5273 | Planned (`python/carnot/experiment_5273_solver_fixture_rebuild_v482.py`, `results/experiment_5273_solver_fixture_rebuild_v482.json`) | Planned (`tests/python/test_experiment_5273_solver_fixture_rebuild_v482.py`) |
 
+### REQ-VERIFY-5274: Solver Constraint Extraction Retry Gated V482
+
+The repository SHALL provide Exp 5274 at
+`python/carnot/experiment_5274_solver_constraint_extraction_retry_gated_v482.py`
+and write
+`results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL execute
+only after confirming that Exp 5273 wrote
+`solver_fixture_ready=true`, at least the mandated headline local SOTA GGUF
+models are locally available, and the deterministic solver is importable.
+
+The headline `MODEL_SPECS` SHALL use
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as optional `middle_moe`. Tiny legacy models
+MAY be used only for CPU smoke tests and SHALL NOT appear in headline metrics.
+`MODEL_SPECS` SHALL record model IDs, roles, quantization/file receipts,
+runtime availability, and the principle for treating local GGUF inference as
+the headline extraction substrate.
+
+The runner SHALL ask each headline-ready mandated local SOTA GGUF model to
+translate the rebuilt Exp 5273 natural-language fixtures into the strict
+executable constraint IR from Exp 5273. Prompts SHALL be deterministic and
+record prompt checksums. Raw outputs SHALL be preserved with output checksums.
+The `malformed model outputs` category SHALL be rejected before solver scoring
+and reported separately. Schema validation SHALL run before solver scoring.
+Malformed model outputs SHALL be counted separately from schema-valid
+constraints whose solver label is wrong.
+
+The deterministic solver SHALL be the only oracle-distinct evaluator. The
+runner SHALL NOT call external text scorers, LLM judge models, NLI scorers, or
+retired generated-text/logprob scoring routes. It SHALL compare model validity,
+satisfiable-label accuracy, counterexample agreement, malformed rate, and
+unsafe false accepts against the rebuilt fixture baselines and the prior V481
+result. The retry SHALL be reported as improved only when the aggregate
+validity exceeds the applicable baseline and V481 validity while unsafe false
+accepts remain zero; otherwise the artifact SHALL honestly report nulled,
+regressed, blocked, or unmeasured scope.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `solver_extraction_improved`, `validity_rate`,
+`baseline_validity`, `malformed_rate`, `unsafe_false_accepts`,
+`fixture_checksums`, and `commands_run`. `honest_verdict.value` SHALL start
+with `complete:` or `blocked_` and state whether the retry improved, nulled,
+regressed, or was unmeasured. `inference_substrate.value` SHALL be
+`live_llm_inference_local_gguf_sota`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5274 verdict; starts with complete: or blocked_ and states whether the retry improved, nulled, regressed, or was unmeasured."
+- `inference_substrate`: principle "Declares live local SOTA GGUF inference plus deterministic solver scoring over the rebuilt Exp 5273 fixture."
+- `preconditions_checked`: principle "Records Exp 5273 fixture readiness, local mandated GGUF availability, deterministic solver availability, and exclusion of external scorers before extraction."
+- `MODEL_SPECS`: principle "Records mandated local SOTA GGUF model IDs, roles, quantization/file receipts, runtime status, and headline inclusion."
+- `solver_extraction_improved`: principle "True only when schema-valid solver-scored extraction beats the rebuilt baseline and prior V481 validity without unsafe false accepts."
+- `validity_rate`: principle "Fraction of model-fixture rows whose schema-valid executable constraints matched the deterministic solver label."
+- `baseline_validity`: principle "Baseline validity from the rebuilt Exp 5273 fixture controls used as the comparison floor."
+- `malformed_rate`: principle "Fraction of model-fixture rows rejected by schema validation before solver scoring."
+- `unsafe_false_accepts`: principle "Count of expected-UNSAT fixture rows whose schema-valid generated constraints were satisfiable."
+- `fixture_checksums`: principle "Carries Exp 5273 fixture and per-prompt/output checksums so extraction scoring cannot silently drift from the gated fixture."
+- `commands_run`: principle "Commands run to create and validate the artifact, with outcomes."
+
+### SCENARIO-VERIFY-5274: Gated SOTA Extraction Is Scored Only By Solver
+
+Given Exp 5273 `solver_fixture_ready=true`, the rebuilt solver fixture,
+headline-ready mandated local SOTA GGUF receipts, and an importable Z3 checker,
+when Exp 5274 runs, then it prompts the headline-ready SOTA models with
+deterministic constraint-extraction prompts, records prompt and output
+checksums, rejects malformed IR before solver scoring, scores schema-valid
+constraints with the solver, compares validity and unsafe false accepts against
+the rebuilt baselines and V481, writes the required artifact, and uses
+`live_llm_inference_local_gguf_sota` as its inference substrate.
+
+If Exp 5273 is not ready, no headline mandated model is locally available, the
+solver is unavailable, every output is malformed, or the retry fails to improve
+without unsafe false accepts, then the runner writes an honest `blocked_` or
+`complete:` artifact with exact evidence, keeps the malformed and solver-invalid
+counts separate, and does not reopen external text scorers or the retired
+solver-feedback scope.
+
+## Implementation Status (REQ-VERIFY-5274)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5274 | Planned (`python/carnot/experiment_5274_solver_constraint_extraction_retry_gated_v482.py`, `results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json`) | Planned (`tests/python/test_experiment_5274_solver_constraint_extraction_retry_gated_v482.py`) |
+
 ### REQ-VERIFY-5263: Neuron/Attention/Logit Energy Hallucination Probe V481
 
 The repository SHALL provide Exp 5263 at
