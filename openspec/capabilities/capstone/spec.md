@@ -896,3 +896,82 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5256 | Implemented (`python/carnot/experiment_5256_capstone_v480.py`, `results/experiment_5256_capstone_v480.json`) | Implemented (`tests/python/test_experiment_5256_capstone_v480.py`) |
+
+- REQ-CAPSTONE-5281: The `.482` milestone-close capstone aggregator
+  `exp5281-capstone-v482` in `python/carnot/experiment_5281_capstone_v482.py`
+  SHALL write `results/experiment_5281_capstone_v482.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every expected
+  `.482` upstream artifact from Exp5269 through Exp5280, including blocked and
+  adversarially flagged artifacts, record missing artifacts explicitly, classify
+  each task as one of clean positive, clean null, harmful/regression, gated
+  skip, honest block, or flagged/quarantined, and synthesize the milestone
+  without inventing new results or promoting blocked, skipped, harmful,
+  flagged, or no-speedup evidence.
+- SCENARIO-CAPSTONE-5281: The artifact
+  `results/experiment_5281_capstone_v482.json` must emit top-level fields
+  `honest_verdict`, `inference_substrate`, `milestone_synthesized`,
+  `clean_positives`, `clean_nulls`, `gated_skips`, `honest_blocks`,
+  `harmful_or_regressions`, `flagged_or_quarantined`,
+  `retirements_or_retries_recommended`,
+  `continuous_self_learning_advanced`, `hardware_speedup_claimed`,
+  `docs_updated`, and `commands_run`; each required artifact field except
+  `commands_run` must be an object with `value` and `principle`. The default
+  `.482` read must classify Exp5269, Exp5270, Exp5271, Exp5273, Exp5275,
+  Exp5276, Exp5277, Exp5278, and Exp5280 as clean positives; Exp5272 as a
+  harmful/regression result because the live internal/logit signal underperformed
+  the lexical baseline; Exp5274 as flagged/quarantined and blocked because the
+  SOTA extraction retry was unmeasured and preserved a critical
+  `corrigendum_pending` quarantine record even though its stamped
+  `flagged_adversarial` field is false after the precondition-blocked recheck; and
+  Exp5279 as an honest hardware reachability block with
+  `hardware_speedup_claimed.value=false`. The artifact must map the PRD gaps:
+  receipt-clean verifier signals advanced only as telemetry and negative
+  controls, governed continuous self-learning advanced through governed memory
+  plus memory-assisted verifier dosing, the KAN/factor-graph certificate path
+  advanced on bounded deterministic fixtures, hardware evidence stayed blocked
+  without speedup, and QA evidence discipline advanced through the normalizer
+  audit. The terminal `honest_verdict.value` must start with `complete:` or
+  `blocked_` and summarize the true milestone outcome.
+- SCENARIO-CAPSTONE-5281-BLOCKED-MISSING-INPUT: If any expected Exp5269 through
+  Exp5280 result artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5281_capstone_v482.json` with
+  `honest_verdict.value` starting with `blocked_missing_required`, record the
+  missing or malformed artifact in `honest_blocks.value`, keep
+  `milestone_synthesized.value=false`, keep `hardware_speedup_claimed.value=false`,
+  and keep `docs_updated.value.ops_status`, `docs_updated.value.ops_changelog`,
+  and `docs_updated.value.traceability` false.
+- SCENARIO-CAPSTONE-5281-FIELD-PRINCIPLES: The required field principles are:
+  `honest_verdict` = "terminal prefix; starts with complete: or blocked_ and
+  summarizes the .482 milestone without laundering harmful, blocked, flagged, or
+  no-speedup evidence.", `inference_substrate` =
+  "aggregation_from_upstream_artifacts because the capstone reads checked-in
+  result artifacts and does not run model inference.", `milestone_synthesized` =
+  "true only when every expected upstream artifact is present and loadable.",
+  `clean_positives` = "clean non-flagged upstream results that advance a
+  bounded artifact, receipt, memory, certificate, boundary, source, or QA
+  discipline.", `clean_nulls` = "clean non-flagged no-improvement results;
+  empty is valid and must not be padded.", `gated_skips` = "structured
+  gate-skipped results; empty is valid when no task followed a skip path.",
+  `honest_blocks` = "blocked or missing upstreams recorded without conversion
+  to nulls or successes.", `harmful_or_regressions` = "harmful or regressive
+  upstreams preserved separately from clean nulls and positives.",
+  `flagged_or_quarantined` = "flagged_adversarial or
+  quarantined artifacts whose metrics cannot become headline evidence.",
+  `retirements_or_retries_recommended` = "retirement or retry recommendations
+  derived from the exclusion manifest and repeated failed verdicts; does not edit
+  the manifest.", `continuous_self_learning_advanced` = "true only when
+  governed memory and memory-assisted verifier dosing both pass unsafe false
+  accept controls.", `hardware_speedup_claimed` = "must be false unless prior
+  hardware tasks produced real comparable timing receipts.", `docs_updated` =
+  "records OpenSpec updates performed by this task and defers
+  ops/status/changelog/traceability updates per the conductor stop rule.", and
+  `commands_run` = "list of validation commands and pass/fail outcomes used for
+  the capstone."
+
+## Implementation Status (REQ-CAPSTONE-5281)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5281 | Implemented (`python/carnot/experiment_5281_capstone_v482.py`, `results/experiment_5281_capstone_v482.json`) | Implemented (`tests/python/test_experiment_5281_capstone_v482.py`) |
