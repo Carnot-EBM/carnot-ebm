@@ -1,0 +1,374 @@
+{
+  "activation_milestone": "2026.07.483",
+  "activation_ready": true,
+  "activation_ready_principle": "Bare boolean confirming .483 can proceed without overwriting research-roadmap.yaml.",
+  "archived_milestone": "2026.07.482",
+  "closeout_fact_failures": [],
+  "closeout_facts": {
+    "evidence_audit_complete": true,
+    "factor_boundary_tiny_no_speedup": true,
+    "governed_memory_positive": true,
+    "hardware_blocked_no_speedup": true,
+    "internal_logit_harmful_regression": true,
+    "kan_certificate_positive": true,
+    "solver_fixture_rebuilt": true,
+    "sota_extraction_blocked_by_gguf_offload": true,
+    "sota_telemetry_ready": true,
+    "verifier_dosing_positive": true
+  },
+  "commands_run": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/roadmap_schema.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/validate_prior_failures.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml --complete /home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "command_label": "scripts/audit_roadmap_gates.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 6,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 13,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 13,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    }
+  ],
+  "duration_s": 14.943214,
+  "exclusions_checked": {
+    "principle": "The transition must run or explicitly record available roadmap, exclusion, and prior-failure checks.",
+    "value": true
+  },
+  "experiment": "experiment_5282_archive_482_activate_483",
+  "experiment_id": "exp5282-archive-482-activate-483",
+  "failed_preconditions": [],
+  "field_principles": {
+    "activation_ready": "Bare boolean confirming .483 can proceed without overwriting research-roadmap.yaml.",
+    "commands_run": "Every validation command must be recorded with pass/fail outcome.",
+    "exclusions_checked": "The transition must run or explicitly record available roadmap, exclusion, and prior-failure checks.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .482 was archived and .483 is activation-ready.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because Exp5282 only reads existing artifacts and local records.",
+    "milestone_archived": "Bare boolean confirming the .482 closeout is represented in durable research records.",
+    "ops_docs_updated": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "research_complete_updated": "True only if this workflow appended or reconciled research-complete.yaml; false when .482 was already present.",
+    "roadmap_activation_check": "No roadmap overwrite is allowed; activated must remain false."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .482 was archived and .483 is activation-ready.",
+    "value": "complete: .482 archived and .483 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+  },
+  "inference_substrate": {
+    "principle": "aggregation_from_upstream_artifacts because Exp5282 only reads existing artifacts and local records.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone_archived": true,
+  "milestone_archived_principle": "Bare boolean confirming the .482 closeout is represented in durable research records.",
+  "ops_docs_updated": {
+    "principle": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "value": false
+  },
+  "random_seed": 5282,
+  "reproducibility_checksum": "sha256:6215460f3a01174911bd0f8c0b956b7b20c859ff0cc7ae7d5a346429d040c1fa",
+  "research_complete_check": {
+    "count_after": 1,
+    "count_before": 1,
+    "had_2026_07_482_before": true,
+    "has_2026_07_482_after": true,
+    "milestone": "2026.07.482",
+    "path": "research-complete.yaml",
+    "sha256": "sha256:70b6ce1919c6773865c7b09f3291e80dc42f7ac780a915919eb8599b26e9c6cc",
+    "updated": false
+  },
+  "research_complete_updated": {
+    "principle": "True only if this workflow appended or reconciled research-complete.yaml; false when .482 was already present.",
+    "value": false
+  },
+  "result_path": "results/experiment_5282_archive_482_activate_483.json",
+  "roadmap_activation_check": {
+    "activated": false,
+    "activation_ready_without_overwrite": true,
+    "active_roadmap_already_483": true,
+    "active_roadmap_milestone": "2026.07.483",
+    "active_roadmap_missing_task_prefixes": [],
+    "active_roadmap_modified": false,
+    "active_roadmap_sha256": "sha256:a433f49bf627652fb3f52ea41c7b29728fcdf26cf3dce0423e113120531b18f1",
+    "active_roadmap_task_ids": [
+      "exp5282-archive-482-activate-483",
+      "exp5283-sota-source-delta-v483",
+      "exp5284-sota-runtime-offload-receipt-repair-v483",
+      "exp5285-knowledge-thought-coherence-fixture-v483",
+      "exp5286-knowledge-thought-coherence-sota-pilot-v483",
+      "exp5287-compilable-trace-dsl-fixture-v483",
+      "exp5288-sota-trace-dsl-extraction-gated-v483",
+      "exp5289-memory-operation-attribution-v483",
+      "exp5290-memory-assisted-coherence-dose-gated-v483",
+      "exp5291-low-order-factor-certificate-curriculum-v483",
+      "exp5292-pbit-cdcl-factor-guidance-v483",
+      "exp5293-hardware-continuity-reachability-v483",
+      "exp5294-capstone-v483"
+    ],
+    "principle": "No roadmap overwrite is allowed; activated must remain false.",
+    "roadmap_next_absence_handled_by": "active_roadmap_already_483",
+    "roadmap_next_milestone": null,
+    "roadmap_next_missing_task_prefixes": [],
+    "roadmap_next_present": false,
+    "roadmap_next_sha256": null,
+    "roadmap_next_task_ids": [],
+    "vnext_names_2026_07_483": true,
+    "vnext_present": true
+  },
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5282_archive_482_activate_483.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5269,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .481 archived and .482 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used.",
+      "loadable": true,
+      "relative_path": "results/experiment_5269_archive_481_activate_482.json",
+      "sha256": "sha256:60de4c80374a2d355aa5b01331ad4b5f2dafbc3ddde5cbb969cb04569c02970f",
+      "task_id": "exp5269-archive-481-activate-482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5270,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: 5 new actionable findings appended; executable .482 plan unchanged.",
+      "loadable": true,
+      "relative_path": "results/experiment_5270_sota_source_delta_v482.json",
+      "sha256": "sha256:4e6b3525b7b61bb8f4e3b5dee8d5b5a0893ade2d831c9b579da20eebff7fd9e3",
+      "task_id": "exp5270-sota-source-delta-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5271,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: telemetry_receipts_ready=true via flagship_moe, flagship_dense, middle_moe",
+      "loadable": true,
+      "relative_path": "results/experiment_5271_sota_telemetry_receipt_harness_v482.json",
+      "sha256": "sha256:5e2bad92538e807318c4d715c02214a8142a17fdf70d2d145895e4b9214a54ad",
+      "task_id": "exp5271-sota-telemetry-receipt-harness-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5272,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: harmful internal/logit signal delta_over_lexical=-0.345679 auroc=0.654321 sample_count=27",
+      "loadable": true,
+      "relative_path": "results/experiment_5272_internal_hallucination_probe_gated_v482.json",
+      "sha256": "sha256:187ceb03550766e47f31e1b7d4d568f3b2dce0c2d90784e9bc2d967933dd111d",
+      "task_id": "exp5272-internal-hallucination-probe-gated-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5273,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: solver_fixture_ready true for Exp 5274 deterministic gated retry",
+      "loadable": true,
+      "relative_path": "results/experiment_5273_solver_fixture_rebuild_v482.json",
+      "sha256": "sha256:5e93f8445d7aab5164cb7887c5041d9e5dca6593d0497dc4ec46b9e326305983",
+      "task_id": "exp5273-solver-fixture-rebuild-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5274,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured",
+      "loadable": true,
+      "relative_path": "results/experiment_5274_solver_constraint_extraction_retry_gated_v482.json",
+      "sha256": "sha256:d009df0b506261912d0c8e5aa5860fe4813ad844044bc379e66f91c632cd8ec7",
+      "task_id": "exp5274-solver-constraint-extraction-retry-gated-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5275,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: governed decision-history memory is ready for Exp5276; provenance_fields_present=true, scope_enforcement_passed=true, stale_conflict_eviction_passed=true, harmful_memory_rollback_passed=true, unsafe_false_accepts=0",
+      "loadable": true,
+      "relative_path": "results/experiment_5275_governed_decision_history_memory_v482.json",
+      "sha256": "sha256:8939df38942f856857fe821e3a330d1a2b6783e186fd04fe3945431998566f0c",
+      "task_id": "exp5275-governed-decision-history-memory-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5276,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: positive memory-assisted verifier dosing preserved always-full quality, avoided 0.857143 full verifier calls, blocked unsafe memory rows, and kept unsafe_false_accepts=0",
+      "loadable": true,
+      "relative_path": "results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json",
+      "sha256": "sha256:891ffc80eb0023fd17d8677022e9f1b65c8e2e196e4d8317c628b6a33b72530a",
+      "task_id": "exp5276-memory-assisted-verifier-dose-gated-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5277,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: scaled certificate positive for a bounded three-component PWA/MILP fixture with explicit approximation slack and nearby false-property rejection",
+      "loadable": true,
+      "relative_path": "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+      "sha256": "sha256:920d0748ef2e44f8a8ffe20f2f6bb7ed8238dd1ef8b27e3eedf50ede20f5b795",
+      "task_id": "exp5277-kan-milp-certificate-scale-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5278,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: factor-graph boundary is usable for the tiny solver fixture; sampler interface compatibility is shape-only and no hardware speedup is claimed",
+      "loadable": true,
+      "relative_path": "results/experiment_5278_constraint_factor_graph_boundary_v482.json",
+      "sha256": "sha256:8cf02504793667efd93d0e49119dcda3ed6f515c7b6347e8ac868aea5a512296",
+      "task_id": "exp5278-constraint-factor-graph-boundary-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5279,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5279_hardware_continuity_reachability_v482.json",
+      "sha256": "sha256:37dd7cabd0a8db761e5a18eee80a1b9b5e80a75193be41bafc4b5d6cb039080f",
+      "task_id": "exp5279-hardware-continuity-reachability-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5280,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: producer evidence discipline is ready at the template normalizer boundary; bare gates stay bare, missing evidence is rejected, duration and substrate behavior is preserved, and old v481 pilots remain quarantined.",
+      "loadable": true,
+      "relative_path": "results/experiment_5280_artifact_normalizer_evidence_audit_v482.json",
+      "sha256": "sha256:54dfe9b6119e42a1da9730bfed6aa120594daf7b0aa3404dca1914fc4fc2fadc",
+      "task_id": "exp5280-artifact-normalizer-evidence-audit-v482"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5281,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .482 synthesized with 9 clean positives, 0 clean nulls, 1 harmful/regression result, 1 flagged/quarantined artifact, 1 honest block, governed self-learning advanced, and hardware blocked with no speedup claim.",
+      "loadable": true,
+      "relative_path": "results/experiment_5281_capstone_v482.json",
+      "sha256": "sha256:b117788a291bafcc60e38544c3d545f1b19188ed8c182e1833d4ef8def23858c",
+      "task_id": "exp5281-capstone-v482"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:6362755ccc4538eafed20baa616b127b5b5569f7465f33bcfadf331c15aeef3b"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/prd.md",
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/architecture.md",
+      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:b9192e55381a4ddcd7b16b618144d0b5ebc4ed9a4e3cbc79e5885de7a0d6c62b"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:66dafe65aefd29eee6bcb8efd357af7b6c06dae5182b7347f779628f35adc728"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:2fb6962965effa2613b7ea933b0288cf6c2254da8dfdb001d2ed3213ae38e017"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:70b6ce1919c6773865c7b09f3291e80dc42f7ac780a915919eb8599b26e9c6cc"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:a433f49bf627652fb3f52ea41c7b29728fcdf26cf3dce0423e113120531b18f1"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:91b2cb9484215e23ac672d0f3ae844d6e8aba1c842b46ae05f4c39727e341e73"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/traceability.md",
+      "sha256": "sha256:6af8097bdedb621798d985c14781bf5af5c60a9929b5e62636ca66d09d54a192"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5282",
+    "SCENARIO-REPORT-5282",
+    "SCENARIO-REPORT-5282-BLOCKED-CLOSEOUT"
+  ]
+}
