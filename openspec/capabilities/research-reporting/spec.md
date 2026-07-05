@@ -34741,6 +34741,87 @@ is unchanged.
 |---|---|---|
 | REQ-REPORT-5241 | Planned (`python/carnot/experiment_5241_arc_gated_live_patch_attempt_v479.py`, `results/experiment_5241_arc_gated_live_patch_attempt_v479.json`) | Planned (`tests/python/test_experiment_5241_arc_gated_live_patch_attempt_v479.py`) |
 
+### REQ-REPORT-5253: ARC Live Patch Clean Receipts Or Retirement V480
+
+The Exp 5253 workflow SHALL rerun or replay the Exp 5240 provenance-routing
+patch through the live ARC-agent path with complete methodology receipts. Before
+the attempt it SHALL read `ops/arc_solve_registry.yaml` and record whether the
+target level is already reproduced. If the target is already reproduced, the
+workflow SHALL NOT claim a duplicate solve and SHALL use the run only to improve
+receipts or retire the current patch scope.
+
+The workflow SHALL enable only the Exp 5240 patch or the minimal equivalent
+already present in `python/carnot/agentic/arc_solve_learning.py`. It SHALL NOT
+add or use offline ground-truth BFS, hidden-game source reading, per-game
+ground-truth adapters, hand-calibrated per-game logic, or outer-loop reverse
+engineering. The live path SHALL use deterministic seed `5253`, wall-clock
+timing, input/output checksums, an attempt-log JSONL path, and provenance route
+receipts that show the live recommendation reached the Exp 5240 provenance
+guard.
+
+The artifact SHALL be
+`results/experiment_5253_arc_live_patch_clean_receipts_v480.json`. It SHALL use
+principle-wrapped fields for `honest_verdict`, `inference_substrate`,
+`solve_provenance`, `registry_precheck`, `level_delta`, `levels_reproduced`,
+`duplicate_solve_claimed`, `retire_current_provenance_patch`, `duration_s`, and
+`attempt_log_path`. `honest_verdict.value` SHALL start with `complete:` or
+`blocked_` and state `level_delta` and the patch decision. `inference_substrate`
+SHALL be `offline_arcade_live_agent_runtime_self_discovery_no_llm` unless a
+mandated local SOTA GGUF proposer actually ran. `solve_provenance.value` SHALL
+be one of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re`;
+headline solve credit is allowed only for `live_agent_self_discovery`.
+`duplicate_solve_claimed.value` SHALL be false. If no solve is banked and
+`level_delta.value=0`, the artifact SHALL set
+`retire_current_provenance_patch.value=true` and the exclusion manifest SHALL be
+updated only for the Exp 5240/5241 provenance-routing patch scope.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state level_delta and patch decision."
+- `inference_substrate`: principle "Use offline_arcade_live_agent_runtime_self_discovery_no_llm unless a mandated local SOTA GGUF proposer actually ran."
+- `solve_provenance`: principle "Records the attempted solve-credit route; no level is banked unless live_agent_self_discovery also passes registry validation."
+- `registry_precheck`: principle "Records registry total and whether the target level was already reproduced before the live attempt."
+- `level_delta`: principle "Integer level delta accepted after registry and provenance gates; zero means no solve was banked."
+- `levels_reproduced`: principle "List of levels banked by this receipt; empty when no solve is claimed."
+- `duplicate_solve_claimed`: principle "Must remain false; pre-reproduced targets improve receipts or retire the patch instead of claiming credit."
+- `retire_current_provenance_patch`: principle "True when clean receipts leave level_delta=0 and the current provenance patch scope should be retired."
+- `duration_s`: principle "Measured wall-clock seconds for registry precheck, live route, attempt-log write, and artifact construction."
+- `attempt_log_path`: principle "Path to the JSONL attempt log written by this receipt run."
+- `input_checksum`: principle "sha256 over registry, Exp5240 artifact, patch file, and target configuration."
+- `output_checksum`: principle "sha256 over the attempt-log rows before final artifact checksum."
+- `provenance_route_receipts`: principle "Receipts proving the live path reached the Exp5240 guard and avoided forbidden methods."
+
+#### SCENARIO-REPORT-5253-CLEAN-NO-BANK-RETIRE: Clean Receipts Retire A Zero-Delta Patch
+
+**Given** Exp 5240's provenance-routing patch is reachable from the live ARC
+agent, the registry precheck shows the synthetic clean-receipt probe target is
+not already reproduced, and no LLM proposer is used
+**When** Exp 5253 runs the fixed-seed live path with attempt logs and
+provenance route receipts
+**Then** it writes the required JSON artifact with
+`inference_substrate.value=offline_arcade_live_agent_runtime_self_discovery_no_llm`,
+`solve_provenance.value=live_agent_self_discovery`, `level_delta.value=0`,
+`levels_reproduced.value=[]`, `duplicate_solve_claimed.value=false`, and
+`retire_current_provenance_patch.value=true`.
+
+#### SCENARIO-REPORT-5253-SOLVE-CREDIT-GATE: Solve Credit Requires Live Self-Discovery
+
+**Given** a future Exp 5253-compatible live attempt reports a level beyond the
+registry depth
+**When** the artifact builder classifies the result
+**Then** it may set positive `level_delta.value` only when the attempt uses
+`solve_provenance=live_agent_self_discovery`, forbidden-method receipts are all
+false, the target was not already reproduced, and the route receipt came from
+the live agent's own runtime path; otherwise it leaves `level_delta.value=0`,
+sets `duplicate_solve_claimed.value=false`, and emits a blocked or retirement
+decision rather than banking a solve.
+
+## Implementation Status (REQ-REPORT-5253)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5253 | Planned (`python/carnot/experiment_5253_arc_live_patch_clean_receipts_v480.py`, `results/experiment_5253_arc_live_patch_clean_receipts_v480.json`, `ops/exclusion_manifest.yaml`) | Planned (`tests/python/test_experiment_5253_arc_live_patch_clean_receipts_v480.py`) |
+
 ### REQ-REPORT-5245: Archive .479 And Emit .480 Activation-Ready Record
 
 The Exp 5245 workflow SHALL archive the honest closeout for milestone

@@ -1,0 +1,141 @@
+{
+  "attempt_log_path": {
+    "principle": "Path to the JSONL attempt log written by this receipt run.",
+    "value": "results/experiment_5253_arc_live_patch_clean_receipts_v480_attempts.jsonl"
+  },
+  "attempt_summary": {
+    "attempt_id": "exp5253_zz99_exp5253_live_receipt_probe_seed_5253_budget_8",
+    "llm_proposer_used": false,
+    "model_specs": null,
+    "patch_decision": "retire_current_provenance_patch",
+    "reproduction_gate": {
+      "claimed_level": 0,
+      "reached_level": 0,
+      "registry_validation_passed": false,
+      "reproduced": false
+    },
+    "residual": "clean_zero_delta_no_level_banked",
+    "runtime_s": 1.030021
+  },
+  "budget": 8,
+  "duplicate_solve_claimed": {
+    "principle": "Must remain false; pre-reproduced targets improve receipts or retire the patch instead of claiming credit.",
+    "value": false
+  },
+  "duration_s": {
+    "principle": "Measured wall-clock seconds for registry precheck, live route, attempt-log write, and artifact construction.",
+    "value": 1.148325
+  },
+  "exact_command": ".venv/bin/python -m carnot.experiment_5253_arc_live_patch_clean_receipts_v480 --target-game zz99_exp5253_live_receipt_probe --budget 8 --random-seed 5253 --update-exclusion-manifest",
+  "experiment": "experiment_5253_arc_live_patch_clean_receipts_v480",
+  "experiment_id": "exp5253-arc-live-patch-clean-receipts-v480",
+  "field_principles": {
+    "attempt_log_path": "Path to the JSONL attempt log written by this receipt run.",
+    "duplicate_solve_claimed": "Must remain false; pre-reproduced targets improve receipts or retire the patch instead of claiming credit.",
+    "duration_s": "Measured wall-clock seconds for registry precheck, live route, attempt-log write, and artifact construction.",
+    "honest_verdict": "Must start with complete: or blocked_ and state level_delta and patch decision.",
+    "inference_substrate": "Use offline_arcade_live_agent_runtime_self_discovery_no_llm unless a mandated local SOTA GGUF proposer actually ran.",
+    "input_checksum": "sha256 over registry, Exp5240 artifact, patch file, and target configuration.",
+    "level_delta": "Integer level delta accepted after registry and provenance gates; zero means no solve was banked.",
+    "levels_reproduced": "List of levels banked by this receipt; empty when no solve is claimed.",
+    "output_checksum": "sha256 over the attempt-log rows before final artifact checksum.",
+    "provenance_route_receipts": "Receipts proving the live path reached the Exp5240 guard and avoided forbidden methods.",
+    "registry_precheck": "Records registry total and whether the target level was already reproduced before the live attempt.",
+    "retire_current_provenance_patch": "True when clean receipts leave level_delta=0 and the current provenance patch scope should be retired.",
+    "solve_provenance": "Records the attempted solve-credit route; no level is banked unless live_agent_self_discovery also passes registry validation."
+  },
+  "forbidden_methods": {
+    "hand_per_game_adapter": false,
+    "offline_ground_truth_bfs": false,
+    "outer_loop_reverse_engineering": false,
+    "read_hidden_game_source": false
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state level_delta and patch decision.",
+    "value": "complete: level_delta=0 patch_decision=retire_current_provenance_patch solve_provenance=live_agent_self_discovery; clean_zero_delta_no_level_banked."
+  },
+  "inference_substrate": {
+    "principle": "Use offline_arcade_live_agent_runtime_self_discovery_no_llm unless a mandated local SOTA GGUF proposer actually ran.",
+    "value": "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+  },
+  "input_checksum": {
+    "principle": "sha256 over registry, Exp5240 artifact, patch file, and target configuration.",
+    "value": "sha256:3e3406a0532b07e96f0d3a3f34ab9d45a884cf407faa46c2454b4d1b4244ff28"
+  },
+  "level_delta": {
+    "principle": "Integer level delta accepted after registry and provenance gates; zero means no solve was banked.",
+    "value": 0
+  },
+  "levels_reproduced": {
+    "principle": "List of levels banked by this receipt; empty when no solve is claimed.",
+    "value": []
+  },
+  "live_agent_patch_enabled": true,
+  "milestone": "2026.07.480",
+  "output_checksum": {
+    "principle": "sha256 over the attempt-log rows before final artifact checksum.",
+    "value": "sha256:aca1e5dc729e9c8bb52561e65ef18b5c1a8a402c5955f3d69a0201e738e9edd1"
+  },
+  "provenance_route_receipts": {
+    "principle": "Receipts proving the live path reached the Exp5240 guard and avoided forbidden methods.",
+    "value": [
+      {
+        "blocked_arc_consumer_actions": [
+          "block_gap1_registry_promotion_until_frozen_subset_gate",
+          "quarantine_gap4_candidate_pool_until_positive_validation"
+        ],
+        "calls": [
+          "arc_solve_learning.recommend_approach",
+          "arc_typed_memory_provenance_guard.typed_memory_provenance_guard"
+        ],
+        "failure_mode_targeted": "provenance_routing",
+        "guard_enabled": true,
+        "reached_exp5240_guard": true,
+        "route": "arc_competition_agent._recommend_live_approach"
+      }
+    ]
+  },
+  "random_seed": 5253,
+  "registry_precheck": {
+    "principle": "Records registry total and whether the target level was already reproduced before the live attempt.",
+    "value": {
+      "path": "ops/arc_solve_registry.yaml",
+      "present": true,
+      "reproducible_total_levels": 69,
+      "target_already_reproduced": false,
+      "target_game": "zz99_exp5253_live_receipt_probe",
+      "target_level": 1,
+      "target_prior_level": 0
+    }
+  },
+  "reproducibility_checksum": "sha256:60b9728243f77c4237ff3d2d319e7d8398591fa48985aedd60f878df6576d7f0",
+  "result_path": "results/experiment_5253_arc_live_patch_clean_receipts_v480.json",
+  "retire_current_provenance_patch": {
+    "principle": "True when clean receipts leave level_delta=0 and the current provenance patch scope should be retired.",
+    "value": true
+  },
+  "run_date": "2026-07-05",
+  "schema": "carnot.experiment_5253.arc_live_patch_clean_receipts.v480",
+  "solve_provenance": {
+    "principle": "Records the attempted solve-credit route; no level is banked unless live_agent_self_discovery also passes registry validation.",
+    "value": "live_agent_self_discovery"
+  },
+  "source_artifacts": [
+    "results/experiment_5240_arc_rubric_to_patch_synthesis_v479.json",
+    "ops/arc_solve_registry.yaml",
+    "python/carnot/agentic/arc_solve_learning.py"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5253",
+    "SCENARIO-REPORT-5253-CLEAN-NO-BANK-RETIRE",
+    "SCENARIO-REPORT-5253-SOLVE-CREDIT-GATE"
+  ],
+  "target_game": "zz99_exp5253_live_receipt_probe",
+  "target_level": 1,
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5253_arc_live_patch_clean_receipts_v480.py tests/python/test_arc_solve_artifact_discipline.py tests/python/test_arc_artifact_lint.py -q",
+      "passed": true
+    }
+  ]
+}
