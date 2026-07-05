@@ -35078,6 +35078,76 @@ GAP-4 counts.
 |---|---|---|
 | REQ-REPORT-5248 | Implemented (`python/carnot/experiment_5248_gap4_receipt_salvage_or_retire_v480.py`, `results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json`) | Implemented (`tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py`) |
 
+### REQ-REPORT-5267: Producer-Side Strict Artifact Normalizer Adoption
+
+The experiment template SHALL expose a producer-side path that applies the Exp
+5247 strict artifact normalizer before newly built artifacts are written or
+inspected by conductor gates. This path SHALL live outside
+`scripts/research_conductor.py`, SHALL NOT require modifying the conductor, and
+SHALL operate on in-memory artifact copies.
+
+The producer-side path SHALL preserve existing bare gate fields exactly when
+they are already top-level booleans. It MAY unwrap top-level
+`{"value": ..., "principle": ...}` fields and MAY surface a missing top-level
+gate only when the caller explicitly names the gate field and the source artifact
+already contains one unambiguous boolean value for that same field. It SHALL
+record safe and unsafe normalizer receipts when any repair or rejection occurs.
+
+The producer-side path SHALL never synthesize missing methodology, duration,
+model, solve-provenance, or performance-win evidence. Compute-bound artifacts
+with missing duration or methodology receipts SHALL retain unsafe rejection
+receipts after normalization, and any existing `solve_provenance` value SHALL be
+preserved rather than overwritten.
+
+The Exp 5267 artifact SHALL be written to
+`results/experiment_5267_artifact_normalizer_template_adoption_v481.json` and
+SHALL include principle-wrapped top-level fields `honest_verdict`,
+`inference_substrate`, `conductor_modified`, `safe_repairs_supported`,
+`unsafe_repairs_rejected`, `gate_fields_preserved`, and `spec_updated`; bare
+boolean `producer_normalizer_ready`; bare string
+`producer_normalizer_ready_principle`; and bare list `tests_run`.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether producer-side adoption is ready. `inference_substrate.value` SHALL equal
+`cached_fixture_replay_no_llm`. `conductor_modified.value` SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether producer-side normalizer adoption is ready."
+- `inference_substrate`: principle "Must be cached_fixture_replay_no_llm because Exp5267 only replays fixtures and validates template adoption."
+- `producer_normalizer_ready`: principle "Bare bool gate; true only when template adoption preserves gates and rejects unsafe missing evidence."
+- `producer_normalizer_ready_principle`: principle "Explains why the bare producer readiness gate is safe for downstream consumers."
+- `conductor_modified`: principle "False because producer adoption lives in scripts/experiment_template.py and leaves scripts/research_conductor.py untouched."
+- `safe_repairs_supported`: principle "Lists shape-only repairs supported at the producer/template boundary."
+- `unsafe_repairs_rejected`: principle "Lists evidence-synthesis attempts that the producer/template path refuses."
+- `gate_fields_preserved`: principle "True only when existing bare gate booleans survive normalization unchanged."
+- `spec_updated`: principle "True when this OpenSpec requirement and scenarios anchor the producer-side adoption."
+- `tests_run`: principle "Records command/outcome receipts for unit, coverage, spec, and artifact verification checks."
+
+#### SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION: Template Boundary Normalizes Safe Shapes
+
+**Given** a new artifact built through the experiment template with bare gate
+booleans, principle-wrapped fields, or an explicitly named unambiguous nested
+gate boolean
+**When** the producer-side normalizer runs
+**Then** the returned artifact preserves existing bare gate fields, unwraps
+principle-wrapped top-level fields, surfaces only the caller-named unambiguous
+gate boolean, and records safe repair receipts when repairs occur.
+
+#### SCENARIO-REPORT-5267-UNSAFE-REJECTION: Template Boundary Does Not Invent Evidence
+
+**Given** a compute-bound or solve artifact is missing duration, methodology,
+model, or solve-provenance evidence
+**When** the producer-side normalizer runs
+**Then** it records unsafe rejection receipts, does not synthesize missing
+evidence, preserves any existing `solve_provenance`, and leaves
+`scripts/research_conductor.py` unmodified.
+
+## Implementation Status (REQ-REPORT-5267)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5267 | Implemented (`scripts/experiment_template.py`, `results/experiment_5267_artifact_normalizer_template_adoption_v481.json`) | Implemented (`tests/python/test_experiment_template.py`) |
+
 ### REQ-REPORT-5257: Archive .480 And Emit .481 Activation-Ready Record
 
 The Exp 5257 workflow SHALL archive the honest closeout for milestone

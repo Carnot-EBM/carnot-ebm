@@ -1,0 +1,110 @@
+{
+  "schema": "carnot.experiment_5267.artifact_normalizer_template_adoption.v481",
+  "experiment": "experiment_5267_artifact_normalizer_template_adoption_v481",
+  "experiment_id": "exp5267-artifact-normalizer-template-adoption-v481",
+  "milestone": "2026.07.481",
+  "run_date": "2026-07-05",
+  "result_path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+  "spec_refs": [
+    "REQ-REPORT-5267",
+    "SCENARIO-REPORT-5267-TEMPLATE-NORMALIZATION",
+    "SCENARIO-REPORT-5267-UNSAFE-REJECTION"
+  ],
+  "normalizer_version": "experiment_5247_slot_artifact_normalizer_v480",
+  "template_hook": "scripts/experiment_template.py:normalize_artifact_for_template_write",
+  "field_principles": {
+    "honest_verdict": "Must start with complete: or blocked_ and state whether producer-side normalizer adoption is ready.",
+    "inference_substrate": "Must be cached_fixture_replay_no_llm because Exp5267 only replays fixtures and validates template adoption.",
+    "producer_normalizer_ready": "Bare bool gate; true only when template adoption preserves gates and rejects unsafe missing evidence.",
+    "producer_normalizer_ready_principle": "Explains why the bare producer readiness gate is safe for downstream consumers.",
+    "conductor_modified": "False because producer adoption lives in scripts/experiment_template.py and leaves scripts/research_conductor.py untouched.",
+    "safe_repairs_supported": "Lists shape-only repairs supported at the producer/template boundary.",
+    "unsafe_repairs_rejected": "Lists evidence-synthesis attempts that the producer/template path refuses.",
+    "gate_fields_preserved": "True only when existing bare gate booleans survive normalization unchanged.",
+    "spec_updated": "True when this OpenSpec requirement and scenarios anchor the producer-side adoption.",
+    "tests_run": "Records command/outcome receipts for unit, coverage, spec, and artifact verification checks."
+  },
+  "honest_verdict": {
+    "value": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence.",
+    "principle": "Must start with complete: or blocked_ and state whether producer-side normalizer adoption is ready."
+  },
+  "inference_substrate": {
+    "value": "cached_fixture_replay_no_llm",
+    "principle": "Must be cached_fixture_replay_no_llm because Exp5267 only replays fixtures and validates template adoption."
+  },
+  "producer_normalizer_ready": true,
+  "producer_normalizer_ready_principle": "Bare bool gate; true only when template adoption preserves gates and rejects unsafe missing evidence.",
+  "conductor_modified": {
+    "value": false,
+    "principle": "False because producer adoption lives in scripts/experiment_template.py and leaves scripts/research_conductor.py untouched."
+  },
+  "safe_repairs_supported": {
+    "value": [
+      "top_level_principle_wrapper_unwrap",
+      "missing_explicit_null_for_declared_nullable_fields",
+      "unambiguous_boolean_gate_field_extraction"
+    ],
+    "principle": "Lists shape-only repairs supported at the producer/template boundary."
+  },
+  "unsafe_repairs_rejected": {
+    "value": [
+      "missing_methodology_receipt",
+      "missing_duration_receipt",
+      "duration_too_short",
+      "missing_model_receipts",
+      "missing_or_conflicting_gate_boolean",
+      "solve_provenance_synthesis",
+      "performance_win_synthesis"
+    ],
+    "principle": "Lists evidence-synthesis attempts that the producer/template path refuses."
+  },
+  "gate_fields_preserved": {
+    "value": true,
+    "principle": "True only when existing bare gate booleans survive normalization unchanged."
+  },
+  "spec_updated": {
+    "value": true,
+    "principle": "True when this OpenSpec requirement and scenarios anchor the producer-side adoption."
+  },
+  "producer_normalizer_receipt_examples": {
+    "safe_repairs": [
+      "principle-wrapped top-level fields unwrap to bare values",
+      "explicitly named nested gate boolean can surface when unambiguous"
+    ],
+    "unsafe_rejections": [
+      "live_llm_inference without model_specs remains missing_methodology_receipt",
+      "live_llm_inference below the duration floor remains duration_too_short"
+    ],
+    "solve_provenance": "existing solve_provenance is preserved; missing solve evidence is not synthesized"
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_template.py -q",
+      "outcome": "INTERRUPTED after 1 unrelated existing failure under CARNOT_FORCE_LIVE=1: TestSetupGpu.test_all_healthy_false_when_one_fails attempted live GPU diagnostics for mock/a."
+    },
+    {
+      "command": "CARNOT_FORCE_LIVE=0 .venv/bin/pytest --override-ini addopts= tests/python/test_experiment_template.py -q",
+      "outcome": "INTERRUPTED after 56 passed; pre-existing JAX shutdown callback held the process after visible assertions completed."
+    },
+    {
+      "command": "CARNOT_FORCE_LIVE=0 .venv/bin/pytest --override-ini addopts= tests/python/test_experiment_template.py::TestProducerArtifactNormalizer -q",
+      "outcome": "PASS (8 passed)"
+    },
+    {
+      "command": ".venv/bin/pytest --override-ini addopts= tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py -q",
+      "outcome": "PASS (12 passed)"
+    },
+    {
+      "command": ".venv/bin/ruff check scripts/experiment_template.py python/carnot/experiment_5247_slot_artifact_normalizer_v480.py tests/python/test_experiment_template.py tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_template.py tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py",
+      "outcome": "PASS"
+    },
+    {
+      "command": "CARNOT_FORCE_LIVE=0 .venv/bin/python -m coverage run --rcfile=/dev/null -m pytest --override-ini addopts= tests/python/test_experiment_template.py::TestProducerArtifactNormalizer tests/python/test_experiment_5247_slot_artifact_normalizer_v480.py -q --no-cov && .venv/bin/python -m coverage json --rcfile=/dev/null -o /tmp/exp5267_coverage.json",
+      "outcome": "PASS (20 passed; checked 100% coverage on added executable lines)"
+    }
+  ]
+}
