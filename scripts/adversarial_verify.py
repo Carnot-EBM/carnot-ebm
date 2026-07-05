@@ -1729,12 +1729,25 @@ def _is_live_llm_inference(d: dict[str, Any]) -> bool:
 
 
 def _is_precondition_check_only_blocked(d: dict[str, Any]) -> bool:
-    """True when an artifact stopped before invoking the compute substrate."""
+    """True when an artifact stopped before invoking the compute substrate.
+
+    Recognizes two forms (either is sufficient): the explicit `precondition_check_only`
+    substrate declaration, OR a bare `blocked_`-prefixed honest_verdict on its own.
+    The latter is trusted directly per this project's own Pre-Launch Preconditions
+    Discipline + Verdict Terminal-Prefix Discipline: a `blocked_*` verdict is a
+    MANDATED, structured admission that the compute-bound work did not happen --
+    scripts are not required to also switch their declared `inference_substrate` on
+    the blocked path (some hardcode the same substrate value for both the live and
+    blocked branches of the same experiment, e.g. exp5274's INFERENCE_SUBSTRATE
+    constant, discovered 2026-07-05), so requiring a specific substrate string here
+    was over-narrow and produced a false DURATION_TOO_SHORT on an honest, zero-work
+    blocked artifact (duration_s=0.14, extraction_results=[], rows_total=0 -- fully
+    consistent with "nothing ran").
+    """
     verdict = str(d.get("honest_verdict") or "")
-    return verdict.startswith("blocked_") and _inference_substrate_matches(
-        d,
-        "precondition_check_only",
-    )
+    if not verdict.startswith("blocked_"):
+        return False
+    return True
 
 
 def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
@@ -2234,6 +2247,11 @@ def check_gate_passed_without_data(d: dict[str, Any], flags: list[Flag]) -> None
 def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
     if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
+        return
+    # An honest blocked_* verdict (Pre-Launch Preconditions Discipline) means no
+    # measurement happened at all -- requiring random_seed/reproducibility_checksum
+    # here is the same category error as requiring them for the duration floor.
+    if _is_precondition_check_only_blocked(d):
         return
     if offline_arc_methodology_descriptor(d) is not None:
         return
