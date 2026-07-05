@@ -2167,6 +2167,31 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
 (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
 an explicit operator directive, same standing-default discipline as the experiment default).
 
+### CANDIDATE: staged plan for TRM-as-generator on hidden games 2026-07-04 (outer-loop, "what is the plan for a TRM based generator that may solve the hidden game levels in the live agent?")
+
+Full writeup: `docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md`. Answers the natural
+follow-on question to the TRM-as-generator note: granting that public-game TRM training succeeds,
+what actually makes that useful on a HIDDEN game the model never saw? A 4-stage plan, each stage
+gated on the one before, respecting this project's settled "value is process not weights" framing:
+
+1. Public-game training (once the human-replay corpus below is re-staged) produces a validated
+   recipe + general prior, NOT a hidden-game solver -- gated on the leave-one-game-out pilot from the
+   original TRM note actually showing held-out generalization, not memorization.
+2. TRM wires in as a generator feeding the EXISTING `WorldModelVerifier` gate in `E3AgentPolicy` --
+   additive only, never a bypass or replacement, per "ARC Live-Path Reachability Discipline."
+3. **The load-bearing stage**: online, within-episode full-fine-tune adaptation of the TRM checkpoint
+   on the hidden game's own accumulated transitions as the agent plays -- mirrors the existing
+   `arc_live_ttt` online world-model induction pattern already used by the scored agent. Adaptation
+   cadence (how often, how much data needed) is flagged as its own open, unmeasured question -- not
+   to be assumed, needs a small falsifiable check before being wired in for real.
+4. Mandatory guardrail: TRM must never regress the baseline solve rate -- same `solve_rate_dropped`
+   pattern already specified in exp4490's own capability spec.
+
+If a future planner picks up the TRM thread, this staged shape (not "train TRM then deploy it
+directly") is the intended path -- skipping straight from Stage 1 to a live deployment without
+Stages 2-4 would repeat the exact "weights don't transfer" mistake this project has already learned
+from once.
+
 ### BUG + OPPORTUNITY: human replay corpus staging drops all win signal 2026-07-04 (outer-loop, "don't we have the human generated game event solutions handy?")
 
 Full writeup: `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md`.
