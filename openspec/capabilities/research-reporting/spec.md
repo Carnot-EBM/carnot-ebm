@@ -35148,6 +35148,71 @@ evidence, preserves any existing `solve_provenance`, and leaves
 |---|---|---|
 | REQ-REPORT-5267 | Implemented (`scripts/experiment_template.py`, `results/experiment_5267_artifact_normalizer_template_adoption_v481.json`) | Implemented (`tests/python/test_experiment_template.py`) |
 
+### REQ-REPORT-5280: Artifact Normalizer Evidence Audit V482
+
+The Exp 5280 workflow SHALL audit whether producer-side strict artifact
+normalization protects downstream artifacts from shape-only wrapper drift,
+missing methodology evidence, bare gate corruption, malformed substrate
+declarations, duration/substrate regressions, and no-LLM aggregation
+false-positive duration floors. It SHALL write
+`results/experiment_5280_artifact_normalizer_evidence_audit_v482.json`, SHALL
+NOT modify `scripts/research_conductor.py`, and SHALL NOT weaken
+`scripts/adversarial_verify.py` to make old artifacts pass.
+
+The audit SHALL enumerate current producer/template surfaces that should use
+the normalizer and SHALL record whether they are covered by
+`scripts/experiment_template.py:normalize_artifact_for_template_write` or by a
+strict local validator. The audit SHALL build a matrix with at least these
+cases: valid shape-only artifacts, missing evidence, bare gate fields,
+dict-wrapped substrate fields, sub-threshold duration, and no-LLM aggregation
+artifacts.
+
+The audit SHALL show that bare gate booleans remain bare after producer-side
+normalization and that missing evidence is rejected rather than synthesized. It
+SHALL also confirm that the Exp 5262 and Exp 5263 v481 pilots remain
+quarantined for missing methodology evidence instead of being made clean by
+weakening adversarial verification.
+
+The artifact SHALL include principle-wrapped top-level fields
+`honest_verdict`, `inference_substrate`, `normalizer_evidence_ready`,
+`producer_coverage`, `bare_gate_preservation_passed`,
+`missing_evidence_rejected`, `duration_substrate_regression_passed`, and
+`adversarial_verify_weakening`; and a bare list `tests_run` with
+command/outcome rows. `honest_verdict.value` SHALL start with `complete:` or
+`blocked_` and state whether producer evidence discipline is ready.
+`inference_substrate.value` SHALL equal `aggregation_from_upstream_artifacts`.
+`adversarial_verify_weakening.value` SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether producer evidence discipline is ready after auditing gates, evidence, duration, and substrate behavior."
+- `inference_substrate`: principle "Must be aggregation_from_upstream_artifacts because Exp5280 reads checked-in code, tests, and artifacts without invoking a model."
+- `normalizer_evidence_ready`: principle "True only when the audit matrix shows shape-only repairs succeed, missing evidence is rejected, and old quarantined artifacts are not laundered clean."
+- `producer_coverage`: principle "Numeric coverage ratio for current normalizer-required producer/template surfaces covered by the producer-side normalizer."
+- `bare_gate_preservation_passed`: principle "True only when existing top-level boolean gates remain bare booleans after normalization."
+- `missing_evidence_rejected`: principle "True only when missing methodology, model, seed, checksum, or duration evidence remains an unsafe rejection."
+- `duration_substrate_regression_passed`: principle "True only when wrapped substrate declarations, sub-threshold live durations, and no-LLM aggregation floors preserve adversarial-verifier behavior."
+- `adversarial_verify_weakening`: principle "Must be false; old artifacts must remain quarantined by evidence findings rather than by weakening verifier checks."
+- `tests_run`: principle "Records command/outcome receipts for focused unit, coverage, full repository tests, and artifact verification checks."
+
+#### SCENARIO-REPORT-5280-EVIDENCE-AUDIT: Matrix Covers Gates, Evidence, Duration, And Aggregation
+
+**Given** the Exp 5247 strict normalizer, the Exp 5267 producer-template hook,
+the Exp 5262 and Exp 5263 v481 artifacts, and the v482 gated retry artifacts
+are present
+**When** the Exp 5280 audit runs
+**Then** it writes the required JSON artifact, records the producer/template
+inventory, records all six audit matrix cases, preserves bare gate booleans,
+rejects missing evidence, preserves substrate-specific duration behavior,
+keeps `adversarial_verify_weakening.value=false`, and leaves
+`scripts/research_conductor.py` unmodified.
+
+## Implementation Status (REQ-REPORT-5280)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5280 | Planned (`python/carnot/experiment_5280_artifact_normalizer_evidence_audit_v482.py`, `results/experiment_5280_artifact_normalizer_evidence_audit_v482.json`) | Planned (`tests/python/test_experiment_5280_artifact_normalizer_evidence_audit_v482.py`) |
+
 ### REQ-REPORT-5268: Capstone .481 Synthesis And Next-Gap Recommendation
 
 The Exp 5268 workflow SHALL synthesize milestone `2026.07.481` from the
