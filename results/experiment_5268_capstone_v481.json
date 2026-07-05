@@ -1,0 +1,592 @@
+{
+  "blocked_or_skipped": {
+    "principle": "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics.",
+    "value": [
+      {
+        "classification": "flagged_adversarial",
+        "exists": true,
+        "experiment_number": 5262,
+        "flagged_adversarial": true,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+        "sha256": "sha256:0b758e34dbd62ab8dac17d1a8e5aad8eb07c1a5a841078e894a2d8f211c18246",
+        "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence",
+        "task_id": "exp5262-solver-grounded-constraint-extraction-v481",
+        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot",
+        "verdict": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"
+      },
+      {
+        "classification": "flagged_adversarial",
+        "exists": true,
+        "experiment_number": 5263,
+        "flagged_adversarial": true,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
+        "sha256": "sha256:ef1e4d9ed79c0652b96a191aef35c1bac222e3442c26c91295eb40ded74c2d4c",
+        "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence",
+        "task_id": "exp5263-neuron-attention-energy-hallucination-probe-v481",
+        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe",
+        "verdict": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
+      },
+      {
+        "classification": "blocked",
+        "exists": true,
+        "experiment_number": 5266,
+        "flagged_adversarial": false,
+        "inference_substrate": "hardware_probe_no_speedup_claim",
+        "loadable": true,
+        "path": "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json",
+        "sha256": "sha256:9bdc6f3465064edfd441f38ee43f629a7e65c939ac09daad45e0adaab983b5b1",
+        "summary": "kv260=blocked_kv260_ssh_unreachable; polarfire=blocked_polarfire_ssh_unreachable; gatemate=blocked_physical_jtag; speedup_claimed=false",
+        "task_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481",
+        "title": "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity",
+        "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim"
+      }
+    ]
+  },
+  "clean_nulls": {
+    "principle": "Only non-flagged complete no-improvement outcomes count as clean nulls.",
+    "value": [
+      {
+        "classification": "clean_null",
+        "exists": true,
+        "experiment_number": 5260,
+        "flagged_adversarial": false,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
+        "sha256": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
+        "summary": "cross-model typed memory useful=False; delta_over_no_memory=0.0; delta_over_shuffled_memory=0.0; unsafe_false_accepts=0; rollback_exercised=False",
+        "task_id": "exp5260-cross-model-typed-memory-retry-v481",
+        "title": "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry",
+        "verdict": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"
+      }
+    ]
+  },
+  "clean_positives": {
+    "principle": "Only non-flagged upstreams with useful complete outcomes count as positives.",
+    "value": [
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5257,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5257_archive_480_activate_481.json",
+        "sha256": "sha256:603717214057e5b194aec129795ba9cee473d1b88c3f8b6ac5b224a19fad551a",
+        "summary": "transition complete; .481 active without roadmap overwrite",
+        "task_id": "exp5257-archive-480-activate-481",
+        "title": "PHASE 0 transition -- archive .480 truth and prepare .481 activation",
+        "verdict": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used."
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5258,
+        "flagged_adversarial": false,
+        "inference_substrate": "literature_ingestion_network_sources",
+        "loadable": true,
+        "path": "results/experiment_5258_sota_refresh_v481.json",
+        "sha256": "sha256:faee92918b24daeff8d76d695a0c75bd90930c4217f61140f2cfa9f92880e25f",
+        "summary": "SOTA refresh appended 7 actionable findings",
+        "task_id": "exp5258-sota-refresh-v481",
+        "title": "PHASE 0 SOTA refresh -- V481 deltas after planning references",
+        "verdict": "complete: 7 new actionable findings appended; executable .481 plan unchanged."
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5259,
+        "flagged_adversarial": false,
+        "inference_substrate": "llama_cpp_runtime_preflight_no_quality_claim",
+        "loadable": true,
+        "path": "results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
+        "sha256": "sha256:5105872f79fc03b2e15b6f46133fab0e6b37be79fe06b17cd870ae78c559960d",
+        "summary": "SOTA GGUF runtime preflight ready=True; no model-quality claim",
+        "task_id": "exp5259-sota-gguf-gpu-offload-preflight-v481",
+        "title": "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight",
+        "verdict": "complete: sota_runtime_ready=true ready through flagship_moe"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5261,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "sha256": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
+        "summary": "memory_policy_ready=True; retention_rate=1.0; interference_rate=0.0; rollback_passed=True",
+        "task_id": "exp5261-typed-memory-interference-audit-v481",
+        "title": "PHASE 1 continuous self-learning -- typed-memory retention and interference audit",
+        "verdict": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5264,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5264_verifier_dose_scheduler_replay_v481.json",
+        "sha256": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
+        "summary": "scheduler_ready=True; full_verifier_calls_avoided_rate=0.857143; decision_quality_delta=0.0; false_accept_delta=0.0",
+        "task_id": "exp5264-verifier-dose-scheduler-replay-v481",
+        "title": "PHASE 2 replay -- verifier-dose scheduler without live-model dependency",
+        "verdict": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5265,
+        "flagged_adversarial": false,
+        "inference_substrate": "offline_deterministic_certificate_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
+        "sha256": "sha256:d8fa1293b2f366cc31affaf04de9d3bb6f4c861616c4959ffa1bd5ed94d2a911",
+        "summary": "certificate_refinement_ready=True; true_property_certified=True; false_property_rejected=True",
+        "task_id": "exp5265-kan-certificate-explanation-refinement-v481",
+        "title": "PHASE 3 KAN -- convex-envelope certificate explanation and refinement",
+        "verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5267,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+        "sha256": "sha256:ac3b48230745af7d7d9d9e371c2d7e18fe84f54ed44f32cfe2291c1a426ba5f0",
+        "summary": "producer_normalizer_ready=True; gate_fields_preserved=True",
+        "task_id": "exp5267-artifact-normalizer-template-adoption-v481",
+        "title": "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary",
+        "verdict": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence."
+      }
+    ]
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5268_capstone_v481.py -q",
+      "outcome": "PASS: 6 passed in 0.88s"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/python/carnot/experiment_5268_capstone_v481.py' -m pytest -o addopts='' tests/python/test_experiment_5268_capstone_v481.py -q && .venv/bin/coverage report --rcfile=/dev/null --include='*/python/carnot/experiment_5268_capstone_v481.py' --fail-under=100 -m",
+      "outcome": "PASS: 6 tests passed; 100% coverage on python/carnot/experiment_5268_capstone_v481.py (230 statements, 0 missed)"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5268_capstone_v481.py tests/python/test_experiment_5268_capstone_v481.py",
+      "outcome": "PASS: All checks passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "outcome": "PASS: Exclusion-manifest lint clean"
+    },
+    {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "outcome": "PASS: no schema errors, no prior_failures violations"
+    },
+    {
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "outcome": "PASS: all_checks_pass; 12 tasks audited; 3 gate upstream checks; 0 failures"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5268_capstone_v481.py",
+      "outcome": "PASS: All tests reference specification requirements"
+    },
+    {
+      "command": "sed -n '1,220p' ops/e2e-test-plan.md",
+      "outcome": "READ: no E2E item applies to this report-only cached_fixture_replay_no_llm capstone; no model, sampler, binding, or hardware pipeline was changed"
+    },
+    {
+      "command": "git status --short -- research-roadmap.yaml scripts/research_conductor.py",
+      "outcome": "PASS: no output; neither protected file is modified"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "FAIL: single mandated full-suite run exited code 3 after 43:54; 421 failed, 33284 passed, 100 skipped, 1 xpassed, 224 warnings, 10 errors; xdist internal error after worker crashes; observed Z3/JAX segmentation faults in pre-existing tests including z3_math_verifier, jepa_energy, pipeline_errors, and kaem_distribution_benchmark paths. Not rerun after the final focused classifier fix per the stop-when-done rule; focused tests and 100% new-module coverage were rerun after that fix."
+    }
+  ],
+  "conductor_modified": {
+    "principle": "Reports whether scripts/research_conductor.py changed; must not hide a violation.",
+    "value": false
+  },
+  "duration_s": 0.014372,
+  "experiment": "experiment_5268_capstone_v481",
+  "experiment_id": "exp5268-capstone-v481",
+  "field_principles": {
+    "blocked_or_skipped": "Blocked, gated, missing, auxiliary, or adversarially flagged upstreams are preserved without promoting their metrics.",
+    "clean_nulls": "Only non-flagged complete no-improvement outcomes count as clean nulls.",
+    "clean_positives": "Only non-flagged upstreams with useful complete outcomes count as positives.",
+    "commands_run": "Records validation and test commands with outcomes.",
+    "conductor_modified": "Reports whether scripts/research_conductor.py changed; must not hide a violation.",
+    "harmful_results": "Harmful outcomes must remain visible and must not be silently converted to nulls.",
+    "honest_verdict": "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes.",
+    "inference_substrate": "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only.",
+    "milestone_summary": "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware.",
+    "next_top_gaps": "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production.",
+    "retirements_or_exclusions": "Records prior-failure discipline decisions and scopes that should not be rerun unchanged.",
+    "roadmap_modified": "Reports whether research-roadmap.yaml changed; must not hide a violation."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_number": 5262,
+      "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+      "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence"
+    },
+    {
+      "experiment_number": 5263,
+      "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
+      "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence"
+    }
+  ],
+  "harmful_results": {
+    "principle": "Harmful outcomes must remain visible and must not be silently converted to nulls.",
+    "value": []
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and summarize the milestone truth without laundering flagged, blocked, null, or no-speedup outcomes.",
+    "value": "complete: .481 synthesized with 7 clean positives, 1 clean null, 2 flagged verifier artifacts quarantined, hardware blocked, and no speedup claim."
+  },
+  "inference_substrate": {
+    "principle": "cached_fixture_replay_no_llm because Exp5268 reads existing artifacts and local records only.",
+    "value": "cached_fixture_replay_no_llm"
+  },
+  "milestone": "2026.07.481",
+  "milestone_summary": {
+    "principle": "Short durable .481 summary preserving positives, nulls, flagged probes, and blocked hardware.",
+    "value": {
+      "blocked_or_skipped_count": 3,
+      "clean_null_count": 1,
+      "clean_positive_count": 7,
+      "flagged_artifacts_skipped_count": 2,
+      "harmful_count": 0,
+      "milestone": "2026.07.481",
+      "primary_artifacts_expected": 11,
+      "primary_artifacts_read": 11,
+      "research_complete_updated": true,
+      "truth": "SOTA runtime preflight is ready without a quality claim; continuous self-learning has a clean live cross-model null plus cached memory-policy and scheduler positives; solver/internal verification pilots are flagged and not clean evidence; KAN certificate refinement and producer artifact normalization are bounded positives; hardware is blocked with no speedup claim."
+    }
+  },
+  "milestone_title": "Local SOTA Runtime, Internal Verification, and Self-Learning Memory Stability",
+  "next_top_gaps": {
+    "principle": "Ranks the next three gaps across SOTA runtime, self-learning, internal verification, KAN, hardware, and artifact production.",
+    "value": [
+      {
+        "categories_considered": {
+          "KAN_certificates": "continue bounded, not the immediate blocker",
+          "artifact_production": "supporting requirement via Exp5267 normalizer",
+          "internal_verification": "highest"
+        },
+        "category": "internal_verification",
+        "priority_rank": 1,
+        "recommendation": "Prioritize adversarial-clean internal verification: rerun solver-grounded and logit/attention-energy pilots only with duration, model, seed, and methodology receipts that clear artifact verification."
+      },
+      {
+        "categories_considered": {
+          "SOTA_runtime": "ready as preflight, but strengthen methodology receipts",
+          "continuous_self_learning": "high priority after Exp5260 null and Exp5261/5264 positives"
+        },
+        "category": "continuous_self_learning_and_sota_runtime",
+        "priority_rank": 2,
+        "recommendation": "Use the now-ready SOTA GGUF runtime to build a non-degenerate live memory transfer task with real headroom and rollback exercise; keep cached memory policy and verifier-dose scheduler as safety rails."
+      },
+      {
+        "categories_considered": {
+          "KAN_certificates": "bounded positive can progress on CPU while boards are repaired",
+          "artifact_production": "ready enough; maintain rather than lead",
+          "hardware": "blocked precondition"
+        },
+        "category": "hardware_reachability",
+        "priority_rank": 3,
+        "recommendation": "Repair board reachability before further hardware claims: KV260/PolarFire SSH and GateMate physical/JTAG state are hard blockers; keep no-speedup language until real board execution changes."
+      }
+    ]
+  },
+  "random_seed": 5268,
+  "reproducibility_checksum": "sha256:c1eab22e785b5ea61aa41fa2da12c77f33bb2630fb9788d913a3ac1f9372d107",
+  "research_complete_updated": {
+    "principle": "True only if this capstone appended the missing 2026.07.481 entry to research-complete.yaml.",
+    "value": true
+  },
+  "result_path": "results/experiment_5268_capstone_v481.json",
+  "retirements_or_exclusions": {
+    "principle": "Records prior-failure discipline decisions and scopes that should not be rerun unchanged.",
+    "value": [
+      {
+        "basis": "Exp5263 records external_text_scorer_used=false and no .481 task reopened generated-text/logprob reranking.",
+        "decision": "remains retired",
+        "scope": "Phase D external text scorer path"
+      },
+      {
+        "basis": "2 upstream verifier pilots were flagged_adversarial and require methodology/duration repair before reuse.",
+        "decision": "do not headline or rerun unchanged",
+        "scope": "Exp5262/Exp5263 internal-verification pilots"
+      },
+      {
+        "basis": "Exp5260 was a clean live null with zero delta over no-memory and shuffled-memory controls.",
+        "decision": "carry forward only with changed headroom and rollback exercise",
+        "scope": "cross-model typed memory usefulness"
+      },
+      {
+        "basis": "Exp5266 blocked KV260, PolarFire, and GateMate reachability/physical setup.",
+        "decision": "blocked preconditions carry forward; no speedup claim",
+        "scope": "hardware board execution"
+      }
+    ]
+  },
+  "roadmap_modified": {
+    "principle": "Reports whether research-roadmap.yaml changed; must not hide a violation.",
+    "value": false
+  },
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5268_capstone_v481.v1",
+  "source_artifacts_read": {
+    "auxiliary": [
+      {
+        "classification": "auxiliary",
+        "exists": true,
+        "experiment_number": 5265,
+        "loadable": true,
+        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481_explanation.json",
+        "sha256": "sha256:10cf26f855acd694f18b6ebbae97b001732efa5d6959e209d0ec2af94ee84580",
+        "summary": "auxiliary artifact read; not a standalone milestone outcome",
+        "verdict": ""
+      }
+    ],
+    "auxiliary_count": 1,
+    "primary": [
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5257,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5257_archive_480_activate_481.json",
+        "sha256": "sha256:603717214057e5b194aec129795ba9cee473d1b88c3f8b6ac5b224a19fad551a",
+        "summary": "transition complete; .481 active without roadmap overwrite",
+        "task_id": "exp5257-archive-480-activate-481",
+        "title": "PHASE 0 transition -- archive .480 truth and prepare .481 activation",
+        "verdict": "complete: .480 archived and .481 activation-ready; no roadmap overwrite performed and cached_fixture_replay_no_llm evidence used."
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5258,
+        "flagged_adversarial": false,
+        "inference_substrate": "literature_ingestion_network_sources",
+        "loadable": true,
+        "path": "results/experiment_5258_sota_refresh_v481.json",
+        "sha256": "sha256:faee92918b24daeff8d76d695a0c75bd90930c4217f61140f2cfa9f92880e25f",
+        "summary": "SOTA refresh appended 7 actionable findings",
+        "task_id": "exp5258-sota-refresh-v481",
+        "title": "PHASE 0 SOTA refresh -- V481 deltas after planning references",
+        "verdict": "complete: 7 new actionable findings appended; executable .481 plan unchanged."
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5259,
+        "flagged_adversarial": false,
+        "inference_substrate": "llama_cpp_runtime_preflight_no_quality_claim",
+        "loadable": true,
+        "path": "results/experiment_5259_sota_gguf_gpu_offload_preflight_v481.json",
+        "sha256": "sha256:5105872f79fc03b2e15b6f46133fab0e6b37be79fe06b17cd870ae78c559960d",
+        "summary": "SOTA GGUF runtime preflight ready=True; no model-quality claim",
+        "task_id": "exp5259-sota-gguf-gpu-offload-preflight-v481",
+        "title": "PHASE 0 runtime unblock -- mandated SOTA GGUF llama.cpp GPU-offload preflight",
+        "verdict": "complete: sota_runtime_ready=true ready through flagship_moe"
+      },
+      {
+        "classification": "clean_null",
+        "exists": true,
+        "experiment_number": 5260,
+        "flagged_adversarial": false,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
+        "sha256": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
+        "summary": "cross-model typed memory useful=False; delta_over_no_memory=0.0; delta_over_shuffled_memory=0.0; unsafe_false_accepts=0; rollback_exercised=False",
+        "task_id": "exp5260-cross-model-typed-memory-retry-v481",
+        "title": "PHASE 1 gated on exp5259 sota_runtime_ready -- cross-model typed-memory transfer retry",
+        "verdict": "complete: cross-model typed memory null; delta_over_no_memory=0.000000; delta_over_shuffled_memory=0.000000; unsafe_false_accepts=0; rollback_exercised=false"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5261,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "sha256": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
+        "summary": "memory_policy_ready=True; retention_rate=1.0; interference_rate=0.0; rollback_passed=True",
+        "task_id": "exp5261-typed-memory-interference-audit-v481",
+        "title": "PHASE 1 continuous self-learning -- typed-memory retention and interference audit",
+        "verdict": "complete: memory policy ready for cached fixture replay; retention_rate=1.000000, interference_rate=0.000000, stale_conflict_eviction_passed=true, harmful_rollback_passed=true, live_cross_model_memory_still_unclaimed"
+      },
+      {
+        "classification": "flagged_adversarial",
+        "exists": true,
+        "experiment_number": 5262,
+        "flagged_adversarial": true,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5262_solver_grounded_constraint_extraction_v481.json",
+        "sha256": "sha256:0b758e34dbd62ab8dac17d1a8e5aad8eb07c1a5a841078e894a2d8f211c18246",
+        "summary": "flagged solver-grounded extraction; ready=False; validity=0.25; false_accepts=0; not clean evidence",
+        "task_id": "exp5262-solver-grounded-constraint-extraction-v481",
+        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- solver-grounded constraint extraction pilot",
+        "verdict": "complete: solver-grounded extraction produced no useful oracle-distinct signal (validity=0.25, baseline=0.5, false_accepts=0)"
+      },
+      {
+        "classification": "flagged_adversarial",
+        "exists": true,
+        "experiment_number": 5263,
+        "flagged_adversarial": true,
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "loadable": true,
+        "path": "results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json",
+        "sha256": "sha256:ef1e4d9ed79c0652b96a191aef35c1bac222e3442c26c91295eb40ded74c2d4c",
+        "summary": "flagged internal/logit-energy pilot; internal_signal_available=True; signal_delta=0.004811297384257784; external_text_scorer_used=False; not clean evidence",
+        "task_id": "exp5263-neuron-attention-energy-hallucination-probe-v481",
+        "title": "PHASE 2 gated on exp5259 sota_runtime_ready -- neuron and attention-energy hallucination probe",
+        "verdict": "complete: null logit-energy unsupported-minus-supported delta=0.004811"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5264,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5264_verifier_dose_scheduler_replay_v481.json",
+        "sha256": "sha256:fb83de6746cad4bcaa6ca8de577bdde065376bc6027beceda3b82c10171c6034",
+        "summary": "scheduler_ready=True; full_verifier_calls_avoided_rate=0.857143; decision_quality_delta=0.0; false_accept_delta=0.0",
+        "task_id": "exp5264-verifier-dose-scheduler-replay-v481",
+        "title": "PHASE 2 replay -- verifier-dose scheduler without live-model dependency",
+        "verdict": "complete: useful scheduler replay preserved always-full decision quality, kept false_accept_delta=0.000000, and avoided 0.857143 full verifier calls"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5265,
+        "flagged_adversarial": false,
+        "inference_substrate": "offline_deterministic_certificate_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
+        "sha256": "sha256:d8fa1293b2f366cc31affaf04de9d3bb6f4c861616c4959ffa1bd5ed94d2a911",
+        "summary": "certificate_refinement_ready=True; true_property_certified=True; false_property_rejected=True",
+        "task_id": "exp5265-kan-certificate-explanation-refinement-v481",
+        "title": "PHASE 3 KAN -- convex-envelope certificate explanation and refinement",
+        "verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
+      },
+      {
+        "classification": "blocked",
+        "exists": true,
+        "experiment_number": 5266,
+        "flagged_adversarial": false,
+        "inference_substrate": "hardware_probe_no_speedup_claim",
+        "loadable": true,
+        "path": "results/experiment_5266_hardware_thermodynamic_schedule_boundary_v481.json",
+        "sha256": "sha256:9bdc6f3465064edfd441f38ee43f629a7e65c939ac09daad45e0adaab983b5b1",
+        "summary": "kv260=blocked_kv260_ssh_unreachable; polarfire=blocked_polarfire_ssh_unreachable; gatemate=blocked_physical_jtag; speedup_claimed=false",
+        "task_id": "exp5266-hardware-thermodynamic-schedule-boundary-v481",
+        "title": "PHASE 3 hardware -- thermodynamic sampler-cost boundary and board continuity",
+        "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=blocked_polarfire_ssh_unreachable gatemate=blocked_physical_jtag no_speedup_claim"
+      },
+      {
+        "classification": "clean_positive",
+        "exists": true,
+        "experiment_number": 5267,
+        "flagged_adversarial": false,
+        "inference_substrate": "cached_fixture_replay_no_llm",
+        "loadable": true,
+        "path": "results/experiment_5267_artifact_normalizer_template_adoption_v481.json",
+        "sha256": "sha256:ac3b48230745af7d7d9d9e371c2d7e18fe84f54ed44f32cfe2291c1a426ba5f0",
+        "summary": "producer_normalizer_ready=True; gate_fields_preserved=True",
+        "task_id": "exp5267-artifact-normalizer-template-adoption-v481",
+        "title": "PHASE 3 evidence production -- artifact normalizer adoption at producer boundary",
+        "verdict": "complete: producer-side normalizer adoption is ready; ExperimentTemplate now normalizes shape-only artifacts before write/inspection while preserving bare gates and rejecting missing evidence."
+      }
+    ],
+    "primary_count": 11,
+    "primary_loadable_count": 11
+  },
+  "source_context": [
+    {
+      "exists": true,
+      "path": "CLAUDE.md",
+      "sha256": "sha256:6362755ccc4538eafed20baa616b127b5b5569f7465f33bcfadf331c15aeef3b"
+    },
+    {
+      "exists": true,
+      "path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/prd.md",
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "path": "_bmad/architecture.md",
+      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
+    },
+    {
+      "exists": true,
+      "path": "ops/status.md",
+      "sha256": "sha256:db406a53e7ae0a6a186975eba4d4adb1a6e0eeb9cb949148262ebdd1455caa53"
+    },
+    {
+      "exists": true,
+      "path": "ops/changelog.md",
+      "sha256": "sha256:d68673967a39ff2e2a911ff729df4fa2fc425d752c99e4783a73de976ff9d0a8"
+    },
+    {
+      "exists": true,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:6ad724fe0bbfcd796ee7955e5974ad9e7dc25df7013bb894fdda38530f0f17b8"
+    },
+    {
+      "exists": true,
+      "path": "research-complete.yaml",
+      "sha256": "sha256:45ba9d59091b85ba642739356872c63c881e14c6a2697f58288dc27f88d42ea3"
+    },
+    {
+      "exists": true,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:8d417c9fd992bb4159594144e408fdd041ed984bb6ef550390a8f055b2b899ec"
+    },
+    {
+      "exists": false,
+      "path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:af8d013e435979b8951638ee586657f0b4cd53f4fe0ec6678fbc8f4e187f9678"
+    },
+    {
+      "exists": true,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:e81158cd2c26895febceaa541fb81717743297e4413ba4151e5fa9c508fee1b6"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5268",
+    "SCENARIO-REPORT-5268",
+    "SCENARIO-REPORT-5268-BLOCKED-MISSING-INPUT"
+  ]
+}
