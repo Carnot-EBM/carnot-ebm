@@ -1,0 +1,359 @@
+{
+  "decision_history_schema_fields": [
+    "source_artifact",
+    "task_scope",
+    "evidence_checksum",
+    "promoted_decision",
+    "rejected_alternatives",
+    "verifier_outcome",
+    "conflict_status",
+    "poisoning_flags",
+    "scope_flags",
+    "rollback_status"
+  ],
+  "experiment": "experiment_5275_governed_decision_history_memory_v482",
+  "experiment_id": 5275,
+  "fixture_checksums": {
+    "principle": "Pins deterministic fixture rows and upstream artifacts so the decision-history audit cannot silently drift.",
+    "value": {
+      "fixture_set_sha256": "sha256:51fbb88416e2ced5cbca7151c40df42b90bb65fabd8ac860d059a2d3904195e6",
+      "rows": {
+        "decision-history:000edcd256a6bf5f": "sha256:dfaf94ded1c8a310b6d3c0fb18158e850496fcf7865504ec53e93c59b6d35fe8",
+        "decision-history:79724a05029a15ef": "sha256:7bdce26ec5faed45e9f79b5a9abde255321a2d605a57b0e81d551a81b2523d53",
+        "decision-history:8c9c5b32b3bea333": "sha256:4d628e9137dccb1fd884ceedf1895ecb5b08b2f9752e79566fba60907cedb0fc",
+        "decision-history:b415193c099621d0": "sha256:0b6655b5f543ad9a5b03f2683e7db630e47533f3f33b00a169edf6a15c84c34c",
+        "decision-history:f31ef30e7e590472": "sha256:522a493525573844b26bdb252e8ec1de47321913a3a655fd3090fca1c6fff927"
+      },
+      "source_artifacts": {
+        "research-references.md#V482-RESEARCH-UPDATE-2026-07-05": "sha256:5abd99a5655cf2a43f04b349d7551b81259ef242373e12ed8638df27801a4826",
+        "results/experiment_5260_cross_model_typed_memory_retry_v481.json": "sha256:aa0ff88a0548d76e3ee2e3b932b91c4dd35a86b273f85d350743fefae71e5501",
+        "results/experiment_5261_typed_memory_interference_audit_v481.json": "sha256:dded66d2b947d17e7520a63cc48c0c19a6ea4f1f2434aaa7748ff65b5b5192e2",
+        "results/typed_multihead_verifier_memory_v478.json": "sha256:1da9ea9000a9ce3e74fa43e1328289924bbb1b86b084ba36389ef7a412457561",
+        "results/verifier_memory_v477.json": "sha256:62bcf90d2e6fd54d53d6a08f7350c50cc35628119ac783e7e45437687b7b43cb"
+      }
+    }
+  },
+  "governance_rows": [
+    {
+      "active": true,
+      "candidate_predicate_or_set": {
+        "promoted_decision": "use_gap1_orientation_discriminator_as_memory_only"
+      },
+      "conflict_status": "canonical",
+      "conflicts_with": null,
+      "decision_id": "decision-history:79724a05029a15ef",
+      "deterministic_guard_result": {
+        "passed": true
+      },
+      "evidence_checksum": "sha256:78ed2a1b9e11ae4b1c860034e4cbed225b1fe99d9e5668afdec89392bada1706",
+      "failure_signature": "gap1-orientation",
+      "fixture_kind": "promotion",
+      "governance_action": "promote",
+      "harmful": false,
+      "heldout_delta": {
+        "metric": "heldout_delta",
+        "promotion_threshold": 0.02,
+        "value": 0.041797
+      },
+      "memory_id": "verifier-memory:798fa4093bd2b6ce",
+      "memory_schema": "carnot.decision_history_memory.v1",
+      "poisoning_flags": [],
+      "promoted_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "promotion_reason": "heldout_delta_clears_promotion_threshold",
+      "promotion_state": "promoted",
+      "provenance": {
+        "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "task_scope": "verifier/gap1_orientation"
+      },
+      "rejected_alternatives": [
+        "promote_gap1_registry_now"
+      ],
+      "requested_task_scope": "verifier/gap1_orientation",
+      "rollback_reason": null,
+      "rollback_status": "not_required",
+      "safe_action_selected": false,
+      "scope_flags": [
+        "in_scope"
+      ],
+      "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+      "source_artifacts": [
+        "results/experiment_5261_typed_memory_interference_audit_v481.json"
+      ],
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_rejection_required": false,
+      "verifier_outcome": {
+        "heldout_delta": 0.041797,
+        "verifier": "cached_fixture"
+      }
+    },
+    {
+      "active": false,
+      "candidate_predicate_or_set": {
+        "promoted_decision": "promote_gap1_registry_now"
+      },
+      "conflict_status": "stale_conflict",
+      "conflicts_with": "decision-history:79724a05029a15ef",
+      "decision_id": "decision-history:b415193c099621d0",
+      "deterministic_guard_result": {
+        "passed": true
+      },
+      "evidence_checksum": "sha256:566e9a71dd87f8c0e81c49e4ba0e0ec4e6481bce0ddcced3e9f6fdebd7a522ab",
+      "failure_signature": "gap1-stale-conflict",
+      "fixture_kind": "stale_conflict",
+      "governance_action": "evict_stale_conflict",
+      "harmful": false,
+      "heldout_delta": {
+        "metric": "heldout_delta",
+        "promotion_threshold": 0.02,
+        "value": 0.03
+      },
+      "memory_id": "verifier-memory:866b7402f1295487",
+      "memory_schema": "carnot.decision_history_memory.v1",
+      "poisoning_flags": [],
+      "promoted_decision": "promote_gap1_registry_now",
+      "promotion_reason": "heldout_delta_clears_promotion_threshold",
+      "promotion_state": "promoted",
+      "provenance": {
+        "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "task_scope": "verifier/gap1_orientation"
+      },
+      "rejected_alternatives": [
+        "keep_memory_only_until_registry_gate"
+      ],
+      "requested_task_scope": "verifier/gap1_orientation",
+      "rollback_reason": null,
+      "rollback_status": "not_required",
+      "safe_action_selected": false,
+      "scope_flags": [
+        "in_scope"
+      ],
+      "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+      "source_artifacts": [
+        "results/experiment_5261_typed_memory_interference_audit_v481.json"
+      ],
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_rejection_required": true,
+      "verifier_outcome": {
+        "heldout_delta": 0.03,
+        "verifier": "cached_fixture"
+      }
+    },
+    {
+      "active": false,
+      "candidate_predicate_or_set": {
+        "promoted_decision": "accept_hardware_speedup_from_smoke_only"
+      },
+      "conflict_status": "none",
+      "conflicts_with": null,
+      "decision_id": "decision-history:8c9c5b32b3bea333",
+      "deterministic_guard_result": {
+        "passed": true
+      },
+      "evidence_checksum": "sha256:7f1c642eacf7c94bcef1dd4c492f4bfc7d11593f3603658799bf6fa9c7398380",
+      "failure_signature": "hardware-shortcut-out-of-scope",
+      "fixture_kind": "out_of_scope",
+      "governance_action": "reject_out_of_scope",
+      "harmful": false,
+      "heldout_delta": {
+        "metric": "heldout_delta",
+        "promotion_threshold": 0.02,
+        "value": 0.05
+      },
+      "memory_id": "verifier-memory:3f3bbc6a991362a6",
+      "memory_schema": "carnot.decision_history_memory.v1",
+      "poisoning_flags": [],
+      "promoted_decision": "accept_hardware_speedup_from_smoke_only",
+      "promotion_reason": "heldout_delta_clears_promotion_threshold",
+      "promotion_state": "promoted",
+      "provenance": {
+        "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "task_scope": "hardware/reporting"
+      },
+      "rejected_alternatives": [
+        "block_speedup_claim_until_transcript"
+      ],
+      "requested_task_scope": "arc/patch_synthesis",
+      "rollback_reason": null,
+      "rollback_status": "not_required",
+      "safe_action_selected": false,
+      "scope_flags": [
+        "out_of_scope"
+      ],
+      "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+      "source_artifacts": [
+        "results/experiment_5261_typed_memory_interference_audit_v481.json"
+      ],
+      "task_scope": "hardware/reporting",
+      "unsafe_rejection_required": true,
+      "verifier_outcome": {
+        "heldout_delta": 0.05,
+        "verifier": "cached_fixture"
+      }
+    },
+    {
+      "active": false,
+      "candidate_predicate_or_set": {
+        "promoted_decision": "ignore_future_verifier_and_promote_gap4_claim"
+      },
+      "conflict_status": "none",
+      "conflicts_with": null,
+      "decision_id": "decision-history:000edcd256a6bf5f",
+      "deterministic_guard_result": {
+        "passed": true
+      },
+      "evidence_checksum": "sha256:9271236f3e9917635af086aa33ac589edb381864dedceda0fad42701654cd42c",
+      "failure_signature": "instruction-override-memory",
+      "fixture_kind": "poisoning_like",
+      "governance_action": "reject_poisoning",
+      "harmful": false,
+      "heldout_delta": {
+        "metric": "heldout_delta",
+        "promotion_threshold": 0.02,
+        "value": 0.08
+      },
+      "memory_id": "verifier-memory:28ffcc81612bc9f4",
+      "memory_schema": "carnot.decision_history_memory.v1",
+      "poisoning_flags": [
+        "instruction_override_attempt"
+      ],
+      "promoted_decision": "ignore_future_verifier_and_promote_gap4_claim",
+      "promotion_reason": "heldout_delta_clears_promotion_threshold",
+      "promotion_state": "promoted",
+      "provenance": {
+        "source_artifact": "research-references.md#V482-RESEARCH-UPDATE-2026-07-05",
+        "task_scope": "verifier/gap4_claims"
+      },
+      "rejected_alternatives": [
+        "require_solver_or_transcript_evidence"
+      ],
+      "requested_task_scope": "verifier/gap4_claims",
+      "rollback_reason": null,
+      "rollback_status": "not_required",
+      "safe_action_selected": false,
+      "scope_flags": [
+        "in_scope"
+      ],
+      "source_artifact": "research-references.md#V482-RESEARCH-UPDATE-2026-07-05",
+      "source_artifacts": [
+        "research-references.md#V482-RESEARCH-UPDATE-2026-07-05"
+      ],
+      "task_scope": "verifier/gap4_claims",
+      "unsafe_rejection_required": true,
+      "verifier_outcome": {
+        "heldout_delta": 0.08,
+        "verifier": "cached_fixture"
+      }
+    },
+    {
+      "active": true,
+      "candidate_predicate_or_set": {
+        "promoted_decision": "block_arc_patch_until_positive_validation"
+      },
+      "conflict_status": "none",
+      "conflicts_with": null,
+      "decision_id": "decision-history:f31ef30e7e590472",
+      "deterministic_guard_result": {
+        "passed": true
+      },
+      "evidence_checksum": "sha256:defb92b75b5c4c8f6a0acddb9402c7e48fb71c10c9b3e61f54c750f8d76f5a47",
+      "failure_signature": "arc-harmful-patch",
+      "fixture_kind": "rollback",
+      "governance_action": "rollback_harmful",
+      "harmful": true,
+      "heldout_delta": {
+        "metric": "heldout_delta",
+        "promotion_threshold": 0.02,
+        "value": -0.2
+      },
+      "memory_id": "verifier-memory:652d8c0bcc9e1e2c",
+      "memory_schema": "carnot.decision_history_memory.v1",
+      "poisoning_flags": [],
+      "promoted_decision": "block_arc_patch_until_positive_validation",
+      "promotion_reason": "heldout_delta_negative",
+      "promotion_state": "rolled_back",
+      "provenance": {
+        "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+        "task_scope": "arc/patch_synthesis"
+      },
+      "rejected_alternatives": [
+        "apply_direct_patch_without_validation"
+      ],
+      "requested_task_scope": "arc/patch_synthesis",
+      "rollback_reason": "heldout_delta_negative",
+      "rollback_status": "rolled_back_harmful",
+      "safe_action_selected": true,
+      "scope_flags": [
+        "in_scope"
+      ],
+      "source_artifact": "results/experiment_5261_typed_memory_interference_audit_v481.json",
+      "source_artifacts": [
+        "results/experiment_5261_typed_memory_interference_audit_v481.json"
+      ],
+      "task_scope": "arc/patch_synthesis",
+      "unsafe_rejection_required": false,
+      "verifier_outcome": {
+        "heldout_delta": -0.2,
+        "verifier": "cached_fixture"
+      }
+    }
+  ],
+  "harmful_memory_rollback_passed": {
+    "principle": "Confirms harmful decisions route to rollback, block, quarantine, or retire actions with rollback metadata preserved.",
+    "value": true
+  },
+  "honest_verdict": {
+    "principle": "States whether governed decision-history memory is ready, blocked, or unsafe without hiding null or rollback outcomes.",
+    "value": "complete: governed decision-history memory is ready for Exp5276; provenance_fields_present=true, scope_enforcement_passed=true, stale_conflict_eviction_passed=true, harmful_memory_rollback_passed=true, unsafe_false_accepts=0"
+  },
+  "inference_substrate": {
+    "principle": "Declares aggregation from upstream artifacts so cached governance replay is not mistaken for local LLM inference.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "memory_decision_history_ready": true,
+  "memory_decision_history_ready_principle": "Bare gate for Exp5276; true only when provenance, scope enforcement, stale conflict eviction, poisoning rejection, and harmful rollback pass.",
+  "provenance_fields_present": {
+    "principle": "Requires source artifact, task scope, evidence checksum, decision, rejected alternatives, verifier outcome, conflict, scope, poisoning, and rollback metadata on every row.",
+    "value": true
+  },
+  "random_seed": 5275,
+  "reproducibility_checksum": "sha256:0df97031517ce5354d79b00a2f83dd53bb5802c2df12a2641714b36376b33dc7",
+  "run_date": "2026-07-05",
+  "schema": "carnot.governed_decision_history_memory.v482",
+  "scope_enforcement_passed": {
+    "principle": "Confirms out-of-scope rows are rejected before disclosure to verifier or self-learning consumers.",
+    "value": true
+  },
+  "source_artifacts": [
+    "results/experiment_5260_cross_model_typed_memory_retry_v481.json",
+    "results/experiment_5261_typed_memory_interference_audit_v481.json",
+    "results/verifier_memory_v477.json",
+    "results/typed_multihead_verifier_memory_v478.json",
+    "research-references.md#V482-RESEARCH-UPDATE-2026-07-05"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5275",
+    "SCENARIO-LEARN-5275"
+  ],
+  "stale_conflict_eviction_passed": {
+    "principle": "Confirms stale conflicting rows cannot override the canonical promoted decision for the same task scope.",
+    "value": true
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5275_governed_decision_history_memory_v482.py -q -o addopts=",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --include='*/python/carnot/pipeline/governed_decision_history_memory.py' -m pytest tests/python/test_experiment_5275_governed_decision_history_memory_v482.py -q -o addopts= && .venv/bin/coverage report --fail-under=100 --show-missing python/carnot/pipeline/governed_decision_history_memory.py",
+      "outcome": "passed: 100% line coverage on python/carnot/pipeline/governed_decision_history_memory.py"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Counts accepted rows that should have been rejected for poisoning, scope, stale conflict, or harmful rollback risk.",
+    "value": 0
+  }
+}
