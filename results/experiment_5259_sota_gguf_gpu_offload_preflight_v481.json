@@ -1,0 +1,391 @@
+{
+  "duration_s": 62.761483,
+  "experiment": 5259,
+  "experiment_name": "experiment_5259_sota_gguf_gpu_offload_preflight_v481",
+  "gpu_offload_receipts": {
+    "principle": "Driver/device/runtime/offload settings proving which GPU-offload path was attempted or why it was not safe.",
+    "value": {
+      "cuda_runtime": {
+        "command": [
+          "nvidia-smi"
+        ],
+        "duration_s": 0.094388,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "Sun Jul  5 02:58:41 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   45C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   48C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+      },
+      "gpu_visible": true,
+      "llama_cpp": {
+        "import_ok": true,
+        "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "version": "0.3.29"
+      },
+      "llama_cpp_python_distribution": "llama-cpp-python",
+      "nvcc": {
+        "command": [
+          "nvcc",
+          "--version"
+        ],
+        "duration_s": 0.016137,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_Apr_24_07:22:02_PM_PDT_2026\nCuda compilation tools, release 13.3, V13.3.33\nBuild cuda_13.3.r13.3/compiler.37862127_0"
+      },
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.034005,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "offload_settings": {
+        "n_ctx": 256,
+        "n_gpu_layers": -1,
+        "n_predict": 1,
+        "seed": 5259,
+        "temperature": 0.0
+      },
+      "torch_cuda": {
+        "available": true,
+        "device_count": 2,
+        "import_ok": true,
+        "version": "2.11.0+cu128"
+      }
+    }
+  },
+  "honest_verdict": {
+    "principle": "Terminal preflight verdict; starts with complete: or blocked_ and states whether the mandated SOTA GGUF runtime is ready.",
+    "value": "complete: sota_runtime_ready=true ready through flagship_moe"
+  },
+  "inference_substrate": {
+    "principle": "Declares a llama.cpp runtime preflight only, preventing quality, memory, verifier-dose, or benchmark claims from being inferred.",
+    "value": "llama_cpp_runtime_preflight_no_quality_claim"
+  },
+  "model_receipts": {
+    "principle": "Per mandated model receipts with role, status, local path/checksum when available, command/config, outcome, and traceback on failure.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        ],
+        "config": {
+          "n_ctx": 256,
+          "n_gpu_layers": -1,
+          "n_predict": 1,
+          "seed": 5259,
+          "temperature": 0.0
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "outcome": "tokenized 5 tokens and generated 2 chars",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "preferred_quant": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 5 tokens and generated 2 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 18323731456,
+        "smoke_label": null,
+        "status": "runtime_ready",
+        "traceback": null
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        ],
+        "config": {
+          "n_ctx": 256,
+          "n_gpu_layers": -1,
+          "n_predict": 1,
+          "seed": 5259,
+          "temperature": 0.0
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "outcome": "tokenized 4 tokens and generated 2 chars",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "preferred_quant": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 4 tokens and generated 2 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 22134528992,
+        "smoke_label": null,
+        "status": "runtime_ready",
+        "traceback": null
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        ],
+        "config": {
+          "n_ctx": 256,
+          "n_gpu_layers": -1,
+          "n_predict": 1,
+          "seed": 5259,
+          "temperature": 0.0
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "outcome": "tokenized 5 tokens and generated 3 chars",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "preferred_quant": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_probe": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "\nimport json\nimport sys\nimport traceback\nfrom pathlib import Path\nfrom llama_cpp import Llama\n\nmodel_path = Path(sys.argv[1])\nprompt = sys.argv[2]\nn_gpu_layers = int(sys.argv[3])\nn_ctx = int(sys.argv[4])\nn_predict = int(sys.argv[5])\nseed = int(sys.argv[6])\n\npayload = {\n    \"runtime_ready\": False,\n    \"status\": \"blocked_runtime_load_failed\",\n    \"command\": \"llama_cpp.Llama(model_path=<path>, n_gpu_layers=%s, n_ctx=%s)\" % (n_gpu_layers, n_ctx),\n    \"config\": {\n        \"n_gpu_layers\": n_gpu_layers,\n        \"n_ctx\": n_ctx,\n        \"n_predict\": n_predict,\n        \"temperature\": 0.0,\n        \"seed\": seed,\n    },\n    \"outcome\": \"\",\n    \"traceback\": None,\n}\ntry:\n    vocab = Llama(model_path=str(model_path), vocab_only=True, verbose=False)\n    tokens = vocab.tokenize(prompt.encode(\"utf-8\"))\n    if not tokens:\n        raise RuntimeError(\"embedded GGUF tokenizer returned no tokens\")\n    llm = Llama(\n        model_path=str(model_path),\n        n_gpu_layers=n_gpu_layers,\n        n_ctx=n_ctx,\n        seed=seed,\n        verbose=False,\n    )\n    response = llm(prompt, max_tokens=n_predict, temperature=0.0)\n    text = \"\"\n    if isinstance(response, dict) and response.get(\"choices\"):\n        text = str(response[\"choices\"][0].get(\"text\", \"\"))\n    payload.update(\n        {\n            \"runtime_ready\": True,\n            \"status\": \"runtime_ready\",\n            \"outcome\": \"tokenized %d tokens and generated %d chars\" % (len(tokens), len(text)),\n        }\n    )\nexcept Exception:\n    payload[\"traceback\"] = traceback.format_exc()\n    payload[\"outcome\"] = payload[\"traceback\"].splitlines()[-1] if payload[\"traceback\"] else \"unknown\"\nprint(json.dumps(payload, sort_keys=True))\n",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "n_ctx": 256,
+            "n_gpu_layers": -1,
+            "n_predict": 1,
+            "seed": 5259,
+            "temperature": 0.0
+          },
+          "outcome": "tokenized 5 tokens and generated 3 chars",
+          "returncode": 0,
+          "runtime_ready": true,
+          "status": "runtime_ready",
+          "stderr_tail": "llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+          "traceback": null
+        },
+        "runtime_ready": true,
+        "size_bytes": 16947539744,
+        "smoke_label": null,
+        "status": "runtime_ready",
+        "traceback": null
+      }
+    }
+  },
+  "no_quality_claim": {
+    "principle": "True guard that this artifact measures runtime readiness only and makes no model-quality, memory-usefulness, or verification-uplift claim.",
+    "value": true
+  },
+  "preconditions_checked": {
+    "principle": "Records GPU, CUDA/runtime, llama.cpp, disk, cache, and local GGUF resolvability receipts before any headline task can run.",
+    "value": {
+      "cached_sota_pair_preview": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "driver_cuda_runtime_checked": true,
+      "free_disk": {
+        "free_bytes": 1487716106240,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "used_bytes": 2465572917248
+      },
+      "gguf_cache_paths": {
+        "flagship_dense": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "flagship_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF"
+      },
+      "gpu_offload_receipts": {
+        "cuda_runtime": {
+          "command": [
+            "nvidia-smi"
+          ],
+          "duration_s": 0.094388,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Sun Jul  5 02:58:41 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   45C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   48C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+        },
+        "gpu_visible": true,
+        "llama_cpp": {
+          "import_ok": true,
+          "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "version": "0.3.29"
+        },
+        "llama_cpp_python_distribution": "llama-cpp-python",
+        "nvcc": {
+          "command": [
+            "nvcc",
+            "--version"
+          ],
+          "duration_s": 0.016137,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_Apr_24_07:22:02_PM_PDT_2026\nCuda compilation tools, release 13.3, V13.3.33\nBuild cuda_13.3.r13.3/compiler.37862127_0"
+        },
+        "nvidia_smi": {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.034005,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+        },
+        "offload_settings": {
+          "n_ctx": 256,
+          "n_gpu_layers": -1,
+          "n_predict": 1,
+          "seed": 5259,
+          "temperature": 0.0
+        },
+        "torch_cuda": {
+          "available": true,
+          "device_count": 2,
+          "import_ok": true,
+          "version": "2.11.0+cu128"
+        }
+      },
+      "gpu_visibility_checked": true,
+      "llama_cpp_checked": true,
+      "local_resolvability": {
+        "flagship_dense": {
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "resolved_without_repo_tokenizer": true,
+          "status": "runtime_ready"
+        },
+        "flagship_moe": {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "resolved_without_repo_tokenizer": true,
+          "status": "runtime_ready"
+        },
+        "middle_moe": {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "resolved_without_repo_tokenizer": true,
+          "status": "runtime_ready"
+        }
+      }
+    }
+  },
+  "reproducibility_checksum": "ea592f080957c96b",
+  "schema": "carnot.experiment_5259.sota_gguf_gpu_offload_preflight.v481",
+  "sota_runtime_ready": true,
+  "sota_runtime_ready_principle": "sota_runtime_ready=true; ready through flagship_moe completing the local GGUF runtime path.",
+  "spec_refs": [
+    "REQ-VERIFY-5259",
+    "SCENARIO-VERIFY-5259"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest -o addopts='' tests/python/test_experiment_5259_sota_gguf_gpu_offload_preflight_v481.py -q",
+      "outcome": "passed: 7 passed in 0.77s"
+    },
+    {
+      "command": ".venv/bin/coverage run --include='*/python/carnot/experiment_5259_sota_gguf_gpu_offload_preflight_v481.py' -m pytest -o addopts='' tests/python/test_experiment_5259_sota_gguf_gpu_offload_preflight_v481.py -q && .venv/bin/coverage report --include='*/python/carnot/experiment_5259_sota_gguf_gpu_offload_preflight_v481.py' --fail-under=100 -m",
+      "outcome": "passed: 7 passed; 100% coverage on exp5259 module"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5259_sota_gguf_gpu_offload_preflight_v481.py -q",
+      "outcome": "tests passed but command failed because pyproject addopts enforced whole-repo coverage: total coverage 0.48% < 99%"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: existing repository-wide spec traceability debt; checker reported 1231 unrelated tests missing REQ-* or SCENARIO-* references"
+    }
+  ]
+}
