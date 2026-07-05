@@ -104,6 +104,9 @@ able to make the live agent worse than it already is.
 
 ## Cross-references
 
+- `docs/research-notes/arc1-arc2-capability-transfer-to-arc3-2026-07-04.md` -- the broader ARC-1/2
+  capability-transfer question, the ARC-1-to-ARC-2 degradation calibration point, and the parallel
+  unbuilt methodology bridge (Family-B induction in `exp4544`)
 - `docs/research-notes/trm-arc-action-sequence-generator-2026-07-04.md` -- the original TRM proposal
   and the leave-one-game-out pilot this plan's Stage 1 depends on
 - `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md` -- the training

@@ -2167,6 +2167,37 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
 (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
 an explicit operator directive, same standing-default discipline as the experiment default).
 
+### CANDIDATE: does ARC-1/2 capability apply to ARC-3? 2026-07-04 (outer-loop, "do we know if ARC-AGI-1 and ARC-AGI-2 capability has any potential application to ARC-AGI-3 games?")
+
+Full writeup: `docs/research-notes/arc1-arc2-capability-transfer-to-arc3-2026-07-04.md`. No direct
+test exists in this project's record -- a genuine gap, not a measured negative. Two things ARE known:
+
+1. **A calibration point urging caution**: the project's own GAP-3/GAP-4 program measured transfer
+   between ARC-1 and ARC-2 themselves (the two MOST similar variants, both static single-shot
+   puzzles) and found real degradation -- an LLM induce-and-verify-by-execution pipeline dropped from
+   0.93 induction rate / 0.90 precision on ARC-1 to 0.57 / 0.47 on ARC-2. If capability degrades that
+   much between adjacent variants of the SAME task format, expect at least as much friction moving to
+   ARC-3's genuinely different (live, interactive, multi-step) format.
+2. **A real, unbuilt methodology bridge**: the SOTA ARC-3 architecture (Family-B "Executable World
+   Models", arXiv:2605.05138) uses the EXACT SAME paradigm as this project's own ARC-1/2 rule-
+   induction work (GAP-3/GAP-4) -- LLM induces executable code, verified by execution against
+   held-out data, refined via counterexample-guided debugging (arXiv:2606.11521). Already mapped as a
+   `.421` candidate for `exp4544`'s GOAL+DYNAMICS proposer (`docs/research-notes/arc-llm-inducer-
+   sota-420.md`, 2026-06-21) -- still marked `unbuilt_mapped_only` per the levers-tried tracking.
+   Nobody has actually wired it in.
+
+**Also note: a genuinely capable, pre-trained TRM checkpoint for ARC-1 already exists and is verified
+working in this repo** (`arcprize/trm_arc_prize_verification`, pass@1000 ~0.62 on a 29-task subset,
+reproduced 2026-06-09 in `results/trm_verifier_rerank_opportunity.json`). Nothing needs to be trained
+from scratch to have a capable ARC-1 model on hand -- the open question for any future TRM-related
+work is purely whether the checkpoint's recursive-refinement MECHANISM (not its ARC-1-specific
+weights) transfers to ARC-3's action-sequence domain, which is exactly what the TRM-as-generator
+note's leave-one-game-out pilot already tests.
+
+**If a future planner picks this up:** two independent, parallel candidates exist -- finishing the
+`exp4544` Family-B integration (methodology bridge), and the TRM-as-generator staged plan
+(architecture bridge). Neither has been built; either, both, or neither could pan out.
+
 ### CANDIDATE: staged plan for TRM-as-generator on hidden games 2026-07-04 (outer-loop, "what is the plan for a TRM based generator that may solve the hidden game levels in the live agent?")
 
 Full writeup: `docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md`. Answers the natural
