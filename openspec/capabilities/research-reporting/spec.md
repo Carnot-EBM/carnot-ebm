@@ -35078,6 +35078,101 @@ GAP-4 counts.
 |---|---|---|
 | REQ-REPORT-5248 | Implemented (`python/carnot/experiment_5248_gap4_receipt_salvage_or_retire_v480.py`, `results/experiment_5248_gap4_receipt_salvage_or_retire_v480.json`) | Implemented (`tests/python/test_experiment_5248_gap4_receipt_salvage_or_retire_v480.py`) |
 
+### REQ-REPORT-5257: Archive .480 And Emit .481 Activation-Ready Record
+
+The Exp 5257 workflow SHALL archive the honest closeout for milestone
+`2026.07.480` and write
+`results/experiment_5257_archive_480_activate_481.json`. It SHALL read
+`results/experiment_5256_capstone_v480.json`, the `.480` result artifacts from
+Exp5245 through Exp5256 when present, `research-complete.yaml`,
+`research-roadmap.yaml`, `openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/status.md`, `ops/changelog.md`, `ops/conductor-log.md`, and
+`ops/exclusion_manifest.yaml`. It SHALL NOT modify `research-roadmap.yaml`,
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+`_bmad/traceability.md`, or `docs/index.html`. It SHALL declare
+`inference_substrate.value="cached_fixture_replay_no_llm"` because the workflow
+only reads existing artifacts and local operational records.
+
+The workflow SHALL preserve the `.480` close-state truthfully without creating
+new research claims: the SLOT artifact normalizer is ready, GAP-4 is a salvaged
+clean null, Exp5249 is blocked by the llama.cpp/GGUF runtime precondition,
+Exp5250 is gated/skipped by the Exp5249 eligibility failure, Token-Guard/Carnot
+is harmful on the bounded panel, HalluHard-style provenance memory is a clean
+null, the ARC provenance patch has `level_delta=0` and is retired, the KAN
+convex-envelope certificate is a bounded positive, and hardware continuity makes
+no speedup claim. If `research-complete.yaml` already contains `2026.07.480`,
+the workflow SHALL record `research_complete_updated.value=false`; if it does
+not, the workflow MAY append a minimal milestone entry preserving existing
+history and SHALL record `research_complete_updated.value=true`.
+
+The workflow SHALL inspect
+`openspec/change-proposals/research-roadmap-vNEXT.md` for milestone
+`2026.07.481` and inspect `research-roadmap-next.yaml` when present, but SHALL
+NOT activate by copying it over `research-roadmap.yaml`. If
+`research-roadmap-next.yaml` is absent because `research-roadmap.yaml` already
+names milestone `2026.07.481`, the workflow SHALL record the already-active
+fallback as activation-ready while setting
+`roadmap_activation_check.activated=false`. It SHALL run available roadmap and
+exclusion checks against `research-roadmap.yaml`, including
+`scripts/exclusion_manifest_lint.py` and `scripts/validate_prior_failures.py`
+when those scripts exist, and SHALL record command pass/fail outcomes.
+
+The artifact SHALL include required fields `honest_verdict`,
+`inference_substrate`, bare boolean `milestone_archived`,
+`milestone_archived_principle`, bare boolean `activation_ready`,
+`activation_ready_principle`, `ops_docs_updated`, `research_complete_updated`,
+`exclusions_checked`, `roadmap_activation_check`, and `commands_run`. It SHOULD
+also include source artifact/context checksums, closeout facts, roadmap
+readiness details, validation checks, and a reproducibility checksum.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether .480 was archived and .481 is activation-ready."
+- `inference_substrate`: principle "cached_fixture_replay_no_llm because Exp5257 only reads existing artifacts and local records."
+- `milestone_archived`: principle "Bare boolean confirming the .480 closeout is represented in durable research records."
+- `activation_ready`: principle "Bare boolean confirming .481 can proceed without overwriting research-roadmap.yaml."
+- `ops_docs_updated`: principle "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation."
+- `research_complete_updated`: principle "True only if this workflow appended or reconciled research-complete.yaml; false when .480 was already present."
+- `exclusions_checked`: principle "The transition must run or explicitly record available exclusion/prior-failure checks."
+- `roadmap_activation_check`: principle "No roadmap overwrite is allowed; activated must remain false."
+- `commands_run`: principle "Every validation command must be recorded with pass/fail outcome."
+
+#### SCENARIO-REPORT-5257: Already-Active .481 Emits A Complete No-Overwrite Artifact
+
+**Given** the `.480` capstone artifact records normalizer ready, GAP-4 salvaged
+clean null, Exp5249 blocked by llama.cpp/GGUF runtime, Exp5250 gated/skipped,
+Token-Guard harmful, HalluHard clean null, ARC `level_delta=0` with patch
+retired, bounded-positive KAN certification, and hardware no-speedup
+**And** `research-complete.yaml` already contains milestone `2026.07.480`
+**And** `research-roadmap.yaml` already names milestone `2026.07.481`
+**When** the Exp 5257 workflow runs
+**Then** it writes
+`results/experiment_5257_archive_480_activate_481.json`, sets
+`milestone_archived=true`, sets `activation_ready=true`, sets
+`roadmap_activation_check.activated=false`, records whether
+`research-roadmap-next.yaml` is present, declares
+`cached_fixture_replay_no_llm`, records the roadmap/exclusion command outcomes,
+and emits a `complete:` verdict without overwriting `research-roadmap.yaml`.
+
+#### SCENARIO-REPORT-5257-BLOCKED-CLOSEOUT: Missing Or Contradictory Closeout Blocks Readiness
+
+**Given** the `.480` capstone artifact is missing, the closeout facts do not
+match the required ready/null/blocked/gated/harmful/zero-delta/bounded/no-speedup
+state, the vNEXT document does not name `2026.07.481`, the active roadmap is not
+`.481` and no `.481` next-roadmap is present, or an available validation command
+fails
+**When** the Exp 5257 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`blocked_`, records the failed preconditions, keeps
+`roadmap_activation_check.activated=false`, and does not modify
+`research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5257)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5257 | Planned (`python/carnot/experiment_5257_archive_480_activate_481.py`, `results/experiment_5257_archive_480_activate_481.json`) | Planned (`tests/python/test_experiment_5257_archive_480_activate_481.py`) |
+
 ### REQ-REPORT-5162: V473 Multi-Level ARC SOTA Ingestion And Outcome-Conditioned Planning
 
 The Exp 5162 workflow SHALL produce
