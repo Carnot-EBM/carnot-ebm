@@ -134,6 +134,9 @@ full-FT-on-a-3090 build the existing gap entry already scoped.
 
 ## Cross-references
 
+- `docs/research-notes/arc1-arc2-capability-transfer-to-arc3-2026-07-04.md` — the broader question of
+  whether ARC-1/2 capability (not just TRM specifically) applies to ARC-3; also notes the pre-trained
+  ARC-1 TRM checkpoint's availability
 - `docs/research-notes/trm-generator-hidden-game-plan-2026-07-04.md` — the staged plan for turning a
   successfully-trained public-game TRM into something that can help on hidden games (weights don't
   transfer, but a recipe + online adaptation might)
