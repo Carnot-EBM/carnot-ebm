@@ -27232,3 +27232,22 @@ only unless Carnot has local execution receipts.
   evidence while explicitly refusing speedup claims without board/runtime receipts.
 
 <!-- V482-RESEARCH-UPDATE-2026-07-05-END -->
+
+
+### V482 Execution Refresh - 2026-07-05
+
+Execution-time sweep after the `.482` plan checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, and Logical Intelligence public pages. The items below were not in the V482 planning block or nearby reference history and are actionable as implementation notes, but they do not require a roadmap edit.
+
+### New actionable deltas
+- **G-RRM: Guiding Symbolic Solvers with Recurrent Reasoning Models** (https://arxiv.org/abs/2607.02491): Neural hints only helped when the symbolic solver could overwrite bad branch choices and recover globally correct solutions, which matches Carnot's need to keep the solver as the authority. Actionability: For Exp5273/Exp5274, record conflict counts, overwrite/recovery behavior, and wall-clock separately if a neural proposer is used; do not let neural guidance replace solver labels.
+- **VeryTrace: Verifying Reasoning Traces through Compilable Formalism** (https://arxiv.org/abs/2606.24124): The DSL makes dependencies explicit and turns quantitative reasoning into executable expressions, matching the V482 solver-fixture rebuild direction. Actionability: Keep Exp5273's fixture focused on dependency resolution, executable arithmetic, constraint checks, and localized repair labels before any SOTA extraction rerun.
+- **ElephantAgent: Contextual State Continuity in Agentic Systems** (https://arxiv.org/abs/2607.01919): The digest-and-ledger framing treats memory and tool state as a bounded security-critical context, which strengthens V482 governed memory requirements. Actionability: For Exp5275, include context-state digests or equivalent checksums, authorized transition provenance, and recovery-to-known-good fields in decision-history rows.
+- **ATMem: Active Task Driving Memory for GUI Agents** (https://arxiv.org/abs/2606.31612): Memory is modeled as an active execution state with role and status, not passive retrieval text; the paper also separates progress from scope-aware false actions. Actionability: For Exp5275/Exp5276, track whether a memory entry is pending, consumed, stale, or out-of-scope and compare memory-on versus memory-off decisions without reopening GRPO or broad fine-tuning.
+- **A 2048-spin bulk acoustic wave Ising machine for number partitioning and Sudoku** (https://arxiv.org/abs/2607.02112): The physical Ising reference reports all-to-all connectivity, 15-bit coupling resolution, and Sudoku/number-partition workloads, giving better boundary metadata for sampler-interface notes. Actionability: For Exp5278/Exp5279, record connectivity, coupling resolution, problem family, autocorrelation, and local-board reachability separately; make no acoustic hardware or speedup claim from a paper-only reference.
+
+### Execution impact
+- **Plan impact:** No executable `.482` task edit is required. The deltas sharpen Exp5273/Exp5274 solver-grounded extraction, Exp5275/Exp5276 governed memory, and Exp5278/Exp5279 sampler/hardware boundary notes.
+- **Retired scope:** No retired scope was reopened; Phase D external generated-text scoring, broad GRPO/fine-tuning, and TSU/Kona execution claims remain closed unless a future task carries an explicit override.
+- **Semantic Scholar:** Direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 returned HTTP 429 in this pass, so no citation-count delta is claimed.
+
+<!-- V482-EXECUTION-REFRESH-2026-07-05-END -->
