@@ -10312,3 +10312,4 @@ web search: |
 | 2026-07-05 00:41 UTC | PHASE 1 evidence integrity -- SLOT-style artifact  | OK | 93 passed, 1 warning in 7.80s |
 | 2026-07-05 00:58 UTC | PHASE 1 gated on exp5247 artifact_normalizer_ready | OK | 91 passed, 1 warning in 11.19s |
 | 2026-07-05 01:15 UTC | PHASE 2 Continuous Self-Learning -- cross-model ty | OK | 86 passed, 1 warning in 8.34s |
+| 2026-07-05 01:22 UTC | PHASE 2 gated on exp5249 cross_model_memory_eligib | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5249-cross-model-typed-memory-transfer- |
