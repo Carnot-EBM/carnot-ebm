@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.480",
+  "generated_at": "2026-07-05T04:00:56Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.07.480. no data available this milestone for slowest-experiment, compute-bound duration, GPU-efficiency, or DualGPURunner analysis.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone for timed experiment bottlenecks; the timing block contains no completed experiment entries",
+    "no compute-bound experiment entries are present, so no GPU-idle or DualGPURunner bottleneck is supportable"
+  ],
+  "improvements_suggested": [
+    "Make the empty timing window an explicit no-data branch before slowest-experiment ranking or GPU-state interpretation",
+    "Keep GPU-idle warnings gated on compute-bound timing entries with GGUF, CUDA, or requires_gpu markers",
+    "Emit a separate conductor-state diagnostic when both live git-log and disk-mtime reconstruction find no experiment commits"
+  ],
+  "top_3_highest_leverage_actions": [
+    "Short-circuit retrospective generation into no-data sections when the timing window has no experiment entries",
+    "Preserve the compute-bound gate before interpreting idle GPU snapshots as operational failures",
+    "Add a follow-up diagnostic that explains empty timing windows without inventing experiment IDs or durations"
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The main operational risk in this retrospective is over-interpreting an idle GPU snapshot when the timing data contains 0 compute-bound tasks. The correct outcome is an honest no-data report rather than a synthetic bottleneck ranking.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}

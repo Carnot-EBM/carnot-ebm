@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-03 (Exp 5197 GAP-4 real-checkpoint test fix)
+**Last Updated:** 2026-07-05 (Milestone 2026.07.480 operational retro)
+
+## Session 2026-07-05 - Milestone 2026.07.480 Operational Retro
+
+Wrote `results/operational_retro_2026_07_480.json` and appended the
+corresponding operational entries to `ops/changelog.md` and
+`docs/research-log.md`. The authoritative timing window reports 0 completed
+experiments, 0 wall-time minutes, and 0 compute-bound experiments, so no
+slowest-experiment, GPU-idle bottleneck, or DualGPURunner finding is supported.
+
+Validation for this documentation-only task: JSON parsing, focused artifact
+field checks, operator-curated docs lint, and whitespace checks passed.
+Reconciliation remains blocked by stale architecture metadata and repo-wide
+spec-traceability failures outside the touched files; no E2E model-training or
+hardware check applies.
 
 ## Session 2026-07-03 — Exp 5197 GAP-4 Real-Checkpoint Test Fix
 
