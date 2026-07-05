@@ -1,0 +1,322 @@
+{
+  "approximation_slack": {
+    "principle": "Numeric threshold slack after the PWA/MILP upper-bound and error accounting.",
+    "value": 0.016600000000000004
+  },
+  "blocked_reason": null,
+  "certificate_scaled": {
+    "principle": "True only when the source V481 certificate is ready, the V482 true property certifies, the false property rejects, and dynamic spot checks pass.",
+    "value": true
+  },
+  "claim_limits": [
+    "bounded deterministic three-component convex fixture only",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "duration_s": 0.018747,
+  "dynamic_spot_check_passed": {
+    "principle": "True only when sampled points stay inside the true property and expose a false-property witness.",
+    "value": true
+  },
+  "experiment_id": "exp5277-kan-milp-certificate-scale-v482",
+  "false_property_rejected": {
+    "principle": "True only when the nearby expected-false threshold is rejected by a deterministic witness.",
+    "value": true
+  },
+  "field_principles": {
+    "approximation_slack": "Numeric threshold slack after the PWA/MILP upper-bound and error accounting.",
+    "certificate_scaled": "True only when the source V481 certificate is ready, the V482 true property certifies, the false property rejects, and dynamic spot checks pass.",
+    "dynamic_spot_check_passed": "True only when sampled points stay inside the true property and expose a false-property witness.",
+    "false_property_rejected": "True only when the nearby expected-false threshold is rejected by a deterministic witness.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether the scaled certificate is positive, null, blocked, or too loose.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm.",
+    "piece_count": "Integer count of PWA envelope pieces submitted to the solver.",
+    "solve_time_s": "Measured local deterministic solver time in seconds."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether the scaled certificate is positive, null, blocked, or too loose.",
+    "value": "complete: scaled certificate positive for a bounded three-component PWA/MILP fixture with explicit approximation slack and nearby false-property rejection"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "piece_count": {
+    "principle": "Integer count of PWA envelope pieces submitted to the solver.",
+    "value": 6
+  },
+  "property_results": [
+    {
+      "actual_witness_value": null,
+      "certificate_slack": 0.016600000000000004,
+      "certified": true,
+      "certified_upper_bound": 0.4984,
+      "counterexample_inputs": null,
+      "property_id": "v482_true_multi_component_upper_property",
+      "rejected": false,
+      "threshold": 0.515
+    },
+    {
+      "actual_witness_value": 0.49839999999999995,
+      "certificate_slack": -0.00040000000000001146,
+      "certified": false,
+      "certified_upper_bound": 0.4984,
+      "counterexample_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ],
+      "property_id": "v482_nearby_false_multi_component_upper_property",
+      "rejected": true,
+      "threshold": 0.498
+    }
+  ],
+  "pwa_abstraction": {
+    "binary_variable_count": 6,
+    "component_count": 3,
+    "components": [
+      {
+        "component_id": "v482_component_0",
+        "interval": [
+          -0.4,
+          0.6
+        ],
+        "polynomial": {
+          "constant": 0.08,
+          "linear": 0.18,
+          "quadratic": 0.1
+        },
+        "variable_index": 0
+      },
+      {
+        "component_id": "v482_component_1",
+        "interval": [
+          -0.4,
+          0.6
+        ],
+        "polynomial": {
+          "constant": 0.05,
+          "linear": 0.14,
+          "quadratic": 0.08
+        },
+        "variable_index": 1
+      },
+      {
+        "component_id": "v482_component_2",
+        "interval": [
+          -0.4,
+          0.6
+        ],
+        "polynomial": {
+          "constant": 0.03,
+          "linear": 0.1,
+          "quadratic": 0.06
+        },
+        "variable_index": 2
+      }
+    ],
+    "global_error_bound": 0.015,
+    "input_box": [
+      [
+        -0.4,
+        0.6
+      ],
+      [
+        -0.4,
+        0.6
+      ],
+      [
+        -0.4,
+        0.6
+      ]
+    ],
+    "local_error_bound_max": 0.00625,
+    "local_error_bounds": [
+      0.00625,
+      0.005,
+      0.00375
+    ],
+    "method": "convex_quadratic_chord_upper_envelopes_with_z3_milp_selectors",
+    "piece_count": 6,
+    "pieces_by_component": [
+      [
+        {
+          "component_id": "v482_component_0",
+          "intercept": 0.084,
+          "interval": [
+            -0.4,
+            0.09999999999999998
+          ],
+          "local_error_bound": 0.00625,
+          "piece_index": 0,
+          "slope": 0.15,
+          "variable_index": 0
+        },
+        {
+          "component_id": "v482_component_0",
+          "intercept": 0.07400000000000001,
+          "interval": [
+            0.09999999999999998,
+            0.6
+          ],
+          "local_error_bound": 0.00625,
+          "piece_index": 1,
+          "slope": 0.24999999999999994,
+          "variable_index": 0
+        }
+      ],
+      [
+        {
+          "component_id": "v482_component_1",
+          "intercept": 0.0532,
+          "interval": [
+            -0.4,
+            0.09999999999999998
+          ],
+          "local_error_bound": 0.005,
+          "piece_index": 0,
+          "slope": 0.116,
+          "variable_index": 1
+        },
+        {
+          "component_id": "v482_component_1",
+          "intercept": 0.045200000000000004,
+          "interval": [
+            0.09999999999999998,
+            0.6
+          ],
+          "local_error_bound": 0.005,
+          "piece_index": 1,
+          "slope": 0.196,
+          "variable_index": 1
+        }
+      ],
+      [
+        {
+          "component_id": "v482_component_2",
+          "intercept": 0.0324,
+          "interval": [
+            -0.4,
+            0.09999999999999998
+          ],
+          "local_error_bound": 0.00375,
+          "piece_index": 0,
+          "slope": 0.08200000000000002,
+          "variable_index": 2
+        },
+        {
+          "component_id": "v482_component_2",
+          "intercept": 0.0264,
+          "interval": [
+            0.09999999999999998,
+            0.6
+          ],
+          "local_error_bound": 0.00375,
+          "piece_index": 1,
+          "slope": 0.142,
+          "variable_index": 2
+        }
+      ]
+    ]
+  },
+  "random_seed": 5277,
+  "reproducibility_checksum": "475057331ad6adcda9b93fe3cd6ab58c3ecd5f939d42b10e03524d6a3dfc1171",
+  "run_date": "20260705",
+  "schema": "carnot.experiment_5277.kan_milp_certificate_scale.v482",
+  "slack_accounting": {
+    "certified_upper_bound": 0.4984,
+    "false_property_slack": -0.00040000000000001146,
+    "false_property_threshold": 0.498,
+    "global_error_bound": 0.015,
+    "local_error_bound_max": 0.00625,
+    "local_error_bounds": [
+      0.00625,
+      0.005,
+      0.00375
+    ],
+    "true_property_slack": 0.016600000000000004,
+    "true_property_threshold": 0.515
+  },
+  "solve_time_s": {
+    "principle": "Measured local deterministic solver time in seconds.",
+    "value": 0.004908
+  },
+  "solver_result": {
+    "binary_variable_count": 6,
+    "blocked_reason": null,
+    "certified_upper_bound": 0.4984,
+    "constraint_count": 46,
+    "piece_count": 6,
+    "property_results": [
+      {
+        "actual_witness_value": null,
+        "certificate_slack": 0.016600000000000004,
+        "certified": true,
+        "certified_upper_bound": 0.4984,
+        "counterexample_inputs": null,
+        "property_id": "v482_true_multi_component_upper_property",
+        "rejected": false,
+        "threshold": 0.515
+      },
+      {
+        "actual_witness_value": 0.49839999999999995,
+        "certificate_slack": -0.00040000000000001146,
+        "certified": false,
+        "certified_upper_bound": 0.4984,
+        "counterexample_inputs": [
+          0.6,
+          0.6,
+          0.6
+        ],
+        "property_id": "v482_nearby_false_multi_component_upper_property",
+        "rejected": true,
+        "threshold": 0.498
+      }
+    ],
+    "selected_pieces": [
+      1,
+      1,
+      1
+    ],
+    "solve_time_s": 0.004908,
+    "solver_available": true,
+    "solver_name": "z3",
+    "solver_status": "optimal",
+    "witness_inputs": [
+      0.6,
+      0.6,
+      0.6
+    ]
+  },
+  "source_artifacts": [
+    "results/experiment_5265_kan_certificate_explanation_refinement_v481.json"
+  ],
+  "source_v481": {
+    "artifact_path": "results/experiment_5265_kan_certificate_explanation_refinement_v481.json",
+    "false_property_rejected": true,
+    "ready": true,
+    "source_verdict": "complete: refinement added certificate value by identifying variable 0 as the bound driver and halving the envelope-gap bound; same-property output slack is unchanged because the endpoint maximum was already tight"
+  },
+  "spec_refs": [
+    "REQ-KAN-5277",
+    "SCENARIO-KAN-5277"
+  ],
+  "spot_check": {
+    "envelope_violation_count": 0,
+    "false_property_witness_seen": true,
+    "max_actual_value": 0.49839999999999995,
+    "max_observed_envelope_gap": 0.015000000000000013,
+    "max_upper_envelope_value": 0.49839999999999995,
+    "passed": true,
+    "sample_count": 125,
+    "true_threshold_violation_count": 0
+  },
+  "tests_run": [
+    {
+      "command": "artifact generation before final verification",
+      "outcome": "generated"
+    }
+  ]
+}

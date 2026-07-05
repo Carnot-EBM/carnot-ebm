@@ -849,6 +849,51 @@ preserves true-property certification, rejects a near-threshold false property,
 reports before/after slack and envelope-gap numbers, and writes an explanation
 artifact path without claiming broad KAN verification.
 
+## REQ-KAN-5277: V482 KAN PWA/MILP Certificate Scale And False-Property Rejection
+
+The KAN verification tier SHALL extend the bounded certificate path to one
+small multi-component PWA/MILP property without claiming broad KAN
+verification. The experiment MUST build a deterministic CPU-only fixture with
+multiple univariate convex components, replace each component with explicit
+piecewise-affine upper envelopes, and submit the bounded property to a local
+MILP-compatible solver. The certificate MUST record the total PWA piece count,
+per-component local error bounds, the propagated global error bound, solve
+time, approximation slack, and property-level witness data.
+
+The experiment MUST check one expected-true property and one nearby
+expected-false property over the same certified region. The expected-true
+property MUST be accepted only when the PWA/MILP certified upper bound plus the
+declared approximation accounting stays within the threshold. The
+expected-false property MUST be rejected by a deterministic witness rather than
+counted as a successful certificate. The experiment MUST also run a deterministic
+dynamic spot-check or sampled falsification pass over the certified region to
+catch implementation mistakes before writing the terminal artifact.
+
+The deliverable MUST be written to
+`results/experiment_5277_kan_milp_certificate_scale_v482.json` with the
+required fields `honest_verdict`, `inference_substrate`,
+`certificate_scaled`, `false_property_rejected`, `approximation_slack`,
+`piece_count`, `solve_time_s`, `dynamic_spot_check_passed`, and `tests_run`.
+Each required scalar field except `tests_run` MUST be principle-wrapped with
+`value` and `principle`. `inference_substrate.value` MUST be
+`offline_deterministic_certificate_no_llm`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_` and state whether the scaled certificate is
+positive, null, blocked, or too loose. The artifact MUST NOT claim trained
+network soundness, hardware execution, hardware speedup, live LLM inference, or
+general KAN verifier readiness.
+
+### SCENARIO-KAN-5277: Multi-Component PWA/MILP Certificate Reports Slack And Rejects False Bound
+
+Given the committed Exp 5265 explanation/refinement artifact and a deterministic
+three-component bounded convex fixture,
+When Exp 5277 builds piecewise-affine upper envelopes, solves the expected-true
+and expected-false bounded properties through the local MILP-compatible path,
+and runs deterministic dynamic spot checks over the certified region,
+Then the artifact reports positive certificate scaling, false-property
+rejection, numeric approximation slack, integer piece count, solve time,
+local/global error bounds, dynamic spot-check success, and required tests
+without claiming broad KAN verification.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -891,6 +936,7 @@ artifact path without claiming broad KAN verification.
 | REQ-KAN-5242 | Planned | Exp 5242 target: V479 bounded abstraction stress test that reproduces Exp 5230, adds limited segment/domain/false-property pressure, and reports the achieved certificate boundary without hardware or broad KAN claims. |
 | REQ-KAN-5254 | Planned | Exp 5254 target: V480 bounded convex-envelope certificate prototype compared against Exp 5242, with true-property certification, false-property rejection, and no hardware or broad KAN claims. |
 | REQ-KAN-5265 | Planned | Exp 5265 target: V481 explanation/refinement layer over the V480 bounded convex-envelope certificate, with bound-contributor reporting, envelope-gap tightening, before/after slack, and near-threshold false-property rejection. |
+| REQ-KAN-5277 | Planned | Exp 5277 target: V482 bounded multi-component PWA/MILP certificate scale check, with explicit approximation slack, solve time, false-property rejection, and dynamic spot-check evidence. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
