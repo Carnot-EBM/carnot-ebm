@@ -10342,3 +10342,4 @@ web search: |
 | 2026-07-05 14:11 UTC | PHASE 0 transition -- archive .481 truth and prepa | OK | 87 passed, 1 warning in 12.31s |
 | 2026-07-05 14:26 UTC | PHASE 0 SOTA/source refresh -- V482 execution delt | OK | 106 passed, 1 warning in 9.37s |
 | 2026-07-05 14:51 UTC | PHASE 0 runtime receipts -- SOTA GGUF internal tel | OK | 97 passed, 1 warning in 9.60s |
+| 2026-07-05 15:20 UTC | PHASE 1 gated on exp5271 telemetry_harness_ready - | OK | 90 passed, 1 warning in 9.50s |
