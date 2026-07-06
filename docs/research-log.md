@@ -5745,3 +5745,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a milestone whose authorized timing sources found no experiment commits after activation
 - key result: honest negative -- no data available this milestone; the supplied timing block gives 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks, so the idle GPU state cannot be treated as a compute-bound bottleneck
 - acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
+
+### Milestone 2026.07.483
+- exp_range: no data available this milestone
+- theme: timing-integrity mismatch in operational retrospective assembly
+- key result: no data available this milestone; both authorized timing paths found 0 experiment commits while ops/changelog.md contains milestone references, so no experiment IDs, durations, compute-bound ranking, GPU-efficiency finding, or DualGPURunner assessment can be inferred
+- acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
