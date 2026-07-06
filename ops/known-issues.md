@@ -2223,6 +2223,24 @@ directly") is the intended path -- skipping straight from Stage 1 to a live depl
 Stages 2-4 would repeat the exact "weights don't transfer" mistake this project has already learned
 from once.
 
+### LITERATURE: AutoMem, memory as a trainable skill 2026-07-05 (outer-loop, operator-requested paper review)
+
+Full writeup: `docs/research-notes/automem-memory-as-cognitive-skill-2026-07-05.md`. arXiv:2607.01224
+(Stanford). 2x-4x progression gains from optimizing memory alone (task-action weights untouched) on
+long-horizon games, via a two-loop architecture: a meta-LLM revises the memory scaffold at the
+trajectory level (gated on measured improvement), then a separately-trained, LoRA-finetuned "memory
+specialist" is trained on the agent's own good memory decisions while the task model stays frozen.
+Concrete transferable lesson: an unbounded append-only memory log silently accumulating duplicates
+was fixed with a coordinate-keyed upsert operation, cutting per-step memory growth 95%.
+
+**Checked directly, not assumed**: this is a DIFFERENT concept from this project's own "Continuous
+Self-Learning" / verifier-memory track (`python/carnot/pipeline/verifier_memory.py`), which holds
+controller-artifact promotion/rollback decisions, not episodic agent memory. AutoMem's ideas are most
+relevant to the ARC-AGI-3 live agent's own within-game memory (what it records about a hidden game's
+discovered mechanics as it plays) -- worth auditing that layer for (1) whether memory-update and
+action-decision paths are cleanly separated, and (2) the unbounded-append anti-pattern specifically --
+but this is a literature note, not a build task yet.
+
 ### BUG + OPPORTUNITY: human replay corpus staging drops all win signal 2026-07-04 (outer-loop, "don't we have the human generated game event solutions handy?")
 
 **FIXED 2026-07-05** (outer-loop, operator authorized starting ARC-specific work directly). Root
