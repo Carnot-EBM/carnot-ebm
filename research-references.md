@@ -27523,3 +27523,19 @@ public pages. The items below are promoted into `.485` planning constraints or e
 - KAN certificate work should move from dynamic spot-check success toward optimal abstraction budgets.
 
 <!-- V485-PLANNER-REFRESH-2026-07-06-END -->
+
+
+### V485 Execution Refresh - 2026-07-06
+
+Execution-time sweep after the `.485` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, Logical Intelligence public pages, and local duplicate history. The findings below were absent from the V485 planner block and nearby reference history.
+
+### New actionable deltas
+- **Self-GC: Self-Governing Context for Long-Horizon LLM Agents** (https://arxiv.org/abs/2607.00692): Self-GC treats user turns, tool spans, and skill state as indexed context objects; a side-channel planner proposes fold, mask, and prune actions; and the harness enforces recoverable sidecars, safe commit boundaries, and cache-aware commits. Actionability: For V485 continuous self-learning work, evaluate context-object lifecycle decisions separately from final answer quality. Require stable object IDs, recoverable sidecars, and explicit safe-commit boundaries before memory or skill state is promoted or pruned.
+- **A-TMA: Decoupling State-Aware Memory Failures in Long-Term Agent Memory** (https://arxiv.org/abs/2607.01935): A-TMA isolates ghost-memory failures where old, current, and transition facts coexist in the bank, mix during retrieval, and mislead answer-time resolution. It evaluates bank maintenance, retrieval, and answer failures separately instead of relying only on final QA accuracy. Actionability: For the V485 transition-level memory verifier, add current, historical, and transition labels to conflict-heavy fixtures. Report bank, retrieval, and answer-time failure rates separately so a clean final answer cannot hide stale or contradictory memory state.
+
+### Execution impact
+- **Plan impact:** No executable `.485` task edit is required. The deltas sharpen transition-level memory verification, context-object lifecycle testing, and conflict-heavy stale-memory fixtures.
+- **Retired scope:** No retired scope was reopened. External generated-text scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, and CPU-only GGUF offload reruns remain closed.
+- **Secondary-source status:** Semantic Scholar EBT/ARM-EBM counts matched the prior live check; OpenReview, HuggingFace Papers, Extropic, GitHub, and Logical Intelligence did not add a separate execution-changing source.
+
+<!-- V485-EXECUTION-REFRESH-2026-07-06-END -->
