@@ -2223,6 +2223,30 @@ directly") is the intended path -- skipping straight from Stage 1 to a live depl
 Stages 2-4 would repeat the exact "weights don't transfer" mistake this project has already learned
 from once.
 
+### ROOT CAUSE FOUND: native llama-cli hang that .484's exp5297 and .485's exp5309 could not resolve 2026-07-06 (outer-loop, following up on last night's GPU fix)
+
+Following up on the llama-cpp-python fix (below): `.484`'s `exp5297` and `.485`'s `exp5309` (two
+independent conductor tasks, a full milestone apart) both hit the same hang trying to verify GPU
+offload through a *different* path -- the native `llama.cpp-master` CLI binary
+(`~/.cache/llama.cpp-master/build/bin/llama-cli`, a separate, independent build used as a
+cross-check against the Python bindings). Neither task found the fix; both logged
+`blocked_native_cli_timeout` / `generation_incomplete` after burning real wall-clock (549s and
+206s respectively) plus multiple gate-block retries.
+
+**Root cause, confirmed directly**: this build (b9606) defaults to an interactive chat REPL. After
+answering a prompt, it loops an empty `> ` prompt forever rather than exiting -- confirmed by
+running it myself and capturing 41+ million lines of blank prompts even with stdin closed via
+`< /dev/null`. `exp5309`'s own command shows it already tried `--no-conversation` (the flag that
+looks like the obvious fix) -- **that alone is insufficient.** The flag that actually works is
+`-st` / `--single-turn`, which I verified directly: clean exit code 0, `Exiting...`, and real
+GPU-accelerated generation (~64 tok/s on `gemma-4-31B-it`).
+
+Documented in CLAUDE.md's Build Environment section (right next to the llama-cpp-python fix, since
+they're the same investigation thread) so the conductor's next attempt at this gate doesn't have to
+rediscover it a third time. Did not directly edit `exp5297`/`exp5309`'s own experiment scripts --
+those are the conductor's own active research artifacts; this is a documentation fix for whoever
+(or whatever task) picks up the gate next.
+
 ### FIXED (MAJOR): llama-cpp-python had no GPU offload this whole time 2026-07-06 (outer-loop, investigating exp5284's persistent gate block)
 
 Dug into why `exp5284` (SOTA runtime offload receipt repair) blocked two downstream `.483` tasks
