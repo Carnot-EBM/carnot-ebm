@@ -5775,3 +5775,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a mixed synthesis and compute-bound milestone
 - key result: the milestone completed 28 experiments in 266.2 minutes, with Exp 5309 as the listed 60-minute compute-bound slow path; the GPU state showed both RTX 3090s at 0% utilization, and no supplied block identifies a 2+ parallel-model DualGPURunner miss
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.485
+- exp_range: exp5309-exp5320
+- theme: compute-bound timeout accounting separated from synthesis-only throughput and GPU-runner claims
+- key result: the locked artifact records 28 experiments in 266.2 minutes with 4 compute-bound tasks; the visible compute-bound slow path took 60.2 minutes, no GPU-idle bottleneck is recorded, and no supplied block identifies a 2+ parallel-model DualGPURunner miss
+- acceptance: 4/4 operational questions answered
