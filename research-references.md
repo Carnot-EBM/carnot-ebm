@@ -1,3 +1,67 @@
+## V484 Research Update - 2026-07-06
+
+Planning sweep for milestone `2026.07.484` after `.483` completed. Sources checked: arXiv primary pages,
+OpenReview search/browser results where accessible, Hugging Face Papers, Semantic Scholar-style EBT/ARM-EBM
+citation trails via public pages, GitHub repository discovery, official GGUF/runtime docs, Extropic writing,
+Logical Intelligence public posts, and the existing Carnot reference history. Duplicates already captured in
+earlier sections, including Distributional EBMs, ConsFormer-LNS, AS2, EBT spectral control, million-p-bit
+hardware, and Scaling Up Thermodynamic AI Models, are not re-added below.
+
+### Runtime substrate and SOTA GGUF execution
+- **llama-cpp-python CUDA build requirements** - official project docs,
+  https://github.com/abetlen/llama-cpp-python. CUDA support requires a CUDA-enabled build or CUDA wheel
+  (`GGML_CUDA=on` or the CUDA wheel index); `n_gpu_layers` is only meaningful when the installed binary
+  actually has a GPU backend. Carnot hook: `.484` must not repeat Exp5284's CPU-only llama-cpp-python path.
+  The next runtime task needs a changed substrate, such as native llama.cpp CUDA CLI/server or a fresh
+  CUDA-enabled wheel/container, plus GPU memory deltas and offload logs.
+- **vLLM GGUF support status** - official vLLM docs,
+  https://docs.vllm.ai/en/stable/features/quantization/gguf/. GGUF support is marked experimental,
+  under-optimized, and now routed through the out-of-tree `vllm-gguf-plugin`; docs recommend explicit base
+  tokenizers because GGUF tokenizer conversion can be unstable. Carnot hook: vLLM can be an alternate
+  diagnostic backend for GGUF receipts, but any SOTA-quality claim must record plugin version, tokenizer,
+  model file, and a local generation receipt.
+- **Hugging Face GGUF docs** - https://huggingface.co/docs/hub/en/gguf. The Hub describes GGUF as a
+  metadata-rich binary format designed for GGML/llama.cpp-style executors. Carnot hook: keep model loading
+  path local-GGUF-first and never use `AutoTokenizer.from_pretrained` on a GGUF repository.
+
+### Memory and continuous self-learning
+- **Evaluating Memory in LLM Agents via Incremental Multi-Turn Interactions / MemoryAgentBench** -
+  arXiv:2507.05257, revised 2026-06-28, https://arxiv.org/abs/2507.05257; Hugging Face page
+  https://huggingface.co/papers/2507.05257; code https://github.com/HUST-AI-HYZ/MemoryAgentBench. The
+  benchmark frames memory-agent quality around accurate retrieval, test-time learning, long-range
+  understanding, and conflict resolution in incremental multi-turn interactions. Carnot hook: `.484`
+  self-learning should move beyond fixed verifier dosing and measure held-out policy selection, stale
+  conflict handling, selective forgetting/rollback, and unsafe false accepts.
+
+### Structured generation and verifier safety
+- **When Grammar Guides the Attack: Uncovering Control-Plane Vulnerabilities in LLMs with Structured
+  Output** - arXiv:2503.24191, revised 2026-05-21, https://arxiv.org/abs/2503.24191. Shows that structured
+  output constraints can create a control-plane attack surface where grammar/schema rules steer harmful
+  semantics. Carnot hook: any `.484` trace DSL, grammar-constrained extractor, or structured-output SOTA
+  pilot must include safety-negative controls and separate parse validity from semantic safety.
+
+### Secondary-source status
+- **OpenReview/Hugging Face Papers:** EBT, NRGPT, and memory pages reinforce the current architecture watch,
+  but no accessible page changes the immediate `.484` execution order.
+- **Semantic Scholar citation trails:** public search links for EBT `2507.02092` and ARM-EBM `2512.15605`
+  did not provide a reliable fresh citation-count delta in this planning pass. Treat follow-on papers as
+  watch metadata unless they provide an executable Carnot-local method.
+- **Extropic and Logical Intelligence:** public TSU/XTR-0 and Kona/Aleph posts remain strategic evidence for
+  sampler-first and verifier-first architecture. They still do not provide local SDKs, reproducible Kona
+  internals, or grounds for a Carnot hardware speedup claim.
+
+### Planning impact
+- The first SOTA task in `.484` must be a **changed-runtime-substrate** gate, not another llama-cpp-python
+  CPU-only offload rerun.
+- Self-learning should become adaptive and held-out: select memory/verifier-dose policy under conflict,
+  stale evidence, and rollback checks rather than merely replaying the fixed `.483` governed-memory dose.
+- Solver guidance should add a class gate after Exp5292's misleading-assumption harm; aggregate positives
+  are not enough.
+- Structured trace/DSL work must carry semantic safety controls because structured output can be an attack
+  surface.
+
+<!-- V484-RESEARCH-UPDATE-2026-07-06-END -->
+
 ## 2026-06-30 -- .465 planner synthesis -- repair Phase D execution with tool-first verification, delayed constrained decoding, and audited self-learning
 
 Added by the `.465` planning sweep (Codex GPT-5, 2026-06-30) after reading the completed `.464`

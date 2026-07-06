@@ -1,12 +1,14 @@
-# Research Roadmap vNEXT: Milestone 2026.07.483
+# Research Roadmap vNEXT: Milestone 2026.07.484
 
-Created: 2026-07-05
-Milestone: 2026.07.483
+Created: 2026-07-06
+Milestone: 2026.07.484
 Status: proposed
-Milestone title: Claim-Level Verification, Memory Attribution, and Solver-Hardware Guidance
+Milestone title: Changed SOTA Runtime, Adaptive Memory, and Solver-Gated Energy Stability
 
 ## Inputs Read
 
+- `CLAUDE.md`
+- `CODEX.md`
 - `research-program.md`
 - `_bmad/prd.md`
 - `_bmad/architecture.md`
@@ -18,218 +20,209 @@ Milestone title: Claim-Level Verification, Memory Attribution, and Solver-Hardwa
 - `ops/conductor-log.md`
 - `research-references.md`
 - `research-hardware-wishlist.md`
-- `CLAUDE.md`
-- `CODEX.md`
 - `scripts/experiment_template.py`
 - `ops/exclusion_manifest.yaml`
 
-## What 2026.07.482 Proved
+## What 2026.07.483 Proved
 
-Milestone `.482` completed the governed-memory and certificate tracks while exposing the next verifier and
-hardware bottlenecks:
+Milestone `.483` separated usable deterministic infrastructure from blocked live SOTA execution:
 
-- SOTA GGUF telemetry receipts are available for the mandated local model set. The milestone proved runtime
-  and telemetry harness readiness, not verifier quality.
-- The internal/logit hallucination probe was harmful relative to the lexical baseline. Its artifact showed a
-  negative delta, so `.483` must not rerun the same internal/logit quality path without a changed mechanism.
-- The deterministic solver fixture was rebuilt successfully with valid baselines and counterexample coverage.
-- SOTA solver-grounded extraction stayed blocked because local GGUF GPU/offload preconditions failed during
-  the retry. The next LLM extraction attempt needs a separate runtime repair gate.
-- Governed decision-history memory was positive: provenance, scope, stale-conflict handling, rollback, and
-  unsafe-action rejection all passed on the bounded fixture.
-- Memory-assisted verifier dosing was positive: it preserved always-full verifier quality, avoided most full
-  verifier calls on the replay fixture, and introduced no unsafe false accepts.
-- KAN PWA/MILP certificates scaled positively with false-property rejection intact.
-- The solver-to-factor-graph boundary is usable only at tiny scale. No hardware acceleration claim exists.
-- Hardware continuity remains blocked: KV260 and PolarFire were unreachable, GateMate remained physical/JTAG
-  blocked, and no speedup claim was made.
-- Evidence normalization and the capstone closed cleanly, with honest positives, a harmful internal-verifier
-  result, one quarantined/blocked SOTA extraction path, and one hardware reachability block.
+- The mandated SOTA GGUF path remains blocked for headline work. Exp5284 resolved model files and smoke paths
+  but produced no GPU-offload evidence, so Exp5286 and Exp5288 were correctly gate-skipped.
+- CheckRLM-style knowledge-thought coherence is now a usable deterministic fixture. Exp5285 produced seven
+  labeled cases, caught unsafe false accepts, and separated lexical baseline weakness from semantic checking.
+- VeryTrace-style compilable trace verification is now a usable deterministic fixture. Exp5287 built trace DSL
+  cases with dependency links, executable checks, malformed controls, semantic-error controls, and repair labels.
+- Continuous self-learning advanced on bounded fixtures. Exp5289 attributed memory-stage failures across all
+  seven cases with unsafe propagation zero; Exp5290 preserved always-full quality while avoiding four of seven
+  full claim/coherence checks.
+- The low-order KAN/Ising curriculum was a clean null. Exp5291 certified every stage, but low-order ordering did
+  not improve success over shuffled ordering.
+- p-bit/CDCL guidance was mixed. Exp5292 saved aggregate conflicts on CPU simulation while harming the
+  misleading-assumption class; correctness was preserved through solver fallback, and no hardware speedup was
+  claimed.
+- Hardware continuity stayed reachability-only. KV260 SSH was blocked, PolarFire provided status-only SSH
+  reachability, GateMate remained physical/JTAG blocked, and no speedup claim was made.
+- The `.483` operational retrospective had a timing-accounting mismatch. Planning should use artifacts,
+  changelog, and conductor logs for research truth, not the locked zero-duration timing fields.
 
 ## Three Biggest Gaps to the PRD Vision
 
-1. **Oracle-distinct verification:** Carnot still lacks a robust verifier signal that beats cheap lexical or
-   format baselines. The next milestone moves from raw internal/logit probes to claim-level
-   knowledge-thought coherence and compilable trace verification.
+1. **Live local SOTA reasoning is still unavailable.** The PRD requires local-first open-weight verifier loops,
+   but `.483` proved the current llama-cpp-python path is CPU-only for the mandated models. `.484` must change
+   runtime substrate before asking for SOTA quality.
 
-2. **Continuous self-learning attribution:** Governed memory can safely preserve decisions and reduce verifier
-   calls, but it does not yet explain which memory operation failed or improved the loop. `.483` adds
-   operation-stage attribution across extraction, update, routing, maintenance, and use.
+2. **Self-learning is useful but still fixed-policy.** Governed memory can reduce verifier calls safely on a
+   tiny fixture, yet it does not adapt verifier-dose policy under held-out conflict, stale evidence, selective
+   forgetting, or long-range memory pressure.
 
-3. **Solver/certificate/hardware bridge:** Carnot has KAN certificates and a tiny factor-graph boundary, but
-   not a solver-authoritative sampler-guidance result or reachable board evidence. `.483` adds CPU p-bit/CDCL
-   guidance and keeps hardware continuity honest.
+3. **Solver/energy components lack class gates and stability receipts.** LNS-style repair, p-bit/CDCL guidance,
+   KAN abstraction, and EBT inner-loop control are promising, but `.483` showed distribution sensitivity and a
+   null curriculum. The next milestone must add instance-class gates, spectral step controls, and dynamic
+   certificate spot-checks before hardware or quality claims.
 
-## Research Incorporated for 2026.07.483
+## Research Incorporated for 2026.07.484
 
-The `V483 Research Update - 2026-07-05` section in `research-references.md` drives the design:
+The `V484 Research Update - 2026-07-06` section in `research-references.md` drives this plan:
 
-- CheckRLM motivates claim extraction, knowledge checking, and minimal correction as a safer next verifier
-  target than the failed internal/logit signal.
-- VeryTrace motivates converting reasoning chains into a tiny compilable DSL with dependency links,
-  executable expressions, and localized repair labels.
-- Constrained-decoding safety and reliability work warns that syntactic validity is not semantic safety.
-  Schema compliance must be measured separately from correctness and false accepts.
-- HaluMem, Agent-Native Memory, and MemTrace motivate operation-level memory failure attribution rather than
-  final-decision-only memory metrics.
-- G-RRM motivates solver-authoritative neural guidance: hints are allowed only when the symbolic solver can
-  overwrite and recover from bad hints.
-- Probabilistic-bit guided CDCL and p-bit simulated annealing papers motivate a CPU p-bit/CDCL guidance
-  benchmark before any hardware acceleration claim.
-- EBM theory on distributional simplicity bias motivates a low-order-factor certificate curriculum before
-  higher-order factor claims.
-- Extropic TSU and Logical Intelligence Kona/Aleph material remains architecture context only. No execution,
-  compatibility, or speedup claim is made without local receipts.
+- Official `llama-cpp-python`, vLLM GGUF, and Hugging Face GGUF docs make the runtime conclusion explicit:
+  repeat CPU-only llama-cpp-python offload is retired; the next SOTA task must use a changed substrate or block.
+- MemoryAgentBench motivates adaptive self-learning evaluation across accurate retrieval, test-time learning,
+  long-range understanding, and conflict resolution rather than final decision quality only.
+- The structured-output control-plane attack paper requires safety-negative controls for any trace DSL,
+  grammar-constrained extractor, or structured SOTA output.
+- V483 execution refresh items carry forward: ConsFormer-LNS motivates destroy/repair telemetry, AS2 motivates
+  declarative constraint-group metadata with symbolic validation, and the EBT spectral-control artifact
+  motivates lambda-max and step-size logging before inner energy descent is trusted.
+
+Prior references remain active but are not re-promoted as new findings: Distributional EBMs, CheckRLM,
+VeryTrace, HaluMem, MemTrace, G-RRM, p-bit/CDCL, Extropic TSU, Logical Intelligence Kona/Aleph, and KAN
+PWA/MILP verification.
 
 ## Architecture Target
 
 ```text
-                         research-references.md V483 update
+                         V484 source update + .483 closeout
                                       |
                                       v
-                         exp5282 archive .482 / activate .483
+                         exp5295 archive .483 / activate .484
                                       |
                                       v
-                         exp5283 SOTA/source delta refresh
+                         exp5296 bounded source delta refresh
                                       |
                                       v
-                         exp5284 SOTA runtime/offload repair
-                              |                         |
-                              |                         v
-                              |       exp5286 claim-level coherence SOTA pilot
-                              |                ^        |
-                              |                |        v
-                              |       exp5290 memory-assisted coherence dosing
-                              |                ^
-                              |                |
-                 exp5285 deterministic coherence fixture
+                         exp5297 changed SOTA runtime substrate gate
+                                      |
+                         [gate: changed_runtime_sota_ready]
+                                      |
+                                      v
+                         exp5298 SOTA coherence/trace smoke
 
-                 exp5287 compilable trace DSL fixture
-                              |
-                              v
-                 exp5288 SOTA trace DSL extraction retry
+       exp5285 coherence fixture -----------------------------^
+       exp5287 trace DSL fixture ------------------------------^
 
-                 exp5289 memory operation attribution
-                              |
-                              v
-                 exp5290 memory-assisted coherence dosing
+       exp5299 constraint-LNS solver repair fixture
+                    |
+                    v
+       exp5300 p-bit/CDCL instance-class gate
 
-                 exp5291 low-order factor certificate curriculum
-                              |
-                              v
-                 exp5292 p-bit/CDCL solver guidance
-                              |
-                              v
-                 exp5293 hardware continuity reachability
+       exp5301 EBT spectral step-control diagnostic
 
-            all completed, gated-skipped, harmful, null, or blocked -> exp5294 capstone
+       exp5290 fixed memory dose + MemoryAgentBench references
+                    |
+                    v
+       exp5302 adaptive self-learning memory policy
+                    |
+                    v
+       exp5303 stale/conflict/selective-forgetting memory stress
+
+       exp5291 KAN null -> exp5304 dynamic abstraction spot-check
+       exp5293 hardware block -> exp5305 reachability continuity
+
+          all completed, gated-skipped, null, mixed, or blocked -> exp5306 capstone
 ```
 
 ## Phase Plan
 
-### Phase 0 - Transition, Source Delta, and Runtime Preconditions
+### Phase 0 - Transition, Source Delta, and Changed Runtime Gate
 
-**Goal:** close `.482` honestly, keep the reference set current, and isolate whether local SOTA GGUF
-generation/offload is ready before any LLM-dependent quality task runs.
+**Goal:** close `.483` truthfully, keep references current, and avoid another doomed SOTA rerun through the
+retired CPU-only path.
 
-- `exp5282-archive-482-activate-483`: archive the `.482` positive/null/harmful/blocked split and confirm
-  `.483` is pre-staged without activating it.
-- `exp5283-sota-source-delta-v483`: run the execution-time literature/source delta and append only genuinely
-  new actionable items to `research-references.md`.
-- `exp5284-sota-runtime-offload-receipt-repair-v483`: repair or honestly block the local SOTA GGUF generation
-  path that blocked Exp5274, producing the `sota_offload_ready` gate.
+- `exp5295-archive-483-activate-484`: archive `.483` into durable records and prepare `.484` without
+  overwriting `research-roadmap.yaml`.
+- `exp5296-sota-source-delta-v484`: perform a bounded execution-time source refresh and append only genuinely
+  new actionable items.
+- `exp5297-changed-runtime-sota-substrate-gate-v484`: try a changed SOTA GGUF runtime substrate, such as
+  native llama.cpp CUDA CLI/server, a fresh CUDA-enabled wheel/container, or a clearly documented alternate
+  GGUF backend. Emit `changed_runtime_sota_ready`.
+- `exp5298-sota-coherence-trace-smoke-gated-v484`: gated on Exp5297; run a tiny mandatory-model smoke over the
+  `.483` coherence and trace fixtures, with no headline claim if runtime is still blocked.
 
-### Phase 1 - Claim-Level and Trace-Level Verification
+### Phase 1 - Solver-Gated Repair and Energy Stability
 
-**Goal:** replace the harmful internal/logit route with verifier signals grounded in claims, knowledge,
-solver checks, and executable traces.
+**Goal:** advance non-LLM verification and sampler guidance while keeping symbolic solvers authoritative.
 
-- `exp5285-knowledge-thought-coherence-fixture-v483`: build a deterministic CheckRLM-style fixture with claim
-  extraction, evidence links, minimal correction labels, lexical baselines, and safety negatives.
-- `exp5286-knowledge-thought-coherence-sota-pilot-v483`: gated on runtime/offload and fixture readiness; run
-  mandated SOTA GGUF models and report claim-level coherence quality without using the failed internal/logit
-  score as a headline result.
-- `exp5287-compilable-trace-dsl-fixture-v483`: build a VeryTrace-style tiny DSL fixture from the solver
-  fixture, with dependency links, executable expressions, and repair labels.
-- `exp5288-sota-trace-dsl-extraction-gated-v483`: gated on runtime/offload and trace-fixture readiness; retry
-  SOTA extraction with solver-authoritative validation, overwrite/recovery telemetry, and false-accept
-  accounting.
-
-### Phase 2 - Continuous Self-Learning and Memory Attribution
-
-**Goal:** advance PRD FR-11 by measuring not just whether governed memory helps, but where it succeeds or
-fails inside the self-learning loop.
-
-- `exp5289-memory-operation-attribution-v483`: attribute memory outcomes across extraction, update, routing,
-  maintenance, and use using Exp5275/Exp5276 governed artifacts.
-- `exp5290-memory-assisted-coherence-dose-gated-v483`: gated on coherence fixture and attribution readiness;
-  test whether governed memory can safely allocate claim/coherence checks while preserving unsafe-false-accept
+- `exp5299-constraint-lns-solver-repair-fixture-v484`: implement a deterministic ConsFormer-LNS-style
+  destroy/repair fixture with classical baselines, solver validation, and safety-negative structured-output
   controls.
+- `exp5300-pbit-cdcl-instance-class-gate-v484`: turn Exp5292's mixed result into an instance-class gate that
+  blocks misleading-assumption classes and preserves aggregate guidance only where it helps.
+- `exp5301-ebt-spectral-step-control-diagnostic-v484`: add a tiny EBT/energy-descent diagnostic that logs
+  lambda-max estimates, step sizes, divergence, and recovery behavior before any energy-guided decoding claim.
 
-### Phase 3 - Certificates, Sampler Guidance, Hardware Continuity, and Capstone
+### Phase 2 - Continuous Self-Learning
 
-**Goal:** advance the non-LLM EBM path while keeping the solver authoritative and hardware claims receipt
-bound.
+**Goal:** satisfy PRD FR-11 with adaptive, held-out, governed memory rather than a fixed replay policy.
 
-- `exp5291-low-order-factor-certificate-curriculum-v483`: test a low-order-first KAN/Ising certificate
-  curriculum with false-property rejection intact.
-- `exp5292-pbit-cdcl-factor-guidance-v483`: use p-bit/Ising-style assumptions to guide CDCL on tiny factor
-  fixtures, recording conflicts saved, fallback use, and distribution gates with no hardware speedup claim.
-- `exp5293-hardware-continuity-reachability-v483`: check KV260, PolarFire, and GateMate reachability only;
-  record blocked reasons and refuse speedup claims.
-- `exp5294-capstone-v483`: synthesize positives, nulls, harmful results, gated skips, hardware blocks, and
-  retirement recommendations for the next milestone.
+- `exp5302-adaptive-memory-policy-self-learning-v484`: search/select verifier-dose memory policy on held-out
+  deterministic cases, measuring call avoidance, quality preservation, unsafe false accepts, stale conflicts,
+  and rollback.
+- `exp5303-memory-stress-conflict-forgetting-v484`: stress the selected policy with MemoryAgentBench-style
+  accurate retrieval, test-time learning, long-range understanding, conflict resolution, selective forgetting,
+  and harmful-memory rollback controls.
+
+### Phase 3 - Certificates, Hardware Continuity, and Capstone
+
+**Goal:** turn null/mixed certificate and hardware findings into better-gated next evidence.
+
+- `exp5304-kan-dynamic-abstraction-spotcheck-v484`: replace the null low-order curriculum with dynamic
+  PWA/MILP abstraction spot-checks, declarative constraint-group metadata, and false-property rejection.
+- `exp5305-hardware-continuity-reachability-v484`: run KV260, PolarFire, and GateMate reachability only, with
+  no speedup claim and no host `/dev/mmcblk*` assumption.
+- `exp5306-capstone-v484`: synthesize positives, nulls, mixed-class harms, gated skips, hardware blocks, and
+  retirement recommendations.
 
 ## Dependency Graph and Structured Gates
 
 ```text
-exp5282 -> exp5283 -> exp5284
+exp5295 -> exp5296 -> exp5297
 
-exp5285 -> exp5286 [gate: exp5284.sota_offload_ready == true
-                    AND exp5285.coherence_fixture_ready == true]
+exp5297 -> exp5298 [gate: exp5297.changed_runtime_sota_ready == true]
 
-exp5287 -> exp5288 [gate: exp5284.sota_offload_ready == true
-                    AND exp5287.trace_dsl_ready == true]
+exp5299 -> exp5300 [gate: exp5299.constraint_lns_fixture_ready == true]
 
-exp5289 -> exp5290 [gate: exp5285.coherence_fixture_ready == true
-                    AND exp5289.memory_attribution_ready == true]
+exp5302 -> exp5303 [gate: exp5302.memory_policy_candidate_ready == true]
 
-exp5291 -> exp5292 -> exp5293
+exp5301, exp5304, exp5305 are independent bounded diagnostics.
 
-all terminal upstreams -> exp5294
+all terminal upstreams -> exp5306
 ```
 
 Structured conductor gates:
 
-- `exp5286` is gated on `exp5284.sota_offload_ready == true` and
-  `exp5285.coherence_fixture_ready == true`.
-- `exp5288` is gated on `exp5284.sota_offload_ready == true` and
-  `exp5287.trace_dsl_ready == true`.
-- `exp5290` is gated on `exp5285.coherence_fixture_ready == true` and
-  `exp5289.memory_attribution_ready == true`.
+- `exp5298` is gated on `exp5297.changed_runtime_sota_ready == true`.
+- `exp5300` is gated on `exp5299.constraint_lns_fixture_ready == true`.
+- `exp5303` is gated on `exp5302.memory_policy_candidate_ready == true`.
+
+Prior milestone artifacts are treated as preconditions in prompts, not cross-milestone `gated_on` entries:
+Exp5285 coherence fixture, Exp5287 trace fixture, Exp5289 attribution, Exp5290 fixed memory dose, Exp5291 KAN
+null, Exp5292 p-bit/CDCL mixed result, and Exp5293 hardware reachability block.
 
 ## Model and Inference Requirements
 
-Any experiment that calls an LLM must declare `MODEL_SPECS` and include at least one mandated local SOTA GGUF
-model:
+Any `.484` experiment that calls an LLM must declare `MODEL_SPECS` and include at least one mandated local
+SOTA GGUF model:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy tiny models may be used only for CPU smoke tests. They cannot be headline-result models. New
-experiment scripts must use the `cached_sota_pair()` pattern or the current repo SOTA helper and load GGUFs
-through llama.cpp by local `.gguf` path. Do not use `AutoTokenizer` on a GGUF repository.
+Legacy tiny models may be used only for CPU smoke tests and must be labeled `smoke_test_not_headline`. New
+experiment scripts must use `cached_sota_pair()` or the repo's current SOTA helper where applicable and load
+GGUFs through local `.gguf` paths. Do not use `AutoTokenizer.from_pretrained` on a GGUF repository.
 
-Required inference-substrate labels for `.483`:
+Required inference-substrate labels for `.484`:
 
 - `literature_ingestion_network_sources`: network-backed source refresh only.
-- `live_llm_inference_local_gguf_sota`: real local GGUF generation/scoring with model id, quantization,
-  llama.cpp command, prompt checksum, output checksum, wall-clock receipt, and GPU/offload receipt.
+- `live_llm_inference_changed_local_gguf_sota`: real local GGUF generation/scoring through a changed substrate
+  with model id, quantization, command/backend, prompt checksum, output checksum, wall-clock receipt, and GPU
+  offload receipt.
+- `blocked_preconditions_with_no_quality_claim`: runtime or hardware preconditions failed; no quality claim.
 - `offline_deterministic_fixture_no_llm`: fixture, parser, lexical baseline, schema, or safety-negative work
   with no live model-quality claim.
-- `offline_deterministic_certificate_no_llm`: solver, MILP, KAN, factor graph, or CDCL computation with no
-  LLM claim.
+- `offline_deterministic_certificate_no_llm`: solver, MILP, KAN, factor graph, CDCL, or EBT diagnostic with no
+  LLM quality claim.
 - `aggregation_from_upstream_artifacts`: capstone, replay, attribution, or scheduler aggregation with no live
   model-quality claim.
 - `hardware_probe_no_speedup_claim`: board reachability and environment receipts only.
@@ -237,14 +230,16 @@ Required inference-substrate labels for `.483`:
 ## Hardware Requirements
 
 - Local NVIDIA GPUs are required for headline SOTA GGUF inference. If unavailable, LLM-dependent tasks must
-  skip through gates or emit honest blocked artifacts.
+  gate-skip or emit honest blocked artifacts.
+- Exp5297 must use a changed runtime substrate. Reusing the `.483` CPU-only llama-cpp-python path without new
+  GPU-offload evidence is retired by `ops/exclusion_manifest.yaml`.
 - KV260 is reachable via SSH only. Do not require host `/dev/mmcblk*`.
-- PolarFire remains reachability-only unless an authenticated terminal workload already exists.
+- PolarFire remains reachability/status-only unless an authenticated terminal workload already exists.
 - GateMate remains physical/JTAG blocked unless the operator changes the physical setup.
 - Extropic TSU/XTR-0 and Logical Kona/Aleph are reference material only. Do not claim execution,
   compatibility, or speedup without local reproducible receipts.
-- Hardware tasks must record `hardware_evidence_level`, `hardware_speedup_claimed`, `blocked_reason`, and the
-  exact commands/probes run.
+- Hardware tasks must record `hardware_evidence_level`, `hardware_speedup_claimed`, `blocked_reason`, and exact
+  probes run.
 
 ## No-Go Rules
 
@@ -252,8 +247,9 @@ Required inference-substrate labels for `.483`:
 - Do not modify `scripts/research_conductor.py`.
 - Do not push.
 - Do not use `/deep-research`.
-- Do not rerun Exp5272's harmful internal/logit hallucination probe as a headline verifier signal.
+- Do not repeat Exp5284's CPU-only llama-cpp-python SOTA offload path without changed runtime substrate and new
+  GPU-offload receipts.
 - Do not revive the retired Phase D external generated-text/logprob scorer path.
-- Do not treat syntactic/JSON/grammar validity as semantic correctness.
-- Do not claim hardware speedups from reachability checks, paper references, public roadmap material, or
-  CPU-only simulations.
+- Do not treat grammar, JSON, schema, or trace parse validity as semantic safety or correctness.
+- Do not claim hardware speedups from reachability checks, public hardware posts, or CPU-only simulations.
+- Do not propose ARC solves in this milestone; no ARC level-solve task is needed for the identified gaps.
