@@ -26110,6 +26110,78 @@ with `trace_dsl_ready=false`, exact blocker details in
 |---|---|---|
 | REQ-VERIFY-5287 | Planned (`python/carnot/experiment_5287_compilable_trace_dsl_fixture_v483.py`, `results/experiment_5287_compilable_trace_dsl_fixture_v483.json`) | Planned (`tests/python/test_experiment_5287_compilable_trace_dsl_fixture_v483.py`) |
 
+### REQ-VERIFY-5292: CPU p-bit Guidance Benchmark For CDCL On Factor Fixtures V483
+
+The repository SHALL provide Exp 5292 at
+`python/carnot/experiment_5292_pbit_cdcl_factor_guidance_v483.py` and write
+`results/experiment_5292_pbit_cdcl_factor_guidance_v483.json` without
+modifying `scripts/research_conductor.py`. The runner SHALL reuse a tiny
+factor fixture from Exp 5278, Exp 5287, or Exp 5291 rather than inventing an
+unanchored SAT benchmark.
+
+The runner SHALL generate p-bit or Ising-style assumption sets on CPU only and
+SHALL label them as simulated sampler guidance, not hardware execution. It
+SHALL run a CDCL SAT solver with and without temporary assumptions, record
+conflicts, propagations, decisions, restarts, fallback/overwrite count,
+correctness, and wall-clock metrics, and keep the CDCL solver authoritative
+for every SAT/UNSAT result. Assumption-guided UNSAT under non-empty assumptions
+SHALL NOT be promoted to original-formula UNSAT without an unassumed solver
+check.
+
+The benchmark SHALL identify instance classes where simulated guidance helps,
+harms, or is neutral. Distribution sensitivity SHALL be recorded as an expected
+property of advisory guidance, not as a harness failure. Bad or misleading
+assumptions SHALL be rejected or overwritten by the authoritative CDCL result
+and SHALL NOT force an incorrect SAT/UNSAT label.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `pbit_cdcl_guidance_positive`,
+`pbit_cdcl_guidance_positive_principle`, `assumption_generation_summary`,
+`conflicts_saved`, `propagations_saved`, `fallback_overwrite_count`,
+`correctness_preserved`, `instance_class_gate`, `hardware_speedup_claimed`,
+and `tests_run`. `honest_verdict.value` SHALL start with `complete:`, `null:`,
+`harmful_`, or `blocked_` and state whether p-bit/CDCL guidance helped.
+`inference_substrate.value` SHALL be `offline_deterministic_certificate_no_llm`.
+`pbit_cdcl_guidance_positive` SHALL be a bare bool. `hardware_speedup_claimed.value`
+SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5292 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether simulated p-bit/CDCL guidance helped."
+- `inference_substrate`: principle "Must be offline_deterministic_certificate_no_llm because Exp 5292 uses CPU-local fixtures, a local CDCL solver, and no LLM inference."
+- `pbit_cdcl_guidance_positive`: principle "Bare boolean requested by the task; true only when simulated p-bit assumptions preserve correctness and save aggregate conflicts on the bounded instance classes."
+- `pbit_cdcl_guidance_positive_principle`: principle "Explains why the bare guidance gate opened or stayed closed so a mixed distribution-sensitive result is not over-promoted."
+- `assumption_generation_summary`: principle "Documents CPU-only simulated p-bit/Ising assumption generation and prevents it from being mistaken for hardware execution."
+- `conflicts_saved`: principle "Pure-minus-guided CDCL conflicts by aggregate and class; negative values expose harmful guidance instead of hiding it."
+- `propagations_saved`: principle "Pure-minus-guided CDCL propagations by aggregate and class; negative values expose harmful guidance overhead."
+- `fallback_overwrite_count`: principle "Counts assumptions rejected or overwritten by the authoritative CDCL fallback, proving guidance is advisory."
+- `correctness_preserved`: principle "True only when guided SAT/UNSAT labels match unassumed CDCL labels and every SAT model satisfies the original CNF."
+- `instance_class_gate`: principle "Classifies help, harm, and neutral behavior by tiny fixture class and treats distribution sensitivity as expected."
+- `hardware_speedup_claimed`: principle "Always false for Exp 5292 because the sampler guidance is CPU simulation, not hardware execution."
+- `tests_run`: principle "Commands run to validate assumption safety, class gates, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5292: Bad Assumptions Cannot Override CDCL Authority
+
+Given the Exp 5278 tiny factor boundary and the Exp 5292 CPU simulated
+p-bit/Ising assumption generator, when Exp 5292 runs, then it converts the
+factor fixture to tiny CNF classes, runs CDCL without assumptions, runs CDCL
+with temporary assumptions, records solver counters and wall-clock for both
+arms, falls back to unassumed CDCL when assumptions are rejected or only prove a
+strengthened formula UNSAT, writes the required artifact, and sets
+`hardware_speedup_claimed.value=false`.
+
+If the p-bit assumptions point at the fixture's known false assignment or any
+other misleading basin, then the guided arm SHALL record fallback/overwrite
+telemetry, return the same SAT/UNSAT label as the unassumed CDCL authority, and
+verify any final SAT model against the original CNF before setting
+`correctness_preserved.value=true`.
+
+## Implementation Status (REQ-VERIFY-5292)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5292 | Planned (`python/carnot/experiment_5292_pbit_cdcl_factor_guidance_v483.py`, `results/experiment_5292_pbit_cdcl_factor_guidance_v483.json`) | Planned (`tests/python/test_experiment_5292_pbit_cdcl_factor_guidance_v483.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
