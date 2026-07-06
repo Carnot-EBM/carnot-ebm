@@ -27539,3 +27539,62 @@ Execution-time sweep after the `.485` planner refresh checked arXiv, OpenReview,
 - **Secondary-source status:** Semantic Scholar EBT/ARM-EBM counts matched the prior live check; OpenReview, HuggingFace Papers, Extropic, GitHub, and Logical Intelligence did not add a separate execution-changing source.
 
 <!-- V485-EXECUTION-REFRESH-2026-07-06-END -->
+
+
+### V486 Planner Refresh - 2026-07-06
+
+Planning-time sweep for `.486` rechecked arXiv primary pages, OpenReview, HuggingFace Papers,
+Semantic Scholar-style EBT/ARM-EBM trails, GitHub repositories, Extropic writing, Logical
+Intelligence public pages, and the local completed-experiment ledger. The items below are promoted
+into the next-milestone design constraints.
+
+### Promoted actionable findings
+- **Self-Evolving Agents with Anytime-Valid Certificates** (https://arxiv.org/abs/2607.00871):
+  proposes frozen-base agent improvement through a small steering adapter and an anytime-valid
+  certificate gate, with no-op controls to distinguish real improvement from selection noise.
+  Carnot hook: test certificate-gated self-learning over context/memory policy updates, keep model
+  weights frozen, and require rollback/no-op controls before any policy promotion.
+- **Theoria: A Formal Framework for LLM Rewrite Verification** (https://arxiv.org/abs/2607.01223):
+  casts document and claim edits as typed state transitions checked for rewrite acceptability and
+  complete-change coverage. Carnot hook: extend the `.485` paraphrase fixture into typed
+  rewrite-state verification before asking local SOTA GGUF models for quality-sensitive rewrites.
+- **LLM Agents Are Latent Context Managers / VISTA** (https://arxiv.org/abs/2606.30005):
+  treats agent context as typed addressable blocks with runtime dashboards for visibility into what
+  remains active, archived, or lost. Carnot hook: combine VISTA-style typed context blocks with
+  Self-GC and A-TMA labels so transition-memory tests report lifecycle, retrieval, and answer-time
+  failures separately.
+- **AutoMem: Agentic Memory Management as a Learnable Skill** (https://arxiv.org/abs/2607.01224):
+  frames memory editing, file organization, and retrieval operations as skills learned through
+  experience rather than one fixed compaction policy. Carnot hook: evaluate memory-operation choices
+  as a bounded self-learning policy over deterministic fixtures, without parameter fine-tuning.
+- **Frequency-Aware Attention for Hallucination Detection** (https://arxiv.org/abs/2602.18145),
+  **Semantic Energy** (https://arxiv.org/abs/2508.14496), and **Spilled Energy**
+  (https://arxiv.org/abs/2602.18671): support attention/logit/internal-signal energy diagnostics for
+  hallucination detection. Carnot hook: add only runtime-receipt and internal-signal availability
+  checks this milestone; do not reopen retired external generated-text scorer work.
+- **p-bit CDCL sampling and dual-BRAM FPGA annealer work** (https://arxiv.org/abs/2605.04033,
+  https://arxiv.org/abs/2602.16143) remains relevant as hardware-boundary context, but `.485`
+  established only solver-guidance diagnostics and no authenticated board speedup. Carnot hook:
+  keep symbolic solvers authoritative and hardware tasks limited to reachability/workload receipts.
+
+### Secondary-source status
+- **Logical Intelligence:** recent EBRM/Kona writing continues to align with globally scored partial
+  traces plus deterministic verifiers, but it is a design reference rather than a reproducible local
+  baseline.
+- **Extropic:** `thermodynamic-computing-from-zero-to-one` and XTR-0/TSU notes remain useful for the
+  long-term thermodynamic-sampling architecture, but no accessible TSU execution path exists in this
+  repo.
+- **GitHub watch:** `OmnAI-Lab/spilled-energy`, `MaHuanAAA/logtoku`, and hallucination-detection
+  survey repositories are useful references for metrics and receipts; none supersedes the local
+  GGUF runtime gate.
+
+### Planning impact
+- `.486` must repair the local SOTA GGUF runtime path before spending a milestone on quality claims.
+- The next continuous self-learning step should be context-object lifecycle and certificate-gated
+  policy promotion, not another broad final-answer-only memory rollout.
+- The `.485` SMT hint protocol needs a clean corrigendum because the adversarial audit flagged its
+  runtime methodology, even though the deterministic acceptance/rejection fields were promising.
+- KAN work should target counterexample localization and false-property sensitivity because `.485`
+  improved envelope tightness but not certificate success.
+
+<!-- V486-PLANNER-REFRESH-2026-07-06-END -->
