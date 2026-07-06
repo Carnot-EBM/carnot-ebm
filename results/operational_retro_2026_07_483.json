@@ -1,8 +1,9 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.07.483",
-  "generated_at": "2026-07-06T04:15:40Z",
+  "generated_at": "2026-07-06T04:51:04Z",
   "retro_type": "operational_full",
+  "summary": "No data available this milestone for experiment-duration analysis: the timing block reports a timing integrity mismatch, with both authorized reconstruction paths finding 0 experiment commits while changelog references exist for this milestone. The locked timing fields therefore stay at 0 or null, and the idle GPU snapshot is not evidence of compute-bound waste.",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
@@ -10,22 +11,21 @@
   "gpu_idle_on_compute_bound_tasks": null,
   "reconstructed_from_disk_mtime": false,
   "timing_integrity_mismatch": true,
-  "summary": "Timing integrity mismatch: both authorized timing paths found 0 experiment commits for milestone 2026.07.483 while ops/changelog.md contains milestone references, so experiment-level timing analysis has no data available this milestone. With total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0, there is no supportable slowest-experiment, GPU-efficiency, or DualGPURunner finding.",
   "bottlenecks_identified": [
-    "Timing assembly mismatch: the live git-log path and disk-mtime reconstruction both produced 0 experiment commits while ops/changelog.md still references milestone 2026.07.483.",
-    "No experiment-level wall-time bottleneck can be ranked because slowest_experiments is empty.",
-    "No GPU-idle bottleneck is supportable because compute_bound_experiments_count is 0 and gpu_idle_on_compute_bound_tasks is null."
+    "Timing assembly is internally inconsistent: live git-log and disk-mtime reconstruction both found 0 experiment commits, while ops/changelog.md contains milestone references.",
+    "No compute-bound runtime bottleneck can be ranked because the timing block contains no experiment entries.",
+    "No GPU bottleneck is supportable: compute_bound_experiments_count is 0, so the 0% GPU-utilization snapshot is not tied to a compute-bound failure."
   ],
   "improvements_suggested": [
-    "Add a first-class timing-integrity-mismatch branch that stops top-N and GPU-efficiency derivation when git/disk timing sources are empty but milestone changelog references exist.",
-    "Separate changelog-reference evidence from experiment timing evidence so retrospective generation can report the mismatch without inferring durations or experiment IDs.",
-    "Keep GPU-idle analysis gated on compute_bound_experiments_count > 0 and explicit compute-bound markers before emitting bottleneck language."
+    "Add a first-class timing_integrity_mismatch branch before slowest-experiment, GPU-efficiency, or DualGPURunner analysis runs.",
+    "Have the retrospective assembler refuse to derive experiment IDs, durations, or compute-bound status from changelog prose when both timing sources are empty.",
+    "Emit an explicit no-data section for compute-bound ranking and GPU interpretation whenever the timing block has 0 completed experiments."
   ],
   "top_3_highest_leverage_actions": [
-    "Fix the timing assembler to surface the git/disk-vs-changelog mismatch as a structured no-data state.",
-    "Add a regression check for milestones where changelog entries exist but both timing reconstruction paths return 0 experiment commits.",
-    "Preserve the compute-bound gate for GPU analysis so idle synthesis-only snapshots stay informational."
+    "Make the mismatch between empty timing sources and changelog references a structured artifact state.",
+    "Keep all GPU-idle claims gated on compute-bound task tags in the timing data.",
+    "Add a locked-field check so retrospective edits cannot replace authoritative zero/null values with inferred values."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The only defensible operational finding is the timing-assembly mismatch. The idle GPU snapshot remains informational because the authoritative timing data contains 0 compute-bound experiments."
+  "meta_reflection": "The operational finding is the timing-assembly mismatch itself, not experiment throughput. Because the timing block provides 0 completed experiments and 0 compute-bound experiments, questions about slowest compute-bound work, GPU efficiency, and DualGPURunner engagement all resolve to no data available this milestone."
 }
