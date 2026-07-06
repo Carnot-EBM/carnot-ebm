@@ -1,48 +1,45 @@
-milestone: "2026.07.485"
-milestone_title: "Memory-Transition Verification, Paraphrase-Stable Claims, and Ising/KAN Certificate Gates"
+milestone: "2026.07.486"
+milestone_title: "Runtime-Stable Local SOTA, Rewrite-Certified Claims, and Context-Lifecycle Self-Learning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp5307-archive-484-activate-485
-    milestone: "2026.07.485"
-    title: "Exp 5307: Archive 2026.07.484 and activate 2026.07.485"
+  - id: exp5321-archive-485-activate-486
+    milestone: "2026.07.486"
+    title: "Exp 5321: Archive 2026.07.485 and activate 2026.07.486"
     priority: critical
     track: reporting
-    deliverable: results/experiment_5307_archive_484_activate_485.json
+    deliverable: results/experiment_5321_archive_485_activate_486.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 30
     estimated_wall_time_min: 20
     prior_failures:
-      - experiment_id: exp2847-archive-v269-activate-v270
-        verdict: "complete: archive_ready=true; archived_milestone=2026.05.269; activated_milestone=2026.05.270; paper_ready=false; blocked_artifacts=4; missing_artifacts=2"
-        addressed_by: "Recurring transition scope, but different from Exp2847 because it archives .484 after user-confirmed completion and records .485 staged roadmap readiness without paper-readiness claims."
-        retire_if_same_verdict: true
-      - experiment_id: exp2861-archive-v270-activate-v271
-        verdict: "complete: archive_ready=true; archived_milestone=2026.05.270; activated_milestone=2026.05.271; paper_ready=false; sota_runtime_ready_v2=false; clean_artifacts=5; blocked_artifacts=4; missing_artifacts=4"
-        addressed_by: "Recurring transition scope, but different from Exp2861 because SOTA runtime remains separately diagnosed by Exp5309 and is not laundered into archive readiness."
+      - experiment_id: exp5307-archive-484-activate-485
+        verdict: "complete: .484 capstone archived and .485 observed in local roadmap docs; roadmap_next_present=false; no active roadmap overwrite or conductor edit performed."
+        addressed_by: "Recurring transition scope, but different from Exp5307 because it archives the now-complete .485 milestone and checks .486 readiness without paper-readiness or runtime claims."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. The user has declared all tasks in milestone 2026.07.484 complete. This task is the transition artifact for 2026.07.485 and must not overwrite the active roadmap by hand.
+      Run from {project_root} on {date}. The user has declared all tasks in milestone 2026.07.485 complete. This task is the transition artifact for 2026.07.486 and must not overwrite the active roadmap by hand.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - research-roadmap.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
+      - research-roadmap-next.yaml
       - ops/status.md
       - ops/changelog.md
       - ops/conductor-log.md
-      - results/experiment_5306_capstone_v484.json
+      - results/experiment_5320_capstone_v485.json
 
       TASK:
-      Produce the transition artifact for moving from .484 to .485. Confirm .484 capstone status, confirm .485 roadmap files exist, and record that no active roadmap overwrite or conductor edit was performed.
+      Produce the transition artifact for moving from .485 to .486. Confirm .485 capstone status, confirm .486 roadmap files exist, and record that no active roadmap overwrite or conductor edit was performed.
 
       CONCRETE STEPS:
-      1. Read the .484 capstone artifact and summarize only what it actually proves.
-      2. Verify `openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml` exist and name milestone 2026.07.485.
+      1. Read the .485 capstone artifact and summarize only what it actually proves.
+      2. Verify `openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml` exist and name milestone 2026.07.486.
       3. Confirm `research-roadmap.yaml` and `scripts/research_conductor.py` were not modified by this task.
-      4. Write the deliverable JSON at `results/experiment_5307_archive_484_activate_485.json`.
+      4. Write the deliverable JSON at `results/experiment_5321_archive_485_activate_486.json`.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle explaining the milestone-transition role.
@@ -52,7 +49,7 @@ tasks:
       - inference_substrate with principle; expected value is local_repo_doc_and_artifact_audit.
       - archived_milestone with principle.
       - activated_milestone with principle.
-      - v484_capstone_verdict with principle.
+      - v485_capstone_verdict with principle.
       - roadmap_next_present with bare boolean value for machine checks.
       - milestone_doc_present with bare boolean value for machine checks.
       - active_roadmap_modified with bare boolean value; must be false.
@@ -60,39 +57,40 @@ tasks:
       - preconditions_checked with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5308-sota-source-delta-v485
-    milestone: "2026.07.485"
-    title: "Exp 5308: V485 SOTA source delta refresh"
+  - id: exp5322-sota-source-delta-v486
+    milestone: "2026.07.486"
+    title: "Exp 5322: V486 SOTA source delta refresh"
     priority: high
     track: literature
-    deliverable: results/experiment_5308_sota_source_delta_v485.json
+    deliverable: results/experiment_5322_sota_source_delta_v486.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 35
     estimated_wall_time_min: 35
     prior_failures:
-      - experiment_id: exp303-amd-xdna-npu-unblock
-        verdict: "blocked_prereq"
-        addressed_by: "Different from Exp303: this task is a literature/source delta refresh and does not attempt AMD XDNA/NPU unblocking or hardware package installation."
+      - experiment_id: exp5308-sota-source-delta-v485
+        verdict: "complete: 2 new actionable V485 source findings appended; executable .485 plan unchanged."
+        addressed_by: "Recurring source-refresh scope, but different from Exp5308 because it checks for deltas after the V486 planner refresh and records methodology duration explicitly."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. Planning already appended a V485 planner refresh to `research-references.md`; this task performs the execution-time source delta check before technical work proceeds.
+      Run from {project_root} on {date}. Planning already appended a V486 planner refresh to `research-references.md`; this task performs the execution-time source delta check before technical work proceeds.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - research-references.md
       - research-program.md
+      - openspec/change-proposals/research-roadmap-vNEXT.md
       - ops/exclusion_manifest.yaml
       - ops/changelog.md
-      - results/experiment_5296_sota_source_delta_v484.json
+      - results/experiment_5308_sota_source_delta_v485.json
 
       TASK:
-      Check whether any new 2025-2026 source delta appeared after the V485 planner refresh across arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, Extropic writing, GitHub, and Logical Intelligence. Append only genuinely new actionable findings to `research-references.md`.
+      Check whether any new 2025-2026 source delta appeared after the V486 planner refresh across arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, Extropic writing, GitHub, and Logical Intelligence. Append only genuinely new actionable findings to `research-references.md`.
 
       CONCRETE STEPS:
-      1. Search the same source families listed in the milestone doc, with emphasis on EBMs for reasoning, constraint neural methods, Ising/annealing, hallucination detection, KAN verification, energy-guided decoding, hardware sampling, and continual constraint learning.
+      1. Search the source families listed in the milestone doc, emphasizing EBMs for reasoning, neural constraint satisfaction, Ising/annealing, hallucination detection, KAN verification, energy-guided decoding, hardware sampling, and continual constraint learning.
       2. Do not reopen retired scopes: no retired external generated-text scoring, no broad GRPO/fine-tuning reruns, no TSU/Kona execution claims, and no CPU-only GGUF offload rerun.
       3. If no new actionable source exists, write an honest no-op artifact and do not edit references.
       4. If findings are appended, add a clearly delimited execution-refresh section with URLs and Carnot-local actionability.
@@ -113,38 +111,43 @@ tasks:
       - no_executable_plan_edit with bare boolean value.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5309-sota-runtime-timeout-rootcause-matrix-v485
-    milestone: "2026.07.485"
-    title: "Exp 5309: SOTA GGUF runtime timeout root-cause matrix"
+  - id: exp5323-native-gguf-backend-flag-bisect-v486
+    milestone: "2026.07.486"
+    title: "Exp 5323: Native GGUF backend and flag bisect for mandated SOTA models"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json
+    deliverable: results/experiment_5323_native_gguf_backend_flag_bisect_v486.json
     requires_gpu: true
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 50
     estimated_wall_time_min: 90
     prior_failures:
+      - experiment_id: exp5309-sota-runtime-timeout-rootcause-matrix-v485
+        verdict: "blocked_sota_runtime_unblocked_false: no_mandated_model_completed_load_first_token_and_8_tokens:generation_incomplete,generation_incomplete,generation_incomplete"
+        addressed_by: "Different from Exp5309: this task specifically bisects backend binaries and flags, including llama-completion/server alternatives, unsupported conversation flags, and batch/context settings found in the .485 logs."
+        retire_if_same_verdict: true
       - experiment_id: exp5297-changed-runtime-sota-substrate-gate-v484
         verdict: "blocked_preconditions: changed_runtime_sota_ready=false flagship_moe:blocked_native_cli_timeout:offload=True"
-        addressed_by: "Different from Exp5297: this task is a timeout root-cause matrix, not a quality gate, and it separates load, prompt ingestion, first-token, token-throughput, context length, and backend/offload evidence."
+        addressed_by: "Different from Exp5297: this is not another changed-substrate gate; it records per-backend command variants and first-token root cause for the mandated model set."
         retire_if_same_verdict: true
       - experiment_id: exp5284-sota-runtime-offload-receipt-repair-v483
         verdict: "blocked_preconditions: sota_offload_ready=false flagship_moe:blocked_no_gpu_offload_evidence:offload=False"
-        addressed_by: "Different from Exp5284: this task must use the changed native/runtime path and fresh GPU receipt evidence rather than the retired CPU-only Python binding path."
+        addressed_by: "Different from Exp5284: it uses native llama.cpp CLI/server binaries with fresh GPU receipts, not the retired CPU-only Python binding offload path."
         retire_if_same_verdict: true
       - experiment_id: exp5274-solver-constraint-extraction-retry-gated-v482
         verdict: "blocked_preconditions: llama_cpp_gpu_offload_unavailable; retry was unmeasured"
-        addressed_by: "Different from Exp5274: this task does not attempt solver extraction and only diagnoses mandated SOTA GGUF runtime availability before any downstream LLM task runs."
+        addressed_by: "Different from Exp5274: this task performs runtime diagnosis only and does not attempt solver extraction or quality measurement."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. Exp5297 showed native llama.cpp CUDA/offload evidence but timed out on the mandated SOTA GGUF models. Exp5298 correctly gate-blocked quality. The next step is root-cause diagnosis, not another headline quality attempt.
+      Run from {project_root} on {date}. Exp5309 produced GPU/offload evidence but failed to complete load plus first token plus 8-token generation for any mandated SOTA GGUF model. It also exposed concrete root causes: an unsupported `--no-conversation` flag on `llama-cli` and a Gemma MoE batch/context assertion. This experiment repairs command form before any quality task runs.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - scripts/experiment_template.py
+      - results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json
       - results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json
       - results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json
       - ops/changelog.md
@@ -152,671 +155,739 @@ tasks:
       - research-hardware-wishlist.md
 
       TASK:
-      Build a SOTA GGUF runtime timeout matrix that determines whether the local runtime is unblocked enough for downstream tiny quality smoke tests. Do not claim model quality.
+      Bisect native llama.cpp backend binaries, generation modes, and flags until either at least one mandated SOTA GGUF model has a usable bounded generation receipt or the next blocking root cause is precise. Do not claim model quality.
 
       CONCRETE STEPS:
-      1. Define MODEL_SPECS in the experiment artifact and code path:
+      0. PRECONDITIONS: record GPU visibility, `nvidia-smi`, CUDA/driver version when available, llama.cpp binary paths and versions, free disk, free VRAM, and whether model files are already cached. If a compute-bound precondition is absent, write a blocked artifact instead of faking a run.
+      1. Define MODEL_SPECS in the artifact:
          - unsloth/Qwen3.6-35B-A3B-GGUF
          - unsloth/gemma-4-31B-it-GGUF
          - unsloth/gemma-4-26B-A4B-it-GGUF
       2. Use llama.cpp-compatible GGUF loading or the repo's cached SOTA helper pattern. Do not load GGUF repositories with Hugging Face `AutoTokenizer`.
-      3. For each mandated model that is locally available or fetchable under existing policy, separately time: metadata/model resolution, load, GPU offload evidence, prompt ingestion, first-token latency, 8-token generation, and timeout class.
-      4. Record preconditions: GPU visibility, VRAM before/after, backend command, layer/offload flags, model path, context size, batch size, and any fallback.
-      5. Set `sota_runtime_unblocked` to true only if at least one mandated SOTA model completes load plus first-token plus bounded token generation with authenticated GPU offload and no timeout. Otherwise set it false and explain the next root cause.
-      6. Run only relevant runtime/unit checks. If tests are unavailable, record that honestly.
+      3. Compare available native paths such as `llama-cli`, `llama-completion`, and `llama-server`/completion API where present. Remove unsupported flags and test batch/context settings that avoid the `.485` assertion.
+      4. For each attempted mandated model, record command, model path, context, batch, ubatch, GPU layers, tensor split if used, prompt, n_predict, timeout, GPU memory delta, offload evidence, first-token time, and 8-token completion status.
+      5. Set `sota_backend_candidate_ready` true only if at least one mandated model completes load, first token, and bounded 8-token generation with authenticated GPU offload. Otherwise set it false and record the next root cause.
+      6. Run focused runtime checks only. Do not run SOTA quality benchmarks.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is local_llama_cpp_gguf_runtime.
+      - inference_substrate with principle; expected value is local_native_llama_cpp_gguf_backend_bisect.
       - MODEL_SPECS with principle and the three mandated GGUF model ids.
       - preconditions_checked with principle.
-      - gpu_backend_evidence with principle.
+      - backend_matrix with principle.
       - per_model_runtime_matrix with principle.
-      - timeout_root_cause with principle.
-      - sota_runtime_unblocked as a bare boolean for downstream gates.
-      - no_quality_claim as a bare boolean; must be true.
+      - best_backend_command with principle.
+      - timeout_or_crash_root_cause with principle.
+      - sota_backend_candidate_ready with bare boolean value for downstream gates.
+      - runtime_unblocked_min_one_mandated with bare boolean value.
+      - no_quality_claim with bare boolean value; must be true.
       - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5310-paraphrase-consistency-fixture-v485
-    milestone: "2026.07.485"
-    title: "Exp 5310: Deterministic paraphrase-consistency verifier fixture"
-    priority: high
-    track: verification
-    deliverable: results/experiment_5310_paraphrase_consistency_fixture_v485.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 45
-    estimated_wall_time_min: 45
-    prior_failures:
-      - experiment_id: exp172-global-consistency-checker
-        verdict: "no_honest_verdict_present_in_results/experiment_172_results.json"
-        addressed_by: "Different from Exp172: this task creates a deterministic paraphrase/label-preservation fixture with tests, not a broad global-consistency checker."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Run from {project_root} on {date}. Constrained Paraphrase Consistency suggests hallucination checks should enforce paraphrase consistency and label preservation. Carnot needs a deterministic fixture before spending SOTA GGUF runtime.
-
-      EXISTING CODE TO READ FIRST:
-      - CODEX.md
-      - CLAUDE.md
-      - results/experiment_5285_knowledge_thought_coherence_fixture_v483.json
-      - results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json
-      - python/carnot
-      - tests/python
-      - research-references.md
-
-      TASK:
-      Implement or assemble a tiny deterministic paraphrase-consistency fixture for claim/coherence verification. The fixture should label semantically equivalent paraphrases, contradiction-preserving paraphrases, premise-invalid paraphrases, and surface-only rewrites.
-
-      CONCRETE STEPS:
-      1. Reuse existing claim/coherence fixture patterns where possible.
-      2. Add a small set of labeled paraphrase groups with expected label preservation and expected violation cases.
-      3. Implement a deterministic verifier or scoring helper that checks consistency without calling an LLM.
-      4. Add focused tests for label preservation, contradiction detection, invalid-premise handling, and false-positive resistance.
-      5. Write the deliverable JSON and set `paraphrase_fixture_ready` true only if tests pass and the fixture is usable by Exp5311.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id with principle.
-      - milestone with principle.
-      - status with principle.
-      - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is deterministic_claim_paraphrase_fixture_no_llm.
-      - paraphrase_fixture_ready as a bare boolean for downstream gates.
-      - fixture_path with principle.
-      - paraphrase_group_count with bare integer value.
-      - label_preservation_pass_rate with bare numeric value.
-      - contradiction_violation_caught_rate with bare numeric value.
-      - invalid_premise_handled with bare boolean value.
-      - tests_run with principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5311-gated-sota-paraphrase-coherence-smoke-v485
-    milestone: "2026.07.485"
-    title: "Exp 5311: Gated SOTA paraphrase/coherence smoke, gated on Exp 5309 runtime and Exp 5310 fixture"
-    priority: high
-    track: verification
-    deliverable: results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json
+  - id: exp5324-gated-runtime-receipt-stabilization-v486
+    milestone: "2026.07.486"
+    title: "Exp 5324: Gated runtime receipt stabilization after Exp 5323 backend candidate"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_5324_runtime_receipt_stabilization_v486.json
     requires_gpu: true
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 50
-    estimated_wall_time_min: 120
+    estimated_wall_time_min: 75
     gated_on:
-      - upstream: exp5309-sota-runtime-timeout-rootcause-matrix-v485
-        artifact_field: sota_runtime_unblocked
-        op: "=="
-        value: true
-      - upstream: exp5310-paraphrase-consistency-fixture-v485
-        artifact_field: paraphrase_fixture_ready
+      - upstream: exp5323-native-gguf-backend-flag-bisect-v486
+        artifact_field: sota_backend_candidate_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp5298-sota-coherence-trace-smoke-gated-v484
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp5298: this task has a structured runtime gate on Exp5309 and a deterministic paraphrase fixture gate on Exp5310 before any SOTA call."
+      - experiment_id: exp5309-sota-runtime-timeout-rootcause-matrix-v485
+        verdict: "blocked_sota_runtime_unblocked_false: no_mandated_model_completed_load_first_token_and_8_tokens:generation_incomplete,generation_incomplete,generation_incomplete"
+        addressed_by: "Different from Exp5309: this task runs only after a candidate backend exists and measures repeatability rather than rediscovering the initial timeout."
         retire_if_same_verdict: true
-      - experiment_id: exp5286-knowledge-thought-coherence-sota-pilot-v483
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp5286: this task requires a fresh runtime-unblocked field and tests paraphrase consistency rather than relying on an unready SOTA runtime."
-        retire_if_same_verdict: true
-      - experiment_id: exp5288-sota-trace-dsl-extraction-gated-v483
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp5288: this task is a bounded paraphrase/coherence smoke with explicit runtime and fixture gates, not trace DSL extraction."
+      - experiment_id: exp5297-changed-runtime-sota-substrate-gate-v484
+        verdict: "blocked_preconditions: changed_runtime_sota_ready=false flagship_moe:blocked_native_cli_timeout:offload=True"
+        addressed_by: "Different from Exp5297: the input is an already-selected backend command from Exp5323, and the output is a stability gate for downstream LLM tasks."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. This task should be skipped by conductor gates unless Exp5309 proves SOTA runtime readiness and Exp5310 proves the deterministic paraphrase fixture is ready.
+      Run from {project_root} on {date}. This task is pre-gated by Exp5323. It should run only if a native GGUF backend candidate has completed a bounded generation receipt for at least one mandated SOTA model.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - scripts/experiment_template.py
+      - results/experiment_5323_native_gguf_backend_flag_bisect_v486.json
       - results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json
-      - results/experiment_5310_paraphrase_consistency_fixture_v485.json
-      - results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json
-      - python/carnot
-      - tests/python
+      - ops/status.md
+      - ops/changelog.md
 
       TASK:
-      Run a tiny local SOTA GGUF paraphrase/coherence smoke on the deterministic fixture. The task is a smoke test only: report whether the runtime and verifier path can produce bounded local-model evidence, not broad SOTA quality.
+      Stabilize the backend candidate into a repeatable local SOTA runtime receipt. Do not run a quality benchmark.
 
       CONCRETE STEPS:
-      1. Confirm both structured gates passed before doing any model work.
-      2. Define MODEL_SPECS in the artifact:
+      0. PRECONDITIONS: re-check GPU visibility, llama.cpp binary version, selected model file presence, VRAM, and the exact backend command from Exp5323. If the candidate command or model file is unavailable, write a blocked artifact.
+      1. Define MODEL_SPECS in the artifact:
          - unsloth/Qwen3.6-35B-A3B-GGUF
          - unsloth/gemma-4-31B-it-GGUF
          - unsloth/gemma-4-26B-A4B-it-GGUF
-      3. Use at least one mandated SOTA model as the headline smoke model. Legacy small models are allowed only as CPU smoke controls and must be labeled non-headline.
-      4. Run a bounded subset of the Exp5310 fixture and record per-case prediction, abstention, latency, and verifier outcome.
-      5. Preserve deterministic labels as the authority. Do not infer broad model quality from this smoke.
-      6. Write the deliverable JSON with no false quality claims.
+      2. Replay the Exp5323 best backend command for the selected mandated model with at least three bounded runs, unless preconditions block.
+      3. For each run, record load time, first-token time, 8-token completion, GPU memory delta, offload evidence, timeout class, and stderr summary.
+      4. Set `sota_runtime_unblocked_stable` true only if the selected mandated model completes the bounded receipt repeatably with authenticated GPU offload and no crash/timeout.
+      5. If stability fails, record whether the failure is command drift, memory pressure, model-specific assertion, timeout, or missing binary.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is local_sota_gguf_paraphrase_smoke.
+      - inference_substrate with principle; expected value is local_native_llama_cpp_stability_receipts.
       - MODEL_SPECS with principle and the three mandated GGUF model ids.
-      - gates_confirmed with principle.
-      - headline_models_completed with principle.
-      - smoke_case_count with bare integer value.
-      - paraphrase_consistency_accuracy with bare numeric value or null if blocked.
-      - unsafe_false_accepts with bare integer value.
-      - no_broad_quality_claim with bare boolean value; must be true.
+      - preconditions_checked with principle.
+      - selected_model_spec with principle.
+      - selected_backend_command with principle.
+      - repeated_receipts with principle.
+      - stability_failure_class with principle.
+      - sota_runtime_unblocked_stable with bare boolean value for downstream gates.
+      - quality_claim_permitted with bare boolean value.
       - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5312-trustmem-transition-verifier-self-learning-v485
-    milestone: "2026.07.485"
-    title: "Exp 5312: TrustMem-style memory transition verifier for continuous self-learning"
-    priority: critical
-    track: learning
-    deliverable: results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json
+  - id: exp5325-theoria-rewrite-state-fixture-v486
+    milestone: "2026.07.486"
+    title: "Exp 5325: Deterministic Theoria-style rewrite-state verifier fixture"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 45
+    prior_failures:
+      - experiment_id: exp5310-paraphrase-consistency-fixture-v485
+        verdict: "complete: deterministic paraphrase-consistency fixture usable by Exp5311"
+        addressed_by: "Continuation of Exp5310, but different because it adds typed rewrite-state transitions and complete-change accounting rather than only paraphrase label preservation."
+        retire_if_same_verdict: true
+      - experiment_id: exp172-global-consistency-checker
+        verdict: "no_honest_verdict_present_in_results/experiment_172_results.json"
+        addressed_by: "Different from Exp172: this is a tiny deterministic rewrite-state fixture with explicit tests and artifact fields, not a broad global-consistency checker."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run from {project_root} on {date}. Exp5310 proved deterministic paraphrase consistency. Theoria suggests treating rewrites as typed state transitions checked for acceptability and complete-change coverage before SOTA model quality is measured.
+
+      EXISTING CODE TO READ FIRST:
+      - CODEX.md
+      - CLAUDE.md
+      - results/experiment_5310_paraphrase_consistency_fixture_v485.json
+      - research-references.md
+      - python/carnot
+      - tests/python
+      - ops/changelog.md
+
+      TASK:
+      Implement or assemble a deterministic rewrite-state verifier fixture that extends the paraphrase fixture with typed state transitions, change obligations, and unsafe rewrite rejection.
+
+      CONCRETE STEPS:
+      1. Reuse existing claim/coherence/paraphrase fixture patterns where possible.
+      2. Define a tiny set of typed rewrite cases: safe paraphrase, contradiction introduction, missing required change, fabricated premise/citation, invalid premise preserved, and overbroad rewrite.
+      3. Implement deterministic checks for rewrite acceptability, complete-change coverage, label preservation, and unsafe-change rejection.
+      4. Add focused tests for positive and negative cases.
+      5. Write the deliverable JSON and set `rewrite_state_fixture_ready` true only if tests pass and Exp5326 can consume the fixture.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id with principle.
+      - milestone with principle.
+      - status with principle.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is deterministic_rewrite_state_fixture.
+      - rewrite_case_count with bare integer value.
+      - rewrite_acceptability_rate with bare numeric value.
+      - complete_change_coverage_rate with bare numeric value.
+      - unsafe_rewrite_rejection_rate with bare numeric value.
+      - false_accept_count with bare integer value.
+      - rewrite_state_fixture_ready with bare boolean value for downstream gates.
+      - tests_run with principle.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5326-gated-sota-paraphrase-rewrite-smoke-v486
+    milestone: "2026.07.486"
+    title: "Exp 5326: Gated SOTA paraphrase and rewrite smoke after runtime and fixture gates"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.json
+    requires_gpu: true
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 50
     estimated_wall_time_min: 70
+    gated_on:
+      - upstream: exp5324-gated-runtime-receipt-stabilization-v486
+        artifact_field: sota_runtime_unblocked_stable
+        op: "=="
+        value: true
+      - upstream: exp5325-theoria-rewrite-state-fixture-v486
+        artifact_field: rewrite_state_fixture_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp1388-fr11-self-learning-v4-dvi-grpo-integration
-        verdict: "fr11_self_learning_v4_dvi_only_exp1382_headline_allowed_fresh_59"
-        addressed_by: "Different from Exp1388: this task does not run GRPO or headline training; it builds a deterministic memory transition verifier before commit."
-        retire_if_same_verdict: true
-      - experiment_id: exp1757-fr11-dynamic-resolution-self-learning
+      - experiment_id: exp5311-gated-sota-paraphrase-coherence-smoke-v485
         verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp1757: this task has no dynamic-resolution gate dependency and targets transition-level memory validation with local deterministic tests."
+        addressed_by: "Different from Exp5311: this task is pre-gated by a stable runtime receipt and a rewrite-state fixture, not just the initial runtime root-cause matrix."
         retire_if_same_verdict: true
-      - experiment_id: exp1795-continuous-self-learning-capstone
+      - experiment_id: exp5286-gated-sota-coherence-trace-smoke-v483
         verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp1795: this task is an executable verifier fixture, not a capstone dependent on blocked upstream telemetry."
+        addressed_by: "Different from Exp5286: the local SOTA run is blocked before launch unless Exp5324 proves repeatable native GGUF generation."
+        retire_if_same_verdict: true
+      - experiment_id: exp5288-gated-knowledge-thought-coherence-v483
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Different from Exp5288: this smoke uses the deterministic paraphrase/rewrite fixtures and reports no headline quality claim."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. The research program requires at least one continuous self-learning experiment per milestone. Exp5302 and Exp5303 showed adaptive memory can save verifier calls while preserving quality, but they did not verify each memory transition before commit.
+      Run from {project_root} on {date}. This task is gated on stable local SOTA runtime and the deterministic rewrite-state fixture. It is a tiny smoke test, not a benchmark.
+
+      EXISTING CODE TO READ FIRST:
+      - CODEX.md
+      - CLAUDE.md
+      - scripts/experiment_template.py
+      - results/experiment_5324_runtime_receipt_stabilization_v486.json
+      - results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+      - results/experiment_5310_paraphrase_consistency_fixture_v485.json
+      - python/carnot
+      - tests/python
+
+      TASK:
+      Run the smallest useful local SOTA paraphrase/rewrite smoke on the mandated GGUF runtime candidate and score outputs only with deterministic fixture checks.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm the Exp5324 selected backend command, selected mandated model, GPU visibility, model cache, and fixture availability. If any precondition fails, write a blocked artifact.
+      1. Define MODEL_SPECS in the artifact:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      2. Use only the stable mandated model/backend from Exp5324 for generation unless Exp5324 proved more than one stable model.
+      3. Generate bounded outputs for a tiny fixed set of paraphrase and rewrite prompts. Keep token budgets small and deterministic.
+      4. Score outputs using the deterministic paraphrase and rewrite-state fixtures. Do not score broad factual knowledge.
+      5. Set `sota_quality_measured` true only if generation and scoring complete. Set `headline_quality_claim` false regardless of result.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id with principle.
+      - milestone with principle.
+      - status with principle.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is local_sota_gguf_bounded_smoke.
+      - MODEL_SPECS with principle and the three mandated GGUF model ids.
+      - preconditions_checked with principle.
+      - selected_model_spec with principle.
+      - prompt_count with bare integer value.
+      - paraphrase_label_preservation_rate with bare numeric value.
+      - rewrite_acceptability_rate with bare numeric value.
+      - unsafe_false_accepts with bare integer value.
+      - sota_quality_measured with bare boolean value.
+      - headline_quality_claim with bare boolean value; must be false.
+      - tests_run with principle.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5327-smt-hint-corrigendum-reemit-v486
+    milestone: "2026.07.486"
+    title: "Exp 5327: SMT hint protocol corrigendum and clean re-emit"
+    priority: high
+    track: verification
+    deliverable: results/experiment_5327_smt_hint_corrigendum_reemit_v486.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 40
+    estimated_wall_time_min: 40
+    prior_failures:
+      - experiment_id: exp5318-deterministic-smt-hint-validation-protocol-v485
+        verdict: "complete: deterministic SMT hint validation protocol is ready; valid hints are accepted, unsound hints are rejected, and future LLM hint proposals remain gated on Exp5309 runtime readiness"
+        addressed_by: "Different from Exp5318: this re-emits the deterministic protocol with explicit duration/substrate fields and no compute-bound marker confusion after the adversarial audit flagged methodology."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run from {project_root} on {date}. Exp5318 produced promising deterministic SMT hint validation fields, but the adversarial audit flagged duration and compute-bound marker confusion. This task repairs the artifact methodology before future LLM-guided SMT work builds on it.
+
+      EXISTING CODE TO READ FIRST:
+      - CODEX.md
+      - CLAUDE.md
+      - results/experiment_5318_smt_hint_validation_protocol_v485.json
+      - ops/conductor-log.md
+      - ops/status.md
+      - python/carnot
+      - tests/python
+
+      TASK:
+      Re-emit the deterministic SMT hint validation protocol with clean substrate, timing, and audit fields. Do not invoke an LLM and do not pretend duration is longer than it is.
+
+      CONCRETE STEPS:
+      1. Inspect the Exp5318 artifact and conductor/adversarial notes to identify exactly why the methodology was flagged.
+      2. Re-run or rebuild the deterministic SMT hint fixture: valid hints accepted, unsound hints rejected, useful-but-not-required hints separated from solver fallback.
+      3. Ensure the artifact describes the substrate as deterministic solver/protocol validation, not compute-bound GGUF execution.
+      4. Record actual methodology duration. If the run is too short for the audit guard to trust, mark the artifact blocked rather than complete.
+      5. Add or update focused tests only if needed to make the fixture reproducible.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id with principle.
+      - milestone with principle.
+      - status with principle.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is deterministic_smt_solver_protocol.
+      - exp5318_flag_reason with principle.
+      - valid_hint_acceptance_rate with bare numeric value.
+      - unsound_hint_rejection_rate with bare numeric value.
+      - usefulness_rate with bare numeric value.
+      - solver_fallback_complete with bare boolean value.
+      - methodology_duration_s with bare numeric value.
+      - compute_bound_marker_present with bare boolean value; must be false.
+      - smt_hint_protocol_clean with bare boolean value.
+      - tests_run with principle.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5328-context-object-lifecycle-self-learning-v486
+    milestone: "2026.07.486"
+    title: "Exp 5328: Continuous self-learning context-object lifecycle fixture"
+    priority: critical
+    track: self_learning
+    deliverable: results/experiment_5328_context_object_lifecycle_self_learning_v486.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 50
+    estimated_wall_time_min: 65
+    prior_failures:
+      - experiment_id: exp5312-trustmem-transition-verifier-self-learning-v485
+        verdict: "complete: deterministic memory transition verifier ready for Exp5313; safe transitions committed and unsafe writes rejected before state change"
+        addressed_by: "Continuation of Exp5312, but different because it adds Self-GC/VISTA context objects, recoverable sidecars, lifecycle actions, and A-TMA bank/retrieval/answer failure labels."
+        retire_if_same_verdict: true
+      - experiment_id: exp1757-memory_bootstrap_gate
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Different from Exp1757: this task is deterministic context-lifecycle fixture work and has no bootstrap-only artifact or LLM-runtime dependency."
+        retire_if_same_verdict: true
+      - experiment_id: exp1484-query-time-memory-policy
+        verdict: "query_time_memory_policy_improves_bounded_replay_without_false_accepts"
+        addressed_by: "Different from Exp1484: this task measures object lifecycle and failure provenance, not only query-time memory policy outcome."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run from {project_root} on {date}. The research program requires continuous self-learning. Exp5312 and Exp5313 proved transition-memory safety and verifier-call savings, but not context-object lifecycle learning. Self-GC, VISTA, A-TMA, and AutoMem point to object IDs, recoverable sidecars, stale-state labels, and memory operations as learnable policy actions.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - research-program.md
-      - results/experiment_5302_adaptive_memory_policy_self_learning_v484.json
-      - results/experiment_5303_memory_stress_conflict_forgetting_v484.json
       - research-references.md
-      - python/carnot
-      - tests/python
-
-      TASK:
-      Build a deterministic memory transition verifier inspired by TrustMem. It must score proposed memory updates for coverage, preservation, and faithfulness, and reject unsafe writes before persistent state changes.
-
-      CONCRETE STEPS:
-      1. Locate the existing adaptive memory policy and memory stress fixtures.
-      2. Add transition labels for useful insert, omission, corruption, hallucinated update, stale retention, conflict resolution, forgetting, and rollback.
-      3. Implement a verifier helper that scores coverage, preservation, and faithfulness for each proposed transition without mutating model weights.
-      4. Add tests showing unsafe transitions are rejected and safe transitions can be committed.
-      5. Set `memory_transition_verifier_ready` true only if the verifier and tests are usable by Exp5313.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id with principle.
-      - milestone with principle.
-      - status with principle.
-      - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is deterministic_memory_transition_verifier_no_llm.
-      - continuous_self_learning with bare boolean value; must be true.
-      - memory_transition_verifier_ready as a bare boolean for downstream gates.
-      - verifier_path with principle.
-      - transition_label_counts with principle.
-      - coverage_score with bare numeric value.
-      - preservation_score with bare numeric value.
-      - faithfulness_score with bare numeric value.
-      - unsafe_transition_rejection_rate with bare numeric value.
-      - tests_run with principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5313-gated-memory-transition-policy-rollout-v485
-    milestone: "2026.07.485"
-    title: "Exp 5313: Gated memory transition policy rollout, gated on Exp 5312 verifier"
-    priority: high
-    track: learning
-    deliverable: results/experiment_5313_gated_memory_transition_policy_rollout_v485.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 45
-    estimated_wall_time_min: 60
-    prior_failures:
-      - experiment_id: exp1484-fr11-v9-query-time-memory-policy
-        verdict: "query_time_memory_policy_improves_bounded_replay_without_false_accepts"
-        addressed_by: "Different from Exp1484: this task evaluates process-level transition quality using Exp5312's verifier, not only query-time memory policy replay outcomes."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp5312-trustmem-transition-verifier-self-learning-v485
-        artifact_field: memory_transition_verifier_ready
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT:
-      Run from {project_root} on {date}. Exp5312 should provide the transition-level verifier. This task measures whether the adaptive memory policy improves process-level memory quality while preserving `.484`'s safety behavior.
-
-      EXISTING CODE TO READ FIRST:
-      - CODEX.md
-      - CLAUDE.md
       - results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json
-      - results/experiment_5302_adaptive_memory_policy_self_learning_v484.json
-      - results/experiment_5303_memory_stress_conflict_forgetting_v484.json
+      - results/experiment_5313_gated_memory_transition_policy_rollout_v485.json
       - python/carnot
       - tests/python
 
       TASK:
-      Run the adaptive memory policy through the transition verifier and compare against always-full and no-memory baselines on deterministic memory stress cases.
+      Implement or assemble a deterministic context-object lifecycle fixture for continuous self-learning. This should track context objects through create, revise, fold, mask, archive, retrieve, commit, and rollback operations without mutating model weights.
 
       CONCRETE STEPS:
-      1. Confirm the Exp5312 gate passed.
-      2. Evaluate always-full, adaptive, and no-memory policies on clean, conflict, forgetting, stale evidence, invalid premise, and rollback cases.
-      3. Score final task quality separately from process-level transition quality.
-      4. Record verifier calls avoided, unsafe false accepts, unsafe commits rejected, rollback events, and latency/cost proxy.
-      5. Preserve the no-weight-mutation constraint.
+      1. Reuse the transition-memory verifier where possible.
+      2. Define stable context object IDs, object types, current/historical/transition labels, recoverable sidecars, and lifecycle actions.
+      3. Add fixtures with ghost-memory, stale-retrieval, omission, corruption, unsafe prune, and safe archive/recover cases.
+      4. Score bank-maintenance, retrieval, and answer-time failure modes separately.
+      5. Add tests proving safe commits, rollback, recoverability, and unsafe action rejection.
+      6. Write the deliverable and set `context_lifecycle_fixture_ready` true only if the fixture and tests are usable by Exp5329 and Exp5330.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is deterministic_memory_policy_rollout_no_llm.
-      - gates_confirmed with principle.
-      - transition_policy_rollout_complete with bare boolean value.
-      - quality_delta_vs_always_full with bare numeric value.
-      - transition_score_delta_vs_always_full with bare numeric value.
-      - full_verifier_calls_avoided with bare integer value.
-      - unsafe_false_accepts with bare integer value.
-      - unsafe_commits_rejected with bare integer value.
-      - rollback_events with bare integer value.
-      - latency_or_cost_proxy with principle.
+      - inference_substrate with principle; expected value is deterministic_context_lifecycle_fixture.
+      - continuous_self_learning_target with bare boolean value; must be true.
+      - no_weight_mutation with bare boolean value; must be true.
+      - context_object_count with bare integer value.
+      - lifecycle_action_set with principle.
+      - bank_failure_detection_rate with bare numeric value.
+      - retrieval_failure_detection_rate with bare numeric value.
+      - answer_failure_detection_rate with bare numeric value.
+      - rollback_success_rate with bare numeric value.
+      - context_lifecycle_fixture_ready with bare boolean value for downstream gates.
       - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5314-ising-smooth-relaxation-baseline-v485
-    milestone: "2026.07.485"
-    title: "Exp 5314: Ising smooth-relaxation baseline for p-bit/CDCL fixtures"
+  - id: exp5329-gated-memory-context-policy-rollout-v486
+    milestone: "2026.07.486"
+    title: "Exp 5329: Gated memory/context lifecycle policy rollout"
     priority: high
-    track: solver
-    deliverable: results/experiment_5314_ising_smooth_relaxation_baseline_v485.json
+    track: self_learning
+    deliverable: results/experiment_5329_memory_context_policy_rollout_v486.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 45
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 55
+    gated_on:
+      - upstream: exp5328-context-object-lifecycle-self-learning-v486
+        artifact_field: context_lifecycle_fixture_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp2305-sparse-ising-connectivity
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp2305: this task uses existing p-bit/CDCL fixtures to add a tiny CPU smooth-relaxation baseline and keeps CDCL/SAT authoritative."
+      - experiment_id: exp5313-gated-memory-transition-policy-rollout-v485
+        verdict: "complete: adaptive memory transition rollout matched always-full quality and process score, avoided 3 full verifier calls, rejected unsafe commits, exercised rollback, and preserved v484 safety without weight mutation"
+        addressed_by: "Different from Exp5313: this rollout compares context-object lifecycle policies and separately reports bank, retrieval, and answer-time failures instead of only transition score and final quality."
+        retire_if_same_verdict: true
+      - experiment_id: exp1484-query-time-memory-policy
+        verdict: "query_time_memory_policy_improves_bounded_replay_without_false_accepts"
+        addressed_by: "Different from Exp1484: this task uses the context lifecycle fixture from Exp5328 and includes rollback/recoverability metrics."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. The V485 source refresh promoted local-minima-preserving Ising relaxation as a CPU baseline next to `.484` p-bit/CDCL gates. Symbolic CDCL/SAT remains authoritative.
+      Run from {project_root} on {date}. This task is gated on the deterministic context-object lifecycle fixture. It tests whether lifecycle-aware self-learning policy choices improve process metrics without lowering final quality or accepting unsafe state changes.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
-      - results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json
-      - results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json
-      - results/experiment_5292_pbit_cdcl_factor_guidance_v483.json
+      - results/experiment_5328_context_object_lifecycle_self_learning_v486.json
+      - results/experiment_5313_gated_memory_transition_policy_rollout_v485.json
       - python/carnot
       - tests/python
       - research-references.md
 
       TASK:
-      Add a tiny CPU smooth-relaxation diagnostic for generalized Ising/factor-graph fixtures and compare its hints against p-bit/CDCL and solver-only baselines.
+      Compare memory/context policies on the lifecycle fixture: always-full verification, transition-only verifier, and context-lifecycle policy with rollback.
 
       CONCRETE STEPS:
-      1. Reuse bounded Exp5299/Exp5300 fixture instances.
-      2. Implement a minimal smooth-relaxation or one-flip local-minimum diagnostic suitable for tiny CPU tests.
-      3. Validate final assignments with the symbolic solver; relaxation hints are never authoritative.
-      4. Record one-flip local-minimum checks, conflicts saved or added, fallback rate, and misleading-class behavior.
-      5. Set `smooth_relaxation_ready` true only if the diagnostic is tested and usable by Exp5315.
+      1. Load the Exp5328 fixture and confirm it exposes bank, retrieval, answer-time, rollback, and recoverability metrics.
+      2. Run the three policy variants on the same deterministic cases.
+      3. Report final quality, verifier calls, bank failure rate, retrieval failure rate, answer failure rate, unsafe false accepts, rollbacks, and recoveries.
+      4. Set `policy_rollout_ready` true only if all variants run and unsafe false accepts are zero.
+      5. Do not mutate model weights or call an LLM.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is cpu_smooth_ising_relaxation_with_symbolic_fallback.
-      - smooth_relaxation_ready as a bare boolean for downstream gates.
-      - fixture_instances with principle.
-      - one_flip_checks_passed with bare boolean value.
-      - cdcl_fallback_authoritative with bare boolean value; must be true.
-      - conflict_delta_vs_solver_only with bare numeric value.
-      - misleading_class_harm with bare numeric value.
-      - no_hardware_speedup_claim with bare boolean value; must be true.
+      - inference_substrate with principle; expected value is deterministic_context_policy_rollout.
+      - continuous_self_learning_target with bare boolean value; must be true.
+      - no_weight_mutation with bare boolean value; must be true.
+      - quality_delta_vs_always_full with bare numeric value.
+      - verifier_calls_avoided with bare integer value.
+      - bank_failure_delta with bare numeric value.
+      - retrieval_failure_delta with bare numeric value.
+      - answer_failure_delta with bare numeric value.
+      - unsafe_false_accepts with bare integer value.
+      - rollback_events with bare integer value.
+      - policy_rollout_ready with bare boolean value.
       - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5315-gated-solver-guidance-ablation-v485
-    milestone: "2026.07.485"
-    title: "Exp 5315: Gated solver-guidance ablation, gated on Exp 5314 smooth relaxation"
+  - id: exp5330-sea-anytime-certificate-gate-v486
+    milestone: "2026.07.486"
+    title: "Exp 5330: Gated SEA-style anytime certificate for self-learning policy promotion"
     priority: high
-    track: solver
-    deliverable: results/experiment_5315_gated_solver_guidance_ablation_v485.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 45
-    estimated_wall_time_min: 65
-    gated_on:
-      - upstream: exp5314-ising-smooth-relaxation-baseline-v485
-        artifact_field: smooth_relaxation_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp5292-pbit-cdcl-factor-guidance-v483
-        verdict: "complete: p-bit/CDCL simulated CPU guidance helped aggregate conflicts on the bounded factor fixture while harming the misleading-assumption class; distribution sensitivity is expected"
-        addressed_by: "Different from Exp5292: this ablation is gated on Exp5314, includes smooth-relaxation hints, and must block or isolate misleading classes instead of averaging harm into aggregate wins."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Run from {project_root} on {date}. Exp5300 showed p-bit/CDCL instance-class gating can preserve aggregate savings by blocking misleading classes. Exp5314 should add a smooth-relaxation baseline.
-
-      EXISTING CODE TO READ FIRST:
-      - CODEX.md
-      - CLAUDE.md
-      - results/experiment_5314_ising_smooth_relaxation_baseline_v485.json
-      - results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json
-      - results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json
-      - results/experiment_5292_pbit_cdcl_factor_guidance_v483.json
-      - python/carnot
-      - tests/python
-
-      TASK:
-      Run a gated solver-guidance ablation comparing solver-only, LNS, p-bit/CDCL gated hints, smooth-relaxation hints, and combined hints on bounded fixtures.
-
-      CONCRETE STEPS:
-      1. Confirm the Exp5314 smooth-relaxation gate passed.
-      2. Evaluate each method on the same deterministic instance set.
-      3. Keep the symbolic solver authoritative for correctness.
-      4. Report aggregate conflict/runtime deltas and per-class harm, especially misleading-assumption classes.
-      5. If smooth relaxation or p-bit hints hurt a class, encode the class gate rather than claiming broad improvement.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id with principle.
-      - milestone with principle.
-      - status with principle.
-      - honest_verdict with terminal prefix `complete:`, `null:`, `harmful_`, or `blocked_`.
-      - inference_substrate with principle; expected value is bounded_solver_guidance_ablation_with_symbolic_fallback.
-      - gates_confirmed with principle.
-      - solver_guidance_ablation_complete with bare boolean value.
-      - method_matrix with principle.
-      - aggregate_conflict_delta with bare numeric value.
-      - per_class_harm with principle.
-      - misleading_class_blocked with bare boolean value.
-      - cdcl_fallback_authoritative with bare boolean value; must be true.
-      - no_hardware_speedup_claim with bare boolean value; must be true.
-      - tests_run with principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5316-kan-optimal-abstraction-budget-v485
-    milestone: "2026.07.485"
-    title: "Exp 5316: KAN optimal abstraction budget for certificate tightening"
-    priority: high
-    track: certificates
-    deliverable: results/experiment_5316_kan_optimal_abstraction_budget_v485.json
+    track: self_learning
+    deliverable: results/experiment_5330_sea_anytime_certificate_gate_v486.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 50
-    estimated_wall_time_min: 75
+    estimated_wall_time_min: 60
+    gated_on:
+      - upstream: exp5328-context-object-lifecycle-self-learning-v486
+        artifact_field: context_lifecycle_fixture_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp5291-low-order-factor-certificate-curriculum-v483
-        verdict: "complete: low-order curriculum did not improve certificate success over the shuffled ordering; all bounded stages certified, so the value is measurement and factor-order telemetry"
-        addressed_by: "Different from Exp5291: this task changes the technique to optimal PWA piece allocation for KANs instead of curriculum ordering over low-order factors."
+      - experiment_id: exp1388-fr11-self-learning-v4
+        verdict: "fr11_self_learning_v4_dvi_only_exp1382_headline_allowed_fresh_59"
+        addressed_by: "Different from Exp1388: this task uses deterministic context lifecycle certificates and no-op controls, not a DVI-only headline self-learning claim."
         retire_if_same_verdict: true
-      - experiment_id: exp5304-kan-dynamic-abstraction-spotcheck-v484
-        verdict: "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
-        addressed_by: "Different from Exp5304: this task uses DP/knapsack-style budget allocation and must measure certificate success, false-property rejection, and solve time, not only dynamic spot-check hit rate."
+      - experiment_id: exp1757-memory_bootstrap_gate
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Different from Exp1757: it is gated on an existing lifecycle fixture and writes a certificate-gate artifact, not a bootstrap-only memory artifact."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. Exp5304 improved KAN abstraction diagnostics but not certificate success. V485 research promotes optimal abstraction allocation for KAN verification.
+      Run from {project_root} on {date}. SEA-style self-evolving agents suggest frozen-base improvement through certificate-gated updates and no-op controls. Carnot's safe near-term version is policy promotion over deterministic context lifecycle choices, not model weight updates.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
+      - research-program.md
+      - research-references.md
+      - results/experiment_5328_context_object_lifecycle_self_learning_v486.json
+      - python/carnot
+      - tests/python
+
+      TASK:
+      Build an anytime-valid certificate gate for promoting or rejecting context lifecycle policy updates. Include no-op controls, rollback, and frozen-model discipline.
+
+      CONCRETE STEPS:
+      1. Load the Exp5328 context lifecycle fixture and define candidate policy updates over lifecycle actions.
+      2. Implement a bounded anytime certificate that can accept, reject, or defer promotion based on deterministic fixture evidence.
+      3. Include a no-op/shuffled-control policy so selection noise cannot be reported as improvement.
+      4. Record rollback behavior for rejected or later-invalidated promotions.
+      5. Add focused tests for promotion, rejection, defer, no-op control, and rollback.
+      6. Set `anytime_certificate_gate_ready` true only if promotion decisions are reproducible and no unsafe policy is promoted.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id with principle.
+      - milestone with principle.
+      - status with principle.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is deterministic_anytime_certificate_gate.
+      - continuous_self_learning_target with bare boolean value; must be true.
+      - no_weight_mutation with bare boolean value; must be true.
+      - candidate_policy_count with bare integer value.
+      - policy_promotions with bare integer value.
+      - policy_rejections with bare integer value.
+      - policy_deferrals with bare integer value.
+      - no_op_control_delta with bare numeric value.
+      - unsafe_promotions with bare integer value; must be 0.
+      - rollback_events with bare integer value.
+      - anytime_certificate_gate_ready with bare boolean value.
+      - tests_run with principle.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5331-gated-internal-energy-receipt-harness-v486
+    milestone: "2026.07.486"
+    title: "Exp 5331: Gated local internal-signal and energy receipt harness"
+    priority: medium
+    track: verification
+    deliverable: results/experiment_5331_internal_energy_receipt_harness_v486.json
+    requires_gpu: true
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 55
+    operator_override: "ops/exclusion_manifest.yaml states hidden-state/internal-representation verifiers are outside phase_d_external_text_scorer_retired_exp5163_v474; this task records internal-signal availability only and scores no generated text."
+    gated_on:
+      - upstream: exp5324-gated-runtime-receipt-stabilization-v486
+        artifact_field: sota_runtime_unblocked_stable
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp5163-mmlu-pro-verifier-rescale-v473
+        verdict: "complete_mmlu_pro_fewshot_verifier_vs_cheap_delta_+0.025_CI95_[-0.125,0.175]_CI_includes_0"
+        addressed_by: "Different from Exp5163: this task does not train or evaluate an external generated-text scorer; it only records whether local runtime exposes logits, attention, or hidden/internal receipts."
+        retire_if_same_verdict: true
+      - experiment_id: exp5170-retire-phase-d-external-text-scorer-v474
+        verdict: "complete: phase_d_external_text_scorer_scope_retired_and_hidden_state_exception_preserved"
+        addressed_by: "Different from Exp5170: it respects the retirement by avoiding LoRA-EBM/uPRM/EBRM text scoring and using only the manifest-preserved internal-signal exception."
+        retire_if_same_verdict: true
+      - experiment_id: exp5263-neuron-attention-energy-hallucination-probe-v481
+        verdict: "complete: null logit-energy unsupported-minus-supported delta=0.004811"
+        addressed_by: "Different from Exp5263: this is an availability and receipt harness gated on stable native SOTA runtime, not a hallucination performance probe."
+        retire_if_same_verdict: true
+      - experiment_id: exp5272-internal-hallucination-probe-gated-v482
+        verdict: "complete: harmful internal/logit signal delta_over_lexical=-0.345679 auroc=0.654321 sample_count=27"
+        addressed_by: "Different from Exp5272: it makes no AUROC or hallucination-quality claim and exists only to decide whether future diagnostics are technically measurable."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run from {project_root} on {date}. Frequency-aware attention, Semantic Energy, and Spilled Energy are promising only if the local runtime exposes suitable internal receipts. This task is gated on runtime stability and must not reopen retired external generated-text scorer work.
+
+      EXISTING CODE TO READ FIRST:
+      - CODEX.md
+      - CLAUDE.md
+      - ops/exclusion_manifest.yaml
+      - research-references.md
+      - results/experiment_5324_runtime_receipt_stabilization_v486.json
+      - results/experiment_5263_neuron_attention_energy_hallucination_probe_v481.json
+      - results/experiment_5272_internal_hallucination_probe_gated_v482.json
+      - scripts/experiment_template.py
+
+      TASK:
+      Determine whether the stable local GGUF backend can emit logits, attention-like data, hidden-state proxies, or enough token-level metadata for future internal-energy diagnostics. Do not evaluate hallucination quality.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm the Exp5324 stable backend/model, GPU visibility, model cache, and any backend flags/API options for logits or token metadata. If unavailable, write a blocked artifact.
+      1. Define MODEL_SPECS in the artifact:
+         - unsloth/Qwen3.6-35B-A3B-GGUF
+         - unsloth/gemma-4-31B-it-GGUF
+         - unsloth/gemma-4-26B-A4B-it-GGUF
+      2. Probe only bounded prompts and backend metadata endpoints/options. Do not train a scorer and do not compare against self-consistency.
+      3. Record availability for logits, per-token probabilities, attention, hidden-state proxies, token timing, and raw output receipts.
+      4. If an internal signal exists, save a tiny receipt and schema description. If not, record the missing backend feature precisely.
+      5. Set `internal_signal_receipt_ready` true only if a reproducible non-text-score internal receipt exists.
+
+      REQUIRED ARTIFACT FIELDS:
+      - experiment_id with principle.
+      - milestone with principle.
+      - status with principle.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is local_sota_internal_signal_receipt.
+      - MODEL_SPECS with principle and the three mandated GGUF model ids.
+      - preconditions_checked with principle.
+      - selected_model_spec with principle.
+      - logits_available with bare boolean value.
+      - token_probability_available with bare boolean value.
+      - attention_available with bare boolean value.
+      - hidden_state_proxy_available with bare boolean value.
+      - receipt_schema_path with principle.
+      - external_text_scorer_reopened with bare boolean value; must be false.
+      - internal_signal_receipt_ready with bare boolean value.
+      - no_quality_claim with bare boolean value; must be true.
+      - tests_run with principle.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp5332-kan-counterexample-localization-v486
+    milestone: "2026.07.486"
+    title: "Exp 5332: KAN counterexample localization and false-property sensitivity"
+    priority: medium
+    track: certificates
+    deliverable: results/experiment_5332_kan_counterexample_localization_v486.json
+    agent_type: codex
+    model: "gpt-5.5"
+    max_turns: 45
+    estimated_wall_time_min: 50
+    prior_failures:
+      - experiment_id: exp5316-kan-optimal-abstraction-budget-v485
+        verdict: "complete: optimal-budget allocation tightened the bounded fixture envelope under the piece/error budget while certificate success stayed unchanged and false-property rejection stayed intact"
+        addressed_by: "Different from Exp5316: this task targets counterexample localization and false-property sensitivity rather than trying to improve certificate success again."
+        retire_if_same_verdict: true
+      - experiment_id: exp5304-kan-dynamic-abstraction-spotcheck-v484
+        verdict: "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
+        addressed_by: "Different from Exp5304: it focuses on where the abstraction fails or localizes counterexamples, not only envelope tightness and spot-check hit rate."
+        retire_if_same_verdict: true
+      - experiment_id: exp5291-low-order-factor-certificate-curriculum-v483
+        verdict: "complete: low-order curriculum did not improve certificate success over the shuffled ordering; all bounded stages certified, so the value is measurement and factor-order telemetry"
+        addressed_by: "Different from Exp5291: it does not retry curriculum ordering and instead measures false-property localization diagnostics."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Run from {project_root} on {date}. Exp5316 improved KAN abstraction envelope tightness but certificate success did not move. The next useful step is to determine whether KAN abstraction helps localize false-property counterexamples and failure regions.
+
+      EXISTING CODE TO READ FIRST:
+      - CODEX.md
+      - CLAUDE.md
+      - results/experiment_5316_kan_optimal_abstraction_budget_v485.json
       - results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json
       - results/experiment_5291_low_order_factor_certificate_curriculum_v483.json
       - python/carnot
       - tests/python
-      - research-references.md
 
       TASK:
-      Add a bounded KAN abstraction budget experiment that allocates PWA pieces across units under a global error budget and compares against static and `.484` dynamic abstraction.
+      Add or run a bounded KAN diagnostic that measures false-property sensitivity and counterexample localization using the existing abstraction/certificate fixtures.
 
       CONCRETE STEPS:
-      1. Find the existing KAN/PWA/MILP abstraction code and bounded fixtures.
-      2. Implement a small DP/knapsack-style allocation or deterministic approximation suitable for the existing fixture scale.
-      3. Compare static allocation, dynamic spot-check allocation, and optimal-budget allocation.
-      4. Measure envelope gap, MILP solve time, certificate success, false-property rejection, and piece count.
-      5. Do not claim general KAN verification improvement from a bounded fixture.
+      1. Reuse the existing KAN/PWA/MILP fixtures and optimal-budget outputs where possible.
+      2. Define false-property perturbations and expected counterexample regions for a tiny deterministic fixture.
+      3. Measure whether the abstraction localizes violating units/regions, rejects false properties, and preserves true-property certificates.
+      4. Record solve time, piece budget, envelope gap, localization accuracy, and false-property rejection.
+      5. Do not claim broad KAN verification success unless the bounded fixture actually supports it.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
-      - honest_verdict with terminal prefix `complete:`, `null:`, or `blocked_`.
-      - inference_substrate with principle; expected value is bounded_kan_pwa_milp_certificate.
-      - kan_optimal_abstraction_ready with bare boolean value.
-      - allocation_strategy with principle.
-      - piece_budget with bare integer value.
+      - honest_verdict with terminal prefix `complete:` or `blocked_`.
+      - inference_substrate with principle; expected value is deterministic_kan_abstraction_diagnostic.
+      - fixture_count with bare integer value.
+      - false_property_rejection_rate with bare numeric value.
+      - true_property_preservation_rate with bare numeric value.
+      - counterexample_localization_accuracy with bare numeric value.
       - envelope_gap_delta with bare numeric value.
       - certificate_success_delta with bare numeric value.
-      - false_property_rejection_rate with bare numeric value.
-      - milp_solve_time_delta_s with bare numeric value.
-      - bounded_fixture_only with bare boolean value; must be true.
+      - counterexample_localization_ready with bare boolean value.
+      - no_broad_certificate_claim with bare boolean value; must be true.
       - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5317-ebt-telemetry-audit-reemit-v485
-    milestone: "2026.07.485"
-    title: "Exp 5317: EBT spectral telemetry audit and re-emit"
-    priority: medium
-    track: ebm
-    deliverable: results/experiment_5317_ebt_telemetry_audit_reemit_v485.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 40
-    estimated_wall_time_min: 45
-    prior_failures:
-      - experiment_id: exp5301-ebt-spectral-step-control-diagnostic-v484
-        verdict: "complete: spectral step-control is usable as a tiny deterministic stability diagnostic before energy-guided inner-loop claims"
-        addressed_by: "Different from Exp5301: this task audits and re-emits the telemetry with methodology duration, workload counters, and quarantine status before any downstream EBT claim uses it."
-        retire_if_same_verdict: true
-      - experiment_id: exp3872-ebt-energy-descent-system2-diagnostic
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Different from Exp3872: this task is a deterministic telemetry audit/re-emit and does not depend on the blocked gate that prevented the earlier diagnostic."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Run from {project_root} on {date}. Exp5301 produced a useful tiny EBT spectral step-control diagnostic, but the conductor flagged the artifact for duration/methodology. V485 should repair the telemetry record before using it for future energy-descent claims.
-
-      EXISTING CODE TO READ FIRST:
-      - CODEX.md
-      - CLAUDE.md
-      - results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json
-      - results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
-      - research-references.md
-      - python/carnot
-      - tests/python
-
-      TASK:
-      Re-run or audit the tiny deterministic EBT spectral step-control diagnostic and emit a methodology-clean artifact with workload counters.
-
-      CONCRETE STEPS:
-      1. Inspect why Exp5301 was flagged and whether the underlying deterministic diagnostic is still valid.
-      2. Re-run the smallest deterministic diagnostic if needed, with real wall-clock duration and explicit methodology notes.
-      3. Record forward/backward counts, sampling/inner-step counts, lambda-max estimates, alpha/step choices, divergence/recovery behavior, runtime breakdown, and memory/utilization proxies where available.
-      4. Preserve quarantine language if the methodology still cannot support future claims.
-      5. Do not run SOTA LLM inference and do not claim hardware readiness.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id with principle.
-      - milestone with principle.
-      - status with principle.
-      - honest_verdict with terminal prefix `complete:`, `null:`, or `blocked_`.
-      - inference_substrate with principle; expected value is deterministic_ebt_telemetry_audit_no_llm.
-      - ebt_telemetry_audited with bare boolean value.
-      - methodology_duration_s with bare numeric value.
-      - methodology_flag_cleared with bare boolean value.
-      - workload_counters with principle.
-      - lambda_max_logged with bare boolean value.
-      - step_control_recovery_logged with bare boolean value.
-      - no_sota_quality_claim with bare boolean value; must be true.
-      - no_hardware_speedup_claim with bare boolean value; must be true.
-      - tests_run with principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5318-smt-hint-validation-protocol-v485
-    milestone: "2026.07.485"
-    title: "Exp 5318: Solver-authoritative SMT hint validation protocol"
-    priority: medium
-    track: solver
-    deliverable: results/experiment_5318_smt_hint_validation_protocol_v485.json
-    agent_type: codex
-    model: "gpt-5.5"
-    max_turns: 45
-    estimated_wall_time_min: 55
-    prior_failures:
-      - experiment_id: exp260-solver-semantic-gpu
-        verdict: "partial_cpu_bound"
-        addressed_by: "Different from Exp260: this task is a deterministic SMT hint validation protocol with no GPU model run and no semantic verifier scaling claim."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Run from {project_root} on {date}. Recent quantified-SMT and inductive-constraint papers use LLM-generated hints only under solver validation. Carnot should prepare that validation protocol without relying on an LLM runtime in this task.
-
-      EXISTING CODE TO READ FIRST:
-      - CODEX.md
-      - CLAUDE.md
-      - results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json
-      - results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json
-      - python/carnot
-      - tests/python
-      - research-references.md
-
-      TASK:
-      Build a deterministic SMT hint validation fixture that can later accept LLM-proposed instantiations, conjectures, or lemmas, while preserving solver completeness and rejecting unsound hints.
-
-      CONCRETE STEPS:
-      1. Do not call an LLM in this task.
-      2. Create tiny quantified or inductive-style constraint examples with canned valid, useless, redundant, and unsound hints.
-      3. Implement validation telemetry: hint validity, usefulness, overwrite clauses, fallback-to-classical behavior, and completeness preservation.
-      4. Add tests that unsound hints are rejected and solver fallback still reaches the correct result.
-      5. Document how a future SOTA GGUF model can plug into the hint-proposal slot only after the Exp5309 runtime gate is ready.
-
-      REQUIRED ARTIFACT FIELDS:
-      - experiment_id with principle.
-      - milestone with principle.
-      - status with principle.
-      - honest_verdict with terminal prefix `complete:`, `null:`, or `blocked_`.
-      - inference_substrate with principle; expected value is deterministic_smt_hint_validation_no_llm.
-      - smt_hint_protocol_ready with bare boolean value.
-      - fixture_path with principle.
-      - valid_hint_acceptance_rate with bare numeric value.
-      - unsound_hint_rejection_rate with bare numeric value.
-      - usefulness_rate with bare numeric value.
-      - solver_fallback_complete with bare boolean value.
-      - completeness_preserved with bare boolean value.
-      - future_llm_slot_gated_on_sota_runtime with bare boolean value; must be true.
-      - tests_run with principle.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp5319-hardware-continuity-no-speedup-v485
-    milestone: "2026.07.485"
-    title: "Exp 5319: Hardware continuity receipts with no speedup claim"
+  - id: exp5333-hardware-continuity-no-speedup-v486
+    milestone: "2026.07.486"
+    title: "Exp 5333: Hardware continuity receipts with no speedup claim"
     priority: medium
     track: hardware
-    deliverable: results/experiment_5319_hardware_continuity_no_speedup_v485.json
+    deliverable: results/experiment_5333_hardware_continuity_no_speedup_v486.json
     agent_type: codex
     model: "gpt-5.5"
     max_turns: 45
-    estimated_wall_time_min: 55
-    operator_override: "2026-07-06 user requested hardware-aware next-milestone planning; this task records reachability/no-speedup receipts only and does not rerun retired board mechanisms."
+    estimated_wall_time_min: 45
+    operator_override: "2026-07-06 user requested hardware-aware next-milestone planning; this task records reachability/no-speedup receipts only and does not rerun retired KV260 host-block-device or unauthenticated board mechanisms."
     prior_failures:
+      - experiment_id: exp5319-hardware-continuity-no-speedup-v485
+        verdict: "blocked_kv260_ssh_no_authenticated_workload: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged authenticated_workload_run=false public_refs=context_only no_speedup_claim"
+        addressed_by: "Recurring hardware continuity scope, but different from Exp5319 because it checks current reachability once, preserves SSH-only KV260 discipline, and does not claim speedup."
+        retire_if_same_verdict: true
       - experiment_id: exp5305-hardware-continuity-reachability-v484
         verdict: "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
-        addressed_by: "Different from Exp5305: this task is the required next-milestone continuity receipt, must use SSH-only KV260 checks, and makes no workload or speedup claim unless new authenticated evidence exists."
+        addressed_by: "Different from Exp5305: it records .486 hardware context and authenticated workload status without using host block devices or stale board assumptions."
         retire_if_same_verdict: true
-      - experiment_id: exp5293-hardware-continuity-reachability-v483
+      - experiment_id: exp5293-hardware-boundary-receipts-v483
         verdict: "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
-        addressed_by: "Different from Exp5293: this task records whether physical reachability changed after .484 and preserves no-speedup discipline if it did not."
+        addressed_by: "Different from Exp5293: it is a continuity receipt tied to current .486 planning, not a sampler-boundary performance experiment."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. Hardware continuity remains required, but `.484` had KV260 SSH unreachable, PolarFire status-only reachable, and GateMate physical/JTAG unchanged. This task must not turn reachability into a speedup claim.
+      Run from {project_root} on {date}. Hardware remains reachability-only. The hardware wishlist lists KV260, PolarFire, and GateMate context, but prior milestones did not authenticate a useful board workload or speedup.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
       - CLAUDE.md
       - research-hardware-wishlist.md
+      - results/experiment_5319_hardware_continuity_no_speedup_v485.json
       - results/experiment_5305_hardware_continuity_reachability_v484.json
-      - results/experiment_5293_hardware_continuity_reachability_v483.json
-      - ops/changelog.md
       - ops/status.md
+      - ops/changelog.md
 
       TASK:
-      Produce hardware continuity receipts for KV260, PolarFire, GateMate, dual RTX 3090 GPU runtime relevance, and TSU/Kona context boundaries. No speedup claim is allowed without an authenticated workload run.
+      Record current hardware reachability and workload status without making speedup claims.
 
       CONCRETE STEPS:
-      1. Check KV260 with `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` or record blocked reachability. Do not use host block-device checks as board-state evidence.
-      2. Check PolarFire only through authenticated status or workload paths available in the environment.
-      3. Check GateMate only for actual physical/JTAG/toolchain evidence; otherwise preserve blocked status.
-      4. Summarize dual RTX 3090 relevance only as SOTA runtime context, not as sampler hardware acceleration.
-      5. Record Extropic/TSU and Logical/Kona as public-reference context only unless local authenticated access exists.
-      6. Write a no-speedup artifact if no authenticated workload speedup exists.
+      0. PRECONDITIONS: for KV260 use only `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; do not inspect host `/dev/mmcblk*` as board evidence. For PolarFire and GateMate, record only authenticated status or physical/toolchain evidence that is actually available.
+      1. Check KV260 SSH reachability with the required command form and capture result class.
+      2. Check PolarFire status only if an authenticated path exists in the environment.
+      3. Check GateMate only for physical/JTAG/toolchain evidence that is actually present.
+      4. Record Extropic/TSU and Logical/Kona references as public context only if relevant; do not treat them as local hardware.
+      5. Set `authenticated_workload_run` true only if a real board workload ran and a receipt exists. Set `speedup_claim` false.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is hardware_reachability_receipts_no_speedup.
+      - inference_substrate with principle; expected value is hardware_reachability_receipts.
       - preconditions_checked with principle.
-      - kv260_ssh_reachable with bare boolean value.
-      - polarfire_status_reachable with bare boolean value.
-      - gatemate_physical_jtag_changed with bare boolean value.
+      - kv260_status with principle.
+      - polarfire_status with principle.
+      - gatemate_status with principle.
       - authenticated_workload_run with bare boolean value.
-      - no_speedup_claim with bare boolean value; must be true unless authenticated_workload_run is true and measured.
-      - public_hardware_references_used_as_context_only with bare boolean value; must be true.
-      - commands_run with principle.
+      - public_refs_context_only with bare boolean value.
+      - speedup_claim with bare boolean value; must be false.
+      - no_host_block_device_evidence with bare boolean value; must be true.
+      - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp5320-capstone-v485
-    milestone: "2026.07.485"
-    title: "Exp 5320: Capstone and next-milestone decision for 2026.07.485"
+  - id: exp5334-capstone-v486
+    milestone: "2026.07.486"
+    title: "Exp 5334: Capstone for 2026.07.486 runtime, rewrite, self-learning, and hardware decisions"
     priority: critical
     track: reporting
-    deliverable: results/experiment_5320_capstone_v485.json
+    deliverable: results/experiment_5334_capstone_v486.json
     agent_type: codex
     model: "gpt-5.5"
-    max_turns: 45
+    max_turns: 50
     estimated_wall_time_min: 45
-    prior_failures:
-      - experiment_id: exp5306-capstone-v484
-        verdict: "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup."
-        addressed_by: "Different from Exp5306: this capstone aggregates .485 artifacts and decides the .486 branch after the new transition-memory, paraphrase, solver, KAN, EBT, SMT, and hardware tasks run."
-        retire_if_same_verdict: true
     requires:
-      - exp5307-archive-484-activate-485
-      - exp5308-sota-source-delta-v485
-      - exp5309-sota-runtime-timeout-rootcause-matrix-v485
-      - exp5310-paraphrase-consistency-fixture-v485
-      - exp5311-gated-sota-paraphrase-coherence-smoke-v485
-      - exp5312-trustmem-transition-verifier-self-learning-v485
-      - exp5313-gated-memory-transition-policy-rollout-v485
-      - exp5314-ising-smooth-relaxation-baseline-v485
-      - exp5315-gated-solver-guidance-ablation-v485
-      - exp5316-kan-optimal-abstraction-budget-v485
-      - exp5317-ebt-telemetry-audit-reemit-v485
-      - exp5318-smt-hint-validation-protocol-v485
-      - exp5319-hardware-continuity-no-speedup-v485
+      - exp5321-archive-485-activate-486
+      - exp5322-sota-source-delta-v486
+      - exp5323-native-gguf-backend-flag-bisect-v486
+      - exp5324-gated-runtime-receipt-stabilization-v486
+      - exp5325-theoria-rewrite-state-fixture-v486
+      - exp5326-gated-sota-paraphrase-rewrite-smoke-v486
+      - exp5327-smt-hint-corrigendum-reemit-v486
+      - exp5328-context-object-lifecycle-self-learning-v486
+      - exp5329-gated-memory-context-policy-rollout-v486
+      - exp5330-sea-anytime-certificate-gate-v486
+      - exp5331-gated-internal-energy-receipt-harness-v486
+      - exp5332-kan-counterexample-localization-v486
+      - exp5333-hardware-continuity-no-speedup-v486
+    prior_failures:
+      - experiment_id: exp5320-capstone-v485
+        verdict: "complete: .485 closed with SOTA runtime still blocked and SOTA quality unmeasured; paraphrase and transition-memory fixtures are clean positives; solver/KAN/EBT are bounded diagnostics; SMT is flagged; hardware remains reachability-only with no speedup claim."
+        addressed_by: "Recurring capstone scope, but different from Exp5320 because it reconciles .486 runtime repair, rewrite-state verification, context-lifecycle self-learning, SMT corrigendum, KAN localization, and hardware continuity."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Run from {project_root} on {date}. This capstone closes milestone 2026.07.485. It must aggregate artifacts honestly and not launder blocked, gated, null, harmful, quarantined, missing, or no-speedup evidence into success.
+      Run from {project_root} on {date}. This is the .486 milestone capstone. It must synthesize completed, blocked, and gate-skipped artifacts without laundering any blocked result into a quality, speedup, or certificate claim.
 
       EXISTING CODE TO READ FIRST:
       - CODEX.md
@@ -825,50 +896,50 @@ tasks:
       - openspec/change-proposals/research-roadmap-vNEXT.md
       - ops/status.md
       - ops/changelog.md
-      - _bmad/traceability.md
-      - results/experiment_5307_archive_484_activate_485.json
-      - results/experiment_5308_sota_source_delta_v485.json
-      - results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json
-      - results/experiment_5310_paraphrase_consistency_fixture_v485.json
-      - results/experiment_5311_gated_sota_paraphrase_coherence_smoke_v485.json
-      - results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json
-      - results/experiment_5313_gated_memory_transition_policy_rollout_v485.json
-      - results/experiment_5314_ising_smooth_relaxation_baseline_v485.json
-      - results/experiment_5315_gated_solver_guidance_ablation_v485.json
-      - results/experiment_5316_kan_optimal_abstraction_budget_v485.json
-      - results/experiment_5317_ebt_telemetry_audit_reemit_v485.json
-      - results/experiment_5318_smt_hint_validation_protocol_v485.json
-      - results/experiment_5319_hardware_continuity_no_speedup_v485.json
+      - ops/conductor-log.md
+      - results/experiment_5321_archive_485_activate_486.json
+      - results/experiment_5322_sota_source_delta_v486.json
+      - results/experiment_5323_native_gguf_backend_flag_bisect_v486.json
+      - results/experiment_5324_runtime_receipt_stabilization_v486.json
+      - results/experiment_5325_theoria_rewrite_state_fixture_v486.json
+      - results/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.json
+      - results/experiment_5327_smt_hint_corrigendum_reemit_v486.json
+      - results/experiment_5328_context_object_lifecycle_self_learning_v486.json
+      - results/experiment_5329_memory_context_policy_rollout_v486.json
+      - results/experiment_5330_sea_anytime_certificate_gate_v486.json
+      - results/experiment_5331_internal_energy_receipt_harness_v486.json
+      - results/experiment_5332_kan_counterexample_localization_v486.json
+      - results/experiment_5333_hardware_continuity_no_speedup_v486.json
 
       TASK:
-      Aggregate .485 outcomes, update ops docs and traceability as appropriate, and recommend the natural .486 branch based on actual artifact fields.
+      Produce the .486 capstone decision artifact. State clearly whether local SOTA runtime is stable, whether SOTA quality was measured, whether rewrite/SMT/self-learning gates are clean, whether internal-signal diagnostics are opened or closed, whether KAN localization helped, and whether hardware remains reachability-only.
 
       CONCRETE STEPS:
-      1. Read every available .485 artifact and record missing or blocked artifacts explicitly.
-      2. Summarize SOTA runtime, SOTA quality, paraphrase fixture, continuous self-learning, solver guidance, KAN certificates, EBT telemetry, SMT hint protocol, and hardware continuity separately.
-      3. Update `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` if the artifact evidence changes their stated status.
-      4. Do not edit `research-roadmap.yaml` and do not edit `scripts/research_conductor.py`.
-      5. Write the capstone artifact with a concrete recommendation for .486.
+      1. Read every .486 artifact that exists. Treat missing artifacts, blocked artifacts, and conductor pre-gate skips as first-class outcomes.
+      2. Build a gate table for runtime, SOTA quality, rewrite-state verification, SMT corrigendum, context lifecycle, certificate-gated self-learning, internal-signal receipts, KAN localization, and hardware.
+      3. Update `ops/status.md` and `ops/changelog.md` only if the repo convention requires capstone status/changelog alignment for completed milestone work. Do not modify `research-roadmap.yaml` or the conductor.
+      4. Write the deliverable JSON with a short next-milestone recommendation: runtime quality, self-learning scale-up, or another substrate repair.
+      5. Run relevant lightweight validation for the capstone and documentation edits.
 
       REQUIRED ARTIFACT FIELDS:
       - experiment_id with principle.
       - milestone with principle.
       - status with principle.
       - honest_verdict with terminal prefix `complete:` or `blocked_`.
-      - inference_substrate with principle; expected value is local_artifact_aggregation_and_doc_reconcile.
+      - inference_substrate with principle; expected value is artifact_synthesis_and_gate_reconciliation.
       - artifacts_read with principle.
-      - missing_artifacts with principle.
-      - sota_runtime_status with principle.
-      - sota_quality_status with principle.
-      - paraphrase_verification_status with principle.
-      - continuous_self_learning_status with principle.
-      - solver_status with principle.
-      - kan_certificate_status with principle.
-      - ebt_telemetry_status with principle.
-      - smt_hint_protocol_status with principle.
-      - hardware_status with principle.
-      - no_false_speedup_claim with bare boolean value; must be true.
-      - no_false_sota_quality_claim with bare boolean value; must be true.
+      - missing_or_blocked_artifacts with principle.
+      - runtime_stable with bare boolean value.
+      - sota_quality_measured with bare boolean value.
+      - rewrite_state_ready with bare boolean value.
+      - smt_corrigendum_clean with bare boolean value.
+      - context_lifecycle_ready with bare boolean value.
+      - certificate_self_learning_ready with bare boolean value.
+      - internal_signal_path_open with bare boolean value.
+      - kan_localization_ready with bare boolean value.
+      - hardware_speedup_claim with bare boolean value; must be false.
       - next_milestone_recommendation with principle.
-      - docs_updated with principle.
+      - active_roadmap_modified with bare boolean value; must be false.
+      - conductor_modified with bare boolean value; must be false.
+      - tests_run with principle.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
