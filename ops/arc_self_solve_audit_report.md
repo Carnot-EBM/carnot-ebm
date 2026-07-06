@@ -16,21 +16,19 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: **0 SELF_DISCOVERY_ADVANCE.** Eight artifacts are **UNCLEAR/no-credit development proxies**; `lp85` is **OUTER_LOOP_RE** because it explicitly used env source.
+TL;DR: **0 SELF_DISCOVERY_ADVANCE.** Reachability is clean, but reachability is not evidence of live self-discovery. Eight are **UNCLEAR/no-credit development proxies**; `lp85` is **OUTER_LOOP_RE**.
 
 | Artifact | Verdict | Evidence | Recommended action |
-|---|---:|---|---|
-| `results/arc_loop_solve_r11l.json` | **UNCLEAR** | Reachable path, but provenance is `development_proxy`, `honest_verdict` is empty, and `standing_arc_loop_offline_no_quota` does not prove live self-discovery from attempts. | Do not count as ARC capability. Re-run with live-agent provenance, attempt log, runtime RE trace, and no dev proxy labeling. |
-| `results/arc_loop_solve_ls20.json` | **UNCLEAR** | Same: live-ish entrypoint naming is not enough; `development_proxy` gives no evidence the agent discovered the solve itself. | Reproduce under live competition agent path with auditable action/observation history. |
-| `results/arc_loop_solve_dc22.json` | **UNCLEAR** | Level 3 claim, but no honest verdict and no self-discovery proof. Offline/no-quota mode weakens the claim. | Treat as hypothesis/test fixture until live replay proves it. |
-| `results/arc_loop_solve_sp80.json` | **UNCLEAR** | No declared outer-loop inputs, but also no affirmative live-agent evidence. `development_proxy` is not acceptable provenance. | Require provenance upgrade or quarantine from solve registry. |
-| `results/arc_loop_solve_su15.json` | **UNCLEAR** | Claimed solve lacks trace showing the live agent learned/discovered the policy from its own attempts. | Same: live replay with trace, or mark non-credit. |
-| `results/arc_loop_solve_ft09.json` | **UNCLEAR** | Level 3 artifact, but `development_proxy` + empty `honest_verdict` leaves discovery mechanism unproven. | Do not promote. Add explicit provenance fields for attempt-derived model/state. |
-| `results/arc_loop_solve_lf52.json` | **UNCLEAR** | Reachable module closure helps only with OFF_PATH; it does not establish self-discovery. | Keep out of capability claims until independently replayed by live agent. |
-| `results/arc_loop_solve_ka59.json` | **UNCLEAR** | Level 1 solve, same provenance gap. No duplicate evidence provided, but no self-discovery evidence either. | Re-run clean or drop from “recent advances.” |
-| `results/experiment_headway_lp85_capture.json` | **OUTER_LOOP_RE** | Declares `outer_loop_inputs_declared: ["used_env_source"]`; honest verdict says captured bank trajectory. That is source-assisted reverse engineering, not live agent discovery. | Quarantine as forbidden outer-loop artifact. It may be useful as a regression oracle, but must not be counted as ARC solve capability. |
+|---|---|---|---|
+| `results/arc_loop_solve_r11l.json` | **UNCLEAR** | `development_proxy`; empty `honest_verdict`; offline/no-quota mode. | Do not count. Re-run with live attempt log and runtime RE trace. |
+| `results/arc_loop_solve_ls20.json` | **UNCLEAR** | Same: reachable path, but no proof the live agent discovered it. | Require live competition-agent reproduction. |
+| `results/arc_loop_solve_dc22.json` | **UNCLEAR** | L3 claim, but still `development_proxy` with no self-discovery receipt. | Treat as offline fixture until proven live. |
+| `results/arc_loop_solve_sp80.json` | **UNCLEAR** | No declared outer-loop input, but no affirmative live-agent evidence. | Quarantine from capability claims. |
+| `results/arc_loop_solve_su15.json` | **UNCLEAR** | Claimed solve lacks attempt-derived model/trace evidence. | Re-run clean or drop. |
+| `results/arc_loop_solve_ft09.json` | **UNCLEAR** | L3 gate, but provenance is still development proxy. | No promotion without live trace. |
+| `results/arc_loop_solve_lf52.json` | **UNCLEAR** | Reachable module closure only rules out OFF_PATH. | Keep non-credit. |
+| `results/arc_loop_solve_ka59.json` | **UNCLEAR** | L1 solve with same provenance gap. | Do not present as recent advance. |
+| `results/experiment_headway_lp85_capture.json` | **OUTER_LOOP_RE** | Explicit `outer_loop_inputs_declared: ["used_env_source"]`; trajectory capture is source-assisted. | Quarantine as forbidden outer-loop artifact; regression oracle only. |
 
-**Pattern Watch**
-
-The drift is clear: `development_proxy` artifacts are being allowed to look like solves without carrying the burden of proof. Reachability is necessary but not sufficient. A solver being on the live path does not matter if the artifact does not prove the live agent reached the solve through its own attempts and runtime reverse-engineering. The `lp85` capture is the explicit red line: source-assisted trajectory capture is outer-loop RE and should be labeled non-competitive by default.
+**Pattern watch:** The drift is `development_proxy` artifacts being allowed to look like solves. Offline/no-quota reproduction and live-path reachability are not live self-discovery. The `lp85` capture crosses the red line outright: source-assisted reverse engineering must never be counted as ARC live-agent capability.
 
