@@ -3979,6 +3979,17 @@ Every user instruction must be captured and traceable to outcomes:
   the CPU-only wheel unless this build-flag requirement is applied again. Re-run the verification
   command above after any venv rebuild before trusting a `live_llm_inference`-substrate artifact's
   duration as GPU-backed evidence.
+- **The native `llama.cpp-master` CLI binary (`~/.cache/llama.cpp-master/build/bin/llama-cli`,
+  build b9606) hangs indefinitely on `-p <prompt> -n <N>` alone — needs `-st` / `--single-turn`,
+  not just `-no-cnv` / `--no-conversation` (found 2026-07-06, while `.484`'s `exp5297` and `.485`'s
+  `exp5309` were independently investigating this same hang across two milestones without finding
+  the fix).** This build defaults to an interactive chat REPL; `--no-conversation` alone does not
+  stop it from looping an empty `> ` prompt forever after answering (confirmed: hangs even with
+  stdin closed via `< /dev/null`, producing tens of millions of blank-prompt lines). `--single-turn`
+  (`-st`) is the flag that actually exits cleanly after one response — verified directly: real
+  GPU-accelerated generation (~64 tok/s on `gemma-4-31B-it` Q4_K_M, matching the llama-cpp-python
+  fix above), clean `Exiting...` and exit code 0. Any script driving this binary (or copying its
+  invocation pattern) should use `-st`, not `-no-cnv`, to guarantee termination.
 
 ## Key Paths
 
