@@ -290,6 +290,15 @@ LOG_ANALYSIS_LOCAL_TIMING_MIN_DURATION_S = (
 LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE = "live_llm_inference_local_gguf_sota"
 LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
 
+# Deterministic solver/formal-checker validation (SMT/Z3-style hint acceptance, constraint
+# checking) that explicitly declares itself LLM-free in its own substrate name. No model load,
+# no GPU, just a fast deterministic check -- a near-zero floor is appropriate, same reasoning as
+# aggregation_from_upstream_artifacts and artifact_qa_lint_tests. Discovered 2026-07-06 (exp5318,
+# duration_s=0.03, flagged under the generic 60s live_llm_inference floor despite its own substrate
+# name declaring "no_llm").
+DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE = "deterministic_smt_hint_validation_no_llm"
+DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S = 0.0001
+
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
 # including negative controls whose details mention GGUF/CUDA/live-model markers.
 # The artifact itself runs JSON lint tests, not model inference, so exact
@@ -1920,6 +1929,13 @@ def _is_local_sota_gguf_small_n(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE)
 
 
+def _is_deterministic_smt_hint_validation(d: dict[str, Any]) -> bool:
+    """True when the artifact declares deterministic, LLM-free SMT/solver hint validation.
+    See DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE for the exemplar incident (exp5318)."""
+
+    return _inference_substrate_matches(d, DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -2034,6 +2050,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
             "min_duration_s": LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
             "reason": "local_sota_gguf_small_n",
+        }
+    if _is_deterministic_smt_hint_validation(d):
+        return {
+            "substrate": DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
+            "min_duration_s": DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S,
+            "reason": "deterministic_smt_hint_validation",
         }
     if _is_live_llm_inference(d):
         return {

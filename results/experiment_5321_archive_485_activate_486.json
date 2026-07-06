@@ -1,0 +1,184 @@
+{
+  "activated_milestone": {
+    "principle": "Records the next milestone that roadmap documents must name before activation can proceed.",
+    "value": "2026.07.486"
+  },
+  "active_roadmap_modified": false,
+  "archived_milestone": {
+    "principle": "Records the closed milestone whose capstone is being archived.",
+    "value": "2026.07.485"
+  },
+  "conductor_modified": false,
+  "duration_s": 0.051455,
+  "experiment": "experiment_5321_archive_485_activate_486",
+  "experiment_id": {
+    "principle": "Identifies Exp5321 as the durable milestone-transition receipt from .485 to .486, not a new research result or a roadmap overwrite.",
+    "value": "exp5321-archive-485-activate-486"
+  },
+  "failed_preconditions": [
+    "roadmap_next_missing"
+  ],
+  "field_principles": {
+    "activated_milestone": "Records the next milestone that roadmap documents must name before activation can proceed.",
+    "archived_milestone": "Records the closed milestone whose capstone is being archived.",
+    "experiment_id": "Identifies Exp5321 as the durable milestone-transition receipt from .485 to .486, not a new research result or a roadmap overwrite.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .485 was archived, .486 roadmap readiness was observed, and no active-roadmap or conductor edit occurred.",
+    "inference_substrate": "local_repo_doc_and_artifact_audit because Exp5321 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
+    "milestone": "Names the target .486 milestone being audited so downstream gates do not confuse transition scope with .485 capstone scope.",
+    "preconditions_checked": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
+    "status": "Machine-readable terminal state for the transition audit.",
+    "v485_capstone_verdict": "Carries forward the capstone's own verdict without broadening it into unproven runtime, quality, or hardware claims."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .485 was archived, .486 roadmap readiness was observed, and no active-roadmap or conductor edit occurred.",
+    "value": "blocked_archive_485_activate_486: transition preconditions failed; roadmap_next_present=false; no active roadmap overwrite or conductor edit was performed by this task."
+  },
+  "inference_substrate": {
+    "principle": "local_repo_doc_and_artifact_audit because Exp5321 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
+    "value": "local_repo_doc_and_artifact_audit"
+  },
+  "milestone": {
+    "principle": "Names the target .486 milestone being audited so downstream gates do not confuse transition scope with .485 capstone scope.",
+    "value": "2026.07.486"
+  },
+  "milestone_doc_present": true,
+  "preconditions_checked": {
+    "principle": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
+    "value": {
+      "active_roadmap_milestone": "2026.07.486",
+      "active_roadmap_modified": false,
+      "active_roadmap_present": true,
+      "capstone_loadable": true,
+      "capstone_present": true,
+      "checked_paths": [
+        "results/experiment_5320_capstone_v485.json",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap-next.yaml",
+        "research-roadmap.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "conductor_modified": false,
+      "milestone_doc_names_activated_milestone": true,
+      "milestone_doc_present": true,
+      "no_active_roadmap_overwrite_performed": true,
+      "no_conductor_edit_performed": true,
+      "ops_reconciliation_delegated": true,
+      "roadmap_next_milestone": null,
+      "roadmap_next_names_activated_milestone": false,
+      "roadmap_next_present": false
+    }
+  },
+  "random_seed": 5321,
+  "reproducibility_checksum": "sha256:dddd77e7ed8ab07e55965e3399110b6fa0191699119f39e86345ac4639433a69",
+  "result_path": "results/experiment_5321_archive_485_activate_486.json",
+  "roadmap_next_present": false,
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5321_archive_485_activate_486.v1",
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:204383e585d9fc03394ac52dc67000f83c1c85ce88d7671be788c55226aae06c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:243964c09b16cdea5877766d55933d30a975f80c2df561971acfd9c1afb1c59b"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:488c56b09968b2aa4558d115fba95281ac402f86313337ca5ce4ef056d43248d"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:32d19ad4ea44265b558a63cd7ce615e54160d114538b880558ac309667a214c8"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:a52ca47ea3aa8c4440c2d8e2b7193aaf9982dd7dec559e4abd314d0dea71c063"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:897abdd9f7cc85d7299ba428879e8285ee74a921f528d596f12fc008434a1a44"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "results/experiment_5320_capstone_v485.json",
+      "sha256": "sha256:9fce3753d66f68dbd0b17b219e147f8d17a2ea53c1546572e3c17828fbccdc00"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5321",
+    "SCENARIO-REPORT-5321",
+    "SCENARIO-REPORT-5321-BLOCKED-NEXT-ROADMAP"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for the transition audit.",
+    "value": "blocked"
+  },
+  "v485_capstone_proves": {
+    "principle": "Summarizes only fields present in the .485 capstone so this transition cannot turn blocked, gated, flagged, bounded, or no-speedup evidence into a stronger claim.",
+    "value": {
+      "capstone_honest_verdict": "complete: .485 closed with SOTA runtime still blocked and SOTA quality unmeasured; paraphrase and transition-memory fixtures are clean positives; solver/KAN/EBT are bounded diagnostics; SMT is flagged; hardware remains reachability-only with no speedup claim.",
+      "capstone_milestone": "2026.07.485",
+      "capstone_status": "complete",
+      "continuous_self_learning_no_weight_mutation": true,
+      "continuous_self_learning_quality_delta": 0.0,
+      "continuous_self_learning_rollout_complete": true,
+      "ebt_hardware_readiness_claims_eligible": false,
+      "ebt_methodology_flag_cleared": true,
+      "ebt_sota_quality_claims_eligible": false,
+      "hardware_authenticated_workload_run": false,
+      "hardware_no_speedup_claim": true,
+      "hardware_speedup_claimed": false,
+      "kan_bounded_fixture_only": true,
+      "kan_certificate_success_delta": 0.0,
+      "no_false_sota_quality_claim": true,
+      "no_false_speedup_claim": true,
+      "paraphrase_fixture_ready": true,
+      "runtime_completed_model_count": 0,
+      "smt_clean_success_evidence": false,
+      "smt_flagged_adversarial": true,
+      "solver_cdcl_authoritative": true,
+      "solver_guidance_ablation_complete": true,
+      "solver_misleading_class_blocked": true,
+      "sota_quality_gate_blocked": true,
+      "sota_quality_measured": false,
+      "sota_runtime_no_quality_claim": true,
+      "sota_runtime_unblocked": false
+    }
+  },
+  "v485_capstone_verdict": {
+    "principle": "Carries forward the capstone's own verdict without broadening it into unproven runtime, quality, or hardware claims.",
+    "value": "complete: .485 closed with SOTA runtime still blocked and SOTA quality unmeasured; paraphrase and transition-memory fixtures are clean positives; solver/KAN/EBT are bounded diagnostics; SMT is flagged; hardware remains reachability-only with no speedup claim."
+  }
+}

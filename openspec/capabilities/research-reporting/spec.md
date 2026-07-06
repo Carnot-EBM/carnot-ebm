@@ -35685,6 +35685,88 @@ present next-roadmap names it, or git status reports changes to
 |---|---|---|
 | REQ-REPORT-5307 | Implemented (`python/carnot/experiment_5307_archive_484_activate_485.py`, `results/experiment_5307_archive_484_activate_485.json`) | Implemented (`tests/python/test_experiment_5307_archive_484_activate_485.py`) |
 
+### REQ-REPORT-5321: Archive .485 And Emit .486 Transition Artifact
+
+The Exp 5321 workflow SHALL audit local repository documents and the `.485`
+capstone artifact before writing
+`results/experiment_5321_archive_485_activate_486.json`. It SHALL read
+`CODEX.md`, `CLAUDE.md`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap-next.yaml` when present, `ops/status.md`,
+`ops/changelog.md`, `ops/conductor-log.md`, and
+`results/experiment_5320_capstone_v485.json`. It SHALL NOT overwrite
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`,
+SHALL NOT update ops/status, changelog, or traceability files during this
+transition run, and SHALL NOT push.
+
+The workflow SHALL summarize only what the `.485` capstone artifact actually
+proves: local SOTA runtime stayed blocked and SOTA quality was unmeasured;
+deterministic paraphrase and transition-memory fixtures were clean positives;
+solver, KAN, and EBT results remained bounded diagnostics; Exp5318 SMT evidence
+was flagged adversarial; and hardware stayed reachability-only with no speedup
+claim. It SHALL verify
+`openspec/change-proposals/research-roadmap-vNEXT.md` exists and names
+`2026.07.486`. It SHALL verify `research-roadmap-next.yaml` exists and names
+`2026.07.486`; if that next-roadmap file is absent or mismatched, the workflow
+SHALL write a terminal `blocked_` artifact instead of creating or copying any
+roadmap file. It SHALL confirm `research-roadmap.yaml` and
+`scripts/research_conductor.py` were not modified by this task.
+
+The artifact SHALL include required fields `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `archived_milestone`,
+`activated_milestone`, `v485_capstone_verdict`, bare boolean
+`roadmap_next_present`, bare boolean `milestone_doc_present`, bare boolean
+`active_roadmap_modified`, bare boolean `conductor_modified`, and
+`preconditions_checked`. It SHALL declare
+`inference_substrate.value="local_repo_doc_and_artifact_audit"` because the
+workflow only reads local documents, git status, and checked-in artifacts.
+
+Required field principles:
+
+- `experiment_id`: principle "Identifies Exp5321 as the durable milestone-transition receipt from .485 to .486, not a new research result or a roadmap overwrite."
+- `milestone`: principle "Names the target .486 milestone being audited so downstream gates do not confuse transition scope with .485 capstone scope."
+- `status`: principle "Machine-readable terminal state for the transition audit."
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether .485 was archived, .486 roadmap readiness was observed, and no active-roadmap or conductor edit occurred."
+- `inference_substrate`: principle "local_repo_doc_and_artifact_audit because Exp5321 reads local docs, git status, and artifacts without running models, solvers, or hardware."
+- `archived_milestone`: principle "Records the closed milestone whose capstone is being archived."
+- `activated_milestone`: principle "Records the next milestone that roadmap documents must name before activation can proceed."
+- `v485_capstone_verdict`: principle "Carries forward the capstone's own verdict without broadening it into unproven runtime, quality, or hardware claims."
+- `preconditions_checked`: principle "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable."
+
+#### SCENARIO-REPORT-5321: Present .486 Roadmap-Next Emits A Complete No-Overwrite Artifact
+
+**Given** the `.485` capstone artifact is loadable and terminal-prefixed
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.486`
+**And** `research-roadmap-next.yaml` exists and names `2026.07.486`
+**And** git status reports no changes to `research-roadmap.yaml` or
+`scripts/research_conductor.py`
+**When** the Exp 5321 workflow runs
+**Then** it writes
+`results/experiment_5321_archive_485_activate_486.json`, sets
+`roadmap_next_present=true`, sets `milestone_doc_present=true`, sets
+`active_roadmap_modified=false`, sets `conductor_modified=false`, declares
+`local_repo_doc_and_artifact_audit`, summarizes only capstone-backed `.485`
+facts, and emits a `complete:` verdict without overwriting
+`research-roadmap.yaml`.
+
+#### SCENARIO-REPORT-5321-BLOCKED-NEXT-ROADMAP: Missing Or Mismatched Next Roadmap Blocks The Receipt
+
+**Given** the `.485` capstone artifact and `.486` milestone document exist
+**And** `research-roadmap-next.yaml` is missing or does not name
+`2026.07.486`
+**When** the Exp 5321 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`blocked_`, preserves the failed next-roadmap precondition, keeps
+`active_roadmap_modified=false`, keeps `conductor_modified=false`, and does not
+modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-5321)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5321 | Planned (`python/carnot/experiment_5321_archive_485_activate_486.py`, `results/experiment_5321_archive_485_activate_486.json`) | Planned (`tests/python/test_experiment_5321_archive_485_activate_486.py`) |
+
 ### REQ-REPORT-5308: V485 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5308 workflow SHALL perform an execution-time source delta check after
