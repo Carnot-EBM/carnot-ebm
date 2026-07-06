@@ -1,0 +1,2181 @@
+{
+  "aggregate_conflict_delta": 9,
+  "cdcl_fallback_authoritative": true,
+  "claim_limits": [
+    "bounded CPU solver-guidance ablation only",
+    "symbolic CDCL validates every final SAT assignment and fallback label",
+    "p-bit, smooth, LNS, and combined hints are advisory",
+    "misleading hint classes are gated instead of promoted",
+    "no LLM inference, hardware execution, or hardware speedup claim"
+  ],
+  "duration_s": 0.159791,
+  "experiment_id": {
+    "principle": "Traceable Exp 5315 identifier for the gated solver-guidance ablation.",
+    "value": "exp5315-gated-solver-guidance-ablation-v485"
+  },
+  "field_principles": {
+    "aggregate_conflict_delta": "Bare numeric solver-only-minus-combined conflict delta; positive values save conflicts and negative values expose aggregate harm.",
+    "cdcl_fallback_authoritative": "Bare boolean proving CDCL validates final SAT labels/models and overwrites unsafe advisory hints.",
+    "experiment_id": "Traceable Exp 5315 identifier for the gated solver-guidance ablation.",
+    "gates_confirmed": "Records upstream Exp5299 LNS, Exp5300 p-bit/CDCL, and Exp5314 smooth-relaxation readiness before combining hints.",
+    "honest_verdict": "Terminal Exp 5315 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether gated solver guidance helped without hiding harmful classes.",
+    "inference_substrate": "Declares bounded CPU solver-guidance ablation with symbolic fallback; no LLM, hardware execution, or hardware speedup claim.",
+    "method_matrix": "Compares aggregate and per-class conflicts/runtime for every method on the same deterministic instances so savings are not distribution drift.",
+    "milestone": "Milestone accountability for the V485 bounded solver-guidance comparison.",
+    "misleading_class_blocked": "Bare boolean true only when every misleading p-bit or smooth hint that would add conflicts is routed to solver-only fallback in final guided methods.",
+    "no_hardware_speedup_claim": "Bare boolean that must remain true because Exp5315 is CPU-only and reports no hardware speedup.",
+    "per_class_harm": "Reports class-level added conflicts by method, including misleading-assumption classes, so harmful guidance is gated instead of promoted as broad improvement.",
+    "solver_guidance_ablation_complete": "Bare boolean true only when solver-only, LNS, p-bit/CDCL gated, smooth-relaxation, and combined-hint arms all run on the same fixture instances with CDCL-valid final labels.",
+    "status": "Terminal status for downstream readers; complete means all advisory methods were compared on the same deterministic fixture set.",
+    "tests_run": "Commands run to validate ablation routing, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+  },
+  "gates_confirmed": {
+    "principle": "Records upstream Exp5299 LNS, Exp5300 p-bit/CDCL, and Exp5314 smooth-relaxation readiness before combining hints.",
+    "value": {
+      "all_required_gates_confirmed": true,
+      "constraint_lns_fixture_ready": true,
+      "pbit_gate_ready": true,
+      "smooth_relaxation_gate_passed": true,
+      "smooth_relaxation_ready": true,
+      "source_artifacts": [
+        "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+        "results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json",
+        "results/experiment_5314_ising_smooth_relaxation_baseline_v485.json"
+      ]
+    }
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5315 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether gated solver guidance helped without hiding harmful classes.",
+    "value": "complete: gated solver-guidance ablation preserved aggregate conflict savings while reporting and blocking misleading-class p-bit and smooth hint harm; symbolic CDCL stayed authoritative"
+  },
+  "inference_substrate": {
+    "principle": "Declares bounded CPU solver-guidance ablation with symbolic fallback; no LLM, hardware execution, or hardware speedup claim.",
+    "value": "bounded_solver_guidance_ablation_with_symbolic_fallback"
+  },
+  "method_matrix": {
+    "principle": "Compares aggregate and per-class conflicts/runtime for every method on the same deterministic instances so savings are not distribution drift.",
+    "value": {
+      "instance_set": {
+        "classes": [
+          "aligned_factor_sat",
+          "misleading_factor_sat",
+          "neutral_factor_sat",
+          "aligned_repair",
+          "misleading_repair",
+          "neutral_noop_repair",
+          "malformed_control",
+          "semantic_wrong_control"
+        ],
+        "count": 8,
+        "fixture_id": "small_pair_sum",
+        "instance_ids": [
+          "exp5292_aligned_factor_sat",
+          "exp5292_misleading_factor_sat",
+          "exp5292_neutral_factor_sat",
+          "exp5299_aligned_repair",
+          "exp5299_misleading_repair",
+          "exp5299_neutral_noop_repair",
+          "exp5299_malformed_control",
+          "exp5299_semantic_wrong_control"
+        ]
+      },
+      "methods": {
+        "combined_hints": {
+          "aggregate": {
+            "conflicts": 15,
+            "decisions": 71,
+            "propagations": 152,
+            "restarts": 8,
+            "wall_clock_s": 0.000152204
+          },
+          "delta_vs_solver_only": {
+            "conflicts_saved": 9,
+            "decisions_saved": 33,
+            "propagations_saved": 48,
+            "restarts_saved": 0,
+            "wall_clock_s_saved": -4.4994e-05
+          },
+          "per_class": {
+            "aligned_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "combined_pbit_allow",
+              "wall_clock_s": 5.5754e-05
+            },
+            "aligned_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "combined_pbit_allow",
+              "wall_clock_s": 1.8705e-05
+            },
+            "malformed_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "combined_solver_fallback",
+              "wall_clock_s": 1.1431e-05
+            },
+            "misleading_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "combined_solver_fallback",
+              "wall_clock_s": 1.3165e-05
+            },
+            "misleading_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "combined_solver_fallback",
+              "wall_clock_s": 1.1261e-05
+            },
+            "neutral_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "combined_solver_fallback",
+              "wall_clock_s": 1.2042e-05
+            },
+            "neutral_noop_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "combined_pbit_allow",
+              "wall_clock_s": 1.8335e-05
+            },
+            "semantic_wrong_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "combined_solver_fallback",
+              "wall_clock_s": 1.1511e-05
+            }
+          },
+          "per_instance": [
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_factor_sat",
+              "instance_id": "exp5292_aligned_factor_sat",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 5.5754e-05
+              },
+              "route": "combined_pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 5.5754e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_factor_sat",
+              "instance_id": "exp5292_misleading_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.3165e-05
+              },
+              "route": "combined_solver_fallback",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.3165e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_factor_sat",
+              "instance_id": "exp5292_neutral_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.2042e-05
+              },
+              "route": "combined_solver_fallback",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.2042e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_repair",
+              "instance_id": "exp5299_aligned_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8705e-05
+              },
+              "route": "combined_pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8705e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_repair",
+              "instance_id": "exp5299_misleading_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1261e-05
+              },
+              "route": "combined_solver_fallback",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1261e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_noop_repair",
+              "instance_id": "exp5299_neutral_noop_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8335e-05
+              },
+              "route": "combined_pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8335e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "malformed_control",
+              "instance_id": "exp5299_malformed_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1431e-05
+              },
+              "route": "combined_solver_fallback",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1431e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "semantic_wrong_control",
+              "instance_id": "exp5299_semantic_wrong_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1511e-05
+              },
+              "route": "combined_solver_fallback",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1511e-05
+            }
+          ]
+        },
+        "lns": {
+          "aggregate": {
+            "conflicts": 18,
+            "decisions": 82,
+            "propagations": 168,
+            "restarts": 8,
+            "wall_clock_s": 0.000120575
+          },
+          "delta_vs_solver_only": {
+            "conflicts_saved": 6,
+            "decisions_saved": 22,
+            "propagations_saved": 32,
+            "restarts_saved": 0,
+            "wall_clock_s_saved": -1.3365e-05
+          },
+          "per_class": {
+            "aligned_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "no_lns_candidate",
+              "wall_clock_s": 2.4125e-05
+            },
+            "aligned_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "use_lns_repair",
+              "wall_clock_s": 1.8705e-05
+            },
+            "malformed_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "blocked_lns_candidate",
+              "wall_clock_s": 1.1431e-05
+            },
+            "misleading_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "no_lns_candidate",
+              "wall_clock_s": 1.3165e-05
+            },
+            "misleading_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "blocked_lns_candidate",
+              "wall_clock_s": 1.1261e-05
+            },
+            "neutral_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "no_lns_candidate",
+              "wall_clock_s": 1.2042e-05
+            },
+            "neutral_noop_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "use_lns_repair",
+              "wall_clock_s": 1.8335e-05
+            },
+            "semantic_wrong_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "blocked_lns_candidate",
+              "wall_clock_s": 1.1511e-05
+            }
+          },
+          "per_instance": [
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_factor_sat",
+              "instance_id": "exp5292_aligned_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 2.4125e-05
+              },
+              "route": "no_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 2.4125e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_factor_sat",
+              "instance_id": "exp5292_misleading_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.3165e-05
+              },
+              "route": "no_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.3165e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_factor_sat",
+              "instance_id": "exp5292_neutral_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.2042e-05
+              },
+              "route": "no_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.2042e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_repair",
+              "instance_id": "exp5299_aligned_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8705e-05
+              },
+              "route": "use_lns_repair",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8705e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_repair",
+              "instance_id": "exp5299_misleading_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1261e-05
+              },
+              "route": "blocked_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1261e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_noop_repair",
+              "instance_id": "exp5299_neutral_noop_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8335e-05
+              },
+              "route": "use_lns_repair",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8335e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "malformed_control",
+              "instance_id": "exp5299_malformed_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1431e-05
+              },
+              "route": "blocked_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1431e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "semantic_wrong_control",
+              "instance_id": "exp5299_semantic_wrong_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1511e-05
+              },
+              "route": "blocked_lns_candidate",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1511e-05
+            }
+          ]
+        },
+        "pbit_cdcl_gated": {
+          "aggregate": {
+            "conflicts": 15,
+            "decisions": 71,
+            "propagations": 152,
+            "restarts": 8,
+            "wall_clock_s": 0.00020171
+          },
+          "delta_vs_solver_only": {
+            "conflicts_saved": 9,
+            "decisions_saved": 33,
+            "propagations_saved": 48,
+            "restarts_saved": 0,
+            "wall_clock_s_saved": -9.45e-05
+          },
+          "per_class": {
+            "aligned_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "pbit_allow",
+              "wall_clock_s": 5.5754e-05
+            },
+            "aligned_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "pbit_allow",
+              "wall_clock_s": 1.8705e-05
+            },
+            "malformed_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "pbit_block",
+              "wall_clock_s": 1.9386e-05
+            },
+            "misleading_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "pbit_block",
+              "wall_clock_s": 3.0658e-05
+            },
+            "misleading_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "pbit_block",
+              "wall_clock_s": 2.0048e-05
+            },
+            "neutral_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "pbit_allow",
+              "wall_clock_s": 2.105e-05
+            },
+            "neutral_noop_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "pbit_allow",
+              "wall_clock_s": 1.8335e-05
+            },
+            "semantic_wrong_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "pbit_block",
+              "wall_clock_s": 1.7774e-05
+            }
+          },
+          "per_instance": [
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_factor_sat",
+              "instance_id": "exp5292_aligned_factor_sat",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 5.5754e-05
+              },
+              "route": "pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 5.5754e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_factor_sat",
+              "instance_id": "exp5292_misleading_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 3.0658e-05
+              },
+              "route": "pbit_block",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 3.0658e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_factor_sat",
+              "instance_id": "exp5292_neutral_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 2.105e-05
+              },
+              "route": "pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 2.105e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_repair",
+              "instance_id": "exp5299_aligned_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8705e-05
+              },
+              "route": "pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8705e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_repair",
+              "instance_id": "exp5299_misleading_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 2.0048e-05
+              },
+              "route": "pbit_block",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 2.0048e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_noop_repair",
+              "instance_id": "exp5299_neutral_noop_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.8335e-05
+              },
+              "route": "pbit_allow",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.8335e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "malformed_control",
+              "instance_id": "exp5299_malformed_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.9386e-05
+              },
+              "route": "pbit_block",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.9386e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "semantic_wrong_control",
+              "instance_id": "exp5299_semantic_wrong_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.7774e-05
+              },
+              "route": "pbit_block",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.7774e-05
+            }
+          ]
+        },
+        "smooth_relaxation": {
+          "aggregate": {
+            "conflicts": 15,
+            "decisions": 71,
+            "propagations": 152,
+            "restarts": 8,
+            "wall_clock_s": 9.9126e-05
+          },
+          "delta_vs_solver_only": {
+            "conflicts_saved": 9,
+            "decisions_saved": 33,
+            "propagations_saved": 48,
+            "restarts_saved": 0,
+            "wall_clock_s_saved": 8.084e-06
+          },
+          "per_class": {
+            "aligned_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "smooth_use_hint",
+              "wall_clock_s": 1.7103e-05
+            },
+            "aligned_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "smooth_use_hint",
+              "wall_clock_s": 1.1612e-05
+            },
+            "malformed_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "smooth_fallback_solver_only",
+              "wall_clock_s": 1.1431e-05
+            },
+            "misleading_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "smooth_fallback_solver_only",
+              "wall_clock_s": 1.3165e-05
+            },
+            "misleading_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "smooth_fallback_solver_only",
+              "wall_clock_s": 1.1261e-05
+            },
+            "neutral_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "smooth_fallback_solver_only",
+              "wall_clock_s": 1.2042e-05
+            },
+            "neutral_noop_repair": {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "conflicts_saved_vs_solver_only": 3,
+              "route": "smooth_use_hint",
+              "wall_clock_s": 1.1001e-05
+            },
+            "semantic_wrong_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "smooth_fallback_solver_only",
+              "wall_clock_s": 1.1511e-05
+            }
+          },
+          "per_instance": [
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_factor_sat",
+              "instance_id": "exp5292_aligned_factor_sat",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.7103e-05
+              },
+              "route": "smooth_use_hint",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.7103e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_factor_sat",
+              "instance_id": "exp5292_misleading_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.3165e-05
+              },
+              "route": "smooth_fallback_solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.3165e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_factor_sat",
+              "instance_id": "exp5292_neutral_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.2042e-05
+              },
+              "route": "smooth_fallback_solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.2042e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_repair",
+              "instance_id": "exp5299_aligned_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.1612e-05
+              },
+              "route": "smooth_use_hint",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1612e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_repair",
+              "instance_id": "exp5299_misleading_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1261e-05
+              },
+              "route": "smooth_fallback_solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1261e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 0,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_noop_repair",
+              "instance_id": "exp5299_neutral_noop_repair",
+              "metrics": {
+                "conflicts": 0,
+                "decisions": 2,
+                "propagations": 9,
+                "restarts": 1,
+                "wall_clock_s": 1.1001e-05
+              },
+              "route": "smooth_use_hint",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1001e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "malformed_control",
+              "instance_id": "exp5299_malformed_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1431e-05
+              },
+              "route": "smooth_fallback_solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1431e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "semantic_wrong_control",
+              "instance_id": "exp5299_semantic_wrong_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1511e-05
+              },
+              "route": "smooth_fallback_solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1511e-05
+            }
+          ]
+        },
+        "solver_only": {
+          "aggregate": {
+            "conflicts": 24,
+            "decisions": 104,
+            "propagations": 200,
+            "restarts": 8,
+            "wall_clock_s": 0.00010721
+          },
+          "delta_vs_solver_only": {
+            "conflicts_saved": 0,
+            "decisions_saved": 0,
+            "propagations_saved": 0,
+            "restarts_saved": 0,
+            "wall_clock_s_saved": 0.0
+          },
+          "per_class": {
+            "aligned_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 2.4125e-05
+            },
+            "aligned_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.2023e-05
+            },
+            "malformed_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.1431e-05
+            },
+            "misleading_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.3165e-05
+            },
+            "misleading_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.1261e-05
+            },
+            "neutral_factor_sat": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.2042e-05
+            },
+            "neutral_noop_repair": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.1652e-05
+            },
+            "semantic_wrong_control": {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "conflicts_saved_vs_solver_only": 0,
+              "route": "solver_only",
+              "wall_clock_s": 1.1511e-05
+            }
+          },
+          "per_instance": [
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_factor_sat",
+              "instance_id": "exp5292_aligned_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 2.4125e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 2.4125e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_factor_sat",
+              "instance_id": "exp5292_misleading_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.3165e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.3165e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_factor_sat",
+              "instance_id": "exp5292_neutral_factor_sat",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.2042e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5292",
+              "wall_clock_s": 1.2042e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "aligned_repair",
+              "instance_id": "exp5299_aligned_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.2023e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.2023e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "misleading_repair",
+              "instance_id": "exp5299_misleading_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1261e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1261e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "neutral_noop_repair",
+              "instance_id": "exp5299_neutral_noop_repair",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1652e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1652e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "malformed_control",
+              "instance_id": "exp5299_malformed_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1431e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1431e-05
+            },
+            {
+              "cdcl_validated": true,
+              "conflicts": 3,
+              "final_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "final_status": "sat",
+              "instance_class": "semantic_wrong_control",
+              "instance_id": "exp5299_semantic_wrong_control",
+              "metrics": {
+                "conflicts": 3,
+                "decisions": 13,
+                "propagations": 25,
+                "restarts": 1,
+                "wall_clock_s": 1.1511e-05
+              },
+              "route": "solver_only",
+              "solver_only_model": [
+                -1,
+                -2,
+                3,
+                -4,
+                -5,
+                -6,
+                -7,
+                8
+              ],
+              "solver_only_status": "sat",
+              "source_experiment": "exp5299",
+              "wall_clock_s": 1.1511e-05
+            }
+          ]
+        }
+      }
+    }
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V485 bounded solver-guidance comparison.",
+    "value": "2026.07.485"
+  },
+  "misleading_class_blocked": true,
+  "no_hardware_speedup_claim": true,
+  "per_class_harm": {
+    "principle": "Reports class-level added conflicts by method, including misleading-assumption classes, so harmful guidance is gated instead of promoted as broad improvement.",
+    "value": {
+      "classes": {
+        "aligned_factor_sat": {
+          "blocked_by_gate": [],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": false,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 0,
+            "smooth_relaxation_ungated": 0
+          }
+        },
+        "aligned_repair": {
+          "blocked_by_gate": [],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": false,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 0,
+            "smooth_relaxation_ungated": 0
+          }
+        },
+        "malformed_control": {
+          "blocked_by_gate": [
+            "smooth_relaxation"
+          ],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": false,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 0,
+            "smooth_relaxation_ungated": 1
+          }
+        },
+        "misleading_factor_sat": {
+          "blocked_by_gate": [
+            "pbit_cdcl_gated",
+            "smooth_relaxation"
+          ],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": true,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 1,
+            "smooth_relaxation_ungated": 1
+          }
+        },
+        "misleading_repair": {
+          "blocked_by_gate": [
+            "pbit_cdcl_gated",
+            "smooth_relaxation",
+            "lns"
+          ],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": true,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 1,
+            "pbit_cdcl_ungated": 1,
+            "smooth_relaxation_ungated": 1
+          }
+        },
+        "neutral_factor_sat": {
+          "blocked_by_gate": [
+            "smooth_relaxation"
+          ],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": false,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 0,
+            "smooth_relaxation_ungated": 1
+          }
+        },
+        "neutral_noop_repair": {
+          "blocked_by_gate": [],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": false,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 0,
+            "pbit_cdcl_ungated": 0,
+            "smooth_relaxation_ungated": 0
+          }
+        },
+        "semantic_wrong_control": {
+          "blocked_by_gate": [
+            "pbit_cdcl_gated",
+            "smooth_relaxation",
+            "lns"
+          ],
+          "final_added_conflicts": {
+            "combined_hints": 0,
+            "lns": 0,
+            "pbit_cdcl_gated": 0,
+            "smooth_relaxation": 0
+          },
+          "misleading_class": true,
+          "raw_hint_added_conflicts": {
+            "lns_candidate": 1,
+            "pbit_cdcl_ungated": 1,
+            "smooth_relaxation_ungated": 1
+          }
+        }
+      },
+      "final_guided_harmful_classes": [],
+      "misleading_classes": [
+        "misleading_factor_sat",
+        "misleading_repair",
+        "semantic_wrong_control"
+      ],
+      "raw_harmful_hint_classes": {
+        "lns_candidate": [
+          "misleading_repair",
+          "semantic_wrong_control"
+        ],
+        "pbit_cdcl_ungated": [
+          "misleading_factor_sat",
+          "misleading_repair",
+          "semantic_wrong_control"
+        ],
+        "smooth_relaxation_ungated": [
+          "misleading_factor_sat",
+          "neutral_factor_sat",
+          "misleading_repair",
+          "malformed_control",
+          "semantic_wrong_control"
+        ]
+      }
+    }
+  },
+  "random_seed": 5315,
+  "reproducibility_checksum": "3fe1e5ed7d5329c4ed82342d2fd49cbbc529b46dc45d0ef92c3748bb030eb4f6",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5315.gated_solver_guidance_ablation.v485",
+  "solver_guidance_ablation_complete": true,
+  "source_artifacts": [
+    "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+    "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+    "results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json",
+    "results/experiment_5314_ising_smooth_relaxation_baseline_v485.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5315",
+    "SCENARIO-VERIFY-5315"
+  ],
+  "status": {
+    "principle": "Terminal status for downstream readers; complete means all advisory methods were compared on the same deterministic fixture set.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate ablation routing, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.",
+    "value": []
+  }
+}
