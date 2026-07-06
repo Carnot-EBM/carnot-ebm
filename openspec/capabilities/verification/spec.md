@@ -26040,6 +26040,76 @@ with `coherence_fixture_ready=false`, exact blocker details in
 |---|---|---|
 | REQ-VERIFY-5285 | Planned (`python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py`, `data/knowledge_thought_coherence_fixture_v483.json`, `results/experiment_5285_knowledge_thought_coherence_fixture_v483.json`) | Planned (`tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py`) |
 
+### REQ-VERIFY-5287: Compilable Trace DSL Fixture V483
+
+The repository SHALL provide Exp 5287 at
+`python/carnot/experiment_5287_compilable_trace_dsl_fixture_v483.py` and write
+`results/experiment_5287_compilable_trace_dsl_fixture_v483.json` without
+invoking an LLM and without modifying `scripts/research_conductor.py`. The
+fixture SHALL reuse the solver-labeled cases from Exp 5273 rather than
+inventing an unrelated dataset.
+
+The runner SHALL define a tiny deterministic trace DSL schema with claims,
+dependency links, executable quantitative expressions, compiled constraints,
+semantic deduction steps, counterexample labels, and localized repair labels.
+The DSL SHALL compile every format-valid trace into the Exp 5273 executable
+constraint IR and SHALL score it with the deterministic solver/verifier path
+used by Exp 5273. Malformed traces SHALL be rejected before solver scoring.
+
+The fixture SHALL include positive, negative, malformed,
+format-valid-but-semantically-wrong, and localized-repair cases. The runner
+SHALL report syntactic validity separately from solver correctness. A
+format-valid trace whose compiled constraints disagree with the Exp 5273 solver
+label SHALL be rejected unless a localized repair label changes only the
+declared target expression and the repaired trace is solver-checked again.
+Bad traces SHALL NOT become unsafe accepts.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `trace_dsl_ready`,
+`trace_dsl_ready_principle`, `dsl_schema_summary`, `fixture_case_counts`,
+`solver_correctness_metrics`, `format_vs_semantic_split`,
+`unsafe_false_accepts`, and `tests_run`. `trace_dsl_ready` SHALL be a bare bool
+gate for Exp 5288. `honest_verdict.value` SHALL start with `complete:` or
+`blocked_` and state whether the trace DSL fixture is usable.
+`inference_substrate.value` SHALL be `offline_deterministic_fixture_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5287 verdict; starts with complete: or blocked_ and states whether the trace DSL fixture is usable."
+- `inference_substrate`: principle "Declares offline deterministic fixture compilation and solver checking with no LLM, GGUF, API, or external judge dependency."
+- `trace_dsl_ready`: principle "Bare gate for exp5288; true only when all trace DSL fixture families compile or reject as intended, solver correctness is separate from format validity, localized repairs recheck cleanly, and unsafe false accepts are zero."
+- `trace_dsl_ready_principle`: principle "Explains why the compilable trace DSL fixture can or cannot gate downstream SOTA extraction."
+- `dsl_schema_summary`: principle "Summarizes the minimal trace DSL fields for claims, dependency links, executable expressions, constraints, deduction steps, counterexample labels, and localized repairs."
+- `fixture_case_counts`: principle "Counts positive, negative, malformed, semantic-error, and repair trace cases so downstream pilots cannot silently drop a failure mode."
+- `solver_correctness_metrics`: principle "Records deterministic solver/verifier outcomes after DSL compilation, including correct accepts, semantic-error rejections, repair successes, and solver false-accept candidates."
+- `format_vs_semantic_split`: principle "Shows that schema/format validity is measured separately from solver correctness, including format-valid traces that remain semantically wrong."
+- `unsafe_false_accepts`: principle "Counts semantically wrong or unrepaired solver-false-accept traces that were accepted; must be zero for trace_dsl_ready."
+- `tests_run`: principle "Commands run to validate the trace DSL fixture module, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5287: Trace DSL Compilation Separates Format From Solver Correctness
+
+Given Exp 5273 provides a ready solver fixture, when Exp 5287 runs, then it
+builds deterministic trace DSL records over those same fixture IDs, validates
+dependency links and executable expression syntax, compiles format-valid traces
+to solver constraint IR, scores them with the Exp 5273 solver path, verifies
+counterexample labels, applies localized repairs only to their declared target
+expressions, writes the required artifact, and sets `trace_dsl_ready=true`
+only when all required trace families behave as expected with zero unsafe false
+accepts.
+
+If any required trace family is missing, malformed traces reach solver scoring,
+format-valid semantic errors are accepted without repair, localized repairs
+fail to repair the solver label, dependency links are unresolved, or any bad
+trace becomes an unsafe accept, then the runner writes a `blocked_` artifact
+with `trace_dsl_ready=false`, exact blocker details in
+`trace_dsl_ready_principle`, and the same required schema fields.
+
+## Implementation Status (REQ-VERIFY-5287)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5287 | Planned (`python/carnot/experiment_5287_compilable_trace_dsl_fixture_v483.py`, `results/experiment_5287_compilable_trace_dsl_fixture_v483.json`) | Planned (`tests/python/test_experiment_5287_compilable_trace_dsl_fixture_v483.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
