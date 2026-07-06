@@ -939,6 +939,49 @@ false-property rejection, slack accounting, solve-time metrics, piece-count
 metrics, failure classes, source fixture provenance, and required tests without
 claiming broad KAN verification or modifying the conductor.
 
+## REQ-KAN-5304: V484 Dynamic Abstraction And Spot-Check Certificate Diagnostic
+
+The KAN verification tier SHALL replace the null low-order curriculum finding
+with a bounded dynamic-abstraction diagnostic over the existing Exp 5277
+KAN PWA/MILP fixture and Exp 5278 Ising-style factor boundary. The experiment
+MUST reuse those committed fixtures, compare static abstraction, Exp 5291
+low-order ordering, and dynamic spot-check/refinement, and MUST NOT modify
+`scripts/research_conductor.py`.
+
+The dynamic method MUST select refinement or spot-check points from measurable
+certificate signals such as slack, local envelope error, boundary proximity, or
+near-violated constraints. It MUST preserve declarative constraint-group
+metadata and validate final property witnesses and factor assignments with a
+symbolic checker rather than trusting telemetry alone. It MUST preserve
+expected-true property acceptance, expected-false property rejection, and honest
+solver/fallback reporting. It MUST fail closed outside the certified bounded
+region; this bounded region is the only scope of the diagnostic. It MUST NOT
+claim global KAN robustness, trained-network soundness,
+hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json` with the
+required fields `honest_verdict`, `inference_substrate`,
+`dynamic_abstraction_helped`, `certificate_success_by_method`,
+`false_property_rejected`, `slack_metrics`, `spotcheck_metrics`,
+`bounded_scope_only`, and `tests_run`. Every required field except `tests_run`
+MUST be principle-wrapped with `value` and `principle`.
+`inference_substrate.value` MUST be
+`offline_deterministic_certificate_no_llm`. `bounded_scope_only.value` MUST be
+true. `honest_verdict.value` MUST start with `complete:`, `null:`, or
+`blocked_` and state whether dynamic abstraction helped.
+
+### SCENARIO-KAN-5304: Dynamic Refinement Tightens Diagnostics Without Overclaiming Scope
+
+Given the committed Exp 5277 KAN PWA/MILP certificate fixture, Exp 5278
+factor-graph boundary fixture, and Exp 5291 low-order curriculum artifact,
+When Exp 5304 compares static abstraction, low-order ordering, and a dynamic
+slack/error/boundary-driven refinement plus spot-check diagnostic,
+Then the artifact reports piece counts, solve time, slack, false-property
+rejection, spot-check hit rate, declarative constraint groups, symbolic-checker
+validation, solver/fallback status, and bounded-scope limits without claiming
+global robustness beyond the certified input box.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -983,6 +1026,7 @@ claiming broad KAN verification or modifying the conductor.
 | REQ-KAN-5265 | Planned | Exp 5265 target: V481 explanation/refinement layer over the V480 bounded convex-envelope certificate, with bound-contributor reporting, envelope-gap tightening, before/after slack, and near-threshold false-property rejection. |
 | REQ-KAN-5277 | Planned | Exp 5277 target: V482 bounded multi-component PWA/MILP certificate scale check, with explicit approximation slack, solve time, false-property rejection, and dynamic spot-check evidence. |
 | REQ-KAN-5291 | Planned | Exp 5291 target: V483 low-order, medium-order, and higher-order certificate curriculum over the existing Exp 5277 KAN PWA/MILP and Exp 5278 factor-boundary fixtures, with false-property rejection, slack, solve-time, piece-count, and ordering telemetry. |
+| REQ-KAN-5304 | Planned | Exp 5304 target: V484 dynamic abstraction refinement and spot-check diagnostic over Exp 5277/5278/5291 bounded fixtures, with symbolic validation, method comparison, and bounded-scope-only claims. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
