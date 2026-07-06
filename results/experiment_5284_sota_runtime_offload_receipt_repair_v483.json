@@ -1,0 +1,1103 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records the three mandated SOTA GGUF model IDs, roles, quantization, local file receipts, and runtime/offload status.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [
+          "blocked_no_gpu_offload_evidence"
+        ],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "generation_receipt": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+          ],
+          "config": {
+            "max_tokens": 2,
+            "n_ctx": 512,
+            "n_gpu_layers": -1,
+            "seed": 5284,
+            "temperature": 0.0
+          },
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "live_generation_ready": false,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "output_checksum": "db8b8e836881534b",
+          "output_text_preview": "\n\nOK",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "returncode": 0,
+          "role": "flagship_dense",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n",
+          "traceback": null,
+          "wall_clock_s": 34.436503
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "live_generation_ready": false,
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "runtime_status": "blocked_no_gpu_offload_evidence",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [
+          "blocked_no_gpu_offload_evidence"
+        ],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "generation_receipt": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "max_tokens": 2,
+            "n_ctx": 512,
+            "n_gpu_layers": -1,
+            "seed": 5284,
+            "temperature": 0.0
+          },
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "live_generation_ready": false,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "output_checksum": "e3a51c5e66219c80",
+          "output_text_preview": "\n\n```",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "returncode": 0,
+          "role": "flagship_moe",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n",
+          "traceback": null,
+          "wall_clock_s": 31.632719
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "live_generation_ready": false,
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "runtime_status": "blocked_no_gpu_offload_evidence",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [
+          "blocked_no_gpu_offload_evidence"
+        ],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "generation_receipt": {
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "-c",
+            "<probe-code>",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+          ],
+          "config": {
+            "max_tokens": 2,
+            "n_ctx": 512,
+            "n_gpu_layers": -1,
+            "seed": 5284,
+            "temperature": 0.0
+          },
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "live_generation_ready": false,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "output_checksum": "f2196fe9f868cbbf",
+          "output_text_preview": " OK.",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "returncode": 0,
+          "role": "middle_moe",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+          "traceback": null,
+          "wall_clock_s": 25.9802
+        },
+        "headline_role": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "live_generation_ready": false,
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "runtime_status": "blocked_no_gpu_offload_evidence",
+        "smoke_label": null,
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "duration_receipts": {
+    "principle": "Per-model wall-clock receipts plus prompt/output checksums for live generation or scoring, preventing unsupported fast-path claims.",
+    "value": {
+      "minimum_live_generation_duration_s": 1.0,
+      "per_model": {
+        "flagship_dense": {
+          "live_generation_ready": false,
+          "output_checksum": "db8b8e836881534b",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "wall_clock_s": 34.436503
+        },
+        "flagship_moe": {
+          "live_generation_ready": false,
+          "output_checksum": "e3a51c5e66219c80",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "wall_clock_s": 31.632719
+        },
+        "middle_moe": {
+          "live_generation_ready": false,
+          "output_checksum": "f2196fe9f868cbbf",
+          "prompt_checksum": "c072824f1aefd4a6",
+          "runtime_ready": true,
+          "status": "blocked_no_gpu_offload_evidence",
+          "wall_clock_s": 25.9802
+        }
+      },
+      "total_wall_clock_s": 96.606335
+    }
+  },
+  "duration_s": 96.606335,
+  "experiment": 5284,
+  "experiment_name": "experiment_5284_sota_runtime_offload_receipt_repair_v483",
+  "generation_receipts": {
+    "principle": "Raw per-model live generation or scoring receipts with prompt/output hashes, command, offload config, and GPU-memory evidence.",
+    "value": {
+      "flagship_dense": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        ],
+        "config": {
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "seed": 5284,
+          "temperature": 0.0
+        },
+        "gpu_memory_receipts": {
+          "after_generate": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "after_load": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "before": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "max_memory_delta_mb": 0,
+          "offload_evidence": false
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "live_generation_ready": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "output_checksum": "db8b8e836881534b",
+        "output_text_preview": "\n\nOK",
+        "prompt_checksum": "c072824f1aefd4a6",
+        "returncode": 0,
+        "role": "flagship_dense",
+        "runtime_ready": true,
+        "status": "blocked_no_gpu_offload_evidence",
+        "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 4096\n",
+        "traceback": null,
+        "wall_clock_s": 34.436503
+      },
+      "flagship_moe": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        ],
+        "config": {
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "seed": 5284,
+          "temperature": 0.0
+        },
+        "gpu_memory_receipts": {
+          "after_generate": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "after_load": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "before": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "max_memory_delta_mb": 0,
+          "offload_evidence": false
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "live_generation_ready": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "output_checksum": "e3a51c5e66219c80",
+        "output_text_preview": "\n\n```",
+        "prompt_checksum": "c072824f1aefd4a6",
+        "returncode": 0,
+        "role": "flagship_moe",
+        "runtime_ready": true,
+        "status": "blocked_no_gpu_offload_evidence",
+        "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n",
+        "traceback": null,
+        "wall_clock_s": 31.632719
+      },
+      "middle_moe": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "<probe-code>",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        ],
+        "config": {
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "seed": 5284,
+          "temperature": 0.0
+        },
+        "gpu_memory_receipts": {
+          "after_generate": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "after_load": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "before": {
+            "gpus": [
+              {
+                "index": 0,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              },
+              {
+                "index": 1,
+                "memory_free_mb": 24120,
+                "memory_used_mb": 4,
+                "name": "NVIDIA GeForce RTX 3090",
+                "utilization_gpu_pct": 0
+              }
+            ],
+            "ok": true,
+            "stderr": ""
+          },
+          "max_memory_delta_mb": 0,
+          "offload_evidence": false
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "live_generation_ready": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "output_checksum": "f2196fe9f868cbbf",
+        "output_text_preview": " OK.",
+        "prompt_checksum": "c072824f1aefd4a6",
+        "returncode": 0,
+        "role": "middle_moe",
+        "runtime_ready": true,
+        "status": "blocked_no_gpu_offload_evidence",
+        "stderr_tail": "llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+        "traceback": null,
+        "wall_clock_s": 25.9802
+      }
+    }
+  },
+  "gpu_offload_receipts": {
+    "principle": "Driver/device/runtime/offload settings and GPU memory receipts proving which offload path was visible or attempted.",
+    "value": {
+      "cuda_runtime": {
+        "command": [
+          "nvidia-smi"
+        ],
+        "duration_s": 0.099026,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "Sun Jul  5 20:39:06 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   48C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   49C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+      },
+      "gpu_visible": true,
+      "llama_cpp": {
+        "gpu_offload_support_error": null,
+        "gpu_offload_supported": false,
+        "import_ok": true,
+        "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "version": "0.3.29"
+      },
+      "llama_cpp_python_distribution": "llama-cpp-python",
+      "nvcc": {
+        "command": [
+          "nvcc",
+          "--version"
+        ],
+        "duration_s": 0.011416,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Fri_Apr_24_07:22:02_PM_PDT_2026\nCuda compilation tools, release 13.3, V13.3.33\nBuild cuda_13.3.r13.3/compiler.37862127_0"
+      },
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.037042,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "offload_settings": {
+        "max_tokens": 2,
+        "n_ctx": 512,
+        "n_gpu_layers": -1,
+        "seed": 5284,
+        "temperature": 0.0
+      },
+      "per_model": {
+        "flagship_dense": {
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "offload_evidence": false
+        },
+        "flagship_moe": {
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "offload_evidence": false
+        },
+        "middle_moe": {
+          "gpu_memory_receipts": {
+            "after_generate": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "after_load": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "before": {
+              "gpus": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "ok": true,
+              "stderr": ""
+            },
+            "max_memory_delta_mb": 0,
+            "offload_evidence": false
+          },
+          "max_tokens": 2,
+          "n_ctx": 512,
+          "n_gpu_layers": -1,
+          "offload_evidence": false
+        }
+      },
+      "rocm_smi": {
+        "command": [
+          "rocm-smi",
+          "--showdriverversion"
+        ],
+        "duration_s": 0.179459,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "WARNING: AMD GPU device(s) is/are in a low-power state. Check power control/runtime_status",
+        "stdout": "============================ ROCm System Management Interface ============================\n============================== Version of System Component ===============================\nDriver version: 7.0.11-1-cachyos\n==========================================================================================\n================================== End of ROCm SMI Log ==================================="
+      },
+      "torch_cuda": {
+        "available": true,
+        "device_count": 2,
+        "import_ok": true,
+        "version": "2.11.0+cu128"
+      }
+    }
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5284 verdict; starts with complete: or blocked_ and states whether SOTA offload receipts are ready for exp5286/exp5288.",
+    "value": "blocked_preconditions: sota_offload_ready=false flagship_moe:blocked_no_gpu_offload_evidence:offload=False"
+  },
+  "inference_substrate": {
+    "principle": "Declares live local SOTA GGUF inference only after a mandated model actually generated or scored; otherwise records blocked preconditions with no quality claim.",
+    "value": "blocked_preconditions_with_no_quality_claim"
+  },
+  "no_quality_claim": {
+    "principle": "Must be true; Exp 5284 is a runtime/offload receipt gate and makes no verifier, solver, memory, benchmark, or model-quality claim.",
+    "value": true
+  },
+  "preconditions_checked": {
+    "principle": "Records GPU visibility, driver/CUDA or ROCm facts, llama.cpp version/origin/offload support, cache paths, disk, and local GGUF resolvability before live generation.",
+    "value": {
+      "at_least_one_mandated_model_resolved_without_autotokenizer": true,
+      "autotokenizer_used": false,
+      "blocked_preconditions": [],
+      "cached_sota_pair_preview": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "driver_cuda_or_rocm": {
+        "cuda_runtime": {
+          "command": [
+            "nvidia-smi"
+          ],
+          "duration_s": 0.099026,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "Sun Jul  5 20:39:06 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   48C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   49C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+        },
+        "nvidia_smi": {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+            "--format=csv,noheader,nounits"
+          ],
+          "duration_s": 0.037042,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+        },
+        "rocm_smi": {
+          "command": [
+            "rocm-smi",
+            "--showdriverversion"
+          ],
+          "duration_s": 0.179459,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "WARNING: AMD GPU device(s) is/are in a low-power state. Check power control/runtime_status",
+          "stdout": "============================ ROCm System Management Interface ============================\n============================== Version of System Component ===============================\nDriver version: 7.0.11-1-cachyos\n==========================================================================================\n================================== End of ROCm SMI Log ==================================="
+        }
+      },
+      "driver_cuda_or_rocm_checked": true,
+      "free_disk": {
+        "free_bytes": 1485740531712,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "used_bytes": 2467548491776
+      },
+      "gguf_cache_paths": {
+        "flagship_dense": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "flagship_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF"
+      },
+      "gpu_visibility_checked": true,
+      "gpu_visible": true,
+      "llama_cpp": {
+        "gpu_offload_support_error": null,
+        "gpu_offload_supported": false,
+        "import_ok": true,
+        "origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "version": "0.3.29"
+      },
+      "llama_cpp_checked": true,
+      "resolved_roles": [
+        "flagship_moe",
+        "flagship_dense",
+        "middle_moe"
+      ],
+      "run_date_utc": "20260706",
+      "run_on_or_after_20260706_utc": true
+    }
+  },
+  "random_seed": 5284,
+  "reproducibility_checksum": "e1a206022829e7e8",
+  "schema": "carnot.experiment_5284.sota_runtime_offload_receipt_repair.v483",
+  "smoke_tests": {
+    "principle": "Tiny legacy CPU smoke tests, if any, are labeled smoke_test_not_headline and cannot open the SOTA offload gate.",
+    "value": []
+  },
+  "sota_offload_ready": false,
+  "sota_offload_ready_principle": "sota_offload_ready=false because no mandated SOTA GGUF completed live generation/scoring with GPU-offload evidence; blocked_preconditions=['flagship_moe:blocked_no_gpu_offload_evidence:offload=False', 'flagship_dense:blocked_no_gpu_offload_evidence:offload=False', 'middle_moe:blocked_no_gpu_offload_evidence:offload=False']",
+  "spec_refs": [
+    "REQ-VERIFY-5284",
+    "SCENARIO-VERIFY-5284"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5284_sota_runtime_offload_receipt_repair_v483.py -q -o addopts=\"\"",
+      "outcome": "passed: 8 passed in 1.55s"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot_5284.coverage .venv/bin/coverage run --include=python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py -m pytest tests/python/test_experiment_5284_sota_runtime_offload_receipt_repair_v483.py -q -o addopts=\"\" && COVERAGE_FILE=/tmp/carnot_5284.coverage .venv/bin/coverage report --include=python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py --fail-under=100 --show-missing",
+      "outcome": "passed: 8 passed; new module coverage 100%"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed: exit code 3; 147 failed, 22683 passed, 88 skipped, 133 warnings in 1184.38s; xdist worker crash/internal MemoryError; earlier Z3 segmentation fault in unrelated tests"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py tests/python/test_experiment_5284_sota_runtime_offload_receipt_repair_v483.py",
+      "outcome": "passed: All checks passed!"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: exit code 1; repo-wide check reports 1248 pre-existing tests missing spec traceability; new v483 tests include REQ-VERIFY-5284/SCENARIO-VERIFY-5284 refs"
+    }
+  ]
+}
