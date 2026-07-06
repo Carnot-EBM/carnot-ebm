@@ -10369,3 +10369,4 @@ web search: |
 | 2026-07-06 01:36 UTC | PHASE 1 gated on exp5284 and exp5287 -- SOTA trace | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
 | 2026-07-06 01:49 UTC | PHASE 2 continuous self-learning -- memory operati | OK | 87 passed, 1 warning in 8.00s |
 | 2026-07-06 02:04 UTC | PHASE 2 gated on exp5285 and exp5289 -- memory-ass | OK | 88 passed, 1 warning in 11.01s |
+| 2026-07-06 02:20 UTC | PHASE 3 certificates -- low-order factor KAN/Ising | OK | 88 passed, 1 warning in 8.44s |
