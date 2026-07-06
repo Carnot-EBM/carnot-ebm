@@ -1050,3 +1050,86 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5294 | Planned (`python/carnot/experiment_5294_capstone_v483.py`, `results/experiment_5294_capstone_v483.json`) | Planned (`tests/python/test_experiment_5294_capstone_v483.py`) |
+
+- REQ-CAPSTONE-5306: The `.484` milestone-close capstone aggregator
+  `exp5306-capstone-v484` in `python/carnot/experiment_5306_capstone_v484.py`
+  SHALL write `results/experiment_5306_capstone_v484.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`,
+  without modifying `_bmad/traceability.md`, and without modifying
+  `docs/index.html`. It SHALL read every expected `.484` upstream artifact from
+  Exp5295 through Exp5305, including gated, blocked, adversarially flagged,
+  quarantined, null, mixed, harmful, and missing artifacts, plus the `.484`
+  conductor-log entries and exclusion-manifest retirement context. It SHALL
+  classify each upstream as clean positive, clean null, harmful or regression,
+  mixed positive with harmful class, blocked precondition, gated skip, missing
+  artifact, or quarantined. It SHALL synthesize the milestone without promoting
+  blocked runtime work, gate-skipped SOTA quality work, quarantined diagnostics,
+  null certificate-success deltas, mixed solver-class harms, or reachability-only
+  hardware evidence into stronger claims.
+- SCENARIO-CAPSTONE-5306: The artifact
+  `results/experiment_5306_capstone_v484.json` must emit top-level
+  principle-annotated fields `honest_verdict`, `inference_substrate`,
+  `tasks_summarized`, `changed_runtime_outcome`, `sota_quality_outcome`,
+  `continuous_self_learning_outcome`, `solver_energy_certificate_outcome`,
+  `hardware_speedup_claimed`, `retirements_or_exclusions_recommended`,
+  `next_milestone_recommendations`, and `docs_updated`. The default `.484`
+  aggregation must summarize Exp5295 as a clean transition/archive positive,
+  Exp5296 as source-refresh evidence that remains quarantined when
+  `flagged_adversarial=true`, Exp5297 as a changed-runtime substrate attempt
+  that changed backend and found CUDA/offload evidence but ended
+  `changed_runtime_sota_ready=false` with no quality claim, Exp5298 as a
+  conductor pre-gate skip so SOTA smoke quality was not measured, Exp5299 as a
+  clean constraint-LNS fixture ready with solver correctness preserved and
+  unsafe false accepts zero, Exp5300 as a clean p-bit/CDCL instance-class gate
+  that blocks misleading classes and keeps aggregate conflict savings while
+  claiming no hardware speedup, Exp5301 as an EBT spectral-control diagnostic
+  whose positive telemetry is quarantined when `flagged_adversarial=true`,
+  Exp5302 and Exp5303 as clean adaptive-memory/self-learning positives measured
+  by held-out quality, calls avoided, unsafe false accepts, rollback, and stress
+  competencies, Exp5304 as dynamic KAN abstraction improving diagnostic
+  tightness and spot-check hit rate while certificate success stays unchanged,
+  and Exp5305 as reachability-only hardware with KV260 blocked, PolarFire SSH
+  status-only reachable, GateMate physical/JTAG blocked, and
+  `hardware_speedup_claimed.value=false`. The terminal
+  `honest_verdict.value` must start with `complete:` or `blocked_` and state the
+  true `.484` closure without laundering gated, blocked, null, harmful, mixed,
+  quarantined, missing, or no-speedup evidence.
+- SCENARIO-CAPSTONE-5306-BLOCKED-MISSING-INPUT: If any expected Exp5295 through
+  Exp5305 result artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5306_capstone_v484.json` with
+  `honest_verdict.value` starting with `blocked_missing_required`, record the
+  missing or malformed artifact in `tasks_summarized.value.missing_artifact`,
+  keep `hardware_speedup_claimed.value=false`, and keep
+  `docs_updated.value.ops_status`, `docs_updated.value.ops_changelog`,
+  `docs_updated.value.traceability`, and `docs_updated.value.docs_index` false.
+- SCENARIO-CAPSTONE-5306-FIELD-PRINCIPLES: The required field principles are:
+  `honest_verdict` = "terminal prefix; starts with complete: or blocked_ and
+  summarizes the .484 milestone without laundering gated, blocked, null,
+  harmful, mixed, quarantined, missing, or no-speedup evidence.",
+  `inference_substrate` = "aggregation_from_upstream_artifacts because the
+  capstone reads checked-in artifacts and conductor logs without running LLM,
+  solver, or hardware workloads.", `tasks_summarized` = "classification counts
+  and per-task lanes for clean_positive, clean_null, harmful_or_regression,
+  mixed_positive_with_harmful_class, blocked_precondition, gated_skip, and
+  missing_artifact.", `changed_runtime_outcome` = "changed runtime backend
+  evidence and blocked readiness separated from any quality claim.",
+  `sota_quality_outcome` = "quality-smoke state; if Exp5298 is gate-skipped then
+  SOTA quality was not measured.", `continuous_self_learning_outcome` =
+  "adaptive memory results using held-out quality, calls avoided, unsafe false
+  accepts, rollback, and stress competencies.", `solver_energy_certificate_outcome`
+  = "LNS readiness, p-bit/CDCL gate, EBT spectral-control quarantine, and KAN
+  dynamic-abstraction limits.", `hardware_speedup_claimed` = "must be false
+  unless a local reproducible hardware speedup artifact exists.",
+  `retirements_or_exclusions_recommended` = "manifest-aware same-verdict
+  retirements, quarantine handling, and bounded retry guidance without editing
+  the manifest unless explicitly scoped.", `next_milestone_recommendations` =
+  "concrete next work that preserves evidence boundaries.", and `docs_updated`
+  = "records that ops/status, ops/changelog, traceability, and docs/index.html
+  were not touched when the stop rule delegates reconciliation."
+
+## Implementation Status (REQ-CAPSTONE-5306)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5306 | Planned (`python/carnot/experiment_5306_capstone_v484.py`, `results/experiment_5306_capstone_v484.json`) | Planned (`tests/python/test_experiment_5306_capstone_v484.py`) |
