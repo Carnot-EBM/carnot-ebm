@@ -2209,6 +2209,54 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 **Then** it calculates energy spills dynamically per token
 **And** the experiment artifact `results/experiment_3406_latent_spills_sensing.json` is generated.
 
+### REQ-INFER-5301: EBT Spectral Step-Control Stability Diagnostic
+
+The system SHALL provide a tiny deterministic EBT/energy-descent diagnostic in
+`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`
+before any energy-guided decoding or inner-loop optimization result treats
+additional descent steps as safe.  The diagnostic SHALL use an offline CPU-safe
+continuous energy fixture, estimate the largest local Hessian eigenvalue with a
+power-iteration Hessian-vector proxy, and compare at least three alpha policies:
+fixed conservative, fixed aggressive, and adaptive spectral step control.
+
+The diagnostic SHALL include a sharpened or ill-conditioned energy case where
+the fixed aggressive step can diverge.  It SHALL log lambda-max estimates, alpha
+choices, energy before and after each step, convergence/divergence flags,
+adaptive recovery behavior, random seed, and a reproducibility checksum.  The
+terminal artifact SHALL be
+`results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json` and
+SHALL expose principle-wrapped fields `honest_verdict`,
+`inference_substrate`, `spectral_control_ready`, `lambda_max_estimates`,
+`alpha_policy_results`, `divergence_recovery`, `random_seed`, and
+`reproducibility_checksum`, plus a `tests_run` list with command/outcome rows.
+`inference_substrate.value` SHALL equal
+`offline_deterministic_certificate_no_llm`, and `honest_verdict.value` SHALL
+start with `complete:`, `null:`, or `blocked_` while stating whether spectral
+step-control is usable.  The artifact SHALL NOT make an LLM quality,
+SOTA-quality, or hardware-speedup claim.
+
+Artifact field principles SHALL be recorded as:
+- `honest_verdict`: Terminal Exp 5301 verdict; starts with complete:, null:, or blocked_ and states whether spectral step-control is usable.
+- `inference_substrate`: Must be offline_deterministic_certificate_no_llm because the diagnostic uses only a CPU-local analytic energy fixture and no LLM inference.
+- `spectral_control_ready`: True only when the conservative policy decreases energy, the aggressive policy detects divergence, and adaptive spectral control recovers without claiming LLM quality.
+- `lambda_max_estimates`: Largest local Hessian eigenvalue estimates from deterministic power-iteration Hessian-vector products for every descent step.
+- `alpha_policy_results`: Per-policy alpha choices, energy before/after traces, convergence flags, and divergence flags for fixed conservative, fixed aggressive, and adaptive spectral policies.
+- `divergence_recovery`: Telemetry showing the aggressive fixed step diverges and the adaptive spectral policy shrinks alpha before accepting stable steps.
+- `random_seed`: Deterministic seed used for the power-iteration probe vector and checksum provenance.
+- `reproducibility_checksum`: SHA-256 checksum over the deterministic fixture, lambda estimates, alpha traces, and stability decisions, excluding wall-clock time.
+
+### SCENARIO-INFER-5301: Spectral Control Recovers Where Aggressive Fixed Step Diverges
+
+**Given** the deterministic sharpened energy fixture
+**When** fixed conservative, fixed aggressive, and adaptive spectral policies
+run from the same initial state
+**Then** the conservative policy decreases energy monotonically
+**And** the aggressive policy reports detected divergence on the ill-conditioned
+case
+**And** the adaptive spectral policy uses lambda-max estimates to shrink alpha,
+records recovery telemetry, and finishes with lower energy without an LLM
+quality claim.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -2243,6 +2291,7 @@ The pipeline SHALL validate against a small hallucination dataset and output an 
 | REQ-INFER-SOTA-023 | Implemented (`python/carnot/reporting/sota_cache_preconditions_manifest_v2.py`) | Implemented (`tests/python/test_experiment_3123_sota_cache_preconditions_manifest_v2.py`) |
 | REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
+| REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
