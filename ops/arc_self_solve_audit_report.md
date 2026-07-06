@@ -16,18 +16,17 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: 0 `SELF_DISCOVERY_ADVANCE`; 7 `DUPLICATE` same-depth development-proxy replays; 1 `OUTER_LOOP_RE` (`lp85` via `used_env_source`). Reachability is clean, but reachability is not proof of live self-discovery.
+TL;DR: 0 `SELF_DISCOVERY_ADVANCE`; 6 `DUPLICATE`; 1 `OUTER_LOOP_RE`; no `OFF_PATH`. Reachability is clean, but none of these prove new live autonomous hidden-game discovery.
 
-| Artifact | Verdict | Evidence | Recommended action |
-|---|---:|---|---|
-| `results/arc_loop_solve_r11l.json` | `DUPLICATE` | Reaches L2; registry already records r11l L2. Also `solve_provenance=development_proxy`, `standing_arc_loop_offline_no_quota`, no honest live trace. | Do not count as new capability. Require audited live attempt trace for any future claim. |
-| `results/arc_loop_solve_ls20.json` | `DUPLICATE` | Reaches L2; registry already records ls20 L2. Same weak development-proxy/offline provenance. | Keep out of headline progress. |
-| `results/arc_loop_solve_sp80.json` | `DUPLICATE` | Reaches L2; registry already records sp80 L2 and later notes duplicate-depth residuals. | Treat as replay/regression check only. |
-| `results/arc_loop_solve_su15.json` | `DUPLICATE` | Reaches L2; registry already records su15 L2 and later notes duplicate-depth residuals. | No solve credit. Need L3 live self-discovery. |
-| `results/arc_loop_solve_ft09.json` | `DUPLICATE` | Reaches L3; registry already records ft09 L3. Development-proxy replay is not autonomous discovery evidence. | Replay artifact only, not new progress. |
-| `results/arc_loop_solve_lf52.json` | `DUPLICATE` | Reaches L2; registry already records lf52 L2. No grounded L3 delta shown. | Do not promote. Require live L3 bank with trace. |
-| `results/arc_loop_solve_ka59.json` | `DUPLICATE` | Reaches L1; registry already records ka59 L1. Also only development-proxy/offline. | No new capability. |
-| `results/experiment_headway_lp85_capture.json` | `OUTER_LOOP_RE` | Claims L6, but declares `used_env_source`; artifact also has `solve_provenance=development_proxy`, `flagged_adversarial=true`, and cached/verifier-ensemble methodology. | Quarantine as tainted research/debug artifact. Do not count as live-agent solve. |
+| Artifact | Verdict | Evidence | Recommended Action |
+|---|---|---|---|
+| `results/arc_loop_solve_r11l.json` | `DUPLICATE` | Reaches L2; registry already records r11l L2. Artifact says `solve_provenance=development_proxy`, `mode=standing_arc_loop_offline_no_quota`, no live attempt/runtime RE trace. | No new credit. Require audited live trace for future claims. |
+| `results/arc_loop_solve_ls20.json` | `DUPLICATE` | Reaches L2; registry already records ls20 L2. Same development-proxy/offline provenance. | Treat as replay/self-play only. |
+| `results/arc_loop_solve_su15.json` | `DUPLICATE` | Reaches L2; registry already records su15 L2 and notes later duplicate-depth residuals. | No promotion. Need live L3 discovery. |
+| `results/arc_loop_solve_ft09.json` | `DUPLICATE` | Reaches L3; registry already records ft09 L3. Development-proxy replay is not self-discovery evidence. | Keep out of headline progress. |
+| `results/arc_loop_solve_lf52.json` | `DUPLICATE` | Reaches L2; registry already records lf52 L2; no grounded L3 delta shown. | Replay/regression only. |
+| `results/arc_loop_solve_ka59.json` | `DUPLICATE` | Reaches L1; registry already records ka59 L1. Artifact is development-proxy/offline, not live autonomous discovery. | No new capability credit. |
+| `results/experiment_headway_lp85_capture.json` | `OUTER_LOOP_RE` | Claims lp85 L6, but declares `used_env_source`; artifact also has `solve_provenance=development_proxy`, `flagged_adversarial=true`, verifier/cached-candidate substrate, and no live trace. | Quarantine as tainted debug/research artifact. Do not count; redo via live entrypoint only, no source/env internals/per-game calibration. |
 
-Pattern watch: the drift is toward laundering reachable offline/development artifacts into “live agent solved it” claims. The live closure is necessary but not sufficient. Anything without autonomous attempt logs, runtime RE evidence, and no source/BFS/per-game hand path stays out of self-discovery metrics.
+Pattern watch: the drift is laundering reachable offline/development artifacts into “live agent solved it” claims. Reachable modules are necessary, not sufficient. Anything without autonomous attempt logs, runtime reverse-engineering evidence, and clean no-source/no-BFS/no-hand-adapter provenance stays out of self-discovery metrics.
 
