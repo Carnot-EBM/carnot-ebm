@@ -26657,6 +26657,87 @@ label, validate any final SAT model with the original CNF, and keep
 |---|---|---|
 | REQ-VERIFY-5314 | Planned (`python/carnot/experiment_5314_ising_smooth_relaxation_baseline_v485.py`, `results/experiment_5314_ising_smooth_relaxation_baseline_v485.json`) | Planned (`tests/python/test_experiment_5314_ising_smooth_relaxation_baseline_v485.py`) |
 
+### REQ-VERIFY-5315: Gated Solver-Guidance Ablation V485
+
+The repository SHALL provide Exp 5315 at
+`python/carnot/experiment_5315_gated_solver_guidance_ablation_v485.py`
+and write
+`results/experiment_5315_gated_solver_guidance_ablation_v485.json`
+without invoking an LLM, without claiming hardware execution or hardware
+speedup, and without modifying `scripts/research_conductor.py`. The runner
+SHALL first confirm that Exp 5314 smooth-relaxation readiness passed and SHALL
+reuse the same bounded Exp 5292/Exp 5299/Exp 5300/Exp 5314 fixture instances
+rather than inventing an unanchored SAT benchmark.
+
+The ablation SHALL evaluate solver-only fallback, deterministic constraint
+LNS, p-bit/CDCL gated hints, smooth-relaxation gated hints, and combined gated hints
+on the same deterministic instance set. The LNS arm MAY fall back to
+solver-only on fixture rows that have no structured LNS candidate, but the row
+SHALL remain present in the method matrix so every method is compared on the
+same class distribution.
+
+All guidance methods SHALL remain advisory. The symbolic CDCL solver SHALL
+validate every final SAT assignment and SHALL provide the fallback label/model
+whenever p-bit/CDCL, smooth-relaxation, LNS, or combined hints are unsafe,
+misleading, malformed, or nonzero-energy. If a p-bit or smooth hint hurts a
+class before gating, the class gate SHALL be encoded in the artifact rather
+than reported as broad improvement.
+
+The artifact SHALL include these top-level fields: `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`gates_confirmed`, `solver_guidance_ablation_complete`, `method_matrix`,
+`aggregate_conflict_delta`, `per_class_harm`, `misleading_class_blocked`,
+`cdcl_fallback_authoritative`, `no_hardware_speedup_claim`, and `tests_run`.
+The fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `gates_confirmed`, `method_matrix`, `per_class_harm`,
+and `tests_run` SHALL be principle-wrapped objects with `value` and
+`principle`. `honest_verdict.value` SHALL start with `complete:`, `null:`,
+`harmful_`, or `blocked_`. `inference_substrate.value` SHALL be
+`bounded_solver_guidance_ablation_with_symbolic_fallback`.
+`solver_guidance_ablation_complete`, `misleading_class_blocked`,
+`cdcl_fallback_authoritative`, and `no_hardware_speedup_claim` SHALL be bare
+booleans, with `cdcl_fallback_authoritative=true` and
+`no_hardware_speedup_claim=true`. `aggregate_conflict_delta` SHALL be a bare
+numeric value.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceable Exp 5315 identifier for the gated solver-guidance ablation."
+- `milestone`: principle "Milestone accountability for the V485 bounded solver-guidance comparison."
+- `status`: principle "Terminal status for downstream readers; complete means all advisory methods were compared on the same deterministic fixture set."
+- `honest_verdict`: principle "Terminal Exp 5315 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether gated solver guidance helped without hiding harmful classes."
+- `inference_substrate`: principle "Declares bounded CPU solver-guidance ablation with symbolic fallback; no LLM, hardware execution, or hardware speedup claim."
+- `gates_confirmed`: principle "Records upstream Exp5299 LNS, Exp5300 p-bit/CDCL, and Exp5314 smooth-relaxation readiness before combining hints."
+- `solver_guidance_ablation_complete`: principle "Bare boolean true only when solver-only, LNS, p-bit/CDCL gated, smooth-relaxation, and combined-hint arms all run on the same fixture instances with CDCL-valid final labels."
+- `method_matrix`: principle "Compares aggregate and per-class conflicts/runtime for every method on the same deterministic instances so savings are not distribution drift."
+- `aggregate_conflict_delta`: principle "Bare numeric solver-only-minus-combined conflict delta; positive values save conflicts and negative values expose aggregate harm."
+- `per_class_harm`: principle "Reports class-level added conflicts by method, including misleading-assumption classes, so harmful guidance is gated instead of promoted as broad improvement."
+- `misleading_class_blocked`: principle "Bare boolean true only when every misleading p-bit or smooth hint that would add conflicts is routed to solver-only fallback in final guided methods."
+- `cdcl_fallback_authoritative`: principle "Bare boolean proving CDCL validates final SAT labels/models and overwrites unsafe advisory hints."
+- `no_hardware_speedup_claim`: principle "Bare boolean that must remain true because Exp5315 is CPU-only and reports no hardware speedup."
+- `tests_run`: principle "Commands run to validate ablation routing, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+
+### SCENARIO-VERIFY-5315: Gated Solver Guidance Blocks Misleading Classes
+
+Given the Exp 5314 smooth-relaxation gate passed and the Exp 5300 p-bit/CDCL
+gate blocks misleading classes, when Exp 5315 runs the bounded ablation, then
+it evaluates solver-only, LNS, p-bit/CDCL gated, smooth-relaxation gated, and
+combined-hint methods over the exact same fixture classes; reports aggregate
+conflict/runtime deltas and per-class harm; sets
+`cdcl_fallback_authoritative=true`; and sets
+`no_hardware_speedup_claim=true`.
+
+If p-bit or smooth hints would add conflicts on misleading-assumption classes
+before gating, then the runner SHALL report that raw harm in `per_class_harm`,
+route those classes to solver-only fallback in final guided methods, set
+`misleading_class_blocked=true`, and avoid claiming broad ungated improvement.
+
+## Implementation Status (REQ-VERIFY-5315)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5315 | Planned (`python/carnot/experiment_5315_gated_solver_guidance_ablation_v485.py`, `results/experiment_5315_gated_solver_guidance_ablation_v485.json`) | Planned (`tests/python/test_experiment_5315_gated_solver_guidance_ablation_v485.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
