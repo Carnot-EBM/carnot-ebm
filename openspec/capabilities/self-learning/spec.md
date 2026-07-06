@@ -16843,3 +16843,108 @@ whether governed decision-history memory is ready.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5275 | Planned (`python/carnot/pipeline/governed_decision_history_memory.py`) | Planned (`tests/python/test_experiment_5275_governed_decision_history_memory_v482.py`) |
+
+---
+
+## REQ-LEARN-5289: Memory Operation Attribution Harness
+
+Experiment 5289 SHALL build a small no-LLM attribution harness over the
+existing Exp5275 governed decision-history memory rows and Exp5276
+memory-assisted verifier-dose replay rows. The harness SHALL NOT start a broad
+fine-tuning, GRPO, VPRM, LoRA, or live LLM-inference task.
+
+The harness SHALL classify governed-memory outcomes with these operation-stage
+labels:
+
+- extraction
+- update/write
+- retrieval/routing
+- maintenance/eviction
+- use/action
+- rollback
+
+The bounded deterministic fixture SHALL include controls for stale memory,
+conflicting memory, shuffled memory, missing provenance, and harmful memory.
+Every controlled fault SHALL be attributed to exactly one primary operation
+stage while separately reporting whether the governance control blocked unsafe
+propagation into a final replay decision.
+
+The result artifact SHALL be
+`results/experiment_5289_memory_operation_attribution_v483.json` and SHALL
+include principle-wrapped `honest_verdict`, principle-wrapped
+`inference_substrate`, bare `memory_attribution_ready` plus
+`memory_attribution_ready_principle`, `operation_stage_error_counts` with
+`extraction`, `update`, `routing`, `maintenance`, `use`, `rollback`, and
+`principle`, principle-wrapped `attribution_coverage`, principle-wrapped
+`unsafe_propagations`, principle-wrapped `local_maintenance_cost`,
+principle-wrapped `decision_impact_summary`, principle-wrapped
+`continuous_self_learning_evidence`, and a `tests_run` list.
+
+The required field principles SHALL be:
+
+- `honest_verdict`: States whether operation attribution is usable, blocked, or
+  null without hiding unsafe propagation or attribution gaps.
+- `inference_substrate`: Declares aggregation from upstream artifacts or an
+  offline deterministic no-LLM fixture so operation attribution is not mistaken
+  for live LLM inference.
+- `memory_attribution_ready`: Gates Exp5290 only when every bounded control is
+  attributed, no unsafe memory propagates, and final replay decisions remain
+  safe.
+- `operation_stage_error_counts`: Separates extraction, update/write,
+  retrieval/routing, maintenance/eviction, use/action, and rollback faults so a
+  final memory success cannot hide the responsible operation stage.
+- `attribution_coverage`: Reports how many bounded control cases received a
+  primary stage attribution.
+- `unsafe_propagations`: Counts controlled unsafe memories that reached final
+  action selection despite governance.
+- `local_maintenance_cost`: Measures deterministic local
+  ledger/provenance/scope/rollback checks instead of treating governance as
+  free.
+- `decision_impact_summary`: Compares memory-assisted replay decisions against
+  no-memory and always-full baselines so allocation gains are not confused with
+  answer injection.
+- `continuous_self_learning_evidence`: Explains whether the governed memory
+  lifecycle supplies reusable, auditable self-learning evidence.
+
+### REQ-LEARN-5289 Sub-requirements
+
+- REQ-LEARN-5289-1: The harness SHALL read Exp5275 governance rows and Exp5276
+  pilot/baseline rows from checked-in artifacts or equivalent in-memory
+  fixtures.
+- REQ-LEARN-5289-2: Operation-stage error counts SHALL include exactly the keys
+  `extraction`, `update`, `routing`, `maintenance`, `use`, and `rollback`.
+- REQ-LEARN-5289-3: Missing provenance SHALL be attributed to extraction,
+  conflicting writes SHALL be attributed to update/write, shuffled scope
+  retrieval SHALL be attributed to retrieval/routing, stale conflict eviction
+  SHALL be attributed to maintenance/eviction, poisoning-like action influence
+  SHALL be attributed to use/action, and harmful-memory rollback SHALL be
+  attributed to rollback.
+- REQ-LEARN-5289-4: Unsafe propagation count SHALL be zero only when every
+  stale, conflict, shuffled, missing-provenance, poisoning-like, and harmful
+  control is blocked before it can change the final replay decision.
+- REQ-LEARN-5289-5: `memory_attribution_ready` SHALL be a bare boolean and
+  SHALL be true only when attribution coverage is complete, unsafe propagation
+  count is zero, and the decision-impact summary preserves Exp5276's safe final
+  replay decisions.
+
+### SCENARIO-LEARN-5289: Governed Memory Operation Faults Are Attributed Before Exp5290
+
+**Given** Exp5275 governed decision-history rows and Exp5276 memory-assisted
+verifier-dose replay rows
+**When** Experiment 5289 runs the no-LLM operation attribution harness
+**Then** missing provenance, conflicting memory, shuffled routing, stale memory,
+poisoning-like use, and harmful rollback controls are each assigned a primary
+operation stage
+**And** unsafe propagation count is zero
+**And** final replay decision quality is not reduced relative to the always-full
+baseline
+**And** the artifact uses `aggregation_from_upstream_artifacts` or
+`offline_deterministic_fixture_no_llm`
+**And** the honest verdict starts with `complete:`, `null:`, or `blocked_` and
+states whether operation attribution is usable.
+
+## Implementation Status (Exp 5289)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5289 | Planned (`python/carnot/pipeline/memory_operation_attribution.py`) | Planned (`tests/python/test_experiment_5289_memory_operation_attribution_v483.py`) |
