@@ -10429,3 +10429,4 @@ web search: Semantic Schola |
 | 2026-07-06 21:19 UTC | Exp 5323: Native GGUF backend and flag bisect for  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-06 22:47 UTC | Exp 5324: Gated runtime receipt stabilization afte | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ses:
 +         |
+| 2026-07-06 22:59 UTC | Exp 5324: Gated runtime receipt stabilization afte | OK | cache hit: 96 passed, 1 warning in 13.78s |
