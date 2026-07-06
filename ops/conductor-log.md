@@ -10415,3 +10415,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 15:59 UTC | Exp 5315: Gated solver-guidance ablation, gated on | OK | 91 passed, 1 warning in 9.22s |
 | 2026-07-06 16:13 UTC | Exp 5316: KAN optimal abstraction budget for certi | OK | 88 passed, 1 warning in 8.98s |
 | 2026-07-06 16:33 UTC | Exp 5317: EBT spectral telemetry audit and re-emit | OK | 87 passed, 1 warning in 8.61s |
+| 2026-07-06 16:52 UTC | Exp 5318: Solver-authoritative SMT hint validation | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
