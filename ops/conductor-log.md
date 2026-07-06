@@ -10416,3 +10416,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 16:13 UTC | Exp 5316: KAN optimal abstraction budget for certi | OK | 88 passed, 1 warning in 8.98s |
 | 2026-07-06 16:33 UTC | Exp 5317: EBT spectral telemetry audit and re-emit | OK | 87 passed, 1 warning in 8.61s |
 | 2026-07-06 16:52 UTC | Exp 5318: Solver-authoritative SMT hint validation | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-07-06 17:16 UTC | Exp 5319: Hardware continuity receipts with no spe | OK | 87 passed, 1 warning in 10.92s |
