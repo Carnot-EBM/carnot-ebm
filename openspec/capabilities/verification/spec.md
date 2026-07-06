@@ -25882,6 +25882,85 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5325: Theoria Deterministic Rewrite-State Fixture V486
+
+The repository SHALL provide Exp 5325 at
+`python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py`, store
+the deterministic fixture at `data/rewrite_state_fixture_v486.json`, and write
+`results/experiment_5325_theoria_rewrite_state_fixture_v486.json` without
+invoking a live LLM, local GGUF model, external API judge, generated-text
+judge, or retired text-verifier path, and without modifying
+`scripts/research_conductor.py`. Exp 5325 SHALL extend the Exp 5310
+paraphrase-consistency pattern from claim labels into typed rewrite-state
+transitions so Exp 5326 can consume a deterministic accept/reject gate before
+any SOTA rewrite-quality measurement.
+
+The fixture SHALL include exactly the requested tiny typed rewrite case set:
+safe paraphrase, contradiction introduction, missing required change,
+fabricated premise/citation, invalid premise preserved, and overbroad rewrite.
+Each case SHALL carry source state, target state, evidence facts, allowed
+citations, typed change obligations, expected label-preservation behavior,
+expected complete-change coverage behavior, and expected acceptability. Free
+text MAY be present for human auditability, but the verifier SHALL decide from
+typed state fields, evidence facts, citations, and obligations only.
+
+The runner SHALL implement deterministic checks for rewrite acceptability,
+complete-change coverage, label preservation, and unsafe-change rejection. A
+rewrite SHALL be acceptable only when all typed obligations are covered, label
+preservation matches the case contract, no contradiction is introduced, no
+fabricated premise or citation is added, invalid premises are not preserved
+when repair is required, and no semantic fact changes beyond the typed
+obligations occur. The runner SHALL compute `false_accept_count` over unsafe
+cases and SHALL keep the downstream fixture gate closed if any unsafe case is
+accepted.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, and `tests_run`, plus bare
+`rewrite_case_count`, `rewrite_acceptability_rate`,
+`complete_change_coverage_rate`, `unsafe_rewrite_rejection_rate`,
+`false_accept_count`, and `rewrite_state_fixture_ready`. `honest_verdict.value`
+SHALL start with `complete:` or `blocked_`. `inference_substrate.value` SHALL
+be `deterministic_rewrite_state_fixture`. `rewrite_state_fixture_ready` SHALL
+be true only when all required case types are present, acceptability decisions
+match the fixture contract, complete-change coverage is classified correctly,
+unsafe rewrites are rejected, `false_accept_count=0`, and the artifact exposes
+the required Exp 5326 consumer contract.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture."
+- `milestone`: principle "Milestone accountability for the V486 rewrite-state fixture gate."
+- `status`: principle "Machine-readable terminal state for downstream rewrite-quality gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture."
+- `inference_substrate`: principle "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality."
+- `fixture_path`: principle "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics."
+- `tests_run`: principle "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests."
+
+### SCENARIO-VERIFY-5325: Typed Rewrite Transitions Accept Safe Rewrites And Reject Unsafe Ones
+
+Given the checked-in deterministic rewrite-state fixture, when Exp 5325 runs,
+then it loads the six typed rewrite cases, scores source and target states from
+structured facts and citations, checks every typed change obligation, evaluates
+label preservation against the case contract, rejects unsafe contradictions,
+fabrications, invalid-premise preservation, missing required changes, and
+overbroad fact changes, writes the required artifact, keeps
+`inference_substrate.value=deterministic_rewrite_state_fixture`, and sets
+`rewrite_state_fixture_ready=true` only when Exp 5326 can consume the fixture.
+
+If a required case type is missing, an unsafe rewrite is accepted, an expected
+safe paraphrase is rejected, a required change is missed without being detected,
+a fabricated premise or citation is not rejected, an invalid premise is
+preserved when repair is required, an overbroad fact change is not rejected, or
+the fixture would require any LLM call, then the same runner writes a terminal
+`blocked_` artifact with `rewrite_state_fixture_ready=false`, exact blocker
+metrics, and no SOTA model-quality claim.
+
+## Implementation Status (REQ-VERIFY-5325)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5325 | Planned (`python/carnot/experiment_5325_theoria_rewrite_state_fixture_v486.py`, `data/rewrite_state_fixture_v486.json`, `results/experiment_5325_theoria_rewrite_state_fixture_v486.json`) | Planned (`tests/python/test_experiment_5325_theoria_rewrite_state_fixture_v486.py`) |
+
 ### REQ-VERIFY-5324: Local Native GGUF Runtime Receipt Stabilization V486
 
 The repository SHALL provide Exp 5324 at

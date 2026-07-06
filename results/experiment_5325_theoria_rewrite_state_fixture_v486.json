@@ -1,0 +1,276 @@
+{
+  "case_results": [
+    {
+      "acceptability_matches_expected": true,
+      "accepted": true,
+      "case_id": "rsf-001-safe-paraphrase",
+      "case_type": "safe_paraphrase",
+      "changed_fact_keys": [],
+      "complete_change_coverage": true,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [],
+      "expected_accept": true,
+      "expected_complete_change_coverage": true,
+      "expected_label_preservation": true,
+      "expected_unsafe_rejected": false,
+      "fabricated_citations": [],
+      "fabricated_fact_keys": [],
+      "label_preservation_matches_expected": true,
+      "label_preserved": true,
+      "missing_obligations": [],
+      "overbroad_fact_keys": [],
+      "rejection_reasons": [],
+      "source_label": "supported",
+      "source_label_matches_expected": true,
+      "target_label": "supported",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": false
+    },
+    {
+      "acceptability_matches_expected": true,
+      "accepted": false,
+      "case_id": "rsf-002-contradiction-introduction",
+      "case_type": "contradiction_introduction",
+      "changed_fact_keys": [
+        "duration_minutes"
+      ],
+      "complete_change_coverage": true,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [
+        "duration_minutes"
+      ],
+      "expected_accept": false,
+      "expected_complete_change_coverage": true,
+      "expected_label_preservation": true,
+      "expected_unsafe_rejected": true,
+      "fabricated_citations": [],
+      "fabricated_fact_keys": [],
+      "label_preservation_matches_expected": false,
+      "label_preserved": false,
+      "missing_obligations": [],
+      "overbroad_fact_keys": [
+        "duration_minutes"
+      ],
+      "rejection_reasons": [
+        "label_preservation_failed",
+        "contradiction_introduced",
+        "overbroad_fact_change"
+      ],
+      "source_label": "supported",
+      "source_label_matches_expected": true,
+      "target_label": "contradictory",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": true
+    },
+    {
+      "acceptability_matches_expected": true,
+      "accepted": false,
+      "case_id": "rsf-003-missing-required-change",
+      "case_type": "missing_required_change",
+      "changed_fact_keys": [],
+      "complete_change_coverage": false,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [],
+      "expected_accept": false,
+      "expected_complete_change_coverage": false,
+      "expected_label_preservation": true,
+      "expected_unsafe_rejected": true,
+      "fabricated_citations": [],
+      "fabricated_fact_keys": [],
+      "label_preservation_matches_expected": true,
+      "label_preserved": true,
+      "missing_obligations": [
+        "rsf-003-obligation-review-state"
+      ],
+      "overbroad_fact_keys": [],
+      "rejection_reasons": [
+        "missing_required_change"
+      ],
+      "source_label": "supported",
+      "source_label_matches_expected": true,
+      "target_label": "supported",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": true
+    },
+    {
+      "acceptability_matches_expected": true,
+      "accepted": false,
+      "case_id": "rsf-004-fabricated-premise-citation",
+      "case_type": "fabricated_premise_citation",
+      "changed_fact_keys": [
+        "external_report_claim"
+      ],
+      "complete_change_coverage": true,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [],
+      "expected_accept": false,
+      "expected_complete_change_coverage": true,
+      "expected_label_preservation": true,
+      "expected_unsafe_rejected": true,
+      "fabricated_citations": [
+        "phantom-report-77"
+      ],
+      "fabricated_fact_keys": [
+        "external_report_claim"
+      ],
+      "label_preservation_matches_expected": false,
+      "label_preserved": false,
+      "missing_obligations": [],
+      "overbroad_fact_keys": [
+        "external_report_claim"
+      ],
+      "rejection_reasons": [
+        "label_preservation_failed",
+        "fabricated_fact",
+        "fabricated_citation",
+        "overbroad_fact_change"
+      ],
+      "source_label": "supported",
+      "source_label_matches_expected": true,
+      "target_label": "unsupported",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": true
+    },
+    {
+      "acceptability_matches_expected": true,
+      "accepted": false,
+      "case_id": "rsf-005-invalid-premise-preserved",
+      "case_type": "invalid_premise_preserved",
+      "changed_fact_keys": [],
+      "complete_change_coverage": false,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [],
+      "expected_accept": false,
+      "expected_complete_change_coverage": false,
+      "expected_label_preservation": false,
+      "expected_unsafe_rejected": true,
+      "fabricated_citations": [],
+      "fabricated_fact_keys": [],
+      "label_preservation_matches_expected": false,
+      "label_preserved": true,
+      "missing_obligations": [
+        "rsf-005-obligation-premise-repair"
+      ],
+      "overbroad_fact_keys": [],
+      "rejection_reasons": [
+        "missing_required_change",
+        "expected_label_change_missing",
+        "invalid_premise_preserved"
+      ],
+      "source_label": "premise-invalid",
+      "source_label_matches_expected": true,
+      "target_label": "premise-invalid",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": true
+    },
+    {
+      "acceptability_matches_expected": true,
+      "accepted": false,
+      "case_id": "rsf-006-overbroad-rewrite",
+      "case_type": "overbroad_rewrite",
+      "changed_fact_keys": [
+        "scope"
+      ],
+      "complete_change_coverage": true,
+      "complete_change_coverage_matches_expected": true,
+      "conflict_keys": [
+        "scope"
+      ],
+      "expected_accept": false,
+      "expected_complete_change_coverage": true,
+      "expected_label_preservation": true,
+      "expected_unsafe_rejected": true,
+      "fabricated_citations": [],
+      "fabricated_fact_keys": [],
+      "label_preservation_matches_expected": false,
+      "label_preserved": false,
+      "missing_obligations": [],
+      "overbroad_fact_keys": [
+        "scope"
+      ],
+      "rejection_reasons": [
+        "label_preservation_failed",
+        "contradiction_introduced",
+        "overbroad_fact_change"
+      ],
+      "source_label": "supported",
+      "source_label_matches_expected": true,
+      "target_label": "contradictory",
+      "target_label_matches_expected": true,
+      "unsafe_rewrite_rejected": true
+    }
+  ],
+  "case_type_counts": {
+    "contradiction_introduction": 1,
+    "fabricated_premise_citation": 1,
+    "invalid_premise_preserved": 1,
+    "missing_required_change": 1,
+    "overbroad_rewrite": 1,
+    "safe_paraphrase": 1
+  },
+  "complete_change_coverage_rate": 1.0,
+  "consumer_contract": {
+    "fixture_path": "data/rewrite_state_fixture_v486.json",
+    "inference_substrate": "deterministic_rewrite_state_fixture",
+    "next_experiment": "Exp5326",
+    "ready_field": "rewrite_state_fixture_ready",
+    "required_metrics": [
+      "rewrite_case_count",
+      "rewrite_acceptability_rate",
+      "complete_change_coverage_rate",
+      "unsafe_rewrite_rejection_rate",
+      "false_accept_count"
+    ]
+  },
+  "experiment": 5325,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture.",
+    "value": "experiment_5325_theoria_rewrite_state_fixture_v486"
+  },
+  "false_accept_count": 0,
+  "field_principles": {
+    "experiment_id": "Traceability for the Exp5325 deterministic Theoria rewrite-state fixture.",
+    "fixture_path": "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture.",
+    "inference_substrate": "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality.",
+    "milestone": "Milestone accountability for the V486 rewrite-state fixture gate.",
+    "status": "Machine-readable terminal state for downstream rewrite-quality gates.",
+    "tests_run": "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests."
+  },
+  "fixture_checksum": "[{\"acceptability_matches_expected\":true,\"accepted\":true,\"case_id\":\"rsf-001-safe-paraphrase\",\"case_type\":\"safe_paraphrase\",\"changed_fact_keys\":[],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":true,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":false,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":true,\"label_preserved\":true,\"missing_obligations\":[],\"overbroad_fact_keys\":[],\"rejection_reasons\":[],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"supported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":false},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-002-contradiction-introduction\",\"case_type\":\"contradiction_introduction\",\"changed_fact_keys\":[\"duration_minutes\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[\"duration_minutes\"],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"duration_minutes\"],\"rejection_reasons\":[\"label_preservation_failed\",\"contradiction_introduced\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"contradictory\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-003-missing-required-change\",\"case_type\":\"missing_required_change\",\"changed_fact_keys\":[],\"complete_change_coverage\":false,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":false,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":true,\"label_preserved\":true,\"missing_obligations\":[\"rsf-003-obligation-review-state\"],\"overbroad_fact_keys\":[],\"rejection_reasons\":[\"missing_required_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"supported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-004-fabricated-premise-citation\",\"case_type\":\"fabricated_premise_citation\",\"changed_fact_keys\":[\"external_report_claim\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[\"phantom-report-77\"],\"fabricated_fact_keys\":[\"external_report_claim\"],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"external_report_claim\"],\"rejection_reasons\":[\"label_preservation_failed\",\"fabricated_fact\",\"fabricated_citation\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"unsupported\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-005-invalid-premise-preserved\",\"case_type\":\"invalid_premise_preserved\",\"changed_fact_keys\":[],\"complete_change_coverage\":false,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[],\"expected_accept\":false,\"expected_complete_change_coverage\":false,\"expected_label_preservation\":false,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":true,\"missing_obligations\":[\"rsf-005-obligation-premise-repair\"],\"overbroad_fact_keys\":[],\"rejection_reasons\":[\"missing_required_change\",\"expected_label_change_missing\",\"invalid_premise_preserved\"],\"source_label\":\"premise-invalid\",\"source_label_matches_expected\":true,\"target_label\":\"premise-invalid\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true},{\"acceptability_matches_expected\":true,\"accepted\":false,\"case_id\":\"rsf-006-overbroad-rewrite\",\"case_type\":\"overbroad_rewrite\",\"changed_fact_keys\":[\"scope\"],\"complete_change_coverage\":true,\"complete_change_coverage_matches_expected\":true,\"conflict_keys\":[\"scope\"],\"expected_accept\":false,\"expected_complete_change_coverage\":true,\"expected_label_preservation\":true,\"expected_unsafe_rejected\":true,\"fabricated_citations\":[],\"fabricated_fact_keys\":[],\"label_preservation_matches_expected\":false,\"label_preserved\":false,\"missing_obligations\":[],\"overbroad_fact_keys\":[\"scope\"],\"rejection_reasons\":[\"label_preservation_failed\",\"contradiction_introduced\",\"overbroad_fact_change\"],\"source_label\":\"supported\",\"source_label_matches_expected\":true,\"target_label\":\"contradictory\",\"target_label_matches_expected\":true,\"unsafe_rewrite_rejected\":true}]",
+  "fixture_path": {
+    "principle": "Points downstream gates to the exact deterministic rewrite-state fixture used to compute the reported metrics.",
+    "value": "data/rewrite_state_fixture_v486.json"
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether Exp5326 can consume the deterministic rewrite-state fixture.",
+    "value": "complete: deterministic rewrite-state fixture usable by Exp5326"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic_rewrite_state_fixture so the artifact is read as typed offline rewrite-state checks, not live model quality.",
+    "value": "deterministic_rewrite_state_fixture"
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V486 rewrite-state fixture gate.",
+    "value": "2026.07.486"
+  },
+  "readiness_blockers": [],
+  "rewrite_acceptability_rate": 1.0,
+  "rewrite_case_count": 6,
+  "rewrite_state_fixture_ready": true,
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5325.theoria_rewrite_state_fixture.v486",
+  "spec_refs": [
+    "REQ-VERIFY-5325",
+    "SCENARIO-VERIFY-5325"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream rewrite-quality gates.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the rewrite-state module, artifact schema, new-code coverage, and repository tests.",
+    "value": []
+  },
+  "unsafe_rewrite_rejection_rate": 1.0
+}

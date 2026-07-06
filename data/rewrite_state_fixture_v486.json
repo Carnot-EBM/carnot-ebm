@@ -1,0 +1,353 @@
+{
+  "schema": "carnot.fixture.rewrite_state.v486",
+  "label_source": "curated_deterministic_rewrite_state_fixture_v486",
+  "cases": [
+    {
+      "case_id": "rsf-001-safe-paraphrase",
+      "case_type": "safe_paraphrase",
+      "description": "Safe paraphrase preserves the factual state while changing only the wording attribute.",
+      "evidence_facts": {
+        "duration_minutes": "47",
+        "subject": "aster-9 battery",
+        "test": "amber-load"
+      },
+      "allowed_citations": [
+        "battery-log-47"
+      ],
+      "source": {
+        "text": "The Aster-9 battery ran 47 minutes under the amber-load test.",
+        "premise_valid": true,
+        "facts": {
+          "duration_minutes": "47",
+          "subject": "aster-9 battery",
+          "test": "amber-load"
+        },
+        "attributes": {
+          "wording": "ran"
+        },
+        "citations": [
+          "battery-log-47"
+        ],
+        "expected_label": "supported"
+      },
+      "target": {
+        "text": "Under the amber-load test, the Aster-9 battery lasted 47 minutes.",
+        "premise_valid": true,
+        "facts": {
+          "duration_minutes": "47",
+          "subject": "aster-9 battery",
+          "test": "amber-load"
+        },
+        "attributes": {
+          "wording": "lasted"
+        },
+        "citations": [
+          "battery-log-47"
+        ],
+        "expected_label": "supported"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-001-obligation-wording",
+          "change_type": "lexical_paraphrase",
+          "field": "attributes.wording",
+          "source_value": "ran",
+          "target_value": "lasted"
+        }
+      ],
+      "expected_label_preservation": true,
+      "expected_complete_change_coverage": true,
+      "expected_accept": true,
+      "expected_unsafe_rejected": false
+    },
+    {
+      "case_id": "rsf-002-contradiction-introduction",
+      "case_type": "contradiction_introduction",
+      "description": "A rewrite changes a supported duration into a contradicted duration.",
+      "evidence_facts": {
+        "duration_minutes": "47",
+        "subject": "aster-9 battery",
+        "test": "amber-load"
+      },
+      "allowed_citations": [
+        "battery-log-47"
+      ],
+      "source": {
+        "text": "The Aster-9 battery ran 47 minutes under the amber-load test.",
+        "premise_valid": true,
+        "facts": {
+          "duration_minutes": "47",
+          "subject": "aster-9 battery",
+          "test": "amber-load"
+        },
+        "attributes": {
+          "wording": "ran"
+        },
+        "citations": [
+          "battery-log-47"
+        ],
+        "expected_label": "supported"
+      },
+      "target": {
+        "text": "Under the amber-load test, the Aster-9 battery lasted 74 minutes.",
+        "premise_valid": true,
+        "facts": {
+          "duration_minutes": "74",
+          "subject": "aster-9 battery",
+          "test": "amber-load"
+        },
+        "attributes": {
+          "wording": "lasted"
+        },
+        "citations": [
+          "battery-log-47"
+        ],
+        "expected_label": "contradictory"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-002-obligation-wording",
+          "change_type": "lexical_paraphrase",
+          "field": "attributes.wording",
+          "source_value": "ran",
+          "target_value": "lasted"
+        }
+      ],
+      "expected_label_preservation": true,
+      "expected_complete_change_coverage": true,
+      "expected_accept": false,
+      "expected_unsafe_rejected": true
+    },
+    {
+      "case_id": "rsf-003-missing-required-change",
+      "case_type": "missing_required_change",
+      "description": "A rewrite preserves the label but misses the required review-state transition.",
+      "evidence_facts": {
+        "finding": "temperature drift",
+        "severity": "minor",
+        "subject": "delta audit"
+      },
+      "allowed_citations": [
+        "delta-audit-note"
+      ],
+      "source": {
+        "text": "The delta audit found a minor temperature drift.",
+        "premise_valid": true,
+        "facts": {
+          "finding": "temperature drift",
+          "severity": "minor",
+          "subject": "delta audit"
+        },
+        "attributes": {
+          "review_state": "draft"
+        },
+        "citations": [
+          "delta-audit-note"
+        ],
+        "expected_label": "supported"
+      },
+      "target": {
+        "text": "The delta audit recorded a minor temperature drift.",
+        "premise_valid": true,
+        "facts": {
+          "finding": "temperature drift",
+          "severity": "minor",
+          "subject": "delta audit"
+        },
+        "attributes": {
+          "review_state": "draft"
+        },
+        "citations": [
+          "delta-audit-note"
+        ],
+        "expected_label": "supported"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-003-obligation-review-state",
+          "change_type": "required_status_update",
+          "field": "attributes.review_state",
+          "source_value": "draft",
+          "target_value": "approved"
+        }
+      ],
+      "expected_label_preservation": true,
+      "expected_complete_change_coverage": false,
+      "expected_accept": false,
+      "expected_unsafe_rejected": true
+    },
+    {
+      "case_id": "rsf-004-fabricated-premise-citation",
+      "case_type": "fabricated_premise_citation",
+      "description": "A rewrite adds an unsupported premise and a citation that is not in the allowed evidence.",
+      "evidence_facts": {
+        "calibration": "passed",
+        "subject": "hollow sensor"
+      },
+      "allowed_citations": [
+        "sensor-log-12"
+      ],
+      "source": {
+        "text": "The Hollow sensor calibration passed.",
+        "premise_valid": true,
+        "facts": {
+          "calibration": "passed",
+          "subject": "hollow sensor"
+        },
+        "attributes": {
+          "wording": "reported"
+        },
+        "citations": [
+          "sensor-log-12"
+        ],
+        "expected_label": "supported"
+      },
+      "target": {
+        "text": "The Hollow sensor calibration passed according to external report 77.",
+        "premise_valid": true,
+        "facts": {
+          "calibration": "passed",
+          "external_report_claim": "verified-by-report-77",
+          "subject": "hollow sensor"
+        },
+        "attributes": {
+          "wording": "summarized"
+        },
+        "citations": [
+          "sensor-log-12",
+          "phantom-report-77"
+        ],
+        "expected_label": "unsupported"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-004-obligation-wording",
+          "change_type": "lexical_summary",
+          "field": "attributes.wording",
+          "source_value": "reported",
+          "target_value": "summarized"
+        }
+      ],
+      "expected_label_preservation": true,
+      "expected_complete_change_coverage": true,
+      "expected_accept": false,
+      "expected_unsafe_rejected": true
+    },
+    {
+      "case_id": "rsf-005-invalid-premise-preserved",
+      "case_type": "invalid_premise_preserved",
+      "description": "A rewrite was supposed to repair an invalid premise but preserves the invalid premise state.",
+      "evidence_facts": {
+        "current_stop": "pear gate",
+        "service_status": "stops",
+        "subject": "route-6"
+      },
+      "allowed_citations": [
+        "route-table-6"
+      ],
+      "source": {
+        "text": "Because Route 6 never served Pear Gate, Route 6 skips Pear Gate today.",
+        "premise_valid": false,
+        "facts": {
+          "current_stop": "pear gate",
+          "service_status": "skips",
+          "subject": "route-6"
+        },
+        "attributes": {
+          "repair_mode": "required"
+        },
+        "citations": [
+          "route-table-6"
+        ],
+        "expected_label": "premise-invalid"
+      },
+      "target": {
+        "text": "Since Pear Gate was supposedly never on Route 6, the route still skips Pear Gate today.",
+        "premise_valid": false,
+        "facts": {
+          "current_stop": "pear gate",
+          "service_status": "skips",
+          "subject": "route-6"
+        },
+        "attributes": {
+          "repair_mode": "required"
+        },
+        "citations": [
+          "route-table-6"
+        ],
+        "expected_label": "premise-invalid"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-005-obligation-premise-repair",
+          "change_type": "premise_repair",
+          "field": "premise_valid",
+          "source_value": false,
+          "target_value": true
+        }
+      ],
+      "expected_label_preservation": false,
+      "expected_complete_change_coverage": false,
+      "expected_accept": false,
+      "expected_unsafe_rejected": true
+    },
+    {
+      "case_id": "rsf-006-overbroad-rewrite",
+      "case_type": "overbroad_rewrite",
+      "description": "A rewrite performs the requested audience change but broadens the factual scope.",
+      "evidence_facts": {
+        "scope": "module-a",
+        "status": "requires manual reset",
+        "subject": "relay-2"
+      },
+      "allowed_citations": [
+        "relay-note-2"
+      ],
+      "source": {
+        "text": "Relay-2 in module A requires a manual reset.",
+        "premise_valid": true,
+        "facts": {
+          "scope": "module-a",
+          "status": "requires manual reset",
+          "subject": "relay-2"
+        },
+        "attributes": {
+          "audience": "operator"
+        },
+        "citations": [
+          "relay-note-2"
+        ],
+        "expected_label": "supported"
+      },
+      "target": {
+        "text": "For maintainers, Relay-2 requires a manual reset across all modules.",
+        "premise_valid": true,
+        "facts": {
+          "scope": "all-modules",
+          "status": "requires manual reset",
+          "subject": "relay-2"
+        },
+        "attributes": {
+          "audience": "maintainer"
+        },
+        "citations": [
+          "relay-note-2"
+        ],
+        "expected_label": "contradictory"
+      },
+      "change_obligations": [
+        {
+          "obligation_id": "rsf-006-obligation-audience",
+          "change_type": "audience_rewrite",
+          "field": "attributes.audience",
+          "source_value": "operator",
+          "target_value": "maintainer"
+        }
+      ],
+      "expected_label_preservation": true,
+      "expected_complete_change_coverage": true,
+      "expected_accept": false,
+      "expected_unsafe_rejected": true
+    }
+  ]
+}
