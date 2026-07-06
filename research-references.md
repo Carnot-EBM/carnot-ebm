@@ -27598,3 +27598,20 @@ into the next-milestone design constraints.
   improved envelope tightness but not certificate success.
 
 <!-- V486-PLANNER-REFRESH-2026-07-06-END -->
+
+
+### V486 Execution Refresh - 2026-07-06
+
+Execution-time sweep after the `.486` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, Logical Intelligence public pages, and local duplicate history. The findings below were absent from the V486 planner block and nearby reference history.
+
+### New actionable deltas
+- **ContextNest: Verifiable Context Governance for Autonomous AI Agent** (https://arxiv.org/abs/2607.02116): ContextNest formalizes context governance below retrieval with typed Markdown documents, deterministic selectors, contextnest:// references, SHA-256 hash-chained versions, graph checkpoints, MCP source nodes, and audit traces of context consumption. Actionability: For Exp5328/Exp5330, require context-object lifecycle rows to preserve version identity, approval/currentness, integrity hashes, point-in-time reconstruction, and audit traces before any context or memory policy is promoted.
+- **Episodic-to-Semantic Consolidation Without Identity Drift** (https://arxiv.org/abs/2607.01988): The paper treats consolidation as a deterministic episodic-to-semantic memory function whose output is separately addressable; the certified agent identity hash excludes that semantic layer so knowledge can update without mutating the agent identity. Actionability: For Exp5330, keep SEA-style policy promotion and memory consolidation outside frozen model identity. Record byte-stable identity manifests, semantic-layer sidecars, supporting-event provenance, rollback fields, and no weight mutation.
+- **Distributed Attacks in Persistent-State AI Control** (https://arxiv.org/abs/2607.02514): The paper and repository show that gradual cross-change attacks evade standard per-diff monitors, while a stateful link-tracker that carries suspicion notes across changes detects gradual buildup better. Actionability: For Exp5328/Exp5330, include cross-event suspicious-buildup telemetry in context lifecycle fixtures: link memory commits, sidecars, rollback events, and verifier-dose changes across sessions instead of judging each state change independently.
+
+### Execution impact
+- **Plan impact:** No executable `.486` task edit is required. The deltas sharpen context-object lifecycle verification, identity-stable memory consolidation, and persistent-state monitoring fixtures.
+- **Retired scope:** No retired scope was reopened. External generated-text scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, and CPU-only GGUF offload reruns remain closed.
+- **Secondary-source status:** Semantic Scholar was rate-limited during execution and no citation-trend claim is made. OpenReview, HuggingFace Papers, Extropic, and Logical Intelligence did not add a separate execution-changing source.
+
+<!-- V486-EXECUTION-REFRESH-2026-07-06-END -->

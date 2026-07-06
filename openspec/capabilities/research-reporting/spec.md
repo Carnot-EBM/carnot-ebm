@@ -35767,6 +35767,87 @@ modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
 |---|---|---|
 | REQ-REPORT-5321 | Planned (`python/carnot/experiment_5321_archive_485_activate_486.py`, `results/experiment_5321_archive_485_activate_486.json`) | Planned (`tests/python/test_experiment_5321_archive_485_activate_486.py`) |
 
+### REQ-REPORT-5322: V486 Execution-Time SOTA Source Delta Refresh
+
+The Exp 5322 workflow SHALL perform an execution-time source delta check after
+the `V486 Planner Refresh - 2026-07-06` section in `research-references.md`.
+It SHALL write `results/experiment_5322_sota_source_delta_v486.json` and MAY
+append one clearly delimited execution-refresh section to
+`research-references.md` only when genuinely new actionable source findings are
+absent from the V486 planner block and nearby reference history.
+
+The workflow SHALL check the same source families as the V486 planner refresh:
+arXiv, OpenReview, HuggingFace Papers, Semantic Scholar citation trails for EBT
+`arXiv:2507.02092` and ARM-EBM `arXiv:2512.15605`, GitHub repository discovery,
+Extropic writing, Logical Intelligence public pages, and local duplicate
+comparison against `research-references.md`. It SHALL emphasize EBMs for
+reasoning, neural constraint satisfaction, Ising/annealing and p-bit sampling,
+hallucination detection, KAN verification, energy-guided decoding, hardware
+sampling, and continual constraint learning. It SHALL NOT use `/deep-research`,
+modify `scripts/research_conductor.py`, modify executable roadmap files, or
+reopen retired scopes such as external generated-text scoring, broad GRPO or
+fine-tuning reruns, TSU/Kona execution claims, or CPU-only GGUF offload reruns.
+
+The artifact SHALL include required fields `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `sources_checked`,
+`new_actionable_findings_count`, `references_modified`,
+`references_section_marker`, `retired_scope_reopened`,
+`methodology_duration_s`, and `no_executable_plan_edit`. The fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `sources_checked`, and `references_section_marker` SHALL
+be principle-annotated. The fields `new_actionable_findings_count`,
+`references_modified`, `retired_scope_reopened`, `methodology_duration_s`, and
+`no_executable_plan_edit` SHALL remain bare scalar values for downstream
+gating. `inference_substrate.value` SHALL be
+`literature_ingestion_network_sources`, and `retired_scope_reopened` SHALL be
+false unless a future operator-authorized exclusion-manifest override is
+recorded in the artifact. The artifact SHOULD include `actionable_findings` as a
+principle-annotated list of URLs and Carnot-local hooks when findings are
+appended.
+
+Required field principles:
+
+- `experiment_id`: principle "traceability for the Exp5322 execution-time source delta artifact."
+- `milestone`: principle "milestone accountability for V486 source freshness."
+- `status`: principle "machine-readable terminal state for downstream reconciliation."
+- `honest_verdict`: principle "terminal verdict must start with complete: or blocked_ so nuance cannot be misclassified."
+- `inference_substrate`: principle "literature_ingestion_network_sources because Exp5322 reads network literature/source metadata and makes no experiment outcome claim."
+- `sources_checked`: principle "records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+- `references_section_marker`: principle "idempotent marker prevents duplicate research-references.md appends."
+- `actionable_findings`: principle "source URLs plus Carnot-local hooks make each appended reference auditable instead of bibliography churn."
+
+#### SCENARIO-REPORT-5322-APPEND-DELTAS: New Network Findings Append A V486 Refresh
+
+**Given** `research-references.md` contains the `V486 Planner Refresh -
+2026-07-06` section
+**And** the focused execution-time network sweep finds source-verified
+actionable deltas not already recorded in the V486 section or nearby reference
+history
+**When** the Exp 5322 workflow runs
+**Then** it appends one dated V486 execution refresh subsection, writes
+`results/experiment_5322_sota_source_delta_v486.json`, declares
+`literature_ingestion_network_sources`, records every required source family,
+sets `new_actionable_findings_count` to the appended reference count, sets
+`references_modified=true`, leaves retired scopes closed, and records
+`no_executable_plan_edit=true`.
+
+#### SCENARIO-REPORT-5322-NOOP: No New Findings Leave References Unchanged
+
+**Given** the focused execution-time network sweep only rediscovers items
+already present in the V486 planner block or elsewhere in
+`research-references.md`
+**When** the Exp 5322 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`complete:`, sets `new_actionable_findings_count=0`, sets
+`references_modified=false`, leaves `actionable_findings.value=[]`, and does not
+churn `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5322)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5322 | Planned (`python/carnot/experiment_5322_sota_source_delta_v486.py`, `results/experiment_5322_sota_source_delta_v486.json`) | Planned (`tests/python/test_experiment_5322_sota_source_delta_v486.py`) |
+
 ### REQ-REPORT-5308: V485 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5308 workflow SHALL perform an execution-time source delta check after
