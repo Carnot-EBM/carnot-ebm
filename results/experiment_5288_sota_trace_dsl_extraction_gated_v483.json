@@ -1,0 +1,33 @@
+{
+  "experiment": 5288,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-06",
+  "started_at": "2026-07-06T01:32:13.354712+00:00",
+  "finished_at": "2026-07-06T01:32:13.354712+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE 1 gated on exp5284 and exp5287 -- SOTA trace DSL extraction retry",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repair-v483.sota_offload_ready (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5284-sota-runtime-offload-receipt-repair-v483",
+      "artifact_field": "sota_offload_ready",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5287-compilable-trace-dsl-fixture-v483",
+      "artifact_field": "trace_dsl_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
