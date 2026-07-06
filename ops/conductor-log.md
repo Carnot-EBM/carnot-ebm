@@ -10430,3 +10430,4 @@ web search: Semantic Schola |
 | 2026-07-06 22:47 UTC | Exp 5324: Gated runtime receipt stabilization afte | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ses:
 +         |
 | 2026-07-06 22:59 UTC | Exp 5324: Gated runtime receipt stabilization afte | OK | cache hit: 96 passed, 1 warning in 13.78s |
+| 2026-07-06 23:17 UTC | Exp 5325: Deterministic Theoria-style rewrite-stat | OK | 88 passed, 1 warning in 10.92s |
