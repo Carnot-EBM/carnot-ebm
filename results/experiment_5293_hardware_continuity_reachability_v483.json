@@ -1,0 +1,330 @@
+{
+  "blocked_reason": {
+    "principle": "Per-board blockers preserve exact command failure text or the carried physical/JTAG reason.",
+    "value": {
+      "GateMate": {
+        "prior_evidence": "results/experiment_5279_hardware_continuity_reachability_v482.json",
+        "reason": "operator_setup_unchanged_physical_jtag_block_carried_forward"
+      },
+      "KV260": {
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
+        "exit_code": 255,
+        "reason": "blocked_kv260_ssh_unreachable",
+        "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+        "stdout": "",
+        "timeout_s": 10.0
+      },
+      "PolarFire": null
+    }
+  },
+  "commands_run": [
+    {
+      "command": "env",
+      "duration_s": 0.001963,
+      "exit_code": 0,
+      "kind": "local_hardware_environment",
+      "outcome": "recorded",
+      "stderr": "",
+      "stdout": "CARNOT_ARC_GENERATOR_CUDA_GPU\nCARNOT_FORCE_LIVE\nCARNOT_MODE",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "sh -lc 'for tool in ssh openFPGALoader yosys nextpnr-himbaechel gmpack lsusb; do if command -v \"$tool\" >/dev/null 2>&1; then printf '\"'\"'%s_path=%s\\n'\"'\"' \"$tool\" \"$(command -v \"$tool\")\"; version=\"$($tool -V 2>&1 | head -n 1)\"; if [ -z \"$version\" ]; then version=\"$($tool --version 2>&1 | head -n 1)\"; fi; printf '\"'\"'%s_version=%s\\n'\"'\"' \"$tool\" \"$version\"; else printf '\"'\"'%s_path=\\n%s_version=\\n'\"'\"' \"$tool\" \"$tool\"; fi; done'",
+      "duration_s": 0.316169,
+      "exit_code": 0,
+      "kind": "local_tool_versions",
+      "outcome": "recorded",
+      "stderr": "",
+      "stdout": "ssh_path=/usr/bin/ssh\nssh_version=OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026\nopenFPGALoader_path=/opt/oss-cad-suite/bin/openFPGALoader\nopenFPGALoader_version=openFPGALoader v1.1.1\nyosys_path=/opt/oss-cad-suite/bin/yosys\nyosys_version=Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nnextpnr-himbaechel_path=/opt/oss-cad-suite/bin/nextpnr-himbaechel\nnextpnr-himbaechel_version=\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)\ngmpack_path=/opt/oss-cad-suite/bin/gmpack\ngmpack_version=Error: unrecognised option '-V'\nlsusb_path=/opt/oss-cad-suite/bin/lsusb\nlsusb_version=1d6b:0003 (bus 8, device 1)\n",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1209:c0ca; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
+      "duration_s": 0.111394,
+      "exit_code": 0,
+      "kind": "local_usb_gatemate_dirtyjtag",
+      "outcome": "visible",
+      "stderr": "",
+      "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "sh -lc 'if command -v lsusb >/dev/null 2>&1; then lsusb -d 1514:2008; else echo '\"'\"'lsusb not found'\"'\"' >&2; exit 127; fi'",
+      "duration_s": 0.098461,
+      "exit_code": 0,
+      "kind": "local_usb_polarfire_flashpro",
+      "outcome": "visible",
+      "stderr": "",
+      "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)\n",
+      "timeout_s": 5.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
+      "duration_s": 5.049848,
+      "exit_code": 255,
+      "kind": "kv260_ssh_status_probe",
+      "outcome": "blocked_kv260_ssh_unreachable",
+      "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+      "stdout": "",
+      "timeout_s": 10.0
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'python='\"'\"'; (python3 --version 2>&1 || true)'",
+      "duration_s": 0.956805,
+      "exit_code": 0,
+      "kind": "polarfire_ssh_status_probe",
+      "outcome": "reachable_ssh_status_only",
+      "stderr": "",
+      "stdout": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12\n",
+      "timeout_s": 10.0
+    }
+  ],
+  "commit": "c2e79ed33da878aed1f380f8cb477bbc31ecc504",
+  "conductor_modified": false,
+  "docs_update_decision": {
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "reason": "task stop rule delegates docs/status reconciliation to the conductor",
+    "research_hardware_wishlist_updated": false
+  },
+  "duration_s": 6.535074,
+  "experiment": "experiment_5293_hardware_continuity_reachability",
+  "experiment_id": "exp5293-hardware-continuity-reachability-v483",
+  "gatemate_reachability": {
+    "principle": "GateMate status records USB/tool/JTAG reachability and carries the physical setup blocker unless the operator changed it.",
+    "value": {
+      "board": "GateMate",
+      "device_identifier": "1209:c0ca",
+      "dirtyjtag_usb": {
+        "device_identifier": "1209:c0ca",
+        "stderr": "",
+        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+        "visible": true
+      },
+      "jtag_probe_attempted": false,
+      "physical_setup_changed": false,
+      "speedup_claimed": false,
+      "status": "blocked_gatemate_physical_jtag_setup_unchanged",
+      "tool_versions": {
+        "gmpack": {
+          "path": "/opt/oss-cad-suite/bin/gmpack",
+          "present": true,
+          "version": "Error: unrecognised option '-V'"
+        },
+        "lsusb": {
+          "path": "/opt/oss-cad-suite/bin/lsusb",
+          "present": true,
+          "version": "1d6b:0003 (bus 8, device 1)"
+        },
+        "nextpnr-himbaechel": {
+          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+          "present": true,
+          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+        },
+        "openFPGALoader": {
+          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+          "present": true,
+          "version": "openFPGALoader v1.1.1"
+        },
+        "ssh": {
+          "path": "/usr/bin/ssh",
+          "present": true,
+          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
+        },
+        "yosys": {
+          "path": "/opt/oss-cad-suite/bin/yosys",
+          "present": true,
+          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        }
+      }
+    }
+  },
+  "hardware_evidence_level": {
+    "principle": "Reachability and version evidence can support continuity accounting but cannot support performance claims.",
+    "value": "reachability_status_receipt_only"
+  },
+  "hardware_speedup_claimed": {
+    "principle": "False because no reproducible same-workload hardware-vs-baseline timing run was performed.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict starts with complete: or blocked_ and states KV260, PolarFire, GateMate, and no-speedup outcomes.",
+    "value": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
+  },
+  "host_storage_precondition_used": {
+    "principle": "False because the KV260 path is SSH-only and does not depend on host removable storage.",
+    "value": false
+  },
+  "inference_substrate": {
+    "principle": "hardware_probe_no_speedup_claim means this receipt records status probes only, not model inference or acceleration.",
+    "value": "hardware_probe_no_speedup_claim"
+  },
+  "kv260_reachability": {
+    "principle": "KV260 is checked only by authenticated SSH board commands; no host storage state is a precondition.",
+    "value": {
+      "board": "KV260",
+      "probe_exit_code": 255,
+      "remote_identifier": null,
+      "speedup_claimed": false,
+      "ssh_reachable": false,
+      "status": "blocked_kv260_ssh_unreachable"
+    }
+  },
+  "milestone": "2026.07.483",
+  "polarfire_reachability": {
+    "principle": "PolarFire status is derived from authenticated SSH board commands plus local FlashPro visibility when available.",
+    "value": {
+      "board": "PolarFire",
+      "probe_exit_code": 0,
+      "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
+      "speedup_claimed": false,
+      "ssh_reachable": true,
+      "status": "reachable_ssh_status_only"
+    }
+  },
+  "preconditions_checked": {
+    "principle": "Local environment, tool-version, and USB receipts are recorded before board classifications to make the probe context auditable.",
+    "value": {
+      "hardware_environment": {
+        "CARNOT_ARC_GENERATOR_CUDA_GPU": {
+          "present": true,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_FORCE_LIVE": {
+          "present": true,
+          "truthy": true,
+          "value_recorded": false
+        },
+        "CARNOT_GATEMATE_SETUP_CHANGED": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_KV260_HOST": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_KV260_USER": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_MODE": {
+          "present": true,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_POLARFIRE_HOST": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "CARNOT_POLARFIRE_USER": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "EXTROPIC_API_KEY": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "EXTROPIC_TOKEN": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "GATEMATE_PHYSICAL_SETUP_CHANGED": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "THRML_HOME": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "TSU_SDK": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        },
+        "XTR0_SDK": {
+          "present": false,
+          "truthy": false,
+          "value_recorded": false
+        }
+      },
+      "operator_visible_hardware_assumptions": {
+        "gatemate_physical_setup_changed_assumed": false,
+        "internet_required_for_board_probe": false,
+        "kv260_checked_by_ssh_only": true
+      },
+      "tool_versions": {
+        "gmpack": {
+          "path": "/opt/oss-cad-suite/bin/gmpack",
+          "present": true,
+          "version": "Error: unrecognised option '-V'"
+        },
+        "lsusb": {
+          "path": "/opt/oss-cad-suite/bin/lsusb",
+          "present": true,
+          "version": "1d6b:0003 (bus 8, device 1)"
+        },
+        "nextpnr-himbaechel": {
+          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+          "present": true,
+          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+        },
+        "openFPGALoader": {
+          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+          "present": true,
+          "version": "openFPGALoader v1.1.1"
+        },
+        "ssh": {
+          "path": "/usr/bin/ssh",
+          "present": true,
+          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
+        },
+        "yosys": {
+          "path": "/opt/oss-cad-suite/bin/yosys",
+          "present": true,
+          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        }
+      },
+      "usb_visibility": {
+        "GateMate": {
+          "device_identifier": "1209:c0ca",
+          "stderr": "",
+          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+          "visible": true
+        },
+        "PolarFire": {
+          "device_identifier": "1514:2008",
+          "stderr": "",
+          "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+          "visible": true
+        }
+      }
+    }
+  },
+  "random_seed": 5293,
+  "reproducibility_checksum": "cb89ec04119e3aedda4de51719b61580c88fc0ba717cc06fadfeaa7d6fea5761",
+  "reviewed_inputs": [
+    "AGENTS.md",
+    "CODEX.md",
+    "CLAUDE.md hardware continuity and KV260 SSH discipline",
+    "research-hardware-wishlist.md",
+    "ops/status.md hardware sections",
+    "ops/exclusion_manifest.yaml",
+    "results/experiment_5279_hardware_continuity_reachability_v482.json"
+  ],
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5293.hardware_continuity_reachability.v483",
+  "spec_refs": [
+    "REQ-HW-5293",
+    "SCENARIO-HW-5293"
+  ]
+}
