@@ -1,0 +1,263 @@
+{
+  "activated_milestone": {
+    "principle": "Records the next milestone observed in roadmap documents.",
+    "value": "2026.07.485"
+  },
+  "active_roadmap_modified": false,
+  "archived_milestone": {
+    "principle": "Records the closed milestone whose capstone is being archived.",
+    "value": "2026.07.484"
+  },
+  "conductor_modified": false,
+  "duration_s": 0.035367,
+  "experiment": "experiment_5307_archive_484_activate_485",
+  "experiment_id": {
+    "principle": "Identifies this as the durable transition receipt from .484 to .485, not a new research result.",
+    "value": "exp5307-archive-484-activate-485"
+  },
+  "failed_preconditions": [],
+  "field_principles": {
+    "activated_milestone": "Records the next milestone observed in roadmap documents.",
+    "archived_milestone": "Records the closed milestone whose capstone is being archived.",
+    "experiment_id": "Identifies this as the durable transition receipt from .484 to .485, not a new research result.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .484 was archived, .485 was observed, and no active-roadmap or conductor edit occurred.",
+    "inference_substrate": "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
+    "milestone": "Names the activated milestone being audited so downstream gates do not confuse transition scope with .484 capstone scope.",
+    "preconditions_checked": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
+    "status": "Machine-readable terminal state for the transition audit.",
+    "v484_capstone_verdict": "Carries forward the capstone's own verdict without broadening it into unproven claims."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .484 was archived, .485 was observed, and no active-roadmap or conductor edit occurred.",
+    "value": "complete: .484 capstone archived and .485 observed in local roadmap docs; roadmap_next_present=false; no active roadmap overwrite or conductor edit performed."
+  },
+  "inference_substrate": {
+    "principle": "local_repo_doc_and_artifact_audit because Exp5307 reads local docs, git status, and artifacts without running models, solvers, or hardware.",
+    "value": "local_repo_doc_and_artifact_audit"
+  },
+  "milestone": {
+    "principle": "Names the activated milestone being audited so downstream gates do not confuse transition scope with .484 capstone scope.",
+    "value": "2026.07.485"
+  },
+  "milestone_doc_present": true,
+  "preconditions_checked": {
+    "principle": "Documents each file, milestone, and no-edit precondition that makes the transition receipt auditable.",
+    "value": {
+      "active_or_next_roadmap_ready": true,
+      "active_roadmap_milestone": "2026.07.485",
+      "active_roadmap_modified": false,
+      "active_roadmap_names_activated_milestone": true,
+      "active_roadmap_present": true,
+      "capstone_loadable": true,
+      "capstone_present": true,
+      "checked_paths": [
+        "results/experiment_5306_capstone_v484.json",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "scripts/research_conductor.py"
+      ],
+      "conductor_modified": false,
+      "milestone_doc_names_activated_milestone": true,
+      "milestone_doc_present": true,
+      "no_active_roadmap_overwrite_performed": true,
+      "no_conductor_edit_performed": true,
+      "roadmap_next_absent_after_activation": true,
+      "roadmap_next_milestone": null,
+      "roadmap_next_names_activated_milestone": false,
+      "roadmap_next_present": false
+    }
+  },
+  "random_seed": 5307,
+  "reproducibility_checksum": "sha256:f7fa187e42e8f272a786625e60c793b005c6c610c0153b67347c5af922eff067",
+  "result_path": "results/experiment_5307_archive_484_activate_485.json",
+  "roadmap_next_present": false,
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5307_archive_484_activate_485.v1",
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:2f827a1b66f7fdcecd7b380b8bfe0770bcb794740b08858b4af92d6d89edd8fb"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:edaf030e603373fa3f10083198c247ca84bf7dca77a5751b2c1e9b5bff44122a"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:5f77021d1ba299c0c756743efba221c24c5b682236a702e82772bca12c51eeec"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:16a1e98a10f8d8cb40dcc7143103fe353b5908674599dd7b6fe544f025a0c164"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:ed2bd35ea8a4b63f6a7ecc1c6c327cfe4c452ee396f096368fd746ed501f34aa"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:218eb97332067ff04bc5b9e5ef7b69e45502b9a5db2a1902223ebf1f68398a7d"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "results/experiment_5306_capstone_v484.json",
+      "sha256": "sha256:17843615cc2f63cd1ce168b7501c7773c72c9c8634767dad06ed42bf27c919f7"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5307",
+    "SCENARIO-REPORT-5307",
+    "SCENARIO-REPORT-5307-BLOCKED-PRECONDITIONS"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for the transition audit.",
+    "value": "complete"
+  },
+  "v484_capstone_proves": {
+    "principle": "Summarizes only fields present in the .484 capstone so the transition does not turn bounded, blocked, quarantined, or no-speedup evidence into a stronger claim.",
+    "value": {
+      "adaptive_memory_positive": true,
+      "capstone_honest_verdict": "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup.",
+      "capstone_milestone": "2026.07.484",
+      "certificate_success_lift": 0.0,
+      "changed_runtime_sota_ready": false,
+      "constraint_lns_fixture_ready": true,
+      "ebt_headline_eligible": false,
+      "ebt_telemetry_quarantined": true,
+      "expected_task_count": 11,
+      "hardware_speedup_claimed": false,
+      "hardware_status": {
+        "blocked_reason": {
+          "GateMate": {
+            "prior_evidence": "results/experiment_5293_hardware_continuity_reachability_v483.json",
+            "reason": "operator_setup_unchanged_physical_jtag_block_carried_forward"
+          },
+          "KV260": {
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
+            "exit_code": 255,
+            "reason": "blocked_kv260_ssh_unreachable",
+            "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+            "stdout": "",
+            "timeout_s": 10.0
+          },
+          "PolarFire": null
+        },
+        "gatemate_status": {
+          "board": "GateMate",
+          "device_identifier": "1209:c0ca",
+          "dirtyjtag_usb": {
+            "device_identifier": "1209:c0ca",
+            "stderr": "",
+            "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+            "visible": true
+          },
+          "jtag_probe_attempted": false,
+          "physical_setup_changed": false,
+          "speedup_claimed": false,
+          "status": "blocked_gatemate_physical_jtag_setup_unchanged",
+          "tool_versions": {
+            "gmpack": {
+              "path": "/opt/oss-cad-suite/bin/gmpack",
+              "present": true,
+              "version": "Error: unrecognised option '-V'"
+            },
+            "lsusb": {
+              "path": "/opt/oss-cad-suite/bin/lsusb",
+              "present": true,
+              "version": "1d6b:0003 (bus 8, device 1)"
+            },
+            "nextpnr-himbaechel": {
+              "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+              "present": true,
+              "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+            },
+            "openFPGALoader": {
+              "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+              "present": true,
+              "version": "openFPGALoader v1.1.1"
+            },
+            "ssh": {
+              "path": "/usr/bin/ssh",
+              "present": true,
+              "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
+            },
+            "yosys": {
+              "path": "/opt/oss-cad-suite/bin/yosys",
+              "present": true,
+              "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+            }
+          }
+        },
+        "hardware_evidence_level": "reachability_status_receipt_only",
+        "kv260_status": {
+          "board": "KV260",
+          "probe_exit_code": 255,
+          "remote_identifier": null,
+          "speedup_claimed": false,
+          "ssh_reachable": false,
+          "status": "blocked_kv260_ssh_unreachable"
+        },
+        "polarfire_status": {
+          "board": "PolarFire",
+          "probe_exit_code": 0,
+          "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
+          "speedup_claimed": false,
+          "ssh_reachable": true,
+          "status": "reachable_ssh_status_only"
+        },
+        "source_experiment": 5305
+      },
+      "kan_diagnostic_tightness_helped": true,
+      "loadable_task_count": 11,
+      "memory_stress_passed": true,
+      "no_quality_claim": true,
+      "pbit_gate_ready": true,
+      "sota_quality_measured": false,
+      "task_classification_counts": {
+        "blocked_precondition": 2,
+        "clean_null": 1,
+        "clean_positive": 4,
+        "gated_skip": 1,
+        "mixed_positive_with_harmful_class": 1,
+        "quarantined": 2
+      },
+      "unsafe_false_accepts": 0
+    }
+  },
+  "v484_capstone_verdict": {
+    "principle": "Carries forward the capstone's own verdict without broadening it into unproven claims.",
+    "value": "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup."
+  }
+}
