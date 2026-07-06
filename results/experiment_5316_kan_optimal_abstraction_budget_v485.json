@@ -1,0 +1,297 @@
+{
+  "allocation_plans": {
+    "dynamic_v484": {
+      "candidate_count": 1,
+      "global_error_bound": 0.00375,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": true,
+      "local_error_bounds": [
+        0.0015625,
+        0.00125,
+        0.0009375
+      ],
+      "piece_budget": 12,
+      "piece_counts": [
+        4,
+        4,
+        4
+      ],
+      "strategy_id": "dynamic_spotcheck_refine_all_v484",
+      "total_pieces": 12
+    },
+    "optimal_budget": {
+      "candidate_count": 65,
+      "global_error_bound": 0.0054513889,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": true,
+      "local_error_bounds": [
+        0.0015625,
+        0.0022222222,
+        0.0016666667
+      ],
+      "piece_budget": 10,
+      "piece_counts": [
+        4,
+        3,
+        3
+      ],
+      "strategy_id": "dp_knapsack_min_pieces_then_gap",
+      "total_pieces": 10
+    },
+    "static": {
+      "candidate_count": 1,
+      "global_error_bound": 0.015,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": false,
+      "local_error_bounds": [
+        0.00625,
+        0.005,
+        0.00375
+      ],
+      "piece_budget": 6,
+      "piece_counts": [
+        2,
+        2,
+        2
+      ],
+      "strategy_id": "static_uniform_two_piece",
+      "total_pieces": 6
+    }
+  },
+  "allocation_strategy": {
+    "principle": "Records the deterministic DP/knapsack-style objective, selected PWA piece counts, global error budget, and static/dynamic comparators.",
+    "value": {
+      "bounded_fixture_only": true,
+      "candidate_count": 65,
+      "dynamic_v484_piece_counts": [
+        4,
+        4,
+        4
+      ],
+      "global_error_budget": 0.006,
+      "objective": "minimize total PWA pieces that satisfy the bounded global error budget, then choose the lowest remaining envelope gap",
+      "piece_budget": 10,
+      "selected_piece_count_total": 10,
+      "selected_piece_counts": [
+        4,
+        3,
+        3
+      ],
+      "static_piece_counts": [
+        2,
+        2,
+        2
+      ],
+      "strategy_id": "dp_knapsack_min_pieces_then_gap"
+    }
+  },
+  "bounded_fixture_only": true,
+  "certificate_success_delta": 0.0,
+  "claim_limits": [
+    "bounded deterministic Exp 5277 KAN PWA/MILP input box only",
+    "Exp 5304 dynamic allocation is a bounded diagnostic comparator",
+    "optimal-budget allocation is not a general KAN verification improvement",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "duration_s": 0.116464,
+  "envelope_gap_delta": 0.0095486111,
+  "experiment_id": {
+    "principle": "Traceable Exp 5316 identifier for the bounded KAN abstraction budget run.",
+    "value": "exp5316-kan-optimal-abstraction-budget-v485"
+  },
+  "false_property_rejection_rate": 1.0,
+  "field_principles": {
+    "allocation_strategy": "Records the deterministic DP/knapsack-style objective, selected PWA piece counts, global error budget, and static/dynamic comparators.",
+    "experiment_id": "Traceable Exp 5316 identifier for the bounded KAN abstraction budget run.",
+    "honest_verdict": "Terminal Exp 5316 verdict; starts with complete:, null:, or blocked_ and states whether optimal-budget allocation tightened only the bounded fixture.",
+    "inference_substrate": "Declares a bounded KAN PWA/MILP certificate substrate with no LLM inference, hardware execution, or broad KAN verification claim.",
+    "milestone": "Milestone accountability for the V485 bounded certificate allocation task.",
+    "status": "Terminal status for downstream readers; complete means the bounded static, dynamic, and optimal-budget allocations were all compared.",
+    "tests_run": "Commands run to validate the allocation logic, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5316 verdict; starts with complete:, null:, or blocked_ and states whether optimal-budget allocation tightened only the bounded fixture.",
+    "value": "complete: optimal-budget allocation tightened the bounded fixture envelope under the piece/error budget while certificate success stayed unchanged and false-property rejection stayed intact"
+  },
+  "inference_substrate": {
+    "principle": "Declares a bounded KAN PWA/MILP certificate substrate with no LLM inference, hardware execution, or broad KAN verification claim.",
+    "value": "bounded_kan_pwa_milp_certificate"
+  },
+  "kan_optimal_abstraction_ready": true,
+  "method_comparison": [
+    {
+      "actual_witness_value": 0.4984,
+      "allocation_piece_counts": [
+        2,
+        2,
+        2
+      ],
+      "allocation_strategy_id": "static_uniform_two_piece",
+      "binary_variable_count": 6,
+      "bounded_fixture_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 46,
+      "envelope_gap": 0.015,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "global_error_bound": 0.015,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": false,
+      "local_error_bounds": [
+        0.00625,
+        0.005,
+        0.00375
+      ],
+      "method_id": "static_allocation",
+      "milp_solve_time_s": 0.030566,
+      "piece_budget": 6,
+      "piece_count": 6,
+      "selected_pieces": [
+        1,
+        1,
+        1
+      ],
+      "solver_backend": "z3",
+      "solver_status": "optimal",
+      "true_property_accepted": true,
+      "true_property_slack": 0.0166,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.4984,
+      "allocation_piece_counts": [
+        4,
+        4,
+        4
+      ],
+      "allocation_strategy_id": "dynamic_spotcheck_refine_all_v484",
+      "binary_variable_count": 12,
+      "bounded_fixture_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 82,
+      "envelope_gap": 0.00375,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "global_error_bound": 0.00375,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": true,
+      "local_error_bounds": [
+        0.0015625,
+        0.00125,
+        0.0009375
+      ],
+      "method_id": "dynamic_spotcheck_allocation_v484",
+      "milp_solve_time_s": 0.039661,
+      "piece_budget": 12,
+      "piece_count": 12,
+      "selected_pieces": [
+        3,
+        3,
+        3
+      ],
+      "solver_backend": "z3",
+      "solver_status": "optimal",
+      "true_property_accepted": true,
+      "true_property_slack": 0.0166,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.4984,
+      "allocation_piece_counts": [
+        4,
+        3,
+        3
+      ],
+      "allocation_strategy_id": "dp_knapsack_min_pieces_then_gap",
+      "binary_variable_count": 10,
+      "bounded_fixture_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 70,
+      "envelope_gap": 0.0054513889,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "global_error_bound": 0.0054513889,
+      "global_error_budget": 0.006,
+      "global_error_budget_met": true,
+      "local_error_bounds": [
+        0.0015625,
+        0.0022222222,
+        0.0016666667
+      ],
+      "method_id": "optimal_budget_allocation",
+      "milp_solve_time_s": 0.025085,
+      "piece_budget": 10,
+      "piece_count": 10,
+      "selected_pieces": [
+        3,
+        2,
+        2
+      ],
+      "solver_backend": "z3",
+      "solver_status": "optimal",
+      "true_property_accepted": true,
+      "true_property_slack": 0.0166,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  ],
+  "milestone": {
+    "principle": "Milestone accountability for the V485 bounded certificate allocation task.",
+    "value": "2026.07.485"
+  },
+  "milp_solve_time_delta_s": -0.014576,
+  "piece_budget": 10,
+  "random_seed": 5316,
+  "reproducibility_checksum": "420e818fca39ac71d6499e0a88bd8b90a401e41fbcb1f0d1d639c08876fe614f",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5316.kan_optimal_abstraction_budget.v485",
+  "source_artifacts": [
+    "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+    "results/experiment_5291_low_order_factor_certificate_curriculum_v483.json",
+    "results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5316",
+    "SCENARIO-KAN-5316"
+  ],
+  "status": {
+    "principle": "Terminal status for downstream readers; complete means the bounded static, dynamic, and optimal-budget allocations were all compared.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the allocation logic, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5316_kan_optimal_abstraction_budget_v485.py -q",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5316_kan_optimal_abstraction_budget_v485.py --cov=python/carnot/experiment_5316_kan_optimal_abstraction_budget_v485.py --cov-report=term-missing --cov-fail-under=100 -q",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  }
+}

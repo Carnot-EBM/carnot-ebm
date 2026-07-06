@@ -982,6 +982,63 @@ rejection, spot-check hit rate, declarative constraint groups, symbolic-checker
 validation, solver/fallback status, and bounded-scope limits without claiming
 global robustness beyond the certified input box.
 
+## REQ-KAN-5316: V485 Optimal Abstraction Budget For Bounded KAN Certificates
+
+The KAN verification tier SHALL add an Exp 5316 CPU-only bounded abstraction
+budget experiment over the existing Exp 5277 KAN PWA/MILP fixture and Exp 5304
+dynamic-abstraction diagnostic. The experiment MUST reuse those committed
+fixtures, compare static allocation, `.484` dynamic spot-check allocation, and
+an optimal-budget allocation, and MUST NOT modify `scripts/research_conductor.py`.
+
+The optimal-budget method MUST use a deterministic DP/knapsack-style allocation
+or equivalent exhaustive dynamic program suitable for the three-unit bounded
+fixture. It MUST allocate PWA pieces across KAN units under an explicit
+global error budget and piece budget, then run the same bounded
+MILP-compatible certificate path used by the existing KAN certificate experiments. The
+comparison MUST report envelope gap, MILP solve time, certificate success,
+false-property rejection, and piece count for every method. The artifact MUST
+state directly that any measured tightening is limited to the bounded fixture
+and MUST NOT claim general KAN verification improvement, trained-network
+soundness, hardware execution, hardware speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5316_kan_optimal_abstraction_budget_v485.json` with the
+required fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `kan_optimal_abstraction_ready`, `allocation_strategy`,
+`piece_budget`, `envelope_gap_delta`, `certificate_success_delta`,
+`false_property_rejection_rate`, `milp_solve_time_delta_s`,
+`bounded_fixture_only`, and `tests_run`. The fields `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`allocation_strategy`, and `tests_run` MUST be principle-wrapped with `value`
+and `principle`; `kan_optimal_abstraction_ready`, `bounded_fixture_only`,
+`piece_budget`, `envelope_gap_delta`, `certificate_success_delta`,
+`false_property_rejection_rate`, and `milp_solve_time_delta_s` MUST be bare
+scalar values. `inference_substrate.value` MUST be
+`bounded_kan_pwa_milp_certificate`. `bounded_fixture_only` MUST be true.
+`honest_verdict.value` MUST start with `complete:`, `null:`, or `blocked_` and
+state whether optimal-budget allocation improved bounded diagnostic tightness.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5316 identifier for the bounded KAN abstraction budget run.
+- `milestone`: Milestone accountability for the V485 bounded certificate allocation task.
+- `status`: Terminal status for downstream readers; complete means the bounded static, dynamic, and optimal-budget allocations were all compared.
+- `honest_verdict`: Terminal Exp 5316 verdict; starts with complete:, null:, or blocked_ and states whether optimal-budget allocation tightened only the bounded fixture.
+- `inference_substrate`: Declares a bounded KAN PWA/MILP certificate substrate with no LLM inference, hardware execution, or broad KAN verification claim.
+- `allocation_strategy`: Records the deterministic DP/knapsack-style objective, selected PWA piece counts, global error budget, and static/dynamic comparators.
+- `tests_run`: Commands run to validate the allocation logic, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.
+
+### SCENARIO-KAN-5316: Budgeted Allocation Tightens The Bounded Fixture Only
+
+Given the committed Exp 5277 bounded KAN PWA/MILP certificate fixture and Exp
+5304 static/dynamic abstraction comparison,
+When Exp 5316 allocates PWA pieces across the three KAN units with a
+DP/knapsack-style budget policy and compares it with static and `.484` dynamic
+allocations,
+Then the artifact reports allocation strategy, piece budget, per-method piece
+counts, envelope gaps, MILP solve times, certificate success, false-property
+rejection, and required tests while keeping `bounded_fixture_only=true` and
+avoiding any claim of general KAN verification improvement.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1027,6 +1084,7 @@ global robustness beyond the certified input box.
 | REQ-KAN-5277 | Planned | Exp 5277 target: V482 bounded multi-component PWA/MILP certificate scale check, with explicit approximation slack, solve time, false-property rejection, and dynamic spot-check evidence. |
 | REQ-KAN-5291 | Planned | Exp 5291 target: V483 low-order, medium-order, and higher-order certificate curriculum over the existing Exp 5277 KAN PWA/MILP and Exp 5278 factor-boundary fixtures, with false-property rejection, slack, solve-time, piece-count, and ordering telemetry. |
 | REQ-KAN-5304 | Planned | Exp 5304 target: V484 dynamic abstraction refinement and spot-check diagnostic over Exp 5277/5278/5291 bounded fixtures, with symbolic validation, method comparison, and bounded-scope-only claims. |
+| REQ-KAN-5316 | Planned | Exp 5316 target: V485 bounded DP/knapsack-style PWA piece allocation under global error and piece budgets, compared with static and `.484` dynamic abstraction without broad KAN claims. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
