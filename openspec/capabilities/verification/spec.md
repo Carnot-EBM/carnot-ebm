@@ -26577,6 +26577,86 @@ arm, preserve the solver-only SAT/UNSAT label, and record the class in
 |---|---|---|
 | REQ-VERIFY-5300 | Planned (`python/carnot/experiment_5300_pbit_cdcl_instance_class_gate_v484.py`, `results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json`) | Planned (`tests/python/test_experiment_5300_pbit_cdcl_instance_class_gate_v484.py`) |
 
+### REQ-VERIFY-5314: CPU Smooth Ising Relaxation Baseline V485
+
+The repository SHALL provide Exp 5314 at
+`python/carnot/experiment_5314_ising_smooth_relaxation_baseline_v485.py`
+and write
+`results/experiment_5314_ising_smooth_relaxation_baseline_v485.json`
+without invoking an LLM, without claiming hardware execution or hardware
+speedup, and without modifying `scripts/research_conductor.py`. The runner
+SHALL reuse the bounded Exp 5299/Exp 5300 fixture instances rather than
+inventing an unanchored SAT benchmark.
+
+The diagnostic SHALL treat generalized Ising/factor-graph fixture energy as
+the number of violated CNF factors and SHALL implement a tiny CPU smooth
+relaxation or one-flip local-minimum check suitable for unit tests. Relaxation
+hints SHALL remain advisory only: the symbolic CDCL solver SHALL validate every
+final SAT assignment, and nonzero-energy local minima SHALL fall back to the
+solver-only baseline before any final result is reported.
+
+The benchmark SHALL compare solver-only fallback, the Exp 5300 p-bit/CDCL
+baselines, and the CPU smooth-relaxation hints over the same fixture classes.
+It SHALL record one-flip local-minimum checks, conflicts saved or added versus
+solver-only, fallback rate, and misleading-class behavior. Misleading local
+minima MAY be diagnosed, but they SHALL NOT become authoritative SAT/UNSAT
+labels.
+
+The artifact SHALL include these top-level fields:
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `smooth_relaxation_ready`, `fixture_instances`,
+`one_flip_checks_passed`, `cdcl_fallback_authoritative`,
+`conflict_delta_vs_solver_only`, `misleading_class_harm`,
+`no_hardware_speedup_claim`, and `tests_run`. The fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `fixture_instances`, and `tests_run` SHALL be
+principle-wrapped objects with `value` and `principle`.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_`.
+`inference_substrate.value` SHALL be
+`cpu_smooth_ising_relaxation_with_symbolic_fallback`.
+`smooth_relaxation_ready`, `one_flip_checks_passed`,
+`cdcl_fallback_authoritative`, and `no_hardware_speedup_claim` SHALL be bare
+booleans, with `cdcl_fallback_authoritative=true` and
+`no_hardware_speedup_claim=true`. `conflict_delta_vs_solver_only` and
+`misleading_class_harm` SHALL be bare numeric values.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceable Exp 5314 identifier for the CPU smooth Ising relaxation baseline."
+- `milestone`: principle "Milestone accountability for the V485 source refresh."
+- `status`: principle "Terminal status for downstream Exp5315 gating."
+- `honest_verdict`: principle "Terminal Exp 5314 verdict; starts with complete: or blocked_ and states whether the smooth-relaxation diagnostic is usable."
+- `inference_substrate`: principle "Declares CPU smooth Ising relaxation with symbolic CDCL fallback; no LLM, hardware execution, or hardware speedup claim."
+- `smooth_relaxation_ready`: principle "Bare boolean for Exp5315; true only when one-flip checks pass, CDCL fallback remains authoritative, misleading-class harm is not introduced, and new-code tests cover the diagnostic."
+- `fixture_instances`: principle "Names the reused Exp5299/Exp5300 fixture classes so the diagnostic cannot silently change distributions."
+- `one_flip_checks_passed`: principle "Bare boolean showing every relaxation hint is a one-flip local minimum under the fixture energy."
+- `cdcl_fallback_authoritative`: principle "Bare boolean proving symbolic CDCL, not smooth relaxation, validates final SAT assignments and fallback labels."
+- `conflict_delta_vs_solver_only`: principle "Bare numeric solver-only-minus-smooth conflict delta; positive values save conflicts and negative values add conflicts."
+- `misleading_class_harm`: principle "Bare numeric added conflicts on misleading classes after symbolic fallback, with zero required for readiness."
+- `no_hardware_speedup_claim`: principle "Bare boolean that must remain true because Exp5314 is CPU-only and makes no hardware speedup claim."
+- `tests_run`: principle "Commands run to validate the diagnostic, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+
+### SCENARIO-VERIFY-5314: Smooth Relaxation Hints Stay Advisory
+
+Given the Exp 5300 replay fixtures backed by Exp 5292 and Exp 5299, when Exp
+5314 runs the CPU smooth-relaxation diagnostic, then it computes deterministic
+one-flip local minima, compares the advisory hints with solver-only and
+p-bit/CDCL baselines, writes the required artifact, sets
+`cdcl_fallback_authoritative=true`, and sets
+`no_hardware_speedup_claim=true`.
+
+If a relaxation hint lands in a nonzero-energy or misleading local minimum,
+then the runner SHALL record the local-minimum diagnosis, invoke solver-only
+symbolic fallback for the final result, preserve the solver-only SAT/UNSAT
+label, validate any final SAT model with the original CNF, and keep
+`misleading_class_harm` at zero before setting `smooth_relaxation_ready=true`.
+
+## Implementation Status (REQ-VERIFY-5314)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5314 | Planned (`python/carnot/experiment_5314_ising_smooth_relaxation_baseline_v485.py`, `results/experiment_5314_ising_smooth_relaxation_baseline_v485.json`) | Planned (`tests/python/test_experiment_5314_ising_smooth_relaxation_baseline_v485.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
