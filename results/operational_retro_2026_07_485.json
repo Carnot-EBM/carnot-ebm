@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.07.485",
-  "generated_at": "2026-07-06T17:44:16Z",
+  "generated_at": "2026-07-06T18:22:08Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 266.2,
   "experiments_completed": 28,
@@ -33,27 +33,26 @@
       "compute_bound": false
     }
   ],
-  "gpu_idle_on_compute_bound_tasks": true,
-  "summary": "Milestone 2026.07.485 ran 28 experiments over 266.2 minutes, including 4 compute-bound tasks. The listed compute-bound slow path was Exp 5309 at 60 minutes, and the GPU state showed both RTX 3090s idle, so gpu_idle_on_compute_bound_tasks is true under the supplied rule. No supplied block identifies a 2+ parallel-model task that failed to engage DualGPURunner.",
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.485 completed 28 experiments in 266.2 minutes, including 4 compute-bound tasks. The only compute-bound entry in the top-five slowest list was Exp 5309 at 60.2 minutes; the locked GPU-idle gate is false, and the supplied blocks do not identify a 2+ parallel-model DualGPURunner miss.",
   "bottlenecks_identified": [
-    "Exp 5309 is the only listed compute-bound slowest experiment and took 60 minutes; the timing label identifies the work as a SOTA GGUF runtime timeout root-cause matrix.",
-    "The GPU monitor reported both RTX 3090s at 0% utilization with 4MB allocated on each device while the milestone included 4 compute-bound experiments, so GPU idle on compute-bound work is flagged.",
-    "The other listed slowest experiments were synthesis-only at 20, 15, 14, and 14 minutes, so they are throughput overhead but not GPU-utilization bugs.",
-    "No supplied timing or GPU-state field identifies a compute-bound task with 2+ models loaded in parallel, so there is no supported DualGPURunner miss."
+    "Exp 5309 was the visible compute-bound slow path at 60.2 minutes; the timing label identifies it as a SOTA GGUF runtime timeout root-cause matrix.",
+    "The remaining top-five slowest runs were synthesis-only at 19.5, 15.2, 14.1, and 14.1 minutes, so they are milestone-throughput costs rather than GPU-utilization bugs.",
+    "DualGPURunner coverage cannot be audited from the supplied blocks because no compute-bound task is marked as a 2+ parallel-model run."
   ],
   "improvements_suggested": [
-    "Add a compute-bound GPU-engagement preflight that records target GPU, utilization after warmup, allocated memory, and timeout state before a GGUF/CUDA task can consume a long slot.",
-    "Fail fast and emit a blocked runtime artifact when a compute-bound task remains at 0% GPU utilization after launch, instead of waiting for the full timeout path.",
-    "Record runner metadata for compute-bound tasks, including model_count and runner class, so DualGPURunner recommendations are emitted only for 2+ parallel-model jobs.",
-    "Split synthesis-only wall-time optimization from GPU bottleneck reporting so synthesis tasks cannot dilute compute-bound runtime signals."
+    "Add a GGUF/CUDA timeout preflight that fails fast before another root-cause matrix consumes a long compute-bound slot.",
+    "Persist per-task gpu_engaged, runner_class, and model_count fields so GPU-idle and DualGPURunner claims can be made from artifact data rather than inferred after the fact.",
+    "Report synthesis-only and compute-bound wall time in separate bins so CPU/doc synthesis throughput and GPU runtime health are optimized independently.",
+    "Emit an explicit dual_gpu_not_applicable marker for single-model compute-bound tasks to keep DualGPURunner suggestions scoped to parallel model loads."
   ],
   "top_3_highest_leverage_actions": [
-    "Wire a GGUF/CUDA GPU-engagement sentinel into compute-bound task startup.",
-    "Add early timeout classification for runtime-root-cause jobs before the 60-minute slow path recurs.",
-    "Persist model_count and runner-class metadata so DualGPURunner coverage can be audited without inference."
+    "Implement GGUF/CUDA early-timeout classification for compute-bound starts.",
+    "Add artifact fields for model_count, runner_class, and GPU engagement.",
+    "Split retrospective accounting into compute-bound and synthesis-only lanes."
   ],
   "estimated_time_savings_pct": 23,
-  "meta_reflection": "The estimate targets the visible 60-minute compute-bound stall out of 266.2 total minutes and assigns no savings to synthesis-only work. The GPU-idle finding is gated on the supplied compute-bound count; the DualGPURunner question remains unsupported because the blocks do not show any 2+ parallel-model compute-bound task.",
-  "reconstructed_from_disk_mtime": false,
-  "timing_integrity_mismatch": false
+  "meta_reflection": "Interpretation is constrained to the locked fields in the skeleton; although the GPU monitor snapshot was idle, the locked gpu_idle_on_compute_bound_tasks value is false, so GPU idle is not labeled as a bottleneck here. The savings estimate is the visible 60.2-minute compute-bound slow path over 266.2 total minutes, rounded to 23%, not a measured speedup."
 }
