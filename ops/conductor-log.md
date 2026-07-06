@@ -10394,3 +10394,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 09:34 UTC | PHASE 1 fixture -- constraint-LNS destroy/repair w | FAIL | Codex CLI error: Stalled after 600s silence. Last output: gs/jepa_energy.py", |
 | 2026-07-06 09:49 UTC | PHASE 1 fixture -- constraint-LNS destroy/repair w | OK | 90 passed, 1 warning in 8.43s |
 | 2026-07-06 10:04 UTC | PHASE 1 gated on exp5299 -- p-bit/CDCL instance-cl | OK | 90 passed, 1 warning in 10.49s |
+| 2026-07-06 10:20 UTC | PHASE 1 diagnostic -- EBT spectral step-control be | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
