@@ -1,0 +1,516 @@
+{
+  "clean_positive_findings": {
+    "principle": "bounded clean non-flagged results that advanced fixtures, attribution, coherence dosing, aggregate solver guidance, source refresh, or transition readiness.",
+    "value": [
+      {
+        "finding": "V483 activated cleanly and the execution refresh added three actionable references without changing the plan.",
+        "id": "transition_and_source_refresh_ready",
+        "source_experiments": [
+          5282,
+          5283
+        ]
+      },
+      {
+        "coherence_fixture_ready": true,
+        "finding": "The CheckRLM-style fixture is ready for gated SOTA work and exposes lexical unsafe-false-accept controls.",
+        "id": "claim_level_coherence_fixture_ready",
+        "source_experiments": [
+          5285
+        ]
+      },
+      {
+        "finding": "The VeryTrace-style DSL compiles solver cases into executable, dependency-linked trace records.",
+        "id": "compilable_trace_dsl_fixture_ready",
+        "source_experiments": [
+          5287
+        ],
+        "trace_dsl_ready": true
+      },
+      {
+        "attribution_coverage": {
+          "attributed_cases": 7,
+          "control_kinds": [
+            "valid_promoted_memory",
+            "missing_provenance",
+            "conflicting_memory",
+            "shuffled_memory",
+            "stale_memory",
+            "poisoning_like",
+            "harmful_memory"
+          ],
+          "coverage_rate": 1.0,
+          "total_cases": 7
+        },
+        "finding": "Memory failures and uses were attributed across bounded operation stages with no unsafe propagation.",
+        "id": "memory_operation_attribution_ready",
+        "source_experiments": [
+          5289
+        ]
+      },
+      {
+        "finding": "Governed memory preserved always-full coherence quality while avoiding full claim/coherence checks.",
+        "full_verifier_calls_avoided": {
+          "additional_vs_no_memory": 2,
+          "always_full_calls": 7,
+          "governed_memory_calls": 3,
+          "no_memory_calls": 5,
+          "rate_vs_always_full": 0.571429,
+          "vs_always_full": 4
+        },
+        "id": "memory_assisted_coherence_dosing_positive",
+        "source_experiments": [
+          5290
+        ],
+        "unsafe_false_accepts": {
+          "case_ids": [],
+          "count": 0,
+          "policy": "governed_memory",
+          "safety_negative_case_ids_checked": [
+            "ktc-006-safety-negative-dose"
+          ]
+        }
+      },
+      {
+        "conflicts_saved": {
+          "aggregate": 2,
+          "by_class": {
+            "aligned_factor_sat": 3,
+            "misleading_factor_sat": -1,
+            "neutral_factor_sat": 0
+          }
+        },
+        "correctness_preserved": true,
+        "finding": "CPU simulated p-bit assumptions saved aggregate CDCL conflicts while CDCL fallback preserved correctness.",
+        "id": "pbit_cdcl_aggregate_guidance_positive",
+        "source_experiments": [
+          5292
+        ]
+      }
+    ]
+  },
+  "commands_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5294_capstone_v483.py -q",
+      "outcome": "FAILED: test functions passed, but repo default pytest-cov measured all python/carnot and failed total coverage 1 < 99"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5294_capstone_v483.py -q --no-cov",
+      "outcome": "PASSED: 5 passed in 3.53s after formatting rerun"
+    },
+    {
+      "command": ".venv/bin/python -m coverage run --include='*/python/carnot/experiment_5294_capstone_v483.py' -m pytest tests/python/test_experiment_5294_capstone_v483.py -q --no-cov -n0 && .venv/bin/python -m coverage report --include='*/python/carnot/experiment_5294_capstone_v483.py' --fail-under=100",
+      "outcome": "PASSED: new module 208 statements, 0 missing, 100% coverage"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5294_capstone_v483.py tests/python/test_experiment_5294_capstone_v483.py",
+      "outcome": "PASSED: All checks passed"
+    },
+    {
+      "command": ".venv/bin/ruff format python/carnot/experiment_5294_capstone_v483.py tests/python/test_experiment_5294_capstone_v483.py && .venv/bin/ruff format --check python/carnot/experiment_5294_capstone_v483.py tests/python/test_experiment_5294_capstone_v483.py",
+      "outcome": "PASSED: 2 files reformatted, then 2 files already formatted"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5294_capstone_v483.py",
+      "outcome": "PASSED: OK: All tests reference specification requirements"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "FAILED: 149 failed, 22753 passed, 88 skipped, 133 warnings in 1126.41s; xdist worker crashed after Z3 segmentation fault in z3_math_verifier and internal MemoryError; unrelated to Exp5294 focused tests"
+    },
+    {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "outcome": "PASSED: Exclusion-manifest lint clean: research-roadmap.yaml"
+    }
+  ],
+  "duration_s": 0.0001,
+  "experiment": "experiment_5294_capstone_v483",
+  "experiment_id": "exp5294-capstone-v483",
+  "field_principles": {
+    "clean_positive_findings": "bounded clean non-flagged results that advanced fixtures, attribution, coherence dosing, aggregate solver guidance, source refresh, or transition readiness.",
+    "commands_run": "list of validation commands and outcomes used for this capstone.",
+    "gated_or_blocked_findings": "blocked preconditions, conductor pre-gate skips, missing artifacts, hardware blocks, and quarantines that must not be rounded up.",
+    "honest_verdict": "terminal prefix; starts with complete: or blocked_ and summarizes the .483 milestone without laundering gated, blocked, null, harmful, mixed, quarantined, or no-speedup evidence.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because the capstone reads checked-in result artifacts and conductor logs without running LLM, solver, or hardware workloads.",
+    "next_milestone_recommendations": "concrete next gaps and retirements without creating a next roadmap file.",
+    "null_or_harmful_findings": "clean null effects and harmful or mixed-harmful subfindings preserved separately from positives.",
+    "ops_docs_updated": "false for ops/status, ops/changelog, and traceability when the stop rule delegates those docs to a later reconciler.",
+    "research_complete_updated": "false when the stop rule limits this capstone to the result artifact plus tested code.",
+    "retirements_or_exclusions": "same-verdict retirements, manifest status, and scope limits for future reruns.",
+    "tasks_summarized": "expected, loadable, missing, classification, and conductor-log coverage for Exp5282 through Exp5293."
+  },
+  "gated_or_blocked_findings": {
+    "principle": "blocked preconditions, conductor pre-gate skips, missing artifacts, hardware blocks, and quarantines that must not be rounded up.",
+    "value": [
+      {
+        "finding": "Local mandated SOTA GGUF paths resolved and generated smoke text, but GPU offload evidence was absent.",
+        "id": "sota_runtime_offload_blocked",
+        "sota_offload_ready": false,
+        "source_experiments": [
+          5284
+        ]
+      },
+      {
+        "finding": "The claim-level SOTA pilot was conductor pre-gated on Exp5284 and did not produce quality evidence.",
+        "id": "claim_level_sota_pilot_gated_skip",
+        "source_experiments": [
+          5286
+        ]
+      },
+      {
+        "finding": "The SOTA trace DSL extraction retry was conductor pre-gated on Exp5284 and did not produce quality evidence.",
+        "id": "trace_dsl_sota_extraction_gated_skip",
+        "source_experiments": [
+          5288
+        ]
+      },
+      {
+        "blocked_reason": {
+          "GateMate": {
+            "prior_evidence": "results/experiment_5279_hardware_continuity_reachability_v482.json",
+            "reason": "operator_setup_unchanged_physical_jtag_block_carried_forward"
+          },
+          "KV260": {
+            "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
+            "exit_code": 255,
+            "reason": "blocked_kv260_ssh_unreachable",
+            "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+            "stdout": "",
+            "timeout_s": 10.0
+          },
+          "PolarFire": null
+        },
+        "finding": "Hardware evidence is reachability/status only: KV260 blocked, PolarFire SSH status-only reachable, GateMate blocked, no speedup.",
+        "hardware_speedup_claimed": false,
+        "id": "hardware_reachability_blocked_no_speedup",
+        "source_experiments": [
+          5293
+        ]
+      }
+    ]
+  },
+  "honest_verdict": {
+    "principle": "terminal prefix; starts with complete: or blocked_ and summarizes the .483 milestone without laundering gated, blocked, null, harmful, mixed, quarantined, or no-speedup evidence.",
+    "value": "complete: .483 closed with deterministic claim/coherence and trace fixtures ready, SOTA runtime/offload blocked, SOTA quality tasks gate-skipped, memory attribution and coherence dosing positive, low-order curriculum null, p-bit/CDCL aggregate positive with misleading-class harm, and hardware reachability-only with no speedup."
+  },
+  "inference_substrate": {
+    "principle": "aggregation_from_upstream_artifacts because the capstone reads checked-in result artifacts and conductor logs without running LLM, solver, or hardware workloads.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": "2026.07.483",
+  "next_milestone_recommendations": {
+    "principle": "concrete next gaps and retirements without creating a next roadmap file.",
+    "value": [
+      {
+        "id": "repair_sota_runtime_before_quality_tasks",
+        "recommendation": "Build or select a GGUF backend with real GPU offload evidence before re-enabling SOTA claim-level or trace-extraction quality tasks."
+      },
+      {
+        "id": "run_claim_level_sota_only_after_offload",
+        "recommendation": "Use Exp5285 labels and lexical unsafe-false-accept controls for the next claim-level SOTA pilot only after the offload gate opens."
+      },
+      {
+        "id": "run_trace_dsl_sota_only_after_offload",
+        "recommendation": "Use Exp5287 trace records with solver-authoritative false-accept and recovery accounting after runtime receipts are clean."
+      },
+      {
+        "id": "extend_memory_dosing_with_stage_attribution",
+        "recommendation": "Carry Exp5289/Exp5290 operation-stage attribution into any live coherence work and preserve rollback/escalation controls."
+      },
+      {
+        "id": "separate_pbit_instance_classes",
+        "recommendation": "Treat p-bit/CDCL guidance as class-sensitive: report help, harm, neutral, overwrite counts, and no hardware speedup until board timing exists."
+      },
+      {
+        "id": "hardware_next_steps_are_reachability_first",
+        "recommendation": "Fix KV260 SSH naming, keep PolarFire to authenticated workload receipts before speedup claims, and change GateMate physical/JTAG setup before reruns."
+      }
+    ]
+  },
+  "null_or_harmful_findings": {
+    "principle": "clean null effects and harmful or mixed-harmful subfindings preserved separately from positives.",
+    "value": [
+      {
+        "certificate_success_by_order": {
+          "all_curriculum_stages_certified": true,
+          "all_shuffled_stages_certified": true,
+          "curriculum": {
+            "higher_order_triple": true,
+            "low_order_unary": true,
+            "medium_order_pair": true
+          },
+          "helped_certificate_success": false,
+          "shuffled": {
+            "higher_order_triple": true,
+            "low_order_unary": true,
+            "medium_order_pair": true
+          },
+          "success_advantage_over_shuffled": 0.0
+        },
+        "finding": "Low-order-first scheduling did not improve certificate success over shuffled ordering.",
+        "id": "low_order_curriculum_clean_null",
+        "source_experiments": [
+          5291
+        ]
+      },
+      {
+        "conflicts_saved": {
+          "aggregate": 2,
+          "by_class": {
+            "aligned_factor_sat": 3,
+            "misleading_factor_sat": -1,
+            "neutral_factor_sat": 0
+          }
+        },
+        "finding": "The misleading-assumption class lost conflicts, so the p-bit/CDCL result is distribution-sensitive.",
+        "harmful_classes": [
+          "misleading_factor_sat"
+        ],
+        "id": "pbit_cdcl_misleading_assumption_harm",
+        "source_experiments": [
+          5292
+        ]
+      }
+    ]
+  },
+  "ops_docs_updated": {
+    "principle": "false for ops/status, ops/changelog, and traceability when the stop rule delegates those docs to a later reconciler.",
+    "value": {
+      "ops_changelog": false,
+      "ops_status": false,
+      "reason": "stop_when_done_reconciler_deferred_ops_docs",
+      "traceability": false
+    }
+  },
+  "random_seed": 5294,
+  "reproducibility_checksum": "sha256:8d6717dff52b976a289c98b33e1d359623e3d2b7020ac049a2daea7d9747c481",
+  "research_complete_updated": {
+    "principle": "false when the stop rule limits this capstone to the result artifact plus tested code.",
+    "value": false
+  },
+  "result_path": "results/experiment_5294_capstone_v483.json",
+  "retirements_or_exclusions": {
+    "principle": "same-verdict retirements, manifest status, and scope limits for future reruns.",
+    "value": {
+      "manifest_updated": true,
+      "not_retired": [
+        "claim-level coherence fixture work",
+        "trace DSL fixture work",
+        "SOTA extraction after a genuine GPU-offload receipt",
+        "hardware reachability continuity with changed board setup"
+      ],
+      "same_verdict_retirements": [
+        {
+          "id": "exp5284_sota_offload_cpu_only_path_retired_v483",
+          "reason": "Exp5284 repeated the Exp5274 blocked offload-precondition failure class; future SOTA quality tasks need a changed runtime substrate.",
+          "scope": "current llama-cpp-python SOTA GGUF reruns without GPU offload support or memory-delta evidence",
+          "source_experiments": [
+            "exp5274",
+            "exp5284"
+          ],
+          "status": "recorded"
+        }
+      ]
+    }
+  },
+  "run_date": "2026-07-06",
+  "schema": "carnot.experiment_5294_capstone_v483.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-5294",
+    "SCENARIO-CAPSTONE-5294",
+    "SCENARIO-CAPSTONE-5294-BLOCKED-MISSING-INPUT",
+    "SCENARIO-CAPSTONE-5294-FIELD-PRINCIPLES"
+  ],
+  "tasks_summarized": {
+    "principle": "expected, loadable, missing, classification, and conductor-log coverage for Exp5282 through Exp5293.",
+    "value": {
+      "by_classification": {
+        "blocked_precondition": 2,
+        "clean_null": 1,
+        "clean_positive": 6,
+        "gated_skip": 2,
+        "mixed_positive_with_harmful_class": 1
+      },
+      "conductor_log_entries": [
+        "| 2026-07-05 03:29 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, G | OK | 89 passed, 1 warning in 9.97s |",
+        "| 2026-07-05 23:37 UTC | PHASE 0 transition -- archive .482 truth and prepa | OK | 87 passed, 1 warning in 8.06s |",
+        "| 2026-07-05 23:53 UTC | PHASE 0 SOTA/source refresh -- V483 execution delt | OK | 106 passed, 1 warning in 14.82s |",
+        "| 2026-07-06 00:43 UTC | PHASE 0 runtime receipts -- repair SOTA GGUF gener | OK | 89 passed, 1 warning in 14.76s |",
+        "| 2026-07-06 01:01 UTC | PHASE 1 fixture -- CheckRLM-style knowledge-though | OK | 87 passed, 1 warning in 11.28s |",
+        "| 2026-07-06 01:05 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:07 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:10 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:29 UTC | PHASE 1 fixture -- VeryTrace-style compilable trac | OK | 89 passed, 1 warning in 8.64s |",
+        "| 2026-07-06 01:32 UTC | PHASE 1 gated on exp5284 and exp5287 -- SOTA trace | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:34 UTC | PHASE 1 gated on exp5284 and exp5287 -- SOTA trace | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:36 UTC | PHASE 1 gated on exp5284 and exp5287 -- SOTA trace | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |",
+        "| 2026-07-06 01:49 UTC | PHASE 2 continuous self-learning -- memory operati | OK | 87 passed, 1 warning in 8.00s |",
+        "| 2026-07-06 02:04 UTC | PHASE 2 gated on exp5285 and exp5289 -- memory-ass | OK | 88 passed, 1 warning in 11.01s |",
+        "| 2026-07-06 02:20 UTC | PHASE 3 certificates -- low-order factor KAN/Ising | OK | 88 passed, 1 warning in 8.44s |",
+        "| 2026-07-06 02:36 UTC | PHASE 3 solver guidance -- p-bit Ising assumptions | OK | 89 passed, 1 warning in 11.46s |",
+        "| 2026-07-06 02:54 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, a | OK | 87 passed, 1 warning in 10.39s |"
+      ],
+      "expected_count": 12,
+      "loadable_count": 12,
+      "milestone_synthesized": true,
+      "missing_artifacts": [],
+      "per_task": [
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5282,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "loadable": true,
+          "path": "results/experiment_5282_archive_482_activate_483.json",
+          "sha256": "sha256:61f2cb80cc2be469be6b0faac5c3655935fb775a068b3991f3b2ec76eeffd7ef",
+          "summary": "transition/archive record complete; .483 activated without roadmap mutation",
+          "task_id": "exp5282-archive-482-activate-483",
+          "title": "Archive .482 and prepare .483 activation",
+          "verdict": "complete: .482 archived and .483 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5283,
+          "inference_substrate": "literature_ingestion_network_sources",
+          "loadable": true,
+          "path": "results/experiment_5283_sota_source_delta_v483.json",
+          "sha256": "sha256:a9682f3733ed6858da6669c7922f329b7b71a492fa67155fe9adf01c7699d7c2",
+          "summary": "source refresh appended three actionable findings; plan unchanged",
+          "task_id": "exp5283-sota-source-delta-v483",
+          "title": "V483 SOTA/source delta refresh",
+          "verdict": "complete: 3 new actionable findings appended; executable .483 plan unchanged."
+        },
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5284,
+          "inference_substrate": "blocked_preconditions_with_no_quality_claim",
+          "loadable": true,
+          "path": "results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json",
+          "sha256": "sha256:6e4fee59c1f6655c91d6636e79dec1d31e2e4cd8bc2be58c71d286d2099720f1",
+          "summary": "SOTA GGUF generation ran only as blocked precondition evidence; GPU offload evidence absent",
+          "task_id": "exp5284-sota-runtime-offload-receipt-repair-v483",
+          "title": "SOTA GGUF generation/offload receipt repair",
+          "verdict": "blocked_preconditions: sota_offload_ready=false flagship_moe:blocked_no_gpu_offload_evidence:offload=False"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5285,
+          "inference_substrate": "offline_deterministic_fixture_no_llm",
+          "loadable": true,
+          "path": "results/experiment_5285_knowledge_thought_coherence_fixture_v483.json",
+          "sha256": "sha256:50d24669453f286a8e09032d40bb4e73c8180ac03dcc10c559a44f1c1c881c17",
+          "summary": "claim-level coherence fixture ready; lexical baseline unsafe false accepts remain visible",
+          "task_id": "exp5285-knowledge-thought-coherence-fixture-v483",
+          "title": "Knowledge-thought coherence fixture",
+          "verdict": "complete: knowledge-thought coherence fixture usable for exp5286/exp5290"
+        },
+        {
+          "classification": "gated_skip",
+          "exists": true,
+          "experiment_number": 5286,
+          "inference_substrate": "",
+          "loadable": true,
+          "path": "results/experiment_5286_knowledge_thought_coherence_sota_pilot_v483.json",
+          "sha256": "sha256:c04bb74023b0377e78e0b7b3360d9259eb02869c6f141e8ce1d793bff72998b0",
+          "summary": "SOTA claim-level pilot conductor-gated because Exp5284 sota_offload_ready=false",
+          "task_id": "exp5286-knowledge-thought-coherence-sota-pilot-v483",
+          "title": "SOTA claim-level coherence pilot",
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5287,
+          "inference_substrate": "offline_deterministic_fixture_no_llm",
+          "loadable": true,
+          "path": "results/experiment_5287_compilable_trace_dsl_fixture_v483.json",
+          "sha256": "sha256:ddf57394295e75f44f1e8def1adb83f39f90cae1511d59bbe7823661b46b1b7a",
+          "summary": "compilable trace DSL fixture ready with solver-checked structure",
+          "task_id": "exp5287-compilable-trace-dsl-fixture-v483",
+          "title": "Compilable trace DSL fixture",
+          "verdict": "complete: trace DSL fixture usable for exp5288 solver-checked extraction"
+        },
+        {
+          "classification": "gated_skip",
+          "exists": true,
+          "experiment_number": 5288,
+          "inference_substrate": "",
+          "loadable": true,
+          "path": "results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json",
+          "sha256": "sha256:f7dec30e8b52560e2298b5aa315009bf3e14a9098e578be306a0679c0672cc08",
+          "summary": "SOTA trace DSL extraction conductor-gated because Exp5284 sota_offload_ready=false",
+          "task_id": "exp5288-sota-trace-dsl-extraction-gated-v483",
+          "title": "SOTA trace DSL extraction retry",
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5289,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "loadable": true,
+          "path": "results/experiment_5289_memory_operation_attribution_v483.json",
+          "sha256": "sha256:9e80afac123f4c3155f21504c6cb3239cc8340d6e65453a71f510764d59a910f",
+          "summary": "memory operation attribution ready with full bounded control coverage and unsafe propagation zero",
+          "task_id": "exp5289-memory-operation-attribution-v483",
+          "title": "Memory operation attribution harness",
+          "verdict": "complete: operation attribution is usable for Exp5290; all bounded operation-stage controls were attributed and unsafe_propagations=0"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5290,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "loadable": true,
+          "path": "results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json",
+          "sha256": "sha256:dde739e4190d56688d15c17d61448ca423929ebf93c07b6fbaf614b680eb2358",
+          "summary": "memory-assisted coherence dosing preserved quality, avoided full checks, and kept unsafe false accepts zero",
+          "task_id": "exp5290-memory-assisted-coherence-dose-gated-v483",
+          "title": "Memory-assisted coherence dosing",
+          "verdict": "complete: memory-assisted coherence dosing helped; governed memory preserved always-full quality, avoided 4/7 full claim/coherence checks, and kept unsafe_false_accepts=0"
+        },
+        {
+          "classification": "clean_null",
+          "exists": true,
+          "experiment_number": 5291,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "loadable": true,
+          "path": "results/experiment_5291_low_order_factor_certificate_curriculum_v483.json",
+          "sha256": "sha256:a733d665e0a65fd647c90a7a17b8e81fc2441ce8190491d5083e12f81db571e3",
+          "summary": "low-order curriculum did not beat shuffled ordering; bounded certificate telemetry still landed",
+          "task_id": "exp5291-low-order-factor-certificate-curriculum-v483",
+          "title": "Low-order factor certificate curriculum",
+          "verdict": "complete: low-order curriculum did not improve certificate success over the shuffled ordering; all bounded stages certified, so the value is measurement and factor-order telemetry"
+        },
+        {
+          "classification": "mixed_positive_with_harmful_class",
+          "exists": true,
+          "experiment_number": 5292,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "loadable": true,
+          "path": "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+          "sha256": "sha256:90e6e28484a369217c4dfe93647926afeba9af0fe98f83e7d3c9238b0b2323f4",
+          "summary": "CPU p-bit/CDCL guidance saved aggregate conflicts but harmed the misleading-assumption class",
+          "task_id": "exp5292-pbit-cdcl-factor-guidance-v483",
+          "title": "CPU p-bit/CDCL factor guidance",
+          "verdict": "complete: p-bit/CDCL simulated CPU guidance helped aggregate conflicts on the bounded factor fixture while harming the misleading-assumption class; distribution sensitivity is expected"
+        },
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5293,
+          "inference_substrate": "hardware_probe_no_speedup_claim",
+          "loadable": true,
+          "path": "results/experiment_5293_hardware_continuity_reachability_v483.json",
+          "sha256": "sha256:68a225d4b34ca9745f91823d68cd74db35826afc3f7a3cba21c7cae658c503eb",
+          "summary": "hardware status remained reachability-only: KV260 blocked, PolarFire SSH status-only, GateMate blocked",
+          "task_id": "exp5293-hardware-continuity-reachability-v483",
+          "title": "Hardware continuity reachability receipts",
+          "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
+        }
+      ]
+    }
+  }
+}

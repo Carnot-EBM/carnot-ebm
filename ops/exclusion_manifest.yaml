@@ -713,3 +713,26 @@ retired_extras:
   - experiment_5240_arc_rubric_to_patch_synthesis_v479
   - experiment_5241_arc_gated_live_patch_attempt_v479
   - provenance-routing live patch zero-delta rerun
+- id: exp5284_sota_offload_cpu_only_path_retired_v483
+  experiment_scope: Current llama-cpp-python SOTA GGUF reruns that request GPU
+    offload but produce no GPU-offload support or memory-delta evidence
+  reason: >-
+    retire_if_same_verdict: Exp 5284 repeated the Exp 5274 blocked
+    runtime/offload precondition class. The mandated GGUF model files resolved
+    and tiny generation smoke calls returned, but the installed llama.cpp path
+    reported no GPU offload support and GPU memory receipts showed no offload
+    evidence, so downstream SOTA quality tasks remained gate-blocked. Future
+    reruns need a changed runtime substrate or a fresh GPU-offload receipt, not
+    another pass through the same CPU-only offload path.
+  experiment_ids:
+  - exp5274
+  - exp5284
+  retired_milestone: 2026.07.483
+  retired_by_artifact: results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json
+  recorded_by_artifact: results/experiment_5294_capstone_v483.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - rerun SOTA GGUF extraction with current CPU-only llama-cpp-python offload path
+  - repeat exp5284 blocked_no_gpu_offload_evidence without changed runtime substrate
+  - SOTA quality task gated only by the same no-offload llama.cpp receipt
