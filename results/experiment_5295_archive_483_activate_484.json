@@ -1,0 +1,373 @@
+{
+  "activation_milestone": "2026.07.484",
+  "activation_ready": true,
+  "activation_ready_principle": "Bare boolean confirming .484 can proceed without overwriting research-roadmap.yaml.",
+  "archived_milestone": "2026.07.483",
+  "closeout_fact_failures": [],
+  "closeout_facts": {
+    "coherence_dosing_positive": true,
+    "coherence_fixture_ready": true,
+    "hardware_reachability_no_speedup": true,
+    "low_order_curriculum_null": true,
+    "memory_attribution_positive": true,
+    "pbit_cdcl_mixed_positive_with_harm": true,
+    "sota_quality_gate_skipped": true,
+    "sota_runtime_offload_blocked": true,
+    "timing_retro_accounting_mismatch": true,
+    "trace_fixture_ready": true
+  },
+  "commands_run": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/roadmap_schema.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/validate_prior_failures.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml --complete /home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "command_label": "scripts/audit_roadmap_gates.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 3,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 12,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 12,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "command_label": "scripts/exclusion_manifest_lint.py",
+      "exit_code": 0,
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    }
+  ],
+  "duration_s": 15.388837,
+  "exclusions_checked": {
+    "principle": "The transition must run or explicitly record available roadmap, exclusion, and prior-failure checks.",
+    "value": true
+  },
+  "experiment": "experiment_5295_archive_483_activate_484",
+  "experiment_id": "exp5295-archive-483-activate-484",
+  "failed_preconditions": [],
+  "field_principles": {
+    "activation_ready": "Bare boolean confirming .484 can proceed without overwriting research-roadmap.yaml.",
+    "commands_run": "Every validation command must be recorded with pass/fail outcome.",
+    "exclusions_checked": "The transition must run or explicitly record available roadmap, exclusion, and prior-failure checks.",
+    "honest_verdict": "Must start with complete: or blocked_ and state whether .483 was archived and .484 is activation-ready.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because Exp5295 only reads existing artifacts and local records.",
+    "milestone_archived": "Bare boolean confirming the .483 closeout is represented in durable research records.",
+    "ops_docs_updated": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "research_complete_updated": "True only if this workflow appended or reconciled research-complete.yaml; false when .483 was already present.",
+    "roadmap_activation_check": "No roadmap overwrite is allowed; activated must remain false."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: or blocked_ and state whether .483 was archived and .484 is activation-ready.",
+    "value": "complete: .483 archived and .484 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+  },
+  "inference_substrate": {
+    "principle": "aggregation_from_upstream_artifacts because Exp5295 only reads existing artifacts and local records.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone_archived": true,
+  "milestone_archived_principle": "Bare boolean confirming the .483 closeout is represented in durable research records.",
+  "ops_docs_updated": {
+    "principle": "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation.",
+    "value": false
+  },
+  "random_seed": 5295,
+  "reproducibility_checksum": "sha256:286dfb596ef713b96557efb74934493ceaa74d4b1a4a5bfeca0829fc02f989b9",
+  "research_complete_check": {
+    "count_after": 1,
+    "count_before": 1,
+    "had_2026_07_483_before": true,
+    "has_2026_07_483_after": true,
+    "milestone": "2026.07.483",
+    "path": "research-complete.yaml",
+    "sha256": "sha256:6a482ebac6dd6e8addbb7539bca0c4eaf61d3f07469fa4cd3dd398c2d9e01dbd",
+    "updated": false
+  },
+  "research_complete_updated": {
+    "principle": "True only if this workflow appended or reconciled research-complete.yaml; false when .483 was already present.",
+    "value": false
+  },
+  "result_path": "results/experiment_5295_archive_483_activate_484.json",
+  "roadmap_activation_check": {
+    "activated": false,
+    "activation_ready_without_overwrite": true,
+    "active_roadmap_already_484": true,
+    "active_roadmap_milestone": "2026.07.484",
+    "active_roadmap_missing_task_prefixes": [],
+    "active_roadmap_modified": false,
+    "active_roadmap_sha256": "sha256:59f25a5f210592dddac500cfbb814d664cb9155c26c3e3ac76ec8ab0da01d49d",
+    "active_roadmap_task_ids": [
+      "exp5295-archive-483-activate-484",
+      "exp5296-sota-source-delta-v484",
+      "exp5297-changed-runtime-sota-substrate-gate-v484",
+      "exp5298-sota-coherence-trace-smoke-gated-v484",
+      "exp5299-constraint-lns-solver-repair-fixture-v484",
+      "exp5300-pbit-cdcl-instance-class-gate-v484",
+      "exp5301-ebt-spectral-step-control-diagnostic-v484",
+      "exp5302-adaptive-memory-policy-self-learning-v484",
+      "exp5303-memory-stress-conflict-forgetting-v484",
+      "exp5304-kan-dynamic-abstraction-spotcheck-v484",
+      "exp5305-hardware-continuity-reachability-v484",
+      "exp5306-capstone-v484"
+    ],
+    "principle": "No roadmap overwrite is allowed; activated must remain false.",
+    "roadmap_next_absence_handled_by": "active_roadmap_already_484",
+    "roadmap_next_milestone": null,
+    "roadmap_next_missing_task_prefixes": [],
+    "roadmap_next_present": false,
+    "roadmap_next_sha256": null,
+    "roadmap_next_task_ids": [],
+    "vnext_names_2026_07_484": true,
+    "vnext_present": true
+  },
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5295_archive_483_activate_484.v1",
+  "source_artifacts": [
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5282,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .482 archived and .483 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used.",
+      "loadable": true,
+      "relative_path": "results/experiment_5282_archive_482_activate_483.json",
+      "sha256": "sha256:61f2cb80cc2be469be6b0faac5c3655935fb775a068b3991f3b2ec76eeffd7ef",
+      "task_id": "exp5282-archive-482-activate-483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5283,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: 3 new actionable findings appended; executable .483 plan unchanged.",
+      "loadable": true,
+      "relative_path": "results/experiment_5283_sota_source_delta_v483.json",
+      "sha256": "sha256:a9682f3733ed6858da6669c7922f329b7b71a492fa67155fe9adf01c7699d7c2",
+      "task_id": "exp5283-sota-source-delta-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5284,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_preconditions: sota_offload_ready=false flagship_moe:blocked_no_gpu_offload_evidence:offload=False",
+      "loadable": true,
+      "relative_path": "results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json",
+      "sha256": "sha256:6e4fee59c1f6655c91d6636e79dec1d31e2e4cd8bc2be58c71d286d2099720f1",
+      "task_id": "exp5284-sota-runtime-offload-receipt-repair-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5285,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: knowledge-thought coherence fixture usable for exp5286/exp5290",
+      "loadable": true,
+      "relative_path": "results/experiment_5285_knowledge_thought_coherence_fixture_v483.json",
+      "sha256": "sha256:50d24669453f286a8e09032d40bb4e73c8180ac03dcc10c559a44f1c1c881c17",
+      "task_id": "exp5285-knowledge-thought-coherence-fixture-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5286,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "relative_path": "results/experiment_5286_knowledge_thought_coherence_sota_pilot_v483.json",
+      "sha256": "sha256:c04bb74023b0377e78e0b7b3360d9259eb02869c6f141e8ce1d793bff72998b0",
+      "task_id": "exp5286-knowledge-thought-coherence-sota-pilot-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5287,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: trace DSL fixture usable for exp5288 solver-checked extraction",
+      "loadable": true,
+      "relative_path": "results/experiment_5287_compilable_trace_dsl_fixture_v483.json",
+      "sha256": "sha256:ddf57394295e75f44f1e8def1adb83f39f90cae1511d59bbe7823661b46b1b7a",
+      "task_id": "exp5287-compilable-trace-dsl-fixture-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5288,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "loadable": true,
+      "relative_path": "results/experiment_5288_sota_trace_dsl_extraction_gated_v483.json",
+      "sha256": "sha256:f7dec30e8b52560e2298b5aa315009bf3e14a9098e578be306a0679c0672cc08",
+      "task_id": "exp5288-sota-trace-dsl-extraction-gated-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5289,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: operation attribution is usable for Exp5290; all bounded operation-stage controls were attributed and unsafe_propagations=0",
+      "loadable": true,
+      "relative_path": "results/experiment_5289_memory_operation_attribution_v483.json",
+      "sha256": "sha256:9e80afac123f4c3155f21504c6cb3239cc8340d6e65453a71f510764d59a910f",
+      "task_id": "exp5289-memory-operation-attribution-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5290,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: memory-assisted coherence dosing helped; governed memory preserved always-full quality, avoided 4/7 full claim/coherence checks, and kept unsafe_false_accepts=0",
+      "loadable": true,
+      "relative_path": "results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json",
+      "sha256": "sha256:dde739e4190d56688d15c17d61448ca423929ebf93c07b6fbaf614b680eb2358",
+      "task_id": "exp5290-memory-assisted-coherence-dose-gated-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5291,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: low-order curriculum did not improve certificate success over the shuffled ordering; all bounded stages certified, so the value is measurement and factor-order telemetry",
+      "loadable": true,
+      "relative_path": "results/experiment_5291_low_order_factor_certificate_curriculum_v483.json",
+      "sha256": "sha256:a733d665e0a65fd647c90a7a17b8e81fc2441ce8190491d5083e12f81db571e3",
+      "task_id": "exp5291-low-order-factor-certificate-curriculum-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5292,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: p-bit/CDCL simulated CPU guidance helped aggregate conflicts on the bounded factor fixture while harming the misleading-assumption class; distribution sensitivity is expected",
+      "loadable": true,
+      "relative_path": "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+      "sha256": "sha256:90e6e28484a369217c4dfe93647926afeba9af0fe98f83e7d3c9238b0b2323f4",
+      "task_id": "exp5292-pbit-cdcl-factor-guidance-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5293,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim",
+      "loadable": true,
+      "relative_path": "results/experiment_5293_hardware_continuity_reachability_v483.json",
+      "sha256": "sha256:68a225d4b34ca9745f91823d68cd74db35826afc3f7a3cba21c7cae658c503eb",
+      "task_id": "exp5293-hardware-continuity-reachability-v483"
+    },
+    {
+      "error": null,
+      "exists": true,
+      "experiment_number": 5294,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: .483 closed with deterministic claim/coherence and trace fixtures ready, SOTA runtime/offload blocked, SOTA quality tasks gate-skipped, memory attribution and coherence dosing positive, low-order curriculum null, p-bit/CDCL aggregate positive with misleading-class harm, and hardware reachability-only with no speedup.",
+      "loadable": true,
+      "relative_path": "results/experiment_5294_capstone_v483.json",
+      "sha256": "sha256:40dce0ecf4052dca97c68087e9a012de427350d6651705fdd884631e6b8bf082",
+      "task_id": "exp5294-capstone-v483"
+    }
+  ],
+  "source_context": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:6362755ccc4538eafed20baa616b127b5b5569f7465f33bcfadf331c15aeef3b"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/prd.md",
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "_bmad/architecture.md",
+      "sha256": "sha256:0b7fb8814f1134ad05d931b176615c9061a4e9c491ae3f619d59f52bbee6a38a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:70b9dd3de3d079f7d44d02498b6f5bc61cc5833abbe1516d38d6aa55cafc6a56"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:9260cebf24f5ea4632a715ff404c7f3a47e952510df3880979b398a7c257e07a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:1a0b2eaf84eec8797a652ec7c376cf99e41b23a27136efde5d202557acc6133c"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-complete.yaml",
+      "sha256": "sha256:6a482ebac6dd6e8addbb7539bca0c4eaf61d3f07469fa4cd3dd398c2d9e01dbd"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:59f25a5f210592dddac500cfbb814d664cb9155c26c3e3ac76ec8ab0da01d49d"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:1a5e367c5d69d6ff003b362fe4e80ed1afeacaaf3e06d239bc06c07f4ed6ad26"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "results/operational_retro_2026_07_483.json",
+      "sha256": "sha256:77a7f6811272078fd1d7d16f7c08a81713f3009d0ecec9e444fa90e29cfbb0bb"
+    }
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5295",
+    "SCENARIO-REPORT-5295",
+    "SCENARIO-REPORT-5295-BLOCKED-CLOSEOUT"
+  ]
+}
