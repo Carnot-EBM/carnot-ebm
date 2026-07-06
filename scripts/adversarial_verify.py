@@ -2294,7 +2294,11 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     # STILL required (this substrate is a real measurement, just not a model-inference one).
     if _is_artifact_qa_lint_tests(d):
         return
-    no_model_spec_required = _is_arc_live_agent_no_llm(d) or _is_log_analysis_local_timing(d)
+    no_model_spec_required = (
+        _is_arc_live_agent_no_llm(d)
+        or _is_log_analysis_local_timing(d)
+        or _is_deterministic_smt_hint_validation(d)
+    )
     # Some experiment scripts (24 in the corpus as of 2026-07-05, e.g. exp5262/exp5263) declare
     # the field as the uppercase Python-constant-style "MODEL_SPECS" rather than lowercase
     # "model_specs" -- both are legitimate, so recognize either casing.
