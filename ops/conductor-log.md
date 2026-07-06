@@ -10362,3 +10362,4 @@ web search: |
 | 2026-07-06 01:01 UTC | PHASE 1 fixture -- CheckRLM-style knowledge-though | OK | 87 passed, 1 warning in 11.28s |
 | 2026-07-06 01:05 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
 | 2026-07-06 01:07 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
+| 2026-07-06 01:10 UTC | PHASE 1 gated on exp5284 and exp5285 -- SOTA claim | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5284-sota-runtime-offload-receipt-repai |
