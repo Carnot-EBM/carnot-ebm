@@ -15586,6 +15586,90 @@ GateMate, and no-speedup status.
 
 ---
 
+### REQ-HW-5293
+
+**Title:** Hardware-continuity v483 MUST refresh KV260, PolarFire, and GateMate reachability receipts without acceleration claims
+
+**Description:**
+Experiment 5293 MUST produce
+`results/experiment_5293_hardware_continuity_reachability_v483.json` as a v483
+reachability/status-only hardware-continuity artifact. The artifact MUST use
+`inference_substrate.value="hardware_probe_no_speedup_claim"`,
+`hardware_speedup_claimed.value=false`, and MUST NOT infer acceleration from
+SSH success, USB enumeration, JTAG status, tool versions, public papers, CPU
+simulation, or any status-only receipt.
+
+KV260 MUST remain SSH-only. The probe MUST NOT require host `/dev/mmcblk*`,
+`/dev/disk`, SD-card presence, or any other host block-device path. A reachable
+KV260 receipt SHOULD record a bounded remote board identifier such as hostname,
+`uname`, or board-local tool status. An unreachable KV260 receipt MUST record
+the exact SSH command, exit code, timeout, stdout/stderr, and a
+`blocked_kv260_*` reason.
+
+PolarFire MUST use authenticated local SSH reachability when available. A
+reachable PolarFire receipt SHOULD record a bounded remote board identifier such
+as hostname, `uname`, or tool/version output. An unreachable PolarFire receipt
+MUST record the exact SSH command, exit code, timeout, stdout/stderr, and a
+`blocked_polarfire_*` reason.
+
+GateMate MUST use only documented local status probes. If the physical/JTAG
+setup is not explicitly marked changed, the artifact MUST carry the existing
+physical/JTAG blocker forward and record local USB/tool visibility only. If a
+setup-change flag is present, the artifact MAY run a bounded
+`openFPGALoader -c dirtyJtag --detect` status probe, but MUST NOT flash hardware
+or claim sampler timing.
+
+The artifact MUST include principle-wrapped fields `honest_verdict`,
+`inference_substrate`, `hardware_evidence_level`, `kv260_reachability`,
+`polarfire_reachability`, `gatemate_reachability`,
+`hardware_speedup_claimed`, and `blocked_reason`, plus a `commands_run` list
+whose entries include `command` and `outcome`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_`, MUST state KV260, PolarFire, and GateMate
+reachability outcomes, and MUST include no-speedup discipline.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5293_hardware_continuity_reachability_v483 --date 20260706`
+  writes `results/experiment_5293_hardware_continuity_reachability_v483.json`.
+- The artifact includes
+  `experiment_id="exp5293-hardware-continuity-reachability-v483"`,
+  `spec_refs` containing `REQ-HW-5293` and `SCENARIO-HW-5293`,
+  `random_seed=5293`, and a stable `reproducibility_checksum`.
+- `commands_run` records exact command strings, outcomes, exit codes, timeouts,
+  durations, and bounded stdout/stderr receipts for the probes that ran.
+- `kv260_reachability`, `polarfire_reachability`, and
+  `gatemate_reachability` each state a board-specific status and either a
+  bounded remote/device identifier or an honest blocked reason.
+- `hardware_speedup_claimed.value=false`, and no host block-device marker such
+  as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 5293)
+
+---
+
+### SCENARIO-HW-5293
+
+**Scenario:** Exp 5293 writes a v483 reachability-only hardware-continuity receipt.
+
+**Given:** Exp 5279 recorded v482 reachability/status receipts and no later
+operator instruction permits flashing hardware, requiring host SD-card access,
+or claiming acceleration from reachability.
+**When:** Experiment 5293 records authenticated local probes for KV260,
+PolarFire, and GateMate where the documented probe path is available, carrying
+honest blockers forward where a board is unreachable or the GateMate physical
+setup is unchanged.
+**Then:** It writes
+`results/experiment_5293_hardware_continuity_reachability_v483.json` with all
+required principle-wrapped fields,
+`inference_substrate.value="hardware_probe_no_speedup_claim"`,
+`hardware_speedup_claimed.value=false`, per-board reachability receipts,
+`commands_run` command/outcome receipts, no host block-device precondition, and
+an honest verdict beginning with `complete:` or `blocked_` that states KV260,
+PolarFire, GateMate, and no-speedup status.
+
+**Implementation status:** Pending (Exp 5293)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
