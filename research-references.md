@@ -27438,3 +27438,21 @@ Execution-time sweep after the `.483` plan checked arXiv, OpenReview, HuggingFac
 - **Semantic Scholar:** Direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 returned HTTP 429 in this pass, so no citation-count delta is claimed.
 
 <!-- V483-EXECUTION-REFRESH-2026-07-05-END -->
+
+
+### V484 Execution Refresh - 2026-07-06
+
+Execution-time sweep after the `.484` plan checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM citation trails, GitHub repositories, Extropic writing, and Logical Intelligence public pages. The items below were not in the V484 planning block or nearby reference history and are actionable as implementation notes, but they do not require a roadmap edit.
+
+### New actionable deltas
+- **Towards System-2 AI: Workloads and Characterizations of Energy-Based Models** (https://zishenwan.github.io/publication/ISPASS26_EBM_Characterization.pdf; secondary source https://ispass.org/ispass2026/program.php): The ISPASS workload study profiles EBM inference and training across CPU, GPU, and TPU and identifies repetitive forward/backward operations, long sampling trajectories, MCMC sensitivity, memory behavior, and accelerator under-use as the core deployment bottlenecks. Actionability: For Exp5301 and future EBT/energy-descent diagnostics, log forward/backward pass counts, sampling-step count, runtime breakdown, memory/utilization proxies, and step-size quality tradeoffs before treating inner energy descent as ready for hardware or SOTA claims.
+- **LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues** (https://arxiv.org/abs/2605.12493; secondary source https://github.com/xiaowu0162/LongMemEval-V2): The benchmark makes environment-specific memory measurable through static state recall, dynamic state tracking, workflow knowledge, environment gotchas, and premise awareness, with accuracy and latency reported together. Actionability: For Exp5303, add tiny deterministic memory-stress rows for gotchas, invalid premises, dynamic state changes, and workflow reuse; report query latency or call cost next to quality preservation instead of only final answer quality.
+- **MemoryRewardBench: Benchmarking Reward Models for Long-Term Memory Management** (https://arxiv.org/abs/2601.11969; secondary source https://huggingface.co/papers/2601.11969): MemoryRewardBench separates process-level memory-management quality from outcome-only task accuracy across long-context comprehension and generation settings, which directly matches Carnot's verifier-dose policy problem. Actionability: For Exp5302/Exp5303, score memory updates and retrieval decisions separately from final verifier outcomes using deterministic labels; do not introduce a new reward-model training dependency unless a later task explicitly scopes it.
+- **Local-Minima-Preserving Continuous Relaxation of Ising Problems** (https://arxiv.org/abs/2606.30333): The paper constructs a smooth relaxation with a one-to-one correspondence between its local minima and one-flip local minima of generalized Ising instances, covering spin-glass, MAX-CUT, number partitioning, and maximum independent set benchmarks. Actionability: For Exp5300, consider a tiny CPU smooth-relaxation baseline or one-flip local-minimum diagnostic beside p-bit/CDCL guidance; keep SAT/CDCL fallback authoritative and do not infer any hardware speedup from the paper.
+
+### Execution impact
+- **Plan impact:** No executable `.484` task edit is required. The deltas sharpen Exp5301 EBT runtime/stability telemetry, Exp5302/Exp5303 memory policy and stress scoring, and Exp5300 p-bit/CDCL instance-class baselines.
+- **Retired scope:** No retired scope was reopened; CPU-only llama-cpp-python SOTA offload reruns, Phase D external generated-text scoring, broad GRPO/fine-tuning, and TSU/Kona execution claims remain closed unless a future task carries an explicit override.
+- **Semantic Scholar:** Direct API calls returned EBT arXiv:2507.02092 with citationCount=26 and influentialCitationCount=2, and ARM-EBM arXiv:2512.15605 with citationCount=8 and influentialCitationCount=2. Only the ISPASS EBM workload characterization produced a new actionable Carnot-local implementation note.
+
+<!-- V484-EXECUTION-REFRESH-2026-07-06-END -->

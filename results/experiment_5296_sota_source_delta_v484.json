@@ -1,0 +1,284 @@
+{
+  "actionable_deltas": {
+    "principle": "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh.",
+    "value": [
+      {
+        "actionability": "For Exp5301 and future EBT/energy-descent diagnostics, log forward/backward pass counts, sampling-step count, runtime breakdown, memory/utilization proxies, and step-size quality tradeoffs before treating inner energy descent as ready for hardware or SOTA claims.",
+        "arxiv_id_or_repo": "DOI:10.1109/ISPASS69572.2026.00062",
+        "carnot_hook": "The ISPASS workload study profiles EBM inference and training across CPU, GPU, and TPU and identifies repetitive forward/backward operations, long sampling trajectories, MCMC sensitivity, memory behavior, and accelerator under-use as the core deployment bottlenecks.",
+        "category": "ebm_runtime_hardware_characterization",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "secondary_source_url": "https://ispass.org/ispass2026/program.php",
+        "source_family": "semantic_scholar+conference_pdf",
+        "source_url": "https://zishenwan.github.io/publication/ISPASS26_EBM_Characterization.pdf",
+        "title": "Towards System-2 AI: Workloads and Characterizations of Energy-Based Models"
+      },
+      {
+        "actionability": "For Exp5303, add tiny deterministic memory-stress rows for gotchas, invalid premises, dynamic state changes, and workflow reuse; report query latency or call cost next to quality preservation instead of only final answer quality.",
+        "arxiv_id_or_repo": "2605.12493",
+        "carnot_hook": "The benchmark makes environment-specific memory measurable through static state recall, dynamic state tracking, workflow knowledge, environment gotchas, and premise awareness, with accuracy and latency reported together.",
+        "category": "continual_online_memory_for_constraints",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "secondary_source_url": "https://github.com/xiaowu0162/LongMemEval-V2",
+        "source_family": "arxiv+github",
+        "source_url": "https://arxiv.org/abs/2605.12493",
+        "title": "LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues"
+      },
+      {
+        "actionability": "For Exp5302/Exp5303, score memory updates and retrieval decisions separately from final verifier outcomes using deterministic labels; do not introduce a new reward-model training dependency unless a later task explicitly scopes it.",
+        "arxiv_id_or_repo": "2601.11969",
+        "carnot_hook": "MemoryRewardBench separates process-level memory-management quality from outcome-only task accuracy across long-context comprehension and generation settings, which directly matches Carnot's verifier-dose policy problem.",
+        "category": "memory_policy_evaluation",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "secondary_source_url": "https://huggingface.co/papers/2601.11969",
+        "source_family": "arxiv+huggingface_papers",
+        "source_url": "https://arxiv.org/abs/2601.11969",
+        "title": "MemoryRewardBench: Benchmarking Reward Models for Long-Term Memory Management"
+      },
+      {
+        "actionability": "For Exp5300, consider a tiny CPU smooth-relaxation baseline or one-flip local-minimum diagnostic beside p-bit/CDCL guidance; keep SAT/CDCL fallback authoritative and do not infer any hardware speedup from the paper.",
+        "arxiv_id_or_repo": "2606.30333",
+        "carnot_hook": "The paper constructs a smooth relaxation with a one-to-one correspondence between its local minima and one-flip local minima of generalized Ising instances, covering spin-glass, MAX-CUT, number partitioning, and maximum independent set benchmarks.",
+        "category": "ising_ml_solver_baseline",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "source_family": "arxiv",
+        "source_url": "https://arxiv.org/abs/2606.30333",
+        "title": "Local-Minima-Preserving Continuous Relaxation of Ising Problems"
+      }
+    ]
+  },
+  "duration_s": 0.0,
+  "experiment_id": "experiment_5296_sota_source_delta_v484",
+  "field_principles": {
+    "actionable_deltas": "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh.",
+    "honest_verdict": "Must start with complete: and distinguish new actionable findings from an honest no-op refresh.",
+    "inference_substrate": "literature_ingestion_network_sources because Exp5296 reads network literature/source metadata and makes no experiment outcome claim.",
+    "new_references_added": "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false.",
+    "references_md_updated": "True only when a dated V484 execution refresh subsection was appended to research-references.md.",
+    "retired_scope_reopened": "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope.",
+    "semantic_scholar_status": "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims.",
+    "sources_checked": "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+  },
+  "honest_verdict": {
+    "principle": "Must start with complete: and distinguish new actionable findings from an honest no-op refresh.",
+    "value": "complete: 4 new actionable findings appended; executable .484 plan unchanged."
+  },
+  "inference_substrate": {
+    "principle": "literature_ingestion_network_sources because Exp5296 reads network literature/source metadata and makes no experiment outcome claim.",
+    "value": "literature_ingestion_network_sources"
+  },
+  "milestone": "2026.07.484",
+  "new_references_added": {
+    "principle": "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false.",
+    "value": 4
+  },
+  "no_deep_research_used": true,
+  "plan_change_required": false,
+  "references_md_updated": {
+    "principle": "True only when a dated V484 execution refresh subsection was appended to research-references.md.",
+    "value": true
+  },
+  "references_section_heading": "### V484 Execution Refresh - 2026-07-06",
+  "research_conductor_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "retired_scope_reopened": {
+    "principle": "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope.",
+    "value": false
+  },
+  "search_window": {
+    "comparison_anchor": "research-references.md V484 Research Update - 2026-07-06",
+    "run_date": "2026-07-06",
+    "years": "2025-2026"
+  },
+  "semantic_scholar_status": {
+    "principle": "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims.",
+    "value": {
+      "ARM-EBM": {
+        "arxiv_id": "2512.15605",
+        "checked_at": "2026-07-06T06:29:30Z",
+        "citationCount": 8,
+        "citation_samples": [
+          {
+            "external_id": "arXiv:2607.02154",
+            "title": "Path-Measure Dynamics of Attention-Driven World Models",
+            "year": 2026
+          },
+          {
+            "external_id": "arXiv:2605.18871",
+            "title": "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning",
+            "year": 2026
+          },
+          {
+            "external_id": "DOI:10.18653/v1/2026.acl-long.2131",
+            "title": "Reinforcement Learning for Diffusion LLMs via Energy-Based Gibbs Alignment",
+            "year": 2026
+          }
+        ],
+        "influentialCitationCount": 2,
+        "query": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.48550/arXiv.2512.15605",
+        "raw_error": null,
+        "status": "ok",
+        "title": "Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction"
+      },
+      "EBT": {
+        "arxiv_id": "2507.02092",
+        "checked_at": "2026-07-06T06:29:30Z",
+        "citationCount": 26,
+        "citation_samples": [
+          {
+            "external_id": "arXiv:2606.18206",
+            "title": "Fixed-Point Reasoners: Stable and Adaptive Deep Looped Transformers",
+            "year": 2026
+          },
+          {
+            "external_id": "arXiv:2605.11011",
+            "title": "LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models",
+            "year": 2026
+          },
+          {
+            "external_id": "DOI:10.1109/ISPASS69572.2026.00062",
+            "title": "Towards System-2 AI: Workloads and Characterizations of Energy-Based Models",
+            "year": 2026
+          }
+        ],
+        "influentialCitationCount": 2,
+        "query": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.48550/arXiv.2507.02092",
+        "raw_error": null,
+        "status": "ok",
+        "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
+      }
+    }
+  },
+  "sources_checked": {
+    "principle": "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result.",
+    "value": {
+      "arxiv": {
+        "already_indexed_or_duplicate": [
+          "2507.02092 Energy-Based Transformers",
+          "2512.15605 ARM-EBM",
+          "2507.05257 MemoryAgentBench",
+          "2503.24191 structured-output control-plane attacks",
+          "2603.20801 ConsFormer-LNS",
+          "2603.18436 AS2",
+          "2607.02262 CheckRLM",
+          "2606.24124 VeryTrace",
+          "2607.00170 Scaling Up Thermodynamic AI Models",
+          "2607.00158 neuron-level medical hallucination evidence"
+        ],
+        "new_actionable_ids": [
+          "2605.12493",
+          "2601.11969",
+          "2606.30333"
+        ],
+        "not_promoted": [
+          "2607.00286 signed-coupling oscillatory neural network was paper-only hardware context and did not change a V484 task.",
+          "2607.02052 BOUND requires model editing/LoRA scope outside this refresh.",
+          "2606.17449 MODE-RAG overlaps existing VFE/hallucination watch without a local Carnot implementation hook."
+        ],
+        "queries": [
+          "EBMs for verification/reasoning",
+          "neural constraint satisfaction and CSP/SAT",
+          "Ising/ML hardware sampling",
+          "hallucination mitigation and internal/logit signals",
+          "KANs and certificates",
+          "energy-guided decoding",
+          "continual/online learning for constraints"
+        ],
+        "status": "ok"
+      },
+      "extropic": {
+        "queries": [
+          "extropic.ai/writing",
+          "thermodynamic-computing-from-zero-to-one",
+          "inside-x0-and-xtr-0",
+          "tsu-101-an-entirely-new-type-of-computing-hardware"
+        ],
+        "result": "No newer first-party writing beyond the already indexed TSU/XTR-0/thrml material was found; Extropic remains architecture context only with no Carnot execution or speedup claim.",
+        "status": "ok"
+      },
+      "github": {
+        "new_actionable_ids": [
+          "xiaowu0162/LongMemEval-V2",
+          "LCM-Lab/MemRewardBench"
+        ],
+        "queries": [
+          "GitHub new repositories after 2026-07-01 for Energy-Based Transformers",
+          "GitHub repository search for LongMemEval-V2 and AgentRunbook",
+          "GitHub repository search for MemoryRewardBench",
+          "GitHub repository search for llguidance/xgrammar/GGUF",
+          "GitHub repository search for KAN constraint verification"
+        ],
+        "result": "No new EBT runtime repository replaced Carnot code paths. The LongMemEval-V2 and MemoryRewardBench repositories are useful implementation references for the memory stress and policy-scoring tasks.",
+        "status": "ok"
+      },
+      "huggingface_papers": {
+        "new_actionable_ids": [
+          "2601.11969",
+          "2605.12493"
+        ],
+        "queries": [
+          "HuggingFace Papers memory/agent daily and monthly listings",
+          "HuggingFace Papers EBT 2507.02092 related artifacts",
+          "HuggingFace Papers ARM-EBM 2512.15605 related pages",
+          "HuggingFace Papers MemoryRewardBench and LongMemEval-V2"
+        ],
+        "result": "Hugging Face surfaced MemoryRewardBench and LongMemEval-V2 as concrete memory evaluation references. EBT spectral-control was already indexed in the V483 execution refresh.",
+        "status": "ok"
+      },
+      "local_v484_comparison": {
+        "queries": [
+          "research-references.md V484 Research Update - 2026-07-06",
+          "repo-wide duplicate search for candidate titles and IDs",
+          "openspec/change-proposals/research-roadmap-vNEXT.md V484 plan",
+          "ops/exclusion_manifest.yaml retired scopes"
+        ],
+        "result": "Four source-verified deltas were absent from the V484 planning block and nearby reference history. They sharpen planned V484 implementation notes without requiring roadmap or conductor edits.",
+        "status": "ok"
+      },
+      "logical_intelligence": {
+        "queries": [
+          "logicalintelligence.com blog index",
+          "Aleph leading benchmarks and Aleph Prover posts",
+          "automatic formal verification for code generation",
+          "Kona and EBRM reasoning posts"
+        ],
+        "result": "Logical Intelligence posts continue to support verifier-first and formal-methods framing, but public pages still expose no local SDK, Kona internals, or reproducible baseline that changes the V484 plan.",
+        "status": "ok"
+      },
+      "openreview": {
+        "queries": [
+          "Energy-Based Transformers ICLR 2026 OpenReview",
+          "Certified correctness in neural constraint reasoning",
+          "SEM-CTRL semantically controlled decoding",
+          "structured constrained decoding hallucination OpenReview",
+          "neuro-symbolic constraint and formal verification OpenReview"
+        ],
+        "result": "OpenReview reinforced existing EBT, symbolic-integration, SEM-CTRL, and hallucination-watch context. No OpenReview-only page required changing the V484 executable plan.",
+        "status": "ok"
+      },
+      "semantic_scholar": {
+        "new_actionable_ids": [
+          "DOI:10.1109/ISPASS69572.2026.00062"
+        ],
+        "queries": [
+          "DOI:10.48550/arXiv.2507.02092 metadata and citations",
+          "DOI:10.48550/arXiv.2512.15605 metadata and citations"
+        ],
+        "result": "Direct Graph API lookups returned live EBT and ARM-EBM metadata. Most citing papers were already indexed; the ISPASS EBM workload characterization was not in the V484 planning block or nearby reference history.",
+        "status": "ok"
+      }
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-5296",
+    "SCENARIO-REPORT-5296-APPEND-DELTAS",
+    "SCENARIO-REPORT-5296-NOOP"
+  ],
+  "tests_run": [
+    "tests/python/test_experiment_5296_sota_source_delta_v484.py"
+  ]
+}
