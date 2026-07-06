@@ -25882,6 +25882,112 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5323: Native GGUF Backend Flag Bisect V486
+
+The repository SHALL provide Exp 5323 at
+`python/carnot/experiment_5323_native_gguf_backend_flag_bisect_v486.py` and
+write `results/experiment_5323_native_gguf_backend_flag_bisect_v486.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL bisect
+native llama.cpp GGUF binaries, generation modes, and command flags only until
+at least one mandated SOTA GGUF model has a usable bounded generation receipt,
+or until the next blocking root cause is precise. It SHALL NOT claim model
+quality, verifier quality, solver quality, benchmark improvement, memory
+usefulness, or answer accuracy.
+
+The Step 0 preconditions SHALL record GPU visibility, raw `nvidia-smi`, NVIDIA
+driver/CUDA facts when available, free VRAM, free disk, native llama.cpp binary
+paths and versions for `llama-cli`, `llama-completion`, and `llama-server` when
+present, dynamic-library CUDA evidence, and whether the three mandated SOTA
+GGUF files are already cached. If a compute-bound precondition is absent, the
+runner SHALL write a blocked artifact rather than fake a runtime receipt. The
+mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+For each attempted mandated model, the runner SHALL use a concrete `.gguf`
+`model_path` resolved by llama.cpp-compatible cache helpers and SHALL NOT use
+`AutoTokenizer.from_pretrained` or any transformers tokenizer on a GGUF
+repository. Each attempted backend command SHALL remove the Exp 5309
+`--no-conversation` command form, SHALL prefer single-turn CLI termination via
+`-st`/`--single-turn` where that mode is used, and SHALL test context, batch,
+and ubatch settings large enough to avoid the Exp 5309
+`GGML_ASSERT(n_tokens_all <= cparams.n_batch)` failure. The runner SHALL compare
+available native paths such as `llama-cli`, `llama-completion`, and
+`llama-server` completion API where present, and SHALL record unattempted paths
+with a reason when an earlier bounded receipt stops the bisect.
+
+Each attempted runtime row SHALL record backend kind, command, model path,
+context, batch, ubatch, GPU layers, tensor split if used, prompt, `n_predict`,
+timeout, stdout/stderr tails, return code, load timing, first-token timing,
+8-token completion status, GPU memory before/during/after, GPU memory delta,
+backend offload evidence, and any timeout or crash class.
+`sota_backend_candidate_ready` and `runtime_unblocked_min_one_mandated` SHALL be
+bare booleans and SHALL be true only when at least one mandated model completes
+load, first token, and bounded 8-token generation with authenticated GPU
+offload. Otherwise both SHALL be false and `timeout_or_crash_root_cause.value`
+SHALL name the next blocking root cause.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `backend_matrix`, `per_model_runtime_matrix`,
+`best_backend_command`, `timeout_or_crash_root_cause`, and `tests_run`, plus
+bare `sota_backend_candidate_ready`, bare
+`runtime_unblocked_min_one_mandated`, and bare `no_quality_claim=true`.
+`inference_substrate.value` SHALL be
+`local_native_llama_cpp_gguf_backend_bisect`. `honest_verdict.value` SHALL
+start with `complete:` when a bounded backend candidate exists, or `blocked_`
+when no attempted mandated model completes the bounded path.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5323 native GGUF backend flag bisect."
+- `milestone`: principle "Milestone accountability for the V486 native backend candidate decision."
+- `status`: principle "Machine-readable terminal state for downstream runtime gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether a native bounded generation backend candidate exists."
+- `inference_substrate`: principle "Declares local_native_llama_cpp_gguf_backend_bisect so the artifact is read as a native GGUF runtime bisect, not a quality or verifier claim."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF repository IDs and concrete local GGUF cache status without AutoTokenizer fallback."
+- `preconditions_checked`: principle "Records GPU visibility, nvidia-smi, CUDA and driver facts, free VRAM, free disk, native binary paths, binary versions, dynamic-library evidence, and model cache status before runtime interpretation."
+- `backend_matrix`: principle "Compares available native llama.cpp paths and generation modes, including attempted and skipped variants with exact flag choices."
+- `per_model_runtime_matrix`: principle "Records each attempted mandated model's command, backend, model path, context, batch, ubatch, offload flags, prompt, n_predict, timeout, GPU memory delta, offload evidence, first-token time, and 8-token completion status."
+- `best_backend_command`: principle "Records the exact reusable command that completed load, first token, and bounded 8-token generation with authenticated GPU offload, or null with a blocker reason."
+- `timeout_or_crash_root_cause`: principle "Names the next concrete runtime blocker when no mandated model has a usable bounded generation receipt."
+- `tests_run`: principle "Commands run to validate the bisect module, artifact schema, new-code coverage, and focused runtime checks."
+
+### SCENARIO-VERIFY-5323: Native Backend Bisect Opens Or Blocks Runtime Candidate
+
+Given the three mandated SOTA GGUF model IDs and locally available native
+llama.cpp binaries, when Exp 5323 runs, then it resolves local `.gguf` paths
+without using `AutoTokenizer`, records Step 0 GPU, CUDA, disk, VRAM, binary,
+version, and cache preconditions, compares native `llama-cli`,
+`llama-completion`, and `llama-server` paths where present, and attempts
+bounded generation commands whose flags remove `--no-conversation`, use
+single-turn termination for CLI-style generation, and set batch/ubatch values
+that avoid the Exp 5309 batch/context assertion.
+
+If at least one mandated model completes load, emits a first token, completes
+bounded 8-token generation, and has authenticated GPU offload from backend logs
+or GPU memory delta, then the artifact sets `status.value=complete`,
+`honest_verdict.value` to a `complete:` prefix,
+`sota_backend_candidate_ready=true`,
+`runtime_unblocked_min_one_mandated=true`, records the successful command under
+`best_backend_command.value`, and keeps `no_quality_claim=true`.
+
+If no native path can complete a bounded offloaded receipt, or if GPU,
+CUDA-linked native binaries, local GGUF cache, or compute capacity is absent,
+then the same runner writes a terminal `blocked_` artifact, records every
+attempted timeout/crash class and skipped native path, sets both bare runtime
+booleans to false, records the next blocker under
+`timeout_or_crash_root_cause.value`, keeps
+`inference_substrate.value=local_native_llama_cpp_gguf_backend_bisect`, keeps
+`no_quality_claim=true`, and does not modify `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5323)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5323 | Planned (`python/carnot/experiment_5323_native_gguf_backend_flag_bisect_v486.py`, `results/experiment_5323_native_gguf_backend_flag_bisect_v486.json`) | Planned (`tests/python/test_experiment_5323_native_gguf_backend_flag_bisect_v486.py`) |
+
 ### REQ-VERIFY-5309: SOTA GGUF Runtime Timeout Root-Cause Matrix V485
 
 The repository SHALL provide Exp 5309 at
