@@ -10410,3 +10410,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 14:54 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
 | 2026-07-06 14:56 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
 | 2026-07-06 15:14 UTC | Exp 5312: TrustMem-style memory transition verifie | OK | 89 passed, 1 warning in 9.26s |
+| 2026-07-06 15:28 UTC | Exp 5313: Gated memory transition policy rollout,  | OK | 92 passed, 1 warning in 8.97s |
