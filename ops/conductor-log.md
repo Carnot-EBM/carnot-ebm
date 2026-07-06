@@ -10407,3 +10407,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 14:33 UTC | Exp 5309: SOTA GGUF runtime timeout root-cause mat | OK | 90 passed, 1 warning in 17.08s |
 | 2026-07-06 14:46 UTC | Exp 5310: Deterministic paraphrase-consistency ver | OK | 89 passed, 1 warning in 10.55s |
 | 2026-07-06 14:52 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
+| 2026-07-06 14:54 UTC | Exp 5311: Gated SOTA paraphrase/coherence smoke, g | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-mat |
