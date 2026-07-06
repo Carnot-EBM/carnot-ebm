@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.483",
+  "generated_at": "2026-07-06T03:38:51.781130Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The authoritative timing window contains no experiment commits for milestone 2026.07.483, so there are 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments to rank. The idle GPU snapshot is therefore informational only; no compute-bound GPU-efficiency or DualGPURunner finding is supported.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "no data available this milestone for slowest-experiment or compute-bound bottleneck analysis"
+  ],
+  "improvements_suggested": [
+    "Add an explicit empty-timing-window classification before slowest-experiment, GPU-efficiency, and DualGPURunner analysis.",
+    "Keep GPU monitor output separate from bottleneck findings unless the timing block contains at least one compute-bound entry.",
+    "Validate that locked retrospective fields are present and unchanged before accepting interpretive edits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate GPU-idle bottleneck language on compute_bound_experiments_count > 0.",
+    "Emit a standard no-data section when live git-log and disk-mtime reconstruction both find no experiment commits.",
+    "Add a final artifact check that rejects missing locked fields in operational retro JSON."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective intentionally makes no claim about slowest experiments, compute-bound runtime, or dual-model scheduling because the supplied timing block contains no experiment entries. The 0% GPU utilization snapshot is correct behavior for a synthesis-only retrospective and is not counted as a defect.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false
+}
