@@ -27456,3 +27456,70 @@ Execution-time sweep after the `.484` plan checked arXiv, OpenReview, HuggingFac
 - **Semantic Scholar:** Direct API calls returned EBT arXiv:2507.02092 with citationCount=26 and influentialCitationCount=2, and ARM-EBM arXiv:2512.15605 with citationCount=8 and influentialCitationCount=2. Only the ISPASS EBM workload characterization produced a new actionable Carnot-local implementation note.
 
 <!-- V484-EXECUTION-REFRESH-2026-07-06-END -->
+
+
+### V485 Planner Refresh - 2026-07-06
+
+Planning-time sweep for the next milestone checked arXiv, OpenReview, HuggingFace Papers,
+Semantic Scholar citation trails, GitHub repositories, Extropic writing, and Logical Intelligence
+public pages. The items below are promoted into `.485` planning constraints or experiment ideas.
+
+### Promoted actionable findings
+- **TRUSTMEM: Learning Trustworthy Memory Consolidation for LLM Agents with Long-Term Memory**
+  (https://arxiv.org/abs/2606.25161): introduces a Memory Transition Verifier that scores memory
+  writes on coverage, preservation, and faithfulness before commit. Carnot hook: turn `.484`'s
+  positive adaptive memory policy into a transition-level continuous self-learning verifier that
+  catches omission, corruption, and hallucinated memory updates before they enter persistent state.
+- **Constrained Paraphrase Consistency for LLM Hallucination Detection** (https://arxiv.org/abs/2606.08158):
+  formulates hallucination detection with paraphrase-consistency and label-preservation constraints.
+  Carnot hook: add a deterministic paraphrase-invariance fixture for claim/coherence verification
+  before spending SOTA GGUF runtime on headline local-model quality.
+- **Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks (KANs)**
+  (https://arxiv.org/abs/2602.06737): uses unit-level dynamic programming and network-level knapsack
+  allocation to choose PWA abstractions under a global error budget. Carnot hook: follow `.484`'s
+  dynamic-abstraction diagnostic with an optimal piece-budget experiment that measures certificate
+  tightness, false-property rejection, solve time, and piece count.
+- **Local-Minima-Preserving Continuous Relaxation of Ising Problems** (https://arxiv.org/abs/2606.30333):
+  gives a smooth relaxation whose local minima correspond to one-flip local minima of generalized
+  Ising instances. Carnot hook: compare this CPU relaxation against the `.484` p-bit/CDCL gate on
+  tiny factor-graph fixtures while keeping SAT/CDCL authoritative and making no hardware speedup claim.
+- **LLM-Guided Quantified SMT Solving over Uninterpreted Functions** (https://arxiv.org/abs/2601.04675)
+  and **Can LLM Aid in Solving Constraints with Inductive Definitions?** (https://arxiv.org/abs/2603.03668):
+  both use LLM-generated instantiations, conjectures, or lemmas only under solver validation. Carnot
+  hook: future solver-guidance work should log proposal validity, usefulness, overwrite clauses, and
+  fallback-to-classical completeness instead of treating LLM hints as trusted proof steps.
+- **Energy-Efficient p-Bit-Based Fully-Connected Quantum-Inspired Simulated Annealer with Dual BRAM
+  Architecture** (https://arxiv.org/abs/2602.16143): demonstrates an FPGA p-bit architecture for large
+  fully-connected Ising models. Carnot hook: use as hardware-boundary context for p-bit tasks, but do
+  not claim relevance to local KV260/PolarFire/GateMate performance until an authenticated board run
+  exists.
+- **Spilled Energy in Large Language Models** (https://openreview.net/forum?id=EXFKk4Y3yc),
+  **Semantic Energy: Detecting LLM Hallucination Beyond Entropy** (https://openreview.net/forum?id=E5mL07Fbq8),
+  and **Verifying Chain-of-Thought Reasoning via Its Computational Graph** (https://openreview.net/forum?id=CxiNICq0Rr):
+  reinforce internal/logit/circuit verifier directions. Carnot hook: keep them gated behind a local
+  runtime that exposes logits or hidden-state traces; do not reopen the retired Phase D external
+  generated-text scorer.
+
+### Secondary-source status
+- **Extropic:** `inside-x0-and-xtr-0`, `tsu-101`, and `thermodynamic-computing-from-zero-to-one`
+  describe XTR-0/TSU programmable sampling and THRML simulation, but no Carnot-accessible TSU hardware
+  is available. Use only for architecture context and simulator-facing questions.
+- **Logical Intelligence:** public Kona/Aleph pages continue to support the verifier-first direction:
+  score partial/complete traces, then certify with deterministic external checkers when possible.
+  They are not reproducible baselines for `.485`.
+- **GitHub watch:** official and community EBT/energy-transformer repositories are useful implementation
+  references, but none displaces Carnot's current local solver, memory, KAN, or runtime substrates.
+- **Semantic Scholar:** citation-trail checks for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605
+  were attempted during planning; rate limits prevented a trustworthy new citation-count delta, so
+  no trend change is claimed here.
+
+### Planning impact
+- `.485` should prioritize transition-level continuous self-learning over another broad memory-policy
+  quality rerun.
+- SOTA GGUF quality experiments should remain gated behind a fresh runtime-unblocked receipt; the
+  changed native CLI substrate timed out in `.484`.
+- Solver and hardware tasks should add smooth-relaxation, p-bit, and FPGA-context telemetry without
+  weakening symbolic fallback or making board-speedup claims.
+- KAN certificate work should move from dynamic spot-check success toward optimal abstraction budgets.
+
+<!-- V485-PLANNER-REFRESH-2026-07-06-END -->
