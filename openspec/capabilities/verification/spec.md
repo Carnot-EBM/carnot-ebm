@@ -25882,6 +25882,94 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5284: SOTA Runtime Offload Receipt Repair V483
+
+The repository SHALL provide Exp 5284 at
+`python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py`
+and write
+`results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json`
+without modifying `scripts/research_conductor.py`. The runner is a strict
+local SOTA GGUF generation/offload receipt gate only: it SHALL decide whether
+downstream Exp 5286 and Exp 5288 may rely on local SOTA offload receipts, and
+it SHALL NOT claim verifier quality, solver quality, memory usefulness,
+benchmark improvement, or any model-quality result.
+
+The Step 0 preconditions SHALL run before live generation: GPU visibility,
+NVIDIA driver/CUDA or ROCm facts, torch CUDA visibility when importable,
+llama.cpp or llama-cpp-python version and origin, llama.cpp GPU-offload support
+when exposed by the Python binding, model cache paths, free disk, and local
+resolvability for at least one mandated SOTA GGUF model without using
+`AutoTokenizer` or any transformers tokenizer on a GGUF repository. The
+mandated `MODEL_SPECS` are exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF` as `flagship_moe`,
+`unsloth/gemma-4-31B-it-GGUF` as `flagship_dense`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` as `middle_moe`. Legacy tiny models MAY be
+recorded only as `smoke_test_not_headline` CPU smoke receipts and SHALL NOT
+open the SOTA offload gate.
+
+For every locally available mandated model, the runner SHALL load the concrete
+local `.gguf` path through llama.cpp-backed APIs only, run a tiny deterministic
+generation or scoring prompt, and record the prompt checksum, output checksum,
+wall-clock duration, model file, quantization, context length,
+`n_gpu_layers`/offload settings, and GPU memory receipts. A model SHALL count
+as SOTA-offload ready only when the live llama.cpp generation/scoring path
+completes and the receipt contains GPU offload evidence from support metadata
+or in-process GPU memory observations. If the live generation path cannot run
+or offload evidence is absent, the runner SHALL NOT fall back to a tiny model
+as headline evidence; it SHALL write an honest blocked artifact with exact
+`blocked_preconditions` and `sota_offload_ready=false`.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `preconditions_checked`,
+`MODEL_SPECS`, `sota_offload_ready`, `sota_offload_ready_principle`,
+`duration_receipts`, `gpu_offload_receipts`, `generation_receipts`, `smoke_tests`,
+`no_quality_claim`, and `tests_run`. `sota_offload_ready` SHALL be a bare bool
+gate for Exp 5286 and Exp 5288. `honest_verdict.value` SHALL start with
+`complete:` or `blocked_` and state whether SOTA offload receipts are ready.
+`inference_substrate.value` SHALL be
+`live_llm_inference_local_gguf_sota` only when a mandated model actually
+generated or scored through the local GGUF runtime; otherwise it SHALL be
+`blocked_preconditions_with_no_quality_claim`. `no_quality_claim.value` SHALL
+be true.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5284 verdict; starts with complete: or blocked_ and states whether SOTA offload receipts are ready for exp5286/exp5288."
+- `inference_substrate`: principle "Declares live local SOTA GGUF inference only after a mandated model actually generated or scored; otherwise records blocked preconditions with no quality claim."
+- `preconditions_checked`: principle "Records GPU visibility, driver/CUDA or ROCm facts, llama.cpp version/origin/offload support, cache paths, disk, and local GGUF resolvability before live generation."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF model IDs, roles, quantization, local file receipts, and runtime/offload status."
+- `sota_offload_ready`: principle "Bare gate for exp5286 and exp5288; true only when at least one mandated SOTA GGUF completes live generation or scoring with GPU-offload evidence."
+- `sota_offload_ready_principle`: principle "Explains the exact ready model receipt or blocked precondition used by downstream gates."
+- `duration_receipts`: principle "Per-model wall-clock receipts plus prompt/output checksums for live generation or scoring, preventing unsupported fast-path claims."
+- `gpu_offload_receipts`: principle "Driver/device/runtime/offload settings and GPU memory receipts proving which offload path was visible or attempted."
+- `generation_receipts`: principle "Raw per-model live generation or scoring receipts with prompt/output hashes, command, offload config, and GPU-memory evidence."
+- `smoke_tests`: principle "Tiny legacy CPU smoke tests, if any, are labeled smoke_test_not_headline and cannot open the SOTA offload gate."
+- `no_quality_claim`: principle "Must be true; Exp 5284 is a runtime/offload receipt gate and makes no verifier, solver, memory, benchmark, or model-quality claim."
+- `tests_run`: principle "Commands run to validate the v483 runtime-offload gate, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5284: Live Offload Receipts Or Honest Blocked Preconditions
+
+Given local GPU and llama.cpp environment receipts and the three mandated SOTA
+GGUF model IDs, when Exp 5284 runs, then it resolves local `.gguf` paths without
+using `AutoTokenizer`, runs a tiny deterministic llama.cpp-backed generation or
+scoring prompt for each available mandated model, records prompt/output
+checksums, duration, model-file receipts, context/offload settings, GPU memory
+receipts, writes the required artifact, and sets `sota_offload_ready=true` only
+when at least one mandated model completes the live runtime path with offload
+evidence.
+
+If GPU visibility, llama.cpp import, local GGUF resolution, live generation, or
+GPU-offload evidence is unavailable, then the same runner writes a
+`blocked_` artifact with exact precondition failures, keeps
+`sota_offload_ready=false`, preserves any `smoke_test_not_headline` CPU smoke
+receipts as non-headline evidence, and sets `no_quality_claim.value=true`.
+
+## Implementation Status (REQ-VERIFY-5284)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5284 | Planned (`python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py`, `results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json`) | Planned (`tests/python/test_experiment_5284_sota_runtime_offload_receipt_repair_v483.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
