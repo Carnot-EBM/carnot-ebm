@@ -26263,6 +26263,87 @@ verify any final SAT model against the original CNF before setting
 |---|---|---|
 | REQ-VERIFY-5292 | Planned (`python/carnot/experiment_5292_pbit_cdcl_factor_guidance_v483.py`, `results/experiment_5292_pbit_cdcl_factor_guidance_v483.json`) | Planned (`tests/python/test_experiment_5292_pbit_cdcl_factor_guidance_v483.py`) |
 
+### REQ-VERIFY-5299: Constraint LNS Solver Repair Fixture V484
+
+The repository SHALL provide Exp 5299 at
+`python/carnot/experiment_5299_constraint_lns_solver_repair_fixture_v484.py`
+and write
+`results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json`
+without invoking an LLM and without modifying `scripts/research_conductor.py`.
+The runner SHALL reuse the Exp 5278 factor fixture and Exp 5292 CDCL helper
+path rather than inventing an unanchored solver benchmark.
+
+The fixture SHALL implement a small deterministic constraint-LNS loop with
+explicit destroy operators, explicit repair operators, declarative constraint-group
+metadata, symbolic solver validation, and safety-negative
+structured-output controls. The instance families SHALL include at least
+`aligned_repair`, `misleading_repair`, and `neutral_noop_repair`; the fixture
+SHALL also include malformed structured repair and format-valid-but-semantic-
+wrong controls so unsafe repair accepts are measured rather than assumed away.
+The artifact SHALL keep declarative constraint-group metadata attached to the
+same CNF clauses checked by the symbolic solver.
+
+For every instance, the runner SHALL record destroyed variables, destroyed
+clauses, the repair candidate, whether the solver accepted or rejected the
+candidate, fallback and overwrite counts, and CDCL conflicts and decisions
+when the local solver exposes them. The symbolic CDCL solver SHALL remain
+authoritative for correctness: a repair candidate accepted by schema checks
+SHALL still be rejected unless solver assumptions admit a model satisfying the
+original CNF, and any rejected or malformed repair SHALL fall back to an
+authoritative solver-only result before reporting final correctness.
+
+The benchmark SHALL compare the deterministic LNS path against at least one
+classical baseline, including the solver-only fallback baseline over the same
+instances. Bad or misleading repair candidates SHALL NOT force an incorrect
+SAT/UNSAT label, SHALL NOT be counted as accepted repairs, and SHALL contribute
+to unsafe false-accept telemetry if any negative control slips through.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `constraint_lns_fixture_ready`,
+`constraint_lns_fixture_ready_principle`, `instance_class_counts`,
+`destroy_repair_telemetry`, `classical_baseline_results`,
+`solver_correctness_preserved`, `unsafe_false_accepts`, and `tests_run`.
+`constraint_lns_fixture_ready` SHALL be a bare bool gate for Exp 5300.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_` and state
+whether the LNS fixture is usable. `inference_substrate.value` SHALL be
+`offline_deterministic_certificate_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5299 verdict; starts with complete: or blocked_ and states whether the constraint-LNS fixture is usable."
+- `inference_substrate`: principle "Must be offline_deterministic_certificate_no_llm because Exp 5299 uses CPU-local deterministic fixtures, a local CDCL solver, and no LLM inference."
+- `constraint_lns_fixture_ready`: principle "Bare gate for exp5300; true only when aligned, misleading, neutral, malformed, and semantic-wrong repair classes are measured, solver correctness is preserved, classical baselines are present, and unsafe false accepts are zero."
+- `constraint_lns_fixture_ready_principle`: principle "Explains why the deterministic constraint-LNS fixture can or cannot gate downstream p-bit/CDCL guidance experiments."
+- `instance_class_counts`: principle "Counts aligned repair, misleading repair, neutral no-op repair, malformed control, and semantic-wrong control instances so downstream runs cannot silently drop a class."
+- `destroy_repair_telemetry`: principle "Records destroy operators, destroyed variables and clauses, repair operators, repair candidates, solver accept/reject decisions, fallback/overwrite counts, and CDCL counters."
+- `classical_baseline_results`: principle "Reports solver-only classical baseline results over the same instances so LNS repair behavior is compared against an authoritative non-guided path."
+- `solver_correctness_preserved`: principle "True only when every final LNS result matches the solver-only baseline label and every final SAT model satisfies the original CNF."
+- `unsafe_false_accepts`: principle "Counts malformed, semantic-wrong, or misleading repair candidates accepted as safe repairs; must be zero for the fixture-ready gate."
+- `tests_run`: principle "Commands run to validate LNS repair acceptance, rejection, fallback correctness, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5299: Constraint LNS Repairs Stay Solver-Authoritative
+
+Given the Exp 5278 tiny factor boundary and the Exp 5292 CDCL helper, when Exp
+5299 runs, then it constructs deterministic LNS instances for aligned repair,
+misleading repair, neutral/no-op repair, malformed structured repair, and
+format-valid semantic-wrong repair; records declarative constraint groups;
+runs destroy and repair operators; validates repair candidates with the local
+symbolic solver; writes the required artifact; and sets
+`constraint_lns_fixture_ready=true` only when final solver correctness is
+preserved and `unsafe_false_accepts.value=0`.
+
+If a repair candidate is malformed, violates the original CNF, points at the
+known misleading false assignment, or omits required structured-output fields,
+then the runner SHALL reject that candidate, record the rejection reason,
+invoke the solver-only fallback for the final assignment, preserve the
+solver-only SAT/UNSAT label, and keep the unsafe false-accept count at zero.
+
+## Implementation Status (REQ-VERIFY-5299)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5299 | Planned (`python/carnot/experiment_5299_constraint_lns_solver_repair_fixture_v484.py`, `results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json`) | Planned (`tests/python/test_experiment_5299_constraint_lns_solver_repair_fixture_v484.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at

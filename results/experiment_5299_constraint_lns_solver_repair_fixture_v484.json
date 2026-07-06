@@ -1,0 +1,1575 @@
+{
+  "claim_limits": [
+    "offline deterministic LNS fixture only",
+    "Minisat22 CDCL remains authoritative for candidate and final correctness",
+    "malformed and semantic-wrong structured repair controls are rejected",
+    "classical baseline is solver-only fallback over the same CNF",
+    "no LLM inference, hardware execution, or hardware speedup claim"
+  ],
+  "classical_baseline_results": {
+    "principle": "Reports solver-only classical baseline results over the same instances so LNS repair behavior is compared against an authoritative non-guided path.",
+    "value": {
+      "all_baseline_models_valid": true,
+      "baseline_name": "solver_only_fallback",
+      "instance_count": 5,
+      "lns_matches_baseline_count": 5,
+      "per_instance": {
+        "aligned_repair": {
+          "model_valid": true,
+          "solver_counters": {
+            "conflicts": 3,
+            "decisions": 13,
+            "propagations": 25,
+            "restarts": 1
+          },
+          "status": "sat"
+        },
+        "malformed_control": {
+          "model_valid": true,
+          "solver_counters": {
+            "conflicts": 3,
+            "decisions": 13,
+            "propagations": 25,
+            "restarts": 1
+          },
+          "status": "sat"
+        },
+        "misleading_repair": {
+          "model_valid": true,
+          "solver_counters": {
+            "conflicts": 3,
+            "decisions": 13,
+            "propagations": 25,
+            "restarts": 1
+          },
+          "status": "sat"
+        },
+        "neutral_noop_repair": {
+          "model_valid": true,
+          "solver_counters": {
+            "conflicts": 3,
+            "decisions": 13,
+            "propagations": 25,
+            "restarts": 1
+          },
+          "status": "sat"
+        },
+        "semantic_wrong_control": {
+          "model_valid": true,
+          "solver_counters": {
+            "conflicts": 3,
+            "decisions": 13,
+            "propagations": 25,
+            "restarts": 1
+          },
+          "status": "sat"
+        }
+      }
+    }
+  },
+  "constraint_group_metadata": [
+    {
+      "authority": "Minisat22 CDCL over original CNF",
+      "clause_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "group_id": "a_one_hot",
+      "group_type": "one_hot_domain",
+      "variables": [
+        "a_0",
+        "a_1",
+        "a_2",
+        "a_3"
+      ]
+    },
+    {
+      "authority": "Minisat22 CDCL over original CNF",
+      "clause_indices": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "group_id": "b_one_hot",
+      "group_type": "one_hot_domain",
+      "variables": [
+        "b_0",
+        "b_1",
+        "b_2",
+        "b_3"
+      ]
+    },
+    {
+      "authority": "Minisat22 CDCL over original CNF",
+      "clause_indices": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "group_id": "sum_and_order_relation",
+      "group_type": "decoded_sum_and_order",
+      "variables": [
+        "a_0",
+        "a_1",
+        "a_2",
+        "a_3",
+        "b_0",
+        "b_1",
+        "b_2",
+        "b_3"
+      ]
+    }
+  ],
+  "constraint_lns_fixture_ready": true,
+  "constraint_lns_fixture_ready_principle": "ready: deterministic destroy/repair telemetry covers aligned, misleading, neutral, malformed, and semantic-wrong classes; solver-only baseline matches final labels; unsafe_false_accepts=0 for exp5300.",
+  "destroy_repair_telemetry": {
+    "principle": "Records destroy operators, destroyed variables and clauses, repair operators, repair candidates, solver accept/reject decisions, fallback/overwrite counts, and CDCL counters.",
+    "value": [
+      {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 0,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "aligned_solver_assignment",
+          "expected_behavior": "solver_accepts",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "repair_operator": "structured_exact_repair",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "solver_decision": "accepted"
+      },
+      {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 2,
+        "repair_candidate": {
+          "candidate_id": "misleading_false_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 3,
+              "b": 2
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_false_basin_repair",
+        "solver_counters": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1
+        },
+        "solver_decision": "rejected"
+      },
+      {
+        "destroy_operator": "destroy_none_noop",
+        "destroyed_clauses": [],
+        "destroyed_variables": [],
+        "fallback_count": 0,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "neutral_preserve_assignment",
+          "expected_behavior": "solver_accepts_noop",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "repair_operator": "structured_noop_repair",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "solver_decision": "accepted"
+      },
+      {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "malformed_missing_assignments",
+          "expected_behavior": "schema_rejects_then_fallback",
+          "operator": "structured_output_schema_control",
+          "payload": {
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_output_schema_control",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 0,
+          "propagations": 0,
+          "restarts": 0
+        },
+        "solver_decision": "rejected"
+      },
+      {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 1,
+        "repair_candidate": {
+          "candidate_id": "semantic_wrong_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 1,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_semantic_negative_control",
+        "solver_counters": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1
+        },
+        "solver_decision": "rejected"
+      }
+    ]
+  },
+  "duration_s": 0.002101,
+  "experiment_id": "exp5299-constraint-lns-solver-repair-fixture-v484",
+  "field_principles": {
+    "classical_baseline_results": "Reports solver-only classical baseline results over the same instances so LNS repair behavior is compared against an authoritative non-guided path.",
+    "constraint_lns_fixture_ready": "Bare gate for exp5300; true only when aligned, misleading, neutral, malformed, and semantic-wrong repair classes are measured, solver correctness is preserved, classical baselines are present, and unsafe false accepts are zero.",
+    "constraint_lns_fixture_ready_principle": "Explains why the deterministic constraint-LNS fixture can or cannot gate downstream p-bit/CDCL guidance experiments.",
+    "destroy_repair_telemetry": "Records destroy operators, destroyed variables and clauses, repair operators, repair candidates, solver accept/reject decisions, fallback/overwrite counts, and CDCL counters.",
+    "honest_verdict": "Terminal Exp 5299 verdict; starts with complete: or blocked_ and states whether the constraint-LNS fixture is usable.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm because Exp 5299 uses CPU-local deterministic fixtures, a local CDCL solver, and no LLM inference.",
+    "instance_class_counts": "Counts aligned repair, misleading repair, neutral no-op repair, malformed control, and semantic-wrong control instances so downstream runs cannot silently drop a class.",
+    "solver_correctness_preserved": "True only when every final LNS result matches the solver-only baseline label and every final SAT model satisfies the original CNF.",
+    "tests_run": "Commands run to validate LNS repair acceptance, rejection, fallback correctness, artifact schema, new-code coverage, and repository test status.",
+    "unsafe_false_accepts": "Counts malformed, semantic-wrong, or misleading repair candidates accepted as safe repairs; must be zero for the fixture-ready gate."
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5299 verdict; starts with complete: or blocked_ and states whether the constraint-LNS fixture is usable.",
+    "value": "complete: constraint-LNS fixture usable for exp5300 solver-repair guidance"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because Exp 5299 uses CPU-local deterministic fixtures, a local CDCL solver, and no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "instance_class_counts": {
+    "principle": "Counts aligned repair, misleading repair, neutral no-op repair, malformed control, and semantic-wrong control instances so downstream runs cannot silently drop a class.",
+    "value": {
+      "aligned_repair": 1,
+      "malformed_control": 1,
+      "misleading_repair": 1,
+      "neutral_noop_repair": 1,
+      "semantic_wrong_control": 1
+    }
+  },
+  "per_instance_results": [
+    {
+      "baseline": {
+        "baseline_name": "solver_only_fallback",
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "constraint_groups": [
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "group_id": "a_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "group_id": "b_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "group_id": "sum_and_order_relation",
+          "group_type": "decoded_sum_and_order",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3",
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        }
+      ],
+      "fallback": {
+        "overwrite_count": 0,
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 0,
+          "propagations": 0,
+          "restarts": 0
+        },
+        "status": "not_run",
+        "used": false
+      },
+      "final": {
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "instance_class": "aligned_repair",
+      "instance_id": "exp5299_aligned_repair",
+      "repair": {
+        "assumption_literals": [
+          3,
+          8
+        ],
+        "candidate": {
+          "candidate_id": "aligned_solver_assignment",
+          "expected_behavior": "solver_accepts",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "candidate_format_valid": true,
+        "candidate_safety_negative": false,
+        "candidate_solver_accepted": true,
+        "primary_status": "sat",
+        "rejection_reason": "",
+        "solver_decision": "accepted",
+        "validation_errors": []
+      },
+      "solver_correctness_preserved": true,
+      "source_fixture_id": "small_pair_sum",
+      "telemetry": {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 0,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "aligned_solver_assignment",
+          "expected_behavior": "solver_accepts",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "repair_operator": "structured_exact_repair",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "solver_decision": "accepted"
+      }
+    },
+    {
+      "baseline": {
+        "baseline_name": "solver_only_fallback",
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "constraint_groups": [
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "group_id": "a_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "group_id": "b_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "group_id": "sum_and_order_relation",
+          "group_type": "decoded_sum_and_order",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3",
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        }
+      ],
+      "fallback": {
+        "overwrite_count": 2,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat",
+        "used": true
+      },
+      "final": {
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "instance_class": "misleading_repair",
+      "instance_id": "exp5299_misleading_repair",
+      "repair": {
+        "assumption_literals": [
+          4,
+          7
+        ],
+        "candidate": {
+          "candidate_id": "misleading_false_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 3,
+              "b": 2
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "candidate_format_valid": true,
+        "candidate_safety_negative": true,
+        "candidate_solver_accepted": false,
+        "primary_status": "unsat",
+        "rejection_reason": "solver_rejected_candidate_against_original_cnf",
+        "solver_decision": "rejected",
+        "validation_errors": []
+      },
+      "solver_correctness_preserved": true,
+      "source_fixture_id": "small_pair_sum",
+      "telemetry": {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 2,
+        "repair_candidate": {
+          "candidate_id": "misleading_false_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 3,
+              "b": 2
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_false_basin_repair",
+        "solver_counters": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1
+        },
+        "solver_decision": "rejected"
+      }
+    },
+    {
+      "baseline": {
+        "baseline_name": "solver_only_fallback",
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "constraint_groups": [
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "group_id": "a_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "group_id": "b_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "group_id": "sum_and_order_relation",
+          "group_type": "decoded_sum_and_order",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3",
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        }
+      ],
+      "fallback": {
+        "overwrite_count": 0,
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 0,
+          "propagations": 0,
+          "restarts": 0
+        },
+        "status": "not_run",
+        "used": false
+      },
+      "final": {
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "instance_class": "neutral_noop_repair",
+      "instance_id": "exp5299_neutral_noop_repair",
+      "repair": {
+        "assumption_literals": [
+          3,
+          8
+        ],
+        "candidate": {
+          "candidate_id": "neutral_preserve_assignment",
+          "expected_behavior": "solver_accepts_noop",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "candidate_format_valid": true,
+        "candidate_safety_negative": false,
+        "candidate_solver_accepted": true,
+        "primary_status": "sat",
+        "rejection_reason": "",
+        "solver_decision": "accepted",
+        "validation_errors": []
+      },
+      "solver_correctness_preserved": true,
+      "source_fixture_id": "small_pair_sum",
+      "telemetry": {
+        "destroy_operator": "destroy_none_noop",
+        "destroyed_clauses": [],
+        "destroyed_variables": [],
+        "fallback_count": 0,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "neutral_preserve_assignment",
+          "expected_behavior": "solver_accepts_noop",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 2,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": false
+        },
+        "repair_operator": "structured_noop_repair",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1
+        },
+        "solver_decision": "accepted"
+      }
+    },
+    {
+      "baseline": {
+        "baseline_name": "solver_only_fallback",
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "constraint_groups": [
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "group_id": "a_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "group_id": "b_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "group_id": "sum_and_order_relation",
+          "group_type": "decoded_sum_and_order",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3",
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        }
+      ],
+      "fallback": {
+        "overwrite_count": 0,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat",
+        "used": true
+      },
+      "final": {
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "instance_class": "malformed_control",
+      "instance_id": "exp5299_malformed_control",
+      "repair": {
+        "assumption_literals": [],
+        "candidate": {
+          "candidate_id": "malformed_missing_assignments",
+          "expected_behavior": "schema_rejects_then_fallback",
+          "operator": "structured_output_schema_control",
+          "payload": {
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "candidate_format_valid": false,
+        "candidate_safety_negative": true,
+        "candidate_solver_accepted": false,
+        "primary_status": "not_run",
+        "rejection_reason": "assignments must be an object",
+        "solver_decision": "rejected",
+        "validation_errors": [
+          "assignments must be an object"
+        ]
+      },
+      "solver_correctness_preserved": true,
+      "source_fixture_id": "small_pair_sum",
+      "telemetry": {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 0,
+        "repair_candidate": {
+          "candidate_id": "malformed_missing_assignments",
+          "expected_behavior": "schema_rejects_then_fallback",
+          "operator": "structured_output_schema_control",
+          "payload": {
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_output_schema_control",
+        "solver_counters": {
+          "conflicts": 0,
+          "decisions": 0,
+          "propagations": 0,
+          "restarts": 0
+        },
+        "solver_decision": "rejected"
+      }
+    },
+    {
+      "baseline": {
+        "baseline_name": "solver_only_fallback",
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "constraint_groups": [
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "group_id": "a_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "group_id": "b_one_hot",
+          "group_type": "one_hot_domain",
+          "variables": [
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        },
+        {
+          "authority": "Minisat22 CDCL over original CNF",
+          "clause_indices": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "group_id": "sum_and_order_relation",
+          "group_type": "decoded_sum_and_order",
+          "variables": [
+            "a_0",
+            "a_1",
+            "a_2",
+            "a_3",
+            "b_0",
+            "b_1",
+            "b_2",
+            "b_3"
+          ]
+        }
+      ],
+      "fallback": {
+        "overwrite_count": 1,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat",
+        "used": true
+      },
+      "final": {
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "model_valid": true,
+        "solver_counters": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1
+        },
+        "status": "sat"
+      },
+      "instance_class": "semantic_wrong_control",
+      "instance_id": "exp5299_semantic_wrong_control",
+      "repair": {
+        "assumption_literals": [
+          2,
+          8
+        ],
+        "candidate": {
+          "candidate_id": "semantic_wrong_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 1,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "candidate_format_valid": true,
+        "candidate_safety_negative": true,
+        "candidate_solver_accepted": false,
+        "primary_status": "unsat",
+        "rejection_reason": "solver_rejected_candidate_against_original_cnf",
+        "solver_decision": "rejected",
+        "validation_errors": []
+      },
+      "solver_correctness_preserved": true,
+      "source_fixture_id": "small_pair_sum",
+      "telemetry": {
+        "destroy_operator": "destroy_full_assignment_neighborhood",
+        "destroyed_clauses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "destroyed_variables": [
+          "a_0",
+          "a_1",
+          "a_2",
+          "a_3",
+          "b_0",
+          "b_1",
+          "b_2",
+          "b_3"
+        ],
+        "fallback_count": 1,
+        "overwrite_count": 1,
+        "repair_candidate": {
+          "candidate_id": "semantic_wrong_assignment",
+          "expected_behavior": "solver_rejects_then_fallback",
+          "operator": "structured_domain_assignment",
+          "payload": {
+            "assignments": {
+              "a": 1,
+              "b": 3
+            },
+            "format_version": "constraint_lns_repair_v1"
+          },
+          "safety_negative": true
+        },
+        "repair_operator": "structured_semantic_negative_control",
+        "solver_counters": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1
+        },
+        "solver_decision": "rejected"
+      }
+    }
+  ],
+  "random_seed": 5299,
+  "reproducibility_checksum": "698125a98cab4cdb8144b41c9f02db67559e5fa50db2f03384d3768977c56cef",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5299.constraint_lns_solver_repair_fixture.v484",
+  "solver_correctness_preserved": {
+    "principle": "True only when every final LNS result matches the solver-only baseline label and every final SAT model satisfies the original CNF.",
+    "value": true
+  },
+  "source_artifacts": [
+    "results/experiment_5278_constraint_factor_graph_boundary_v482.json",
+    "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5299",
+    "SCENARIO-VERIFY-5299"
+  ],
+  "tests_run": [],
+  "unsafe_false_accepts": {
+    "principle": "Counts malformed, semantic-wrong, or misleading repair candidates accepted as safe repairs; must be zero for the fixture-ready gate.",
+    "value": 0
+  }
+}
