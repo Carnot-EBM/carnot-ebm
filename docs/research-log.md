@@ -5769,3 +5769,9 @@ The critical path for milestone .250:
 - theme: operational no-data closeout for a milestone with no experiment commits in the authorized timing window
 - key result: no data available this milestone; the locked fields show 0 completed experiments, 0 wall-time minutes, and 0 compute-bound tasks, so no compute-bound duration, GPU-idle bug, or DualGPURunner miss can be reported
 - acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
+
+### Milestone 2026.07.485
+- exp_range: exp5309-exp5320
+- theme: operational retrospective for a mixed synthesis and compute-bound milestone
+- key result: the milestone completed 28 experiments in 266.2 minutes, with Exp 5309 as the listed 60-minute compute-bound slow path; the GPU state showed both RTX 3090s at 0% utilization, and no supplied block identifies a 2+ parallel-model DualGPURunner miss
+- acceptance: 4/4 operational questions answered
