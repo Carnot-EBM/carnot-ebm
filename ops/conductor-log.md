@@ -10388,3 +10388,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 06:39 UTC | PHASE 0 SOTA/source refresh -- V484 execution delt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-06 08:07 UTC | PHASE 0 runtime receipts -- changed SOTA GGUF subs | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:   """REQ-VERIF |
 | 2026-07-06 09:09 UTC | PHASE 0 runtime receipts -- changed SOTA GGUF subs | OK | 92 passed, 1 warning in 9.22s |
+| 2026-07-06 09:12 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |
