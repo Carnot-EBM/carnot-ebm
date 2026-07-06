@@ -26346,3 +26346,101 @@ artifact that states `unmeasured`, `null`, or `harmful`, keeps
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5276 | Planned (`python/carnot/experiment_5276_memory_assisted_verifier_dose_gated_v482.py`, `results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json`) | Planned (`tests/python/test_experiment_5276_memory_assisted_verifier_dose_gated_v482.py`) |
+
+### REQ-VERIFY-5290: Memory-Assisted Coherence-Dose Gated V483
+
+The repository SHALL provide Exp 5290 at
+`python/carnot/experiment_5290_memory_assisted_coherence_dose_gated_v483.py`
+and write
+`results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json`
+without invoking a live LLM and without modifying
+`scripts/research_conductor.py`. The runner SHALL execute only when
+`results/experiment_5285_knowledge_thought_coherence_fixture_v483.json`
+reports `coherence_fixture_ready=true` and
+`results/experiment_5289_memory_operation_attribution_v483.json` reports
+`memory_attribution_ready=true`. If either precondition is absent or false, the
+runner SHALL write a terminal `blocked_` artifact and SHALL NOT synthesize
+claim/coherence verifier evidence.
+
+The runner SHALL compare at least three policies over the deterministic
+knowledge-thought coherence fixture: always-full coherence verification,
+no-memory dosing, and governed-memory dosing. The always-full policy SHALL be
+the quality reference. Governed memory MAY reduce full claim/coherence checks
+only when operation-stage attribution shows a valid promoted memory row reaching
+`use/action` as an allocation feature. stale memory, shuffled scope/routing,
+missing provenance, poisoning-like influence, harmful memory, rollback cases,
+and safety-negative cases SHALL escalate to full verification or a safe
+reject/block route. Governed memory SHALL NOT inject accepted claims, selected
+answers, or coherence verdicts directly.
+
+The artifact SHALL include principle-wrapped `honest_verdict`,
+principle-wrapped `inference_substrate`, bare boolean
+`coherence_dose_positive` plus `coherence_dose_positive_principle`,
+principle-wrapped `decision_quality_delta`, principle-wrapped
+`full_verifier_calls_avoided`, principle-wrapped `unsafe_false_accepts`,
+principle-wrapped `stale_conflict_handling`, principle-wrapped
+`rollback_triggers`, principle-wrapped `attribution_stage_contributions`,
+principle-wrapped `continuous_self_learning_loop`, and a bare `tests_run` list.
+`honest_verdict.value` SHALL start with `complete:`, `null:`, `harmful_`, or
+`blocked_` and state whether memory-assisted coherence dosing helped.
+`inference_substrate.value` SHALL be `aggregation_from_upstream_artifacts` or
+`offline_deterministic_fixture_no_llm`.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5290 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether memory-assisted coherence dosing helped."
+- `inference_substrate`: principle "Declares aggregation from upstream artifacts or offline deterministic fixture replay, with no live LLM, GGUF generation, API judge, or answer injection."
+- `coherence_dose_positive`: principle "Bare positive gate; true only when governed memory preserves always-full coherence decision quality, avoids at least one full claim/coherence check beyond no-memory dosing, and keeps unsafe false accepts at zero."
+- `decision_quality_delta`: principle "Compares governed-memory coherence dosing against always-full and no-memory policies on the same deterministic fixture rows."
+- `full_verifier_calls_avoided`: principle "Counts full claim/coherence verifier calls avoided relative to always-full and the additional calls avoided beyond no-memory dosing."
+- `unsafe_false_accepts`: principle "Counts safety-negative or otherwise unsafe fixture/control cases accepted by governed-memory dosing; any positive value blocks a positive result."
+- `stale_conflict_handling`: principle "Reports stale, conflicting, shuffled, missing-provenance, and poisoning-like memory controls that escalated instead of reducing checks."
+- `rollback_triggers`: principle "Reports harmful-memory and safety-negative rollback/escalation cases that forced full verification or safe rejection."
+- `attribution_stage_contributions`: principle "Shows which operation stages allowed check reduction and which stages forced escalation."
+- `continuous_self_learning_loop`: principle "Explains how governed operation-attributed memory affected allocation only, without model-weight mutation or answer injection."
+- `tests_run`: principle "Commands run to validate the dosing policy, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+
+### REQ-VERIFY-5290 Sub-requirements
+
+- REQ-VERIFY-5290-1: Step 0 SHALL read Exp 5285 and Exp 5289 and block unless
+  `coherence_fixture_ready=true` and `memory_attribution_ready=true`.
+- REQ-VERIFY-5290-2: The policy comparison SHALL include always-full,
+  no-memory, and governed-memory dosing on the same deterministic fixture rows.
+- REQ-VERIFY-5290-3: Operation-stage attribution SHALL allow reduced checks
+  only for valid promoted `use/action` allocation cases and SHALL escalate
+  stale, shuffled, harmful, missing-provenance, poisoning-like, rollback, and
+  safety-negative controls.
+- REQ-VERIFY-5290-4: The result SHALL measure decision quality, full verifier
+  calls avoided, unsafe false accepts, stale-conflict handling, rollback
+  triggers, and attribution-stage contributions.
+- REQ-VERIFY-5290-5: `coherence_dose_positive` SHALL be true only when
+  governed-memory dosing has decision quality at least equal to always-full,
+  avoids more full checks than no-memory dosing, and has zero unsafe false
+  accepts.
+
+### SCENARIO-VERIFY-5290: Governed Memory Reduces Coherence Checks Without Unsafe Accepts
+
+Given Exp 5285 reports `coherence_fixture_ready=true` and Exp 5289 reports
+`memory_attribution_ready=true`, when Exp 5290 runs the no-LLM deterministic
+coherence-dose replay, then it compares always-full, no-memory, and
+governed-memory dosing on the Exp 5285 fixture, uses Exp 5289 operation-stage
+attribution to reduce checks only for valid promoted use/action memory, forces
+stale, shuffled, harmful, rollback, and safety-negative controls to full
+verification or safe rejection, writes the required artifact, and sets
+`coherence_dose_positive=true` only when governed-memory dosing preserves
+always-full quality, avoids additional full checks relative to no-memory dosing,
+and keeps unsafe false accepts at zero.
+
+If either upstream precondition is false, operation-stage coverage is
+incomplete, governed memory injects a claim/verdict directly, decision quality
+drops below always-full, unsafe false accepts increase, no additional full
+checks are avoided beyond no-memory dosing, stale/shuffled/harmful controls are
+not escalated, or rollback is not triggered for harmful memory, then the same
+runner writes a terminal `blocked_`, `null:`, or `harmful_` artifact with
+`coherence_dose_positive=false` and exact blocker metrics.
+
+## Implementation Status (REQ-VERIFY-5290)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5290 | Planned (`python/carnot/experiment_5290_memory_assisted_coherence_dose_gated_v483.py`, `results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json`) | Planned (`tests/python/test_experiment_5290_memory_assisted_coherence_dose_gated_v483.py`) |
