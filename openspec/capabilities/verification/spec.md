@@ -25882,6 +25882,91 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5309: SOTA GGUF Runtime Timeout Root-Cause Matrix V485
+
+The repository SHALL provide Exp 5309 at
+`python/carnot/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.py`
+and write
+`results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL build a
+local SOTA GGUF runtime timeout matrix only: it SHALL decide whether the local
+llama.cpp-compatible GGUF runtime is unblocked enough for downstream tiny
+quality smoke tests, and it SHALL NOT claim model quality, verifier quality,
+solver quality, benchmark improvement, memory usefulness, or answer accuracy.
+
+The Step 0 preconditions SHALL record GPU visibility, CUDA/driver facts, VRAM
+before and after, native llama.cpp-compatible backend command/version/device
+evidence, layer/offload flags, context size, batch size, local disk status,
+fallback policy, and local resolvability for each mandated SOTA GGUF without
+using `AutoTokenizer.from_pretrained` or any transformers tokenizer on a GGUF
+repository. The mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+For each mandated model that is locally available or fetchable under existing
+policy, the runner SHALL separately time metadata/model resolution, model load,
+GPU offload evidence observation, prompt ingestion, first-token latency,
+8-token generation, and timeout class. The runner SHALL use llama.cpp-compatible
+GGUF loading or the repository's cached SOTA helper pattern and SHALL record the
+concrete `model_path`, backend command, context size, batch size, offload flags,
+GPU memory samples, stdout/stderr tails, parsed llama.cpp timing receipts when
+available, and any fallback. `sota_runtime_unblocked` SHALL be a bare boolean
+and SHALL be true only when at least one mandated SOTA model completes load,
+first-token, and bounded 8-token generation with authenticated GPU offload and
+no timeout.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `gpu_backend_evidence`,
+`per_model_runtime_matrix`, `timeout_root_cause`, and `tests_run`, plus bare
+`sota_runtime_unblocked` and bare `no_quality_claim=true`.
+`inference_substrate.value` SHALL be `local_llama_cpp_gguf_runtime`.
+`honest_verdict.value` SHALL start with `complete:` when the matrix is written
+and a model is unblocked, or `blocked_` when the matrix is written but every
+mandated model times out, lacks offload, or cannot be resolved. If no model is
+unblocked, `timeout_root_cause.value` SHALL name the next concrete root cause.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5309 SOTA GGUF runtime timeout root-cause matrix."
+- `milestone`: principle "Milestone accountability for the V485 runtime unblock decision."
+- `status`: principle "Machine-readable terminal state for downstream gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether runtime, not quality, is unblocked."
+- `inference_substrate`: principle "Declares local_llama_cpp_gguf_runtime so the artifact is read as a runtime matrix, not a quality or verifier claim."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF repository IDs and concrete local paths without AutoTokenizer fallback."
+- `preconditions_checked`: principle "Records GPU, VRAM, backend command, offload flags, context, batch, cache, disk, and fallback checks before runtime interpretation."
+- `gpu_backend_evidence`: principle "Records CUDA/device/build/log/memory evidence needed to distinguish real GPU offload from CPU-only runtime."
+- `per_model_runtime_matrix`: principle "Separates resolution, load, prompt ingestion, first-token, bounded generation, offload, and timeout class per mandated model."
+- `timeout_root_cause`: principle "Names the next concrete blocker when no mandated model completes the bounded runtime path."
+- `tests_run`: principle "Commands run to validate the matrix module, artifact schema, new-code coverage, and relevant runtime checks."
+
+### SCENARIO-VERIFY-5309: Runtime Matrix Opens Or Blocks Downstream Tiny Quality Smoke
+
+Given the three mandated SOTA GGUF model IDs and a local llama.cpp-compatible
+runtime, when Exp 5309 runs, then it resolves local `.gguf` paths without using
+`AutoTokenizer`, probes every available mandated model through the runtime,
+records resolution, load, GPU-offload evidence, prompt ingestion, first-token,
+8-token generation, timeout class, GPU memory, command, context size, batch
+size, and fallback evidence, writes the required artifact, keeps
+`no_quality_claim=true`, and sets `sota_runtime_unblocked=true` only if at least
+one mandated model completes the bounded path with authenticated GPU offload and
+no timeout.
+
+If no mandated model is locally available, every mandated model times out before
+first token or 8-token generation, or GPU offload cannot be authenticated, then
+the same runner writes a terminal `blocked_` artifact with
+`sota_runtime_unblocked=false`, records every per-model timeout class, explains
+the next root cause under `timeout_root_cause`, keeps
+`inference_substrate.value=local_llama_cpp_gguf_runtime`, keeps
+`no_quality_claim=true`, and does not modify `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5309)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5309 | Planned (`python/carnot/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.py`, `results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json`) | Planned (`tests/python/test_experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.py`) |
+
 ### REQ-VERIFY-5297: Changed Runtime SOTA GGUF Substrate Gate V484
 
 The repository SHALL provide an Exp 5297 runtime gate that tries a changed
