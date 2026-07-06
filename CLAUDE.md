@@ -3957,6 +3957,28 @@ Every user instruction must be captured and traceable to outcomes:
 - Research experiments: always prefix with `JAX_PLATFORMS=cpu` for reproducibility
 - **JAX CUDA12 plugins installed on dual RTX 3090 rig (2026-05-08)** — `pip install "jax[cuda12]"` adds `jax-cuda12-pjrt`, `jax-cuda12-plugin`, `nvidia-cuda-nvcc-cu12` to the venv at `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/`. Default backend now `gpu` with `[CudaDevice(id=0), CudaDevice(id=1)]` available. THRML's JAX-native sampling primitives inherit GPU automatically. Reproducibility rule unchanged: research experiments still use `JAX_PLATFORMS=cpu` for headline claims; GPU JAX is opt-in for non-headline development and parity-sweep work.
 - **THRML 0.1.3 installed (2026-05-07)** — `pip install thrml` in the carnot-ebm venv. Apache-2.0 PyPI package, JAX-native sampling. Used by `.115 exp1503/1504 to demonstrate THRML/Carnot tiny-Ising parity (delta = 1.14e-7 exact, 0.042 stochastic mean). Aligned with CLAUDE.md decentralization rule 5 (hardware portability) and the queued `.117+ THRML/Carnot parity scaling sweep at n=8/16/32/64/128.
+- **`llama-cpp-python` MUST be built with CUDA support, not installed as a plain PyPI wheel
+  (fixed 2026-07-06)** — discovered via `exp5284`'s own honest `blocked_no_gpu_offload_evidence`
+  precondition check (GPU memory stayed pinned at 4 MiB through model load + generation for all
+  three mandated SOTA GGUF models, despite `n_gpu_layers=-1`). Root cause: a plain
+  `pip install llama-cpp-python` pulls a prebuilt CPU-only wheel from PyPI —
+  `llama_cpp.llama_cpp.llama_supports_gpu_offload()` returned `False`. CPU inference on 26-35B
+  quantized models is slow enough to still clear the 60s `live_llm_inference` duration floor, so
+  every "live SOTA GGUF inference" task this project has run was likely silently running on CPU,
+  not the two idle RTX 3090s, until this fix. Correct install command for this rig (RTX 3090,
+  compute capability 8.6):
+  ```
+  CMAKE_ARGS="-DGGML_CUDA=on -DCMAKE_CUDA_ARCHITECTURES=86" \
+    pip install llama-cpp-python --force-reinstall --no-cache-dir --no-binary llama-cpp-python
+  ```
+  Verify with `python -c "from llama_cpp import llama_cpp as b; print(b.llama_supports_gpu_offload())"`
+  — must print `True`, and loading a real GGUF with `n_gpu_layers=-1` must show `nvidia-smi` memory
+  usage jump from ~4 MiB to several GB (verified 2026-07-06: gemma-4-31B-it Q4_K_M jumped to
+  ~9.4GB/10GB split across both GPUs). **Not yet pinned in `pyproject.toml`** (the package isn't
+  declared there at all) — a future venv rebuild (`uv sync` or equivalent) will silently reinstall
+  the CPU-only wheel unless this build-flag requirement is applied again. Re-run the verification
+  command above after any venv rebuild before trusting a `live_llm_inference`-substrate artifact's
+  duration as GPU-backed evidence.
 
 ## Key Paths
 

@@ -2223,6 +2223,32 @@ directly") is the intended path -- skipping straight from Stage 1 to a live depl
 Stages 2-4 would repeat the exact "weights don't transfer" mistake this project has already learned
 from once.
 
+### FIXED (MAJOR): llama-cpp-python had no GPU offload this whole time 2026-07-06 (outer-loop, investigating exp5284's persistent gate block)
+
+Dug into why `exp5284` (SOTA runtime offload receipt repair) blocked two downstream `.483` tasks
+6 times across 2 retries each. It was a genuinely honest, correctly-designed precondition check --
+NOT a fabrication or a linter bug. Root cause: the installed `llama-cpp-python` (0.3.29) was a
+**CPU-only build** -- `llama_supports_gpu_offload()` returned `False`, and GPU memory stayed pinned
+at exactly 4 MiB through model load + generation for all three mandated SOTA GGUF models, despite
+`n_gpu_layers=-1`. A plain `pip install llama-cpp-python` pulls a prebuilt CPU-only wheel from
+PyPI; the project never rebuilt it with CUDA flags.
+
+**This likely affected every "live SOTA GGUF inference" artifact in this project's history, not just
+exp5284.** CPU inference on 26-35B quantized models is slow enough to still clear the 60s
+`live_llm_inference` duration floor, so nothing ever tripped a DURATION_TOO_SHORT flag despite
+silently never touching either idle RTX 3090.
+
+**Fixed**: rebuilt from source with `CMAKE_ARGS="-DGGML_CUDA=on -DCMAKE_CUDA_ARCHITECTURES=86"`
+(compute capability 8.6 for RTX 3090). Verified end-to-end, not just the capability flag: loading a
+real GGUF (gemma-4-31B-it Q4_K_M) with `n_gpu_layers=-1` now shows `nvidia-smi` memory jump from
+4 MiB to ~9.4GB/10GB split across both GPUs, and real generation succeeds. Full detail + the
+verification command in CLAUDE.md's Build Environment section.
+
+**Not yet durable**: `llama-cpp-python` isn't pinned in `pyproject.toml` at all -- a future venv
+rebuild will silently reinstall the CPU-only wheel unless the CUDA build flags are reapplied. Ran
+the full adversarial_verify test suite (284 tests) and core module imports after the numpy
+dependency bump (2.4.4->2.5.1, a side effect of the reinstall) -- both clean, no regressions.
+
 ### RESULT: TRM leave-one-game-out pilot -- inconclusive, redesign needed 2026-07-05 (outer-loop, operator authorized ARC-specific work)
 
 Full writeup: `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`. Ran the
