@@ -1,6 +1,20 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-06 (Milestone 2026.07.483 operational retrospective)
+**Last Updated:** 2026-07-06 (Milestone 2026.07.484 operational retrospective)
+
+## Session 2026-07-06 - Milestone 2026.07.484 Operational Retro
+
+Wrote `results/operational_retro_2026_07_484.json` and appended the
+corresponding entries to `ops/changelog.md` and `docs/research-log.md`. The
+authoritative timing block reports no experiment commits after activation, so
+the retrospective keeps total wall time, completed experiments, and
+compute-bound experiments at 0, leaves `slowest_experiments` empty, and keeps
+`gpu_idle_on_compute_bound_tasks: null`.
+
+Validation for this documentation/results-only task: JSON parsing, locked-field
+checks, operator-curated docs lint, and whitespace checks passed. Repo-wide
+spec coverage still fails on pre-existing tests outside the touched files; no
+E2E model-training or hardware check applies.
 
 ## Session 2026-07-06 - Milestone 2026.07.483 Operational Retro
 

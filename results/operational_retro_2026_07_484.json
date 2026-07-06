@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.484",
+  "generated_at": "2026-07-06T12:07:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "The authorized timing window contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound tasks. No data available this milestone for slowest-run ranking, GPU efficiency on compute-bound work, or DualGPURunner engagement.",
+  "bottlenecks_identified": [
+    "No measurable execution bottleneck can be attributed from the timing data because experiments_completed is 0.",
+    "No data available this milestone for compute-bound duration analysis.",
+    "GPU idle is not flagged as a bottleneck because compute_bound_experiments_count is 0."
+  ],
+  "improvements_suggested": [
+    "Add a first-class zero-experiment branch in the retrospective generator before top-N duration or GPU analysis runs.",
+    "Emit a pre-close milestone heartbeat when the post-activation experiment count is 0 so the operator can choose to launch work or close as no-data.",
+    "Keep GPU-idle and DualGPURunner recommendations gated on explicit compute-bound and 2+ parallel-model evidence."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a zero-commit milestone heartbeat before retrospective generation.",
+    "Generate no-data changelog and research-log text directly from locked retrospective fields.",
+    "Require compute-bound evidence before surfacing GPU-idle operational findings."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is an operational no-data case, not evidence of a slow experiment. The GPU report shows idle devices, but the timing block contains no compute-bound task, so the retrospective should preserve null GPU interpretation instead of converting idle state into a bottleneck."
+}
