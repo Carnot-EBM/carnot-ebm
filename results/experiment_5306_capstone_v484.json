@@ -1,0 +1,986 @@
+{
+  "changed_runtime_outcome": {
+    "principle": "changed runtime backend evidence and blocked readiness separated from any quality claim.",
+    "value": {
+      "backend_kind": "native_llama_cpp_cli",
+      "changed_from_exp5284": true,
+      "changed_runtime_sota_ready": false,
+      "cuda_backend_evidence": true,
+      "model_statuses": {
+        "flagship_dense": {
+          "blocked_preconditions": [],
+          "role": "flagship_dense",
+          "runtime_status": "blocked_native_cli_timeout"
+        },
+        "flagship_moe": {
+          "blocked_preconditions": [],
+          "role": "flagship_moe",
+          "runtime_status": "blocked_native_cli_timeout"
+        },
+        "middle_moe": {
+          "blocked_preconditions": [],
+          "role": "middle_moe",
+          "runtime_status": "blocked_native_cli_timeout"
+        }
+      },
+      "no_quality_claim": true,
+      "sota_quality_measured": false,
+      "source_experiment": 5297,
+      "summary": "Changed native llama.cpp CLI substrate showed CUDA/offload evidence but all mandated model runs timed out, so changed_runtime_sota_ready=false and no quality result is imported."
+    }
+  },
+  "commands_run": [
+    {
+      "command": "PYTHONPATH=python COVERAGE_FILE=/tmp/carnot_exp5306.coverage .venv/bin/coverage run --include='*/python/carnot/experiment_5306_capstone_v484.py' -m pytest tests/python/test_experiment_5306_capstone_v484.py -q -o addopts='' && PYTHONPATH=python COVERAGE_FILE=/tmp/carnot_exp5306.coverage .venv/bin/coverage report --include='*/python/carnot/experiment_5306_capstone_v484.py' --fail-under=100 --show-missing",
+      "outcome": "passed: 5 focused tests passed; new module coverage 274/274 statements, 100%."
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed: exit code 3 after 753.82s; 129 failed, 17183 passed, 75 skipped, 129 warnings, 15 errors. Run hit a Z3 segmentation fault in python/carnot/verify/z3_math_verifier.py during pre-existing verifier tests, then xdist internal errors including MemoryError formatting and crashitem tests/python/test_experiment_4887_value_gap_inducer_audit.py::test_req_arc_wmte_4887_build_schema_write_and_report."
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: 1248 pre-existing tests lack REQ-* or SCENARIO-* traceability; Exp5306 focused tests include REQ-CAPSTONE-5306/SCENARIO-CAPSTONE-5306 references."
+    },
+    {
+      "command": ".venv/bin/ruff format python/carnot/experiment_5306_capstone_v484.py tests/python/test_experiment_5306_capstone_v484.py",
+      "outcome": "passed: final formatting applied; subsequent format check passed."
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5306_capstone_v484.py tests/python/test_experiment_5306_capstone_v484.py",
+      "outcome": "passed: All checks passed."
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5306_capstone_v484.py tests/python/test_experiment_5306_capstone_v484.py",
+      "outcome": "passed: 2 files already formatted."
+    }
+  ],
+  "conductor_log_entries": [
+    "| 2026-07-04 16:09 UTC | PHASE 3 hardware continuity -- KV260/PolarFire has | OK | 107 passed, 1 warning in 11.84s |",
+    "| 2026-07-04 22:21 UTC | PHASE 3 hardware continuity -- KV260/PolarFire has | OK | 89 passed, 1 warning in 9.45s |",
+    "| 2026-07-05 03:29 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, G | OK | 89 passed, 1 warning in 9.97s |",
+    "| 2026-07-05 17:47 UTC | PHASE 2 continuous self-learning -- governed decis | OK | 87 passed, 1 warning in 10.74s |",
+    "| 2026-07-05 18:57 UTC | PHASE 3 hardware continuity -- KV260 PolarFire Gat | OK | 88 passed, 1 warning in 10.47s |",
+    "| 2026-07-06 01:49 UTC | PHASE 2 continuous self-learning -- memory operati | OK | 87 passed, 1 warning in 8.00s |",
+    "| 2026-07-06 02:54 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, a | OK | 87 passed, 1 warning in 10.39s |",
+    "| 2026-07-06 06:09 UTC | Plan milestone 2026.07.484 | OK | 12 tasks proposed |",
+    "| 2026-07-06 06:11 UTC | Milestone 2026.07.484 activated | OK | 12 tasks queued |",
+    "| 2026-07-06 06:25 UTC | PHASE 0 transition -- archive .483 truth and prepa | OK | 87 passed, 1 warning in 9.97s |",
+    "| 2026-07-06 06:39 UTC | PHASE 0 SOTA/source refresh -- V484 execution delt | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-06 08:07 UTC | PHASE 0 runtime receipts -- changed SOTA GGUF subs | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:   \"\"\"REQ-VERIF |",
+    "| 2026-07-06 09:09 UTC | PHASE 0 runtime receipts -- changed SOTA GGUF subs | OK | 92 passed, 1 warning in 9.22s |",
+    "| 2026-07-06 09:12 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |",
+    "| 2026-07-06 09:14 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |",
+    "| 2026-07-06 09:16 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |",
+    "| 2026-07-06 09:34 UTC | PHASE 1 fixture -- constraint-LNS destroy/repair w | FAIL | Codex CLI error: Stalled after 600s silence. Last output: gs/jepa_energy.py\", |",
+    "| 2026-07-06 09:49 UTC | PHASE 1 fixture -- constraint-LNS destroy/repair w | OK | 90 passed, 1 warning in 8.43s |",
+    "| 2026-07-06 10:04 UTC | PHASE 1 gated on exp5299 -- p-bit/CDCL instance-cl | OK | 90 passed, 1 warning in 10.49s |",
+    "| 2026-07-06 10:20 UTC | PHASE 1 diagnostic -- EBT spectral step-control be | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+    "| 2026-07-06 10:37 UTC | PHASE 2 continuous self-learning -- adaptive held- | OK | 89 passed, 1 warning in 8.42s |",
+    "| 2026-07-06 10:54 UTC | PHASE 2 gated on exp5302 -- memory conflict, forge | OK | 90 passed, 1 warning in 8.76s |",
+    "| 2026-07-06 11:12 UTC | PHASE 3 certificates -- KAN dynamic abstraction an | OK | 90 passed, 1 warning in 12.77s |",
+    "| 2026-07-06 11:29 UTC | PHASE 3 hardware continuity -- KV260, PolarFire, a | OK | 87 passed, 1 warning in 9.38s |"
+  ],
+  "continuous_self_learning_outcome": {
+    "principle": "adaptive memory results using held-out quality, calls avoided, unsafe false accepts, rollback, and stress competencies.",
+    "value": {
+      "adaptive_memory_policy_positive": true,
+      "full_verifier_calls_avoided": {
+        "adaptive_memory_policy_calls": 4,
+        "additional_vs_fixed_governed_memory": 1,
+        "additional_vs_no_memory": 1,
+        "always_full_calls": 7,
+        "fixed_governed_memory_calls": 5,
+        "no_memory_calls": 5,
+        "rate_vs_always_full": 0.428571,
+        "vs_always_full": 3
+      },
+      "heldout_quality_delta_vs_always_full": {
+        "adaptive_memory_policy_quality_rate": 1.0,
+        "always_full_quality_rate": 1.0,
+        "delta": 0.0
+      },
+      "memory_policy_candidate_ready": true,
+      "memory_stress_passed": true,
+      "no_weight_mutation": true,
+      "policy_source_experiment": 5302,
+      "rollback_exercised": {
+        "all_harmful_memory_escalated": true,
+        "case_ids": [
+          "heldout-harmful-memory",
+          "heldout-rollback"
+        ],
+        "trigger_count": 2,
+        "value": true
+      },
+      "rollback_success_rate": {
+        "case_ids": [
+          "harmful-injection-autopatch"
+        ],
+        "rate": 1.0,
+        "successful": 1,
+        "total": 1
+      },
+      "selective_forgetting_correctness": {
+        "case_ids": [
+          "forget-query-deprecated",
+          "rollback-query-safe-restored"
+        ],
+        "correct": 2,
+        "rate": 1.0,
+        "total": 2
+      },
+      "stale_conflict_handling": {
+        "case_ids": [
+          "conflict-query-newest",
+          "multi-hop-conflict-query",
+          "stale-query-outdated"
+        ],
+        "multi_hop_conflict_case_ids": [
+          "multi-hop-conflict-query"
+        ],
+        "rate": 1.0,
+        "resolved_or_escalated": 3,
+        "stale_evidence_case_ids": [
+          "stale-query-outdated"
+        ],
+        "total": 3
+      },
+      "stress_calls_avoided": {
+        "adaptive_memory_policy_calls": 3,
+        "additional_vs_fixed_governed_memory": 5,
+        "always_full_calls": 8,
+        "fixed_governed_memory_calls": 8,
+        "rate_vs_always_full": 0.625,
+        "vs_always_full": 5
+      },
+      "stress_competency_quality_rates": {
+        "accurate_retrieval": 1.0,
+        "conflict_resolution": 1.0,
+        "long_range_understanding": 1.0,
+        "selective_forgetting": 1.0,
+        "test_time_learning": 1.0
+      },
+      "stress_source_experiment": 5303,
+      "summary": "Adaptive memory matched always-full held-out quality, avoided 3/7 full verifier calls in policy selection and 5/8 under stress, kept unsafe false accepts at zero, exercised rollback, and passed conflict/forgetting/stale competency checks.",
+      "unsafe_false_accepts": 0
+    }
+  },
+  "docs_updated": {
+    "principle": "records that ops/status, ops/changelog, traceability, and docs/index.html were not touched when the stop rule delegates reconciliation.",
+    "value": {
+      "docs_index": false,
+      "exclusion_manifest": false,
+      "openspec_capstone_spec": true,
+      "ops_changelog": false,
+      "ops_status": false,
+      "reason": "stop_when_done_reconciler_deferred_ops_docs_and_traceability",
+      "research_complete": false,
+      "traceability": false
+    }
+  },
+  "duration_s": 0.0001,
+  "experiment": "experiment_5306_capstone_v484",
+  "experiment_id": "exp5306-capstone-v484",
+  "field_principles": {
+    "changed_runtime_outcome": "changed runtime backend evidence and blocked readiness separated from any quality claim.",
+    "continuous_self_learning_outcome": "adaptive memory results using held-out quality, calls avoided, unsafe false accepts, rollback, and stress competencies.",
+    "docs_updated": "records that ops/status, ops/changelog, traceability, and docs/index.html were not touched when the stop rule delegates reconciliation.",
+    "hardware_speedup_claimed": "must be false unless a local reproducible hardware speedup artifact exists.",
+    "honest_verdict": "terminal prefix; starts with complete: or blocked_ and summarizes the .484 milestone without laundering gated, blocked, null, harmful, mixed, quarantined, missing, or no-speedup evidence.",
+    "inference_substrate": "aggregation_from_upstream_artifacts because the capstone reads checked-in artifacts and conductor logs without running LLM, solver, or hardware workloads.",
+    "next_milestone_recommendations": "concrete next work that preserves evidence boundaries.",
+    "retirements_or_exclusions_recommended": "manifest-aware same-verdict retirements, quarantine handling, and bounded retry guidance without editing the manifest unless explicitly scoped.",
+    "solver_energy_certificate_outcome": "LNS readiness, p-bit/CDCL gate, EBT spectral-control quarantine, and KAN dynamic-abstraction limits.",
+    "sota_quality_outcome": "quality-smoke state; if Exp5298 is gate-skipped then SOTA quality was not measured.",
+    "tasks_summarized": "classification counts and per-task lanes for clean_positive, clean_null, harmful_or_regression, mixed_positive_with_harmful_class, blocked_precondition, gated_skip, and missing_artifact."
+  },
+  "hardware_speedup_claimed": {
+    "principle": "must be false unless a local reproducible hardware speedup artifact exists.",
+    "value": false
+  },
+  "hardware_status": {
+    "blocked_reason": {
+      "GateMate": {
+        "prior_evidence": "results/experiment_5293_hardware_continuity_reachability_v483.json",
+        "reason": "operator_setup_unchanged_physical_jtag_block_carried_forward"
+      },
+      "KV260": {
+        "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'printf '\"'\"'hostname='\"'\"'; hostname; printf '\"'\"'uname='\"'\"'; uname -a; printf '\"'\"'xmutil='\"'\"'; (xmutil --version 2>&1 || command -v xmutil || true); printf '\"'\"'uio='\"'\"'; (ls /dev/uio* 2>/dev/null | tr '\"'\"'\\n'\"'\"' '\"'\"' '\"'\"' || true)'",
+        "exit_code": 255,
+        "reason": "blocked_kv260_ssh_unreachable",
+        "stderr": "ssh: Could not resolve hostname kv260.local: Name or service not known\n",
+        "stdout": "",
+        "timeout_s": 10.0
+      },
+      "PolarFire": null
+    },
+    "gatemate_status": {
+      "board": "GateMate",
+      "device_identifier": "1209:c0ca",
+      "dirtyjtag_usb": {
+        "device_identifier": "1209:c0ca",
+        "stderr": "",
+        "stdout": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 6) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+        "visible": true
+      },
+      "jtag_probe_attempted": false,
+      "physical_setup_changed": false,
+      "speedup_claimed": false,
+      "status": "blocked_gatemate_physical_jtag_setup_unchanged",
+      "tool_versions": {
+        "gmpack": {
+          "path": "/opt/oss-cad-suite/bin/gmpack",
+          "present": true,
+          "version": "Error: unrecognised option '-V'"
+        },
+        "lsusb": {
+          "path": "/opt/oss-cad-suite/bin/lsusb",
+          "present": true,
+          "version": "1d6b:0003 (bus 8, device 1)"
+        },
+        "nextpnr-himbaechel": {
+          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+          "present": true,
+          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+        },
+        "openFPGALoader": {
+          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+          "present": true,
+          "version": "openFPGALoader v1.1.1"
+        },
+        "ssh": {
+          "path": "/usr/bin/ssh",
+          "present": true,
+          "version": "OpenSSH_10.3p1, OpenSSL 3.6.3 9 Jun 2026"
+        },
+        "yosys": {
+          "path": "/opt/oss-cad-suite/bin/yosys",
+          "present": true,
+          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+        }
+      }
+    },
+    "hardware_evidence_level": "reachability_status_receipt_only",
+    "kv260_status": {
+      "board": "KV260",
+      "probe_exit_code": 255,
+      "remote_identifier": null,
+      "speedup_claimed": false,
+      "ssh_reachable": false,
+      "status": "blocked_kv260_ssh_unreachable"
+    },
+    "polarfire_status": {
+      "board": "PolarFire",
+      "probe_exit_code": 0,
+      "remote_identifier": "hostname=mpfs-disco-kit\nuname=Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\npython=Python 3.12.12",
+      "speedup_claimed": false,
+      "ssh_reachable": true,
+      "status": "reachable_ssh_status_only"
+    },
+    "source_experiment": 5305
+  },
+  "honest_verdict": {
+    "principle": "terminal prefix; starts with complete: or blocked_ and summarizes the .484 milestone without laundering gated, blocked, null, harmful, mixed, quarantined, missing, or no-speedup evidence.",
+    "value": "complete: .484 closed with changed-runtime SOTA still blocked and quality unmeasured, adaptive memory/self-learning cleanly positive, solver/certificate tracks bounded with LNS and p-bit gates but quarantined EBT telemetry and null certificate-success lift, and hardware reachability-only with no speedup."
+  },
+  "inference_substrate": {
+    "principle": "aggregation_from_upstream_artifacts because the capstone reads checked-in artifacts and conductor logs without running LLM, solver, or hardware workloads.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "milestone": "2026.07.484",
+  "next_milestone_recommendations": {
+    "principle": "concrete next work that preserves evidence boundaries.",
+    "value": [
+      {
+        "id": "runtime_then_quality",
+        "recommendation": "Separate runtime readiness from quality: first get a completed changed-runtime mandatory-model receipt, then run the SOTA coherence/trace smoke."
+      },
+      {
+        "id": "memory_promote_with_larger_holdout",
+        "recommendation": "Promote adaptive memory only after a larger held-out panel preserves quality, zero unsafe accepts, rollback, and call savings."
+      },
+      {
+        "id": "solver_gate_extend_classes",
+        "recommendation": "Extend the LNS and p-bit/CDCL gates to more instance classes while keeping solver fallback authoritative."
+      },
+      {
+        "id": "spectral_control_fix_quarantine",
+        "recommendation": "Rerun EBT spectral-control with corrected methodology receipts before treating it as clean stability evidence."
+      },
+      {
+        "id": "kan_retire_same_certificate_success",
+        "recommendation": "Do not rerun KAN dynamic abstraction for the same unchanged certificate-success verdict unless a new certificate-strength metric is added."
+      },
+      {
+        "id": "hardware_reachability_before_speedup",
+        "recommendation": "Fix KV260 SSH and GateMate physical/JTAG setup, and require a local same-workload timing artifact before any speedup claim."
+      }
+    ]
+  },
+  "random_seed": 5306,
+  "reproducibility_checksum": "sha256:651e18f05139c9cfc4ce97332cc8412ebb77246cff19326f04b5f4512509eb01",
+  "result_path": "results/experiment_5306_capstone_v484.json",
+  "retirements_or_exclusions_recommended": {
+    "principle": "manifest-aware same-verdict retirements, quarantine handling, and bounded retry guidance without editing the manifest unless explicitly scoped.",
+    "value": {
+      "manifest_has_exp5284_cpu_path_retirement": true,
+      "quarantines_preserved": [
+        "exp5296_sota_source_delta_v484",
+        "exp5301_ebt_spectral_step_control_diagnostic_v484"
+      ],
+      "recommendations": [
+        {
+          "id": "repeat_exp5284_cpu_only_path",
+          "recommendation": "Keep the Exp5284 CPU-only llama-cpp-python SOTA path retired unless an operator provides a new runtime/offload root cause."
+        },
+        {
+          "id": "sota_quality_until_changed_runtime_ready",
+          "recommendation": "Keep SOTA quality smoke gated until changed_runtime_sota_ready=true on a completed mandatory-model run."
+        },
+        {
+          "id": "quarantined_artifact_correction",
+          "recommendation": "Correct or rerun quarantined Exp5296/Exp5301 artifacts before using their metrics as headline evidence."
+        },
+        {
+          "id": "pbit_class_gate_not_speedup",
+          "recommendation": "Reuse the p-bit/CDCL gate only as a class-sensitive CPU guidance rule; keep hardware speedup claims false."
+        },
+        {
+          "id": "kan_certificate_success_same_verdict",
+          "recommendation": "Retire reruns that only reprove unchanged certificate success; continue only if diagnostic tightness maps to a stronger certificate gate."
+        }
+      ],
+      "same_verdict_retirements": [
+        {
+          "id": "exp5284_sota_offload_cpu_only_path_retired_v483",
+          "scope": "current llama-cpp-python SOTA GGUF reruns without changed runtime substrate or GPU-offload receipt",
+          "status": "recorded"
+        }
+      ]
+    }
+  },
+  "run_date": "2026-07-06",
+  "schema": "carnot.experiment_5306_capstone_v484.v1",
+  "solver_energy_certificate_outcome": {
+    "principle": "LNS readiness, p-bit/CDCL gate, EBT spectral-control quarantine, and KAN dynamic-abstraction limits.",
+    "value": {
+      "constraint_lns_fixture_ready": true,
+      "kan_dynamic_abstraction": {
+        "certificate_success_improvement": 0.0,
+        "diagnostic_tightness_helped": true,
+        "envelope_gap_reduction": 0.01125,
+        "false_property_rejected": true,
+        "help_kind": "diagnostic_tightness_not_certificate_success",
+        "source_experiment": 5304,
+        "spotcheck_hit_rate_delta": 0.8808888889
+      },
+      "lns_solver_correctness_preserved": true,
+      "lns_source_experiment": 5299,
+      "lns_unsafe_false_accepts": 0,
+      "pbit_aggregate_metrics": {
+        "gated": {
+          "conflicts": 15,
+          "decisions": 71,
+          "propagations": 152,
+          "restarts": 8,
+          "wall_clock_s": 0.000134643
+        },
+        "solver_only": {
+          "conflicts": 24,
+          "decisions": 104,
+          "propagations": 200,
+          "restarts": 8,
+          "wall_clock_s": 0.000544724
+        },
+        "solver_only_vs_gated_delta": {
+          "conflicts_saved": 9,
+          "decisions_saved": 33,
+          "propagations_saved": 48,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.000410081
+        },
+        "solver_only_vs_ungated_delta": {
+          "conflicts_saved": 6,
+          "decisions_saved": 33,
+          "propagations_saved": 30,
+          "restarts_saved": -3,
+          "wall_clock_s_saved": 0.000374375
+        },
+        "ungated": {
+          "conflicts": 18,
+          "decisions": 71,
+          "propagations": 170,
+          "restarts": 11,
+          "wall_clock_s": 0.000170349
+        },
+        "ungated_vs_gated_delta": {
+          "conflicts_saved_by_gate": 3,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 18,
+          "restarts_saved_by_gate": 3,
+          "wall_clock_s_saved_by_gate": 3.5706e-05
+        }
+      },
+      "pbit_blocked_classes": [
+        "misleading_factor_sat",
+        "misleading_repair",
+        "semantic_wrong_control"
+      ],
+      "pbit_correctness_preserved": true,
+      "pbit_gate_ready": true,
+      "pbit_hardware_speedup_claimed": false,
+      "pbit_source_experiment": 5300,
+      "spectral_control": {
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.002755 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "divergence_recovery": {
+          "adaptive_diverged": false,
+          "adaptive_recovered": true,
+          "adaptive_total_recovery_shrinks": 8,
+          "aggressive_diverged": true,
+          "aggressive_divergence_step": 0,
+          "recovery_rule": "start from 2.4/lambda_max, then halve until the step is below the 2/lambda_max stability limit and does not increase energy"
+        },
+        "headline_eligible": false,
+        "quarantined": true,
+        "ready": true,
+        "source_experiment": 5301
+      },
+      "summary": "LNS fixture and p-bit/CDCL gate are usable within deterministic solver scope; EBT spectral-control telemetry is quarantined when flagged; KAN dynamic abstraction improves diagnostic tightness but not certificate success."
+    }
+  },
+  "sota_quality_outcome": {
+    "principle": "quality-smoke state; if Exp5298 is gate-skipped then SOTA quality was not measured.",
+    "value": {
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gate-v484.changed_runtime_sota_ready (actual=False == expected=True)",
+      "gates_evaluated": [
+        {
+          "actual": false,
+          "artifact_field": "changed_runtime_sota_ready",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=False == expected=True",
+          "upstream": "exp5297-changed-runtime-sota-substrate-gate-v484"
+        }
+      ],
+      "measured": false,
+      "source_experiment": 5298,
+      "summary": "SOTA smoke was not measured because Exp5298 was conductor-pre-gated on Exp5297.changed_runtime_sota_ready == true and the observed value was false."
+    }
+  },
+  "source_artifacts_read": [
+    {
+      "classification": "clean_positive",
+      "exists": true,
+      "experiment_number": 5295,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5295_archive_483_activate_484.json",
+      "sha256": "sha256:2303728019cc25cf574ae3bbc5583d2f853dc27574e232ab2d23f111029eb074",
+      "summary": ".483 archived and .484 activation-ready without roadmap mutation",
+      "task_id": "exp5295-archive-483-activate-484",
+      "title": "Archive .483 and prepare .484 activation",
+      "verdict": "complete: .483 archived and .484 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+    },
+    {
+      "classification": "quarantined",
+      "exists": true,
+      "experiment_number": 5296,
+      "inference_substrate": "literature_ingestion_network_sources",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5296_sota_source_delta_v484.json",
+      "sha256": "sha256:bb7ac07605d392a1b0af94d9a5c04e83405367c16144ae0be65ff2d62445ac01",
+      "summary": "source refresh appended four findings, but the artifact is adversarially quarantined",
+      "task_id": "exp5296-sota-source-delta-v484",
+      "title": "V484 SOTA/source delta refresh",
+      "verdict": "complete: 4 new actionable findings appended; executable .484 plan unchanged."
+    },
+    {
+      "classification": "blocked_precondition",
+      "exists": true,
+      "experiment_number": 5297,
+      "inference_substrate": "blocked_preconditions_with_no_quality_claim",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json",
+      "sha256": "sha256:a493f82ce2312ca070bec7766fbd1653c7834aa9bfc9da158b666f755822d36d",
+      "summary": "changed runtime backend had CUDA/offload evidence but timed out; readiness false and no quality claim",
+      "task_id": "exp5297-changed-runtime-sota-substrate-gate-v484",
+      "title": "Changed SOTA GGUF runtime substrate gate",
+      "verdict": "blocked_preconditions: changed_runtime_sota_ready=false flagship_moe:blocked_native_cli_timeout:offload=True"
+    },
+    {
+      "classification": "gated_skip",
+      "exists": true,
+      "experiment_number": 5298,
+      "inference_substrate": "",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json",
+      "sha256": "sha256:61b4351467a96157fbac811f6d00ae54fb7ed6015db54733bbe27e45e19ca84b",
+      "summary": "SOTA coherence/trace smoke was conductor-gated because changed_runtime_sota_ready=false",
+      "task_id": "exp5298-sota-coherence-trace-smoke-gated-v484",
+      "title": "SOTA coherence and trace smoke",
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "classification": "clean_positive",
+      "exists": true,
+      "experiment_number": 5299,
+      "inference_substrate": "offline_deterministic_certificate_no_llm",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "sha256": "sha256:a17b7505319acfe33362659c5963ed255cbbbb0e7730a79fe814181e6291ab0b",
+      "summary": "constraint-LNS fixture ready with solver correctness preserved and unsafe false accepts zero",
+      "task_id": "exp5299-constraint-lns-solver-repair-fixture-v484",
+      "title": "Constraint-LNS destroy/repair fixture",
+      "verdict": "complete: constraint-LNS fixture usable for exp5300 solver-repair guidance"
+    },
+    {
+      "classification": "mixed_positive_with_harmful_class",
+      "exists": true,
+      "experiment_number": 5300,
+      "inference_substrate": "offline_deterministic_certificate_no_llm",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json",
+      "sha256": "sha256:0462fe547f746085e904733d01c66e50005598fdbd2fdd4abd7f6e9828cc4307",
+      "summary": "p-bit/CDCL gate blocks misleading classes while preserving aggregate conflict savings",
+      "task_id": "exp5300-pbit-cdcl-instance-class-gate-v484",
+      "title": "p-bit/CDCL instance-class gate",
+      "verdict": "complete: p-bit/CDCL gate helped by blocking misleading-assumption classes while preserving aggregate conflict savings on deterministic Exp5292 and Exp5299 fixtures"
+    },
+    {
+      "classification": "quarantined",
+      "exists": true,
+      "experiment_number": 5301,
+      "inference_substrate": "offline_deterministic_certificate_no_llm",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json",
+      "sha256": "sha256:2d801f8a9e51b5a10e61636a1517a15dff527c3b27fa58509641f9a60c39b0e5",
+      "summary": "spectral-control telemetry exists but is quarantined by adversarial DURATION_TOO_SHORT findings",
+      "task_id": "exp5301-ebt-spectral-step-control-diagnostic-v484",
+      "title": "EBT spectral step-control diagnostic",
+      "verdict": "complete: spectral step-control is usable as a tiny deterministic stability diagnostic before energy-guided inner-loop claims"
+    },
+    {
+      "classification": "clean_positive",
+      "exists": true,
+      "experiment_number": 5302,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json",
+      "sha256": "sha256:3ed92e37aa1dc118103149bcb37b72ea4a84cbb9feb7f736bb390c4559f2bb01",
+      "summary": "adaptive memory matched held-out always-full quality, avoided calls, and kept unsafe false accepts zero",
+      "task_id": "exp5302-adaptive-memory-policy-self-learning-v484",
+      "title": "Adaptive self-learning memory policy",
+      "verdict": "complete: adaptive memory policy helped; held-out quality matched always-full, avoided 3/7 full verifier calls and kept unsafe_false_accepts=0 without weight mutation"
+    },
+    {
+      "classification": "clean_positive",
+      "exists": true,
+      "experiment_number": 5303,
+      "inference_substrate": "offline_deterministic_fixture_no_llm",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5303_memory_stress_conflict_forgetting_v484.json",
+      "sha256": "sha256:3eb0de19fce91c68c61cd6fcf156ec7c81564069b47706865ee4945f844cc7d6",
+      "summary": "memory stress passed conflict, forgetting, stale-evidence, and rollback controls with call savings",
+      "task_id": "exp5303-memory-stress-conflict-forgetting-v484",
+      "title": "Memory conflict, forgetting, and long-range stress",
+      "verdict": "complete: memory stress passed; adaptive policy matched always-full quality, avoided 5/8 full verifier calls, handled conflict/forgetting/stale evidence, and rolled back harmful memory"
+    },
+    {
+      "classification": "clean_null",
+      "exists": true,
+      "experiment_number": 5304,
+      "inference_substrate": "offline_deterministic_certificate_no_llm",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json",
+      "sha256": "sha256:732ef2208b03497578456058642973bd4d1402453949e4c4df84e3d28c724f40",
+      "summary": "dynamic abstraction improved diagnostic tightness while certificate success improvement stayed zero",
+      "task_id": "exp5304-kan-dynamic-abstraction-spotcheck-v484",
+      "title": "KAN dynamic abstraction spot-check",
+      "verdict": "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
+    },
+    {
+      "classification": "blocked_precondition",
+      "exists": true,
+      "experiment_number": 5305,
+      "inference_substrate": "hardware_probe_no_speedup_claim",
+      "load_error": null,
+      "loadable": true,
+      "path": "results/experiment_5305_hardware_continuity_reachability_v484.json",
+      "sha256": "sha256:f769a0afd86a113d491ed4ca6de71990e16c77a00b22d88751856b56ed7a8239",
+      "summary": "hardware remained reachability-only: KV260 blocked, PolarFire status-only, GateMate blocked",
+      "task_id": "exp5305-hardware-continuity-reachability-v484",
+      "title": "Hardware continuity reachability receipts",
+      "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
+    }
+  ],
+  "spec_refs": [
+    "REQ-CAPSTONE-5306",
+    "SCENARIO-CAPSTONE-5306",
+    "SCENARIO-CAPSTONE-5306-BLOCKED-MISSING-INPUT",
+    "SCENARIO-CAPSTONE-5306-FIELD-PRINCIPLES"
+  ],
+  "tasks_summarized": {
+    "principle": "classification counts and per-task lanes for clean_positive, clean_null, harmful_or_regression, mixed_positive_with_harmful_class, blocked_precondition, gated_skip, and missing_artifact.",
+    "value": {
+      "blocked_precondition": [
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5297,
+          "inference_substrate": "blocked_preconditions_with_no_quality_claim",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json",
+          "sha256": "sha256:a493f82ce2312ca070bec7766fbd1653c7834aa9bfc9da158b666f755822d36d",
+          "summary": "changed runtime backend had CUDA/offload evidence but timed out; readiness false and no quality claim",
+          "task_id": "exp5297-changed-runtime-sota-substrate-gate-v484",
+          "title": "Changed SOTA GGUF runtime substrate gate",
+          "verdict": "blocked_preconditions: changed_runtime_sota_ready=false flagship_moe:blocked_native_cli_timeout:offload=True"
+        },
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5305,
+          "inference_substrate": "hardware_probe_no_speedup_claim",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5305_hardware_continuity_reachability_v484.json",
+          "sha256": "sha256:f769a0afd86a113d491ed4ca6de71990e16c77a00b22d88751856b56ed7a8239",
+          "summary": "hardware remained reachability-only: KV260 blocked, PolarFire status-only, GateMate blocked",
+          "task_id": "exp5305-hardware-continuity-reachability-v484",
+          "title": "Hardware continuity reachability receipts",
+          "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
+        }
+      ],
+      "by_classification": {
+        "blocked_precondition": 2,
+        "clean_null": 1,
+        "clean_positive": 4,
+        "gated_skip": 1,
+        "mixed_positive_with_harmful_class": 1,
+        "quarantined": 2
+      },
+      "clean_null": [
+        {
+          "classification": "clean_null",
+          "exists": true,
+          "experiment_number": 5304,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json",
+          "sha256": "sha256:732ef2208b03497578456058642973bd4d1402453949e4c4df84e3d28c724f40",
+          "summary": "dynamic abstraction improved diagnostic tightness while certificate success improvement stayed zero",
+          "task_id": "exp5304-kan-dynamic-abstraction-spotcheck-v484",
+          "title": "KAN dynamic abstraction spot-check",
+          "verdict": "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
+        }
+      ],
+      "clean_positive": [
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5295,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5295_archive_483_activate_484.json",
+          "sha256": "sha256:2303728019cc25cf574ae3bbc5583d2f853dc27574e232ab2d23f111029eb074",
+          "summary": ".483 archived and .484 activation-ready without roadmap mutation",
+          "task_id": "exp5295-archive-483-activate-484",
+          "title": "Archive .483 and prepare .484 activation",
+          "verdict": "complete: .483 archived and .484 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5299,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+          "sha256": "sha256:a17b7505319acfe33362659c5963ed255cbbbb0e7730a79fe814181e6291ab0b",
+          "summary": "constraint-LNS fixture ready with solver correctness preserved and unsafe false accepts zero",
+          "task_id": "exp5299-constraint-lns-solver-repair-fixture-v484",
+          "title": "Constraint-LNS destroy/repair fixture",
+          "verdict": "complete: constraint-LNS fixture usable for exp5300 solver-repair guidance"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5302,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json",
+          "sha256": "sha256:3ed92e37aa1dc118103149bcb37b72ea4a84cbb9feb7f736bb390c4559f2bb01",
+          "summary": "adaptive memory matched held-out always-full quality, avoided calls, and kept unsafe false accepts zero",
+          "task_id": "exp5302-adaptive-memory-policy-self-learning-v484",
+          "title": "Adaptive self-learning memory policy",
+          "verdict": "complete: adaptive memory policy helped; held-out quality matched always-full, avoided 3/7 full verifier calls and kept unsafe_false_accepts=0 without weight mutation"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5303,
+          "inference_substrate": "offline_deterministic_fixture_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5303_memory_stress_conflict_forgetting_v484.json",
+          "sha256": "sha256:3eb0de19fce91c68c61cd6fcf156ec7c81564069b47706865ee4945f844cc7d6",
+          "summary": "memory stress passed conflict, forgetting, stale-evidence, and rollback controls with call savings",
+          "task_id": "exp5303-memory-stress-conflict-forgetting-v484",
+          "title": "Memory conflict, forgetting, and long-range stress",
+          "verdict": "complete: memory stress passed; adaptive policy matched always-full quality, avoided 5/8 full verifier calls, handled conflict/forgetting/stale evidence, and rolled back harmful memory"
+        }
+      ],
+      "expected_count": 11,
+      "gated_skip": [
+        {
+          "classification": "gated_skip",
+          "exists": true,
+          "experiment_number": 5298,
+          "inference_substrate": "",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json",
+          "sha256": "sha256:61b4351467a96157fbac811f6d00ae54fb7ed6015db54733bbe27e45e19ca84b",
+          "summary": "SOTA coherence/trace smoke was conductor-gated because changed_runtime_sota_ready=false",
+          "task_id": "exp5298-sota-coherence-trace-smoke-gated-v484",
+          "title": "SOTA coherence and trace smoke",
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "harmful_or_regression": [],
+      "loadable_count": 11,
+      "milestone_synthesized": true,
+      "missing_artifact": [],
+      "mixed_positive_with_harmful_class": [
+        {
+          "classification": "mixed_positive_with_harmful_class",
+          "exists": true,
+          "experiment_number": 5300,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json",
+          "sha256": "sha256:0462fe547f746085e904733d01c66e50005598fdbd2fdd4abd7f6e9828cc4307",
+          "summary": "p-bit/CDCL gate blocks misleading classes while preserving aggregate conflict savings",
+          "task_id": "exp5300-pbit-cdcl-instance-class-gate-v484",
+          "title": "p-bit/CDCL instance-class gate",
+          "verdict": "complete: p-bit/CDCL gate helped by blocking misleading-assumption classes while preserving aggregate conflict savings on deterministic Exp5292 and Exp5299 fixtures"
+        }
+      ],
+      "per_task": [
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5295,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5295_archive_483_activate_484.json",
+          "sha256": "sha256:2303728019cc25cf574ae3bbc5583d2f853dc27574e232ab2d23f111029eb074",
+          "summary": ".483 archived and .484 activation-ready without roadmap mutation",
+          "task_id": "exp5295-archive-483-activate-484",
+          "title": "Archive .483 and prepare .484 activation",
+          "verdict": "complete: .483 archived and .484 activation-ready; no roadmap overwrite performed and aggregation_from_upstream_artifacts evidence used."
+        },
+        {
+          "classification": "quarantined",
+          "exists": true,
+          "experiment_number": 5296,
+          "inference_substrate": "literature_ingestion_network_sources",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5296_sota_source_delta_v484.json",
+          "sha256": "sha256:bb7ac07605d392a1b0af94d9a5c04e83405367c16144ae0be65ff2d62445ac01",
+          "summary": "source refresh appended four findings, but the artifact is adversarially quarantined",
+          "task_id": "exp5296-sota-source-delta-v484",
+          "title": "V484 SOTA/source delta refresh",
+          "verdict": "complete: 4 new actionable findings appended; executable .484 plan unchanged."
+        },
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5297,
+          "inference_substrate": "blocked_preconditions_with_no_quality_claim",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json",
+          "sha256": "sha256:a493f82ce2312ca070bec7766fbd1653c7834aa9bfc9da158b666f755822d36d",
+          "summary": "changed runtime backend had CUDA/offload evidence but timed out; readiness false and no quality claim",
+          "task_id": "exp5297-changed-runtime-sota-substrate-gate-v484",
+          "title": "Changed SOTA GGUF runtime substrate gate",
+          "verdict": "blocked_preconditions: changed_runtime_sota_ready=false flagship_moe:blocked_native_cli_timeout:offload=True"
+        },
+        {
+          "classification": "gated_skip",
+          "exists": true,
+          "experiment_number": 5298,
+          "inference_substrate": "",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5298_sota_coherence_trace_smoke_gated_v484.json",
+          "sha256": "sha256:61b4351467a96157fbac811f6d00ae54fb7ed6015db54733bbe27e45e19ca84b",
+          "summary": "SOTA coherence/trace smoke was conductor-gated because changed_runtime_sota_ready=false",
+          "task_id": "exp5298-sota-coherence-trace-smoke-gated-v484",
+          "title": "SOTA coherence and trace smoke",
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5299,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+          "sha256": "sha256:a17b7505319acfe33362659c5963ed255cbbbb0e7730a79fe814181e6291ab0b",
+          "summary": "constraint-LNS fixture ready with solver correctness preserved and unsafe false accepts zero",
+          "task_id": "exp5299-constraint-lns-solver-repair-fixture-v484",
+          "title": "Constraint-LNS destroy/repair fixture",
+          "verdict": "complete: constraint-LNS fixture usable for exp5300 solver-repair guidance"
+        },
+        {
+          "classification": "mixed_positive_with_harmful_class",
+          "exists": true,
+          "experiment_number": 5300,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json",
+          "sha256": "sha256:0462fe547f746085e904733d01c66e50005598fdbd2fdd4abd7f6e9828cc4307",
+          "summary": "p-bit/CDCL gate blocks misleading classes while preserving aggregate conflict savings",
+          "task_id": "exp5300-pbit-cdcl-instance-class-gate-v484",
+          "title": "p-bit/CDCL instance-class gate",
+          "verdict": "complete: p-bit/CDCL gate helped by blocking misleading-assumption classes while preserving aggregate conflict savings on deterministic Exp5292 and Exp5299 fixtures"
+        },
+        {
+          "classification": "quarantined",
+          "exists": true,
+          "experiment_number": 5301,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json",
+          "sha256": "sha256:2d801f8a9e51b5a10e61636a1517a15dff527c3b27fa58509641f9a60c39b0e5",
+          "summary": "spectral-control telemetry exists but is quarantined by adversarial DURATION_TOO_SHORT findings",
+          "task_id": "exp5301-ebt-spectral-step-control-diagnostic-v484",
+          "title": "EBT spectral step-control diagnostic",
+          "verdict": "complete: spectral step-control is usable as a tiny deterministic stability diagnostic before energy-guided inner-loop claims"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5302,
+          "inference_substrate": "aggregation_from_upstream_artifacts",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json",
+          "sha256": "sha256:3ed92e37aa1dc118103149bcb37b72ea4a84cbb9feb7f736bb390c4559f2bb01",
+          "summary": "adaptive memory matched held-out always-full quality, avoided calls, and kept unsafe false accepts zero",
+          "task_id": "exp5302-adaptive-memory-policy-self-learning-v484",
+          "title": "Adaptive self-learning memory policy",
+          "verdict": "complete: adaptive memory policy helped; held-out quality matched always-full, avoided 3/7 full verifier calls and kept unsafe_false_accepts=0 without weight mutation"
+        },
+        {
+          "classification": "clean_positive",
+          "exists": true,
+          "experiment_number": 5303,
+          "inference_substrate": "offline_deterministic_fixture_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5303_memory_stress_conflict_forgetting_v484.json",
+          "sha256": "sha256:3eb0de19fce91c68c61cd6fcf156ec7c81564069b47706865ee4945f844cc7d6",
+          "summary": "memory stress passed conflict, forgetting, stale-evidence, and rollback controls with call savings",
+          "task_id": "exp5303-memory-stress-conflict-forgetting-v484",
+          "title": "Memory conflict, forgetting, and long-range stress",
+          "verdict": "complete: memory stress passed; adaptive policy matched always-full quality, avoided 5/8 full verifier calls, handled conflict/forgetting/stale evidence, and rolled back harmful memory"
+        },
+        {
+          "classification": "clean_null",
+          "exists": true,
+          "experiment_number": 5304,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5304_kan_dynamic_abstraction_spotcheck_v484.json",
+          "sha256": "sha256:732ef2208b03497578456058642973bd4d1402453949e4c4df84e3d28c724f40",
+          "summary": "dynamic abstraction improved diagnostic tightness while certificate success improvement stayed zero",
+          "task_id": "exp5304-kan-dynamic-abstraction-spotcheck-v484",
+          "title": "KAN dynamic abstraction spot-check",
+          "verdict": "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
+        },
+        {
+          "classification": "blocked_precondition",
+          "exists": true,
+          "experiment_number": 5305,
+          "inference_substrate": "hardware_probe_no_speedup_claim",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5305_hardware_continuity_reachability_v484.json",
+          "sha256": "sha256:f769a0afd86a113d491ed4ca6de71990e16c77a00b22d88751856b56ed7a8239",
+          "summary": "hardware remained reachability-only: KV260 blocked, PolarFire status-only, GateMate blocked",
+          "task_id": "exp5305-hardware-continuity-reachability-v484",
+          "title": "Hardware continuity reachability receipts",
+          "verdict": "blocked_board_reachability: kv260=blocked_kv260_ssh_unreachable polarfire=reachable_ssh_status_only gatemate=blocked_gatemate_physical_jtag_setup_unchanged no_speedup_claim"
+        }
+      ],
+      "quarantined": [
+        {
+          "classification": "quarantined",
+          "exists": true,
+          "experiment_number": 5296,
+          "inference_substrate": "literature_ingestion_network_sources",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5296_sota_source_delta_v484.json",
+          "sha256": "sha256:bb7ac07605d392a1b0af94d9a5c04e83405367c16144ae0be65ff2d62445ac01",
+          "summary": "source refresh appended four findings, but the artifact is adversarially quarantined",
+          "task_id": "exp5296-sota-source-delta-v484",
+          "title": "V484 SOTA/source delta refresh",
+          "verdict": "complete: 4 new actionable findings appended; executable .484 plan unchanged."
+        },
+        {
+          "classification": "quarantined",
+          "exists": true,
+          "experiment_number": 5301,
+          "inference_substrate": "offline_deterministic_certificate_no_llm",
+          "load_error": null,
+          "loadable": true,
+          "path": "results/experiment_5301_ebt_spectral_step_control_diagnostic_v484.json",
+          "sha256": "sha256:2d801f8a9e51b5a10e61636a1517a15dff527c3b27fa58509641f9a60c39b0e5",
+          "summary": "spectral-control telemetry exists but is quarantined by adversarial DURATION_TOO_SHORT findings",
+          "task_id": "exp5301-ebt-spectral-step-control-diagnostic-v484",
+          "title": "EBT spectral step-control diagnostic",
+          "verdict": "complete: spectral step-control is usable as a tiny deterministic stability diagnostic before energy-guided inner-loop claims"
+        }
+      ]
+    }
+  }
+}
