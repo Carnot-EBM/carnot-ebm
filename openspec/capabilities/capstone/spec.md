@@ -1133,3 +1133,87 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5306 | Planned (`python/carnot/experiment_5306_capstone_v484.py`, `results/experiment_5306_capstone_v484.json`) | Planned (`tests/python/test_experiment_5306_capstone_v484.py`) |
+
+- REQ-CAPSTONE-5320: The `.485` milestone-close capstone aggregator
+  `exp5320-capstone-v485` in `python/carnot/experiment_5320_capstone_v485.py`
+  SHALL write `results/experiment_5320_capstone_v485.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every expected `.485`
+  upstream artifact from Exp5307 through Exp5319, record missing artifacts
+  explicitly, record blocked, gated, flagged, quarantined, null, no-speedup, and
+  no-quality evidence separately, and recommend the natural `.486` branch from
+  actual artifact fields rather than from roadmap intent. It SHALL not promote
+  blocked SOTA runtime, gate-blocked SOTA quality, flagged SMT evidence,
+  unchanged KAN certificate success, or hardware reachability-only receipts into
+  success claims.
+- SCENARIO-CAPSTONE-5320: The artifact
+  `results/experiment_5320_capstone_v485.json` must emit top-level
+  principle-annotated fields `experiment_id`, `milestone`, `status`,
+  `honest_verdict`, `inference_substrate`, `artifacts_read`,
+  `missing_artifacts`, `sota_runtime_status`, `sota_quality_status`,
+  `paraphrase_verification_status`, `continuous_self_learning_status`,
+  `solver_status`, `kan_certificate_status`, `ebt_telemetry_status`,
+  `smt_hint_protocol_status`, `hardware_status`, `next_milestone_recommendation`,
+  and `docs_updated`. The artifact must also emit bare booleans
+  `no_false_speedup_claim=true` and `no_false_sota_quality_claim=true`. The
+  default `.485` aggregation must summarize Exp5309 as local GGUF runtime still
+  blocked despite authenticated CUDA/offload evidence, Exp5311 as gate-blocked
+  quality because Exp5309 did not unblock, Exp5310 as a deterministic
+  paraphrase fixture ready, Exp5312 and Exp5313 as clean transition-level
+  continuous self-learning positives with no model-weight mutation,
+  Exp5314/Exp5315 as bounded CPU solver-guidance positives with symbolic CDCL
+  fallback authoritative and misleading classes blocked, Exp5316 as a bounded
+  KAN envelope improvement with certificate-success delta unchanged at zero,
+  Exp5317 as methodology-clean tiny EBT telemetry that remains quarantined from
+  energy-descent, SOTA-quality, and hardware-readiness claims, Exp5318 as a
+  deterministic SMT protocol that is flagged adversarial and therefore cannot be
+  clean success evidence, and Exp5319 as reachability-only hardware continuity
+  with no speedup claim.
+- SCENARIO-CAPSTONE-5320-BLOCKED-MISSING-INPUT: If any expected Exp5307 through
+  Exp5319 artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5320_capstone_v485.json` with `honest_verdict.value`
+  starting with `blocked_missing_required`, record the missing or malformed
+  artifact in `missing_artifacts.value`, keep
+  `no_false_speedup_claim=true`, keep `no_false_sota_quality_claim=true`, and
+  keep `docs_updated.value.ops_status`, `docs_updated.value.ops_changelog`, and
+  `docs_updated.value.traceability` false.
+- SCENARIO-CAPSTONE-5320-FIELD-PRINCIPLES: The required field principles are:
+  `experiment_id` = "identifies Exp5320 as the `.485` capstone artifact so
+  downstream reconciliation cannot confuse it with the transition task or gated
+  SOTA smoke.", `milestone` = "binds the aggregation to 2026.07.485 and the
+  close-state read of Exp5307 through Exp5319.", `status` = "complete only when
+  every expected artifact is readable; otherwise blocked_missing_required.",
+  `honest_verdict` = "terminal prefix; starts with complete: or blocked_ and
+  summarizes the milestone without laundering blocked, gated, null, harmful,
+  flagged, quarantined, missing, no-speedup, or no-quality evidence.",
+  `inference_substrate` = "local_artifact_aggregation_and_doc_reconcile because
+  the capstone reads local result artifacts and existing docs without running
+  model, solver, or hardware workloads.", `artifacts_read` = "every readable
+  upstream artifact with path, experiment identity, verdict, and sha256 for the
+  audit trail.", `missing_artifacts` = "empty only when all expected artifacts
+  are present and parseable; otherwise names missing or malformed inputs.",
+  `sota_runtime_status` = "Exp5309 runtime gate state separated from any quality
+  claim.", `sota_quality_status` = "Exp5311 quality-smoke state; gate-blocked
+  quality remains unmeasured.", `paraphrase_verification_status` = "Exp5310
+  deterministic fixture readiness and label-preservation evidence separated from
+  gated SOTA quality.", `continuous_self_learning_status` = "Exp5312/Exp5313
+  transition verifier and rollout evidence with process-score, safety, rollback,
+  and no-weight-mutation gates.", `solver_status` = "Exp5314/Exp5315 bounded
+  solver guidance, symbolic fallback, and misleading-class blocking.",
+  `kan_certificate_status` = "Exp5316 bounded KAN allocation improvement while
+  certificate success delta remains zero.", `ebt_telemetry_status` = "Exp5317
+  methodology-clean tiny telemetry and its explicit quarantine boundaries.",
+  `smt_hint_protocol_status` = "Exp5318 deterministic protocol evidence plus
+  flagged-adversarial state so it is not treated as clean success.",
+  `hardware_status` = "Exp5319 board reachability receipts and no-speedup
+  discipline.", `next_milestone_recommendation` = "the concrete `.486` branch
+  implied by evidence, prioritizing runtime repair and gated quality before
+  broadening.", and `docs_updated` = "false for ops/status, ops/changelog, and
+  traceability when the stop rule delegates those docs to a later reconciler."
+
+## Implementation Status (REQ-CAPSTONE-5320)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5320 | Planned (`python/carnot/experiment_5320_capstone_v485.py`, `results/experiment_5320_capstone_v485.json`) | Planned (`tests/python/test_experiment_5320_capstone_v485.py`) |
