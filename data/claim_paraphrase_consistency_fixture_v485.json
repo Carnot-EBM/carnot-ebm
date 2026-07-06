@@ -1,0 +1,189 @@
+{
+  "schema": "carnot.fixture.claim_paraphrase_consistency.v485",
+  "label_source": "curated_deterministic_claim_paraphrase_fixture_v485",
+  "groups": [
+    {
+      "group_id": "pcf-001-supported-equivalent",
+      "family": "equivalent",
+      "evidence_facts": {
+        "duration_minutes": "47",
+        "subject": "aster-9 battery",
+        "test": "amber-load"
+      },
+      "anchor": {
+        "claim_id": "pcf-001-anchor",
+        "text": "The Aster-9 battery ran 47 minutes under the amber-load test.",
+        "premise_valid": true,
+        "facts": {
+          "duration_minutes": "47",
+          "subject": "aster-9 battery",
+          "test": "amber-load"
+        },
+        "expected_label": "supported",
+        "expected_label_preservation": true,
+        "expected_violation_type": null
+      },
+      "variants": [
+        {
+          "claim_id": "pcf-001-v1-word-order",
+          "text": "Under the amber-load test, Aster-9's battery lasted 47 minutes.",
+          "premise_valid": true,
+          "facts": {
+            "duration_minutes": "47",
+            "subject": "aster-9 battery",
+            "test": "amber-load"
+          },
+          "expected_label": "supported",
+          "expected_label_preservation": true,
+          "expected_violation_type": null
+        },
+        {
+          "claim_id": "pcf-001-v2-surface-format",
+          "text": "Aster-9 battery duration: 47 minutes in the amber-load run.",
+          "premise_valid": true,
+          "facts": {
+            "duration_minutes": "47",
+            "subject": "aster-9 battery",
+            "test": "amber-load"
+          },
+          "expected_label": "supported",
+          "expected_label_preservation": true,
+          "expected_violation_type": null
+        }
+      ]
+    },
+    {
+      "group_id": "pcf-002-contradiction-preserving",
+      "family": "contradiction-preserving",
+      "evidence_facts": {
+        "bench_count": "6",
+        "opened_year": "2024",
+        "subject": "cedar lab"
+      },
+      "anchor": {
+        "claim_id": "pcf-002-anchor",
+        "text": "The Cedar lab opened in 2023 with eleven benches.",
+        "premise_valid": true,
+        "facts": {
+          "bench_count": "11",
+          "opened_year": "2023",
+          "subject": "cedar lab"
+        },
+        "expected_label": "contradictory",
+        "expected_label_preservation": true,
+        "expected_violation_type": null
+      },
+      "variants": [
+        {
+          "claim_id": "pcf-002-v1-same-wrong-values",
+          "text": "When Cedar lab opened in 2023, it had eleven benches.",
+          "premise_valid": true,
+          "facts": {
+            "bench_count": "11",
+            "opened_year": "2023",
+            "subject": "cedar lab"
+          },
+          "expected_label": "contradictory",
+          "expected_label_preservation": true,
+          "expected_violation_type": null
+        },
+        {
+          "claim_id": "pcf-002-v2-corrected-facts",
+          "text": "The Cedar lab opened in 2024 with six benches.",
+          "premise_valid": true,
+          "facts": {
+            "bench_count": "6",
+            "opened_year": "2024",
+            "subject": "cedar lab"
+          },
+          "expected_label": "supported",
+          "expected_label_preservation": false,
+          "expected_violation_type": "contradiction_erased"
+        }
+      ]
+    },
+    {
+      "group_id": "pcf-003-premise-invalid",
+      "family": "premise-invalid",
+      "evidence_facts": {
+        "current_stop": "pear gate",
+        "service_status": "stops",
+        "subject": "route 6"
+      },
+      "anchor": {
+        "claim_id": "pcf-003-anchor",
+        "text": "Because Route 6 never served Pear Gate, Route 6 skips Pear Gate today.",
+        "premise_valid": false,
+        "facts": {
+          "current_stop": "pear gate",
+          "service_status": "skips",
+          "subject": "route 6"
+        },
+        "expected_label": "premise-invalid",
+        "expected_label_preservation": true,
+        "expected_violation_type": null
+      },
+      "variants": [
+        {
+          "claim_id": "pcf-003-v1-restated-premise",
+          "text": "Since Pear Gate was supposedly never on Route 6, the route does not stop there now.",
+          "premise_valid": false,
+          "facts": {
+            "current_stop": "pear gate",
+            "service_status": "skips",
+            "subject": "route 6"
+          },
+          "expected_label": "premise-invalid",
+          "expected_label_preservation": true,
+          "expected_violation_type": null
+        }
+      ]
+    },
+    {
+      "group_id": "pcf-004-surface-only",
+      "family": "surface-only",
+      "evidence_facts": {
+        "checksum": "8f12",
+        "subject": "noma audit"
+      },
+      "anchor": {
+        "claim_id": "pcf-004-anchor",
+        "text": "The Noma audit checksum was 8f12.",
+        "premise_valid": true,
+        "facts": {
+          "checksum": "8f12",
+          "subject": "noma audit"
+        },
+        "expected_label": "supported",
+        "expected_label_preservation": true,
+        "expected_violation_type": null
+      },
+      "variants": [
+        {
+          "claim_id": "pcf-004-v1-punctuation",
+          "text": "Noma audit checksum: 8f12.",
+          "premise_valid": true,
+          "facts": {
+            "checksum": "8f12",
+            "subject": "noma audit"
+          },
+          "expected_label": "supported",
+          "expected_label_preservation": true,
+          "expected_violation_type": null
+        },
+        {
+          "claim_id": "pcf-004-v2-negation-overlap",
+          "text": "The Noma audit checksum was not 8f12.",
+          "premise_valid": true,
+          "facts": {
+            "checksum": "not:8f12",
+            "subject": "noma audit"
+          },
+          "expected_label": "contradictory",
+          "expected_label_preservation": false,
+          "expected_violation_type": "surface_overlap_label_flip"
+        }
+      ]
+    }
+  ]
+}

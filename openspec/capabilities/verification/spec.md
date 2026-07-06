@@ -25967,6 +25967,80 @@ the next root cause under `timeout_root_cause`, keeps
 |---|---|---|
 | REQ-VERIFY-5309 | Planned (`python/carnot/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.py`, `results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json`) | Planned (`tests/python/test_experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.py`) |
 
+### REQ-VERIFY-5310: Deterministic Claim Paraphrase Consistency Fixture V485
+
+The repository SHALL provide Exp 5310 at
+`python/carnot/experiment_5310_paraphrase_consistency_fixture_v485.py`, store
+the deterministic fixture at
+`data/claim_paraphrase_consistency_fixture_v485.json`, and write
+`results/experiment_5310_paraphrase_consistency_fixture_v485.json` without
+invoking a live LLM, local GGUF model, external API judge, generated-text
+judge, or retired text-verifier path, and without modifying
+`scripts/research_conductor.py`. Exp 5310 SHALL prepare the no-LLM fixture gate
+that Exp 5311 reads before running any local SOTA quality smoke.
+
+The fixture SHALL include small labeled paraphrase groups for semantically
+equivalent supported claims, contradiction-preserving paraphrases,
+premise-invalid paraphrases, and surface-only rewrites. Each group SHALL carry
+deterministic evidence facts, claim facts, expected semantic labels, expected
+label-preservation decisions, and explicit expected violation cases so a
+surface rewrite or high token overlap cannot be mistaken for semantic
+equivalence.
+
+The runner SHALL implement a deterministic verifier or scoring helper that
+checks labels from structured facts only. It SHALL compute whether expected
+label-preserving variants preserve the anchor label, whether
+contradiction-erasing variants are caught as violations, whether invalid
+premise variants are rejected as `premise-invalid`, and whether surface-only
+rewrites resist false-positive equivalence. The runner SHALL NOT call a model
+or synthesize labels from free-form text.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `fixture_path`, and
+`tests_run`, plus bare `paraphrase_fixture_ready`,
+`paraphrase_group_count`, `label_preservation_pass_rate`,
+`contradiction_violation_caught_rate`, and `invalid_premise_handled`.
+`honest_verdict.value` SHALL start with `complete:` or `blocked_`.
+`inference_substrate.value` SHALL be
+`deterministic_claim_paraphrase_fixture_no_llm`.
+`paraphrase_fixture_ready` SHALL be true only when all required fixture
+families are present, expected label-preservation checks pass, expected
+contradiction violations are caught, invalid premises are handled, and the
+fixture is usable by Exp 5311.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5310 deterministic paraphrase-consistency fixture."
+- `milestone`: principle "Milestone accountability for the V485 paraphrase fixture gate."
+- `status`: principle "Machine-readable terminal state for downstream gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether the deterministic paraphrase fixture is usable by Exp5311."
+- `inference_substrate`: principle "Declares deterministic_claim_paraphrase_fixture_no_llm so the artifact is read as a fixture/scoring helper, not a live model claim."
+- `fixture_path`: principle "Points downstream gates to the exact deterministic fixture file used to compute the reported metrics."
+- `tests_run`: principle "Commands run to validate the fixture module, artifact schema, new-code coverage, and repository tests."
+
+### SCENARIO-VERIFY-5310: Paraphrase Labels Preserve Meaning And Catch Violations
+
+Given the checked-in no-LLM paraphrase fixture, when Exp 5310 runs, then it
+loads every labeled group, scores each claim from structured facts, confirms
+semantically equivalent, contradiction-preserving, premise-invalid, and
+surface-only families are present, computes label-preservation and
+contradiction-violation rates, writes the required artifact, keeps
+`inference_substrate.value=deterministic_claim_paraphrase_fixture_no_llm`, and
+sets `paraphrase_fixture_ready=true` only when every deterministic gate passes.
+
+If a required family is missing, an expected label-preserving paraphrase changes
+the anchor label, a contradiction-erasing violation is not caught, an invalid
+premise is accepted as supported, a surface-only rewrite is falsely treated as
+semantic equivalence, or the fixture would require any LLM call, then the same
+runner writes a terminal `blocked_` artifact with
+`paraphrase_fixture_ready=false` and exact blocker metrics.
+
+## Implementation Status (REQ-VERIFY-5310)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5310 | Planned (`python/carnot/experiment_5310_paraphrase_consistency_fixture_v485.py`, `data/claim_paraphrase_consistency_fixture_v485.json`, `results/experiment_5310_paraphrase_consistency_fixture_v485.json`) | Planned (`tests/python/test_experiment_5310_paraphrase_consistency_fixture_v485.py`) |
+
 ### REQ-VERIFY-5297: Changed Runtime SOTA GGUF Substrate Gate V484
 
 The repository SHALL provide an Exp 5297 runtime gate that tries a changed
