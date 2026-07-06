@@ -25882,6 +25882,109 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5324: Local Native GGUF Runtime Receipt Stabilization V486
+
+The repository SHALL provide Exp 5324 at
+`python/carnot/experiment_5324_runtime_receipt_stabilization_v486.py` and
+write `results/experiment_5324_runtime_receipt_stabilization_v486.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL stabilize
+the Exp 5323 native llama.cpp backend candidate into a repeatable local SOTA
+runtime receipt only; it SHALL NOT run a quality benchmark or claim model
+quality, verifier quality, solver quality, memory usefulness, benchmark
+improvement, or answer accuracy.
+
+The workflow SHALL be pre-gated by Exp 5323. It SHALL read the Exp 5323
+artifact, accept replay only when a native GGUF backend candidate completed a
+bounded generation receipt for at least one mandated SOTA model, and preserve
+the exact selected backend command. If the Exp 5323 candidate command is absent,
+not complete, malformed, or no longer matches the selected mandated model, the
+runner SHALL write a terminal blocked artifact rather than inventing a command.
+
+Step 0 SHALL re-check GPU visibility, raw `nvidia-smi`, NVIDIA driver/CUDA facts
+when available, free VRAM, free disk, the selected llama.cpp binary path and
+version, CUDA dynamic-library evidence, selected model file presence and GGUF
+metadata, and the exact Exp 5323 backend command before replay. If the selected
+binary or selected model file is unavailable, the runner SHALL write a blocked
+artifact. The mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+When preconditions pass, the runner SHALL replay the selected Exp 5323 backend
+command for the selected mandated model at least three times. Each repeated
+receipt SHALL record run index, command, load time, first-token time, 8-token
+completion status, generated-token count, GPU memory delta, offload evidence,
+timeout class, return code, wall-clock time, stdout tail, and stderr summary.
+The runner SHALL set bare `sota_runtime_unblocked_stable=true` only if all
+required repeated receipts complete load, first token, and bounded 8-token
+generation with authenticated GPU offload and no crash or timeout. It SHALL set
+bare `quality_claim_permitted=false` in all artifacts.
+
+If stability fails, `stability_failure_class.value` SHALL be one of
+`command_drift`, `memory_pressure`, `model_specific_assertion`, `timeout`, or
+`missing_binary`, and SHALL name the dominant blocker without converting partial
+success into a quality claim. `command_drift` covers an invalid or changed Exp
+5323 command/model binding; `memory_pressure` covers insufficient current VRAM
+or repeated out-of-memory evidence; `model_specific_assertion` covers GGUF or
+llama.cpp assertion failures tied to the selected model; `timeout` covers
+first-token or bounded-generation timeout; and `missing_binary` covers absent
+native binary or selected model file.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, `selected_backend_command`,
+`repeated_receipts`, `stability_failure_class`, and `tests_run`, plus bare
+`sota_runtime_unblocked_stable` and bare `quality_claim_permitted=false`.
+`inference_substrate.value` SHALL be
+`local_native_llama_cpp_stability_receipts`. `honest_verdict.value` SHALL start
+with `complete:` when the selected mandated model is repeatably stable, or
+`blocked_` when preconditions or repeated receipts do not meet the stability
+gate.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5324 local native GGUF runtime receipt stabilization."
+- `milestone`: principle "Milestone accountability for the V486 stability decision."
+- `status`: principle "Machine-readable terminal state for downstream runtime gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether the native SOTA runtime receipt is repeatably stable."
+- `inference_substrate`: principle "Declares local_native_llama_cpp_stability_receipts so the artifact is read as repeated native runtime receipts, not a quality benchmark."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF repository IDs and concrete local GGUF cache status without AutoTokenizer fallback."
+- `preconditions_checked`: principle "Records GPU visibility, llama.cpp binary version, selected model file presence, VRAM, CUDA evidence, and the exact Exp5323 command before replay."
+- `selected_model_spec`: principle "Binds the repeated receipts to the one mandated model selected by the Exp5323 successful backend command."
+- `selected_backend_command`: principle "Preserves the exact Exp5323 backend command so stability replay cannot silently drift to easier flags or a different model."
+- `repeated_receipts`: principle "Records at least three bounded replay receipts with timing, 8-token completion, GPU memory, offload, timeout, and stderr evidence."
+- `stability_failure_class`: principle "Names the dominant stability blocker for downstream gates without inflating partial receipt success into an unblock."
+- `tests_run`: principle "Commands run to validate the stability module, artifact schema, new-code coverage, and required repository test status."
+
+### SCENARIO-VERIFY-5324: Exp5323 Candidate Replays Into Stable Or Blocked Receipts
+
+Given the Exp 5323 artifact reports a completed native GGUF backend candidate
+for one mandated SOTA model and the selected binary, GPU, CUDA backend, VRAM,
+and selected model file are still available, when Exp 5324 runs, then it
+replays the exact selected backend command at least three times, records each
+bounded receipt with load timing, first-token timing, 8-token completion, GPU
+memory delta, authenticated offload evidence, timeout class, and stderr
+summary, writes the required artifact, sets
+`inference_substrate.value=local_native_llama_cpp_stability_receipts`, sets
+`quality_claim_permitted=false`, and sets
+`sota_runtime_unblocked_stable=true` only when every replay completes with
+authenticated GPU offload and no crash or timeout.
+
+If the Exp 5323 command is absent, the selected binary or selected model file is
+missing, current VRAM is insufficient, any replay times out, any replay hits a
+model-specific llama.cpp assertion, or any replay completes without
+authenticated GPU offload, then the same runner writes a terminal `blocked_`
+artifact, records `sota_runtime_unblocked_stable=false`, records
+`quality_claim_permitted=false`, and classifies the dominant blocker as
+`command_drift`, `memory_pressure`, `model_specific_assertion`, `timeout`, or
+`missing_binary` without modifying `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5324)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5324 | Planned (`python/carnot/experiment_5324_runtime_receipt_stabilization_v486.py`, `results/experiment_5324_runtime_receipt_stabilization_v486.json`) | Planned (`tests/python/test_experiment_5324_runtime_receipt_stabilization_v486.py`) |
+
 ### REQ-VERIFY-5323: Native GGUF Backend Flag Bisect V486
 
 The repository SHALL provide Exp 5323 at
