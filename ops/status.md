@@ -1,6 +1,22 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-05 (Exp 5258 V481 execution-refresh test fix)
+**Last Updated:** 2026-07-06 (Milestone 2026.07.483 operational retrospective)
+
+## Session 2026-07-06 - Milestone 2026.07.483 Operational Retro
+
+Wrote `results/operational_retro_2026_07_483.json` and appended the
+corresponding entries to `ops/changelog.md` and `docs/research-log.md`. The
+authoritative timing block reports a timing-assembly mismatch: live git-log
+and disk-mtime reconstruction found 0 experiment commits while changelog
+references exist, so the retrospective keeps total wall time, completed
+experiments, and compute-bound experiments at 0, leaves `slowest_experiments`
+empty, and keeps `gpu_idle_on_compute_bound_tasks: null`.
+
+Validation for this documentation/results-only task: JSON parsing and
+whitespace checks passed; operator-curated docs lint exited successfully with
+its no-message-path warning. Reconciliation remains blocked by stale
+architecture metadata and repo-wide spec-traceability gaps outside the touched
+files; no E2E model-training or hardware check applies.
 
 ## Session 2026-07-05 — Exp 5258 V481 Execution-Refresh Test Fix
 
