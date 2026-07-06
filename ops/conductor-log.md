@@ -10425,3 +10425,4 @@ web search: Semantic Schola |
 | 2026-07-06 19:08 UTC | Milestone 2026.07.486 activated | OK | 14 tasks queued |
 | 2026-07-06 19:18 UTC | Exp 5321: Archive 2026.07.485 and activate 2026.07 | OK | 86 passed, 1 warning in 10.26s |
 | 2026-07-06 19:39 UTC | Exp 5322: V486 SOTA source delta refresh | OK | 103 passed, 1 warning in 9.32s |
+| 2026-07-06 21:06 UTC | Exp 5323: Native GGUF backend and flag bisect for  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:    with pytest |

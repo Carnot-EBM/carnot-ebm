@@ -1,0 +1,1731 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records the three mandated SOTA GGUF repository IDs and concrete local GGUF cache status without AutoTokenizer fallback.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.00028,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.000402,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.000268,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "backend_matrix": {
+    "principle": "Compares available native llama.cpp paths and generation modes, including attempted and skipped variants with exact flag choices.",
+    "value": {
+      "llama-cli": {
+        "attempts": [
+          {
+            "backend_variant": "llama-cli-single-turn-batch512",
+            "completed_load_first_token_and_8_tokens": true,
+            "model_role": "flagship_dense",
+            "offload_authenticated": true,
+            "timeout_class": "completed_no_timeout"
+          }
+        ],
+        "available": true,
+        "cuda_backend_evidence": true,
+        "dynamic_libraries": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+          ],
+          "duration_s": 0.007971,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007fb3e78be000)\n\tlibllama-cli-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so (0x00007fb3e7726000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007fb3e75d9000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007fb3e7000000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007fb3e6c00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007fb3e75cd000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007fb3e6a43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007fb3e3000000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007fb3e74f4000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007fb3dc400000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007fb3dc000000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007fb3e693c000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007fb3e6fcb000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007fb3dbc00000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fb3e78c0000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007fb3dbee6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007fb3db400000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007fb3e6f5b000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007fb3db000000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007fb3d7800000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007fb3b2a00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007fb3e74c0000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007fb3e74bb000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007fb3e74b4000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007fb3dc3c4000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007fb3dbb06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007fb3e74a4000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007fb3dae9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007fb3e6f38000)"
+        },
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "skipped": [],
+        "version": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "--version"
+          ],
+          "duration_s": 0.18398,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        }
+      },
+      "llama-completion": {
+        "attempts": [],
+        "available": true,
+        "cuda_backend_evidence": true,
+        "dynamic_libraries": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion"
+          ],
+          "duration_s": 0.006954,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007f566e6f3000)\n\tlibllama-completion-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so (0x00007f566e6cc000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f566e200000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f566de00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f566e6c0000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f566dc43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f566a200000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f566e129000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f5663600000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f5663200000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f56630f9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f566dbe3000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f5662e00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f5662ce6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f5662600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f566e6f5000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f566db73000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f5662200000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f565ea00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f5639c00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f566e6b5000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f566e6b0000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f566e6ab000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f566db37000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f5662506000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f566db27000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f566209f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f566a1dd000)"
+        },
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+        "skipped": [
+          "skipped_after_candidate_found"
+        ],
+        "version": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "--version"
+          ],
+          "duration_s": 0.134934,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        }
+      },
+      "llama-server": {
+        "attempts": [],
+        "available": true,
+        "cuda_backend_evidence": true,
+        "dynamic_libraries": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "duration_s": 0.006892,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007f4feeb51000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f4fede00000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f4fed800000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f4fee9f7000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f4fed400000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f4fee9eb000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f4fed243000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f4fe9800000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f4fedd29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f4fe2c00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f4fed129000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f4fe2400000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f4fe2000000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f4fe2af9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f4fee987000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f4fe1c00000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f4feeb53000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f4fedcb9000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f4fe1800000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f4fde000000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f4fb9200000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f4fee980000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f4fee97b000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f4fee974000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f4fed7c4000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f4fe1f06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f4fedca9000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f4fe169f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f4fed7a1000)"
+        },
+        "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "skipped": [
+          "skipped_after_candidate_found"
+        ],
+        "version": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "duration_s": 0.156194,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        }
+      }
+    }
+  },
+  "best_backend_command": {
+    "principle": "Records the exact reusable command that completed load, first token, and bounded 8-token generation with authenticated GPU offload, or null with a blocker reason.",
+    "value": {
+      "backend_kind": "llama-cli",
+      "backend_variant": "llama-cli-single-turn-batch512",
+      "batch": 512,
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "-p",
+        "Write eight lowercase color words separated by spaces.",
+        "-n",
+        "8",
+        "-c",
+        "512",
+        "-b",
+        "512",
+        "-ub",
+        "128",
+        "-ngl",
+        "all",
+        "-sm",
+        "layer",
+        "--temp",
+        "0",
+        "--seed",
+        "5323",
+        "--no-display-prompt",
+        "--simple-io",
+        "-st",
+        "--perf"
+      ],
+      "context": 512,
+      "eight_token_generation_s": null,
+      "first_token_latency_s": 19.374111400917172,
+      "gpu_layers": "all",
+      "gpu_memory_delta_mb": 18630,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_role": "flagship_dense",
+      "n_predict": 8,
+      "prompt": "Write eight lowercase color words separated by spaces.",
+      "tensor_split": null,
+      "timeout_s": 240.0,
+      "ubatch": 128
+    }
+  },
+  "duration_s": 20.830088,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5323 native GGUF backend flag bisect.",
+    "value": "experiment_5323_native_gguf_backend_flag_bisect_v486"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated SOTA GGUF repository IDs and concrete local GGUF cache status without AutoTokenizer fallback.",
+    "backend_matrix": "Compares available native llama.cpp paths and generation modes, including attempted and skipped variants with exact flag choices.",
+    "best_backend_command": "Records the exact reusable command that completed load, first token, and bounded 8-token generation with authenticated GPU offload, or null with a blocker reason.",
+    "experiment_id": "Traceability for the Exp5323 native GGUF backend flag bisect.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether a native bounded generation backend candidate exists.",
+    "inference_substrate": "Declares local_native_llama_cpp_gguf_backend_bisect so the artifact is read as a native GGUF runtime bisect, not a quality or verifier claim.",
+    "milestone": "Milestone accountability for the V486 native backend candidate decision.",
+    "per_model_runtime_matrix": "Records each attempted mandated model's command, backend, model path, context, batch, ubatch, offload flags, prompt, n_predict, timeout, GPU memory delta, offload evidence, first-token time, and 8-token completion status.",
+    "preconditions_checked": "Records GPU visibility, nvidia-smi, CUDA and driver facts, free VRAM, free disk, native binary paths, binary versions, dynamic-library evidence, and model cache status before runtime interpretation.",
+    "status": "Machine-readable terminal state for downstream runtime gates.",
+    "tests_run": "Commands run to validate the bisect module, artifact schema, new-code coverage, and focused runtime checks.",
+    "timeout_or_crash_root_cause": "Names the next concrete runtime blocker when no mandated model has a usable bounded generation receipt."
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether a native bounded generation backend candidate exists.",
+    "value": "complete: native_llama_cpp_backend_candidate_ready=flagship_dense:llama-cli"
+  },
+  "inference_substrate": {
+    "principle": "Declares local_native_llama_cpp_gguf_backend_bisect so the artifact is read as a native GGUF runtime bisect, not a quality or verifier claim.",
+    "value": "local_native_llama_cpp_gguf_backend_bisect"
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V486 native backend candidate decision.",
+    "value": "2026.07.486"
+  },
+  "no_quality_claim": true,
+  "per_model_runtime_matrix": {
+    "principle": "Records each attempted mandated model's command, backend, model path, context, batch, ubatch, offload flags, prompt, n_predict, timeout, GPU memory delta, offload evidence, first-token time, and 8-token completion status.",
+    "value": {
+      "flagship_dense": {
+        "attempts": [
+          {
+            "backend_gpu_log_evidence": false,
+            "backend_kind": "llama-cli",
+            "backend_variant": "llama-cli-single-turn-batch512",
+            "batch": 512,
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Write eight lowercase color words separated by spaces.",
+              "-n",
+              "8",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5323",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed_load_first_token_and_8_tokens": true,
+            "context": 512,
+            "eight_token_completion_status": "completed_8_tokens",
+            "eight_token_generation_s": null,
+            "first_token_latency_s": 19.374111400917172,
+            "generated_token_count": 8,
+            "gpu_layers": "all",
+            "gpu_memory_delta_mb": 18630,
+            "gpu_memory_receipts": {
+              "after": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 7
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "before": [
+                {
+                  "index": 0,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                },
+                {
+                  "index": 1,
+                  "memory_free_mb": 24120,
+                  "memory_used_mb": 4,
+                  "name": "NVIDIA GeForce RTX 3090",
+                  "utilization_gpu_pct": 0
+                }
+              ],
+              "during": [
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23903,
+                    "memory_used_mb": 222,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 19,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23916,
+                    "memory_used_mb": 208,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 16
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23918,
+                    "memory_used_mb": 206,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24116,
+                    "memory_used_mb": 8,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 20,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 19,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 8
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23859,
+                    "memory_used_mb": 266,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 8
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23859,
+                    "memory_used_mb": 266,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 10
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23859,
+                    "memory_used_mb": 266,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 8
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23859,
+                    "memory_used_mb": 266,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 10
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23859,
+                    "memory_used_mb": 266,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 20,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 3
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 3
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23916,
+                    "memory_used_mb": 208,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 13
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23916,
+                    "memory_used_mb": 209,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24093,
+                    "memory_used_mb": 32,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24106,
+                    "memory_used_mb": 19,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24118,
+                    "memory_used_mb": 6,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 20,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 8
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 15
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24105,
+                    "memory_used_mb": 20,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 15
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 24120,
+                    "memory_used_mb": 4,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 1
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 99
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 15251,
+                    "memory_used_mb": 8874,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 15005,
+                    "memory_used_mb": 9120,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14937,
+                    "memory_used_mb": 9188,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14737,
+                    "memory_used_mb": 9388,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14921,
+                    "memory_used_mb": 9204,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14691,
+                    "memory_used_mb": 9434,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14921,
+                    "memory_used_mb": 9204,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14691,
+                    "memory_used_mb": 9434,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14921,
+                    "memory_used_mb": 9204,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14691,
+                    "memory_used_mb": 9434,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14921,
+                    "memory_used_mb": 9204,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14691,
+                    "memory_used_mb": 9434,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 14933,
+                    "memory_used_mb": 9192,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 14703,
+                    "memory_used_mb": 9422,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 0
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23823,
+                    "memory_used_mb": 302,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 100
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23823,
+                    "memory_used_mb": 302,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 51
+                  }
+                ],
+                [
+                  {
+                    "index": 0,
+                    "memory_free_mb": 23823,
+                    "memory_used_mb": 302,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 57
+                  },
+                  {
+                    "index": 1,
+                    "memory_free_mb": 23823,
+                    "memory_used_mb": 302,
+                    "name": "NVIDIA GeForce RTX 3090",
+                    "utilization_gpu_pct": 51
+                  }
+                ]
+              ],
+              "max_memory_delta_mb": 18630,
+              "offload_evidence": true
+            },
+            "load_s": null,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "n_predict": 8,
+            "offload_authenticated": true,
+            "prompt": "Write eight lowercase color words separated by spaces.",
+            "returncode": 0,
+            "status": "completed",
+            "stderr_tail": "",
+            "stdout_tail": "\nLoading model... \n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Write eight lowercase color words separated by spaces.\n\n[Start thinking]\n*   Quantity: Eight\n\n[ Prompt: 179.8 t/s | Generation: 39.9 t/s ]\n\nExiting...\n",
+            "tensor_split": null,
+            "timed_out": false,
+            "timeout_class": "completed_no_timeout",
+            "timeout_s": 240.0,
+            "ubatch": 128,
+            "wall_clock_s": 20.117968
+          }
+        ],
+        "autotokenizer_used": false,
+        "best_attempt_status": "ready",
+        "cache_status": "local_gguf_resolved",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_available": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "role": "flagship_dense"
+      },
+      "flagship_moe": {
+        "attempts": [],
+        "autotokenizer_used": false,
+        "best_attempt_status": "not_attempted",
+        "cache_status": "local_gguf_resolved",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_available": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "role": "flagship_moe"
+      },
+      "middle_moe": {
+        "attempts": [],
+        "autotokenizer_used": false,
+        "best_attempt_status": "not_attempted",
+        "cache_status": "local_gguf_resolved",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_available": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "role": "middle_moe"
+      }
+    }
+  },
+  "preconditions_checked": {
+    "principle": "Records GPU visibility, nvidia-smi, CUDA and driver facts, free VRAM, free disk, native binary paths, binary versions, dynamic-library evidence, and model cache status before runtime interpretation.",
+    "value": {
+      "attempt_role_order": [
+        "flagship_dense",
+        "flagship_moe",
+        "middle_moe"
+      ],
+      "autotokenizer_used": false,
+      "binary_dynamic_libraries": {
+        "llama-cli": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+          ],
+          "duration_s": 0.007971,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007fb3e78be000)\n\tlibllama-cli-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so (0x00007fb3e7726000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007fb3e75d9000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007fb3e7000000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007fb3e6c00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007fb3e75cd000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007fb3e6a43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007fb3e3000000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007fb3e74f4000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007fb3dc400000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007fb3dc000000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007fb3e693c000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007fb3e6fcb000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007fb3dbc00000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fb3e78c0000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007fb3dbee6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007fb3db400000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007fb3e6f5b000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007fb3db000000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007fb3d7800000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007fb3b2a00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007fb3e74c0000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007fb3e74bb000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007fb3e74b4000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007fb3dc3c4000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007fb3dbb06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007fb3e74a4000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007fb3dae9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007fb3e6f38000)"
+        },
+        "llama-completion": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion"
+          ],
+          "duration_s": 0.006954,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007f566e6f3000)\n\tlibllama-completion-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so (0x00007f566e6cc000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f566e200000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f566de00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f566e6c0000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f566dc43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f566a200000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f566e129000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f5663600000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f5663200000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f56630f9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f566dbe3000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f5662e00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f5662ce6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f5662600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f566e6f5000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f566db73000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f5662200000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f565ea00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f5639c00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f566e6b5000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f566e6b0000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f566e6ab000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f566db37000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f5662506000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f566db27000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f566209f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f566a1dd000)"
+        },
+        "llama-server": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "duration_s": 0.006892,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007f4feeb51000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f4fede00000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f4fed800000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f4fee9f7000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f4fed400000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f4fee9eb000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f4fed243000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f4fe9800000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f4fedd29000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f4fe2c00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f4fed129000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f4fe2400000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f4fe2000000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f4fe2af9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f4fee987000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f4fe1c00000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f4feeb53000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f4fedcb9000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f4fe1800000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f4fde000000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f4fb9200000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f4fee980000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f4fee97b000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f4fee974000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f4fed7c4000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f4fe1f06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f4fedca9000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f4fe169f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f4fed7a1000)"
+        }
+      },
+      "binary_paths": {
+        "llama-cli": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "llama-completion": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+        "llama-server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+      },
+      "binary_versions": {
+        "llama-cli": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "--version"
+          ],
+          "duration_s": 0.18398,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        },
+        "llama-completion": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "--version"
+          ],
+          "duration_s": 0.134934,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        },
+        "llama-server": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "duration_s": 0.156194,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        }
+      },
+      "blocked_preconditions": [],
+      "cuda_backend_evidence": true,
+      "cuda_driver": {
+        "cuda_version": "13.3",
+        "driver_version": "610.43.02"
+      },
+      "free_disk": {
+        "free_bytes": 1483996729344,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "used_bytes": 2469292294144
+      },
+      "free_vram_mb": 48240,
+      "gguf_cache_paths": {
+        "flagship_dense": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "flagship_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "middle_moe": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF"
+      },
+      "gpu_visible": true,
+      "model_cache_status": {
+        "flagship_dense": {
+          "cached": true,
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "status": "local_gguf_resolved"
+        },
+        "flagship_moe": {
+          "cached": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "status": "local_gguf_resolved"
+        },
+        "middle_moe": {
+          "cached": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "status": "local_gguf_resolved"
+        }
+      },
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.033959,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "raw_nvidia_smi": {
+        "command": [
+          "nvidia-smi"
+        ],
+        "duration_s": 0.105747,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "Mon Jul  6 17:18:44 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   50C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   52C    P8             20W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+      },
+      "resolved_roles": [
+        "flagship_moe",
+        "flagship_dense",
+        "middle_moe"
+      ],
+      "run_date_utc": "20260706",
+      "vram_before": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ]
+    }
+  },
+  "random_seed": 5323,
+  "reproducibility_checksum": "0f91aee4895d1934",
+  "runtime_unblocked_min_one_mandated": true,
+  "schema": "carnot.experiment_5323.native_gguf_backend_flag_bisect.v486",
+  "sota_backend_candidate_ready": true,
+  "spec_refs": [
+    "REQ-VERIFY-5323",
+    "SCENARIO-VERIFY-5323"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream runtime gates.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the bisect module, artifact schema, new-code coverage, and focused runtime checks.",
+    "value": [
+      {
+        "command": "PYTHONPATH=python .venv/bin/pytest tests/python/test_experiment_5323_native_gguf_backend_flag_bisect_v486.py -q -o addopts=\"\"",
+        "details": "9 passed in 1.51s; focused REQ-VERIFY-5323/SCENARIO-VERIFY-5323 unit and schema tests.",
+        "outcome": "passed"
+      },
+      {
+        "command": "PYTHONPATH=python COVERAGE_FILE=/tmp/carnot_exp5323.coverage .venv/bin/coverage run --include=\"*/python/carnot/experiment_5323_native_gguf_backend_flag_bisect_v486.py\" -m pytest tests/python/test_experiment_5323_native_gguf_backend_flag_bisect_v486.py -q -o addopts=\"\" && PYTHONPATH=python COVERAGE_FILE=/tmp/carnot_exp5323.coverage .venv/bin/coverage report --include=\"*/python/carnot/experiment_5323_native_gguf_backend_flag_bisect_v486.py\" --fail-under=100 --show-missing",
+        "details": "9 passed in 2.89s; new module coverage 358/358 statements, 100%.",
+        "outcome": "passed"
+      },
+      {
+        "command": "ruff check python/carnot/experiment_5323_native_gguf_backend_flag_bisect_v486.py tests/python/test_experiment_5323_native_gguf_backend_flag_bisect_v486.py",
+        "details": "All checks passed.",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py",
+        "details": "Failed with 1255 pre-existing tests lacking REQ-* or SCENARIO-* traceability; new Exp5323 tests include REQ-VERIFY-5323/SCENARIO-VERIFY-5323 references.",
+        "outcome": "failed_pre_existing_repo_wide"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "details": "Single required invocation interrupted after failures and an xdist worker crash: 21 failed, 9232 passed, 22 skipped, 120 warnings in 385.64s. Failures included pre-existing onnx missing, THRML parity blocked, capstone expectation drift, HTTP timeout, and Z3 segfault in unrelated tests; Exp5323 focused tests passed separately.",
+        "outcome": "failed_interrupted_after_unrelated_failures"
+      }
+    ]
+  },
+  "timeout_or_crash_root_cause": {
+    "principle": "Names the next concrete runtime blocker when no mandated model has a usable bounded generation receipt.",
+    "value": "none"
+  }
+}
