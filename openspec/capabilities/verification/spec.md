@@ -26344,6 +26344,80 @@ solver-only SAT/UNSAT label, and keep the unsafe false-accept count at zero.
 |---|---|---|
 | REQ-VERIFY-5299 | Planned (`python/carnot/experiment_5299_constraint_lns_solver_repair_fixture_v484.py`, `results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json`) | Planned (`tests/python/test_experiment_5299_constraint_lns_solver_repair_fixture_v484.py`) |
 
+### REQ-VERIFY-5300: p-bit/CDCL Instance-Class Gate V484
+
+The repository SHALL provide Exp 5300 at
+`python/carnot/experiment_5300_pbit_cdcl_instance_class_gate_v484.py`
+and write
+`results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json`
+without invoking an LLM, without claiming hardware execution or hardware
+speedup, and without modifying `scripts/research_conductor.py`. The runner
+SHALL reuse the Exp 5292 p-bit/CDCL helper and the Exp 5299 deterministic
+constraint-LNS fixture rather than inventing an unanchored SAT benchmark.
+
+The gate SHALL replay bounded p-bit/Ising assumptions over the original Exp
+5292 help/harm/neutral classes and over the available Exp 5299 LNS/factor
+fixture classes. It SHALL compute deterministic transparent gate features,
+including assumption conflict prefix, factor alignment score, LNS repair
+agreement, contradiction count, and solver overwrite count. The deterministic
+feature named LNS repair agreement SHALL be derived from the deterministic Exp
+5299 fixture rather than from learned labels. It SHALL NOT train
+or invoke a broad opaque classifier.
+
+The benchmark SHALL compare solver-only fallback, ungated p-bit/CDCL guidance,
+and gated p-bit/CDCL guidance over the same CNF instances. It SHALL report
+conflicts, decisions, propagations, restarts, wall-clock receipts, correctness,
+and class-level deltas. The gate SHALL route p-bit/Ising assumptions only when
+the deterministic features indicate the assumptions help or are neutral, and
+SHALL block misleading-assumption classes. If the gate cannot block misleading
+harm without losing all aggregate benefit, the artifact SHALL emit a `null:`,
+`harmful_`, or `blocked_` honest verdict and recommend retirement of ungated
+p-bit guidance.
+
+The artifact SHALL include these top-level fields:
+`honest_verdict`, `inference_substrate`, `pbit_gate_ready`,
+`misleading_class_blocked`, `conflicts_saved_by_class`,
+`ungated_vs_gated_delta`, `correctness_preserved`,
+`hardware_speedup_claimed`, and `tests_run`. Except for `tests_run`, each
+required field SHALL be an object with `value` and `principle`.
+`honest_verdict.value` SHALL start with `complete:`, `null:`, `harmful_`, or
+`blocked_` and state whether the p-bit/CDCL gate helped.
+`inference_substrate.value` SHALL be `offline_deterministic_certificate_no_llm`.
+`hardware_speedup_claimed.value` SHALL be false.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5300 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether the p-bit/CDCL instance-class gate helped."
+- `inference_substrate`: principle "Must be offline_deterministic_certificate_no_llm because Exp 5300 replays local deterministic fixtures with a local CDCL solver and no LLM inference."
+- `pbit_gate_ready`: principle "True only when the transparent feature gate preserves correctness, blocks misleading assumption classes, and retains positive aggregate conflict savings versus solver-only fallback."
+- `misleading_class_blocked`: principle "Confirms that classes with contradiction, overwrite, or LNS-rejected assumption evidence are blocked instead of routed through ungated p-bit guidance."
+- `conflicts_saved_by_class`: principle "Reports solver-only-minus-gated CDCL conflicts by class so class-specific benefit and harm remain visible."
+- `ungated_vs_gated_delta`: principle "Compares ungated guidance, gated guidance, and solver-only fallback over the same instances to prove the gate removes misleading harm rather than hiding it."
+- `correctness_preserved`: principle "True only when gated and ungated final SAT/UNSAT labels match solver-only labels and every final SAT model satisfies the original CNF."
+- `hardware_speedup_claimed`: principle "Always false for Exp 5300 because p-bit/Ising assumptions are replayed CPU-side and no hardware execution is measured."
+- `tests_run`: principle "Commands run to validate gate decisions, misleading-class blocking, correctness preservation, no hardware speedup claims, artifact schema, and new-code coverage."
+
+### SCENARIO-VERIFY-5300: Misleading Assumptions Are Blocked By The Instance-Class Gate
+
+Given the Exp 5292 factor-guidance classes and the Exp 5299 deterministic
+constraint-LNS fixture classes, when Exp 5300 runs, then it replays solver-only,
+ungated p-bit/CDCL, and gated p-bit/CDCL arms for every available class;
+computes assumption conflict prefix, factor alignment, LNS agreement,
+contradiction count, and solver overwrite count; writes the required artifact;
+and sets `hardware_speedup_claimed.value=false`.
+
+If p-bit or Ising assumptions contradict the original CNF, are rejected by the
+LNS repair fixture, or require solver overwrite/fallback telemetry, then the
+gate SHALL block those assumptions, use the solver-only fallback for the gated
+arm, preserve the solver-only SAT/UNSAT label, and record the class in
+`misleading_class_blocked.value.blocked_classes`.
+
+## Implementation Status (REQ-VERIFY-5300)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5300 | Planned (`python/carnot/experiment_5300_pbit_cdcl_instance_class_gate_v484.py`, `results/experiment_5300_pbit_cdcl_instance_class_gate_v484.json`) | Planned (`tests/python/test_experiment_5300_pbit_cdcl_instance_class_gate_v484.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at

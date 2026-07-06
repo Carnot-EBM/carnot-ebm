@@ -1,0 +1,1170 @@
+{
+  "aggregate_metrics": {
+    "gated": {
+      "conflicts": 15,
+      "decisions": 71,
+      "propagations": 152,
+      "restarts": 8,
+      "wall_clock_s": 0.000134643
+    },
+    "solver_only": {
+      "conflicts": 24,
+      "decisions": 104,
+      "propagations": 200,
+      "restarts": 8,
+      "wall_clock_s": 0.000544724
+    },
+    "solver_only_vs_gated_delta": {
+      "conflicts_saved": 9,
+      "decisions_saved": 33,
+      "propagations_saved": 48,
+      "restarts_saved": 0,
+      "wall_clock_s_saved": 0.000410081
+    },
+    "solver_only_vs_ungated_delta": {
+      "conflicts_saved": 6,
+      "decisions_saved": 33,
+      "propagations_saved": 30,
+      "restarts_saved": -3,
+      "wall_clock_s_saved": 0.000374375
+    },
+    "ungated": {
+      "conflicts": 18,
+      "decisions": 71,
+      "propagations": 170,
+      "restarts": 11,
+      "wall_clock_s": 0.000170349
+    },
+    "ungated_vs_gated_delta": {
+      "conflicts_saved_by_gate": 3,
+      "decisions_saved_by_gate": 0,
+      "propagations_saved_by_gate": 18,
+      "restarts_saved_by_gate": 3,
+      "wall_clock_s_saved_by_gate": 3.5706e-05
+    }
+  },
+  "claim_limits": [
+    "CPU replay of p-bit/Ising assumptions only",
+    "Minisat22 CDCL remains authoritative for SAT/UNSAT labels",
+    "misleading assumptions are blocked by deterministic feature gates",
+    "ungated p-bit guidance is not safe to route on misleading classes",
+    "no hardware execution or hardware speedup claim",
+    "no LLM inference claim"
+  ],
+  "conflicts_saved_by_class": {
+    "principle": "Reports solver-only-minus-gated CDCL conflicts by class so class-specific benefit and harm remain visible.",
+    "value": {
+      "aligned_factor_sat": 3,
+      "aligned_repair": 3,
+      "malformed_control": 0,
+      "misleading_factor_sat": 0,
+      "misleading_repair": 0,
+      "neutral_factor_sat": 0,
+      "neutral_noop_repair": 3,
+      "semantic_wrong_control": 0
+    }
+  },
+  "correctness_preserved": {
+    "principle": "True only when gated and ungated final SAT/UNSAT labels match solver-only labels and every final SAT model satisfies the original CNF.",
+    "value": true
+  },
+  "duration_s": 0.035427,
+  "experiment_id": "exp5300-pbit-cdcl-instance-class-gate-v484",
+  "field_principles": {
+    "conflicts_saved_by_class": "Reports solver-only-minus-gated CDCL conflicts by class so class-specific benefit and harm remain visible.",
+    "correctness_preserved": "True only when gated and ungated final SAT/UNSAT labels match solver-only labels and every final SAT model satisfies the original CNF.",
+    "hardware_speedup_claimed": "Always false for Exp 5300 because p-bit/Ising assumptions are replayed CPU-side and no hardware execution is measured.",
+    "honest_verdict": "Terminal Exp 5300 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether the p-bit/CDCL instance-class gate helped.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm because Exp 5300 replays local deterministic fixtures with a local CDCL solver and no LLM inference.",
+    "misleading_class_blocked": "Confirms that classes with contradiction, overwrite, or LNS-rejected assumption evidence are blocked instead of routed through ungated p-bit guidance.",
+    "pbit_gate_ready": "True only when the transparent feature gate preserves correctness, blocks misleading assumption classes, and retains positive aggregate conflict savings versus solver-only fallback.",
+    "tests_run": "Commands run to validate gate decisions, misleading-class blocking, correctness preservation, no hardware speedup claims, artifact schema, and new-code coverage.",
+    "ungated_vs_gated_delta": "Compares ungated guidance, gated guidance, and solver-only fallback over the same instances to prove the gate removes misleading harm rather than hiding it."
+  },
+  "gate_rule": {
+    "classifier_kind": "deterministic_threshold_rules_no_training",
+    "features": [
+      "assumption_conflict_prefix",
+      "factor_alignment_score",
+      "lns_repair_agreement",
+      "contradiction_count",
+      "solver_overwrite_count"
+    ],
+    "route_rule": "allow non-empty assumptions only when CDCL accepts them, factor alignment is exact, LNS agreement is accepted, and overwrite count is zero; empty assumptions are neutral unless the LNS fixture is malformed or rejected"
+  },
+  "hardware_speedup_claimed": {
+    "principle": "Always false for Exp 5300 because p-bit/Ising assumptions are replayed CPU-side and no hardware execution is measured.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5300 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether the p-bit/CDCL instance-class gate helped.",
+    "value": "complete: p-bit/CDCL gate helped by blocking misleading-assumption classes while preserving aggregate conflict savings on deterministic Exp5292 and Exp5299 fixtures"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because Exp 5300 replays local deterministic fixtures with a local CDCL solver and no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "misleading_class_blocked": {
+    "principle": "Confirms that classes with contradiction, overwrite, or LNS-rejected assumption evidence are blocked instead of routed through ungated p-bit guidance.",
+    "value": {
+      "all_misleading_blocked": true,
+      "block_rule": "block non-empty assumptions when CDCL reports assumption UNSAT, factor energy is nonzero, LNS agreement is rejected, or fallback overwrites assumptions",
+      "blocked_classes": [
+        "misleading_factor_sat",
+        "misleading_repair",
+        "semantic_wrong_control"
+      ],
+      "misleading_classes": [
+        "misleading_factor_sat",
+        "misleading_repair",
+        "semantic_wrong_control"
+      ]
+    }
+  },
+  "pbit_gate_ready": {
+    "principle": "True only when the transparent feature gate preserves correctness, blocks misleading assumption classes, and retains positive aggregate conflict savings versus solver-only fallback.",
+    "value": true
+  },
+  "per_instance_results": [
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          3,
+          8
+        ],
+        "method": "cpu_simulated_pbit_low_temperature_consensus",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.000406904
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.000406904
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 0,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 0,
+          "restarts_saved_by_gate": 0,
+          "wall_clock_s_saved_by_gate": 0.0
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "aligned_deterministic_features",
+        "route": "allow"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "sat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 0,
+        "factor_alignment_score": 1.0,
+        "factor_energy": 0,
+        "lns_repair_agreement": "accepted",
+        "solver_overwrite_count": 0
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 3.2942e-05
+        },
+        "used_solver_only_fallback": false
+      },
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 0.000439846
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+      "source_experiment": "exp5292",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 3.2942e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 3.2942e-05
+        },
+        "primary_status": "sat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          4,
+          7
+        ],
+        "method": "cpu_simulated_pbit_false_basin_control",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": -1,
+          "decisions_saved": 0,
+          "propagations_saved": -6,
+          "restarts_saved": -1,
+          "wall_clock_s_saved": -1.2643e-05
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 1,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 6,
+          "restarts_saved_by_gate": 1,
+          "wall_clock_s_saved_by_gate": 1.2643e-05
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "contradiction_or_overwrite",
+        "route": "block"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "unsat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 3,
+        "factor_alignment_score": 0.0,
+        "factor_energy": 1,
+        "lns_repair_agreement": "rejected",
+        "solver_overwrite_count": 2
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 2.116e-05
+        },
+        "used_solver_only_fallback": true
+      },
+      "instance_class": "misleading_factor_sat",
+      "instance_id": "exp5292_misleading_factor_sat",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 2.116e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+      "source_experiment": "exp5292",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.6781e-05
+        },
+        "fallback_used": true,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 4,
+          "decisions": 13,
+          "propagations": 31,
+          "restarts": 2,
+          "wall_clock_s": 3.3803e-05
+        },
+        "overwrite_count": 2,
+        "primary_metrics": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1,
+          "wall_clock_s": 1.7022e-05
+        },
+        "primary_status": "unsat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [],
+        "method": "cpu_simulated_pbit_no_consensus_control",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 0,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 0,
+          "restarts_saved_by_gate": 0,
+          "wall_clock_s_saved_by_gate": 0.0
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "no_assumptions_neutral",
+        "route": "allow"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "no_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 0,
+        "factor_alignment_score": 0.5,
+        "factor_energy": 2,
+        "lns_repair_agreement": "neutral",
+        "solver_overwrite_count": 0
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.5519e-05
+        },
+        "used_solver_only_fallback": false
+      },
+      "instance_class": "neutral_factor_sat",
+      "instance_id": "exp5292_neutral_factor_sat",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.5519e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+      "source_experiment": "exp5292",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.5519e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.5519e-05
+        },
+        "primary_status": "sat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          3,
+          8
+        ],
+        "method": "structured_domain_assignment",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 1.714e-06
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 1.714e-06
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 0,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 0,
+          "restarts_saved_by_gate": 0,
+          "wall_clock_s_saved_by_gate": 0.0
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "aligned_deterministic_features",
+        "route": "allow"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "sat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 0,
+        "factor_alignment_score": 1.0,
+        "factor_energy": 0,
+        "lns_repair_agreement": "accepted",
+        "solver_overwrite_count": 0
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.3164e-05
+        },
+        "used_solver_only_fallback": false
+      },
+      "instance_class": "aligned_repair",
+      "instance_id": "exp5299_aligned_repair",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.4878e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "source_experiment": "exp5299",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.3164e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.3164e-05
+        },
+        "primary_status": "sat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          4,
+          7
+        ],
+        "method": "structured_domain_assignment",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": -1,
+          "decisions_saved": 0,
+          "propagations_saved": -6,
+          "restarts_saved": -1,
+          "wall_clock_s_saved": -1.1351e-05
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 1,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 6,
+          "restarts_saved_by_gate": 1,
+          "wall_clock_s_saved_by_gate": 1.1351e-05
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "contradiction_or_overwrite",
+        "route": "block"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "unsat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 3,
+        "factor_alignment_score": 0.0,
+        "factor_energy": 1,
+        "lns_repair_agreement": "rejected",
+        "solver_overwrite_count": 2
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3486e-05
+        },
+        "used_solver_only_fallback": true
+      },
+      "instance_class": "misleading_repair",
+      "instance_id": "exp5299_misleading_repair",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3486e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "source_experiment": "exp5299",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.2584e-05
+        },
+        "fallback_used": true,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 4,
+          "decisions": 13,
+          "propagations": 31,
+          "restarts": 2,
+          "wall_clock_s": 2.4837e-05
+        },
+        "overwrite_count": 2,
+        "primary_metrics": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1,
+          "wall_clock_s": 1.2253e-05
+        },
+        "primary_status": "unsat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          3,
+          8
+        ],
+        "method": "structured_domain_assignment",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 1.463e-06
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": 3,
+          "decisions_saved": 11,
+          "propagations_saved": 16,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 1.463e-06
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 0,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 0,
+          "restarts_saved_by_gate": 0,
+          "wall_clock_s_saved_by_gate": 0.0
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "aligned_deterministic_features",
+        "route": "allow"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "sat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 0,
+        "factor_alignment_score": 1.0,
+        "factor_energy": 0,
+        "lns_repair_agreement": "accepted",
+        "solver_overwrite_count": 0
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.2213e-05
+        },
+        "used_solver_only_fallback": false
+      },
+      "instance_class": "neutral_noop_repair",
+      "instance_id": "exp5299_neutral_noop_repair",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3676e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "source_experiment": "exp5299",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.2213e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 1.2213e-05
+        },
+        "primary_status": "sat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [],
+        "method": "structured_output_schema_control",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 0,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 0,
+          "restarts_saved_by_gate": 0,
+          "wall_clock_s_saved_by_gate": 0.0
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "malformed_or_rejected_lns_fixture",
+        "route": "block"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "no_assumptions",
+        "candidate_format_valid": false,
+        "contradiction_count": 1,
+        "factor_alignment_score": 0.5,
+        "factor_energy": 2,
+        "lns_repair_agreement": "malformed",
+        "solver_overwrite_count": 0
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3185e-05
+        },
+        "used_solver_only_fallback": true
+      },
+      "instance_class": "malformed_control",
+      "instance_id": "exp5299_malformed_control",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3185e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "source_experiment": "exp5299",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3185e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.3185e-05
+        },
+        "primary_status": "sat"
+      }
+    },
+    {
+      "assumptions": {
+        "hardware_execution": false,
+        "literals": [
+          2,
+          8
+        ],
+        "method": "structured_domain_assignment",
+        "simulated_guidance": true
+      },
+      "class_delta": {
+        "solver_only_minus_gated": {
+          "conflicts_saved": 0,
+          "decisions_saved": 0,
+          "propagations_saved": 0,
+          "restarts_saved": 0,
+          "wall_clock_s_saved": 0.0
+        },
+        "solver_only_minus_ungated": {
+          "conflicts_saved": -1,
+          "decisions_saved": 0,
+          "propagations_saved": -6,
+          "restarts_saved": -1,
+          "wall_clock_s_saved": -1.1712e-05
+        },
+        "ungated_minus_gated": {
+          "conflicts_saved_by_gate": 1,
+          "decisions_saved_by_gate": 0,
+          "propagations_saved_by_gate": 6,
+          "restarts_saved_by_gate": 1,
+          "wall_clock_s_saved_by_gate": 1.1712e-05
+        }
+      },
+      "correctness_preserved": true,
+      "gate_decision": {
+        "reason": "contradiction_or_overwrite",
+        "route": "block"
+      },
+      "gate_features": {
+        "assumption_conflict_prefix": "unsat_under_assumptions",
+        "candidate_format_valid": true,
+        "contradiction_count": 3,
+        "factor_alignment_score": 0.0,
+        "factor_energy": 1,
+        "lns_repair_agreement": "rejected",
+        "solver_overwrite_count": 1
+      },
+      "gated": {
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.2974e-05
+        },
+        "used_solver_only_fallback": true
+      },
+      "instance_class": "semantic_wrong_control",
+      "instance_id": "exp5299_semantic_wrong_control",
+      "solver_only": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.2974e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "source_artifact": "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json",
+      "source_experiment": "exp5299",
+      "source_fixture_id": "small_pair_sum",
+      "ungated": {
+        "fallback_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 1.2884e-05
+        },
+        "fallback_used": true,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 4,
+          "decisions": 13,
+          "propagations": 31,
+          "restarts": 2,
+          "wall_clock_s": 2.4686e-05
+        },
+        "overwrite_count": 1,
+        "primary_metrics": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1,
+          "wall_clock_s": 1.1802e-05
+        },
+        "primary_status": "unsat"
+      }
+    }
+  ],
+  "random_seed": 5300,
+  "reproducibility_checksum": "66d4a14aded78f2aeca300f4df2567426fc31dc8b66c167a64dd6bd8c09a7c11",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5300.pbit_cdcl_instance_class_gate.v484",
+  "source_artifacts": [
+    "results/experiment_5292_pbit_cdcl_factor_guidance_v483.json",
+    "results/experiment_5299_constraint_lns_solver_repair_fixture_v484.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5300",
+    "SCENARIO-VERIFY-5300"
+  ],
+  "tests_run": [
+    {
+      "command": "initial artifact generation",
+      "outcome": "pending final verification"
+    }
+  ],
+  "ungated_vs_gated_delta": {
+    "principle": "Compares ungated guidance, gated guidance, and solver-only fallback over the same instances to prove the gate removes misleading harm rather than hiding it.",
+    "value": {
+      "conflicts_saved_by_gate": 3,
+      "decisions_saved_by_gate": 0,
+      "propagations_saved_by_gate": 18,
+      "restarts_saved_by_gate": 3,
+      "wall_clock_s_saved_by_gate": 3.5706e-05
+    }
+  }
+}
