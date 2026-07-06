@@ -10396,3 +10396,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 10:04 UTC | PHASE 1 gated on exp5299 -- p-bit/CDCL instance-cl | OK | 90 passed, 1 warning in 10.49s |
 | 2026-07-06 10:20 UTC | PHASE 1 diagnostic -- EBT spectral step-control be | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-06 10:37 UTC | PHASE 2 continuous self-learning -- adaptive held- | OK | 89 passed, 1 warning in 8.42s |
+| 2026-07-06 10:54 UTC | PHASE 2 gated on exp5302 -- memory conflict, forge | OK | 90 passed, 1 warning in 8.76s |
