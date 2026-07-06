@@ -10412,3 +10412,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 15:14 UTC | Exp 5312: TrustMem-style memory transition verifie | OK | 89 passed, 1 warning in 9.26s |
 | 2026-07-06 15:28 UTC | Exp 5313: Gated memory transition policy rollout,  | OK | 92 passed, 1 warning in 8.97s |
 | 2026-07-06 15:41 UTC | Exp 5314: Ising smooth-relaxation baseline for p-b | OK | 90 passed, 1 warning in 10.84s |
+| 2026-07-06 15:59 UTC | Exp 5315: Gated solver-guidance ablation, gated on | OK | 91 passed, 1 warning in 9.22s |
