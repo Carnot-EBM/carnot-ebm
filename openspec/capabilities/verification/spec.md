@@ -26738,6 +26738,91 @@ route those classes to solver-only fallback in final guided methods, set
 |---|---|---|
 | REQ-VERIFY-5315 | Planned (`python/carnot/experiment_5315_gated_solver_guidance_ablation_v485.py`, `results/experiment_5315_gated_solver_guidance_ablation_v485.json`) | Planned (`tests/python/test_experiment_5315_gated_solver_guidance_ablation_v485.py`) |
 
+### REQ-VERIFY-5318: SMT Hint Validation Protocol V485
+
+The repository SHALL provide Exp 5318 at
+`python/carnot/experiment_5318_smt_hint_validation_protocol_v485.py`
+and write
+`results/experiment_5318_smt_hint_validation_protocol_v485.json`
+without invoking an LLM and without modifying `scripts/research_conductor.py`.
+The runner SHALL build deterministic tiny quantified or inductive-style SMT
+fixtures with canned valid, useless, redundant, and unsound hints. The fixtures
+SHALL represent the future hint-proposal interface for instantiations,
+conjectures, and lemmas while keeping the local SMT solver authoritative.
+
+Every proposed hint SHALL be validated by solver entailment before it can be
+added to a solve. The validation context SHALL stay satisfiable so unsound
+hints cannot be accepted through vacuous entailment on an already-UNSAT goal.
+Valid hints MAY be classified as useful, useless, or redundant, but useless and
+redundant valid hints SHALL NOT affect completeness or final labels. Unsound
+hints SHALL be rejected, their overwrite clauses SHALL be recorded, and the
+runner SHALL fall back to the classical solver path for the final SAT/UNSAT
+result.
+
+The protocol SHALL report hint validity, usefulness, overwrite clauses,
+fallback-to-classical behavior, and completeness preservation over the fixture
+panel. A future SOTA GGUF model MAY plug into the hint-proposal slot only after
+the Exp5309 runtime gate is ready; until that gate opens, the proposer SHALL be
+the deterministic canned fixture and `future_llm_slot_gated_on_sota_runtime`
+SHALL be true.
+
+The artifact SHALL include these top-level fields: `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`smt_hint_protocol_ready`, `fixture_path`, `valid_hint_acceptance_rate`,
+`unsound_hint_rejection_rate`, `usefulness_rate`, `solver_fallback_complete`,
+`completeness_preserved`, `future_llm_slot_gated_on_sota_runtime`, and
+`tests_run`. The fields `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate`, `fixture_path`, and `tests_run` SHALL
+be principle-wrapped objects with `value` and `principle`. `honest_verdict.value`
+SHALL start with `complete:`, `null:`, or `blocked_`.
+`inference_substrate.value` SHALL be
+`deterministic_smt_hint_validation_no_llm`. `smt_hint_protocol_ready`,
+`solver_fallback_complete`, `completeness_preserved`, and
+`future_llm_slot_gated_on_sota_runtime` SHALL be bare booleans, with
+`future_llm_slot_gated_on_sota_runtime=true`. `valid_hint_acceptance_rate`,
+`unsound_hint_rejection_rate`, and `usefulness_rate` SHALL be bare numeric
+values.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceable Exp 5318 identifier for the deterministic SMT hint validation protocol."
+- `milestone`: principle "Milestone accountability for the V485 SMT hint-validation fixture."
+- `status`: principle "Terminal status for downstream solver-guidance readers; complete means the deterministic no-LLM hint protocol ran and preserved completeness."
+- `honest_verdict`: principle "Terminal Exp 5318 verdict; starts with complete:, null:, or blocked_ and states whether SMT hint validation is ready."
+- `inference_substrate`: principle "Declares deterministic_smt_hint_validation_no_llm so canned solver-validated hints are not mistaken for live LLM inference."
+- `smt_hint_protocol_ready`: principle "Bare boolean true only when valid hints are accepted, unsound hints are rejected, fallback reaches the classical solver result, and completeness is preserved."
+- `fixture_path`: principle "Points to the deterministic fixture module that owns the canned quantified and inductive SMT examples."
+- `valid_hint_acceptance_rate`: principle "Bare numeric fraction of solver-validated sound hints accepted by the protocol."
+- `unsound_hint_rejection_rate`: principle "Bare numeric fraction of solver-refuted unsound hints rejected before they can affect final solving."
+- `usefulness_rate`: principle "Bare numeric fraction of accepted valid hints that are non-redundant and reduce the fixture's deterministic proof burden."
+- `solver_fallback_complete`: principle "Bare boolean proving rejected hints fall back to the classical SMT solver and still reach the baseline result."
+- `completeness_preserved`: principle "Bare boolean proving accepted hints never change the classical solver SAT/UNSAT label and rejected unsound hints cannot block fallback."
+- `future_llm_slot_gated_on_sota_runtime`: principle "Bare boolean that must stay true until the Exp5309 SOTA GGUF runtime gate is ready for any future hint proposer."
+- `tests_run`: principle "Commands run to validate hint soundness, unsound rejection, fallback completeness, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks."
+
+### SCENARIO-VERIFY-5318: Unsound SMT Hints Are Rejected Before Solving
+
+Given the Exp 5318 deterministic quantified and inductive-style SMT fixtures,
+when the validation protocol evaluates canned instantiation, lemma, and
+conjecture hints, then it checks every hint by local solver entailment against
+a satisfiable validation context; accepts valid useful, useless, and redundant
+hints; rejects unsound hints; records overwrite clauses for rejected hints;
+writes the required artifact; sets
+`inference_substrate.value=deterministic_smt_hint_validation_no_llm`; and sets
+`future_llm_slot_gated_on_sota_runtime=true`.
+
+If an unsound hint proposes a false conjecture, contradicts an inductive
+invariant, or would force the wrong SAT/UNSAT label if blindly added, then the
+runner SHALL reject the hint before solving with it, invoke the classical SMT
+fallback for the final result, preserve the baseline solver label, and keep
+`completeness_preserved=true`.
+
+## Implementation Status (REQ-VERIFY-5318)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5318 | Planned (`python/carnot/experiment_5318_smt_hint_validation_protocol_v485.py`, `results/experiment_5318_smt_hint_validation_protocol_v485.json`) | Planned (`tests/python/test_experiment_5318_smt_hint_validation_protocol_v485.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at

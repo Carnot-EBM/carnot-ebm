@@ -1,0 +1,463 @@
+{
+  "claim_limits": [
+    "deterministic SMT hint-validation fixture only",
+    "canned hints only; no LLM proposer invoked",
+    "Z3 entailment validates hints before acceptance",
+    "unsound hints fall back to the classical SMT result",
+    "future SOTA GGUF proposer remains gated on Exp5309 runtime readiness"
+  ],
+  "completeness_preserved": true,
+  "counts": {
+    "examples": 3,
+    "hints": 9,
+    "unsound_hints": 3,
+    "useful_accepted_hints": 3,
+    "valid_hints": 6
+  },
+  "duration_s": 0.029515,
+  "experiment_id": {
+    "principle": "Traceable Exp 5318 identifier for the deterministic SMT hint validation protocol.",
+    "value": "exp5318-smt-hint-validation-protocol-v485"
+  },
+  "field_principles": {
+    "completeness_preserved": "Bare boolean proving accepted hints never change the classical solver SAT/UNSAT label and rejected unsound hints cannot block fallback.",
+    "experiment_id": "Traceable Exp 5318 identifier for the deterministic SMT hint validation protocol.",
+    "fixture_path": "Points to the deterministic fixture module that owns the canned quantified and inductive SMT examples.",
+    "future_llm_slot_gated_on_sota_runtime": "Bare boolean that must stay true until the Exp5309 SOTA GGUF runtime gate is ready for any future hint proposer.",
+    "honest_verdict": "Terminal Exp 5318 verdict; starts with complete:, null:, or blocked_ and states whether SMT hint validation is ready.",
+    "inference_substrate": "Declares deterministic_smt_hint_validation_no_llm so canned solver-validated hints are not mistaken for live LLM inference.",
+    "milestone": "Milestone accountability for the V485 SMT hint-validation fixture.",
+    "smt_hint_protocol_ready": "Bare boolean true only when valid hints are accepted, unsound hints are rejected, fallback reaches the classical solver result, and completeness is preserved.",
+    "solver_fallback_complete": "Bare boolean proving rejected hints fall back to the classical SMT solver and still reach the baseline result.",
+    "status": "Terminal status for downstream solver-guidance readers; complete means the deterministic no-LLM hint protocol ran and preserved completeness.",
+    "tests_run": "Commands run to validate hint soundness, unsound rejection, fallback completeness, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.",
+    "unsound_hint_rejection_rate": "Bare numeric fraction of solver-refuted unsound hints rejected before they can affect final solving.",
+    "usefulness_rate": "Bare numeric fraction of accepted valid hints that are non-redundant and reduce the fixture's deterministic proof burden.",
+    "valid_hint_acceptance_rate": "Bare numeric fraction of solver-validated sound hints accepted by the protocol."
+  },
+  "fixture_examples": [
+    {
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "example_id": "quantified_successor",
+      "hints": [
+        {
+          "burden_delta": 2,
+          "description": "Instantiate the quantified successor axiom at n.",
+          "expected_class": "valid",
+          "formula": "(> (+ quantified_n 1) quantified_n)",
+          "hint_id": "quantified_successor_instantiation",
+          "hint_kind": "instantiation",
+          "overwrite_clause": "quantified_n_successor_positive",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "Valid tautology that should not improve the proof burden.",
+          "expected_class": "useless",
+          "formula": "(or (= quantified_n quantified_n) (distinct quantified_n quantified_n))",
+          "hint_id": "quantified_tautology_useless",
+          "hint_kind": "lemma",
+          "overwrite_clause": "quantified_tautology",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "Unsound conjecture outside the declared bounded domain.",
+          "expected_class": "unsound",
+          "formula": "(= quantified_n 4)",
+          "hint_id": "quantified_unsound_out_of_domain",
+          "hint_kind": "conjecture",
+          "overwrite_clause": "quantified_n_equals_4",
+          "proposal_source": "canned_fixture_no_llm"
+        }
+      ],
+      "style": "quantified_instantiation",
+      "validation_context_status": "sat"
+    },
+    {
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "example_id": "inductive_reachability",
+      "hints": [
+        {
+          "burden_delta": 2,
+          "description": "Inductive reachability lemma for the final state.",
+          "expected_class": "valid",
+          "formula": "ind_s3",
+          "hint_id": "inductive_goal_lemma",
+          "hint_kind": "lemma",
+          "overwrite_clause": "ind_s3",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "Duplicate of the base fact already asserted.",
+          "expected_class": "redundant",
+          "formula": "ind_s0",
+          "hint_id": "inductive_start_redundant",
+          "hint_kind": "lemma",
+          "overwrite_clause": "ind_s0",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "False conjecture contradicting the inductive chain.",
+          "expected_class": "unsound",
+          "formula": "(not ind_s3)",
+          "hint_id": "inductive_unsound_not_reached",
+          "hint_kind": "conjecture",
+          "overwrite_clause": "not_ind_s3",
+          "proposal_source": "canned_fixture_no_llm"
+        }
+      ],
+      "style": "inductive_chain",
+      "validation_context_status": "sat"
+    },
+    {
+      "baseline_proof_burden": 3,
+      "baseline_status": "sat",
+      "example_id": "sat_choice_overwrite",
+      "hints": [
+        {
+          "burden_delta": 2,
+          "description": "Entailed SAT-side lemma selecting the only remaining branch.",
+          "expected_class": "valid",
+          "formula": "sat_choice_a",
+          "hint_id": "sat_choice_valid_a",
+          "hint_kind": "lemma",
+          "overwrite_clause": "sat_choice_a",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "Duplicate of the original disjunction.",
+          "expected_class": "redundant",
+          "formula": "(or sat_choice_a sat_choice_b)",
+          "hint_id": "sat_choice_redundant_or",
+          "hint_kind": "lemma",
+          "overwrite_clause": "sat_choice_a_or_b",
+          "proposal_source": "canned_fixture_no_llm"
+        },
+        {
+          "burden_delta": 0,
+          "description": "Unsound branch conjecture that would make the SAT problem UNSAT.",
+          "expected_class": "unsound",
+          "formula": "sat_choice_b",
+          "hint_id": "sat_choice_unsound_b",
+          "hint_kind": "conjecture",
+          "overwrite_clause": "sat_choice_b",
+          "proposal_source": "canned_fixture_no_llm"
+        }
+      ],
+      "style": "sat_overwrite_control",
+      "validation_context_status": "sat"
+    }
+  ],
+  "fixture_path": {
+    "principle": "Points to the deterministic fixture module that owns the canned quantified and inductive SMT examples.",
+    "value": "python/carnot/experiment_5318_smt_hint_validation_protocol_v485.py"
+  },
+  "future_llm_slot": {
+    "current_proposer": "canned_fixture_no_llm",
+    "gate": "Exp5309 results/experiment_5309_sota_runtime_timeout_rootcause_matrix_v485.json requires sota_runtime_unblocked=true before any SOTA GGUF hint proposer is enabled",
+    "interface": "future proposer returns candidate SMT hints; validator still requires local solver entailment before any hint is accepted",
+    "runtime_gate_ready_required": true
+  },
+  "future_llm_slot_gated_on_sota_runtime": true,
+  "hint_validation_telemetry": [
+    {
+      "accepted": true,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "quantified_successor",
+      "expected_class": "valid",
+      "fallback_to_classical": false,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "(> (+ quantified_n 1) quantified_n)",
+      "hint_id": "quantified_successor_instantiation",
+      "hint_kind": "instantiation",
+      "hinted_proof_burden": 2,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": true,
+      "style": "quantified_instantiation",
+      "useful": true,
+      "usefulness_class": "useful",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": true,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "quantified_successor",
+      "expected_class": "useless",
+      "fallback_to_classical": false,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "(or (= quantified_n quantified_n) (distinct quantified_n quantified_n))",
+      "hint_id": "quantified_tautology_useless",
+      "hint_kind": "lemma",
+      "hinted_proof_burden": 4,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": true,
+      "style": "quantified_instantiation",
+      "useful": false,
+      "usefulness_class": "useless",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": false,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "quantified_successor",
+      "expected_class": "unsound",
+      "fallback_to_classical": true,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "(= quantified_n 4)",
+      "hint_id": "quantified_unsound_out_of_domain",
+      "hint_kind": "conjecture",
+      "hinted_proof_burden": 4,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": false,
+      "style": "quantified_instantiation",
+      "useful": false,
+      "usefulness_class": "unsound",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": true,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "inductive_reachability",
+      "expected_class": "valid",
+      "fallback_to_classical": false,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "ind_s3",
+      "hint_id": "inductive_goal_lemma",
+      "hint_kind": "lemma",
+      "hinted_proof_burden": 2,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": true,
+      "style": "inductive_chain",
+      "useful": true,
+      "usefulness_class": "useful",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": true,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "inductive_reachability",
+      "expected_class": "redundant",
+      "fallback_to_classical": false,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "ind_s0",
+      "hint_id": "inductive_start_redundant",
+      "hint_kind": "lemma",
+      "hinted_proof_burden": 4,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": true,
+      "solver_valid": true,
+      "style": "inductive_chain",
+      "useful": false,
+      "usefulness_class": "redundant",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": false,
+      "baseline_model": {},
+      "baseline_proof_burden": 4,
+      "baseline_status": "unsat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "inductive_reachability",
+      "expected_class": "unsound",
+      "fallback_to_classical": true,
+      "final_model": {},
+      "final_status": "unsat",
+      "formula": "(not ind_s3)",
+      "hint_id": "inductive_unsound_not_reached",
+      "hint_kind": "conjecture",
+      "hinted_proof_burden": 4,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": false,
+      "style": "inductive_chain",
+      "useful": false,
+      "usefulness_class": "unsound",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": true,
+      "baseline_model": {
+        "a": true,
+        "b": false
+      },
+      "baseline_proof_burden": 3,
+      "baseline_status": "sat",
+      "blindly_added_status": "sat",
+      "completeness_preserved": true,
+      "example_id": "sat_choice_overwrite",
+      "expected_class": "valid",
+      "fallback_to_classical": false,
+      "final_model": {
+        "a": true,
+        "b": false
+      },
+      "final_status": "sat",
+      "formula": "sat_choice_a",
+      "hint_id": "sat_choice_valid_a",
+      "hint_kind": "lemma",
+      "hinted_proof_burden": 1,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": true,
+      "style": "sat_overwrite_control",
+      "useful": true,
+      "usefulness_class": "useful",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": true,
+      "baseline_model": {
+        "a": true,
+        "b": false
+      },
+      "baseline_proof_burden": 3,
+      "baseline_status": "sat",
+      "blindly_added_status": "sat",
+      "completeness_preserved": true,
+      "example_id": "sat_choice_overwrite",
+      "expected_class": "redundant",
+      "fallback_to_classical": false,
+      "final_model": {
+        "a": true,
+        "b": false
+      },
+      "final_status": "sat",
+      "formula": "(or sat_choice_a sat_choice_b)",
+      "hint_id": "sat_choice_redundant_or",
+      "hint_kind": "lemma",
+      "hinted_proof_burden": 3,
+      "overwrite_clauses": [],
+      "overwrite_count": 0,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": true,
+      "solver_valid": true,
+      "style": "sat_overwrite_control",
+      "useful": false,
+      "usefulness_class": "redundant",
+      "validation_context_status": "sat"
+    },
+    {
+      "accepted": false,
+      "baseline_model": {
+        "a": true,
+        "b": false
+      },
+      "baseline_proof_burden": 3,
+      "baseline_status": "sat",
+      "blindly_added_status": "unsat",
+      "completeness_preserved": true,
+      "example_id": "sat_choice_overwrite",
+      "expected_class": "unsound",
+      "fallback_to_classical": true,
+      "final_model": {
+        "a": true,
+        "b": false
+      },
+      "final_status": "sat",
+      "formula": "sat_choice_b",
+      "hint_id": "sat_choice_unsound_b",
+      "hint_kind": "conjecture",
+      "hinted_proof_burden": 3,
+      "overwrite_clauses": [
+        "sat_choice_b"
+      ],
+      "overwrite_count": 1,
+      "proposal_source": "canned_fixture_no_llm",
+      "redundant": false,
+      "solver_valid": false,
+      "style": "sat_overwrite_control",
+      "useful": false,
+      "usefulness_class": "unsound",
+      "validation_context_status": "sat"
+    }
+  ],
+  "honest_verdict": {
+    "principle": "Terminal Exp 5318 verdict; starts with complete:, null:, or blocked_ and states whether SMT hint validation is ready.",
+    "value": "complete: deterministic SMT hint validation protocol is ready; valid hints are accepted, unsound hints are rejected, and future LLM hint proposals remain gated on Exp5309 runtime readiness"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic_smt_hint_validation_no_llm so canned solver-validated hints are not mistaken for live LLM inference.",
+    "value": "deterministic_smt_hint_validation_no_llm"
+  },
+  "llm_invoked": false,
+  "milestone": {
+    "principle": "Milestone accountability for the V485 SMT hint-validation fixture.",
+    "value": "2026.07.485"
+  },
+  "random_seed": 5318,
+  "reproducibility_checksum": "6e1cc5de870d8332a893a3595c4d7d0b5094793c6ea16e2dab0cd2b52a70eb66",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5318.smt_hint_validation_protocol.v485",
+  "smt_hint_protocol_ready": true,
+  "solver_fallback_complete": true,
+  "spec_refs": [
+    "REQ-VERIFY-5318",
+    "SCENARIO-VERIFY-5318"
+  ],
+  "status": {
+    "principle": "Terminal status for downstream solver-guidance readers; complete means the deterministic no-LLM hint protocol ran and preserved completeness.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate hint soundness, unsound rejection, fallback completeness, artifact schema, new-code coverage, repository tests, and applicable offline e2e checks.",
+    "value": [
+      {
+        "command": "preliminary exp5318 targeted tests before final verification",
+        "outcome": "pending"
+      }
+    ]
+  },
+  "unsound_hint_rejection_rate": 1.0,
+  "usefulness_rate": 0.5,
+  "valid_hint_acceptance_rate": 1.0
+}
