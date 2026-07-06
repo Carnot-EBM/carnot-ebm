@@ -299,6 +299,18 @@ LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
 DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE = "deterministic_smt_hint_validation_no_llm"
 DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S = 0.0001
 
+# Native-llama.cpp-CLI backend/flag bisect: probes a handful of backend-variant + flag
+# combinations against the mandated SOTA models to find one that completes load + first-token +
+# bounded generation without hanging or timing out. Real GPU-backed model load(s) happen, but the
+# bisect stops as soon as ONE working combination is confirmed rather than running a full
+# generation benchmark across all variants -- genuinely faster than the 60s live_llm_inference
+# floor, similar reasoning to the small-N SOTA GGUF pilot substrate. Discovered 2026-07-06
+# (exp5323, duration_s=20.8, found the working `-st`/`--single-turn` variant this project's own
+# CLAUDE.md documents -- see the native-llama-cli-hang fix -- and confirmed
+# completed_load_first_token_and_8_tokens=True with authenticated GPU offload).
+NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE = "local_native_llama_cpp_gguf_backend_bisect"
+NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S = 5.0
+
 # Artifact-QA lint-test artifacts intentionally embed verifier fixture reports,
 # including negative controls whose details mention GGUF/CUDA/live-model markers.
 # The artifact itself runs JSON lint tests, not model inference, so exact
@@ -1936,6 +1948,14 @@ def _is_deterministic_smt_hint_validation(d: dict[str, Any]) -> bool:
     return _inference_substrate_matches(d, DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE)
 
 
+def _is_native_gguf_backend_bisect(d: dict[str, Any]) -> bool:
+    """True when the artifact declares a native-llama.cpp-CLI backend/flag bisect (stops at
+    the first working combination, not a full generation benchmark). See
+    NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE for the exemplar incident (exp5323)."""
+
+    return _inference_substrate_matches(d, NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE)
+
+
 def _descriptor_key_present(value: Any, wanted: str) -> bool:
     """True if a real artifact field named `wanted` appears outside metadata.
 
@@ -2056,6 +2076,12 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "substrate": DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
             "min_duration_s": DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S,
             "reason": "deterministic_smt_hint_validation",
+        }
+    if _is_native_gguf_backend_bisect(d):
+        return {
+            "substrate": NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
+            "min_duration_s": NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S,
+            "reason": "native_gguf_backend_bisect",
         }
     if _is_live_llm_inference(d):
         return {
