@@ -1,0 +1,383 @@
+{
+  "assumption_generation_summary": {
+    "principle": "Documents CPU-only simulated p-bit/Ising assumption generation and prevents it from being mistaken for hardware execution.",
+    "value": {
+      "hardware_execution": false,
+      "method": "cpu_simulated_pbit_ising_assumptions",
+      "profiles": {
+        "aligned_factor_sat": {
+          "energy": 0,
+          "hardware_execution": false,
+          "literals": [
+            3,
+            8
+          ],
+          "method": "cpu_simulated_pbit_low_temperature_consensus",
+          "profile": "low_temperature_consensus",
+          "simulated_guidance": true
+        },
+        "misleading_factor_sat": {
+          "energy": 1,
+          "hardware_execution": false,
+          "literals": [
+            4,
+            7
+          ],
+          "method": "cpu_simulated_pbit_false_basin_control",
+          "profile": "false_basin_control",
+          "simulated_guidance": true
+        },
+        "neutral_factor_sat": {
+          "energy": 2,
+          "hardware_execution": false,
+          "literals": [],
+          "method": "cpu_simulated_pbit_no_consensus_control",
+          "profile": "no_consensus_control",
+          "simulated_guidance": true
+        }
+      },
+      "random_seed": 5292,
+      "simulated_guidance_label": "simulated_cpu_guidance_not_hardware_execution",
+      "source_artifact": "results/experiment_5278_constraint_factor_graph_boundary_v482.json"
+    }
+  },
+  "benchmark_metrics": {
+    "conflicts_saved": 2,
+    "decisions_saved": 11,
+    "propagations_saved": 10,
+    "restarts_saved": -1,
+    "wall_clock_s_saved": 0.000482453
+  },
+  "claim_limits": [
+    "CPU simulated p-bit/Ising assumptions only",
+    "Minisat22 CDCL remains authoritative for SAT/UNSAT labels",
+    "bad assumptions trigger fallback or overwrite telemetry",
+    "distribution sensitivity is expected and reported by class",
+    "no hardware execution or hardware speedup claim",
+    "no LLM inference claim"
+  ],
+  "conflicts_saved": {
+    "principle": "Pure-minus-guided CDCL conflicts by aggregate and class; negative values expose harmful guidance instead of hiding it.",
+    "value": {
+      "aggregate": 2,
+      "by_class": {
+        "aligned_factor_sat": 3,
+        "misleading_factor_sat": -1,
+        "neutral_factor_sat": 0
+      }
+    }
+  },
+  "correctness_preserved": {
+    "principle": "True only when guided SAT/UNSAT labels match unassumed CDCL labels and every SAT model satisfies the original CNF.",
+    "value": true
+  },
+  "duration_s": 0.052495,
+  "experiment_id": "exp5292-pbit-cdcl-factor-guidance-v483",
+  "fallback_overwrite_count": {
+    "principle": "Counts assumptions rejected or overwritten by the authoritative CDCL fallback, proving guidance is advisory.",
+    "value": 2
+  },
+  "field_principles": {
+    "assumption_generation_summary": "Documents CPU-only simulated p-bit/Ising assumption generation and prevents it from being mistaken for hardware execution.",
+    "conflicts_saved": "Pure-minus-guided CDCL conflicts by aggregate and class; negative values expose harmful guidance instead of hiding it.",
+    "correctness_preserved": "True only when guided SAT/UNSAT labels match unassumed CDCL labels and every SAT model satisfies the original CNF.",
+    "fallback_overwrite_count": "Counts assumptions rejected or overwritten by the authoritative CDCL fallback, proving guidance is advisory.",
+    "hardware_speedup_claimed": "Always false for Exp 5292 because the sampler guidance is CPU simulation, not hardware execution.",
+    "honest_verdict": "Terminal Exp 5292 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether simulated p-bit/CDCL guidance helped.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm because Exp 5292 uses CPU-local fixtures, a local CDCL solver, and no LLM inference.",
+    "instance_class_gate": "Classifies help, harm, and neutral behavior by tiny fixture class and treats distribution sensitivity as expected.",
+    "pbit_cdcl_guidance_positive": "Bare boolean requested by the task; true only when simulated p-bit assumptions preserve correctness and save aggregate conflicts on the bounded instance classes.",
+    "pbit_cdcl_guidance_positive_principle": "Explains why the bare guidance gate opened or stayed closed so a mixed distribution-sensitive result is not over-promoted.",
+    "propagations_saved": "Pure-minus-guided CDCL propagations by aggregate and class; negative values expose harmful guidance overhead.",
+    "tests_run": "Commands run to validate assumption safety, class gates, artifact schema, new-code coverage, and repository test status."
+  },
+  "hardware_speedup_claimed": {
+    "principle": "Always false for Exp 5292 because the sampler guidance is CPU simulation, not hardware execution.",
+    "value": false
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp 5292 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether simulated p-bit/CDCL guidance helped.",
+    "value": "complete: p-bit/CDCL simulated CPU guidance helped aggregate conflicts on the bounded factor fixture while harming the misleading-assumption class; distribution sensitivity is expected"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because Exp 5292 uses CPU-local fixtures, a local CDCL solver, and no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "instance_class_gate": {
+    "principle": "Classifies help, harm, and neutral behavior by tiny fixture class and treats distribution sensitivity as expected.",
+    "value": {
+      "distribution_sensitivity_expected": true,
+      "gate_rule": "classify by pure-minus-guided conflicts, with correctness required separately",
+      "harms": [
+        "misleading_factor_sat"
+      ],
+      "helps": [
+        "aligned_factor_sat"
+      ],
+      "neutral": [
+        "neutral_factor_sat"
+      ]
+    }
+  },
+  "pbit_cdcl_guidance_positive": true,
+  "pbit_cdcl_guidance_positive_principle": "Bare boolean requested by the task; true only when simulated p-bit assumptions preserve correctness and save aggregate conflicts on the bounded instance classes.",
+  "per_instance_results": [
+    {
+      "assumptions": {
+        "energy": 0,
+        "hardware_execution": false,
+        "literals": [
+          3,
+          8
+        ],
+        "method": "cpu_simulated_pbit_low_temperature_consensus",
+        "profile": "low_temperature_consensus",
+        "simulated_guidance": true
+      },
+      "class_effect": "helps",
+      "correctness_preserved": true,
+      "expected_status": "sat",
+      "guided": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 6.5984e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 0,
+          "decisions": 2,
+          "propagations": 9,
+          "restarts": 1,
+          "wall_clock_s": 6.5984e-05
+        },
+        "primary_status": "sat"
+      },
+      "instance_class": "aligned_factor_sat",
+      "instance_id": "exp5292_aligned_factor_sat",
+      "pure": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 0.000547848
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "savings": {
+        "conflicts_saved": 3,
+        "decisions_saved": 11,
+        "propagations_saved": 16,
+        "restarts_saved": 0,
+        "wall_clock_s_saved": 0.000481864
+      },
+      "source_fixture_id": "small_pair_sum"
+    },
+    {
+      "assumptions": {
+        "energy": 1,
+        "hardware_execution": false,
+        "literals": [
+          4,
+          7
+        ],
+        "method": "cpu_simulated_pbit_false_basin_control",
+        "profile": "false_basin_control",
+        "simulated_guidance": true
+      },
+      "class_effect": "harms",
+      "correctness_preserved": true,
+      "expected_status": "sat",
+      "guided": {
+        "fallback_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 2.4426e-05
+        },
+        "fallback_used": true,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 4,
+          "decisions": 13,
+          "propagations": 31,
+          "restarts": 2,
+          "wall_clock_s": 4.8041e-05
+        },
+        "overwrite_count": 2,
+        "primary_metrics": {
+          "conflicts": 1,
+          "decisions": 0,
+          "propagations": 6,
+          "restarts": 1,
+          "wall_clock_s": 2.3615e-05
+        },
+        "primary_status": "unsat"
+      },
+      "instance_class": "misleading_factor_sat",
+      "instance_id": "exp5292_misleading_factor_sat",
+      "pure": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 3.6418e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "savings": {
+        "conflicts_saved": -1,
+        "decisions_saved": 0,
+        "propagations_saved": -6,
+        "restarts_saved": -1,
+        "wall_clock_s_saved": -1.1623e-05
+      },
+      "source_fixture_id": "small_pair_sum"
+    },
+    {
+      "assumptions": {
+        "energy": 2,
+        "hardware_execution": false,
+        "literals": [],
+        "method": "cpu_simulated_pbit_no_consensus_control",
+        "profile": "no_consensus_control",
+        "simulated_guidance": true
+      },
+      "class_effect": "neutral",
+      "correctness_preserved": true,
+      "expected_status": "sat",
+      "guided": {
+        "fallback_metrics": null,
+        "fallback_used": false,
+        "final_model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "final_status": "sat",
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 2.0299e-05
+        },
+        "overwrite_count": 0,
+        "primary_metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 2.0299e-05
+        },
+        "primary_status": "sat"
+      },
+      "instance_class": "neutral_factor_sat",
+      "instance_id": "exp5292_neutral_factor_sat",
+      "pure": {
+        "metrics": {
+          "conflicts": 3,
+          "decisions": 13,
+          "propagations": 25,
+          "restarts": 1,
+          "wall_clock_s": 3.2511e-05
+        },
+        "model": [
+          -1,
+          -2,
+          3,
+          -4,
+          -5,
+          -6,
+          -7,
+          8
+        ],
+        "status": "sat"
+      },
+      "savings": {
+        "conflicts_saved": 0,
+        "decisions_saved": 0,
+        "propagations_saved": 0,
+        "restarts_saved": 0,
+        "wall_clock_s_saved": 1.2212e-05
+      },
+      "source_fixture_id": "small_pair_sum"
+    }
+  ],
+  "propagations_saved": {
+    "principle": "Pure-minus-guided CDCL propagations by aggregate and class; negative values expose harmful guidance overhead.",
+    "value": {
+      "aggregate": 10,
+      "by_class": {
+        "aligned_factor_sat": 16,
+        "misleading_factor_sat": -6,
+        "neutral_factor_sat": 0
+      }
+    }
+  },
+  "random_seed": 5292,
+  "reproducibility_checksum": "7edf365208d414dd347e558a4101c49843ed8a2ef2dbd8cccb23a93e083656ce",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5292.pbit_cdcl_factor_guidance.v483",
+  "source_artifacts": [
+    "results/experiment_5278_constraint_factor_graph_boundary_v482.json"
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5292",
+    "SCENARIO-VERIFY-5292"
+  ],
+  "tests_run": []
+}
