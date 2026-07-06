@@ -99,6 +99,32 @@ One additional minor, unresolved discrepancy: the raw `wa30` session used above 
 steps, but the corresponding staged shard rows for `wa30` total 1564. Not chased further here — worth
 a quick check during any re-staging work, but not blocking.
 
+## FIXED (2026-07-05)
+
+Operator authorized starting ARC-specific outer-loop work directly, given available quota headroom.
+This was the first task picked up. Root cause confirmed precisely: `exp4495`'s own recorded
+`training_shard_count=3`/`training_example_count=10000` shows the original 2026-06-20 run only ever
+staged the "10k truncated mirror"; a later, undocumented partial restaging reached 4 shards / 14,797
+examples, still far short of the full 340-session raw corpus, and every row's `level_progress` was
+degenerately `0.0`. Verified directly that `python/carnot/agentic/arc_human_replay_corpus.py`'s
+conversion code is correct (tested it against the raw parquet mirror directly: `level_progress`
+transitions from `0.0` to `0.125` exactly at the right action-index boundary) — the bug was purely
+that the on-disk staged output was stale/incomplete, never regenerated with the full raw corpus. No
+code changes were needed.
+
+Re-ran `write_training_shards_from_parquet()` against all 7 already-downloaded raw parquet files
+(626.5s). Result: **180,144 examples across 44 shards** (was 14,797/4), spanning 339 distinct
+sessions across all 25 public games. Validated directly: 93.2% of rows now carry non-zero
+`level_progress` (was 0%), 17.0% show `level_progress=1.0` (fully won), matching the raw source's own
+144-winning-session ground truth. `results/experiment_4495_human_replay_corpus_staging.json` updated
+with the corrected shard state and a full corrigendum; `adversarial_verify.py` clean (0 flags); the
+artifact's own test suite (10 tests) still passes.
+
+**This unblocks both `exp4490`** (the original frame-change-predictor task, blocked since 2026-06-20,
+never retried) **and the TRM-as-generator leave-one-game-out pilot** — the training-data-sufficiency
+question from that note is no longer just resolved-in-principle, the corpus is now genuinely usable
+on disk.
+
 ## What this note is NOT proposing
 
 - Not proposing to skip straight to TRM training. The concrete next step is narrower and cheaper: fix

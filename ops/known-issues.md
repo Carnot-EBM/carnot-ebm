@@ -2225,6 +2225,15 @@ from once.
 
 ### BUG + OPPORTUNITY: human replay corpus staging drops all win signal 2026-07-04 (outer-loop, "don't we have the human generated game event solutions handy?")
 
+**FIXED 2026-07-05** (outer-loop, operator authorized starting ARC-specific work directly). Root
+cause: the on-disk staged shards were stale/incomplete (`exp4495` only ever staged a 10k-truncated
+mirror; a later partial restaging reached 14,797 examples, still incomplete) -- the conversion CODE
+was verified correct, just never re-run against the full raw corpus. Regenerated:
+**180,144 examples across 44 shards** (was 14,797), 339 sessions across all 25 games, 93.2% of rows
+now carry real `level_progress` signal (was 0%). Full detail:
+`docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md` "FIXED" section.
+Unblocks `exp4490` and the TRM-as-generator leave-one-game-out pilot.
+
 Full writeup: `docs/research-notes/human-replay-corpus-staging-bug-and-opportunity-2026-07-04.md`.
 
 **The opportunity:** a real, licensed (CC BY 4.0) human replay corpus already exists at
