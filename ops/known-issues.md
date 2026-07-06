@@ -2167,6 +2167,40 @@ CLAUDE.md "Codex-Default for Experiments v2" exception #1 updated to reflect thi
 (never an auto-revert-on-quota-reset expectation — re-enabling Claude for this tier needs
 an explicit operator directive, same standing-default discipline as the experiment default).
 
+### BUILT: exp4544's Family-B counterexample gap closed 2026-07-06 (outer-loop, "can we pursue the ARC-AGI-3 unbuilt alternatives here in the outer loop?")
+
+Picked up the first of the two unbuilt alternatives flagged 2026-07-04 (see the TRM entries below
+for the second). Investigated `python/carnot/agentic/arc_executable_world_model.py` +
+`arc_llm_reinduction.py` first -- found the live GOAL+DYNAMICS proposer is already more
+sophisticated than the original `.421` SOTA note assumed (real Family-B-style executable
+induction, real held-out verification, bounded refinement, already live-path-reachable from
+`E3AgentPolicy`, no wiring needed). The actual narrow gap: on the dominant live failure mode
+(`heldout_transition_verification_failed`), `execute_bounded_llm_reinduction` built a FAKE
+counterexample (a scalar summary, hardcoded `n=1/accuracy=0.0`) instead of the REAL per-transition
+mismatch evidence `WorldModelVerifier.score()` already computes and `refactor_prompt()` is already
+built to consume -- the LLM refactor step was getting "you're wrong" with zero concrete detail to
+fix, exactly the counterexample-guided-refinement gap arXiv:2606.11521 describes.
+
+**Fixed**: real mismatches now flow through to `proposer.refactor()`. Verified via the existing
+test's own failure signature (before: `n=1/accuracy=0.0` always; after: genuine
+`n=2/n_correct=1/accuracy=0.5` with the actual failing transition's delta). Updated the one
+existing test that had inadvertently locked in the bug (hardcoded `mismatches[0]['kind']`) to
+verify the real evidence instead -- more faithful to its own stated intent ("held-out transition
+failures become CEGIS counterexamples"). Full directly-relevant suite (51 tests, 8 files) clean;
+two pre-existing, unrelated failures elsewhere confirmed via `git stash` to be present on
+unmodified code, not caused by this change.
+
+**What this does NOT close**: GOAL and DYNAMICS are still proposed/verified as one combined
+candidate, not independently -- that's a separate, larger architectural change, not attempted this
+session. If picked up again, start from `LlmReinductionResult.goal_candidate_names`/
+`dynamics_candidate_names` currently being set to the identical list
+(`python/carnot/agentic/arc_llm_reinduction.py`).
+
+**The second alternative (TRM-as-sequence-refiner) was investigated but not built this session** --
+see the TRM pilot entries above; the narrower behavioral-cloning proxy was properly ruled out via a
+rigorous multi-seed test, and the full-sequence-refinement version remains a real but bigger,
+unattempted lift.
+
 ### CANDIDATE: does ARC-1/2 capability apply to ARC-3? 2026-07-04 (outer-loop, "do we know if ARC-AGI-1 and ARC-AGI-2 capability has any potential application to ARC-AGI-3 games?")
 
 Full writeup: `docs/research-notes/arc1-arc2-capability-transfer-to-arc3-2026-07-04.md`. No direct
