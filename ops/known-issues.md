@@ -2250,6 +2250,18 @@ history (cheap change to the existing pilot script) or moving toward full-sequen
 validated until a redesigned test clears the trivial baseline, not just beats a matched non-recursive
 arm.
 
+**UPDATE, same day: the history-conditioned re-run CONTRADICTS the above finding, not confirms it.**
+Same held-out game, same architectures, added an 8-action history window. Non-recursive baseline
+jumped to 0.7757 (from 0.4626), confirming history was the missing signal -- but the recursive
+refiner now scores 0.6107, **16.5pp WORSE than the non-recursive baseline**, the opposite ranking
+from the frame-only run. Full detail + honest interpretation in the writeup's "v2 update" section:
+most likely explanation is that a single seed per arm, on a hand-rolled standalone reimplementation
+(no ACT halting, no tuned hyperparameters, three epochs), is simply too noisy to reliably measure
+this effect in either direction -- NOT that recursion has a real, condition-dependent flip. Revised
+state: **inconclusive with contradictory single-run signals in both directions.** Before any further
+conclusion, this needs multiple seeds per arm and/or a properly-tuned per-architecture training
+regime -- not another single-seed run under a third task framing.
+
 ### LITERATURE: AutoMem, memory as a trainable skill 2026-07-05 (outer-loop, operator-requested paper review)
 
 Full writeup: `docs/research-notes/automem-memory-as-cognitive-skill-2026-07-05.md`. arXiv:2607.01224
