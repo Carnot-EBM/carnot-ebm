@@ -17,6 +17,7 @@ from typing import Any, Callable, Mapping, Sequence
 
 import numpy as np
 
+from carnot.agentic.arc_executable_world_model import WorldModelVerifier
 from carnot.agentic.arc_world_model_trust_energy import (
     WorldModelCandidate,
     select_trusted_world_model,
@@ -120,7 +121,9 @@ def _normalise_structural_goal_candidate(
             return None
         return {
             "predicate": predicate,
-            "goal_expression": str(row.get("goal_expression") or row.get("name") or "structural_goal"),
+            "goal_expression": str(
+                row.get("goal_expression") or row.get("name") or "structural_goal"
+            ),
             "diagnostics": dict(row.get("diagnostics") or {}),
         }
     return None
@@ -153,6 +156,23 @@ def _normalise_candidates(rows: Sequence[Any], engine: Any, goal: Any) -> list[W
 
 
 def _counterexample_result(counterexample: Mapping[str, Any]) -> Any:
+    """REQ-ARC-WMTE-4544: build the VerifyResult-shaped object passed to proposer.refactor().
+
+    When real per-transition mismatch evidence (BEFORE/PREDICTED/OBSERVED deltas from
+    WorldModelVerifier.score(), the same shape refactor_prompt() is built to consume) was
+    computed by the caller, use it -- the LLM refactor step needs concrete failing cases to
+    fix, not just a scalar heldout_accuracy summary. Falls back to the scalar-only summary
+    (as its own single mismatch entry) when no real evidence is available, so this remains
+    safe for any caller that has not (yet) attached real evidence.
+    """
+    real_mismatches = counterexample.get("real_mismatches")
+    if real_mismatches:
+        return SimpleNamespace(
+            n=int(counterexample.get("real_n") or len(real_mismatches)),
+            n_correct=int(counterexample.get("real_n_correct") or 0),
+            accuracy=float(counterexample.get("real_accuracy") or 0.0),
+            mismatches=list(real_mismatches),
+        )
     return SimpleNamespace(n=1, n_correct=0, accuracy=0.0, mismatches=[dict(counterexample)])
 
 
@@ -743,9 +763,7 @@ def execute_bounded_llm_reinduction(
                         structural_goal_candidate.get("diagnostics") or {}
                     )
                     row["goal_expression"] = last_goal_expression
-                    row["structural_goal_diagnostics"] = dict(
-                        last_structural_goal_diagnostics
-                    )
+                    row["structural_goal_diagnostics"] = dict(last_structural_goal_diagnostics)
                 elif structural_goal_candidate.get("error"):
                     row["structural_goal_error"] = structural_goal_candidate["error"]
             heldout_accuracy = float(selection.selected_score.heldout_accuracy)
@@ -771,11 +789,23 @@ def execute_bounded_llm_reinduction(
                 }
             )
             if not accepted:
+                # REQ-ARC-WMTE-4544: attach REAL per-transition mismatch evidence (BEFORE/
+                # PREDICTED/OBSERVED deltas), not just the scalar heldout_accuracy summary --
+                # refactor_prompt() is built to consume concrete failing cases, and a bare
+                # accuracy number gives the LLM nothing actionable to fix. Scoring against
+                # the full transitions list (not just the held-out split) is deliberate: every
+                # mismatch returned is still a genuinely observed transition the engine gets
+                # wrong, which is what CEGIS refinement needs.
+                real_verify = WorldModelVerifier(list(transitions)).score(selected.engine)
                 last_counterexample = {
                     "kind": "heldout_transition_verification_failed",
                     "selected_candidate_name": selected.name,
                     "heldout_accuracy": round(heldout_accuracy, 6),
                     "heldout_threshold": round(verifier_threshold, 6),
+                    "real_n": real_verify.n,
+                    "real_n_correct": real_verify.n_correct,
+                    "real_accuracy": round(float(real_verify.accuracy), 6),
+                    "real_mismatches": list(real_verify.mismatches),
                 }
                 counterexamples.append(last_counterexample)
                 row["counterexample"] = dict(last_counterexample)
@@ -965,8 +995,7 @@ def execute_bounded_llm_reinduction(
                             factored_result.per_subgoal_reachable
                         ),
                         "factored_plan_length": len(factored_result.plan),
-                        "factored_residual": factored_result.residual
-                        or expert_result.residual,
+                        "factored_residual": factored_result.residual or expert_result.residual,
                     }
                 )
                 if factored_result.planned:

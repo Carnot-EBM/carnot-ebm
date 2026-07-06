@@ -43,9 +43,7 @@ def _measurement(
                             "planned": planned,
                             "skipped": "" if planned else "heldout_transition_verification_failed",
                             "refinement_rounds_used": 2 if planned else 3,
-                            "counterexamples": [
-                                {"kind": "heldout_transition_verification_failed"}
-                            ],
+                            "counterexamples": [{"kind": "heldout_transition_verification_failed"}],
                         }
                     ]
                 },
@@ -115,7 +113,15 @@ def test_req_arc_wmte_4557_rejects_unverified_heldout_candidate_before_planning(
             return True, "overfit executable candidate"
 
         def refactor(self, _game, counterexample):
-            self.calls.append(f"refactor:{counterexample.mismatches[0]['kind']}")
+            # REQ-ARC-WMTE-4544: refactor() must receive REAL per-transition mismatch
+            # evidence (BEFORE/PREDICTED/OBSERVED deltas from WorldModelVerifier.score()),
+            # not just a scalar heldout_accuracy summary -- this is the CEGIS counterexample
+            # refactor_prompt() is built to consume.
+            mismatch = counterexample.mismatches[0]
+            self.calls.append(
+                f"refactor:n={counterexample.n}:n_correct={counterexample.n_correct}:"
+                f"mismatch_i={mismatch['i']}"
+            )
             return True, "general executable candidate"
 
     transitions = [
@@ -183,9 +189,20 @@ def test_req_arc_wmte_4557_rejects_unverified_heldout_candidate_before_planning(
     assert result.planned is True
     assert result.refinement_rounds_used == 2
     assert result.counterexamples[0]["kind"] == "heldout_transition_verification_failed"
+    # REQ-ARC-WMTE-4544: the counterexample must carry REAL per-transition mismatch evidence,
+    # not just the scalar heldout_accuracy -- this is what makes refinement genuinely
+    # counterexample-guided rather than "you're wrong, try again" with no concrete detail.
+    assert result.counterexamples[0]["real_accuracy"] == 0.5
+    assert result.counterexamples[0]["real_n"] == 2
+    assert result.counterexamples[0]["real_n_correct"] == 1
+    real_mismatches = result.counterexamples[0]["real_mismatches"]
+    assert len(real_mismatches) == 1
+    assert real_mismatches[0]["i"] == 1
+    assert "true_change" in real_mismatches[0]
+    assert "your_prediction_was_wrong_at" in real_mismatches[0]
     assert result.rounds[0]["accepted_by_heldout_verifier"] is False
     assert result.rounds[1]["accepted_by_heldout_verifier"] is True
-    assert proposer.calls == ["induce", "refactor:heldout_transition_verification_failed"]
+    assert proposer.calls == ["induce", "refactor:n=2:n_correct=1:mismatch_i=1"]
     assert proposer.induction_sizes == [1]
     assert plan_calls == 1
 
@@ -217,7 +234,10 @@ def test_scenario_arc_wmte_4557_positive_control_failure_skips_measurement(
         "complete: executable_proposer_positive_control_failed_no_deeper_barrier_refined"
     )
     assert exp4557.artifact_schema_errors(artifact) == []
-    assert json.loads((tmp_path / exp4557.RESULT_RELATIVE_PATH).read_text(encoding="utf-8")) == artifact
+    assert (
+        json.loads((tmp_path / exp4557.RESULT_RELATIVE_PATH).read_text(encoding="utf-8"))
+        == artifact
+    )
 
 
 def test_req_arc_wmte_4557_honest_null_records_value_after_passed_gate() -> None:
@@ -287,4 +307,6 @@ def test_req_arc_wmte_4557_success_requires_l2_efficiency_preservation_and_repla
 
     dropped = dict(artifact)
     dropped["core_solves_preserved"] = False
-    assert any("core_solves_preserved" in error for error in exp4557.artifact_schema_errors(dropped))
+    assert any(
+        "core_solves_preserved" in error for error in exp4557.artifact_schema_errors(dropped)
+    )
