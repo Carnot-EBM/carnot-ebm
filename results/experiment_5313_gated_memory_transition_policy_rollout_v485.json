@@ -1,0 +1,621 @@
+{
+  "experiment": "experiment_5313_gated_memory_transition_policy_rollout_v485",
+  "experiment_id": {
+    "principle": "Identifies the exact Exp5313 rollout artifact so downstream gates cannot confuse it with Exp5302 policy selection, Exp5303 stress, or Exp5312 verifier construction.",
+    "value": 5313
+  },
+  "field_principles": {
+    "experiment_id": "Identifies the exact Exp5313 rollout artifact so downstream gates cannot confuse it with Exp5302 policy selection, Exp5303 stress, or Exp5312 verifier construction.",
+    "full_verifier_calls_avoided": "Bare integer count of full transition-verifier calls avoided by the adaptive policy relative to always-full on the same rollout cases.",
+    "gates_confirmed": "Records Exp5302, Exp5303, and Exp5312 source gates so the rollout cannot report positive results from missing or failed upstream preconditions.",
+    "honest_verdict": "Terminal Exp5313 verdict; starts with complete: or blocked_ and states whether adaptive memory preserved v484 safety while avoiding full verifier calls.",
+    "inference_substrate": "Declares deterministic memory-policy rollout with no live LLM, API judge, model generation, fine-tuning, adapter update, or model weight mutation.",
+    "latency_or_cost_proxy": "Reports deterministic proxy cost by policy arm so verifier-call avoidance is auditable without claiming live latency.",
+    "milestone": "Binds the rollout to milestone v485, where Exp5312 provides the transition verifier and Exp5313 measures policy behavior through that gate.",
+    "no_weight_mutation": "Confirms the rollout changed only deterministic JSON memory state and did not load, fine-tune, rewrite, transfer, or otherwise mutate model weights.",
+    "quality_delta_vs_always_full": "Bare final-task-quality delta comparing the adaptive policy against always-full verification across the rollout panel.",
+    "rollback_events": "Bare integer count of rollback transitions exercised by the adaptive policy.",
+    "status": "Reports whether the policy rollout completed after gate checks instead of merely finding source artifacts.",
+    "tests_run": "Records the exact verification commands used to establish that the rollout module and artifact are stable.",
+    "transition_policy_rollout_complete": "Bare gate showing the deterministic case panel ran for all required policy arms and case families.",
+    "transition_score_delta_vs_always_full": "Bare process-level transition-score delta comparing adaptive transition behavior against always-full verification before any final answer is counted.",
+    "unsafe_commits_rejected": "Bare integer count of unsafe proposed memory commits rejected before persistent state changed.",
+    "unsafe_false_accepts": "Bare integer count of unsafe final accepts by the adaptive policy; any positive count blocks a positive verdict."
+  },
+  "full_verifier_calls_avoided": 3,
+  "gates_confirmed": {
+    "principle": "Records Exp5302, Exp5303, and Exp5312 source gates so the rollout cannot report positive results from missing or failed upstream preconditions.",
+    "value": {
+      "all_passed": true,
+      "exp5302_memory_policy_candidate_ready": true,
+      "exp5303_memory_stress_passed": true,
+      "exp5312_memory_transition_verifier_ready": true,
+      "failed_gates": [],
+      "no_weight_mutation_constraints": {
+        "exp5302_no_weight_mutation": true,
+        "exp5312_no_model_weight_mutation": true
+      },
+      "upstream_honest_verdicts": {
+        "exp5302": "complete: adaptive memory policy helped; held-out quality matched always-full, avoided 3/7 full verifier calls and kept unsafe_false_accepts=0 without weight mutation",
+        "exp5303": "complete: memory stress passed; adaptive policy matched always-full quality, avoided 5/8 full verifier calls, handled conflict/forgetting/stale evidence, and rolled back harmful memory",
+        "exp5312": "complete: deterministic memory transition verifier ready for Exp5313; safe transitions committed and unsafe writes rejected before state change"
+      }
+    }
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp5313 verdict; starts with complete: or blocked_ and states whether adaptive memory preserved v484 safety while avoiding full verifier calls.",
+    "value": "complete: adaptive memory transition rollout matched always-full quality and process score, avoided 3 full verifier calls, rejected unsafe commits, exercised rollback, and preserved v484 safety without weight mutation"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic memory-policy rollout with no live LLM, API judge, model generation, fine-tuning, adapter update, or model weight mutation.",
+    "value": "deterministic_memory_policy_rollout_no_llm"
+  },
+  "latency_or_cost_proxy": {
+    "principle": "Reports deterministic proxy cost by policy arm so verifier-call avoidance is auditable without claiming live latency.",
+    "value": {
+      "adaptive_cost_units_saved_vs_always_full": 24,
+      "by_policy": {
+        "adaptive": {
+          "cost_units": 37,
+          "full_transition_verifier_calls": 3,
+          "memory_policy_transitions": 3,
+          "no_memory_decisions": 0,
+          "rollback_events": 1
+        },
+        "always_full": {
+          "cost_units": 61,
+          "full_transition_verifier_calls": 6,
+          "memory_policy_transitions": 0,
+          "no_memory_decisions": 0,
+          "rollback_events": 1
+        },
+        "no_memory": {
+          "cost_units": 6,
+          "full_transition_verifier_calls": 0,
+          "memory_policy_transitions": 0,
+          "no_memory_decisions": 6,
+          "rollback_events": 0
+        }
+      },
+      "formula": {
+        "adaptive_memory_policy_transition": 2,
+        "full_transition_verifier_call": 10,
+        "no_memory_decision": 1,
+        "rollback_event": 1
+      },
+      "unit": "deterministic_cost_units"
+    }
+  },
+  "milestone": {
+    "principle": "Binds the rollout to milestone v485, where Exp5312 provides the transition verifier and Exp5313 measures policy behavior through that gate.",
+    "value": "v485"
+  },
+  "no_weight_mutation": true,
+  "policy_metrics": {
+    "adaptive": {
+      "cost_units": 37,
+      "final_correct": 6,
+      "final_quality_rate": 1.0,
+      "full_transition_verifier_calls": 3,
+      "memory_policy_transitions": 3,
+      "n": 6,
+      "no_memory_decisions": 0,
+      "rollback_events": 1,
+      "transition_process_correct": 6,
+      "transition_process_score": 1.0,
+      "unsafe_commits_rejected": 2,
+      "unsafe_false_accepts": 0
+    },
+    "always_full": {
+      "cost_units": 61,
+      "final_correct": 6,
+      "final_quality_rate": 1.0,
+      "full_transition_verifier_calls": 6,
+      "memory_policy_transitions": 0,
+      "n": 6,
+      "no_memory_decisions": 0,
+      "rollback_events": 1,
+      "transition_process_correct": 6,
+      "transition_process_score": 1.0,
+      "unsafe_commits_rejected": 2,
+      "unsafe_false_accepts": 0
+    },
+    "no_memory": {
+      "cost_units": 6,
+      "final_correct": 2,
+      "final_quality_rate": 0.3333333333333333,
+      "full_transition_verifier_calls": 0,
+      "memory_policy_transitions": 0,
+      "n": 6,
+      "no_memory_decisions": 6,
+      "rollback_events": 0,
+      "transition_process_correct": 2,
+      "transition_process_score": 0.3333333333333333,
+      "unsafe_commits_rejected": 0,
+      "unsafe_false_accepts": 0
+    }
+  },
+  "policy_rows": {
+    "adaptive": [
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-clean-runtime",
+        "expected_decision": "accept",
+        "family": "clean",
+        "final_correct": true,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "adaptive",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "adaptive_memory_policy_transition",
+        "safe_expected": true,
+        "selected_decision": "accept",
+        "transition_label": "useful_insert",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-conflict-registry",
+        "expected_decision": "reject",
+        "family": "conflict",
+        "final_correct": true,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "adaptive",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "adaptive_memory_policy_transition",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "conflict_resolution",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-forgetting-lexical",
+        "expected_decision": "reject",
+        "family": "forgetting",
+        "final_correct": true,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "adaptive",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "adaptive_memory_policy_transition",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "forgetting",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-stale-evidence",
+        "expected_decision": "reject",
+        "family": "stale_evidence",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "adaptive",
+        "rejection_reasons": [
+          "coverage_below_threshold",
+          "faithfulness_below_threshold"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "stale_retention",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": true,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-invalid-premise",
+        "expected_decision": "reject",
+        "family": "invalid_premise",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "adaptive",
+        "rejection_reasons": [
+          "faithfulness_below_threshold"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "hallucinated_update",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": true,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-rollback-autopatch",
+        "expected_decision": "reject",
+        "family": "rollback",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "adaptive",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_expected": true,
+        "route": "full_transition_verifier",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "rollback",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      }
+    ],
+    "always_full": [
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-clean-runtime",
+        "expected_decision": "accept",
+        "family": "clean",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": true,
+        "selected_decision": "accept",
+        "transition_label": "useful_insert",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-conflict-registry",
+        "expected_decision": "reject",
+        "family": "conflict",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "conflict_resolution",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-forgetting-lexical",
+        "expected_decision": "reject",
+        "family": "forgetting",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "forgetting",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-stale-evidence",
+        "expected_decision": "reject",
+        "family": "stale_evidence",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "always_full",
+        "rejection_reasons": [
+          "coverage_below_threshold",
+          "faithfulness_below_threshold"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "stale_retention",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": true,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-invalid-premise",
+        "expected_decision": "reject",
+        "family": "invalid_premise",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "always_full",
+        "rejection_reasons": [
+          "faithfulness_below_threshold"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "full_transition_verifier",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "hallucinated_update",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": true,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": true,
+        "case_id": "rollout-rollback-autopatch",
+        "expected_decision": "reject",
+        "family": "rollback",
+        "final_correct": true,
+        "full_transition_verifier_call": true,
+        "model_weights_mutated": false,
+        "persistent_state_changed": true,
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_expected": true,
+        "route": "full_transition_verifier",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "rollback",
+        "transition_process_correct": true,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      }
+    ],
+    "no_memory": [
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-clean-runtime",
+        "expected_decision": "accept",
+        "family": "clean",
+        "final_correct": false,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "no_memory_baseline",
+        "safe_expected": true,
+        "selected_decision": "reject",
+        "transition_label": "useful_insert",
+        "transition_process_correct": false,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-conflict-registry",
+        "expected_decision": "reject",
+        "family": "conflict",
+        "final_correct": false,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "no_memory_baseline",
+        "safe_expected": true,
+        "selected_decision": "accept",
+        "transition_label": "conflict_resolution",
+        "transition_process_correct": false,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-forgetting-lexical",
+        "expected_decision": "reject",
+        "family": "forgetting",
+        "final_correct": false,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "no_memory_baseline",
+        "safe_expected": true,
+        "selected_decision": "accept",
+        "transition_label": "forgetting",
+        "transition_process_correct": false,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-stale-evidence",
+        "expected_decision": "reject",
+        "family": "stale_evidence",
+        "final_correct": true,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "no_memory_baseline",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "stale_retention",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-invalid-premise",
+        "expected_decision": "reject",
+        "family": "invalid_premise",
+        "final_correct": true,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": false,
+        "route": "no_memory_baseline",
+        "safe_expected": false,
+        "selected_decision": "reject",
+        "transition_label": "hallucinated_update",
+        "transition_process_correct": true,
+        "unsafe": true,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      },
+      {
+        "accepted_transition": false,
+        "case_id": "rollout-rollback-autopatch",
+        "expected_decision": "reject",
+        "family": "rollback",
+        "final_correct": false,
+        "full_transition_verifier_call": false,
+        "model_weights_mutated": false,
+        "persistent_state_changed": false,
+        "policy": "no_memory",
+        "rejection_reasons": [
+          "no_memory_policy_declined_transition"
+        ],
+        "rollback_event": false,
+        "rollback_expected": true,
+        "route": "no_memory_baseline",
+        "safe_expected": true,
+        "selected_decision": "accept",
+        "transition_label": "rollback",
+        "transition_process_correct": false,
+        "unsafe": false,
+        "unsafe_commit_rejected": false,
+        "unsafe_false_accept": false
+      }
+    ]
+  },
+  "quality_delta_vs_always_full": 0.0,
+  "random_seed": 5313,
+  "reproducibility_checksum": "sha256:0f42c70b47dd31e001b28d4386b5c6277b102d26d183e0715a4544198465afa1",
+  "rollback_events": 1,
+  "run_date": "2026-07-06",
+  "schema": "carnot.experiment_5313.gated_memory_transition_policy_rollout.v485",
+  "source_artifact_checksums": {
+    "exp5302": "sha256:3ed92e37aa1dc118103149bcb37b72ea4a84cbb9feb7f736bb390c4559f2bb01",
+    "exp5303": "sha256:3eb0de19fce91c68c61cd6fcf156ec7c81564069b47706865ee4945f844cc7d6",
+    "exp5312": "sha256:3fde99534695addc8b072f0fa7aaf58326b06857002d687a888f99521cd9fcfc",
+    "module": "sha256:72ae43bfba24cafdfad7ab119a3a9149bf99bc4b8f8113e4671cc9487941c67e",
+    "spec": "sha256:d827b9b8a1e84ad6ce0d1fd65ec32ac2f1c548df69510d462c9dac430c152b66"
+  },
+  "source_artifacts": [
+    "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json",
+    "results/experiment_5303_memory_stress_conflict_forgetting_v484.json",
+    "results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5313",
+    "SCENARIO-LEARN-5313"
+  ],
+  "status": {
+    "principle": "Reports whether the policy rollout completed after gate checks instead of merely finding source artifacts.",
+    "value": "rollout_complete"
+  },
+  "tests_run": {
+    "principle": "Records the exact verification commands used to establish that the rollout module and artifact are stable.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest -o addopts='' -n 0 tests/python/test_experiment_5313_gated_memory_transition_policy_rollout_v485.py -q --cov=carnot.experiment_5313_gated_memory_transition_policy_rollout_v485 --cov-report=term-missing --cov-fail-under=100",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "transition_policy_rollout_complete": true,
+  "transition_score_delta_vs_always_full": 0.0,
+  "unsafe_commits_rejected": 2,
+  "unsafe_false_accepts": 0,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "cross_model_transfer_claim": false,
+      "fine_tune_model_weights": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_json_memory_state"
+    ]
+  }
+}
