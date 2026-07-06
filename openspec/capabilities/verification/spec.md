@@ -25882,6 +25882,87 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5297: Changed Runtime SOTA GGUF Substrate Gate V484
+
+The repository SHALL provide an Exp 5297 runtime gate that tries a changed
+local GGUF execution substrate before any downstream SOTA quality, verifier,
+solver, or repair claim is made. The changed substrate SHALL differ from Exp
+5284's CPU-only `llama-cpp-python` path and MAY be a native `llama.cpp` CUDA
+CLI/server, a freshly built CUDA-enabled `llama-cpp-python` wheel/container
+with build receipts, or another documented local GGUF backend. The old CPU-only
+`llama-cpp-python` path SHALL NOT count as success.
+
+The gate SHALL run Step 0 preconditions before generation or scoring: GPU
+visibility, driver/CUDA facts, backend version/build flags, changed-substrate
+identity, model cache paths, free disk, and at least one locally resolvable
+mandated SOTA GGUF without using `AutoTokenizer.from_pretrained` on a GGUF repo.
+The mandated model specs SHALL be recorded as `MODEL_SPECS` roles:
+`flagship_moe=unsloth/Qwen3.6-35B-A3B-GGUF`,
+`flagship_dense=unsloth/gemma-4-31B-it-GGUF`, and
+`middle_moe=unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+For each locally available mandated model, the gate SHALL attempt one tiny
+deterministic generation or scoring call through the changed substrate and
+record the exact command/backend, build flags or dynamic-library evidence,
+model file, quantization, context length, offload settings, prompt checksum,
+output checksum when output exists, wall-clock duration, stdout/stderr snippets,
+and GPU memory before/during/after. `changed_runtime_sota_ready` SHALL be a
+bare boolean and SHALL be true only when at least one mandated model completes
+the changed-substrate call with GPU-offload evidence from backend logs, device
+enumeration, or a positive GPU memory delta during the process.
+
+The terminal artifact SHALL be
+`results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json` and
+SHALL include principle-annotated `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, `MODEL_SPECS`, `runtime_substrate_changed`,
+`duration_receipts`, `gpu_offload_receipts`, `smoke_tests`, `no_quality_claim`,
+and `tests_run`, plus bare `changed_runtime_sota_ready` and
+`changed_runtime_sota_ready_principle`. If no mandated model can run with
+changed-substrate GPU evidence, the artifact SHALL set `honest_verdict.value`
+to `blocked_*`, `inference_substrate.value` to
+`blocked_preconditions_with_no_quality_claim`,
+`changed_runtime_sota_ready=false`, and `no_quality_claim.value=true`; tiny or
+legacy model checks MAY appear only under `smoke_tests` with
+`smoke_test_not_headline`.
+
+Field principles:
+
+- `honest_verdict`: Terminal Exp 5297 verdict; starts with `complete:` or `blocked_` and states whether changed-runtime SOTA receipts are ready.
+- `inference_substrate`: Declares live changed local GGUF SOTA inference only after a mandated model actually generated or scored with changed-substrate GPU evidence; otherwise records blocked preconditions with no quality claim.
+- `preconditions_checked`: Records Step 0 GPU, CUDA, backend, cache, disk, and mandated-GGUF local resolution checks before any generation/scoring attempt.
+- `MODEL_SPECS`: Records the three mandated SOTA GGUF model IDs, roles, quantization/file receipts, and per-model changed-runtime status.
+- `runtime_substrate_changed`: Explains how the attempted backend differs from Exp 5284's CPU-only `llama-cpp-python` path and why the old path is not being counted as success.
+- `duration_receipts`: Captures per-model wall-clock, prompt checksum, and output checksum receipts so runtime claims are tied to live calls.
+- `gpu_offload_receipts`: Captures driver/device/offload settings, memory deltas, backend logs, and build/dynamic-library evidence proving whether GPU offload was available.
+- `smoke_tests`: Tiny or legacy model checks are labeled `smoke_test_not_headline` and cannot open the changed-runtime SOTA gate.
+- `no_quality_claim`: Must be true because Exp 5297 is a runtime-substrate gate, not a verifier, solver, benchmark, or model-quality experiment.
+- `tests_run`: Records the focused unit, coverage, and repository verification commands used for the v484 gate.
+- `generation_receipts`: Raw per-model changed-runtime generation or scoring receipts with prompt/output hashes, command, backend logs, offload config, and GPU-memory evidence.
+
+### SCENARIO-VERIFY-5297: Changed Runtime Opens Or Blocks SOTA Gate
+
+Given a native or otherwise changed local GGUF backend is available,
+When a locally cached mandated SOTA GGUF completes a tiny deterministic
+generation or scoring call with positive GPU-offload evidence,
+Then the artifact records the model file, quantization, command/backend,
+offload settings, prompt/output checksums, wall-clock, GPU memory receipts, and
+backend log snippets, sets `changed_runtime_sota_ready=true`, sets
+`inference_substrate.value=live_llm_inference_changed_local_gguf_sota`, and
+keeps `no_quality_claim.value=true`.
+
+If no locally cached mandated SOTA GGUF can complete through a changed substrate
+with GPU-offload evidence, then the artifact records the missing or failed
+preconditions, sets `changed_runtime_sota_ready=false`, sets
+`inference_substrate.value=blocked_preconditions_with_no_quality_claim`, does
+not promote any tiny model to headline evidence, and does not modify
+`scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5297)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5297 | Planned (`python/carnot/experiment_5297_changed_runtime_sota_substrate_gate_v484.py`, `results/experiment_5297_changed_runtime_sota_substrate_gate_v484.json`) | Planned (`tests/python/test_experiment_5297_changed_runtime_sota_substrate_gate_v484.py`) |
+
 ### REQ-VERIFY-5284: SOTA Runtime Offload Receipt Repair V483
 
 The repository SHALL provide Exp 5284 at
