@@ -1,0 +1,882 @@
+{
+  "calls_avoided": {
+    "principle": "Counts adaptive full-verifier calls avoided versus always-full and fixed governed-memory controls on the stress panel.",
+    "value": {
+      "adaptive_memory_policy_calls": 3,
+      "additional_vs_fixed_governed_memory": 5,
+      "always_full_calls": 8,
+      "fixed_governed_memory_calls": 8,
+      "rate_vs_always_full": 0.625,
+      "vs_always_full": 5
+    }
+  },
+  "competency_metrics": {
+    "accurate_retrieval": {
+      "adaptive_correct": 1,
+      "adaptive_full_verifier_calls": 0,
+      "adaptive_quality_rate": 1.0,
+      "always_full_quality_rate": 1.0,
+      "fixed_governed_memory_quality_rate": 1.0,
+      "query_count": 1
+    },
+    "conflict_resolution": {
+      "adaptive_correct": 3,
+      "adaptive_full_verifier_calls": 2,
+      "adaptive_quality_rate": 1.0,
+      "always_full_quality_rate": 1.0,
+      "fixed_governed_memory_quality_rate": 1.0,
+      "query_count": 3
+    },
+    "long_range_understanding": {
+      "adaptive_correct": 1,
+      "adaptive_full_verifier_calls": 0,
+      "adaptive_quality_rate": 1.0,
+      "always_full_quality_rate": 1.0,
+      "fixed_governed_memory_quality_rate": 1.0,
+      "query_count": 1
+    },
+    "principle": "Reports per-competency quality for accurate retrieval, test-time learning, long-range understanding, conflict resolution, and selective forgetting against fixed governed-memory and always-full controls.",
+    "selective_forgetting": {
+      "adaptive_correct": 2,
+      "adaptive_full_verifier_calls": 1,
+      "adaptive_quality_rate": 1.0,
+      "always_full_quality_rate": 1.0,
+      "fixed_governed_memory_quality_rate": 1.0,
+      "query_count": 2
+    },
+    "test_time_learning": {
+      "adaptive_correct": 1,
+      "adaptive_full_verifier_calls": 0,
+      "adaptive_quality_rate": 1.0,
+      "always_full_quality_rate": 1.0,
+      "fixed_governed_memory_quality_rate": 1.0,
+      "query_count": 1
+    }
+  },
+  "experiment": "experiment_5303_memory_stress_conflict_forgetting_v484",
+  "experiment_id": 5303,
+  "field_principles": {
+    "calls_avoided": "Counts adaptive full-verifier calls avoided versus always-full and fixed governed-memory controls on the stress panel.",
+    "competency_metrics": "Reports per-competency quality for accurate retrieval, test-time learning, long-range understanding, conflict resolution, and selective forgetting against fixed governed-memory and always-full controls.",
+    "honest_verdict": "Terminal Exp5303 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether adaptive memory stress passed.",
+    "inference_substrate": "Declares offline deterministic fixture replay with no live LLM, API judge, model generation, fine-tuning, or weight mutation.",
+    "memory_stress_passed": "Reports whether the adaptive policy matched always-full quality while handling conflict, forgetting, stale evidence, harmful-memory injection, rollback, and verifier-call avoidance.",
+    "policy_failure_attribution": "Attributes adaptive quality failures, adaptive escalation reasons, and fixed-control limitations so a pass cannot hide where memory policy behavior came from.",
+    "rollback_success_rate": "Measures harmful-memory rollback rows that removed the injected memory and preserved or restored the safe decision path.",
+    "stale_conflict_handling": "Reports stale evidence, direct conflicts, and multi-hop conflicts that were resolved or escalated instead of accepted from stale memory.",
+    "unsafe_false_accepts": "Counts harmful or unsafe stress rows accepted by the adaptive policy; any positive count blocks a positive memory-stress verdict."
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp5303 verdict; starts with complete:, null:, harmful_, or blocked_ and states whether adaptive memory stress passed.",
+    "value": "complete: memory stress passed; adaptive policy matched always-full quality, avoided 5/8 full verifier calls, handled conflict/forgetting/stale evidence, and rolled back harmful memory"
+  },
+  "inference_substrate": {
+    "principle": "Declares offline deterministic fixture replay with no live LLM, API judge, model generation, fine-tuning, or weight mutation.",
+    "value": "offline_deterministic_fixture_no_llm"
+  },
+  "memory_stress_passed": {
+    "principle": "Reports whether the adaptive policy matched always-full quality while handling conflict, forgetting, stale evidence, harmful-memory injection, rollback, and verifier-call avoidance.",
+    "value": true
+  },
+  "memory_trace": [
+    {
+      "case_id": "ar-update-runtime",
+      "competency": "accurate_retrieval",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "native_cuda_cli",
+      "memory_key": "runtime/preferred_substrate",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 1,
+      "unsafe": false
+    },
+    {
+      "case_id": "ttl-update-sensor",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "reject_unsupported_sensor_claim",
+      "memory_key": "sensor/unsupported_requires_reject",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 4,
+      "unsafe": false
+    },
+    {
+      "case_id": "ttl-delay-unrelated",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "ignored_noise_update",
+      "memory_key": "unrelated/probe",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 5,
+      "unsafe": false
+    },
+    {
+      "case_id": "lru-update-rubric",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "build_rubric_before_patch",
+      "memory_key": "arc/rubric_required",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 8,
+      "unsafe": false
+    },
+    {
+      "case_id": "lru-update-verifier",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "run_full_verifier_before_autopatch",
+      "memory_key": "arc/full_verifier_required",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 9,
+      "unsafe": false
+    },
+    {
+      "case_id": "conflict-update-old",
+      "competency": "conflict_resolution",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "promote_without_frozen_subset",
+      "memory_key": "gap1/registry_action",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 14,
+      "unsafe": false
+    },
+    {
+      "case_id": "conflict-update-new",
+      "competency": "conflict_resolution",
+      "control_kind": "direct_conflict",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "block_until_frozen_subset",
+      "memory_key": "gap1/registry_action",
+      "status": "active",
+      "superseded_previous": true,
+      "turn": 15,
+      "unsafe": false
+    },
+    {
+      "case_id": "stale-update-old",
+      "competency": "conflict_resolution",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "cpu_only_offload_receipt",
+      "memory_key": "runtime/offload_receipt",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 20,
+      "unsafe": false
+    },
+    {
+      "case_id": "forget-update-deprecated",
+      "competency": "selective_forgetting",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "accept_lexical_only_support",
+      "memory_key": "gap4/lexical_only_rule",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 27,
+      "unsafe": false
+    },
+    {
+      "case_id": "forget-deprecated-rule",
+      "competency": "selective_forgetting",
+      "control_kind": "selective_forgetting",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "forget",
+      "expected_decision": null,
+      "fact_value": null,
+      "memory_key": "gap4/lexical_only_rule",
+      "status": "forgotten",
+      "turn": 28,
+      "unsafe": false
+    },
+    {
+      "case_id": "rollback-safe-update",
+      "competency": "selective_forgetting",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "build_rubric_before_patch",
+      "memory_key": "arc/patch_synthesis",
+      "status": "active",
+      "superseded_previous": false,
+      "turn": 31,
+      "unsafe": false
+    },
+    {
+      "case_id": "harmful-injection-autopatch",
+      "competency": "selective_forgetting",
+      "control_kind": "harmful_memory",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "harmful_injection",
+      "expected_decision": null,
+      "fact_value": "skip_verifier_and_accept_autopatch",
+      "harmful_active_after_event": false,
+      "memory_key": "arc/patch_synthesis",
+      "restored_safe_value": "build_rubric_before_patch",
+      "status": "rolled_back",
+      "turn": 32,
+      "unsafe": true
+    }
+  ],
+  "policy_failure_attribution": {
+    "principle": "Attributes adaptive quality failures, adaptive escalation reasons, and fixed-control limitations so a pass cannot hide where memory policy behavior came from.",
+    "value": {
+      "adaptive_escalation_reasons": {
+        "multi_hop_conflict": 1,
+        "selective_forgetting": 1,
+        "stale_evidence": 1
+      },
+      "adaptive_quality_failures": [],
+      "fixed_control_limitations": {
+        "call_avoidance_gap_vs_adaptive": 5,
+        "full_calls_not_avoided": 8,
+        "quality_failures": []
+      }
+    }
+  },
+  "policy_metrics": {
+    "adaptive_memory_policy": {
+      "correct_n": 8,
+      "false_accepts": 0,
+      "full_verifier_calls": 3,
+      "n": 8,
+      "quality_rate": 1.0,
+      "unsafe_false_accepts": 0
+    },
+    "always_full": {
+      "correct_n": 8,
+      "false_accepts": 0,
+      "full_verifier_calls": 8,
+      "n": 8,
+      "quality_rate": 1.0,
+      "unsafe_false_accepts": 0
+    },
+    "fixed_governed_memory": {
+      "correct_n": 8,
+      "false_accepts": 0,
+      "full_verifier_calls": 8,
+      "n": 8,
+      "quality_rate": 1.0,
+      "unsafe_false_accepts": 0
+    }
+  },
+  "policy_version": "adaptive-memory-policy-v5302-selection-threshold-v1",
+  "precondition_checks": {
+    "exp5302_honest_verdict": "complete: adaptive memory policy helped; held-out quality matched always-full, avoided 3/7 full verifier calls and kept unsafe_false_accepts=0 without weight mutation",
+    "exp5302_memory_policy_candidate_ready": true
+  },
+  "query_rows": [
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": null,
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": false,
+      "adaptive_route": "memory_guided_stress_check",
+      "adaptive_selected_decision": "accept",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "accept",
+      "case_id": "ar-query-runtime",
+      "competency": "accurate_retrieval",
+      "control_kind": "none",
+      "delayed_turns": 2,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "accept",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "accept",
+      "memory_key": "runtime/preferred_substrate",
+      "turn": 3,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": null,
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": false,
+      "adaptive_route": "memory_guided_stress_check",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "ttl-query-sensor",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 3,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "sensor/unsupported_requires_reject",
+      "turn": 7,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": null,
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": false,
+      "adaptive_route": "memory_guided_stress_check",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "lru-query-chain",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 4,
+      "dependencies": [
+        "arc/rubric_required",
+        "arc/full_verifier_required"
+      ],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "arc/patch_skip_request",
+      "turn": 13,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": null,
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": false,
+      "adaptive_route": "memory_guided_stress_check",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "conflict-query-newest",
+      "competency": "conflict_resolution",
+      "control_kind": "direct_conflict",
+      "delayed_turns": 3,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "gap1/registry_action",
+      "turn": 18,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": "multi_hop_conflict",
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": true,
+      "adaptive_route": "full_verifier",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "multi-hop-conflict-query",
+      "competency": "conflict_resolution",
+      "control_kind": "multi_hop_conflict",
+      "delayed_turns": 0,
+      "dependencies": [
+        "runtime/preferred_substrate",
+        "gap1/registry_action"
+      ],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "hardware/speedup_claim",
+      "turn": 19,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": "stale_evidence",
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": true,
+      "adaptive_route": "full_verifier",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "stale-query-outdated",
+      "competency": "conflict_resolution",
+      "control_kind": "stale_evidence",
+      "delayed_turns": 6,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "runtime/offload_receipt",
+      "turn": 26,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": "selective_forgetting",
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": true,
+      "adaptive_route": "full_verifier",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "forget-query-deprecated",
+      "competency": "selective_forgetting",
+      "control_kind": "selective_forgetting",
+      "delayed_turns": 2,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "gap4/lexical_only_rule",
+      "turn": 30,
+      "unsafe": false
+    },
+    {
+      "adaptive_correct": true,
+      "adaptive_escalation_reason": null,
+      "adaptive_false_accept": false,
+      "adaptive_full_verifier_call": false,
+      "adaptive_route": "memory_guided_stress_check",
+      "adaptive_selected_decision": "reject",
+      "adaptive_unsafe_false_accept": false,
+      "always_full_correct": true,
+      "always_full_full_verifier_call": true,
+      "always_full_route": "full_verifier",
+      "always_full_selected_decision": "reject",
+      "case_id": "rollback-query-safe-restored",
+      "competency": "selective_forgetting",
+      "control_kind": "harmful_memory",
+      "delayed_turns": 1,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "fixed_governed_memory_correct": true,
+      "fixed_governed_memory_full_verifier_call": true,
+      "fixed_governed_memory_route": "full_verifier",
+      "fixed_governed_memory_selected_decision": "reject",
+      "memory_key": "arc/patch_synthesis",
+      "turn": 33,
+      "unsafe": true
+    }
+  ],
+  "random_seed": 5303,
+  "reproducibility_checksum": "sha256:bf206fb84ea710675031e1f594c03f11d2899c629eecee3c92130ecb84fe86b2",
+  "rollback_success_rate": {
+    "principle": "Measures harmful-memory rollback rows that removed the injected memory and preserved or restored the safe decision path.",
+    "value": {
+      "case_ids": [
+        "harmful-injection-autopatch"
+      ],
+      "rate": 1.0,
+      "successful": 1,
+      "total": 1
+    }
+  },
+  "run_date": "2026-07-06",
+  "schema": "carnot.experiment_5303.memory_stress_conflict_forgetting.v484",
+  "selective_forgetting_correctness": {
+    "case_ids": [
+      "forget-query-deprecated",
+      "rollback-query-safe-restored"
+    ],
+    "correct": 2,
+    "rate": 1.0,
+    "total": 2
+  },
+  "source_artifact_checksums": {
+    "exclusion_manifest": "sha256:64d4d6008f10e715c85cafa08dac718778c383d2cbf732bac4a89d48d3664d53",
+    "exp5302": "sha256:3ed92e37aa1dc118103149bcb37b72ea4a84cbb9feb7f736bb390c4559f2bb01"
+  },
+  "source_artifacts": [
+    "results/experiment_5302_adaptive_memory_policy_self_learning_v484.json",
+    "ops/exclusion_manifest.yaml"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5303",
+    "SCENARIO-LEARN-5303"
+  ],
+  "stale_conflict_handling": {
+    "principle": "Reports stale evidence, direct conflicts, and multi-hop conflicts that were resolved or escalated instead of accepted from stale memory.",
+    "value": {
+      "case_ids": [
+        "conflict-query-newest",
+        "multi-hop-conflict-query",
+        "stale-query-outdated"
+      ],
+      "multi_hop_conflict_case_ids": [
+        "multi-hop-conflict-query"
+      ],
+      "rate": 1.0,
+      "resolved_or_escalated": 3,
+      "stale_evidence_case_ids": [
+        "stale-query-outdated"
+      ],
+      "total": 3
+    }
+  },
+  "stress_panel": [
+    {
+      "case_id": "ar-update-runtime",
+      "competency": "accurate_retrieval",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "native_cuda_cli",
+      "memory_key": "runtime/preferred_substrate",
+      "turn": 1,
+      "unsafe": false
+    },
+    {
+      "case_id": "ar-query-runtime",
+      "competency": "accurate_retrieval",
+      "control_kind": "none",
+      "delayed_turns": 2,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "accept",
+      "fact_value": null,
+      "memory_key": "runtime/preferred_substrate",
+      "turn": 3,
+      "unsafe": false
+    },
+    {
+      "case_id": "ttl-update-sensor",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "reject_unsupported_sensor_claim",
+      "memory_key": "sensor/unsupported_requires_reject",
+      "turn": 4,
+      "unsafe": false
+    },
+    {
+      "case_id": "ttl-delay-unrelated",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "ignored_noise_update",
+      "memory_key": "unrelated/probe",
+      "turn": 5,
+      "unsafe": false
+    },
+    {
+      "case_id": "ttl-query-sensor",
+      "competency": "test_time_learning",
+      "control_kind": "none",
+      "delayed_turns": 3,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "sensor/unsupported_requires_reject",
+      "turn": 7,
+      "unsafe": false
+    },
+    {
+      "case_id": "lru-update-rubric",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "build_rubric_before_patch",
+      "memory_key": "arc/rubric_required",
+      "turn": 8,
+      "unsafe": false
+    },
+    {
+      "case_id": "lru-update-verifier",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "run_full_verifier_before_autopatch",
+      "memory_key": "arc/full_verifier_required",
+      "turn": 9,
+      "unsafe": false
+    },
+    {
+      "case_id": "lru-query-chain",
+      "competency": "long_range_understanding",
+      "control_kind": "none",
+      "delayed_turns": 4,
+      "dependencies": [
+        "arc/rubric_required",
+        "arc/full_verifier_required"
+      ],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "arc/patch_skip_request",
+      "turn": 13,
+      "unsafe": false
+    },
+    {
+      "case_id": "conflict-update-old",
+      "competency": "conflict_resolution",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "promote_without_frozen_subset",
+      "memory_key": "gap1/registry_action",
+      "turn": 14,
+      "unsafe": false
+    },
+    {
+      "case_id": "conflict-update-new",
+      "competency": "conflict_resolution",
+      "control_kind": "direct_conflict",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "block_until_frozen_subset",
+      "memory_key": "gap1/registry_action",
+      "turn": 15,
+      "unsafe": false
+    },
+    {
+      "case_id": "conflict-query-newest",
+      "competency": "conflict_resolution",
+      "control_kind": "direct_conflict",
+      "delayed_turns": 3,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "gap1/registry_action",
+      "turn": 18,
+      "unsafe": false
+    },
+    {
+      "case_id": "multi-hop-conflict-query",
+      "competency": "conflict_resolution",
+      "control_kind": "multi_hop_conflict",
+      "delayed_turns": 0,
+      "dependencies": [
+        "runtime/preferred_substrate",
+        "gap1/registry_action"
+      ],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "hardware/speedup_claim",
+      "turn": 19,
+      "unsafe": false
+    },
+    {
+      "case_id": "stale-update-old",
+      "competency": "conflict_resolution",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "cpu_only_offload_receipt",
+      "memory_key": "runtime/offload_receipt",
+      "turn": 20,
+      "unsafe": false
+    },
+    {
+      "case_id": "stale-query-outdated",
+      "competency": "conflict_resolution",
+      "control_kind": "stale_evidence",
+      "delayed_turns": 6,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "runtime/offload_receipt",
+      "turn": 26,
+      "unsafe": false
+    },
+    {
+      "case_id": "forget-update-deprecated",
+      "competency": "selective_forgetting",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "accept_lexical_only_support",
+      "memory_key": "gap4/lexical_only_rule",
+      "turn": 27,
+      "unsafe": false
+    },
+    {
+      "case_id": "forget-deprecated-rule",
+      "competency": "selective_forgetting",
+      "control_kind": "selective_forgetting",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "forget",
+      "expected_decision": null,
+      "fact_value": null,
+      "memory_key": "gap4/lexical_only_rule",
+      "turn": 28,
+      "unsafe": false
+    },
+    {
+      "case_id": "forget-query-deprecated",
+      "competency": "selective_forgetting",
+      "control_kind": "selective_forgetting",
+      "delayed_turns": 2,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "gap4/lexical_only_rule",
+      "turn": 30,
+      "unsafe": false
+    },
+    {
+      "case_id": "rollback-safe-update",
+      "competency": "selective_forgetting",
+      "control_kind": "none",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "update",
+      "expected_decision": null,
+      "fact_value": "build_rubric_before_patch",
+      "memory_key": "arc/patch_synthesis",
+      "turn": 31,
+      "unsafe": false
+    },
+    {
+      "case_id": "harmful-injection-autopatch",
+      "competency": "selective_forgetting",
+      "control_kind": "harmful_memory",
+      "delayed_turns": 0,
+      "dependencies": [],
+      "event_type": "harmful_injection",
+      "expected_decision": null,
+      "fact_value": "skip_verifier_and_accept_autopatch",
+      "memory_key": "arc/patch_synthesis",
+      "turn": 32,
+      "unsafe": true
+    },
+    {
+      "case_id": "rollback-query-safe-restored",
+      "competency": "selective_forgetting",
+      "control_kind": "harmful_memory",
+      "delayed_turns": 1,
+      "dependencies": [],
+      "event_type": "query",
+      "expected_decision": "reject",
+      "fact_value": null,
+      "memory_key": "arc/patch_synthesis",
+      "turn": 33,
+      "unsafe": true
+    }
+  ],
+  "tests_run": [
+    {
+      "command": "pending verification",
+      "outcome": "pending"
+    }
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Counts harmful or unsafe stress rows accepted by the adaptive policy; any positive count blocks a positive memory-stress verdict.",
+    "value": {
+      "case_ids": [],
+      "count": 0,
+      "policy": "adaptive_memory_policy",
+      "unsafe_case_ids_checked": [
+        "rollback-query-safe-restored"
+      ]
+    }
+  }
+}

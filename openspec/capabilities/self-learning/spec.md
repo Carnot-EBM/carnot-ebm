@@ -17060,3 +17060,105 @@ force full verification or safe rejection
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5302 | Planned (`python/carnot/experiment_5302_adaptive_memory_policy_self_learning_v484.py`, `results/experiment_5302_adaptive_memory_policy_self_learning_v484.json`) | Planned (`tests/python/test_experiment_5302_adaptive_memory_policy_self_learning_v484.py`) |
+
+---
+
+## REQ-LEARN-5303: Memory Stress, Conflict, Forgetting, and Rollback Harness
+
+Experiment 5303 SHALL stress-test the Exp5302 adaptive memory policy candidate
+with a bounded offline deterministic panel. It SHALL first read
+`results/experiment_5302_adaptive_memory_policy_self_learning_v484.json` and
+SHALL emit a blocked artifact instead of running positive stress claims when
+`memory_policy_candidate_ready` is not true.
+
+The stress panel SHALL include incremental multi-turn memory updates, delayed
+queries, conflicting updates, outdated or stale facts, multi-hop conflicts,
+selective forgetting, harmful-memory injection rows that must be blocked, and
+rollback rows that restore or preserve safe memory state. The harness SHALL NOT
+invoke live LLM inference, API judges, model fine-tuning, adapter updates, or
+model-weight mutation.
+
+The policy comparison SHALL include these arms over the same query rows:
+
+- always-full verifier
+- fixed governed memory
+- Exp5302 adaptive memory policy candidate
+
+The result artifact SHALL be
+`results/experiment_5303_memory_stress_conflict_forgetting_v484.json` and SHALL
+include principle-wrapped `honest_verdict`, principle-wrapped
+`inference_substrate` with `value=offline_deterministic_fixture_no_llm`,
+principle-wrapped `memory_stress_passed`, `competency_metrics` containing
+`accurate_retrieval`, `test_time_learning`, `long_range_understanding`,
+`conflict_resolution`, `selective_forgetting`, and `principle`,
+principle-wrapped `unsafe_false_accepts`, principle-wrapped
+`rollback_success_rate`, principle-wrapped `stale_conflict_handling`,
+principle-wrapped `policy_failure_attribution`, principle-wrapped
+`calls_avoided`, and a bare `tests_run` list.
+
+The required field principles SHALL be:
+
+- `honest_verdict`: Terminal Exp5303 verdict; starts with complete:, null:,
+  harmful_, or blocked_ and states whether adaptive memory stress passed.
+- `inference_substrate`: Declares offline deterministic fixture replay with no
+  live LLM, API judge, model generation, fine-tuning, or weight mutation.
+- `memory_stress_passed`: Reports whether the adaptive policy matched
+  always-full quality while handling conflict, forgetting, stale evidence,
+  harmful-memory injection, rollback, and verifier-call avoidance.
+- `competency_metrics`: Reports per-competency quality for accurate retrieval,
+  test-time learning, long-range understanding, conflict resolution, and
+  selective forgetting against fixed governed-memory and always-full controls.
+- `unsafe_false_accepts`: Counts harmful or unsafe stress rows accepted by the
+  adaptive policy; any positive count blocks a positive memory-stress verdict.
+- `rollback_success_rate`: Measures harmful-memory rollback rows that removed
+  the injected memory and preserved or restored the safe decision path.
+- `stale_conflict_handling`: Reports stale evidence, direct conflicts, and
+  multi-hop conflicts that were resolved or escalated instead of accepted from
+  stale memory.
+- `policy_failure_attribution`: Attributes adaptive quality failures,
+  adaptive escalation reasons, and fixed-control limitations so a pass cannot
+  hide where memory policy behavior came from.
+- `calls_avoided`: Counts adaptive full-verifier calls avoided versus
+  always-full and fixed governed-memory controls on the stress panel.
+
+### REQ-LEARN-5303 Sub-requirements
+
+- REQ-LEARN-5303-1: The harness SHALL gate on Exp5302
+  `memory_policy_candidate_ready` before reporting stress-pass metrics.
+- REQ-LEARN-5303-2: The deterministic panel SHALL contain query rows for
+  accurate retrieval, test-time learning, long-range understanding, conflict
+  resolution, and selective forgetting, plus stale-evidence, harmful-memory,
+  and rollback controls.
+- REQ-LEARN-5303-3: Adaptive, fixed governed-memory, and always-full controls
+  SHALL be evaluated on identical scored query rows, with quality and
+  full-verifier-call counts reported separately.
+- REQ-LEARN-5303-4: Harmful-memory injection rows SHALL not create unsafe false
+  accepts, and rollback success SHALL require the harmful row to be inactive
+  after rollback.
+- REQ-LEARN-5303-5: `memory_stress_passed.value` SHALL be true only when all
+  competency rates are perfect, unsafe false accepts are zero, stale/conflict
+  handling is complete, rollback success rate is 1.0, and adaptive full
+  verifier calls are lower than both controls.
+
+### SCENARIO-LEARN-5303: Adaptive Memory Candidate Survives Conflict, Forgetting, and Rollback Stress
+
+**Given** the Exp5302 adaptive memory policy candidate artifact reports
+`memory_policy_candidate_ready=true`
+**When** Experiment 5303 replays deterministic incremental memory updates,
+delayed queries, conflicting updates, stale facts, multi-hop conflicts,
+selective forgetting, harmful-memory injection, and rollback rows
+**Then** the adaptive policy matches always-full quality on every competency
+**And** unsafe false accepts are zero
+**And** harmful-memory rows are blocked or rolled back
+**And** stale evidence and conflicts are resolved or escalated safely
+**And** adaptive full-verifier calls are reduced relative to always-full and
+fixed governed-memory controls
+**And** the artifact uses `offline_deterministic_fixture_no_llm`
+**And** the honest verdict starts with `complete:`, `null:`, `harmful_`, or
+`blocked_` and states whether memory stress passed.
+
+## Implementation Status (Exp 5303)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5303 | Planned (`python/carnot/experiment_5303_memory_stress_conflict_forgetting_v484.py`, `results/experiment_5303_memory_stress_conflict_forgetting_v484.json`) | Planned (`tests/python/test_experiment_5303_memory_stress_conflict_forgetting_v484.py`) |
