@@ -1,0 +1,304 @@
+{
+  "attribution_coverage": {
+    "principle": "Reports how many bounded control cases received a primary stage attribution.",
+    "value": {
+      "attributed_cases": 7,
+      "control_kinds": [
+        "valid_promoted_memory",
+        "missing_provenance",
+        "conflicting_memory",
+        "shuffled_memory",
+        "stale_memory",
+        "poisoning_like",
+        "harmful_memory"
+      ],
+      "coverage_rate": 1.0,
+      "total_cases": 7
+    }
+  },
+  "attribution_rows": [
+    {
+      "case_id": "case-valid-promoted-gap1",
+      "control_kind": "valid_promoted_memory",
+      "error_detected": false,
+      "expected_control_action": "promote",
+      "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:79724a05029a15ef",
+      "memory_fixture_kind": "promotion",
+      "memory_task_scope": "verifier/gap1_orientation",
+      "notes": "Canonical governed memory reaches use/action only as an allocation feature.",
+      "observed_control_action": "promote",
+      "operation_stage_label": "use/action",
+      "primary_stage": "use",
+      "propagation_blocked": false,
+      "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "gap1_memory_only_consumer",
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-missing-provenance",
+      "control_kind": "missing_provenance",
+      "error_detected": true,
+      "expected_control_action": "reject_missing_provenance",
+      "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:79724a05029a15ef:missing-provenance",
+      "memory_fixture_kind": "promotion",
+      "memory_task_scope": "verifier/gap1_orientation",
+      "notes": "Extraction cannot safely trust a row missing source/evidence receipts.",
+      "observed_control_action": "reject_missing_provenance",
+      "operation_stage_label": "extraction",
+      "primary_stage": "extraction",
+      "propagation_blocked": true,
+      "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "gap1_memory_only_consumer",
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-conflicting-write",
+      "control_kind": "conflicting_memory",
+      "error_detected": true,
+      "expected_control_action": "evict_stale_conflict",
+      "expected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:b415193c099621d0",
+      "memory_fixture_kind": "stale_conflict",
+      "memory_task_scope": "verifier/gap1_orientation",
+      "notes": "The conflicting write is detected before it overwrites the canonical row.",
+      "observed_control_action": "evict_stale_conflict",
+      "operation_stage_label": "update/write",
+      "primary_stage": "update",
+      "propagation_blocked": true,
+      "selected_decision": "block_gap1_registry_promotion_until_frozen_subset_gate",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "gap1_registry_rollback_consumer",
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-shuffled-routing",
+      "control_kind": "shuffled_memory",
+      "control_source_decision_id": "decision-history:8c9c5b32b3bea333",
+      "error_detected": true,
+      "expected_control_action": "reject_shuffled_scope_mismatch",
+      "expected_decision": "block_hardware_speedup_claim_until_transcript",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:79724a05029a15ef",
+      "memory_fixture_kind": "promotion",
+      "memory_task_scope": "verifier/gap1_orientation",
+      "notes": "A deterministic shuffled-memory control routes gap1 memory to hardware scope.",
+      "observed_control_action": "reject_shuffled_scope_mismatch",
+      "operation_stage_label": "retrieval/routing",
+      "primary_stage": "routing",
+      "propagation_blocked": true,
+      "selected_decision": "block_hardware_speedup_claim_until_transcript",
+      "selected_decision_source": "cheap_deterministic_check",
+      "shuffled_from_scope": "verifier/gap1_orientation",
+      "shuffled_to_scope": "hardware/reporting",
+      "task_id": "hardware_speedup_boundary_consumer",
+      "task_scope": "hardware/reporting",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-stale-maintenance",
+      "control_kind": "stale_memory",
+      "error_detected": true,
+      "expected_control_action": "evict_stale_conflict",
+      "expected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:b415193c099621d0",
+      "memory_fixture_kind": "stale_conflict",
+      "memory_task_scope": "verifier/gap1_orientation",
+      "notes": "Maintenance/eviction removes the stale row before retrieval can use it.",
+      "observed_control_action": "evict_stale_conflict",
+      "operation_stage_label": "maintenance/eviction",
+      "primary_stage": "maintenance",
+      "propagation_blocked": true,
+      "selected_decision": "use_gap1_orientation_discriminator_as_memory_only",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "gap1_memory_only_consumer",
+      "task_scope": "verifier/gap1_orientation",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-poisoning-use",
+      "control_kind": "poisoning_like",
+      "error_detected": true,
+      "expected_control_action": "reject_poisoning",
+      "expected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:000edcd256a6bf5f",
+      "memory_fixture_kind": "poisoning_like",
+      "memory_task_scope": "verifier/gap4_claims",
+      "notes": "Use/action blocks a memory that tries to override future verifier behavior.",
+      "observed_control_action": "reject_poisoning",
+      "operation_stage_label": "use/action",
+      "primary_stage": "use",
+      "propagation_blocked": true,
+      "selected_decision": "quarantine_gap4_candidate_pool_until_positive_validation",
+      "selected_decision_source": "full_verifier",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "gap4_candidate_pool_consumer",
+      "task_scope": "verifier/gap4_claims",
+      "unsafe_propagated": false
+    },
+    {
+      "case_id": "case-harmful-rollback",
+      "control_kind": "harmful_memory",
+      "error_detected": true,
+      "expected_control_action": "rollback_harmful",
+      "expected_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "final_decision_correct": true,
+      "final_decision_false_accept": false,
+      "local_maintenance_cost_units": 1,
+      "memory_decision_id": "decision-history:f31ef30e7e590472",
+      "memory_fixture_kind": "rollback",
+      "memory_task_scope": "arc/patch_synthesis",
+      "notes": "Rollback keeps the safe block action and prevents the harmful alternative.",
+      "observed_control_action": "rollback_harmful",
+      "operation_stage_label": "rollback",
+      "primary_stage": "rollback",
+      "propagation_blocked": true,
+      "selected_decision": "build_arc_process_rubric_before_patch_synthesis",
+      "selected_decision_source": "deterministic_check_selected_by_memory_feature",
+      "shuffled_from_scope": null,
+      "shuffled_to_scope": null,
+      "task_id": "arc_rubric_before_patch_consumer",
+      "task_scope": "arc/patch_synthesis",
+      "unsafe_propagated": false
+    }
+  ],
+  "continuous_self_learning_evidence": {
+    "principle": "Explains whether the governed memory lifecycle supplies reusable, auditable self-learning evidence.",
+    "value": {
+      "basis": "Exp5275 governed decision-history rows plus Exp5276 replay decisions; stage faults are controlled locally without model-weight mutation.",
+      "no_model_weight_mutation": true,
+      "self_learning_tier": "Tier 2 constraint memory / Trace2Skill",
+      "source_artifacts": [
+        "results/experiment_5275_governed_decision_history_memory_v482.json",
+        "results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json"
+      ],
+      "usable_for_exp5290": true
+    }
+  },
+  "decision_impact_summary": {
+    "principle": "Compares memory-assisted replay decisions against no-memory and always-full baselines so allocation gains are not confused with answer injection.",
+    "value": {
+      "allocation_changed_by_memory_count": 3,
+      "always_full_quality_rate": 1.0,
+      "calls_avoided_rate": 0.857143,
+      "decision_quality_delta": 0.0,
+      "final_decision_differences_vs_full": 0,
+      "final_decision_regressions": 0,
+      "memory_answer_injection_blocked": true,
+      "memory_assisted_quality_rate": 1.0,
+      "no_memory_quality_rate": 1.0
+    }
+  },
+  "experiment": "experiment_5289_memory_operation_attribution_v483",
+  "experiment_id": 5289,
+  "field_principles": {
+    "attribution_coverage": "Reports how many bounded control cases received a primary stage attribution.",
+    "continuous_self_learning_evidence": "Explains whether the governed memory lifecycle supplies reusable, auditable self-learning evidence.",
+    "decision_impact_summary": "Compares memory-assisted replay decisions against no-memory and always-full baselines so allocation gains are not confused with answer injection.",
+    "honest_verdict": "States whether operation attribution is usable, blocked, or null without hiding unsafe propagation or attribution gaps.",
+    "inference_substrate": "Declares aggregation from upstream artifacts or an offline deterministic no-LLM fixture so operation attribution is not mistaken for live LLM inference.",
+    "local_maintenance_cost": "Measures deterministic local ledger/provenance/scope/rollback checks instead of treating governance as free.",
+    "memory_attribution_ready": "Gates Exp5290 only when every bounded control is attributed, no unsafe memory propagates, and final replay decisions remain safe.",
+    "operation_stage_error_counts": "Separates extraction, update/write, retrieval/routing, maintenance/eviction, use/action, and rollback faults so a final memory success cannot hide the responsible operation stage.",
+    "unsafe_propagations": "Counts controlled unsafe memories that reached final action selection despite governance."
+  },
+  "honest_verdict": {
+    "principle": "States whether operation attribution is usable, blocked, or null without hiding unsafe propagation or attribution gaps.",
+    "value": "complete: operation attribution is usable for Exp5290; all bounded operation-stage controls were attributed and unsafe_propagations=0"
+  },
+  "inference_substrate": {
+    "principle": "Declares aggregation from upstream artifacts or an offline deterministic no-LLM fixture so operation attribution is not mistaken for live LLM inference.",
+    "value": "aggregation_from_upstream_artifacts"
+  },
+  "local_maintenance_cost": {
+    "principle": "Measures deterministic local ledger/provenance/scope/rollback checks instead of treating governance as free.",
+    "value": {
+      "cost_model": "one unit per deterministic ledger/provenance/scope/rollback check",
+      "llm_calls": 0,
+      "pilot_rows_examined": 7,
+      "source_rows_examined": 5,
+      "total_cost_units": 7
+    }
+  },
+  "memory_attribution_ready": true,
+  "memory_attribution_ready_principle": "Gates Exp5290 only when every bounded control is attributed, no unsafe memory propagates, and final replay decisions remain safe.",
+  "operation_stage_error_counts": {
+    "extraction": 1,
+    "maintenance": 1,
+    "principle": "Separates extraction, update/write, retrieval/routing, maintenance/eviction, use/action, and rollback faults so a final memory success cannot hide the responsible operation stage.",
+    "rollback": 1,
+    "routing": 1,
+    "update": 1,
+    "use": 1
+  },
+  "random_seed": 5289,
+  "reproducibility_checksum": "sha256:33bb35d80fb0868a5e2c7bad795de517faa27f71bedfedf18759af78b3b3380b",
+  "run_date": "2026-07-06",
+  "schema": "carnot.memory_operation_attribution.v483",
+  "source_artifact_checksums": {
+    "exp5275": "sha256:8939df38942f856857fe821e3a330d1a2b6783e186fd04fe3945431998566f0c",
+    "exp5276": "sha256:891ffc80eb0023fd17d8677022e9f1b65c8e2e196e4d8317c628b6a33b72530a"
+  },
+  "source_artifacts": [
+    "results/experiment_5275_governed_decision_history_memory_v482.json",
+    "results/experiment_5276_memory_assisted_verifier_dose_gated_v482.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5289",
+    "SCENARIO-LEARN-5289"
+  ],
+  "stage_labels": {
+    "extraction": "extraction",
+    "maintenance": "maintenance/eviction",
+    "rollback": "rollback",
+    "routing": "retrieval/routing",
+    "update": "update/write",
+    "use": "use/action"
+  },
+  "tests_run": [
+    {
+      "command": "pending verification",
+      "outcome": "pending"
+    }
+  ],
+  "unsafe_propagations": {
+    "principle": "Counts controlled unsafe memories that reached final action selection despite governance.",
+    "value": {
+      "blocked_control_count": 6,
+      "control_kinds": [],
+      "count": 0
+    }
+  }
+}
