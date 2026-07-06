@@ -1,0 +1,33 @@
+{
+  "experiment": 5311,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-07-06",
+  "started_at": "2026-07-06T14:52:46.463386+00:00",
+  "finished_at": "2026-07-06T14:52:46.463386+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 5311: Gated SOTA paraphrase/coherence smoke, gated on Exp 5309 runtime and Exp 5310 fixture",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp5309-sota-runtime-timeout-rootcause-matrix-v485.sota_runtime_unblocked (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp5309-sota-runtime-timeout-rootcause-matrix-v485",
+      "artifact_field": "sota_runtime_unblocked",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    },
+    {
+      "upstream": "exp5310-paraphrase-consistency-fixture-v485",
+      "artifact_field": "paraphrase_fixture_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
