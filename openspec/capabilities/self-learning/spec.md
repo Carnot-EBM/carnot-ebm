@@ -16948,3 +16948,115 @@ states whether operation attribution is usable.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5289 | Planned (`python/carnot/pipeline/memory_operation_attribution.py`) | Planned (`tests/python/test_experiment_5289_memory_operation_attribution_v483.py`) |
+
+---
+
+## REQ-LEARN-5302: Adaptive Memory Policy Self-Learning Harness
+
+Experiment 5302 SHALL run an offline adaptive memory/verifier-dose policy over
+deterministic fixtures derived from the existing coherence, memory attribution,
+and governed decision-history memory artifacts. The policy SHALL update only
+explicit, reversible policy state such as memory entries, provenance, status,
+scope, counters, rejected promotions, retrieval choices, and a policy version.
+It SHALL NOT fine-tune model weights, mutate model weights, or claim
+cross-model transfer.
+
+The harness SHALL build a selection split and a held-out split. Policy
+thresholds and retrieval rules SHALL be optimized only on the selection split.
+Held-out evaluation SHALL include supported, unsupported, stale, contradictory,
+harmful-memory, and rollback cases, and the artifact SHALL record the case IDs
+used for selection separately from the case IDs used for held-out evaluation.
+
+The policy comparison SHALL include these arms:
+
+- always-full verifier
+- no-memory dose
+- fixed governed-memory dose from Exp5290
+- adaptive memory policy
+- shuffled-memory control where the fixture supports a deterministic scope
+  mismatch
+
+The result artifact SHALL be
+`results/experiment_5302_adaptive_memory_policy_self_learning_v484.json` and
+SHALL include principle-wrapped `honest_verdict`, principle-wrapped
+`inference_substrate`, principle-wrapped `continuous_self_learning_task` with
+`value=true`, bare boolean `memory_policy_candidate_ready`,
+`memory_policy_candidate_ready_principle`, principle-wrapped
+`adaptive_memory_policy_positive`, principle-wrapped
+`heldout_quality_delta_vs_always_full`, principle-wrapped
+`full_verifier_calls_avoided`, principle-wrapped `unsafe_false_accepts`,
+principle-wrapped `rollback_exercised`, principle-wrapped
+`no_weight_mutation` with `value=true`, and a `tests_run` list.
+
+The required field principles SHALL be:
+
+- `honest_verdict`: Terminal Exp 5302 verdict; starts with complete:, null:,
+  harmful_, or blocked_ and states whether the adaptive memory policy helped on
+  held-out deterministic cases.
+- `inference_substrate`: Declares aggregation from upstream artifacts or
+  offline deterministic fixture replay, with no live LLM, GGUF generation, API
+  judge, model fine-tuning, or cross-model transfer claim.
+- `continuous_self_learning_task`: Marks Exp5302 as a bounded continuous
+  self-learning task because the policy updates reversible memory counters and
+  retrieval choices without mutating model weights.
+- `memory_policy_candidate_ready`: Bare gate for Exp5303; true only when
+  held-out quality matches always-full, full-verifier calls are reduced, unsafe
+  false accepts are zero, rollback is exercised, and no model weights mutate.
+- `adaptive_memory_policy_positive`: Reports whether the adaptive policy
+  preserved held-out quality, improved verifier-call avoidance versus
+  no-memory/fixed dosing, and kept unsafe false accepts at zero.
+- `heldout_quality_delta_vs_always_full`: Compares adaptive policy quality on
+  held-out cases against always-full verifier quality; selection rows are
+  excluded.
+- `full_verifier_calls_avoided`: Counts held-out full-verifier calls avoided by
+  adaptive policy versus always-full and versus no-memory/fixed governed-memory
+  arms.
+- `unsafe_false_accepts`: Counts held-out unsafe or harmful cases accepted by
+  adaptive policy; any positive value blocks candidate readiness.
+- `rollback_exercised`: Reports held-out harmful-memory/rollback cases that
+  forced full verification or safe rejection and records reversible rollback
+  state.
+- `no_weight_mutation`: Confirms Exp5302 changed only policy counters, memory
+  entries, retrieval choices, or thresholds and did not fine-tune or mutate
+  model weights.
+
+### REQ-LEARN-5302 Sub-requirements
+
+- REQ-LEARN-5302-1: The selection and held-out splits SHALL be disjoint by
+  experiment case ID, and the policy-selection trace SHALL list only selection
+  case IDs.
+- REQ-LEARN-5302-2: Unsafe, harmful-memory, stale, contradictory, shuffled, and
+  rollback rows SHALL be blocked from memory-only acceptance during held-out
+  adaptive evaluation.
+- REQ-LEARN-5302-3: The adaptive policy SHALL report call avoidance, quality
+  delta versus always-full, false accepts, unsafe false accepts, stale conflict
+  behavior, and rollback behavior on held-out rows only.
+- REQ-LEARN-5302-4: The adaptive policy state SHALL record reversible memory
+  entries with provenance, status, scope, counters, rejected promotions, and
+  policy version.
+- REQ-LEARN-5302-5: `no_weight_mutation.value` SHALL be true only when no model
+  weights are loaded, fine-tuned, rewritten, or used for cross-model transfer.
+
+### SCENARIO-LEARN-5302: Adaptive Memory Policy Is Selected on Selection Rows and Tested Held-Out
+
+**Given** the Exp5285 coherence fixture, Exp5289 memory-operation attribution
+rows, Exp5275 governed decision-history rows, and Exp5290 fixed governed-memory
+dose result
+**When** Experiment 5302 selects an adaptive memory policy on the selection
+split and evaluates it on held-out rows
+**Then** held-out quality is not reduced relative to always-full verification
+**And** full verifier calls are reduced relative to always-full and fixed
+governed-memory dosing
+**And** unsafe false accepts are zero
+**And** stale conflicts, shuffled memory, harmful memory, and rollback cases
+force full verification or safe rejection
+**And** the artifact uses `aggregation_from_upstream_artifacts` or
+`offline_deterministic_fixture_no_llm`
+**And** the honest verdict starts with `complete:`, `null:`, `harmful_`, or
+`blocked_` and states whether the adaptive memory policy helped.
+
+## Implementation Status (Exp 5302)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5302 | Planned (`python/carnot/experiment_5302_adaptive_memory_policy_self_learning_v484.py`, `results/experiment_5302_adaptive_memory_policy_self_learning_v484.json`) | Planned (`tests/python/test_experiment_5302_adaptive_memory_policy_self_learning_v484.py`) |
