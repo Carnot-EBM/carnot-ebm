@@ -35605,6 +35605,83 @@ validation command fails
 |---|---|---|
 | REQ-REPORT-5295 | Planned (`python/carnot/experiment_5295_archive_483_activate_484.py`, `results/experiment_5295_archive_483_activate_484.json`) | Planned (`tests/python/test_experiment_5295_archive_483_activate_484.py`) |
 
+### REQ-REPORT-5296: V484 Execution-Time SOTA Source Delta Refresh
+
+The Exp 5296 workflow SHALL search 2025-2026 network sources for actionable
+deltas relevant to the Carnot research program and write
+`results/experiment_5296_sota_source_delta_v484.json`. It SHALL read
+`CLAUDE.md`, `CODEX.md`, `research-program.md`, `research-references.md`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap.yaml`, `research-roadmap-next.yaml` when present, and
+`ops/exclusion_manifest.yaml`. It SHALL use arXiv, OpenReview, HuggingFace
+Papers, Semantic Scholar citation trails for EBT `arXiv:2507.02092` and
+ARM-EBM `arXiv:2512.15605`, GitHub repository discovery, Extropic writing,
+and Logical Intelligence public pages. It SHALL NOT use `/deep-research`,
+modify `research-roadmap.yaml`, modify `scripts/research_conductor.py`, or
+reopen retired scopes without a specific exclusion-manifest override.
+
+The workflow SHALL compare findings against the existing `V484 Research
+Update - 2026-07-06` section in `research-references.md` and against already
+indexed nearby reference history to avoid duplicate churn. If genuinely new
+actionable findings exist, it SHALL append one dated V484 execution refresh
+subsection without rewriting prior reference history. If no genuinely new
+findings exist, it SHALL leave `research-references.md` unchanged and record a
+no-op refresh honestly. It SHALL state whether any finding changes the
+executable `.484` task plan; plan-changing findings are advisory only in this
+workflow and SHALL not edit `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The artifact SHALL include required principle-annotated fields
+`honest_verdict`, `inference_substrate`, `sources_checked`,
+`new_references_added`, `references_md_updated`, `actionable_deltas`,
+`retired_scope_reopened`, and `semantic_scholar_status`. It SHOULD also
+include `experiment_id`, `milestone`, `spec_refs`, `search_window`,
+`no_deep_research_used`, `research_roadmap_yaml_modified`,
+`research_conductor_modified`, `plan_change_required`, `tests_run`, and
+`references_section_heading` so downstream planning can audit what was checked.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: and distinguish new actionable findings from an honest no-op refresh."
+- `inference_substrate`: principle "literature_ingestion_network_sources because Exp5296 reads network literature/source metadata and makes no experiment outcome claim."
+- `sources_checked`: principle "Records every required source family and query channel so a missing source cannot masquerade as a zero-new-finding result."
+- `new_references_added`: principle "Integer count of genuinely new actionable references appended; zero is valid only when references_md_updated is false."
+- `references_md_updated`: principle "True only when a dated V484 execution refresh subsection was appended to research-references.md."
+- `actionable_deltas`: principle "List of new findings with source URLs and concrete Carnot hooks; may be empty only for a no-op refresh."
+- `retired_scope_reopened`: principle "False unless the artifact names a specific exclusion-manifest override that justifies reopening a retired scope."
+- `semantic_scholar_status`: principle "EBT and ARM-EBM citation lookup results must record counts, citing-paper samples, or rate-limit failures without inventing citation-trend claims."
+
+#### SCENARIO-REPORT-5296-APPEND-DELTAS: New Network Findings Append A V484 Refresh
+
+**Given** `research-references.md` contains the `V484 Research Update -
+2026-07-06` section
+**And** the focused network sweep finds source-verified actionable deltas not
+already recorded in the V484 section or nearby reference history
+**When** the Exp 5296 workflow runs
+**Then** it appends one dated V484 execution refresh subsection, writes
+`results/experiment_5296_sota_source_delta_v484.json`, declares
+`literature_ingestion_network_sources`, records all required source families
+including Semantic Scholar EBT and ARM-EBM status, sets
+`new_references_added.value` to the appended reference count, sets
+`references_md_updated.value=true`, leaves retired scopes closed, and records
+whether any executable `.484` task change is required.
+
+#### SCENARIO-REPORT-5296-NOOP: No New Findings Leave References Unchanged
+
+**Given** the focused network sweep only rediscovers items already present in
+the V484 section or elsewhere in `research-references.md`
+**When** the Exp 5296 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`complete:`, sets `new_references_added.value=0`, sets
+`references_md_updated.value=false`, leaves `actionable_deltas.value=[]`, and
+does not churn `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5296)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5296 | Planned (`python/carnot/experiment_5296_sota_source_delta_v484.py`, `results/experiment_5296_sota_source_delta_v484.json`) | Planned (`tests/python/test_experiment_5296_sota_source_delta_v484.py`) |
+
 ### REQ-REPORT-5283: V483 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5283 workflow SHALL search 2025-2026 network sources for actionable
