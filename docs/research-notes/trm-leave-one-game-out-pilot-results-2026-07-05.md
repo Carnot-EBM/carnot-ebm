@@ -135,6 +135,63 @@ architecture rather than one shared quick-and-dirty config. Absent that, the hon
 is: **inconclusive, with contradictory single-run signals in both directions** — not a lead worth
 building on without a more rigorous follow-up test.
 
+## v3: the properly-scoped multi-seed test — the gate fails; the direction leans against recursion
+
+**Scope, decided before running (pre-registered to avoid post-hoc rationalization):** 10 seeds per
+(game, framing, architecture) combination, both framings (frame-only, frame+8-action-history), 5
+held-out games spanning different size/imbalance characteristics (`ft09`, `m0r0` — lowest
+imbalance 21%, `vc33` — highest imbalance 99%, `sk48` — largest, `cd82` — smallest). 200 total
+training runs. For each (game, framing) pair, a paired Wilcoxon signed-rank test across the 10
+matched seeds. **Falsifiable gate, fixed in advance**: recursion is supported only if it shows
+p<0.05 in a majority (≥5 of 10) of the (game, framing) combinations.
+
+**Result: the gate fails outright — 0 of 10 combinations reached statistical significance in
+recursion's favor.** Full per-combination results:
+
+| Game | Framing | Recursive mean±std | Baseline mean±std | p-value | Recursion wins (of 10 seeds) |
+|---|---|---|---|---|---|
+| ft09 | frame-only | 0.522±0.142 | 0.523±0.105 | 0.846 | 5 |
+| ft09 | +history | 0.697±0.064 | 0.732±0.072 | 0.131 | 2 |
+| m0r0 | frame-only | 0.088±0.024 | 0.121±0.053 | 0.084 | 3 |
+| m0r0 | +history | 0.436±0.107 | 0.397±0.114 | 0.322 | 6 |
+| vc33 | frame-only | 0.577±0.329 | 0.645±0.327 | 0.432 | 3 |
+| vc33 | +history | 0.843±0.294 | 0.938±0.145 | 0.820 | 5 |
+| sk48 | frame-only | 0.039±0.0002 | 0.041±0.005 | 0.063 | 0 |
+| sk48 | +history | 0.381±0.183 | **0.546±0.052** | **0.049** | 3 |
+| cd82 | frame-only | 0.206±0.031 | 0.196±0.049 | 0.846 | 4 |
+| cd82 | +history | 0.318±0.017 | 0.323±0.026 | 0.334 | 3 |
+
+**Reading this honestly, not selectively:** recursion has a higher mean in only 2 of the 10
+combinations (`m0r0`+history, `cd82` frame-only), and neither reaches significance. The baseline has
+a higher mean in the other 8. The *one* combination in the entire sweep that reaches conventional
+significance (`sk48`+history, p=0.049) favors the **non-recursive baseline**, not recursion — the
+opposite of what would be needed to support the hypothesis.
+
+**This resolves the earlier contradiction cleanly.** The two single-seed pilots' opposing signals
+(recursion +15pp in v1, recursion -16.5pp in v2) were exactly what they looked like: noise from
+underpowered single-run comparisons, not a real condition-dependent effect. With proper statistical
+power, there is no reliable recursive advantage anywhere in this sweep — if anything the data leans
+mildly the other way.
+
+**Per the pre-registered commitment, this is the honest conclusion, not a hedge:** this specific
+standalone recursive-refinement architecture, at this scale (4.2M params, no ACT halting, 3 epochs,
+one shared training recipe across both arms), on this specific task framing (single-step action
+classification, with or without history), shows **no evidence of a generalization advantage over a
+matched non-recursive baseline.** This line of inquiry, as currently scoped, should be deprioritized
+in favor of either a fundamentally different test (full-sequence action refinement, the original
+framing this was always meant to lead toward) or dropped.
+
+**What this does NOT invalidate.** This negative result is specific to this quick reimplementation
+and this task. It says nothing about nano-trm's own validated architecture/training regime (ACT
+halting, proper deep supervision scheduling, per-architecture tuning), nor about the original Sudoku
+precedent this whole thread started from (`results/experiment_sudoku_energy_vs_ar_v1.json`, a large,
+decisive effect using TRM's real recipe on a genuinely different, more constraint-structured task).
+The gap between "TRM's real architecture is decisive on Sudoku" and "this toy reimplementation shows
+nothing on ARC action classification" could be architecture fidelity, task structure (Sudoku's hard
+constraint-satisfaction shape vs. noisy human-behavior prediction), or training budget — this test
+cannot distinguish between those explanations, only that the *toy* version does not replicate the
+effect here.
+
 ## What this note is NOT claiming
 
 - Not claiming TRM-style recursive refinement is proven to generalize to ARC-AGI-3. Finding 1 is a

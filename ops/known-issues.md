@@ -2262,6 +2262,28 @@ state: **inconclusive with contradictory single-run signals in both directions.*
 conclusion, this needs multiple seeds per arm and/or a properly-tuned per-architecture training
 regime -- not another single-seed run under a third task framing.
 
+**FINAL UPDATE, same day: ran the properly-scoped multi-seed test -- the gate fails outright.**
+10 seeds x 2 framings x 5 held-out games (200 total training runs), a pre-registered falsifiable
+gate (recursion supported only if p<0.05 in a MAJORITY of the 10 combinations), paired Wilcoxon
+signed-rank test per combination. Result: **0 of 10 combinations reached significance in recursion's
+favor.** Recursion had a higher mean in only 2/10 combinations (neither significant); the baseline
+had a higher mean in the other 8/10; the ONE combination that reached significance anywhere in the
+sweep (sk48+history, p=0.049) favored the BASELINE, not recursion. Full table in the writeup's "v3"
+section.
+
+**This resolves the earlier contradiction: both single-seed pilots were noise, not signal.** With
+proper statistical power, there is no reliable recursive advantage in this setup -- if anything the
+data leans mildly against it. Per the pre-registered commitment: this specific standalone
+recursive-refiner (4.2M params, no ACT halting, one shared training recipe), on this task framing
+(single-step action classification with or without history), is **deprioritized** -- not because the
+broader TRM-as-generator idea is dead, but because this toy-scale test doesn't show the effect. Does
+NOT invalidate the original Sudoku precedent (a real, decisive effect using TRM's actual validated
+architecture on a genuinely different, constraint-structured task) -- this test cannot distinguish
+whether the gap is architecture fidelity, task structure, or training budget, only that the toy
+reimplementation doesn't replicate the effect on this task. If this thread is picked up again, the
+right next step is full action-SEQUENCE refinement (the original framing) or nano-trm's own validated
+training pipeline -- not another variant of single-action classification.
+
 ### LITERATURE: AutoMem, memory as a trainable skill 2026-07-05 (outer-loop, operator-requested paper review)
 
 Full writeup: `docs/research-notes/automem-memory-as-cognitive-skill-2026-07-05.md`. arXiv:2607.01224
