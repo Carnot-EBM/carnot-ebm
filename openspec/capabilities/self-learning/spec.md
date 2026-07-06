@@ -17293,3 +17293,133 @@ state.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5312 | Planned (`python/carnot/pipeline/memory_transition_verifier.py`, `python/carnot/experiment_5312_trustmem_transition_verifier_self_learning_v485.py`, `results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json`) | Planned (`tests/python/test_experiment_5312_trustmem_transition_verifier_self_learning_v485.py`) |
+
+---
+
+## REQ-LEARN-5313: Gated Memory Transition Policy Rollout
+
+Experiment 5313 SHALL run the Exp5302 adaptive memory policy through the
+Exp5312 transition-level verifier on deterministic memory stress cases. The
+rollout SHALL compare always-full, adaptive, and no-memory policies on exactly
+these case families:
+
+- clean
+- conflict
+- forgetting
+- stale evidence
+- invalid premise
+- rollback
+
+The rollout SHALL confirm that the Exp5312 gate passed before reporting a
+terminal positive result. If the Exp5312 artifact does not report
+`memory_transition_verifier_ready=true`, the rollout SHALL emit a blocked
+artifact rather than fabricate transition-quality claims. The rollout SHALL
+score final task quality separately from process-level transition quality, so a
+policy that gets the final answer right by unsafe memory mutation cannot hide a
+bad transition process.
+
+The adaptive policy SHALL preserve the v484 safety behavior from Exp5302 and
+Exp5303: unsafe false accepts must remain zero, unsafe commits must be rejected,
+rollback must be exercised, and no model weights may be loaded, fine-tuned,
+rewritten, or transferred. The rollout SHALL be deterministic and SHALL NOT call
+an LLM, API judge, model generator, fine-tuning path, adapter update, or
+model-weight mutation path.
+
+The result artifact SHALL be
+`results/experiment_5313_gated_memory_transition_policy_rollout_v485.json` and
+SHALL include principle-wrapped `experiment_id`, principle-wrapped
+`milestone`, principle-wrapped `status`, principle-wrapped `honest_verdict`
+whose value starts with `complete:` or `blocked_`, principle-wrapped
+`inference_substrate` with
+`value=deterministic_memory_policy_rollout_no_llm`, principle-wrapped
+`gates_confirmed`, bare boolean `transition_policy_rollout_complete`, bare
+numeric `quality_delta_vs_always_full`, bare numeric
+`transition_score_delta_vs_always_full`, bare integer
+`full_verifier_calls_avoided`, bare integer `unsafe_false_accepts`, bare integer
+`unsafe_commits_rejected`, bare integer `rollback_events`, principle-wrapped
+`latency_or_cost_proxy`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5313 rollout artifact so downstream
+  gates cannot confuse it with Exp5302 policy selection, Exp5303 stress, or
+  Exp5312 verifier construction.
+- `milestone`: Binds the rollout to milestone v485, where Exp5312 provides the
+  transition verifier and Exp5313 measures policy behavior through that gate.
+- `status`: Reports whether the policy rollout completed after gate checks
+  instead of merely finding source artifacts.
+- `honest_verdict`: Terminal Exp5313 verdict; starts with complete: or
+  blocked_ and states whether adaptive memory preserved v484 safety while
+  avoiding full verifier calls.
+- `inference_substrate`: Declares deterministic memory-policy rollout with no
+  live LLM, API judge, model generation, fine-tuning, adapter update, or model
+  weight mutation.
+- `gates_confirmed`: Records Exp5302, Exp5303, and Exp5312 source gates so the
+  rollout cannot report positive results from missing or failed upstream
+  preconditions.
+- `transition_policy_rollout_complete`: Bare gate showing the deterministic
+  case panel ran for all required policy arms and case families.
+- `quality_delta_vs_always_full`: Bare final-task-quality delta comparing the
+  adaptive policy against always-full verification across the rollout panel.
+- `transition_score_delta_vs_always_full`: Bare process-level transition-score
+  delta comparing adaptive transition behavior against always-full verification
+  before any final answer is counted.
+- `full_verifier_calls_avoided`: Bare integer count of full transition-verifier
+  calls avoided by the adaptive policy relative to always-full on the same
+  rollout cases.
+- `unsafe_false_accepts`: Bare integer count of unsafe final accepts by the
+  adaptive policy; any positive count blocks a positive verdict.
+- `unsafe_commits_rejected`: Bare integer count of unsafe proposed memory
+  commits rejected before persistent state changed.
+- `rollback_events`: Bare integer count of rollback transitions exercised by
+  the adaptive policy.
+- `latency_or_cost_proxy`: Reports deterministic proxy cost by policy arm so
+  verifier-call avoidance is auditable without claiming live latency.
+- `tests_run`: Records the exact verification commands used to establish that
+  the rollout module and artifact are stable.
+
+### REQ-LEARN-5313 Sub-requirements
+
+- REQ-LEARN-5313-1: The rollout SHALL gate on Exp5312
+  `memory_transition_verifier_ready=true`, Exp5302
+  `memory_policy_candidate_ready=true`, and Exp5303
+  `memory_stress_passed.value=true`.
+- REQ-LEARN-5313-2: The deterministic rollout panel SHALL include one clean,
+  one conflict, one forgetting, one stale-evidence, one invalid-premise, and
+  one rollback case.
+- REQ-LEARN-5313-3: Always-full, adaptive, and no-memory policy arms SHALL be
+  evaluated on identical case IDs with separate final task quality and
+  transition process quality metrics.
+- REQ-LEARN-5313-4: The adaptive policy SHALL reject unsafe stale-evidence and
+  invalid-premise commits before state mutation, SHALL report zero unsafe false
+  accepts, and SHALL exercise at least one rollback event.
+- REQ-LEARN-5313-5: `transition_policy_rollout_complete` SHALL be true only
+  when all upstream gates pass, all three policy arms run on all six case
+  families, adaptive final quality matches always-full, adaptive transition
+  process score matches always-full, full verifier calls are avoided, unsafe
+  false accepts are zero, unsafe commits are rejected, rollback is exercised,
+  tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5313: Adaptive Rollout Preserves Safety While Avoiding Full Verifier Calls
+
+**Given** Exp5302 reports `memory_policy_candidate_ready=true`, Exp5303 reports
+`memory_stress_passed.value=true`, and Exp5312 reports
+`memory_transition_verifier_ready=true`
+**When** Experiment 5313 evaluates always-full, adaptive, and no-memory policies
+on the clean, conflict, forgetting, stale-evidence, invalid-premise, and
+rollback case families
+**Then** adaptive final task quality matches always-full
+**And** adaptive process-level transition score matches always-full
+**And** adaptive full transition-verifier calls are lower than always-full
+**And** unsafe false accepts are zero
+**And** unsafe commits are rejected before persistent state changes
+**And** rollback is exercised
+**And** the artifact uses
+`inference_substrate=deterministic_memory_policy_rollout_no_llm`
+**And** the honest verdict starts with `complete:` or `blocked_`.
+
+## Implementation Status (Exp 5313)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5313 | Implemented (`python/carnot/experiment_5313_gated_memory_transition_policy_rollout_v485.py`, `results/experiment_5313_gated_memory_transition_policy_rollout_v485.json`) | Implemented (`tests/python/test_experiment_5313_gated_memory_transition_policy_rollout_v485.py`) |
