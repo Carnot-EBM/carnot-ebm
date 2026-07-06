@@ -10403,3 +10403,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 12:55 UTC | Plan milestone 2026.07.485 | OK | 14 tasks proposed |
 | 2026-07-06 12:58 UTC | Milestone 2026.07.485 activated | OK | 14 tasks queued |
 | 2026-07-06 13:10 UTC | Exp 5307: Archive 2026.07.484 and activate 2026.07 | OK | 87 passed, 1 warning in 9.18s |
+| 2026-07-06 13:27 UTC | Exp 5308: V485 SOTA source delta refresh | OK | 103 passed, 1 warning in 9.16s |
