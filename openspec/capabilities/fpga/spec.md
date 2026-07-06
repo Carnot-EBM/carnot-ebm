@@ -15751,6 +15751,101 @@ PolarFire, GateMate, and no-speedup status.
 
 ---
 
+### REQ-HW-5319
+
+**Title:** Hardware-continuity v485 MUST record reachability receipts, GPU runtime context, and TSU/Kona public-reference boundaries with no speedup claim
+
+**Description:**
+Experiment 5319 MUST produce
+`results/experiment_5319_hardware_continuity_no_speedup_v485.json` as a v485
+hardware-continuity receipt. The artifact MUST use
+`inference_substrate.value="hardware_reachability_receipts_no_speedup"` and MUST
+NOT convert SSH reachability, PolarFire status, GateMate USB/tool/JTAG
+visibility, dual RTX 3090 runtime availability, public Extropic/TSU references,
+public Logical/Kona references, CPU simulation, or any other status-only
+receipt into a sampler acceleration or speedup result.
+
+KV260 MUST be checked by SSH using the non-destructive BatchMode reachability
+command `ssh -o ConnectTimeout=5 -o BatchMode=yes kria true` or recorded as a
+blocked reachability result. The artifact MUST NOT use host block-device,
+`/dev/mmcblk*`, `/dev/disk`, SD-card, or removable-storage state as board-state
+evidence.
+
+PolarFire MUST use only authenticated status or authenticated workload paths
+available in the environment. A status-only successful SSH receipt MUST set
+`polarfire_status_reachable=true` but MUST NOT set
+`authenticated_workload_run=true` unless a hash-checked board workload actually
+runs.
+
+GateMate MUST use only actual physical/JTAG/toolchain evidence. If the operator
+has not changed the physical/JTAG setup, the artifact MUST preserve the blocked
+physical/JTAG status and set `gatemate_physical_jtag_changed=false` without
+running unsafe flash operations.
+
+Dual RTX 3090 evidence MAY be summarized only as local SOTA runtime context and
+MUST NOT be reported as sampler hardware acceleration. Extropic/TSU and
+Logical/Kona evidence MUST be public-reference context only unless local
+authenticated access exists.
+
+The artifact MUST include principle-wrapped fields `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, and `commands_run`. It MUST include bare boolean fields
+`kv260_ssh_reachable`, `polarfire_status_reachable`,
+`gatemate_physical_jtag_changed`, `authenticated_workload_run`,
+`no_speedup_claim`, and `public_hardware_references_used_as_context_only`.
+`honest_verdict.value` MUST start with `complete:` or `blocked_` and MUST state
+KV260, PolarFire, GateMate, authenticated workload, public-reference boundary,
+and no-speedup status.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5319_hardware_continuity_no_speedup_v485 --date 20260706`
+  writes `results/experiment_5319_hardware_continuity_no_speedup_v485.json`.
+- The artifact includes `experiment_id.value="exp5319-hardware-continuity-no-speedup-v485"`,
+  `milestone.value="2026.07.485"`, `spec_refs` containing `REQ-HW-5319` and
+  `SCENARIO-HW-5319`, `random_seed=5319`, and a stable
+  `reproducibility_checksum`.
+- `commands_run.value` records exact command strings, outcomes, exit codes,
+  timeouts, durations, and bounded stdout/stderr receipts for every probe that
+  ran.
+- `kv260_ssh_reachable`, `polarfire_status_reachable`,
+  `gatemate_physical_jtag_changed`, `authenticated_workload_run`,
+  `no_speedup_claim`, and `public_hardware_references_used_as_context_only` are
+  top-level booleans, not principle-wrapped objects.
+- `authenticated_workload_run=false`, `no_speedup_claim=true`,
+  `public_hardware_references_used_as_context_only=true`, and no host
+  block-device marker such as `/dev/mmcblk` appears in the artifact unless a
+  later authenticated workload artifact explicitly justifies a measured speedup.
+
+**Implementation status:** Pending (Exp 5319)
+
+---
+
+### SCENARIO-HW-5319
+
+**Scenario:** Exp 5319 writes v485 hardware-continuity receipts with explicit public-reference and no-speedup boundaries.
+
+**Given:** Exp 5305 recorded KV260 SSH blocked, PolarFire status-only
+reachable, GateMate physical/JTAG unchanged, and no speedup claim, while the
+v485 task requires dual RTX 3090 context and TSU/Kona boundaries without
+promoting reachability into acceleration.
+**When:** Experiment 5319 records Step 0 preconditions, runs the KV260
+BatchMode `true` SSH reachability command, checks PolarFire only through
+authenticated status paths, carries GateMate physical/JTAG status unless the
+operator changed setup, and records GPU plus TSU/Kona context boundaries.
+**Then:** It writes
+`results/experiment_5319_hardware_continuity_no_speedup_v485.json` with all
+required principle-wrapped and bare boolean fields, with
+`inference_substrate.value="hardware_reachability_receipts_no_speedup"`,
+`authenticated_workload_run=false`, `no_speedup_claim=true`,
+`public_hardware_references_used_as_context_only=true`, commands_run receipts,
+no host block-device precondition, and an honest verdict beginning with
+`complete:` or `blocked_` that states KV260, PolarFire, GateMate, public
+reference boundaries, authenticated-workload absence, and no-speedup status.
+
+**Implementation status:** Pending (Exp 5319)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
