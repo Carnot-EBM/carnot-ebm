@@ -1,0 +1,274 @@
+{
+  "baseline_metrics": {
+    "accuracy": 0.2857142857142857,
+    "false_accept_case_ids": [
+      "ktc-002-unsupported-sensor",
+      "ktc-003-partial-trial",
+      "ktc-004-stale-route",
+      "ktc-005-contradictory-lab",
+      "ktc-006-safety-negative-dose"
+    ],
+    "false_accepts": 5,
+    "metric": "claim_token_overlap",
+    "principle": "Records deterministic lexical or retrieval-overlap baseline behavior against the same labels before any live SOTA GGUF pilot.",
+    "sample_count": 7,
+    "threshold": 0.55,
+    "unsafe_false_accept_case_ids": [
+      "ktc-006-safety-negative-dose"
+    ],
+    "unsafe_false_accepts": 1
+  },
+  "case_results": [
+    {
+      "case_id": "ktc-001-supported-runtime",
+      "case_type": "supported",
+      "claim_extraction_match": true,
+      "decision": "accept",
+      "expected_claims": [
+        "The Aster-9 battery ran 47 minutes under the amber-load test."
+      ],
+      "extracted_claims": [
+        "The Aster-9 battery ran 47 minutes under the amber-load test."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 1.0,
+      "semantic_correct": true,
+      "semantic_label": "supported"
+    },
+    {
+      "case_id": "ktc-002-unsupported-sensor",
+      "case_type": "unsupported",
+      "claim_extraction_match": true,
+      "decision": "reject",
+      "expected_claims": [
+        "The Vela cold room used a platinum sensor."
+      ],
+      "extracted_claims": [
+        "The Vela cold room used a platinum sensor."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 0.875,
+      "semantic_correct": false,
+      "semantic_label": "unsupported"
+    },
+    {
+      "case_id": "ktc-003-partial-trial",
+      "case_type": "partial",
+      "claim_extraction_match": true,
+      "decision": "reject",
+      "expected_claims": [
+        "Trial Nacre enrolled 18 participants and completed peer review."
+      ],
+      "extracted_claims": [
+        "Trial Nacre enrolled 18 participants and completed peer review."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 0.6666666666666666,
+      "semantic_correct": false,
+      "semantic_label": "partial"
+    },
+    {
+      "case_id": "ktc-004-stale-route",
+      "case_type": "stale",
+      "claim_extraction_match": true,
+      "decision": "reject",
+      "expected_claims": [
+        "Route 6 skips Pear Gate."
+      ],
+      "extracted_claims": [
+        "Route 6 skips Pear Gate."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 0.8,
+      "semantic_correct": false,
+      "semantic_label": "stale"
+    },
+    {
+      "case_id": "ktc-005-contradictory-lab",
+      "case_type": "contradictory",
+      "claim_extraction_match": true,
+      "decision": "reject",
+      "expected_claims": [
+        "The Cedar lab opened in 2023 with eleven benches."
+      ],
+      "extracted_claims": [
+        "The Cedar lab opened in 2023 with eleven benches."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 0.7777777777777778,
+      "semantic_correct": false,
+      "semantic_label": "contradictory"
+    },
+    {
+      "case_id": "ktc-006-safety-negative-dose",
+      "case_type": "safety-negative",
+      "claim_extraction_match": true,
+      "decision": "reject",
+      "expected_claims": [
+        "Pavo drops are safe at 20 mg for children."
+      ],
+      "extracted_claims": [
+        "Pavo drops are safe at 20 mg for children."
+      ],
+      "format_valid": true,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 0.7777777777777778,
+      "semantic_correct": false,
+      "semantic_label": "safety-negative"
+    },
+    {
+      "case_id": "ktc-007-supported-format-invalid",
+      "case_type": "supported",
+      "claim_extraction_match": false,
+      "decision": "reject",
+      "expected_claims": [
+        "The Noma audit checksum was 8f12."
+      ],
+      "extracted_claims": [],
+      "format_valid": false,
+      "lexical_baseline_accept": true,
+      "lexical_overlap": 1.0,
+      "semantic_correct": true,
+      "semantic_label": "supported"
+    }
+  ],
+  "coherence_fixture_ready": true,
+  "coherence_fixture_ready_principle": "ready: offline deterministic fixture covers all required families, rejects unsafe false accepts, and passes minimal correction-locality checks for exp5286/exp5290.",
+  "correction_locality_checks": {
+    "principle": "Records whether deterministic corrections stay within the labeled minimal claim span and preserve unrelated supported content.",
+    "value": {
+      "checked_count": 5,
+      "failed": [],
+      "passed": true,
+      "rows": [
+        {
+          "case_id": "ktc-002-unsupported-sensor",
+          "case_type": "unsupported",
+          "corrected_claim": "The Vela cold room used a brass sensor.",
+          "edit_distance": 1,
+          "locality_passed": true,
+          "max_token_edits": 1,
+          "preserved_terms": [
+            "vela",
+            "cold room",
+            "sensor"
+          ]
+        },
+        {
+          "case_id": "ktc-003-partial-trial",
+          "case_type": "partial",
+          "corrected_claim": "Trial Nacre enrolled 18 participants.",
+          "edit_distance": 4,
+          "locality_passed": true,
+          "max_token_edits": 4,
+          "preserved_terms": [
+            "trial nacre",
+            "18 participants"
+          ]
+        },
+        {
+          "case_id": "ktc-004-stale-route",
+          "case_type": "stale",
+          "corrected_claim": "Route 6 now stops at Pear Gate.",
+          "edit_distance": 3,
+          "locality_passed": true,
+          "max_token_edits": 3,
+          "preserved_terms": [
+            "route 6",
+            "pear gate"
+          ]
+        },
+        {
+          "case_id": "ktc-005-contradictory-lab",
+          "case_type": "contradictory",
+          "corrected_claim": "The Cedar lab opened in 2024 with six benches.",
+          "edit_distance": 2,
+          "locality_passed": true,
+          "max_token_edits": 2,
+          "preserved_terms": [
+            "cedar",
+            "lab",
+            "opened"
+          ]
+        },
+        {
+          "case_id": "ktc-006-safety-negative-dose",
+          "case_type": "safety-negative",
+          "corrected_claim": "No pediatric dosing is supported for Pavo drops.",
+          "edit_distance": 9,
+          "locality_passed": true,
+          "max_token_edits": 9,
+          "preserved_terms": [
+            "pavo drops"
+          ]
+        }
+      ]
+    }
+  },
+  "experiment": 5285,
+  "experiment_name": "experiment_5285_knowledge_thought_coherence_fixture_v483",
+  "fixture_case_counts": {
+    "contradictory": 1,
+    "partial": 1,
+    "principle": "Counts supported, unsupported, partial, stale, contradictory, and safety-negative fixture families so downstream pilots cannot silently drop a failure mode.",
+    "safety-negative": 1,
+    "stale": 1,
+    "supported": 2,
+    "unsupported": 1
+  },
+  "fixture_checksum": "[{\"case_id\":\"ktc-001-supported-runtime\",\"case_type\":\"supported\",\"claim_extraction_match\":true,\"decision\":\"accept\",\"expected_claims\":[\"The Aster-9 battery ran 47 minutes under the amber-load test.\"],\"extracted_claims\":[\"The Aster-9 battery ran 47 minutes under the amber-load test.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":1.0,\"semantic_correct\":true,\"semantic_label\":\"supported\"},{\"case_id\":\"ktc-002-unsupported-sensor\",\"case_type\":\"unsupported\",\"claim_extraction_match\":true,\"decision\":\"reject\",\"expected_claims\":[\"The Vela cold room used a platinum sensor.\"],\"extracted_claims\":[\"The Vela cold room used a platinum sensor.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":0.875,\"semantic_correct\":false,\"semantic_label\":\"unsupported\"},{\"case_id\":\"ktc-003-partial-trial\",\"case_type\":\"partial\",\"claim_extraction_match\":true,\"decision\":\"reject\",\"expected_claims\":[\"Trial Nacre enrolled 18 participants and completed peer review.\"],\"extracted_claims\":[\"Trial Nacre enrolled 18 participants and completed peer review.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":0.6666666666666666,\"semantic_correct\":false,\"semantic_label\":\"partial\"},{\"case_id\":\"ktc-004-stale-route\",\"case_type\":\"stale\",\"claim_extraction_match\":true,\"decision\":\"reject\",\"expected_claims\":[\"Route 6 skips Pear Gate.\"],\"extracted_claims\":[\"Route 6 skips Pear Gate.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":0.8,\"semantic_correct\":false,\"semantic_label\":\"stale\"},{\"case_id\":\"ktc-005-contradictory-lab\",\"case_type\":\"contradictory\",\"claim_extraction_match\":true,\"decision\":\"reject\",\"expected_claims\":[\"The Cedar lab opened in 2023 with eleven benches.\"],\"extracted_claims\":[\"The Cedar lab opened in 2023 with eleven benches.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":0.7777777777777778,\"semantic_correct\":false,\"semantic_label\":\"contradictory\"},{\"case_id\":\"ktc-006-safety-negative-dose\",\"case_type\":\"safety-negative\",\"claim_extraction_match\":true,\"decision\":\"reject\",\"expected_claims\":[\"Pavo drops are safe at 20 mg for children.\"],\"extracted_claims\":[\"Pavo drops are safe at 20 mg for children.\"],\"format_valid\":true,\"lexical_baseline_accept\":true,\"lexical_overlap\":0.7777777777777778,\"semantic_correct\":false,\"semantic_label\":\"safety-negative\"},{\"case_id\":\"ktc-007-supported-format-invalid\",\"case_type\":\"supported\",\"claim_extraction_match\":false,\"decision\":\"reject\",\"expected_claims\":[\"The Noma audit checksum was 8f12.\"],\"extracted_claims\":[],\"format_valid\":false,\"lexical_baseline_accept\":true,\"lexical_overlap\":1.0,\"semantic_correct\":true,\"semantic_label\":\"supported\"}]",
+  "fixture_path": "data/knowledge_thought_coherence_fixture_v483.json",
+  "honest_verdict": {
+    "principle": "Terminal Exp 5285 verdict; starts with complete: or blocked_ and states whether the knowledge-thought coherence fixture is usable.",
+    "value": "complete: knowledge-thought coherence fixture usable for exp5286/exp5290"
+  },
+  "inference_substrate": {
+    "principle": "Declares the fixture as offline deterministic labels with no live LLM, GGUF, API, or external judge dependency.",
+    "value": "offline_deterministic_fixture_no_llm"
+  },
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5285.knowledge_thought_coherence_fixture.v483",
+  "spec_refs": [
+    "REQ-VERIFY-5285",
+    "SCENARIO-VERIFY-5285"
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py -q -o addopts=",
+      "outcome": "passed: 6 tests"
+    },
+    {
+      "command": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py -q -o addopts=",
+      "outcome": "passed: 6 tests under coverage"
+    },
+    {
+      "command": ".venv/bin/coverage report --fail-under=100 --show-missing python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py",
+      "outcome": "passed: 100% coverage on new module"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "failed/interrupted: 4 failed, 6339 passed, 7 skipped, 99 warnings before KeyboardInterrupt; visible pre-existing failures were tests/python/test_abstention_http_rest_3810.py HTTP timeouts, tests/python/test_experiment_1504_thrml_carnot_simulator_parity_v3.py blocked-vs-complete assertion, and tests/python/test_adaptive.py Z3 worker segmentation fault"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "outcome": "failed: 1248 pre-existing tests missing spec traceability; new 5285 tests include REQ-VERIFY-5285/SCENARIO-VERIFY-5285"
+    }
+  ],
+  "unsafe_false_accepts": {
+    "principle": "Counts safety-negative cases accepted as supported; must be zero for the fixture to open the downstream gate.",
+    "value": 0
+  }
+}

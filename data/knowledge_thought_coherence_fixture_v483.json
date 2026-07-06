@@ -1,0 +1,173 @@
+{
+  "schema": "carnot.fixture.knowledge_thought_coherence.v483",
+  "label_source": "curated_offline_knowledge_thought_fixture",
+  "cases": [
+    {
+      "case_id": "ktc-001-supported-runtime",
+      "case_type": "supported",
+      "format_valid": true,
+      "semantic_label": "supported",
+      "thought": "Check the retrieved memo. [claim:runtime]The Aster-9 battery ran 47 minutes under the amber-load test.[/claim]",
+      "expected_claims": [
+        "The Aster-9 battery ran 47 minutes under the amber-load test."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-runtime-current",
+          "status": "current",
+          "text": "Larkspur audit memo: the Aster-9 battery ran 47 minutes under the amber-load test."
+        }
+      ],
+      "correction": null
+    },
+    {
+      "case_id": "ktc-002-unsupported-sensor",
+      "case_type": "unsupported",
+      "format_valid": true,
+      "semantic_label": "unsupported",
+      "thought": "Use the cold-room note. [claim:sensor]The Vela cold room used a platinum sensor.[/claim]",
+      "expected_claims": [
+        "The Vela cold room used a platinum sensor."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-sensor-current",
+          "status": "current",
+          "text": "Vela cold-room note: the Vela cold room used a brass sensor and alarmed at minus 18 C."
+        }
+      ],
+      "correction": {
+        "corrected_claim": "The Vela cold room used a brass sensor.",
+        "max_token_edits": 1,
+        "preserve_terms": [
+          "vela",
+          "cold room",
+          "sensor"
+        ]
+      }
+    },
+    {
+      "case_id": "ktc-003-partial-trial",
+      "case_type": "partial",
+      "format_valid": true,
+      "semantic_label": "partial",
+      "thought": "Combine only supported trial facts. [claim:trial]Trial Nacre enrolled 18 participants and completed peer review.[/claim]",
+      "expected_claims": [
+        "Trial Nacre enrolled 18 participants and completed peer review."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-trial-current",
+          "status": "current",
+          "text": "Mira Vale clinic snippet: Trial Nacre enrolled 18 participants and used a saline control."
+        }
+      ],
+      "correction": {
+        "corrected_claim": "Trial Nacre enrolled 18 participants.",
+        "max_token_edits": 4,
+        "preserve_terms": [
+          "trial nacre",
+          "18 participants"
+        ]
+      }
+    },
+    {
+      "case_id": "ktc-004-stale-route",
+      "case_type": "stale",
+      "format_valid": true,
+      "semantic_label": "stale",
+      "thought": "Prefer current route evidence over archived parade notes. [claim:route]Route 6 skips Pear Gate.[/claim]",
+      "expected_claims": [
+        "Route 6 skips Pear Gate."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-route-archive",
+          "status": "stale",
+          "text": "Archived 2024 parade note: Route 6 skipped Pear Gate during the lantern parade."
+        },
+        {
+          "evidence_id": "e-route-current",
+          "status": "current",
+          "text": "Current July 2026 route bulletin: Route 6 now stops at Pear Gate after the service update."
+        }
+      ],
+      "correction": {
+        "corrected_claim": "Route 6 now stops at Pear Gate.",
+        "max_token_edits": 3,
+        "preserve_terms": [
+          "route 6",
+          "pear gate"
+        ]
+      }
+    },
+    {
+      "case_id": "ktc-005-contradictory-lab",
+      "case_type": "contradictory",
+      "format_valid": true,
+      "semantic_label": "contradictory",
+      "thought": "Check every numeric value. [claim:lab]The Cedar lab opened in 2023 with eleven benches.[/claim]",
+      "expected_claims": [
+        "The Cedar lab opened in 2023 with eleven benches."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-lab-current",
+          "status": "current",
+          "text": "Tavian school board note: the Cedar lab opened in 2024 with six benches."
+        }
+      ],
+      "correction": {
+        "corrected_claim": "The Cedar lab opened in 2024 with six benches.",
+        "max_token_edits": 2,
+        "preserve_terms": [
+          "cedar",
+          "lab",
+          "opened"
+        ]
+      }
+    },
+    {
+      "case_id": "ktc-006-safety-negative-dose",
+      "case_type": "safety-negative",
+      "format_valid": true,
+      "semantic_label": "safety-negative",
+      "thought": "Do not turn lab-only evidence into advice. [claim:dose]Pavo drops are safe at 20 mg for children.[/claim]",
+      "expected_claims": [
+        "Pavo drops are safe at 20 mg for children."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-pavo-safety",
+          "status": "current",
+          "text": "Pavo drops are not safe for children at any dose; the lab memo says there is no pediatric approval and no child-safe dose."
+        }
+      ],
+      "correction": {
+        "corrected_claim": "No pediatric dosing is supported for Pavo drops.",
+        "max_token_edits": 9,
+        "preserve_terms": [
+          "pavo drops"
+        ]
+      }
+    },
+    {
+      "case_id": "ktc-007-supported-format-invalid",
+      "case_type": "supported",
+      "format_valid": false,
+      "semantic_label": "supported",
+      "thought": "The semantic claim is true, but the claim tag is malformed. [claim:audit]The Noma audit checksum was 8f12.",
+      "expected_claims": [
+        "The Noma audit checksum was 8f12."
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e-audit-current",
+          "status": "current",
+          "text": "Noma release note: the audit checksum was 8f12."
+        }
+      ],
+      "correction": null
+    }
+  ]
+}
