@@ -25970,6 +25970,76 @@ receipts as non-headline evidence, and sets `no_quality_claim.value=true`.
 |---|---|---|
 | REQ-VERIFY-5284 | Planned (`python/carnot/experiment_5284_sota_runtime_offload_receipt_repair_v483.py`, `results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json`) | Planned (`tests/python/test_experiment_5284_sota_runtime_offload_receipt_repair_v483.py`) |
 
+### REQ-VERIFY-5285: Knowledge-Thought Coherence Fixture V483
+
+The repository SHALL provide Exp 5285 at
+`python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py`,
+store the deterministic fixture at
+`data/knowledge_thought_coherence_fixture_v483.json`, and write
+`results/experiment_5285_knowledge_thought_coherence_fixture_v483.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL be an
+offline deterministic fixture only and SHALL NOT call live LLMs, local GGUF
+models, external APIs, generated-text judges, LoRA-EBM, uPRM, EBRM text
+rerankers, or any retired Phase D text-verifier path.
+
+The fixture SHALL include supported, unsupported, partially supported,
+stale-evidence, contradictory-evidence, and safety-negative examples. It SHALL
+separate format validity from semantic correctness so a malformed claim
+container is not mistaken for an unsupported claim, and a semantically false
+claim is not accepted merely because its structured format is valid.
+
+The runner SHALL implement deterministic claim-extraction expectations,
+evidence-support labels, minimal correction-locality labels, and a cheap lexical
+or retrieval-overlap baseline. The coherence decision SHALL accept supported
+claims, reject unsupported, partially supported, stale, contradictory, and
+safety-negative claims, count unsafe false accepts, and verify that corrections
+change only the labeled local claim span instead of rewriting unrelated
+supported content.
+
+The artifact SHALL include top-level fields `honest_verdict`,
+`inference_substrate`, `coherence_fixture_ready`,
+`coherence_fixture_ready_principle`, `fixture_case_counts`,
+`baseline_metrics`, `unsafe_false_accepts`, `correction_locality_checks`, and
+`tests_run`. `honest_verdict.value` SHALL start with `complete:` or `blocked_`
+and state whether the coherence fixture is usable. `inference_substrate.value`
+SHALL be `offline_deterministic_fixture_no_llm`. `coherence_fixture_ready`
+SHALL be a bare boolean gate for Exp 5286 and Exp 5290.
+
+Required field principles:
+
+- `honest_verdict`: principle "Terminal Exp 5285 verdict; starts with complete: or blocked_ and states whether the knowledge-thought coherence fixture is usable."
+- `inference_substrate`: principle "Declares the fixture as offline deterministic labels with no live LLM, GGUF, API, or external judge dependency."
+- `coherence_fixture_ready`: principle "Bare gate for exp5286 and exp5290; true only when all required case families, labels, baselines, safety-negative checks, and correction-locality checks pass deterministically."
+- `coherence_fixture_ready_principle`: principle "Explains why the offline fixture can or cannot gate downstream CheckRLM-style pilots."
+- `fixture_case_counts`: principle "Counts supported, unsupported, partial, stale, contradictory, and safety-negative fixture families so downstream pilots cannot silently drop a failure mode."
+- `baseline_metrics`: principle "Records deterministic lexical or retrieval-overlap baseline behavior against the same labels before any live SOTA GGUF pilot."
+- `unsafe_false_accepts`: principle "Counts safety-negative cases accepted as supported; must be zero for the fixture to open the downstream gate."
+- `correction_locality_checks`: principle "Records whether deterministic corrections stay within the labeled minimal claim span and preserve unrelated supported content."
+- `tests_run`: principle "Commands run to validate the fixture module, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5285: Offline Coherence Fixture Gates Live Pilots
+
+Given the offline knowledge-thought fixture contains all required case families,
+when Exp 5285 runs, then it parses deterministic claim containers, reports
+format validity separately from semantic correctness, applies evidence labels,
+computes lexical or retrieval-overlap baseline metrics, verifies minimal
+correction locality, writes the required artifact, and sets
+`coherence_fixture_ready=true` only when unsupported, partial, stale,
+contradictory, and safety-negative claims are rejected with zero unsafe false
+accepts.
+
+If a required family is missing, any safety-negative case is accepted, a
+non-supported correction rewrites unrelated supported content, or the fixture
+would require a live model call, then the runner writes a `blocked_` artifact
+with `coherence_fixture_ready=false`, exact blocker details in
+`coherence_fixture_ready_principle`, and the same required schema fields.
+
+## Implementation Status (REQ-VERIFY-5285)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5285 | Planned (`python/carnot/experiment_5285_knowledge_thought_coherence_fixture_v483.py`, `data/knowledge_thought_coherence_fixture_v483.json`, `results/experiment_5285_knowledge_thought_coherence_fixture_v483.json`) | Planned (`tests/python/test_experiment_5285_knowledge_thought_coherence_fixture_v483.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
