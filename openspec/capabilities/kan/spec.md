@@ -894,6 +894,51 @@ rejection, numeric approximation slack, integer piece count, solve time,
 local/global error bounds, dynamic spot-check success, and required tests
 without claiming broad KAN verification.
 
+## REQ-KAN-5291: V483 Low-Order Factor Certificate Curriculum
+
+The KAN verification tier SHALL provide an Exp 5291 CPU-only curriculum that
+measures bounded low-order-first certificate behavior over the existing KAN
+PWA/MILP and factor-graph fixtures. The experiment MUST reuse the Exp 5277
+three-component PWA/MILP certificate fixture and the Exp 5278 solver-to-factor
+boundary metadata; it MUST NOT create an unrelated benchmark or modify
+`scripts/research_conductor.py`.
+
+The curriculum MUST define explicit low-order, medium-order, and higher-order
+factor stages with property targets. Each stage MUST run a deterministic
+certificate check that records factor order, solve time, certificate slack,
+PWA/factor piece count, false-property rejection, and a failure class. The
+low-order-first order MUST be compared with a deterministic shuffled or
+unstructured ordering when feasible. The comparison MUST state whether the
+low-order curriculum helped certificate success, was null, blocked, or only
+provided measurement value.
+
+The deliverable MUST be written to
+`results/experiment_5291_low_order_factor_certificate_curriculum_v483.json`
+with the required fields `honest_verdict`, `inference_substrate`,
+`low_order_curriculum_ready`, `low_order_curriculum_ready_principle`,
+`factor_order_metrics`, `certificate_success_by_order`,
+`false_property_rejected`, `slack_metrics`, `solve_time_metrics`,
+`piece_count_metrics`, and `tests_run`. Every required field except
+`low_order_curriculum_ready`, `low_order_curriculum_ready_principle`, and
+`tests_run` MUST be principle-wrapped with `value` and `principle`.
+`inference_substrate.value` MUST be `offline_deterministic_certificate_no_llm`.
+`honest_verdict.value` MUST start with `complete:`, `null:`, or `blocked_` and
+state whether the low-order curriculum helped. The artifact MUST NOT claim
+trained-network soundness, broad KAN verification, hardware execution, hardware
+speedup, live LLM inference, or a causal EBM training-dynamics result.
+
+### SCENARIO-KAN-5291: Low-Order Curriculum Reports Order, Slack, And False Controls
+
+Given the committed Exp 5277 KAN PWA/MILP certificate fixture and Exp 5278
+factor-graph boundary fixture,
+When Exp 5291 evaluates low-order, medium-order, and higher-order certificate
+stages in low-order-first order and compares them with a deterministic shuffled
+ordering,
+Then the artifact reports factor-order metrics, certificate success by order,
+false-property rejection, slack accounting, solve-time metrics, piece-count
+metrics, failure classes, source fixture provenance, and required tests without
+claiming broad KAN verification or modifying the conductor.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -937,6 +982,7 @@ without claiming broad KAN verification.
 | REQ-KAN-5254 | Planned | Exp 5254 target: V480 bounded convex-envelope certificate prototype compared against Exp 5242, with true-property certification, false-property rejection, and no hardware or broad KAN claims. |
 | REQ-KAN-5265 | Planned | Exp 5265 target: V481 explanation/refinement layer over the V480 bounded convex-envelope certificate, with bound-contributor reporting, envelope-gap tightening, before/after slack, and near-threshold false-property rejection. |
 | REQ-KAN-5277 | Planned | Exp 5277 target: V482 bounded multi-component PWA/MILP certificate scale check, with explicit approximation slack, solve time, false-property rejection, and dynamic spot-check evidence. |
+| REQ-KAN-5291 | Planned | Exp 5291 target: V483 low-order, medium-order, and higher-order certificate curriculum over the existing Exp 5277 KAN PWA/MILP and Exp 5278 factor-boundary fixtures, with false-property rejection, slack, solve-time, piece-count, and ordering telemetry. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

@@ -1,0 +1,298 @@
+{
+  "certificate_success_by_order": {
+    "principle": "Compares certificate success under low-order-first and shuffled schedules; prevents mistaking schedule order for a causal success gain.",
+    "value": {
+      "all_curriculum_stages_certified": true,
+      "all_shuffled_stages_certified": true,
+      "curriculum": {
+        "higher_order_triple": true,
+        "low_order_unary": true,
+        "medium_order_pair": true
+      },
+      "helped_certificate_success": false,
+      "shuffled": {
+        "higher_order_triple": true,
+        "low_order_unary": true,
+        "medium_order_pair": true
+      },
+      "success_advantage_over_shuffled": 0.0
+    }
+  },
+  "claim_limits": [
+    "bounded deterministic Exp 5277 KAN PWA/MILP fixture only",
+    "Exp 5278 factor boundary used for provenance and medium-order context",
+    "no broad KAN verification claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim",
+    "no causal EBM training-dynamics claim"
+  ],
+  "duration_s": 0.018365,
+  "experiment_id": "exp5291-low-order-factor-certificate-curriculum-v483",
+  "factor_boundary_summary": {
+    "best_energy": 0.0,
+    "binary_variable_count": 8,
+    "cpu_enumerator_state_count": 256,
+    "factor_count": 4,
+    "false_assignment_rejected": true,
+    "pairwise_qubo_term_count": 28,
+    "source_artifact": "results/experiment_5278_constraint_factor_graph_boundary_v482.json",
+    "source_fixture_id": "small_pair_sum"
+  },
+  "factor_order_metrics": {
+    "principle": "Records factor order, curriculum order, and shuffled order so low-order-first claims are auditable rather than inferred from prose.",
+    "value": {
+      "factor_orders_seen": [
+        1,
+        2,
+        3
+      ],
+      "failure_class_by_stage": {
+        "higher_order_triple": "none",
+        "low_order_unary": "none",
+        "medium_order_pair": "none"
+      },
+      "highest_order_success_step": 3,
+      "low_before_high_in_curriculum": true,
+      "low_order_first_sequence": [
+        "low_order_unary",
+        "medium_order_pair",
+        "higher_order_triple"
+      ],
+      "lowest_order_success_step": 1,
+      "shuffled_sequence": [
+        "higher_order_triple",
+        "low_order_unary",
+        "medium_order_pair"
+      ]
+    }
+  },
+  "false_property_rejected": {
+    "principle": "True only when every stage rejects its nearby expected-false property by witness.",
+    "value": true
+  },
+  "field_principles": {
+    "certificate_success_by_order": "Compares certificate success under low-order-first and shuffled schedules; prevents mistaking schedule order for a causal success gain.",
+    "factor_order_metrics": "Records factor order, curriculum order, and shuffled order so low-order-first claims are auditable rather than inferred from prose.",
+    "false_property_rejected": "True only when every stage rejects its nearby expected-false property by witness.",
+    "honest_verdict": "Terminal verdict; starts with complete:, null:, or blocked_ and states whether the low-order curriculum helped certificate success.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm because this is a local deterministic certificate run with no LLM inference.",
+    "piece_count_metrics": "Records the PWA piece count by stage so factor-order growth is visible.",
+    "slack_metrics": "Records true-property and false-property slack by stage so certificate margins cannot be hidden behind a single success flag.",
+    "solve_time_metrics": "Records deterministic local solver time by stage and schedule totals."
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict; starts with complete:, null:, or blocked_ and states whether the low-order curriculum helped certificate success.",
+    "value": "complete: low-order curriculum did not improve certificate success over the shuffled ordering; all bounded stages certified, so the value is measurement and factor-order telemetry"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because this is a local deterministic certificate run with no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "low_order_curriculum_ready": true,
+  "low_order_curriculum_ready_principle": "Bare boolean because the task requires a direct readiness gate; true only when all bounded stages certify, all false controls reject, and factor-order telemetry is present.",
+  "piece_count_metrics": {
+    "principle": "Records the PWA piece count by stage so factor-order growth is visible.",
+    "value": {
+      "piece_count_by_stage": {
+        "higher_order_triple": 6,
+        "low_order_unary": 2,
+        "medium_order_pair": 4
+      },
+      "piece_count_increases_with_order": true,
+      "piece_counts_by_factor_order": {
+        "1": 2,
+        "2": 4,
+        "3": 6
+      }
+    }
+  },
+  "random_seed": 5291,
+  "reproducibility_checksum": "253b29a6e5cd8e54e41abad1633990062c23d461fce569f35b4c13957ff127f9",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5291.low_order_factor_certificate_curriculum.v483",
+  "slack_metrics": {
+    "principle": "Records true-property and false-property slack by stage so certificate margins cannot be hidden behind a single success flag.",
+    "value": {
+      "all_false_property_slacks_negative": true,
+      "all_true_property_slacks_positive": true,
+      "false_property_slack_by_stage": {
+        "higher_order_triple": -0.0004,
+        "low_order_unary": -0.0005,
+        "medium_order_pair": -0.0003
+      },
+      "minimum_true_property_slack": 0.011,
+      "true_property_slack_by_stage": {
+        "higher_order_triple": 0.0166,
+        "low_order_unary": 0.011,
+        "medium_order_pair": 0.0112
+      },
+      "true_slack_non_decreasing_with_order": true
+    }
+  },
+  "solve_time_metrics": {
+    "principle": "Records deterministic local solver time by stage and schedule totals.",
+    "value": {
+      "all_solve_times_nonnegative": true,
+      "solve_time_s_by_stage": {
+        "higher_order_triple": 0.00443,
+        "low_order_unary": 0.001855,
+        "medium_order_pair": 0.002619
+      },
+      "total_low_order_first_s": 0.008904,
+      "total_shuffled_s": 0.008904
+    }
+  },
+  "source_artifacts": [
+    "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+    "results/experiment_5278_constraint_factor_graph_boundary_v482.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5291",
+    "SCENARIO-KAN-5291"
+  ],
+  "stage_outcomes": [
+    {
+      "actual_witness_value": 0.224,
+      "certificate_success": true,
+      "certified_upper_bound": 0.224,
+      "component_indices": [
+        0
+      ],
+      "constraint_count": 16,
+      "factor_order": 1,
+      "failure_class": "none",
+      "false_property_rejected": true,
+      "false_property_slack": -0.0005,
+      "false_property_target": 0.2235,
+      "order_label": "low",
+      "piece_count": 2,
+      "selected_pieces": [
+        1
+      ],
+      "solve_time_s": 0.001855,
+      "stage_id": "low_order_unary",
+      "true_property_slack": 0.011,
+      "true_property_target": 0.235,
+      "witness_inputs": [
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.3868,
+      "certificate_success": true,
+      "certified_upper_bound": 0.3868,
+      "component_indices": [
+        0,
+        1
+      ],
+      "constraint_count": 31,
+      "factor_order": 2,
+      "failure_class": "none",
+      "false_property_rejected": true,
+      "false_property_slack": -0.0003,
+      "false_property_target": 0.3865,
+      "order_label": "medium",
+      "piece_count": 4,
+      "selected_pieces": [
+        1,
+        1
+      ],
+      "solve_time_s": 0.002619,
+      "stage_id": "medium_order_pair",
+      "true_property_slack": 0.0112,
+      "true_property_target": 0.398,
+      "witness_inputs": [
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.4984,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "component_indices": [
+        0,
+        1,
+        2
+      ],
+      "constraint_count": 46,
+      "factor_order": 3,
+      "failure_class": "none",
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "false_property_target": 0.498,
+      "order_label": "higher",
+      "piece_count": 6,
+      "selected_pieces": [
+        1,
+        1,
+        1
+      ],
+      "solve_time_s": 0.00443,
+      "stage_id": "higher_order_triple",
+      "true_property_slack": 0.0166,
+      "true_property_target": 0.515,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "component_indices": [
+        0
+      ],
+      "factor_order": 1,
+      "false_property_target": 0.2235,
+      "order_label": "low",
+      "property_target": "component_0_upper <= 0.235 and false bound 0.2235 rejects",
+      "source_fixture_refs": [
+        "results/experiment_5277_kan_milp_certificate_scale_v482.json"
+      ],
+      "stage_id": "low_order_unary",
+      "true_property_target": 0.235
+    },
+    {
+      "component_indices": [
+        0,
+        1
+      ],
+      "factor_order": 2,
+      "false_property_target": 0.3865,
+      "order_label": "medium",
+      "property_target": "components_0_1_upper <= 0.398 and false bound 0.3865 rejects",
+      "source_fixture_refs": [
+        "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+        "results/experiment_5278_constraint_factor_graph_boundary_v482.json"
+      ],
+      "stage_id": "medium_order_pair",
+      "true_property_target": 0.398
+    },
+    {
+      "component_indices": [
+        0,
+        1,
+        2
+      ],
+      "factor_order": 3,
+      "false_property_target": 0.498,
+      "order_label": "higher",
+      "property_target": "components_0_1_2_upper <= 0.515 and false bound 0.498 rejects",
+      "source_fixture_refs": [
+        "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+        "results/experiment_5278_constraint_factor_graph_boundary_v482.json"
+      ],
+      "stage_id": "higher_order_triple",
+      "true_property_target": 0.515
+    }
+  ],
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5291_low_order_factor_certificate_curriculum_v483.py -q",
+      "outcome": "failed_initial_missing_deliverable_then_fixed"
+    }
+  ]
+}
