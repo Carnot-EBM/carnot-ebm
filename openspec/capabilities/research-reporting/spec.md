@@ -35500,6 +35500,111 @@ fails
 |---|---|---|
 | REQ-REPORT-5282 | Planned (`python/carnot/experiment_5282_archive_482_activate_483.py`, `results/experiment_5282_archive_482_activate_483.json`) | Planned (`tests/python/test_experiment_5282_archive_482_activate_483.py`) |
 
+### REQ-REPORT-5295: Archive .483 And Emit .484 Activation Artifact
+
+The Exp 5295 workflow SHALL archive the honest closeout for milestone
+`2026.07.483` and write
+`results/experiment_5295_archive_483_activate_484.json`. It SHALL read
+`results/experiment_5282_archive_482_activate_483.json` through
+`results/experiment_5294_capstone_v483.json`, including gated or blocked
+artifacts when present, plus `CLAUDE.md`, `CODEX.md`,
+`research-program.md`, `_bmad/prd.md`, `_bmad/architecture.md`,
+`ops/status.md`, `ops/changelog.md`, `ops/conductor-log.md`,
+`research-complete.yaml`, `research-roadmap.yaml`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`, and
+`ops/exclusion_manifest.yaml`. It SHALL NOT modify `research-roadmap.yaml`,
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`,
+`_bmad/traceability.md`, or `docs/index.html`. It SHALL declare
+`inference_substrate.value="aggregation_from_upstream_artifacts"` because the
+workflow only reads existing artifacts and local operational records.
+
+The workflow SHALL preserve the `.483` close-state truthfully without creating
+new research claims: deterministic knowledge-thought coherence and compilable
+trace DSL fixtures are ready, SOTA runtime/offload is blocked, SOTA quality
+tasks are gate-skipped, memory operation attribution and memory-assisted
+coherence dosing are positive, low-order curriculum is a clean null, p-bit/CDCL
+guidance is aggregate-positive with misleading-assumption-class harm, hardware
+evidence is reachability/status only with no speedup claim, and the `.483`
+operational retrospective records a timing-accounting mismatch. If
+`research-complete.yaml` already contains milestone `2026.07.483`, the workflow
+SHALL record `research_complete_updated.value=false`; if it does not, the
+workflow MAY append a minimal milestone entry preserving existing history and
+SHALL record `research_complete_updated.value=true`.
+
+The workflow SHALL inspect
+`openspec/change-proposals/research-roadmap-vNEXT.md` for milestone
+`2026.07.484` and inspect `research-roadmap-next.yaml` when present, but SHALL
+NOT activate by copying it over `research-roadmap.yaml`. If
+`research-roadmap-next.yaml` is absent because `research-roadmap.yaml` already
+names milestone `2026.07.484`, the workflow SHALL record the already-active
+fallback as activation-ready while setting
+`roadmap_activation_check.activated=false`. It SHALL run available roadmap and
+exclusion checks against `research-roadmap.yaml`, including
+`scripts/roadmap_schema.py`, `scripts/validate_prior_failures.py`,
+`scripts/audit_roadmap_gates.py`, and `scripts/exclusion_manifest_lint.py` when
+those scripts exist, and SHALL record command pass/fail outcomes.
+
+The artifact SHALL include required fields `honest_verdict`,
+`inference_substrate`, bare boolean `milestone_archived`,
+`milestone_archived_principle`, bare boolean `activation_ready`,
+`activation_ready_principle`, `ops_docs_updated`, `research_complete_updated`,
+`exclusions_checked`, `roadmap_activation_check`, and `commands_run`. It SHOULD
+also include source artifact/context checksums, closeout facts, roadmap
+readiness details, validation checks, timing-retro mismatch evidence, and a
+reproducibility checksum.
+
+Required field principles:
+
+- `honest_verdict`: principle "Must start with complete: or blocked_ and state whether .483 was archived and .484 is activation-ready."
+- `inference_substrate`: principle "aggregation_from_upstream_artifacts because Exp5295 only reads existing artifacts and local records."
+- `milestone_archived`: principle "Bare boolean confirming the .483 closeout is represented in durable research records."
+- `activation_ready`: principle "Bare boolean confirming .484 can proceed without overwriting research-roadmap.yaml."
+- `ops_docs_updated`: principle "False when the conductor stop rule delegates ops/status/changelog/traceability reconciliation."
+- `research_complete_updated`: principle "True only if this workflow appended or reconciled research-complete.yaml; false when .483 was already present."
+- `exclusions_checked`: principle "The transition must run or explicitly record available roadmap, exclusion, and prior-failure checks."
+- `roadmap_activation_check`: principle "No roadmap overwrite is allowed; activated must remain false."
+- `commands_run`: principle "Every validation command must be recorded with pass/fail outcome."
+
+#### SCENARIO-REPORT-5295: Already-Active .484 Emits A Complete No-Overwrite Artifact
+
+**Given** the `.483` capstone artifact records deterministic coherence and
+trace fixtures ready, SOTA runtime/offload blocked, SOTA quality gate-skipped,
+memory attribution and coherence dosing positive, low-order curriculum null,
+p-bit/CDCL aggregate-positive with misleading-class harm, and hardware
+reachability-only with no speedup
+**And** `ops/status.md`, `ops/changelog.md`, and the operational retro artifact
+record the `.483` timing-accounting mismatch
+**And** `research-complete.yaml` already contains milestone `2026.07.483`
+**And** `research-roadmap.yaml` already names milestone `2026.07.484`
+**When** the Exp 5295 workflow runs
+**Then** it writes
+`results/experiment_5295_archive_483_activate_484.json`, sets
+`milestone_archived=true`, sets `activation_ready=true`, sets
+`roadmap_activation_check.activated=false`, records whether
+`research-roadmap-next.yaml` is present, declares
+`aggregation_from_upstream_artifacts`, records the roadmap/exclusion command
+outcomes, and emits a `complete:` verdict without overwriting
+`research-roadmap.yaml`.
+
+#### SCENARIO-REPORT-5295-BLOCKED-CLOSEOUT: Missing Or Contradictory Closeout Blocks Readiness
+
+**Given** the `.483` capstone artifact is missing, the closeout facts do not
+match the required fixture/block/gate/positive/null/mixed/no-speedup/timing
+mismatch state, the vNEXT document does not name `2026.07.484`, the active
+roadmap is not `.484` and no `.484` next-roadmap is present, or an available
+validation command fails
+**When** the Exp 5295 workflow runs
+**Then** it writes a terminal artifact whose `honest_verdict.value` starts with
+`blocked_`, records the failed preconditions, keeps
+`roadmap_activation_check.activated=false`, and does not modify
+`research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5295)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5295 | Planned (`python/carnot/experiment_5295_archive_483_activate_484.py`, `results/experiment_5295_archive_483_activate_484.json`) | Planned (`tests/python/test_experiment_5295_archive_483_activate_484.py`) |
+
 ### REQ-REPORT-5283: V483 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5283 workflow SHALL search 2025-2026 network sources for actionable
