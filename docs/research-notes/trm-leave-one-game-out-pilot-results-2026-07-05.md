@@ -93,6 +93,48 @@ plan — and per that plan's own gating logic, Stage 1 should not be treated as 
 these redesigns produces a result that clears the trivial baseline, not just beats a matched
 non-recursive arm.
 
+## v2 update (2026-07-05, same day): history conditioning run — a direct contradiction, not a confirmation
+
+Ran the recommended next step (condition on the last 8 action ids, same held-out game `ft09`, same
+two architectures, added a "repeat-last-action" heuristic baseline). Reporting this without spin,
+per the same discipline as the rest of this note — **the result contradicts, rather than confirms,
+Finding 1 above.**
+
+| Arm | Train accuracy | Held-out (`ft09`) accuracy |
+|---|---|---|
+| Majority-class baseline | — | 0.7787 |
+| Repeat-last-action heuristic | — | 0.7651 |
+| Non-recursive baseline (+ history) | 0.7026 | **0.7757** |
+| Recursive refiner (+ history) | 0.6998 | **0.6107** |
+
+History conditioning helped a lot in absolute terms — the non-recursive baseline jumped from 0.4626
+(v1, frame-only) to 0.7757, confirming the v1 hypothesis that recent action history was the missing
+signal. But **the recursive refiner now clearly *underperforms* the non-recursive baseline** (0.6107
+vs 0.7757, a 16.5pp gap in the wrong direction), despite near-identical training accuracy — the exact
+opposite ranking from v1, where recursion won by 15.3pp under nearly the same training-accuracy
+parity.
+
+**This reversal is the most important finding of the two runs combined, not either run in isolation.**
+A single seed per architecture per condition is not enough to distinguish "recursion has an
+inconsistent, condition-dependent effect" from "this quick, hand-rolled pilot setup is simply too
+noisy/underpowered to measure the effect reliably in either direction." Both pilots used a single
+fixed seed, three epochs, and a standalone reimplementation far simpler than nano-trm's own validated
+training regime (no ACT halting, no tuned hyperparameters per architecture) — a plausible, honest
+explanation for a 30-point swing in the recursive-vs-non-recursive ranking between two closely
+related conditions.
+
+**Also notable**: once history is added, the non-recursive baseline (0.7757) sits almost exactly at
+the majority-class baseline (0.7787) — the task became easy enough for a simple architecture to
+nearly match trivial guessing, which further narrows the headroom available for any architecture,
+recursive or not, to demonstrate a real advantage.
+
+**Revised recommendation.** Neither pilot should be read as evidence for or against TRM-style
+recursion generalizing better on this task. Before drawing any conclusion, this needs: multiple
+random seeds per arm (to separate signal from noise), and/or a properly-tuned training regime per
+architecture rather than one shared quick-and-dirty config. Absent that, the honest state of Stage 1
+is: **inconclusive, with contradictory single-run signals in both directions** — not a lead worth
+building on without a more rigorous follow-up test.
+
 ## What this note is NOT claiming
 
 - Not claiming TRM-style recursive refinement is proven to generalize to ARC-AGI-3. Finding 1 is a
