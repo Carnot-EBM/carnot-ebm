@@ -1,0 +1,341 @@
+{
+  "bounded_scope_only": {
+    "principle": "Must be true; certificates are limited to the Exp5277 bounded input box and Exp5278 factor fixture, not global KAN robustness.",
+    "value": true
+  },
+  "certificate_success_by_method": {
+    "principle": "Reports static, low-order Exp5291, and dynamic method certificate success separately so diagnostic gains are not mistaken for a new global proof.",
+    "value": {
+      "dynamic_spotcheck_refinement": true,
+      "low_order_exp5291": true,
+      "static_abstraction": true
+    }
+  },
+  "claim_limits": [
+    "bounded deterministic Exp 5277 KAN PWA/MILP input box only",
+    "Exp 5278 factor boundary is used only for Ising-style assignment checks",
+    "Exp 5291 low-order ordering remains a null certificate-success comparison",
+    "no global KAN robustness claim",
+    "no trained-network soundness claim",
+    "no hardware execution or hardware speedup claim",
+    "no live LLM inference claim"
+  ],
+  "declarative_constraint_groups": [
+    {
+      "authority": "symbolic checker recomputes convex component values and PWA envelopes",
+      "group_id": "kan_component_envelopes",
+      "group_type": "bounded_pwa_upper_envelope",
+      "source_artifact": "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+      "variables": [
+        "x_0",
+        "x_1",
+        "x_2"
+      ]
+    },
+    {
+      "authority": "Z3 MILP-compatible solve or exact vertex fallback",
+      "group_id": "pwa_piece_selectors",
+      "group_type": "mixed_integer_piece_selection",
+      "source_artifact": "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+      "variables": [
+        "a_0",
+        "a_1",
+        "a_2",
+        "a_3",
+        "b_0",
+        "b_1",
+        "b_2",
+        "b_3"
+      ]
+    },
+    {
+      "authority": "Exp5278 direct assignment and QUBO energy evaluator",
+      "factor_ids": [
+        "a_one_hot",
+        "b_one_hot",
+        "sum_is_five",
+        "a_less_than_b"
+      ],
+      "group_id": "factor_graph_boundary",
+      "group_type": "ising_style_factor_boundary",
+      "source_artifact": "results/experiment_5278_constraint_factor_graph_boundary_v482.json",
+      "variables": [
+        "a_0",
+        "a_1",
+        "a_2",
+        "a_3",
+        "b_0",
+        "b_1",
+        "b_2",
+        "b_3"
+      ]
+    }
+  ],
+  "duration_s": 0.076187,
+  "dynamic_abstraction_helped": {
+    "principle": "True only when dynamic refinement improves diagnostic evidence such as spot-check hit rate or envelope gap without weakening false-property rejection.",
+    "value": {
+      "envelope_gap_reduction": 0.01125,
+      "help_kind": "diagnostic_tightness_not_certificate_success",
+      "helped": true,
+      "spotcheck_hit_rate_delta": 0.8808888889,
+      "success_improvement": 0.0
+    }
+  },
+  "experiment_id": "exp5304-kan-dynamic-abstraction-spotcheck-v484",
+  "false_property_rejected": {
+    "principle": "True only when every compared method rejects the nearby expected-false property.",
+    "value": true
+  },
+  "field_principles": {
+    "bounded_scope_only": "Must be true; certificates are limited to the Exp5277 bounded input box and Exp5278 factor fixture, not global KAN robustness.",
+    "certificate_success_by_method": "Reports static, low-order Exp5291, and dynamic method certificate success separately so diagnostic gains are not mistaken for a new global proof.",
+    "dynamic_abstraction_helped": "True only when dynamic refinement improves diagnostic evidence such as spot-check hit rate or envelope gap without weakening false-property rejection.",
+    "false_property_rejected": "True only when every compared method rejects the nearby expected-false property.",
+    "honest_verdict": "Terminal verdict; starts with complete:, null:, or blocked_ and states whether dynamic abstraction helped the bounded certificate diagnostic.",
+    "inference_substrate": "Must be offline_deterministic_certificate_no_llm because Exp 5304 uses local deterministic PWA/factor fixtures and no LLM inference.",
+    "slack_metrics": "Reports true/false property slack and envelope-gap changes for each method.",
+    "spotcheck_metrics": "Reports spot-check sample counts, hit rates, false-property witness hits, and whether dynamic probes improved over static probes."
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict; starts with complete:, null:, or blocked_ and states whether dynamic abstraction helped the bounded certificate diagnostic.",
+    "value": "complete: dynamic abstraction helped diagnostic tightness and spot-check hit rate, while certificate success stayed unchanged on the bounded fixture"
+  },
+  "inference_substrate": {
+    "principle": "Must be offline_deterministic_certificate_no_llm because Exp 5304 uses local deterministic PWA/factor fixtures and no LLM inference.",
+    "value": "offline_deterministic_certificate_no_llm"
+  },
+  "method_comparison": [
+    {
+      "actual_witness_value": 0.4984,
+      "binary_variable_count": 6,
+      "bounded_scope_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 46,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "false_property_witness_hits": 1,
+      "global_error_bound": 0.015,
+      "local_error_bounds": [
+        0.00625,
+        0.005,
+        0.00375
+      ],
+      "max_observed_envelope_gap": 0.015,
+      "method_id": "static_abstraction",
+      "piece_count": 6,
+      "selected_pieces": [
+        1,
+        1,
+        1
+      ],
+      "solve_time_s": 0.005793,
+      "solver_backend": "z3",
+      "solver_status": "optimal",
+      "spotcheck_hit_rate": 0.008,
+      "spotcheck_profile": "static_uniform_grid",
+      "spotcheck_sample_count": 125,
+      "true_property_accepted": true,
+      "true_property_slack": 0.0166,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.4984,
+      "binary_variable_count": 6,
+      "bounded_scope_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 46,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0003,
+      "false_property_witness_hits": 1,
+      "global_error_bound": 0.015,
+      "local_error_bounds": [
+        0.00625,
+        0.005,
+        0.00375
+      ],
+      "max_observed_envelope_gap": 0.015,
+      "method_id": "low_order_exp5291",
+      "piece_count": 6,
+      "selected_pieces": [
+        1,
+        1,
+        1
+      ],
+      "solve_time_s": 0.010653,
+      "solver_backend": "z3",
+      "solver_status": "exp5291_curriculum_reused",
+      "spotcheck_hit_rate": 0.008,
+      "spotcheck_profile": "static_uniform_grid_reused_for_final_stage",
+      "spotcheck_sample_count": 125,
+      "stage_piece_count_total": 12,
+      "true_property_accepted": true,
+      "true_property_slack": 0.011,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "actual_witness_value": 0.4984,
+      "binary_variable_count": 12,
+      "bounded_scope_only": true,
+      "certificate_success": true,
+      "certified_upper_bound": 0.4984,
+      "constraint_count": 82,
+      "fallback_used": false,
+      "false_property_rejected": true,
+      "false_property_slack": -0.0004,
+      "false_property_witness_hits": 1,
+      "global_error_bound": 0.00375,
+      "local_error_bounds": [
+        0.0015625,
+        0.00125,
+        0.0009375
+      ],
+      "max_observed_envelope_gap": 0.00375,
+      "method_id": "dynamic_spotcheck_refinement",
+      "piece_count": 12,
+      "refinement_trigger": {
+        "boundary_distance_by_component": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 0.0
+        },
+        "false_property_slack": -0.0004,
+        "local_error_by_component": {
+          "0": 0.00625,
+          "1": 0.005,
+          "2": 0.00375
+        },
+        "near_false_property_slack": true,
+        "policy": "refine_all_components_when_false_slack_is_near_zero_else_max_error",
+        "selected_component_indices": [
+          0,
+          1,
+          2
+        ],
+        "signals_seen": [
+          "near_false_property_slack",
+          "local_error",
+          "boundary_proximity"
+        ]
+      },
+      "selected_pieces": [
+        3,
+        3,
+        3
+      ],
+      "solve_time_s": 0.040154,
+      "solver_backend": "z3",
+      "solver_status": "optimal",
+      "spotcheck_hit_rate": 0.8888888889,
+      "spotcheck_profile": "dynamic_near_boundary_and_max_error",
+      "spotcheck_sample_count": 9,
+      "true_property_accepted": true,
+      "true_property_slack": 0.0166,
+      "witness_inputs": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    }
+  ],
+  "random_seed": 5304,
+  "reproducibility_checksum": "fa78314f8db42ff16dc4d0cddec1a66dc42663205962c021790ee00d9293344e",
+  "run_date": "20260706",
+  "schema": "carnot.experiment_5304.kan_dynamic_abstraction_spotcheck.v484",
+  "slack_metrics": {
+    "principle": "Reports true/false property slack and envelope-gap changes for each method.",
+    "value": {
+      "dynamic_envelope_gap_reduction": 0.01125,
+      "dynamic_global_error_reduction": 0.01125,
+      "false_property_slack_by_method": {
+        "dynamic_spotcheck_refinement": -0.0004,
+        "low_order_exp5291": -0.0003,
+        "static_abstraction": -0.0004
+      },
+      "global_error_bound_by_method": {
+        "dynamic_spotcheck_refinement": 0.00375,
+        "low_order_exp5291": 0.015,
+        "static_abstraction": 0.015
+      },
+      "max_observed_envelope_gap_by_method": {
+        "dynamic_spotcheck_refinement": 0.00375,
+        "low_order_exp5291": 0.015,
+        "static_abstraction": 0.015
+      },
+      "true_property_slack_by_method": {
+        "dynamic_spotcheck_refinement": 0.0166,
+        "low_order_exp5291": 0.011,
+        "static_abstraction": 0.0166
+      }
+    }
+  },
+  "solver_availability": {
+    "exact_vertex_fallback_available": true,
+    "fallback_used_by_any_method": false,
+    "preferred_solver": "z3"
+  },
+  "source_artifacts": [
+    "results/experiment_5277_kan_milp_certificate_scale_v482.json",
+    "results/experiment_5278_constraint_factor_graph_boundary_v482.json",
+    "results/experiment_5291_low_order_factor_certificate_curriculum_v483.json"
+  ],
+  "spec_refs": [
+    "REQ-KAN-5304",
+    "SCENARIO-KAN-5304"
+  ],
+  "spotcheck_metrics": {
+    "principle": "Reports spot-check sample counts, hit rates, false-property witness hits, and whether dynamic probes improved over static probes.",
+    "value": {
+      "dynamic_hit_rate_delta": 0.8808888889,
+      "dynamic_hit_rate_improved": true,
+      "false_property_witness_hits_by_method": {
+        "dynamic_spotcheck_refinement": 1,
+        "low_order_exp5291": 1,
+        "static_abstraction": 1
+      },
+      "hit_rate_by_method": {
+        "dynamic_spotcheck_refinement": 0.8888888889,
+        "low_order_exp5291": 0.008,
+        "static_abstraction": 0.008
+      },
+      "sample_count_by_method": {
+        "dynamic_spotcheck_refinement": 9,
+        "low_order_exp5291": 125,
+        "static_abstraction": 125
+      }
+    }
+  },
+  "symbolic_checker": {
+    "constraint_group_ids_seen": [
+      "kan_component_envelopes",
+      "pwa_piece_selectors",
+      "factor_graph_boundary"
+    ],
+    "factor_boundary_valid": true,
+    "false_factor_assignment_rejected": true,
+    "final_factor_assignment": {
+      "a": 2,
+      "b": 3
+    },
+    "method_validity": {
+      "dynamic_spotcheck_refinement": true,
+      "low_order_exp5291": true,
+      "static_abstraction": true
+    },
+    "property_checks_valid": true,
+    "valid": true
+  },
+  "tests_run": []
+}
