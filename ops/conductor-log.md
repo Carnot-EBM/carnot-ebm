@@ -10391,3 +10391,4 @@ web search: Semantic Scholar ar |
 | 2026-07-06 09:12 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |
 | 2026-07-06 09:14 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |
 | 2026-07-06 09:16 UTC | PHASE 0 gated on exp5297 -- SOTA coherence and tra | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5297-changed-runtime-sota-substrate-gat |
+| 2026-07-06 09:34 UTC | PHASE 1 fixture -- constraint-LNS destroy/repair w | FAIL | Codex CLI error: Stalled after 600s silence. Last output: gs/jepa_energy.py", |
