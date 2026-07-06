@@ -2257,6 +2257,63 @@ case
 records recovery telemetry, and finishes with lower energy without an LLM
 quality claim.
 
+### REQ-INFER-5317: EBT Telemetry Audit Re-Emission
+
+The system SHALL provide a V485 telemetry audit in
+`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py` that reads
+the prior Exp5301 and Exp3872 artifacts, explains why Exp5301 was
+adversarially flagged, re-runs the same tiny deterministic EBT spectral
+step-control diagnostic when the prior telemetry remains mechanically valid,
+and writes
+`results/experiment_5317_ebt_telemetry_audit_reemit_v485.json` with a real
+wall-clock `methodology_duration_s`.
+
+The audit SHALL emit principle-wrapped fields `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `workload_counters`, and
+`tests_run`.  `inference_substrate.value` SHALL equal
+`deterministic_ebt_telemetry_audit_no_llm`, and `honest_verdict.value` SHALL
+start with `complete:`, `null:`, or `blocked_`.  The artifact SHALL emit bare
+JSON values for `ebt_telemetry_audited`, `methodology_duration_s`,
+`methodology_flag_cleared`, `lambda_max_logged`,
+`step_control_recovery_logged`, `no_sota_quality_claim`, and
+`no_hardware_speedup_claim`.
+
+The workload counters SHALL record forward energy counts, analytic
+gradient/backward-like counts, autograd backward calls, policy counts, logged
+step counts, alpha-attempt counts, Hessian-vector product counts,
+power-iteration counts, random probe-vector counts, adaptive recovery shrink
+counts, and memory/utilization proxies where available.  The artifact SHALL
+log lambda-max estimates, alpha and step choices, divergence/recovery behavior,
+runtime breakdown, methodology notes, and the prior Exp5301 flag reasons.  It
+SHALL preserve quarantine language by marking the telemetry clean only for this
+tiny deterministic audit while keeping future energy-descent, SOTA-quality,
+and hardware-readiness claims ineligible.
+
+Artifact field principles SHALL be recorded as:
+- `experiment_id`: Identifies the V485 repair receipt so downstream readers do not confuse it with the flagged V484 artifact.
+- `milestone`: Names milestone 2026.07.485 because the audit repairs telemetry for the next milestone without modifying conductor-owned reconciliation docs.
+- `status`: Machine-readable state that distinguishes a completed audit from blocked upstream telemetry.
+- `honest_verdict`: Terminal verdict; starts with complete:, null:, or blocked_ and states whether the telemetry methodology was repaired without broadening the claim.
+- `inference_substrate`: deterministic_ebt_telemetry_audit_no_llm because this audit re-runs a CPU-local analytic fixture and does not load or call an LLM.
+- `workload_counters`: Counts the actual deterministic diagnostic workload so short duration is explainable rather than suspicious.
+- `tests_run`: Records verification commands and outcomes so the artifact is tied to executable checks.
+
+### SCENARIO-INFER-5317: Clean Audit Re-Emits Quarantined Tiny EBT Telemetry
+
+**Given** the V484 Exp5301 artifact is flagged for duration/methodology while
+its deterministic spectral-control telemetry remains internally valid
+**And** Exp3872 is a pre-gate blocked System-2 diagnostic with no usable
+energy-descent claim
+**When** the V485 telemetry audit runs
+**Then** it re-runs the tiny deterministic spectral diagnostic without LLM
+inference
+**And** it emits the required V485 artifact fields with workload counters,
+lambda-max estimates, alpha choices, divergence/recovery telemetry, runtime
+breakdown, and no SOTA or hardware claim
+**And** it clears only the telemetry methodology flag while preserving
+quarantine language that blocks future energy-descent headline claims from the
+tiny diagnostic.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -2292,6 +2349,7 @@ quality claim.
 | REQ-INFER-SOTA-024 | Planned (`python/carnot/reporting/cuda_env_forensics_ledger_3206.py`) | Planned (`tests/python/test_experiment_3206_cuda_env_forensics_ledger.py`) |
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
+| REQ-INFER-5317 | Implemented (`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py`) | Implemented (`tests/python/test_experiment_5317_ebt_telemetry_audit_reemit_v485.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
