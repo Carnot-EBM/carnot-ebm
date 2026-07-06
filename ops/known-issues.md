@@ -2223,6 +2223,33 @@ directly") is the intended path -- skipping straight from Stage 1 to a live depl
 Stages 2-4 would repeat the exact "weights don't transfer" mistake this project has already learned
 from once.
 
+### RESULT: TRM leave-one-game-out pilot -- inconclusive, redesign needed 2026-07-05 (outer-loop, operator authorized ARC-specific work)
+
+Full writeup: `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md`. Ran the
+falsifiable first pilot from the TRM-as-generator note against the freshly-fixed human replay corpus.
+Simplified scope (single-step action-type classification, standalone recursive-refiner
+reimplementation, not full sequence refinement or nano-trm's own pipeline) -- stated explicitly in
+the writeup.
+
+**Mixed result, reported honestly, not smoothed over**: the recursive refiner beat a matched
+non-recursive baseline by +15pp on the held-out game (0.6151 vs 0.4626) despite near-identical
+training accuracy -- a real generalization signal, not explained by extra memorization capacity.
+BUT neither model beat the trivial majority-class baseline (0.7787) -- inconclusive on the core
+hypothesis, not a clean win.
+
+**A broader finding**: checked whether the held-out game (`ft09`) was an unlucky pick -- it was not;
+several OTHER games in the corpus show 94-99% single-action-class dominance (worse than ft09's
+77.9%). Single-frame-to-action-type classification is a structurally low-headroom task across most
+of this corpus -- the missing signal is very likely recent action history/intent, which this pilot's
+framing excluded (single static frame only).
+
+**If a future planner/session picks this up**: the recommended next step is NOT re-running the same
+framing on a different held-out game -- it's redesigning the task to condition on recent action
+history (cheap change to the existing pilot script) or moving toward full-sequence refinement
+(the original framing). Per the staged plan's own gating logic, Stage 1 should not be treated as
+validated until a redesigned test clears the trivial baseline, not just beats a matched non-recursive
+arm.
+
 ### LITERATURE: AutoMem, memory as a trainable skill 2026-07-05 (outer-loop, operator-requested paper review)
 
 Full writeup: `docs/research-notes/automem-memory-as-cognitive-skill-2026-07-05.md`. arXiv:2607.01224

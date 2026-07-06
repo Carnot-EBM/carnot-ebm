@@ -134,6 +134,8 @@ full-FT-on-a-3090 build the existing gap entry already scoped.
 
 ## Cross-references
 
+- `docs/research-notes/trm-leave-one-game-out-pilot-results-2026-07-05.md` — the falsifiable first
+  pilot proposed here, run: mixed/inconclusive result, a redesign is needed before a firmer verdict
 - `docs/research-notes/arc1-arc2-capability-transfer-to-arc3-2026-07-04.md` — the broader question of
   whether ARC-1/2 capability (not just TRM specifically) applies to ARC-3; also notes the pre-trained
   ARC-1 TRM checkpoint's availability
