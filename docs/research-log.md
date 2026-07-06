@@ -5757,3 +5757,9 @@ The critical path for milestone .250:
 - theme: timing-assembly mismatch prevents operational throughput accounting
 - key result: no data available this milestone; the timing block reports 0 experiment commits from both authorized reconstruction paths but also reports milestone references in ops/changelog.md, so compute-bound duration, GPU-use efficiency, and parallel-runner questions have no measurable basis
 - acceptance: 0/0 criteria met -- the timing data contains no milestone-scoped experiment entries to score
+
+### Milestone 2026.07.483
+- exp_range: no data available this milestone
+- theme: operational retrospective blocked by inconsistent timing assembly
+- key result: no data available this milestone; the timing source records 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also flagging changelog references, so no experiment duration, GPU-efficiency, or DualGPURunner finding can be derived
+- acceptance: 0/0 criteria met -- the timing data provides no milestone-scoped experiment rows to evaluate
