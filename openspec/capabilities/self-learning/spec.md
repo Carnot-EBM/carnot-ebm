@@ -17162,3 +17162,134 @@ fixed governed-memory controls
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5303 | Planned (`python/carnot/experiment_5303_memory_stress_conflict_forgetting_v484.py`, `results/experiment_5303_memory_stress_conflict_forgetting_v484.json`) | Planned (`tests/python/test_experiment_5303_memory_stress_conflict_forgetting_v484.py`) |
+
+---
+
+## REQ-LEARN-5312: TrustMem-Inspired Deterministic Memory Transition Verifier
+
+Experiment 5312 SHALL build a deterministic memory transition verifier for the
+Exp5302 adaptive memory policy and Exp5303 memory stress fixture family. The
+verifier SHALL score each proposed memory transition before any persistent
+state change, using only explicit fixture evidence and prior memory state. It
+SHALL NOT call an LLM, mutate model weights, fine-tune adapters, or use an API
+judge.
+
+The transition fixture SHALL label proposed transitions with exactly these
+TrustMem-inspired safety classes:
+
+- `useful_insert`
+- `omission`
+- `corruption`
+- `hallucinated_update`
+- `stale_retention`
+- `conflict_resolution`
+- `forgetting`
+- `rollback`
+
+For every proposed transition, the verifier SHALL compute:
+
+- `coverage_score`: whether required evidence-backed facts are present in the
+  proposed post-state.
+- `preservation_score`: whether unrelated protected prior memories are
+  preserved unchanged.
+- `faithfulness_score`: whether changed memory keys are supported by explicit
+  evidence rather than unsupported additions, corruptions, or stale retention.
+
+The verifier SHALL accept only transitions whose coverage, preservation, and
+faithfulness scores pass the deterministic threshold. A rejected transition
+SHALL leave the prior memory state unchanged before any persistent state
+change. Safe transitions SHALL be committable only through the verifier result
+path.
+
+Audit phrase: persistent state change is forbidden until the verifier accepts.
+
+The result artifact SHALL be
+`results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json`
+and SHALL include principle-wrapped `experiment_id`, principle-wrapped
+`milestone`, principle-wrapped `status`, principle-wrapped `honest_verdict`
+whose value starts with `complete:` or `blocked_`, principle-wrapped
+`inference_substrate` with
+`value=deterministic_memory_transition_verifier_no_llm`, bare boolean
+`continuous_self_learning` with value true, bare boolean
+`memory_transition_verifier_ready`, principle-wrapped `verifier_path`,
+principle-wrapped `transition_label_counts`, bare numeric `coverage_score`,
+bare numeric `preservation_score`, bare numeric `faithfulness_score`, bare
+numeric `unsafe_transition_rejection_rate`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5312 artifact so downstream gates
+  cannot confuse this verifier with prior adaptive-memory experiments.
+- `milestone`: Binds the result to milestone v485 so the conductor can require
+  one continuous self-learning experiment for the milestone.
+- `status`: Reports whether the verifier is usable by Exp5313 instead of
+  merely present as code.
+- `honest_verdict`: Terminal Exp5312 verdict; starts with complete: or
+  blocked_ and states whether unsafe memory writes were rejected before commit.
+- `inference_substrate`: Declares deterministic fixture scoring with no live
+  LLM, API judge, model generation, fine-tuning, adapter update, or weight
+  mutation.
+- `continuous_self_learning`: Bare milestone gate showing this is a continuous
+  self-learning memory-safety experiment, not a static documentation update.
+- `memory_transition_verifier_ready`: Bare downstream gate for Exp5313; true
+  only when safe transitions commit, unsafe transitions are rejected, tests
+  pass, and no model weights mutate.
+- `verifier_path`: Points to the deterministic verifier helper used by tests
+  and the artifact so downstream code can import the same implementation.
+- `transition_label_counts`: Counts every required transition label so unsafe
+  rejection cannot hide missing omission, corruption, hallucination, stale,
+  conflict, forgetting, or rollback cases.
+- `coverage_score`: Bare numeric gate over committed safe transitions; missing
+  required evidence-backed facts lowers the score.
+- `preservation_score`: Bare numeric gate over committed safe transitions;
+  unrelated memory corruption lowers the score.
+- `faithfulness_score`: Bare numeric gate over committed safe transitions;
+  unsupported or stale writes lower the score.
+- `unsafe_transition_rejection_rate`: Bare numeric gate requiring unsafe
+  omission, corruption, hallucination, and stale-retention writes to be rejected.
+- `tests_run`: Records the exact verification commands used to establish that
+  the verifier and artifact are usable by Exp5313.
+
+### REQ-LEARN-5312 Sub-requirements
+
+- REQ-LEARN-5312-1: The transition fixture SHALL include all eight labels:
+  useful insert, omission, corruption, hallucinated update, stale retention,
+  conflict resolution, forgetting, and rollback.
+- REQ-LEARN-5312-2: The verifier helper SHALL score coverage, preservation,
+  and faithfulness deterministically from prior state, proposed post-state,
+  expected evidence-backed post-state, and protected keys.
+- REQ-LEARN-5312-3: Unsafe omission, corruption, hallucinated update, and
+  stale-retention transitions SHALL be rejected before persistent state
+  changes.
+- REQ-LEARN-5312-4: Useful insert, conflict resolution, forgetting, and
+  rollback transitions SHALL commit when they pass all three score thresholds.
+- REQ-LEARN-5312-5: `memory_transition_verifier_ready` SHALL be true only when
+  all safe transitions commit, all unsafe transitions reject, aggregate
+  committed scores pass, `unsafe_transition_rejection_rate` is 1.0, tests are
+  recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5312: Unsafe Memory Transition Rejected Before Commit
+
+**Given** a prior memory state and a proposed transition labelled `corruption`
+or `hallucinated_update`
+**When** the deterministic transition verifier scores the proposal
+**Then** preservation or faithfulness falls below the threshold
+**And** the verifier rejects the proposal
+**And** the persistent memory state remains byte-for-byte equal to the prior
+state.
+
+### SCENARIO-LEARN-5313: Safe Memory Transition Commits Through Verifier
+
+**Given** a prior memory state and a proposed transition labelled
+`useful_insert`, `conflict_resolution`, `forgetting`, or `rollback`
+**When** the deterministic transition verifier scores the proposal
+**Then** coverage, preservation, and faithfulness all pass
+**And** the transition can be committed through the verifier result path
+**And** the artifact reports `memory_transition_verifier_ready=true` with
+`inference_substrate=deterministic_memory_transition_verifier_no_llm`.
+
+## Implementation Status (Exp 5312)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5312 | Planned (`python/carnot/pipeline/memory_transition_verifier.py`, `python/carnot/experiment_5312_trustmem_transition_verifier_self_learning_v485.py`, `results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json`) | Planned (`tests/python/test_experiment_5312_trustmem_transition_verifier_self_learning_v485.py`) |
