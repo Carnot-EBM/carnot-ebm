@@ -975,3 +975,78 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5281 | Implemented (`python/carnot/experiment_5281_capstone_v482.py`, `results/experiment_5281_capstone_v482.json`) | Implemented (`tests/python/test_experiment_5281_capstone_v482.py`) |
+
+- REQ-CAPSTONE-5294: The `.483` milestone-close capstone aggregator
+  `exp5294-capstone-v483` in `python/carnot/experiment_5294_capstone_v483.py`
+  SHALL write `results/experiment_5294_capstone_v483.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every expected `.483`
+  upstream artifact from Exp5282 through Exp5293 that exists, record missing or
+  malformed artifacts explicitly, read the `.483` conductor-log entries, classify
+  each upstream as clean positive, clean null, harmful or mixed-harmful,
+  gated skip, blocked precondition, quarantined, or missing, and synthesize the
+  milestone without promoting blocked SOTA runtime/offload work, conductor
+  pre-gate skips, mixed p-bit guidance harm, null curriculum effects, or
+  reachability-only hardware evidence into stronger claims.
+- SCENARIO-CAPSTONE-5294: The artifact
+  `results/experiment_5294_capstone_v483.json` must emit top-level fields
+  `honest_verdict`, `inference_substrate`, `tasks_summarized`,
+  `clean_positive_findings`, `null_or_harmful_findings`,
+  `gated_or_blocked_findings`, `retirements_or_exclusions`,
+  `next_milestone_recommendations`, `ops_docs_updated`,
+  `research_complete_updated`, and `commands_run`; every required artifact field
+  except `commands_run` must be an object with `value` and `principle`. The
+  default `.483` read must summarize Exp5282 and Exp5283 as clean transition and
+  source-refresh evidence, Exp5284 as blocked SOTA offload readiness with
+  `sota_offload_ready=false`, Exp5285 as a deterministic claim-level coherence
+  fixture ready for gated consumers, Exp5286 as a conductor pre-gate skip,
+  Exp5287 as a deterministic compilable trace DSL fixture, Exp5288 as a
+  conductor pre-gate skip, Exp5289 as memory operation attribution ready with no
+  unsafe propagation, Exp5290 as positive memory-assisted coherence dosing,
+  Exp5291 as a clean null for low-order curriculum advantage while preserving
+  bounded certificate telemetry, Exp5292 as aggregate-positive CPU p-bit/CDCL
+  guidance with a harmful misleading-assumption class and no hardware speedup
+  claim, and Exp5293 as reachability-only hardware evidence with KV260 blocked,
+  PolarFire SSH status-only reachable, GateMate physical/JTAG blocked, and
+  `hardware_speedup_claimed.value=false`. The terminal
+  `honest_verdict.value` must start with `complete:` or `blocked_` and state the
+  true `.483` closure without turning gated, blocked, null, harmful, or
+  no-speedup evidence into success.
+- SCENARIO-CAPSTONE-5294-BLOCKED-MISSING-INPUT: If any expected Exp5282 through
+  Exp5293 result artifact is absent or unreadable, the workflow must still write
+  `results/experiment_5294_capstone_v483.json` with
+  `honest_verdict.value` starting with `blocked_missing_required`, record the
+  missing or malformed artifact in `gated_or_blocked_findings.value`, keep
+  `tasks_summarized.value.milestone_synthesized=false`, keep
+  `ops_docs_updated.value.ops_status`, `ops_docs_updated.value.ops_changelog`,
+  and `ops_docs_updated.value.traceability` false, and keep
+  `research_complete_updated.value=false`.
+- SCENARIO-CAPSTONE-5294-FIELD-PRINCIPLES: The required field principles are:
+  `honest_verdict` = "terminal prefix; starts with complete: or blocked_ and
+  summarizes the .483 milestone without laundering gated, blocked, null,
+  harmful, mixed, quarantined, or no-speedup evidence.", `inference_substrate` =
+  "aggregation_from_upstream_artifacts because the capstone reads checked-in
+  result artifacts and conductor logs without running LLM, solver, or hardware
+  workloads.", `tasks_summarized` = "expected, loadable, missing, classification,
+  and conductor-log coverage for Exp5282 through Exp5293.", `clean_positive_findings`
+  = "bounded clean non-flagged results that advanced fixtures, attribution,
+  coherence dosing, aggregate solver guidance, source refresh, or transition
+  readiness.", `null_or_harmful_findings` = "clean null effects and harmful or
+  mixed-harmful subfindings preserved separately from positives.", `gated_or_blocked_findings`
+  = "blocked preconditions, conductor pre-gate skips, missing artifacts, hardware
+  blocks, and quarantines that must not be rounded up.", `retirements_or_exclusions`
+  = "same-verdict retirements, manifest status, and scope limits for future
+  reruns.", `next_milestone_recommendations` = "concrete next gaps and
+  retirements without creating a next roadmap file.", `ops_docs_updated` =
+  "false for ops/status, ops/changelog, and traceability when the stop rule
+  delegates those docs to a later reconciler.", `research_complete_updated` =
+  "false when the stop rule limits this capstone to the result artifact plus
+  tested code.", and `commands_run` = "list of validation commands and outcomes
+  used for this capstone."
+
+## Implementation Status (REQ-CAPSTONE-5294)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5294 | Planned (`python/carnot/experiment_5294_capstone_v483.py`, `results/experiment_5294_capstone_v483.json`) | Planned (`tests/python/test_experiment_5294_capstone_v483.py`) |
