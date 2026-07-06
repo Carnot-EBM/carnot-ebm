@@ -10370,3 +10370,4 @@ web search: |
 | 2026-07-06 01:49 UTC | PHASE 2 continuous self-learning -- memory operati | OK | 87 passed, 1 warning in 8.00s |
 | 2026-07-06 02:04 UTC | PHASE 2 gated on exp5285 and exp5289 -- memory-ass | OK | 88 passed, 1 warning in 11.01s |
 | 2026-07-06 02:20 UTC | PHASE 3 certificates -- low-order factor KAN/Ising | OK | 88 passed, 1 warning in 8.44s |
+| 2026-07-06 02:36 UTC | PHASE 3 solver guidance -- p-bit Ising assumptions | OK | 89 passed, 1 warning in 11.46s |
