@@ -10359,3 +10359,4 @@ web search: |
 | 2026-07-05 23:37 UTC | PHASE 0 transition -- archive .482 truth and prepa | OK | 87 passed, 1 warning in 8.06s |
 | 2026-07-05 23:53 UTC | PHASE 0 SOTA/source refresh -- V483 execution delt | OK | 106 passed, 1 warning in 14.82s |
 | 2026-07-06 00:43 UTC | PHASE 0 runtime receipts -- repair SOTA GGUF gener | OK | 89 passed, 1 warning in 14.76s |
+| 2026-07-06 01:01 UTC | PHASE 1 fixture -- CheckRLM-style knowledge-though | OK | 87 passed, 1 warning in 11.28s |
