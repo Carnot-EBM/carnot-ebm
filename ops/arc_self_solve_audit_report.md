@@ -12,19 +12,26 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 ```
 
 ### Recent solve artifacts -- mechanical findings
-- results/experiment_headway_lp85_capture.json: declares outer-loop-only inputs ['used_env_source']
+- (none flagged mechanically)
 
 ## Hostile LLM review
 
-TL;DR: **0/5 count as self-discovery advances.** Four are **UNCLEAR** development-proxy/offline artifacts with no live-attempt proof; one is explicit **OUTER_LOOP_RE** due to `used_env_source`.
+TL;DR: **0/3 count as self-discovery advances. Verdict: all three are OUTER_LOOP_RE.** Reachability passed, but these are offline/no-quota `development_proxy` artifacts backed by named per-game `GameAdapter`s and baked level tails, not live hidden-game discovery.
 
-| Artifact | Verdict | Evidence | Recommended Action |
-|---|---|---|---|
-| `results/arc_loop_solve_r11l.json` | **UNCLEAR** | Reachable path is plausible via `arc_loop_solve`, but provenance is `development_proxy`, `honest_verdict` is empty, and mode is `standing_arc_loop_offline_no_quota`. No evidence the live agent discovered the solve from its own attempts/runtime RE. | Do not credit. Require attempt logs, observation/action trace, inferred rule/model provenance, and proof no per-game/offline oracle was used. |
-| `results/arc_loop_solve_ls20.json` | **UNCLEAR** | Same issue: `development_proxy`, empty `honest_verdict`, offline/no-quota mode. Reachability alone is not live self-discovery. | Quarantine from solve registry until backed by live-agent trace and budgeted run evidence. |
-| `results/arc_loop_solve_su15.json` | **UNCLEAR** | No declared outer-loop inputs, but also no affirmative evidence of self-discovery. `development_proxy` is a warning label, not a capability proof. | Mark as non-credit experimental artifact unless rerun through live entrypoint with provenance capture. |
-| `results/arc_loop_solve_lf52.json` | **UNCLEAR** | Same pattern: offline development proxy, no honest verdict, no proof of autonomous discovery. | Require reproducible live run transcript before counting. |
-| `results/experiment_headway_lp85_capture.json` | **OUTER_LOOP_RE** | Declares `outer_loop_inputs_declared: ["used_env_source"]`. That directly violates the principle: source-assisted reverse engineering is outer-loop, even if the trajectory is valid. | Exclude from live capability metrics. Keep only as a contaminated dev note or regression fixture clearly labeled non-credit. |
+- `results/arc_loop_solve_r11l.json`
+  `{ verdict: OUTER_LOOP_RE }`
+  Evidence: artifact declares `solve_provenance: development_proxy` and `mode: standing_arc_loop_offline_no_quota` at [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:544). Registry credits `GameAdapter _r11l` plus offline reproduction at [ops/arc_solve_registry.yaml](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:731). The adapter file explicitly describes these as outputs of per-game reverse-engineering at [arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:1), and `_r11l` uses pre-baked L1/L2 labels plus a hand verifier.
+  Recommended action: remove from live self-discovery credit; keep only as contaminated dev/regression artifact unless rerun from clean live attempts with runtime-derived provenance and no per-game adapter/tail.
 
-**Pattern Watch:** The drift is toward laundering development artifacts as solves: `development_proxy`, offline/no-quota runs, empty `honest_verdict`, and captured trajectories without live discovery evidence. Reachability is necessary but not sufficient. Anything not backed by the live agent’s own attempts, runtime inference, and auditable provenance should stay out of the ARC solve registry.
+- `results/arc_loop_solve_ls20.json`
+  `{ verdict: OUTER_LOOP_RE }`
+  Evidence: same `development_proxy` / offline no-quota metadata at [results/arc_loop_solve_ls20.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_ls20.json:584). Registry credits `GameAdapter _ls20` and an offline re-gate at [ops/arc_solve_registry.yaml](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:773). `_ls20` says the replay labels are the derived next-level delta, then returns hard-coded label tails from the adapter at [arc_game_adapters.py](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2390).
+  Recommended action: quarantine from live capability metrics; require a live transcript showing attempts, observations, inferred model, and action selection without the baked adapter.
+
+- `results/arc_loop_solve_lf52.json`
+  `{ verdict: OUTER_LOOP_RE }`
+  Evidence: same `development_proxy` / offline no-quota metadata at [results/arc_loop_solve_lf52.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_lf52.json:584). Registry says L2 is `GameAdapter _lf52` plus offline reproduction at [ops/arc_solve_registry.yaml](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:1005), and explicitly notes adapter-free graph exploration only banked L1 while L2 required the GameAdapter rail delta at [ops/arc_solve_registry.yaml](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:1035).
+  Recommended action: do not count as a new live solve; label as per-game adapter reproduction until the live agent independently discovers the rail/jump dynamics at runtime.
+
+Pattern watch: the drift is adapter laundering: reachable modules plus offline reproduction gates are being treated like live solves. They are not. `development_proxy`, offline/no-quota mode, empty/absent honest verdicts, hand verifiers, and pre-baked per-game tails should be hard blockers for ARC-AGI-3 self-discovery credit.
 
