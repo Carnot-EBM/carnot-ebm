@@ -28214,6 +28214,90 @@ hardware guidance claim.
 |---|---|---|
 | REQ-VERIFY-5344 | Planned (`python/carnot/experiment_5344_solver_guidance_overwrite_telemetry_v487.py`, `results/experiment_5344_solver_guidance_overwrite_telemetry_v487.json`) | Planned (`tests/python/test_experiment_5344_solver_guidance_overwrite_telemetry_v487.py`) |
 
+### REQ-VERIFY-5358: Solver-Authoritative Projection/Cut Bridge V488
+
+The repository SHALL provide Exp 5358 at
+`python/carnot/experiment_5358_solver_projection_cut_bridge_v488.py` and write
+`results/experiment_5358_solver_projection_cut_bridge_v488.json` without
+invoking a live LLM, local GGUF model, external API judge, generated text
+judge, hardware sampler, or retired text-verifier path, and without modifying
+`scripts/research_conductor.py`. Exp 5358 SHALL load the checked-in Exp 5343
+QSTR fixture plus at least one Exp 5346 KAN/Ising counterexample cut fixture,
+then run a bounded projection diagnostic where neural or heuristic proposals
+are advisory only. The exact QSTR checker and generated counterexample cuts
+SHALL project, repair, reject, or route to unguided fallback before any proposal
+can be accepted.
+
+The diagnostic SHALL define exactly six proposal classes: valid, near-valid,
+invalid-repairable, invalid-unrepairable, misleading-neural, and no proposal.
+Each proposal row SHALL preserve the source QSTR case, proposed qualitative
+assignment, optional KAN/Ising cut activation, authoritative baseline outcome,
+solver projection action, final solver outcome, and whether the final state is
+valid after projection. Valid and near-valid rows MAY be projected directly.
+Invalid-repairable rows MAY be repaired by dropping forbidden assignments or
+activating a counterexample cut. Invalid-unrepairable and misleading-neural rows
+MUST be rejected or routed to unguided fallback rather than accepted.
+
+The runner SHALL report projection success, post-projection validity, fallback
+completeness, counterexample cut count, conflict/search deltas against no-hint
+baselines, neural-corrector agreement with solver outcomes, and unsafe false
+accepts. `solver_projection_ready` SHALL be true only when fallback
+completeness is preserved, false accepts are zero, post-projection validity is
+complete, and at least one repairable proposal class has a positive search or
+conflict benefit after solver projection. Guidance MAY affect search metrics,
+but the final accepted or rejected label SHALL remain solver-authoritative.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, and `tests_run`, plus bare
+boolean `solver_authoritative`, bare integer `proposal_class_count`, bare
+numeric `projection_success_rate`, bare numeric
+`post_projection_validity_rate`, bare numeric `fallback_completeness_rate`,
+bare integer `counterexample_cut_count`, bare numeric
+`conflict_delta_vs_no_hint`, bare numeric `neural_corrector_agreement_rate`,
+bare integer `unsafe_false_accepts`, and bare boolean
+`solver_projection_ready`. `honest_verdict.value` SHALL start with `complete:`
+or `blocked_`. `inference_substrate.value` SHALL be
+`deterministic_solver_projection`. `solver_authoritative` SHALL be true because
+exact QSTR facts and deterministic cuts, not neural proposals, decide final
+labels.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Keeps projection evidence tied to the `.488` solver line."
+- `status`: principle "Lets capstone distinguish clean projection from blocked fixture use."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous certificate claims."
+- `inference_substrate`: principle "Expected value is deterministic_solver_projection."
+- `tests_run`: principle "Lists deterministic solver/projection tests."
+
+### SCENARIO-VERIFY-5358: Solver Projects Advisory Proposals Before Acceptance
+
+Given the checked-in Exp 5343 QSTR fixture and at least one Exp 5346 KAN/Ising
+counterexample cut,
+When Exp 5358 evaluates the six required proposal classes,
+Then valid proposals are accepted only after exact checking, near-valid and
+invalid-repairable proposals are projected or repaired to exact valid solver
+states, invalid-unrepairable and misleading-neural proposals are rejected or
+fallback-routed without false accepts, no-proposal rows preserve unguided
+completeness, the artifact records counterexample cut usage and conflict/search
+deltas, and `solver_projection_ready=true` only under the full preservation and
+benefit gate.
+
+If the QSTR fixture is missing, no KAN/Ising cut fixture is available, required
+proposal classes are missing, a projected invalid state is accepted, fallback
+completeness drops below 1.0, post-projection validity is incomplete, no
+repairable proposal class benefits, the inference substrate is not
+`deterministic_solver_projection`, or tests are not recorded, then the same
+runner writes a terminal `blocked_` artifact with
+`solver_projection_ready=false`, exact blocker metrics, and no neural
+certificate claim.
+
+## Implementation Status (REQ-VERIFY-5358)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5358 | Planned (`python/carnot/experiment_5358_solver_projection_cut_bridge_v488.py`, `results/experiment_5358_solver_projection_cut_bridge_v488.json`) | Planned (`tests/python/test_experiment_5358_solver_projection_cut_bridge_v488.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at

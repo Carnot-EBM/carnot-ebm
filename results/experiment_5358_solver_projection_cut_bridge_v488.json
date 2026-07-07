@@ -1,0 +1,310 @@
+{
+  "conflict_delta_vs_no_hint": 1,
+  "counterexample_cut_count": 1,
+  "experiment": 5358,
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": "experiment_5358_solver_projection_cut_bridge_v488"
+  },
+  "fallback_completeness_rate": 1.0,
+  "field_principles": {
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous certificate claims.",
+    "inference_substrate": "Expected value is deterministic_solver_projection.",
+    "milestone": "Keeps projection evidence tied to the `.488` solver line.",
+    "status": "Lets capstone distinguish clean projection from blocked fixture use.",
+    "tests_run": "Lists deterministic solver/projection tests."
+  },
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous certificate claims.",
+    "value": "complete: deterministic solver projection repaired or rejected advisory proposals while preserving fallback completeness"
+  },
+  "inference_substrate": {
+    "principle": "Expected value is deterministic_solver_projection.",
+    "value": "deterministic_solver_projection"
+  },
+  "milestone": {
+    "principle": "Keeps projection evidence tied to the `.488` solver line.",
+    "value": "2026.07.488"
+  },
+  "neural_corrector_agreement_rate": 0.8333333333333334,
+  "post_projection_validity_rate": 1.0,
+  "projection_results": [
+    {
+      "accepted_after_projection": true,
+      "actual_relations": [
+        "before"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "satisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "cut_activation": null,
+      "cut_generated": false,
+      "fallback_preserved_baseline": false,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_conflicts": 0,
+      "final_matches_baseline": true,
+      "final_search_steps": 2,
+      "final_status": "satisfiable",
+      "neural_corrector_agrees": true,
+      "neural_expected_outcome": "accept",
+      "post_projection_valid": true,
+      "projected_relations": [
+        "before"
+      ],
+      "projection_success": true,
+      "proposal_class": "valid",
+      "proposed_relations": [
+        "before"
+      ],
+      "qstr_calculus": "temporal",
+      "qstr_case_id": "t-before",
+      "repairable_benefited": false,
+      "search_delta_vs_no_hint": 1,
+      "selected_cut_id": null,
+      "solver_action": "accept_exact"
+    },
+    {
+      "accepted_after_projection": true,
+      "actual_relations": [
+        "overlaps"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "satisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "cut_activation": null,
+      "cut_generated": false,
+      "fallback_preserved_baseline": false,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_conflicts": 0,
+      "final_matches_baseline": true,
+      "final_search_steps": 1,
+      "final_status": "satisfiable",
+      "neural_corrector_agrees": true,
+      "neural_expected_outcome": "accept",
+      "post_projection_valid": true,
+      "projected_relations": [
+        "overlaps"
+      ],
+      "projection_success": true,
+      "proposal_class": "near-valid",
+      "proposed_relations": [
+        "overlaps",
+        "after"
+      ],
+      "qstr_calculus": "temporal",
+      "qstr_case_id": "t-overlaps",
+      "repairable_benefited": true,
+      "search_delta_vs_no_hint": 2,
+      "selected_cut_id": null,
+      "solver_action": "project_to_intersection"
+    },
+    {
+      "accepted_after_projection": true,
+      "actual_relations": [
+        "disconnected",
+        "east_of"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "satisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": 1,
+      "cut_activation": "kan_unit_0_piece_3_counterexample_cell",
+      "cut_generated": true,
+      "fallback_preserved_baseline": false,
+      "fallback_used": false,
+      "false_accept": false,
+      "final_conflicts": 0,
+      "final_matches_baseline": true,
+      "final_search_steps": 2,
+      "final_status": "satisfiable",
+      "neural_corrector_agrees": true,
+      "neural_expected_outcome": "accept",
+      "post_projection_valid": true,
+      "projected_relations": [
+        "east_of"
+      ],
+      "projection_success": true,
+      "proposal_class": "invalid-repairable",
+      "proposed_relations": [
+        "east_of"
+      ],
+      "qstr_calculus": "spatial",
+      "qstr_case_id": "s-east-of",
+      "repairable_benefited": true,
+      "search_delta_vs_no_hint": 1,
+      "selected_cut_id": "cut_forbid_kan_unit_0_piece_3",
+      "solver_action": "repair_with_counterexample_cut"
+    },
+    {
+      "accepted_after_projection": false,
+      "actual_relations": [
+        "meets"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "unsatisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "cut_activation": "kan_unit_0_piece_3_counterexample_cell",
+      "cut_generated": true,
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_conflicts": 2,
+      "final_matches_baseline": true,
+      "final_search_steps": 4,
+      "final_status": "rejected",
+      "neural_corrector_agrees": true,
+      "neural_expected_outcome": "reject",
+      "post_projection_valid": true,
+      "projected_relations": [],
+      "projection_success": false,
+      "proposal_class": "invalid-unrepairable",
+      "proposed_relations": [
+        "before"
+      ],
+      "qstr_calculus": "temporal",
+      "qstr_case_id": "t-contradiction-before-vs-meets",
+      "repairable_benefited": false,
+      "search_delta_vs_no_hint": -1,
+      "selected_cut_id": "cut_forbid_kan_unit_0_piece_3",
+      "solver_action": "reject_with_counterexample_cut"
+    },
+    {
+      "accepted_after_projection": false,
+      "actual_relations": [
+        "disconnected",
+        "west_of"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "unsatisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": -1,
+      "cut_activation": null,
+      "cut_generated": false,
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_conflicts": 2,
+      "final_matches_baseline": true,
+      "final_search_steps": 4,
+      "final_status": "unsatisfiable",
+      "neural_corrector_agrees": false,
+      "neural_expected_outcome": "accept",
+      "post_projection_valid": true,
+      "projected_relations": [
+        "disconnected",
+        "west_of"
+      ],
+      "projection_success": false,
+      "proposal_class": "misleading-neural",
+      "proposed_relations": [
+        "contains"
+      ],
+      "qstr_calculus": "spatial",
+      "qstr_case_id": "s-contradiction-contains-vs-disconnected",
+      "repairable_benefited": false,
+      "search_delta_vs_no_hint": -1,
+      "selected_cut_id": null,
+      "solver_action": "reject_and_fallback"
+    },
+    {
+      "accepted_after_projection": true,
+      "actual_relations": [
+        "during"
+      ],
+      "baseline_conflicts": 1,
+      "baseline_search_steps": 3,
+      "baseline_status": "satisfiable",
+      "baseline_valid": true,
+      "conflict_delta_vs_no_hint": 0,
+      "cut_activation": null,
+      "cut_generated": false,
+      "fallback_preserved_baseline": true,
+      "fallback_used": true,
+      "false_accept": false,
+      "final_conflicts": 1,
+      "final_matches_baseline": true,
+      "final_search_steps": 3,
+      "final_status": "satisfiable",
+      "neural_corrector_agrees": true,
+      "neural_expected_outcome": "abstain",
+      "post_projection_valid": true,
+      "projected_relations": [
+        "during"
+      ],
+      "projection_success": false,
+      "proposal_class": "no proposal",
+      "proposed_relations": [],
+      "qstr_calculus": "temporal",
+      "qstr_case_id": "t-during",
+      "repairable_benefited": false,
+      "search_delta_vs_no_hint": 0,
+      "selected_cut_id": null,
+      "solver_action": "unguided_search"
+    }
+  ],
+  "projection_success_rate": 0.6,
+  "proposal_class_count": 6,
+  "proposal_class_names": [
+    "valid",
+    "near-valid",
+    "invalid-repairable",
+    "invalid-unrepairable",
+    "misleading-neural",
+    "no proposal"
+  ],
+  "readiness_blockers": [],
+  "repairable_class_benefited": true,
+  "reproducibility_checksum": "a32259595687b11ce0253cf2056a306884243525fd14a95a688dd8f0ffe9d6b7",
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5358.solver_projection_cut_bridge.v488",
+  "search_delta_vs_no_hint": 2,
+  "solver_authoritative": true,
+  "solver_projection_ready": true,
+  "source_fixtures": {
+    "kan_cut_available": true,
+    "qstr_ready": true,
+    "selected_cell_id": "kan_unit_0_piece_3_counterexample_cell",
+    "selected_cut_id": "cut_forbid_kan_unit_0_piece_3",
+    "source_artifacts": [
+      "results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json",
+      "results/experiment_5346_kan_ising_counterexample_constraint_bridge_v487.json"
+    ]
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5358",
+    "SCENARIO-VERIFY-5358"
+  ],
+  "status": {
+    "principle": "Lets capstone distinguish clean projection from blocked fixture use.",
+    "value": "solver_projection_ready"
+  },
+  "tests_run": {
+    "principle": "Lists deterministic solver/projection tests.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5358_solver_projection_cut_bridge_v488.py -q",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5358_solver_projection_cut_bridge_v488.py --cov=python/carnot/experiment_5358_solver_projection_cut_bridge_v488.py --cov-report=term-missing --cov-fail-under=100 -q",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "unsafe_false_accepts": 0
+}
