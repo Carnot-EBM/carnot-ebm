@@ -1,0 +1,287 @@
+{
+  "anytime_certificate_gate_ready": true,
+  "candidate_policies": [
+    {
+      "decision_mode": "context_lifecycle",
+      "is_control": false,
+      "lifecycle_actions": [
+        "create",
+        "revise",
+        "fold",
+        "mask",
+        "archive",
+        "retrieve",
+        "commit",
+        "rollback"
+      ],
+      "policy_id": "context_lifecycle_certificate_update",
+      "preliminary_promoted_then_invalidated": false
+    },
+    {
+      "decision_mode": "unsafe_pass_through",
+      "is_control": false,
+      "lifecycle_actions": [
+        "create",
+        "revise",
+        "fold",
+        "mask",
+        "archive",
+        "retrieve",
+        "commit",
+        "rollback"
+      ],
+      "policy_id": "unsafe_accept_all_lifecycle_actions",
+      "preliminary_promoted_then_invalidated": false
+    },
+    {
+      "decision_mode": "thin_context_lifecycle",
+      "is_control": false,
+      "lifecycle_actions": [
+        "create",
+        "revise",
+        "fold"
+      ],
+      "policy_id": "thin_evidence_context_lifecycle",
+      "preliminary_promoted_then_invalidated": false
+    },
+    {
+      "decision_mode": "no_op_shuffled_control",
+      "is_control": true,
+      "lifecycle_actions": [
+        "rollback",
+        "commit",
+        "retrieve",
+        "archive",
+        "mask",
+        "fold",
+        "revise",
+        "create"
+      ],
+      "policy_id": "no_op_shuffled_control",
+      "preliminary_promoted_then_invalidated": false
+    },
+    {
+      "decision_mode": "later_invalidated_fast_path",
+      "is_control": false,
+      "lifecycle_actions": [
+        "create",
+        "revise",
+        "fold",
+        "mask",
+        "archive",
+        "commit",
+        "rollback"
+      ],
+      "policy_id": "retrieval_fast_path_later_invalidated",
+      "preliminary_promoted_then_invalidated": true
+    }
+  ],
+  "candidate_policy_count": 5,
+  "certificate_rows": [
+    {
+      "anytime_bound": 0.0,
+      "baseline_quality": 0.8125,
+      "certified_delta": 0.1875,
+      "decision": "promote",
+      "decision_mode": "context_lifecycle",
+      "evidence_count": 16,
+      "final_quality": 1.0,
+      "is_control": false,
+      "model_weights_mutated": false,
+      "observed_delta": 0.1875,
+      "policy_id": "context_lifecycle_certificate_update",
+      "preliminary_decision": null,
+      "reasons": [
+        "certificate_cleared"
+      ],
+      "rollback_event": false,
+      "unsafe_accepts": 0
+    },
+    {
+      "anytime_bound": 0.0,
+      "baseline_quality": 0.8125,
+      "certified_delta": -0.3125,
+      "decision": "reject",
+      "decision_mode": "unsafe_pass_through",
+      "evidence_count": 16,
+      "final_quality": 0.5,
+      "is_control": false,
+      "model_weights_mutated": false,
+      "observed_delta": -0.3125,
+      "policy_id": "unsafe_accept_all_lifecycle_actions",
+      "preliminary_decision": null,
+      "reasons": [
+        "unsafe_accepts"
+      ],
+      "rollback_event": true,
+      "unsafe_accepts": 8
+    },
+    {
+      "anytime_bound": 0.5625,
+      "baseline_quality": 0.8125,
+      "certified_delta": -0.375,
+      "decision": "defer",
+      "decision_mode": "thin_context_lifecycle",
+      "evidence_count": 7,
+      "final_quality": 1.0,
+      "is_control": false,
+      "model_weights_mutated": false,
+      "observed_delta": 0.1875,
+      "policy_id": "thin_evidence_context_lifecycle",
+      "preliminary_decision": null,
+      "reasons": [
+        "insufficient_evidence"
+      ],
+      "rollback_event": false,
+      "unsafe_accepts": 0
+    },
+    {
+      "anytime_bound": 0.0,
+      "baseline_quality": 0.8125,
+      "certified_delta": 0.0,
+      "decision": "reject",
+      "decision_mode": "no_op_shuffled_control",
+      "evidence_count": 16,
+      "final_quality": 0.8125,
+      "is_control": true,
+      "model_weights_mutated": false,
+      "observed_delta": 0.0,
+      "policy_id": "no_op_shuffled_control",
+      "preliminary_decision": null,
+      "reasons": [
+        "control_policy_not_promotable"
+      ],
+      "rollback_event": false,
+      "unsafe_accepts": 0
+    },
+    {
+      "anytime_bound": 0.0,
+      "baseline_quality": 0.8125,
+      "certified_delta": 0.0625,
+      "decision": "reject",
+      "decision_mode": "later_invalidated_fast_path",
+      "evidence_count": 16,
+      "final_quality": 0.875,
+      "is_control": false,
+      "model_weights_mutated": false,
+      "observed_delta": 0.0625,
+      "policy_id": "retrieval_fast_path_later_invalidated",
+      "preliminary_decision": "promote",
+      "reasons": [
+        "later_invalidated_promotion",
+        "unsafe_accepts"
+      ],
+      "rollback_event": true,
+      "unsafe_accepts": 2
+    }
+  ],
+  "continuous_self_learning_target": true,
+  "decisions_reproducible": true,
+  "experiment": "experiment_5330_sea_anytime_certificate_gate_v486",
+  "experiment_id": {
+    "principle": "Identifies the exact Exp5330 certificate-gate artifact so downstream self-learning cannot confuse policy promotion with model-weight updates.",
+    "value": 5330
+  },
+  "field_principles": {
+    "anytime_certificate_gate_ready": "Bare gate true only when promotion decisions are reproducible, no unsafe policy is promoted, no-op controls are cleared, rollback is recorded, tests are recorded, and no model weights mutate.",
+    "candidate_policy_count": "Bare count of candidate lifecycle policy updates evaluated by the certificate.",
+    "continuous_self_learning_target": "Bare gate showing the certificate governs continuous self-learning policy promotion rather than static reporting.",
+    "experiment_id": "Identifies the exact Exp5330 certificate-gate artifact so downstream self-learning cannot confuse policy promotion with model-weight updates.",
+    "honest_verdict": "Terminal Exp5330 verdict; starts with complete: or blocked_ and states whether reproducible policy promotion avoided unsafe accepts and model-weight mutation.",
+    "inference_substrate": "Declares deterministic anytime certificate evaluation over fixture rows with no live LLM, API judge, fine-tuning, adapter update, or foundation-weight mutation.",
+    "milestone": "Binds the anytime certificate gate to milestone v486 where context lifecycle policy promotion is the frozen-model SEA target.",
+    "no_op_control_delta": "Bare numeric best improvement delta achieved by the no-op/shuffled control; candidates must clear this delta before any promotion can be reported as improvement.",
+    "no_weight_mutation": "Bare gate confirming the experiment promotes only deterministic lifecycle policy choices and never mutates model weights or adapters.",
+    "policy_deferrals": "Bare count of candidates deferred because bounded evidence was insufficient for safe promotion or rejection.",
+    "policy_promotions": "Bare count of candidates accepted for promotion by the certificate gate.",
+    "policy_rejections": "Bare count of candidates rejected by the certificate gate.",
+    "rollback_events": "Bare count of rejected or later-invalidated promotions that recorded rollback behavior.",
+    "status": "Reports whether candidate policy promotion completed under certificate, no-op-control, rollback, and frozen-model gates.",
+    "tests_run": "Records the exact verification commands used to establish that the certificate module and artifact are stable.",
+    "unsafe_promotions": "Bare count of promoted candidates that accept unsafe fixture rows; value 0 is required for readiness."
+  },
+  "fixture_gate": {
+    "action_counts_present": true,
+    "all_passed": true,
+    "context_lifecycle_fixture_ready": true,
+    "failed_gates": [],
+    "lifecycle_rows_present": true,
+    "no_weight_mutation": true,
+    "source_honest_verdict": "complete: deterministic context-object lifecycle fixture ready for Exp5329 and Exp5330; safe actions commit, unsafe actions reject, rollback succeeds at 1.0, and no model weights mutate"
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp5330 verdict; starts with complete: or blocked_ and states whether reproducible policy promotion avoided unsafe accepts and model-weight mutation.",
+    "value": "complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic anytime certificate evaluation over fixture rows with no live LLM, API judge, fine-tuning, adapter update, or foundation-weight mutation.",
+    "value": "deterministic_anytime_certificate_gate"
+  },
+  "methodology_note": "The anytime certificate is bounded over the fixed Exp5328 fixture. It is a deterministic policy-promotion gate, not a statistical claim about model learning and not a model-weight update.",
+  "milestone": {
+    "principle": "Binds the anytime certificate gate to milestone v486 where context lifecycle policy promotion is the frozen-model SEA target.",
+    "value": "v486"
+  },
+  "no_op_control_delta": 0.0,
+  "no_weight_mutation": true,
+  "policy_deferrals": 1,
+  "policy_promotions": 1,
+  "policy_rejections": 3,
+  "random_seed": 5330,
+  "reproducibility_checksum": "sha256:0e16eab56073431432c8c98505e73013efaa260d33603e8b21de7cf37bd51309",
+  "rollback_events": 2,
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5330.sea_anytime_certificate_gate.v486",
+  "source_artifact_checksums": {
+    "exp5328": "sha256:966445a7a0828e0603e146f0ad5b51813725e5c29915ea09d7bca50ca78bae36",
+    "exp5328_module": "sha256:f6db3d29f426ac6be679f3e4d6888bc6728111a0b1de0be36dacaa203976547c",
+    "exp5329": "sha256:a57579c8174c0091df870ccf36da2b3b4fa4744a71ff5774d06ae1eae2fd9e62",
+    "exp5329_module": "sha256:f4884c1d2dd2fff961b3e61f7a1b2b40d3eb1e73262ee60fba9ac2073a5b3cc0",
+    "module": "sha256:57e6deb56344f501c4d8fc6d2a714a8cfea1ff9799b18cc277dc6ab405e7519e",
+    "spec": "sha256:54567b2ab5dc8ec05334c0ab5754a7a7e4fb0b170c5b2aea6375246da10a68ba"
+  },
+  "source_artifacts": [
+    "results/experiment_5328_context_object_lifecycle_self_learning_v486.json",
+    "results/experiment_5329_memory_context_policy_rollout_v486.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5330",
+    "SCENARIO-LEARN-5330-PROMOTE",
+    "SCENARIO-LEARN-5330-REJECT",
+    "SCENARIO-LEARN-5330-DEFER",
+    "SCENARIO-LEARN-5330-NOOP",
+    "SCENARIO-LEARN-5330-ROLLBACK"
+  ],
+  "status": {
+    "principle": "Reports whether candidate policy promotion completed under certificate, no-op-control, rollback, and frozen-model gates.",
+    "value": "anytime_certificate_gate_ready"
+  },
+  "tests_run": {
+    "principle": "Records the exact verification commands used to establish that the certificate module and artifact are stable.",
+    "value": [
+      {
+        "command": "PYTHONFAULTHANDLER=1 .venv/bin/python -m coverage run --include='*/python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py' -m pytest -o addopts='' -n 0 tests/python/test_experiment_5330_sea_anytime_certificate_gate_v486.py -q && .venv/bin/python -m coverage report --include='*/python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py' --fail-under=100",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "unsafe_promotions": 0,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_update": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_context_lifecycle_policy"
+    ]
+  }
+}
