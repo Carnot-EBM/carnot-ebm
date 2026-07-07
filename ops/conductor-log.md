@@ -10435,3 +10435,4 @@ web search: Semantic Schola |
 | 2026-07-07 00:53 UTC | Exp 5326: Gated SOTA paraphrase and rewrite smoke  | OK | cache hit: 87 passed, 1 warning in 13.11s |
 | 2026-07-07 01:06 UTC | Exp 5327: SMT hint protocol corrigendum and clean  | OK | 87 passed, 1 warning in 12.41s |
 | 2026-07-07 01:22 UTC | Exp 5328: Continuous self-learning context-object  | OK | 91 passed, 1 warning in 11.24s |
+| 2026-07-07 01:42 UTC | Exp 5329: Gated memory/context lifecycle policy ro | OK | 89 passed, 1 warning in 10.46s |
