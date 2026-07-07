@@ -97,6 +97,92 @@ modify `research-roadmap.yaml`.
 |---|---|---|
 | REQ-REPORT-5335 | Implemented (`python/carnot/experiment_5335_archive_486_activate_487.py`, `results/experiment_5335_archive_486_activate_487.json`) | Implemented (`tests/python/test_experiment_5335_archive_486_activate_487.py`) |
 
+### REQ-REPORT-5349: Archive .487 And Record .488 Activation Preconditions
+
+The Exp 5349 workflow SHALL read `results/experiment_5348_capstone_v487.json`,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`research-roadmap-next.yaml` when present, `research-roadmap.yaml`, and
+`scripts/research_conductor.py`. It SHALL write
+`results/experiment_5349_archive_487_activate_488.json`, SHALL NOT modify
+`research-roadmap.yaml`, SHALL NOT modify `scripts/research_conductor.py`, and
+SHALL declare `inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL summarize only what the `.487` capstone artifact actually
+proves: local SOTA runtime is clean without a quality claim; structured output
+protocol and bounded SOTA quality are not decision-grade; utility memory and
+bounded compressor fixtures are ready; scaled self-learning and internal
+token-probability energy are not clean; QSTR, solver guidance, and KAN
+constraint-bridge components are ready only as bounded deterministic/explicit
+cut evidence; and hardware remains continuity/workload-receipt evidence with
+no speedup claim. It SHALL NOT strengthen blocked, flagged, bounded, missing,
+no-speedup, or no-headline-quality evidence into stronger readiness claims.
+
+The workflow SHALL confirm
+`openspec/change-proposals/research-roadmap-vNEXT.md` exists and names milestone
+`2026.07.488`. It SHALL also confirm `research-roadmap-next.yaml` exists and
+names milestone `2026.07.488`. If the next-roadmap file is absent or names a
+different milestone, the workflow SHALL write a terminal `blocked_<reason>`
+artifact that records `roadmap_next_present=false` or the observed mismatch and
+SHALL NOT repair the condition by editing `research-roadmap.yaml`.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `archived_milestone`, `activated_milestone`,
+`v487_capstone_verdict`, `cited_upstream_artifacts`, and
+`preconditions_checked`. It SHALL include bare booleans
+`roadmap_next_present`, `milestone_doc_present`, `active_roadmap_modified`, and
+`conductor_modified`, with the latter two set to false for this workflow. It
+SHOULD also include a `.487` capstone truth summary, failed preconditions,
+source context checksums, deterministic checksum, and spec refs so downstream
+reconciliation can audit the transition without rerunning experiments.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Prevents cross-milestone evidence laundering."
+- `status`: principle "Lets the conductor distinguish completed, blocked, and partial work."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous reconciliation."
+- `inference_substrate`: principle "This is aggregation from upstream artifacts, not fresh inference."
+- `archived_milestone`: principle "Records the source milestone being closed."
+- `activated_milestone`: principle "Records the destination milestone being staged."
+- `v487_capstone_verdict`: principle "Carries forward the actual capstone truth."
+- `roadmap_next_present`: principle "Bare boolean guard against activation without a pre-staged roadmap."
+- `milestone_doc_present`: principle "Bare boolean guard against roadmap/doc drift."
+- `active_roadmap_modified`: principle "Bare boolean must remain false because activation is conductor-owned."
+- `conductor_modified`: principle "Bare boolean must remain false by operator instruction."
+- `cited_upstream_artifacts`: principle "Makes the transition auditable without re-running experiments."
+- `preconditions_checked`: principle "Records which files/resources existed before writing the artifact."
+
+#### SCENARIO-REPORT-5349: Present .488 Roadmap-Next Records Complete Transition Preconditions
+
+**Given** the `.487` capstone artifact is readable and terminal
+**And** `openspec/change-proposals/research-roadmap-vNEXT.md` names
+`2026.07.488`
+**And** `research-roadmap-next.yaml` exists and names `2026.07.488`
+**When** the Exp 5349 workflow runs
+**Then** it writes the transition artifact, declares
+`aggregation_from_upstream_artifacts`, summarizes only `.487` capstone truth,
+sets `roadmap_next_present=true`, sets `milestone_doc_present=true`, keeps
+`active_roadmap_modified=false`, keeps `conductor_modified=false`, and does not
+edit `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-5349-BLOCKED-NEXT-ROADMAP: Missing Or Mismatched Next Queue Fails Closed
+
+**Given** the `.487` capstone artifact and `.488` milestone document are
+readable
+**And** `research-roadmap-next.yaml` is missing or does not name milestone
+`2026.07.488`
+**When** the Exp 5349 workflow runs
+**Then** it writes a terminal blocked artifact, records the missing or
+mismatched next-roadmap precondition, keeps `active_roadmap_modified=false`,
+keeps `conductor_modified=false`, and does not modify `research-roadmap.yaml`.
+
+## Implementation Status (REQ-REPORT-5349)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5349 | Implemented (`python/carnot/experiment_5349_archive_487_activate_488.py`, `results/experiment_5349_archive_487_activate_488.json`) | Implemented (`tests/python/test_experiment_5349_archive_487_activate_488.py`) |
+
 ### REQ-REPORT-5336: V487 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5336 workflow SHALL perform an execution-time 2025-2026 source-delta
