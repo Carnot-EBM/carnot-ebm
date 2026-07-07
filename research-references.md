@@ -27829,3 +27829,20 @@ Planner sweep for milestone `.489` checked arXiv, OpenReview, HuggingFace Papers
 - `.489` should include the required ARC live-path level-up slot and hardware continuity receipt, but no duplicate ARC solve, host block-device KV260 evidence, TSU/Kona claim, or hardware speedup claim.
 
 <!-- V489-PLANNER-REFRESH-2026-07-07-END -->
+
+
+### V489 Execution Refresh - 2026-07-07
+
+Execution-time sweep after the `.489` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, Logical Intelligence public pages, and local duplicate history. The findings below were absent from the V489 planner block and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **LLGuidance: Low-level Guidance for Super-fast Structured Outputs** (https://github.com/guidance-ai/llguidance): Use the llama.cpp llguidance integration as the concrete grammar-budget probe for Exp5365: record whether the local build has -DLLAMA_LLGUIDANCE=ON, compile JSON/Lark reachability fixtures, and measure mask-computation budget before Exp5366 live GGUF generation.
+- **LongMemEval-V2: Evaluating Long-Term Agent Memory Toward Experienced Colleagues** (https://arxiv.org/abs/2605.12493): For Exp5368/Exp5369, add compact-evidence memory checks covering static state recall, dynamic state tracking, workflow knowledge, environment gotchas, and premise awareness; record evidence-token/latency budget separately from memory accuracy.
+
+### Execution impact
+- **Plan impact:** No active `.489` roadmap edit is required. The deltas sharpen Exp5365 grammar-budget preflight and Exp5368/Exp5369 budget-curated memory scale-up by adding concrete local receipt fields.
+- **Duplicates suppressed:** G-RRM, Budget-Curated Memory, ALMA, CFGzip, TruncProof, FLaG, thermodynamic-signature, and million-p-bit sources were already covered by the planner refresh and are not re-added.
+- **Retired scope:** No retired scope was reopened. External text scorers, CPU-only GGUF offload reruns, TSU/Kona execution claims, and retired ARC candidate-exploration-signal reruns remain closed.
+- **Watch-only context:** EDV/PREPING memory papers, SE-RRM/ARC solver repositories, Extropic writing, and Logical Intelligence public pages were checked but not promoted because they either broaden the bounded .489 tasks or lack reproducible local execution evidence.
+
+<!-- V489-EXECUTION-REFRESH-2026-07-07-END -->
