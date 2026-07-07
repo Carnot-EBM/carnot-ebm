@@ -28120,3 +28120,92 @@ hardware guidance claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5344 | Planned (`python/carnot/experiment_5344_solver_guidance_overwrite_telemetry_v487.py`, `results/experiment_5344_solver_guidance_overwrite_telemetry_v487.json`) | Planned (`tests/python/test_experiment_5344_solver_guidance_overwrite_telemetry_v487.py`) |
+
+### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
+
+The repository SHALL provide Exp 5345 at
+`python/carnot/experiment_5345_tokenprob_energy_corrigendum_v487.py` and
+write `results/experiment_5345_tokenprob_energy_corrigendum_v487.json`
+without training a scorer, reranking generated text, making a headline
+hallucination claim, reopening retired Phase D external generated-text scorer
+scope, or modifying `scripts/research_conductor.py`. Exp 5345 SHALL re-emit a
+clean token-probability internal receipt only when the Exp 5337 runtime
+corrigendum is clean, the selected local GGUF model/backend is still available,
+GPU visibility is current, the Exp 5331 token-probability receipt path and
+schema are readable, and the live token-probability probe itself records real
+methodology duration of at least 60 seconds.
+
+The mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. `selected_model_spec` SHALL bind the
+diagnostic to the clean Exp 5337 selected model, expected to be the local
+`unsloth/gemma-4-31B-it-GGUF` dense GGUF receipt when available. If preconditions
+block before any live generation, the artifact SHALL declare
+`aggregation_from_upstream_artifacts`, explain why no live generation occurred,
+and SHALL set `internal_energy_corrigendum_clean=false`. If live generation is
+attempted, the artifact SHALL declare `live_llm_inference` and SHALL set
+`internal_energy_corrigendum_clean=true` only when `methodology_duration_s >= 60`
+and every receipt/schema/no-retired-scope gate is clean.
+
+The diagnostic SHALL use only controlled synthetic arithmetic/factual prompts
+whose correct and perturbed target tokens are known before inference. The runner
+SHALL compute only transparent token-probability features exposed by the backend,
+such as target logprob, target probability, negative-logprob token energy, and
+energy margins between correct and perturbed known targets. Raw generated text
+MAY be checksummed as receipt evidence but SHALL NOT be scored for answer
+quality, used to train a model, used to rerank candidates, or promoted as a
+hallucination detector. If token probabilities, target top-logprob rows, timing,
+schema evidence, or duration are insufficient, the runner SHALL write a terminal
+`blocked_` artifact naming the missing feature fields.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`selected_model_spec`, `token_energy_feature_rows`, and `tests_run`, plus bare
+boolean `token_probability_available`, bare boolean `logits_available`, bare
+boolean `attention_available`, bare integer `diagnostic_case_count`, bare
+numeric `methodology_duration_s`, bare boolean
+`external_text_scorer_reopened=false`, bare boolean `no_quality_claim=true`, and
+bare boolean `internal_energy_corrigendum_clean`. `honest_verdict.value` SHALL
+start with `complete:` when the clean live token-probability energy diagnostic
+exists, or `blocked_` when any precondition, feature, duration, schema, or scope
+gate fails.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5345 token-probability energy corrigendum receipt."
+- `milestone`: principle "Milestone accountability for the V487 token-probability energy corrigendum gate."
+- `status`: principle "Machine-readable terminal state for downstream internal-energy corrigendum consumers."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether a clean token-probability energy diagnostic exists without reopening retired scorer scope."
+- `inference_substrate`: principle "Declares whether Exp5345 ran live_llm_inference or only aggregation blocked before generation so duration checks match the actual substrate."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF model IDs so the diagnostic cannot silently substitute a legacy, tiny, API, or non-GGUF model."
+- `selected_model_spec`: principle "Binds the token-probability receipt to the clean Exp5337 selected local GGUF model/backend."
+- `token_energy_feature_rows`: principle "Records only transparent token-probability-derived energies for controlled known-target cases, not generated-text quality scores."
+- `tests_run`: principle "Commands run to validate the Exp5345 module, artifact schema, new-code coverage, repository tests, and applicable e2e checks."
+
+### SCENARIO-VERIFY-5345: Clean Live Token-Probability Diagnostic Or Precise Block
+
+Given Exp 5337 is a complete clean `live_llm_inference` runtime receipt with
+`methodology_duration_s >= 60`, Exp 5331 saved a readable token-probability tiny
+receipt and schema, the selected model/backend and GPU remain visible, and the
+live backend returns top-logprob rows for the known correct and perturbed target
+tokens, when Exp 5345 runs, then it records live token-probability timing with
+`methodology_duration_s >= 60`, writes token energy feature rows for the
+controlled arithmetic/factual cases, keeps
+`external_text_scorer_reopened=false`, keeps `no_quality_claim=true`, declares
+`live_llm_inference`, and sets `internal_energy_corrigendum_clean=true`.
+
+If Exp 5337 is not clean, GPU visibility or the selected model/backend is absent,
+the Exp 5331 token-probability receipt/schema is missing or contradictory, the
+live duration is below 60 seconds, the backend exposes raw text but not token
+probabilities, target top-logprob rows are missing, tests are not recorded, or
+retired external scorer scope is reopened, then the same runner writes a
+terminal `blocked_` artifact with exact missing feature names,
+`internal_energy_corrigendum_clean=false`, no quality claim, and no scorer,
+reranker, or text judge.
+
+## Implementation Status (REQ-VERIFY-5345)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5345 | Planned (`python/carnot/experiment_5345_tokenprob_energy_corrigendum_v487.py`, `results/experiment_5345_tokenprob_energy_corrigendum_v487.json`) | Planned (`tests/python/test_experiment_5345_tokenprob_energy_corrigendum_v487.py`) |
