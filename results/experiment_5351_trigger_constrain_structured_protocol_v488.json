@@ -1,0 +1,719 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Confirms every LLM task includes the mandated local SOTA GGUF model ids.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.000122,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.0003,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 8e-05,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "duration_s": 90.59195,
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": "experiment_5351_trigger_constrain_structured_protocol_v488"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Confirms every LLM task includes the mandated local SOTA GGUF model ids.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous downstream quality gates.",
+    "inference_substrate": "Expected value is live_llm_inference when a GGUF model generated outputs.",
+    "milestone": "Prevents `.487` flagged protocol evidence from being reused as `.488` evidence.",
+    "preconditions_checked": "Records GPU/backend/model checks before inference.",
+    "protocol_variants": "Shows which trigger/constrain mechanisms were tested.",
+    "selected_model_spec": "Identifies which mandated model actually supplied the receipt.",
+    "status": "Lets gates distinguish completed calibration from blocked runtime.",
+    "tests_run": "Lists local checks that validated parser/schema behavior."
+  },
+  "final_json_extraction_rate": 0.75,
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous downstream quality gates.",
+    "value": "blocked_structured_protocol_clean_false"
+  },
+  "inference_substrate": {
+    "principle": "Expected value is live_llm_inference when a GGUF model generated outputs.",
+    "value": "live_llm_inference"
+  },
+  "methodology_duration_s": 90.28661,
+  "milestone": {
+    "principle": "Prevents `.487` flagged protocol evidence from being reused as `.488` evidence.",
+    "value": "2026.07.488"
+  },
+  "no_autotokenizer_used": true,
+  "no_quality_claim": true,
+  "parse_success_rate": 0.75,
+  "preconditions_checked": {
+    "principle": "Records GPU/backend/model checks before inference.",
+    "value": {
+      "backend_cuda_evidence": false,
+      "blocked_preconditions": [],
+      "exp5337_runtime_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
+      "exp5337_runtime_receipt_clean": true,
+      "free_vram_mb": 48240,
+      "gpu_visible": true,
+      "llama_cpp_command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+      ],
+      "llama_cpp_version": {
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+          "--version"
+        ],
+        "duration_s": 0.174533,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64\n",
+        "stdout": ""
+      },
+      "model_file_presence": {
+        "flagship_dense": true,
+        "flagship_moe": true,
+        "middle_moe": true
+      },
+      "no_autotokenizer_used": true,
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.031584,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n"
+      },
+      "raw_nvidia_smi": {
+        "command": [
+          "nvidia-smi"
+        ],
+        "duration_s": 0.094466,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "Tue Jul  7 08:02:16 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   46C    P8             17W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   47C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
+      },
+      "selected_model_file_present": true
+    }
+  },
+  "prompt_count": 4,
+  "protocol_variants": {
+    "principle": "Shows which trigger/constrain mechanisms were tested.",
+    "value": [
+      {
+        "command_lines": [
+          [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "-p",
+            "Protocol calibration only. Use id battery_probe. The Aster-9 battery ran 47 minutes under the amber-load test. Return answer 47 minutes.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+            "-n",
+            "768",
+            "-c",
+            "512",
+            "-b",
+            "512",
+            "-ub",
+            "128",
+            "-ngl",
+            "all",
+            "-sm",
+            "layer",
+            "--temp",
+            "0",
+            "--seed",
+            "5352",
+            "--no-display-prompt",
+            "--simple-io",
+            "-st",
+            "--perf"
+          ],
+          [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "-p",
+            "Protocol calibration only. Use id code_probe. Fixture B-12 has code word orange. Return answer orange.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+            "-n",
+            "768",
+            "-c",
+            "512",
+            "-b",
+            "512",
+            "-ub",
+            "128",
+            "-ngl",
+            "all",
+            "-sm",
+            "layer",
+            "--temp",
+            "0",
+            "--seed",
+            "5353",
+            "--no-display-prompt",
+            "--simple-io",
+            "-st",
+            "--perf"
+          ],
+          [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "-p",
+            "Protocol calibration only. Use id route_probe. In route card R-3, the approved direction is north. Return answer north.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+            "-n",
+            "768",
+            "-c",
+            "512",
+            "-b",
+            "512",
+            "-ub",
+            "128",
+            "-ngl",
+            "all",
+            "-sm",
+            "layer",
+            "--temp",
+            "0",
+            "--seed",
+            "5354",
+            "--no-display-prompt",
+            "--simple-io",
+            "-st",
+            "--perf"
+          ],
+          [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "-m",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "-p",
+            "Protocol calibration only. Use id count_probe. The fixture contains three validated rows. Return answer 3.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+            "-n",
+            "768",
+            "-c",
+            "512",
+            "-b",
+            "512",
+            "-ub",
+            "128",
+            "-ngl",
+            "all",
+            "-sm",
+            "layer",
+            "--temp",
+            "0",
+            "--seed",
+            "5355",
+            "--no-display-prompt",
+            "--simple-io",
+            "-st",
+            "--perf"
+          ]
+        ],
+        "end_sentinel": "END_FINAL_JSON",
+        "final_json_extraction_rate": 0.75,
+        "final_json_sentinel": "FINAL_JSON:",
+        "final_only_extraction": true,
+        "free_reasoning_trigger_token": "FREE_REASONING_TRIGGER",
+        "generation_receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Use id battery_probe. The Aster-9 battery ran 47 minutes under the amber-load test. Return answer 47 minutes.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "768",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5352",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "generated_token_count": 236,
+            "output_checksum": "a883ba372b18498d",
+            "prompt_id": "battery_duration_probe",
+            "returncode": 0,
+            "run_index": 1,
+            "score": {
+              "accepted_for_protocol": false,
+              "completed": true,
+              "final_json_extraction_success": false,
+              "parse_success": false,
+              "parsed_keys": [],
+              "parsed_object": null,
+              "prompt_id": "battery_duration_probe",
+              "schema_errors": [
+                "payload must be object"
+              ],
+              "schema_success": false,
+              "thinking_text_outside_final": false,
+              "unsafe_false_accept": false,
+              "variant_id": "trigger_then_final_json_sentinel_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": "egenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Use id battery_probe. The Aster-9 battery ran 47 minutes under the amber-load test. Return answer 47 minutes.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FIN ... (truncated)\n\n[Start thinking]\n*   Protocol: Calibration only.\n    *   ID: `battery_probe`.\n    *   Input: \"The Aster-9 battery ran 47 minutes under the amber-load test.\"\n    *   Required Answer: \"47 minutes\".\n\n    *   ID: `battery_probe`\n    *   Answer: `47 minutes`\n    *   Facts: `The Aster-9 battery ran 47 minutes under the amber-load test.`\n\n    *   The user wants a JSON object with `id`, `answer`, and `facts`.\n    *   `id`: \"battery_probe\"\n    *   `answer`: \"47 minutes\"\n    *   `facts`: [\"The Aster-9 battery ran 47 minutes under the amber-load test.\"] (or a string, but usually facts are a list or a string). Let's use a string or list based on common patterns. The prompt says \"facts\", plural, but only one fact is provided.\n\n    *   `id`: \"battery_probe\"\n    *   `answer`: \"47 minutes\"\n    *   `facts`: \"The Aster-9 battery ran 47 minutes under the amber-load test.\"\n[End thinking]\n\nFREE_REASONING_TRIGGER: The user wants a specific JSON output based on the provided protocol calibration.\n- ID: battery_probe\n- Input: \"The Aster-9 battery ran 47 minutes under the amber-load test.\"\n- Required Answer: \"47 minutes\"\n- Facts: \"The Aster-9 battery ran 47 minutes under the amber-load test.\"\n\nFINAL_JSON: {\"id\": \"battery_probe\", \"answer\": \"47 minutes\", \"\n\n[ Prompt: 728.2 t/s | Generation: 38.7 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "trigger_then_final_json_sentinel_v1",
+            "wall_clock_s": 27.214550079312176
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Use id code_probe. Fixture B-12 has code word orange. Return answer orange.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "768",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5353",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "generated_token_count": 138,
+            "output_checksum": "456355b7514ff82b",
+            "prompt_id": "code_word_probe",
+            "returncode": 0,
+            "run_index": 2,
+            "score": {
+              "accepted_for_protocol": false,
+              "completed": true,
+              "final_json_extraction_success": true,
+              "parse_success": true,
+              "parsed_keys": [
+                "answer",
+                "facts",
+                "id"
+              ],
+              "parsed_object": {
+                "answer": "orange",
+                "facts": "Fixture B-12 has code word orange.",
+                "id": "code_probe"
+              },
+              "prompt_id": "code_word_probe",
+              "schema_errors": [
+                "facts must be array"
+              ],
+              "schema_success": false,
+              "thinking_text_outside_final": true,
+              "unsafe_false_accept": false,
+              "variant_id": "trigger_then_final_json_sentinel_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": "\nLoading model... \n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Use id code_probe. Fixture B-12 has code word orange. Return answer orange.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON\n\n[Start thinking]\n*   Protocol: Calibration only.\n    *   ID code: `code_probe`.\n    *   Fixture B-12 code word: `orange`.\n    *   Required answer: `orange`.\n\n    *   ID: `code_probe`\n    *   Answer: `orange`\n    *   Facts: Fixture B-12 has code word orange.\n[End thinking]\n\nFREE_REASONING_TRIGGER: The user has provided a specific protocol for calibration.\n- ID code: code_probe\n- Fixture B-12 code word: orange\n- Required answer: orange\n\nThe final output must be a JSON object containing the id, answer, and facts.\n\nFINAL_JSON: {\"id\": \"code_probe\", \"answer\": \"orange\", \"facts\": \"Fixture B-12 has code word orange.\"} END_FINAL_JSON\n\n[ Prompt: 612.8 t/s | Generation: 38.6 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "trigger_then_final_json_sentinel_v1",
+            "wall_clock_s": 20.47764439601451
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Use id route_probe. In route card R-3, the approved direction is north. Return answer north.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "768",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5354",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "generated_token_count": 140,
+            "output_checksum": "b0ddd55b1a7d45a1",
+            "prompt_id": "route_probe",
+            "returncode": 0,
+            "run_index": 3,
+            "score": {
+              "accepted_for_protocol": true,
+              "completed": true,
+              "final_json_extraction_success": true,
+              "parse_success": true,
+              "parsed_keys": [
+                "answer",
+                "facts",
+                "id"
+              ],
+              "parsed_object": {
+                "answer": "north",
+                "facts": [
+                  "In route card R-3, the approved direction is north."
+                ],
+                "id": "route_probe"
+              },
+              "prompt_id": "route_probe",
+              "schema_errors": [],
+              "schema_success": true,
+              "thinking_text_outside_final": true,
+              "unsafe_false_accept": false,
+              "variant_id": "trigger_then_final_json_sentinel_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": "\nLoading model... \n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Use id route_probe. In route card R-3, the approved direction is north. Return answer north.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON\n\n[Start thinking]\n*   Protocol: calibration only.\n    *   ID: `route_probe`.\n    *   Context: In route card R-3, the approved direction is north.\n    *   Required Answer: north.\n\n    *   ID: `route_probe`\n    *   Answer: `north`\n    *   Facts: `[\"In route card R-3, the approved direction is north.\"]`\n[End thinking]\n\nFREE_REASONING_TRIGGER: The user has provided a calibration protocol.\nThe ID is `route_probe`.\nThe context states that in route card R-3, the approved direction is north.\nThe required answer is \"north\".\n\nFINAL_JSON: {\"id\": \"route_probe\", \"answer\": \"north\", \"facts\": [\"In route card R-3, the approved direction is north.\"]} END_FINAL_JSON\n\n[ Prompt: 770.0 t/s | Generation: 38.8 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "trigger_then_final_json_sentinel_v1",
+            "wall_clock_s": 20.69687553308904
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Use id count_probe. The fixture contains three validated rows. Return answer 3.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "768",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5355",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "generated_token_count": 153,
+            "output_checksum": "dd33597938480490",
+            "prompt_id": "count_probe",
+            "returncode": 0,
+            "run_index": 4,
+            "score": {
+              "accepted_for_protocol": false,
+              "completed": true,
+              "final_json_extraction_success": true,
+              "parse_success": true,
+              "parsed_keys": [
+                "answer",
+                "facts",
+                "id"
+              ],
+              "parsed_object": {
+                "answer": 3,
+                "facts": [
+                  "The fixture contains three validated rows."
+                ],
+                "id": "count_probe"
+              },
+              "prompt_id": "count_probe",
+              "schema_errors": [
+                "answer must be string"
+              ],
+              "schema_success": false,
+              "thinking_text_outside_final": true,
+              "unsafe_false_accept": false,
+              "variant_id": "trigger_then_final_json_sentinel_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": "\nLoading model... \n\n\n\u2584\u2584 \u2584\u2584\n\u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Use id count_probe. The fixture contains three validated rows. Return answer 3.\nFREE_REASONING_TRIGGER: reason if needed before the final object.\nThink freely after FREE_REASONING_TRIGGER. When ready, write exactly one final JSON object after FINAL_JSON:. The final object must contain only id, answer, and facts. Do not put analysis or thinking text inside JSON values. End with END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON\n\n[Start thinking]\n*   Protocol: calibration only.\n    *   ID: `count_probe`.\n    *   Fixture: Three validated rows.\n    *   Required Answer: 3.\n\n    *   The prompt explicitly states: \"Return answer 3.\"\n    *   The ID is `count_probe`.\n    *   The fixture contains three validated rows.\n\n    *   id: `count_probe`\n    *   answer: 3\n    *   facts: [\"The fixture contains three validated rows.\"]\n[End thinking]\n\nFREE_REASONING_TRIGGER: The user has provided a calibration protocol with a specific ID (`count_probe`) and a clear instruction to return the answer 3, based on the fact that the fixture contains three validated rows.\n\nFINAL_JSON: {\n  \"id\": \"count_probe\",\n  \"answer\": 3,\n  \"facts\": [\n    \"The fixture contains three validated rows.\"\n  ]\n} END_FINAL_JSON\n\n[ Prompt: 608.7 t/s | Generation: 38.6 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "trigger_then_final_json_sentinel_v1",
+            "wall_clock_s": 21.89753987826407
+          }
+        ],
+        "methodology_duration_s": 90.28661,
+        "n_predict": 768,
+        "parse_success_rate": 0.75,
+        "parser_side_strips_llama_cpp_banners": true,
+        "prompt_count": 4,
+        "prompt_results": [
+          {
+            "accepted_for_protocol": false,
+            "completed": true,
+            "final_json_extraction_success": false,
+            "parse_success": false,
+            "parsed_keys": [],
+            "parsed_object": null,
+            "prompt_id": "battery_duration_probe",
+            "schema_errors": [
+              "payload must be object"
+            ],
+            "schema_success": false,
+            "thinking_text_outside_final": false,
+            "unsafe_false_accept": false,
+            "variant_id": "trigger_then_final_json_sentinel_v1"
+          },
+          {
+            "accepted_for_protocol": false,
+            "completed": true,
+            "final_json_extraction_success": true,
+            "parse_success": true,
+            "parsed_keys": [
+              "answer",
+              "facts",
+              "id"
+            ],
+            "parsed_object": {
+              "answer": "orange",
+              "facts": "Fixture B-12 has code word orange.",
+              "id": "code_probe"
+            },
+            "prompt_id": "code_word_probe",
+            "schema_errors": [
+              "facts must be array"
+            ],
+            "schema_success": false,
+            "thinking_text_outside_final": true,
+            "unsafe_false_accept": false,
+            "variant_id": "trigger_then_final_json_sentinel_v1"
+          },
+          {
+            "accepted_for_protocol": true,
+            "completed": true,
+            "final_json_extraction_success": true,
+            "parse_success": true,
+            "parsed_keys": [
+              "answer",
+              "facts",
+              "id"
+            ],
+            "parsed_object": {
+              "answer": "north",
+              "facts": [
+                "In route card R-3, the approved direction is north."
+              ],
+              "id": "route_probe"
+            },
+            "prompt_id": "route_probe",
+            "schema_errors": [],
+            "schema_success": true,
+            "thinking_text_outside_final": true,
+            "unsafe_false_accept": false,
+            "variant_id": "trigger_then_final_json_sentinel_v1"
+          },
+          {
+            "accepted_for_protocol": false,
+            "completed": true,
+            "final_json_extraction_success": true,
+            "parse_success": true,
+            "parsed_keys": [
+              "answer",
+              "facts",
+              "id"
+            ],
+            "parsed_object": {
+              "answer": 3,
+              "facts": [
+                "The fixture contains three validated rows."
+              ],
+              "id": "count_probe"
+            },
+            "prompt_id": "count_probe",
+            "schema_errors": [
+              "answer must be string"
+            ],
+            "schema_success": false,
+            "thinking_text_outside_final": true,
+            "unsafe_false_accept": false,
+            "variant_id": "trigger_then_final_json_sentinel_v1"
+          }
+        ],
+        "ready": false,
+        "schema_success_rate": 0.25,
+        "stop_sequences_requested": [
+          "END_FINAL_JSON"
+        ],
+        "stop_sequences_supported": false,
+        "strict_schema_validation": true,
+        "token_counts": {
+          "generated_token_count": 667,
+          "n_predict_per_prompt": 768
+        },
+        "unsafe_false_accepts": 0,
+        "variant_id": "trigger_then_final_json_sentinel_v1"
+      }
+    ]
+  },
+  "random_seed": 5351,
+  "reproducibility_checksum": "58a37d5d5c851f07",
+  "schema": "carnot.experiment_5351.trigger_constrain_structured_protocol.v488",
+  "schema_success_rate": 0.25,
+  "selected_model_spec": {
+    "principle": "Identifies which mandated model actually supplied the receipt.",
+    "value": {
+      "autotokenizer_used": false,
+      "blocked_preconditions": [],
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+      "cached": true,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "metadata_model_resolution_s": 0.000122,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    }
+  },
+  "selected_variant_id": "trigger_then_final_json_sentinel_v1",
+  "spec_refs": [
+    "REQ-VERIFY-5351",
+    "SCENARIO-VERIFY-5351"
+  ],
+  "status": {
+    "principle": "Lets gates distinguish completed calibration from blocked runtime.",
+    "value": "blocked"
+  },
+  "structured_protocol_clean": false,
+  "tests_run": {
+    "principle": "Lists local checks that validated parser/schema behavior.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest -o addopts=\"\" tests/python/test_experiment_5351_trigger_constrain_structured_protocol_v488.py -q",
+        "outcome": "passed: 5 passed"
+      },
+      {
+        "command": "COVERAGE_FILE=/tmp/carnot_exp5351.coverage .venv/bin/coverage run --include=\"*/python/carnot/experiment_5351_trigger_constrain_structured_protocol_v488.py\" -m pytest -o addopts=\"\" tests/python/test_experiment_5351_trigger_constrain_structured_protocol_v488.py -q && COVERAGE_FILE=/tmp/carnot_exp5351.coverage .venv/bin/coverage report --include=\"*/python/carnot/experiment_5351_trigger_constrain_structured_protocol_v488.py\" --fail-under=100 --show-missing",
+        "outcome": "passed: 100% new-code coverage"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "failed/interrupted: unrelated suite failures plus native xdist worker crashes in Z3/JAX paths before interrupt; 5351 focused tests passed separately"
+      }
+    ]
+  },
+  "unsafe_false_accepts": 0
+}
