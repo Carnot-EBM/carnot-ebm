@@ -10440,3 +10440,4 @@ web search: Semantic Schola |
 | 2026-07-07 02:28 UTC | Exp 5331: Gated local internal-signal and energy r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-07 02:41 UTC | Exp 5332: KAN counterexample localization and fals | OK | 88 passed, 1 warning in 9.08s |
 | 2026-07-07 02:57 UTC | Exp 5333: Hardware continuity receipts with no spe | OK | 88 passed, 1 warning in 10.70s |
+| 2026-07-07 03:12 UTC | Exp 5334: Capstone for 2026.07.486 runtime, rewrit | OK | 87 passed, 1 warning in 8.19s |
