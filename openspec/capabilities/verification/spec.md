@@ -27876,3 +27876,85 @@ keeps `no_quality_claim=true`, and does not modify
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
+
+### REQ-VERIFY-5339: Gated SOTA Claim Rewrite Panel V487
+
+The repository SHALL provide Exp 5339 at
+`python/carnot/experiment_5339_gated_sota_claim_rewrite_panel_v487.py`
+and write
+`results/experiment_5339_gated_sota_claim_rewrite_panel_v487.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL run a
+bounded local SOTA claim/rewrite panel using the calibrated Exp 5338
+structured-output protocol and deterministic Exp 5310 / Exp 5325 fixtures. It
+SHALL score only fixture-grounded claim-label preservation, rewrite
+acceptability, citation/provenance preservation, and unsafe-rewrite rejection.
+It SHALL NOT emit a headline benchmark or broad model-quality claim.
+
+Step 0 SHALL confirm Exp 5338 reports `structured_output_protocol_ready=true`,
+the selected mandated model and backend command are present, GPU visibility is
+recorded, local model cache files are present, and the deterministic claim and
+rewrite fixtures are available before panel generation. The mandated
+`MODEL_SPECS` SHALL be exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The panel SHALL contain 8-12 fixed prompts covering safe paraphrase, required
+rewrite / missing required change, invalid-premise preservation, fabricated
+premise/citation, numeric contradiction, and overbroad rewrite. The runner SHALL
+extract final-sentinel JSON with the calibrated protocol, record parse failures
+separately from semantic failures, and run deterministic fixture checks only.
+`sota_claim_rewrite_panel_ready` SHALL be true only if generation, parsing, and
+fixture scoring complete for every panel prompt. `headline_quality_claim` SHALL
+always be bare `false` regardless of measured rates.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, and `tests_run`, plus bare
+integer `prompt_count`, bare numeric `parse_success_rate`, bare numeric
+`paraphrase_label_preservation_rate`, bare numeric
+`rewrite_acceptability_rate`, bare numeric `citation_preservation_rate`, bare
+integer `unsafe_false_accepts`, bare boolean `headline_quality_claim=false`, and
+bare boolean `sota_claim_rewrite_panel_ready`.
+`inference_substrate.value` SHALL be `live_llm_inference`.
+`honest_verdict.value` SHALL start with `complete:` when the panel is generated,
+parsed, and fixture-scored end-to-end, or `blocked_` when preconditions,
+generation, parsing, or scoring fail.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5339 gated local SOTA claim/rewrite panel."
+- `milestone`: principle "Milestone accountability for the V487 gated SOTA claim/rewrite panel."
+- `status`: principle "Machine-readable terminal state for downstream claim/rewrite panel gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether generation, parsing, and deterministic scoring completed."
+- `inference_substrate`: principle "Declares live_llm_inference because Exp5339 runs the selected local SOTA GGUF rather than replaying cached text."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF model IDs so the panel cannot silently substitute a legacy or smaller model."
+- `preconditions_checked`: principle "Records Exp5338 protocol readiness, selected backend/model, GPU visibility, model cache, and deterministic fixture availability before panel generation."
+- `selected_model_spec`: principle "Binds panel outputs to the stable mandated model selected by the calibrated protocol path."
+- `tests_run`: principle "Commands run to validate the Exp5339 module, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5339: Calibrated Protocol Scores Fixture-Grounded Panel
+
+Given Exp 5338 reports a ready structured-output protocol, the selected
+mandated model/backend command is available, GPU visibility and cache files are
+recorded, and deterministic claim/rewrite fixtures are available, when Exp 5339
+runs its fixed 8-12 prompt panel, then it uses the calibrated final-sentinel
+protocol, records generation receipts, separates parse failures from semantic
+fixture failures, computes claim-label preservation, rewrite acceptability,
+citation/provenance preservation, and unsafe false accepts, writes the required
+`live_llm_inference` artifact, keeps `headline_quality_claim=false`, and sets
+`sota_claim_rewrite_panel_ready=true` only when every prompt generated, parsed,
+and scored.
+
+If Exp 5338 is missing or not ready, the selected backend command or selected
+model is missing, GPU visibility is absent, model cache files are unavailable,
+fixtures are unavailable, generation fails, any final JSON parse fails, or a
+fixture row cannot be scored, then the same runner writes a terminal `blocked_`
+artifact with exact blockers, keeps `sota_claim_rewrite_panel_ready=false`,
+keeps `headline_quality_claim=false`, and does not modify
+`scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5339)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5339 | Planned (`python/carnot/experiment_5339_gated_sota_claim_rewrite_panel_v487.py`, `results/experiment_5339_gated_sota_claim_rewrite_panel_v487.json`) | Planned (`tests/python/test_experiment_5339_gated_sota_claim_rewrite_panel_v487.py`) |
