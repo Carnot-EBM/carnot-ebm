@@ -938,6 +938,51 @@ Required field principles:
 - `reproducibility_checksum`: principle "content-addressed hash catches silent harness/corpus drift."
 - `preconditions_checked`: principle "records CUDA, Qwen cache, offline arcade, Go-Explore import, and `/props` verification."
 
+### REQ-ARC-FCP-5360: Live-Reachable Color-Blob Salience Level-Up Attempt
+
+Experiment 5360 SHALL write
+`results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json`
+after a registry-prechecked ARC live-path attempt. The workflow SHALL audit the
+live frame-diff/perception path for self-consistent but wrong reads, expose a
+classical single-color connected-component/color-blob salience tier through the
+live `E3AgentPolicy`/`StepwiseExplorer` candidate ordering path, and run a
+bounded first-contact next-level attempt on a rotated shallow target such as
+`re86`, `sb26`, `bp35`, or `lf52`.
+
+The result artifact SHALL include `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate=live_arc_agent_policy`,
+`solve_provenance=live_agent_self_discovery`,
+`registry_precheck_completed`, `target_game`, `target_level_before`,
+`perception_audit_completed`, `salience_policy_live_reachable`,
+`offline_reproduced`, `reproduced_levels`, `new_level_banked`,
+`actions_to_first_levelup`, `perception_error_classes`, `outer_loop_re_used`,
+`registry_updated`, and `tests_run`. A credited level-up SHALL require
+`offline_reproduced=true`, `reproduced_levels>=1`, and
+`outer_loop_re_used=false`; otherwise the artifact SHALL report an honest null
+with exact blockers.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Satisfies the per-milestone ARC standing floor for `.488`."
+- `status`: principle "Lets capstone distinguish banked level, honest null, or blocked live path."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous ARC progress."
+- `inference_substrate`: principle "Expected value is live_arc_agent_policy for credited progress."
+- `solve_provenance`: principle "Must be live_agent_self_discovery for a credited ARC solve path."
+- `registry_precheck_completed`: principle "Bare boolean prevents duplicate re-solving of already banked levels."
+- `target_game`: principle "Names the rotated target game for coverage auditing."
+- `target_level_before`: principle "Bare integer records pre-attempt reproduced depth."
+- `perception_audit_completed`: principle "Bare boolean proves the known-issues priority was exercised."
+- `salience_policy_live_reachable`: principle "Bare boolean proves the live agent can reach the new mechanism."
+- `offline_reproduced`: principle "Bare boolean is the ARC level-up lint and registry gate."
+- `reproduced_levels`: principle "Bare integer records new live-path level count; success gate includes reproduced_levels>=1."
+- `new_level_banked`: principle "Bare boolean separates real progress from diagnostics."
+- `actions_to_first_levelup`: principle "Bare integer or null measures action efficiency."
+- `perception_error_classes`: principle "Lists observed perception failure modes."
+- `outer_loop_re_used`: principle "Bare boolean must be false for credited live-path progress."
+- `registry_updated`: principle "Bare boolean records whether solve registry changed."
+- `tests_run`: principle "Lists live-path, registry, and salience-policy checks."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1261,3 +1306,25 @@ Given a fixture artifact with `inference_substrate=live_llm_inference`, a GGUF
 marker, and `duration_s < 60`
 When adversarial verification processes the artifact
 Then it emits a critical `DURATION_TOO_SHORT` flag.
+
+### SCENARIO-ARC-FCP-5360: Color-Blob Salience Is Live-Reachable
+
+Given a rendered ARC frame with single-color connected components that include
+a button-like salient-color blob, a larger dull blob, and a status-bar-colored
+blob
+When the color-blob salience prior scores live `rich_action_candidates`
+Then the button-like blob is ranked ahead of the dull and status-bar blobs.
+
+Given the submitted `E3AgentPolicy` constructor builds its `StepwiseExplorer`
+without an explicit action prior
+When the live policy is instantiated
+Then the explorer receives the classical color-blob salience prior and the
+submitted config declares the mechanism live-reachable.
+
+Given the registry records `re86`, `sb26`, `bp35`, and `lf52` at shallow depth
+2
+When experiment 5360 performs its registry precheck
+Then it selects the next unbanked target level rather than duplicating an
+already reproduced L1/L2 solve, runs the perception audit, and writes an
+artifact whose credited progress fields only pass when offline reproduction
+banks at least one new live-path level.

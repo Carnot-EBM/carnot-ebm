@@ -1,0 +1,140 @@
+{
+  "actions_to_first_levelup": null,
+  "attempt": {
+    "actions_taken": 35,
+    "actions_to_first_levelup": null,
+    "blockers": [
+      "bounded_budget_no_levelup"
+    ],
+    "budget": 36,
+    "max_level_reached": 0,
+    "offline_reproduced": false,
+    "reproduced_levels": 0,
+    "solution_labels": [],
+    "target_game": "re86",
+    "target_level": 3,
+    "target_level_before": 2
+  },
+  "duration_s": 1.1126844328828156,
+  "experiment": "experiment_5360_arc_perception_salience_levelup_attempt_v488",
+  "experiment_id": 5360,
+  "field_principles": {
+    "actions_to_first_levelup": {
+      "principle": "Bare integer or null measures action efficiency."
+    },
+    "experiment_id": {
+      "principle": "Stable id ties the artifact to this roadmap task."
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous ARC progress."
+    },
+    "inference_substrate": {
+      "principle": "Expected value is live_arc_agent_policy for credited progress."
+    },
+    "milestone": {
+      "principle": "Satisfies the per-milestone ARC standing floor for `.488`."
+    },
+    "new_level_banked": {
+      "principle": "Bare boolean separates real progress from diagnostics."
+    },
+    "offline_reproduced": {
+      "principle": "Bare boolean is the ARC level-up lint and registry gate."
+    },
+    "outer_loop_re_used": {
+      "principle": "Bare boolean must be false for credited live-path progress."
+    },
+    "perception_audit_completed": {
+      "principle": "Bare boolean proves the known-issues priority was exercised."
+    },
+    "perception_error_classes": {
+      "principle": "Lists observed perception failure modes."
+    },
+    "registry_precheck_completed": {
+      "principle": "Bare boolean prevents duplicate re-solving of already banked levels."
+    },
+    "registry_updated": {
+      "principle": "Bare boolean records whether solve registry changed."
+    },
+    "reproduced_levels": {
+      "principle": "Bare integer records new live-path level count; success gate includes reproduced_levels>=1."
+    },
+    "salience_policy_live_reachable": {
+      "principle": "Bare boolean proves the live agent can reach the new mechanism."
+    },
+    "solve_provenance": {
+      "principle": "Must be live_agent_self_discovery for a credited ARC solve path."
+    },
+    "status": {
+      "principle": "Lets capstone distinguish banked level, honest null, or blocked live path."
+    },
+    "target_game": {
+      "principle": "Names the rotated target game for coverage auditing."
+    },
+    "target_level_before": {
+      "principle": "Bare integer records pre-attempt reproduced depth."
+    },
+    "tests_run": {
+      "principle": "Lists live-path, registry, and salience-policy checks."
+    }
+  },
+  "honest_verdict": "complete: no_new_level_banked_re86_residual_bounded_budget_no_levelup",
+  "inference_substrate": "live_arc_agent_policy",
+  "milestone": "2026.07.488",
+  "new_level_banked": false,
+  "offline_reproduced": false,
+  "outer_loop_re_used": false,
+  "perception_audit_completed": true,
+  "perception_error_classes": [
+    "flat_salience_large_blob_or_status_bar_can_precede_button_like_blob",
+    "frame_diff_score_not_ground_truth_validated_before_probe",
+    "status_bar_color_requires_salience_deprioritization"
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "offline_arcade_available": true,
+    "outer_loop_re_used": false,
+    "registry_present": true,
+    "spec_has_req_5360": true
+  },
+  "registry_precheck_completed": true,
+  "registry_total_after": 69,
+  "registry_total_before": 69,
+  "registry_updated": false,
+  "reproduced_levels": 0,
+  "result_path": "results/experiment_5360_arc_perception_salience_levelup_attempt_v488.json",
+  "salience_policy_live_reachable": true,
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5360",
+    "SCENARIO-ARC-FCP-5360"
+  ],
+  "status": "honest_null",
+  "target_game": "re86",
+  "target_level": 3,
+  "target_level_before": 2,
+  "target_selection": {
+    "candidate_audit": [
+      {
+        "game": "re86",
+        "levels_reproduced": 2,
+        "status": "selected_next_unbanked_depth",
+        "target_level": 3
+      }
+    ],
+    "duplicate_target_avoided": false,
+    "registry_precheck_completed": true,
+    "target_game": "re86",
+    "target_level": 3,
+    "target_level_before": 2
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5360_arc_perception_salience_levelup_attempt_v488.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_experiment_5360_arc_perception_salience_levelup_attempt_v488.py -q -o addopts= --cov=python/carnot/agentic/arc_color_blob_salience.py --cov-report=term-missing --cov-fail-under=100",
+    ".venv/bin/ruff check python/carnot/agentic/arc_color_blob_salience.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5360_arc_perception_salience_levelup_attempt_v488.py tests/python/test_experiment_5360_arc_perception_salience_levelup_attempt_v488.py tests/python/test_arc_submitted_agent_parity.py",
+    ".venv/bin/ruff format --check python/carnot/agentic/arc_color_blob_salience.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5360_arc_perception_salience_levelup_attempt_v488.py tests/python/test_experiment_5360_arc_perception_salience_levelup_attempt_v488.py tests/python/test_arc_submitted_agent_parity.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml --min 1",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
