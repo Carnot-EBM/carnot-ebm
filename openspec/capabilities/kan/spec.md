@@ -1039,6 +1039,63 @@ counts, envelope gaps, MILP solve times, certificate success, false-property
 rejection, and required tests while keeping `bounded_fixture_only=true` and
 avoiding any claim of general KAN verification improvement.
 
+## REQ-KAN-5332: V486 Counterexample Localization Diagnostic For Bounded KAN Abstractions
+
+The KAN verification tier SHALL add an Exp 5332 CPU-only bounded diagnostic
+over the existing Exp 5277 KAN PWA/MILP fixture and Exp 5316 optimal-budget
+outputs. The experiment MUST reuse the committed abstraction/certificate
+fixtures where possible, define deterministic false-property perturbations for
+the tiny three-unit fixture, and measure whether the abstraction localizes the
+violating unit and PWA region for each expected counterexample while preserving
+paired true-property certificates. The diagnostic MUST NOT modify
+`scripts/research_conductor.py`.
+
+The diagnostic MUST record solve time, piece budget, envelope gap,
+false-property rejection, true-property preservation, and counterexample
+localization accuracy. It MUST report `certificate_success_delta` separately
+from localization so a tighter or more localized diagnostic is not presented as
+a broad certificate-success improvement. The artifact MUST state directly that
+the result is limited to the deterministic fixture and MUST NOT claim broad KAN
+verification success, trained-network soundness, hardware execution, hardware
+speedup, or live LLM inference.
+
+The deliverable MUST be written to
+`results/experiment_5332_kan_counterexample_localization_v486.json` with the
+required fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `fixture_count`, `false_property_rejection_rate`,
+`true_property_preservation_rate`, `counterexample_localization_accuracy`,
+`envelope_gap_delta`, `certificate_success_delta`,
+`counterexample_localization_ready`, `no_broad_certificate_claim`, and
+`tests_run`. The fields `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate`, and `tests_run` MUST be
+principle-wrapped with `value` and `principle`; `fixture_count`,
+`false_property_rejection_rate`, `true_property_preservation_rate`,
+`counterexample_localization_accuracy`, `envelope_gap_delta`,
+`certificate_success_delta`, `counterexample_localization_ready`, and
+`no_broad_certificate_claim` MUST be bare scalar values.
+`inference_substrate.value` MUST be
+`deterministic_kan_abstraction_diagnostic`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_`. `no_broad_certificate_claim` MUST be true.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5332 identifier for the bounded KAN counterexample-localization diagnostic.
+- `milestone`: Milestone accountability for the V486 bounded counterexample-localization task.
+- `status`: Terminal status for downstream readers; complete means all deterministic false-property perturbations were evaluated.
+- `honest_verdict`: Terminal Exp 5332 verdict; starts with complete: or blocked_ and states whether the bounded diagnostic localized counterexamples without broad certificate claims.
+- `inference_substrate`: Declares the deterministic KAN abstraction diagnostic substrate with no LLM inference, hardware execution, or broad KAN verification claim.
+- `tests_run`: Commands run to validate the localization diagnostic, artifact schema, new-code coverage, and repository tests.
+
+### SCENARIO-KAN-5332: False-Property Counterexamples Localize To Expected Units And Regions
+
+Given the committed Exp 5277 bounded KAN PWA/MILP fixture and the Exp 5316
+optimal-budget allocation,
+When Exp 5332 applies one deterministic false-property perturbation per KAN
+unit and runs the bounded certificate diagnostic,
+Then the artifact reports the expected and predicted violating unit/region,
+solve time, piece budget, envelope gap, false-property rejection rate,
+true-property preservation rate, localization accuracy, envelope-gap delta, and
+neutral certificate-success delta while keeping `no_broad_certificate_claim=true`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1085,6 +1142,7 @@ avoiding any claim of general KAN verification improvement.
 | REQ-KAN-5291 | Planned | Exp 5291 target: V483 low-order, medium-order, and higher-order certificate curriculum over the existing Exp 5277 KAN PWA/MILP and Exp 5278 factor-boundary fixtures, with false-property rejection, slack, solve-time, piece-count, and ordering telemetry. |
 | REQ-KAN-5304 | Planned | Exp 5304 target: V484 dynamic abstraction refinement and spot-check diagnostic over Exp 5277/5278/5291 bounded fixtures, with symbolic validation, method comparison, and bounded-scope-only claims. |
 | REQ-KAN-5316 | Planned | Exp 5316 target: V485 bounded DP/knapsack-style PWA piece allocation under global error and piece budgets, compared with static and `.484` dynamic abstraction without broad KAN claims. |
+| REQ-KAN-5332 | Planned | Exp 5332 target: V486 bounded false-property sensitivity and counterexample-localization diagnostic over Exp 5277/5316 fixtures, with per-unit perturbations and no broad certificate claim. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
