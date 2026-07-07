@@ -914,5 +914,18 @@
     "status": "completed",
     "wall_clock_s": 82.932366
   },
-  "unsafe_false_accepts": 0
+  "unsafe_false_accepts": 0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "duration_s=82.932366 and methodology_duration_s=82.932366 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
