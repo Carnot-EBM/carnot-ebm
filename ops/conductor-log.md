@@ -10483,3 +10483,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 16:18 UTC | Archive .488 outcomes and stage .489 execution con | OK | 87 passed, 1 warning in 8.06s |
 | 2026-07-07 16:33 UTC | Execution-time SOTA source delta for .489 | OK | 116 passed, 1 warning in 10.94s |
 | 2026-07-07 17:48 UTC | Grammar-budgeted structured-output protocol prefli | OK | 87 passed, 1 warning in 8.21s |
+| 2026-07-07 18:08 UTC | Gated live grammar-budgeted SOTA structured protoc | OK | 87 passed, 1 warning in 14.81s |
