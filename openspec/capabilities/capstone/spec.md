@@ -1373,3 +1373,85 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5348 | Planned (`python/carnot/experiment_5348_capstone_v487.py`, `results/experiment_5348_capstone_v487.json`) | Planned (`tests/python/test_experiment_5348_capstone_v487.py`) |
+
+- REQ-CAPSTONE-5362: The `.488` milestone-close capstone aggregator
+  `exp5362-capstone-v488` in `python/carnot/experiment_5362_capstone_v488.py`
+  SHALL write `results/experiment_5362_capstone_v488.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every available
+  `.488` upstream artifact from Exp5349 through Exp5361, record the requested
+  but absent Exp5352 non-gated deliverable path explicitly, record blocked,
+  flagged, missing, malformed, conductor-gate-skipped, ARC-null, and
+  hardware-subgate-blocked outcomes explicitly, build a gate table for source
+  delta, structured protocol, constraint-tax panel, token-probability feature audit,
+  carry diagnostic, dependency provenance, memory-tool drift,
+  self-learning scale-up, solver projection, p-bit schedules, ARC level-up, and
+  hardware continuity, and synthesize the milestone without promoting bounded
+  diagnostics, flagged token-probability rows, blocked carry evidence,
+  gate-skipped constraint-tax work, honest-null ARC work, or hardware continuity
+  receipts into headline quality, internal-energy, ARC-progress, or
+  hardware-speedup claims.
+- SCENARIO-CAPSTONE-5362: The artifact
+  `results/experiment_5362_capstone_v488.json` must emit top-level
+  principle-annotated fields `experiment_id`, `milestone`, `status`,
+  `honest_verdict`, `inference_substrate`, `artifacts_read`,
+  `missing_blocked_flagged_or_skipped_artifacts`, `gate_table`,
+  `next_milestone_recommendation`, `cited_upstream_artifacts`, and
+  `tests_run`. The artifact must also emit bare booleans
+  `structured_protocol_clean`, `constraint_tax_panel_ready`,
+  `tokenprob_feature_rows_ready`, `carry_token_energy_signal_ready`,
+  `dependency_provenance_ready`, `memory_tool_drift_ready`,
+  `self_learning_scaleup_ready`, `solver_projection_ready`,
+  `pbit_schedule_signal_ready`, `arc_new_level_banked`,
+  `hardware_speedup_claim=false`, `active_roadmap_modified=false`, and
+  `conductor_modified=false`. The default `.488` aggregation must summarize
+  Exp5350 as a complete source delta with one actionable finding and no
+  executable plan change, Exp5351 as a blocked structured protocol with
+  `structured_protocol_clean=false`, Exp5352 as conductor-pre-gate skipped and
+  therefore unusable for constraint-tax metrics, Exp5353 as token-probability
+  feature rows present but adversarially flagged and not an energy claim,
+  Exp5354 as blocked and flagged carry-token evidence with no broad
+  hallucination claim, Exp5355 through Exp5357 as clean deterministic
+  dependency-safe self-learning evidence with no weight mutation, Exp5358 as a
+  solver-authoritative projection/cut bridge, Exp5359 as a CPU-only p-bit
+  schedule diagnostic with `hardware_speedup_claim=false`, Exp5360 as an
+  honest-null ARC live attempt with `arc_new_level_banked=false`, and Exp5361 as
+  PolarFire workload continuity with KV260 and GateMate still blocked and no
+  speedup claim. The terminal `honest_verdict.value` must start with
+  `complete:` or `blocked_` and state the true `.488` closure without
+  laundering blocked, flagged, skipped, bounded, missing, honest-null, or
+  no-speedup evidence.
+- SCENARIO-CAPSTONE-5362-BLOCKED-MISSING-INPUT: If any expected actual Exp5349
+  through Exp5361 upstream artifact is absent or unreadable, the workflow must
+  still write `results/experiment_5362_capstone_v488.json` with
+  `honest_verdict.value` starting with `blocked_missing_required`, record the
+  missing or malformed artifact in
+  `missing_blocked_flagged_or_skipped_artifacts.value`, keep
+  `hardware_speedup_claim=false`, keep `active_roadmap_modified=false`, and keep
+  `conductor_modified=false`. The historical requested path
+  `results/experiment_5352_constraint_tax_tool_action_panel_v488.json` is
+  recorded as a missing requested alias when the actual
+  `results/experiment_5352_gated_constraint_tax_tool_action_panel_v488.json`
+  gate-skip artifact is present, but that alias alone must not block the
+  capstone synthesis.
+- SCENARIO-CAPSTONE-5362-FIELD-PRINCIPLES: The required field principles are:
+  `experiment_id` = "Stable id ties the artifact to this roadmap task.",
+  `milestone` = "Prevents `.488` synthesis from being confused with `.487`.",
+  `status` = "Lets conductor classify the capstone itself.",
+  `honest_verdict` = "Terminal prefix `complete:` or `blocked_` prevents
+  ambiguous milestone outcome.", `inference_substrate` = "Expected value is
+  aggregation_from_upstream_artifacts.", `artifacts_read` = "Lists which result
+  files actually informed the synthesis.",
+  `missing_blocked_flagged_or_skipped_artifacts` = "Prevents skipped work from
+  being treated as success.", `gate_table` = "One row per .488 decision gate
+  with source artifacts, readiness truth, claim boundary, and imported evidence.",
+  `next_milestone_recommendation` = "Names the next decisive gate without
+  overclaiming.", `cited_upstream_artifacts` = "Makes the synthesis auditable.",
+  and `tests_run` = "Lists local validation for artifact/docs edits."
+
+## Implementation Status (REQ-CAPSTONE-5362)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5362 | Planned (`python/carnot/experiment_5362_capstone_v488.py`, `results/experiment_5362_capstone_v488.json`) | Planned (`tests/python/test_experiment_5362_capstone_v488.py`) |
