@@ -18498,3 +18498,146 @@ recoverable cases.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5356 | Planned (`python/carnot/experiment_5356_memory_tool_drift_harness_v488.py`, `results/experiment_5356_memory_tool_drift_harness_v488.json`) | Planned (`tests/python/test_experiment_5356_memory_tool_drift_harness_v488.py`) |
+
+---
+
+## REQ-LEARN-5357: Dependency-Drift Self-Learning Scale-Up v488
+
+Experiment 5357 SHALL run a deterministic multi-session self-learning scale-up
+that combines utility memory, bounded compression, dependency-edge provenance,
+memory-induced drift controls, anytime certificate gates, and rollback without
+mutating model weights. The scale-up SHALL load the checked-in Exp5355
+dependency provenance artifact and Exp5356 memory-tool drift artifact, verify
+their readiness gates, and treat the Exp5342 v487 scale-up only as quarantined
+context that explains the metric-duplication repair. It SHALL NOT reuse Exp5342
+aggregate metrics as terminal scale-up evidence.
+
+Exp5357 records Exp5342 v487 scale-up only as quarantined context.
+
+The deterministic trace panel SHALL contain 4 to 6 multi-session traces. Every
+trace SHALL include context object versions, dependency graph edges, verifier
+and tool decisions, drift injection metadata, execution feedback, hash-chain
+links, and rollback evidence when a rollback is required. The policy comparison
+SHALL evaluate always-full, utility-only, compressor-only, dependency-only,
+drift-guarded, and combined certificate-gated policies over the same trace
+events.
+
+The experiment SHALL report quality, memory hygiene, context efficiency,
+verifier cost, dependency attribution, drift detection, unsafe accepts,
+rollback recovery, and metric-duplication checks as separate fields.
+`self_learning_scaleup_ready` SHALL be true only when upstream gates pass,
+unsafe false accepts are zero, rollback recovery works, no aggregate metric
+duplicates another aggregate metric, the combined policy preserves quality
+versus always-full verification, at least one process metric improves, tests
+are recorded, and no model weights mutate.
+
+The result artifact SHALL be
+`results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json` and
+SHALL include principle-wrapped `experiment_id`, principle-wrapped
+`milestone`, principle-wrapped `status`, principle-wrapped `honest_verdict`
+whose value starts with `complete:` or `blocked_`, principle-wrapped
+`inference_substrate` with
+`value=deterministic_dependency_safe_self_learning`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer
+`multi_session_trace_count`, bare boolean `context_hash_chain_valid`, bare
+numeric `dependency_attribution_rate`, bare numeric `drift_detection_rate`,
+bare numeric `quality_delta_vs_always_full`, bare numeric
+`memory_hygiene_delta`, bare numeric `context_efficiency_delta`, bare numeric
+`verifier_cost_delta`, bare list `duplicated_metric_pairs`, bare integer
+`unsafe_false_accepts`, bare numeric `rollback_recovery_rate`, bare boolean
+`self_learning_scaleup_ready`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Stable id ties the artifact to this roadmap task.
+- `milestone`: Prevents quarantined `.487` scale-up evidence from being reused.
+- `status`: Lets capstone distinguish clean scale-up from gate skip or block.
+- `honest_verdict`: Terminal prefix `complete:` or `blocked_` prevents
+  ambiguous self-learning claims.
+- `inference_substrate`: Expected value is deterministic_dependency_safe_self_learning.
+- `continuous_self_learning_target`: Bare boolean must be true to satisfy the
+  research-program mandate.
+- `no_weight_mutation`: Bare boolean must be true to preserve frozen-model
+  discipline.
+- `multi_session_trace_count`: Bare integer fixes scale-up scope.
+- `context_hash_chain_valid`: Bare boolean proves provenance integrity.
+- `dependency_attribution_rate`: Bare numeric measures whether decisions are
+  tied to supporting context.
+- `drift_detection_rate`: Bare numeric measures memory-induced drift control.
+- `quality_delta_vs_always_full`: Bare numeric ensures process gains do not
+  reduce correctness.
+- `memory_hygiene_delta`: Bare numeric kept distinct from efficiency/cost
+  metrics.
+- `context_efficiency_delta`: Bare numeric kept distinct from hygiene/cost
+  metrics.
+- `verifier_cost_delta`: Bare numeric measures compute savings separately.
+- `duplicated_metric_pairs`: Explicitly catches TAUTOLOGY regressions.
+- `unsafe_false_accepts`: Bare integer blocks unsafe self-learning promotion.
+- `rollback_recovery_rate`: Bare numeric proves bad state can be undone.
+- `self_learning_scaleup_ready`: Bare boolean gates capstone.
+- `tests_run`: Lists deterministic, rollback, and anti-tautology checks.
+
+### REQ-LEARN-5357 Sub-requirements
+
+- REQ-LEARN-5357-1: The source gate SHALL load Exp5355 and Exp5356 artifacts,
+  require `dependency_provenance_ready=true`, `memory_tool_drift_ready=true`,
+  `unsafe_false_accepts == 0`, no duplicated Exp5355 metrics, positive drift
+  readiness, rollback recovery, and no upstream model-weight mutation.
+- REQ-LEARN-5357-2: The trace builder SHALL create 4 to 6 deterministic
+  multi-session traces with dependency graphs, context object versions,
+  verifier/tool decisions, drift injections, execution feedback, rollback
+  events, and hash-chain links.
+- REQ-LEARN-5357-3: The hash-chain validator SHALL recompute every event hash
+  and predecessor link, and `context_hash_chain_valid` SHALL be true only when
+  every recomputed link matches.
+- REQ-LEARN-5357-4: The policy comparison SHALL run always-full,
+  utility-only, compressor-only, dependency-only, drift-guarded, and combined
+  certificate-gated policies over identical trace event ids.
+- REQ-LEARN-5357-5: Dependency attribution and drift detection SHALL be
+  computed from edge-attributed decisions and drift injection rows, not copied
+  from quality, hygiene, efficiency, or verifier-cost aggregates.
+- REQ-LEARN-5357-6: `duplicated_metric_pairs` SHALL compare the aggregate
+  fields `dependency_attribution_rate`, `drift_detection_rate`,
+  `quality_delta_vs_always_full`, `memory_hygiene_delta`,
+  `context_efficiency_delta`, `verifier_cost_delta`, and
+  `rollback_recovery_rate`.
+- REQ-LEARN-5357-7: `self_learning_scaleup_ready` SHALL be true only when
+  upstream gates pass, unsafe false accepts are zero, rollback recovery works,
+  `duplicated_metric_pairs` is empty, quality delta is nonnegative, at least
+  one process metric improves, tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5357-TRACE: Multi-Session Traces Carry Full Provenance
+
+**Given** ready Exp5355 and Exp5356 source artifacts
+**When** Exp5357 builds deterministic multi-session traces
+**Then** 4 to 6 traces are produced
+**And** every trace event contains a context object version, dependency graph,
+verifier/tool decision, drift injection row, execution feedback row, and
+hash-chain link
+**And** rollback events restore clean context for unsafe or stale state.
+
+### SCENARIO-LEARN-5357-POLICY: Combined Policy Preserves Quality and Improves Process
+
+**Given** the same trace events for all policies
+**When** always-full, utility-only, compressor-only, dependency-only,
+drift-guarded, and combined certificate-gated policies are compared
+**Then** the combined policy has zero unsafe false accepts
+**And** `quality_delta_vs_always_full >= 0.0`
+**And** at least one of memory hygiene, context efficiency, or verifier cost
+improves.
+
+### SCENARIO-LEARN-5357-ANTI-TAUTOLOGY: Aggregate Metrics Stay Separate
+
+**Given** Exp5342 duplicated process metrics and is quarantined as context
+**When** Exp5357 computes aggregate metrics
+**Then** dependency attribution, drift detection, quality, memory hygiene,
+context efficiency, verifier cost, and rollback recovery are distinct
+measurements
+**And** `duplicated_metric_pairs` is empty for a ready artifact.
+
+## Implementation Status (Exp 5357)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5357 | Implemented (`python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py`, `results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json`) | Implemented (`tests/python/test_experiment_5357_dependency_drift_self_learning_scaleup_v488.py`) |

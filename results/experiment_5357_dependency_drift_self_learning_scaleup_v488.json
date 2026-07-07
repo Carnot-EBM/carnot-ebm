@@ -1,0 +1,3125 @@
+{
+  "context_efficiency_delta": 0.228549,
+  "context_hash_chain_valid": true,
+  "continuous_self_learning_target": true,
+  "dependency_attribution_rate": 0.9,
+  "drift_detection_rate": 0.8,
+  "duplicated_metric_pairs": [],
+  "excluded_artifacts": [
+    "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
+  ],
+  "experiment": "experiment_5357_dependency_drift_self_learning_scaleup_v488",
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": 5357
+  },
+  "field_principles": {
+    "context_efficiency_delta": "Bare numeric kept distinct from hygiene/cost metrics.",
+    "context_hash_chain_valid": "Bare boolean proves provenance integrity.",
+    "continuous_self_learning_target": "Bare boolean must be true to satisfy the research-program mandate.",
+    "dependency_attribution_rate": "Bare numeric measures whether decisions are tied to supporting context.",
+    "drift_detection_rate": "Bare numeric measures memory-induced drift control.",
+    "duplicated_metric_pairs": "Explicitly catches TAUTOLOGY regressions.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning claims.",
+    "inference_substrate": "Expected value is deterministic_dependency_safe_self_learning.",
+    "memory_hygiene_delta": "Bare numeric kept distinct from efficiency/cost metrics.",
+    "milestone": "Prevents quarantined `.487` scale-up evidence from being reused.",
+    "multi_session_trace_count": "Bare integer fixes scale-up scope.",
+    "no_weight_mutation": "Bare boolean must be true to preserve frozen-model discipline.",
+    "quality_delta_vs_always_full": "Bare numeric ensures process gains do not reduce correctness.",
+    "rollback_recovery_rate": "Bare numeric proves bad state can be undone.",
+    "self_learning_scaleup_ready": "Bare boolean gates capstone.",
+    "status": "Lets capstone distinguish clean scale-up from gate skip or block.",
+    "tests_run": "Lists deterministic, rollback, and anti-tautology checks.",
+    "unsafe_false_accepts": "Bare integer blocks unsafe self-learning promotion.",
+    "verifier_cost_delta": "Bare numeric measures compute savings separately."
+  },
+  "hash_chain": {
+    "checked_event_count": 10,
+    "failure_count": 0,
+    "failures": [],
+    "valid": true
+  },
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning claims.",
+    "value": "complete: dependency-drift self-learning scale-up validated 10 events across 5 traces, preserved always-full quality, kept unsafe false accepts at 0, recovered rollback at 1.0, kept aggregate metrics non-duplicated, improved process metrics, and preserved no model weight mutation"
+  },
+  "inference_substrate": {
+    "principle": "Expected value is deterministic_dependency_safe_self_learning.",
+    "value": "deterministic_dependency_safe_self_learning"
+  },
+  "memory_hygiene_delta": 0.208333,
+  "methodology_note": "Exp5357 uses deterministic checked-in artifacts and replay rows. Exact 0.0/1.0 values are fixture invariants: quality delta is 0.0 because combined matches always-full correctness, and rollback recovery is 1.0 because every injected rollback case has an explicit clean sidecar. These are not live-model performance claims. Exp5342 is recorded only as quarantined duplicate-metric context and contributes no aggregate metric to this artifact.",
+  "metric_duplication_check": {
+    "checked_fields": [
+      "dependency_attribution_rate",
+      "drift_detection_rate",
+      "quality_delta_vs_always_full",
+      "memory_hygiene_delta",
+      "context_efficiency_delta",
+      "verifier_cost_delta",
+      "rollback_recovery_rate"
+    ],
+    "duplicated_metric_pairs": [],
+    "metric_values": {
+      "context_efficiency_delta": 0.228549,
+      "dependency_attribution_rate": 0.9,
+      "drift_detection_rate": 0.8,
+      "memory_hygiene_delta": 0.208333,
+      "quality_delta_vs_always_full": 0.0,
+      "rollback_recovery_rate": 1.0,
+      "verifier_cost_delta": 0.5
+    },
+    "quarantined_v487_pairs": [
+      {
+        "left": "memory_hygiene_delta",
+        "right": "context_efficiency_delta",
+        "value": 0.144762
+      }
+    ]
+  },
+  "metric_reports": {
+    "context_efficiency": {
+      "delta_vs_always_full": 0.228549,
+      "measurement": "useful_tokens / (active_tokens + verifier_cost)"
+    },
+    "dependency_attribution": {
+      "measurement": "decision-attributed dependency graph events",
+      "rate": 0.9
+    },
+    "drift_detection": {
+      "measurement": "detected drift injections over all drift rows",
+      "rate": 0.8
+    },
+    "memory_hygiene": {
+      "delta_vs_always_full": 0.208333,
+      "measurement": "clean_active_tokens / active_tokens"
+    },
+    "quality": {
+      "combined_final_quality": 1.0,
+      "delta_vs_always_full": 0.0
+    },
+    "rollback_recovery": {
+      "rate": 1.0
+    },
+    "unsafe_accepts": {
+      "combined_policy_count": 0
+    },
+    "verifier_cost": {
+      "delta_vs_always_full": 0.5,
+      "measurement": "relative verifier-call reduction"
+    }
+  },
+  "milestone": {
+    "principle": "Prevents quarantined `.487` scale-up evidence from being reused.",
+    "value": "v488"
+  },
+  "multi_session_trace_count": 5,
+  "multi_session_traces": [
+    {
+      "events": [
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": true
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:70e78e49132c48da495fddacfc99f5b909df20c395b5c2863bcc190d9e0050c0",
+            "object_id": "ctx.archive.policy",
+            "payload": "archive policy current safe sourced",
+            "utility_score": 0.9,
+            "version": 2
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t1-e1-retrieve-archive:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.archive.policy:2",
+                "target": "retrieval:t1-e1-retrieve-archive"
+              },
+              {
+                "edge_id": "t1-e1-retrieve-archive:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t1-e1-retrieve-archive",
+                "target": "verifier:certificate_verifier:t1-e1-retrieve-archive"
+              },
+              {
+                "edge_id": "t1-e1-retrieve-archive:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t1-e1-retrieve-archive",
+                "target": "tool:context_replayer:t1-e1-retrieve-archive"
+              },
+              {
+                "edge_id": "t1-e1-retrieve-archive:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:certificate_verifier:t1-e1-retrieve-archive",
+                "target": "outcome:accept:t1-e1-retrieve-archive"
+              },
+              {
+                "edge_id": "t1-e1-retrieve-archive:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_replayer:t1-e1-retrieve-archive",
+                "target": "outcome:accept:t1-e1-retrieve-archive"
+              },
+              {
+                "edge_id": "t1-e1-retrieve-archive:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t1-e1-retrieve-archive",
+                "target": "feedback:t1-e1-retrieve-archive"
+              }
+            ],
+            "nodes": [
+              "context:ctx.archive.policy:2",
+              "retrieval:t1-e1-retrieve-archive",
+              "verifier:certificate_verifier:t1-e1-retrieve-archive",
+              "tool:context_replayer:t1-e1-retrieve-archive",
+              "outcome:accept:t1-e1-retrieve-archive",
+              "feedback:t1-e1-retrieve-archive"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "none",
+            "memory_variant": "clean",
+            "unsafe": false
+          },
+          "event_action": "retrieve",
+          "event_hash": "sha256:99e41cc78c7c1e60da220cecb387f3ce70aadfe6e5695f78cf66800af6ab3ff5",
+          "event_id": "t1-e1-retrieve-archive",
+          "event_index": 1,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t1-e1-retrieve-archive"
+          },
+          "previous_event_hash": "sha256:genesis",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.archive.policy",
+            "restore_payload": "archive policy current safe sourced",
+            "restore_payload_sha256": "sha256:2216bd67adfeb437a311d0d9f3ecdc8f1fe6b7c6992b87685e916e0cdab33a4f",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-01",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:08739440b7bd701de5eb230ca7dc17411ebc98247c8808c49264a54de0148c89",
+          "token_count": 5,
+          "trace_id": "trace-utility-clean",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5355:dep-positive-retrieval"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "clean",
+              "object_id": "ctx.archive.policy",
+              "version": 2
+            },
+            "selected_action": "accept_context_version",
+            "selected_tool": "context_replayer",
+            "selected_verifier": "certificate_verifier"
+          }
+        },
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": false
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:60772525e2ae2eaadd0448878dd922ba64d0a6f5f35a677e5bc292608a948054",
+            "object_id": "ctx.patch.autofix",
+            "payload": "patch receipt tests passed current",
+            "utility_score": 0.9,
+            "version": 3
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t1-e2-commit-patch:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.patch.autofix:3",
+                "target": "retrieval:t1-e2-commit-patch"
+              },
+              {
+                "edge_id": "t1-e2-commit-patch:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t1-e2-commit-patch",
+                "target": "verifier:certificate_verifier:t1-e2-commit-patch"
+              },
+              {
+                "edge_id": "t1-e2-commit-patch:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t1-e2-commit-patch",
+                "target": "tool:context_replayer:t1-e2-commit-patch"
+              },
+              {
+                "edge_id": "t1-e2-commit-patch:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:certificate_verifier:t1-e2-commit-patch",
+                "target": "outcome:accept:t1-e2-commit-patch"
+              },
+              {
+                "edge_id": "t1-e2-commit-patch:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_replayer:t1-e2-commit-patch",
+                "target": "outcome:accept:t1-e2-commit-patch"
+              },
+              {
+                "edge_id": "t1-e2-commit-patch:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t1-e2-commit-patch",
+                "target": "feedback:t1-e2-commit-patch"
+              }
+            ],
+            "nodes": [
+              "context:ctx.patch.autofix:3",
+              "retrieval:t1-e2-commit-patch",
+              "verifier:certificate_verifier:t1-e2-commit-patch",
+              "tool:context_replayer:t1-e2-commit-patch",
+              "outcome:accept:t1-e2-commit-patch",
+              "feedback:t1-e2-commit-patch"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "none",
+            "memory_variant": "clean",
+            "unsafe": false
+          },
+          "event_action": "commit",
+          "event_hash": "sha256:403e79cad871abdb91c4615dc6132f4f8f33f570ef63719c08f864610d38e020",
+          "event_id": "t1-e2-commit-patch",
+          "event_index": 2,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t1-e2-commit-patch"
+          },
+          "previous_event_hash": "sha256:99e41cc78c7c1e60da220cecb387f3ce70aadfe6e5695f78cf66800af6ab3ff5",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.patch.autofix",
+            "restore_payload": "patch receipt tests passed current",
+            "restore_payload_sha256": "sha256:b979f83fac125d7435aa8e257ab351f4ff43a8a91226be484681d78b8526b083",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-01",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:216310d01b1a92bbd0379c24025094a224fa4c4a08a168b36ce445520f9c262e",
+          "token_count": 5,
+          "trace_id": "trace-utility-clean",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5355:dep-poisoned-rollback"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "clean",
+              "object_id": "ctx.patch.autofix",
+              "version": 3
+            },
+            "selected_action": "accept_context_version",
+            "selected_tool": "context_replayer",
+            "selected_verifier": "certificate_verifier"
+          }
+        }
+      ],
+      "session_id": "session-5357-01",
+      "trace_id": "trace-utility-clean"
+    },
+    {
+      "events": [
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "rollback",
+            "requires_verifier": true
+          },
+          "context_object_version": {
+            "compressor_status": "stale",
+            "integrity_hash": "sha256:f800eb5482bc2504bbbf748cef0a371ed19b3077b977fab50c6d74b71f3778de",
+            "object_id": "ctx.runtime.receipt",
+            "payload": "stale runtime receipt from pre v487",
+            "utility_score": 0.72,
+            "version": 0
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t2-e1-stale-runtime:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.runtime.receipt:0",
+                "target": "retrieval:t2-e1-stale-runtime"
+              },
+              {
+                "edge_id": "t2-e1-stale-runtime:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t2-e1-stale-runtime",
+                "target": "verifier:rollback_replay_verifier:t2-e1-stale-runtime"
+              },
+              {
+                "edge_id": "t2-e1-stale-runtime:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t2-e1-stale-runtime",
+                "target": "tool:state_replayer:t2-e1-stale-runtime"
+              },
+              {
+                "edge_id": "t2-e1-stale-runtime:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:rollback_replay_verifier:t2-e1-stale-runtime",
+                "target": "outcome:rollback:t2-e1-stale-runtime"
+              },
+              {
+                "edge_id": "t2-e1-stale-runtime:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:state_replayer:t2-e1-stale-runtime",
+                "target": "outcome:rollback:t2-e1-stale-runtime"
+              },
+              {
+                "edge_id": "t2-e1-stale-runtime:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:rollback:t2-e1-stale-runtime",
+                "target": "feedback:t2-e1-stale-runtime"
+              }
+            ],
+            "nodes": [
+              "context:ctx.runtime.receipt:0",
+              "retrieval:t2-e1-stale-runtime",
+              "verifier:rollback_replay_verifier:t2-e1-stale-runtime",
+              "tool:state_replayer:t2-e1-stale-runtime",
+              "outcome:rollback:t2-e1-stale-runtime",
+              "feedback:t2-e1-stale-runtime"
+            ]
+          },
+          "drift_injection": {
+            "detected": true,
+            "detected_by": [
+              "memory_tool_drift_guard",
+              "bounded_compressor_gate"
+            ],
+            "drift_type": "stale_tool_route",
+            "memory_variant": "stale",
+            "unsafe": true
+          },
+          "event_action": "retrieve",
+          "event_hash": "sha256:8d0cfa4c0c65ca24d9c521c0f187ce0373b38a25c39a9c6c7869eb76bb57e152",
+          "event_id": "t2-e1-stale-runtime",
+          "event_index": 1,
+          "execution_feedback": {
+            "answer_correct": false,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "rollback_executed",
+            "feedback_id": "feedback:t2-e1-stale-runtime"
+          },
+          "previous_event_hash": "sha256:genesis",
+          "rollback_event": {
+            "recovered": true,
+            "required": true,
+            "restore_object_id": "ctx.runtime.receipt",
+            "restore_payload": "runtime receipt v2 current verified",
+            "restore_payload_sha256": "sha256:18669b5aee9e844aa05d0d0f5a1d448c15a86c2d77ad915aba90a1ea7794869c",
+            "rollback_reason": "stale_tool_route",
+            "triggered": true
+          },
+          "safe_expected": false,
+          "session_id": "session-5357-02",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:1f428edfe9dc3188dedd113e05b27b3d49887c62584d6cb22b9c6e3dd7777a56",
+          "token_count": 6,
+          "trace_id": "trace-bounded-stale-rollback",
+          "useful_context": false,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5356:choose-rollback-route:stale"
+            ],
+            "utility_score": 0.72
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "rollback",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "stale",
+              "object_id": "ctx.runtime.receipt",
+              "version": 0
+            },
+            "selected_action": "restore_clean_selection",
+            "selected_tool": "state_replayer",
+            "selected_verifier": "rollback_replay_verifier"
+          }
+        },
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": false
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:053c4764b03ab9f721d5a34a5ee56a0d9427d65503350fb2f86bc7de4024aca9",
+            "object_id": "ctx.runtime.receipt",
+            "payload": "runtime receipt v2 current verified",
+            "utility_score": 0.9,
+            "version": 2
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t2-e2-restore-runtime:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.runtime.receipt:2",
+                "target": "retrieval:t2-e2-restore-runtime"
+              },
+              {
+                "edge_id": "t2-e2-restore-runtime:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t2-e2-restore-runtime",
+                "target": "verifier:certificate_verifier:t2-e2-restore-runtime"
+              },
+              {
+                "edge_id": "t2-e2-restore-runtime:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t2-e2-restore-runtime",
+                "target": "tool:context_replayer:t2-e2-restore-runtime"
+              },
+              {
+                "edge_id": "t2-e2-restore-runtime:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:certificate_verifier:t2-e2-restore-runtime",
+                "target": "outcome:accept:t2-e2-restore-runtime"
+              },
+              {
+                "edge_id": "t2-e2-restore-runtime:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_replayer:t2-e2-restore-runtime",
+                "target": "outcome:accept:t2-e2-restore-runtime"
+              },
+              {
+                "edge_id": "t2-e2-restore-runtime:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t2-e2-restore-runtime",
+                "target": "feedback:t2-e2-restore-runtime"
+              }
+            ],
+            "nodes": [
+              "context:ctx.runtime.receipt:2",
+              "retrieval:t2-e2-restore-runtime",
+              "verifier:certificate_verifier:t2-e2-restore-runtime",
+              "tool:context_replayer:t2-e2-restore-runtime",
+              "outcome:accept:t2-e2-restore-runtime",
+              "feedback:t2-e2-restore-runtime"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "none",
+            "memory_variant": "clean",
+            "unsafe": false
+          },
+          "event_action": "restore",
+          "event_hash": "sha256:a89ee5eb3ca72a43af83a77267583648ec08a27cecb6438c98ddb21ba0f3cf9f",
+          "event_id": "t2-e2-restore-runtime",
+          "event_index": 2,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t2-e2-restore-runtime"
+          },
+          "previous_event_hash": "sha256:8d0cfa4c0c65ca24d9c521c0f187ce0373b38a25c39a9c6c7869eb76bb57e152",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.runtime.receipt",
+            "restore_payload": "runtime receipt v2 current verified",
+            "restore_payload_sha256": "sha256:18669b5aee9e844aa05d0d0f5a1d448c15a86c2d77ad915aba90a1ea7794869c",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-02",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:2af95bab2b34ad81635f2d54326e66f77b4a9abf70930750d6fcdc22391b2e2a",
+          "token_count": 5,
+          "trace_id": "trace-bounded-stale-rollback",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5356:choose-rollback-route:rollback"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "clean",
+              "object_id": "ctx.runtime.receipt",
+              "version": 2
+            },
+            "selected_action": "accept_context_version",
+            "selected_tool": "context_replayer",
+            "selected_verifier": "certificate_verifier"
+          }
+        }
+      ],
+      "session_id": "session-5357-02",
+      "trace_id": "trace-bounded-stale-rollback"
+    },
+    {
+      "events": [
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "reject",
+            "requires_verifier": true
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:95bef60d8410883e364fe81346102918d921bf04d7dc34aa7560cdfeb3440018",
+            "object_id": "ctx.execution.feedback",
+            "payload": "verifier feedback lacks outcome edge",
+            "utility_score": 0.68,
+            "version": 1
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": false,
+            "decision_attributed": false,
+            "dependency_status": "missing_edge",
+            "edges": [
+              {
+                "edge_id": "t3-e1-missing-execution-edge:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.execution.feedback:1",
+                "target": "retrieval:t3-e1-missing-execution-edge"
+              },
+              {
+                "edge_id": "t3-e1-missing-execution-edge:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t3-e1-missing-execution-edge",
+                "target": "verifier:dependency_graph_verifier:t3-e1-missing-execution-edge"
+              },
+              {
+                "edge_id": "t3-e1-missing-execution-edge:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t3-e1-missing-execution-edge",
+                "target": "tool:edge_audit:t3-e1-missing-execution-edge"
+              },
+              {
+                "edge_id": "t3-e1-missing-execution-edge:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:dependency_graph_verifier:t3-e1-missing-execution-edge",
+                "target": "outcome:reject:t3-e1-missing-execution-edge"
+              },
+              {
+                "edge_id": "t3-e1-missing-execution-edge:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:edge_audit:t3-e1-missing-execution-edge",
+                "target": "outcome:reject:t3-e1-missing-execution-edge"
+              }
+            ],
+            "nodes": [
+              "context:ctx.execution.feedback:1",
+              "retrieval:t3-e1-missing-execution-edge",
+              "verifier:dependency_graph_verifier:t3-e1-missing-execution-edge",
+              "tool:edge_audit:t3-e1-missing-execution-edge",
+              "outcome:reject:t3-e1-missing-execution-edge",
+              "feedback:t3-e1-missing-execution-edge"
+            ]
+          },
+          "drift_injection": {
+            "detected": true,
+            "detected_by": [
+              "dependency_graph_audit"
+            ],
+            "drift_type": "missing_dependency_edge",
+            "memory_variant": "clean",
+            "unsafe": true
+          },
+          "event_action": "revise",
+          "event_hash": "sha256:433a5b22b2a74025f16c320af4583a52de9aff3ae4f4bc2e46a1b1793443b39f",
+          "event_id": "t3-e1-missing-execution-edge",
+          "event_index": 1,
+          "execution_feedback": {
+            "answer_correct": false,
+            "attributed_by_dependency_edge": false,
+            "execution_status": "missing_edge_quarantined",
+            "feedback_id": "feedback:t3-e1-missing-execution-edge"
+          },
+          "previous_event_hash": "sha256:genesis",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.execution.feedback",
+            "restore_payload": "verifier feedback lacks outcome edge",
+            "restore_payload_sha256": "sha256:71b8df950255e4f228d201e0efa2d22995dd054967954cfb7a088385aa9f0f95",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": false,
+          "session_id": "session-5357-03",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "token_count": 5,
+          "trace_id": "trace-dependency-missing-edge",
+          "useful_context": false,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5355:dep-missing-edge"
+            ],
+            "utility_score": 0.68
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "reject",
+            "parameters": {
+              "dependency_status": "missing_edge",
+              "memory_variant": "clean",
+              "object_id": "ctx.execution.feedback",
+              "version": 1
+            },
+            "selected_action": "quarantine_missing_edge",
+            "selected_tool": "edge_audit",
+            "selected_verifier": "dependency_graph_verifier"
+          }
+        },
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": false
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:159018b27dd8c43e97a3338d7c200e880458d09782c829c18bca63db76631ad1",
+            "object_id": "ctx.execution.feedback",
+            "payload": "verifier feedback edge rebuilt",
+            "utility_score": 0.9,
+            "version": 2
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.execution.feedback:2",
+                "target": "retrieval:t3-e2-rebuild-feedback-edge"
+              },
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t3-e2-rebuild-feedback-edge",
+                "target": "verifier:certificate_verifier:t3-e2-rebuild-feedback-edge"
+              },
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t3-e2-rebuild-feedback-edge",
+                "target": "tool:context_replayer:t3-e2-rebuild-feedback-edge"
+              },
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:certificate_verifier:t3-e2-rebuild-feedback-edge",
+                "target": "outcome:accept:t3-e2-rebuild-feedback-edge"
+              },
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_replayer:t3-e2-rebuild-feedback-edge",
+                "target": "outcome:accept:t3-e2-rebuild-feedback-edge"
+              },
+              {
+                "edge_id": "t3-e2-rebuild-feedback-edge:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t3-e2-rebuild-feedback-edge",
+                "target": "feedback:t3-e2-rebuild-feedback-edge"
+              }
+            ],
+            "nodes": [
+              "context:ctx.execution.feedback:2",
+              "retrieval:t3-e2-rebuild-feedback-edge",
+              "verifier:certificate_verifier:t3-e2-rebuild-feedback-edge",
+              "tool:context_replayer:t3-e2-rebuild-feedback-edge",
+              "outcome:accept:t3-e2-rebuild-feedback-edge",
+              "feedback:t3-e2-rebuild-feedback-edge"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "none",
+            "memory_variant": "clean",
+            "unsafe": false
+          },
+          "event_action": "commit",
+          "event_hash": "sha256:22393bcea5c647b9ebf67bb475bc625daa61d830b8e2a1863ca922f82727f629",
+          "event_id": "t3-e2-rebuild-feedback-edge",
+          "event_index": 2,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t3-e2-rebuild-feedback-edge"
+          },
+          "previous_event_hash": "sha256:433a5b22b2a74025f16c320af4583a52de9aff3ae4f4bc2e46a1b1793443b39f",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.execution.feedback",
+            "restore_payload": "verifier feedback edge rebuilt",
+            "restore_payload_sha256": "sha256:f1431ac4d12aae02e73a8c944e18540c12eeed9c5e33acdb3368ee47b487b1c8",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-03",
+          "sidecar_token_count": 4,
+          "state_after_sha256": "sha256:f8671df5e4a89b7925590b26548388cf57b8d2173c57ceb3fcb8b08050b360ce",
+          "token_count": 4,
+          "trace_id": "trace-dependency-missing-edge",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5355:dep-positive-retrieval"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "clean",
+              "object_id": "ctx.execution.feedback",
+              "version": 2
+            },
+            "selected_action": "accept_context_version",
+            "selected_tool": "context_replayer",
+            "selected_verifier": "certificate_verifier"
+          }
+        }
+      ],
+      "session_id": "session-5357-03",
+      "trace_id": "trace-dependency-missing-edge"
+    },
+    {
+      "events": [
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "rollback",
+            "requires_verifier": true
+          },
+          "context_object_version": {
+            "compressor_status": "poisoned",
+            "integrity_hash": "sha256:ef429fcaaa8ce8b2c22729c9954e10c6024bc1bd0ecfafbd4e0cc918c70f4d89",
+            "object_id": "ctx.tool.route",
+            "payload": "memory says accept without verifier",
+            "utility_score": 0.81,
+            "version": 1
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.tool.route:1",
+                "target": "retrieval:t4-e1-poisoned-tool-route"
+              },
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t4-e1-poisoned-tool-route",
+                "target": "verifier:poison_guard_verifier:t4-e1-poisoned-tool-route"
+              },
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t4-e1-poisoned-tool-route",
+                "target": "tool:memory_quarantine:t4-e1-poisoned-tool-route"
+              },
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:poison_guard_verifier:t4-e1-poisoned-tool-route",
+                "target": "outcome:rollback:t4-e1-poisoned-tool-route"
+              },
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:memory_quarantine:t4-e1-poisoned-tool-route",
+                "target": "outcome:rollback:t4-e1-poisoned-tool-route"
+              },
+              {
+                "edge_id": "t4-e1-poisoned-tool-route:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:rollback:t4-e1-poisoned-tool-route",
+                "target": "feedback:t4-e1-poisoned-tool-route"
+              }
+            ],
+            "nodes": [
+              "context:ctx.tool.route:1",
+              "retrieval:t4-e1-poisoned-tool-route",
+              "verifier:poison_guard_verifier:t4-e1-poisoned-tool-route",
+              "tool:memory_quarantine:t4-e1-poisoned-tool-route",
+              "outcome:rollback:t4-e1-poisoned-tool-route",
+              "feedback:t4-e1-poisoned-tool-route"
+            ]
+          },
+          "drift_injection": {
+            "detected": true,
+            "detected_by": [
+              "memory_tool_drift_guard",
+              "bounded_compressor_gate"
+            ],
+            "drift_type": "poisoned_tool_bypass",
+            "memory_variant": "poisoned",
+            "unsafe": true
+          },
+          "event_action": "tool_select",
+          "event_hash": "sha256:925f8a5c158249a7f55cf655df3398babaf5c2cf3f7154fd845c8fc8b14860a3",
+          "event_id": "t4-e1-poisoned-tool-route",
+          "event_index": 1,
+          "execution_feedback": {
+            "answer_correct": false,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "rollback_executed",
+            "feedback_id": "feedback:t4-e1-poisoned-tool-route"
+          },
+          "previous_event_hash": "sha256:genesis",
+          "rollback_event": {
+            "recovered": true,
+            "required": true,
+            "restore_object_id": "ctx.tool.route",
+            "restore_payload": "tool route pytest verifier restored",
+            "restore_payload_sha256": "sha256:4d250ef8491851d40447a076019ddf2d11a2a487597c11def2190312ebefec75",
+            "rollback_reason": "poisoned_tool_bypass",
+            "triggered": true
+          },
+          "safe_expected": false,
+          "session_id": "session-5357-04",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:e2bc5eeff1033a2ab4ff648af0b7070dde59bd2d3902138952a8fba7ac2b3577",
+          "token_count": 5,
+          "trace_id": "trace-memory-poisoned-tool",
+          "useful_context": false,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5356:select-safety-gate:poisoned"
+            ],
+            "utility_score": 0.81
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "rollback",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "poisoned",
+              "object_id": "ctx.tool.route",
+              "version": 1
+            },
+            "selected_action": "reject_unsafe_memory",
+            "selected_tool": "memory_quarantine",
+            "selected_verifier": "poison_guard_verifier"
+          }
+        },
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": false
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:28252240f1744a475f808d772cb563ea38e884b4ea413e2fa93871406998d5c4",
+            "object_id": "ctx.tool.route",
+            "payload": "tool route pytest verifier restored",
+            "utility_score": 0.9,
+            "version": 2
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t4-e2-restore-tool-route:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.tool.route:2",
+                "target": "retrieval:t4-e2-restore-tool-route"
+              },
+              {
+                "edge_id": "t4-e2-restore-tool-route:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t4-e2-restore-tool-route",
+                "target": "verifier:certificate_verifier:t4-e2-restore-tool-route"
+              },
+              {
+                "edge_id": "t4-e2-restore-tool-route:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t4-e2-restore-tool-route",
+                "target": "tool:context_replayer:t4-e2-restore-tool-route"
+              },
+              {
+                "edge_id": "t4-e2-restore-tool-route:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:certificate_verifier:t4-e2-restore-tool-route",
+                "target": "outcome:accept:t4-e2-restore-tool-route"
+              },
+              {
+                "edge_id": "t4-e2-restore-tool-route:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_replayer:t4-e2-restore-tool-route",
+                "target": "outcome:accept:t4-e2-restore-tool-route"
+              },
+              {
+                "edge_id": "t4-e2-restore-tool-route:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t4-e2-restore-tool-route",
+                "target": "feedback:t4-e2-restore-tool-route"
+              }
+            ],
+            "nodes": [
+              "context:ctx.tool.route:2",
+              "retrieval:t4-e2-restore-tool-route",
+              "verifier:certificate_verifier:t4-e2-restore-tool-route",
+              "tool:context_replayer:t4-e2-restore-tool-route",
+              "outcome:accept:t4-e2-restore-tool-route",
+              "feedback:t4-e2-restore-tool-route"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "none",
+            "memory_variant": "clean",
+            "unsafe": false
+          },
+          "event_action": "restore",
+          "event_hash": "sha256:c06f8424be88d27c6c57750bf3e193a6013b4da2b5dc5f518370e35731686080",
+          "event_id": "t4-e2-restore-tool-route",
+          "event_index": 2,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t4-e2-restore-tool-route"
+          },
+          "previous_event_hash": "sha256:925f8a5c158249a7f55cf655df3398babaf5c2cf3f7154fd845c8fc8b14860a3",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.tool.route",
+            "restore_payload": "tool route pytest verifier restored",
+            "restore_payload_sha256": "sha256:4d250ef8491851d40447a076019ddf2d11a2a487597c11def2190312ebefec75",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-04",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:0f3f85ae013d63f623829318d1429ae0e9a3a9bb070ca7d1f3cbf856953244ae",
+          "token_count": 5,
+          "trace_id": "trace-memory-poisoned-tool",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5356:select-safety-gate:rollback"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "clean",
+              "object_id": "ctx.tool.route",
+              "version": 2
+            },
+            "selected_action": "accept_context_version",
+            "selected_tool": "context_replayer",
+            "selected_verifier": "certificate_verifier"
+          }
+        }
+      ],
+      "session_id": "session-5357-04",
+      "trace_id": "trace-memory-poisoned-tool"
+    },
+    {
+      "events": [
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "reject",
+            "requires_verifier": true
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:6899b1b33826f427b9627ea4cae7f5e69c93a0ae560d416104379eaad2c8e6ca",
+            "object_id": "ctx.summary.cycle",
+            "payload": "summary creates cyclic dependency edge",
+            "utility_score": 0.64,
+            "version": 1
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": false,
+            "decision_attributed": true,
+            "dependency_status": "cycle",
+            "edges": [
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.summary.cycle:1",
+                "target": "retrieval:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t5-e1-cyclic-summary-edge",
+                "target": "verifier:dependency_graph_verifier:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t5-e1-cyclic-summary-edge",
+                "target": "tool:cycle_detector:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:dependency_graph_verifier:t5-e1-cyclic-summary-edge",
+                "target": "outcome:reject:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:cycle_detector:t5-e1-cyclic-summary-edge",
+                "target": "outcome:reject:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:reject:t5-e1-cyclic-summary-edge",
+                "target": "feedback:t5-e1-cyclic-summary-edge"
+              },
+              {
+                "edge_id": "t5-e1-cyclic-summary-edge:feedback_reopens_retrieval",
+                "relation": "feedback_reopens_retrieval",
+                "source": "feedback:t5-e1-cyclic-summary-edge",
+                "target": "retrieval:t5-e1-cyclic-summary-edge"
+              }
+            ],
+            "nodes": [
+              "context:ctx.summary.cycle:1",
+              "retrieval:t5-e1-cyclic-summary-edge",
+              "verifier:dependency_graph_verifier:t5-e1-cyclic-summary-edge",
+              "tool:cycle_detector:t5-e1-cyclic-summary-edge",
+              "outcome:reject:t5-e1-cyclic-summary-edge",
+              "feedback:t5-e1-cyclic-summary-edge"
+            ]
+          },
+          "drift_injection": {
+            "detected": true,
+            "detected_by": [
+              "dependency_graph_audit"
+            ],
+            "drift_type": "cyclic_dependency",
+            "memory_variant": "clean",
+            "unsafe": true
+          },
+          "event_action": "fold",
+          "event_hash": "sha256:e82021ccc73680bdf7e3b9dddf726b664a3c723ee2f5bd65fec621e5d4891915",
+          "event_id": "t5-e1-cyclic-summary-edge",
+          "event_index": 1,
+          "execution_feedback": {
+            "answer_correct": false,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "cycle_quarantined",
+            "feedback_id": "feedback:t5-e1-cyclic-summary-edge"
+          },
+          "previous_event_hash": "sha256:genesis",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.summary.cycle",
+            "restore_payload": "summary creates cyclic dependency edge",
+            "restore_payload_sha256": "sha256:25e55adee1469f98f705eb8fd110dee1bda62d5647aaf40033ab5d939be36b8d",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": false,
+          "session_id": "session-5357-05",
+          "sidecar_token_count": 5,
+          "state_after_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "token_count": 5,
+          "trace_id": "trace-cycle-benign-drift-control",
+          "useful_context": false,
+          "utility_memory": {
+            "supporting_context": [
+              "exp5355:dep-cyclic-dependency"
+            ],
+            "utility_score": 0.64
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "reject",
+            "parameters": {
+              "dependency_status": "cycle",
+              "memory_variant": "clean",
+              "object_id": "ctx.summary.cycle",
+              "version": 1
+            },
+            "selected_action": "quarantine_cycle",
+            "selected_tool": "cycle_detector",
+            "selected_verifier": "dependency_graph_verifier"
+          }
+        },
+        {
+          "certificate_gate": {
+            "anytime_certificate": "exp5330_context_lifecycle_gate",
+            "decision": "accept",
+            "requires_verifier": false
+          },
+          "context_object_version": {
+            "compressor_status": "clean",
+            "integrity_hash": "sha256:4d95fa079522251524c4097c99c3c73c071f2f544a7e807f1a9340eb0691f867",
+            "object_id": "ctx.style.preference",
+            "payload": "prefer concise memory hints",
+            "utility_score": 0.9,
+            "version": 1
+          },
+          "dependency_graph": {
+            "accepted_into_final_graph": true,
+            "decision_attributed": true,
+            "dependency_status": "complete",
+            "edges": [
+              {
+                "edge_id": "t5-e2-benign-style-bias:context_informs_retrieval",
+                "relation": "context_informs_retrieval",
+                "source": "context:ctx.style.preference:1",
+                "target": "retrieval:t5-e2-benign-style-bias"
+              },
+              {
+                "edge_id": "t5-e2-benign-style-bias:retrieval_routes_verifier",
+                "relation": "retrieval_routes_verifier",
+                "source": "retrieval:t5-e2-benign-style-bias",
+                "target": "verifier:utility_memory_verifier:t5-e2-benign-style-bias"
+              },
+              {
+                "edge_id": "t5-e2-benign-style-bias:retrieval_routes_tool",
+                "relation": "retrieval_routes_tool",
+                "source": "retrieval:t5-e2-benign-style-bias",
+                "target": "tool:context_cache:t5-e2-benign-style-bias"
+              },
+              {
+                "edge_id": "t5-e2-benign-style-bias:verifier_affects_outcome",
+                "relation": "verifier_affects_outcome",
+                "source": "verifier:utility_memory_verifier:t5-e2-benign-style-bias",
+                "target": "outcome:accept:t5-e2-benign-style-bias"
+              },
+              {
+                "edge_id": "t5-e2-benign-style-bias:tool_affects_outcome",
+                "relation": "tool_affects_outcome",
+                "source": "tool:context_cache:t5-e2-benign-style-bias",
+                "target": "outcome:accept:t5-e2-benign-style-bias"
+              },
+              {
+                "edge_id": "t5-e2-benign-style-bias:outcome_records_feedback",
+                "relation": "outcome_records_feedback",
+                "source": "outcome:accept:t5-e2-benign-style-bias",
+                "target": "feedback:t5-e2-benign-style-bias"
+              }
+            ],
+            "nodes": [
+              "context:ctx.style.preference:1",
+              "retrieval:t5-e2-benign-style-bias",
+              "verifier:utility_memory_verifier:t5-e2-benign-style-bias",
+              "tool:context_cache:t5-e2-benign-style-bias",
+              "outcome:accept:t5-e2-benign-style-bias",
+              "feedback:t5-e2-benign-style-bias"
+            ]
+          },
+          "drift_injection": {
+            "detected": false,
+            "detected_by": [],
+            "drift_type": "benign_style_bias",
+            "memory_variant": "biased",
+            "unsafe": false
+          },
+          "event_action": "revise",
+          "event_hash": "sha256:61bec4cdffcc99f7c8c07c236f6413641413e014138d3861626d0f85b6a6e5a1",
+          "event_id": "t5-e2-benign-style-bias",
+          "event_index": 2,
+          "execution_feedback": {
+            "answer_correct": true,
+            "attributed_by_dependency_edge": true,
+            "execution_status": "accepted_and_replayed",
+            "feedback_id": "feedback:t5-e2-benign-style-bias"
+          },
+          "previous_event_hash": "sha256:e82021ccc73680bdf7e3b9dddf726b664a3c723ee2f5bd65fec621e5d4891915",
+          "rollback_event": {
+            "recovered": false,
+            "required": false,
+            "restore_object_id": "ctx.style.preference",
+            "restore_payload": "prefer concise memory hints",
+            "restore_payload_sha256": "sha256:a9fdb607e08e87381f103bee1cab8ec9ed60a9dabb4592e6148addfdf872ac2b",
+            "rollback_reason": "not_required",
+            "triggered": false
+          },
+          "safe_expected": true,
+          "session_id": "session-5357-05",
+          "sidecar_token_count": 4,
+          "state_after_sha256": "sha256:72b065574bcb0e891a882b101ca26b1efdb708f3d1744023ddefbf8d3e41e110",
+          "token_count": 4,
+          "trace_id": "trace-cycle-benign-drift-control",
+          "useful_context": true,
+          "utility_memory": {
+            "supporting_context": [
+              "operator:benign-style-note"
+            ],
+            "utility_score": 0.9
+          },
+          "verifier_tool_decision": {
+            "certificate_decision": "accept",
+            "parameters": {
+              "dependency_status": "complete",
+              "memory_variant": "biased",
+              "object_id": "ctx.style.preference",
+              "version": 1
+            },
+            "selected_action": "accept_style_preference",
+            "selected_tool": "context_cache",
+            "selected_verifier": "utility_memory_verifier"
+          }
+        }
+      ],
+      "session_id": "session-5357-05",
+      "trace_id": "trace-cycle-benign-drift-control"
+    }
+  ],
+  "no_weight_mutation": true,
+  "policy_comparison": {
+    "all_policies_run": true,
+    "process_metric_improved": true,
+    "quality_preserved_vs_always_full": true,
+    "same_event_ids": true
+  },
+  "policy_metrics": {
+    "always_full": {
+      "active_token_count": 48,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.655172,
+      "event_count": 10,
+      "failed_trace_count": 0,
+      "final_quality": 1.0,
+      "memory_hygiene": 0.791667,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "rollback_recovery_rate": 1.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 0,
+      "useful_token_count": 38,
+      "verifier_cost": 10
+    },
+    "combined_certificate_gated": {
+      "active_token_count": 38,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.883721,
+      "event_count": 10,
+      "failed_trace_count": 0,
+      "final_quality": 1.0,
+      "memory_hygiene": 1.0,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "rollback_recovery_rate": 1.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 0,
+      "useful_token_count": 38,
+      "verifier_cost": 5
+    },
+    "compressor_only": {
+      "active_token_count": 48,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.730769,
+      "event_count": 10,
+      "failed_trace_count": 2,
+      "final_quality": 0.6,
+      "memory_hygiene": 0.791667,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "rollback_recovery_rate": 1.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 2,
+      "useful_token_count": 38,
+      "verifier_cost": 4
+    },
+    "dependency_only": {
+      "active_token_count": 39,
+      "clean_active_token_count": 28,
+      "context_efficiency": 0.682927,
+      "event_count": 10,
+      "failed_trace_count": 2,
+      "final_quality": 0.6,
+      "memory_hygiene": 0.717949,
+      "model_weights_mutated": false,
+      "rollback_events": 0,
+      "rollback_recovery_rate": 0.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 2,
+      "useful_token_count": 28,
+      "verifier_cost": 2
+    },
+    "drift_guarded": {
+      "active_token_count": 38,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.926829,
+      "event_count": 10,
+      "failed_trace_count": 0,
+      "final_quality": 1.0,
+      "memory_hygiene": 1.0,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "rollback_recovery_rate": 1.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 0,
+      "useful_token_count": 38,
+      "verifier_cost": 3
+    },
+    "utility_only": {
+      "active_token_count": 49,
+      "clean_active_token_count": 28,
+      "context_efficiency": 0.571429,
+      "event_count": 10,
+      "failed_trace_count": 4,
+      "final_quality": 0.2,
+      "memory_hygiene": 0.571429,
+      "model_weights_mutated": false,
+      "rollback_events": 0,
+      "rollback_recovery_rate": 0.0,
+      "trace_ids": [
+        "trace-utility-clean",
+        "trace-utility-clean",
+        "trace-bounded-stale-rollback",
+        "trace-bounded-stale-rollback",
+        "trace-dependency-missing-edge",
+        "trace-dependency-missing-edge",
+        "trace-memory-poisoned-tool",
+        "trace-memory-poisoned-tool",
+        "trace-cycle-benign-drift-control",
+        "trace-cycle-benign-drift-control"
+      ],
+      "unsafe_false_accepts": 4,
+      "useful_token_count": 28,
+      "verifier_cost": 0
+    }
+  },
+  "policy_rows": {
+    "always_full": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "always_full",
+        "rejection_reasons": [
+          "full_verifier_rejected"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "always_full",
+        "rejection_reasons": [
+          "full_verifier_rejected"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "always_full",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": true
+      }
+    ],
+    "combined_certificate_gated": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [
+          "combined_certificate_rejected_context"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [
+          "combined_certificate_rejected_context"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ],
+    "compressor_only": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ],
+    "dependency_only": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 6,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 0,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "dependency_only",
+        "rejection_reasons": [
+          "dependency_graph_rejected_context"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 0,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "dependency_only",
+        "rejection_reasons": [
+          "dependency_graph_rejected_context"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "dependency_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ],
+    "drift_guarded": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "drift_guarded",
+        "rejection_reasons": [
+          "drift_guard_rejected_memory"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "rollback_recovered": true,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active": false,
+        "active_token_count": 0,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "drift_guarded",
+        "rejection_reasons": [
+          "drift_guard_rejected_memory"
+        ],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "drift_guarded",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": true
+      }
+    ],
+    "utility_only": [
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e1-retrieve-archive",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t1-e2-commit-patch",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-01",
+        "trace_id": "trace-utility-clean",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 6,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 0,
+        "event_id": "t2-e1-stale-runtime",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "state_replayer",
+        "selected_verifier": "rollback_replay_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t2-e2-restore-runtime",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-02",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t3-e1-missing-execution-edge",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "edge_audit",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-03",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "rollback",
+        "clean_active_token_count": 0,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": true,
+        "safe_expected": false,
+        "selected_tool": "memory_quarantine",
+        "selected_verifier": "poison_guard_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 5,
+        "event_id": "t4-e2-restore-tool-route",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_replayer",
+        "selected_verifier": "certificate_verifier",
+        "session_id": "session-5357-04",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 5,
+        "certificate_decision": "reject",
+        "clean_active_token_count": 0,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": false,
+        "selected_tool": "cycle_detector",
+        "selected_verifier": "dependency_graph_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": true,
+        "useful_context": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active": true,
+        "active_token_count": 4,
+        "certificate_decision": "accept",
+        "clean_active_token_count": 4,
+        "event_id": "t5-e2-benign-style-bias",
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "rollback_recovered": false,
+        "rollback_required": false,
+        "safe_expected": true,
+        "selected_tool": "context_cache",
+        "selected_verifier": "utility_memory_verifier",
+        "session_id": "session-5357-05",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe_false_accept": false,
+        "useful_context": true,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ]
+  },
+  "quality_delta_vs_always_full": 0.0,
+  "random_seed": 5357,
+  "reproducibility_checksum": "sha256:5f5fc68a6c82c81864b042b99426886500bf16ec8fc00b1e50473c95ce5d69c5",
+  "rollback_recovery_rate": 1.0,
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5357.dependency_drift_self_learning_scaleup.v488",
+  "self_learning_scaleup_ready": true,
+  "source_artifact_checksums": {
+    "exp5330": "sha256:121fb359b78b2cf27ce7c9a7e15093f7d4f0bbd567b625ca6d0ac4bee5887157",
+    "exp5342_quarantined": "sha256:dffe3a32ea88dccae9c264661c22fa0cf6f5058706b5bb23b2ea6c83f284413b",
+    "exp5355": "sha256:91228b5bd86b2804e514d223106ccd9c457a0e06a69552d50c1651ba14e5b4bf",
+    "exp5355_module": "sha256:b35004fff83315e22c547506515417d558f976ee5a802eaf75e723f4c488349d",
+    "exp5356": "sha256:eb062aa36fcdb4b8f8d56d7b61e6977189cbd9c69e0c5c5adba10c0dcffb3d25",
+    "exp5356_module": "sha256:f90f4141b86e5e601f04c067364b8b117d4538328cc80210706a96a393aee168",
+    "module": "sha256:0d5b09c86438ad069e28c0aa2594793961b70d13d72cf235c83b9306a4f54b2a",
+    "spec": "sha256:3738c5cbaca768f774e0922e47d6a4a6c4c1faee82380fa86b19ca4144f7507e"
+  },
+  "source_artifacts": [
+    "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+    "results/experiment_5356_memory_tool_drift_harness_v488.json",
+    "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
+  ],
+  "source_gate": {
+    "all_passed": true,
+    "certificate_gate_ready": true,
+    "certificate_source_honest_verdict": "complete: deterministic anytime certificate promoted 1 lifecycle policy, rejected 3, deferred 1, kept unsafe promotions at 0, recorded 2 rollback events, and preserved frozen-model discipline",
+    "dependency_provenance_ready": true,
+    "dependency_source_honest_verdict": "complete: deterministic dependency-edge provenance built 37 accepted graph edges, detected and quarantined missing-edge and cyclic-dependency cases, kept unsafe false accepts at 0, kept execution feedback separate from memory hygiene, and preserved no model weight mutation",
+    "drift_source_honest_verdict": "complete: deterministic memory-tool drift harness measured 32 memory cases, clean accuracy 1.0, induced drift rate 1.0, rollback recovery 1.0, counterfactual deflection 1.0, zero unsafe false accepts, and no model weight mutation",
+    "excluded_artifacts": [
+      "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
+    ],
+    "failed_gates": [],
+    "memory_tool_drift_ready": true,
+    "no_weight_mutation": true,
+    "prior_v487_duplicated_metric_pairs": [
+      {
+        "left": "memory_hygiene_delta",
+        "right": "context_efficiency_delta",
+        "value": 0.144762
+      }
+    ],
+    "prior_v487_metric_duplication_detected": true,
+    "prior_v487_scaleup_quarantined": true,
+    "rollback_recovery_ready": true,
+    "source_artifacts": [
+      "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+      "results/experiment_5356_memory_tool_drift_harness_v488.json",
+      "results/experiment_5330_sea_anytime_certificate_gate_v486.json"
+    ],
+    "source_metric_duplicates_clear": true,
+    "source_unsafe_false_accepts_zero": true
+  },
+  "spec_refs": [
+    "REQ-LEARN-5357",
+    "SCENARIO-LEARN-5357-TRACE",
+    "SCENARIO-LEARN-5357-POLICY",
+    "SCENARIO-LEARN-5357-ANTI-TAUTOLOGY"
+  ],
+  "status": {
+    "principle": "Lets capstone distinguish clean scale-up from gate skip or block.",
+    "value": "self_learning_scaleup_ready"
+  },
+  "tests_run": {
+    "principle": "Lists deterministic, rollback, and anti-tautology checks.",
+    "value": [
+      {
+        "command": "PYTHONFAULTHANDLER=1 .venv/bin/python -m coverage run --include='*/python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py' -m pytest -o addopts='' -n 0 tests/python/test_experiment_5357_dependency_drift_self_learning_scaleup_v488.py -q && .venv/bin/python -m coverage report --include='*/python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py' --fail-under=100",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "trace_provenance": {
+    "dependency_attribution_rate": 0.9,
+    "drift_detection_rate": 0.8,
+    "drift_rows": [
+      {
+        "detected": true,
+        "detected_by": [
+          "memory_tool_drift_guard",
+          "bounded_compressor_gate"
+        ],
+        "drift_type": "stale_tool_route",
+        "event_id": "t2-e1-stale-runtime",
+        "memory_variant": "stale",
+        "trace_id": "trace-bounded-stale-rollback",
+        "unsafe": true
+      },
+      {
+        "detected": true,
+        "detected_by": [
+          "dependency_graph_audit"
+        ],
+        "drift_type": "missing_dependency_edge",
+        "event_id": "t3-e1-missing-execution-edge",
+        "memory_variant": "clean",
+        "trace_id": "trace-dependency-missing-edge",
+        "unsafe": true
+      },
+      {
+        "detected": true,
+        "detected_by": [
+          "memory_tool_drift_guard",
+          "bounded_compressor_gate"
+        ],
+        "drift_type": "poisoned_tool_bypass",
+        "event_id": "t4-e1-poisoned-tool-route",
+        "memory_variant": "poisoned",
+        "trace_id": "trace-memory-poisoned-tool",
+        "unsafe": true
+      },
+      {
+        "detected": true,
+        "detected_by": [
+          "dependency_graph_audit"
+        ],
+        "drift_type": "cyclic_dependency",
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "memory_variant": "clean",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe": true
+      },
+      {
+        "detected": false,
+        "detected_by": [],
+        "drift_type": "benign_style_bias",
+        "event_id": "t5-e2-benign-style-bias",
+        "memory_variant": "biased",
+        "trace_id": "trace-cycle-benign-drift-control",
+        "unsafe": false
+      }
+    ],
+    "event_count": 10,
+    "execution_feedback_rows": [
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t1-e1-retrieve-archive",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t1-e1-retrieve-archive",
+        "trace_id": "trace-utility-clean"
+      },
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t1-e2-commit-patch",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t1-e2-commit-patch",
+        "trace_id": "trace-utility-clean"
+      },
+      {
+        "answer_correct": false,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t2-e1-stale-runtime",
+        "execution_status": "rollback_executed",
+        "feedback_id": "feedback:t2-e1-stale-runtime",
+        "trace_id": "trace-bounded-stale-rollback"
+      },
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t2-e2-restore-runtime",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t2-e2-restore-runtime",
+        "trace_id": "trace-bounded-stale-rollback"
+      },
+      {
+        "answer_correct": false,
+        "attributed_by_dependency_edge": false,
+        "event_id": "t3-e1-missing-execution-edge",
+        "execution_status": "missing_edge_quarantined",
+        "feedback_id": "feedback:t3-e1-missing-execution-edge",
+        "trace_id": "trace-dependency-missing-edge"
+      },
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t3-e2-rebuild-feedback-edge",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t3-e2-rebuild-feedback-edge",
+        "trace_id": "trace-dependency-missing-edge"
+      },
+      {
+        "answer_correct": false,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t4-e1-poisoned-tool-route",
+        "execution_status": "rollback_executed",
+        "feedback_id": "feedback:t4-e1-poisoned-tool-route",
+        "trace_id": "trace-memory-poisoned-tool"
+      },
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t4-e2-restore-tool-route",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t4-e2-restore-tool-route",
+        "trace_id": "trace-memory-poisoned-tool"
+      },
+      {
+        "answer_correct": false,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t5-e1-cyclic-summary-edge",
+        "execution_status": "cycle_quarantined",
+        "feedback_id": "feedback:t5-e1-cyclic-summary-edge",
+        "trace_id": "trace-cycle-benign-drift-control"
+      },
+      {
+        "answer_correct": true,
+        "attributed_by_dependency_edge": true,
+        "event_id": "t5-e2-benign-style-bias",
+        "execution_status": "accepted_and_replayed",
+        "feedback_id": "feedback:t5-e2-benign-style-bias",
+        "trace_id": "trace-cycle-benign-drift-control"
+      }
+    ],
+    "rollback_recovery_rate": 1.0,
+    "rollback_rows": [
+      {
+        "event_id": "t2-e1-stale-runtime",
+        "recovered": true,
+        "required": true,
+        "restore_object_id": "ctx.runtime.receipt",
+        "restore_payload": "runtime receipt v2 current verified",
+        "restore_payload_sha256": "sha256:18669b5aee9e844aa05d0d0f5a1d448c15a86c2d77ad915aba90a1ea7794869c",
+        "rollback_reason": "stale_tool_route",
+        "trace_id": "trace-bounded-stale-rollback",
+        "triggered": true
+      },
+      {
+        "event_id": "t4-e1-poisoned-tool-route",
+        "recovered": true,
+        "required": true,
+        "restore_object_id": "ctx.tool.route",
+        "restore_payload": "tool route pytest verifier restored",
+        "restore_payload_sha256": "sha256:4d250ef8491851d40447a076019ddf2d11a2a487597c11def2190312ebefec75",
+        "rollback_reason": "poisoned_tool_bypass",
+        "trace_id": "trace-memory-poisoned-tool",
+        "triggered": true
+      }
+    ]
+  },
+  "unsafe_false_accepts": 0,
+  "verifier_cost_delta": 0.5,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_write": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_context_trace_rows",
+      "deterministic_policy_comparison_rows",
+      "deterministic_rollback_rows"
+    ]
+  }
+}
