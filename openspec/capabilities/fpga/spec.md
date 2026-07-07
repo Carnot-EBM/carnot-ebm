@@ -16134,6 +16134,99 @@ authenticated-workload status, and no-speedup status.
 
 ---
 
+### REQ-HW-5374
+
+**Title:** Hardware-continuity v489 MUST record fresh KV260, PolarFire, and GateMate receipts without speedup claims
+
+**Description:**
+Experiment 5374 MUST produce
+`results/experiment_5374_hardware_continuity_receipts_v489.json` as a v489
+continuity-only board receipt. The artifact MUST record fresh command attempts
+for reachable board lanes, bounded blockers for unreachable lanes, and MUST NOT
+claim sampler acceleration or hardware speedup.
+
+KV260 MUST be checked by attempting exactly
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. KV260 evidence MUST NOT
+use host `/dev/mmcblk*`, `/dev/disk`, removable storage, or SD-card paths.
+`kv260_checked_via_ssh.value` MUST be true only when that SSH reachability
+command was attempted, and `kv260_status.value` MUST be `reachable`,
+`unreachable`, or `skipped: <reason>`.
+
+PolarFire MUST first use the authenticated SSH status path. If reachable, it
+MUST run the established tiny deterministic board-local workload and record the
+workload output hash as continuity evidence only. `polarfire_status.value` MUST
+be `reachable/workload_receipt`, `unreachable`, or `skipped: <reason>`.
+`polarfire_workload_hash.value` MUST be the output hash when the workload
+receipt ran and validated, otherwise null with a blocker reason recorded
+elsewhere in the artifact.
+
+GateMate MUST use only current non-destructive toolchain and detect checks when
+the physical/JTAG path is available. If the physical/JTAG path is unavailable or
+unchanged from the blocked prior lane, the artifact MUST record
+`gatemate_status.value="blocked_physical_or_jtag"` or an honest skipped reason.
+No destructive flashing or long hardware loops are permitted.
+
+The artifact MUST include principle-wrapped fields `status`,
+`hardware_speedup_claim`, `kv260_checked_via_ssh`, `kv260_status`,
+`polarfire_status`, `polarfire_workload_hash`, `gatemate_status`,
+`commands_run`, `no_host_mmcblk_kv260_evidence`, `no_destructive_flash`,
+`repeatability_evidence_present`, and `honest_verdict`. `status.value` MUST be
+`complete` when fresh reachability or receipt attempts are recorded for the
+board lanes. `hardware_speedup_claim.value` MUST be false unless full
+authenticated baseline timing, board timing, workload hash, and repeatability
+evidence unexpectedly exist. `commands_run.value` MUST record exact command
+strings, exit codes, and redacted concise stdout/stderr excerpts or hashes.
+`no_host_mmcblk_kv260_evidence.value` and `no_destructive_flash.value` MUST be
+true. `repeatability_evidence_present.value` MUST state whether authenticated
+repeat timing evidence exists. `honest_verdict.value` MUST be a one-line
+continuity summary that names KV260, PolarFire, GateMate, and no-speedup status.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5374_hardware_continuity_receipts_v489 --date 20260707`
+  writes `results/experiment_5374_hardware_continuity_receipts_v489.json`.
+- The artifact includes
+  `experiment_id.value="exp5374-hardware-continuity-receipts-v489"`,
+  `milestone.value="2026.07.489"`, `spec_refs` containing `REQ-HW-5374` and
+  `SCENARIO-HW-5374`, `random_seed=5374`, and a stable
+  `reproducibility_checksum`.
+- `commands_run.value` includes the exact KV260 SSH command and every
+  PolarFire or GateMate command actually attempted, with exit codes and concise
+  redacted output excerpts or hashes.
+- `hardware_speedup_claim.value=false`,
+  `no_host_mmcblk_kv260_evidence.value=true`,
+  `no_destructive_flash.value=true`, and
+  `repeatability_evidence_present.value=false` unless authenticated repeat
+  hardware timing evidence is present.
+
+**Implementation status:** Planned (Exp 5374)
+
+---
+
+### SCENARIO-HW-5374
+
+**Scenario:** Exp 5374 writes v489 hardware-continuity receipts without speedup claims.
+
+**Given:** Exp 5361 recorded KV260 SSH unreachable, a PolarFire authenticated
+workload receipt, GateMate physical/JTAG blocked, and no speedup claim.
+**When:** Experiment 5374 attempts the exact KV260 BatchMode SSH reachability
+command, checks PolarFire authenticated SSH and runs the established tiny
+board-local hash workload only when reachable, checks GateMate only through
+current safe toolchain/detect paths when the physical/JTAG path is available,
+and avoids destructive flashing and long loops.
+**Then:** It writes
+`results/experiment_5374_hardware_continuity_receipts_v489.json` with all
+required principle-wrapped fields, command receipts, KV260 SSH-only evidence,
+PolarFire workload hash when validated, an honest GateMate detected or blocked
+status, `hardware_speedup_claim.value=false`,
+`no_host_mmcblk_kv260_evidence.value=true`, `no_destructive_flash.value=true`,
+`repeatability_evidence_present.value=false` unless authenticated repeat timing
+exists, and a one-line verdict that states KV260, PolarFire, GateMate, and
+no-speedup status.
+
+**Implementation status:** Planned (Exp 5374)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
