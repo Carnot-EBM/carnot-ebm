@@ -1,6 +1,28 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-07 (Milestone 2026.07.487 operational retrospective)
+**Last Updated:** 2026-07-07 (Milestone 2026.07.488 planning staged)
+
+## Session 2026-07-07 - Milestone 2026.07.488 Planning Staged
+
+Planned the next research milestone after `.487` completed. The staged `.488`
+roadmap focuses on trigger-then-constrain structured local SOTA, constraint-tax
+metrics, token-probability feature cleanup, dependency-safe continuous
+self-learning, solver-authoritative projection/cuts, p-bit schedule diagnostics,
+the required ARC live-path level-up slot, and hardware continuity without any
+speedup claim.
+
+Staged files: `openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The planner refresh appended the actionable
+2025-2026 source findings to `research-references.md`.
+
+Validation for this planning task: roadmap schema validation,
+`scripts/audit_roadmap_gates.py`, `scripts/arc_levelup_guarantee_lint.py --min
+1`, and `scripts/exclusion_manifest_lint.py` passed for
+`research-roadmap-next.yaml`. No implementation code, active roadmap, conductor,
+model-training run, or hardware workload was changed. Repo-wide
+`scripts/check_spec_coverage.py` still fails on pre-existing missing test
+traceability outside this planning change (`1262 test(s) missing spec
+traceability`).
 
 ## Session 2026-07-07 - Milestone 2026.07.487 Operational Retro
 

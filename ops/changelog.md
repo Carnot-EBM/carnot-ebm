@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-07-07 (Milestone 2026.07.488 planning staged -- codex)
+
+- Staged the next research milestone in `openspec/change-proposals/research-roadmap-vNEXT.md`
+  and `research-roadmap-next.yaml` without modifying `research-roadmap.yaml` or
+  `scripts/research_conductor.py`.
+- Appended the V488 planner refresh to `research-references.md`, incorporating recent
+  trigger-then-constrain, constraint-tax, memory-tool-drift, ContextWeaver,
+  solver-projection, arithmetic carry, and p-bit schedule findings.
+- The `.488` plan contains 14 conductor tasks: structured local SOTA cleanup, token-probability
+  feature audit, dependency-safe self-learning, solver projection/cuts, p-bit schedule simulation,
+  one ARC live-path level-up slot, hardware continuity, and capstone synthesis.
+- Validation passed for roadmap schema parsing, gate audit, ARC level-up guarantee lint, and
+  exclusion-manifest lint.
+
 ## 2026-07-05 (Exp 5258 V481 execution-refresh test fix -- codex)
 
 - Fixed the Exp 5258 V481 execution-refresh test failure without reverting prior work and

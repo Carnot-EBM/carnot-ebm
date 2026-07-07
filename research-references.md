@@ -27701,3 +27701,86 @@ Execution-time sweep after the `.487` planner refresh checked arXiv, OpenReview,
 - **Secondary-source status:** Semantic Scholar was rate-limited during execution and no citation-trend claim is made. Extropic and Logical Intelligence did not add a separate execution-changing source.
 
 <!-- V487-EXECUTION-REFRESH-2026-07-07-END -->
+
+
+### V488 Planner Refresh - 2026-07-07
+
+Planning-time sweep for `.488` rechecked arXiv primary pages, OpenReview, HuggingFace Papers,
+Semantic Scholar EBT/ARM-EBM citation trails, GitHub repository search, Extropic writing, Logical
+Intelligence public pages, and the local `.487` capstone. The items below are new to this ledger or
+materially sharpen the next milestone after `.487` left structured-output, self-learning scale-up,
+and token-probability energy with flagged or blocked evidence.
+
+### Promoted actionable findings
+- **Thinking Before Constraining: A Unified Decoding Framework for Large Language Models**
+  (https://arxiv.org/abs/2601.07525): allows free-form reasoning until trigger tokens, then switches
+  to structured generation. Carnot hook: repair Exp5338 by measuring a trigger-token / post-think
+  packaging protocol under a clean `duration_s >= 60` live GGUF receipt before rerunning the blocked
+  claim/rewrite panel. This directly addresses the `.487` failure mode where compact JSON was not
+  cleanly claimable.
+- **The Constraint Tax: Measuring Validity-Correctness Tradeoffs in Structured Outputs for Small
+  Language Models** (https://arxiv.org/abs/2605.26128) and **Constraint Tax in Open-Weight LLMs:
+  Tool Calling Suppression Under Structured Output Constraints** (https://arxiv.org/abs/2606.25605):
+  hard schema constraints can increase validity while decreasing answer/tool correctness, and grammar
+  masks can make tool-call tokens unreachable. Carnot hook: every structured-output local-SOTA task
+  should report schema validity, semantic correctness, wrong-valid-output rate, tool/action reachability,
+  and two-pass mitigation separately; schema validity alone is not a success metric.
+- **Memory-Induced Tool-Drift in LLM Agents** (https://arxiv.org/abs/2605.24941): biased long-term
+  memories can steer tool calls outside the intended context. Carnot hook: extend `.487` utility memory
+  and bounded compressor fixtures with a deterministic memory-to-action drift lane: biased memory rows,
+  susceptible action parameters, counterfactual clean memory, deflection score, and rollback/no-commit
+  enforcement.
+- **ContextWeaver: Selective and Dependency-Structured Memory Construction for LLM Agents**
+  (https://arxiv.org/abs/2604.23069): organizes interaction traces as dependency graphs and validates
+  selected context with execution feedback. Carnot hook: repair the flagged Exp5342 scale-up by using
+  dependency-edge provenance and point-in-time reconstruction instead of duplicate aggregate deltas;
+  report dependency preservation, omitted-root detection, and verifier-cost savings separately.
+- **Neural Proposals, Symbolic Guarantees: Neuro-Symbolic Graph Generation with Hard Constraints**
+  (https://arxiv.org/abs/2602.16954) plus the OpenReview **Hard-Constrained Graph Generation with
+  Discrete-Projection Diffusion** entry (https://openreview.net/forum?id=cbtykHVWX9): both keep a
+  symbolic solver/projection step authoritative while neural proposals supply candidates. Carnot hook:
+  the KAN/Ising counterexample bridge should add a solver-authoritative projection task that logs
+  projection success, fallback completeness, post-projection validity, and neural-corrector agreement
+  without claiming learned sampler authority.
+- **The Shape of Addition: Geometric Structures of Arithmetic in Large Language Models**
+  (https://arxiv.org/abs/2606.03645; HuggingFace page https://huggingface.co/papers/2606.03645):
+  arithmetic errors can be viewed as residual-stream carry-fiber quantization slippage. Carnot hook:
+  keep as an internal-signal watch item for the token-probability/hidden-state lane; do not claim it
+  from GGUF output text alone unless logits/hidden states are actually available.
+- **Enhanced Convergence in p-bit Based Simulated Annealing with Partial Deactivation**
+  (https://arxiv.org/abs/2601.15561), **A Unified Performance-Cost Landscape of Parallel p-bit Ising
+  Machines Based on Update Dynamics** (https://arxiv.org/abs/2604.01564), and **A fully parallel
+  densely connected probabilistic Ising machine** (https://arxiv.org/abs/2604.17109): recent p-bit
+  work isolates oscillation, simultaneity, partial deactivation, and inertia as the schedule-level
+  knobs that decide whether parallel updates help or stall. Carnot hook: add a CPU simulation-only
+  schedule diagnostic for partial deactivation/inertia before any FPGA speedup claim; board tasks
+  remain receipt-only unless authenticated hardware timing exists.
+
+### Secondary-source status
+- **Semantic Scholar:** direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605
+  returned HTTP 429 on 2026-07-07. Search fallback reconfirmed the primary arXiv pages, but no
+  citation-count or influential-citation delta is claimed.
+- **Extropic:** `/writing` still surfaces TSU 101 and probabilistic hardware architecture material
+  from late 2025; no local Extropic hardware or authenticated Carnot execution path is available.
+  Treat as architecture context only.
+- **Logical Intelligence:** public pages now emphasize Kona 1.0 as an EBM layer beneath LLM interfaces,
+  Aleph/Lean-style translate-and-verify, and formal verification for code generation. Carnot hook:
+  prefer deterministic external checkers and solver-authoritative certificates over fluent verifier
+  text; public claims are not reproducible baselines.
+- **GitHub watch:** `alexiglad/EBT`, `Saibo-creator/Awesome-LLM-Constrained-Decoding`,
+  `guidance-ai/jsonschemabench`, `RL-MIND/Shape-of-Addition`, and Ising-machine repositories are
+  useful references. None replaces Carnot's local GGUF, solver, KAN, memory, or hardware substrates.
+
+### Planning impact
+- `.488` should clean the flagged structured-output protocol with trigger-then-constrain and
+  constraint-tax metrics before running another local-SOTA quality panel.
+- `.488` should repair the flagged self-learning scale-up with dependency-structured provenance and
+  memory-induced tool-drift controls, not another aggregate memory-quality rerun.
+- `.488` should treat token-probability energy as blocked unless backend features expose the required
+  logprob/logit rows cleanly; arithmetic residual geometry remains a watch item, not a claim.
+- `.488` should extend the clean QSTR/solver/KAN branch through solver-authoritative projection and
+  counterexample cuts while preserving fallback completeness.
+- `.488` hardware work remains continuity plus schedule simulation only: no board speedup claim, no
+  TSU/Kona execution claim, no host block-device evidence for KV260.
+
+<!-- V488-PLANNER-REFRESH-2026-07-07-END -->

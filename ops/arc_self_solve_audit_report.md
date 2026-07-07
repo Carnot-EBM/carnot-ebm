@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (47 modul
 
 ## Hostile LLM review
 
-TL;DR: **Reject all 3 as SELF_DISCOVERY_ADVANCE.** Reachability is clean, but the artifacts do not prove live, autonomous discovery; `development_proxy` + offline/no-quota mode is not acceptable evidence.
+TL;DR: `results/arc_loop_solve_ls20.json` is **UNCLEAR**, leaning **not acceptable as a live self-discovery advance** until provenance is tightened.
 
-| Artifact | Verdict | Evidence | Recommended Action |
-|---|---:|---|---|
-| `results/arc_loop_solve_r11l.json` | `UNCLEAR` | Solver path is reachable, but provenance is `development_proxy`; `honest_verdict` is empty; no declared runtime self-discovery trace; mode is `standing_arc_loop_offline_no_quota`. No proof the live agent discovered the solve from its own attempts. | Do not count. Re-run through a live entrypoint with attempt logs, learned hypotheses, runtime RE evidence, and explicit no-source/no-BFS/no-hand-model declaration. |
-| `results/arc_loop_solve_ls20.json` | `UNCLEAR` | Same failure: `development_proxy`, empty `honest_verdict`, no clear self-discovery evidence, offline/no-quota mode. Reachability alone is insufficient. | Do not count. Require live-run provenance and auditable trace from observations/actions to solve. |
-| `results/arc_loop_solve_lf52.json` | `UNCLEAR` | Same failure pattern. Nothing here distinguishes a live autonomous solve from development scaffolding or outer-loop-assisted validation. | Do not count. Promote only after a live entrypoint produces the solve with self-contained runtime evidence. |
+Artifact: `results/arc_loop_solve_ls20.json`
 
-**Pattern watch:** The drift risk is laundering development/offline proxy solves into capability claims. `development_proxy` plus empty honesty fields is exactly where outer-loop reverse engineering can hide. Treat these as non-advances until the artifact proves the live agent could reach, infer, and execute the solve without human/game-specific offline help.
+- **Verdict:** `UNCLEAR`
+- **Evidence:** It is on a reachable live path via `scripts/arc_loop_solve.py`, so this is not `OFF_PATH`. But the declared provenance is `development_proxy`, `honest_verdict` is empty, and mode is `standing_arc_loop_offline_no_quota`. Nothing here clearly proves the live agent discovered the level 2 solve from its own attempts and runtime reverse-engineering. No outer-loop inputs are declared, but absence of declaration is not positive evidence.
+- **Recommended action:** Do not count this as a new live capability yet. Require the artifact to record live attempt traces, observations used, runtime hypotheses/actions, and an explicit `SELF_DISCOVERY_ADVANCE` provenance verdict. If `development_proxy` involved a human-built model, source inspection, offline ground-truth search, or per-game adapter logic, reclassify as `OUTER_LOOP_RE`.
+
+**Pattern Watch:** The drift risk is provenance laundering: reachable entrypoint plus “offline/no quota” artifact is being treated like a solve without showing the agent’s own discovery chain. Reachability is necessary, not sufficient. Count only artifacts that expose the live agent’s attempt-to-solve path, not development proxy outputs.
 
