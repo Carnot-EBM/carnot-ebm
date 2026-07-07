@@ -17959,3 +17959,128 @@ improvement.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5340 | Implemented (`python/carnot/experiment_5340_utility_weighted_context_memory_v487.py`, `results/experiment_5340_utility_weighted_context_memory_v487.json`) | Implemented (`tests/python/test_experiment_5340_utility_weighted_context_memory_v487.py`) |
+
+---
+
+## REQ-LEARN-5341: Bounded Context Compressor Drift Monitor
+
+Experiment 5341 SHALL assemble a deterministic bounded context compressor over
+the Exp5328 context-object lifecycle fixture and Exp5330 certificate gate. The
+compressor SHALL separate artifact recall from persistent state commitment:
+recalled artifacts may be exposed to a decision row, but they SHALL NOT mutate
+the persistent bounded state unless a separate commit verifier accepts the
+candidate summary. The bounded state SHALL enforce both a maximum object budget
+and a maximum token budget, and rows that were recalled but not committed SHALL
+be explicit `recalled_not_committed` rows.
+
+The compressor SHALL reuse stable context object IDs, lifecycle actions,
+recoverable sidecars, and rollback fields from Exp5328. It SHALL include
+deterministic cases for benign recall, stale recall, poisoned candidate memory,
+compression omission, over-compression, and safe recovery. The monitor SHALL
+measure compression budget use, recall/commit separation, drift detection,
+stale-recall detection, poison rejection, recoverability, and verifier-call
+cost. The experiment SHALL not call an LLM, API judge, generator, fine-tuning
+path, adapter update, or model-weight mutation path.
+
+The result artifact SHALL be
+`results/experiment_5341_bounded_compressor_drift_monitor_v487.json` and SHALL
+include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_bounded_context_compressor`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer
+`bounded_state_object_limit`, bare integer `recalled_not_committed_count`,
+bare numeric `drift_detection_rate`, bare numeric
+`stale_recall_detection_rate`, bare numeric `poison_rejection_rate`, bare
+numeric `recoverability_rate`, bare integer `unsafe_commits` with value 0,
+bare boolean `compressor_drift_fixture_ready`, and principle-wrapped
+`tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5341 artifact so downstream gates
+  cannot confuse bounded compressor drift monitoring with Exp5328 lifecycle
+  rows, Exp5330 certificate promotion, or Exp5340 utility learning.
+- `milestone`: Binds the bounded compressor to milestone v487 where recall and
+  persistent commitment are deliberately separated.
+- `status`: Reports whether the compressor completed under bounded budget,
+  drift-monitor, poison-rejection, recoverability, and frozen-model gates.
+- `honest_verdict`: Terminal Exp5341 verdict; starts with complete: or blocked_
+  and states whether bounded compression kept unsafe commits at zero while
+  preserving recovery.
+- `inference_substrate`: Declares deterministic bounded context compression
+  with no live LLM, API judge, model generation, fine-tuning, adapter update,
+  or foundation-weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the compressor evaluates
+  state-management policy behavior for continuous self-learning rather than
+  static reporting.
+- `no_weight_mutation`: Bare gate confirming only deterministic bounded context
+  summaries and monitor rows changed, never model weights or adapters.
+- `bounded_state_object_limit`: Bare integer object cap enforced on the
+  persistent bounded state.
+- `recalled_not_committed_count`: Bare integer count of rows where an artifact
+  was recalled for evaluation but explicitly not committed to persistent state.
+- `drift_detection_rate`: Bare numeric rate over compression omission and
+  over-compression drift rows.
+- `stale_recall_detection_rate`: Bare numeric rate over stale-recall rows.
+- `poison_rejection_rate`: Bare numeric rate over poisoned candidate memory
+  rows rejected before persistent commitment.
+- `recoverability_rate`: Bare numeric rate over safe recovery rows that restore
+  from sidecars or rollback evidence.
+- `unsafe_commits`: Bare integer count of unsafe candidates that reached
+  persistent state; value 0 is required for readiness.
+- `compressor_drift_fixture_ready`: Bare gate true only when deterministic
+  tests are recorded, unsafe commits are zero, budgets hold, all anomaly
+  detection rates are 1.0, recoverability is preserved, and no model weights
+  mutate.
+- `tests_run`: Records the exact verification commands used to establish that
+  the compressor module and result artifact are stable.
+
+### REQ-LEARN-5341 Sub-requirements
+
+- REQ-LEARN-5341-1: The fixture SHALL load Exp5328 lifecycle rows and confirm
+  the Exp5330 certificate gate before reporting a ready artifact.
+- REQ-LEARN-5341-2: The compressor SHALL enforce a bounded persistent state
+  with max object and token budgets on every accepted summary.
+- REQ-LEARN-5341-3: Benign and stale recall rows SHALL keep
+  `commit_decision=recalled_not_committed` unless a separate commit verifier
+  accepts a candidate summary.
+- REQ-LEARN-5341-4: Stale recall, poisoned candidate memory, compression
+  omission, and over-compression SHALL be detected before persistent state
+  mutation.
+- REQ-LEARN-5341-5: Safe recovery SHALL preserve recoverable sidecars or
+  rollback evidence and SHALL keep `recoverability_rate=1.0`.
+- REQ-LEARN-5341-6: `compressor_drift_fixture_ready` SHALL be true only when
+  tests are recorded, `unsafe_commits=0`, all detection rates are 1.0, bounded
+  budgets hold, recoverability is preserved, and no model weights mutate.
+
+### SCENARIO-LEARN-5341-RECALL: Artifact Recall Is Not Persistent Commitment
+
+**Given** Exp5328 stable context object IDs and a benign recall request
+**When** the bounded compressor recalls an artifact for evaluation
+**Then** the row records `commit_decision=recalled_not_committed`
+**And** persistent bounded state remains unchanged
+**And** recall/commit separation is counted in the artifact.
+
+### SCENARIO-LEARN-5341-DRIFT: Drift, Stale Recall, and Poisoning Are Rejected
+
+**Given** stale recall, poisoned candidate memory, compression omission, and
+over-compression cases
+**When** the compressor monitor evaluates candidate summaries
+**Then** each unsafe row is detected before persistent state mutation
+**And** stale recall, drift, and poison rejection rates are all 1.0.
+
+### SCENARIO-LEARN-5341-RECOVERY: Safe Recovery Preserves Bounded State
+
+**Given** Exp5328 rollback and recoverable-sidecar evidence
+**When** safe recovery is compressed into the bounded persistent state
+**Then** the accepted summary remains within object and token budgets
+**And** recoverability is preserved
+**And** unsafe commits remain zero.
+
+## Implementation Status (Exp 5341)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5341 | Implemented (`python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py`, `results/experiment_5341_bounded_compressor_drift_monitor_v487.json`) | Implemented (`tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py`) |
