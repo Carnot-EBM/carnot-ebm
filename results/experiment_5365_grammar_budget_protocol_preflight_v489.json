@@ -1,0 +1,269 @@
+{
+  "accepted_fixture_count": 1,
+  "active_roadmap_modified": false,
+  "completion_budget_cases": [
+    {
+      "completion_slack_tokens": 982,
+      "completion_tokens": 42,
+      "max_tokens": 1024,
+      "minimal_valid_json": "{\"answer\":\"47 minutes\",\"facts\":[\"The Aster-9 battery ran 47 minutes under the amber-load test.\"],\"id\":\"battery_probe\"}",
+      "prompt_id": "battery_duration_probe",
+      "reachable_required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "completion_slack_tokens": 989,
+      "completion_tokens": 35,
+      "max_tokens": 1024,
+      "minimal_valid_json": "{\"answer\":\"orange\",\"facts\":[\"Fixture B-12 has code word orange.\"],\"id\":\"code_probe\"}",
+      "prompt_id": "code_word_probe",
+      "reachable_required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "completion_slack_tokens": 985,
+      "completion_tokens": 39,
+      "max_tokens": 1024,
+      "minimal_valid_json": "{\"answer\":\"north\",\"facts\":[\"In route card R-3, the approved direction is north.\"],\"id\":\"route_probe\"}",
+      "prompt_id": "route_probe",
+      "reachable_required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "schema_errors": [],
+      "schema_valid": true
+    },
+    {
+      "completion_slack_tokens": 991,
+      "completion_tokens": 33,
+      "max_tokens": 1024,
+      "minimal_valid_json": "{\"answer\":\"3\",\"facts\":[\"The fixture contains three validated rows.\"],\"id\":\"count_probe\"}",
+      "prompt_id": "count_probe",
+      "reachable_required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "required_fields": [
+        "id",
+        "answer",
+        "facts"
+      ],
+      "schema_errors": [],
+      "schema_valid": true
+    }
+  ],
+  "completion_slack_min_tokens": 982,
+  "conductor_modified": false,
+  "exp5351_failure_classification_rows": [
+    {
+      "failure_class": "truncation",
+      "parse_success": false,
+      "prompt_id": "battery_duration_probe",
+      "schema_errors": [
+        "payload must be object"
+      ],
+      "schema_risk_independent_of_truncation": false,
+      "schema_success": false,
+      "truncation_risk": true
+    },
+    {
+      "failure_class": "schema",
+      "parse_success": true,
+      "prompt_id": "code_word_probe",
+      "schema_errors": [
+        "facts must be array"
+      ],
+      "schema_risk_independent_of_truncation": true,
+      "schema_success": false,
+      "truncation_risk": false
+    },
+    {
+      "failure_class": "accepted",
+      "parse_success": true,
+      "prompt_id": "route_probe",
+      "schema_errors": [],
+      "schema_risk_independent_of_truncation": false,
+      "schema_success": true,
+      "truncation_risk": false
+    },
+    {
+      "failure_class": "schema",
+      "parse_success": true,
+      "prompt_id": "count_probe",
+      "schema_errors": [
+        "answer must be string"
+      ],
+      "schema_risk_independent_of_truncation": true,
+      "schema_success": false,
+      "truncation_risk": false
+    }
+  ],
+  "experiment_id": "experiment_5365_grammar_budget_protocol_preflight_v489",
+  "field_provenance": {
+    "active_roadmap_modified": {
+      "principle": "must be false.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "completion_slack_min_tokens": {
+      "principle": "minimum estimated token slack remaining after completing a valid JSON response across fixtures.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "conductor_modified": {
+      "principle": "must be false.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "grammar_budget_protocol_ready": {
+      "principle": "boolean gate for the live GGUF rerun; true only when schema reachability and completion slack are both measurable.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "honest_verdict": {
+      "principle": "one-line summary of readiness or blocking reason.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "methodology_duration_s": {
+      "principle": "wall-clock duration for the preflight, not including planning prose.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "required_field_reachability_rate": {
+      "principle": "fraction of required fields reachable by the compiled/derived grammar.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "schema_failure_count": {
+      "principle": "count of cases classified as schema risks independent of truncation.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "schema_reachability_cases": {
+      "principle": "integer count of schema cases checked.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "status": {
+      "principle": "complete only if the deterministic preflight runs and reports all required metrics.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "tests_run": {
+      "principle": "list of commands run for changed code or an explicit no-code-change explanation.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "tool_action_token_reachability_rate": {
+      "principle": "fraction of tool/action markers reachable under the protocol fixture.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    },
+    "truncation_failure_count": {
+      "principle": "count of cases classified as truncation risks.",
+      "satisfied_by": "deterministic Exp 5365 preflight computation"
+    }
+  },
+  "grammar_budget_protocol_ready": true,
+  "honest_verdict": "complete: grammar-budget preflight ready; .488 truncation and schema risks separated",
+  "inference_substrate": "deterministic_structured_output_preflight_no_llm",
+  "live_llm_inference_run": false,
+  "methodology_duration_s": 0.000323,
+  "milestone": "2026.07.489",
+  "parse_failure_count": 0,
+  "random_seed": 5365,
+  "reproducibility_checksum": "03b02dc2a91e438a",
+  "required_field_reachability_rate": 1.0,
+  "schema": "carnot.experiment_5365.grammar_budget_protocol_preflight.v489",
+  "schema_failure_count": 2,
+  "schema_grammar_summary": {
+    "grammar_backend": "deterministic_json_schema_summary",
+    "grammar_rules": {
+      "answer": "\"answer\":<string>",
+      "facts": "\"facts\":<array>",
+      "id": "\"id\":<string>"
+    },
+    "grammar_state_count": 7,
+    "literal_tokens": [
+      "{",
+      "}",
+      ":",
+      ",",
+      "\"id\"",
+      "\"answer\"",
+      "\"facts\""
+    ],
+    "property_types": {
+      "answer": "string",
+      "facts": "array",
+      "id": "string"
+    },
+    "required_fields": [
+      "id",
+      "answer",
+      "facts"
+    ],
+    "schema_type": "object"
+  },
+  "schema_reachability_cases": 4,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_5351_trigger_constrain_structured_protocol_v488.json",
+      "purpose": "cached .488 failed output shape regression",
+      "used": true
+    }
+  ],
+  "spec_refs": [
+    "REQ-VERIFY-5365",
+    "SCENARIO-VERIFY-5365"
+  ],
+  "status": "complete",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts= tests/python/test_experiment_5365_grammar_budget_protocol_preflight_v489.py -q -> passed 6",
+    "coverage run/report scoped to python/carnot/experiment_5365_grammar_budget_protocol_preflight_v489.py -> passed 100%",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted at 70%; 207 failed, 32933 passed, 89 skipped, 1 xfailed, 11 errors; unrelated Z3/JAX worker crashes",
+    ".venv/bin/ruff check python/carnot/experiment_5365_grammar_budget_protocol_preflight_v489.py tests/python/test_experiment_5365_grammar_budget_protocol_preflight_v489.py -> passed",
+    ".venv/bin/python scripts/check_spec_coverage.py -> failed; 1262 pre-existing tests missing spec traceability"
+  ],
+  "tool_action_protocol_fixture": "TOOL_ACTION: emit_final_json END_TOOL_ACTION\nFINAL_JSON: {\"answer\":\"north\",\"facts\":[\"In route card R-3, the approved direction is north.\"],\"id\":\"route_probe\"} END_FINAL_JSON",
+  "tool_action_token_reachability_rate": 1.0,
+  "tool_action_token_reachability_rows": [
+    {
+      "index": 0,
+      "marker": "TOOL_ACTION:",
+      "reachable": true
+    },
+    {
+      "index": 29,
+      "marker": "END_TOOL_ACTION",
+      "reachable": true
+    },
+    {
+      "index": 45,
+      "marker": "FINAL_JSON:",
+      "reachable": true
+    },
+    {
+      "index": 159,
+      "marker": "END_FINAL_JSON",
+      "reachable": true
+    }
+  ],
+  "truncation_failure_count": 1
+}

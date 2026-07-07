@@ -27877,6 +27877,62 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5365: Grammar-Budget Protocol Preflight V489
+
+The repository SHALL provide Exp 5365 at
+`python/carnot/experiment_5365_grammar_budget_protocol_preflight_v489.py`
+and write
+`results/experiment_5365_grammar_budget_protocol_preflight_v489.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL run a
+deterministic, CPU-only structured-output preflight before any live local GGUF
+generation. The preflight SHALL derive a grammar summary from the Exp 5351
+final JSON schema, measure required-field reachability, estimate maximum-token
+completion slack for every protocol fixture, classify cached Exp 5351 failed
+output shapes into parse, schema, and truncation risks, and measure
+tool/action marker reachability under the protocol fixture.
+
+The artifact SHALL include bare top-level `status`,
+`grammar_budget_protocol_ready`, `schema_reachability_cases`,
+`required_field_reachability_rate`, `completion_slack_min_tokens`,
+`truncation_failure_count`, `schema_failure_count`,
+`tool_action_token_reachability_rate`, `methodology_duration_s`, `tests_run`,
+`active_roadmap_modified`, `conductor_modified`, and `honest_verdict`, plus
+field provenance explaining each required field's principle. `status` SHALL be
+`complete` only when the deterministic preflight runs and reports all required
+metrics. `grammar_budget_protocol_ready` SHALL be true only when schema
+reachability is measurable, completion slack is measurable and non-negative,
+and required fields are fully reachable. `schema_reachability_cases` SHALL
+count the schema/prompt cases checked. `required_field_reachability_rate` SHALL
+be the fraction of required fields reachable by the derived grammar.
+`completion_slack_min_tokens` SHALL be the minimum remaining generation-token
+slack after estimating valid JSON completion cost across fixtures.
+`truncation_failure_count` SHALL count cases classified as truncation risks.
+`schema_failure_count` SHALL count schema risks independent of truncation.
+`tool_action_token_reachability_rate` SHALL report the fraction of configured
+tool/action markers reachable by the protocol fixture. The preflight SHALL not
+claim broad answer quality, live model quality, solver quality, memory
+usefulness, or semantic correctness.
+
+### SCENARIO-VERIFY-5365: Deterministic Grammar Budget Gate Separates Risks
+
+Given the Exp 5351 trigger-then-final-JSON schema, schema reachability
+requirements, completion slack requirements, and cached `.488` generation
+receipts, when Exp 5365 runs, then it derives a grammar summary with all
+required fields reachable, computes per-fixture completion tokens and minimum
+slack against the protocol max-token budget, verifies every configured
+tool/action marker is reachable in the deterministic fixture, classifies the
+Exp 5351 incomplete final JSON as truncation risk instead of schema risk,
+classifies parsed wrong-type final JSON objects as schema risks, writes the
+required `.489` result artifact, records `active_roadmap_modified=false` and
+`conductor_modified=false`, and leaves live local GGUF generation to the gated
+follow-up.
+
+## Implementation Status (REQ-VERIFY-5365)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5365 | Planned (`python/carnot/experiment_5365_grammar_budget_protocol_preflight_v489.py`, `results/experiment_5365_grammar_budget_protocol_preflight_v489.json`) | Planned (`tests/python/test_experiment_5365_grammar_budget_protocol_preflight_v489.py`) |
+
 ### REQ-VERIFY-5351: Trigger-Constrain Structured Protocol V488
 
 The repository SHALL provide Exp 5351 at
