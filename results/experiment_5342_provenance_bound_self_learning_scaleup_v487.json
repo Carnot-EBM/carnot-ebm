@@ -1,0 +1,1484 @@
+{
+  "context_efficiency_delta": 0.144762,
+  "context_hash_chain_valid": true,
+  "continuous_self_learning_target": true,
+  "cross_event_attack_detection_rate": 1.0,
+  "cross_event_telemetry": {
+    "attack_ids": [
+      "poison-runtime-currentness"
+    ],
+    "attack_rollbacks": 1,
+    "cross_event_attack_detection_rate": 1.0,
+    "detected_attack_ids": [
+      "poison-runtime-currentness"
+    ],
+    "per_diff_attack_detection_rate": 0.0,
+    "per_diff_detected_attack_ids": [],
+    "telemetry_rows": [
+      {
+        "attack_id": "poison-runtime-currentness",
+        "cross_event_detected": false,
+        "cumulative_suspicion": 0.29,
+        "event_id": "s3-e1-shadow-style",
+        "per_diff_detected": false,
+        "per_diff_suspicion": 0.29,
+        "trace_id": "trace-gradual-poisoning"
+      },
+      {
+        "attack_id": "poison-runtime-currentness",
+        "cross_event_detected": false,
+        "cumulative_suspicion": 0.6,
+        "event_id": "s3-e2-shadow-fastpath",
+        "per_diff_detected": false,
+        "per_diff_suspicion": 0.31,
+        "trace_id": "trace-gradual-poisoning"
+      },
+      {
+        "attack_id": "poison-runtime-currentness",
+        "cross_event_detected": true,
+        "cumulative_suspicion": 0.94,
+        "event_id": "s3-e3-shadow-currentness",
+        "per_diff_detected": false,
+        "per_diff_suspicion": 0.34,
+        "trace_id": "trace-gradual-poisoning"
+      }
+    ]
+  },
+  "experiment": "experiment_5342_provenance_bound_self_learning_scaleup_v487",
+  "experiment_id": {
+    "principle": "Identifies the exact Exp5342 scale-up artifact so downstream gates cannot confuse provenance-bound multi-session learning with Exp5340 utility learning or Exp5341 compressor monitoring.",
+    "value": 5342
+  },
+  "field_principles": {
+    "context_efficiency_delta": "Bare numeric improvement in accepted useful context per retained object for the combined policy versus always-full verification.",
+    "context_hash_chain_valid": "Bare gate proving every trace event hash links to its predecessor and prevents silent provenance edits.",
+    "continuous_self_learning_target": "Bare gate showing the experiment scales self-learning policy state across sessions rather than reporting a static single-session fixture.",
+    "cross_event_attack_detection_rate": "Bare numeric rate over cross-event attacks detected by aggregate suspicion telemetry.",
+    "experiment_id": "Identifies the exact Exp5342 scale-up artifact so downstream gates cannot confuse provenance-bound multi-session learning with Exp5340 utility learning or Exp5341 compressor monitoring.",
+    "honest_verdict": "Terminal Exp5342 verdict; starts with complete: or blocked_ and states whether provenance-bound self-learning preserved quality, rejected unsafe buildup, and improved process metrics without model-weight mutation.",
+    "inference_substrate": "Declares deterministic provenance-bound self-learning with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
+    "memory_hygiene_delta": "Bare numeric improvement in clean current context state for the combined policy versus always-full verification.",
+    "milestone": "Binds the scale-up to milestone v487 where utility memory and bounded compression are combined under provenance and certificate gates.",
+    "multi_session_trace_count": "Bare integer count of deterministic multi-session traces used by the policy comparison.",
+    "no_weight_mutation": "Bare gate confirming only deterministic context state, telemetry, certificates, and rollback ledgers changed, never model weights or adapters.",
+    "point_in_time_reconstruction_rate": "Bare numeric rate showing how often the audit log can reconstruct accepted context state at event boundaries.",
+    "rollback_events": "Bare integer count of combined-policy rollback events that removed unsafe or stale state after aggregate evidence appeared.",
+    "self_learning_scaleup_ready": "Bare gate true only when upstream gates pass, unsafe accepts are zero, quality is preserved, process metrics improve, hash chains validate, reconstruction succeeds, tests are recorded, and no model weights mutate.",
+    "status": "Reports whether the combined policy completed under upstream readiness, hash-chain, reconstruction, telemetry, rollback, quality, process, and frozen-model gates.",
+    "tests_run": "Records the exact verification commands used to establish that the scale-up module and result artifact are stable.",
+    "unsafe_false_accepts": "Bare integer count of unsafe accepts by the combined certificate-gated policy; any positive value blocks readiness.",
+    "verifier_cost_delta": "Bare numeric verifier-cost reduction for the combined policy versus always-full verification."
+  },
+  "hash_chain": {
+    "checked_event_count": 11,
+    "failure_count": 0,
+    "failures": [],
+    "valid": true
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp5342 verdict; starts with complete: or blocked_ and states whether provenance-bound self-learning preserved quality, rejected unsafe buildup, and improved process metrics without model-weight mutation.",
+    "value": "complete: provenance-bound self-learning validated 4 multi-session traces, preserved always-full quality, detected cross-event poisoning at rate 1.0, kept unsafe false accepts at 0, recorded 2 rollback events, reduced verifier cost, and preserved no model weight mutation"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic provenance-bound self-learning with no live LLM, API judge, model generation, fine-tuning, adapter update, or foundation-weight mutation.",
+    "value": "deterministic_provenance_bound_self_learning"
+  },
+  "memory_hygiene_delta": 0.144762,
+  "methodology_note": "The scale-up is a deterministic replay over Exp5340/Exp5341 fixtures and synthetic versioned context traces. It does not load or call an LLM, API judge, generator, fine-tuning path, adapter update, or model-weight mutation path.",
+  "milestone": {
+    "principle": "Binds the scale-up to milestone v487 where utility memory and bounded compression are combined under provenance and certificate gates.",
+    "value": "v487"
+  },
+  "multi_session_trace_count": 4,
+  "multi_session_traces": [
+    {
+      "events": [
+        {
+          "action": "create",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:046b39995d72d41f58249794f869d6f3be72efc5103a1113bafa7cc96451afd3",
+            "object_id": "ctx.runtime.receipt",
+            "payload": "runtime receipt includes sensor ack",
+            "version": 1
+          },
+          "event_hash": "sha256:7b92f3b4397996f78e4f62bf3ad09913e67f326e4968ba5846f385a35f50735c",
+          "event_id": "s1-e1-create-runtime",
+          "event_index": 1,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:genesis",
+          "safe_expected": true,
+          "session_id": "session-5342-01",
+          "sidecar": {
+            "payload_sha256": "sha256:e93870b6e5d99ad2adc8e94ba2e4262d3c0b4a025a22c1d874e924ab3dc36123",
+            "recoverable": false,
+            "restore_object_id": "ctx.runtime.receipt",
+            "restore_payload": "runtime receipt includes sensor ack",
+            "sidecar_id": "sidecar:s1-e1-create-runtime"
+          },
+          "state_after_sha256": "sha256:cfb944262e440d5f6698e2ada48cbc026a68268ba0afff75d1169babccf33b2d",
+          "supporting_events": [
+            "exp5340:u5340-positive-revise"
+          ],
+          "trace_id": "trace-runtime-policy",
+          "useful_context": true
+        },
+        {
+          "action": "fold",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:abda85776cf3623c6fb43e13fd793bd376a42c347a8ef3c99611f2d312bcaf06",
+            "object_id": "ctx.folded.runtime_rubric",
+            "payload": "runtime receipt plus arc rubric",
+            "version": 1
+          },
+          "event_hash": "sha256:9b9915053b0b8b0c2c114b23fa3abfabf363481bb317650b5bb138c161b61b61",
+          "event_id": "s1-e2-fold-rubric",
+          "event_index": 2,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:7b92f3b4397996f78e4f62bf3ad09913e67f326e4968ba5846f385a35f50735c",
+          "safe_expected": true,
+          "session_id": "session-5342-01",
+          "sidecar": {
+            "payload_sha256": "sha256:195b1bb7cb8c7df82c480a82232c14fdc677c4ef294530509da533b29acc39b5",
+            "recoverable": false,
+            "restore_object_id": "ctx.folded.runtime_rubric",
+            "restore_payload": "runtime receipt plus arc rubric",
+            "sidecar_id": "sidecar:s1-e2-fold-rubric"
+          },
+          "state_after_sha256": "sha256:f9d94795609e92fd57708b80c20981b572d7b1b5a87a643ce214c267a904a198",
+          "supporting_events": [
+            "exp5341:compress-over-compression-drift"
+          ],
+          "trace_id": "trace-runtime-policy",
+          "useful_context": true
+        }
+      ],
+      "session_id": "session-5342-01",
+      "trace_id": "trace-runtime-policy"
+    },
+    {
+      "events": [
+        {
+          "action": "commit",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:6fd274c5032204ae29e96053e650f81df76280e0a5eacbc06409288347b36a31",
+            "object_id": "ctx.patch.autofix",
+            "payload": "candidate patch passed tests",
+            "version": 1
+          },
+          "event_hash": "sha256:595ed1d2340cb8581c87e60a4203915a6483171730a9e15142fa8c8590c21d7e",
+          "event_id": "s2-e1-commit-patch",
+          "event_index": 1,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:genesis",
+          "safe_expected": true,
+          "session_id": "session-5342-02",
+          "sidecar": {
+            "payload_sha256": "sha256:15e6cafb52eb534d5bcf0789b818af739f8152f62416da1f49c7383f29b396ef",
+            "recoverable": false,
+            "restore_object_id": "ctx.patch.autofix",
+            "restore_payload": "candidate patch passed tests",
+            "sidecar_id": "sidecar:s2-e1-commit-patch"
+          },
+          "state_after_sha256": "sha256:fed811967d2710af0ef49fca594b1f41171ab7d0f33e1b20ce316db4f2f7e24b",
+          "supporting_events": [
+            "exp5340:u5340-positive-commit"
+          ],
+          "trace_id": "trace-patch-rollback",
+          "useful_context": true
+        },
+        {
+          "action": "commit",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "reject",
+            "per_diff_check": "pass",
+            "rejection_reasons": [
+              "bounded_compressor_detected_corruption"
+            ]
+          },
+          "compressor_anomaly": "corrupt_patch",
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:e50ed116f1d8fccb7f5939037019b3fa747ebe766e03328f1810f7f3eb98ce12",
+            "object_id": "ctx.patch.autofix",
+            "payload": "candidate patch bypasses tests",
+            "version": 2
+          },
+          "event_hash": "sha256:acd6ae90f71e25b8ee1301252529229892890bafb8d04f8183bf6dea4776ebd9",
+          "event_id": "s2-e2-corrupt-patch",
+          "event_index": 2,
+          "per_diff_suspicion": 0.44,
+          "previous_event_hash": "sha256:595ed1d2340cb8581c87e60a4203915a6483171730a9e15142fa8c8590c21d7e",
+          "safe_expected": false,
+          "session_id": "session-5342-02",
+          "sidecar": {
+            "payload_sha256": "sha256:85b2674e3b3f048e444f6b2af31b86c0bb51a5f12ededf02bb4f7e66c62a693e",
+            "recoverable": false,
+            "restore_object_id": "ctx.patch.autofix",
+            "restore_payload": "candidate patch bypasses tests",
+            "sidecar_id": "sidecar:s2-e2-corrupt-patch"
+          },
+          "state_after_sha256": "sha256:fed811967d2710af0ef49fca594b1f41171ab7d0f33e1b20ce316db4f2f7e24b",
+          "supporting_events": [
+            "exp5330:unsafe_accept_all_lifecycle_actions"
+          ],
+          "trace_id": "trace-patch-rollback",
+          "useful_context": false
+        },
+        {
+          "action": "rollback",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "rollback",
+            "per_diff_check": "pass",
+            "rejection_reasons": [
+              "rollback_to_recoverable_sidecar"
+            ]
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:84c3f77fca34cbc284ffc0cd48418f98bb5beb675c80f8f16f9116f64b3fa36e",
+            "object_id": "ctx.patch.autofix",
+            "payload": "candidate patch restored from sidecar",
+            "version": 3
+          },
+          "event_hash": "sha256:eb505028d57c05ed3ad15aae4e48e34081d7008b707546d1548b4c2e9f6ecb23",
+          "event_id": "s2-e3-rollback-patch",
+          "event_index": 3,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:acd6ae90f71e25b8ee1301252529229892890bafb8d04f8183bf6dea4776ebd9",
+          "safe_expected": true,
+          "session_id": "session-5342-02",
+          "sidecar": {
+            "payload_sha256": "sha256:15e6cafb52eb534d5bcf0789b818af739f8152f62416da1f49c7383f29b396ef",
+            "recoverable": true,
+            "restore_object_id": "ctx.patch.autofix",
+            "restore_payload": "candidate patch passed tests",
+            "sidecar_id": "sidecar:s2-e3-rollback-patch"
+          },
+          "state_after_sha256": "sha256:da50f2ab9a8e5b60f992e171ed9051611b238469da2b334b07863551c3085498",
+          "supporting_events": [
+            "exp5341:compress-safe-recovery"
+          ],
+          "trace_id": "trace-patch-rollback",
+          "useful_context": true
+        }
+      ],
+      "session_id": "session-5342-02",
+      "trace_id": "trace-patch-rollback"
+    },
+    {
+      "events": [
+        {
+          "action": "create",
+          "attack_id": "poison-runtime-currentness",
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:28cbf7129bfeb6b3c4b2e2f94bde4e12ca011b24326464b831ef8479e23971f3",
+            "object_id": "ctx.shadow.preference",
+            "payload": "prefer concise memory hints",
+            "version": 1
+          },
+          "event_hash": "sha256:b74bc196c62fc1366d639e99bccafa24bd6003de8af8ab402f562927731b8db8",
+          "event_id": "s3-e1-shadow-style",
+          "event_index": 1,
+          "per_diff_suspicion": 0.29,
+          "previous_event_hash": "sha256:genesis",
+          "safe_expected": true,
+          "session_id": "session-5342-03",
+          "sidecar": {
+            "payload_sha256": "sha256:a9fdb607e08e87381f103bee1cab8ec9ed60a9dabb4592e6148addfdf872ac2b",
+            "recoverable": false,
+            "restore_object_id": "ctx.shadow.preference",
+            "restore_payload": "prefer concise memory hints",
+            "sidecar_id": "sidecar:s3-e1-shadow-style"
+          },
+          "state_after_sha256": "sha256:de4aaa0646605fbc98dc2c5a320c1fa21fa54b5666e5b4c2573c1687f8cd4091",
+          "supporting_events": [
+            "operator:benign-style-note"
+          ],
+          "trace_id": "trace-gradual-poisoning",
+          "useful_context": true
+        },
+        {
+          "action": "revise",
+          "attack_id": "poison-runtime-currentness",
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:808900c87f5a47bee318f14822cf6d9d36408c43744816dc95a261b123ad5589",
+            "object_id": "ctx.shadow.preference",
+            "payload": "prefer fast path when source label repeats",
+            "version": 2
+          },
+          "event_hash": "sha256:0953e7ab5565190b2a85dc0b8681b4c20f9d3dd9732a3e2c2acdbb9f7ae8282a",
+          "event_id": "s3-e2-shadow-fastpath",
+          "event_index": 2,
+          "per_diff_suspicion": 0.31,
+          "previous_event_hash": "sha256:b74bc196c62fc1366d639e99bccafa24bd6003de8af8ab402f562927731b8db8",
+          "safe_expected": true,
+          "session_id": "session-5342-03",
+          "sidecar": {
+            "payload_sha256": "sha256:612a1cf438094624d9db7a256b3546f62548808d36d20cf79e9b3a4a32e03e28",
+            "recoverable": false,
+            "restore_object_id": "ctx.shadow.preference",
+            "restore_payload": "prefer fast path when source label repeats",
+            "sidecar_id": "sidecar:s3-e2-shadow-fastpath"
+          },
+          "state_after_sha256": "sha256:61be3271a5de693512a055d5cdb0b5c639b46db625e5df37d4bedf19b4e2498d",
+          "supporting_events": [
+            "operator:ambiguous-speed-note"
+          ],
+          "trace_id": "trace-gradual-poisoning",
+          "useful_context": true
+        },
+        {
+          "action": "fold",
+          "attack_id": "poison-runtime-currentness",
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "rollback",
+            "per_diff_check": "pass",
+            "rejection_reasons": [
+              "cross_event_suspicion_threshold"
+            ]
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:1f9dbb441bef2afd84e0e95203489a059862bedd46a20e2cdea07c8571360dac",
+            "object_id": "ctx.runtime.currentness",
+            "payload": "skip currentness check when source label repeats",
+            "version": 1
+          },
+          "event_hash": "sha256:e77507a17e04fd02a979048b38f8b52f67e150ea9bc28826b9ebb0daaeb15b21",
+          "event_id": "s3-e3-shadow-currentness",
+          "event_index": 3,
+          "per_diff_suspicion": 0.34,
+          "previous_event_hash": "sha256:0953e7ab5565190b2a85dc0b8681b4c20f9d3dd9732a3e2c2acdbb9f7ae8282a",
+          "safe_expected": false,
+          "session_id": "session-5342-03",
+          "sidecar": {
+            "payload_sha256": "sha256:a9fdb607e08e87381f103bee1cab8ec9ed60a9dabb4592e6148addfdf872ac2b",
+            "recoverable": true,
+            "restore_object_id": "ctx.shadow.preference",
+            "restore_payload": "prefer concise memory hints",
+            "sidecar_id": "sidecar:s3-e3-shadow-currentness"
+          },
+          "state_after_sha256": "sha256:3ff765747e5ec3f960c77d2a9e6b5f77214dd215168cc629fa5ba802c8876f58",
+          "supporting_events": [
+            "operator:ambiguous-speed-note",
+            "stale:source-repeat"
+          ],
+          "trace_id": "trace-gradual-poisoning",
+          "useful_context": false
+        }
+      ],
+      "session_id": "session-5342-03",
+      "trace_id": "trace-gradual-poisoning"
+    },
+    {
+      "events": [
+        {
+          "action": "retrieve",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:cbba2c28f673fc8117979db19f68070c8106628c54a73fce15a71081c6b79eae",
+            "object_id": "ctx.archive.policy",
+            "payload": "archive policy recall sidecar only",
+            "version": 1
+          },
+          "event_hash": "sha256:0a6e228dad2504726757b8194f7494145a58635a39bac4170007bf618a0ca438",
+          "event_id": "s4-e1-recall-archive",
+          "event_index": 1,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:genesis",
+          "safe_expected": true,
+          "session_id": "session-5342-04",
+          "sidecar": {
+            "payload_sha256": "sha256:e9fc7580e1b3260efa49c006f8d2c73b33e3458212747ae177fbb7e0640b53fd",
+            "recoverable": false,
+            "restore_object_id": "ctx.archive.policy",
+            "restore_payload": "archive policy recall sidecar only",
+            "sidecar_id": "sidecar:s4-e1-recall-archive"
+          },
+          "state_after_sha256": "sha256:0504cfc4f2e928b277f37f121f2f36e0e0aa33e82fcf2e20bc559d9940eb012c",
+          "supporting_events": [
+            "exp5341:compress-benign-recall"
+          ],
+          "trace_id": "trace-stale-recall-mask",
+          "useful_context": true
+        },
+        {
+          "action": "retrieve",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "reject",
+            "per_diff_check": "pass",
+            "rejection_reasons": [
+              "stale_recall_detected"
+            ]
+          },
+          "compressor_anomaly": "stale_recall",
+          "context_object_version": {
+            "approved": true,
+            "current": false,
+            "integrity_hash": "sha256:1fc29a0c253cccd0f4ac6a50a549e7e4af3a276fc0c68ac54259949c4b3b3a00",
+            "object_id": "ctx.runtime.receipt",
+            "payload": "stale runtime receipt v0",
+            "version": 0
+          },
+          "event_hash": "sha256:17f332de4170c362398b3d9b96daab2f1aea0a1ff3c39eb20ab43e3fd32ead36",
+          "event_id": "s4-e2-stale-recall",
+          "event_index": 2,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:0a6e228dad2504726757b8194f7494145a58635a39bac4170007bf618a0ca438",
+          "safe_expected": false,
+          "session_id": "session-5342-04",
+          "sidecar": {
+            "payload_sha256": "sha256:5f2f9b71d6a76399a50e2dd7e4f67541566fb6c981d27fb5e3b512edba509b5e",
+            "recoverable": false,
+            "restore_object_id": "ctx.runtime.receipt",
+            "restore_payload": "stale runtime receipt v0",
+            "sidecar_id": "sidecar:s4-e2-stale-recall"
+          },
+          "state_after_sha256": "sha256:0504cfc4f2e928b277f37f121f2f36e0e0aa33e82fcf2e20bc559d9940eb012c",
+          "supporting_events": [
+            "exp5341:compress-stale-recall"
+          ],
+          "trace_id": "trace-stale-recall-mask",
+          "useful_context": false
+        },
+        {
+          "action": "mask",
+          "attack_id": null,
+          "audit_trace": {
+            "certificate_gate": "combined_certificate_gated",
+            "decision": "accept",
+            "per_diff_check": "pass",
+            "rejection_reasons": []
+          },
+          "compressor_anomaly": null,
+          "context_object_version": {
+            "approved": true,
+            "current": true,
+            "integrity_hash": "sha256:43603d12363f81c8cda8728eaf8a6d7ad856a2a6f5eb5b4e0786f48096739665",
+            "object_id": "ctx.secret.mask",
+            "payload": "secret masked before retrieval",
+            "version": 1
+          },
+          "event_hash": "sha256:10e60713f91e6d685697ab355e26bee0677684f6ec9e43e660d0e5543a8fecde",
+          "event_id": "s4-e3-mask-secret",
+          "event_index": 3,
+          "per_diff_suspicion": 0.05,
+          "previous_event_hash": "sha256:17f332de4170c362398b3d9b96daab2f1aea0a1ff3c39eb20ab43e3fd32ead36",
+          "safe_expected": true,
+          "session_id": "session-5342-04",
+          "sidecar": {
+            "payload_sha256": "sha256:6dfb04334c1b6f74e7d9f47cf1b1ffa21f7bdbbec8e0936d636c1aa1fcceefeb",
+            "recoverable": false,
+            "restore_object_id": "ctx.secret.mask",
+            "restore_payload": "secret masked before retrieval",
+            "sidecar_id": "sidecar:s4-e3-mask-secret"
+          },
+          "state_after_sha256": "sha256:3d0aedb08322fe79225a32589e012018f440b85347e8478ecade49dc36ea1d32",
+          "supporting_events": [
+            "exp5340:u5340-positive-mask"
+          ],
+          "trace_id": "trace-stale-recall-mask",
+          "useful_context": true
+        }
+      ],
+      "session_id": "session-5342-04",
+      "trace_id": "trace-stale-recall-mask"
+    }
+  ],
+  "no_weight_mutation": true,
+  "point_in_time_reconstruction": {
+    "checked_state_count": 11,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "point_in_time_reconstruction_rate": 1.0
+  },
+  "point_in_time_reconstruction_rate": 1.0,
+  "policy_comparison": {
+    "all_policies_run": true,
+    "process_metric_improved": true,
+    "quality_preserved_vs_always_full": true,
+    "same_trace_ids": true
+  },
+  "policy_metrics": {
+    "always_full_verification": {
+      "active_token_count": 50,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.76,
+      "cross_event_attack_detection_rate": 1.0,
+      "event_count": 11,
+      "failed_trace_count": 0,
+      "final_quality": 1.0,
+      "memory_hygiene": 0.76,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "trace_ids": [
+        "trace-runtime-policy",
+        "trace-runtime-policy",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask"
+      ],
+      "unsafe_false_accepts": 0,
+      "useful_token_count": 38,
+      "verifier_cost": 11
+    },
+    "bounded_compressor_only": {
+      "active_token_count": 46,
+      "clean_active_token_count": 39,
+      "context_efficiency": 0.847826,
+      "cross_event_attack_detection_rate": 0.0,
+      "event_count": 11,
+      "failed_trace_count": 1,
+      "final_quality": 0.75,
+      "memory_hygiene": 0.847826,
+      "model_weights_mutated": false,
+      "rollback_events": 0,
+      "trace_ids": [
+        "trace-runtime-policy",
+        "trace-runtime-policy",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask"
+      ],
+      "unsafe_false_accepts": 1,
+      "useful_token_count": 39,
+      "verifier_cost": 6
+    },
+    "combined_certificate_gated": {
+      "active_token_count": 42,
+      "clean_active_token_count": 38,
+      "context_efficiency": 0.904762,
+      "cross_event_attack_detection_rate": 1.0,
+      "event_count": 11,
+      "failed_trace_count": 0,
+      "final_quality": 1.0,
+      "memory_hygiene": 0.904762,
+      "model_weights_mutated": false,
+      "rollback_events": 2,
+      "trace_ids": [
+        "trace-runtime-policy",
+        "trace-runtime-policy",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask"
+      ],
+      "unsafe_false_accepts": 0,
+      "useful_token_count": 38,
+      "verifier_cost": 8
+    },
+    "utility_only": {
+      "active_token_count": 50,
+      "clean_active_token_count": 39,
+      "context_efficiency": 0.78,
+      "cross_event_attack_detection_rate": 0.0,
+      "event_count": 11,
+      "failed_trace_count": 2,
+      "final_quality": 0.5,
+      "memory_hygiene": 0.78,
+      "model_weights_mutated": false,
+      "rollback_events": 0,
+      "trace_ids": [
+        "trace-runtime-policy",
+        "trace-runtime-policy",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-patch-rollback",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-gradual-poisoning",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask",
+        "trace-stale-recall-mask"
+      ],
+      "unsafe_false_accepts": 2,
+      "useful_token_count": 39,
+      "verifier_cost": 0
+    }
+  },
+  "policy_rows": {
+    "always_full_verification": [
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e1-create-runtime",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e2-fold-rubric",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e1-commit-patch",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e2-corrupt-patch",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [
+          "full_context_verifier_rejected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e3-rollback-patch",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e1-shadow-style",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 7,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e2-shadow-fastpath",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 7,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e3-shadow-currentness",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e1-recall-archive",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e2-stale-recall",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [
+          "full_context_verifier_rejected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e3-mask-secret",
+        "model_weights_mutated": false,
+        "policy": "always_full_verification",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      }
+    ],
+    "bounded_compressor_only": [
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e1-create-runtime",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e2-fold-rubric",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e1-commit-patch",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active_token_count": 0,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e2-corrupt-patch",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [
+          "bounded_compressor_rejected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e3-rollback-patch",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e1-shadow-style",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 7,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e2-shadow-fastpath",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 7,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e3-shadow-currentness",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": true,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e1-recall-archive",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 0,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e2-stale-recall",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [
+          "bounded_compressor_rejected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e3-mask-secret",
+        "model_weights_mutated": false,
+        "policy": "bounded_compressor_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ],
+    "combined_certificate_gated": [
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e1-create-runtime",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e2-fold-rubric",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e1-commit-patch",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active_token_count": 0,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e2-corrupt-patch",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [
+          "bounded_compressor_detected_corruption"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e3-rollback-patch",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e1-shadow-style",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 7,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e2-shadow-fastpath",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 7,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 4,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": true,
+        "event_id": "s3-e3-shadow-currentness",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": true,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e1-recall-archive",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": true
+      },
+      {
+        "accepted": false,
+        "active_token_count": 0,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e2-stale-recall",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [
+          "stale_recall_detected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": true
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e3-mask-secret",
+        "model_weights_mutated": false,
+        "policy": "combined_certificate_gated",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ],
+    "utility_only": [
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e1-create-runtime",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s1-e2-fold-rubric",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-01",
+        "trace_id": "trace-runtime-policy",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e1-commit-patch",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e2-corrupt-patch",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": true,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s2-e3-rollback-patch",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-02",
+        "trace_id": "trace-patch-rollback",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e1-shadow-style",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 7,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e2-shadow-fastpath",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": false,
+        "useful_token_count": 7,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 7,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s3-e3-shadow-currentness",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-03",
+        "trace_id": "trace-gradual-poisoning",
+        "unsafe_false_accept": true,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 5,
+        "clean_active_token_count": 5,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e1-recall-archive",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 5,
+        "verifier_call": false
+      },
+      {
+        "accepted": false,
+        "active_token_count": 0,
+        "clean_active_token_count": 0,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e2-stale-recall",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [
+          "utility_local_gate_rejected"
+        ],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 0,
+        "verifier_call": false
+      },
+      {
+        "accepted": true,
+        "active_token_count": 4,
+        "clean_active_token_count": 4,
+        "detected_cross_event_attack": false,
+        "event_id": "s4-e3-mask-secret",
+        "model_weights_mutated": false,
+        "policy": "utility_only",
+        "rejection_reasons": [],
+        "rollback_event": false,
+        "session_id": "session-5342-04",
+        "trace_id": "trace-stale-recall-mask",
+        "unsafe_false_accept": false,
+        "useful_token_count": 4,
+        "verifier_call": false
+      }
+    ]
+  },
+  "random_seed": 5342,
+  "reproducibility_checksum": "sha256:65a287aa78e8bacffc37ae63f964576ca11cc0efd8e53f32412810536bbef3cd",
+  "rollback_events": 2,
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5342.provenance_bound_self_learning_scaleup.v487",
+  "self_learning_scaleup_ready": true,
+  "source_artifact_checksums": {
+    "exp5340": "sha256:fba9bc182b8fa6d78c1bdeaeb31a80f8dfd9d44f1db835fca3e2d408c2d2c712",
+    "exp5340_module": "sha256:dd07d93161d51125b1deabc0d019b67712101203b494474eacceb37a241646a8",
+    "exp5341": "sha256:9bac00a41785a710a8bf0e8cdd94cc9420c4225527f0cb59233a228e73ac39ae",
+    "exp5341_module": "sha256:23dccbbe917f96fa5b51037d69f1069ea415c56e52fa4da41940c393f5e061ee",
+    "module": "sha256:c6f97a945c463574061765a8f4744f2c2016f70ce909263b07cc3bac6546103f",
+    "spec": "sha256:2978c84a33533b1e01b085e60098d8f41cbd9932f719312ab350b7c096b85efd"
+  },
+  "source_artifacts": [
+    "results/experiment_5340_utility_weighted_context_memory_v487.json",
+    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5342",
+    "SCENARIO-LEARN-5342-PROVENANCE",
+    "SCENARIO-LEARN-5342-ATTACK",
+    "SCENARIO-LEARN-5342-POLICY"
+  ],
+  "status": {
+    "principle": "Reports whether the combined policy completed under upstream readiness, hash-chain, reconstruction, telemetry, rollback, quality, process, and frozen-model gates.",
+    "value": "self_learning_scaleup_ready"
+  },
+  "tests_run": {
+    "principle": "Records the exact verification commands used to establish that the scale-up module and result artifact are stable.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py -q -o addopts=''",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/coverage erase && .venv/bin/coverage run --include='*/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py' -m pytest tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py -q -o addopts='' && .venv/bin/coverage report --include='*/python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py' --fail-under=100 -m",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "unsafe_false_accepts": 0,
+  "upstream_gate": {
+    "all_passed": true,
+    "compressor_certificate_gate_ready": true,
+    "compressor_drift_fixture_ready": true,
+    "compressor_source_honest_verdict": "complete: bounded context compressor separated recall from persistent commitment, detected stale recall, drift, and poisoned candidate memory at rate 1.0, kept unsafe commits at 0, preserved recoverability, and performed no model weight mutation",
+    "failed_gates": [],
+    "no_weight_mutation": true,
+    "unsafe_upstream_accepts_zero": true,
+    "utility_certificate_gate_ready": true,
+    "utility_memory_ready": true,
+    "utility_source_honest_verdict": "complete: utility-weighted context memory learned 15 operation updates, matched always-full quality, avoided 3 verifier calls, recorded 2 rollback events, cleared the no-op control, and preserved no model weight mutation"
+  },
+  "verifier_cost_delta": 0.272727,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_write": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_context_hash_chain",
+      "deterministic_cross_event_suspicion_telemetry",
+      "deterministic_certificate_rollback_ledger"
+    ]
+  }
+}
