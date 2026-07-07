@@ -16036,6 +16036,104 @@ authenticated-workload status, and no-speedup status.
 
 ---
 
+### REQ-HW-5361
+
+**Title:** Hardware-continuity v488 MUST record current reachability and hash-verified PolarFire workload receipts when authenticated access exists
+
+**Description:**
+Experiment 5361 MUST produce
+`results/experiment_5361_hardware_continuity_workload_v488.json` as a v488
+hardware-continuity receipt. The artifact MUST use
+`inference_substrate.value="hardware_smoke"` because it records bounded
+board-status probes and, when authenticated SSH access exists, a tiny
+board-local workload receipt. It MUST NOT convert reachability, USB/toolchain
+visibility, public Extropic/TSU references, public Logical/Kona references, or
+the workload receipt into a sampler acceleration or speedup claim.
+
+KV260 MUST be checked only by the exact non-destructive SSH reachability command
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. The artifact MUST NOT
+use host block-device, `/dev/mmcblk*`, `/dev/disk`, SD-card, or removable-storage
+state as board-state evidence.
+
+PolarFire MUST first check authenticated SSH status. If SSH is reachable, the
+workflow MUST run a tiny deterministic board-local workload that reports
+hostname, uname, Python version when present, input checksum, output checksum,
+and wall time. `polarfire_workload_validated` and
+`authenticated_workload_run` MUST be true only when that board-local workload
+exits successfully and the receipt contains matching hash evidence. The receipt
+MUST be treated as workload reachability only, not a speedup or sampler timing
+claim.
+
+GateMate MUST record USB/toolchain evidence and MUST run JTAG detect only when
+the operator has changed the physical/JTAG setup or a new safe command is
+explicitly justified. Otherwise it MUST preserve the unchanged
+physical/JTAG/setup blocker.
+
+Extropic/TSU and Logical/Kona references MUST remain public context only unless
+local authenticated access exists. `speedup_claim` MUST be false and
+`no_host_block_device_evidence` MUST be true.
+
+The artifact MUST include principle-wrapped fields `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, `kv260_status`, `polarfire_status`,
+`gatemate_status`, and `tests_run`. It MUST include bare boolean fields
+`polarfire_workload_validated`, `authenticated_workload_run`,
+`public_refs_context_only`, `speedup_claim`, and
+`no_host_block_device_evidence`. `honest_verdict.value` MUST start with
+`complete:` or `blocked_` and MUST state KV260, PolarFire, GateMate,
+authenticated workload, public-reference boundary, and no-speedup status.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5361_hardware_continuity_workload_v488 --date 20260707`
+  writes `results/experiment_5361_hardware_continuity_workload_v488.json`.
+- The artifact includes
+  `experiment_id.value="exp5361-hardware-continuity-workload-v488"`,
+  `milestone.value="2026.07.488"`, `spec_refs` containing `REQ-HW-5361` and
+  `SCENARIO-HW-5361`, `random_seed=5361`, and a stable
+  `reproducibility_checksum`.
+- `commands_run.value` records exact command strings, outcomes, exit codes,
+  timeouts, durations, and bounded stdout/stderr receipts for every probe that
+  ran, including the exact KV260 SSH command above and, when PolarFire is SSH
+  reachable, the workload command.
+- `polarfire_status.value` includes a workload receipt with hostname, uname,
+  Python version when present, input checksum, output checksum, and wall time
+  when `polarfire_workload_validated=true`.
+- `speedup_claim=false`, `no_host_block_device_evidence=true`, and no host
+  block-device marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Implemented (Exp 5361)
+
+---
+
+### SCENARIO-HW-5361
+
+**Scenario:** Exp 5361 writes v488 hardware-continuity workload receipts without speedup claims.
+
+**Given:** Exp 5347 recorded KV260 SSH unreachable, PolarFire authenticated
+workload-receipt reachable, GateMate physical/JTAG setup unchanged, public
+Extropic/TSU and Logical/Kona references as context only, and no speedup claim.
+**When:** Experiment 5361 records Step 0 preconditions, runs exactly
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` for KV260, checks
+PolarFire authenticated SSH and runs a tiny board-local hash-verified workload
+only when SSH is reachable, records GateMate USB/toolchain status without JTAG
+rerun when physical setup is unchanged, and records public hardware references
+as context only.
+**Then:** It writes
+`results/experiment_5361_hardware_continuity_workload_v488.json` with all
+required principle-wrapped and bare boolean fields, with
+`inference_substrate.value="hardware_smoke"`,
+`polarfire_workload_validated=true` only for a successful hash-verified
+PolarFire workload receipt, `authenticated_workload_run` matching that
+receipt, `public_refs_context_only=true`, `speedup_claim=false`,
+`no_host_block_device_evidence=true`, command receipts, no host block-device
+precondition, and an honest verdict beginning with `complete:` or `blocked_`
+that states KV260, PolarFire, GateMate, public-reference boundaries,
+authenticated-workload status, and no-speedup status.
+
+**Implementation status:** Implemented (Exp 5361)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
