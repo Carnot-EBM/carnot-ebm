@@ -17549,3 +17549,136 @@ answer-time behavior
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5328 | Implemented (`python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py`, `results/experiment_5328_context_object_lifecycle_self_learning_v486.json`) | Implemented (`tests/python/test_experiment_5328_context_object_lifecycle_self_learning_v486.py`) |
+
+---
+
+## REQ-LEARN-5329: Memory/Context Policy Rollout on Lifecycle Fixture
+
+Experiment 5329 SHALL compare memory/context policies on the deterministic
+Exp5328 context-object lifecycle fixture. The rollout SHALL load the Exp5328
+artifact and confirm that the fixture exposes bank-maintenance failure metrics,
+retrieval failure metrics, answer-time failure metrics, rollback metrics, and
+recoverability metrics before reporting a terminal positive result.
+
+The rollout SHALL evaluate exactly three policy variants on the same
+deterministic lifecycle cases:
+
+- always-full verification.
+- transition-only verifier.
+- context-lifecycle policy with rollback.
+
+The rollout SHALL report final quality, verifier calls, bank failure rate,
+retrieval failure rate, answer failure rate, unsafe false accepts, rollback
+events, and recoveries for each policy. It SHALL compute the context-lifecycle
+policy's final-quality delta, verifier calls avoided, and bank/retrieval/answer
+failure-rate deltas against always-full verification. `policy_rollout_ready`
+SHALL be true only when the Exp5328 fixture gate passes, all three variants run
+on all deterministic cases, unsafe false accepts are zero, the
+context-lifecycle policy does not lower final quality versus always-full, the
+context-lifecycle policy does not increase bank/retrieval/answer failure rates
+versus always-full, at least one verifier call is avoided, at least one rollback
+and recovery are exercised, tests are recorded, and no model weights mutate.
+
+The rollout SHALL be deterministic and SHALL NOT call an LLM, API judge, model
+generator, fine-tuning path, adapter update, or model-weight mutation path. It
+SHALL mutate only local context-object bank state produced by the Exp5328
+fixture.
+
+The result artifact SHALL be
+`results/experiment_5329_memory_context_policy_rollout_v486.json` and SHALL
+include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_context_policy_rollout`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare numeric
+`quality_delta_vs_always_full`, bare integer `verifier_calls_avoided`, bare
+numeric `bank_failure_delta`, bare numeric `retrieval_failure_delta`, bare
+numeric `answer_failure_delta`, bare integer `unsafe_false_accepts`, bare
+integer `rollback_events`, bare boolean `policy_rollout_ready`, and
+principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5329 rollout artifact so downstream
+  gates cannot confuse lifecycle-aware context policy selection with Exp5313
+  transition-only memory rollout or Exp5328 fixture construction.
+- `milestone`: Binds the rollout to milestone v486 where lifecycle-aware
+  context policy replaces fixed transition-only verifier dosing as the
+  self-learning target.
+- `status`: Reports whether the lifecycle policy comparison completed after
+  fixture checks instead of merely finding source artifacts.
+- `honest_verdict`: Terminal Exp5329 verdict; starts with complete: or
+  blocked_ and states whether lifecycle policy avoided verifier calls without
+  lowering quality or accepting unsafe state changes.
+- `inference_substrate`: Declares deterministic context-policy rollout with no
+  live LLM, API judge, model generation, fine-tuning, adapter update, or model
+  weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the rollout evaluates
+  policy choices for continuous self-learning rather than static context
+  documentation.
+- `no_weight_mutation`: Bare gate confirming only deterministic context-object
+  bank state changed, never model weights or adapters.
+- `quality_delta_vs_always_full`: Bare final-quality delta comparing the
+  context-lifecycle policy with rollback against always-full verification.
+- `verifier_calls_avoided`: Bare integer count of verifier calls avoided by the
+  context-lifecycle policy with rollback relative to always-full on identical
+  cases.
+- `bank_failure_delta`: Bare bank failure-rate delta comparing the
+  context-lifecycle policy with rollback against always-full verification.
+- `retrieval_failure_delta`: Bare retrieval failure-rate delta comparing the
+  context-lifecycle policy with rollback against always-full verification.
+- `answer_failure_delta`: Bare answer failure-rate delta comparing the
+  context-lifecycle policy with rollback against always-full verification.
+- `unsafe_false_accepts`: Bare integer count of unsafe state-change accepts by
+  the context-lifecycle policy; any positive count blocks rollout readiness.
+- `rollback_events`: Bare integer count of rollback transitions exercised by
+  the context-lifecycle policy with rollback.
+- `policy_rollout_ready`: Bare gate showing all three policy variants ran on
+  the same deterministic lifecycle cases and preserved the safety gates.
+- `tests_run`: Records the exact verification commands used to establish that
+  the rollout module and artifact are stable.
+
+### REQ-LEARN-5329 Sub-requirements
+
+- REQ-LEARN-5329-1: The rollout SHALL load the Exp5328 artifact and confirm
+  `context_lifecycle_fixture_ready=true`, bank failure detection rate,
+  retrieval failure detection rate, answer failure detection rate, rollback
+  success rate, and recoverable-sidecar evidence.
+- REQ-LEARN-5329-2: Always-full verification, transition-only verifier, and
+  context-lifecycle policy with rollback SHALL run on identical Exp5328 case
+  IDs.
+- REQ-LEARN-5329-3: Per-policy metrics SHALL include final quality, verifier
+  calls, bank failure rate, retrieval failure rate, answer failure rate, unsafe
+  false accepts, rollback events, and recoveries.
+- REQ-LEARN-5329-4: The context-lifecycle policy with rollback SHALL match
+  always-full final quality and failure rates while avoiding at least one
+  verifier call.
+- REQ-LEARN-5329-5: `policy_rollout_ready` SHALL be true only when all variants
+  run, unsafe false accepts are zero, final quality is not lowered, failure
+  rates are not increased, rollback and recovery are exercised, tests are
+  recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5329-POLICY: Lifecycle Policy Avoids Calls Without Lowering Quality
+
+**Given** the Exp5328 deterministic lifecycle fixture exposes bank,
+retrieval, answer-time, rollback, and recoverability metrics
+**When** Experiment 5329 evaluates always-full verification,
+transition-only verifier, and context-lifecycle policy with rollback on the
+same lifecycle cases
+**Then** the context-lifecycle policy matches always-full final quality
+**And** the context-lifecycle policy avoids verifier calls relative to
+always-full
+**And** bank, retrieval, and answer failure-rate deltas versus always-full are
+zero
+**And** unsafe false accepts are zero
+**And** rollback and recovery are exercised
+**And** the artifact uses
+`inference_substrate=deterministic_context_policy_rollout`
+**And** the honest verdict starts with `complete:` or `blocked_`.
+
+## Implementation Status (Exp 5329)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5329 | Planned (`python/carnot/experiment_5329_memory_context_policy_rollout_v486.py`, `results/experiment_5329_memory_context_policy_rollout_v486.json`) | Planned (`tests/python/test_experiment_5329_memory_context_policy_rollout_v486.py`) |
