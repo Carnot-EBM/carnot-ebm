@@ -466,5 +466,18 @@
     "value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json"
   },
   "token_probability_available": true,
-  "token_timing_available": true
+  "token_timing_available": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=19.498207 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }
