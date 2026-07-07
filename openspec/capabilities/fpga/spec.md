@@ -15846,6 +15846,98 @@ reference boundaries, authenticated-workload absence, and no-speedup status.
 
 ---
 
+### REQ-HW-5333
+
+**Title:** Hardware-continuity v486 MUST record reachability-only board status with no workload or speedup claim
+
+**Description:**
+Experiment 5333 MUST produce
+`results/experiment_5333_hardware_continuity_no_speedup_v486.json` as a v486
+hardware-continuity receipt. The artifact MUST use
+`inference_substrate.value="hardware_reachability_receipts"` and MUST NOT
+convert SSH reachability, PolarFire status, GateMate physical/JTAG/toolchain
+visibility, public Extropic/TSU references, public Logical/Kona references, CPU
+simulation, or any other status-only receipt into a sampler workload or speedup
+claim.
+
+KV260 MUST be checked only by the exact non-destructive SSH reachability command
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. The artifact MUST NOT
+use host block-device, `/dev/mmcblk*`, `/dev/disk`, SD-card, or removable-storage
+state as board-state evidence.
+
+PolarFire MUST record only authenticated status if a BatchMode SSH path is
+available in the environment. If no authenticated path is available, the
+artifact MUST preserve that as a blocked status and MUST NOT fabricate a
+workload result.
+
+GateMate MUST record only physical, JTAG, or local toolchain evidence that is
+actually present. Unless a safe physical/JTAG status path is explicitly
+available, the artifact MUST preserve the status as physical/toolchain evidence
+only and MUST NOT flash hardware or claim sampler timing.
+
+Extropic/TSU and Logical/Kona references MUST be public context only unless
+local authenticated access exists. `authenticated_workload_run` MUST be true
+only when a real board workload ran and a receipt exists. `speedup_claim` MUST
+be false.
+
+The artifact MUST include principle-wrapped fields `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`preconditions_checked`, `kv260_status`, `polarfire_status`,
+`gatemate_status`, and `tests_run`. It MUST include bare boolean fields
+`authenticated_workload_run`, `public_refs_context_only`, `speedup_claim`, and
+`no_host_block_device_evidence`. `honest_verdict.value` MUST start with
+`complete:` or `blocked_` and MUST state KV260, PolarFire, GateMate,
+authenticated-workload absence, public-reference boundary, and no-speedup
+status.
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5333_hardware_continuity_no_speedup_v486 --date 20260707`
+  writes `results/experiment_5333_hardware_continuity_no_speedup_v486.json`.
+- The artifact includes
+  `experiment_id.value="exp5333-hardware-continuity-no-speedup-v486"`,
+  `milestone.value="2026.07.486"`, `spec_refs` containing `REQ-HW-5333` and
+  `SCENARIO-HW-5333`, `random_seed=5333`, and a stable
+  `reproducibility_checksum`.
+- `commands_run.value` records exact command strings, outcomes, exit codes,
+  timeouts, durations, and bounded stdout/stderr receipts for every probe that
+  ran, including the exact KV260 SSH command above.
+- `kv260_status`, `polarfire_status`, and `gatemate_status` each state a
+  board-specific status and either a bounded remote/device/tool identifier or
+  an honest blocked reason.
+- `authenticated_workload_run=false`, `public_refs_context_only=true`,
+  `speedup_claim=false`, `no_host_block_device_evidence=true`, and no host
+  block-device marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Implemented (Exp 5333)
+
+---
+
+### SCENARIO-HW-5333
+
+**Scenario:** Exp 5333 writes v486 hardware-continuity receipts without speedup claims.
+
+**Given:** Exp 5319 recorded KV260 reachability blocked, PolarFire
+status-only reachable, GateMate physical/JTAG setup unchanged, public
+Extropic/TSU and Logical/Kona references as context only, and no speedup claim.
+**When:** Experiment 5333 records Step 0 preconditions, runs exactly
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` for KV260, records
+PolarFire only through authenticated status paths available in the environment,
+records GateMate only through actual physical/JTAG/toolchain evidence, and does
+not run a board workload.
+**Then:** It writes
+`results/experiment_5333_hardware_continuity_no_speedup_v486.json` with all
+required principle-wrapped and bare boolean fields, with
+`inference_substrate.value="hardware_reachability_receipts"`,
+`authenticated_workload_run=false`, `public_refs_context_only=true`,
+`speedup_claim=false`, `no_host_block_device_evidence=true`, command receipts,
+no host block-device precondition, and an honest verdict beginning with
+`complete:` or `blocked_` that states KV260, PolarFire, GateMate, public
+reference boundaries, authenticated-workload absence, and no-speedup status.
+
+**Implementation status:** Implemented (Exp 5333)
+
+---
+
 ### SCENARIO-HW-4910
 
 **Scenario:** Exp 4910 writes SSH-attached KV260 overlay/UIO continuity or an honest SSH-unreachable block.
