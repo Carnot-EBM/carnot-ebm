@@ -1455,3 +1455,55 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5362 | Planned (`python/carnot/experiment_5362_capstone_v488.py`, `results/experiment_5362_capstone_v488.json`) | Planned (`tests/python/test_experiment_5362_capstone_v488.py`) |
+
+- REQ-CAPSTONE-5375: The `.489` milestone-close capstone aggregator
+  `exp5375-capstone-v489` in `python/carnot/experiment_5375_capstone_v489.py`
+  SHALL write `results/experiment_5375_capstone_v489.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every available
+  `.489` upstream artifact from Exp5363 through Exp5374, record the requested
+  but absent `research-roadmap-next.yaml` and
+  `results/experiment_5367_constraint_tax_tool_action_panel_v2_v489.json`
+  explicitly, record the available Exp5367 conductor-pre-gate block without
+  treating it as a measured panel, copy readiness booleans only from clean
+  source fields, and synthesize the milestone without promoting a skipped
+  constraint-tax panel, a failed structured protocol gate, text-only or tautological token/internal-feature evidence, CPU-only p-bit diagnostics, an
+  honest-null ARC attempt, or continuity-only hardware receipts into downstream
+  readiness, ARC progress, SOTA, token-energy, or hardware-speedup claims.
+- SCENARIO-CAPSTONE-5375: The artifact
+  `results/experiment_5375_capstone_v489.json` must emit top-level fields
+  `status`, `milestone`, `artifacts_expected`, `artifacts_found`,
+  `artifacts_missing`, `grammar_budget_protocol_ready`,
+  `structured_protocol_clean`, `constraint_tax_panel_ready`,
+  `budget_curated_memory_ready`,
+  `continuous_self_learning_budget_scaleup_ready`,
+  `overwrite_solver_guidance_ready`, `boundary_exchange_schedule_ready`,
+  `token_feature_gate_ready`, `future_token_signal_allowed`,
+  `arc_new_level_banked`, `hardware_speedup_claim`,
+  `continuous_self_learning_requirement_satisfied`,
+  `next_milestone_recommendations`, `retired_or_blocked_lanes`, and
+  `honest_verdict`. The default `.489` aggregation must summarize Exp5365 as
+  grammar-budget preflight ready, Exp5366 as a live structured SOTA run whose
+  clean gate remained false, Exp5367 as skipped/blocked by the failed
+  structured gate, Exp5368 and Exp5369 as budget-curated self-learning ready
+  with no weight mutation, Exp5370 as overwrite solver guidance ready under
+  solver authority, Exp5371 as CPU simulation-only boundary exchange ready with
+  no hardware speedup, Exp5372 as a token/internal-feature precondition gate
+  that retires future token signal claims until real logits/hidden states or
+  attention are available, Exp5373 as an honest-null ARC run with no new level
+  banked, and Exp5374 as continuity receipts with
+  `hardware_speedup_claim=false`.
+- SCENARIO-CAPSTONE-5375-MISSING-OR-SKIPPED-INPUT: If any expected `.489`
+  upstream artifact is absent, malformed, blocked, or skipped, the workflow must
+  still write `results/experiment_5375_capstone_v489.json` with
+  `status=complete` when the missing or skipped state is recorded honestly,
+  must include the path in `artifacts_missing` when it is absent at the expected
+  path, and must set that lane's readiness boolean to false rather than
+  inferring success from roadmap prose or alternate text-only evidence.
+
+## Implementation Status (REQ-CAPSTONE-5375)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5375 | Implemented (`python/carnot/experiment_5375_capstone_v489.py`, `results/experiment_5375_capstone_v489.json`) | Added (`tests/python/test_experiment_5375_capstone_v489.py`) |
