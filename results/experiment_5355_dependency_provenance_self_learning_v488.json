@@ -1,0 +1,1295 @@
+{
+  "context_efficiency_delta": 0.416667,
+  "continuous_self_learning_target": true,
+  "dependency_cases": [
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-positive-retrieval",
+      "case_type": "positive",
+      "context_node": "context.ctx.archive.policy.v1",
+      "execution_feedback_node": "execution_feedback.dep-positive-retrieval",
+      "expected_edge_ids": [
+        "dep-positive-retrieval:e1:context_informs_retrieval",
+        "dep-positive-retrieval:e2:retrieval_routes_verifier",
+        "dep-positive-retrieval:e3:retrieval_routes_tool",
+        "dep-positive-retrieval:e4:verifier_affects_outcome",
+        "dep-positive-retrieval:e5:tool_affects_outcome",
+        "dep-positive-retrieval:e6:outcome_records_execution_feedback",
+        "dep-positive-retrieval:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "accept",
+      "memory_hygiene_node": "memory_hygiene.dep-positive-retrieval",
+      "observed_edge_ids": [
+        "dep-positive-retrieval:e1:context_informs_retrieval",
+        "dep-positive-retrieval:e2:retrieval_routes_verifier",
+        "dep-positive-retrieval:e3:retrieval_routes_tool",
+        "dep-positive-retrieval:e4:verifier_affects_outcome",
+        "dep-positive-retrieval:e5:tool_affects_outcome",
+        "dep-positive-retrieval:e6:outcome_records_execution_feedback",
+        "dep-positive-retrieval:e7:outcome_updates_memory_hygiene"
+      ],
+      "outcome_node": "outcome.dep-positive-retrieval.accept",
+      "retrieval_node": "retrieval.dep-positive-retrieval",
+      "rollback_node": null,
+      "safe_expected": true,
+      "source_fixture": "exp5340_utility_memory",
+      "source_refs": [
+        "u5340-positive-retrieve"
+      ],
+      "tool_node": "tool_choice.dep-positive-retrieval",
+      "verifier_node": "verifier_choice.dep-positive-retrieval"
+    },
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-stale-recall",
+      "case_type": "stale",
+      "context_node": "context.ctx.runtime.receipt.v0",
+      "execution_feedback_node": "execution_feedback.dep-stale-recall",
+      "expected_edge_ids": [
+        "dep-stale-recall:e1:context_informs_retrieval",
+        "dep-stale-recall:e2:retrieval_routes_verifier",
+        "dep-stale-recall:e3:retrieval_routes_tool",
+        "dep-stale-recall:e4:verifier_affects_outcome",
+        "dep-stale-recall:e5:tool_affects_outcome",
+        "dep-stale-recall:e6:outcome_records_execution_feedback",
+        "dep-stale-recall:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "reject",
+      "memory_hygiene_node": "memory_hygiene.dep-stale-recall",
+      "observed_edge_ids": [
+        "dep-stale-recall:e1:context_informs_retrieval",
+        "dep-stale-recall:e2:retrieval_routes_verifier",
+        "dep-stale-recall:e3:retrieval_routes_tool",
+        "dep-stale-recall:e4:verifier_affects_outcome",
+        "dep-stale-recall:e5:tool_affects_outcome",
+        "dep-stale-recall:e6:outcome_records_execution_feedback",
+        "dep-stale-recall:e7:outcome_updates_memory_hygiene"
+      ],
+      "outcome_node": "outcome.dep-stale-recall.reject",
+      "retrieval_node": "retrieval.dep-stale-recall",
+      "rollback_node": null,
+      "safe_expected": false,
+      "source_fixture": "exp5341_bounded_compressor",
+      "source_refs": [
+        "compress-stale-recall"
+      ],
+      "tool_node": "tool_choice.dep-stale-recall",
+      "verifier_node": "verifier_choice.dep-stale-recall"
+    },
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-poisoned-rollback",
+      "case_type": "poisoned",
+      "context_node": "context.ctx.ghost.unsourced.v1",
+      "execution_feedback_node": "execution_feedback.dep-poisoned-rollback",
+      "expected_edge_ids": [
+        "dep-poisoned-rollback:e1:context_informs_retrieval",
+        "dep-poisoned-rollback:e2:retrieval_routes_verifier",
+        "dep-poisoned-rollback:e3:retrieval_routes_tool",
+        "dep-poisoned-rollback:e4:verifier_affects_outcome",
+        "dep-poisoned-rollback:e5:tool_affects_outcome",
+        "dep-poisoned-rollback:e6:outcome_records_execution_feedback",
+        "dep-poisoned-rollback:e7:outcome_updates_memory_hygiene",
+        "dep-poisoned-rollback:e8:outcome_triggers_rollback",
+        "dep-poisoned-rollback:e9:rollback_updates_hygiene"
+      ],
+      "final_decision": "rollback",
+      "memory_hygiene_node": "memory_hygiene.dep-poisoned-rollback",
+      "observed_edge_ids": [
+        "dep-poisoned-rollback:e1:context_informs_retrieval",
+        "dep-poisoned-rollback:e2:retrieval_routes_verifier",
+        "dep-poisoned-rollback:e3:retrieval_routes_tool",
+        "dep-poisoned-rollback:e4:verifier_affects_outcome",
+        "dep-poisoned-rollback:e5:tool_affects_outcome",
+        "dep-poisoned-rollback:e6:outcome_records_execution_feedback",
+        "dep-poisoned-rollback:e7:outcome_updates_memory_hygiene",
+        "dep-poisoned-rollback:e8:outcome_triggers_rollback",
+        "dep-poisoned-rollback:e9:rollback_updates_hygiene"
+      ],
+      "outcome_node": "outcome.dep-poisoned-rollback.rollback",
+      "retrieval_node": "retrieval.dep-poisoned-rollback",
+      "rollback_node": "rollback.dep-poisoned-rollback",
+      "safe_expected": false,
+      "source_fixture": "exp5341_bounded_compressor",
+      "source_refs": [
+        "compress-poisoned-candidate"
+      ],
+      "tool_node": "tool_choice.dep-poisoned-rollback",
+      "verifier_node": "verifier_choice.dep-poisoned-rollback"
+    },
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-missing-edge",
+      "case_type": "missing_edge",
+      "context_node": "context.ctx.runtime.receipt.v1",
+      "execution_feedback_node": "execution_feedback.dep-missing-edge",
+      "expected_edge_ids": [
+        "dep-missing-edge:e1:context_informs_retrieval",
+        "dep-missing-edge:e2:retrieval_routes_verifier",
+        "dep-missing-edge:e3:retrieval_routes_tool",
+        "dep-missing-edge:e4:verifier_affects_outcome",
+        "dep-missing-edge:e5:tool_affects_outcome",
+        "dep-missing-edge:e6:outcome_records_execution_feedback",
+        "dep-missing-edge:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "quarantine_missing_edge",
+      "memory_hygiene_node": "memory_hygiene.dep-missing-edge",
+      "observed_edge_ids": [
+        "dep-missing-edge:e1:context_informs_retrieval",
+        "dep-missing-edge:e2:retrieval_routes_verifier",
+        "dep-missing-edge:e3:retrieval_routes_tool",
+        "dep-missing-edge:e4:verifier_affects_outcome",
+        "dep-missing-edge:e5:tool_affects_outcome",
+        "dep-missing-edge:e7:outcome_updates_memory_hygiene"
+      ],
+      "outcome_node": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "retrieval_node": "retrieval.dep-missing-edge",
+      "rollback_node": null,
+      "safe_expected": true,
+      "source_fixture": "exp5341_bounded_compressor",
+      "source_refs": [
+        "compress-omission-drift"
+      ],
+      "tool_node": "tool_choice.dep-missing-edge",
+      "verifier_node": "verifier_choice.dep-missing-edge"
+    },
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-cyclic-dependency",
+      "case_type": "cyclic",
+      "context_node": "context.ctx.patch.autofix.v2",
+      "execution_feedback_node": "execution_feedback.dep-cyclic-dependency",
+      "expected_edge_ids": [
+        "dep-cyclic-dependency:e1:context_informs_retrieval",
+        "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+        "dep-cyclic-dependency:e3:retrieval_routes_tool",
+        "dep-cyclic-dependency:e4:verifier_affects_outcome",
+        "dep-cyclic-dependency:e5:tool_affects_outcome",
+        "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+        "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "quarantine_cycle",
+      "memory_hygiene_node": "memory_hygiene.dep-cyclic-dependency",
+      "observed_edge_ids": [
+        "dep-cyclic-dependency:e1:context_informs_retrieval",
+        "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+        "dep-cyclic-dependency:e3:retrieval_routes_tool",
+        "dep-cyclic-dependency:e4:verifier_affects_outcome",
+        "dep-cyclic-dependency:e5:tool_affects_outcome",
+        "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+        "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene",
+        "dep-cyclic-dependency:spurious-cycle-hygiene-retrieval",
+        "dep-cyclic-dependency:spurious-cycle-outcome-context"
+      ],
+      "outcome_node": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "retrieval_node": "retrieval.dep-cyclic-dependency",
+      "rollback_node": null,
+      "safe_expected": true,
+      "source_fixture": "exp5340_utility_memory",
+      "source_refs": [
+        "u5340-positive-commit"
+      ],
+      "tool_node": "tool_choice.dep-cyclic-dependency",
+      "verifier_node": "verifier_choice.dep-cyclic-dependency"
+    }
+  ],
+  "dependency_edge_count": 37,
+  "dependency_edge_precision": 0.947368,
+  "dependency_edge_recall": 0.972973,
+  "dependency_provenance_ready": true,
+  "duplicated_metric_pairs": [],
+  "excluded_artifacts": [
+    "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
+  ],
+  "execution_feedback_attribution_rate": 0.8,
+  "execution_feedback_rows": [
+    {
+      "attributed_by_edge": true,
+      "case_id": "dep-positive-retrieval",
+      "execution_status": "accept_executed",
+      "feedback_id": "execution_feedback.dep-positive-retrieval",
+      "source_outcome_id": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "attributed_by_edge": true,
+      "case_id": "dep-stale-recall",
+      "execution_status": "reject_executed",
+      "feedback_id": "execution_feedback.dep-stale-recall",
+      "source_outcome_id": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "attributed_by_edge": true,
+      "case_id": "dep-poisoned-rollback",
+      "execution_status": "rollback_executed",
+      "feedback_id": "execution_feedback.dep-poisoned-rollback",
+      "source_outcome_id": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "attributed_by_edge": false,
+      "case_id": "dep-missing-edge",
+      "execution_status": "provenance_fault_quarantined",
+      "feedback_id": "execution_feedback.dep-missing-edge",
+      "source_outcome_id": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "attributed_by_edge": true,
+      "case_id": "dep-cyclic-dependency",
+      "execution_status": "provenance_fault_quarantined",
+      "feedback_id": "execution_feedback.dep-cyclic-dependency",
+      "source_outcome_id": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    }
+  ],
+  "expected_dependency_edges": [
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.archive.policy.v1",
+      "target": "retrieval.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "verifier_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "tool_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "execution_feedback.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "memory_hygiene.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v0",
+      "target": "retrieval.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-stale-recall",
+      "target": "verifier_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-stale-recall",
+      "target": "tool_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "execution_feedback.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "memory_hygiene.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.ghost.unsourced.v1",
+      "target": "retrieval.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "verifier_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "tool_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "execution_feedback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e8:outcome_triggers_rollback",
+      "relation": "outcome_triggers_rollback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "rollback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e9:rollback_updates_hygiene",
+      "relation": "rollback_updates_hygiene",
+      "source": "rollback.dep-poisoned-rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v1",
+      "target": "retrieval.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-missing-edge",
+      "target": "verifier_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-missing-edge",
+      "target": "tool_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "target": "execution_feedback.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "target": "memory_hygiene.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.patch.autofix.v2",
+      "target": "retrieval.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "verifier_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "tool_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "execution_feedback.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "memory_hygiene.dep-cyclic-dependency"
+    }
+  ],
+  "experiment": "experiment_5355_dependency_provenance_self_learning_v488",
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": 5355
+  },
+  "fault_cases": [
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-missing-edge",
+      "case_type": "missing_edge",
+      "context_node": "context.ctx.runtime.receipt.v1",
+      "execution_feedback_node": "execution_feedback.dep-missing-edge",
+      "expected_edge_ids": [
+        "dep-missing-edge:e1:context_informs_retrieval",
+        "dep-missing-edge:e2:retrieval_routes_verifier",
+        "dep-missing-edge:e3:retrieval_routes_tool",
+        "dep-missing-edge:e4:verifier_affects_outcome",
+        "dep-missing-edge:e5:tool_affects_outcome",
+        "dep-missing-edge:e6:outcome_records_execution_feedback",
+        "dep-missing-edge:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "quarantine_missing_edge",
+      "memory_hygiene_node": "memory_hygiene.dep-missing-edge",
+      "observed_edge_ids": [
+        "dep-missing-edge:e1:context_informs_retrieval",
+        "dep-missing-edge:e2:retrieval_routes_verifier",
+        "dep-missing-edge:e3:retrieval_routes_tool",
+        "dep-missing-edge:e4:verifier_affects_outcome",
+        "dep-missing-edge:e5:tool_affects_outcome",
+        "dep-missing-edge:e7:outcome_updates_memory_hygiene"
+      ],
+      "outcome_node": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "retrieval_node": "retrieval.dep-missing-edge",
+      "rollback_node": null,
+      "safe_expected": true,
+      "source_fixture": "exp5341_bounded_compressor",
+      "source_refs": [
+        "compress-omission-drift"
+      ],
+      "tool_node": "tool_choice.dep-missing-edge",
+      "verifier_node": "verifier_choice.dep-missing-edge"
+    },
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-cyclic-dependency",
+      "case_type": "cyclic",
+      "context_node": "context.ctx.patch.autofix.v2",
+      "execution_feedback_node": "execution_feedback.dep-cyclic-dependency",
+      "expected_edge_ids": [
+        "dep-cyclic-dependency:e1:context_informs_retrieval",
+        "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+        "dep-cyclic-dependency:e3:retrieval_routes_tool",
+        "dep-cyclic-dependency:e4:verifier_affects_outcome",
+        "dep-cyclic-dependency:e5:tool_affects_outcome",
+        "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+        "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene"
+      ],
+      "final_decision": "quarantine_cycle",
+      "memory_hygiene_node": "memory_hygiene.dep-cyclic-dependency",
+      "observed_edge_ids": [
+        "dep-cyclic-dependency:e1:context_informs_retrieval",
+        "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+        "dep-cyclic-dependency:e3:retrieval_routes_tool",
+        "dep-cyclic-dependency:e4:verifier_affects_outcome",
+        "dep-cyclic-dependency:e5:tool_affects_outcome",
+        "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+        "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene",
+        "dep-cyclic-dependency:spurious-cycle-hygiene-retrieval",
+        "dep-cyclic-dependency:spurious-cycle-outcome-context"
+      ],
+      "outcome_node": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "retrieval_node": "retrieval.dep-cyclic-dependency",
+      "rollback_node": null,
+      "safe_expected": true,
+      "source_fixture": "exp5340_utility_memory",
+      "source_refs": [
+        "u5340-positive-commit"
+      ],
+      "tool_node": "tool_choice.dep-cyclic-dependency",
+      "verifier_node": "verifier_choice.dep-cyclic-dependency"
+    }
+  ],
+  "field_principles": {
+    "context_efficiency_delta": "Bare numeric kept distinct from hygiene and feedback metrics.",
+    "continuous_self_learning_target": "Bare boolean must be true because this advances FR-11 without weight mutation.",
+    "dependency_edge_count": "Bare integer proves the graph exists.",
+    "dependency_edge_precision": "Bare numeric measures spurious provenance edges.",
+    "dependency_edge_recall": "Bare numeric measures missing provenance edges.",
+    "dependency_provenance_ready": "Bare boolean gates self-learning scale-up.",
+    "duplicated_metric_pairs": "Lists exact duplicated values to catch TAUTOLOGY regressions.",
+    "execution_feedback_attribution_rate": "Bare numeric separates outcome feedback from memory hygiene.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning status.",
+    "inference_substrate": "Expected value is deterministic_dependency_provenance.",
+    "memory_hygiene_delta": "Bare numeric kept distinct from efficiency and feedback metrics.",
+    "milestone": "Prevents `.487` quarantined scale-up evidence from being reused.",
+    "no_weight_mutation": "Bare boolean must be true to preserve frozen-model discipline.",
+    "point_in_time_reconstruction_rate": "Bare numeric proves provenance can reconstruct past state.",
+    "status": "Lets gates distinguish clean fixture from blocked implementation.",
+    "tests_run": "Lists graph, rollback, and schema tests.",
+    "unsafe_false_accepts": "Bare integer prevents bad memory from being accepted."
+  },
+  "final_dependency_edges": [
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.archive.policy.v1",
+      "target": "retrieval.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "verifier_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "tool_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "execution_feedback.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "memory_hygiene.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v0",
+      "target": "retrieval.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-stale-recall",
+      "target": "verifier_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-stale-recall",
+      "target": "tool_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "execution_feedback.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "memory_hygiene.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.ghost.unsourced.v1",
+      "target": "retrieval.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "verifier_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "tool_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "execution_feedback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e8:outcome_triggers_rollback",
+      "relation": "outcome_triggers_rollback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "rollback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e9:rollback_updates_hygiene",
+      "relation": "rollback_updates_hygiene",
+      "source": "rollback.dep-poisoned-rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v1",
+      "target": "retrieval.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-missing-edge",
+      "target": "verifier_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-missing-edge",
+      "target": "tool_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "target": "execution_feedback.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "target": "memory_hygiene.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.patch.autofix.v2",
+      "target": "retrieval.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "verifier_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "tool_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "execution_feedback.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "memory_hygiene.dep-cyclic-dependency"
+    }
+  ],
+  "graph_integrity": {
+    "accepted_graph_acyclic": true,
+    "candidate_expected_edge_count": 37,
+    "candidate_observed_edge_count": 38,
+    "cycle_findings": [
+      {
+        "case_id": "dep-cyclic-dependency",
+        "cycle_detected": true
+      }
+    ],
+    "faulty_cases_quarantined": true,
+    "final_expected_edges_present": true,
+    "graph_integrity_holds": true,
+    "missing_edge_count": 1,
+    "missing_edge_findings": [
+      {
+        "case_id": "dep-missing-edge",
+        "missing_edge": {
+          "case_id": "dep-missing-edge",
+          "edge_id": "dep-missing-edge:e6:outcome_records_execution_feedback",
+          "relation": "outcome_records_execution_feedback",
+          "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+          "target": "execution_feedback.dep-missing-edge"
+        }
+      }
+    ],
+    "spurious_edge_count": 2
+  },
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous self-learning status.",
+    "value": "complete: deterministic dependency-edge provenance built 37 accepted graph edges, detected and quarantined missing-edge and cyclic-dependency cases, kept unsafe false accepts at 0, kept execution feedback separate from memory hygiene, and preserved no model weight mutation"
+  },
+  "inference_substrate": {
+    "principle": "Expected value is deterministic_dependency_provenance.",
+    "value": "deterministic_dependency_provenance"
+  },
+  "memory_hygiene_delta": 0.25,
+  "memory_hygiene_rows": [
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-positive-retrieval",
+      "clean_current_context": true,
+      "hygiene_id": "memory_hygiene.dep-positive-retrieval",
+      "source_outcome_id": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-stale-recall",
+      "clean_current_context": true,
+      "hygiene_id": "memory_hygiene.dep-stale-recall",
+      "source_outcome_id": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "accepted_into_final_graph": true,
+      "case_id": "dep-poisoned-rollback",
+      "clean_current_context": true,
+      "hygiene_id": "memory_hygiene.dep-poisoned-rollback",
+      "source_outcome_id": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-missing-edge",
+      "clean_current_context": false,
+      "hygiene_id": "memory_hygiene.dep-missing-edge",
+      "source_outcome_id": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "accepted_into_final_graph": false,
+      "case_id": "dep-cyclic-dependency",
+      "clean_current_context": false,
+      "hygiene_id": "memory_hygiene.dep-cyclic-dependency",
+      "source_outcome_id": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    }
+  ],
+  "methodology_note": "Exp5355 is a deterministic dependency graph audit over Exp5340 utility memory and Exp5341 bounded-compressor fixtures. Exp5342 is listed only as quarantined context and is not reused as an aggregate proof. No LLM, API judge, generator, fine-tuning path, adapter update, or model-weight mutation path is invoked.",
+  "milestone": {
+    "principle": "Prevents `.487` quarantined scale-up evidence from being reused.",
+    "value": "v488"
+  },
+  "no_weight_mutation": true,
+  "observed_dependency_edges": [
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.archive.policy.v1",
+      "target": "retrieval.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "verifier_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-positive-retrieval",
+      "target": "tool_choice.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-positive-retrieval",
+      "target": "outcome.dep-positive-retrieval.accept"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "execution_feedback.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-positive-retrieval",
+      "edge_id": "dep-positive-retrieval:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-positive-retrieval.accept",
+      "target": "memory_hygiene.dep-positive-retrieval"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v0",
+      "target": "retrieval.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-stale-recall",
+      "target": "verifier_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-stale-recall",
+      "target": "tool_choice.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-stale-recall",
+      "target": "outcome.dep-stale-recall.reject"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "execution_feedback.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-stale-recall",
+      "edge_id": "dep-stale-recall:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-stale-recall.reject",
+      "target": "memory_hygiene.dep-stale-recall"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.ghost.unsourced.v1",
+      "target": "retrieval.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "verifier_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-poisoned-rollback",
+      "target": "tool_choice.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-poisoned-rollback",
+      "target": "outcome.dep-poisoned-rollback.rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "execution_feedback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e8:outcome_triggers_rollback",
+      "relation": "outcome_triggers_rollback",
+      "source": "outcome.dep-poisoned-rollback.rollback",
+      "target": "rollback.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-poisoned-rollback",
+      "edge_id": "dep-poisoned-rollback:e9:rollback_updates_hygiene",
+      "relation": "rollback_updates_hygiene",
+      "source": "rollback.dep-poisoned-rollback",
+      "target": "memory_hygiene.dep-poisoned-rollback"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.runtime.receipt.v1",
+      "target": "retrieval.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-missing-edge",
+      "target": "verifier_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-missing-edge",
+      "target": "tool_choice.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-missing-edge",
+      "target": "outcome.dep-missing-edge.quarantine_missing_edge"
+    },
+    {
+      "case_id": "dep-missing-edge",
+      "edge_id": "dep-missing-edge:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-missing-edge.quarantine_missing_edge",
+      "target": "memory_hygiene.dep-missing-edge"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e1:context_informs_retrieval",
+      "relation": "context_informs_retrieval",
+      "source": "context.ctx.patch.autofix.v2",
+      "target": "retrieval.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e2:retrieval_routes_verifier",
+      "relation": "retrieval_routes_verifier",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "verifier_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e3:retrieval_routes_tool",
+      "relation": "retrieval_routes_tool",
+      "source": "retrieval.dep-cyclic-dependency",
+      "target": "tool_choice.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e4:verifier_affects_outcome",
+      "relation": "verifier_affects_outcome",
+      "source": "verifier_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e5:tool_affects_outcome",
+      "relation": "tool_affects_outcome",
+      "source": "tool_choice.dep-cyclic-dependency",
+      "target": "outcome.dep-cyclic-dependency.quarantine_cycle"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e6:outcome_records_execution_feedback",
+      "relation": "outcome_records_execution_feedback",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "execution_feedback.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:e7:outcome_updates_memory_hygiene",
+      "relation": "outcome_updates_memory_hygiene",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "memory_hygiene.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:spurious-cycle-hygiene-retrieval",
+      "relation": "hygiene_reopens_retrieval",
+      "source": "memory_hygiene.dep-cyclic-dependency",
+      "target": "retrieval.dep-cyclic-dependency"
+    },
+    {
+      "case_id": "dep-cyclic-dependency",
+      "edge_id": "dep-cyclic-dependency:spurious-cycle-outcome-context",
+      "relation": "outcome_rewrites_context_without_version",
+      "source": "outcome.dep-cyclic-dependency.quarantine_cycle",
+      "target": "context.ctx.patch.autofix.v2"
+    }
+  ],
+  "point_in_time_reconstruction_rate": 1.0,
+  "policy_metrics": {
+    "baseline_context_memory": {
+      "context_efficiency": 0.416667,
+      "memory_hygiene": 0.5
+    },
+    "dependency_provenance": {
+      "context_efficiency": 0.833334,
+      "memory_hygiene": 0.75
+    }
+  },
+  "random_seed": 5355,
+  "reproducibility_checksum": "sha256:b078eab3f518df8281ea916825f81fd06400b39a1d68704c84f6d7970159d154",
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5355.dependency_provenance_self_learning.v488",
+  "source_artifact_checksums": {
+    "exp5340": "sha256:fba9bc182b8fa6d78c1bdeaeb31a80f8dfd9d44f1db835fca3e2d408c2d2c712",
+    "exp5340_module": "sha256:dd07d93161d51125b1deabc0d019b67712101203b494474eacceb37a241646a8",
+    "exp5341": "sha256:9bac00a41785a710a8bf0e8cdd94cc9420c4225527f0cb59233a228e73ac39ae",
+    "exp5341_module": "sha256:23dccbbe917f96fa5b51037d69f1069ea415c56e52fa4da41940c393f5e061ee",
+    "module": "sha256:b35004fff83315e22c547506515417d558f976ee5a802eaf75e723f4c488349d",
+    "spec": "sha256:dd0b571b5540ce13561d9aa5a9aefb30928c2bbae448e3f965dd5c198377351d"
+  },
+  "source_artifacts": [
+    "results/experiment_5340_utility_weighted_context_memory_v487.json",
+    "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
+  ],
+  "source_gate": {
+    "all_passed": true,
+    "compressor_drift_fixture_ready": true,
+    "compressor_source_honest_verdict": "complete: bounded context compressor separated recall from persistent commitment, detected stale recall, drift, and poisoned candidate memory at rate 1.0, kept unsafe commits at 0, preserved recoverability, and performed no model weight mutation",
+    "excluded_artifacts": [
+      "results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json"
+    ],
+    "failed_gates": [],
+    "no_weight_mutation": true,
+    "quarantined_scaleup_reused": false,
+    "source_artifacts": [
+      "results/experiment_5340_utility_weighted_context_memory_v487.json",
+      "results/experiment_5341_bounded_compressor_drift_monitor_v487.json"
+    ],
+    "unsafe_upstream_accepts_zero": true,
+    "utility_memory_ready": true,
+    "utility_source_honest_verdict": "complete: utility-weighted context memory learned 15 operation updates, matched always-full quality, avoided 3 verifier calls, recorded 2 rollback events, cleared the no-op control, and preserved no model weight mutation"
+  },
+  "spec_refs": [
+    "REQ-LEARN-5355",
+    "SCENARIO-LEARN-5355-GRAPH",
+    "SCENARIO-LEARN-5355-FAULTS",
+    "SCENARIO-LEARN-5355-METRICS"
+  ],
+  "status": {
+    "principle": "Lets gates distinguish clean fixture from blocked implementation.",
+    "value": "dependency_provenance_ready"
+  },
+  "tests_run": {
+    "principle": "Lists graph, rollback, and schema tests.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5355_dependency_provenance_self_learning_v488.py -q -o addopts=''",
+        "outcome": "pending_final_rerun"
+      }
+    ]
+  },
+  "unsafe_false_accepts": 0,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_write": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_dependency_edge_graph",
+      "deterministic_execution_feedback_rows",
+      "deterministic_memory_hygiene_rows"
+    ]
+  }
+}

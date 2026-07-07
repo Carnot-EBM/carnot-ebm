@@ -18240,3 +18240,129 @@ certificate-gated result.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5342 | Planned (`python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py`, `results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json`) | Planned (`tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py`) |
+
+---
+
+## REQ-LEARN-5355: Dependency-Edge Provenance Self-Learning Fixture
+
+Experiment 5355 SHALL assemble a deterministic dependency-edge provenance
+fixture for context self-learning. The fixture SHALL reuse the Exp5340
+utility-weighted context memory rows and Exp5341 bounded compressor rows where
+possible, but SHALL NOT reuse Exp5342 aggregate scale-up evidence as a terminal
+self-learning proof because the v487 scale-up was quarantined for tautological
+metric reuse. The fixture SHALL record explicit dependency graph edges among
+context object versions, retrieval decisions, verifier/tool choices, outcomes,
+rollbacks, execution feedback, and memory hygiene rows.
+
+Execution feedback SHALL be stored separately from memory hygiene. Execution
+feedback records what a verifier or tool observed during execution, while
+memory hygiene records whether retained context is clean, current, and safe to
+keep. The fixture SHALL include positive, stale, poisoned, missing-edge, and
+cyclic-dependency cases. Missing-edge and cyclic-dependency cases SHALL be
+detected and quarantined before they can become accepted dependency graph
+state.
+
+The deterministic panel names the required case set as positive, stale, poisoned, missing-edge, and cyclic-dependency.
+
+The experiment SHALL measure dependency-edge recall, dependency-edge precision,
+point-in-time reconstruction, execution-feedback attribution, memory hygiene,
+and context efficiency as separate aggregate fields. `duplicated_metric_pairs`
+SHALL list any exact duplicate aggregate metric values among those fields.
+`dependency_provenance_ready` SHALL be true only when unsafe false accepts are
+zero, the accepted dependency graph has integrity, no aggregate metric
+duplicates another aggregate metric, tests are recorded, and no model weights
+mutate.
+
+The result artifact SHALL be
+`results/experiment_5355_dependency_provenance_self_learning_v488.json` and
+SHALL include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_dependency_provenance`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer `dependency_edge_count`,
+bare numeric `dependency_edge_recall`, bare numeric
+`dependency_edge_precision`, bare numeric `point_in_time_reconstruction_rate`,
+bare numeric `execution_feedback_attribution_rate`, bare numeric
+`memory_hygiene_delta`, bare numeric `context_efficiency_delta`, bare list
+`duplicated_metric_pairs`, bare integer `unsafe_false_accepts`, bare boolean
+`dependency_provenance_ready`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Stable id ties the artifact to this roadmap task.
+- `milestone`: Prevents `.487` quarantined scale-up evidence from being reused.
+- `status`: Lets gates distinguish clean fixture from blocked implementation.
+- `honest_verdict`: Terminal prefix `complete:` or `blocked_` prevents
+  ambiguous self-learning status.
+- `inference_substrate`: Expected value is deterministic_dependency_provenance.
+- `continuous_self_learning_target`: Bare boolean must be true because this
+  advances FR-11 without weight mutation.
+- `no_weight_mutation`: Bare boolean must be true to preserve frozen-model
+  discipline.
+- `dependency_edge_count`: Bare integer proves the graph exists.
+- `dependency_edge_recall`: Bare numeric measures missing provenance edges.
+- `dependency_edge_precision`: Bare numeric measures spurious provenance edges.
+- `point_in_time_reconstruction_rate`: Bare numeric proves provenance can
+  reconstruct past state.
+- `execution_feedback_attribution_rate`: Bare numeric separates outcome
+  feedback from memory hygiene.
+- `memory_hygiene_delta`: Bare numeric kept distinct from efficiency and
+  feedback metrics.
+- `context_efficiency_delta`: Bare numeric kept distinct from hygiene and
+  feedback metrics.
+- `duplicated_metric_pairs`: Lists exact duplicated values to catch TAUTOLOGY
+  regressions.
+- `unsafe_false_accepts`: Bare integer prevents bad memory from being accepted.
+- `dependency_provenance_ready`: Bare boolean gates self-learning scale-up.
+- `tests_run`: Lists graph, rollback, and schema tests.
+
+### REQ-LEARN-5355 Sub-requirements
+
+- REQ-LEARN-5355-1: The fixture SHALL load Exp5340 and Exp5341 readiness gates
+  and SHALL record Exp5342 only as excluded quarantined context, not as a source
+  aggregate metric.
+- REQ-LEARN-5355-2: The dependency graph SHALL include explicit edges from
+  context object versions to retrieval decisions, verifier/tool choices,
+  outcomes, rollback rows, execution feedback rows, and memory hygiene rows.
+- REQ-LEARN-5355-3: Positive, stale, poisoned, missing-edge, and
+  cyclic-dependency cases SHALL be present in the deterministic panel.
+- REQ-LEARN-5355-4: Missing-edge and cyclic-dependency cases SHALL reduce
+  recall or precision in the audit metrics but SHALL be quarantined from the
+  accepted dependency graph.
+- REQ-LEARN-5355-5: Execution feedback attribution SHALL be computed from
+  outcome-to-execution-feedback edges, not from memory hygiene rows.
+- REQ-LEARN-5355-6: `dependency_provenance_ready` SHALL be true only when
+  unsafe false accepts are zero, the accepted graph has integrity,
+  `duplicated_metric_pairs` is empty, tests are recorded, and no model weights
+  mutate.
+
+### SCENARIO-LEARN-5355-GRAPH: Dependency Edges Reconstruct Decisions
+
+**Given** deterministic context object versions and dependency edges
+**When** the accepted graph is replayed point-in-time
+**Then** retrieval decisions, verifier/tool choices, outcomes, rollback rows,
+execution feedback rows, and memory hygiene rows are reconstructable
+**And** the accepted dependency graph is acyclic.
+
+### SCENARIO-LEARN-5355-FAULTS: Missing Edges and Cycles Are Quarantined
+
+**Given** a missing-edge case and a cyclic-dependency case
+**When** dependency provenance is audited
+**Then** missing edges lower dependency-edge recall
+**And** spurious cycle edges lower dependency-edge precision
+**And** neither fault becomes accepted graph state.
+
+### SCENARIO-LEARN-5355-METRICS: Feedback, Hygiene, and Efficiency Stay Separate
+
+**Given** execution feedback rows and memory hygiene rows for the same outcomes
+**When** aggregate metrics are computed
+**Then** execution-feedback attribution, memory hygiene delta, and context
+efficiency delta are distinct values
+**And** `duplicated_metric_pairs` is empty for a ready artifact.
+
+## Implementation Status (Exp 5355)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5355 | Planned (`python/carnot/experiment_5355_dependency_provenance_self_learning_v488.py`, `results/experiment_5355_dependency_provenance_self_learning_v488.json`) | Planned (`tests/python/test_experiment_5355_dependency_provenance_self_learning_v488.py`) |
