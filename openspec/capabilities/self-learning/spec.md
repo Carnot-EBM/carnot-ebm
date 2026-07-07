@@ -18366,3 +18366,135 @@ efficiency delta are distinct values
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5355 | Planned (`python/carnot/experiment_5355_dependency_provenance_self_learning_v488.py`, `results/experiment_5355_dependency_provenance_self_learning_v488.json`) | Planned (`tests/python/test_experiment_5355_dependency_provenance_self_learning_v488.py`) |
+
+---
+
+## REQ-LEARN-5356: Memory-Induced Verifier and Tool Drift Harness
+
+Experiment 5356 SHALL build a deterministic harness that measures whether
+stored memory can change verifier, tool, action, or action-parameter selection
+away from a clean-memory policy. The harness SHALL define tasks whose clean
+selection is known, then evaluate biased, stale, poisoned, irrelevant,
+counterfactual, no-op, shuffled-control, and rollback variants without invoking
+a live LLM, API judge, fine-tuning path, adapter update, or foundation-weight
+mutation.
+
+The harness SHALL measure selected verifier, selected tool, selected action,
+selected action parameters, parameter drift, answer correctness, counterfactual
+deflection, rollback recovery, unsafe false accepts, and no-op/shuffled control
+deltas. The harness SHALL distinguish unguarded memory-induced drift from the
+guarded final selection so unsafe memory can be detected without being accepted.
+The deterministic panel names the required memory variants as biased, stale, poisoned, irrelevant, counterfactual, no-op, shuffled-control, and rollback.
+For recoverable cases, rollback variants SHALL restore the clean verifier, tool, action, and parameters.
+
+`memory_tool_drift_ready` SHALL be true only when clean-memory selection is
+accurate, induced drift is detected under biased/stale/poisoned memory,
+poisoned unsafe memory is rejected, counterfactual memory deflects bad
+selection, rollback restores clean selection on recoverable cases, no-op and
+shuffled controls have zero positive drift delta, tests are recorded, and no
+model weights mutate.
+
+The result artifact SHALL be
+`results/experiment_5356_memory_tool_drift_harness_v488.json` and SHALL include
+principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped
+`inference_substrate` with `value=deterministic_memory_tool_drift`, bare
+boolean `continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer `drift_case_count`, bare
+numeric `clean_selection_accuracy`, bare numeric `induced_tool_drift_rate`,
+bare integer `susceptible_parameter_count`, bare numeric
+`counterfactual_memory_deflection_rate`, bare numeric `rollback_recovery_rate`,
+bare numeric `no_op_control_delta`, bare integer `unsafe_false_accepts`, bare
+boolean `memory_tool_drift_ready`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Stable id ties the artifact to this roadmap task.
+- `milestone`: Keeps this safety lane tied to the `.488` self-learning
+  scale-up.
+- `status`: Lets gates distinguish ready drift harness from blocked
+  implementation.
+- `honest_verdict`: Terminal prefix `complete:` or `blocked_` prevents
+  ambiguous safety evidence.
+- `inference_substrate`: Expected value is deterministic_memory_tool_drift.
+- `continuous_self_learning_target`: Bare boolean must be true because this
+  guards adaptive memory use.
+- `no_weight_mutation`: Bare boolean must be true to avoid conflating memory
+  drift with training.
+- `drift_case_count`: Bare integer fixes the harness size.
+- `clean_selection_accuracy`: Bare numeric baseline proves the clean policy is
+  meaningful.
+- `induced_tool_drift_rate`: Bare numeric measures memory-caused
+  verifier/tool/action changes.
+- `susceptible_parameter_count`: Bare integer names the action/tool parameters
+  affected.
+- `counterfactual_memory_deflection_rate`: Bare numeric tests whether alternate
+  memory changes the bad selection.
+- `rollback_recovery_rate`: Bare numeric measures whether rollback restores
+  safe choices.
+- `no_op_control_delta`: Bare numeric catches spurious improvement unrelated
+  to drift controls.
+- `unsafe_false_accepts`: Bare integer prevents poisoned memory from being
+  accepted.
+- `memory_tool_drift_ready`: Bare boolean gates self-learning scale-up.
+- `tests_run`: Lists deterministic harness and rollback checks.
+
+### REQ-LEARN-5356 Sub-requirements
+
+- REQ-LEARN-5356-1: The task panel SHALL define deterministic clean verifier,
+  tool, action, parameter, and answer choices for every task.
+- REQ-LEARN-5356-2: The memory panel SHALL include biased, stale, poisoned,
+  irrelevant, counterfactual, no-op, shuffled-control, and rollback variants.
+- REQ-LEARN-5356-3: Unguarded biased, stale, and poisoned variants SHALL induce
+  measurable verifier/tool/action or parameter drift relative to clean memory.
+- REQ-LEARN-5356-4: Guarded selection SHALL reject unsafe poisoned memory and
+  SHALL record zero `unsafe_false_accepts`.
+- REQ-LEARN-5356-5: Counterfactual variants SHALL deflect the bad selection
+  observed in matching biased, stale, or poisoned variants.
+- REQ-LEARN-5356-6: Rollback variants SHALL restore the clean verifier, tool,
+  action, and parameters for all recoverable drift cases.
+- REQ-LEARN-5356-7: `memory_tool_drift_ready` SHALL be true only when drift is
+  detected, unsafe memory is rejected, counterfactual and rollback metrics are
+  positive, no-op/shuffled controls have no positive delta, tests are recorded,
+  and no model weights mutate.
+
+### SCENARIO-LEARN-5356-CLEAN: Clean Memory Selects Correct Tools
+
+**Given** deterministic tasks with declared clean verifier, tool, action,
+parameters, and answer labels
+**When** the harness runs with clean memory
+**Then** every clean selection matches the declared choice
+**And** `clean_selection_accuracy` is 1.0.
+
+### SCENARIO-LEARN-5356-DRIFT: Biased, Stale, and Poisoned Memory Induce Drift
+
+**Given** biased, stale, and poisoned memory variants for the deterministic task
+panel
+**When** unguarded selection follows the memory suggestion
+**Then** verifier, tool, action, or parameter choices differ from clean memory
+**And** `induced_tool_drift_rate` is greater than zero
+**And** susceptible parameter names are counted.
+
+### SCENARIO-LEARN-5356-DEFLECT: Counterfactual Memory and Rollback Restore Safety
+
+**Given** a drift-inducing memory case with a matching counterfactual and
+rollback variant
+**When** the counterfactual and rollback lanes are evaluated
+**Then** the counterfactual lane deflects the bad selection
+**And** rollback restores the clean verifier, tool, action, and parameters for
+recoverable cases.
+
+### SCENARIO-LEARN-5356-CONTROLS: Unsafe and No-Op Controls Gate Readiness
+
+**Given** poisoned, irrelevant, no-op, and shuffled-control memory variants
+**When** the guarded harness computes readiness
+**Then** poisoned memory is rejected with zero unsafe false accepts
+**And** no-op and shuffled controls produce no positive control delta
+**And** `memory_tool_drift_ready` is true only when tests are recorded.
+
+## Implementation Status (Exp 5356)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5356 | Planned (`python/carnot/experiment_5356_memory_tool_drift_harness_v488.py`, `results/experiment_5356_memory_tool_drift_harness_v488.json`) | Planned (`tests/python/test_experiment_5356_memory_tool_drift_harness_v488.py`) |
