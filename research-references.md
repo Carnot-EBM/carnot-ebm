@@ -27615,3 +27615,73 @@ Execution-time sweep after the `.486` planner refresh checked arXiv, OpenReview,
 - **Secondary-source status:** Semantic Scholar was rate-limited during execution and no citation-trend claim is made. OpenReview, HuggingFace Papers, Extropic, and Logical Intelligence did not add a separate execution-changing source.
 
 <!-- V486-EXECUTION-REFRESH-2026-07-06-END -->
+
+
+### V487 Planner Refresh - 2026-07-07
+
+Planning-time sweep for `.487` rechecked arXiv primary pages, OpenReview, HuggingFace Papers,
+Semantic Scholar EBT/ARM-EBM citation trails, GitHub repository search, Extropic writing, Logical
+Intelligence public pages, and the local completed-experiment ledger. The items below are either new
+to this ledger or materially sharpen the `.487` branch after `.486` proved runtime stability but a
+zero-score structured rewrite smoke.
+
+### Promoted actionable findings
+- **MemRL: Self-Evolving Agents via Runtime Reinforcement Learning on Episodic Memory**
+  (https://arxiv.org/abs/2601.03192; code https://github.com/MemTensor/MemRL): separates a frozen
+  reasoner from plastic episodic memory and updates retrieval utility from environment feedback.
+  Carnot hook: scale Exp5328-5330 from deterministic policy promotion into non-parametric
+  utility-weighted memory retrieval. Keep model weights frozen, require no-op/shuffled controls, and
+  gate utility updates through the existing certificate/rollback path.
+- **AI Agents Need Memory Control Over More Context / Agent Cognitive Compressor**
+  (https://arxiv.org/abs/2601.11653): separates artifact recall from persistent state commitment and
+  maintains bounded online state to reduce drift and memory poisoning. Carnot hook: add a bounded
+  compressor lane beside context-object lifecycle rows, with explicit "recalled but not committed"
+  states and anomaly labels for drift, stale recall, and poisoned candidate memories.
+- **From Model Scaling to System Scaling: Scaling the Harness in Agentic AI**
+  (https://arxiv.org/abs/2605.26112; HuggingFace page https://huggingface.co/papers/2605.26112):
+  argues that context governance, trustworthy memory, skill routing, verification cost, and safe
+  evolution are harness-level metrics rather than incidental implementation details. Carnot hook:
+  `.487` capstone should report process metrics for context efficiency, verifier cost, memory hygiene,
+  provenance integrity, and safe evolution, not only final task quality.
+- **Field-Theoretic Memory for AI Agents** (https://arxiv.org/abs/2602.21220; code noted at
+  github.com/rotalabs/rotalabs-fieldmem): models memory as a decaying/coupled field over semantic
+  space. Carnot hook: keep as a bounded simulator diagnostic only. A small decay/coupling stress test
+  can inform memory-pruning policies, but it must not replace hash-chained context identity or
+  certificate-gated promotion.
+- **QSTRBench: Qualitative Spatial and Temporal Reasoning benchmark**
+  (https://arxiv.org/abs/2605.18380): evaluates LLMs on Point Algebra, Allen's Interval Algebra,
+  INDU, RCC, cardinal directions, and related composition tables; no tested model consistently solves
+  all calculi. Carnot hook: add a deterministic qualitative temporal/spatial constraint fixture where
+  the solver/checker is authoritative, then use local SOTA GGUF only as a candidate proposer after the
+  structured-output protocol is repaired.
+- **OpenViking context database** (https://github.com/volcengine/OpenViking; docs
+  https://volcengine-openviking.mintlify.app/): a high-activity filesystem-style context database for
+  agent memory, resources, and skills. Carnot hook: useful implementation contrast for context object
+  IDs, hierarchical loading, and context://-style references; do not add a dependency this milestone.
+
+### Secondary-source status
+- **G-RRM, ProvenanceGuard, CiteTracer, BEAVER, In-Writing, CEM, Spilled Energy, Semantic Energy, and
+  Logical/Extropic public updates** were already recorded in earlier V482-V486 reference sections.
+  They remain active design constraints, but this pass did not find a new local implementation path
+  that supersedes the planned `.487` self-learning scale-up and structured-output repair.
+- **Semantic Scholar:** Direct API calls for EBT arXiv:2507.02092 and ARM-EBM arXiv:2512.15605 returned
+  HTTP 429 on 2026-07-07. Search results still surfaced NRGPT, Fixed-Point Reasoners, and ontology-
+  grounded agent papers as citation-trail watch items, but no trustworthy citation-count delta is
+  claimed.
+- **GitHub watch:** `alexiglad/EBT`, `Saibo-creator/Awesome-LLM-Constrained-Decoding`,
+  `TsinghuaC3I/Awesome-Memory-for-Agents`, `volcengine/OpenViking`, and `getzep/graphiti` remain useful
+  references. No repository found in this sweep replaces Carnot's local GGUF runtime, memory, KAN, or
+  solver substrates.
+
+### Planning impact
+- `.487` should follow the `.486` capstone recommendation and scale continuous self-learning through
+  utility-weighted, provenance-bound context lifecycle policies, not through model-weight mutation.
+- The local SOTA path is now stable enough for bounded experiments, but Exp5326 failed because outputs
+  stayed inside Gemma's thinking transcript and never yielded parseable compact JSON. The next SOTA task
+  should repair the structured-output protocol before measuring quality again.
+- Token-probability energy diagnostics remain promising but must first clean the Exp5331 short-duration /
+  methodology flags and must stay outside the retired Phase D external text-scorer scope.
+- Hardware work remains a continuity lane only: KV260 is unreachable by SSH, PolarFire is status-only,
+  GateMate needs a physical/JTAG change, and no board speedup claim is supported.
+
+<!-- V487-PLANNER-REFRESH-2026-07-07-END -->
