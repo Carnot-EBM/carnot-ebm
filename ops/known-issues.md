@@ -4,6 +4,93 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 opportunistic slot — perception audit + classical salience front-end, in priority order
+
+**Origin:** 2026-07-06 operator directive. Per the 2026-06-30 Phase D entry below, ARC dropped from
+majority lever to opportunistic-only once the submission sprint deadline passed. The operator asked to
+resume ACTIVE novel-idea generation for ARC-AGI-3 — but first confirm we haven't tried the idea before. This
+entry is the product of that check: an internal do-not-repeat audit (~40 tried ARC mechanism classes,
+sourced from `ops/exclusion_manifest.yaml`, `ops/known-issues.md`, `ops/arc_solve_registry.yaml`,
+`docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`, `docs/research-notes/arc-generation-
+program-2026-06-28.md`) cross-referenced against a deep-research literature pass (23 sources fetched, 17/25
+claims survived adversarial verification; several papers' headline NUMBERS were refuted on verification even
+where the underlying MECHANISM held up — treat every cited number below as needing independent confirmation,
+trust only the architecture descriptions). **This entry supplies the concrete content for ARC's opportunistic
+slot; it does NOT reclaim majority share from Phase D.**
+
+**What was checked and is NOT being re-proposed (already tried, already null):** generic novelty/curiosity
+bonuses, a program-synthesis action-effect proposal filter, energy-as-fitness QD search over trajectories,
+hierarchical subgoal value-head search, a PoE-World factored world-model planner, the GAP-3 trained-content-
+energy candidate selector, cross-game learned value-head transfer, an IGE-style LLM Go-Explore cell-selector
+(tested at TWO granularities — bins=6 AND bins=16, both null, `results/arc_ige_llm_go_explore_ab.json`: "even
+at bins=16 the winning prefix is never in the pool" — the wall is not archive granularity), and a frontier-LLM
+tool-use/MCP driving loop with tool access to env/BFS/verifier/induced-model (built+run on re86/ft09,
+ceiling-negative, 0 first-level-ups). All retired per `ops/exclusion_manifest.yaml`; a rerun of any of these
+needs an `operator_override` citing a genuinely new mechanism — do not re-skeleton them.
+
+**What is explicitly OUTSIDE the retired scope** — per `generation_axis_exploration_signal_retired_exp5154_v473`'s
+own reason field: "deepen-wall cross-level warm-starts and **representation/perception fixes are outside this
+retired scope**." The two priority tasks below sit in that explicitly-open lane.
+
+**THE TASKS (opportunistic ARC slot, in priority order; `agent_type: codex`):**
+
+1. **Perception-grounding audit (cheap, run first).** arXiv:2603.17683 ("Sensi") found that once a
+   curriculum/self-verification layer is added to an LLM game agent, its failure mode shifts from exploration
+   efficiency to perception: an LLM-as-judge validates its own hallucinated frame-diff reads as internally
+   self-consistent rather than checking them against ground truth, producing a self-reinforcing error
+   cascade. This corroborates this project's own prior finding (GAP-4891 ladder / `project_arc_live_agent_
+   learning_gaps` memory) that frame-only order-1 features sit at LOO=chance. Audit whatever frame-diff /
+   state-change read the live agent's perception layer currently relies on (`arc_frame_change_predictor`,
+   `arc_online_action_effect_scorer`, or equivalent) for exactly this failure mode. This is a diagnostic, not
+   a rebuild — report findings before proposing a fix.
+2. **Classical connected-component/color-blob segmentation + salience-tiered action prioritization (the main
+   new lever).** A real ARC-AGI-3 competitor (arXiv:2512.24156 / github.com/dolphin-in-a-coma/arc-agi-3-just-
+   explore, 3rd place, 12/25 PRIVATE hidden levels, no learning, no LLM) segments each frame into single-color
+   connected components, masks the status bar, and ranks detected blobs into five priority tiers by
+   size/morphology/color salience, exploring high-salience/untested actions first. This is a
+   **generation-stage** action-prioritization bias, not a post-hoc selection/ranking mechanism over a fixed
+   candidate pool — it is not subject to this project's own `WALL_IS_HIDDEN_STATE` finding (exp4914/exp4893),
+   which showed (frame, action-history) features are insufficient to DISCRIMINATE among already-generated
+   candidates; this instead changes what gets tried in the first place. Differentiator from our own retired
+   "action-effect/clickability predictor" attempts (exp4568/4641/4490/4501, all learned/CNN-based, honest_null
+   or corpus-blocked): this is classical and untrained, and may generalize far better to a genuinely novel
+   game than a small trained CNN that never saw it. Prototype against the offline dev sim (`arc_solver_kit` /
+   `scripts/arc_loop_solve.py`) first, then wire into the live `E3AgentPolicy` exploration policy per the ARC
+   Live-Path Reachability Discipline — a standalone experiment the live agent cannot reach is wasted effort.
+3. **(Lower priority, pilot-only) "Ontology-error" exploration signal.** arXiv:2607.01531 (OPINE-World)
+   proposes prioritizing interactions that resolve uncertainty about which OBJECT TYPES exist in a game (a
+   Bayesian noisy-OR over per-object-type classification uncertainty and per-context effect-distribution
+   uncertainty), mechanistically distinct from the retired novelty/curiosity bonuses (which target
+   state-visitation novelty, not object-ontology uncertainty). Caution: architecturally close to our own
+   retired PoE-World work; the source paper's own headline result (20/25 solved) did NOT survive this
+   project's adversarial verification; 6-day-old, single-author, unreviewed preprint (submitted 2026-07-01).
+   Pilot only if task 2 lands and there's slack — not a standing commitment.
+
+**Explicitly checked and rejected in this pass (do not re-propose without a real differentiator):** an IGE
+archive-granularity fix (already tested at bins=6 AND bins=16, both null — the wall is not granularity); the
+Code-World-Models/CEGIS-style "LLM induces an explicit Python simulator, then classical search plans inside
+it" pattern (arXiv:2510.04542, arXiv:2605.05138) is closely related to the already-run, ceiling-negative
+frontier tool-use/MCP loop (re86/ft09) — needs an `operator_override` naming a mechanism genuinely distinct
+from "LLM interrogates/drives the loop via tool calls" before another attempt.
+
+**Falsifiable gate:** task 2 is decision-grade if it moves `ops/arc_solve_registry.yaml`'s
+`reproducible_total_levels` OR produces a genuine new first-contact win on a held-out unsolved game (rotate
+targets per the Level-Up Attempt Guarantee) that the current pipeline doesn't reach. Record the result with
+the same rigor as every other row in `docs/research-notes/arc-agi3-levers-tried-x-verdict-2026-06-25.md`
+(update that ledger too). `solve_provenance` must be declared per the ARC Live-Path Reachability Discipline.
+
+**Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion, Phase D majority per
+the entry below). This is the content for ARC's opportunistic slot, not a reclaim of majority share.
+
+**Cross-references:**
+- 2026-07-06 operator directive (this session) — origin
+- Internal do-not-repeat audit + external deep-research pass (this session, not yet filed as a standalone doc)
+- `ops/exclusion_manifest.yaml:generation_axis_exploration_signal_retired_exp5154_v473` — the retirement whose
+  own reason field carves out representation/perception fixes as in-scope
+- CLAUDE.md "ARC Live-Path Reachability Discipline" — task 2 must be wired into the live entrypoint
+- CLAUDE.md "Failed-Experiment Rerun Discipline" / "Exclusion-Manifest Cross-Check Before Planning" — governs
+  why the IGE/tool-loop family is excluded here and why tasks 1/3 are scoped the way they are
+
 ### 2026-06-30 (MANDATORY-NEXT-MILESTONE, operator-directed "unlock the conductor running PHASE D experiments immediately"): EXECUTE the off-ARC distributional-energy verifier moat — the majority lever now
 
 > **UPDATE 2026-06-30 (outer-loop): D1 is ANSWERED — bounded null. Do NOT re-skeleton D1.** The conductor's
