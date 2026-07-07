@@ -4,7 +4,18 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
-### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 opportunistic slot — perception audit + classical salience front-end, in priority order
+### 2026-07-06 (MANDATORY-NEXT-MILESTONE, operator-directed "continue trying new and novel ideas to forward progress with ARC-AGI-3... likely includes more ARC and AGI study"): ARC-AGI-3 standing floor (>=1 slot/milestone) — perception audit + classical salience front-end, in priority order
+
+> **UPDATE 2026-07-06 (same session, operator escalation):** "I want at least one ARC slot during each
+> milestone, and more if possible to continue the prioritization of ARC-AGI-3 as we need to make headway
+> toward our November submission." This ELEVATES the entry below from opportunistic-only to a **standing
+> floor**: every milestone from now through the November 2026 submission deadline MUST reserve >=1 ARC-AGI-3
+> task slot (more when capacity allows), per the new CLAUDE.md "ARC-AGI-3 November-Submission Standing
+> Floor" rule. The 2026-06-30 Phase D entry below is NOT demoted — Phase D keeps its majority share — but
+> "ARC continues opportunistically" (as that entry's last line puts it) is superseded by this floor. The
+> corrected deadline is **November 2026**, not 2026-06-30 (which was an interim/preview-round target, not
+> the actual competition close). The task list immediately below (perception audit -> classical salience
+> front-end -> ontology-error pilot) is the current content feeding this floor.
 
 **Origin:** 2026-07-06 operator directive. Per the 2026-06-30 Phase D entry below, ARC dropped from
 majority lever to opportunistic-only once the submission sprint deadline passed. The operator asked to
@@ -15,8 +26,8 @@ sourced from `ops/exclusion_manifest.yaml`, `ops/known-issues.md`, `ops/arc_solv
 program-2026-06-28.md`) cross-referenced against a deep-research literature pass (23 sources fetched, 17/25
 claims survived adversarial verification; several papers' headline NUMBERS were refuted on verification even
 where the underlying MECHANISM held up — treat every cited number below as needing independent confirmation,
-trust only the architecture descriptions). **This entry supplies the concrete content for ARC's opportunistic
-slot; it does NOT reclaim majority share from Phase D.**
+trust only the architecture descriptions). **Per the UPDATE above, this entry now supplies the concrete
+content for ARC's standing floor slot(s), not merely an opportunistic slot.**
 
 **What was checked and is NOT being re-proposed (already tried, already null):** generic novelty/curiosity
 bonuses, a program-synthesis action-effect proposal filter, energy-as-fitness QD search over trajectories,
@@ -80,7 +91,9 @@ the same rigor as every other row in `docs/research-notes/arc-agi3-levers-tried-
 (update that ledger too). `solve_provenance` must be declared per the ARC Live-Path Reachability Discipline.
 
 **Reserved slots still apply** (2 infra, 1-per-board hardware-continuity, SOTA-ingestion, Phase D majority per
-the entry below). This is the content for ARC's opportunistic slot, not a reclaim of majority share.
+the entry below). Per the 2026-07-06 UPDATE above, this is now the content for ARC's **standing floor**
+(>=1 slot/milestone, more when capacity allows) through the November 2026 deadline — not a reclaim of Phase
+D's majority share, but no longer merely opportunistic either.
 
 **Cross-references:**
 - 2026-07-06 operator directive (this session) — origin

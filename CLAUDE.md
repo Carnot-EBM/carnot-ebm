@@ -3245,6 +3245,61 @@ CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" + "ARC Solve Reproducibility"
 CLAUDE.md "Depth-Over-Breadth Forcing Function" (RETIRED; the structural precedent) · `[[project_arc_live_generator]]`
 (the frozen generator) · `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md` (packaging).
 
+## ARC-AGI-3 November-Submission Standing Floor (MANDATORY — supersedes opportunistic-only default)
+
+**Origin:** 2026-07-06 operator directive: "I want at least one ARC slot during each milestone, and more
+if possible to continue the prioritization of ARC-AGI-3 as we need to make headway toward our November
+submission." This corrects the framing left by the RETIRED "ARC-AGI-3 Submission Sprint Forcing Function"
+above: 2026-06-30 was NOT the actual final competition deadline for this project's purposes — the window
+that matters now runs to **November 2026**. The 6/30 CUDA submission package
+(`docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md`) and the Phase D majority-share shift
+(`ops/known-issues.md` 2026-06-30 entry) are NOT retracted — Phase D (the off-ARC verifier moat) keeps its
+majority — but ARC-AGI-3 is no longer merely "opportunistic." It gets a **standing floor**, effective
+2026-07-06 through the November 2026 deadline.
+
+**The rule.** Every milestone's `research-roadmap-next.yaml`, from 2026-07-06 until the November 2026
+submission deadline (or an explicit operator retirement), MUST:
+
+1. **Reserve at least ONE ARC-AGI-3 task slot, no exceptions.** This is a FLOOR, not a majority claim —
+   unlike the retired sprint's "allocate the majority" rule, Phase D and the other reserved slots (2 infra,
+   1-per-board hardware-continuity, SOTA-ingestion) are unaffected. If a milestone would otherwise have zero
+   ARC tasks, cut something else, not this slot.
+2. **Allocate more than one ARC slot whenever milestone capacity allows**, without displacing the reserved
+   infra/hardware/SOTA-ingestion slots or starving Phase D entirely. The floor is 1; the ceiling is "as much
+   as the milestone can absorb."
+3. **Draw the concrete task content from the current live queue** — `ops/known-issues.md`'s 2026-07-06 ARC
+   entry (perception-grounding audit -> classical color-blob/salience front-end -> ontology-error pilot, in
+   that priority order) until that queue is exhausted, then from that entry's "current known gaps" (the
+   fresh 144-trajectory human-replay corpus, Executable World Models + counterexample refinement, CoEx-style
+   state propagation across levels) or a fresh literature pass — never a bare rerun of a retired mechanism
+   class without an `operator_override`.
+4. **Every ARC SOLVE task stays reproduction-gated and Incremental-Progress-scoped** per the existing
+   ARC-AGI-3 Incremental-Progress Scoping + ARC Level-Up Attempt Guarantee rules below — this floor does not
+   relax those disciplines, it guarantees them a slot every milestone instead of only when a milestone
+   happens to already be ARC-headline.
+
+**Mechanical enforcement.** `scripts/arc_levelup_guarantee_lint.py [roadmap.yaml] [--min N]` already counts
+level-up attempts and exits non-zero below the floor; run it on every emitted roadmap through November 2026,
+not only on ARC-headline milestones as the original guarantee scoped it. The activation guard SHOULD extend
+to also fail a roadmap with zero ARC-tagged (`track: arc` or equivalent) tasks, mirroring the Hardware-Task
+Continuity Discipline's per-board mandatory-slot check.
+
+**Retirement.** This floor retires on the November 2026 submission deadline, or when the operator explicitly
+lifts it — whichever comes first, the same two-condition pattern as the retired sprint forcing function
+above. Confirm the exact November date with the operator once the competition's official close date is
+known; treat "November 2026" as the working target until then.
+
+**Why this is in CLAUDE.md, not just `ops/known-issues.md`.** Same defense-in-depth reasoning as every
+sibling ARC forcing function: a known-issues.md entry gets consumed/rotated per milestone, but the planner
+reads CLAUDE.md as required input on EVERY plan generation — that's what makes "at least one ARC slot, every
+milestone, for months" durable rather than a one-off.
+
+**Cross-references:** 2026-07-06 operator directive (origin) · CLAUDE.md "ARC-AGI-3 Submission Sprint
+Forcing Function" (RETIRED, the precedent this supersedes at a lower, sustained intensity) · CLAUDE.md
+"ARC-AGI-3 Incremental-Progress Scoping" + "ARC Level-Up Attempt Guarantee" + "ARC Live-Path Reachability
+Discipline" (the per-task mechanics this floor feeds) · `ops/known-issues.md` 2026-07-06 entry (the current
+concrete task queue) · `scripts/arc_levelup_guarantee_lint.py` (mechanical enforcement).
+
 ## ARC Level-Up Attempt Guarantee (MANDATORY)
 
 **Origin:** 2026-06-19 operator directive — "are we attempting to solve any game levels this roadmap?

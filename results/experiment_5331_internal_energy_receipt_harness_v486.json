@@ -1,0 +1,470 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records the three mandated GGUF model IDs so the receipt harness cannot silently substitute a legacy, tiny, API, or non-GGUF model.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "attention_available": false,
+  "backend_option_surface": {
+    "principle": "Records the native backend help/API option surface used to decide whether logits, token probabilities, timing, attention, or hidden proxies are exposed.",
+    "value": {
+      "backends": {
+        "llama-cli": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "--help"
+          ],
+          "help_checksum": "deacc37ec614d07a",
+          "ok": true,
+          "relevant_option_lines": [
+            "--completion-bash                       print source-able bash completion script for llama.cpp",
+            "-n,    --predict, --n-predict N         number of tokens to predict (default: -1, -1 = infinity)",
+            "--keep N                                number of tokens to keep from the initial prompt (default: 0, -1 =",
+            "-fa,   --flash-attn [on|off|auto]       set Flash Attention use ('on', 'off', or 'auto', default: 'auto')",
+            "--perf, --no-perf                       whether to enable internal libllama performance timings (default:",
+            "(env: LLAMA_ARG_PERF)",
+            "--yarn-attn-factor N                    YaRN: scale sqrt(t) or attention magnitude (default: -1.00)",
+            "tokenizer.ggml.add_bos_token=bool:false,tokenizer.ggml.add_eos_token=bool:false",
+            "-hft,  --hf-token TOKEN                 Hugging Face access token (default: value from HF_TOKEN environment",
+            "(env: HF_TOKEN)",
+            "--ignore-eos                            ignore end of stream token and continue generating (implies",
+            "--logit-bias EOS-inf)",
+            "--xtc-probability N                     xtc probability (default: 0.00, 0.0 = disabled)",
+            "--repeat-last-n N                       last n tokens to consider for penalize (default: 64, 0 = disabled, -1",
+            "--repeat-penalty N                      penalize repeat sequence of tokens (default: 1.00, 1.0 = disabled)",
+            "--dry-penalty-last-n N                  set DRY penalty for the last n tokens (default: -1, 0 = disable, -1 =",
+            "--adaptive-target N                     adaptive-p: select tokens near this probability (valid range 0.0 to",
+            "-l,    --logit-bias TOKEN_ID(+/-)BIAS   modifies the likelihood of token appearing in the completion,",
+            "i.e. `--logit-bias 15043+1` to increase likelihood of token ' Hello',",
+            "or `--logit-bias 15043-1` to decrease likelihood of token ' Hello'",
+            "--spec-draft-n-max N                    number of tokens to draft for speculative decoding (default: 3)",
+            "--spec-draft-n-min N                    minimum number of draft tokens to use for speculative decoding",
+            "speculative decoding split probability (default: 0.10)",
+            "--spec-draft-p-min, --draft-p-min P     minimum speculative decoding probability (greedy) (default: 0.00)",
+            "--spec-ngram-mod-n-min N                minimum number of ngram tokens to use for ngram-based speculative",
+            "--spec-ngram-mod-n-max N                maximum number of ngram tokens to use for ngram-based speculative",
+            "--show-timings, --no-show-timings       whether to show timing information after each response (default: true)",
+            "(env: LLAMA_ARG_SHOW_TIMINGS)",
+            "-sp,   --special                        special tokens output enabled (default: false)",
+            "- does not print special tokens and suffix/prefix",
+            "--warmup, --no-warmup                   whether to perform warmup with an empty run (default: enabled)",
+            "--image-min-tokens N                    minimum number of tokens each image can take, only used by vision",
+            "(env: LLAMA_ARG_IMAGE_MIN_TOKENS)",
+            "--image-max-tokens N                    maximum number of tokens each image can take, only used by vision",
+            "(env: LLAMA_ARG_IMAGE_MAX_TOKENS)",
+            "--reasoning-budget N                    token budget for thinking: -1 for unrestricted, 0 for immediate end,",
+            "N>0 for token budget (default: -1)"
+          ]
+        },
+        "llama-server": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--help"
+          ],
+          "help_checksum": "75b3622ca5c9c521",
+          "ok": true,
+          "relevant_option_lines": [
+            "--completion-bash                       print source-able bash completion script for llama.cpp",
+            "-n,    --predict, --n-predict N         number of tokens to predict (default: -1, -1 = infinity)",
+            "--keep N                                number of tokens to keep from the initial prompt (default: 0, -1 =",
+            "-fa,   --flash-attn [on|off|auto]       set Flash Attention use ('on', 'off', or 'auto', default: 'auto')",
+            "--perf, --no-perf                       whether to enable internal libllama performance timings (default:",
+            "(env: LLAMA_ARG_PERF)",
+            "--yarn-attn-factor N                    YaRN: scale sqrt(t) or attention magnitude (default: -1.00)",
+            "tokenizer.ggml.add_bos_token=bool:false,tokenizer.ggml.add_eos_token=bool:false",
+            "-hft,  --hf-token TOKEN                 Hugging Face access token (default: value from HF_TOKEN environment",
+            "(env: HF_TOKEN)",
+            "--ignore-eos                            ignore end of stream token and continue generating (implies",
+            "--logit-bias EOS-inf)",
+            "--xtc-probability N                     xtc probability (default: 0.00, 0.0 = disabled)",
+            "--repeat-last-n N                       last n tokens to consider for penalize (default: 64, 0 = disabled, -1",
+            "--repeat-penalty N                      penalize repeat sequence of tokens (default: 1.00, 1.0 = disabled)",
+            "--dry-penalty-last-n N                  set DRY penalty for the last n tokens (default: -1, 0 = disable, -1 =",
+            "--adaptive-target N                     adaptive-p: select tokens near this probability (valid range 0.0 to",
+            "-l,    --logit-bias TOKEN_ID(+/-)BIAS   modifies the likelihood of token appearing in the completion,",
+            "i.e. `--logit-bias 15043+1` to increase likelihood of token ' Hello',",
+            "or `--logit-bias 15043-1` to decrease likelihood of token ' Hello'",
+            "--spec-draft-n-max N                    number of tokens to draft for speculative decoding (default: 3)",
+            "--spec-draft-n-min N                    minimum number of draft tokens to use for speculative decoding",
+            "speculative decoding split probability (default: 0.10)",
+            "--spec-draft-p-min, --draft-p-min P     minimum speculative decoding probability (greedy) (default: 0.00)",
+            "--spec-ngram-mod-n-min N                minimum number of ngram tokens to use for ngram-based speculative",
+            "--spec-ngram-mod-n-max N                maximum number of ngram tokens to use for ngram-based speculative",
+            "-cms,  --checkpoint-min-step N          minimum spacing between context checkpoints in tokens (default: 256, 0",
+            "enabled if number of slots is auto)",
+            "--cache-idle-slots, --no-cache-idle-slots",
+            "save idle slots to the prompt cache on new task, and clear them when",
+            "(env: LLAMA_ARG_CACHE_IDLE_SLOTS)",
+            "-sp,   --special                        special tokens output enabled (default: false)",
+            "--warmup, --no-warmup                   whether to perform warmup with an empty run (default: enabled)",
+            "--pooling {none,mean,cls,last,rank}     pooling type for embeddings, use model default if unspecified",
+            "-np,   --parallel N                     number of server slots (default: -1, -1 = auto)",
+            "--image-min-tokens N                    minimum number of tokens each image can take, only used by vision",
+            "(env: LLAMA_ARG_IMAGE_MIN_TOKENS)",
+            "--image-max-tokens N                    maximum number of tokens each image can take, only used by vision",
+            "(env: LLAMA_ARG_IMAGE_MAX_TOKENS)",
+            "--embd-normalize N                      normalisation for embeddings (default: 2) (-1=none, 0=max absolute",
+            "--embedding, --embeddings               restrict to only support embedding use case; use only with dedicated",
+            "embedding models (default: disabled)",
+            "(env: LLAMA_ARG_EMBEDDINGS)",
+            "--metrics                               enable prometheus compatible metrics endpoint (default: disabled)",
+            "(env: LLAMA_ARG_ENDPOINT_METRICS)",
+            "--props                                 enable changing global properties via POST /props (default: disabled)",
+            "(env: LLAMA_ARG_ENDPOINT_PROPS)",
+            "--slots, --no-slots                     expose slots monitoring endpoint (default: enabled)",
+            "(env: LLAMA_ARG_ENDPOINT_SLOTS)",
+            "--reasoning-budget N                    token budget for thinking: -1 for unrestricted, 0 for immediate end,",
+            "N>0 for token budget (default: -1)",
+            "--tts-use-guide-tokens                  Use guide tokens to improve TTS word recall",
+            "--embd-gemma-default                    use default EmbeddingGemma model (note: can download weights from the"
+          ]
+        }
+      },
+      "option_flags": {
+        "aggregate_timing_option": true,
+        "attention_export_option": false,
+        "hidden_state_proxy_option": true,
+        "logit_export_option": false,
+        "raw_output_option": true,
+        "token_probability_option": false
+      }
+    }
+  },
+  "duration_s": 19.498207,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5331 stable local internal-energy receipt harness.",
+    "value": "experiment_5331_internal_energy_receipt_harness_v486"
+  },
+  "external_text_scorer_reopened": false,
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated GGUF model IDs so the receipt harness cannot silently substitute a legacy, tiny, API, or non-GGUF model.",
+    "backend_option_surface": "Records the native backend help/API option surface used to decide whether logits, token probabilities, timing, attention, or hidden proxies are exposed.",
+    "experiment_id": "Traceability for the Exp5331 stable local internal-energy receipt harness.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether a reproducible local non-text-score internal receipt exists.",
+    "inference_substrate": "Declares local_sota_internal_signal_receipt so the artifact is read as a stable local GGUF internal-receipt gate, not a generated-text quality scorer.",
+    "milestone": "Milestone accountability for the V486 internal receipt decision.",
+    "missing_backend_features": "Names unavailable backend features precisely so downstream internal-energy work does not substitute text scoring.",
+    "preconditions_checked": "Records Exp5324 stability, selected backend/model binding, GPU visibility, model cache status, and backend metadata/API option checks before any internal receipt claim.",
+    "raw_output_receipt": "Records prompt/output checksums and timing without interpreting generated text as answer quality.",
+    "receipt_schema_path": "Points to the tiny internal-receipt schema description, or to a blocked-schema description naming the missing backend feature precisely.",
+    "selected_model_spec": "Binds any internal receipt to the stable mandated model selected by Exp5324.",
+    "status": "Machine-readable terminal state for downstream internal-energy gates.",
+    "tests_run": "Commands run to validate the Exp5331 module, artifact schema, new-code coverage, and required repository test status.",
+    "tiny_receipt_path": "Points to the saved tiny non-text internal receipt when one exists; null when the runtime exposes only text or aggregate timing."
+  },
+  "hidden_state_proxy_available": false,
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether a reproducible local non-text-score internal receipt exists.",
+    "value": "complete: token_probability_receipt_ready"
+  },
+  "inference_substrate": {
+    "principle": "Declares local_sota_internal_signal_receipt so the artifact is read as a stable local GGUF internal-receipt gate, not a generated-text quality scorer.",
+    "value": "local_sota_internal_signal_receipt"
+  },
+  "internal_signal_receipt_ready": true,
+  "logits_available": false,
+  "milestone": {
+    "principle": "Milestone accountability for the V486 internal receipt decision.",
+    "value": "2026.07.486"
+  },
+  "missing_backend_features": {
+    "principle": "Names unavailable backend features precisely so downstream internal-energy work does not substitute text scoring.",
+    "value": [
+      "logits_unavailable",
+      "attention_export_unavailable",
+      "hidden_state_proxy_unavailable"
+    ]
+  },
+  "no_quality_claim": true,
+  "preconditions_checked": {
+    "principle": "Records Exp5324 stability, selected backend/model binding, GPU visibility, model cache status, and backend metadata/API option checks before any internal receipt claim.",
+    "value": {
+      "backend_option_surface_checked": true,
+      "binary_dynamic_libraries": {
+        "llama-cli": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli"
+          ],
+          "duration_s": 0.00821,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007f2fd5c81000)\n\tlibllama-cli-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-cli-impl.so (0x00007f2fd5ae9000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f2fd599c000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f2fd5400000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f2fd5000000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f2fd5990000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f2fd4e43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f2fd1400000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f2fd58b7000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f2fca800000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f2fca400000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f2fd4d3c000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f2fd53a0000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f2fca000000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f2fd5c83000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f2fca2e6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f2fc9800000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f2fd5330000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f2fc9400000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f2fc5c00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f2fa0e00000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f2fd58ae000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f2fd58a9000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f2fd58a2000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f2fca7c4000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f2fc9f06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f2fd4d2c000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f2fc929f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f2fd13dd000)"
+        },
+        "llama-completion": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion"
+          ],
+          "duration_s": 0.005486,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007effe1453000)\n\tlibllama-completion-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-completion-impl.so (0x00007effe142c000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007effe0e00000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007effe0a00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007effe1420000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007effe0843000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007effdce00000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007effe1347000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007effd6200000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007effd5e00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007effe073c000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007effe12e7000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007effd5a00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007effd5ce6000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007effd5200000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007effe1455000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007effe0d90000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007effd4e00000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007effd1600000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007effac800000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007effe12de000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007effe12d9000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007effe12d4000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007effe0d54000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007effd5906000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007effe12c2000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007effd4c9f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007effe0d31000)"
+        },
+        "llama-server": {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "duration_s": 0.005253,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "linux-vdso.so.1 (0x00007fa05b7e6000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007fa05ac00000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007fa05a600000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007fa05aab3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007fa05a200000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007fa05b7cd000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007fa05a043000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007fa056600000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007fa05a529000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007fa04fa00000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007fa059f29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007fa04f200000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007fa04ee00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007fa04f8f9000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007fa05b769000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007fa04ea00000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fa05b7e8000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007fa04f190000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007fa04e600000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007fa04ae00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007fa026000000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007fa05aaae000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007fa05aaa9000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007fa05aaa2000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007fa04f8bd000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007fa04ed06000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007fa0565f0000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007fa04e49f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007fa04f16d000)"
+        }
+      },
+      "binary_paths": {
+        "llama-cli": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+        "llama-completion": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+        "llama-server": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+      },
+      "binary_versions": {
+        "llama-cli": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+            "--version"
+          ],
+          "duration_s": 0.124323,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        },
+        "llama-completion": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-completion",
+            "--version"
+          ],
+          "duration_s": 0.116167,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        },
+        "llama-server": {
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "duration_s": 0.111547,
+          "ok": true,
+          "returncode": 0,
+          "stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+          "stdout": ""
+        }
+      },
+      "blocked_preconditions": [],
+      "cuda_backend_evidence": true,
+      "cuda_driver": {
+        "cuda_version": "13.3",
+        "driver_version": "610.43.02"
+      },
+      "exp5324_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5324_runtime_receipt_stabilization_v486.json",
+      "exp5324_stable": true,
+      "external_text_scorer_reopened": false,
+      "free_disk": {
+        "free_bytes": 1487057620992,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot",
+        "total_bytes": 3953289023488,
+        "used_bytes": 2466231402496
+      },
+      "free_vram_mb": 48240,
+      "gpu_visible": true,
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.033016,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "raw_nvidia_smi": {
+        "command": [
+          "nvidia-smi"
+        ],
+        "duration_s": 0.099997,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "Mon Jul  6 22:26:42 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GeForce RTX 3090        Off |   00000000:03:00.0 Off |                  N/A |\n|  0%   49C    P8             18W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n|   1  NVIDIA GeForce RTX 3090        Off |   00000000:62:00.0 Off |                  N/A |\n|  0%   50C    P8             19W /  370W |       4MiB /  24576MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+"
+      },
+      "run_date_utc": "20260707",
+      "selected_backend_kind": "llama-cli",
+      "selected_model_file_present": true,
+      "vram_before": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_gpu_pct": 0
+        }
+      ]
+    }
+  },
+  "random_seed": 5331,
+  "raw_output_receipt": {
+    "principle": "Records prompt/output checksums and timing without interpreting generated text as answer quality.",
+    "value": {
+      "availability": "available",
+      "content_checksum": "db8b8e836881534b",
+      "content_preview": "\n\nOK",
+      "tokens_evaluated": 5,
+      "tokens_predicted": 2
+    }
+  },
+  "raw_output_receipt_available": true,
+  "receipt_schema_path": {
+    "principle": "Points to the tiny internal-receipt schema description, or to a blocked-schema description naming the missing backend feature precisely.",
+    "value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json"
+  },
+  "reproducibility_checksum": "b2023279826b31ad",
+  "schema": "carnot.experiment_5331.internal_energy_receipt_harness.v486",
+  "selected_model_spec": {
+    "principle": "Binds any internal receipt to the stable mandated model selected by Exp5324.",
+    "value": {
+      "autotokenizer_used": false,
+      "blocked_preconditions": [],
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+      "cached": true,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "metadata_model_resolution_s": 0.000125,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5331",
+    "SCENARIO-VERIFY-5331"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream internal-energy gates.",
+    "value": "complete"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the Exp5331 module, artifact schema, new-code coverage, and required repository test status.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5331_internal_energy_receipt_harness_v486.py -q -o addopts=\"\"",
+        "outcome": "passed: 7 passed"
+      },
+      {
+        "command": ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_5331_internal_energy_receipt_harness_v486.py -q -o addopts=\"\" && .venv/bin/coverage report --include=python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py --fail-under=100 --show-missing",
+        "outcome": "passed: 100% coverage on new Exp5331 module"
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py tests/python/test_experiment_5331_internal_energy_receipt_harness_v486.py && .venv/bin/ruff format --check python/carnot/experiment_5331_internal_energy_receipt_harness_v486.py tests/python/test_experiment_5331_internal_energy_receipt_harness_v486.py",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "failed/interrupted: 12 failed, 9719 passed, 21 skipped, Z3 worker segmentation fault in z3_math_verifier path, interrupted at 20% after 409.04s"
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py",
+        "outcome": "failed: 1262 pre-existing tests lack spec references; Exp5331 tests include REQ-VERIFY-5331/SCENARIO-VERIFY-5331"
+      },
+      {
+        "command": "ops/e2e-test-plan.md review",
+        "outcome": "no listed E2E item directly applies to a bounded local GGUF internal-receipt availability harness"
+      }
+    ]
+  },
+  "tiny_receipt_path": {
+    "principle": "Points to the saved tiny non-text internal receipt when one exists; null when the runtime exposes only text or aggregate timing.",
+    "value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json"
+  },
+  "token_probability_available": true,
+  "token_timing_available": true
+}
