@@ -10471,3 +10471,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 12:31 UTC | Exp 5353: Token-probability feature audit and inte | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-07-07 12:52 UTC | Exp 5354: Gated arithmetic carry token-energy diag | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-07 13:09 UTC | Exp 5355: Dependency-edge provenance for context s | OK | 91 passed, 1 warning in 10.50s |
+| 2026-07-07 13:26 UTC | Exp 5356: Memory-induced verifier/tool drift harne | OK | 89 passed, 1 warning in 7.59s |
