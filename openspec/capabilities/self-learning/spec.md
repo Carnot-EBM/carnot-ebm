@@ -17682,3 +17682,142 @@ zero
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5329 | Planned (`python/carnot/experiment_5329_memory_context_policy_rollout_v486.py`, `results/experiment_5329_memory_context_policy_rollout_v486.json`) | Planned (`tests/python/test_experiment_5329_memory_context_policy_rollout_v486.py`) |
+
+---
+
+## REQ-LEARN-5330: Anytime Certificate Gate for Context Lifecycle Policy Promotion
+
+Experiment 5330 SHALL promote, reject, or defer candidate context-lifecycle
+policy updates using a bounded anytime-valid certificate over deterministic
+Exp5328 fixture evidence. The gate SHALL treat Carnot's safe near-term
+self-evolution target as policy promotion over lifecycle actions, not model weight updates.
+It SHALL load the Exp5328 context-object lifecycle fixture,
+define candidate policy updates over lifecycle actions, and decide promotion
+only from reproducible fixture rows.
+
+The certificate gate SHALL include a no-op/shuffled-control policy so selection
+noise cannot be reported as improvement. A candidate SHALL NOT be promoted when
+its certified improvement is no better than the control, when it accepts unsafe
+fixture rows, when it mutates model weights, or when its evidence is below the
+minimum anytime bound. Rejected and later-invalidated promotions SHALL record
+rollback behavior.
+
+The result artifact SHALL be
+`results/experiment_5330_sea_anytime_certificate_gate_v486.json` and SHALL
+include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_anytime_certificate_gate`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer `candidate_policy_count`,
+bare integer `policy_promotions`, bare integer `policy_rejections`, bare
+integer `policy_deferrals`, bare numeric `no_op_control_delta`, bare integer
+`unsafe_promotions` with value 0, bare integer `rollback_events`, bare boolean
+`anytime_certificate_gate_ready`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5330 certificate-gate artifact so
+  downstream self-learning cannot confuse policy promotion with model-weight
+  updates.
+- `milestone`: Binds the anytime certificate gate to milestone v486 where
+  context lifecycle policy promotion is the frozen-model SEA target.
+- `status`: Reports whether candidate policy promotion completed under
+  certificate, no-op-control, rollback, and frozen-model gates.
+- `honest_verdict`: Terminal Exp5330 verdict; starts with complete: or
+  blocked_ and states whether reproducible policy promotion avoided unsafe
+  accepts and model-weight mutation.
+- `inference_substrate`: Declares deterministic anytime certificate evaluation
+  over fixture rows with no live LLM, API judge, fine-tuning, adapter update,
+  or foundation-weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the certificate governs
+  continuous self-learning policy promotion rather than static reporting.
+- `no_weight_mutation`: Bare gate confirming the experiment promotes only
+  deterministic lifecycle policy choices and never mutates model weights or
+  adapters.
+- `candidate_policy_count`: Bare count of candidate lifecycle policy updates
+  evaluated by the certificate.
+- `policy_promotions`: Bare count of candidates accepted for promotion by the
+  certificate gate.
+- `policy_rejections`: Bare count of candidates rejected by the certificate
+  gate.
+- `policy_deferrals`: Bare count of candidates deferred because bounded
+  evidence was insufficient for safe promotion or rejection.
+- `no_op_control_delta`: Bare numeric best improvement delta achieved by the
+  no-op/shuffled control; candidates must clear this delta before any promotion
+  can be reported as improvement.
+- `unsafe_promotions`: Bare count of promoted candidates that accept unsafe
+  fixture rows; value 0 is required for readiness.
+- `rollback_events`: Bare count of rejected or later-invalidated promotions
+  that recorded rollback behavior.
+- `anytime_certificate_gate_ready`: Bare gate true only when promotion
+  decisions are reproducible, no unsafe policy is promoted, no-op controls are
+  cleared, rollback is recorded, tests are recorded, and no model weights
+  mutate.
+- `tests_run`: Records the exact verification commands used to establish that
+  the certificate module and artifact are stable.
+
+### REQ-LEARN-5330 Sub-requirements
+
+- REQ-LEARN-5330-1: The gate SHALL load the Exp5328 lifecycle fixture and
+  confirm `context_lifecycle_fixture_ready=true` and `no_weight_mutation=true`
+  before reporting a ready artifact.
+- REQ-LEARN-5330-2: Candidate policies SHALL cover at least one promotable
+  lifecycle policy, one unsafe policy, one evidence-insufficient policy, and one
+  no-op/shuffled-control policy.
+- REQ-LEARN-5330-3: The anytime certificate SHALL return exactly one of
+  `promote`, `reject`, or `defer` for each candidate from deterministic fixture
+  evidence.
+- REQ-LEARN-5330-4: A promoted candidate SHALL clear the no-op/shuffled-control
+  delta, have zero unsafe accepts, have enough evidence for the configured
+  anytime bound, and preserve no-weight-mutation discipline.
+- REQ-LEARN-5330-5: Rejected unsafe candidates and later-invalidated promoted
+  candidates SHALL record rollback behavior.
+- REQ-LEARN-5330-6: `anytime_certificate_gate_ready` SHALL be true only when
+  promotion decisions are reproducible, `unsafe_promotions=0`, at least one
+  promotion/rejection/defer decision is recorded, no-op control is present,
+  rollback events are recorded, tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5330-PROMOTE: Certificate Promotes Safe Lifecycle Policy
+
+**Given** Exp5328 lifecycle rows and a lifecycle policy candidate that improves
+quality over transition-only context handling
+**When** the anytime certificate evaluates deterministic evidence
+**Then** the candidate is promoted
+**And** its certified delta clears the no-op/shuffled-control delta
+**And** unsafe accepts remain zero.
+
+### SCENARIO-LEARN-5330-REJECT: Certificate Rejects Unsafe Policy
+
+**Given** a candidate lifecycle policy that accepts unsafe fixture rows
+**When** the anytime certificate evaluates deterministic evidence
+**Then** the candidate is rejected
+**And** rollback behavior is recorded.
+
+### SCENARIO-LEARN-5330-DEFER: Certificate Defers Insufficient Evidence
+
+**Given** a candidate lifecycle policy with fewer evidence rows than the
+configured anytime bound requires
+**When** the anytime certificate evaluates deterministic evidence
+**Then** promotion is deferred rather than reported as improvement.
+
+### SCENARIO-LEARN-5330-NOOP: No-Op Control Blocks Selection Noise
+
+**Given** a no-op/shuffled-control policy over the same lifecycle actions
+**When** candidate deltas are compared against the control delta
+**Then** the control is not promoted
+**And** candidate promotion requires improvement strictly above the control.
+
+### SCENARIO-LEARN-5330-ROLLBACK: Invalidated Promotion Rolls Back
+
+**Given** a candidate that was initially promoted and later receives invalidating
+unsafe evidence
+**When** rollback audit runs
+**Then** the candidate is marked rolled back
+**And** the rollback event is counted in the artifact.
+
+## Implementation Status (Exp 5330)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5330 | Implemented (`python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py`, `results/experiment_5330_sea_anytime_certificate_gate_v486.json`) | Implemented (`tests/python/test_experiment_5330_sea_anytime_certificate_gate_v486.py`) |
