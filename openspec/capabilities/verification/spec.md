@@ -27689,3 +27689,102 @@ runner writes a terminal `blocked_`, `null:`, or `harmful_` artifact with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5290 | Planned (`python/carnot/experiment_5290_memory_assisted_coherence_dose_gated_v483.py`, `results/experiment_5290_memory_assisted_coherence_dose_gated_v483.json`) | Planned (`tests/python/test_experiment_5290_memory_assisted_coherence_dose_gated_v483.py`) |
+
+### REQ-VERIFY-5337: SOTA Runtime Corrigendum Multimodel V487
+
+The repository SHALL provide Exp 5337 at
+`python/carnot/experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`
+and write
+`results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json`
+without modifying `scripts/research_conductor.py`. The runner SHALL re-run the
+Exp 5324 stable native `llama-cli` command with clean live-inference
+methodology and a bounded generation plan whose measured live-inference
+duration is at least 60 seconds, so downstream SOTA tasks can depend on a clean
+runtime receipt instead of the adversarial-flagged short Exp 5323 receipt. It
+SHALL NOT claim answer quality, benchmark quality, verifier quality, solver
+quality, memory usefulness, or SOTA model accuracy.
+
+Step 0 SHALL record GPU visibility, raw `nvidia-smi`, parsed free VRAM,
+llama.cpp binary path and version, CUDA dynamic-library or device evidence,
+the three mandated local GGUF model file receipts, and the exact Exp 5324
+selected backend command before any live run. The mandated `MODEL_SPECS` SHALL
+be exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and the runner SHALL NOT use
+`AutoTokenizer.from_pretrained` or any transformers tokenizer on a GGUF
+repository.
+
+The flagship dense Gemma 4 31B command SHALL preserve the Exp 5324 stable
+native backend shape: `llama-cli`, the selected local `.gguf` path, context
+512, batch 512, ubatch 128, `-ngl all`, split mode `layer`, temperature 0,
+single-turn mode, simple I/O, prompt suppression, and `--perf`. The runner MAY
+raise the token budget from the Exp 5324 8-token command or repeat the bounded
+command until the total measured live-inference methodology duration is at
+least 60 seconds. Each receipt SHALL record command, model path, context, batch,
+ubatch, GPU layers, split mode, prompt, token budget, timeout, GPU memory
+receipts, offload evidence, first-token time, total duration, stdout/stderr
+summaries, generated-token count, and whether final answer text is separable
+from thinking text.
+
+The runner MAY attempt `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF` only when their local model files are present
+and the probe can be bounded without risking the flagship dense clean receipt.
+If either optional model is absent or skipped for capacity, methodology, or
+risk-control reasons, the runner SHALL record the precise blocked reason in
+the multi-model receipt matrix instead of converting the dense receipt into a
+quality claim.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_backend_command`,
+`runtime_corrigendum_receipt`, `multi_model_receipt_matrix`, and `tests_run`,
+plus bare numeric `methodology_duration_s`, bare boolean
+`sota_runtime_clean_receipt_ready`, bare boolean
+`runtime_unblocked_min_one_mandated`, bare boolean
+`quality_claim_permitted=false`, and bare boolean
+`no_autotokenizer_used=true`. `inference_substrate.value` SHALL be
+`live_llm_inference`. `honest_verdict.value` SHALL start with `complete:` when
+at least one mandated model has a clean, repeatable, unflagged-duration live
+GGUF receipt with authenticated GPU offload, or `blocked_` when no mandated
+model meets that runtime-only gate.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5337 clean SOTA runtime corrigendum receipt."
+- `milestone`: principle "Milestone accountability for the V487 runtime-corrigendum gate."
+- `status`: principle "Machine-readable terminal state for downstream SOTA runtime gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether a clean unflagged-duration live GGUF receipt exists."
+- `inference_substrate`: principle "Declares live_llm_inference so adversarial verification applies the correct 60-second runtime floor to the cleaned receipt."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF model IDs, local file receipts, roles, and no-AutoTokenizer status."
+- `preconditions_checked`: principle "Records GPU visibility, nvidia-smi, llama.cpp version, model file presence, free VRAM, offload evidence, and the exact Exp5324 command before live inference."
+- `selected_backend_command`: principle "Preserves the Exp5324 stable command shape and records any bounded token-budget increase needed for clean duration."
+- `runtime_corrigendum_receipt`: principle "Records the load, first-token, duration, token, GPU-memory, offload, stdout/stderr, and answer-separation evidence for the cleaned dense receipt."
+- `multi_model_receipt_matrix`: principle "Separates completed, skipped, and blocked receipts for all mandated SOTA models without turning optional probes into quality claims."
+- `tests_run`: principle "Commands run to validate the corrigendum module, artifact schema, new-code coverage, repository tests, and applicable runtime checks."
+
+### SCENARIO-VERIFY-5337: Clean Corrigendum Re-Runs The Stable Dense Receipt
+
+Given Exp 5324 reports a stable native `llama-cli` receipt for
+`unsloth/gemma-4-31B-it-GGUF` and current GPU, CUDA-linked llama.cpp, free
+VRAM, and local GGUF files are available, when Exp 5337 runs, then it re-runs
+the stable command shape with a bounded duration plan, records Step 0
+preconditions, records model file receipts for all three mandated models,
+writes a `live_llm_inference` artifact, records at least one cleaned live GGUF
+receipt with authenticated GPU offload, records `methodology_duration_s >= 60`,
+sets `quality_claim_permitted=false`, sets `no_autotokenizer_used=true`, and
+sets `sota_runtime_clean_receipt_ready=true` only when at least one mandated
+model satisfies that clean runtime-only gate.
+
+If Exp 5324 lacks a usable selected command, the selected binary or dense model
+file is missing, GPU offload cannot be authenticated, the live duration is less
+than 60 seconds, the receipt times out or crashes, or optional Qwen/Gemma-MoE
+models cannot be bounded safely, then the same runner writes a terminal
+`blocked_` artifact or per-model blocked matrix rows, preserves exact blocked
+reasons, sets `quality_claim_permitted=false`, keeps
+`no_autotokenizer_used=true`, and does not modify `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5337)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5337 | Planned (`python/carnot/experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`, `results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json`) | Planned (`tests/python/test_experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`) |
