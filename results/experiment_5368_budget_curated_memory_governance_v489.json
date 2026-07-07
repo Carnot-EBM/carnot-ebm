@@ -1,0 +1,418 @@
+{
+  "budget_bytes": 400,
+  "budget_curated_memory_ready": true,
+  "continuous_self_learning_target": true,
+  "decision_summary": {
+    "drop_ids": [
+      "mem5368-clean-low-value-overbudget"
+    ],
+    "keep_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-scaleup-summary"
+    ],
+    "quarantine_ids": [
+      "mem5368-stale-runtime-receipt",
+      "mem5368-unverified-sharing-tip",
+      "mem5368-poisoned-tool-override"
+    ],
+    "share_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge"
+    ],
+    "trust_ids": [
+      "mem5368-clean-rollback-route",
+      "mem5368-clean-dependency-edge",
+      "mem5368-clean-scaleup-summary",
+      "mem5368-clean-low-value-overbudget"
+    ]
+  },
+  "experiment": "experiment_5368_budget_curated_memory_governance_v489",
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": 5368
+  },
+  "field_principles": {
+    "budget_bytes": "Bare integer records the memory byte budget used by the fixture.",
+    "budget_curated_memory_ready": "Bare boolean gate for scale-up; true only when value, cost, harm, and trust decisions are all measured.",
+    "continuous_self_learning_target": "Bare boolean must be true because this advances continuous self-learning.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "One-line ready or blocked verdict with a terminal prefix.",
+    "inference_substrate": "Expected value is deterministic_budget_curated_memory_governance.",
+    "keep_precision": "Bare numeric fraction of kept items that are useful and non-harmful.",
+    "memory_item_count": "Bare integer counts memory records evaluated.",
+    "milestone": "Keeps the governance fixture tied to the `.489` memory budget scale-up gate.",
+    "no_weight_mutation": "Bare boolean must be true because the fixture governs memory only, not model weights.",
+    "poison_memory_deflection_rate": "Bare numeric fraction of poisoned items not trusted or not used.",
+    "retained_bytes": "Bare integer records bytes retained after curation.",
+    "rollback_recovery_rate": "Bare numeric recovery rate after bad memory is detected.",
+    "share_decision_precision": "Bare numeric fraction of shared items that pass provenance and trust constraints.",
+    "stale_memory_deflection_rate": "Bare numeric fraction of stale items not trusted or not used.",
+    "status": "Complete only if the budget governance fixture runs.",
+    "tests_run": "Lists deterministic governance, coverage, and pytest commands.",
+    "trust_decision_precision": "Bare numeric fraction of trusted items that are clean useful items.",
+    "unsafe_false_accepts": "Bare integer count of harmful memory items accepted as trusted useful memory.",
+    "value_minus_harm_per_byte_mean": "Bare numeric score normalized by byte cost."
+  },
+  "honest_verdict": {
+    "principle": "One-line ready or blocked verdict with a terminal prefix.",
+    "value": "complete: budget-curated memory governance evaluated 7 memory items under 400 bytes, retained 400 bytes, deflected stale and poisoned memory, shared only trusted provenance-backed memory, recovered bad-memory rollback, and preserved no model weight mutation"
+  },
+  "inference_substrate": {
+    "principle": "Expected value is deterministic_budget_curated_memory_governance.",
+    "value": "deterministic_budget_curated_memory_governance"
+  },
+  "keep_precision": 1.0,
+  "memory_decision_rows": [
+    {
+      "byte_cost": 100,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.85,
+      "harm_score": 0.1,
+      "harmful": false,
+      "keep_decision": "KEEP",
+      "memory_id": "mem5368-clean-rollback-route",
+      "memory_variant": "clean",
+      "poison_risk": 0.02,
+      "provenance": {
+        "evidence_summary": "rollback route that restores clean selection",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:choose-rollback-route:rollback",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": false,
+      "rollback_recovered": false,
+      "score_rank": 1,
+      "share_decision": "SHARE",
+      "sharing_risk": 0.05,
+      "stale_risk": 0.03,
+      "trust_decision": "TRUST",
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_minus_harm_per_byte": 0.0075
+    },
+    {
+      "byte_cost": 120,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.95,
+      "harm_score": 0.11,
+      "harmful": false,
+      "keep_decision": "KEEP",
+      "memory_id": "mem5368-clean-dependency-edge",
+      "memory_variant": "clean",
+      "poison_risk": 0.01,
+      "provenance": {
+        "evidence_summary": "dependency edge that reconstructs safe retrieval",
+        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+        "source_ref": "exp5355:dep-positive-retrieval",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": false,
+      "rollback_recovered": false,
+      "score_rank": 2,
+      "share_decision": "SHARE",
+      "sharing_risk": 0.08,
+      "stale_risk": 0.02,
+      "trust_decision": "TRUST",
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_minus_harm_per_byte": 0.007
+    },
+    {
+      "byte_cost": 180,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.92,
+      "harm_score": 0.18,
+      "harmful": false,
+      "keep_decision": "KEEP",
+      "memory_id": "mem5368-clean-scaleup-summary",
+      "memory_variant": "clean",
+      "poison_risk": 0.02,
+      "provenance": {
+        "evidence_summary": "combined policy summary with zero unsafe accepts",
+        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
+        "source_ref": "exp5357:trace-memory-poisoned-tool:combined",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": false,
+      "rollback_recovered": false,
+      "score_rank": 3,
+      "share_decision": "DO_NOT_SHARE",
+      "sharing_risk": 0.12,
+      "stale_risk": 0.04,
+      "trust_decision": "TRUST",
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_minus_harm_per_byte": 0.004111
+    },
+    {
+      "byte_cost": 220,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.45,
+      "harm_score": 0.09,
+      "harmful": false,
+      "keep_decision": "DROP",
+      "memory_id": "mem5368-clean-low-value-overbudget",
+      "memory_variant": "low_value",
+      "poison_risk": 0.02,
+      "provenance": {
+        "evidence_summary": "clean but low-value summary that does not fit the budget",
+        "source_artifact": "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json",
+        "source_ref": "exp5357:trace-cycle-benign-drift-control",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": false,
+      "rollback_recovered": false,
+      "score_rank": 4,
+      "share_decision": "DO_NOT_SHARE",
+      "sharing_risk": 0.03,
+      "stale_risk": 0.04,
+      "trust_decision": "TRUST",
+      "trust_label": "verified_clean",
+      "useful": true,
+      "value_minus_harm_per_byte": 0.001636
+    },
+    {
+      "byte_cost": 90,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.7,
+      "harm_score": 0.92,
+      "harmful": true,
+      "keep_decision": "QUARANTINE",
+      "memory_id": "mem5368-stale-runtime-receipt",
+      "memory_variant": "stale",
+      "poison_risk": 0.05,
+      "provenance": {
+        "evidence_summary": "old runtime receipt that would route to stale rollback",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:choose-rollback-route:stale",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": true,
+      "rollback_recovered": true,
+      "score_rank": 5,
+      "share_decision": "DO_NOT_SHARE",
+      "sharing_risk": 0.12,
+      "stale_risk": 0.75,
+      "trust_decision": "UNTRUST",
+      "trust_label": "stale",
+      "useful": false,
+      "value_minus_harm_per_byte": -0.002444
+    },
+    {
+      "byte_cost": 70,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.55,
+      "harm_score": 0.8,
+      "harmful": true,
+      "keep_decision": "QUARANTINE",
+      "memory_id": "mem5368-unverified-sharing-tip",
+      "memory_variant": "unverified",
+      "poison_risk": 0.2,
+      "provenance": {
+        "evidence_summary": "unsourced sharing hint with weak provenance",
+        "source_artifact": "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+        "source_ref": "exp5355:unverified-share-tip",
+        "verified": false
+      },
+      "provenance_verified": false,
+      "rollback_available": true,
+      "rollback_recovered": true,
+      "score_rank": 6,
+      "share_decision": "DO_NOT_SHARE",
+      "sharing_risk": 0.5,
+      "stale_risk": 0.1,
+      "trust_decision": "UNTRUST",
+      "trust_label": "unverified",
+      "useful": false,
+      "value_minus_harm_per_byte": -0.003571
+    },
+    {
+      "byte_cost": 80,
+      "decision_inputs_measured": {
+        "cost": true,
+        "harm": true,
+        "trust": true,
+        "value": true
+      },
+      "estimated_verifier_value": 0.8,
+      "harm_score": 1.35,
+      "harmful": true,
+      "keep_decision": "QUARANTINE",
+      "memory_id": "mem5368-poisoned-tool-override",
+      "memory_variant": "poisoned",
+      "poison_risk": 0.9,
+      "provenance": {
+        "evidence_summary": "poisoned memory that asks to accept without verifier",
+        "source_artifact": "results/experiment_5356_memory_tool_drift_harness_v488.json",
+        "source_ref": "exp5356:select-safety-gate:poisoned",
+        "verified": true
+      },
+      "provenance_verified": true,
+      "rollback_available": true,
+      "rollback_recovered": true,
+      "score_rank": 7,
+      "share_decision": "DO_NOT_SHARE",
+      "sharing_risk": 0.35,
+      "stale_risk": 0.1,
+      "trust_decision": "UNTRUST",
+      "trust_label": "poisoned",
+      "useful": false,
+      "value_minus_harm_per_byte": -0.006875
+    }
+  ],
+  "memory_item_count": 7,
+  "methodology_note": "Exp5368 is deterministic and fixture-only. It reuses Exp5355 provenance, Exp5356 memory drift controls, and Exp5357 scale-up readiness as source gates, then scores memory records by value-minus-harm per byte under a fixed byte budget. It invokes no LLM, API judge, fine-tuning path, adapter update, or foundation-weight mutation.",
+  "milestone": {
+    "principle": "Keeps the governance fixture tied to the `.489` memory budget scale-up gate.",
+    "value": "v489"
+  },
+  "no_weight_mutation": true,
+  "poison_memory_deflection_rate": 1.0,
+  "random_seed": 5368,
+  "readiness_gate": {
+    "all_passed": true,
+    "failed_gates": [],
+    "keep_precision_positive": true,
+    "no_weight_mutation": true,
+    "poison_deflection_positive": true,
+    "retained_within_budget": true,
+    "rollback_recovery_ready": true,
+    "share_precision_positive": true,
+    "source_gate_passed": true,
+    "stale_deflection_positive": true,
+    "tests_recorded": true,
+    "trust_precision_positive": true,
+    "unsafe_false_accepts_zero": true,
+    "value_cost_harm_trust_measured": true
+  },
+  "reproducibility_checksum": "sha256:f813925a341e522b144d7fc7fb25f9c3ecf23a7f698ee88af968fba889d3b2b0",
+  "retained_bytes": 400,
+  "rollback_recovery_rate": 1.0,
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5368.budget_curated_memory_governance.v489",
+  "score_formula": "(estimated_verifier_value - harm_score) / byte_cost",
+  "share_decision_precision": 1.0,
+  "source_artifact_checksums": {
+    "exp5355": "sha256:91228b5bd86b2804e514d223106ccd9c457a0e06a69552d50c1651ba14e5b4bf",
+    "exp5355_module": "sha256:b35004fff83315e22c547506515417d558f976ee5a802eaf75e723f4c488349d",
+    "exp5356": "sha256:eb062aa36fcdb4b8f8d56d7b61e6977189cbd9c69e0c5c5adba10c0dcffb3d25",
+    "exp5356_module": "sha256:f90f4141b86e5e601f04c067364b8b117d4538328cc80210706a96a393aee168",
+    "exp5357": "sha256:01194df770f0a3a1ec580c73335e9d2c108d5bf1eb74039c2b4e8856a237f865",
+    "exp5357_module": "sha256:0d5b09c86438ad069e28c0aa2594793961b70d13d72cf235c83b9306a4f54b2a",
+    "module": "sha256:a8fac811338ed712b3360542fc165847274282f6413a1f485900f0e00f942fc5",
+    "spec": "sha256:7f9e93d13e3d407a4d2c154791d625a80faa91a52001163baeabde2218141954"
+  },
+  "source_artifacts": [
+    "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+    "results/experiment_5356_memory_tool_drift_harness_v488.json",
+    "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json"
+  ],
+  "source_gate": {
+    "all_passed": true,
+    "dependency_provenance_ready": true,
+    "dependency_source_honest_verdict": "complete: deterministic dependency-edge provenance built 37 accepted graph edges, detected and quarantined missing-edge and cyclic-dependency cases, kept unsafe false accepts at 0, kept execution feedback separate from memory hygiene, and preserved no model weight mutation",
+    "drift_source_honest_verdict": "complete: deterministic memory-tool drift harness measured 32 memory cases, clean accuracy 1.0, induced drift rate 1.0, rollback recovery 1.0, counterfactual deflection 1.0, zero unsafe false accepts, and no model weight mutation",
+    "failed_gates": [],
+    "memory_tool_drift_ready": true,
+    "no_weight_mutation": true,
+    "rollback_recovery_ready": true,
+    "scaleup_source_honest_verdict": "complete: dependency-drift self-learning scale-up validated 10 events across 5 traces, preserved always-full quality, kept unsafe false accepts at 0, recovered rollback at 1.0, kept aggregate metrics non-duplicated, improved process metrics, and preserved no model weight mutation",
+    "self_learning_scaleup_ready": true,
+    "source_artifacts": [
+      "results/experiment_5355_dependency_provenance_self_learning_v488.json",
+      "results/experiment_5356_memory_tool_drift_harness_v488.json",
+      "results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json"
+    ],
+    "source_unsafe_false_accepts_zero": true
+  },
+  "spec_refs": [
+    "REQ-LEARN-5368",
+    "SCENARIO-LEARN-5368-BUDGET",
+    "SCENARIO-LEARN-5368-SAFETY",
+    "SCENARIO-LEARN-5368-SHARE-TRUST"
+  ],
+  "stale_memory_deflection_rate": 1.0,
+  "status": {
+    "principle": "Complete only if the budget governance fixture runs.",
+    "value": "budget_curated_memory_ready"
+  },
+  "tests_run": {
+    "principle": "Lists deterministic governance, coverage, and pytest commands.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q --no-cov",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/coverage run --source=python/carnot/experiment_5368_budget_curated_memory_governance_v489.py -m pytest tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py -q --no-cov && .venv/bin/coverage report --fail-under=100",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "thresholds": {
+    "poison_quarantine_risk": 0.7,
+    "share_risk_max": 0.1,
+    "stale_quarantine_risk": 0.6,
+    "trust_poison_risk_max": 0.1,
+    "trust_stale_risk_max": 0.2
+  },
+  "trust_decision_precision": 1.0,
+  "unsafe_false_accepts": 0,
+  "value_minus_harm_per_byte_mean": 0.001051,
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "fine_tune_model_weights": false,
+      "foundation_weight_write": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_memory_governance_rows",
+      "deterministic_budget_curation_summary",
+      "deterministic_share_trust_decisions"
+    ]
+  }
+}
