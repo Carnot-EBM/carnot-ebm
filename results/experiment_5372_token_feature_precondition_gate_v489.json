@@ -1,0 +1,257 @@
+{
+  "attention_available": false,
+  "bounded_continuation_allowed": [
+    "feature-surface receipt refresh only",
+    "backend upgrade preflight for logits/hidden states/attention"
+  ],
+  "carry_token_energy_continue": false,
+  "claim_decisions": {
+    "carry_lane_retired_until_backend_upgrade": true,
+    "latent_internal_claims_require_new_backend_features": true,
+    "no_new_energy_signal_claimed": true,
+    "tokenprob_rows_are_feature_receipts_only": true
+  },
+  "completion_split_available": true,
+  "experiment": 5372,
+  "experiment_id": "exp5372-v489-token-feature-precondition-gate",
+  "field_principles": {
+    "attention_available": "whether attention tensors are available from the current local runtime path.",
+    "carry_token_energy_continue": "boolean continuation recommendation for the arithmetic carry lane.",
+    "completion_split_available": "whether prompt/completion token separation is available.",
+    "forbidden_claims": "list of claims not supported by the available features.",
+    "future_signal_allowed": "boolean; false if only tautological/text-only evidence exists.",
+    "hidden_states_available": "whether hidden states are available from the current local runtime path.",
+    "honest_verdict": "one-line continuation or retirement recommendation.",
+    "logits_available": "whether logits are available from the current local runtime path.",
+    "methodology_min_duration_s": "minimum duration required for any future live signal claim.",
+    "retire_recommendation": "boolean indicating whether the lane should be retired until new backend features exist.",
+    "status": "complete only if the precondition gate is written from actual artifact/runtime evidence.",
+    "tests_run": "list of commands run or no-code-change explanation.",
+    "token_feature_gate_ready": "true only if feature availability and no-go decisions are explicit.",
+    "tokenprob_rows_available": "whether reliable per-token logprob rows are available.",
+    "unsafe_false_accepts": "count of invalid energy claims accepted by this gate; should be zero."
+  },
+  "forbidden_claims": [
+    "new token/internal-energy signal from text-only or top-logprob rows",
+    "carry-token energy margin or carry-token separability signal",
+    "broad hallucination detection, reasoning verification, or answer-quality claim",
+    "FLaG-style latent/internal evidence claim without hidden states or attention",
+    "HalluField or thermodynamic token-path stability claim without logits",
+    "attention-energy or grounding claim without attention tensors",
+    "hidden-state basin, residual-stream, or latent-probe claim without hidden states",
+    "promotion of tokenprob feature receipts into internal-energy readiness"
+  ],
+  "future_signal_allowed": false,
+  "hidden_states_available": false,
+  "honest_verdict": "complete: retire carry-token energy lane until logits/hidden states/attention and feature-complete non-tautological controls exist",
+  "logits_available": false,
+  "methodology_min_duration_s": 60.0,
+  "milestone": "2026.07.489",
+  "minimum_preconditions": [
+    {
+      "name": "live_methodology_duration",
+      "requirement": "methodology_duration_s >= 60.0 and not copied from duration_s"
+    },
+    {
+      "name": "runtime_provenance",
+      "requirement": "current local model/backend path, selected model spec, and MODEL_SPECS provenance"
+    },
+    {
+      "name": "claim_matching_internal_surface",
+      "requirement": "logits for logit/thermodynamic claims; hidden states for latent claims; attention for attention claims"
+    },
+    {
+      "name": "token_localization",
+      "requirement": "prompt/completion token split plus token timing for token-local claims"
+    },
+    {
+      "name": "positive_controls",
+      "requirement": "feature-complete non-tautological positive controls with known targets"
+    },
+    {
+      "name": "negative_controls",
+      "requirement": "feature-complete perturbed and no-signal controls with positive margins"
+    },
+    {
+      "name": "safety",
+      "requirement": "unsafe_false_accepts == 0 and retired external-scorer scope remains closed"
+    }
+  ],
+  "missing_or_tautological_fields": {
+    "exp5353": {
+      "adversarial_flag_kinds": [
+        "TAUTOLOGY",
+        "DURATION_TOO_SHORT",
+        "METHODOLOGY_MISSING"
+      ],
+      "duration_tautology": true,
+      "feature_audit_duration_s": 0.95139,
+      "feature_audit_missing_feature_names": [
+        "logits",
+        "attention",
+        "hidden_states"
+      ],
+      "methodology_duration_s": 18.988115,
+      "top_level_missing_feature_names": [],
+      "top_level_omits_nested_latent_missing": true
+    },
+    "exp5354": {
+      "adversarial_flag_kinds": [
+        "TAUTOLOGY",
+        "METHODOLOGY_MISSING"
+      ],
+      "correct_vs_perturbed_margin": 0.0,
+      "duration_tautology": true,
+      "feature_complete_rate": 0.5625,
+      "incomplete_row_missing_features": {
+        "multi_carry_999_1": [
+          "perturbed_target_logprob"
+        ],
+        "no_carry_104_205": [
+          "perturbed_target_logprob"
+        ],
+        "no_carry_12_23": [
+          "perturbed_target_logprob"
+        ],
+        "no_carry_2304_1052": [
+          "perturbed_target_logprob"
+        ],
+        "no_carry_321_456": [
+          "perturbed_target_logprob"
+        ],
+        "single_carry_108_207": [
+          "perturbed_target_logprob"
+        ],
+        "single_carry_17_25": [
+          "perturbed_target_logprob"
+        ]
+      },
+      "missing_feature_names": [
+        "no_carry_12_23:perturbed_target_logprob",
+        "no_carry_104_205:perturbed_target_logprob",
+        "no_carry_321_456:perturbed_target_logprob",
+        "no_carry_2304_1052:perturbed_target_logprob",
+        "single_carry_17_25:perturbed_target_logprob",
+        "single_carry_108_207:perturbed_target_logprob",
+        "multi_carry_999_1:perturbed_target_logprob",
+        "correct_vs_perturbed_margin_nonpositive"
+      ]
+    }
+  },
+  "reproducibility_checksum": "f2302d95f32ca79bc1845237f7654080a76e22040825d598e91f167288260b1a",
+  "research_reference_context": {
+    "mentions_attention": true,
+    "mentions_flag": true,
+    "mentions_hallufield": true,
+    "mentions_hidden_states": true,
+    "mentions_logits": true,
+    "mentions_thermodynamic": true
+  },
+  "retire_recommendation": true,
+  "run_date": "20260707",
+  "runtime_feature_evidence": {
+    "attention_available": false,
+    "completion_split_available": true,
+    "hidden_states_available": false,
+    "logits_available": false,
+    "selected_model_spec": {
+      "autotokenizer_used": false,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    },
+    "selected_runtime": {
+      "blocked_preconditions": [],
+      "exp5331_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_harness_v486.json",
+      "exp5331_receipt_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json",
+      "exp5331_tiny_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "exp5337_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
+      "external_text_scorer_reopened": false,
+      "free_vram_mb": 48240,
+      "gpu_visible": true,
+      "live_probe_attempted": true,
+      "nvidia_smi": {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,driver_version,memory.total,memory.free,utilization.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "duration_s": 0.032873,
+        "ok": true,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "0, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0\n1, NVIDIA GeForce RTX 3090, 610.43.02, 24576, 24120, 0"
+      },
+      "retired_scope_check": {
+        "external_text_scorer_reopened": false,
+        "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+        "phase_d_external_text_scorer_retired_marker_present": true,
+        "retired_scope_reopened": false
+      },
+      "selected_backend_kind": "llama-server",
+      "selected_backend_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "selected_model_file_present": true,
+      "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "selected_runtime_backend_kind": "llama-cli",
+      "token_probability_api_available": true
+    },
+    "token_timing_available": true,
+    "tokenprob_feature_row_count": 3,
+    "tokenprob_rows_available": true
+  },
+  "schema": "carnot.experiment_5372.token_feature_precondition_gate.v489",
+  "source_artifacts": [
+    "results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json",
+    "results/experiment_5354_arithmetic_carry_token_energy_v488.json",
+    "results/experiment_5362_capstone_v488.json",
+    "research-references.md"
+  ],
+  "source_evidence_loaded": {
+    "capstone": true,
+    "exp5353": true,
+    "exp5354": true,
+    "research_references": true
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5372",
+    "SCENARIO-VERIFY-5372"
+  ],
+  "status": "complete",
+  "tests_run": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py -q -o addopts=",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include='*/experiment_5372_token_feature_precondition_gate_v489.py' -m pytest tests/python/test_experiment_5372_token_feature_precondition_gate_v489.py -q --no-cov -o addopts=",
+      "outcome": "passed"
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include='*/experiment_5372_token_feature_precondition_gate_v489.py' --fail-under=100 --show-missing",
+      "outcome": "passed; 100% coverage on new module"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "outcome": "passed"
+    }
+  ],
+  "token_feature_gate_ready": true,
+  "tokenprob_rows_available": true,
+  "unsafe_false_accepts": 0
+}
