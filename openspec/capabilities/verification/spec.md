@@ -28609,6 +28609,93 @@ solver-guidance baseline claim.
 |---|---|---|
 | REQ-VERIFY-5370 | Planned (`python/carnot/experiment_5370_overwrite_solver_guidance_matrix_v489.py`, `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`) | Planned (`tests/python/test_experiment_5370_overwrite_solver_guidance_matrix_v489.py`) |
 
+### REQ-VERIFY-5371: CPU p-bit Boundary-Exchange Schedule Diagnostic V489
+
+The repository SHALL provide Exp 5371 at
+`python/carnot/experiment_5371_pbit_boundary_exchange_schedule_v489.py` and
+write `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, board timing path, or modifying
+`scripts/research_conductor.py`. Exp 5371 SHALL reuse the Exp 5359 p-bit
+schedule fixtures when available and SHALL remain a CPU simulation-only
+diagnostic for communication cadence, not a hardware speedup task.
+
+The diagnostic SHALL add a deterministic boundary-exchange abstraction over the
+bounded p-bit/Ising-style fixture set. It SHALL partition each fixture into
+local update domains, identify boundary variables touched by cross-domain
+clauses, and measure at least three communication-to-p-bit-update ratios
+(`eta_values`). The measured schedule families SHALL include a monolithic CPU
+baseline, stale-boundary exchange, and frequent-boundary exchange. For every
+row, the runner SHALL record the exchange mode, eta value where applicable,
+boundary exchange period, energy trace, convergence status, solver conflicts,
+whether stale boundary state was used, final solver-authoritative validity,
+energy monotonicity violations, misleading-class harm, and false-accept status.
+
+The benchmark SHALL compare stale-boundary and frequent-boundary exchange
+against the monolithic CPU baseline on the same fixture instances. It SHALL
+report convergence deltas, conflict deltas, class-specific harm, false accepts,
+energy monotonicity violations, and an honest `eta_threshold_estimate`. The
+threshold MAY be null only when no tested eta cleanly identifies a non-harming
+communication cadence. A schedule row MAY show worse convergence or higher
+conflicts under stale exchange, but no row may accept an invalid solution as
+valid or claim hardware speedup.
+
+The artifact SHALL include `status`, `boundary_exchange_schedule_ready`,
+`simulation_only`, `hardware_speedup_claim`, `fixture_count`, `eta_values`,
+`eta_threshold_estimate`, `convergence_delta_vs_monolithic`,
+`conflict_delta_vs_monolithic`, `energy_monotonicity_violation_count`,
+`misleading_class_harm_rate`, `false_accept_count`, `tests_run`, and
+`honest_verdict`. `status` SHALL be `complete` only if CPU
+boundary-exchange schedule rows are measured. `boundary_exchange_schedule_ready`
+SHALL be true only if timing ratios and baseline comparison are present.
+`simulation_only` SHALL be true. `hardware_speedup_claim` SHALL be false.
+`honest_verdict` SHALL start with `complete:` or `blocked_` and SHALL state
+whether communication cadence produced a useful signal or a null result.
+
+Required field principles:
+
+- `status`: principle "complete only if CPU boundary-exchange schedule rows are measured."
+- `boundary_exchange_schedule_ready`: principle "true only if timing ratios and baseline comparison are present."
+- `simulation_only`: principle "must be true."
+- `hardware_speedup_claim`: principle "must be false."
+- `fixture_count`: principle "number of Ising/constraint instances measured."
+- `eta_values`: principle "communication-to-p-bit update ratios tested."
+- `eta_threshold_estimate`: principle "best estimated threshold or honest null if not identifiable."
+- `convergence_delta_vs_monolithic`: principle "convergence delta compared with monolithic CPU baseline."
+- `conflict_delta_vs_monolithic`: principle "conflict delta compared with monolithic CPU baseline."
+- `energy_monotonicity_violation_count`: principle "count of energy monotonicity violations."
+- `misleading_class_harm_rate`: principle "harm rate on known misleading classes."
+- `false_accept_count`: principle "invalid solutions accepted as valid."
+- `tests_run`: principle "list of commands run or no-code-change explanation."
+- `honest_verdict`: principle "one-line signal/null verdict."
+
+### SCENARIO-VERIFY-5371: Boundary Cadence Is Compared Against Monolithic CPU Baseline
+
+Given the Exp 5359 p-bit schedule fixtures, when Exp 5371 runs the monolithic
+baseline plus stale-boundary and frequent-boundary exchange over at least three
+communication-to-update ratios, then every row records fixture class,
+communication ratio, exchange cadence, convergence, conflicts, energy trace,
+boundary-staleness telemetry, solver-authoritative final validity,
+class-specific harm, and false accepts. The terminal artifact records
+`eta_values`, deltas versus monolithic baseline, total energy monotonicity
+violations, misleading-class harm rate, `false_accept_count=0`,
+`simulation_only=true`, `hardware_speedup_claim=false`, and an honest eta
+threshold estimate or null.
+
+If no boundary-exchange rows are measured, fewer than three eta ratios are
+tested, a required schedule family is missing, timing ratios or baseline
+comparison are absent, an invalid solution is accepted as valid, the run uses a
+non-CPU substrate, tests are not recorded, or a hardware speedup claim is made,
+then the same runner writes a terminal `blocked_` artifact with
+`boundary_exchange_schedule_ready=false`, exact blocker metrics, and no
+hardware-speedup claim.
+
+## Implementation Status (REQ-VERIFY-5371)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5371 | Planned (`python/carnot/experiment_5371_pbit_boundary_exchange_schedule_v489.py`, `results/experiment_5371_pbit_boundary_exchange_schedule_v489.json`) | Planned (`tests/python/test_experiment_5371_pbit_boundary_exchange_schedule_v489.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at
