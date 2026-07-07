@@ -10490,3 +10490,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 18:28 UTC | Budget-curated memory governance for dependency-sa | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-07 18:45 UTC | Gated budgeted continuous self-learning scale-up | OK | 89 passed, 1 warning in 11.81s |
 | 2026-07-07 19:04 UTC | Overwrite-capable solver guidance matrix from G-RR | OK | 87 passed, 1 warning in 11.08s |
+| 2026-07-07 19:14 UTC | p-bit boundary-exchange schedule diagnostic | OK | 87 passed, 1 warning in 9.40s |
