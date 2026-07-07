@@ -25882,6 +25882,85 @@ sets `telemetry_harness_ready=false`, records absent hidden/attention surfaces a
 |---|---|---|
 | REQ-VERIFY-5271 | Planned (`python/carnot/experiment_5271_sota_telemetry_receipt_harness_v482.py`, `results/experiment_5271_sota_telemetry_receipt_harness_v482.json`) | Planned (`tests/python/test_experiment_5271_sota_telemetry_receipt_harness_v482.py`) |
 
+### REQ-VERIFY-5326: Gated Local SOTA Paraphrase And Rewrite Smoke V486
+
+The repository SHALL provide Exp 5326 at
+`python/carnot/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.py`
+and write
+`results/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL run only
+the stable local SOTA GGUF model/backend selected by Exp 5324 unless Exp 5324
+proves more than one stable model. Exp 5326 is a tiny bounded smoke, not a
+benchmark, and SHALL NOT make a headline quality claim.
+
+Step 0 SHALL check the Exp 5324 selected backend command, selected mandated
+model, current GPU visibility, selected model cache/file availability, and the
+Exp 5310 paraphrase fixture plus Exp 5325 rewrite-state fixture before any
+generation. If any precondition is missing or contradictory, the runner SHALL
+write a terminal `blocked_` artifact, preserve the exact blockers under
+`preconditions_checked.value.blocked_preconditions`, set
+`sota_quality_measured=false`, and skip generation. The mandated
+`MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+When preconditions pass, the runner SHALL generate bounded outputs for a tiny
+fixed set of paraphrase and rewrite prompts using the selected Exp 5324
+backend command with only prompt, seed, and small token-budget substitutions.
+Each output SHALL be scored only by deterministic fixture checks: Exp 5310
+claim-label preservation for paraphrase output, and Exp 5325 typed rewrite-state
+acceptability for rewrite output. The runner SHALL NOT score broad factual
+knowledge, external facts, model preference, or generated prose style.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, and `tests_run`, plus bare
+`prompt_count`, `paraphrase_label_preservation_rate`,
+`rewrite_acceptability_rate`, `unsafe_false_accepts`,
+`sota_quality_measured`, and `headline_quality_claim=false`.
+`inference_substrate.value` SHALL be `local_sota_gguf_bounded_smoke`.
+`sota_quality_measured` SHALL be true only when all bounded generations return
+and deterministic scoring completes. `headline_quality_claim` SHALL remain
+false regardless of the observed rates.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5326 gated local SOTA paraphrase/rewrite smoke."
+- `milestone`: principle "Milestone accountability for the V486 gated SOTA smoke."
+- `status`: principle "Machine-readable terminal state for downstream quality-smoke gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether bounded generation plus deterministic fixture scoring completed."
+- `inference_substrate`: principle "Declares local_sota_gguf_bounded_smoke so the artifact is read as a tiny local GGUF generation smoke scored by fixtures, not a broad benchmark."
+- `MODEL_SPECS`: principle "Records the three mandated GGUF model IDs so the smoke cannot silently substitute a legacy or smaller model."
+- `preconditions_checked`: principle "Records Exp5324 command stability, selected model cache, GPU visibility, and fixture availability before any generation."
+- `selected_model_spec`: principle "Binds quality-smoke outputs to the stable mandated model selected by Exp5324."
+- `tests_run`: principle "Commands run to validate the Exp5326 module, artifact schema, new-code coverage, and repository test status."
+
+### SCENARIO-VERIFY-5326: Stable Exp5324 Runtime Produces Fixture-Scored Smoke
+
+Given Exp 5324 reports a stable selected local SOTA GGUF backend command, the
+selected mandated model file is still cached, a GPU is visible, and the Exp
+5310 and Exp 5325 fixtures are available, when Exp 5326 runs, then it uses the
+selected backend command for the tiny fixed prompt set, records bounded
+generation receipts, scores the outputs only through the deterministic
+paraphrase and rewrite-state fixture checks, writes the required artifact, sets
+`inference_substrate.value=local_sota_gguf_bounded_smoke`, sets
+`sota_quality_measured=true`, and keeps `headline_quality_claim=false`.
+
+If Exp 5324 is missing or not stable, the selected command is malformed, the
+selected model is not one of the mandated GGUF specs, the selected model file is
+missing, GPU visibility is absent, either deterministic fixture is unavailable,
+or any bounded generation call fails, then the same runner writes a terminal
+`blocked_` artifact with exact blockers, `prompt_count` reflecting completed
+bounded generations, `sota_quality_measured=false`, and
+`headline_quality_claim=false`, without modifying `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5326)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5326 | Planned (`python/carnot/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.py`, `results/experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.json`) | Planned (`tests/python/test_experiment_5326_gated_sota_paraphrase_rewrite_smoke_v486.py`) |
+
 ### REQ-VERIFY-5325: Theoria Deterministic Rewrite-State Fixture V486
 
 The repository SHALL provide Exp 5325 at
