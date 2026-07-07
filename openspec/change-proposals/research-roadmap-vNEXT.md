@@ -1,9 +1,9 @@
-# Research Roadmap vNEXT: 2026.07.486
+# Research Roadmap vNEXT: 2026.07.487
 
-Created: 2026-07-06
-Milestone: 2026.07.486
+Created: 2026-07-07
+Milestone: 2026.07.487
 Status: Planned
-Milestone title: Runtime-Stable Local SOTA, Rewrite-Certified Claims, and Context-Lifecycle Self-Learning
+Milestone title: Utility-Governed Context Self-Learning and Structured Local SOTA Verification
 
 ## Inputs Read
 
@@ -22,159 +22,160 @@ Milestone title: Runtime-Stable Local SOTA, Rewrite-Certified Claims, and Contex
 - `research-hardware-wishlist.md`
 - `ops/exclusion_manifest.yaml`
 
-## What 2026.07.485 Proved
+## What 2026.07.486 Proved
 
-The completed `.485` milestone closed several verifier-first loops, but it did not unlock local SOTA quality measurement.
+The completed `.486` milestone changed the local-SOTA branch from "runtime blocked" to "runtime usable but output protocol not yet trustworthy," while giving the self-learning branch the clearest clean positive evidence.
 
-- **Local SOTA runtime is still blocked.** Exp5309 found authenticated CUDA/offload evidence for mandated GGUF models, but no mandated model completed load, first-token, and 8-token generation. The most useful finding was concrete: the native `llama-cli` path used an unsupported conversation flag, and the Gemma MoE path hit a batch/context assertion. The next attempt must be a backend and flag bisect, not another quality run.
-- **Deterministic claim and memory fixtures are clean positives.** Exp5310 proved paraphrase label preservation, contradiction detection, and invalid-premise handling on deterministic fixtures. Exp5312 proved transition-memory coverage, preservation, faithfulness, unsafe rejection, and rollback fields.
-- **Adaptive memory preserved quality but did not improve final quality.** Exp5313 avoided three full verifier calls, rejected unsafe commits, and preserved quality relative to always-full verification, but final quality delta stayed at zero. The next step should measure context-object lifecycle and process failures, not only answer quality.
-- **Solver guidance is useful only under symbolic authority.** Exp5314 and Exp5315 kept SAT/CDCL authoritative, preserved aggregate conflict savings on eligible cases, and blocked misleading instance classes. This remains a bounded diagnostic, not a hardware or general reasoning result.
-- **KAN abstraction tightened diagnostics but not certification.** Exp5316 improved the abstraction envelope while certificate success delta stayed zero. KAN work should now target false-property sensitivity and counterexample localization rather than repeat certificate-success attempts.
-- **EBT telemetry was methodologically repaired, but quality and hardware claims remain quarantined.** Exp5317 cleared the deterministic audit flag, but future energy-descent, SOTA-quality, and hardware-speedup claims are still ineligible without fresh gates.
-- **SMT hint protocol needs a corrigendum.** Exp5318 showed promising deterministic acceptance/rejection fields, but the adversarial audit flagged duration and compute-bound marker confusion. It must be re-emitted cleanly before any LLM-guided SMT work builds on it.
-- **Hardware remains reachability-only.** Exp5319 could not authenticate a KV260 workload, saw PolarFire status-only access, and left GateMate unchanged. No local board speedup claim exists.
+- **Local native SOTA runtime is finally stable for one mandated model.** Exp5323 and Exp5324 found and repeated a native `llama-cli` path for `unsloth/gemma-4-31B-it-GGUF`, with three bounded load/first-token/8-token receipts and authenticated GPU memory/offload evidence. Exp5323 remains adversarial-flagged for duration/methodology, so `.487` must clean the receipt before using it as a headline substrate.
+- **SOTA structured-output quality was measured and failed.** Exp5326 ran bounded local SOTA paraphrase/rewrite prompts, but `paraphrase_label_preservation_rate=0.0` and `rewrite_acceptability_rate=0.0`. The failure mode was parse/protocol: the model stayed in a thinking transcript and did not emit compact JSON within the token budget. The next quality task must repair structured-output protocol before expanding sample count.
+- **Deterministic rewrite and SMT gates are clean.** Exp5325 produced a six-case typed rewrite-state fixture with full acceptability, complete-change, and unsafe-rewrite rejection rates. Exp5327 re-emitted the SMT hint protocol with deterministic solver substrate, actual timing, and no compute-bound marker confusion.
+- **Continuous self-learning has the strongest scale-up path.** Exp5328 built a context-object lifecycle fixture with 1.0 detection rates for bank/retrieval/answer failures and rollback. Exp5329 matched always-full quality while avoiding three verifier calls. Exp5330 promoted one lifecycle policy, rejected three, deferred one, kept unsafe promotions at zero, and preserved frozen-model discipline.
+- **Internal-signal work is open but flagged.** Exp5331 found token probabilities, token timing, and raw receipts, but no logits/attention/hidden-state proxies. It was adversarial-flagged for short duration/methodology, so `.487` may clean the receipt and run only a tiny diagnostic, not a text-scorer rerun.
+- **KAN localization is useful but bounded.** Exp5332 rejected deterministic false-property perturbations and localized counterexample regions with 1.0 accuracy while preserving true-property certificates. Certificate success did not improve, so the next step is counterexample-to-constraint injection, not a repeat certificate-success attempt.
+- **Hardware remains no-speedup continuity.** Exp5333 found KV260 SSH unreachable, PolarFire SSH status-only reachable, and GateMate unchanged at the physical/JTAG level. No authenticated workload or speedup claim exists.
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Reliable local SOTA reasoning substrate.** The PRD requires verification against modern local open-weight models. Carnot now has mandated GGUF model names and some GPU-offload evidence, but not a stable generation receipt or quality measurement path.
-2. **Continuous self-learning with certified state change.** The project has transition-memory verification and adaptive verifier dosing. It still lacks context-object lifecycle accounting, self-learning policy promotion, no-op controls, and certificate-gated rollback discipline.
-3. **Certificate-bearing reasoning stack across claims, constraints, and abstractions.** Paraphrase, SMT, solver, KAN, and internal-energy work are still separate bounded diagnostics. The next milestone should connect them through typed rewrite states, solver-authoritative validation, runtime-gated internal receipts, and explicit no-claim boundaries.
+1. **Modern local model verification is not yet semantically useful.** Carnot can now run a mandated local GGUF model, but it cannot yet reliably extract structured verified outputs from that model. The PRD's verifiable-reasoning vision needs a stable "generate structured candidate -> deterministic checker -> repair or reject" path.
+2. **Self-learning is still fixture-scale and policy-only.** The clean `.486` self-learning win avoided verifier calls and safely promoted one policy, but it has not learned utility values across episodes, compressed bounded state, or handled drift/poisoning across sessions.
+3. **Certificates remain isolated diagnostics.** Rewrite-state checks, SMT, solver guidance, KAN localization, token-probability energy, and hardware receipts are still separate. The PRD needs a certificate-bearing stack where counterexamples, provenance, temporal/spatial constraints, and energy signals feed actionable verification decisions without overclaiming.
 
 ## Research Incorporated
 
-The `.486` planning refresh appended to `research-references.md` promotes these sources into this milestone:
+The `.487` planning refresh appended to `research-references.md` promotes these ideas into the milestone:
 
-- **Self-Evolving Agents with Anytime-Valid Certificates** (arXiv:2607.00871): use certificate gates, no-op controls, and frozen-model policy promotion for continuous self-learning.
-- **Theoria** (arXiv:2607.01223): cast claim and document rewrites as typed state transitions with acceptability and complete-change checks.
-- **VISTA / LLM Agents Are Latent Context Managers** (arXiv:2606.30005), **Self-GC** (arXiv:2607.00692), **A-TMA** (arXiv:2607.01935), and **AutoMem** (arXiv:2607.01224): evaluate context lifecycle, stale-state, retrieval, and answer-time failures separately from final quality.
-- **Frequency-Aware Attention**, **Semantic Energy**, and **Spilled Energy** (arXiv:2602.18145, arXiv:2508.14496, arXiv:2602.18671): probe local logits/attention/internal-signal availability only after runtime is stable; do not reopen retired external generated-text scoring.
-- **p-bit CDCL and FPGA p-bit annealer work** (arXiv:2605.04033, arXiv:2602.16143), plus Extropic and Logical Intelligence public writing: useful for architecture and hardware-boundary context, but not local speedup baselines.
+- **MemRL** (arXiv:2601.03192): non-parametric runtime reinforcement learning on episodic memory; use utility-weighted retrieval without model-weight mutation.
+- **Agent Cognitive Compressor** (arXiv:2601.11653): separate artifact recall from persistent state commitment; test bounded state and memory-drift anomalies.
+- **Scaling the Harness** (arXiv:2605.26112): report harness-level metrics such as memory hygiene, verifier cost, context efficiency, and safe evolution, not only final answer quality.
+- **Field-Theoretic Memory** (arXiv:2602.21220): use decay/coupling as a bounded simulator diagnostic for pruning policies, not as a replacement for hash-chained context identity.
+- **QSTRBench** (arXiv:2605.18380): add qualitative temporal/spatial constraint fixtures with solver-authoritative Allen/RCC-style checks.
+- **OpenViking**: treat filesystem-style context objects as an implementation contrast for IDs and hierarchical context loading; do not add a dependency.
+
+Previously recorded but still active constraints include G-RRM, ProvenanceGuard, CiteTracer, BEAVER, In-Writing, CEM, Spilled Energy, Semantic Energy, Extropic TSU writing, and Logical Intelligence Kona/Aleph public updates. Semantic Scholar EBT/ARM-EBM API checks returned HTTP 429 on 2026-07-07, so no citation-count delta is claimed.
 
 ## Target Architecture
 
 ```text
-                  task / claim / memory event / constraint instance
-                                      |
-                                      v
-        +--------------------------------------------------------+
-        | Local SOTA GGUF runtime gate                          |
-        | Qwen3.6-35B-A3B / Gemma-4-31B-it / Gemma-4-26B-A4B-it |
-        | native llama.cpp backend + receipt matrix             |
-        +--------------------------------------------------------+
-                | stable text/logit/trace receipts only if gated
-                v
- +-----------------------------+     +------------------------------+
- | typed rewrite verifier      |     | solver-authoritative layer   |
- | Theoria-style transitions   |<--->| Z3/CDCL/SMT/LNS/Ising hints |
- | paraphrase + claim changes  |     +------------------------------+
- +-----------------------------+                    |
-                |                                   v
-                |                    +------------------------------+
-                |                    | KAN abstraction diagnostics  |
-                |                    | false-property rejection +   |
-                |                    | counterexample localization  |
-                |                    +------------------------------+
-                v
- +---------------------------------------------------------------+
- | context-object lifecycle and self-learning loop               |
- | Self-GC/VISTA object IDs, A-TMA current/history/transition    |
- | labels, transition verifier, SEA certificate gate, rollback,  |
- | no-op controls, policy registry, no weight mutation           |
- +---------------------------------------------------------------+
-                |
-                v
- +---------------------------------------------------------------+
- | artifact registry, conductor gates, exclusion discipline,     |
- | hardware reachability receipts, no unsupported quality or     |
- | speedup claims                                                |
- +---------------------------------------------------------------+
+           local task, claim, memory event, or constraint case
+                                  |
+                                  v
+ +----------------------------------------------------------------+
+ | Clean local SOTA GGUF runtime receipt                          |
+ | Gemma-4-31B-it stable path; Qwen/Gemma MoE probed if feasible  |
+ | duration/methodology clean before downstream quality           |
+ +----------------------------------------------------------------+
+                  |                            |
+                  v                            v
+ +--------------------------------+   +--------------------------------+
+ | Structured output protocol     |   | Token-probability energy       |
+ | post-think JSON extraction,    |   | receipt-clean Spilled/Semantic |
+ | parse gates, no headline claim |   | energy diagnostic, no scorer   |
+ +--------------------------------+   +--------------------------------+
+                  |
+                  v
+ +----------------------------------------------------------------+
+ | Deterministic certificate layer                                 |
+ | rewrite-state fixture + SMT + QSTR temporal/spatial checker +   |
+ | solver-authoritative G-RRM-style overwrite/fallback telemetry   |
+ +----------------------------------------------------------------+
+                  |
+                  v
+ +----------------------------------------------------------------+
+ | Utility-governed context self-learning                          |
+ | ContextNest identity/hash/audit rows, MemRL utility values,     |
+ | ACC bounded state, drift/poisoning monitors, certificate gate,  |
+ | rollback, no-op controls, no model-weight mutation              |
+ +----------------------------------------------------------------+
+                  |
+                  v
+ +----------------------------------------------------------------+
+ | KAN/Ising counterexample-to-constraint bridge + hardware        |
+ | continuity receipts with no speedup claim                       |
+ +----------------------------------------------------------------+
 ```
 
-The central `.486` loop is context lifecycle self-learning: object-level context decisions are proposed, verified, certificate-gated, and either promoted or rolled back. Model weights remain frozen.
+The `.487` center of gravity is continuous self-learning scale-up. Local SOTA work is necessary, but it is protocol repair and bounded measurement, not a headline benchmark.
 
 ## Phase Plan
 
-### Phase A: Transition, Source Refresh, And Runtime Repair
+### Phase A: Transition, Source Refresh, Runtime Cleanup, Structured Output
 
-Experiments: Exp5321, Exp5322, Exp5323, Exp5324
+Experiments: Exp5335, Exp5336, Exp5337, Exp5338, Exp5339
 
-Archive `.485`, refresh current sources, then repair the mandated local SOTA runtime path by bisecting native llama.cpp binaries, command flags, batch/context settings, and generation modes. Exp5323 is allowed to fail with a precise root cause. Exp5324 runs only if Exp5323 identifies a backend candidate and must prove repeatable first-token and 8-token receipts before any SOTA quality task can run.
+Archive `.486`, refresh sources, then clean the Exp5323/5324 runtime receipts so the stable Gemma 4 31B path is not adversarial-flagged. Exp5338 repairs structured-output protocol by comparing prompt/flag/parse variants that extract final compact JSON after Gemma thinking. Exp5339 reruns a small paraphrase/rewrite/citation panel only after the protocol gate passes, with no headline quality claim.
 
-### Phase B: Rewrite-Certified Claims And SMT Corrigendum
+### Phase B: Continuous Self-Learning Scale-Up
 
-Experiments: Exp5325, Exp5326, Exp5327
+Experiments: Exp5340, Exp5341, Exp5342
 
-Build a deterministic Theoria-style rewrite-state fixture over paraphrase and claim-verification examples. Only after both the rewrite fixture and runtime stability gate pass may Exp5326 spend local SOTA cycles on a tiny paraphrase/rewrite smoke. Exp5327 re-emits the SMT hint protocol with clean methodology fields and no compute-bound marker confusion.
+Turn `.486` lifecycle policy promotion into utility-governed self-learning. Exp5340 adds MemRL-style utility values over memory/context operations. Exp5341 adds ACC-style bounded state and drift/poisoning monitors. Exp5342 combines both under provenance-bound, hash-chained, cross-session context governance with no-op controls, rollback, and frozen model discipline.
 
-### Phase C: Continuous Self-Learning Through Context Lifecycle
+### Phase C: Deterministic Constraints, Solver Guidance, Internal Energy, KAN Bridge
 
-Experiments: Exp5328, Exp5329, Exp5330
+Experiments: Exp5343, Exp5344, Exp5345, Exp5346
 
-Promote `.485` transition-memory work into context-object lifecycle self-learning. Exp5328 creates stable object IDs, current/historical/transition labels, recoverable sidecars, lifecycle actions, and preconditioned safe commits. Exp5329 measures lifecycle policy rollout against always-full verification and transition-only verification. Exp5330 adds SEA-style anytime-valid certificates, rollback, and no-op controls for policy promotion with no weight mutation.
+Add QSTRBench-style qualitative temporal/spatial constraints with an authoritative checker. Revisit solver guidance only as overwrite/fallback telemetry, following G-RRM's lesson that the symbolic solver remains the authority. Clean the token-probability internal-energy receipt and run a tiny non-headline Spilled/Semantic Energy diagnostic if the receipt is valid. Convert KAN counterexample localization into concrete constraint cuts against bounded fixtures.
 
-### Phase D: Internal Signals, KAN Diagnostics, Hardware Receipts, And Capstone
+### Phase D: Hardware Continuity And Capstone
 
-Experiments: Exp5331, Exp5332, Exp5333, Exp5334
+Experiments: Exp5347, Exp5348
 
-If runtime stability exists, Exp5331 checks whether the local backend can expose logits, attention, or related internal receipts for future energy diagnostics without reopening retired text-scorer work. Exp5332 moves KAN work to counterexample localization and false-property sensitivity. Exp5333 records hardware continuity with no speedup claims. Exp5334 closes the milestone with an explicit gate table and next-step decision.
+Record hardware status without speedup claims. KV260 remains SSH-only, PolarFire may run a hash-verified workload only if reachable, and GateMate needs fresh physical/JTAG evidence before another detect loop matters. Exp5348 closes `.487` with gate tables for structured SOTA, self-learning, constraints, internal energy, KAN bridge, and hardware.
 
 ## Dependency Graph
 
 ```text
-exp5321 archive/activate
-  -> exp5322 source refresh
-  -> exp5334 capstone
+exp5335 archive/activate
+  -> exp5336 source refresh
+  -> exp5348 capstone
 
-exp5323 native GGUF backend/flag bisect
-  -> exp5324 gated runtime receipt stabilization
-      -> exp5326 gated SOTA paraphrase/rewrite smoke
-      -> exp5331 gated internal-signal receipt harness
+exp5337 clean local SOTA runtime receipt
+  -> exp5338 structured-output protocol calibration
+      -> exp5339 bounded SOTA claim/rewrite panel
+  -> exp5345 token-probability energy corrigendum
 
-exp5325 Theoria rewrite-state fixture
-  -> exp5326 gated SOTA paraphrase/rewrite smoke
+exp5340 utility-weighted context memory
+  -> exp5342 provenance-bound self-learning scale-up
 
-exp5327 SMT hint corrigendum
-  -> exp5334 capstone
+exp5341 bounded compressor and drift monitor
+  -> exp5342 provenance-bound self-learning scale-up
 
-exp5328 context-object lifecycle fixture
-  -> exp5329 gated memory/context policy rollout
-  -> exp5330 SEA anytime certificate gate
+exp5343 QSTR temporal/spatial fixture
+  -> exp5344 solver-guidance overwrite/fallback telemetry
+  -> exp5346 KAN/Ising counterexample-to-constraint bridge
 
-exp5332 KAN counterexample localization
-  -> exp5334 capstone
-
-exp5333 hardware continuity
-  -> exp5334 capstone
+exp5347 hardware continuity
+  -> exp5348 capstone
 ```
 
 Structured gates in `research-roadmap-next.yaml`:
 
-- Exp5324 requires `exp5323.sota_backend_candidate_ready == true`.
-- Exp5326 requires `exp5324.sota_runtime_unblocked_stable == true`.
-- Exp5326 requires `exp5325.rewrite_state_fixture_ready == true`.
-- Exp5329 requires `exp5328.context_lifecycle_fixture_ready == true`.
-- Exp5330 requires `exp5328.context_lifecycle_fixture_ready == true`.
-- Exp5331 requires `exp5324.sota_runtime_unblocked_stable == true`.
+- Exp5338 requires `exp5337.sota_runtime_clean_receipt_ready == true`.
+- Exp5339 requires `exp5338.structured_output_protocol_ready == true`.
+- Exp5342 requires `exp5340.utility_memory_ready == true`.
+- Exp5342 requires `exp5341.compressor_drift_fixture_ready == true`.
+- Exp5344 requires `exp5343.qstr_fixture_ready == true`.
+- Exp5345 requires `exp5337.sota_runtime_clean_receipt_ready == true`.
+- Exp5346 requires `exp5343.qstr_fixture_ready == true`.
 
 ## Model And Inference Requirements
 
-Every `.486` experiment that needs an LLM must include `MODEL_SPECS` with at least one mandated local SOTA GGUF model, and the headline runtime/quality/internal-signal tasks include all three:
+Every `.487` experiment that invokes an LLM must include `MODEL_SPECS` with the mandated local SOTA GGUF models:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy small models such as Qwen3.5-0.8B and Gemma-4-E4B-it may appear only as fast CPU smoke tests. They cannot be headline-result models. GGUF repositories must be run through llama.cpp-compatible tooling or the project cached SOTA helper path, never Hugging Face `AutoTokenizer` loading.
+The stable `.486` path is `unsloth/gemma-4-31B-it-GGUF` via native `llama-cli`. Exp5337 may attempt Qwen/Gemma MoE variants only as runtime-expansion receipts. Legacy small models may appear only as CPU smoke tests and cannot be headline-result models. GGUF repositories must be loaded through llama.cpp-compatible paths or the cached SOTA helper; never use Hugging Face `AutoTokenizer` on GGUF-only repos.
 
 ## Hardware Requirements
 
-- Dual RTX 3090 CUDA host for Exp5323, Exp5324, Exp5326, and Exp5331 if they run.
-- Runtime receipts must include preconditions checked, backend/binary, exact command, model spec, context and batch settings, GPU memory before/after, layer/offload evidence, timing, timeout class, and whether downstream quality claims are permitted.
-- KV260 checks use `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host `/dev/mmcblk*` checks are not valid board-state evidence.
-- PolarFire checks are limited to authenticated status or workload receipts actually reachable in the environment.
-- GateMate remains blocked unless the task captures physical/JTAG/toolchain evidence.
-- No TSU, Kona, FPGA, or board speedup claim may be made from papers, public writing, or status-only access.
+- Dual RTX 3090 CUDA host for Exp5337, Exp5338, Exp5339, and Exp5345 if their gates pass.
+- Runtime artifacts must record exact command, model path, context/batch/ubatch, GPU layers, split mode, token budget, duration, first-token latency, token count, GPU memory before/during/after, offload evidence, and whether quality claims are permitted.
+- KV260 checks use only `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; host block devices are invalid evidence.
+- PolarFire may record SSH status and a hash-verified board-local workload if reachable; no speedup comparison is allowed.
+- GateMate work is opportunistic unless the physical/JTAG setup changed; repeating the same unchanged detect failure is not useful.
+- Extropic/TSU and Logical/Kona public material remains architecture context only without local authenticated execution.
 
 ## No-Go Rules
 
@@ -183,18 +184,18 @@ Legacy small models such as Qwen3.5-0.8B and Gemma-4-E4B-it may appear only as f
 - Do not push.
 - Do not reopen retired Phase D external generated-text/logprob scorer work.
 - Do not rerun the retired CPU-only llama-cpp-python GGUF offload path.
-- Do not propose ARC level solves in this milestone; no ARC solve provenance is needed.
-- Do not make SOTA quality claims unless the structured runtime gate passes.
-- Do not make SMT, internal-energy, KAN, or hardware readiness claims from blocked, gated, or methodology-flagged artifacts.
+- Do not claim headline SOTA quality from the bounded structured-output panel.
+- Do not claim token-probability energy, KAN, solver-guidance, or hardware readiness from blocked or flagged artifacts.
+- Do not propose ARC level solves in this milestone.
 
 ## Expected End State
 
-`.486` succeeds if it produces:
+`.487` succeeds if it produces:
 
-- A precise answer on whether native llama.cpp can run at least one mandated local SOTA GGUF model repeatably enough for quality work.
-- A deterministic typed rewrite-state verifier and, only if gated, a tiny local SOTA paraphrase/rewrite smoke.
-- A clean SMT hint protocol corrigendum.
-- A context-object lifecycle self-learning fixture with certificate-gated policy promotion, rollback, and no-op controls.
-- A runtime-gated internal-signal receipt decision that either opens or closes future energy diagnostics.
-- KAN counterexample-localization evidence and hardware continuity receipts that preserve no-claim discipline.
-- A capstone that makes the `.487` choice explicit: runtime quality, self-learning scale-up, or another substrate repair.
+- A clean local SOTA runtime receipt and a structured-output protocol that can extract parseable final JSON from the stable mandated GGUF path.
+- A bounded SOTA claim/rewrite panel that reports actual fixture quality without headline claims.
+- A utility-weighted, bounded-state, provenance-bound context self-learning scale-up with no model-weight mutation, no-op controls, rollback, and unsafe-promotion zero.
+- Deterministic qualitative temporal/spatial constraints and solver-guidance telemetry that keep symbolic checkers authoritative.
+- A cleaned token-probability energy receipt or a precise blocked reason, without reopening retired text-scorer work.
+- A KAN/Ising counterexample-to-constraint bridge and hardware continuity artifact that preserve no-claim discipline.
+- A capstone decision for `.488`: structured SOTA quality scale-up, self-learning utility scale-up, or internal-energy/hardware cleanup.
