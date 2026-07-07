@@ -5799,3 +5799,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for synthesis-heavy throughput with one visible compute-bound slow path
 - key result: 29 experiments completed in 246.4 minutes with 3 compute-bound tasks; Exp 5354 is the only visible compute-bound slow path at 15.6 minutes, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.489
+- exp_range: no data available this milestone
+- theme: timing-integrity mismatch blocks operational throughput accounting
+- key result: no data available this milestone; the timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments while also reporting changelog references, so compute-bound duration, GPU utilization efficiency, and DualGPURunner questions have no measurable basis
+- acceptance: 0/0 criteria met -- no milestone-scoped experiment entries were available for acceptance scoring
