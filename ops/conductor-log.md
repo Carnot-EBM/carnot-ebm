@@ -10458,3 +10458,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 08:44 UTC | Exp 5344: Gated solver-guidance overwrite and fall | OK | 87 passed, 1 warning in 8.35s |
 | 2026-07-07 09:03 UTC | Exp 5345: Gated token-probability energy corrigend | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-07 09:20 UTC | Exp 5346: Gated KAN/Ising counterexample-to-constr | OK | 89 passed, 1 warning in 13.01s |
+| 2026-07-07 09:40 UTC | Exp 5347: Hardware continuity and authenticated wo | OK | 90 passed, 1 warning in 10.47s |
