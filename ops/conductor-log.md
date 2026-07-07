@@ -10473,3 +10473,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 13:09 UTC | Exp 5355: Dependency-edge provenance for context s | OK | 91 passed, 1 warning in 10.50s |
 | 2026-07-07 13:26 UTC | Exp 5356: Memory-induced verifier/tool drift harne | OK | 89 passed, 1 warning in 7.59s |
 | 2026-07-07 13:45 UTC | Exp 5357: Gated dependency-safe self-learning scal | OK | 91 passed, 1 warning in 10.48s |
+| 2026-07-07 13:58 UTC | Exp 5358: Solver-authoritative projection and cut  | OK | 87 passed, 1 warning in 8.39s |
