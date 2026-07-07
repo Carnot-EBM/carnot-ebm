@@ -28387,3 +28387,93 @@ claim, AutoTokenizer path, or `.487` flagged internal-energy claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5353 | Planned (`python/carnot/experiment_5353_tokenprob_feature_audit_corrigendum_v488.py`, `results/experiment_5353_tokenprob_feature_audit_corrigendum_v488.json`) | Planned (`tests/python/test_experiment_5353_tokenprob_feature_audit_corrigendum_v488.py`) |
+
+### REQ-VERIFY-5354: Arithmetic Carry Token-Energy Diagnostic V488
+
+The repository SHALL provide Exp 5354 at
+`python/carnot/experiment_5354_arithmetic_carry_token_energy_v488.py`
+and write
+`results/experiment_5354_arithmetic_carry_token_energy_v488.json`
+without modifying `scripts/research_conductor.py`. The diagnostic SHALL run
+only after Exp 5353 proves `tokenprob_feature_rows_ready=true`; otherwise it
+SHALL write a precise `blocked_` artifact and SHALL NOT substitute a generated
+text scorer, reward model, reranker, hallucination detector, or trained
+arithmetic verifier.
+
+Step 0 SHALL confirm the Exp 5353 ready verdict, the selected local GGUF model
+and backend, current GPU visibility, and the manifest marker that Phase D
+external generated-text/logprob scorer scope remains retired. The mandated
+`MODEL_SPECS` SHALL include exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If any live LLM call occurs,
+`inference_substrate.value` SHALL be `live_llm_inference`; if Step 0 blocks
+before local GGUF calls, it SHALL be `aggregation_from_upstream_artifacts`.
+
+The runner SHALL build 12 to 20 deterministic addition yes/no prompts balanced
+across no-carry, single-carry, multi-carry, and perturbed-answer controls. It
+SHALL compute only transparent features from backend per-token/top-logprob rows:
+answer-token negative logprob, carry-position contrast against the no-carry
+baseline, perturbed-vs-correct token-energy margin, and explicit missing-feature
+fallback names. It SHALL report bounded separability only and SHALL set
+`no_broad_hallucination_claim=true`.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, and `tests_run`, plus bare
+integer `diagnostic_case_count`, bare integer `carry_case_count`, bare numeric
+`feature_complete_rate`, bare numeric `correct_vs_perturbed_margin`, bare
+integer `unsafe_false_accepts`, bare boolean
+`external_text_scorer_reopened=false`, bare boolean
+`no_broad_hallucination_claim=true`, and bare boolean
+`carry_token_energy_signal_ready`. `carry_token_energy_signal_ready` SHALL be
+true only when every row is feature-complete, the weakest
+correct-vs-perturbed margin is positive, unsafe false accepts on perturbed
+arithmetic controls are zero, tests are recorded, and retired external scorer
+scope remains closed.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Prevents feature availability from crossing runs without gating."
+- `status`: principle "Lets capstone distinguish clean diagnostic from blocked features."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous signal claims."
+- `inference_substrate`: principle "Expected value is live_llm_inference only if local GGUF calls actually ran."
+- `MODEL_SPECS`: principle "Confirms mandated local SOTA GGUF models are included."
+- `preconditions_checked`: principle "Records Exp5353 and backend readiness checks."
+- `selected_model_spec`: principle "Identifies the probed mandated model."
+- `tests_run`: principle "Lists deterministic fixture and schema checks."
+- `diagnostic_case_count`: principle "Bare integer fixes the bounded probe size."
+- `carry_case_count`: principle "Bare integer proves carry rows were actually present."
+- `feature_complete_rate`: principle "Bare numeric prevents missing rows from being hidden."
+- `correct_vs_perturbed_margin`: principle "Bare numeric is the only local signal under test."
+- `unsafe_false_accepts`: principle "Bare integer guards against promoting wrong arithmetic."
+- `external_text_scorer_reopened`: principle "Bare boolean must be false under the manifest."
+- `no_broad_hallucination_claim`: principle "Bare boolean prevents scope inflation."
+- `carry_token_energy_signal_ready`: principle "Bare boolean summarizes whether this tiny signal merits future work."
+- `carry_token_energy_feature_rows`: principle "Records transparent per-case token energies and missing-feature fallbacks."
+
+### SCENARIO-VERIFY-5354: Carry Token Energy Runs Only On Confirmed Token Rows
+
+Given Exp 5353 is complete with `tokenprob_feature_rows_ready=true`, a selected
+mandated local GGUF model/backend remains available, current GPU visibility is
+true, and the external-scorer retirement marker remains present, when Exp 5354
+runs, then it probes 12 to 20 deterministic addition prompts, writes token-energy
+rows only from backend per-token/top-logprob data, records carry and perturbed
+controls, keeps `external_text_scorer_reopened=false`, keeps
+`no_broad_hallucination_claim=true`, and sets
+`carry_token_energy_signal_ready=true` only if all feature rows are complete, the
+weakest correct-vs-perturbed margin is positive, and unsafe false accepts are
+zero.
+
+If Exp 5353 is absent or not ready, GPU/model/backend checks fail, target token
+top-logprob rows are missing, a perturbed wrong arithmetic control is accepted,
+tests are not recorded, or retired external scorer scope is reopened, then the
+same runner writes a terminal `blocked_` artifact naming the exact missing
+precondition or feature and does not claim broad hallucination detection,
+reasoning verification, text-quality scoring, or scorer training.
+
+## Implementation Status (REQ-VERIFY-5354)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5354 | Planned (`python/carnot/experiment_5354_arithmetic_carry_token_energy_v488.py`, `results/experiment_5354_arithmetic_carry_token_energy_v488.json`) | Planned (`tests/python/test_experiment_5354_arithmetic_carry_token_energy_v488.py`) |
