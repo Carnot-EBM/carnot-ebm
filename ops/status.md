@@ -1,6 +1,22 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-07 (Milestone 2026.07.488 planning staged)
+**Last Updated:** 2026-07-07 (Milestone 2026.07.488 Operational Retro)
+
+## Session 2026-07-07 - Milestone 2026.07.488 Operational Retro
+
+Filled `results/operational_retro_2026_07_488.json` from the locked timing
+artifact values and appended the corresponding entries to `ops/changelog.md`
+and `docs/research-log.md`. The locked fields record 246.4 wall-time minutes,
+29 completed experiments, 3 compute-bound tasks, and
+`gpu_idle_on_compute_bound_tasks: false`; the visible compute-bound slow path is
+Exp 5354 at 15.6 minutes, while the other bounded slowest rows are
+synthesis-only.
+
+Validation for this documentation/results-only task: JSON parsing, locked-field
+checks, protected-file diff check, and whitespace checks passed. Repo-wide spec
+coverage and reconciliation still fail on pre-existing stale documentation and
+spec-traceability issues outside the touched files; no E2E model-training or
+hardware check applies to this operational retrospective.
 
 ## Session 2026-07-07 - Milestone 2026.07.488 Planning Staged
 

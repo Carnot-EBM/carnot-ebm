@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.488",
+  "generated_at": "2026-07-07T15:17:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 246.4,
+  "experiments_completed": 29,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 5351: Trigger-then-constrain structured-output protocol co",
+      "duration_minutes": 29.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5361: Hardware continuity and authenticated workload recei",
+      "duration_minutes": 18.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5354: Gated arithmetic carry token-energy diagnostic",
+      "duration_minutes": 15.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5357: Gated dependency-safe self-learning scale-up",
+      "duration_minutes": 15.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5360: ARC live-path perception salience first-contact leve",
+      "duration_minutes": 14.8,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.488 completed 29 experiments in 246.4 minutes, including 3 compute-bound tasks. The bounded slowest list is synthesis-heavy; the only visible compute-bound slow path is Exp 5354 at 15.6 minutes, and gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Synthesis-only work dominates the bounded slowest list: Exp 5351 took 29.0 minutes and Exp 5361 took 18.0 minutes without a GPU code path.",
+    "Only one compute-bound experiment appears in the bounded slowest list: Exp 5354 took 15.6 minutes. The supplied data does not include runtime traces that explain why it was slower than the other compute-bound tasks.",
+    "Compute-bound observability is too coarse: the milestone had 3 compute-bound tasks, but the bounded timing block exposes detailed duration context for only the one compute-bound row in the slowest list."
+  ],
+  "improvements_suggested": [
+    "Add per-experiment phase timing for synthesis-only work so long rows can be split into planning, artifact writing, validation, and commit time.",
+    "Capture in-run GPU utilization receipts for each GGUF/CUDA/requires_gpu task so idle-GPU interpretation is tied to the compute-bound execution window.",
+    "Emit an explicit runner-eligibility field for compute-bound tasks that distinguishes single-model runs from 2+ parallel-model runs before suggesting DualGPURunner.",
+    "Auto-fill operational retros from the locked timing skeleton and reject accidental edits to locked timing fields before commit."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument synthesis-only conductor phases before changing GPU policy, because the visible slowest rows are mostly synthesis-only.",
+    "Add in-run GPU receipts to every compute-bound task while keeping GPU-idle alerts gated by compute_bound=true.",
+    "Add a DualGPURunner eligibility receipt that is present only for 2+ parallel-model compute-bound workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The authorized blocks support one visible compute-bound slow path but do not explain its root cause. The next milestone should improve timing and GPU receipts before turning a point-in-time idle GPU snapshot into an operational policy."
+}

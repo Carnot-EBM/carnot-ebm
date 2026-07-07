@@ -5793,3 +5793,9 @@ The critical path for milestone .250:
 - theme: operational retrospective for a synthesis-heavy slowest-run list with compute-bound GPU-idle gated off
 - key result: 28 experiments completed in 318.2 minutes with 2 compute-bound tasks; the listed slowest rows are synthesis-only, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported by the supplied blocks
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.488
+- exp_range: exp5351-exp5361 (bounds from visible timing rows only)
+- theme: operational retrospective for synthesis-heavy throughput with one visible compute-bound slow path
+- key result: 29 experiments completed in 246.4 minutes with 3 compute-bound tasks; Exp 5354 is the only visible compute-bound slow path at 15.6 minutes, gpu_idle_on_compute_bound_tasks=false, and no 2+ parallel-model DualGPURunner miss is supported
+- acceptance: 4/4 operational questions answered
