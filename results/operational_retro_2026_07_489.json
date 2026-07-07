@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.489",
+  "generated_at": "2026-07-07T22:32:47Z",
+  "retro_type": "operational_full",
+  "summary": "No data available this milestone for experiment-duration accounting: total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. The timing block explicitly reports a TIMING INTEGRITY MISMATCH because both authorized reconstruction paths found 0 experiment commits while ops/changelog.md contains milestone references, so no experiment IDs, durations, compute-bound slow paths, GPU-efficiency finding, or DualGPURunner finding can be inferred.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Timing assembly is the only supported bottleneck: the live git-log path and disk-mtime reconstruction found 0 experiment commits, while ops/changelog.md contains references to milestone 2026.07.489.",
+    "No data available this milestone for compute-bound throughput because compute_bound_experiments_count=0 and slowest_experiments is empty.",
+    "The GPU monitor snapshot cannot be promoted to a bottleneck because the timing block contains no compute-bound tasks and gpu_idle_on_compute_bound_tasks is null."
+  ],
+  "improvements_suggested": [
+    "Fix the timing-assembly mismatch path so changelog milestone references are reconciled to an explicit timing source or emitted as a structured no-data diagnostic.",
+    "Persist the milestone activation boundary and source-of-truth timing window in the retro skeleton so git-log and disk-mtime reconstruction use the same scope.",
+    "Require each timing row to carry compute_bound and runner-eligibility fields before any GPU-idle or DualGPURunner recommendation is generated.",
+    "Keep estimated savings at 0 when the timing block contains no experiment rows, even when a tooling fix is clearly needed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the timing assembler so milestone references in ops/changelog.md cannot coexist with an unqualified zero-experiment reconstruction.",
+    "Record the exact activation boundary and reconstruction mode in each operational retro artifact before analysis starts.",
+    "Add a pre-retro validation check that refuses GPU-efficiency conclusions unless at least one compute-bound timing row is present."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The honest retrospective is a no-data report plus an integrity finding. The idle GPU snapshot is informational only, and the next milestone should fix timing provenance before drawing operational conclusions from changelog text.",
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": true
+}
