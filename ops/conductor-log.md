@@ -10448,3 +10448,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 04:46 UTC | Milestone 2026.07.487 activated | OK | 14 tasks queued |
 | 2026-07-07 04:57 UTC | Exp 5335: Archive 2026.07.486 and activate 2026.07 | OK | 86 passed, 1 warning in 7.67s |
 | 2026-07-07 05:15 UTC | Exp 5336: V487 SOTA source delta refresh | OK | 112 passed, 1 warning in 7.97s |
+| 2026-07-07 05:36 UTC | Exp 5337: SOTA runtime corrigendum and multi-model | OK | 87 passed, 1 warning in 10.66s |
