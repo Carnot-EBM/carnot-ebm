@@ -10487,3 +10487,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 18:10 UTC | Gated constraint-tax tool/action reachability pane | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-pr |
 | 2026-07-07 18:12 UTC | Gated constraint-tax tool/action reachability pane | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-pr |
 | 2026-07-07 18:14 UTC | Gated constraint-tax tool/action reachability pane | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-pr |
+| 2026-07-07 18:28 UTC | Budget-curated memory governance for dependency-sa | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
