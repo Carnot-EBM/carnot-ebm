@@ -1,0 +1,278 @@
+{
+  "active_roadmap_modified": false,
+  "cited_upstream_artifacts": [
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "CLAUDE.md",
+      "sha256": "sha256:3f0b49b310cd2e507887754c891ab2ae9758b3ee7e6fd0b79b9928a85f5d9ca2"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "research-roadmap.yaml",
+      "sha256": "sha256:08f736585913faf8a6ea40111c93086a02dc5275c80eed3a0d98672735a39612"
+    },
+    {
+      "exists": false,
+      "read_only": true,
+      "relative_path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:0f334010465ef42eb869785b7da91130b16e8d9276160dd4046ba3c225b006d3"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "results/experiment_5375_capstone_v489.json",
+      "sha256": "sha256:e53a79c3507ed6848830ba666d63e256f09256a0ae532ca8f92c98242e8023d4"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/status.md",
+      "sha256": "sha256:b4faaec3d6357e5b585f68a3b31e082852167a64e8f24b2298096792c6582ed0"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/changelog.md",
+      "sha256": "sha256:3daa47c9b7f749a6bfe3813895d148b75fbc0949c6ebe2c3099c4656557d0039"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "ops/conductor-log.md",
+      "sha256": "sha256:9e7c0be4640b15f2e0f2f85d2a7f09bfda9269df683141f4bb3337a8ffcde0b2"
+    },
+    {
+      "exists": true,
+      "read_only": true,
+      "relative_path": "scripts/research_conductor.py",
+      "sha256": "sha256:e20542ec9d72f928cf4648d6e9a185d3b39552f67fc91a01ce7c2da859357ec7"
+    }
+  ],
+  "conductor_modified": false,
+  "downstream_gate_expectations": {
+    "ARC": {
+      "arc_new_level_banked_from_prior": false,
+      "expectation": "Exp5385 can bank a level only through live agent self-discovery, without offline BFS, outer-loop reverse engineering, or per-game adapters.",
+      "solve_provenance_required": "live_agent_self_discovery"
+    },
+    "hardware": {
+      "expectation": "Exp5386 should produce hash-chained board receipts; no speedup claim is allowed without board timing, baseline timing, workload hash, and repeatability evidence.",
+      "requires_authenticated_repeatability_for_speedup": true,
+      "speedup_claim_allowed_from_prior": false
+    },
+    "self_learning": {
+      "expectation": "Exp5381 must re-emit budget memory from row-level evidence with anti-tautology controls before Exp5382 scales real workflow learning.",
+      "inherits_prior_gates": [
+        "budget_curated_memory_ready=true_but_tautology_flagged",
+        "continuous_self_learning_budget_scaleup_ready=true"
+      ],
+      "no_model_weight_mutation_required": true,
+      "requires_exp5381_corrigendum_clean": true
+    },
+    "solver": {
+      "expectation": "Exp5383 may scale overwrite-capable guidance only under solver authority; Exp5384 remains a CPU diagnostic when joining p-bit boundary evidence.",
+      "forced_hint_trust_allowed": false,
+      "hardware_speedup_claim_allowed": false,
+      "solver_authoritative": true
+    },
+    "structured": {
+      "exp5378_min_methodology_duration_s": 60.0,
+      "expectation": "Exp5378 must repair the methodology-duration receipt before Exp5379 reruns the structured clean gate; Exp5380 stays gated until structured_protocol_clean=true.",
+      "inherits_prior_gate": "structured_protocol_clean=false",
+      "requires_structured_protocol_clean_for_constraint_tax": true
+    },
+    "token": {
+      "expectation": "Exp5387 must keep token/internal-feature energy closed unless logits, hidden states, or attention are available with clean provenance.",
+      "future_token_signal_allowed_from_prior": false,
+      "required_backend_features": [
+        "logits",
+        "hidden_states",
+        "attention"
+      ]
+    }
+  },
+  "duration_s": 0.040053,
+  "experiment": "experiment_5376_transition_v490",
+  "experiment_id": "exp5376-v490-transition-and-archive",
+  "failed_preconditions": [],
+  "field_principles": {
+    "active_roadmap_modified": "Must remain false because Exp5376 is record-only and must not edit the active roadmap.",
+    "conductor_modified": "Must remain false because Exp5376 must not edit scripts/research_conductor.py.",
+    "downstream_gate_expectations": "Lists the structured, self-learning, solver, ARC, token, and hardware expectations .490 tasks must honor.",
+    "honest_verdict": "One-line terminal summary that distinguishes a clean transition from a missing-input block.",
+    "milestone": "Must equal 2026.07.490 so this artifact cannot be confused with the completed .489 capstone.",
+    "planned_task_count": "Counts the .490 tasks in the executable roadmap source used by this transition.",
+    "planned_task_ids": "Ordered task ids preserve the Exp5376-5388 conductor execution range for downstream gates.",
+    "prior_blockers": "Summarizes structured, constraint-tax, memory-tautology, ARC, token-feature, and hardware blockers for downstream gating.",
+    "prior_capstone_path": "Names the exact .489 capstone used as the source of truth.",
+    "prior_gate_summary": "Copies only the requested .489 gate booleans without laundering blocked, tautological, null, or no-claim lanes.",
+    "prior_milestone": "Must equal 2026.07.489 because all inherited gates come from the completed prior milestone.",
+    "roadmap_doc_present": "Bare boolean proving the vNEXT roadmap document existed for task-range and phase extraction.",
+    "roadmap_next_present": "Bare boolean proving whether the literal pre-staged next-roadmap file existed at execution time.",
+    "status": "Honest terminal state; complete only when the .489 capstone, .490 roadmap document, executable .490 task source, and no-edit guards are present."
+  },
+  "honest_verdict": "complete: .489 gates archived and .490 task range recorded from research-roadmap.yaml; roadmap_next_present=false; no active roadmap or conductor edit.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.490",
+  "planned_phase_names": [
+    "Phase 0 - Transition and Source Delta",
+    "Phase 1 - Clean Local SOTA Structured Protocol",
+    "Phase 2 - Audited Continuous Self-Learning and Solver Energy",
+    "Phase 3 - Live Surfaces, Hardware Receipts, and Capstone"
+  ],
+  "planned_task_count": 13,
+  "planned_task_ids": [
+    "exp5376-v490-transition-and-archive",
+    "exp5377-v490-sota-source-delta",
+    "exp5378-v490-structured-methodology-duration-receipt",
+    "exp5379-v490-live-structured-clean-gate-rerun",
+    "exp5380-v490-constraint-tax-tool-action-panel-v3",
+    "exp5381-v490-budget-memory-tautology-corrigendum",
+    "exp5382-v490-real-workflow-continuous-self-learning",
+    "exp5383-v490-overwrite-guidance-scale-validity",
+    "exp5384-v490-pbit-boundary-overwrite-joint-diagnostic",
+    "exp5385-v490-arc-geometric-salience-live-path",
+    "exp5386-v490-hardware-hashchain-receipts",
+    "exp5387-v490-token-feature-backend-reopen-gate",
+    "exp5388-v490-capstone"
+  ],
+  "planned_task_source": "research-roadmap.yaml",
+  "preconditions_checked": {
+    "active_roadmap_loadable": true,
+    "active_roadmap_milestone": "2026.07.490",
+    "active_roadmap_modified": false,
+    "active_roadmap_present": true,
+    "capstone_loadable": true,
+    "capstone_present": true,
+    "checked_paths": [
+      "AGENTS.md",
+      "CODEX.md",
+      "CLAUDE.md",
+      "research-roadmap.yaml",
+      "research-roadmap-next.yaml",
+      "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "results/experiment_5375_capstone_v489.json",
+      "ops/status.md",
+      "ops/changelog.md",
+      "ops/conductor-log.md",
+      "scripts/research_conductor.py"
+    ],
+    "conductor_modified": false,
+    "executable_roadmap_milestone": "2026.07.490",
+    "phase_names": [
+      "Phase 0 - Transition and Source Delta",
+      "Phase 1 - Clean Local SOTA Structured Protocol",
+      "Phase 2 - Audited Continuous Self-Learning and Solver Energy",
+      "Phase 3 - Live Surfaces, Hardware Receipts, and Capstone"
+    ],
+    "roadmap_doc_names_milestone": true,
+    "roadmap_doc_present": true,
+    "roadmap_next_loadable": false,
+    "roadmap_next_milestone": null,
+    "roadmap_next_names_milestone": false,
+    "roadmap_next_present": false,
+    "task_range": "Exp 5376-5388"
+  },
+  "prior_blockers": {
+    "ARC": {
+      "arc_new_level_banked": false,
+      "attempted_level": 3,
+      "blocked": true,
+      "solve_provenance": "live_agent_self_discovery",
+      "source": "Exp5373",
+      "target_game": "re86"
+    },
+    "constraint_tax": {
+      "blocked": true,
+      "gate_blocked": true,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5366-v489-live-grammar-budgeted-sota-protocol.structured_protocol_clean (actual=False == expected=True)",
+      "required_upstream_gate": "structured_protocol_clean=true",
+      "source": "Exp5367"
+    },
+    "hardware": {
+      "blocked": true,
+      "gatemate_status": "blocked_physical_or_jtag",
+      "hardware_speedup_claim": false,
+      "kv260_status": "unreachable",
+      "polarfire_status": "reachable/workload_receipt",
+      "repeatability_evidence_present": false,
+      "source": "Exp5374"
+    },
+    "memory_tautology": {
+      "capstone_memory_ready": true,
+      "conductor_flagged_tautology": true,
+      "downstream_requirement": "re_emit_from_row_level_evidence_before_scaleup_dependency",
+      "source": "Exp5368"
+    },
+    "structured": {
+      "blocked": true,
+      "clean_rate_evidence": {
+        "final_json_extraction_rate": 1.0,
+        "parse_success_rate": 1.0,
+        "schema_success_rate": 1.0,
+        "semantic_success_rate": 1.0,
+        "unsafe_false_accepts": 0
+      },
+      "failed_only_on_methodology_duration_lt_60": true,
+      "methodology_duration_s": 19.445366,
+      "required_duration_s": 60.0,
+      "source": "Exp5366"
+    },
+    "token_feature": {
+      "attention_available": false,
+      "blocked": true,
+      "future_token_signal_allowed": false,
+      "hidden_states_available": false,
+      "logits_available": false,
+      "source": "Exp5372"
+    }
+  },
+  "prior_capstone_path": "results/experiment_5375_capstone_v489.json",
+  "prior_gate_summary": {
+    "arc_new_level_banked": false,
+    "boundary_exchange_schedule_ready": true,
+    "budget_curated_memory_ready": true,
+    "constraint_tax_panel_ready": false,
+    "continuous_self_learning_budget_scaleup_ready": true,
+    "future_token_signal_allowed": false,
+    "grammar_budget_protocol_ready": true,
+    "hardware_speedup_claim": false,
+    "overwrite_solver_guidance_ready": true,
+    "structured_protocol_clean": false
+  },
+  "prior_milestone": "2026.07.489",
+  "random_seed": 5376,
+  "reproducibility_checksum": "sha256:8efd111249a781e2fac7bd0773c5349a824efb5eff33dcdd220d6fb708507c84",
+  "result_path": "results/experiment_5376_transition_v490.json",
+  "roadmap_doc_present": true,
+  "roadmap_doc_task_range": "Exp 5376-5388",
+  "roadmap_next_present": false,
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5376_transition_v490.v1",
+  "spec_refs": [
+    "REQ-REPORT-5376",
+    "SCENARIO-REPORT-5376",
+    "SCENARIO-REPORT-5376-BLOCKED-INPUT"
+  ],
+  "status": "complete"
+}
