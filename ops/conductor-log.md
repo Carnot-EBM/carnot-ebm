@@ -10499,3 +10499,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 23:18 UTC | Plan milestone 2026.07.490 | OK | 13 tasks proposed |
 | 2026-07-07 23:20 UTC | Milestone 2026.07.490 activated | OK | 13 tasks queued |
 | 2026-07-07 23:33 UTC | Archive .489 outcomes and stage .490 execution con | OK | 87 passed, 1 warning in 7.95s |
+| 2026-07-07 23:56 UTC | Execution-time SOTA source delta for .490 | OK | 116 passed, 1 warning in 7.44s |
