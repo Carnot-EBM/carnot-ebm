@@ -1290,3 +1290,86 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5334 | Planned (`python/carnot/experiment_5334_capstone_v486.py`, `results/experiment_5334_capstone_v486.json`) | Planned (`tests/python/test_experiment_5334_capstone_v486.py`) |
+
+- REQ-CAPSTONE-5348: The `.487` milestone-close capstone aggregator
+  `exp5348-capstone-v487` in `python/carnot/experiment_5348_capstone_v487.py`
+  SHALL write `results/experiment_5348_capstone_v487.json` without modifying
+  `research-roadmap.yaml`, without modifying `scripts/research_conductor.py`,
+  without modifying `ops/status.md`, without modifying `ops/changelog.md`, and
+  without modifying `_bmad/traceability.md`. It SHALL read every expected
+  `.487` upstream artifact from Exp5335 through Exp5347 plus the Exp5340
+  Q-value sidecar when present, record missing, blocked, adversarially flagged,
+  malformed, and conductor-gate outcomes explicitly, build a gate table for
+  runtime, structured-output protocol, SOTA bounded quality, utility memory,
+  bounded compressor, self-learning scale-up, QSTR fixture, solver guidance,
+  token-probability energy, KAN bridge, and hardware, and synthesize the
+  milestone without promoting blocked transition work, flagged structured-output
+  or self-learning evidence, blocked quality-panel evidence, blocked
+  internal-energy evidence, bounded KAN cuts, or hardware continuity receipts
+  into headline quality, broad certificate, self-learning, internal-energy, or
+  hardware-speedup claims.
+- SCENARIO-CAPSTONE-5348: The artifact
+  `results/experiment_5348_capstone_v487.json` must emit top-level
+  principle-annotated fields `experiment_id`, `milestone`, `status`,
+  `honest_verdict`, `inference_substrate`, `artifacts_read`,
+  `missing_blocked_flagged_or_skipped_artifacts`, `gate_table`,
+  `next_milestone_recommendation`, `cited_upstream_artifacts`, and
+  `tests_run`. The artifact must also emit bare booleans `runtime_clean`,
+  `structured_output_protocol_ready`, `bounded_sota_quality_usable`,
+  `utility_memory_ready`, `bounded_compressor_ready`,
+  `self_learning_scaleup_ready`, `qstr_fixture_ready`,
+  `solver_guidance_ready`, `internal_energy_corrigendum_clean`,
+  `kan_constraint_bridge_ready`, `hardware_speedup_claim=false`,
+  `active_roadmap_modified=false`, and `conductor_modified=false`. The default
+  `.487` aggregation must summarize Exp5337 as a clean runtime receipt with no
+  quality claim, Exp5338 as a parse-only structured-output candidate that is
+  quarantined and therefore not clean-ready, Exp5339 as blocked quality/rewrite
+  evidence, Exp5340 and Exp5341 as clean utility-memory and bounded-compressor
+  fixtures, Exp5342 as a flagged self-learning scale-up result that cannot be
+  used as a clean readiness claim, Exp5343 and Exp5344 as clean deterministic
+  QSTR and solver-guidance gates, Exp5345 as blocked and flagged internal-energy
+  evidence, Exp5346 as a bounded KAN/Ising constraint bridge with no broad
+  certificate claim, and Exp5347 as hardware continuity with authenticated
+  PolarFire smoke evidence but `hardware_speedup_claim=false`. The terminal
+  `honest_verdict.value` must start with `complete:` or `blocked_` and state the
+  true `.487` closure without laundering blocked, flagged, missing, bounded,
+  internal-energy, quality, certificate, self-learning, or hardware evidence.
+- SCENARIO-CAPSTONE-5348-BLOCKED-MISSING-INPUT: If any expected Exp5335 through
+  Exp5347 artifact or Exp5340 Q-value sidecar is absent or unreadable, the
+  workflow must still write `results/experiment_5348_capstone_v487.json` with
+  `honest_verdict.value` starting with `blocked_missing_required`, record the
+  missing or malformed artifact in
+  `missing_blocked_flagged_or_skipped_artifacts.value`, keep
+  `hardware_speedup_claim=false`, keep `active_roadmap_modified=false`, and keep
+  `conductor_modified=false`.
+- SCENARIO-CAPSTONE-5348-FIELD-PRINCIPLES: The required field principles are:
+  `experiment_id` = "identifies Exp5348 as the `.487` capstone artifact so
+  downstream reconciliation cannot confuse it with an upstream SOTA,
+  self-learning, constraint, KAN, internal-energy, or hardware task.",
+  `milestone` = "binds the aggregation to 2026.07.487 and the close-state read
+  of Exp5335 through Exp5347 plus the Exp5340 Q-value sidecar.",
+  `status` = "complete only when every expected artifact is readable; otherwise
+  blocked_missing_required.", `honest_verdict` = "terminal prefix; starts with
+  complete: or blocked_ and summarizes `.487` without laundering blocked,
+  flagged, bounded, missing, no-speedup, no-quality, internal-energy,
+  self-learning, or certificate evidence.", `inference_substrate` =
+  "aggregation_from_upstream_artifacts because the capstone reads local artifacts
+  and conductor outcomes without running model, solver, or hardware workloads.",
+  `artifacts_read` = "every readable upstream artifact with path, experiment
+  identity, status, verdict, sha256, and conductor outcome when available.",
+  `missing_blocked_flagged_or_skipped_artifacts` = "missing, malformed, blocked,
+  flagged, and conductor-gate outcomes that remain first-class and cannot be
+  rounded up.", `gate_table` = "one reconciled row per requested gate with
+  source artifacts, clean-ready boolean, imported evidence, claim boundary, and
+  caveat text.", `next_milestone_recommendation` = "short next branch
+  recommendation grounded only in clean gates, blockers, and flagged rows.",
+  `cited_upstream_artifacts` = "every upstream artifact cited by sha256 with the
+  imported fields that affected a gate.", and `tests_run` = "validation commands
+  and outcomes used to check the capstone module, artifact, coverage, and
+  required repository test status."
+
+## Implementation Status (REQ-CAPSTONE-5348)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-5348 | Planned (`python/carnot/experiment_5348_capstone_v487.py`, `results/experiment_5348_capstone_v487.json`) | Planned (`tests/python/test_experiment_5348_capstone_v487.py`) |
