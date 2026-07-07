@@ -10456,3 +10456,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 08:08 UTC | Exp 5342: Gated provenance-bound context self-lear | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-07-07 08:29 UTC | Exp 5343: QSTR-style qualitative temporal and spat | OK | 90 passed, 1 warning in 9.14s |
 | 2026-07-07 08:44 UTC | Exp 5344: Gated solver-guidance overwrite and fall | OK | 87 passed, 1 warning in 8.35s |
+| 2026-07-07 09:03 UTC | Exp 5345: Gated token-probability energy corrigend | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
