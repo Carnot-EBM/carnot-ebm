@@ -10452,3 +10452,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 05:59 UTC | Exp 5338: Gated structured-output protocol calibra | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-07 07:13 UTC | Exp 5339: Gated bounded SOTA claim/rewrite panel a | OK | 87 passed, 1 warning in 7.92s |
 | 2026-07-07 07:31 UTC | Exp 5340: Continuous self-learning utility-weighte | OK | 89 passed, 1 warning in 8.88s |
+| 2026-07-07 07:50 UTC | Exp 5341: ACC-style bounded compressor and drift m | OK | 92 passed, 1 warning in 12.11s |
