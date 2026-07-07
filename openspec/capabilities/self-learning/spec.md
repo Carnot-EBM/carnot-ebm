@@ -18084,3 +18084,159 @@ over-compression cases
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5341 | Implemented (`python/carnot/experiment_5341_bounded_compressor_drift_monitor_v487.py`, `results/experiment_5341_bounded_compressor_drift_monitor_v487.json`) | Implemented (`tests/python/test_experiment_5341_bounded_compressor_drift_monitor_v487.py`) |
+
+---
+
+## REQ-LEARN-5342: Provenance-Bound Multi-Session Self-Learning Scale-Up
+
+Experiment 5342 SHALL assemble a deterministic multi-session self-learning
+scale-up over the Exp5340 utility-weighted context memory fixture and the
+Exp5341 bounded compressor drift monitor fixture. The scale-up SHALL load both
+upstream artifacts, verify `utility_memory_ready=true`,
+`compressor_drift_fixture_ready=true`, their certificate gates, and
+`no_weight_mutation=true` before reporting a ready artifact.
+
+The scale-up SHALL build 3 to 5 deterministic multi-session traces. Each trace
+SHALL include context object versions, integrity hashes, approval/currentness
+state, supporting events, recoverable sidecars, and audit traces. Every context
+event SHALL be linked into a provenance hash chain. Point-in-time
+reconstruction SHALL rebuild the accepted context state at each event boundary
+from the hash-chained audit log.
+
+The trace panel SHALL include gradual cross-event poisoning or suspicious
+buildup that is not detectable by per-diff checks alone. Cross-event suspicion
+telemetry SHALL aggregate lineage, actor, and supporting-event evidence across
+events, reject or roll back the attack when the aggregate threshold is reached,
+and keep unsafe false accepts at zero for the combined certificate-gated policy.
+
+The experiment SHALL compare always-full verification, utility-only,
+bounded-compressor-only, and combined certificate-gated policies over identical
+trace IDs. The report SHALL include final quality, memory hygiene, context
+efficiency, verifier cost, unsafe false accepts, cross-event detection,
+rollback events, and point-in-time reconstruction. The combined policy SHALL be
+ready only when unsafe accepts are zero, final quality is preserved versus
+always-full verification, cross-event attacks are detected, rollback is
+exercised when required, point-in-time reconstruction succeeds, the hash chain
+is valid, tests are recorded, and at least one process metric improves versus an
+always-full or transition-style baseline.
+
+The result artifact SHALL be
+`results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json` and
+SHALL include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_provenance_bound_self_learning`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer
+`multi_session_trace_count`, bare boolean `context_hash_chain_valid`, bare
+numeric `point_in_time_reconstruction_rate`, bare numeric
+`memory_hygiene_delta`, bare numeric `context_efficiency_delta`, bare numeric
+`verifier_cost_delta`, bare numeric `cross_event_attack_detection_rate`, bare
+integer `unsafe_false_accepts`, bare integer `rollback_events`, bare boolean
+`self_learning_scaleup_ready`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5342 scale-up artifact so downstream
+  gates cannot confuse provenance-bound multi-session learning with Exp5340
+  utility learning or Exp5341 compressor monitoring.
+- `milestone`: Binds the scale-up to milestone v487 where utility memory and
+  bounded compression are combined under provenance and certificate gates.
+- `status`: Reports whether the combined policy completed under upstream
+  readiness, hash-chain, reconstruction, telemetry, rollback, quality, process,
+  and frozen-model gates.
+- `honest_verdict`: Terminal Exp5342 verdict; starts with complete: or
+  blocked_ and states whether provenance-bound self-learning preserved quality,
+  rejected unsafe buildup, and improved process metrics without model-weight
+  mutation.
+- `inference_substrate`: Declares deterministic provenance-bound
+  self-learning with no live LLM, API judge, model generation, fine-tuning,
+  adapter update, or foundation-weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the experiment scales
+  self-learning policy state across sessions rather than reporting a static
+  single-session fixture.
+- `no_weight_mutation`: Bare gate confirming only deterministic context state,
+  telemetry, certificates, and rollback ledgers changed, never model weights or
+  adapters.
+- `multi_session_trace_count`: Bare integer count of deterministic
+  multi-session traces used by the policy comparison.
+- `context_hash_chain_valid`: Bare gate proving every trace event hash links to
+  its predecessor and prevents silent provenance edits.
+- `point_in_time_reconstruction_rate`: Bare numeric rate showing how often the
+  audit log can reconstruct accepted context state at event boundaries.
+- `memory_hygiene_delta`: Bare numeric improvement in clean current context
+  state for the combined policy versus always-full verification.
+- `context_efficiency_delta`: Bare numeric improvement in accepted useful
+  context per retained object for the combined policy versus always-full
+  verification.
+- `verifier_cost_delta`: Bare numeric verifier-cost reduction for the combined
+  policy versus always-full verification.
+- `cross_event_attack_detection_rate`: Bare numeric rate over cross-event
+  attacks detected by aggregate suspicion telemetry.
+- `unsafe_false_accepts`: Bare integer count of unsafe accepts by the combined
+  certificate-gated policy; any positive value blocks readiness.
+- `rollback_events`: Bare integer count of combined-policy rollback events that
+  removed unsafe or stale state after aggregate evidence appeared.
+- `self_learning_scaleup_ready`: Bare gate true only when upstream gates pass,
+  unsafe accepts are zero, quality is preserved, process metrics improve, hash
+  chains validate, reconstruction succeeds, tests are recorded, and no model
+  weights mutate.
+- `tests_run`: Records the exact verification commands used to establish that
+  the scale-up module and result artifact are stable.
+
+### REQ-LEARN-5342 Sub-requirements
+
+- REQ-LEARN-5342-1: The fixture SHALL load Exp5340 and Exp5341 artifacts and
+  verify their readiness gates before reporting a ready artifact.
+- REQ-LEARN-5342-2: The trace builder SHALL create 3 to 5 deterministic
+  multi-session traces with versioned context objects, sidecars, event hashes,
+  approval/currentness state, and audit traces.
+- REQ-LEARN-5342-3: The hash-chain validator SHALL recompute every event hash
+  from canonical event content and predecessor hash.
+- REQ-LEARN-5342-4: Point-in-time reconstruction SHALL replay accepted and
+  rolled-back events from the audit log and report a reconstruction rate.
+- REQ-LEARN-5342-5: Cross-event telemetry SHALL detect gradual suspicious
+  buildup that per-diff checks leave undetected.
+- REQ-LEARN-5342-6: The policy comparison SHALL evaluate always-full,
+  utility-only, bounded-compressor-only, and combined certificate-gated
+  policies on identical trace IDs.
+- REQ-LEARN-5342-7: `self_learning_scaleup_ready` SHALL be true only when
+  unsafe false accepts are zero, quality is preserved versus always-full,
+  at least one process metric improves versus baseline, cross-event attack
+  detection is positive, rollback is exercised, tests are recorded, hash-chain
+  validation and reconstruction pass, and no model weights mutate.
+
+### SCENARIO-LEARN-5342-PROVENANCE: Hash-Chain and Reconstruction Are Stable
+
+**Given** deterministic multi-session traces with versioned context objects
+**When** event hashes and point-in-time states are recomputed
+**Then** every hash links to its predecessor
+**And** the reconstruction rate is 1.0
+**And** sidecars remain available for rollback.
+
+### SCENARIO-LEARN-5342-ATTACK: Cross-Event Buildup Needs Aggregate Telemetry
+
+**Given** a gradual poisoning chain whose individual diffs are below the
+per-diff rejection threshold
+**When** cross-event suspicion telemetry aggregates actor, lineage, and support
+evidence across sessions
+**Then** the combined policy detects the attack
+**And** utility-only or bounded-compressor-only policies expose unsafe accepts
+or lower safety evidence.
+
+### SCENARIO-LEARN-5342-POLICY: Combined Certificate Gate Preserves Quality
+
+**Given** always-full, utility-only, bounded-compressor-only, and combined
+certificate-gated policy arms over identical trace IDs
+**When** final quality, memory hygiene, context efficiency, verifier cost,
+unsafe false accepts, cross-event detection, and rollback are compared
+**Then** the combined policy preserves always-full final quality
+**And** improves at least one process metric
+**And** `self_learning_scaleup_ready` is true only for the safe combined
+certificate-gated result.
+
+## Implementation Status (Exp 5342)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5342 | Planned (`python/carnot/experiment_5342_provenance_bound_self_learning_scaleup_v487.py`, `results/experiment_5342_provenance_bound_self_learning_scaleup_v487.json`) | Planned (`tests/python/test_experiment_5342_provenance_bound_self_learning_scaleup_v487.py`) |
