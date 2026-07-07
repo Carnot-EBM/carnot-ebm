@@ -23,6 +23,7 @@ from carnot.agentic.arc_competition_agent import (
     StepwiseExplorer,
     make_carnot_agent,
 )
+from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -88,10 +89,9 @@ def test_shipped_explorer_config_matches_single_source_of_truth():
     assert pol.subgoal_budget == SUBMITTED_AGENT_CONFIG["hierarchical_subgoal_budget"]
     assert pol.factored_planner == SUBMITTED_AGENT_CONFIG["factored_planner_enabled"]
     assert pol.factored_trust_threshold == SUBMITTED_AGENT_CONFIG["factored_trust_threshold"]
-    assert (
-        (exp.controllable_novelty_policy is not None)
-        == SUBMITTED_AGENT_CONFIG["controllable_novelty_proposal_enabled"]
-    )
+    assert (exp.controllable_novelty_policy is not None) == SUBMITTED_AGENT_CONFIG[
+        "controllable_novelty_proposal_enabled"
+    ]
     assert (
         exp.controllable_novelty_diagnostics()["enabled"]
         == SUBMITTED_AGENT_CONFIG["controllable_novelty_proposal_enabled"]
@@ -127,8 +127,13 @@ def test_req_capstone_4605_live_stack_integrates_only_non_regression_levers():
     assert SUBMITTED_AGENT_CONFIG["frame_change_predictor_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["frame_change_prune_threshold"] is None
     assert SUBMITTED_AGENT_CONFIG["action_effect_expansion_prior_enabled"] is True
-    assert exp.action_prior is None
+    assert isinstance(exp.action_prior, ColorBlobSaliencePrior)
     assert exp.action_prior_prune_quantile is None
+    assert SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"] is True
+    assert (
+        SUBMITTED_AGENT_CONFIG["color_blob_salience_mode"]
+        == "single_color_connected_component_tiers"
+    )
     assert SUBMITTED_AGENT_CONFIG["strategy_router_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["discriminative_candidate_router_enabled"] is True
     assert SUBMITTED_AGENT_CONFIG["explore_diversity_default"] is False

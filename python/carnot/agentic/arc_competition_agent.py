@@ -32,6 +32,7 @@ import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
+from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress
 from carnot.agentic.arc_energy_fitness_qd import coerce_qd_generator
 from carnot.agentic.arc_controllable_novelty import coerce_controllable_novelty_policy
@@ -112,6 +113,8 @@ SUBMITTED_CONTROLLABLE_NOVELTY_PROPOSAL_ENABLED = False
 SUBMITTED_CONTROLLABLE_NOVELTY_MODE = "episodic_knn_plus_rnd_action_effect_embedding"
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED = False
 SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE = "connected_component_slots_plus_relational_gaps"
+SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED = True
+SUBMITTED_COLOR_BLOB_SALIENCE_MODE = "single_color_connected_component_tiers"
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED = False
 SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD = 0.75
 SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED = False
@@ -435,7 +438,9 @@ class StepwiseExplorer:
         self._nav_forward_steps = 0
         self._nav_reset_replay_steps = 0
         if similarity_retrieval is None:
-            similarity_retrieval = _os.environ.get("CARNOT_ARC_MATM_SIMILARITY_RETRIEVAL", "0") == "1"
+            similarity_retrieval = (
+                _os.environ.get("CARNOT_ARC_MATM_SIMILARITY_RETRIEVAL", "0") == "1"
+            )
         self.similarity_retrieval_enabled = bool(similarity_retrieval)
         self.similarity_bucket_width = max(1e-9, float(similarity_bucket_width))
         self.similarity_max_candidates = max(1, int(similarity_max_candidates))
@@ -675,9 +680,7 @@ class StepwiseExplorer:
             "similarity_retrieval_enabled": bool(self.similarity_retrieval_enabled),
             "similarity_buckets": int(len(self._similarity_state_buckets)),
             "similarity_indexed_states": int(len(self._similarity_descriptor_by_hash)),
-            "similarity_candidates_considered": int(
-                self._nav_similarity_candidates_considered
-            ),
+            "similarity_candidates_considered": int(self._nav_similarity_candidates_considered),
             "similarity_router_accepts": int(self._nav_similarity_router_accepts),
             "similarity_router_rejects": int(self._nav_similarity_router_rejects),
             "similarity_value_checks": int(self._nav_similarity_value_checks),
@@ -2147,6 +2150,8 @@ class E3AgentPolicy:
             candidate_router = _load_submitted_candidate_router()
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
             frame_change_scorer = _load_submitted_frame_change_scorer()
+        if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
+            action_prior = ColorBlobSaliencePrior()
         if action_effect_expansion_prior is None:
             action_effect_expansion_prior = bool(
                 SUBMITTED_ACTION_EFFECT_EXPANSION_PRIOR_ENABLED and frame_change_scorer is not None
@@ -2505,8 +2510,7 @@ class E3AgentPolicy:
         if "goal_energy" in signature.parameters:
             return True
         return any(
-            param.kind is inspect.Parameter.VAR_KEYWORD
-            for param in signature.parameters.values()
+            param.kind is inspect.Parameter.VAR_KEYWORD for param in signature.parameters.values()
         )
 
     def _call_plan_in_model(self, plan_in_model, engine, is_done, start_grid):
@@ -2608,7 +2612,9 @@ class E3AgentPolicy:
                 active = self._active_transitions()
                 if len(active) >= 4:
                     split = max(2, int(len(active) * 0.6))
-                    model = poe.build_poe_world_model(active[:split], active[split:] or active[:split])
+                    model = poe.build_poe_world_model(
+                        active[:split], active[split:] or active[:split]
+                    )
                     if model.diagnostics_.get("n_kept", 0) > 0:
                         candidates.append(WorldModelCandidate("poe_world", model.engine, is_done))
             except Exception:
@@ -2870,9 +2876,7 @@ class E3AgentPolicy:
                         "goal_predicate_satisfiable": bool(outcome.goal_predicate_satisfiable),
                         "goal_satisfiability": dict(outcome.goal_satisfiability),
                         "goal_expression": outcome.goal_expression,
-                        "structural_goal_diagnostics": dict(
-                            outcome.structural_goal_diagnostics
-                        ),
+                        "structural_goal_diagnostics": dict(outcome.structural_goal_diagnostics),
                         "subgoal_search_used": bool(
                             outcome.subgoal_search_used or outcome.subgoal_decomposition
                         ),
@@ -2905,7 +2909,9 @@ class E3AgentPolicy:
                             concentration_threshold=self.active_probe_concentration_threshold,
                         )
                     controller = self._active_probe_controller
-                    actions = probe_actions_from_model_candidates(e3._model_candidates(self.root_grid))
+                    actions = probe_actions_from_model_candidates(
+                        e3._model_candidates(self.root_grid)
+                    )
                     chosen_probe = controller.choose_probe(self.root_grid, actions)
                     attempt["active_probe_enabled"] = True
                     attempt["active_probe_candidate_names"] = [
@@ -2963,7 +2969,9 @@ class E3AgentPolicy:
                             concentration_threshold=self.active_probe_concentration_threshold,
                         )
                     controller = self._active_probe_controller
-                    actions = probe_actions_from_model_candidates(e3._model_candidates(self.root_grid))
+                    actions = probe_actions_from_model_candidates(
+                        e3._model_candidates(self.root_grid)
+                    )
                     chosen_probe = controller.choose_probe(self.root_grid, actions)
                     attempt["active_probe_enabled"] = True
                     attempt["active_probe_candidate_names"] = [
@@ -3147,12 +3155,8 @@ SUBMITTED_AGENT_CONFIG = {
     "goal_energy_alpha": SUBMITTED_GOAL_ENERGY_ALPHA,
     "goal_energy_beta": SUBMITTED_GOAL_ENERGY_BETA,
     "goal_guidance_lambda": SUBMITTED_GOAL_GUIDANCE_LAMBDA,
-    "goal_energy_candidate_guidance_enabled": (
-        SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED
-    ),
-    "goal_energy_candidate_guidance_alpha": (
-        SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA
-    ),
+    "goal_energy_candidate_guidance_enabled": (SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ENABLED),
+    "goal_energy_candidate_guidance_alpha": (SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_ALPHA),
     "goal_energy_candidate_guidance_beta": SUBMITTED_GOAL_ENERGY_CANDIDATE_GUIDANCE_BETA,
     "qd_generation_enabled": SUBMITTED_QD_GENERATION_ENABLED,
     "qd_generation_mode": SUBMITTED_QD_GENERATION_MODE,
@@ -3160,6 +3164,8 @@ SUBMITTED_AGENT_CONFIG = {
     "controllable_novelty_proposal_mode": SUBMITTED_CONTROLLABLE_NOVELTY_MODE,
     "object_centric_proposal_enabled": SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
     "object_centric_proposal_mode": SUBMITTED_OBJECT_CENTRIC_PROPOSAL_MODE,
+    "color_blob_salience_enabled": SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
+    "color_blob_salience_mode": SUBMITTED_COLOR_BLOB_SALIENCE_MODE,
     "program_synthesis_proposal_filter_enabled": (
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_ENABLED
     ),
