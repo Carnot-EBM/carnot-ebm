@@ -1,0 +1,209 @@
+{
+  "actionable_findings": {
+    "principle": "Source URLs plus Carnot-local actionability make appended findings auditable instead of bibliography churn.",
+    "value": [
+      {
+        "actionability": "For Exp5352 and Exp5356, treat tool/action reachability and memory-tool drift as observable-state problems: log initial state, final state, tool-call traces, case-specific verifier predicate, and response-text fallback separately before accepting any structured-output or memory policy result.",
+        "arxiv_id_or_repo": "2607.01793",
+        "carnot_hook": "Vera constructs executable agent safety cases with programmatic initial state and deterministic verification predicates, then judges outcomes with evidence-grounded verifiers over environment state and tool-call evidence before falling back to agent response text.",
+        "category": "evidence_grounded_agent_verification",
+        "planned_task_impact": "no_plan_edit",
+        "retired_scope_risk": "none",
+        "secondary_source_url": "https://github.com/Yunhao-Feng/Vera",
+        "source_family": "arxiv+huggingface_papers+github",
+        "source_url": "https://arxiv.org/abs/2607.01793",
+        "title": "Safety Testing LLM Agents at Scale"
+      }
+    ]
+  },
+  "executable_plan_change_required": false,
+  "experiment_id": {
+    "principle": "Stable id ties the artifact to this roadmap task.",
+    "value": "experiment_5350_sota_source_delta_v488"
+  },
+  "field_principles": {
+    "actionable_findings": "Source URLs plus Carnot-local actionability make appended findings auditable instead of bibliography churn.",
+    "executable_plan_change_required": "Bare boolean signals whether the already-staged plan needs operator review.",
+    "experiment_id": "Stable id ties the artifact to this roadmap task.",
+    "honest_verdict": "Terminal prefix `complete:` or `blocked_` prevents ambiguous source-ingestion status.",
+    "inference_substrate": "Expected value is literature_ingestion_network_sources so no model-result claim is implied.",
+    "methodology_duration_s": "Bare numeric duration catches implausibly-short literature sweeps.",
+    "milestone": "Prevents stale literature claims from crossing milestones.",
+    "new_actionable_findings_count": "Bare integer distinguishes useful deltas from watch-only material.",
+    "references_modified": "Bare boolean proves whether `research-references.md` changed.",
+    "references_section_marker": "Lets reviewers find any appended notes quickly.",
+    "retired_scope_reopened": "Bare boolean must be false to preserve manifest discipline.",
+    "sources_checked": "Lists the actual source families searched.",
+    "status": "Lets the conductor classify no-op versus appended findings."
+  },
+  "honest_verdict": {
+    "principle": "Terminal prefix `complete:` or `blocked_` prevents ambiguous source-ingestion status.",
+    "value": "complete: 1 new actionable V488 source finding appended; executable .488 plan unchanged."
+  },
+  "inference_substrate": {
+    "principle": "Expected value is literature_ingestion_network_sources so no model-result claim is implied.",
+    "value": "literature_ingestion_network_sources"
+  },
+  "methodology_duration_s": 2134.0,
+  "milestone": {
+    "principle": "Prevents stale literature claims from crossing milestones.",
+    "value": "2026.07.488"
+  },
+  "new_actionable_findings_count": 1,
+  "no_deep_research_used": true,
+  "ops_docs_modified": false,
+  "references_modified": true,
+  "references_section_marker": {
+    "principle": "Lets reviewers find any appended notes quickly.",
+    "value": "<!-- V488-EXECUTION-REFRESH-2026-07-07-END -->"
+  },
+  "research_conductor_modified": false,
+  "retired_scope_reopened": false,
+  "roadmap_files_modified": false,
+  "search_window": {
+    "comparison_anchor": "research-references.md V488 Planner Refresh - 2026-07-07",
+    "run_date": "2026-07-07",
+    "years": "2025-2026"
+  },
+  "sources_checked": {
+    "principle": "Lists the actual source families searched.",
+    "value": {
+      "arxiv": {
+        "already_indexed_or_duplicate": [
+          "2507.07731 Energy-Guided Decoding for Object Hallucination Mitigation",
+          "2512.20664 Eidoku CSP Neuro-Symbolic Verification Gate",
+          "2602.22465 ConstraintBench",
+          "2605.18871 Distributional Energy-Based Models",
+          "2606.25313 Programmable Probabilistic Computer with 1,000,000 p-bits",
+          "2606.26476 Retrieval-Warmed Energy-Based Reasoning"
+        ],
+        "new_actionable_ids": [
+          "2607.01793"
+        ],
+        "not_promoted": [
+          "2607.05391 LLM-as-a-Verifier uses scoring-token logit expectations and the public repository requires a Vertex/Gemini API key for logprob extraction; treating it as an execution delta would reopen the retired external generated-text/logprob scorer class.",
+          "2607.00597 PaperPilot is useful process context for literature agents, but it does not change a V488 technical task beyond this source-delta discipline.",
+          "2607.02881 PraMem is a behavior-prediction memory paper, not a direct constraint-learning or verifier-control delta for the staged V488 tasks."
+        ],
+        "queries": [
+          "site:arxiv.org/abs/2607 energy based model reasoning verification LLM constraint satisfaction",
+          "site:arxiv.org/abs/2607 neural constraint satisfaction solver projected diffusion EBM reasoning",
+          "site:arxiv.org/abs/2607 Ising p-bit annealing hardware sampling probabilistic machine",
+          "site:arxiv.org/abs/2607 hallucination detection energy-guided decoding KAN verification",
+          "site:arxiv.org/abs/2607 ARC perception salience LLM",
+          "exact lookup for arXiv:2607.01793 after HuggingFace/GitHub discovery",
+          "exact lookup for arXiv:2607.05391 after HuggingFace/GitHub discovery"
+        ],
+        "status": "ok"
+      },
+      "extropic": {
+        "queries": [
+          "extropic.ai/writing TSU and thermodynamic computing pages",
+          "TSU 101",
+          "thermodynamic-computing-from-zero-to-one",
+          "inside-x0-and-xtr-0"
+        ],
+        "result": "Extropic public writing still provides TSU/probabilistic hardware context. No new local TSU SDK, hardware access path, or authenticated Carnot execution receipt was found.",
+        "status": "ok"
+      },
+      "github": {
+        "new_actionable_repos": [
+          "Yunhao-Feng/Vera"
+        ],
+        "not_promoted": [
+          "llm-as-a-verifier/llm-as-a-verifier was not promoted because the setup requires Vertex API logprob extraction and implements an external trajectory reward scorer.",
+          "Public ARC-AGI-3 repositories with connected-component or MCTS language were not promoted because V488 must use Carnot's live-path provenance and must not reopen retired ARC exploration-signal reruns."
+        ],
+        "queries": [
+          "GitHub search for Yunhao-Feng/Vera",
+          "GitHub search for llm-as-a-verifier/llm-as-a-verifier",
+          "GitHub search for energy-based reasoning, KAN verification, SMT projector, and constraint learning",
+          "GitHub search for ARC-AGI-3 perception, salience, connected components, and color blob agents"
+        ],
+        "result": "GitHub confirmed an executable Vera repository with deterministic verifier fixtures. Other repositories were watch-only or retired-scope risks.",
+        "status": "ok"
+      },
+      "huggingface_papers": {
+        "new_actionable_items": [
+          "2607.01793 Safety Testing LLM Agents at Scale"
+        ],
+        "not_promoted": [
+          "2607.05391 LLM-as-a-Verifier was not promoted because its public code path depends on external logprob/scoring-token extraction and would collide with the retired external scorer discipline.",
+          "PraMem and PaperPilot were watch-only for V488 because they do not sharpen constraint-tax, solver projection, p-bit schedule, or ARC salience execution."
+        ],
+        "queries": [
+          "HuggingFace Papers date/2026-07-07 daily page",
+          "HuggingFace Papers 2607 reasoning, energy, constraint, memory, and KAN searches",
+          "HuggingFace Papers lookup for 2607.01793 Vera",
+          "HuggingFace Papers lookup for 2607.05391 LLM-as-a-Verifier"
+        ],
+        "result": "The July 7 HuggingFace Papers page surfaced Vera and LLM-as-a-Verifier. Only Vera adds a Carnot-local execution hook without reopening retired scopes.",
+        "status": "ok"
+      },
+      "local_v488_comparison": {
+        "queries": [
+          "research-references.md V488 Planner Refresh - 2026-07-07",
+          "repo-wide duplicate search for 2607.01793, Vera, 2607.05391, LLM-as-a-Verifier, PraMem, PaperPilot, Opt-Verifier, and Tell-Tale Norm",
+          "results/experiment_5336_sota_source_delta_v487.json prior source status",
+          "ops/exclusion_manifest.yaml retired scopes"
+        ],
+        "result": "Vera was absent from the V488 planner block and nearby source-delta artifacts. It sharpens existing V488 tool/action reachability and memory-tool drift checks without adding a new plan item or reopening retired generated-text scoring, broad GRPO/fine-tuning, TSU/Kona execution, CPU-only GGUF offload, or ARC exploration-signal scopes.",
+        "status": "ok"
+      },
+      "logical_intelligence": {
+        "queries": [
+          "Logical Intelligence blog Kona, Aleph, and EBRM pages",
+          "Automatic Formal Verification for Code Generation",
+          "Aleph leading benchmarks",
+          "Aleph Prover formal methods posts"
+        ],
+        "result": "Logical Intelligence public material continues to support the V488 solver-authoritative certificate direction, but it exposes no reproducible local Kona internals or execution baseline.",
+        "status": "ok"
+      },
+      "openreview": {
+        "challenge_gated_candidates": [
+          "L7NsVVUm9H Opt-Verifier: search snippet was relevant to optimization solver code, but the OpenReview page redirected to a browser challenge and no code/details were accessible.",
+          "lh95PnOlpM Equilibrium Reasoners: search snippet was relevant, but local references already contain Equilibrium Reasoners entries and the page redirected to a browser challenge."
+        ],
+        "new_actionable_items": [],
+        "not_promoted": [
+          "03ZTlJuX0y The Tell-Tale Norm exposes hidden-state L2 reasoning dynamics, but V488 token/internal-signal work is gated on local backend feature rows; the current GGUF path does not expose the hidden states needed for an action.",
+          "EXFKk4Y3yc Spilled Energy, B3Muyi2zgo NRGPT, and cbtykHVWX9 hard-constrained graph generation were already indexed locally."
+        ],
+        "queries": [
+          "OpenReview energy-based reasoning and hallucination verifier search",
+          "OpenReview constrained decoding and neuro-symbolic verification search",
+          "OpenReview KAN verification and certificate search",
+          "OpenReview hard-constrained graph generation and neural CSP search",
+          "OpenReview reasoning dynamics and solver-verifier search"
+        ],
+        "result": "OpenReview produced watch items and duplicates, but no accessible OpenReview-only item changed the V488 execution plan.",
+        "status": "ok"
+      },
+      "semantic_scholar": {
+        "queries": [
+          "Graph API lookup for arXiv:2507.02092 EBT",
+          "Graph API lookup for arXiv:2512.15605 ARM-EBM",
+          "Graph API lookup for arXiv:2607.01793 Vera",
+          "Graph API lookup for arXiv:2607.05391 LLM-as-a-Verifier"
+        ],
+        "raw_error": "Too Many Requests. Please wait and try again or apply for a key for higher rate limits.",
+        "result": "The public Graph API returned HTTP 429 for every checked paper during this execution refresh, so no citation-count or influence delta is claimed.",
+        "status": "rate_limited"
+      }
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-5350",
+    "SCENARIO-REPORT-5350-APPEND-DELTAS",
+    "SCENARIO-REPORT-5350-NOOP"
+  ],
+  "status": {
+    "principle": "Lets the conductor classify no-op versus appended findings.",
+    "value": "complete"
+  },
+  "tests_run": [
+    "tests/python/test_experiment_5350_sota_source_delta_v488.py"
+  ],
+  "traceability_modified": false
+}

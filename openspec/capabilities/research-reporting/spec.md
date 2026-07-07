@@ -262,6 +262,89 @@ does not edit `research-references.md`.
 |---|---|---|
 | REQ-REPORT-5336 | Planned (`python/carnot/experiment_5336_sota_source_delta_v487.py`, `results/experiment_5336_sota_source_delta_v487.json`) | Planned (`tests/python/test_experiment_5336_sota_source_delta_v487.py`) |
 
+### REQ-REPORT-5350: V488 Execution-Time SOTA Source Delta Refresh
+
+The Exp 5350 workflow SHALL perform an execution-time 2025-2026 source-delta
+check after the `.488` planner refresh in `research-references.md`. It SHALL
+check arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub,
+Extropic writing, Logical Intelligence public pages, and local duplicate
+history for source deltas that affect EBMs for reasoning, neural constraint
+satisfaction, Ising/annealing, hallucination detection, KAN verification,
+energy-guided decoding, hardware sampling, continual constraint learning, or
+ARC perception/salience work. It SHALL write
+`results/experiment_5350_sota_source_delta_v488.json` and SHALL declare
+`inference_substrate="literature_ingestion_network_sources"`.
+
+The workflow SHALL append to `research-references.md` only when a finding is
+both absent from the V488 planner refresh and actionable for Carnot-local work.
+When it appends, it SHALL add a clearly delimited `V488 Execution Refresh`
+section with source URLs, Carnot-local actionability, plan impact, and retired
+scope status. When no new actionable finding exists, it SHALL emit an honest
+no-op artifact and SHALL NOT churn `research-references.md`.
+
+The workflow SHALL NOT reopen retired external generated-text scoring, broad
+GRPO/fine-tuning reruns, TSU/Kona execution claims, CPU-only GGUF offload
+reruns, or retired ARC exploration-signal reruns. It SHALL NOT modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md` for this conductor-scoped source refresh.
+
+The artifact SHALL include principle-annotated top-level fields
+`experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `sources_checked`, and `references_section_marker`. It
+SHALL include bare fields `new_actionable_findings_count`,
+`references_modified`, `retired_scope_reopened`, `methodology_duration_s`, and
+`executable_plan_change_required`. It SHOULD also include actionability rows,
+search-window metadata, checked-source details, rejected-candidate notes, tests
+run, and field principles so downstream reconciliation can audit the refresh
+without relying on prose.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Prevents stale literature claims from crossing milestones."
+- `status`: principle "Lets the conductor classify no-op versus appended findings."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous source-ingestion status."
+- `inference_substrate`: principle "Expected value is literature_ingestion_network_sources so no model-result claim is implied."
+- `sources_checked`: principle "Lists the actual source families searched."
+- `new_actionable_findings_count`: principle "Bare integer distinguishes useful deltas from watch-only material."
+- `references_modified`: principle "Bare boolean proves whether `research-references.md` changed."
+- `references_section_marker`: principle "Lets reviewers find any appended notes quickly."
+- `retired_scope_reopened`: principle "Bare boolean must be false to preserve manifest discipline."
+- `methodology_duration_s`: principle "Bare numeric duration catches implausibly-short literature sweeps."
+- `executable_plan_change_required`: principle "Bare boolean signals whether the already-staged plan needs operator review."
+- `actionable_findings`: principle "Source URLs plus Carnot-local actionability make appended findings auditable instead of bibliography churn."
+
+#### SCENARIO-REPORT-5350-APPEND-DELTAS: New Network Findings Append A V488 Refresh
+
+**Given** the V488 planner refresh is present in `research-references.md`
+**And** the source check finds one or more genuinely new Carnot-actionable
+findings
+**When** the Exp 5350 workflow runs
+**Then** it writes the JSON artifact, appends one clearly delimited V488
+execution-refresh section, records every required source family checked, sets
+`references_modified=true`, sets `new_actionable_findings_count` to the number
+of appended rows, keeps `retired_scope_reopened=false`, keeps
+`executable_plan_change_required=false`, and does not modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+#### SCENARIO-REPORT-5350-NOOP: No New Findings Leave References Unchanged
+
+**Given** the V488 planner refresh is present in `research-references.md`
+**And** the source check finds no genuinely new Carnot-actionable finding
+outside retired scopes
+**When** the Exp 5350 workflow runs
+**Then** it writes a terminal no-op JSON artifact, records every required
+source family checked, sets `references_modified=false`, sets
+`new_actionable_findings_count=0`, sets `references_section_marker=null`, keeps
+`retired_scope_reopened=false`, and does not edit `research-references.md`.
+
+## Implementation Status (REQ-REPORT-5350)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5350 | Implemented (`python/carnot/experiment_5350_sota_source_delta_v488.py`, `results/experiment_5350_sota_source_delta_v488.json`) | Implemented (`tests/python/test_experiment_5350_sota_source_delta_v488.py`) |
+
 ### REQ-REPORT-5109: Archive .468, Record Exp5108 KAN Wall, And Activate .469 Frame
 
 The Exp 5109 workflow SHALL aggregate milestone `2026.07.468` from
