@@ -27906,3 +27906,21 @@ blocks and add Carnot-local hooks for the next roadmap.
   claim.
 
 <!-- V490-PLANNER-REFRESH-2026-07-07-END -->
+
+
+### V490 Execution Refresh - 2026-07-07
+
+Execution-time sweep after the `.490` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic writing, Logical Intelligence public pages, official runtime/backend docs surfaced by the search, and local duplicate history. The findings below were absent from the V490 planner block and add Carnot-local hooks without changing the active roadmap.
+
+### New actionable deltas
+- **Your Agent's Memories Are Not Its Own: Forged Reasoning Attacks on LLM Agent Memory and Defenses** (https://arxiv.org/abs/2607.05029): For Exp5381/Exp5382, add reasoning-history memory poisoning fixtures that insert forged rationale entries with evasive and self-referential amplification. Score structural reasoning-guard signals before trusting memory rows, preserve raw provenance, and keep the check deterministic rather than delegating acceptance to an external text scorer.
+- **Self-Verifying Measurement Records: Hash-Linked Evidence Graphs for Hardware Benchmarking** (https://arxiv.org/abs/2606.27934): For Exp5386, extend QCIVET-style board receipts with a hash-linked evidence graph: bind each board-state quantity to an observation and verification node, emit a SHA-256 manifest plus an offline verifier, record a reproducibility class, and add algebraic checksums or Freivalds-style spot checks where the workload permits. This is receipt discipline only, not a hardware speedup claim.
+- **Extracting hidden states from vLLM** (https://vllm.ai/blog/2026-03-30-extract-hidden-states): For Exp5387, record backend-specific feature receipts: vLLM >= 0.18 can expose selected hidden-state layers through a speculative/KV connector path. Use it as a positive-control backend row only; it does not reopen token/internal-feature energy for the mandated local GGUF llama.cpp path unless that path exposes equivalent logits, hidden states, or attention with clean provenance.
+
+### Execution impact
+- **Plan impact:** No active `.490` roadmap edit is required. The deltas sharpen Exp5381/Exp5382 memory governance, Exp5386 hardware receipts, and Exp5387 backend-feature gates by adding concrete local receipt fields.
+- **Duplicates suppressed:** DEX, GeoWorld, QCIVET, llguidance, CFGzip, TruncProof, G-RRM, and LongMemEval-V2 were already covered by the planner refresh or immediately preceding execution refreshes and are not re-added.
+- **Retired scope:** No retired scope was reopened. External generated-text scorers, CPU-only GGUF headline reruns, TSU/Kona execution claims, KV260 host block-device evidence, and offline ARC solve paths remain closed.
+- **Watch-only context:** VMG/Long-Term Memory Security, MemGuard, origin-bound memory authority, llama.cpp hidden-state discussions, Extropic writing, and Logical Intelligence pages were checked but not promoted because they were duplicate, higher-level, non-local, or lacked reproducible execution evidence for `.490`.
+
+<!-- V490-EXECUTION-REFRESH-2026-07-07-END -->
