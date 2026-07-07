@@ -18641,3 +18641,137 @@ measurements
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5357 | Implemented (`python/carnot/experiment_5357_dependency_drift_self_learning_scaleup_v488.py`, `results/experiment_5357_dependency_drift_self_learning_scaleup_v488.json`) | Implemented (`tests/python/test_experiment_5357_dependency_drift_self_learning_scaleup_v488.py`) |
+
+---
+
+## REQ-LEARN-5368: Budget-Curated Memory Governance Fixture v489
+
+Experiment 5368 SHALL build a deterministic budget-curated memory governance
+fixture for continuous self-learning without mutating model weights. The
+fixture SHALL reuse Exp5355 dependency-provenance evidence and Exp5356
+memory-tool drift evidence where possible, then add per-memory-item governance
+fields for provenance, byte cost, estimated verifier value, stale risk, poison
+risk, sharing risk, and trust label.
+
+The fixture SHALL score every memory item by value-minus-harm per byte. Harm
+SHALL be computed from stale, poison, and sharing risks, and the score SHALL be
+`(estimated_verifier_value - harm) / byte_cost`. Budgeted curation SHALL process
+items in deterministic descending score order. Clean useful items with verified
+provenance MAY be kept while the byte budget remains. Stale, poisoned, or
+untrusted items SHALL be deflected by DROP or QUARANTINE decisions and SHALL NOT
+be accepted as trusted useful memory. SHARE decisions SHALL require provenance,
+TRUST, KEEP, and low sharing risk.
+
+The deterministic panel SHALL include clean useful cases, stale cases, poisoned
+cases, untrusted-provenance cases, and low-value or over-budget clean cases.
+The fixture SHALL emit KEEP, DROP, SHARE, QUARANTINE, TRUST, and UNTRUST
+decisions and SHALL measure retained bytes, value-minus-harm per byte,
+keep/share/trust precision, stale and poison deflection, rollback recovery, and
+unsafe false accepts as separate fields.
+
+The result artifact SHALL be
+`results/experiment_5368_budget_curated_memory_governance_v489.json` and SHALL
+include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status` whose value is `budget_curated_memory_ready` only
+if the fixture runs, principle-wrapped `honest_verdict` whose value starts with
+`complete:` or `blocked_`, principle-wrapped `inference_substrate` with
+`value=deterministic_budget_curated_memory_governance`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare boolean
+`budget_curated_memory_ready`, bare integer `memory_item_count`, bare integer
+`budget_bytes`, bare integer `retained_bytes`, bare numeric
+`value_minus_harm_per_byte_mean`, bare numeric `keep_precision`, bare numeric
+`stale_memory_deflection_rate`, bare numeric
+`poison_memory_deflection_rate`, bare numeric `share_decision_precision`, bare
+numeric `trust_decision_precision`, bare numeric `rollback_recovery_rate`,
+bare integer `unsafe_false_accepts`, and principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Stable id ties the artifact to this roadmap task.
+- `milestone`: Keeps the governance fixture tied to the `.489` memory budget
+  scale-up gate.
+- `status`: Complete only if the budget governance fixture runs.
+- `honest_verdict`: One-line ready or blocked verdict with a terminal prefix.
+- `inference_substrate`: Expected value is
+  deterministic_budget_curated_memory_governance.
+- `continuous_self_learning_target`: Bare boolean must be true because this
+  advances continuous self-learning.
+- `no_weight_mutation`: Bare boolean must be true because the fixture governs
+  memory only, not model weights.
+- `budget_curated_memory_ready`: Bare boolean gate for scale-up; true only
+  when value, cost, harm, and trust decisions are all measured.
+- `memory_item_count`: Bare integer counts memory records evaluated.
+- `budget_bytes`: Bare integer records the memory byte budget used by the
+  fixture.
+- `retained_bytes`: Bare integer records bytes retained after curation.
+- `value_minus_harm_per_byte_mean`: Bare numeric score normalized by byte cost.
+- `keep_precision`: Bare numeric fraction of kept items that are useful and
+  non-harmful.
+- `stale_memory_deflection_rate`: Bare numeric fraction of stale items not
+  trusted or not used.
+- `poison_memory_deflection_rate`: Bare numeric fraction of poisoned items not
+  trusted or not used.
+- `share_decision_precision`: Bare numeric fraction of shared items that pass
+  provenance and trust constraints.
+- `trust_decision_precision`: Bare numeric fraction of trusted items that are
+  clean useful items.
+- `rollback_recovery_rate`: Bare numeric recovery rate after bad memory is
+  detected.
+- `unsafe_false_accepts`: Bare integer count of harmful memory items accepted
+  as trusted useful memory.
+- `tests_run`: Lists deterministic governance, coverage, and pytest commands.
+
+### REQ-LEARN-5368 Sub-requirements
+
+- REQ-LEARN-5368-1: The source gate SHALL load Exp5355, Exp5356, and Exp5357
+  artifacts and require their readiness gates, zero unsafe false accepts,
+  rollback readiness, and no upstream model-weight mutation.
+- REQ-LEARN-5368-2: Every memory item SHALL include provenance, byte cost,
+  estimated verifier value, stale risk, poison risk, sharing risk, trust label,
+  usefulness, harmfulness, and rollback availability.
+- REQ-LEARN-5368-3: Curation SHALL compute value-minus-harm per byte for every
+  item and SHALL choose KEEP, DROP, or QUARANTINE under a fixed byte budget in
+  deterministic score order.
+- REQ-LEARN-5368-4: TRUST decisions SHALL require clean useful memory,
+  verified provenance, and stale/poison risks below the trust thresholds.
+- REQ-LEARN-5368-5: SHARE decisions SHALL require KEEP, TRUST, verified
+  provenance, and sharing risk below the sharing threshold.
+- REQ-LEARN-5368-6: Stale and poisoned memory SHALL be deflected by not being
+  trusted or not being used, and bad-memory rollback rows SHALL recover.
+- REQ-LEARN-5368-7: `budget_curated_memory_ready` SHALL be true only when the
+  source gate passes, all value/cost/harm/trust decisions are measured,
+  retained bytes are within budget, unsafe false accepts are zero, stale and
+  poison deflection are positive, keep/share/trust precision are positive,
+  rollback recovery works, tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5368-BUDGET: Score-Guided KEEP/DROP Under Budget
+
+**Given** clean useful memory, stale memory, poisoned memory, and low-value
+memory with byte costs
+**When** curation ranks by value-minus-harm per byte under the fixed byte
+budget
+**Then** high-value clean memories are kept before lower-score memories
+**And** retained bytes do not exceed `budget_bytes`.
+
+### SCENARIO-LEARN-5368-SAFETY: Stale and Poisoned Memory Are Deflected
+
+**Given** stale and poisoned memory cases
+**When** the governance rules compute TRUST and curation decisions
+**Then** stale and poisoned records are UNTRUSTed or not used
+**And** `unsafe_false_accepts` remains zero
+**And** rollback recovery is measured for bad memory.
+
+### SCENARIO-LEARN-5368-SHARE-TRUST: Sharing Requires Provenance and Trust
+
+**Given** kept clean memory and unsafe or unverified memory
+**When** SHARE decisions are computed
+**Then** only kept trusted memory with verified provenance and low sharing risk
+is shared
+**And** shared-memory precision is measured separately from keep precision.
+
+## Implementation Status (Exp 5368)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5368 | Implemented (`python/carnot/experiment_5368_budget_curated_memory_governance_v489.py`, `results/experiment_5368_budget_curated_memory_governance_v489.json`) | Implemented (`tests/python/test_experiment_5368_budget_curated_memory_governance_v489.py`) |
