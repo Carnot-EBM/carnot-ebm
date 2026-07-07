@@ -17821,3 +17821,141 @@ unsafe evidence
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5330 | Implemented (`python/carnot/experiment_5330_sea_anytime_certificate_gate_v486.py`, `results/experiment_5330_sea_anytime_certificate_gate_v486.json`) | Implemented (`tests/python/test_experiment_5330_sea_anytime_certificate_gate_v486.py`) |
+
+---
+
+## REQ-LEARN-5340: Utility-Weighted Context Memory Fixture
+
+Experiment 5340 SHALL assemble a deterministic utility-weighted context memory
+fixture over the Exp5328 context-object lifecycle rows and Exp5330 certificate
+gate. The fixture SHALL learn operation utility values for retrieve, archive,
+mask, fold, revise, commit, and rollback lifecycle actions from deterministic
+feedback labels only. The feedback panel SHALL include positive, stale,
+poisoned, irrelevant, and shuffled/no-op memory controls. The experiment SHALL
+not call an LLM, API judge, generator, fine-tuning path, adapter update, or
+model-weight mutation path.
+
+The required control label set is positive, stale, poisoned, irrelevant, and shuffled/no-op.
+
+The utility learner SHALL update a Q-value table from deterministic fixture
+feedback labels. Positive feedback SHALL reward useful lifecycle context use,
+stale and poisoned feedback SHALL reward rejection or rollback rather than
+unsafe acceptance, irrelevant feedback SHALL avoid promotion, and shuffled/no-op
+feedback SHALL remain a control with no spurious improvement. The Q-value table
+SHALL be written as
+`results/experiment_5340_utility_weighted_context_memory_q_values_v487.json`
+and referenced from the terminal result artifact.
+
+The experiment SHALL compare utility-weighted retrieval against always-full
+verification, transition-only verification, and shuffled-utility/no-op controls
+on identical Exp5328 lifecycle case IDs. `utility_memory_ready` SHALL be true
+only when the Exp5328 fixture gate passes, the Exp5330 certificate gate passes,
+all policies run, unsafe false accepts are zero, the utility-weighted policy
+does not lower final quality versus always-full verification, at least one
+verifier call is avoided, rollback is exercised, the no-op control does not
+show positive improvement, tests are recorded, and no model weights mutate.
+
+The result artifact SHALL be
+`results/experiment_5340_utility_weighted_context_memory_v487.json` and SHALL
+include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_context_utility_learning`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer `utility_update_count`,
+principle-wrapped `q_value_table_path`, bare numeric
+`quality_delta_vs_always_full`, bare integer `verifier_calls_avoided`, bare
+numeric `no_op_control_delta`, bare integer `unsafe_false_accepts`, bare integer
+`rollback_events`, bare boolean `utility_memory_ready`, and principle-wrapped
+`tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5340 artifact so downstream gates
+  cannot confuse utility-weighted context memory with Exp5329 fixed lifecycle
+  rollout or Exp5330 certificate promotion.
+- `milestone`: Binds the utility learner to milestone v487 where context memory
+  starts learning operation utility without model-weight mutation.
+- `status`: Reports whether utility-weighted context memory completed under
+  fixture, certificate, no-op-control, rollback, and frozen-model gates.
+- `honest_verdict`: Terminal Exp5340 verdict; starts with complete: or
+  blocked_ and states whether utility learning improved call efficiency without
+  unsafe accepts or model-weight mutation.
+- `inference_substrate`: Declares deterministic context utility learning with
+  no live LLM, API judge, model generation, fine-tuning, adapter update, or
+  foundation-weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the experiment updates
+  policy utility values for continuous self-learning rather than static
+  reporting.
+- `no_weight_mutation`: Bare gate confirming only deterministic utility tables
+  and context-bank policy state changed, never model weights or adapters.
+- `utility_update_count`: Bare integer count of Q-value updates applied from
+  deterministic fixture feedback labels.
+- `q_value_table_path`: Points to the deterministic utility table artifact so
+  downstream gates can inspect learned values instead of trusting a summary.
+- `quality_delta_vs_always_full`: Bare final-quality delta comparing
+  utility-weighted retrieval against always-full verification.
+- `verifier_calls_avoided`: Bare integer count of verifier calls avoided by
+  utility-weighted retrieval relative to always-full verification on identical
+  cases.
+- `no_op_control_delta`: Bare numeric best improvement delta achieved by the
+  shuffled/no-op utility control; readiness requires it to be non-positive.
+- `unsafe_false_accepts`: Bare integer count of unsafe state-change accepts by
+  the utility-weighted policy; any positive count blocks readiness.
+- `rollback_events`: Bare integer count of rollback transitions exercised by
+  the utility-weighted policy.
+- `utility_memory_ready`: Bare gate true only when all policies run, unsafe
+  false accepts are zero, the no-op control has no spurious improvement, tests
+  are recorded, and no model weights mutate.
+- `tests_run`: Records the exact verification commands used to establish that
+  the utility learner, Q-value table, and result artifact are stable.
+
+### REQ-LEARN-5340 Sub-requirements
+
+- REQ-LEARN-5340-1: The fixture SHALL load Exp5328 lifecycle evidence and
+  confirm the Exp5330 certificate gate before reporting a ready artifact.
+- REQ-LEARN-5340-2: The Q-value table SHALL include utility values for retrieve,
+  archive, mask, fold, revise, commit, and rollback operations, and every update
+  SHALL cite a deterministic feedback label and source fixture case.
+- REQ-LEARN-5340-3: The feedback panel SHALL include positive, stale, poisoned,
+  irrelevant, and shuffled/no-op controls without mutating model weights.
+- REQ-LEARN-5340-4: Always-full, transition-only, utility-weighted retrieval,
+  and shuffled-utility/no-op policies SHALL run on identical Exp5328 case IDs.
+- REQ-LEARN-5340-5: `utility_memory_ready` SHALL be true only when all policies
+  run, quality is not lowered versus always-full, verifier calls are avoided,
+  unsafe false accepts are zero, rollback is exercised, no-op control delta is
+  non-positive, tests are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5340-UTILITY: Deterministic Feedback Updates Operation Utility
+
+**Given** Exp5328 lifecycle rows for retrieve, archive, mask, fold, revise,
+commit, and rollback actions
+**When** Experiment 5340 applies deterministic positive, stale, poisoned,
+irrelevant, and shuffled/no-op feedback labels
+**Then** the Q-value table records one update per feedback row
+**And** every operation has a learned utility value
+**And** the Q-value table path is present in the result artifact.
+
+### SCENARIO-LEARN-5340-POLICY: Utility-Weighted Retrieval Preserves Quality
+
+**Given** the learned utility table and identical Exp5328 lifecycle cases
+**When** always-full, transition-only, utility-weighted retrieval, and
+shuffled-utility/no-op controls are evaluated
+**Then** utility-weighted retrieval matches always-full final quality
+**And** avoids verifier calls relative to always-full
+**And** unsafe false accepts remain zero
+**And** rollback events are recorded.
+
+### SCENARIO-LEARN-5340-NOOP: Shuffled Utility Control Does Not Improve
+
+**Given** the shuffled/no-op utility control over the same lifecycle cases
+**When** its final quality is compared with transition-only verification
+**Then** its improvement delta is non-positive
+**And** `utility_memory_ready` is blocked if that control shows positive
+improvement.
+
+## Implementation Status (Exp 5340)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5340 | Implemented (`python/carnot/experiment_5340_utility_weighted_context_memory_v487.py`, `results/experiment_5340_utility_weighted_context_memory_v487.json`) | Implemented (`tests/python/test_experiment_5340_utility_weighted_context_memory_v487.py`) |
