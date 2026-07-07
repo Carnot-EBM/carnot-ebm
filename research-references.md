@@ -27784,3 +27784,18 @@ and token-probability energy with flagged or blocked evidence.
   TSU/Kona execution claim, no host block-device evidence for KV260.
 
 <!-- V488-PLANNER-REFRESH-2026-07-07-END -->
+
+
+### V488 Execution Refresh - 2026-07-07
+
+Execution-time sweep after the `.488` planner refresh checked arXiv, OpenReview, HuggingFace Papers, Semantic Scholar EBT/ARM-EBM and fresh paper lookups, GitHub repositories, Extropic writing, Logical Intelligence public pages, and local duplicate history. The finding below was absent from the V488 planner block and nearby reference history.
+
+### New actionable delta
+- **Safety Testing LLM Agents at Scale** (https://arxiv.org/abs/2607.01793; code/reference https://github.com/Yunhao-Feng/Vera): Vera constructs executable agent safety cases with programmatic initial state and deterministic verification predicates, then judges outcomes with evidence-grounded verifiers over environment state and tool-call evidence before falling back to agent response text. Actionability: For Exp5352 and Exp5356, treat tool/action reachability and memory-tool drift as observable-state problems: log initial state, final state, tool-call traces, case-specific verifier predicate, and response-text fallback separately before accepting any structured-output or memory policy result.
+
+### Execution impact
+- **Plan impact:** No executable `.488` task edit is required. The delta sharpens Exp5352 constraint-tax action reachability and Exp5356 memory-tool drift fixtures by requiring deterministic state/tool-call evidence before response text.
+- **Retired scope:** No retired scope was reopened. External generated-text scoring, broad GRPO/fine-tuning reruns, TSU/Kona execution claims, CPU-only GGUF offload reruns, and retired ARC exploration-signal reruns remain closed.
+- **Secondary-source status:** Semantic Scholar was rate-limited and no citation-trend claim is made. LLM-as-a-Verifier was not promoted because its public path depends on external logprob/scoring-token extraction.
+
+<!-- V488-EXECUTION-REFRESH-2026-07-07-END -->
