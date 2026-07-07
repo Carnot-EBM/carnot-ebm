@@ -27788,3 +27788,91 @@ reasons, sets `quality_claim_permitted=false`, keeps
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5337 | Planned (`python/carnot/experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`, `results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json`) | Planned (`tests/python/test_experiment_5337_sota_runtime_corrigendum_multimodel_v487.py`) |
+
+### REQ-VERIFY-5338: Structured Output Protocol Calibration V487
+
+The repository SHALL provide Exp 5338 at
+`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`
+and write
+`results/experiment_5338_structured_output_protocol_calibration_v487.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL calibrate
+a minimal local SOTA structured-output protocol that yields parseable final
+JSON after or instead of model thinking. It SHALL use the clean Exp 5337 local
+GGUF runtime receipt as the runtime precondition and SHALL NOT measure broad
+paraphrase quality, rewrite quality, factual quality, benchmark quality,
+verifier quality, solver quality, memory usefulness, or SOTA accuracy.
+
+Step 0 SHALL confirm Exp 5337 is a clean `live_llm_inference` runtime receipt,
+the selected mandated model and backend command are present, GPU visibility is
+recorded, and the deterministic Exp 5325 rewrite fixture is available before
+any calibration generation. The mandated `MODEL_SPECS` SHALL be exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The calibration SHALL test small protocol variants over two to four tiny
+deterministic prompts. Variants SHALL cover increased token budget, an explicit
+final-only sentinel, post-think JSON extraction, prompt wording that forbids
+analysis in the final object, stop sequences when supported by the selected
+backend command, and parser-side stripping of llama.cpp banners. The scorer
+SHALL record parse success, final-JSON extraction success, required schema-key
+presence, whether thinking text remains outside the final object, and unsafe
+false accepts. The scorer SHALL count an unsafe false accept when malformed,
+schema-incomplete, or pre-sentinel JSON is accepted as a final protocol success.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, `protocol_variants`, and
+`tests_run`, plus bare numeric `parse_success_rate`, bare numeric
+`final_json_extraction_rate`, bare numeric `thinking_text_outside_final_rate`,
+bare integer `unsafe_false_accepts`, bare boolean
+`structured_output_protocol_ready`, and bare boolean `no_quality_claim=true`.
+`inference_substrate.value` SHALL be `live_llm_inference`.
+`structured_output_protocol_ready` SHALL be true only when at least one
+protocol variant produces parseable final JSON on every calibration prompt,
+every parsed object has the required schema keys, thinking text is outside the
+final object rather than inside it, and `unsafe_false_accepts=0`.
+`honest_verdict.value` SHALL start with `complete:` when the protocol gate is
+ready, or `blocked_` when no tested variant satisfies that parse/protocol-only
+gate.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5338 structured-output protocol calibration receipt."
+- `milestone`: principle "Milestone accountability for the V487 structured-output protocol gate."
+- `status`: principle "Machine-readable terminal state for downstream structured-output gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready."
+- `inference_substrate`: principle "Declares live_llm_inference because Exp5338 calibrates the local SOTA GGUF generation protocol rather than replaying cached text."
+- `MODEL_SPECS`: principle "Records the three mandated SOTA GGUF model IDs so calibration cannot silently substitute a legacy or smaller model."
+- `preconditions_checked`: principle "Records Exp5337 runtime readiness, selected model/backend command, GPU visibility, and rewrite fixture availability before protocol calibration."
+- `selected_model_spec`: principle "Binds protocol calibration outputs to the stable mandated model selected by Exp5337."
+- `protocol_variants`: principle "Records each prompt, token-budget, sentinel, stop-sequence, extraction, and parser-stripping variant tested without scoring semantic quality."
+- `tests_run`: principle "Commands run to validate the Exp5338 module, artifact schema, new-code coverage, repository tests, and applicable protocol checks."
+
+### SCENARIO-VERIFY-5338: Final-Sentinel Extraction Opens Parse-Only Protocol Gate
+
+Given Exp 5337 reports a clean local GGUF runtime receipt, the selected
+mandated model/backend command is still available, GPU visibility is recorded,
+and the Exp 5325 rewrite fixture is available, when Exp 5338 runs its tiny
+protocol calibration prompts, then it tests bounded protocol variants,
+strips llama.cpp banners, extracts only final-sentinel JSON after any model
+thinking, validates required schema keys, records parse and final-extraction
+rates, writes the required `live_llm_inference` artifact, sets
+`no_quality_claim=true`, and sets `structured_output_protocol_ready=true` only
+when at least one variant succeeds on all calibration prompts with zero unsafe
+false accepts.
+
+If Exp 5337 is missing or not clean, the selected backend command or selected
+model is missing, GPU visibility is absent, the rewrite fixture is unavailable,
+all variants fail to produce parseable final JSON for every prompt, a parser
+accepts pre-sentinel or schema-incomplete JSON, or thinking text is embedded
+inside the final object, then the same runner writes a terminal `blocked_`
+artifact with exact blockers, keeps `structured_output_protocol_ready=false`,
+keeps `no_quality_claim=true`, and does not modify
+`scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5338)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |

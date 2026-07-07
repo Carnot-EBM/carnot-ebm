@@ -1,0 +1,405 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records the three mandated SOTA GGUF model IDs so calibration cannot silently substitute a legacy or smaller model.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.000122,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 0.0003,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "blocked_preconditions": [],
+        "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF",
+        "cached": true,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "metadata_model_resolution_s": 8e-05,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "calibration_prompt_count": 2,
+  "duration_s": 46.083161,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5338 structured-output protocol calibration receipt.",
+    "value": "experiment_5338_structured_output_protocol_calibration_v487"
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated SOTA GGUF model IDs so calibration cannot silently substitute a legacy or smaller model.",
+    "experiment_id": "Traceability for the Exp5338 structured-output protocol calibration receipt.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready.",
+    "inference_substrate": "Declares live_llm_inference because Exp5338 calibrates the local SOTA GGUF generation protocol rather than replaying cached text.",
+    "milestone": "Milestone accountability for the V487 structured-output protocol gate.",
+    "preconditions_checked": "Records Exp5337 runtime readiness, selected model/backend command, GPU visibility, and rewrite fixture availability before protocol calibration.",
+    "protocol_variants": "Records each prompt, token-budget, sentinel, stop-sequence, extraction, and parser-stripping variant tested without scoring semantic quality.",
+    "selected_model_spec": "Binds protocol calibration outputs to the stable mandated model selected by Exp5337.",
+    "status": "Machine-readable terminal state for downstream structured-output gates.",
+    "tests_run": "Commands run to validate the Exp5338 module, artifact schema, new-code coverage, repository tests, and applicable protocol checks."
+  },
+  "final_json_extraction_rate": 1.0,
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether a parse-only structured-output protocol is ready.",
+    "value": "complete: structured_output_protocol_ready=final_sentinel_post_think_json_v1"
+  },
+  "inference_substrate": {
+    "principle": "Declares live_llm_inference because Exp5338 calibrates the local SOTA GGUF generation protocol rather than replaying cached text.",
+    "value": "live_llm_inference"
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V487 structured-output protocol gate.",
+    "value": "2026.07.487"
+  },
+  "no_quality_claim": true,
+  "parse_success_rate": 1.0,
+  "preconditions_checked": {
+    "principle": "Records Exp5337 runtime readiness, selected model/backend command, GPU visibility, and rewrite fixture availability before protocol calibration.",
+    "value": {
+      "blocked_preconditions": [],
+      "exp5337_runtime_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
+      "exp5337_runtime_receipt_clean": true,
+      "gpu_visible": true,
+      "rewrite_fixture_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5325_theoria_rewrite_state_fixture_v486.json",
+      "rewrite_fixture_path": "data/rewrite_state_fixture_v486.json",
+      "rewrite_fixture_status": "complete",
+      "rewrite_state_fixture_ready": true,
+      "selected_backend_command_present": true,
+      "selected_model_file_present": true,
+      "selected_model_role": "flagship_dense"
+    }
+  },
+  "protocol_variants": {
+    "principle": "Records each prompt, token-budget, sentinel, stop-sequence, extraction, and parser-stripping variant tested without scoring semantic quality.",
+    "value": [
+      {
+        "end_sentinel": "END_FINAL_JSON",
+        "explicit_final_only_sentinel": true,
+        "final_json_extraction_rate": 1.0,
+        "forbids_analysis_in_final": true,
+        "generation_receipts": [
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Return the Aster-9 battery duration from this sentence: The Aster-9 battery ran 47 minutes under the amber-load test.\nRequired final JSON keys: id, answer, facts.\nYou may think first if the runtime emits a thinking transcript, but the final answer must be one compact JSON object only after FINAL_JSON:. Do not put analysis, scratch work, or thinking text inside any JSON value. End after END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "640",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5339",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "output_checksum": "2097f9c5c0db5e3a",
+            "prompt_id": "protocol_fact_probe",
+            "returncode": 0,
+            "run_index": 1,
+            "score": {
+              "accepted_for_protocol": true,
+              "completed": true,
+              "final_json_extraction_success": true,
+              "parse_success": true,
+              "parsed_keys": [
+                "answer",
+                "facts",
+                "id"
+              ],
+              "parsed_object": {
+                "answer": "47 minutes",
+                "facts": [
+                  "The Aster-9 battery ran 47 minutes under the amber-load test."
+                ],
+                "id": 1
+              },
+              "prompt_id": "protocol_fact_probe",
+              "required_keys": [
+                "id",
+                "answer",
+                "facts"
+              ],
+              "schema_keys_present": true,
+              "thinking_text_outside_final": true,
+              "unsafe_false_accept": false,
+              "variant_id": "final_sentinel_post_think_json_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": "\u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Return the Aster-9 battery duration from this sentence: The Aster-9 battery ran 47 minutes under the amber-load test.\nRequired final JSON keys: id, answer, facts.\nYou may think first if the runtime emits a thinking transcript, but the final answer must be one compact JSON object only after FINAL_JSON:. Do not put analysis, scratch work, or thinking text inside any JSON value. End after END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON\n\n[Start thinking]\n*   Input sentence: \"The Aster-9 battery ran 47 minutes under the amber-load test.\"\n    *   Goal: Extract the battery duration for the Aster-9.\n    *   Required JSON keys: `id`, `answer`, `facts`.\n\n    *   Entity: Aster-9 battery.\n    *   Duration: 47 minutes.\n    *   Condition: amber-load test.\n\n    *   `id`: (No ID provided in the prompt, usually a placeholder or 1). Let's use 1.\n    *   `answer`: \"47 minutes\".\n    *   `facts`: [\"The Aster-9 battery ran 47 minutes under the amber-load test.\"]\n\n    *   `id`: 1\n    *   `answer`: \"47 minutes\"\n    *   `facts`: [\"The Aster-9 battery ran 47 minutes under the amber-load test.\"]\n\n    *   Compact JSON object.\n    *   No analysis inside JSON.\n    *   Format: FINAL_JSON: {...} END_FINAL_JSON.\n[End thinking]\n\nFINAL_JSON: {\"id\": 1, \"answer\": \"47 minutes\", \"facts\": [\"The Aster-9 battery ran 47 minutes under the amber-load test.\"]} END_FINAL_JSON\n\n[ Prompt: 618.4 t/s | Generation: 38.5 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "final_sentinel_post_think_json_v1",
+            "wall_clock_s": 23.75679786503315
+          },
+          {
+            "command": [
+              "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-cli",
+              "-m",
+              "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+              "-p",
+              "Protocol calibration only. Return code word orange for fixture B-12. Use id b12 and facts with code_word=orange.\nRequired final JSON keys: id, answer, facts.\nYou may think first if the runtime emits a thinking transcript, but the final answer must be one compact JSON object only after FINAL_JSON:. Do not put analysis, scratch work, or thinking text inside any JSON value. End after END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON",
+              "-n",
+              "640",
+              "-c",
+              "512",
+              "-b",
+              "512",
+              "-ub",
+              "128",
+              "-ngl",
+              "all",
+              "-sm",
+              "layer",
+              "--temp",
+              "0",
+              "--seed",
+              "5340",
+              "--no-display-prompt",
+              "--simple-io",
+              "-st",
+              "--perf"
+            ],
+            "completed": true,
+            "output_checksum": "210a13f0647839f4",
+            "prompt_id": "protocol_copy_probe",
+            "returncode": 0,
+            "run_index": 2,
+            "score": {
+              "accepted_for_protocol": true,
+              "completed": true,
+              "final_json_extraction_success": true,
+              "parse_success": true,
+              "parsed_keys": [
+                "answer",
+                "facts",
+                "id"
+              ],
+              "parsed_object": {
+                "answer": "orange",
+                "facts": [
+                  {
+                    "code_word": "orange"
+                  }
+                ],
+                "id": "b12"
+              },
+              "prompt_id": "protocol_copy_probe",
+              "required_keys": [
+                "id",
+                "answer",
+                "facts"
+              ],
+              "schema_keys_present": true,
+              "thinking_text_outside_final": true,
+              "unsafe_false_accept": false,
+              "variant_id": "final_sentinel_post_think_json_v1"
+            },
+            "stderr_tail": "",
+            "stdout_tail": " \u2588\u2588\n\u2588\u2588 \u2588\u2588  \u2580\u2580\u2588\u2584 \u2588\u2588\u2588\u2584\u2588\u2588\u2588\u2584  \u2580\u2580\u2588\u2584    \u2584\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2584 \u2588\u2588\u2588\u2588\u2584\n\u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2584\u2588\u2580\u2588\u2588    \u2588\u2588    \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588\n\u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2588\u2588 \u2588\u2588 \u2580\u2588\u2584\u2588\u2588 \u2588\u2588 \u2580\u2588\u2588\u2588\u2588 \u2588\u2588\u2588\u2588\u2580 \u2588\u2588\u2588\u2588\u2580\n                                    \u2588\u2588    \u2588\u2588\n                                    \u2580\u2580    \u2580\u2580\n\nbuild      : b9606-9b4dae81f\nmodel      : gemma-4-31B-it-Q4_K_M.gguf\nmodalities : text\n\navailable commands:\n  /exit or Ctrl+C     stop or exit\n  /regen              regenerate the last response\n  /clear              clear the chat history\n  /read <file>        add a text file\n  /glob <pattern>     add text files using globbing pattern\n\n\n> Protocol calibration only. Return code word orange for fixture B-12. Use id b12 and facts with code_word=orange.\nRequired final JSON keys: id, answer, facts.\nYou may think first if the runtime emits a thinking transcript, but the final answer must be one compact JSON object only after FINAL_JSON:. Do not put analysis, scratch work, or thinking text inside any JSON value. End after END_FINAL_JSON.\nFinal format exactly: FINAL_JSON: {...} END_FINAL_JSON\n\n[Start thinking]\n*   Task: Protocol calibration.\n    *   Target: Fixture B-12.\n    *   Required code word: orange.\n    *   Required ID: b12.\n    *   Required facts: `code_word=orange`.\n    *   Required JSON keys: `id`, `answer`, `facts`.\n    *   Constraint: Final answer must be one compact JSON object after `FINAL_JSON:`.\n    *   Constraint: No analysis or thinking text inside JSON values.\n    *   Constraint: End after `END_FINAL_JSON`.\n\n    *   `id`: \"b12\"\n    *   `answer`: \"orange\"\n    *   `facts`: [{\"code_word\": \"orange\"}] (or similar structure based on \"facts with code_word=orange\")\n\n    *   `id`: \"b12\"\n    *   `answer`: \"orange\"\n    *   `facts`: [{\"code_word\": \"orange\"}]\n\n    *   `FINAL_JSON: {\"id\": \"b12\", \"answer\": \"orange\", \"facts\": [{\"code_word\": \"orange\"}]} END_FINAL_JSON`\n[End thinking]\n\nFINAL_JSON: {\"id\": \"b12\", \"answer\": \"orange\", \"facts\": [{\"code_word\": \"orange\"}]} END_FINAL_JSON\n\n[ Prompt: 625.3 t/s | Generation: 38.7 t/s ]\n\nExiting...\n",
+            "timed_out": false,
+            "timeout_s": 240.0,
+            "variant_id": "final_sentinel_post_think_json_v1",
+            "wall_clock_s": 22.32295023603365
+          }
+        ],
+        "increased_token_budget": true,
+        "n_predict": 640,
+        "parse_success_rate": 1.0,
+        "parser_side_strips_llama_cpp_banners": true,
+        "post_think_json_extraction": true,
+        "prompt_count": 2,
+        "prompt_results": [
+          {
+            "accepted_for_protocol": true,
+            "completed": true,
+            "final_json_extraction_success": true,
+            "parse_success": true,
+            "parsed_keys": [
+              "answer",
+              "facts",
+              "id"
+            ],
+            "parsed_object": {
+              "answer": "47 minutes",
+              "facts": [
+                "The Aster-9 battery ran 47 minutes under the amber-load test."
+              ],
+              "id": 1
+            },
+            "prompt_id": "protocol_fact_probe",
+            "required_keys": [
+              "id",
+              "answer",
+              "facts"
+            ],
+            "schema_keys_present": true,
+            "thinking_text_outside_final": true,
+            "unsafe_false_accept": false,
+            "variant_id": "final_sentinel_post_think_json_v1"
+          },
+          {
+            "accepted_for_protocol": true,
+            "completed": true,
+            "final_json_extraction_success": true,
+            "parse_success": true,
+            "parsed_keys": [
+              "answer",
+              "facts",
+              "id"
+            ],
+            "parsed_object": {
+              "answer": "orange",
+              "facts": [
+                {
+                  "code_word": "orange"
+                }
+              ],
+              "id": "b12"
+            },
+            "prompt_id": "protocol_copy_probe",
+            "required_keys": [
+              "id",
+              "answer",
+              "facts"
+            ],
+            "schema_keys_present": true,
+            "thinking_text_outside_final": true,
+            "unsafe_false_accept": false,
+            "variant_id": "final_sentinel_post_think_json_v1"
+          }
+        ],
+        "ready": true,
+        "schema_key_presence_rate": 1.0,
+        "sentinel": "FINAL_JSON:",
+        "stop_sequences_requested": [
+          "END_FINAL_JSON"
+        ],
+        "stop_sequences_supported": false,
+        "thinking_text_outside_final_rate": 1.0,
+        "unsafe_false_accepts": 0,
+        "variant_id": "final_sentinel_post_think_json_v1"
+      }
+    ]
+  },
+  "random_seed": 5338,
+  "reproducibility_checksum": "e44c12b4531df0f0",
+  "schema": "carnot.experiment_5338.structured_output_protocol_calibration.v487",
+  "selected_model_spec": {
+    "principle": "Binds protocol calibration outputs to the stable mandated model selected by Exp5337.",
+    "value": {
+      "autotokenizer_used": false,
+      "blocked_preconditions": [],
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF",
+      "cached": true,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "metadata_model_resolution_s": 0.000122,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    }
+  },
+  "selected_variant_id": "final_sentinel_post_think_json_v1",
+  "spec_refs": [
+    "REQ-VERIFY-5338",
+    "SCENARIO-VERIFY-5338"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream structured-output gates.",
+    "value": "complete"
+  },
+  "structured_output_protocol_ready": true,
+  "tests_run": {
+    "principle": "Commands run to validate the Exp5338 module, artifact schema, new-code coverage, repository tests, and applicable protocol checks.",
+    "value": []
+  },
+  "thinking_text_outside_final_rate": 1.0,
+  "unsafe_false_accepts": 0
+}
