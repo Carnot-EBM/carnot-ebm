@@ -27190,6 +27190,83 @@ fallback for the final result, preserve the baseline solver label, and keep
 |---|---|---|
 | REQ-VERIFY-5318 | Planned (`python/carnot/experiment_5318_smt_hint_validation_protocol_v485.py`, `results/experiment_5318_smt_hint_validation_protocol_v485.json`) | Planned (`tests/python/test_experiment_5318_smt_hint_validation_protocol_v485.py`) |
 
+### REQ-VERIFY-5327: SMT Hint Corrigendum Re-Emit V486
+
+The repository SHALL provide Exp 5327 at
+`python/carnot/experiment_5327_smt_hint_corrigendum_reemit_v486.py`
+and write
+`results/experiment_5327_smt_hint_corrigendum_reemit_v486.json`
+without invoking an LLM and without modifying `scripts/research_conductor.py`.
+The runner SHALL re-use the deterministic SMT hint fixture from Exp 5318 to
+prove the same protocol facts: solver-entailed hints are accepted, unsound
+hints are rejected before they can affect a solve, useful-but-not-required
+hints are separated from solver fallback, and rejected hints fall back to the
+classical SMT result.
+
+The artifact SHALL repair the Exp 5318 methodology surface rather than broaden
+the claim. It SHALL describe the substrate as deterministic solver/protocol
+validation, SHALL NOT include compute-bound runtime marker strings, SHALL record
+the actual measured methodology duration without sleep padding, and SHALL mark
+the artifact blocked rather than complete if the measured duration is below the
+near-zero deterministic audit floor.
+
+The artifact SHALL include these top-level fields: `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`exp5318_flag_reason`, `valid_hint_acceptance_rate`,
+`unsound_hint_rejection_rate`, `usefulness_rate`,
+`solver_fallback_complete`, `methodology_duration_s`,
+`compute_bound_marker_present`, `smt_hint_protocol_clean`, and `tests_run`.
+The fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, `exp5318_flag_reason`, and `tests_run` SHALL be
+principle-wrapped objects with `value` and `principle`. `honest_verdict.value`
+SHALL start with `complete:` or `blocked_`. `inference_substrate.value` SHALL
+be `deterministic_smt_solver_protocol`. `valid_hint_acceptance_rate`,
+`unsound_hint_rejection_rate`, `usefulness_rate`, and
+`methodology_duration_s` SHALL be bare numeric values.
+`solver_fallback_complete`, `compute_bound_marker_present`, and
+`smt_hint_protocol_clean` SHALL be bare booleans, with
+`compute_bound_marker_present=false`.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5327 SMT hint validation corrigendum re-emit."
+- `milestone`: principle "Milestone accountability for the V486 SMT hint methodology repair."
+- `status`: principle "Machine-readable terminal state; complete means the deterministic solver protocol is clean, blocked means timing or marker hygiene failed."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether the Exp5318 methodology flag was repaired without broadening the claim."
+- `inference_substrate`: principle "Declares deterministic_smt_solver_protocol so the artifact is read as solver/protocol validation rather than runtime execution."
+- `exp5318_flag_reason`: principle "Explains why Exp5318 was quarantined so downstream work does not inherit the substrate/timing confusion."
+- `valid_hint_acceptance_rate`: principle "Bare numeric fraction of solver-validated sound hints accepted by the deterministic protocol."
+- `unsound_hint_rejection_rate`: principle "Bare numeric fraction of solver-refuted unsound hints rejected before they can influence final solving."
+- `usefulness_rate`: principle "Bare numeric fraction of accepted valid hints that reduce proof burden, keeping useful hints distinct from merely safe hints."
+- `solver_fallback_complete`: principle "Bare boolean proving rejected hints fall back to the classical SMT solver and preserve the baseline result."
+- `methodology_duration_s`: principle "Bare numeric wall-clock duration for the deterministic protocol run; fast is acceptable only when honestly measured."
+- `compute_bound_marker_present`: principle "Bare boolean showing whether runtime-marker text remains in the artifact and could trigger another false compute-bound reading."
+- `smt_hint_protocol_clean`: principle "Bare boolean true only when the solver metrics, fallback behavior, substrate declaration, marker scan, and timing floor all pass."
+- `tests_run`: principle "Commands run to validate the corrigendum fixture, artifact schema, new-code coverage, and repository tests."
+
+### SCENARIO-VERIFY-5327: Clean SMT Hint Corrigendum Re-Emits Exp5318 Evidence
+
+Given the Exp 5318 deterministic SMT hint fixture and its quarantined
+adversarial note, when Exp 5327 rebuilds the protocol artifact, then it accepts
+all solver-entailed valid hints, rejects all unsound hints, separates useful
+hints from useless or redundant accepted hints, completes solver fallback for
+rejected hints, writes `inference_substrate.value=deterministic_smt_solver_protocol`,
+sets `compute_bound_marker_present=false`, records the actual
+`methodology_duration_s`, and writes
+`results/experiment_5327_smt_hint_corrigendum_reemit_v486.json`.
+
+If the deterministic run reports a duration below the near-zero audit floor or
+the final artifact still contains compute-bound runtime marker strings, then
+the runner SHALL set `honest_verdict.value` to a `blocked_` prefix, set
+`status.value=blocked`, and keep `smt_hint_protocol_clean=false` instead of
+pretending the methodology repair completed.
+
+## Implementation Status (REQ-VERIFY-5327)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5327 | Planned (`python/carnot/experiment_5327_smt_hint_corrigendum_reemit_v486.py`, `results/experiment_5327_smt_hint_corrigendum_reemit_v486.json`) | Planned (`tests/python/test_experiment_5327_smt_hint_corrigendum_reemit_v486.py`) |
+
 ### REQ-VERIFY-5272: Gated Internal Hallucination Probe V482
 
 The repository SHALL provide Exp 5272 at
