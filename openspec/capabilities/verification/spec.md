@@ -27877,6 +27877,99 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5351: Trigger-Constrain Structured Protocol V488
+
+The repository SHALL provide Exp 5351 at
+`python/carnot/experiment_5351_trigger_constrain_structured_protocol_v488.py`
+and write
+`results/experiment_5351_trigger_constrain_structured_protocol_v488.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL re-run
+structured local SOTA protocol calibration with a trigger-then-constrain
+method: allow the local GGUF model to think freely, then force a final
+schema-validated JSON object after a final sentinel. It SHALL calibrate the
+protocol only and SHALL NOT measure broad answer quality, rewrite quality,
+factual quality, verifier quality, solver quality, memory usefulness, or SOTA
+model accuracy.
+
+Step 0 SHALL record GPU visibility, raw and parsed `nvidia-smi`, free VRAM,
+the native llama.cpp command path and version, CUDA/backend evidence when
+available, local model file presence for all mandated SOTA GGUF models, and
+the Exp 5337 clean runtime receipt before live inference. The mandated
+`MODEL_SPECS` SHALL be exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The runner SHALL use at least one mandated
+model, prefer the model with the clean Exp 5337 runtime receipt when
+available, and SHALL NOT use `AutoTokenizer.from_pretrained` or any
+transformers tokenizer on a GGUF repository.
+
+The calibration SHALL run four to six deterministic prompts against the
+selected model/backend command. Protocol variants SHALL cover a free reasoning
+trigger token or phrase, a final JSON sentinel, final-only extraction, stop
+sequence request when supported by the selected backend, parser-side stripping
+of llama.cpp banners, and strict schema validation. The scorer SHALL record
+parse success, schema success, final-only extraction success, unsafe false
+accepts, token counts, command lines, and live `methodology_duration_s`.
+Unsafe false accepts SHALL count any malformed JSON, schema-incomplete JSON,
+pre-sentinel draft JSON, or thinking-text-leaking JSON that the parser would
+accept as a successful final protocol output.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, `MODEL_SPECS`,
+`preconditions_checked`, `selected_model_spec`, `protocol_variants`, and
+`tests_run`, plus bare integer `prompt_count`, bare numeric
+`parse_success_rate`, bare numeric `schema_success_rate`, bare numeric
+`final_json_extraction_rate`, bare integer `unsafe_false_accepts`, bare numeric
+`methodology_duration_s`, bare boolean `structured_protocol_clean`, bare
+boolean `no_quality_claim=true`, and bare boolean
+`no_autotokenizer_used=true`. `inference_substrate.value` SHALL be
+`live_llm_inference`. `structured_protocol_clean` SHALL be true only when every
+calibration prompt produces parseable, schema-valid final JSON, final-only
+extraction succeeds for every prompt, unsafe false accepts are zero, no
+AutoTokenizer is used, and the live-run methodology is clean. `honest_verdict`
+SHALL start with `complete:` when the protocol gate is clean, or `blocked_`
+when no tested variant satisfies that parse/protocol-only gate.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Prevents `.487` flagged protocol evidence from being reused as `.488` evidence."
+- `status`: principle "Lets gates distinguish completed calibration from blocked runtime."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous downstream quality gates."
+- `inference_substrate`: principle "Expected value is live_llm_inference when a GGUF model generated outputs."
+- `MODEL_SPECS`: principle "Confirms every LLM task includes the mandated local SOTA GGUF model ids."
+- `preconditions_checked`: principle "Records GPU/backend/model checks before inference."
+- `selected_model_spec`: principle "Identifies which mandated model actually supplied the receipt."
+- `protocol_variants`: principle "Shows which trigger/constrain mechanisms were tested."
+- `tests_run`: principle "Lists local checks that validated parser/schema behavior."
+
+### SCENARIO-VERIFY-5351: Trigger Then Constrain Produces Final Schema JSON
+
+Given Exp 5337 reports a clean local GGUF runtime receipt, the selected
+mandated model/backend command is still available, GPU/backend/model
+preconditions are recorded, and no AutoTokenizer path is used, when Exp 5351
+runs four to six deterministic trigger-then-constrain prompts, then it lets the
+model think before a final sentinel, extracts only the final JSON object,
+validates that object against strict prompt schemas, records command lines,
+token counts, parse/schema/extraction rates, unsafe false accepts, and live
+methodology duration, writes the required `live_llm_inference` artifact, sets
+`no_quality_claim=true`, and sets `structured_protocol_clean=true` only when
+all calibration prompts pass with zero unsafe false accepts.
+
+If Exp 5337 is missing or not clean, the selected backend command or selected
+model is missing, GPU/backend/model preconditions are absent, fewer than four
+or more than six prompts are requested, any prompt fails parse/schema/final-only
+extraction, the parser accepts a draft or schema-incomplete object, live
+methodology duration is not clean, or AutoTokenizer is used, then the runner
+writes a terminal `blocked_` artifact with exact blockers, keeps
+`structured_protocol_clean=false`, keeps `no_quality_claim=true`, and does not
+modify `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-VERIFY-5351)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5351 | Planned (`python/carnot/experiment_5351_trigger_constrain_structured_protocol_v488.py`, `results/experiment_5351_trigger_constrain_structured_protocol_v488.json`) | Planned (`tests/python/test_experiment_5351_trigger_constrain_structured_protocol_v488.py`) |
+
 ### REQ-VERIFY-5339: Gated SOTA Claim Rewrite Panel V487
 
 The repository SHALL provide Exp 5339 at
