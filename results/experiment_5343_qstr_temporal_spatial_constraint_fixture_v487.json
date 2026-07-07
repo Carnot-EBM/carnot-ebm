@@ -1,0 +1,572 @@
+{
+  "calculus_count": 2,
+  "composition_case_count": 6,
+  "composition_results": [
+    {
+      "accepted": true,
+      "actual_relation_ac": "before",
+      "actual_relations_ab": [
+        "before"
+      ],
+      "actual_relations_ac": [
+        "before"
+      ],
+      "actual_relations_bc": [
+        "meets"
+      ],
+      "calculus": "temporal",
+      "case_id": "tc-before-meets",
+      "composition_source": "finite_exact_interval_enumeration",
+      "expected_relations_ac": [
+        "before"
+      ],
+      "possible_composed_relations": [
+        "before"
+      ],
+      "relation_ab": "before",
+      "relation_bc": "meets",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_relation_ac": "before",
+      "actual_relations_ab": [
+        "meets"
+      ],
+      "actual_relations_ac": [
+        "before"
+      ],
+      "actual_relations_bc": [
+        "overlaps"
+      ],
+      "calculus": "temporal",
+      "case_id": "tc-meets-overlaps",
+      "composition_source": "finite_exact_interval_enumeration",
+      "expected_relations_ac": [
+        "before"
+      ],
+      "possible_composed_relations": [
+        "before"
+      ],
+      "relation_ab": "meets",
+      "relation_bc": "overlaps",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_relation_ac": "overlaps",
+      "actual_relations_ab": [
+        "overlaps"
+      ],
+      "actual_relations_ac": [
+        "overlaps"
+      ],
+      "actual_relations_bc": [
+        "during"
+      ],
+      "calculus": "temporal",
+      "case_id": "tc-overlaps-during",
+      "composition_source": "finite_exact_interval_enumeration",
+      "expected_relations_ac": [
+        "overlaps"
+      ],
+      "possible_composed_relations": [
+        "overlaps",
+        "starts",
+        "during"
+      ],
+      "relation_ab": "overlaps",
+      "relation_bc": "during",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_relation_ac": "before",
+      "actual_relations_ab": [
+        "during"
+      ],
+      "actual_relations_ac": [
+        "before"
+      ],
+      "actual_relations_bc": [
+        "before"
+      ],
+      "calculus": "temporal",
+      "case_id": "tc-during-before",
+      "composition_source": "finite_exact_interval_enumeration",
+      "expected_relations_ac": [
+        "before"
+      ],
+      "possible_composed_relations": [
+        "before"
+      ],
+      "relation_ab": "during",
+      "relation_bc": "before",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_relation_ac": "contains",
+      "actual_relations_ab": [
+        "contains"
+      ],
+      "actual_relations_ac": [
+        "contains"
+      ],
+      "actual_relations_bc": [
+        "contains"
+      ],
+      "calculus": "spatial",
+      "case_id": "sc-contains-contains",
+      "composition_source": "exact_rectangle_subset_rules",
+      "expected_relations_ac": [
+        "contains"
+      ],
+      "possible_composed_relations": [
+        "contains"
+      ],
+      "relation_ab": "contains",
+      "relation_bc": "contains",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_relation_ac": "east_of",
+      "actual_relations_ab": [
+        "disconnected",
+        "east_of"
+      ],
+      "actual_relations_ac": [
+        "disconnected",
+        "east_of"
+      ],
+      "actual_relations_bc": [
+        "disconnected",
+        "east_of"
+      ],
+      "calculus": "spatial",
+      "case_id": "sc-east-east",
+      "composition_source": "exact_rectangle_subset_rules",
+      "expected_relations_ac": [
+        "east_of"
+      ],
+      "possible_composed_relations": [
+        "east_of"
+      ],
+      "relation_ab": "east_of",
+      "relation_bc": "east_of",
+      "violation_ids": []
+    }
+  ],
+  "contradiction_case_count": 2,
+  "experiment": 5343,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5343 deterministic QSTR temporal/spatial constraint fixture.",
+    "value": "experiment_5343_qstr_temporal_spatial_constraint_fixture_v487"
+  },
+  "failure_localization_rate": 1.0,
+  "false_accept_count": 0,
+  "field_principles": {
+    "experiment_id": "Traceability for the Exp5343 deterministic QSTR temporal/spatial constraint fixture.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether the deterministic QSTR fixture can gate downstream model reasoning.",
+    "inference_substrate": "Declares deterministic_qstr_constraint_fixture so the artifact is read as exact typed temporal/spatial constraint checking, not live model quality.",
+    "milestone": "Milestone accountability for the V487 qualitative temporal/spatial fixture gate.",
+    "status": "Machine-readable terminal state for downstream QSTR constraint gates.",
+    "tests_run": "Commands run to validate the QSTR module, artifact schema, new-code coverage, and repository tests."
+  },
+  "fixture_checksum": "{\"composition_results\":[{\"accepted\":true,\"actual_relation_ac\":\"before\",\"actual_relations_ab\":[\"before\"],\"actual_relations_ac\":[\"before\"],\"actual_relations_bc\":[\"meets\"],\"calculus\":\"temporal\",\"case_id\":\"tc-before-meets\",\"composition_source\":\"finite_exact_interval_enumeration\",\"expected_relations_ac\":[\"before\"],\"possible_composed_relations\":[\"before\"],\"relation_ab\":\"before\",\"relation_bc\":\"meets\",\"violation_ids\":[]},{\"accepted\":true,\"actual_relation_ac\":\"before\",\"actual_relations_ab\":[\"meets\"],\"actual_relations_ac\":[\"before\"],\"actual_relations_bc\":[\"overlaps\"],\"calculus\":\"temporal\",\"case_id\":\"tc-meets-overlaps\",\"composition_source\":\"finite_exact_interval_enumeration\",\"expected_relations_ac\":[\"before\"],\"possible_composed_relations\":[\"before\"],\"relation_ab\":\"meets\",\"relation_bc\":\"overlaps\",\"violation_ids\":[]},{\"accepted\":true,\"actual_relation_ac\":\"overlaps\",\"actual_relations_ab\":[\"overlaps\"],\"actual_relations_ac\":[\"overlaps\"],\"actual_relations_bc\":[\"during\"],\"calculus\":\"temporal\",\"case_id\":\"tc-overlaps-during\",\"composition_source\":\"finite_exact_interval_enumeration\",\"expected_relations_ac\":[\"overlaps\"],\"possible_composed_relations\":[\"overlaps\",\"starts\",\"during\"],\"relation_ab\":\"overlaps\",\"relation_bc\":\"during\",\"violation_ids\":[]},{\"accepted\":true,\"actual_relation_ac\":\"before\",\"actual_relations_ab\":[\"during\"],\"actual_relations_ac\":[\"before\"],\"actual_relations_bc\":[\"before\"],\"calculus\":\"temporal\",\"case_id\":\"tc-during-before\",\"composition_source\":\"finite_exact_interval_enumeration\",\"expected_relations_ac\":[\"before\"],\"possible_composed_relations\":[\"before\"],\"relation_ab\":\"during\",\"relation_bc\":\"before\",\"violation_ids\":[]},{\"accepted\":true,\"actual_relation_ac\":\"contains\",\"actual_relations_ab\":[\"contains\"],\"actual_relations_ac\":[\"contains\"],\"actual_relations_bc\":[\"contains\"],\"calculus\":\"spatial\",\"case_id\":\"sc-contains-contains\",\"composition_source\":\"exact_rectangle_subset_rules\",\"expected_relations_ac\":[\"contains\"],\"possible_composed_relations\":[\"contains\"],\"relation_ab\":\"contains\",\"relation_bc\":\"contains\",\"violation_ids\":[]},{\"accepted\":true,\"actual_relation_ac\":\"east_of\",\"actual_relations_ab\":[\"disconnected\",\"east_of\"],\"actual_relations_ac\":[\"disconnected\",\"east_of\"],\"actual_relations_bc\":[\"disconnected\",\"east_of\"],\"calculus\":\"spatial\",\"case_id\":\"sc-east-east\",\"composition_source\":\"exact_rectangle_subset_rules\",\"expected_relations_ac\":[\"east_of\"],\"possible_composed_relations\":[\"east_of\"],\"relation_ab\":\"east_of\",\"relation_bc\":\"east_of\",\"violation_ids\":[]}],\"relation_results\":[{\"accepted\":true,\"actual_converse_relations\":[\"after\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"before\",\"actual_relations\":[\"before\"],\"allowed_relations\":[\"before\"],\"ambiguous\":false,\"calculus\":\"temporal\",\"case_id\":\"t-before\",\"case_type\":\"before\",\"claimed_relation\":\"before\",\"converse_relation\":\"after\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"tb-b\",\"subject\":\"tb-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"overlapped_by\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"overlaps\",\"actual_relations\":[\"overlaps\"],\"allowed_relations\":[\"overlaps\"],\"ambiguous\":false,\"calculus\":\"temporal\",\"case_id\":\"t-overlaps\",\"case_type\":\"overlaps\",\"claimed_relation\":\"overlaps\",\"converse_relation\":\"overlapped_by\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"to-b\",\"subject\":\"to-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"contains\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"during\",\"actual_relations\":[\"during\"],\"allowed_relations\":[\"during\"],\"ambiguous\":false,\"calculus\":\"temporal\",\"case_id\":\"t-during\",\"case_type\":\"during\",\"claimed_relation\":\"during\",\"converse_relation\":\"contains\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"td-b\",\"subject\":\"td-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"met_by\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"meets\",\"actual_relations\":[\"meets\"],\"allowed_relations\":[\"meets\"],\"ambiguous\":false,\"calculus\":\"temporal\",\"case_id\":\"t-meets\",\"case_type\":\"meets\",\"claimed_relation\":\"meets\",\"converse_relation\":\"met_by\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"tm-b\",\"subject\":\"tm-a\",\"violation_ids\":[]},{\"accepted\":false,\"actual_converse_relations\":[\"met_by\"],\"actual_label\":\"unsatisfiable\",\"actual_relation\":\"meets\",\"actual_relations\":[\"meets\"],\"allowed_relations\":[\"before\"],\"ambiguous\":false,\"calculus\":\"temporal\",\"case_id\":\"t-contradiction-before-vs-meets\",\"case_type\":\"contradiction\",\"claimed_relation\":\"before\",\"converse_relation\":\"met_by\",\"converse_valid\":true,\"expected_failure_ids\":[\"t-contradiction-before-vs-meets:claim-before\"],\"expected_label\":\"unsatisfiable\",\"expected_satisfiable\":false,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"tm-b\",\"subject\":\"tm-a\",\"violation_ids\":[\"t-contradiction-before-vs-meets:claim-before\"]},{\"accepted\":true,\"actual_converse_relations\":[\"met_by\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"meets\",\"actual_relations\":[\"meets\"],\"allowed_relations\":[\"before\",\"meets\"],\"ambiguous\":true,\"calculus\":\"temporal\",\"case_id\":\"t-ambiguous-before-or-meets\",\"case_type\":\"ambiguous\",\"claimed_relation\":\"one_of:before,meets\",\"converse_relation\":\"met_by\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"ta-b\",\"subject\":\"ta-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"disconnected\",\"east_of\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"disconnected\",\"actual_relations\":[\"disconnected\",\"west_of\"],\"allowed_relations\":[\"disconnected\"],\"ambiguous\":false,\"calculus\":\"spatial\",\"case_id\":\"s-disconnected\",\"case_type\":\"disconnected\",\"claimed_relation\":\"disconnected\",\"converse_relation\":\"disconnected\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"sd-b\",\"subject\":\"sd-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"overlap\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"overlap\",\"actual_relations\":[\"overlap\"],\"allowed_relations\":[\"overlap\"],\"ambiguous\":false,\"calculus\":\"spatial\",\"case_id\":\"s-overlap\",\"case_type\":\"overlap\",\"claimed_relation\":\"overlap\",\"converse_relation\":\"overlap\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"so-b\",\"subject\":\"so-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"inside\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"contains\",\"actual_relations\":[\"contains\"],\"allowed_relations\":[\"contains\"],\"ambiguous\":false,\"calculus\":\"spatial\",\"case_id\":\"s-containment\",\"case_type\":\"containment\",\"claimed_relation\":\"contains\",\"converse_relation\":\"inside\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"sc-b\",\"subject\":\"sc-a\",\"violation_ids\":[]},{\"accepted\":true,\"actual_converse_relations\":[\"disconnected\",\"west_of\"],\"actual_label\":\"satisfiable\",\"actual_relation\":\"east_of\",\"actual_relations\":[\"disconnected\",\"east_of\"],\"allowed_relations\":[\"east_of\"],\"ambiguous\":false,\"calculus\":\"spatial\",\"case_id\":\"s-east-of\",\"case_type\":\"cardinal_direction\",\"claimed_relation\":\"east_of\",\"converse_relation\":\"west_of\",\"converse_valid\":true,\"expected_failure_ids\":[],\"expected_label\":\"satisfiable\",\"expected_satisfiable\":true,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"se-b\",\"subject\":\"se-a\",\"violation_ids\":[]},{\"accepted\":false,\"actual_converse_relations\":[\"disconnected\",\"east_of\"],\"actual_label\":\"unsatisfiable\",\"actual_relation\":\"disconnected\",\"actual_relations\":[\"disconnected\",\"west_of\"],\"allowed_relations\":[\"contains\"],\"ambiguous\":false,\"calculus\":\"spatial\",\"case_id\":\"s-contradiction-contains-vs-disconnected\",\"case_type\":\"contradiction\",\"claimed_relation\":\"contains\",\"converse_relation\":\"disconnected\",\"converse_valid\":true,\"expected_failure_ids\":[\"s-contradiction-contains-vs-disconnected:claim-contains\"],\"expected_label\":\"unsatisfiable\",\"expected_satisfiable\":false,\"label_matches_expected\":true,\"localized_failure\":true,\"object\":\"sf-b\",\"subject\":\"sf-a\",\"violation_ids\":[\"s-contradiction-contains-vs-disconnected:claim-contains\"]}]}",
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether the deterministic QSTR fixture can gate downstream model reasoning.",
+    "value": "complete: deterministic QSTR fixture ready for downstream model reasoning"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic_qstr_constraint_fixture so the artifact is read as exact typed temporal/spatial constraint checking, not live model quality.",
+    "value": "deterministic_qstr_constraint_fixture"
+  },
+  "milestone": {
+    "principle": "Milestone accountability for the V487 qualitative temporal/spatial fixture gate.",
+    "value": "2026.07.487"
+  },
+  "qstr_fixture_ready": true,
+  "readiness_blockers": [],
+  "relation_case_count": 11,
+  "relation_results": [
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "after"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "before",
+      "actual_relations": [
+        "before"
+      ],
+      "allowed_relations": [
+        "before"
+      ],
+      "ambiguous": false,
+      "calculus": "temporal",
+      "case_id": "t-before",
+      "case_type": "before",
+      "claimed_relation": "before",
+      "converse_relation": "after",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "tb-b",
+      "subject": "tb-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "overlapped_by"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "overlaps",
+      "actual_relations": [
+        "overlaps"
+      ],
+      "allowed_relations": [
+        "overlaps"
+      ],
+      "ambiguous": false,
+      "calculus": "temporal",
+      "case_id": "t-overlaps",
+      "case_type": "overlaps",
+      "claimed_relation": "overlaps",
+      "converse_relation": "overlapped_by",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "to-b",
+      "subject": "to-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "contains"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "during",
+      "actual_relations": [
+        "during"
+      ],
+      "allowed_relations": [
+        "during"
+      ],
+      "ambiguous": false,
+      "calculus": "temporal",
+      "case_id": "t-during",
+      "case_type": "during",
+      "claimed_relation": "during",
+      "converse_relation": "contains",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "td-b",
+      "subject": "td-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "met_by"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "meets",
+      "actual_relations": [
+        "meets"
+      ],
+      "allowed_relations": [
+        "meets"
+      ],
+      "ambiguous": false,
+      "calculus": "temporal",
+      "case_id": "t-meets",
+      "case_type": "meets",
+      "claimed_relation": "meets",
+      "converse_relation": "met_by",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "tm-b",
+      "subject": "tm-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": false,
+      "actual_converse_relations": [
+        "met_by"
+      ],
+      "actual_label": "unsatisfiable",
+      "actual_relation": "meets",
+      "actual_relations": [
+        "meets"
+      ],
+      "allowed_relations": [
+        "before"
+      ],
+      "ambiguous": false,
+      "calculus": "temporal",
+      "case_id": "t-contradiction-before-vs-meets",
+      "case_type": "contradiction",
+      "claimed_relation": "before",
+      "converse_relation": "met_by",
+      "converse_valid": true,
+      "expected_failure_ids": [
+        "t-contradiction-before-vs-meets:claim-before"
+      ],
+      "expected_label": "unsatisfiable",
+      "expected_satisfiable": false,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "tm-b",
+      "subject": "tm-a",
+      "violation_ids": [
+        "t-contradiction-before-vs-meets:claim-before"
+      ]
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "met_by"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "meets",
+      "actual_relations": [
+        "meets"
+      ],
+      "allowed_relations": [
+        "before",
+        "meets"
+      ],
+      "ambiguous": true,
+      "calculus": "temporal",
+      "case_id": "t-ambiguous-before-or-meets",
+      "case_type": "ambiguous",
+      "claimed_relation": "one_of:before,meets",
+      "converse_relation": "met_by",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "ta-b",
+      "subject": "ta-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "disconnected",
+        "east_of"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "disconnected",
+      "actual_relations": [
+        "disconnected",
+        "west_of"
+      ],
+      "allowed_relations": [
+        "disconnected"
+      ],
+      "ambiguous": false,
+      "calculus": "spatial",
+      "case_id": "s-disconnected",
+      "case_type": "disconnected",
+      "claimed_relation": "disconnected",
+      "converse_relation": "disconnected",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "sd-b",
+      "subject": "sd-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "overlap"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "overlap",
+      "actual_relations": [
+        "overlap"
+      ],
+      "allowed_relations": [
+        "overlap"
+      ],
+      "ambiguous": false,
+      "calculus": "spatial",
+      "case_id": "s-overlap",
+      "case_type": "overlap",
+      "claimed_relation": "overlap",
+      "converse_relation": "overlap",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "so-b",
+      "subject": "so-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "inside"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "contains",
+      "actual_relations": [
+        "contains"
+      ],
+      "allowed_relations": [
+        "contains"
+      ],
+      "ambiguous": false,
+      "calculus": "spatial",
+      "case_id": "s-containment",
+      "case_type": "containment",
+      "claimed_relation": "contains",
+      "converse_relation": "inside",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "sc-b",
+      "subject": "sc-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": true,
+      "actual_converse_relations": [
+        "disconnected",
+        "west_of"
+      ],
+      "actual_label": "satisfiable",
+      "actual_relation": "east_of",
+      "actual_relations": [
+        "disconnected",
+        "east_of"
+      ],
+      "allowed_relations": [
+        "east_of"
+      ],
+      "ambiguous": false,
+      "calculus": "spatial",
+      "case_id": "s-east-of",
+      "case_type": "cardinal_direction",
+      "claimed_relation": "east_of",
+      "converse_relation": "west_of",
+      "converse_valid": true,
+      "expected_failure_ids": [],
+      "expected_label": "satisfiable",
+      "expected_satisfiable": true,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "se-b",
+      "subject": "se-a",
+      "violation_ids": []
+    },
+    {
+      "accepted": false,
+      "actual_converse_relations": [
+        "disconnected",
+        "east_of"
+      ],
+      "actual_label": "unsatisfiable",
+      "actual_relation": "disconnected",
+      "actual_relations": [
+        "disconnected",
+        "west_of"
+      ],
+      "allowed_relations": [
+        "contains"
+      ],
+      "ambiguous": false,
+      "calculus": "spatial",
+      "case_id": "s-contradiction-contains-vs-disconnected",
+      "case_type": "contradiction",
+      "claimed_relation": "contains",
+      "converse_relation": "disconnected",
+      "converse_valid": true,
+      "expected_failure_ids": [
+        "s-contradiction-contains-vs-disconnected:claim-contains"
+      ],
+      "expected_label": "unsatisfiable",
+      "expected_satisfiable": false,
+      "label_matches_expected": true,
+      "localized_failure": true,
+      "object": "sf-b",
+      "subject": "sf-a",
+      "violation_ids": [
+        "s-contradiction-contains-vs-disconnected:claim-contains"
+      ]
+    }
+  ],
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5343.qstr_temporal_spatial_constraint_fixture.v487",
+  "solver_authoritative": true,
+  "spatial_case_type_counts": {
+    "cardinal_direction": 1,
+    "containment": 1,
+    "contradiction": 1,
+    "disconnected": 1,
+    "overlap": 1
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5343",
+    "SCENARIO-VERIFY-5343"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream QSTR constraint gates.",
+    "value": "qstr_fixture_ready"
+  },
+  "temporal_case_type_counts": {
+    "ambiguous": 1,
+    "before": 1,
+    "contradiction": 1,
+    "during": 1,
+    "meets": 1,
+    "overlaps": 1
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the QSTR module, artifact schema, new-code coverage, and repository tests.",
+    "value": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py -q",
+        "outcome": "pending"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py --cov=python/carnot/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py --cov-report=term-missing --cov-fail-under=100 -q",
+        "outcome": "pending"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "pending"
+      }
+    ]
+  }
+}

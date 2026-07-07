@@ -27958,3 +27958,86 @@ keeps `headline_quality_claim=false`, and does not modify
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5339 | Planned (`python/carnot/experiment_5339_gated_sota_claim_rewrite_panel_v487.py`, `results/experiment_5339_gated_sota_claim_rewrite_panel_v487.json`) | Planned (`tests/python/test_experiment_5339_gated_sota_claim_rewrite_panel_v487.py`) |
+
+### REQ-VERIFY-5343: Deterministic QSTR Temporal/Spatial Constraint Fixture V487
+
+The repository SHALL provide Exp 5343 at
+`python/carnot/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py`
+and write
+`results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, heuristic natural-language grader, or retired text-verifier path,
+and without modifying `scripts/research_conductor.py`. Exp 5343 SHALL assemble
+a tiny qualitative spatio-temporal reasoning fixture where typed interval and
+rectangle facts are the authority before any downstream local SOTA model is
+asked to reason over QSTR-style prompts.
+
+The temporal portion SHALL include deterministic Allen-style interval cases for
+before, overlaps, during, meets, contradiction, and ambiguous relation handling.
+The spatial portion SHALL include a small RCC/cardinal-direction subset with
+disconnected, overlap, containment, cardinal east-of, and contradiction cases.
+Each case SHALL carry exact typed entities, claimed qualitative relations,
+expected satisfiable or unsatisfiable labels, and expected failure identifiers
+for invalid claims. Free text MAY be present for human auditability, but the
+checker SHALL decide from exact intervals, boxes, relation claims, composition
+rules, converse rules, and expected labels only.
+
+The runner SHALL implement deterministic validation for relation composition,
+converse, contradiction, and satisfiable/unsatisfiable labels. Temporal
+composition SHALL be computed from finite exact interval enumeration over the
+Allen relation definitions used by the fixture. Spatial composition SHALL use
+exact rectangle predicates for the selected RCC/cardinal subset. Ambiguous
+relations SHALL be accepted only when the exact relation is inside the declared
+allowed relation set; a single false property SHALL be rejected and localized to
+the failing relation claim. `false_accept_count` SHALL count any unsatisfiable
+case accepted by the deterministic checker.
+
+The artifact SHALL include principle-annotated `experiment_id`, `milestone`,
+`status`, `honest_verdict`, `inference_substrate`, and `tests_run`, plus bare
+integer `calculus_count`, bare integer `composition_case_count`, bare integer
+`contradiction_case_count`, bare boolean `solver_authoritative`, bare integer
+`false_accept_count`, bare numeric `failure_localization_rate`, and bare boolean
+`qstr_fixture_ready`. `honest_verdict.value` SHALL start with `complete:` or
+`blocked_`. `inference_substrate.value` SHALL be
+`deterministic_qstr_constraint_fixture`. `solver_authoritative` SHALL be true
+because exact typed relations, not model prose, are the checker authority.
+`qstr_fixture_ready` SHALL be true only when all deterministic relation,
+composition, converse, contradiction, ambiguity, and failure-localization checks
+pass, all required case families are present, `false_accept_count=0`,
+`failure_localization_rate=1.0`, and tests are recorded.
+
+Required field principles:
+
+- `experiment_id`: principle "Traceability for the Exp5343 deterministic QSTR temporal/spatial constraint fixture."
+- `milestone`: principle "Milestone accountability for the V487 qualitative temporal/spatial fixture gate."
+- `status`: principle "Machine-readable terminal state for downstream QSTR constraint gates."
+- `honest_verdict`: principle "Terminal verdict must start with complete: or blocked_ and state whether the deterministic QSTR fixture can gate downstream model reasoning."
+- `inference_substrate`: principle "Declares deterministic_qstr_constraint_fixture so the artifact is read as exact typed temporal/spatial constraint checking, not live model quality."
+- `tests_run`: principle "Commands run to validate the QSTR module, artifact schema, new-code coverage, and repository tests."
+
+### SCENARIO-VERIFY-5343: Exact QSTR Checker Accepts True Relations And Localizes False Ones
+
+Given the checked-in deterministic QSTR fixture, when Exp 5343 runs, then it
+checks the Allen-style temporal cases for before, overlaps, during, meets,
+contradiction, and ambiguity; checks the RCC/cardinal spatial cases for
+disconnected, overlap, containment, east-of, and contradiction; validates
+converse relations; validates known temporal and spatial composition outcomes;
+writes the required artifact; keeps
+`inference_substrate.value=deterministic_qstr_constraint_fixture`; sets
+`solver_authoritative=true`; and sets `qstr_fixture_ready=true` only when all
+exact checks pass and all unsatisfiable claims are rejected with localized
+failure identifiers.
+
+If a required temporal or spatial case family is missing, a true relation is
+rejected, a false relation is accepted, ambiguous alternatives are treated as a
+single ungrounded claim, a converse or composition outcome is wrong, an
+unsatisfiable label is misclassified, a failure lacks a localized relation
+identifier, or tests are not recorded, then the same runner writes a terminal
+`blocked_` artifact with `qstr_fixture_ready=false`, exact blocker metrics, and
+no SOTA model-quality claim.
+
+## Implementation Status (REQ-VERIFY-5343)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5343 | Planned (`python/carnot/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py`, `results/experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.json`) | Planned (`tests/python/test_experiment_5343_qstr_temporal_spatial_constraint_fixture_v487.py`) |
