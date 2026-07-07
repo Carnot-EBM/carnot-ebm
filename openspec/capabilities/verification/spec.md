@@ -27877,6 +27877,82 @@ keeps `no_quality_claim=true`, and does not modify
 |---|---|---|
 | REQ-VERIFY-5338 | Planned (`python/carnot/experiment_5338_structured_output_protocol_calibration_v487.py`, `results/experiment_5338_structured_output_protocol_calibration_v487.json`) | Planned (`tests/python/test_experiment_5338_structured_output_protocol_calibration_v487.py`) |
 
+### REQ-VERIFY-5366: Live Grammar-Budgeted SOTA Structured Protocol V489
+
+The repository SHALL provide Exp 5366 at
+`python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`
+and write
+`results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`
+without modifying `scripts/research_conductor.py`. The workflow SHALL read the
+Exp 5365 artifact first and SHALL attempt live local SOTA structured-output
+inference only when Exp 5365 reports
+`grammar_budget_protocol_ready=true`. If Exp 5365 is missing, malformed, or not
+ready, the runner SHALL write a terminal blocked artifact and SHALL NOT invoke
+model generation.
+
+Before headline inference, the runner SHALL verify CUDA/GPU visibility, a
+llama.cpp/GGUF-compatible runtime, local GGUF model paths, and machine-readable
+GPU/offload evidence. A headline Exp 5366 artifact SHALL fail closed when the
+runtime exposes only the retired CPU-only path: `status` SHALL be `blocked`,
+`structured_protocol_clean` SHALL be false, `selected_model_spec` SHALL be null,
+and no generation prompt SHALL run. The runner SHALL use llama.cpp/GGUF loading
+only and SHALL NOT use `AutoTokenizer.from_pretrained`, `AutoModel`, or a
+transformers tokenizer/model load directly against any `-GGUF` repository.
+
+The headline-eligible `MODEL_SPECS` SHALL contain all mandated local GGUF model
+ids considered for the run:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models MAY be recorded only as
+CPU smoke tests and SHALL NOT populate `selected_model_spec` or headline
+metrics. When a mandated model is available through a non-retired GPU/offload
+path, the runner SHALL evaluate at least one mandated SOTA model with enough
+deterministic prompts to measure parse success, schema success, final JSON
+extraction success, semantic success after schema validity, truncation failures
+separately from schema failures, and unsafe false accepts.
+
+The artifact SHALL include bare top-level `status`,
+`grammar_budget_protocol_ready`, `structured_protocol_clean`, `MODEL_SPECS`,
+`selected_model_spec`, `inference_substrate`, `gpu_or_offload_receipt`,
+`no_autotokenizer_used`, `prompt_count`, `parse_success_rate`,
+`schema_success_rate`, `final_json_extraction_rate`,
+`semantic_success_rate`, `truncation_failure_rate`, `unsafe_false_accepts`,
+`completion_slack_min_tokens`, `methodology_duration_s`, and
+`honest_verdict`, plus field provenance explaining each required field's
+principle. `structured_protocol_clean` SHALL be true only when
+`parse_success_rate>=0.95`, `schema_success_rate>=0.90`,
+`final_json_extraction_rate>=0.95`, `unsafe_false_accepts=0`, and
+`methodology_duration_s>=60`. `status` SHALL be `complete` only if live local
+SOTA inference actually ran on a mandated model through the non-retired GGUF
+GPU/offload path; otherwise it SHALL be `blocked`.
+
+### SCENARIO-VERIFY-5366: Live GGUF Protocol Runs Or Blocks On Offload
+
+Given Exp 5365 reports `grammar_budget_protocol_ready=true`, schema grammar,
+completion slack, and a max-token budget, and given at least one mandated local
+GGUF model has a concrete `.gguf` path plus non-retired GPU/offload evidence,
+when Exp 5366 runs, then it selects that mandated model, builds protocol prompts
+from the Exp 5365/Exp 5351 grammar-budget settings, uses only the
+llama.cpp/GGUF loader family, records `no_autotokenizer_used=true`, evaluates
+the live prompt rows, separates parse, schema, semantic, and truncation
+failures, writes the required `.489` result artifact, and opens the clean
+structured protocol gate only if the configured parse/schema/final JSON/unsafe
+false-accept/duration thresholds pass.
+
+If Exp 5365 is not ready, CUDA/GPU visibility is absent, llama.cpp/GGUF support
+is unavailable, every mandated local GGUF is missing, or the runtime cannot
+provide non-retired GPU/offload evidence, then Exp 5366 writes the same result
+path with `status=blocked`, `structured_protocol_clean=false`,
+`selected_model_spec=null`, a machine-readable blocker in
+`gpu_or_offload_receipt`, `honest_verdict` starting with `blocked_`, and no
+headline model prompt execution.
+
+## Implementation Status (REQ-VERIFY-5366)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5366 | Planned (`python/carnot/experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`, `results/experiment_5366_live_grammar_budgeted_sota_protocol_v489.json`) | Planned (`tests/python/test_experiment_5366_live_grammar_budgeted_sota_protocol_v489.py`) |
+
 ### REQ-VERIFY-5365: Grammar-Budget Protocol Preflight V489
 
 The repository SHALL provide Exp 5365 at
