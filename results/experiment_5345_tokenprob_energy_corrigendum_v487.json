@@ -1,0 +1,339 @@
+{
+  "MODEL_SPECS": {
+    "principle": "Records the three mandated SOTA GGUF model IDs so the diagnostic cannot silently substitute a legacy, tiny, API, or non-GGUF model.",
+    "value": {
+      "flagship_dense": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "size_bytes": 18323731456
+        },
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 57,
+          "tensor_count": 833,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_dense",
+        "status": "local_gguf_resolved"
+      },
+      "flagship_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "4a73923cb22ef80ab8ae6fc2831d5d99ed6c34e9975c59fe91deab472489c8c1",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "size_bytes": 22134528992
+        },
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 54,
+          "tensor_count": 733,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "flagship_moe",
+        "status": "local_gguf_resolved"
+      },
+      "middle_moe": {
+        "autotokenizer_used": false,
+        "file_receipts": {
+          "checksum_head_1m_sha256": "c13f3b670eb7b8adb7aafa7c70d31cda7253baa63f81ef9bf79a126ac45ca697",
+          "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+          "checksum_sha256": null,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "size_bytes": 16947539744
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "metadata": {
+          "magic": "GGUF",
+          "metadata_kv_count": 60,
+          "tensor_count": 658,
+          "version": 3
+        },
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "quantization": "Q4_K_M",
+        "role": "middle_moe",
+        "status": "local_gguf_resolved"
+      }
+    }
+  },
+  "attention_available": false,
+  "diagnostic_case_count": 4,
+  "diagnostic_cases": [
+    {
+      "case_id": "arithmetic_true_2_plus_2",
+      "correct_aliases": [
+        "yes",
+        "true"
+      ],
+      "domain": "arithmetic",
+      "perturbed_aliases": [
+        "no",
+        "false"
+      ],
+      "prompt_checksum": "7ceca34b59b6add6"
+    },
+    {
+      "case_id": "arithmetic_false_3_plus_5",
+      "correct_aliases": [
+        "no",
+        "false"
+      ],
+      "domain": "arithmetic",
+      "perturbed_aliases": [
+        "yes",
+        "true"
+      ],
+      "prompt_checksum": "707d1f6063e14f5e"
+    },
+    {
+      "case_id": "factual_true_paris_capital",
+      "correct_aliases": [
+        "yes",
+        "true"
+      ],
+      "domain": "factual",
+      "perturbed_aliases": [
+        "no",
+        "false"
+      ],
+      "prompt_checksum": "41b5ef7c392c4d45"
+    },
+    {
+      "case_id": "factual_false_mars_star",
+      "correct_aliases": [
+        "no",
+        "false"
+      ],
+      "domain": "factual",
+      "perturbed_aliases": [
+        "yes",
+        "true"
+      ],
+      "prompt_checksum": "da34c75f7b28f3e0"
+    }
+  ],
+  "duration_s": 80.963973,
+  "experiment": 5345,
+  "experiment_id": {
+    "principle": "Traceability for the Exp5345 token-probability energy corrigendum receipt.",
+    "value": "experiment_5345_tokenprob_energy_corrigendum_v487"
+  },
+  "external_text_scorer_reopened": false,
+  "field_principles": {
+    "MODEL_SPECS": "Records the three mandated SOTA GGUF model IDs so the diagnostic cannot silently substitute a legacy, tiny, API, or non-GGUF model.",
+    "experiment_id": "Traceability for the Exp5345 token-probability energy corrigendum receipt.",
+    "honest_verdict": "Terminal verdict must start with complete: or blocked_ and state whether a clean token-probability energy diagnostic exists without reopening retired scorer scope.",
+    "inference_substrate": "Declares whether Exp5345 ran live_llm_inference or only aggregation blocked before generation so duration checks match the actual substrate.",
+    "milestone": "Milestone accountability for the V487 token-probability energy corrigendum gate.",
+    "preconditions_checked": "Records Exp5337 runtime cleanliness, current GPU/backend visibility, Exp5331 receipt schema, and no-retired-scope checks before any clean token-energy claim.",
+    "selected_model_spec": "Binds the token-probability receipt to the clean Exp5337 selected local GGUF model/backend.",
+    "status": "Machine-readable terminal state for downstream internal-energy corrigendum consumers.",
+    "tests_run": "Commands run to validate the Exp5345 module, artifact schema, new-code coverage, repository tests, and applicable e2e checks.",
+    "token_energy_feature_rows": "Records only transparent token-probability-derived energies for controlled known-target cases, not generated-text quality scores.",
+    "token_probability_receipt": "Records the live probe receipt summary and upstream token-probability receipt paths without interpreting generated text as quality."
+  },
+  "honest_verdict": {
+    "principle": "Terminal verdict must start with complete: or blocked_ and state whether a clean token-probability energy diagnostic exists without reopening retired scorer scope.",
+    "value": "blocked_token_probability_energy_features_insufficient:arithmetic_true_2_plus_2:perturbed_target_logprob,factual_true_paris_capital:perturbed_target_logprob"
+  },
+  "inference_substrate": {
+    "principle": "Declares whether Exp5345 ran live_llm_inference or only aggregation blocked before generation so duration checks match the actual substrate.",
+    "value": "live_llm_inference"
+  },
+  "internal_energy_corrigendum_clean": false,
+  "logits_available": false,
+  "methodology_duration_s": 80.963973,
+  "milestone": {
+    "principle": "Milestone accountability for the V487 token-probability energy corrigendum gate.",
+    "value": "2026.07.487"
+  },
+  "missing_feature_names": [
+    "arithmetic_true_2_plus_2:perturbed_target_logprob",
+    "factual_true_paris_capital:perturbed_target_logprob"
+  ],
+  "no_quality_claim": true,
+  "preconditions_checked": {
+    "principle": "Records Exp5337 runtime cleanliness, current GPU/backend visibility, Exp5331 receipt schema, and no-retired-scope checks before any clean token-energy claim.",
+    "value": {
+      "blocked_preconditions": [],
+      "exp5331_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_harness_v486.json",
+      "exp5331_receipt_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json",
+      "exp5331_tiny_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "exp5337_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5337_sota_runtime_corrigendum_multimodel_v487.json",
+      "exp5337_clean_runtime": true,
+      "external_text_scorer_reopened": false,
+      "gpu_visible": true,
+      "llama_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "no_live_generation_reason": null,
+      "retired_scope_reopened": false,
+      "selected_backend_kind": "llama-cli",
+      "selected_model_file_present": true,
+      "selected_model_hf_id": "unsloth/gemma-4-31B-it-GGUF"
+    }
+  },
+  "random_seed": 5345,
+  "reproducibility_checksum": "0772d3211db837e0",
+  "run_date": "20260707",
+  "schema": "carnot.experiment_5345.tokenprob_energy_corrigendum.v487",
+  "selected_model_spec": {
+    "principle": "Binds the token-probability receipt to the clean Exp5337 selected local GGUF model/backend.",
+    "value": {
+      "autotokenizer_used": false,
+      "file_receipts": {
+        "checksum_head_1m_sha256": "94ef5ecd7ffe2d37cfe66663f3f7e6afa121a660e685abeb63395175838221ea",
+        "checksum_note": "full_sha256_skipped_for_large_file_head_1m_recorded",
+        "checksum_sha256": null,
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "size_bytes": 18323731456
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata": {
+        "magic": "GGUF",
+        "metadata_kv_count": 57,
+        "tensor_count": 833,
+        "version": 3
+      },
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "role": "flagship_dense",
+      "status": "local_gguf_resolved"
+    }
+  },
+  "spec_refs": [
+    "REQ-VERIFY-5345",
+    "SCENARIO-VERIFY-5345"
+  ],
+  "status": {
+    "principle": "Machine-readable terminal state for downstream internal-energy corrigendum consumers.",
+    "value": "blocked"
+  },
+  "tests_run": {
+    "principle": "Commands run to validate the Exp5345 module, artifact schema, new-code coverage, repository tests, and applicable e2e checks.",
+    "value": [
+      {
+        "command": "initial live Exp5345 deliverable generation before final validation",
+        "outcome": "pending final validation"
+      }
+    ]
+  },
+  "token_energy_feature_rows": {
+    "principle": "Records only transparent token-probability-derived energies for controlled known-target cases, not generated-text quality scores.",
+    "value": [
+      {
+        "case_id": "arithmetic_true_2_plus_2",
+        "correct_target_aliases": [
+          "yes",
+          "true"
+        ],
+        "correct_target_logprob": -0.62290585,
+        "correct_token_energy": 0.62290585,
+        "domain": "arithmetic",
+        "energy_margin_perturbed_minus_correct": null,
+        "feature_complete": false,
+        "feature_source": "backend_top_logprobs",
+        "perturbed_target_aliases": [
+          "no",
+          "false"
+        ],
+        "perturbed_target_logprob": null,
+        "perturbed_token_energy": null,
+        "prompt_checksum": "7ceca34b59b6add6",
+        "quality_interpretation": null,
+        "top_logprob_row_count": 20
+      },
+      {
+        "case_id": "arithmetic_false_3_plus_5",
+        "correct_target_aliases": [
+          "no",
+          "false"
+        ],
+        "correct_target_logprob": -0.449877948,
+        "correct_token_energy": 0.449877948,
+        "domain": "arithmetic",
+        "energy_margin_perturbed_minus_correct": 5.363979608,
+        "feature_complete": true,
+        "feature_source": "backend_top_logprobs",
+        "perturbed_target_aliases": [
+          "yes",
+          "true"
+        ],
+        "perturbed_target_logprob": -5.813857555,
+        "perturbed_token_energy": 5.813857555,
+        "prompt_checksum": "707d1f6063e14f5e",
+        "quality_interpretation": null,
+        "top_logprob_row_count": 20
+      },
+      {
+        "case_id": "factual_true_paris_capital",
+        "correct_target_aliases": [
+          "yes",
+          "true"
+        ],
+        "correct_target_logprob": -1.147593737,
+        "correct_token_energy": 1.147593737,
+        "domain": "factual",
+        "energy_margin_perturbed_minus_correct": null,
+        "feature_complete": false,
+        "feature_source": "backend_top_logprobs",
+        "perturbed_target_aliases": [
+          "no",
+          "false"
+        ],
+        "perturbed_target_logprob": null,
+        "perturbed_token_energy": null,
+        "prompt_checksum": "41b5ef7c392c4d45",
+        "quality_interpretation": null,
+        "top_logprob_row_count": 20
+      },
+      {
+        "case_id": "factual_false_mars_star",
+        "correct_target_aliases": [
+          "no",
+          "false"
+        ],
+        "correct_target_logprob": -0.632318258,
+        "correct_token_energy": 0.632318258,
+        "domain": "factual",
+        "energy_margin_perturbed_minus_correct": 4.156308889,
+        "feature_complete": true,
+        "feature_source": "backend_top_logprobs",
+        "perturbed_target_aliases": [
+          "yes",
+          "true"
+        ],
+        "perturbed_target_logprob": -4.788627148,
+        "perturbed_token_energy": 4.788627148,
+        "prompt_checksum": "da34c75f7b28f3e0",
+        "quality_interpretation": null,
+        "top_logprob_row_count": 20
+      }
+    ]
+  },
+  "token_probability_available": true,
+  "token_probability_receipt": {
+    "principle": "Records the live probe receipt summary and upstream token-probability receipt paths without interpreting generated text as quality.",
+    "value": {
+      "backend_kind": "llama-server",
+      "case_receipt_count": 4,
+      "endpoint": "/completion",
+      "exp5331_receipt_schema_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_receipt_schema_v486.json",
+      "exp5331_tiny_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5331_internal_energy_tiny_receipt_v486.json",
+      "live_probe_attempted": true,
+      "raw_output_quality_interpretation": null,
+      "round_count": 93,
+      "status": "completed",
+      "wall_clock_s": 80.963973
+    }
+  }
+}
