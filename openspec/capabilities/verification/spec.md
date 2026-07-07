@@ -28516,6 +28516,99 @@ exact blocker metrics rather than promoting a sampler or hardware claim.
 |---|---|---|
 | REQ-VERIFY-5359 | Planned (`python/carnot/experiment_5359_pbit_schedule_diagnostic_v488.py`, `results/experiment_5359_pbit_schedule_diagnostic_v488.json`) | Planned (`tests/python/test_experiment_5359_pbit_schedule_diagnostic_v488.py`) |
 
+### REQ-VERIFY-5370: Overwrite Solver Guidance Matrix V489
+
+The repository SHALL provide Exp 5370 at
+`python/carnot/experiment_5370_overwrite_solver_guidance_matrix_v489.py` and
+write `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`
+without invoking a live LLM, local GGUF model, external API judge, generated
+text judge, hardware sampler, retired text-verifier path, or modifying
+`scripts/research_conductor.py`. Exp 5370 SHALL reuse the checked-in Exp 5358
+solver projection artifact, the Exp 5359 p-bit schedule diagnostic artifact,
+the Exp 5343 deterministic QSTR fixture, and existing bounded Exp 5292 SAT/CDCL
+fixtures where available. The diagnostic SHALL not claim a learned SE-RRM
+baseline; it SHALL test only deterministic proposal routing under symbolic
+solver authority.
+
+The matrix SHALL measure all three solver-guidance modes: no hints, forced
+hints, and overwrite-capable hints. It SHALL define exactly four deterministic
+proposal classes: aligned hints, partially wrong hints, misleading
+high-confidence hints, and no hints. For each loaded fixture, the no-hint mode
+SHALL establish the solver-only baseline; the forced-hint mode SHALL apply the
+proposal as a mandatory candidate while still requiring deterministic
+solver/verifier validation; and the overwrite-capable mode SHALL allow the
+solver to reject, project, or overwrite bad hints before returning a final
+answer. The symbolic solver or deterministic verifier SHALL remain the only
+authority for validity in every mode.
+The misleading high-confidence hints class SHALL be measured as a deterministic
+wrong-proposal class, not as learned confidence calibration.
+
+The runner SHALL log conflicts, search steps, overwrite events, projection
+validity, fallback completeness, unsafe false accepts, harmful proposal
+classes, and per-row final validity. `overwrite_solver_guidance_ready` SHALL be
+true only when no-hint, forced-hint, and overwrite-capable modes are all
+measured under solver authority, all four proposal classes are present,
+fallback completeness is preserved for overwrite-capable failed hints, unsafe
+false accepts are zero, and tests are recorded. Forced hints MAY harm validity
+or search, and overwrite-capable hints MAY add bounded search cost, but neither
+mode may accept an invalid solution as valid.
+
+The artifact SHALL include `status`, `overwrite_solver_guidance_ready`,
+`solver_authoritative`, `fixture_count`, `proposal_class_count`,
+`overwrite_rate`, `conflict_delta_vs_solver_only`, `forced_hint_harm_rate`,
+`overwrite_hint_harm_rate`, `post_projection_validity_rate`,
+`fallback_completeness_rate`, `harmful_hint_classes`, `unsafe_false_accepts`,
+`tests_run`, and `honest_verdict`. `status` SHALL be `complete` only if all
+solver-guidance modes are measured. `honest_verdict` SHALL start with
+`complete:` or `blocked_` and SHALL state whether overwrite-capable routing
+preserved solver-authoritative validity.
+
+Required field principles:
+
+- `status`: principle "complete only if all solver-guidance modes are measured."
+- `overwrite_solver_guidance_ready`: principle "true only if no-hint, forced-hint, and overwrite-capable modes are all compared under solver authority."
+- `solver_authoritative`: principle "must be true; solver/verifier decides validity."
+- `fixture_count`: principle "number of constraint instances measured."
+- `proposal_class_count`: principle "number of hint/proposal classes measured."
+- `overwrite_rate`: principle "fraction of hinted decisions overwritten by the solver."
+- `conflict_delta_vs_solver_only`: principle "conflict-count delta for overwrite-capable mode versus solver-only baseline."
+- `forced_hint_harm_rate`: principle "fraction of cases where forced hints worsen conflicts/search/validity."
+- `overwrite_hint_harm_rate`: principle "fraction of cases where overwrite-capable hints worsen conflicts/search/validity."
+- `post_projection_validity_rate`: principle "fraction of returned solutions passing deterministic verifier."
+- `fallback_completeness_rate`: principle "fraction of cases where fallback solver still returns the correct answer when hints fail."
+- `harmful_hint_classes`: principle "list of hint classes that harmed performance or validity."
+- `unsafe_false_accepts`: principle "count of invalid solutions accepted as valid."
+- `tests_run`: principle "list of commands run or no-code-change explanation."
+- `honest_verdict`: principle "one-line result summary."
+
+### SCENARIO-VERIFY-5370: Forced Hints Are Compared Against Overwrite-Capable Routing
+
+Given the checked-in Exp 5358 and Exp 5359 artifacts plus deterministic QSTR and
+SAT/CDCL fixtures,
+When Exp 5370 evaluates aligned hints, partially wrong hints, misleading
+high-confidence hints, and no hints across no-hint, forced-hint, and
+overwrite-capable modes,
+Then every row records conflict and search telemetry, final verifier validity,
+overwrite events, fallback behavior, and unsafe false-accept status; forced
+hints expose harms from bad proposals without being allowed to certify invalid
+answers; overwrite-capable routing overwrites or falls back from bad hints;
+`unsafe_false_accepts=0`; and `overwrite_solver_guidance_ready=true` only when
+all modes and proposal classes are measured under solver authority with tests
+recorded.
+
+If any required source artifact is missing, a required mode or proposal class is
+absent, fallback completeness drops below 1.0, an invalid solution is accepted
+as valid, the solver/verifier is not authoritative, or tests are not recorded,
+then the same runner writes a terminal `blocked_` artifact with
+`overwrite_solver_guidance_ready=false`, blocker details, and no learned
+solver-guidance baseline claim.
+
+## Implementation Status (REQ-VERIFY-5370)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5370 | Planned (`python/carnot/experiment_5370_overwrite_solver_guidance_matrix_v489.py`, `results/experiment_5370_overwrite_solver_guidance_matrix_v489.json`) | Planned (`tests/python/test_experiment_5370_overwrite_solver_guidance_matrix_v489.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at
