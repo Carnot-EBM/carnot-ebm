@@ -346,6 +346,82 @@ sets `findings=[]`, keeps `retired_scope_reopened=false`, and does not edit
 |---|---|---|
 | REQ-REPORT-5364 | Implemented (`python/carnot/experiment_5364_sota_source_delta_v489.py`, `results/experiment_5364_sota_source_delta_v489.json`) | Implemented (`tests/python/test_experiment_5364_sota_source_delta_v489.py`) |
 
+### REQ-REPORT-5377: V490 Execution-Time SOTA Source Delta Refresh
+
+The Exp 5377 workflow SHALL perform a narrow execution-time source-delta check
+after the `.490` planner refresh in `research-references.md`. It SHALL check
+arXiv, OpenReview, HuggingFace Papers, Semantic Scholar, GitHub, Extropic
+writing, Logical Intelligence public pages, official runtime/backend
+documentation when surfaced by those searches, and local V490 duplicate history
+for sources not already covered by the V490 planner refresh.
+
+The workflow SHALL focus only on live local SOTA structured receipts,
+constraint-tax verification, continuous self-learning memory governance,
+overwrite-capable solver guidance, p-bit boundary exchange, ARC live-path
+geometric salience, backend feature exposure, and hash-chained hardware receipts.
+It SHALL append to `research-references.md` only when a finding is
+both absent from the V490 planner refresh and actionable for Carnot-local work.
+When it appends, it SHALL add one clearly delimited `V490 Execution Refresh`
+section with source URLs and Carnot hooks. When no new actionable finding
+exists, it SHALL write an honest-null artifact and SHALL NOT churn
+`research-references.md`.
+
+The workflow SHALL NOT promote external generated-text scorers, CPU-only GGUF offload headline reruns, TSU/Kona execution claims, KV260 host block-device evidence, or offline ARC solve paths.
+It SHALL NOT modify `scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or `_bmad/traceability.md` for this conductor-scoped source refresh.
+
+The artifact SHALL write
+`results/experiment_5377_sota_source_delta_v490.json`. It SHALL include
+top-level fields `status`, `search_date`, `sources_checked`,
+`new_actionable_findings_count`, `findings`, `duplicates_suppressed`,
+`retired_scope_reopened`, `research_references_updated`, and
+`honest_verdict`. It SHOULD also include experiment/milestone metadata, source
+details, field principles, tests run, and protected-file booleans so downstream
+reconciliation can audit the refresh without relying on prose.
+
+Required field principles:
+
+- `status`: principle "Must be `complete` when at least one new actionable V490 delta is promoted, otherwise `honest_null`."
+- `search_date`: principle "Must equal 20260707 for this execution-time sweep."
+- `sources_checked`: principle "Lists the required source families searched before downstream experiments."
+- `new_actionable_findings_count`: principle "Counts only non-duplicate actionable findings promoted into the V490 execution refresh."
+- `findings`: principle "Each promoted finding records title, url, source_type, and Carnot-local hook."
+- `duplicates_suppressed`: principle "Lists relevant sources already covered by the V490 planner refresh and therefore not re-added."
+- `retired_scope_reopened`: principle "Bare boolean must remain false because this refresh cannot reopen retired scopes."
+- `research_references_updated`: principle "Bare boolean is true only when a new V490 execution-refresh block was appended."
+- `honest_verdict`: principle "One-line summary of the execution-time source delta check."
+
+#### SCENARIO-REPORT-5377-APPEND-DELTAS: New Network Findings Append A V490 Refresh
+
+**Given** the V490 planner refresh is present in `research-references.md`
+**And** the source check finds one or more genuinely new Carnot-actionable
+findings outside retired scopes
+**When** the Exp 5377 workflow runs
+**Then** it writes the JSON artifact, appends one clearly delimited V490
+execution-refresh section, records every required source family checked, sets
+`status=complete`, sets `research_references_updated=true`, sets
+`new_actionable_findings_count` to the number of promoted rows, keeps
+`retired_scope_reopened=false`, and does not modify
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, or
+`_bmad/traceability.md`.
+
+#### SCENARIO-REPORT-5377-HONEST-NULL: No New Findings Leave References Unchanged
+
+**Given** the V490 planner refresh is present in `research-references.md`
+**And** the source check finds no genuinely new Carnot-actionable finding
+outside retired scopes
+**When** the Exp 5377 workflow runs
+**Then** it writes a terminal honest-null JSON artifact, records every required
+source family checked, sets `status=honest_null`, sets
+`research_references_updated=false`, sets `new_actionable_findings_count=0`,
+sets `findings=[]`, keeps `retired_scope_reopened=false`, and does not edit
+`research-references.md`.
+
+## Implementation Status (REQ-REPORT-5377)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5377 | Implemented (`python/carnot/experiment_5377_sota_source_delta_v490.py`, `results/experiment_5377_sota_source_delta_v490.json`) | Implemented (`tests/python/test_experiment_5377_sota_source_delta_v490.py`) |
+
 ### REQ-REPORT-5336: V487 Execution-Time SOTA Source Delta Refresh
 
 The Exp 5336 workflow SHALL perform an execution-time 2025-2026 source-delta

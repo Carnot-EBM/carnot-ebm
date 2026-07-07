@@ -1,0 +1,229 @@
+{
+  "duplicates_suppressed": [
+    "Depth Exploration for LLM Decoding / DEX - https://arxiv.org/abs/2606.29223",
+    "GeoWorld: Geometric World Models - https://arxiv.org/abs/2602.23058",
+    "QCIVET hash-chained audit traces - https://arxiv.org/abs/2605.13109",
+    "LLGuidance structured-output runtime - https://github.com/guidance-ai/llguidance",
+    "CFGzip token-space compression - https://arxiv.org/abs/2605.29986",
+    "TruncProof JSON completion slack - https://arxiv.org/abs/2605.13076",
+    "G-RRM overwrite-capable solver guidance - https://arxiv.org/abs/2607.02491",
+    "LongMemEval-V2 memory benchmark - https://arxiv.org/abs/2605.12493"
+  ],
+  "experiment_id": "experiment_5377_sota_source_delta_v490",
+  "field_principles": {
+    "duplicates_suppressed": "Lists relevant sources already covered by the V490 planner refresh and therefore not re-added.",
+    "findings": "Each promoted finding records title, url, source_type, and Carnot-local hook.",
+    "honest_verdict": "One-line summary of the execution-time source delta check.",
+    "new_actionable_findings_count": "Counts only non-duplicate actionable findings promoted into the V490 execution refresh.",
+    "research_references_updated": "Bare boolean is true only when a new V490 execution-refresh block was appended.",
+    "retired_scope_reopened": "Bare boolean must remain false because this refresh cannot reopen retired scopes.",
+    "search_date": "Must equal 20260707 for this execution-time sweep.",
+    "sources_checked": "Lists the required source families searched before downstream experiments.",
+    "status": "Must be `complete` when at least one new actionable V490 delta is promoted, otherwise `honest_null`."
+  },
+  "findings": [
+    {
+      "carnot_hook": "For Exp5381/Exp5382, add reasoning-history memory poisoning fixtures that insert forged rationale entries with evasive and self-referential amplification. Score structural reasoning-guard signals before trusting memory rows, preserve raw provenance, and keep the check deterministic rather than delegating acceptance to an external text scorer.",
+      "source_type": "arXiv preprint",
+      "title": "Your Agent's Memories Are Not Its Own: Forged Reasoning Attacks on LLM Agent Memory and Defenses",
+      "url": "https://arxiv.org/abs/2607.05029"
+    },
+    {
+      "carnot_hook": "For Exp5386, extend QCIVET-style board receipts with a hash-linked evidence graph: bind each board-state quantity to an observation and verification node, emit a SHA-256 manifest plus an offline verifier, record a reproducibility class, and add algebraic checksums or Freivalds-style spot checks where the workload permits. This is receipt discipline only, not a hardware speedup claim.",
+      "source_type": "arXiv preprint with ancillary implementation",
+      "title": "Self-Verifying Measurement Records: Hash-Linked Evidence Graphs for Hardware Benchmarking",
+      "url": "https://arxiv.org/abs/2606.27934"
+    },
+    {
+      "carnot_hook": "For Exp5387, record backend-specific feature receipts: vLLM >= 0.18 can expose selected hidden-state layers through a speculative/KV connector path. Use it as a positive-control backend row only; it does not reopen token/internal-feature energy for the mandated local GGUF llama.cpp path unless that path exposes equivalent logits, hidden states, or attention with clean provenance.",
+      "source_type": "Official vLLM implementation note",
+      "title": "Extracting hidden states from vLLM",
+      "url": "https://vllm.ai/blog/2026-03-30-extract-hidden-states"
+    }
+  ],
+  "honest_verdict": "complete: 3 new actionable V490 execution-time source deltas appended; retired scopes remained closed.",
+  "inference_substrate": "literature_ingestion_network_sources",
+  "methodology_duration_s": 1560.0,
+  "milestone": "2026.07.490",
+  "new_actionable_findings_count": 3,
+  "no_deep_research_used": true,
+  "ops_docs_modified": false,
+  "references_section_marker": "<!-- V490-EXECUTION-REFRESH-2026-07-07-END -->",
+  "rejected_candidates": [
+    {
+      "reason": "Useful governance taxonomy, but the sharper V490 hooks come from the new FARMA/SENTINEL reasoning-history attack and already-recorded origin-bound memory authority sources.",
+      "title": "A Survey on Long-Term Memory Security in LLM Agents",
+      "url": "https://arxiv.org/abs/2604.16548"
+    },
+    {
+      "reason": "Type-aware memory isolation is relevant, but prior Carnot references already record typed memory routing and contamination controls. It does not add a separate .490 execution hook beyond FARMA/SENTINEL.",
+      "title": "MemGuard: Preventing Memory Contamination in Long-Term Memory-Augmented LLMs",
+      "url": "https://arxiv.org/abs/2605.28009"
+    },
+    {
+      "reason": "Already present in local duplicate history as origin-bound memory authority and rollback/unsafe-false-accept guidance.",
+      "title": "Securing LLM-Agent Long-Term Memory Against Poisoning",
+      "url": "https://arxiv.org/abs/2606.24322"
+    },
+    {
+      "reason": "Relevant watch-only backend signal, but no completed local GGUF feature receipt was found; it cannot reopen token/internal-feature energy claims.",
+      "title": "llama.cpp Eagle-3 and hidden-state discussions",
+      "url": "https://github.com/ggml-org/llama.cpp/discussions/15902"
+    }
+  ],
+  "research_conductor_modified": false,
+  "research_references_updated": true,
+  "retired_scope_reopened": false,
+  "roadmap_files_modified": false,
+  "search_date": "20260707",
+  "searched_source_details": {
+    "arxiv": {
+      "duplicates_suppressed": [
+        "2606.29223 DEX",
+        "2602.23058 GeoWorld",
+        "2605.13109 QCIVET",
+        "2607.02491 G-RRM",
+        "2605.26128 Constraint Tax",
+        "2605.13076 TruncProof",
+        "2605.12493 LongMemEval-V2"
+      ],
+      "not_promoted": [
+        "2604.16548 VMG survey was high-level relative to the promoted FARMA fixture.",
+        "2605.28009 MemGuard overlaps prior typed-memory routing and contamination notes.",
+        "2606.24322 origin-bound memory authority was already in local duplicate history.",
+        "2605.05138 ARC executable world models are already heavily recorded locally.",
+        "2606.25313 million-p-bit hardware was covered by the V489/V490 planning chain."
+      ],
+      "promoted": [
+        "2607.05029 FARMA/SENTINEL reasoning-history memory attack",
+        "2606.27934 self-verifying measurement records"
+      ],
+      "queries": [
+        "LLM structured output verification tool/action state receipts 2026",
+        "agent memory governance stale poisoned rollback continuous self learning 2026",
+        "ARC-AGI geometric salience live agent world model 2026",
+        "p-bit boundary exchange Ising hash chained hardware receipt 2026",
+        "hardware benchmark hash-linked evidence graph reproducibility 2026"
+      ],
+      "status": "ok"
+    },
+    "extropic_writing": {
+      "queries": [
+        "Extropic TSU 101",
+        "Extropic Inside X0 and XTR-0",
+        "Extropic Thermodynamic Computing From Zero to One"
+      ],
+      "result": "Extropic writing remains architecture context only. No local TSU SDK, authenticated receipt path, or Carnot-accessible TSU execution was found.",
+      "status": "ok"
+    },
+    "github": {
+      "not_promoted": [
+        "FARMA had no primary GitHub implementation surfaced during the sweep.",
+        "llama.cpp hidden-state and Eagle-3 discussions were watch-only, not a local GGUF receipt.",
+        "Generic hash-chain MCP/server lists were not hardware benchmarking evidence."
+      ],
+      "promoted": [
+        "vLLM hidden-state extraction official implementation note"
+      ],
+      "queries": [
+        "GitHub FARMA SENTINEL Reasoning Guard",
+        "GitHub vLLM hidden states extraction",
+        "GitHub llama.cpp hidden states Eagle-3",
+        "GitHub hash-linked evidence graph hardware benchmarking"
+      ],
+      "status": "ok"
+    },
+    "huggingface_papers": {
+      "not_promoted": [
+        "MemGuard was visible on HuggingFace Papers but overlaps prior typed-memory controls.",
+        "GeoWorld mirrors were duplicate planner coverage.",
+        "No FARMA HuggingFace paper page was available during the execution sweep."
+      ],
+      "queries": [
+        "HuggingFace Papers 2607.05029",
+        "HuggingFace Papers 2604.16548",
+        "HuggingFace Papers 2605.28009",
+        "HuggingFace Papers 2602.23058"
+      ],
+      "result": "HuggingFace Papers added no separate implementation hook beyond the arXiv-promoted FARMA and hardware-record findings.",
+      "status": "ok"
+    },
+    "local_v490_duplicate_history": {
+      "queries": [
+        "research-references.md V490 Planner Refresh - 2026-07-07",
+        "research-roadmap-vNEXT.md Literature Refresh Incorporated",
+        "ops/exclusion_manifest.yaml retired scope scan",
+        "results/experiment_5375_capstone_v489.json prior milestone truth",
+        "repo-wide duplicate search for 2607.05029, 2606.27934, and vLLM hidden states"
+      ],
+      "result": "FARMA/SENTINEL, self-verifying hardware measurement records, and the vLLM hidden-state extraction note were absent from the V490 planner refresh and local reference history. DEX, GeoWorld, QCIVET, G-RRM, Constraint Tax, TruncProof, LongMemEval-V2, origin-bound memory authority, Extropic, Logical Intelligence, and ARC executable-world-model sources were duplicates or watch-only context.",
+      "status": "ok"
+    },
+    "logical_intelligence": {
+      "queries": [
+        "Logical Intelligence automatic formal verification for code generation",
+        "Logical Intelligence Aleph PutnamBench",
+        "Logical Intelligence Kona EBM reasoning"
+      ],
+      "result": "Logical Intelligence pages continue to support verifier/prover authority and EBM reasoning context, but expose no reproducible Kona baseline or local execution artifact.",
+      "status": "ok"
+    },
+    "official_runtime_docs": {
+      "not_promoted": [
+        "vLLM is not the mandated local GGUF llama.cpp path for .490 headline SOTA receipts.",
+        "llama.cpp discussions did not provide a completed feature receipt for logits/hidden/attention."
+      ],
+      "promoted": [
+        "vLLM >= 0.18 hidden-state extraction path"
+      ],
+      "queries": [
+        "vLLM Extracting hidden states from vLLM 2026",
+        "vLLM issue 33118 hidden states extraction",
+        "llama.cpp Eagle-3 hidden-state discussion"
+      ],
+      "status": "ok"
+    },
+    "openreview": {
+      "queries": [
+        "OpenReview DANCE-ST constrained guidance",
+        "OpenReview JSONSchemaBench and PSC constrained decoding",
+        "OpenReview memory checkpoints and A-MemGuard",
+        "OpenReview solver guidance and symbolic verification"
+      ],
+      "result": "Search snippets reconfirmed planner-covered constrained-generation and watch-only memory-defense context. Direct OpenReview pages redirected to browser verification, so no OpenReview-only execution delta is promoted.",
+      "status": "challenge_blocked"
+    },
+    "semantic_scholar": {
+      "queries": [
+        "Semantic Scholar public search for FARMA/SENTINEL 2607.05029",
+        "Semantic Scholar public search for VMG 2604.16548",
+        "Semantic Scholar public search for DEX 2606.29223",
+        "Semantic Scholar public search for GeoWorld 2602.23058"
+      ],
+      "result": "Public search reconfirmed arXiv pages and planner-covered sources. No citation-count or influence-trend claim is made.",
+      "status": "ok"
+    }
+  },
+  "sources_checked": [
+    "arxiv",
+    "openreview",
+    "huggingface_papers",
+    "semantic_scholar",
+    "github",
+    "extropic_writing",
+    "logical_intelligence",
+    "official_runtime_docs",
+    "local_v490_duplicate_history"
+  ],
+  "spec_refs": [
+    "REQ-REPORT-5377",
+    "SCENARIO-REPORT-5377-APPEND-DELTAS",
+    "SCENARIO-REPORT-5377-HONEST-NULL"
+  ],
+  "status": "complete",
+  "task_id": "exp5377-v490-sota-source-delta",
+  "tests_run": [
+    "tests/python/test_experiment_5377_sota_source_delta_v490.py"
+  ],
+  "traceability_modified": false
+}
