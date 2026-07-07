@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.487",
+  "generated_at": "2026-07-07T10:08:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 318.2,
+  "experiments_completed": 28,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 5339: Gated bounded SOTA claim/rewrite panel after structu",
+      "duration_minutes": 71.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5338: Gated structured-output protocol calibration for loc",
+      "duration_minutes": 17.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5337: SOTA runtime corrigendum and multi-model receipt exp",
+      "duration_minutes": 15.8,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5341: ACC-style bounded compressor and drift monitor for c",
+      "duration_minutes": 15.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 5345: Gated token-probability energy corrigendum and tiny ",
+      "duration_minutes": 14.9,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": false,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.07.487 completed 28 experiments in 318.2 minutes, with 2 compute-bound tasks counted. The prefilled slowest list contains only synthesis-only rows, so no data available this milestone for naming the longest compute-bound experiment; gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "The dominant listed delay was synthesis-only: Exp 5339 took 71.0 minutes, well above the other listed synthesis-only rows at 17.7, 15.8, 15.3, and 14.9 minutes.",
+    "Compute-bound timing detail is incomplete in the bounded data: 2 compute-bound experiments are counted, but none appears in the prefilled slowest_experiments list, so their relative duration and cause cannot be ranked.",
+    "DualGPURunner eligibility is not established by the supplied blocks because no compute-bound task is identified as loading 2+ models in parallel."
+  ],
+  "improvements_suggested": [
+    "Add phase-level timers and progress receipts for long synthesis-only panels so prompt assembly, generation, parsing, scoring, and artifact writing are separated.",
+    "Add an early structured-output parse preflight before full SOTA claim/rewrite batches so a broken protocol can fail fast with a bounded artifact.",
+    "Emit a complete compute-bound timing table with experiment ID, duration, model_count, runner_class, and GPU-engagement receipts.",
+    "Capture GPU utilization during each compute-bound task rather than relying on the terminal milestone GPU snapshot."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument synthesis-only panels with phase-level timing and parse-preflight fail-fast behavior.",
+    "Record complete compute-bound task rows, including IDs and durations outside the top-five slowest list.",
+    "Persist runner eligibility and GPU-utilization receipts for every GGUF/CUDA/requires_gpu task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The idle GPU snapshot is not promoted into a bottleneck because the locked compute-bound idle field is false. The strongest operational finding is an observability gap: the data counts 2 compute-bound tasks, but does not expose their individual durations."
+}
