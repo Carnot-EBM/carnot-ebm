@@ -10439,3 +10439,4 @@ web search: Semantic Schola |
 | 2026-07-07 01:59 UTC | Exp 5330: Gated SEA-style anytime certificate for  | OK | 92 passed, 1 warning in 10.17s |
 | 2026-07-07 02:28 UTC | Exp 5331: Gated local internal-signal and energy r | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-07-07 02:41 UTC | Exp 5332: KAN counterexample localization and fals | OK | 88 passed, 1 warning in 9.08s |
+| 2026-07-07 02:57 UTC | Exp 5333: Hardware continuity receipts with no spe | OK | 88 passed, 1 warning in 10.70s |
