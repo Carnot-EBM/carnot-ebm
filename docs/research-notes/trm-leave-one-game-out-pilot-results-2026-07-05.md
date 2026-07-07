@@ -192,6 +192,57 @@ constraint-satisfaction shape vs. noisy human-behavior prediction), or training 
 cannot distinguish between those explanations, only that the *toy* version does not replicate the
 effect here.
 
+## v4 (2026-07-06): the more faithful sequence-refiner test — gate fails again, for a different reason
+
+Operator authorized pursuing the second unbuilt alternative directly. This is a materially different
+design from v1-v3: instead of single-action behavioral-cloning classification, this task matches how
+TRM actually works on Sudoku — refine a WHOLE candidate jointly toward a KNOWN CORRECT target. Trained
+only on the 144 genuinely-won trajectories (cross-referenced by guid against the raw corpus's own
+`won` field, not the `level_progress=1.0` proxy, which turned out to mean "reached this session's own
+highest recorded checkpoint," not "won the whole game" — an important distinction caught before
+building on the wrong signal). Task: given the frame at step *i*, predict/refine the full next K=8
+actions taken en route to victory, all 8 slots jointly per recursion step. Pre-registered gate (same
+discipline as v3): recursion supported only if p<0.05 on exact-full-window-match accuracy in a
+majority of 3 held-out games (`sk48`, `m0r0`, `cn04`, chosen for size/action-vocabulary diversity), 5
+seeds each.
+
+**A real data bug caught before it could corrupt the result**: `cn04`'s action IDs are recorded as
+word labels (`"ACTION1"`-`"ACTION6"`, `"RESET"`) rather than the numeral strings (`"0"`-`"7"`) most
+other games use — a genuine inconsistency in the underlying corpus, not a bug in this pilot. Caught
+because `cn04` initially loaded zero windows; traced it to every one of its rows being silently
+dropped by the action-vocabulary filter. Fixed by mapping `RESET`→0, `ACTION`*n*→*n* (this project's
+own established action-space convention), verified the fix recovered all 144 won sessions correctly
+before running anything.
+
+**Result: the gate fails again — 0 of 3 games significant in recursion's favor.**
+
+| Held-out game | Recursive exact-match | Baseline exact-match | Recursive per-action | Baseline per-action | p-value |
+|---|---|---|---|---|---|
+| sk48 | 0.24% | 0.23% | 4.1% | 4.7% | 1.00 |
+| m0r0 | 0.05% | 0.07% | 12.8% | 12.9% | 1.00 |
+| cn04 | 0.21% | 0.17% | 13.1% | 13.9% | 0.75 |
+
+**The more important, honest finding is not the gate failure itself — it's that per-action accuracy
+for BOTH arms sits at or below rough chance level for a ~7-action vocabulary (~14%).** Predicting 8
+steps into the future from a single static frame, with zero action-history context, is very likely an
+under-determined task: the same frame plausibly precedes wildly different action sequences depending
+on a human player's current, invisible intent. This is a *different* failure mode from v1-v3's
+class-imbalance-driven low headroom — there, the trivial baseline was strong and hard to beat; here,
+neither trained model appears to be learning much of anything, so there's no real basis to compare
+architectures at all.
+
+**Honest overall assessment across all four pilots run this week**: the narrow behavioral-cloning
+proxy (v1-v3) was properly ruled out with statistical rigor. This more faithful sequence-refinement
+attempt (v4) also shows no recursive advantage, but for a reason that points at the *task design*
+(missing history/intent context) rather than definitively closing the underlying architectural
+question. A genuinely informative next test would need to give the model *some* signal about intent
+— e.g., condition on recent action history the way v2 did, or shrink the prediction horizon, or
+restrict to the final, most goal-directed portion of trajectories near a level-up moment. Absent that,
+this line of inquiry has now had four honest attempts (three properly ruled out, one inconclusive for
+a task-design reason) without a positive signal — a reasonable point to deprioritize further pilot
+iteration on this specific standalone-reimplementation approach rather than keep varying the task
+framing.
+
 ## What this note is NOT claiming
 
 - Not claiming TRM-style recursive refinement is proven to generalize to ARC-AGI-3. Finding 1 is a
