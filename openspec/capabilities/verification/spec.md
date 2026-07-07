@@ -28298,6 +28298,92 @@ certificate claim.
 |---|---|---|
 | REQ-VERIFY-5358 | Planned (`python/carnot/experiment_5358_solver_projection_cut_bridge_v488.py`, `results/experiment_5358_solver_projection_cut_bridge_v488.json`) | Planned (`tests/python/test_experiment_5358_solver_projection_cut_bridge_v488.py`) |
 
+### REQ-VERIFY-5359: CPU p-bit Schedule Diagnostic V488
+
+The repository SHALL provide Exp 5359 at
+`python/carnot/experiment_5359_pbit_schedule_diagnostic_v488.py` and write
+`results/experiment_5359_pbit_schedule_diagnostic_v488.json` without invoking a
+live LLM, local GGUF model, external API judge, generated text judge, hardware
+sampler, or retired text-verifier path, and without modifying
+`scripts/research_conductor.py`. Exp 5359 SHALL reuse the bounded Exp 5292 and
+Exp 5300 p-bit/CDCL or Ising-style fixture classes rather than inventing an
+unanchored SAT benchmark.
+
+The diagnostic SHALL run deterministic CPU sampler simulation for exactly five
+schedule variants: baseline sequential, partial deactivation, fully parallel inertia,
+cost-aware anneal, and misleading-assumption guard. Each variant SHALL
+produce bounded p-bit/Ising-style assumptions over the same fixture instances,
+measure sweeps to solution, track an energy trace, count energy monotonicity
+violations, and pass final labels through the existing CDCL authority before
+any SAT/UNSAT result is accepted. Misleading assumptions MAY be diagnosed as
+harmful, but they SHALL NOT force an incorrect final label or a hardware
+speedup claim.
+
+The benchmark SHALL compare schedule variants against the baseline sequential
+schedule on the same fixture set. It SHALL report sweep deltas,
+conflict/search deltas, misleading-class harm, false accepts, CPU runtime, and
+class-level help/harm/inconclusive classifications. `pbit_schedule_signal_ready`
+SHALL be true only when at least one non-baseline schedule has a clean
+non-tautological benefit on a bounded class, preserves CDCL correctness, keeps
+false accepts at zero, and does not increase misleading-class harm relative to
+the baseline.
+
+The artifact SHALL include these top-level fields: `experiment_id`,
+`milestone`, `status`, `honest_verdict`, `inference_substrate`,
+`schedule_variant_count`, `fixture_count`, `sweeps_to_solution_delta`,
+`conflict_delta_vs_baseline`, `misleading_class_harm_rate`,
+`energy_monotonicity_violation_count`, `cpu_runtime_s`, `false_accept_count`,
+`hardware_speedup_claim`, `pbit_schedule_signal_ready`, and `tests_run`.
+`honest_verdict` SHALL start with `complete:` or `blocked_`.
+`inference_substrate` SHALL be `deterministic_cpu_sampler_simulation`.
+`hardware_speedup_claim` SHALL be false. `schedule_variant_count`,
+`fixture_count`, `energy_monotonicity_violation_count`, and
+`false_accept_count` SHALL be bare integers. `sweeps_to_solution_delta`,
+`conflict_delta_vs_baseline`, `misleading_class_harm_rate`, and
+`cpu_runtime_s` SHALL be bare numeric values. `hardware_speedup_claim` and
+`pbit_schedule_signal_ready` SHALL be bare booleans.
+
+Required field principles:
+
+- `experiment_id`: principle "Stable id ties the artifact to this roadmap task."
+- `milestone`: principle "Keeps schedule evidence separate from hardware receipts."
+- `status`: principle "Lets capstone classify signal versus blocked simulation."
+- `honest_verdict`: principle "Terminal prefix `complete:` or `blocked_` prevents ambiguous sampler claims."
+- `inference_substrate`: principle "Expected value is deterministic_cpu_sampler_simulation."
+- `schedule_variant_count`: principle "Bare integer proves more than one schedule was tested."
+- `fixture_count`: principle "Bare integer bounds the diagnostic corpus."
+- `sweeps_to_solution_delta`: principle "Bare numeric measures sample-efficiency impact."
+- `conflict_delta_vs_baseline`: principle "Bare numeric measures solver-facing impact."
+- `misleading_class_harm_rate`: principle "Bare numeric catches distribution-sensitive regressions."
+- `energy_monotonicity_violation_count`: principle "Bare integer detects unstable schedules."
+- `cpu_runtime_s`: principle "Bare numeric prevents hardware-speedup conflation."
+- `false_accept_count`: principle "Bare integer prevents invalid sampler wins."
+- `hardware_speedup_claim`: principle "Bare boolean must be false because this is CPU simulation."
+- `pbit_schedule_signal_ready`: principle "Bare boolean summarizes whether hardware follow-up is justified."
+- `tests_run`: principle "Lists deterministic sampler tests."
+
+### SCENARIO-VERIFY-5359: Schedule Variants Stay CPU-Simulated And Solver-Authoritative
+
+Given the bounded Exp 5292 and Exp 5300 p-bit/CDCL fixture classes, when Exp
+5359 runs the five required schedule variants, then every row records the
+schedule name, fixture class, energy trace, sweeps to solution, CDCL conflict
+and search metrics, misleading-class behavior, final solver-authoritative
+label, and whether the schedule helped, harmed, or was inconclusive against
+baseline sequential on the same fixture.
+
+If a schedule reaches a false basin, increases misleading-class harm, accepts a
+nonzero-energy assignment as a valid solution, changes the CDCL final label,
+omits any required schedule variant, uses a non-CPU inference substrate, or
+sets `hardware_speedup_claim=true`, then the same runner SHALL set
+`pbit_schedule_signal_ready=false` or write a terminal `blocked_` artifact with
+exact blocker metrics rather than promoting a sampler or hardware claim.
+
+## Implementation Status (REQ-VERIFY-5359)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5359 | Planned (`python/carnot/experiment_5359_pbit_schedule_diagnostic_v488.py`, `results/experiment_5359_pbit_schedule_diagnostic_v488.json`) | Planned (`tests/python/test_experiment_5359_pbit_schedule_diagnostic_v488.py`) |
+
 ### REQ-VERIFY-5345: Token-Probability Energy Corrigendum V487
 
 The repository SHALL provide Exp 5345 at
