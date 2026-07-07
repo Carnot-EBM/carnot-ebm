@@ -17423,3 +17423,129 @@ rollback case families
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-5313 | Implemented (`python/carnot/experiment_5313_gated_memory_transition_policy_rollout_v485.py`, `results/experiment_5313_gated_memory_transition_policy_rollout_v485.json`) | Implemented (`tests/python/test_experiment_5313_gated_memory_transition_policy_rollout_v485.py`) |
+
+---
+
+## REQ-LEARN-5328: Context Object Lifecycle Fixture for Continuous Self-Learning
+
+Experiment 5328 SHALL assemble a deterministic context-object lifecycle fixture
+for continuous self-learning without mutating model weights. The fixture SHALL
+track stable context object IDs across create, revise, fold, mask, archive,
+retrieve, commit, and rollback actions. Each object SHALL carry an object type,
+current label, historical labels, transition label, recoverable sidecar, and
+action provenance so downstream experiments can learn lifecycle-policy actions
+without relying on hidden model state.
+
+The fixture SHALL reuse the Exp5312 transition-memory verifier where possible:
+safe lifecycle commits SHALL be routed through a `MemoryTransitionProposal`, and
+unsafe lifecycle actions SHALL be rejected before bank state changes. The
+fixture SHALL include deterministic cases for ghost memory, stale retrieval,
+omission, corruption, unsafe prune, and safe archive/recover behavior.
+
+The fixture SHALL score failure detection separately across:
+
+- bank-maintenance failure modes: ghost memory, omission, corruption, and unsafe
+  prune.
+- retrieval failure modes: stale retrieval and masked retrieval leakage.
+- answer-time failure modes: stale or corrupted evidence used in an answer.
+
+The result artifact SHALL be
+`results/experiment_5328_context_object_lifecycle_self_learning_v486.json` and
+SHALL include principle-wrapped `experiment_id`, principle-wrapped `milestone`,
+principle-wrapped `status`, principle-wrapped `honest_verdict` whose value
+starts with `complete:` or `blocked_`, principle-wrapped `inference_substrate`
+with `value=deterministic_context_lifecycle_fixture`, bare boolean
+`continuous_self_learning_target` with value true, bare boolean
+`no_weight_mutation` with value true, bare integer `context_object_count`,
+principle-wrapped `lifecycle_action_set`, bare numeric
+`bank_failure_detection_rate`, bare numeric `retrieval_failure_detection_rate`,
+bare numeric `answer_failure_detection_rate`, bare numeric
+`rollback_success_rate`, bare boolean `context_lifecycle_fixture_ready`, and
+principle-wrapped `tests_run`.
+
+The required field principles SHALL be:
+
+- `experiment_id`: Identifies the exact Exp5328 artifact so Exp5329/Exp5330
+  gates cannot confuse lifecycle learning with earlier transition-memory
+  verifier experiments.
+- `milestone`: Binds the fixture to milestone v486 where context-object
+  lifecycle learning becomes the downstream target.
+- `status`: Reports whether the lifecycle fixture is usable by Exp5329 and
+  Exp5330 rather than merely present as code.
+- `honest_verdict`: Terminal Exp5328 verdict; starts with complete: or
+  blocked_ and states whether lifecycle safety and recoverability gates passed.
+- `inference_substrate`: Declares deterministic context lifecycle fixture
+  evaluation with no live LLM, API judge, model generation, fine-tuning,
+  adapter update, or weight mutation.
+- `continuous_self_learning_target`: Bare gate showing the fixture trains or
+  evaluates policy actions for continuous self-learning rather than static
+  documentation.
+- `no_weight_mutation`: Bare gate confirming only deterministic context-object
+  bank state changed, never model weights or adapters.
+- `context_object_count`: Bare count of stable context object IDs exercised by
+  the lifecycle fixture.
+- `lifecycle_action_set`: Lists every lifecycle action so downstream policy
+  learners know the available action vocabulary.
+- `bank_failure_detection_rate`: Bare numeric rate over bank-maintenance
+  failure modes, separated from retrieval and answer-time failures.
+- `retrieval_failure_detection_rate`: Bare numeric rate over stale or masked
+  retrieval failures, separated from bank and answer-time failures.
+- `answer_failure_detection_rate`: Bare numeric rate over unsafe answer-time
+  context use, separated from bank and retrieval failures.
+- `rollback_success_rate`: Bare numeric rate showing rejected unsafe commits
+  preserved the pre-action bank and safe rollback/recovery restored usable
+  context.
+- `context_lifecycle_fixture_ready`: Bare downstream gate for Exp5329 and
+  Exp5330; true only when object IDs, sidecars, failure scores, safe commits,
+  rollback, recoverability, unsafe rejection, tests, and no-weight-mutation
+  checks all pass.
+- `tests_run`: Records the exact verification commands used to establish that
+  the fixture and artifact are usable by Exp5329 and Exp5330.
+
+### REQ-LEARN-5328 Sub-requirements
+
+- REQ-LEARN-5328-1: The fixture SHALL define stable object IDs, object types,
+  current labels, historical labels, transition labels, recoverable sidecars,
+  and lifecycle actions for every context object.
+- REQ-LEARN-5328-2: The action set SHALL include create, revise, fold, mask,
+  archive, retrieve, commit, and rollback.
+- REQ-LEARN-5328-3: The fixture SHALL include ghost-memory, stale-retrieval,
+  omission, corruption, unsafe-prune, and safe archive/recover cases.
+- REQ-LEARN-5328-4: Bank-maintenance, retrieval, and answer-time failure modes
+  SHALL be scored separately and SHALL each reject unsafe actions before state
+  mutation or unsafe answer use.
+- REQ-LEARN-5328-5: Safe create, revise, fold, mask, archive, retrieve, commit,
+  and rollback/recover actions SHALL keep recoverable sidecars intact and SHALL
+  produce zero model-weight mutation.
+- REQ-LEARN-5328-6: `context_lifecycle_fixture_ready` SHALL be true only when
+  all required failure detection rates are 1.0, rollback success is 1.0, tests
+  are recorded, and no model weights mutate.
+
+### SCENARIO-LEARN-5328: Safe Lifecycle Actions Commit and Remain Recoverable
+
+**Given** a deterministic context-object bank with stable object IDs and
+recoverable sidecars
+**When** safe create, revise, fold, mask, archive, retrieve, commit, and
+rollback/recover actions are applied through the lifecycle fixture
+**Then** accepted commits are routed through the transition-memory verifier
+where state mutation occurs
+**And** archived objects can be recovered from their sidecars
+**And** the object IDs, historical labels, and transition labels remain stable.
+
+### SCENARIO-LEARN-5329: Unsafe Lifecycle Actions Reject Before State Mutation
+
+**Given** ghost-memory, stale-retrieval, omission, corruption, unsafe-prune, and
+answer-time stale-context cases
+**When** the lifecycle fixture scores bank-maintenance, retrieval, and
+answer-time behavior
+**Then** every unsafe action is detected in its own failure family
+**And** rejected bank actions leave the prior bank byte-for-byte unchanged
+**And** stale or masked retrieval is not allowed into the answer context
+**And** the artifact reports
+`inference_substrate=deterministic_context_lifecycle_fixture`.
+
+## Implementation Status (Exp 5328)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5328 | Implemented (`python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py`, `results/experiment_5328_context_object_lifecycle_self_learning_v486.json`) | Implemented (`tests/python/test_experiment_5328_context_object_lifecycle_self_learning_v486.py`) |

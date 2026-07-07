@@ -1,0 +1,1419 @@
+{
+  "answer_failure_detection_rate": 1.0,
+  "bank_failure_detection_rate": 1.0,
+  "context_lifecycle_fixture_ready": true,
+  "context_object_count": 9,
+  "context_object_ids": [
+    "ctx.arc.rubric",
+    "ctx.archive.policy",
+    "ctx.folded.runtime_rubric",
+    "ctx.ghost.unsourced",
+    "ctx.operator.secret",
+    "ctx.patch.autofix",
+    "ctx.runtime.receipt",
+    "ctx.runtime.receipt.v0",
+    "ctx.sensor.reject_rule"
+  ],
+  "continuous_self_learning_target": true,
+  "experiment": "experiment_5328_context_object_lifecycle_self_learning_v486",
+  "experiment_id": {
+    "principle": "Identifies the exact Exp5328 artifact so Exp5329/Exp5330 gates cannot confuse lifecycle learning with earlier transition-memory verifier experiments.",
+    "value": 5328
+  },
+  "failure_counts": {
+    "answer": {
+      "detected": 2,
+      "total": 2
+    },
+    "bank": {
+      "detected": 4,
+      "total": 4
+    },
+    "retrieval": {
+      "detected": 2,
+      "total": 2
+    }
+  },
+  "field_principles": {
+    "answer_failure_detection_rate": "Bare numeric rate over unsafe answer-time context use, separated from bank and retrieval failures.",
+    "bank_failure_detection_rate": "Bare numeric rate over bank-maintenance failure modes, separated from retrieval and answer-time failures.",
+    "context_lifecycle_fixture_ready": "Bare downstream gate for Exp5329 and Exp5330; true only when object IDs, sidecars, failure scores, safe commits, rollback, recoverability, unsafe rejection, tests, and no-weight-mutation checks all pass.",
+    "context_object_count": "Bare count of stable context object IDs exercised by the lifecycle fixture.",
+    "continuous_self_learning_target": "Bare gate showing the fixture trains or evaluates policy actions for continuous self-learning rather than static documentation.",
+    "experiment_id": "Identifies the exact Exp5328 artifact so Exp5329/Exp5330 gates cannot confuse lifecycle learning with earlier transition-memory verifier experiments.",
+    "honest_verdict": "Terminal Exp5328 verdict; starts with complete: or blocked_ and states whether lifecycle safety and recoverability gates passed.",
+    "inference_substrate": "Declares deterministic context lifecycle fixture evaluation with no live LLM, API judge, model generation, fine-tuning, adapter update, or weight mutation.",
+    "lifecycle_action_set": "Lists every lifecycle action so downstream policy learners know the available action vocabulary.",
+    "milestone": "Binds the fixture to milestone v486 where context-object lifecycle learning becomes the downstream target.",
+    "no_weight_mutation": "Bare gate confirming only deterministic context-object bank state changed, never model weights or adapters.",
+    "retrieval_failure_detection_rate": "Bare numeric rate over stale or masked retrieval failures, separated from bank and answer-time failures.",
+    "rollback_success_rate": "Bare numeric rate showing rejected unsafe commits preserved the pre-action bank and safe rollback/recovery restored usable context.",
+    "status": "Reports whether the lifecycle fixture is usable by Exp5329 and Exp5330 rather than merely present as code.",
+    "tests_run": "Records the exact verification commands used to establish that the fixture and artifact are usable by Exp5329 and Exp5330."
+  },
+  "honest_verdict": {
+    "principle": "Terminal Exp5328 verdict; starts with complete: or blocked_ and states whether lifecycle safety and recoverability gates passed.",
+    "value": "complete: deterministic context-object lifecycle fixture ready for Exp5329 and Exp5330; safe actions commit, unsafe actions reject, rollback succeeds at 1.0, and no model weights mutate"
+  },
+  "inference_substrate": {
+    "principle": "Declares deterministic context lifecycle fixture evaluation with no live LLM, API judge, model generation, fine-tuning, adapter update, or weight mutation.",
+    "value": "deterministic_context_lifecycle_fixture"
+  },
+  "lifecycle_action_counts": {
+    "archive": 1,
+    "commit": 2,
+    "create": 2,
+    "fold": 2,
+    "mask": 2,
+    "prune": 1,
+    "retrieve": 3,
+    "revise": 2,
+    "rollback": 1
+  },
+  "lifecycle_action_set": {
+    "principle": "Lists every lifecycle action so downstream policy learners know the available action vocabulary.",
+    "value": [
+      "create",
+      "revise",
+      "fold",
+      "mask",
+      "archive",
+      "retrieve",
+      "commit",
+      "rollback"
+    ]
+  },
+  "lifecycle_rows": [
+    {
+      "accepted": true,
+      "action": "create",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-create-runtime",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:bd26c1e20059ba82e9d35af51ec093aa90136006a2d587aefe5ac9e17222ecd6",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {},
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "revise",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-revise-runtime",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:bd26c1e20059ba82e9d35af51ec093aa90136006a2d587aefe5ac9e17222ecd6",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "fold",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-fold-runtime-rubric",
+      "committed_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "lru-update-rubric"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "reject_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:296c3086365a68fb2c04866c12674ba061a29ba6bf32e830426777157e5ef7ca",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "reject_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        },
+        "ctx.folded.runtime_rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "fold-runtime-rubric"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.folded.runtime_rubric",
+          "object_type": "folded_summary",
+          "payload": "runtime_cli_and_arc_rubric_summary",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:667e154286fcdd6a17afdeb4b7415794a36801055efa035e548cccddbfef8c5e",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "runtime_cli_and_arc_rubric_summary",
+            "sidecar_id": "sidecar:ctx.folded.runtime_rubric:folded",
+            "source_object_ids": [
+              "ctx.runtime.receipt",
+              "ctx.arc.rubric"
+            ]
+          },
+          "transition_label": "folded"
+        },
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "lru-update-rubric"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "reject_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:296c3086365a68fb2c04866c12674ba061a29ba6bf32e830426777157e5ef7ca",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "reject_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        },
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "mask",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-mask-secret",
+      "committed_state": {
+        "ctx.operator.secret": {
+          "current_label": "masked",
+          "evidence_ids": [
+            "operator-note",
+            "mask-secret"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.operator.secret",
+          "object_type": "masked_note",
+          "payload": "MASKED",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:144dd3f5ab4d3e6c7a9a35f7a7a26e323c07b892c0cdf9a25714d24974a6b461",
+            "recoverable": true,
+            "restore_label": "masked",
+            "restore_payload": "operator_private_note",
+            "sidecar_id": "sidecar:ctx.operator.secret:masked",
+            "source_object_ids": []
+          },
+          "transition_label": "masked"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.operator.secret": {
+          "current_label": "current",
+          "evidence_ids": [
+            "operator-note"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.operator.secret",
+          "object_type": "masked_note",
+          "payload": "operator_private_note",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:144dd3f5ab4d3e6c7a9a35f7a7a26e323c07b892c0cdf9a25714d24974a6b461",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "operator_private_note",
+            "sidecar_id": "sidecar:ctx.operator.secret:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "archive",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-archive-policy",
+      "committed_state": {
+        "ctx.archive.policy": {
+          "current_label": "archived",
+          "evidence_ids": [
+            "archive-policy",
+            "archive-action"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.archive.policy",
+          "object_type": "archival_record",
+          "payload": "legacy_safe_archive_rule",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:fe67255e078228e43320473defb2da8871bdb4c8ca965854df720470b36adc69",
+            "recoverable": true,
+            "restore_label": "archived",
+            "restore_payload": "legacy_safe_archive_rule",
+            "sidecar_id": "sidecar:ctx.archive.policy:archived",
+            "source_object_ids": []
+          },
+          "transition_label": "archived"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.archive.policy": {
+          "current_label": "current",
+          "evidence_ids": [
+            "archive-policy"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.archive.policy",
+          "object_type": "archival_record",
+          "payload": "legacy_safe_archive_rule",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:fe67255e078228e43320473defb2da8871bdb4c8ca965854df720470b36adc69",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "legacy_safe_archive_rule",
+            "sidecar_id": "sidecar:ctx.archive.policy:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "retrieve",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [
+        "ctx.archive.policy"
+      ],
+      "case_id": "life-retrieve-archive-recover",
+      "committed_state": {
+        "ctx.archive.policy": {
+          "current_label": "archived",
+          "evidence_ids": [
+            "archive-policy",
+            "archive-action"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.archive.policy",
+          "object_type": "archival_record",
+          "payload": "legacy_safe_archive_rule",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:fe67255e078228e43320473defb2da8871bdb4c8ca965854df720470b36adc69",
+            "recoverable": true,
+            "restore_label": "archived",
+            "restore_payload": "legacy_safe_archive_rule",
+            "sidecar_id": "sidecar:ctx.archive.policy:archived",
+            "source_object_ids": []
+          },
+          "transition_label": "archived"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.archive.policy": {
+          "current_label": "archived",
+          "evidence_ids": [
+            "archive-policy",
+            "archive-action"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.archive.policy",
+          "object_type": "archival_record",
+          "payload": "legacy_safe_archive_rule",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:fe67255e078228e43320473defb2da8871bdb4c8ca965854df720470b36adc69",
+            "recoverable": true,
+            "restore_label": "archived",
+            "restore_payload": "legacy_safe_archive_rule",
+            "sidecar_id": "sidecar:ctx.archive.policy:archived",
+            "source_object_ids": []
+          },
+          "transition_label": "archived"
+        }
+      },
+      "recovered_from_sidecar": true,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [
+        "ctx.archive.policy"
+      ],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": false
+    },
+    {
+      "accepted": true,
+      "action": "commit",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-commit-patch",
+      "committed_state": {
+        "ctx.patch.autofix": {
+          "current_label": "committed",
+          "evidence_ids": [
+            "patch-proposal",
+            "commit-check"
+          ],
+          "historical_labels": [
+            "transition"
+          ],
+          "object_id": "ctx.patch.autofix",
+          "object_type": "patch_receipt",
+          "payload": "candidate_patch_passed",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:37606fd86cf50c95663fe40dbe81a45a1ebe87f1180895292570e5ccf50f351a",
+            "recoverable": true,
+            "restore_label": "committed",
+            "restore_payload": "candidate_patch_passed",
+            "sidecar_id": "sidecar:ctx.patch.autofix:committed",
+            "source_object_ids": []
+          },
+          "transition_label": "committed"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.patch.autofix": {
+          "current_label": "transition",
+          "evidence_ids": [
+            "patch-proposal"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.patch.autofix",
+          "object_type": "patch_receipt",
+          "payload": "candidate_patch_pending",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:5205c5871a43603d8bd6b5a6c60331f60607a0ebc6fccf57cbecbdb88197411b",
+            "recoverable": true,
+            "restore_label": "transition",
+            "restore_payload": "candidate_patch_pending",
+            "sidecar_id": "sidecar:ctx.patch.autofix:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": true,
+      "action": "rollback",
+      "answer_context_allowed": true,
+      "answer_context_object_ids": [],
+      "case_id": "life-rollback-corrupt-patch",
+      "committed_state": {
+        "ctx.patch.autofix": {
+          "current_label": "rolled_back",
+          "evidence_ids": [
+            "harmful-injection-autopatch",
+            "rollback-action"
+          ],
+          "historical_labels": [
+            "committed",
+            "corrupted"
+          ],
+          "object_id": "ctx.patch.autofix",
+          "object_type": "patch_receipt",
+          "payload": "candidate_patch_passed",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:37606fd86cf50c95663fe40dbe81a45a1ebe87f1180895292570e5ccf50f351a",
+            "recoverable": true,
+            "restore_label": "rolled_back",
+            "restore_payload": "candidate_patch_passed",
+            "sidecar_id": "sidecar:ctx.patch.autofix:rolled_back",
+            "source_object_ids": []
+          },
+          "transition_label": "rolled_back"
+        }
+      },
+      "committed_state_changed": true,
+      "coverage_score": 1.0,
+      "detected_failure": false,
+      "failure_family": null,
+      "failure_mode": null,
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.patch.autofix": {
+          "current_label": "current",
+          "evidence_ids": [
+            "harmful-injection-autopatch"
+          ],
+          "historical_labels": [
+            "committed"
+          ],
+          "object_id": "ctx.patch.autofix",
+          "object_type": "patch_receipt",
+          "payload": "bad_patch_injected",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:37606fd86cf50c95663fe40dbe81a45a1ebe87f1180895292570e5ccf50f351a",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "candidate_patch_passed",
+            "sidecar_id": "sidecar:ctx.patch.autofix:corrupted",
+            "source_object_ids": []
+          },
+          "transition_label": "corrupted"
+        }
+      },
+      "recovered_from_sidecar": true,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [],
+      "rollback_expected": true,
+      "rollback_success": true,
+      "safe_expected": true,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "create",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-ghost-memory",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 1.0,
+      "detected_failure": true,
+      "failure_family": "bank",
+      "failure_mode": "ghost_memory",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "faithfulness_below_threshold"
+      ],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "fold",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-omission-sensor-rule",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.5,
+      "detected_failure": true,
+      "failure_family": "bank",
+      "failure_mode": "omission",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "coverage_below_threshold",
+        "faithfulness_below_threshold"
+      ],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "revise",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-corrupt-rubric",
+      "committed_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "lru-update-rubric"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "reject_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:296c3086365a68fb2c04866c12674ba061a29ba6bf32e830426777157e5ef7ca",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "reject_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.0,
+      "detected_failure": true,
+      "failure_family": "bank",
+      "failure_mode": "corruption",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 0.0,
+      "prior_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "lru-update-rubric"
+          ],
+          "historical_labels": [],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "reject_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:296c3086365a68fb2c04866c12674ba061a29ba6bf32e830426777157e5ef7ca",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "reject_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:created",
+            "source_object_ids": []
+          },
+          "transition_label": "created"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "coverage_below_threshold",
+        "preservation_below_threshold",
+        "faithfulness_below_threshold"
+      ],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "prune",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-unsafe-prune-runtime",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.0,
+      "detected_failure": true,
+      "failure_family": "bank",
+      "failure_mode": "unsafe_prune",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 0.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "coverage_below_threshold",
+        "preservation_below_threshold",
+        "faithfulness_below_threshold"
+      ],
+      "retrieval_object_ids": [],
+      "rollback_expected": true,
+      "rollback_success": true,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "retrieve",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-stale-retrieval",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        },
+        "ctx.runtime.receipt.v0": {
+          "current_label": "historical",
+          "evidence_ids": [
+            "stale-query-outdated"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt.v0",
+          "object_type": "evidence_receipt",
+          "payload": "cpu_only_offload_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56c4113490e869d4de14566f773f5d040a07885af8d939b9f38185b86ea17a0b",
+            "recoverable": true,
+            "restore_label": "historical",
+            "restore_payload": "cpu_only_offload_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt.v0:stale_retrieved",
+            "source_object_ids": []
+          },
+          "transition_label": "stale_retrieved"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.0,
+      "detected_failure": true,
+      "failure_family": "retrieval",
+      "failure_mode": "stale_retrieval",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        },
+        "ctx.runtime.receipt.v0": {
+          "current_label": "historical",
+          "evidence_ids": [
+            "stale-query-outdated"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt.v0",
+          "object_type": "evidence_receipt",
+          "payload": "cpu_only_offload_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56c4113490e869d4de14566f773f5d040a07885af8d939b9f38185b86ea17a0b",
+            "recoverable": true,
+            "restore_label": "historical",
+            "restore_payload": "cpu_only_offload_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt.v0:stale_retrieved",
+            "source_object_ids": []
+          },
+          "transition_label": "stale_retrieved"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "retrieval_failure_detected"
+      ],
+      "retrieval_object_ids": [
+        "ctx.runtime.receipt.v0"
+      ],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": false
+    },
+    {
+      "accepted": false,
+      "action": "mask",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [],
+      "case_id": "life-mask-retrieval-leak",
+      "committed_state": {
+        "ctx.operator.secret": {
+          "current_label": "masked",
+          "evidence_ids": [
+            "operator-note",
+            "mask-secret"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.operator.secret",
+          "object_type": "masked_note",
+          "payload": "MASKED",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:144dd3f5ab4d3e6c7a9a35f7a7a26e323c07b892c0cdf9a25714d24974a6b461",
+            "recoverable": true,
+            "restore_label": "masked",
+            "restore_payload": "operator_private_note",
+            "sidecar_id": "sidecar:ctx.operator.secret:masked",
+            "source_object_ids": []
+          },
+          "transition_label": "masked"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 1.0,
+      "detected_failure": true,
+      "failure_family": "retrieval",
+      "failure_mode": "mask_leakage",
+      "faithfulness_score": 1.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.operator.secret": {
+          "current_label": "masked",
+          "evidence_ids": [
+            "operator-note",
+            "mask-secret"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.operator.secret",
+          "object_type": "masked_note",
+          "payload": "MASKED",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:144dd3f5ab4d3e6c7a9a35f7a7a26e323c07b892c0cdf9a25714d24974a6b461",
+            "recoverable": true,
+            "restore_label": "masked",
+            "restore_payload": "operator_private_note",
+            "sidecar_id": "sidecar:ctx.operator.secret:masked",
+            "source_object_ids": []
+          },
+          "transition_label": "masked"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [],
+      "retrieval_object_ids": [
+        "ctx.operator.secret"
+      ],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    },
+    {
+      "accepted": false,
+      "action": "retrieve",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [
+        "ctx.runtime.receipt.v0"
+      ],
+      "case_id": "life-answer-stale-context",
+      "committed_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        },
+        "ctx.runtime.receipt.v0": {
+          "current_label": "historical",
+          "evidence_ids": [
+            "stale-query-outdated"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt.v0",
+          "object_type": "evidence_receipt",
+          "payload": "cpu_only_offload_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56c4113490e869d4de14566f773f5d040a07885af8d939b9f38185b86ea17a0b",
+            "recoverable": true,
+            "restore_label": "historical",
+            "restore_payload": "cpu_only_offload_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt.v0:stale_retrieved",
+            "source_object_ids": []
+          },
+          "transition_label": "stale_retrieved"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.0,
+      "detected_failure": true,
+      "failure_family": "answer",
+      "failure_mode": "answer_stale_context",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.runtime.receipt": {
+          "current_label": "current",
+          "evidence_ids": [
+            "ar-update-runtime",
+            "revise-runtime-receipt"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt",
+          "object_type": "evidence_receipt",
+          "payload": "native_cuda_cli_with_gpu_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:d53e20e8703cc87b815fa63ec14891957c05865f954bc6c9d0afa6d38e4d3a52",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "native_cuda_cli_with_gpu_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt:revised",
+            "source_object_ids": []
+          },
+          "transition_label": "revised"
+        },
+        "ctx.runtime.receipt.v0": {
+          "current_label": "historical",
+          "evidence_ids": [
+            "stale-query-outdated"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.runtime.receipt.v0",
+          "object_type": "evidence_receipt",
+          "payload": "cpu_only_offload_receipt",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56c4113490e869d4de14566f773f5d040a07885af8d939b9f38185b86ea17a0b",
+            "recoverable": true,
+            "restore_label": "historical",
+            "restore_payload": "cpu_only_offload_receipt",
+            "sidecar_id": "sidecar:ctx.runtime.receipt.v0:stale_retrieved",
+            "source_object_ids": []
+          },
+          "transition_label": "stale_retrieved"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "answer_failure_detected"
+      ],
+      "retrieval_object_ids": [
+        "ctx.runtime.receipt.v0"
+      ],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": false
+    },
+    {
+      "accepted": false,
+      "action": "commit",
+      "answer_context_allowed": false,
+      "answer_context_object_ids": [
+        "ctx.arc.rubric"
+      ],
+      "case_id": "life-answer-corrupt-context",
+      "committed_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "unsupported-corruption"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "accept_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56ff54e506350daa61437f5726d7c487ef735dfca719bcd4b1f053cd70b2b937",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "accept_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:corrupted",
+            "source_object_ids": []
+          },
+          "transition_label": "corrupted"
+        }
+      },
+      "committed_state_changed": false,
+      "coverage_score": 0.0,
+      "detected_failure": true,
+      "failure_family": "answer",
+      "failure_mode": "answer_corruption",
+      "faithfulness_score": 0.0,
+      "model_weights_mutated": false,
+      "preservation_score": 1.0,
+      "prior_state": {
+        "ctx.arc.rubric": {
+          "current_label": "current",
+          "evidence_ids": [
+            "unsupported-corruption"
+          ],
+          "historical_labels": [
+            "current"
+          ],
+          "object_id": "ctx.arc.rubric",
+          "object_type": "policy_rule",
+          "payload": "accept_lexical_only_support",
+          "recoverable_sidecar": {
+            "payload_sha256": "sha256:56ff54e506350daa61437f5726d7c487ef735dfca719bcd4b1f053cd70b2b937",
+            "recoverable": true,
+            "restore_label": "current",
+            "restore_payload": "accept_lexical_only_support",
+            "sidecar_id": "sidecar:ctx.arc.rubric:corrupted",
+            "source_object_ids": []
+          },
+          "transition_label": "corrupted"
+        }
+      },
+      "recovered_from_sidecar": false,
+      "rejection_reasons": [
+        "coverage_below_threshold",
+        "faithfulness_below_threshold"
+      ],
+      "retrieval_object_ids": [],
+      "rollback_expected": false,
+      "rollback_success": false,
+      "safe_expected": false,
+      "sidecar_preserved": true,
+      "transition_verifier_reused": true
+    }
+  ],
+  "methodology_note": "Detection rates are deterministic fixture gates over enumerated lifecycle failure rows, not statistical classifier-performance claims.",
+  "milestone": {
+    "principle": "Binds the fixture to milestone v486 where context-object lifecycle learning becomes the downstream target.",
+    "value": "v486"
+  },
+  "no_weight_mutation": true,
+  "random_seed": 5328,
+  "reproducibility_checksum": "sha256:e6d70aeb707171957081afb0fd631dfab396976e09fd52e7ffc0c62a28d6583d",
+  "retrieval_failure_detection_rate": 1.0,
+  "rollback_success_rate": 1.0,
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5328.context_object_lifecycle_self_learning.v486",
+  "source_artifact_checksums": {
+    "exp5312": "sha256:3fde99534695addc8b072f0fa7aaf58326b06857002d687a888f99521cd9fcfc",
+    "exp5313": "sha256:28df2ce57330d666fa34964004605bd90a0ce841376e04857862d97a7b074081",
+    "module": "sha256:f6db3d29f426ac6be679f3e4d6888bc6728111a0b1de0be36dacaa203976547c",
+    "spec": "sha256:94d251d7ef328f7416b8125f1ccc405c099f6b385ecc425ad3c9ffc19d8011cc",
+    "transition_verifier": "sha256:178e208d03ff7ed49ab67b51bd9b030454d451a037e1e3b1f020ddd2857fd205"
+  },
+  "source_artifacts": [
+    "results/experiment_5312_trustmem_transition_verifier_self_learning_v485.json",
+    "results/experiment_5313_gated_memory_transition_policy_rollout_v485.json"
+  ],
+  "spec_refs": [
+    "REQ-LEARN-5328",
+    "SCENARIO-LEARN-5328",
+    "SCENARIO-LEARN-5329"
+  ],
+  "status": {
+    "principle": "Reports whether the lifecycle fixture is usable by Exp5329 and Exp5330 rather than merely present as code.",
+    "value": "ready_for_exp5329_exp5330"
+  },
+  "tests_run": {
+    "principle": "Records the exact verification commands used to establish that the fixture and artifact are usable by Exp5329 and Exp5330.",
+    "value": [
+      {
+        "command": "PYTHONFAULTHANDLER=1 .venv/bin/python -m coverage run --include='*/python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py' -m pytest -o addopts='' -n 0 tests/python/test_experiment_5328_context_object_lifecycle_self_learning_v486.py -q && .venv/bin/python -m coverage report --include='*/python/carnot/experiment_5328_context_object_lifecycle_self_learning_v486.py' --fail-under=100",
+        "outcome": "passed"
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "outcome": "passed"
+      }
+    ]
+  },
+  "transition_verifier_reuse": {
+    "bank_mutation_rows": 13,
+    "verifier_path": "python/carnot/pipeline/memory_transition_verifier.py"
+  },
+  "weight_mutation_receipt": {
+    "forbidden_updates": {
+      "cross_model_transfer_claim": false,
+      "fine_tune_model_weights": false,
+      "lora_or_adapter_update": false
+    },
+    "model_weight_hash_after": "sha256:no_model_weights_loaded",
+    "model_weight_hash_before": "sha256:no_model_weights_loaded",
+    "model_weights_loaded": false,
+    "no_weight_mutation": true,
+    "state_mutation_targets": [
+      "deterministic_context_object_bank"
+    ]
+  }
+}
