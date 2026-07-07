@@ -10467,3 +10467,4 @@ web search: arxiv 2512.24156 ARC AGI 3 j |
 | 2026-07-07 12:06 UTC | Exp 5351: Trigger-then-constrain structured-output | OK | 86 passed, 1 warning in 10.14s |
 | 2026-07-07 12:12 UTC | Exp 5352: Gated constraint-tax and tool/action rea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5351-trigger-constrain-structured-proto |
 | 2026-07-07 12:14 UTC | Exp 5352: Gated constraint-tax and tool/action rea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5351-trigger-constrain-structured-proto |
+| 2026-07-07 12:16 UTC | Exp 5352: Gated constraint-tax and tool/action rea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5351-trigger-constrain-structured-proto |
