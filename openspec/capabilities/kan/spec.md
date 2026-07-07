@@ -1096,6 +1096,67 @@ solve time, piece budget, envelope gap, false-property rejection rate,
 true-property preservation rate, localization accuracy, envelope-gap delta, and
 neutral certificate-success delta while keeping `no_broad_certificate_claim=true`.
 
+## REQ-KAN-5346: V487 KAN/Ising Counterexample Constraint Bridge
+
+The KAN verification tier SHALL add an Exp 5346 CPU-only bounded bridge that
+converts the localized Exp 5332 false-property counterexample cells into
+explicit downstream cut constraints and equivalent tiny Ising penalty records.
+The bridge MUST reuse the Exp 5332 localization output and MAY reuse the Exp
+5343 deterministic QSTR fixture for true/false property labels. It MUST define
+false-property regions, localized counterexample cells, generated cut
+constraints, and Ising penalty terms on the tiny deterministic fixture. It MUST
+NOT modify `scripts/research_conductor.py`.
+
+The bridge MUST run deterministic true/false property checks before and after
+injecting the generated constraints. It MUST report false-property rejection
+delta, true-property preservation, solve-time delta, cut count, unsafe false
+accepts, and certificate-success delta. `constraint_bridge_ready` MUST be true
+only when injected constraints preserve true properties, reduce at least one
+false-property failure, introduce no unsafe false accepts, and avoid broad
+certificate claims. `certificate_success_delta` MUST remain separate from
+constraint rejection so the artifact does not imply broad KAN certificate
+success. `constraint_bridge_ready` MUST be true only under that bounded
+preserve-and-reject condition.
+
+The deliverable MUST be written to
+`results/experiment_5346_kan_ising_counterexample_constraint_bridge_v487.json`
+with the required fields `experiment_id`, `milestone`, `status`,
+`honest_verdict`, `inference_substrate`, `fixture_count`,
+`counterexample_cut_count`, `false_property_rejection_delta`,
+`true_property_preservation_rate`, `solve_time_delta_s`,
+`unsafe_false_accepts`, `certificate_success_delta`,
+`no_broad_certificate_claim`, `constraint_bridge_ready`, and `tests_run`. The
+fields `experiment_id`, `milestone`, `status`, `honest_verdict`,
+`inference_substrate`, and `tests_run` MUST be principle-wrapped with `value`
+and `principle`; `fixture_count`, `counterexample_cut_count`,
+`false_property_rejection_delta`, `true_property_preservation_rate`,
+`solve_time_delta_s`, `unsafe_false_accepts`, `certificate_success_delta`,
+`no_broad_certificate_claim`, and `constraint_bridge_ready` MUST be bare scalar
+values. `inference_substrate.value` MUST be
+`deterministic_kan_ising_constraint_bridge`. `honest_verdict.value` MUST start
+with `complete:` or `blocked_`. `no_broad_certificate_claim` MUST be true.
+
+Required field principles:
+- `experiment_id`: Traceable Exp 5346 identifier for the bounded KAN/Ising counterexample-to-constraint bridge.
+- `milestone`: Milestone accountability for the V487 bounded constraint-bridge task.
+- `status`: Terminal status for downstream readers; complete means localized counterexample cells were converted to constraints and checked with and without injection.
+- `honest_verdict`: Terminal Exp 5346 verdict; starts with complete: or blocked_ and states whether explicit cuts preserved true properties without broad certificate claims.
+- `inference_substrate`: Declares the deterministic KAN/Ising constraint-bridge substrate with no LLM inference, hardware execution, or broad KAN certificate claim.
+- `tests_run`: Commands run to validate the bridge logic, artifact schema, new-code coverage, and repository tests.
+
+### SCENARIO-KAN-5346: Localized Counterexamples Become Downstream Cuts
+
+Given the committed Exp 5332 bounded KAN counterexample-localization artifact
+and the Exp 5343 deterministic QSTR fixture,
+When Exp 5346 converts localized false-property cells into explicit cut
+constraints and Ising penalties, then reruns deterministic property checks with
+and without those injected constraints,
+Then the artifact reports the false-property regions, localized cells,
+generated cut/penalty records, before/after rejection rates, true-property
+preservation rate, solve-time delta, cut count, unsafe false accepts, neutral
+certificate-success delta, and `constraint_bridge_ready` without claiming a
+broad certificate improvement.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1143,6 +1204,7 @@ neutral certificate-success delta while keeping `no_broad_certificate_claim=true
 | REQ-KAN-5304 | Planned | Exp 5304 target: V484 dynamic abstraction refinement and spot-check diagnostic over Exp 5277/5278/5291 bounded fixtures, with symbolic validation, method comparison, and bounded-scope-only claims. |
 | REQ-KAN-5316 | Planned | Exp 5316 target: V485 bounded DP/knapsack-style PWA piece allocation under global error and piece budgets, compared with static and `.484` dynamic abstraction without broad KAN claims. |
 | REQ-KAN-5332 | Planned | Exp 5332 target: V486 bounded false-property sensitivity and counterexample-localization diagnostic over Exp 5277/5316 fixtures, with per-unit perturbations and no broad certificate claim. |
+| REQ-KAN-5346 | Planned | Exp 5346 target: V487 bounded bridge from Exp 5332 localized counterexample cells to explicit downstream KAN cuts / Ising penalties, with before/after false-property rejection and true-property preservation checks. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
