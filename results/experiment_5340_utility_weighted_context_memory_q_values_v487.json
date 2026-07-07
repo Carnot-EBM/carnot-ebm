@@ -1,0 +1,287 @@
+{
+  "experiment": "experiment_5340_utility_weighted_context_memory_v487",
+  "feedback_labels": [
+    "positive",
+    "stale",
+    "poisoned",
+    "irrelevant",
+    "shuffled_no_op"
+  ],
+  "learning_rule": "running_mean_reward_from_deterministic_fixture_feedback; stale and poisoned controls reward safe rejection, not unsafe acceptance",
+  "no_weight_mutation": true,
+  "operation_q_values": {
+    "archive": {
+      "feedback_counts": {
+        "irrelevant": 1,
+        "poisoned": 0,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 0.5,
+      "update_count": 2
+    },
+    "commit": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 1,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 1.0,
+      "update_count": 2
+    },
+    "fold": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 1,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 1.0,
+      "update_count": 2
+    },
+    "mask": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 1,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 1.0,
+      "update_count": 2
+    },
+    "retrieve": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 0,
+        "positive": 1,
+        "shuffled_no_op": 1,
+        "stale": 2
+      },
+      "q_value": 0.75,
+      "update_count": 4
+    },
+    "revise": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 1,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 1.0,
+      "update_count": 2
+    },
+    "rollback": {
+      "feedback_counts": {
+        "irrelevant": 0,
+        "poisoned": 0,
+        "positive": 1,
+        "shuffled_no_op": 0,
+        "stale": 0
+      },
+      "q_value": 1.0,
+      "update_count": 1
+    }
+  },
+  "random_seed": 5340,
+  "reproducibility_checksum": "sha256:7594b339a373ab57b9ad934fa2a810a5f746fe777816e64dccb9de6aa4899258",
+  "run_date": "2026-07-07",
+  "schema": "carnot.experiment_5340.q_value_table.v487",
+  "utility_operations": [
+    "retrieve",
+    "archive",
+    "mask",
+    "fold",
+    "revise",
+    "commit",
+    "rollback"
+  ],
+  "utility_update_count": 15,
+  "utility_updates": [
+    {
+      "action": "retrieve",
+      "control_type": "useful_context",
+      "expected_policy_decision": "accept_recovered_context",
+      "feedback_id": "u5340-positive-retrieve",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-retrieve-archive-recover"
+    },
+    {
+      "action": "archive",
+      "control_type": "useful_context",
+      "expected_policy_decision": "archive_with_sidecar",
+      "feedback_id": "u5340-positive-archive",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-archive-policy"
+    },
+    {
+      "action": "mask",
+      "control_type": "useful_context",
+      "expected_policy_decision": "mask_secret",
+      "feedback_id": "u5340-positive-mask",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-mask-secret"
+    },
+    {
+      "action": "fold",
+      "control_type": "useful_context",
+      "expected_policy_decision": "fold_supported_context",
+      "feedback_id": "u5340-positive-fold",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-fold-runtime-rubric"
+    },
+    {
+      "action": "revise",
+      "control_type": "useful_context",
+      "expected_policy_decision": "revise_with_evidence",
+      "feedback_id": "u5340-positive-revise",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-revise-runtime"
+    },
+    {
+      "action": "commit",
+      "control_type": "useful_context",
+      "expected_policy_decision": "commit_safe_patch",
+      "feedback_id": "u5340-positive-commit",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-commit-patch"
+    },
+    {
+      "action": "rollback",
+      "control_type": "useful_context",
+      "expected_policy_decision": "rollback_corrupt_patch",
+      "feedback_id": "u5340-positive-rollback",
+      "feedback_label": "positive",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 0.0,
+      "reward": 1.0,
+      "source_case_id": "life-rollback-corrupt-patch"
+    },
+    {
+      "action": "retrieve",
+      "control_type": "stale_memory_control",
+      "expected_policy_decision": "reject_stale_retrieval",
+      "feedback_id": "u5340-stale-retrieve-bank",
+      "feedback_label": "stale",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-stale-retrieval"
+    },
+    {
+      "action": "retrieve",
+      "control_type": "stale_memory_control",
+      "expected_policy_decision": "reject_stale_answer_context",
+      "feedback_id": "u5340-stale-retrieve-answer",
+      "feedback_label": "stale",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-answer-stale-context"
+    },
+    {
+      "action": "mask",
+      "control_type": "poisoned_memory_control",
+      "expected_policy_decision": "reject_mask_leakage",
+      "feedback_id": "u5340-poisoned-mask",
+      "feedback_label": "poisoned",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-mask-retrieval-leak"
+    },
+    {
+      "action": "fold",
+      "control_type": "poisoned_memory_control",
+      "expected_policy_decision": "reject_omission",
+      "feedback_id": "u5340-poisoned-fold",
+      "feedback_label": "poisoned",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-omission-sensor-rule"
+    },
+    {
+      "action": "revise",
+      "control_type": "poisoned_memory_control",
+      "expected_policy_decision": "reject_corruption",
+      "feedback_id": "u5340-poisoned-revise",
+      "feedback_label": "poisoned",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-corrupt-rubric"
+    },
+    {
+      "action": "commit",
+      "control_type": "poisoned_memory_control",
+      "expected_policy_decision": "reject_corrupt_answer_context",
+      "feedback_id": "u5340-poisoned-commit",
+      "feedback_label": "poisoned",
+      "model_weights_mutated": false,
+      "q_after": 1.0,
+      "q_before": 1.0,
+      "reward": 1.0,
+      "source_case_id": "life-answer-corrupt-context"
+    },
+    {
+      "action": "archive",
+      "control_type": "irrelevant_memory_control",
+      "expected_policy_decision": "ignore_irrelevant_replay",
+      "feedback_id": "u5340-irrelevant-archive",
+      "feedback_label": "irrelevant",
+      "model_weights_mutated": false,
+      "q_after": 0.5,
+      "q_before": 1.0,
+      "reward": 0.0,
+      "source_case_id": "life-archive-policy"
+    },
+    {
+      "action": "retrieve",
+      "control_type": "shuffled_no_op_control",
+      "expected_policy_decision": "no_policy_change",
+      "feedback_id": "u5340-shuffled-noop-retrieve",
+      "feedback_label": "shuffled_no_op",
+      "model_weights_mutated": false,
+      "q_after": 0.75,
+      "q_before": 1.0,
+      "reward": 0.0,
+      "source_case_id": "life-retrieve-archive-recover"
+    }
+  ]
+}
