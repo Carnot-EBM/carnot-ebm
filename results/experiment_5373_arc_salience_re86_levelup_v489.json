@@ -1,0 +1,143 @@
+{
+  "attempt": {
+    "actions_taken": 35,
+    "attempted_level": 3,
+    "max_level_reached": 0,
+    "new_level_banked": false,
+    "offline_reproduced": false,
+    "perception_error_classes": [
+      "bounded_budget_no_levelup"
+    ],
+    "reproduced_levels": 0,
+    "solution_labels": [],
+    "target_game": "re86",
+    "target_level_before": 2
+  },
+  "attempted_level": 3,
+  "button_like_blob_rank_delta": 1,
+  "duration_s": 2.593658453784883,
+  "experiment": "experiment_5373_arc_salience_re86_levelup_v489",
+  "experiment_id": 5373,
+  "field_principles": {
+    "attempted_level": {
+      "principle": "level attempted for +1 deeper progress."
+    },
+    "button_like_blob_rank_delta": {
+      "principle": "measured ranking change for button-like blobs if available."
+    },
+    "frame_diff_ground_truth_validated": {
+      "principle": "whether frame-diff salience is validated before committing probes."
+    },
+    "honest_verdict": {
+      "principle": "one-line banked/no-bank verdict."
+    },
+    "live_attempt_count": {
+      "principle": "number of live attempts made."
+    },
+    "new_level_banked": {
+      "principle": "true only if registry-compatible evidence banks a level not already present before this task."
+    },
+    "no_duplicate_solve": {
+      "principle": "must be true."
+    },
+    "no_outer_loop_re": {
+      "principle": "must be true for credited solve."
+    },
+    "offline_reproduced": {
+      "principle": "true only when a new level is banked by the accepted registry/evidence path; include this exact field for ARC lint."
+    },
+    "perception_error_classes": {
+      "principle": "residual perception/salience errors observed."
+    },
+    "registry_precheck_done": {
+      "principle": "must be true before target selection or attempts."
+    },
+    "registry_total_after": {
+      "principle": "total reproduced levels after the attempt."
+    },
+    "registry_total_before": {
+      "principle": "total reproduced levels before the attempt."
+    },
+    "reproduced_levels": {
+      "principle": "number of newly reproduced levels; success requires reproduced_levels>=1."
+    },
+    "salience_repair_live_reachable": {
+      "principle": "true only if the repair is in the live agent path."
+    },
+    "solve_provenance": {
+      "principle": "must be live_agent_self_discovery for credited solves."
+    },
+    "status": {
+      "principle": "complete or honest_null; never claim a solve without registry-compatible evidence."
+    },
+    "status_bar_deprioritization_enabled": {
+      "principle": "whether the repair addresses the .488 status-bar error class."
+    },
+    "target_game": {
+      "principle": "target game id after registry precheck."
+    },
+    "target_level_before": {
+      "principle": "reproduced level count before the attempt."
+    }
+  },
+  "frame_diff_ground_truth_validated": true,
+  "honest_verdict": "no-bank: re86 L3 not reproduced within bounded live attempt",
+  "live_attempt_count": 1,
+  "milestone": "2026.07.489",
+  "new_level_banked": false,
+  "no_duplicate_solve": true,
+  "no_outer_loop_re": true,
+  "offline_reproduced": false,
+  "perception_error_classes": [
+    "bounded_budget_no_levelup"
+  ],
+  "preconditions_checked": {
+    "AGENTS.md": true,
+    "CODEX.md": true,
+    "no_outer_loop_re": true,
+    "offline_arcade_available": true,
+    "registry_present": true,
+    "spec_has_req_5373": true
+  },
+  "rank_measurement": {
+    "after_rank": 0,
+    "before_rank": 1,
+    "button_like_blob_rank_delta": 1,
+    "legacy_first_source": "large_flat_blob",
+    "repaired_first_source": "button_like_blob"
+  },
+  "registry_precheck_done": true,
+  "registry_total_after": 69,
+  "registry_total_before": 69,
+  "reproduced_levels": 0,
+  "result_path": "results/experiment_5373_arc_salience_re86_levelup_v489.json",
+  "salience_repair_live_reachable": true,
+  "solve_provenance": "live_agent_self_discovery",
+  "spec_refs": [
+    "REQ-ARC-FCP-5373",
+    "SCENARIO-ARC-FCP-5373"
+  ],
+  "status": "honest_null",
+  "status_bar_deprioritization_enabled": true,
+  "target_game": "re86",
+  "target_level_before": 2,
+  "target_selection": {
+    "attempted_level": 3,
+    "no_duplicate_solve": true,
+    "registry_precheck_done": true,
+    "selection_reason": "preferred_re86_l3_not_banked",
+    "target_game": "re86",
+    "target_level_before": 2
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_5373_arc_salience_re86_levelup_v489.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_arc_submitted_agent_parity.py -q --no-cov",
+    ".venv/bin/pytest tests/python/test_experiment_5373_arc_salience_re86_levelup_v489.py -q -n 0 -o addopts= --cov=python/carnot --cov-report= --cov-fail-under=0",
+    ".venv/bin/coverage report -m python/carnot/experiment_5373_arc_salience_re86_levelup_v489.py",
+    ".venv/bin/coverage report -m python/carnot/agentic/arc_color_blob_salience.py",
+    ".venv/bin/ruff check python/carnot/agentic/arc_color_blob_salience.py python/carnot/agentic/arc_frame_change_predictor.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5373_arc_salience_re86_levelup_v489.py tests/python/test_experiment_5373_arc_salience_re86_levelup_v489.py",
+    ".venv/bin/ruff format --check python/carnot/agentic/arc_color_blob_salience.py python/carnot/agentic/arc_frame_change_predictor.py python/carnot/agentic/arc_competition_agent.py python/carnot/experiment_5373_arc_salience_re86_levelup_v489.py tests/python/test_experiment_5373_arc_salience_re86_levelup_v489.py",
+    ".venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap.yaml --min 1",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

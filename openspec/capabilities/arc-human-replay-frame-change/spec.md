@@ -983,6 +983,57 @@ Required field principles:
 - `registry_updated`: principle "Bare boolean records whether solve registry changed."
 - `tests_run`: principle "Lists live-path, registry, and salience-policy checks."
 
+### REQ-ARC-FCP-5373: Live-Reachable Salience Repair Re86 Level-Up Attempt
+
+Experiment 5373 SHALL write
+`results/experiment_5373_arc_salience_re86_levelup_v489.json` after a
+registry-prechecked ARC live-path attempt. The workflow SHALL select `re86` L3
+when the registry still records only two reproduced `re86` levels; if that depth
+is already banked, it SHALL choose another non-duplicate live-path target and
+record the reason. The repair SHALL be reachable from the live
+`E3AgentPolicy`/`StepwiseExplorer` path and SHALL improve the Exp5360 salience
+error classes by deprioritizing status bars and large flat blobs, ranking
+button-like blobs ahead of flat distractors, and gating frame-diff action-effect
+scores until at least one observed transition validates the scorer against real
+frame change.
+
+The result artifact SHALL include `status`, `solve_provenance`,
+`registry_precheck_done`, `target_game`, `target_level_before`,
+`attempted_level`, `salience_repair_live_reachable`,
+`status_bar_deprioritization_enabled`,
+`frame_diff_ground_truth_validated`, `button_like_blob_rank_delta`,
+`offline_reproduced`, `reproduced_levels`, `new_level_banked`,
+`registry_total_before`, `registry_total_after`, `live_attempt_count`,
+`perception_error_classes`, `no_outer_loop_re`, `no_duplicate_solve`, and
+`honest_verdict`. A credited level-up SHALL require
+`solve_provenance=live_agent_self_discovery`, `offline_reproduced=true`,
+`reproduced_levels>=1`, `new_level_banked=true`, `no_outer_loop_re=true`, and
+`no_duplicate_solve=true`; otherwise the artifact SHALL report an honest null
+with residual perception/salience error classes.
+
+Required field principles:
+
+- `status`: principle "complete or honest_null; never claim a solve without registry-compatible evidence."
+- `solve_provenance`: principle "must be live_agent_self_discovery for credited solves."
+- `registry_precheck_done`: principle "must be true before target selection or attempts."
+- `target_game`: principle "target game id after registry precheck."
+- `target_level_before`: principle "reproduced level count before the attempt."
+- `attempted_level`: principle "level attempted for +1 deeper progress."
+- `salience_repair_live_reachable`: principle "true only if the repair is in the live agent path."
+- `status_bar_deprioritization_enabled`: principle "whether the repair addresses the .488 status-bar error class."
+- `frame_diff_ground_truth_validated`: principle "whether frame-diff salience is validated before committing probes."
+- `button_like_blob_rank_delta`: principle "measured ranking change for button-like blobs if available."
+- `offline_reproduced`: principle "true only when a new level is banked by the accepted registry/evidence path; include this exact field for ARC lint."
+- `reproduced_levels`: principle "number of newly reproduced levels; success requires reproduced_levels>=1."
+- `new_level_banked`: principle "true only if registry-compatible evidence banks a level not already present before this task."
+- `registry_total_before`: principle "total reproduced levels before the attempt."
+- `registry_total_after`: principle "total reproduced levels after the attempt."
+- `live_attempt_count`: principle "number of live attempts made."
+- `perception_error_classes`: principle "residual perception/salience errors observed."
+- `no_outer_loop_re`: principle "must be true for credited solve."
+- `no_duplicate_solve`: principle "must be true."
+- `honest_verdict`: principle "one-line banked/no-bank verdict."
+
 ## Scenarios
 
 ### SCENARIO-ARC-FCP-4490: Positive-Control Candidate Ranking
@@ -1314,6 +1365,20 @@ a button-like salient-color blob, a larger dull blob, and a status-bar-colored
 blob
 When the color-blob salience prior scores live `rich_action_candidates`
 Then the button-like blob is ranked ahead of the dull and status-bar blobs.
+
+### SCENARIO-ARC-FCP-5373: Salience Repair Is Validated Before Probing
+
+Given a rendered ARC frame with a button-like blob, a large flat distractor, and
+a status-bar-like strip
+When the live salience repair scores `rich_action_candidates`
+Then the button-like blob is ranked ahead of both flat/status distractors and
+the artifact records the measured rank delta.
+
+Given a frame-diff scorer assigns high confidence before any observed transition
+has confirmed that high scores predict real frame change
+When the submitted `E3AgentPolicy` asks for live candidate ordering
+Then the frame-diff score is gated out until an observed transition validates it
+against the actual before/after frame pixels.
 
 Given the submitted `E3AgentPolicy` constructor builds its `StepwiseExplorer`
 without an explicit action prior

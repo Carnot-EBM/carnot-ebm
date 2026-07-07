@@ -44,6 +44,7 @@ from carnot.agentic.arc_program_synthesis_filter import (
 )
 from carnot.agentic.arc_frame_change_predictor import (
     ActionEffectExpansionPrior,
+    GroundTruthValidatedFrameChangeScorer,
     load_live_action_effect_scorer,
 )
 from carnot.agentic.arc_goal_energy_live import GOAL_ENERGY_SOURCE
@@ -252,12 +253,15 @@ def _load_submitted_candidate_router() -> Any | None:
 
 
 def _load_submitted_frame_change_scorer() -> Any | None:
-    """REQ-ARC-FCP-4629: load the live action-effect scorer for the submitted E3 path."""
+    """REQ-ARC-FCP-4629/5373: load the validated live action-effect scorer."""
 
     if not SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED:
         return None
     try:
-        return load_live_action_effect_scorer(root=REPO)
+        scorer = load_live_action_effect_scorer(root=REPO)
+        if scorer is None:
+            return None
+        return GroundTruthValidatedFrameChangeScorer(scorer)
     except Exception:
         return None
 

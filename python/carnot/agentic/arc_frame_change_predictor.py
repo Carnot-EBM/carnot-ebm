@@ -1,6 +1,7 @@
 """Frame-only ARC action-effect predictor and behavior prior.
 
-Spec refs: REQ-ARC-FCP-4490, REQ-ARC-FCP-4491, SCENARIO-ARC-FCP-4490.
+Spec refs: REQ-ARC-FCP-4490, REQ-ARC-FCP-4491, SCENARIO-ARC-FCP-4490,
+REQ-ARC-FCP-5373, SCENARIO-ARC-FCP-5373.
 """
 
 from __future__ import annotations
@@ -241,6 +242,97 @@ class LiveActionEffectScorer:
         }
 
 
+@dataclass
+class GroundTruthValidatedFrameChangeScorer:
+    """Gate frame-diff ranking until live observations validate the scorer.
+
+    "Ground truth" here means the agent's own before/after frame pixels after a
+    committed action. The wrapper prevents an unvalidated frame-diff prior from
+    choosing probes solely because it is self-consistent on the current frame.
+    """
+
+    scorer: Any
+    change_threshold: float = 0.0
+    score_threshold: float = 0.0
+    required_agreements: int = 1
+    source: str = "observed_frame_diff_validated"
+    _observed_count: int = field(default=0, init=False, repr=False)
+    _agreement_count: int = field(default=0, init=False, repr=False)
+    _contradiction_count: int = field(default=0, init=False, repr=False)
+    _last_observed_delta: float | None = field(default=None, init=False, repr=False)
+
+    @property
+    def validated(self) -> bool:
+        return bool(
+            self._agreement_count >= int(self.required_agreements)
+            and self._contradiction_count == 0
+        )
+
+    def candidate_score(self, frame: Any, candidate: Any) -> float:
+        if not self.validated:
+            return 0.0
+        return float(_scorer_value(frame, candidate, self.scorer))
+
+    def observe_transition(
+        self,
+        before: Any,
+        action_id: int,
+        data: Mapping[str, Any] | None,
+        after: Any,
+        *,
+        source: str = "observed_transition",
+    ) -> None:
+        candidate = ArcAction(int(action_id), dict(data) if data else None, str(source))
+        predicted_score = 0.0
+        try:
+            predicted_score = float(_scorer_value(before, candidate, self.scorer))
+        except Exception:
+            predicted_score = 0.0
+        try:
+            delta = _transition_frame_delta(grid_of(before), grid_of(after))
+        except Exception:
+            delta = 0.0
+        predicted_changed = predicted_score > float(self.score_threshold)
+        observed_changed = float(delta) > float(self.change_threshold)
+        self._observed_count += 1
+        self._last_observed_delta = float(delta)
+        if predicted_changed == observed_changed:
+            self._agreement_count += 1
+        else:
+            self._contradiction_count += 1
+        if hasattr(self.scorer, "observe_transition"):
+            try:
+                self.scorer.observe_transition(before, action_id, data, after)
+            except Exception:
+                pass
+
+    def reset(self, *args: Any, **kwargs: Any) -> None:
+        if hasattr(self.scorer, "reset"):
+            try:
+                self.scorer.reset(*args, **kwargs)
+            except Exception:
+                pass
+
+    def as_dict(self) -> dict[str, Any]:
+        base = (
+            self.scorer.as_dict()
+            if self.scorer is not None and hasattr(self.scorer, "as_dict")
+            else None
+        )
+        return {
+            "source": self.source,
+            "base_scorer": base,
+            "frame_diff_ground_truth_validated": bool(self.validated),
+            "observed_count": int(self._observed_count),
+            "agreement_count": int(self._agreement_count),
+            "contradiction_count": int(self._contradiction_count),
+            "last_observed_delta": self._last_observed_delta,
+        }
+
+    def diagnostics(self) -> dict[str, Any]:
+        return self.as_dict()
+
+
 def _transition_frame_delta(before: Any, after: Any) -> float:
     lhs = np.asarray(before)
     rhs = np.asarray(after)
@@ -328,7 +420,9 @@ def load_live_frame_change_cnn_scorer(
 ) -> FrameChangeScorer | None:
     """REQ-ARC-FCP-4629: load the graduated CNN scorer when the checkpoint exists."""
 
-    path = Path(checkpoint_path) if checkpoint_path is not None else LIVE_CNN_CHECKPOINT_RELATIVE_PATH
+    path = (
+        Path(checkpoint_path) if checkpoint_path is not None else LIVE_CNN_CHECKPOINT_RELATIVE_PATH
+    )
     if not path.is_absolute():
         path = Path(root) / path
     if not path.exists():
@@ -617,7 +711,9 @@ def train_frame_change_model(
 
     torch.manual_seed(int(seed))
     torch_device = torch.device(device)
-    model = SmallFrameChangeCNN(num_colors=num_colors, hidden_channels=hidden_channels).to(torch_device)
+    model = SmallFrameChangeCNN(num_colors=num_colors, hidden_channels=hidden_channels).to(
+        torch_device
+    )
     trainable = [example for example in examples if _example_has_trainable_head(example)]
     initial_loss = _mean_effect_loss(
         model,
@@ -928,11 +1024,7 @@ def prune_arc_actions(
                 default=None,
             ),
             "max_score_pruned": max(
-                (
-                    score
-                    for score, _index, candidate in scored
-                    if candidate not in kept
-                ),
+                (score for score, _index, candidate in scored if candidate not in kept),
                 default=None,
             ),
         }
@@ -999,11 +1091,7 @@ def prune_arc_actions_by_prior_quantile(
                 default=None,
             ),
             "max_score_pruned": max(
-                (
-                    score
-                    for score, index, _candidate in scored
-                    if index in prune_indexes
-                ),
+                (score for score, index, _candidate in scored if index in prune_indexes),
                 default=None,
             ),
         }
